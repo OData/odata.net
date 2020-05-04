@@ -12,12 +12,17 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
     using Microsoft.Test.OData.Framework.Client;
     using Microsoft.Test.OData.Framework.Verification;
     using Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit.Abstractions;
+    using Xunit;
 
-    [TestClass]
     public class DollarSegmentTests : KeyAsSegmentTest
     {
-        [TestMethod]
+        public DollarSegmentTests(ITestOutputHelper helper)
+            :base(helper)
+        {
+        }
+
+        [Fact]
         public void InsertEntityWithKeyValueSameAsNavigationPropertyName()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -27,38 +32,38 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             contextWrapper.SaveChanges();
 
             var loginQuery = contextWrapper.CreateQuery<Login>("Login").Where(l => l.Username == "LastLogin").ToArray();
-            Assert.IsTrue(newLogin == loginQuery.Single(), "Query result does not equal newly added login");
+            Assert.True(newLogin == loginQuery.Single(), "Query result does not equal newly added login");
         }
 
-        [TestMethod]
+        [Fact]
         public void ClientExecuteEntitySetDerivedType()
         {
             var contextWrapper = this.CreateWrappedContext();
             var discontinuedProductQuery = contextWrapper.Execute<DiscontinuedProduct>(new Uri(this.ServiceUri + "/Product/$/Microsoft.Test.OData.Services.AstoriaDefaultService.DiscontinuedProduct")).ToArray();
         }
 
-        [TestMethod]
+        [Fact]
         public void ClientExecuteEntitySetDerivedTypeDollarSegmentAtEnd()
         {
             var contextWrapper = this.CreateWrappedContext();
             var discontinuedProductQuery = contextWrapper.Execute<DiscontinuedProduct>(new Uri(this.ServiceUri + "/Product/$/Microsoft.Test.OData.Services.AstoriaDefaultService.DiscontinuedProduct/$")).ToArray();
         }
 
-        [TestMethod]
+        [Fact]
         public void ClientExecuteProjectPropertyDefinedOnDerivedType()
         {
             var contextWrapper = this.CreateWrappedContext();
             var discontinuedProductDatesQuery = contextWrapper.Execute<DiscontinuedProduct>(new Uri(this.ServiceUri + "/Product/$/Microsoft.Test.OData.Services.AstoriaDefaultService.DiscontinuedProduct?$select=Discontinued")).ToArray();
         }
 
-        [TestMethod]
+        [Fact]
         public void ClientExecuteProjectPropertyDefinedOnDerivedTypeMultipleDollarSegments()
         {
             var contextWrapper = this.CreateWrappedContext();
             var discontinuedProductDatesQuery = contextWrapper.Execute<DiscontinuedProduct>(new Uri(this.ServiceUri + "/Product/$/$/$/Microsoft.Test.OData.Services.AstoriaDefaultService.DiscontinuedProduct?$select=Discontinued")).ToArray();
         }
 
-        [TestMethod]
+        [Fact]
         public void InvokeFeedBoundActionDefinedOnDerivedType()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -71,7 +76,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
                     }); 
         }
 
-        [TestMethod]
+        [Fact]
         public void InvokeEntryBoundActionDefinedOnDerivedType()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -81,7 +86,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
                 new OperationParameter[] { }); 
         }
 
-        [TestMethod]
+        [Fact]
         public void InvokeActionDefinedOnDerivedTypeMultipleDollarSegments()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -94,7 +99,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
                     }); 
         }
 
-        [TestMethod]
+        [Fact]
         public void InvokeActionDefinedOnDerivedTypeDollarSegmentAtUriEnd()
         {
             var contextWrapper = this.CreateWrappedContext();

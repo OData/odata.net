@@ -20,24 +20,20 @@ namespace Microsoft.Test.OData.Tests.Client
 #endif
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
-#if WIN8 || WINDOWSPHONE
-    using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-#else
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
+    using Xunit.Abstractions;
+    using Xunit;
 
-    [TestClass]
 #if SILVERLIGHT
     [Ignore]
 #endif
     public class AsynchronousSingletonClientTest : EndToEndTestBase
     {
         InMemoryEntities TestClientContext;
-        public AsynchronousSingletonClientTest()
-            : base(ServiceDescriptors.ODataWCFServiceDescriptor)
+        public AsynchronousSingletonClientTest(ITestOutputHelper helper)
+            : base(ServiceDescriptors.ODataWCFServiceDescriptor, helper)
         {
         }
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void SingletonQueryUpdatePropertyClientTest()
         {
             TestClientContext = this.CreateWrappedContext<InMemoryEntities>().Context;
@@ -47,7 +43,7 @@ namespace Microsoft.Test.OData.Tests.Client
             var queryCompany = TestClientContext.Company as DataServiceQuerySingle<Company>;
             var queryCompanyAr = queryCompany.BeginGetValue(null, null).EnqueueWait(this);
             var company = queryCompany.EndGetValue(queryCompanyAr);
-            Assert.IsTrue(company != null);
+            Assert.True(company != null);
 
             //Update Singleton Property and Verify
             company.CompanyCategory = CompanyCategory.Communication;
@@ -62,28 +58,28 @@ namespace Microsoft.Test.OData.Tests.Client
             CompanyCategory? companyCategory = CompanyCategory.Others;
             var queryCompanyCategoryAr = queryCompanyCategory.BeginGetValue(null, null).EnqueueWait(this);
             companyCategory = queryCompanyCategory.EndGetValue(queryCompanyCategoryAr);
-            Assert.IsTrue(companyCategory == CompanyCategory.Communication);
+            Assert.True(companyCategory == CompanyCategory.Communication);
 
             var queryCity = TestClientContext.CreateQuery<string>("Company/Address/City");
             var queryCityAr = queryCity.BeginExecute(null, null);
             var city = queryCity.EndExecute(queryCityAr).Single();
-            this.EnqueueCallback(() => Assert.IsTrue(city == "UpdatedCity"));
+            this.EnqueueCallback(() => Assert.True(city == "UpdatedCity"));
 
             var queryNameAr = TestClientContext.BeginExecute<string>(new Uri("Company/Name", UriKind.Relative), null, null).EnqueueWait(this);
             var name = TestClientContext.EndExecute<string>(queryNameAr).Single();
-            Assert.IsTrue(name == "UpdatedName");
+            Assert.True(name == "UpdatedName");
 
             //Projection with properties - Select
             this.TestCompleted = false;
             queryCompany = TestClientContext.Company.Select(c => new Company { CompanyID = c.CompanyID, Address = c.Address, Name = c.Name }) as DataServiceQuerySingle<Company>;
             queryCompanyAr = queryCompany.BeginGetValue(null, null);
             company = queryCompany.EndGetValue(queryCompanyAr);
-            Assert.IsTrue(company.Name == "UpdatedName");
-            Assert.IsTrue(company.Departments.Count == 0);
+            Assert.True(company.Name == "UpdatedName");
+            Assert.True(company.Departments.Count == 0);
             this.EnqueueTestComplete();
         }
 
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void SingletonQueryUpdateNavigationCollectionPropertyClientTest()
         {
             TestClientContext = this.CreateWrappedContext<InMemoryEntities>().Context;
@@ -96,7 +92,7 @@ namespace Microsoft.Test.OData.Tests.Client
             //Load Navigation Property
             var loadDeparments = TestClientContext.BeginLoadProperty(company, "Departments", null, null).EnqueueWait(this);
             TestClientContext.EndLoadProperty(loadDeparments);
-            Assert.IsTrue(company.Departments.Count > 0);
+            Assert.True(company.Departments.Count > 0);
 
             //Add Navigation Property - Collection
             Random rand = new Random();
@@ -115,7 +111,7 @@ namespace Microsoft.Test.OData.Tests.Client
             var selectCompany = TestClientContext.Company.Select(c => new Company { CompanyID = c.CompanyID, Departments = c.Departments }) as DataServiceQuerySingle<Company>;
             var selectCompanyAr = selectCompany.BeginGetValue(null, null).EnqueueWait(this);
             var projectedCompany = selectCompany.EndGetValue(selectCompanyAr);
-            Assert.IsTrue(projectedCompany.Departments.Any(c => c.DepartmentID == tmpDepartmentID));
+            Assert.True(projectedCompany.Departments.Any(c => c.DepartmentID == tmpDepartmentID));
 
             //Update EntitySet's Navigation Property - Singleton 
             TestClientContext.SetLink(department, "Company", company);
@@ -126,7 +122,7 @@ namespace Microsoft.Test.OData.Tests.Client
             var queryDepartment = TestClientContext.Departments.Expand(d => d.Company).Where(d => d.DepartmentID == tmpDepartmentID) as DataServiceQuery<Department>;
             var queryDepartmentAr = queryDepartment.BeginExecute(null, null).EnqueueWait(this);
             department = queryDepartment.EndExecute(queryDepartmentAr).SingleOrDefault();
-            Assert.IsTrue(department.Company.CompanyID == company.CompanyID);
+            Assert.True(department.Company.CompanyID == company.CompanyID);
 
             //Delete Navigation Property - EntitySet
             TestClientContext.DeleteLink(company, "Departments", department);
@@ -137,12 +133,12 @@ namespace Microsoft.Test.OData.Tests.Client
             queryCompany = TestClientContext.Company.Expand("Departments");
             queryCompanyAr = queryCompany.BeginGetValue(null, null).EnqueueWait(this);
             company = queryCompany.EndGetValue(queryCompanyAr);
-            Assert.IsTrue(!company.Departments.Any(c => c.DepartmentID == tmpDepartmentID));
+            Assert.True(!company.Departments.Any(c => c.DepartmentID == tmpDepartmentID));
 
             this.EnqueueTestComplete();
         }
 
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void SingletonQueryUpdateNavigationSingletonPropertyClientTest()
         {
             TestClientContext = this.CreateWrappedContext<InMemoryEntities>().Context;
@@ -155,7 +151,7 @@ namespace Microsoft.Test.OData.Tests.Client
             //Query Singleton again with Execute
             var queryVipCustomerAr = TestClientContext.BeginExecute<Customer>(new Uri("VipCustomer", UriKind.Relative), null, null).EnqueueWait(this);
             var vipCustomer = TestClientContext.EndExecute<Customer>(queryVipCustomerAr).Single();
-            Assert.IsTrue(vipCustomer != null);
+            Assert.True(vipCustomer != null);
 
             //Update Singleton's Navigation property - Singleton
             vipCustomer.City = "UpdatedCity";
@@ -168,7 +164,7 @@ namespace Microsoft.Test.OData.Tests.Client
             queryCompany = TestClientContext.Company.Expand(c => c.VipCustomer);
             queryCompanyAr = queryCompany.BeginGetValue(null, null).EnqueueWait(this);
             company = queryCompany.EndGetValue(queryCompanyAr);
-            Assert.IsTrue(company.VipCustomer.City == "UpdatedCity");
+            Assert.True(company.VipCustomer.City == "UpdatedCity");
 
             //Update Navigation Property - Delete the Singleton navigation
             TestClientContext.SetLink(company, "VipCustomer", null);
@@ -180,7 +176,7 @@ namespace Microsoft.Test.OData.Tests.Client
             queryCompany = TestClientContext.Company.Expand("VipCustomer");
             queryCompanyAr = queryCompany.BeginGetValue(null, null).EnqueueWait(this);
             company = queryCompany.EndGetValue(queryCompanyAr);
-            Assert.IsTrue(company.VipCustomer == null);
+            Assert.True(company.VipCustomer == null);
 
             //Update Navigation Property - Singleton
             TestClientContext.SetLink(company, "VipCustomer", vipCustomer);
@@ -191,25 +187,25 @@ namespace Microsoft.Test.OData.Tests.Client
             company.VipCustomer = null;
             var ar13 = TestClientContext.BeginLoadProperty(company, "VipCustomer", null, null).EnqueueWait(this);
             TestClientContext.EndLoadProperty(ar13);
-            Assert.IsTrue(company.VipCustomer != null);
+            Assert.True(company.VipCustomer != null);
 
             //Expand Navigation Property - Singleton
             company.VipCustomer = null;
             queryCompany = TestClientContext.Company.Expand(c => c.VipCustomer);
             queryCompanyAr = queryCompany.BeginGetValue(null, null).EnqueueWait(this);
             company = queryCompany.EndGetValue(queryCompanyAr);
-            Assert.IsTrue(company.VipCustomer != null);
+            Assert.True(company.VipCustomer != null);
 
             //Query Singleton's Navigation Property - Singleton
             queryCompany = TestClientContext.Company.Select(c => new Company { CompanyID = c.CompanyID, VipCustomer = c.VipCustomer }) as DataServiceQuerySingle<Company>;
             queryCompanyAr = queryCompany.BeginGetValue(null, null).EnqueueWait(this);
             company = queryCompany.EndGetValue(queryCompanyAr);
-            Assert.IsTrue(company.VipCustomer != null);
+            Assert.True(company.VipCustomer != null);
 
             this.EnqueueTestComplete();
         }
 
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void SingletonQueryUpdateNavigationSingleEntityPropertyClientTest()
         {
             TestClientContext = this.CreateWrappedContext<InMemoryEntities>().Context;
@@ -219,13 +215,13 @@ namespace Microsoft.Test.OData.Tests.Client
             var queryCompany = TestClientContext.Company.Expand("CoreDepartment");
             var queryCompanyAr = queryCompany.BeginGetValue(null, null).EnqueueWait(this);
             company = queryCompany.EndGetValue(queryCompanyAr);
-            Assert.IsTrue(company.CoreDepartment != null);
+            Assert.True(company.CoreDepartment != null);
 
             //Single Entity
             company.CoreDepartment = null;
             var ar15 = TestClientContext.BeginLoadProperty(company, "CoreDepartment", null, null).EnqueueWait(this);
             TestClientContext.EndLoadProperty(ar15);
-            Assert.IsTrue(company.CoreDepartment != null);
+            Assert.True(company.CoreDepartment != null);
 
             Random rand = new Random();
             int tmpCoreDepartmentID = rand.Next();
@@ -249,11 +245,11 @@ namespace Microsoft.Test.OData.Tests.Client
             queryCompany = TestClientContext.Company.Select(c => new Company { CompanyID = c.CompanyID, CoreDepartment = c.CoreDepartment }) as DataServiceQuerySingle<Company>;
             queryCompanyAr = queryCompany.BeginGetValue(null, null).EnqueueWait(this);
             company = queryCompany.EndGetValue(queryCompanyAr);
-            Assert.IsTrue(company.CoreDepartment.DepartmentID == tmpCoreDepartmentID);
+            Assert.True(company.CoreDepartment.DepartmentID == tmpCoreDepartmentID);
             this.EnqueueTestComplete();
         }
 
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void UpdateDerivedTypePropertyClientTest()
         {
             TestClientContext = this.CreateWrappedContext<InMemoryEntities>().Context;
@@ -276,13 +272,13 @@ namespace Microsoft.Test.OData.Tests.Client
             var queryName = TestClientContext.PublicCompany.Select(c => c.Name) as DataServiceQuerySingle<string>;
             var queryNameAr = queryName.BeginGetValue(null, null).EnqueueWait(this);
             var name = queryName.EndGetValue(queryNameAr);
-            Assert.IsTrue(name == "UpdatedName");
+            Assert.True(name == "UpdatedName");
 
             //Projection with properties of DerivedType
             var queryStockExchange = TestClientContext.PublicCompany.Select(c => (c as PublicCompany).StockExchange) as DataServiceQuerySingle<string>;
             var queryStockExchangeAr = queryStockExchange.BeginGetValue(null, null).EnqueueWait(this);
             var stockExchange = queryStockExchange.EndGetValue(queryStockExchangeAr);
-            Assert.IsTrue(stockExchange == "Updated StockExchange");
+            Assert.True(stockExchange == "Updated StockExchange");
 
             //Projection with properties - Select
             var queryPublicCompany = TestClientContext.PublicCompany.Select(c =>
@@ -294,13 +290,13 @@ namespace Microsoft.Test.OData.Tests.Client
                 }) as DataServiceQuerySingle<PublicCompany>;
             var queryPublicCompanyAr = queryPublicCompany.BeginGetValue(null, null).EnqueueWait(this);
             publicCompany = queryPublicCompany.EndGetValue(queryPublicCompanyAr);
-            Assert.IsTrue(publicCompany.Name == "UpdatedName");
-            Assert.IsTrue(publicCompany.StockExchange == "Updated StockExchange");
+            Assert.True(publicCompany.Name == "UpdatedName");
+            Assert.True(publicCompany.StockExchange == "Updated StockExchange");
 
             this.EnqueueTestComplete();
         }
 
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void UpdateDerivedTypeNavigationOfContainedCollection()
         {
             TestClientContext = this.CreateWrappedContext<InMemoryEntities>().Context;
@@ -315,7 +311,7 @@ namespace Microsoft.Test.OData.Tests.Client
             //Collection            
             var loadAssetsAr = TestClientContext.BeginLoadProperty(company, "Assets", null, null).EnqueueWait(this);
             TestClientContext.EndLoadProperty(loadAssetsAr);
-            Assert.IsTrue((company as PublicCompany).Assets != null);
+            Assert.True((company as PublicCompany).Assets != null);
 
             //Add Contained Navigation Property - Collection of derived type
             Random rand = new Random();
@@ -334,7 +330,7 @@ namespace Microsoft.Test.OData.Tests.Client
             queryCompany = TestClientContext.PublicCompany.Expand(c => (c as PublicCompany).Assets) as DataServiceQuerySingle<Company>;
             var queryCompanyAr1 = queryCompany.BeginGetValue(null, null).EnqueueWait(this);
             company = queryCompany.EndGetValue(queryCompanyAr1);
-            Assert.IsTrue((company as PublicCompany).Assets.Any(a => a.AssetID == tmpAssertId));
+            Assert.True((company as PublicCompany).Assets.Any(a => a.AssetID == tmpAssertId));
 
             //Delete contained Navigation Property - Collection of derived type
             TestClientContext.DeleteObject(tmpAssert);
@@ -345,12 +341,12 @@ namespace Microsoft.Test.OData.Tests.Client
             queryCompany = TestClientContext.PublicCompany.Expand(c => (c as PublicCompany).Assets) as DataServiceQuerySingle<Company>;
             queryCompanyAr = queryCompany.BeginGetValue(null, null).EnqueueWait(this);
             company = queryCompany.EndGetValue(queryCompanyAr);
-            Assert.IsTrue(!(company as PublicCompany).Assets.Any(a => a.AssetID == tmpAssertId));
+            Assert.True(!(company as PublicCompany).Assets.Any(a => a.AssetID == tmpAssertId));
 
             this.EnqueueTestComplete();
         }
 
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void UpdateDerivedTypeNavigationOfContainedSingleEntity()
         {
             TestClientContext = this.CreateWrappedContext<InMemoryEntities>().Context;
@@ -365,7 +361,7 @@ namespace Microsoft.Test.OData.Tests.Client
             //Single Enity
             var loadClubAr = TestClientContext.BeginLoadProperty(company, "Club", null, null).EnqueueWait(this);
             TestClientContext.EndLoadProperty(loadClubAr);
-            Assert.IsTrue((company as PublicCompany).Club != null);
+            Assert.True((company as PublicCompany).Club != null);
 
             //Updated Conatined Navigation Property - SingleEntity of derived type
             var club = (company as PublicCompany).Club;
@@ -379,11 +375,11 @@ namespace Microsoft.Test.OData.Tests.Client
                 new PublicCompany { CompanyID = c.CompanyID, Club = (c as PublicCompany).Club }) as DataServiceQuerySingle<PublicCompany>;
             var queryPublicCompany2Ar = queryPublicCompany.BeginGetValue(null, null).EnqueueWait(this);
             var publicCompany = queryPublicCompany.EndGetValue(queryPublicCompany2Ar);
-            Assert.IsTrue(publicCompany.Club.Name == "UpdatedClubName");
+            Assert.True(publicCompany.Club.Name == "UpdatedClubName");
 
             this.EnqueueTestComplete();
         }
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void DerivedTypeSingletonClientTest()
         {
             TestClientContext = this.CreateWrappedContext<InMemoryEntities>().Context;
@@ -397,13 +393,13 @@ namespace Microsoft.Test.OData.Tests.Client
             //Singleton
             var loadLabourUnionAr = TestClientContext.BeginLoadProperty(company, "LabourUnion", null, null).EnqueueWait(this);
             TestClientContext.EndLoadProperty(loadLabourUnionAr);
-            Assert.IsTrue((company as PublicCompany).LabourUnion != null);
+            Assert.True((company as PublicCompany).LabourUnion != null);
 
             //Expand Navigation Property - Singleton
             queryCompany = TestClientContext.PublicCompany.Expand(c => (c as PublicCompany).Club) as DataServiceQuerySingle<Company>;
             queryCompanyAr = queryCompany.BeginGetValue(null, null).EnqueueWait(this);
             company = queryCompany.EndGetValue(queryCompanyAr);
-            Assert.IsTrue((company as PublicCompany).Club != null);
+            Assert.True((company as PublicCompany).Club != null);
 
             //Update Navigation property of derived Type - Singleton
             var labourUnion = (company as PublicCompany).LabourUnion;
@@ -417,7 +413,7 @@ namespace Microsoft.Test.OData.Tests.Client
                 new PublicCompany { CompanyID = c.CompanyID, LabourUnion = (c as PublicCompany).LabourUnion }) as DataServiceQuerySingle<PublicCompany>;
             var queryPublicCompanyAr = queryPublicCompany.BeginGetValue(null, null).EnqueueWait(this);
             var publicCompany = queryPublicCompany.EndGetValue(queryPublicCompanyAr);
-            Assert.IsTrue(publicCompany.LabourUnion != null);
+            Assert.True(publicCompany.LabourUnion != null);
 
             this.EnqueueTestComplete();
         }

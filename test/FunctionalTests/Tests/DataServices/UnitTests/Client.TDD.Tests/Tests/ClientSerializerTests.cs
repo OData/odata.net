@@ -17,23 +17,21 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Spatial;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Microsoft.OData.Client.TDDUnitTests;
+    using Xunit;
 
     /// <summary>
     /// Unit tests for client request serialization code.
     /// </summary>
-    [TestClass]
     public class ClientSerializerTests
     {
         private DataServiceContext context;
-
-        [TestInitialize]
-        public void Init()
+        public ClientSerializerTests()
         {
             context = new DataServiceContext(new Uri("http://www.odata.org/service.svc")) { ResolveName = type => type.FullName }.ReConfigureForNetworkLoadingTests();
         }
-        [TestMethod]
+
+        [Fact]
         public void ClientShouldNotIncludeIdInJsonLightUpdates()
         {
             Action<EntityDescriptor> configureDescriptor = d =>
@@ -46,14 +44,14 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             testSubject.Id.Should().BeNull();
         }
 
-        [TestMethod]
+        [Fact]
         public void ClientShouldSetTypeNameFromClientTypeAnnotation()
         {
             var testSubject = CreateODataEntry(clientTypeName: "Fake.Type");
             testSubject.TypeName.Should().Be("Fake.Type");
         }
 
-        [TestMethod]
+        [Fact]
         public void ClientShouldAddTypeAnnotationIfServerNameIsDifferent()
         {
             var testSubject = CreateODataEntry(serverTypeName: "Foo", clientTypeName: "Fake.Type");
@@ -62,21 +60,21 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             annotation.TypeName.Should().Be("Foo");
         }
 
-        [TestMethod]
+        [Fact]
         public void ClientShouldNotAddTypeAnnotationIfServerNameIsTheSame()
         {
             var testSubject = CreateODataEntry(serverTypeName: "Fake.Type", clientTypeName: "Fake.Type");
             testSubject.TypeAnnotation.Should().BeNull();
         }
 
-        [TestMethod]
+        [Fact]
         public void ClientShouldSetMediaResourceIfTypeIsMediaLinkEntry()
         {
             var testSubject = CreateODataEntry<MyMleType>();
             testSubject.MediaResource.Should().NotBeNull();
         }
 
-        [TestMethod]
+        [Fact]
         public void ClientShouldSetMediaResourceIfDescriptorIsMediaLinkEntry()
         {
             var testSubject = CreateODataEntry(d => d.EditStreamUri = new Uri("http://example.com/odata.svc/streamsRule"));
@@ -113,7 +111,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         {
         }
 
-        [TestMethod]
+        [Fact]
         public void WriteNullUriOperationParametersToUriShouldReturnUri()
         {
             var requestInfo = new RequestInfo(context);
@@ -121,10 +119,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             Uri requestUri = new Uri("http://www.odata.org/service.svc/Function");
             List<UriOperationParameter> parameters = new List<UriOperationParameter> { new UriOperationParameter("p1", null) };
             requestUri = serializer.WriteUriOperationParametersToUri(requestUri, parameters);
-            Assert.AreEqual(new Uri("http://www.odata.org/service.svc/Function(p1=null)"), requestUri);
+            Assert.Equal(new Uri("http://www.odata.org/service.svc/Function(p1=null)"), requestUri);
         }
 
-        [TestMethod]
+        [Fact]
         public void WriteOneUriOperationParametersToUriShouldReturnUri()
         {
             var requestInfo = new RequestInfo(context);
@@ -133,10 +131,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             const int p1 = 1;
             List<UriOperationParameter> parameters = new List<UriOperationParameter> { new UriOperationParameter("p1", p1) };
             requestUri = serializer.WriteUriOperationParametersToUri(requestUri, parameters);
-            Assert.AreEqual(new Uri("http://www.odata.org/service.svc/Function(p1=1)"), requestUri);
+            Assert.Equal(new Uri("http://www.odata.org/service.svc/Function(p1=1)"), requestUri);
         }
 
-        [TestMethod]
+        [Fact]
         public void WriteTwoUriOperationParametersToUriShouldReturnUri()
         {
             var requestInfo = new RequestInfo(context);
@@ -146,10 +144,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             const double p2 = 1;
             List<UriOperationParameter> parameters = new List<UriOperationParameter> { new UriOperationParameter("p1", p1), new UriOperationParameter("p2", p2) };
             requestUri = serializer.WriteUriOperationParametersToUri(requestUri, parameters);
-            Assert.AreEqual(new Uri("http://www.odata.org/service.svc/Function(p1=1,p2=1.0)"), requestUri);
+            Assert.Equal(new Uri("http://www.odata.org/service.svc/Function(p1=1,p2=1.0)"), requestUri);
         }
 
-        [TestMethod]
+        [Fact]
         public void WriteStringAndBoolUriOperationParametersToUriShouldReturnUri()
         {
             var requestInfo = new RequestInfo(context);
@@ -159,10 +157,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             const bool p2 = true;
             List<UriOperationParameter> parameters = new List<UriOperationParameter> { new UriOperationParameter("name", name), new UriOperationParameter("p2", p2) };
             requestUri = serializer.WriteUriOperationParametersToUri(requestUri, parameters);
-            Assert.AreEqual(new Uri("http://www.odata.org/service.svc/Function(name='Henry',p2=true)"), requestUri);
+            Assert.Equal(new Uri("http://www.odata.org/service.svc/Function(name='Henry',p2=true)"), requestUri);
         }
 
-        [TestMethod]
+        [Fact]
         public void WritePrimitiveUriOperationParametersToUriShouldReturnUri()
         {
             var requestInfo = new RequestInfo(context);
@@ -175,10 +173,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             requestUri = serializer.WriteUriOperationParametersToUri(requestUri, parameters);
             const string uriString = "http://www.odata.org/service.svc/Function(guid=00000000-0000-0000-0000-000000000000,duration=duration'P104DT7H50M13.133759S',dateTimeOffset=2000-12-12T12:00:00Z)";
             Uri expectedUri = new Uri(uriString);
-            Assert.AreEqual(expectedUri, requestUri);
+            Assert.Equal(expectedUri, requestUri);
         }
 
-        [TestMethod]
+        [Fact]
         public void WriteDateAndTimeUriOperationParametersToUriShouldReturnUri()
         {
             var requestInfo = new RequestInfo(context);
@@ -190,10 +188,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             requestUri = serializer.WriteUriOperationParametersToUri(requestUri, parameters);
             const string uriString = "http://www.odata.org/service.svc/Function(date=2014-09-25,time=11:52:05.1230000)";
             Uri expectedUri = new Uri(uriString);
-            Assert.AreEqual(expectedUri, requestUri);
+            Assert.Equal(expectedUri, requestUri);
         }
 
-        [TestMethod]
+        [Fact]
         public void WriteGeographyUriOperationParametersToUriShouldReturnUri()
         {
             var requestInfo = new RequestInfo(context);
@@ -204,10 +202,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             requestUri = serializer.WriteUriOperationParametersToUri(requestUri, parameters);
             const string parameterString = "geography'SRID=4326;POINT (10.22 10)'";
             Uri expectedUri = new Uri("http://www.odata.org/service.svc/Function(geography=" + Uri.EscapeDataString(parameterString) + ")");
-            Assert.AreEqual(expectedUri, requestUri);
+            Assert.Equal(expectedUri, requestUri);
         }
 
-        [TestMethod]
+        [Fact]
         public void WriteCollectionUriOperationParametersToUriShouldReturnUri()
         {
             var requestInfo = new RequestInfo(context);
@@ -218,10 +216,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             requestUri = serializer.WriteUriOperationParametersToUri(requestUri, parameters);
             const string parameterString = "[1,2,3]";
             Uri expectedUri = new Uri("http://www.odata.org/service.svc/Function(collection=%40collection)?%40collection=" + Uri.EscapeDataString(parameterString));
-            Assert.AreEqual(expectedUri, requestUri);
+            Assert.Equal(expectedUri, requestUri);
         }
 
-        [TestMethod]
+        [Fact]
         public void WriteEnumUriOperationParametersToUriShouldReturnUri()
         {
             var requestInfo = new RequestInfo(context);
@@ -232,17 +230,17 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             var requestUri = serializer.WriteUriOperationParametersToUri(functionBaseRequestUri, parameters);
             string parameterString = "AstoriaUnitTests.TDD.Tests.Client.Color'blue'";
             Uri expectedUri = new Uri("http://www.odata.org/service.svc/Function(color=" + Uri.EscapeDataString(parameterString) + ")");
-            Assert.AreEqual(expectedUri, requestUri);
+            Assert.Equal(expectedUri, requestUri);
 
             const AccessLevel accessLevel = AccessLevel.Execute | AccessLevel.Write;
             parameters = new List<UriOperationParameter> { new UriOperationParameter("accessLevel", accessLevel) };
             requestUri = serializer.WriteUriOperationParametersToUri(functionBaseRequestUri, parameters);
             parameterString = "AstoriaUnitTests.TDD.Tests.Client.AccessLevel'Write,execute'";
             expectedUri = new Uri("http://www.odata.org/service.svc/Function(accessLevel=" + Uri.EscapeDataString(parameterString) + ")");
-            Assert.AreEqual(expectedUri, requestUri);
+            Assert.Equal(expectedUri, requestUri);
         }
 
-        [TestMethod]
+        [Fact]
         public void WriteComplexTypeUriOperationParametersToUriShouldReturnUri()
         {
             var requestInfo = new RequestInfo(context);
@@ -253,10 +251,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             requestUri = serializer.WriteUriOperationParametersToUri(requestUri, parameters);
             const string parameterString = "{\"@odata.type\":\"#AstoriaUnitTests.TDD.Tests.Client.Address\",\"Street\":\"Microsoft Street\"}";
             Uri expectedUri = new Uri("http://www.odata.org/service.svc/Function(address=%40address)?%40address=" + Uri.EscapeDataString(parameterString));
-            Assert.AreEqual(expectedUri, requestUri);
+            Assert.Equal(expectedUri, requestUri);
         }
 
-        [TestMethod]
+        [Fact]
         public void WriteCollectionOfComplexTypeInUri()
         {
             var requestInfo = new RequestInfo(context);
@@ -272,10 +270,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             requestUri = serializer.WriteUriOperationParametersToUri(requestUri, parameters);
             const string parameterString = "[{\"@odata.type\":\"#AstoriaUnitTests.TDD.Tests.Client.Address\",\"Street\":\"Microsoft Street\"},{\"@odata.type\":\"#AstoriaUnitTests.TDD.Tests.Client.HomeAddress\",\"Number\":\"999\",\"Street\":\"Chinese Street\"}]";
             Uri expectedUri = new Uri("http://www.odata.org/service.svc/Function(addresses=%40addresses)?%40addresses=" + Uri.EscapeDataString(parameterString));
-            Assert.AreEqual(expectedUri, requestUri);
+            Assert.Equal(expectedUri, requestUri);
         }
 
-        [TestMethod]
+        [Fact]
         public void WriteCollectionOfComplexTypeInBody()
         {
             var requestInfo = new RequestInfo(context);
@@ -293,7 +291,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             VerifyMessageBody(requestMessage, parameterString);
         }
 
-        [TestMethod]
+        [Fact]
         public void WriteEntryAsBodyOperationParameter()
         {
             var requestInfo = new RequestInfo(context);
@@ -312,7 +310,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             VerifyMessageBody(requestMessage, parameterString);
         }
 
-        [TestMethod]
+        [Fact]
         public void WriteNullAsBodyOperationParameter()
         {
             var requestInfo = new RequestInfo(context);
@@ -324,7 +322,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             VerifyMessageBody(requestMessage, parameterString);
         }
 
-        [TestMethod]
+        [Fact]
         public void WriteFeedAsBodyOperationParameter()
         {
             var requestInfo = new RequestInfo(context);
@@ -349,7 +347,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             VerifyMessageBody(requestMessage, parameterString);
         }
 
-        [TestMethod]
+        [Fact]
         public void WriteEmptyFeedAsBodyOperationParameter()
         {
             var requestInfo = new RequestInfo(context);
@@ -375,10 +373,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             MemoryStream stream = (MemoryStream)requestMessage.CachedRequestStream.Stream;
             StreamReader streamReader = new StreamReader(stream);
             String body = streamReader.ReadToEnd();
-            Assert.AreEqual(expected, body);
+            Assert.Equal(expected, body);
         }
 
-        [TestMethod]
+        [Fact]
         public void WriteEnumTypeUriOperationParameterWithNonExistingValueShouldThrow()
         {
             var requestInfo = new RequestInfo(context);
@@ -390,7 +388,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             action.ShouldThrow<NotSupportedException>().WithMessage("The enum type 'Color' has no member named '0'.");
         }
 
-        [TestMethod]
+        [Fact]
         public void WriteEnumTypeInFilterShouldSerializeEnumType()
         {
             Container Context = new Container(new Uri("http://www.odata.org/service.svc"));
@@ -407,7 +405,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             entity.RequestUri.OriginalString.Should().Be("http://www.odata.org/service.svc/entitySet?$filter=namespace.test.color'blue' lt colorProp");
         }
 
-        [TestMethod]
+        [Fact]
         public void WriteEnumAsNullInFilterShouldSerializeEnumType()
         {
             Container Context = new Container(new Uri("http://www.odata.org/service.svc"));
@@ -415,7 +413,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             entity.RequestUri.OriginalString.Should().Be("http://www.odata.org/service.svc/entitySet?$filter=colorProp eq null");
         }
 
-        [TestMethod]
+        [Fact]
         public void WriteAllBinaryOperandsAsEnumTypeShouldSerializeEnumType()
         {
             Container Context = new Container(new Uri("http://www.odata.org/service.svc"));
@@ -427,7 +425,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
         // Any
-        [TestMethod]
+        [Fact]
         public void WriteEnumCollectionAnyInFilterShouldSerializeEnumType()
         {
             Container Context = new Container(new Uri("http://www.odata.org/service.svc"));
@@ -436,7 +434,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
         // All
-        [TestMethod]
+        [Fact]
         public void WriteEnumCollectionAllInFilterShouldSerializeEnumType()
         {
             Container Context = new Container(new Uri("http://www.odata.org/service.svc"));
@@ -445,7 +443,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
         // OrderBy
-        [TestMethod]
+        [Fact]
         public void WriteEnumTypeInOrderByShouldSerializeEnumType()
         {
             Container Context = new Container(new Uri("http://www.odata.org/service.svc"));
@@ -455,7 +453,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
         // Select
-        [TestMethod]
+        [Fact]
         public void WriteEnumTypeInSelectShouldSerializeEnumType()
         {
             Container Context = new Container(new Uri("http://www.odata.org/service.svc"));
@@ -464,7 +462,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
         // HasFlags
-        [TestMethod]
+        [Fact]
         public void WriteEnumTypeHasFlagShouldSerializeEnumType()
         {
             Container Context = new Container(new Uri("http://www.odata.org/service.svc"));
@@ -479,7 +477,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
         // Cast
-        [TestMethod]
+        [Fact]
         public void WriteEnumTypeCastAnsHasFlagShouldSerializeEnumType()
         {
             Container Context = new Container(new Uri("http://www.odata.org/service.svc"));
@@ -491,7 +489,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
         // Isof
-        [TestMethod]
+        [Fact]
         public void WriteEnumTypeCastShouldSerializeEnumType()
         {
             Container Context = new Container(new Uri("http://www.odata.org/service.svc"));

@@ -17,24 +17,23 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReferenceModifiedClientTypes;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
+    using Xunit.Abstractions;
 
     /// <summary>
     /// Client processing pipeline async test cases.
     /// </summary>
-    [TestClass]
     public class PipelineEventsCrossPlatformAsyncTests : EndToEndTestBase
     {
-        public PipelineEventsCrossPlatformAsyncTests()
-            : base(ServiceDescriptors.AstoriaDefaultServiceModifiedClientTypes)
+        public PipelineEventsCrossPlatformAsyncTests(ITestOutputHelper helper)
+            : base(ServiceDescriptors.AstoriaDefaultServiceModifiedClientTypes, helper)
         {
         }
 
         /// <summary>
         /// This test covers modifying property values and modifying entry id/links/actions.
         /// </summary>
-        [TestMethod]
-        [Ignore("VSUpgrade19 - DataDriven Test")]
+        [Fact(Skip= "VSUpgrade19 - DataDriven Test")]
         public void QueryEntitySetLinqAsync()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, QueryEntitySetLinqAsync);
@@ -70,8 +69,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
             }
         }
 
-        [TestMethod]
-        [Ignore("VSUpgrade19 - DataDriven Test")]
+        [Fact(Skip= "VSUpgrade19 - DataDriven Test")]
         public void QueryEntitySetExecuteAsync()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, QueryEntitySetExecuteAsync);
@@ -107,8 +105,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// This test covers adding/removing property values and modifying primitive/complex/collection property values.
         /// </summary>
-        [TestMethod]
-        [Ignore("VSUpgrade19 - DataDriven Test")]
+        [Fact(Skip= "VSUpgrade19 - DataDriven Test")]
         public void QueryEntityInstanceExecuteAsync()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, QueryEntityInstanceExecuteAsync);
@@ -134,13 +131,13 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
             }
 
             SpecialEmployee specialEmployee = specialEmployees.Single();
-            Assert.AreEqual("AddRemovePropertySpecialEmployeeEntry_Reading", specialEmployee.CarsLicensePlate,
-                "Unexpected CarsLicensePlate");
-            Assert.AreEqual(1, specialEmployee.BonusLevel, "Unexpected BonusLevel");
+            //Unexpected CarsLicensePlate
+            Assert.Equal("AddRemovePropertySpecialEmployeeEntry_Reading", specialEmployee.CarsLicensePlate);
+            //Unexpected BonusLevel
+            Assert.Equal(1, specialEmployee.BonusLevel);
         }
 
-        [TestMethod]
-        [Ignore("VSUpgrade19 - DataDriven Test")]
+        [Fact(Skip= "VSUpgrade19 - DataDriven Test")]
         public void QueryEntityInstanceBatchAsync()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, QueryEntityInstanceBatchAsync);
@@ -181,32 +178,33 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
                     Customer c = p as Customer;
                     if (se1 != null)
                     {
-                        Assert.AreEqual("AddRemovePropertySpecialEmployeeEntry_Reading", se1.CarsLicensePlate,
-                            "Unexpected CarsLicensePlate");
-                        Assert.AreEqual(1, se1.BonusLevel, "Unexpected BonusLevel");
+                        //Unexpected CarsLicensePlate
+                        Assert.Equal("AddRemovePropertySpecialEmployeeEntry_Reading", se1.CarsLicensePlate);
+                        //Unexpected BonusLevel
+                        Assert.Equal(1, se1.BonusLevel);
                         personVerified = true;
                     }
 
                     if (c != null)
                     {
-                        Assert.IsTrue(c.Name.EndsWith("ModifyPropertyValueCustomerEntity_Materialized"),
+                        Assert.True(c.Name.EndsWith("ModifyPropertyValueCustomerEntity_Materialized"),
                             "Unexpected primitive property");
-                        Assert.IsTrue(c.Auditing.ModifiedBy.Equals("ModifyPropertyValueCustomerEntity_Materialized"),
+                        Assert.True(c.Auditing.ModifiedBy.Equals("ModifyPropertyValueCustomerEntity_Materialized"),
                             "Unexpected complex property");
-                        Assert.IsTrue(c.PrimaryContactInfo.EmailBag.Contains("ModifyPropertyValueCustomerEntity_Materialized"),
+                        Assert.True(c.PrimaryContactInfo.EmailBag.Contains("ModifyPropertyValueCustomerEntity_Materialized"),
                             "Unexpected collection property");
                         customerVerified = true;
                     }
                 }
             }
 
-            Assert.IsTrue(personVerified && customerVerified, "Some inner request does not completed correctly");
+            Assert.True(personVerified && customerVerified, "Some inner request does not completed correctly");
         }
 
         /// <summary>
         /// This test verifies that user can modify entry in a delegate in the case of LoadProperty.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void LoadPropertyTestAsync()
         {
             for (int i = 0; i < 1; i++)
@@ -230,7 +228,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
                 foreach (Car car in result)
                 {
                     EntityDescriptor descriptor = context.GetEntityDescriptor(car);
-                    Assert.IsTrue(descriptor.Identity.OriginalString.Contains("ModifyEntryId"), "Wrong Id");
+                    Assert.True(descriptor.Identity.OriginalString.Contains("ModifyEntryId"), "Wrong Id");
                 }
 
                 this.EnqueueTestComplete();
@@ -240,8 +238,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// Verify that user can modify primitive/complex/collection property values in writing pipeline delegates.
         /// </summary>
-        [TestMethod]
-        [Ignore("VSUpgrade19 - DataDriven Test")]
+        [Fact(Skip= "VSUpgrade19 - DataDriven Test")]
         public void AddObjectTestAsync()
         {
             this.Invoke(
@@ -252,7 +249,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
                 new Constraint[] { });
         }
 
-        public void AddObjectTestAction(ODataFormat format, MergeOption mergeOption, SaveChangesOptions saveChangesOption)
+        internal void AddObjectTestAction(ODataFormat format, MergeOption mergeOption, SaveChangesOptions saveChangesOption)
         {
             DataServiceContextWrapper<DefaultContainer> contextWrapper = this.CreateContext();
             contextWrapper.Context.MergeOption = mergeOption;
@@ -281,9 +278,9 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
                 Thread.Sleep(1000);
             }
 
-            Assert.IsTrue(customer.Name.EndsWith("UpdatedODataEntryPropertyValue"), "Unexpected primitive property");
-            Assert.IsTrue(customer.Auditing.ModifiedBy.Equals("UpdatedODataEntryPropertyValue"), "Unexpected complex property");
-            Assert.IsTrue(customer.PrimaryContactInfo.EmailBag.Contains("UpdatedODataEntryPropertyValue"));
+            Assert.True(customer.Name.EndsWith("UpdatedODataEntryPropertyValue"), "Unexpected primitive property");
+            Assert.True(customer.Auditing.ModifiedBy.Equals("UpdatedODataEntryPropertyValue"), "Unexpected complex property");
+            Assert.Contains("UpdatedODataEntryPropertyValue", customer.PrimaryContactInfo.EmailBag);
 
             contextWrapper.DeleteObject(customer);
             IAsyncResult r2 = contextWrapper.BeginSaveChanges(
@@ -303,8 +300,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// Verify that user can modify primitive/complex/collection property values in writing pipeline delegates.
         /// </summary>
-        [TestMethod]
-        [Ignore("VSUpgrade19 - DataDriven Test")]
+        [Fact(Skip= "VSUpgrade19 - DataDriven Test")]
         public void UpdateObjectTestAsync()
         {
             this.Invoke(
@@ -315,7 +311,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
                 new Constraint[] { });
         }
 
-        public void UpdateObjectTestAction(ODataFormat format, MergeOption mergeOption, SaveChangesOptions saveChangesOption)
+        internal void UpdateObjectTestAction(ODataFormat format, MergeOption mergeOption, SaveChangesOptions saveChangesOption)
         {
             DataServiceContextWrapper<DefaultContainer> contextWrapper = this.CreateContext();
             contextWrapper.Context.MergeOption = mergeOption;
@@ -358,9 +354,9 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
             }
 
 
-            Assert.IsTrue(customer.Name.EndsWith("UpdatedODataEntryPropertyValue"), "Unexpected primitive property");
-            Assert.IsTrue(customer.Auditing.ModifiedBy.Equals("UpdatedODataEntryPropertyValue"), "Unexpected complex property");
-            Assert.IsTrue(customer.PrimaryContactInfo.EmailBag.Contains("UpdatedODataEntryPropertyValue"));
+            Assert.True(customer.Name.EndsWith("UpdatedODataEntryPropertyValue"), "Unexpected primitive property");
+            Assert.True(customer.Auditing.ModifiedBy.Equals("UpdatedODataEntryPropertyValue"), "Unexpected complex property");
+            Assert.Contains("UpdatedODataEntryPropertyValue", customer.PrimaryContactInfo.EmailBag);
 
             contextWrapper.DeleteObject(customer);
             IAsyncResult r3 = contextWrapper.BeginSaveChanges(
@@ -379,8 +375,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// Verify that user can modify entity property and association link through pipeline delegates in AddObject+SetLink scenario.
         /// </summary>
-        [TestMethod]
-        [Ignore("VSUpgrade19 - DataDriven Test")]
+        [Fact(Skip= "VSUpgrade19 - DataDriven Test")]
         public void AddObjectSetLinkTestAsync()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, AddObjectSetLinkTestAsync);
@@ -425,7 +420,8 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
                 Thread.Sleep(1000);
             }
 
-            Assert.AreEqual(1300, order.OrderId, "OrderId should not be altered in the pipeline delegates");
+            //OrderId should not be altered in the pipeline delegates
+            Assert.Equal(1300, order.OrderId);
 
             Customer relatedCustomer = null;
             IAsyncResult r3 = contextWrapper.BeginExecute<Customer>(
@@ -438,8 +434,8 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
                 Thread.Sleep(1000);
             }
 
-            Assert.AreEqual(1302, relatedCustomer.CustomerId,
-                "Associated CustomerId should be altered in the pipeline delegates");
+            //Associated CustomerId should be altered in the pipeline delegates
+            Assert.Equal(1302, relatedCustomer.CustomerId);
 
             contextWrapper.DeleteObject(customer);
             contextWrapper.DeleteObject(customer2);
@@ -456,8 +452,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
             }
         }
 
-        [TestMethod]
-        [Ignore("VSUpgrade19 - DataDriven Test")]
+        [Fact(Skip= "VSUpgrade19 - DataDriven Test")]
         public void CancelRequestTest()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, CancelRequestTest);
@@ -474,7 +469,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
             IAsyncResult result = contextWrapper.BeginSaveChanges(null, null);
             contextWrapper.CancelRequest(result);
 
-            Assert.IsTrue(customer.Name.EndsWith("ModifyPropertyValueCustomerEntity_Writing"), "Unexpected primitive property");
+            Assert.True(customer.Name.EndsWith("ModifyPropertyValueCustomerEntity_Writing"), "Unexpected primitive property");
         }
 
         private DataServiceContextWrapper<DefaultContainer> CreateContext()

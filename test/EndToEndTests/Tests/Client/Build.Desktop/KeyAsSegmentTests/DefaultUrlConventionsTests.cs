@@ -15,17 +15,17 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
     using Microsoft.Test.OData.Framework.Verification;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit.Abstractions;
+    using Xunit;
 
-    [TestClass]
     public class DefaultUrlConventionsTests : EndToEndTestBase
     {
-        public DefaultUrlConventionsTests()
-            : base(ServiceDescriptors.ODataWCFServiceDescriptor)
+        public DefaultUrlConventionsTests(ITestOutputHelper helper)
+            : base(ServiceDescriptors.ODataWCFServiceDescriptor, helper)
         {
         }
 
-        [TestMethod]
+        [Fact]
         public void ClientWithKeyAsSegmentSendsRequestsToServerWithoutKeyAsSegment()
         {
             try
@@ -35,12 +35,12 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
                 contextWrapper.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
 
                 contextWrapper.Context.Orders.Where(c => c.OrderID == 0).ToArray();
-                Assert.Fail("Expected DataServiceException was not thrown.");
+                Assert.True(false, "Expected DataServiceException was not thrown.");
             }
             catch (DataServiceQueryException ex)
             {
-                Assert.IsNotNull(ex.InnerException, "No inner exception found");
-                Assert.IsInstanceOfType(ex.InnerException, typeof(DataServiceClientException), "Unexpected inner exception type");
+                Assert.NotNull(ex.InnerException);
+                Assert.IsType<DataServiceClientException>(ex.InnerException);
                 StringResourceUtil.VerifyDataServicesString(ClientExceptionUtil.ExtractServerErrorMessage(ex), "RequestUriProcessor_CannotQueryCollections", "Orders");
             }
         }

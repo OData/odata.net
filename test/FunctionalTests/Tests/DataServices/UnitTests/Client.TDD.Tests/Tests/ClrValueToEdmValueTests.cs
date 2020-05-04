@@ -16,38 +16,37 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using System.Xml.Linq;
     using FluentAssertions;
     using Microsoft.OData.Edm;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class ClrValueToEdmValueTests
     {
-        [TestMethod]
+        [Fact]
         public void UriValueShouldBeConvertable()
         {
             const string testUri = "http://fake.org/";
             ConvertAndValidateString(new Uri(testUri), testUri);
         }
 
-        [TestMethod]
+        [Fact]
         public void CharValueShouldBeConvertable()
         {
             ConvertAndValidateString('c', "c");
         }
 
-        [TestMethod]
+        [Fact]
         public void CharArrayValueShouldBeConvertable()
         {
             const string testString = "foo";
             ConvertAndValidateString(testString.ToCharArray(), testString);
         }
 
-        [TestMethod]
+        [Fact]
         public void TypeValueShouldBeConvertable()
         {
             ConvertAndValidateString(typeof(int), typeof(int).AssemblyQualifiedName);
         }
 
-        [TestMethod]
+        [Fact]
         public void XmlValueShouldBeConvertable()
         {
             const string testXml = "<fake />";
@@ -56,7 +55,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
-        [TestMethod]
+        [Fact]
         public void L2SBinaryValueShouldBeConvertable()
         {
             byte[] testBytes = new byte[] { 1, 2, 3 };
@@ -64,7 +63,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 #endif
 
-        [TestMethod]
+        [Fact]
         public void UnsignedIntegerValueShouldBeConvertable()
         {
             ConvertAndValidateString((ulong)1, "1");

@@ -12,22 +12,22 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
     using Microsoft.Test.OData.Framework.Client;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultClientTypeMismatchServiceReference;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
+    using Xunit.Abstractions;
 
     /// <summary>
     /// Tests for the scenario where a client side model has slight differences to the server model,
     /// and does not specify a type or name resolver. These tests cover cases that the product should
     /// support successful queries against the mismatched model.
     /// </summary>
-    [TestClass]
     public class MismatchedClientModelWithoutTypeResolverTests : EndToEndTestBase
     {
-        public MismatchedClientModelWithoutTypeResolverTests()
-            : base(ServiceDescriptors.AstoriaDefaultService)
+        public MismatchedClientModelWithoutTypeResolverTests(ITestOutputHelper helper)
+            : base(ServiceDescriptors.AstoriaDefaultService, helper)
         {
         }
 
-        [TestMethod]
+        [Fact]
         public void FeedQuery()
         {
             var contextWrapper = this.CreateContextWrapper();
@@ -37,14 +37,14 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
             var pageViewResults = contextWrapper.Execute<PageView>(new Uri(this.ServiceUri.OriginalString + "/PageView")).ToArray();
         }
 
-        [TestMethod]
+        [Fact]
         public void ExpandedFeedQuery()
         {
             var contextWrapper = this.CreateContextWrapper();
             var messageWithAttachmentsResults = contextWrapper.CreateQuery<Message>("Message").Expand(m => m.Attachments).ToArray();
         }
 
-        [TestMethod]
+        [Fact]
         public void EntryQuery()
         {
             var contextWrapper = this.CreateContextWrapper();
@@ -53,7 +53,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
             var pageViewResults = contextWrapper.CreateQuery<PageView>("PageView").Where(p => p.PageViewId == -2).Single();
         }
 
-        [TestMethod]
+        [Fact]
         public void LoadProperty()
         {
             var contextWrapper = this.CreateContextWrapper();
@@ -65,12 +65,12 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
                 foreach (var attachment in message.Attachments)
                 {
                     // AttachmentId is a string on client and a guid on the server
-                    Assert.IsTrue(Guid.TryParse(attachment.AttachmentId, out testGuid), "Failed to parse attachment id as guid");
+                    Assert.True(Guid.TryParse(attachment.AttachmentId, out testGuid), "Failed to parse attachment id as guid");
                 }
             } 
         }
 
-        [TestMethod]
+        [Fact]
         public void PropertyQuery()
         {
             var contextWrapper = this.CreateContextWrapper();
@@ -81,7 +81,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
             foreach (var messageIdResult in messageIdResults)
             {
                 // Message.MessageId is string on client and int32 on server
-                Assert.IsTrue(Int32.TryParse(messageIdResult.MessageId, out testInt), "Failed to parse message.messageid as int32");     
+                Assert.True(Int32.TryParse(messageIdResult.MessageId, out testInt), "Failed to parse message.messageid as int32");     
             }
 
             var messageIsReadResults = contextWrapper.Context.Message.Select(m => new { m.IsRead }).ToArray();
@@ -89,7 +89,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
             foreach (var messageIsReadResult in messageIsReadResults)
             {
                 // Message.IsRead is string on client and boolean on server
-                Assert.IsTrue(bool.TryParse(messageIsReadResult.IsRead, out testBool), "Failed to parse message.isread as boolean");     
+                Assert.True(bool.TryParse(messageIsReadResult.IsRead, out testBool), "Failed to parse message.isread as boolean");     
             }
 
             var viewedResults = contextWrapper.Context.PageView.Select(p => new { p.Viewed }).ToArray();

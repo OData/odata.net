@@ -12,9 +12,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
     using Microsoft.OData;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class TripPinFilterTests : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>
     {
         private const string NameSpacePrefix = "Microsoft.OData.SampleService.Models.TripPin.";
@@ -25,7 +24,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
         }
 
-        [TestMethod]
+        [Fact]
         public void TripPinFilterDefaultStringFunctions()
         {
             #region Contains
@@ -33,7 +32,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             requestAndCheckResult(uri, (item) =>
             {
                 var userName = item.Properties.Single(p => p.Name == "UserName").Value;
-                Assert.IsTrue(userName.ToString().Contains("v"));
+                Assert.True(userName.ToString().Contains("v"));
             },
             "Person");
             #endregion
@@ -43,8 +42,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             requestAndCheckResult(uri, (item) =>
             {
                 var userName = item.Properties.Single(p => p.Name == "UserName").Value;
-                Assert.IsTrue(userName.ToString().Contains("chum"));
-                Assert.IsTrue(userName.ToString().EndsWith("chum"));
+                Assert.True(userName.ToString().Contains("chum"));
+                Assert.True(userName.ToString().EndsWith("chum"));
             },
             "Person");
             #endregion
@@ -54,8 +53,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             requestAndCheckResult(uri, (item) =>
             {
                 var userName = item.Properties.Single(p => p.Name == "UserName").Value;
-                Assert.IsTrue(userName.ToString().Contains("v"));
-                Assert.IsTrue(userName.ToString().StartsWith("v"));
+                Assert.True(userName.ToString().Contains("v"));
+                Assert.True(userName.ToString().StartsWith("v"));
             },
             "Person");
             #endregion
@@ -65,7 +64,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             requestAndCheckResult(uri, (item) =>
             {
                 var userName = item.Properties.Single(p => p.Name == "UserName").Value;
-                Assert.AreEqual(userName.ToString().Length, 12);
+                Assert.Equal(userName.ToString().Length, 12);
             },
             "Person");
             #endregion
@@ -75,8 +74,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             requestAndCheckResult(uri, (item) =>
             {
                 var userName = item.Properties.Single(p => p.Name == "UserName").Value;
-                Assert.IsTrue(userName.ToString().Contains("vincent"));
-                Assert.AreEqual(userName.ToString().IndexOf("vincent"), 1);
+                Assert.True(userName.ToString().Contains("vincent"));
+                Assert.Equal(userName.ToString().IndexOf("vincent"), 1);
             },
             "Person");
             #endregion
@@ -86,8 +85,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             requestAndCheckResult(uri, (item) =>
             {
                 var userName = item.Properties.Single(p => p.Name == "UserName").Value;
-                Assert.IsTrue(userName.ToString().Contains("incentcalabrese"));
-                Assert.AreEqual(userName.ToString().Substring(1), "incentcalabrese");
+                Assert.True(userName.ToString().Contains("incentcalabrese"));
+                Assert.Equal(userName.ToString().Substring(1), "incentcalabrese");
             },
             "Person");
 
@@ -95,8 +94,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             requestAndCheckResult(uri, (item) =>
             {
                 var userName = item.Properties.Single(p => p.Name == "UserName").Value;
-                Assert.IsTrue(userName.ToString().Contains("incent"));
-                Assert.AreEqual(userName.ToString().Substring(1, 6), "incent");
+                Assert.True(userName.ToString().Contains("incent"));
+                Assert.Equal(userName.ToString().Substring(1, 6), "incent");
             },
             "Person");
             #endregion
@@ -106,7 +105,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             requestAndCheckResult(uri, (item) =>
             {
                 var userName = item.Properties.Single(p => p.Name == "UserName").Value;
-                Assert.AreEqual(userName.ToString(), "vincentcalabrese");
+                Assert.Equal(userName.ToString(), "vincentcalabrese");
             },
             "Person");
             #endregion
@@ -116,7 +115,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             requestAndCheckResult(uri, (item) =>
             {
                 var userName = item.Properties.Single(p => p.Name == "UserName").Value;
-                Assert.AreEqual(userName.ToString().ToUpper(), "VINCENTCALABRESE");
+                Assert.Equal(userName.ToString().ToUpper(), "VINCENTCALABRESE");
             },
             "Person");
             #endregion
@@ -126,7 +125,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             requestAndCheckResult(uri, (item) =>
             {
                 var userName = item.Properties.Single(p => p.Name == "UserName").Value;
-                Assert.AreEqual(userName.ToString(), "vincentcalabrese");
+                Assert.Equal(userName.ToString(), "vincentcalabrese");
             },
             "Person");
             #endregion
@@ -137,13 +136,13 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 var firstName = item.Properties.Single(p => p.Name == "FirstName").Value;
                 var lastName = item.Properties.Single(p => p.Name == "LastName").Value;
-                Assert.AreEqual(string.Concat(string.Concat(firstName, ", "), lastName), "Vincent, Calabrese");
+                Assert.Equal(string.Concat(string.Concat(firstName, ", "), lastName), "Vincent, Calabrese");
             },
             "Person");
             #endregion
         }
 
-        [TestMethod]
+        [Fact]
         public void TripPinFilterDefaultDateTimeFunctions()
         {
             #region year
@@ -152,7 +151,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 var property = item.Properties.Single(p => p.Name == "StartsAt").Value;
                 var startTime = (DateTimeOffset)property;
-                Assert.AreEqual(startTime.Year, 2014);
+                Assert.Equal(startTime.Year, 2014);
             });
             #endregion
 
@@ -162,7 +161,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 var property = item.Properties.Single(p => p.Name == "StartsAt").Value;
                 var startTime = (DateTimeOffset)property;
-                Assert.AreEqual(startTime.Month, 2);
+                Assert.Equal(startTime.Month, 2);
             });
             #endregion
 
@@ -172,7 +171,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 var property = item.Properties.Single(p => p.Name == "StartsAt").Value;
                 var startTime = (DateTimeOffset)property;
-                Assert.AreEqual(startTime.Day, 1);
+                Assert.Equal(startTime.Day, 1);
             });
             #endregion
 
@@ -182,7 +181,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 var property = item.Properties.Single(p => p.Name == "StartsAt").Value;
                 var startTime = (DateTimeOffset)property;
-                Assert.AreEqual(startTime.Hour, 0);
+                Assert.Equal(startTime.Hour, 0);
             });
             #endregion
 
@@ -192,7 +191,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 var property = item.Properties.Single(p => p.Name == "StartsAt").Value;
                 var startTime = (DateTimeOffset)property;
-                Assert.AreEqual(startTime.Minute, 0);
+                Assert.Equal(startTime.Minute, 0);
             });
             #endregion
 
@@ -202,19 +201,19 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 var property = item.Properties.Single(p => p.Name == "StartsAt").Value;
                 var startTime = (DateTimeOffset)property;
-                Assert.AreEqual(startTime.Second, 0);
+                Assert.Equal(startTime.Second, 0);
             });
             #endregion
         }
 
-        [TestMethod]
+        [Fact]
         public void TripPinFilterDefaultMathFunctions()
         {
             #region round
             string uri = "People?$filter=round(12.66) eq 12";
             requestAndCheckResult(uri, (item) =>
             {
-                Assert.AreEqual(Math.Round(12.66), 13);
+                Assert.Equal(Math.Round(12.66), 13);
             });
             #endregion
 
@@ -222,7 +221,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             uri = "People?$filter=floor(12.66) eq 12";
             requestAndCheckResult(uri, (item) =>
             {
-                Assert.AreEqual(Math.Floor(12.66), 12);
+                Assert.Equal(Math.Floor(12.66), 12);
             });
             #endregion
 
@@ -230,12 +229,12 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             uri = "People?$filter=ceiling(12.66) eq 12";
             requestAndCheckResult(uri, (item) =>
             {
-                Assert.AreEqual(Math.Ceiling(12.66), 13);
+                Assert.Equal(Math.Ceiling(12.66), 13);
             });
             #endregion
         }
 
-        [TestMethod]
+        [Fact]
         public void TripPinFilterDefaultTypeFunctions()
         {
             #region isof
@@ -243,7 +242,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             requestAndCheckResult(uri, (item) =>
             {
                 var userName = item.Properties.Single(p => p.Name == "UserName").Value;
-                Assert.AreEqual(userName.GetType(), typeof(String));
+                Assert.Equal(userName.GetType(), typeof(String));
             },
             "Person");
 
@@ -253,8 +252,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 var gender = item.Properties.Single(p => p.Name == "Gender").Value;
 
-                Assert.AreEqual(gender.GetType(), typeof(ODataEnumValue));
-                Assert.AreEqual((gender as ODataEnumValue).TypeName, "Microsoft.OData.SampleService.Models.TripPin.PersonGender");
+                Assert.Equal(gender.GetType(), typeof(ODataEnumValue));
+                Assert.Equal((gender as ODataEnumValue).TypeName, "Microsoft.OData.SampleService.Models.TripPin.PersonGender");
             },
             "Person");
 
@@ -262,14 +261,14 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             uri = string.Format("People?$filter=isof('{0}Person')", NameSpacePrefix);
             requestAndCheckFeedResult(uri, (feed) =>
             {
-                Assert.IsTrue(feed.Count > 0);
+                Assert.True(feed.Count > 0);
             },
             "Person");
 
             uri = string.Format("People('russellwhyte')/Trips(0)/PlanItems?$filter=isof('{0}Flight')", NameSpacePrefix);
             requestAndCheckFeedResult(uri, (feed) =>
             {
-                Assert.IsTrue(feed.Count > 0);
+                Assert.True(feed.Count > 0);
             },
             "Flight");
             #endregion
@@ -279,7 +278,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             requestAndCheckResult(uri, (item) =>
             {
                 var userName = item.Properties.Single(p => p.Name == "UserName").Value;
-                Assert.AreEqual(userName.ToString(), "vincentcalabrese");
+                Assert.Equal(userName.ToString(), "vincentcalabrese");
             },
             "Person");
 
@@ -287,7 +286,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             requestAndCheckResult(uri, (item) =>
             {
                 var tripId = item.Properties.Single(p => p.Name == "TripId").Value;
-                Assert.AreEqual((int)tripId, 1001);
+                Assert.Equal((int)tripId, 1001);
             },
             "Trip");
 
@@ -295,7 +294,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             requestAndCheckResult(uri, (item) =>
             {
                 var tripId = item.Properties.Single(p => p.Name == "TripId").Value;
-                Assert.AreEqual(tripId.ToString(), "1001");
+                Assert.Equal(tripId.ToString(), "1001");
             },
             "Trip");
 
@@ -303,7 +302,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             requestAndCheckResult(uri, (item) =>
             {
                 var tripId = item.Properties.Single(p => p.Name == "TripId").Value;
-                Assert.AreEqual(tripId.ToString(), "1001");
+                Assert.Equal(tripId.ToString(), "1001");
             },
             "Trip");
 
@@ -311,7 +310,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             uri = string.Format("People?$filter=cast(12.66, Edm.Int32) eq 13");
             requestAndCheckFeedResult(uri, (feed) =>
             {
-                Assert.IsTrue(feed.Count > 0);
+                Assert.True(feed.Count > 0);
             },
             "Person");
 
@@ -321,26 +320,26 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 var gender = item.Properties.Single(p => p.Name == "Gender").Value;
 
-                Assert.AreEqual(gender.GetType(), typeof(ODataEnumValue));
-                Assert.AreEqual((gender as ODataEnumValue).TypeName, "Microsoft.OData.SampleService.Models.TripPin.PersonGender");
-                Assert.AreEqual((gender as ODataEnumValue).Value, "Male");
+                Assert.Equal(gender.GetType(), typeof(ODataEnumValue));
+                Assert.Equal((gender as ODataEnumValue).TypeName, "Microsoft.OData.SampleService.Models.TripPin.PersonGender");
+                Assert.Equal((gender as ODataEnumValue).Value, "Male");
             },
             "Person");
 
             uri = string.Format("People?$filter=cast('Male', {0}PersonGender) eq {0}PersonGender'Male'", NameSpacePrefix);
             requestAndCheckFeedResult(uri, (feed) =>
             {
-                Assert.IsTrue(feed.Count > 0);
+                Assert.True(feed.Count > 0);
             },
             "Person");
             #endregion
         }
 
-        [TestMethod]
+        [Fact]
         public void TripPinFilterDefaultGeoFunctions()
         {
             //No data for test.
-            Assert.IsTrue(true);
+            Assert.True(true);
         }
 
         #region private methods
@@ -379,7 +378,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + requestUri, UriKind.Absolute));
             requestMessage.SetHeader("Accept", mimeType);
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
 
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
             {
@@ -403,8 +402,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                             
                         }
                     }
-                    Assert.IsNotNull(feed as ODataResourceSet);
-                    Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                    Assert.NotNull(feed as ODataResourceSet);
+                    Assert.Equal(ODataReaderState.Completed, reader.State);
                 }
             }
             return entries;

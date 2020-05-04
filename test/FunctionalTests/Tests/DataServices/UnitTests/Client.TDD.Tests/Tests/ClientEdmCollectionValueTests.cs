@@ -12,9 +12,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using System.Linq;
     using FluentAssertions;
     using Microsoft.OData.Edm;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class ClientEdmCollectionValueTests
     {
         private IEdmPrimitiveTypeReference _intType;
@@ -22,8 +21,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         private EdmIntegerConstant _value2;
         private EdmIntegerConstant _value1;
 
-        [TestInitialize]
-        public void Init()
+        public ClientEdmCollectionValueTests()
         {
             this._intType = EdmCoreModel.Instance.GetInt32(false);
             this._value1 = new EdmIntegerConstant(1);
@@ -31,19 +29,19 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             this._collection = new ClientEdmCollectionValue(this._intType, new IEdmValue[] { this._value1, this._value2 });
         }
 
-        [TestMethod]
+        [Fact]
         public void TypeShouldMatch()
         {
             this._collection.Type.Should().BeSameAs(this._intType);
         }
 
-        [TestMethod]
+        [Fact]
         public void KindShouldMatch()
         {
             this._collection.ValueKind.Should().Be(EdmValueKind.Collection);
         }
 
-        [TestMethod]
+        [Fact]
         public void ValuesShouldMatch()
         {
             this._collection.Elements.Select(v => v.Value).Should().ContainInOrder(new[] { this._value1, this._value2 });

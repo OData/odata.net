@@ -14,9 +14,8 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class DateAndTimeOfDayCRUDTestings : ODataWCFServiceTestsBase<InMemoryEntities>
     {
         public DateAndTimeOfDayCRUDTestings()
@@ -26,7 +25,7 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
         }
 
         #region Query/Action/Function
-        [TestMethod]
+        [Fact]
         public void QueryEntityContainsDateAndTimeOfDay()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -36,7 +35,7 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Orders(7)", UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -53,15 +52,15 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                         }
 
                         // Verify Date Property
-                        Assert.AreEqual(new Date(2014, 8, 31), entry.Properties.Single(p => p.Name == "ShipDate").Value);
-                        Assert.AreEqual(new TimeOfDay(12, 40, 5, 50), entry.Properties.Single(p => p.Name == "ShipTime").Value);
-                        Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                        Assert.Equal(new Date(2014, 8, 31), entry.Properties.Single(p => p.Name == "ShipDate").Value);
+                        Assert.Equal(new TimeOfDay(12, 40, 5, 50), entry.Properties.Single(p => p.Name == "ShipTime").Value);
+                        Assert.Equal(ODataReaderState.Completed, reader.State);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryTopLevelProperies()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -71,14 +70,14 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Orders(7)/ShipDate", UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
                         ODataProperty property = messageReader.ReadProperty();
-                        Assert.AreEqual(new Date(2014, 8, 31), property.Value);
+                        Assert.Equal(new Date(2014, 8, 31), property.Value);
                     }
                 }
             }
@@ -88,44 +87,44 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Orders(7)/ShipTime", UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
                         ODataProperty property = messageReader.ReadProperty();
-                        Assert.AreEqual(new TimeOfDay(12, 40, 5, 50), property.Value);
+                        Assert.Equal(new TimeOfDay(12, 40, 5, 50), property.Value);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryRawValue()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
 
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Orders(7)/ShipDate/$value", UriKind.Absolute));
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
             using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
             {
                 var date = messageReader.ReadValue(EdmCoreModel.Instance.GetDate(false));
-                Assert.AreEqual(new Date(2014, 8, 31), date);
+                Assert.Equal(new Date(2014, 8, 31), date);
             }
 
             var requestMessage2 = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Orders(7)/ShipTime/$value", UriKind.Absolute));
             var responseMessage2 = requestMessage2.GetResponse();
-            Assert.AreEqual(200, responseMessage2.StatusCode);
+            Assert.Equal(200, responseMessage2.StatusCode);
             using (var messageReader = new ODataMessageReader(responseMessage2, readerSettings, Model))
             {
                 var date = messageReader.ReadValue(EdmCoreModel.Instance.GetTimeOfDay(false));
-                Assert.AreEqual(new TimeOfDay(12, 40, 5, 50), date);
+                Assert.Equal(new TimeOfDay(12, 40, 5, 50), date);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryWithFilterDate()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -135,7 +134,7 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Orders?$filter=ShipDate eq 2014-08-31", UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -151,18 +150,18 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                                 if (entry != null && entry.TypeName.EndsWith("Order"))
                                 {
                                     // Verify Date Property
-                                    Assert.AreEqual(new Date(2014, 8, 31), entry.Properties.Single(p => p.Name == "ShipDate").Value);
-                                    Assert.AreEqual(new TimeOfDay(12, 40, 5, 50), entry.Properties.Single(p => p.Name == "ShipTime").Value);
+                                    Assert.Equal(new Date(2014, 8, 31), entry.Properties.Single(p => p.Name == "ShipDate").Value);
+                                    Assert.Equal(new TimeOfDay(12, 40, 5, 50), entry.Properties.Single(p => p.Name == "ShipTime").Value);
                                 }
                             }
                         }
-                        Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                        Assert.Equal(ODataReaderState.Completed, reader.State);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryWithFilterTime()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -172,7 +171,7 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Orders?$filter=ShipTime eq 12:40:5.05", UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -188,18 +187,18 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                                 if (entry != null)
                                 {
                                     // Verify Date Property
-                                    Assert.AreEqual(new Date(2014, 8, 31), entry.Properties.Single(p => p.Name == "ShipDate").Value);
-                                    Assert.AreEqual(new TimeOfDay(12, 40, 5, 50), entry.Properties.Single(p => p.Name == "ShipTime").Value);
+                                    Assert.Equal(new Date(2014, 8, 31), entry.Properties.Single(p => p.Name == "ShipDate").Value);
+                                    Assert.Equal(new TimeOfDay(12, 40, 5, 50), entry.Properties.Single(p => p.Name == "ShipTime").Value);
                                 }
                             }
                         }
-                        Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                        Assert.Equal(ODataReaderState.Completed, reader.State);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryWithOrderByDate()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -209,7 +208,7 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Orders?$OrderBy=ShipDate", UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -229,20 +228,20 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                                     {
                                         Date entryDate = (Date)entry.Properties.Single(p => p.Name == "ShipDate").Value;
                                         Date preDate = (Date)pre.Properties.Single(p => p.Name == "ShipDate").Value;
-                                        Assert.IsTrue(preDate > entryDate);
+                                        Assert.True(preDate > entryDate);
                                     }
 
                                     list.Add(entry);
                                 }
                             }
                         }
-                        Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                        Assert.Equal(ODataReaderState.Completed, reader.State);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryWithOrderByTime()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -252,7 +251,7 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Orders?$OrderBy=ShipTime", UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -272,20 +271,20 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                                     {
                                         TimeOfDay entryTimeOfDay = (TimeOfDay)entry.Properties.Single(p => p.Name == "ShipTime").Value;
                                         TimeOfDay preTimeOfDay = (TimeOfDay)pre.Properties.Single(p => p.Name == "ShipTime").Value;
-                                        Assert.IsTrue(preTimeOfDay > entryTimeOfDay);
+                                        Assert.True(preTimeOfDay > entryTimeOfDay);
                                     }
 
                                     list.Add(entry);
                                 }
                             }
                         }
-                        Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                        Assert.Equal(ODataReaderState.Completed, reader.State);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void FunctionReturnDate()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -293,16 +292,16 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Orders(7)/Microsoft.Test.OData.Services.ODataWCFService.GetShipDate", UriKind.Absolute));
             requestMessage.SetHeader("Accept", "*/*");
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
 
             using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
             {
                 var date = messageReader.ReadProperty().Value;
-                Assert.AreEqual(new Date(2014, 8, 31), date);
+                Assert.Equal(new Date(2014, 8, 31), date);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void FunctionWithDate()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -310,16 +309,16 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Orders(7)/Microsoft.Test.OData.Services.ODataWCFService.CheckShipDate(date = 2014-08-31)", UriKind.Absolute));
             requestMessage.SetHeader("Accept", "*/*");
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
 
             using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
             {
-                var isTrue = messageReader.ReadProperty().Value;
-                Assert.AreEqual(true, isTrue);
+                var True = messageReader.ReadProperty().Value;
+                Assert.Equal(true, True);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void FunctionReturnTime()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -327,16 +326,16 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Orders(7)/Microsoft.Test.OData.Services.ODataWCFService.GetShipTime", UriKind.Absolute));
             requestMessage.SetHeader("Accept", "*/*");
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
 
             using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
             {
                 var time = messageReader.ReadProperty().Value;
-                Assert.AreEqual(new TimeOfDay(12, 40, 5, 50), time);
+                Assert.Equal(new TimeOfDay(12, 40, 5, 50), time);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void FunctionWithTime()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -344,16 +343,16 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Orders(7)/Microsoft.Test.OData.Services.ODataWCFService.CheckShipTime(time = 12:40:5.5)", UriKind.Absolute));
             requestMessage.SetHeader("Accept", "*/*");
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
 
             using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
             {
-                var isTrue = messageReader.ReadProperty().Value;
-                Assert.AreEqual(false, isTrue);
+                var True = messageReader.ReadProperty().Value;
+                Assert.Equal(false, True);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryByDateKey()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -363,7 +362,7 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Calendars(2015-11-11)", UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -377,15 +376,15 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                             {
                                 ODataResource entry = reader.Item as ODataResource;
                                 // Verify Date Property
-                                Assert.AreEqual(new Date(2015, 11, 11), entry.Properties.Single(p => p.Name == "Day").Value);
+                                Assert.Equal(new Date(2015, 11, 11), entry.Properties.Single(p => p.Name == "Day").Value);
                             }
                         }
-                        Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                        Assert.Equal(ODataReaderState.Completed, reader.State);
                     }
                 }
             }
         }
-        [TestMethod]
+        [Fact]
         public void ActionTakeDateAndTimeAsParameter()
         {
             var writerSettings = new ODataMessageWriterSettings();
@@ -414,7 +413,7 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
 
                 // send the http request
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -429,12 +428,12 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                                 ODataResource entry = reader.Item as ODataResource;
                                 if (entry != null)
                                 {
-                                    Assert.AreEqual(Date.MinValue, entry.Properties.Single(p => p.Name == "ShipDate").Value);
-                                    Assert.AreEqual(TimeOfDay.MinValue, entry.Properties.Single(p => p.Name == "ShipTime").Value);
+                                    Assert.Equal(Date.MinValue, entry.Properties.Single(p => p.Name == "ShipDate").Value);
+                                    Assert.Equal(TimeOfDay.MinValue, entry.Properties.Single(p => p.Name == "ShipTime").Value);
                                 }
                             }
                         }
-                        Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                        Assert.Equal(ODataReaderState.Completed, reader.State);
 
                     }
                 }
@@ -446,7 +445,7 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
 #region Client
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
-        [TestMethod]
+        [Fact]
         public void ClientTest()
         {
             // Query Entity Contain Date/TimeOfDay
@@ -454,39 +453,39 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
 
             // Query Property
             var shipDate = TestClientContext.Orders.ByKey(new Dictionary<string, object>() { { "OrderID", 7 } }).Select(o => o.ShipDate).GetValue();
-            Assert.AreEqual(new Date(2014, 8, 31), shipDate);
+            Assert.Equal(new Date(2014, 8, 31), shipDate);
 
             var shipTime = TestClientContext.Orders.ByKey(new Dictionary<string, object>() { { "OrderID", 7 } }).Select(o => o.ShipTime).GetValue();
-            Assert.AreEqual(new TimeOfDay(12, 40, 05, 50), shipTime);
+            Assert.Equal(new TimeOfDay(12, 40, 05, 50), shipTime);
 
             // Projection Select
             var projOrder = TestClientContext.Orders.ByKey(new Dictionary<string, object>() { { "OrderID", 7 } }).Select(o => new Order() { ShipDate = o.ShipDate, ShipTime = o.ShipTime }).GetValue();
-            Assert.IsTrue(projOrder != null);
-            Assert.AreEqual(new Date(2014, 8, 31), projOrder.ShipDate);
-            Assert.AreEqual(new TimeOfDay(12, 40, 05, 50), projOrder.ShipTime);
+            Assert.True(projOrder != null);
+            Assert.Equal(new Date(2014, 8, 31), projOrder.ShipDate);
+            Assert.Equal(new TimeOfDay(12, 40, 05, 50), projOrder.ShipTime);
 
             // Update Properties
             var order = TestClientContext.Orders.ByKey(new Dictionary<string, object>() { { "OrderID", 7 } }).GetValue();
-            Assert.IsTrue(order != null);
-            Assert.AreEqual(new Date(2014, 8, 31), order.ShipDate);
-            Assert.AreEqual(new TimeOfDay(12, 40, 05, 50), order.ShipTime);
+            Assert.True(order != null);
+            Assert.Equal(new Date(2014, 8, 31), order.ShipDate);
+            Assert.Equal(new TimeOfDay(12, 40, 05, 50), order.ShipTime);
 
             order.ShipDate = new Date(2014, 9, 30);
             TestClientContext.UpdateObject(order);
             TestClientContext.SaveChanges();
 
             var updatedOrder = TestClientContext.Orders.ByKey(new Dictionary<string, object>() { { "OrderID", 7 } }).GetValue();
-            Assert.AreEqual(new Date(2014, 9, 30), updatedOrder.ShipDate);
+            Assert.Equal(new Date(2014, 9, 30), updatedOrder.ShipDate);
 
             // Function
             var date = TestClientContext.Orders.ByKey(new Dictionary<string, object>() { { "OrderID", 7 } }).GetShipDate().GetValue();
-            Assert.AreEqual(new Date(2014, 9, 30), date);
+            Assert.Equal(new Date(2014, 9, 30), date);
 
             // Action
             TestClientContext.Orders.ByKey(new Dictionary<string, object>() { { "OrderID", 7 } }).ChangeShipTimeAndDate(Date.MaxValue, TimeOfDay.MaxValue).GetValue();
             updatedOrder = TestClientContext.Orders.ByKey(new Dictionary<string, object>() { { "OrderID", 7 } }).GetValue();
-            Assert.AreEqual(Date.MaxValue, updatedOrder.ShipDate);
-            Assert.AreEqual(TimeOfDay.MaxValue, updatedOrder.ShipTime);
+            Assert.Equal(Date.MaxValue, updatedOrder.ShipDate);
+            Assert.Equal(TimeOfDay.MaxValue, updatedOrder.ShipTime);
         }
 #endif
 

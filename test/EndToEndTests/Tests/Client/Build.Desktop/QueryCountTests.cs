@@ -16,17 +16,17 @@ namespace Microsoft.Test.OData.Tests.Client
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
+    using Xunit.Abstractions;
     using HttpWebRequestMessage = Microsoft.Test.OData.Tests.Client.Common.HttpWebRequestMessage;
 
     /// <summary>
     /// Query $count test cases.
     /// </summary>
-    [TestClass]
     public class QueryCountTests : EndToEndTestBase
     {
-        public QueryCountTests()
-            : base(ServiceDescriptors.AstoriaDefaultService)
+        public QueryCountTests(ITestOutputHelper helper)
+            : base(ServiceDescriptors.AstoriaDefaultService, helper)
         {
         }
 
@@ -44,97 +44,97 @@ namespace Microsoft.Test.OData.Tests.Client
         /// <summary>
         /// IncludeCount Test
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void CountLinqTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
 
             var query = context.Customer.IncludeCount();
-            Assert.AreEqual(true, query.ToString().Contains("$count=true"));
+            Assert.Equal(true, query.ToString().Contains("$count=true"));
 
             var response = query.Execute() as QueryOperationResponse<Customer>;
-            Assert.AreEqual(response.Count, 10);
+            Assert.Equal(response.Count, 10);
         }
 
         /// <summary>
         /// IncludeCount(true) Test
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void CountWithBoolTrueParamLinqTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
 
             var query = context.Customer.IncludeCount(true);
-            Assert.AreEqual(true, query.ToString().Contains("$count=true"));
+            Assert.Equal(true, query.ToString().Contains("$count=true"));
 
             var response = query.Execute() as QueryOperationResponse<Customer>;
-            Assert.AreEqual(response.Count, 10);
+            Assert.Equal(response.Count, 10);
         }
 
         /// <summary>
         /// Query Entity Set  With Server Driven Paging
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void CountLinqTestWithServerDrivenPaging()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
 
             var query = context.Computer.IncludeCount();
-            Assert.AreEqual(true, query.ToString().Contains("$count=true"));
+            Assert.Equal(true, query.ToString().Contains("$count=true"));
 
             var response = query.Execute() as QueryOperationResponse<Computer>;
-            Assert.AreEqual(response.Count, 10);
+            Assert.Equal(response.Count, 10);
         }
 
         /// <summary>
         /// Normal $count request
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void CountUriTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
 
             var response = context.Execute<Computer>(new Uri(this.ServiceUri.OriginalString + "/Computer?$count=true")) as QueryOperationResponse<Computer>;
-            Assert.AreEqual(10, response.Count);
+            Assert.Equal(10, response.Count);
 
             response = context.Execute<Computer>(new Uri(this.ServiceUri.OriginalString + "/Computer?$expand=ComputerDetail&$count=true")) as QueryOperationResponse<Computer>;
-            Assert.AreEqual(10, response.Count);
+            Assert.Equal(10, response.Count);
 
             response = context.Execute<Computer>(new Uri(this.ServiceUri.OriginalString + "/Computer?$top=5&$count=true")) as QueryOperationResponse<Computer>;
-            Assert.AreEqual(10, response.Count);
+            Assert.Equal(10, response.Count);
 
             response = context.Execute<Computer>(new Uri(this.ServiceUri.OriginalString + "/Computer?$count=true&$skip=5")) as QueryOperationResponse<Computer>;
-            Assert.AreEqual(10, response.Count);
+            Assert.Equal(10, response.Count);
 
             response = context.Execute<Computer>(new Uri(this.ServiceUri.OriginalString + "/Computer?$skip=5&$count=true&$top=10")) as QueryOperationResponse<Computer>;
-            Assert.AreEqual(10, response.Count);
+            Assert.Equal(10, response.Count);
         }
 
         /// <summary>
         /// Normal $count request With Server Driven Paging
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void CountUriTestWithServerDrivenPaging()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
 
             var response = context.Execute<Customer>(new Uri(this.ServiceUri.OriginalString + "/Customer?$count=true")) as QueryOperationResponse<Customer>;
-            Assert.AreEqual(10, response.Count);
+            Assert.Equal(10, response.Count);
 
             response = context.Execute<Customer>(new Uri(this.ServiceUri.OriginalString + "/Customer?$expand=Orders&$count=true")) as QueryOperationResponse<Customer>;
-            Assert.AreEqual(10, response.Count);
+            Assert.Equal(10, response.Count);
 
             response = context.Execute<Customer>(new Uri(this.ServiceUri.OriginalString + "/Customer?$top=5&$count=true")) as QueryOperationResponse<Customer>;
-            Assert.AreEqual(10, response.Count);
+            Assert.Equal(10, response.Count);
 
             response = context.Execute<Customer>(new Uri(this.ServiceUri.OriginalString + "/Customer?$count=true&$skip=5")) as QueryOperationResponse<Customer>;
-            Assert.AreEqual(10, response.Count);
+            Assert.Equal(10, response.Count);
 
             response = context.Execute<Customer>(new Uri(this.ServiceUri.OriginalString + "/Customer?$skip=5&$count=true&$top=10")) as QueryOperationResponse<Customer>;
-            Assert.AreEqual(10, response.Count);
+            Assert.Equal(10, response.Count);
 
             var orders = context.Execute<Order>(new Uri(this.ServiceUri.OriginalString + "/Customer(-10)/Orders?$count=true")) as QueryOperationResponse<Order>;
-            Assert.AreEqual(3, orders.Count);
+            Assert.Equal(3, orders.Count);
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace Microsoft.Test.OData.Tests.Client
         /// and 
         /// m:count in atom payload
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void CountPayloadVerification()
         {
             foreach (var mimeType in mimeTypes)
@@ -157,16 +157,16 @@ namespace Microsoft.Test.OData.Tests.Client
                 {
                     if (mimeType.Contains(MimeTypes.ODataParameterIEEE754Compatible))
                     {
-                        Assert.IsTrue(responseString.Contains("\"@odata.count\":\"10\""));
+                        Assert.True(responseString.Contains("\"@odata.count\":\"10\""));
                     }
                     else
                     {
-                        Assert.IsTrue(responseString.Contains("\"@odata.count\":10"));
+                        Assert.True(responseString.Contains("\"@odata.count\":10"));
                     }
                 }
                 else
                 {
-                    Assert.IsTrue(responseString.Contains("<m:count>10</m:count>"));
+                    Assert.True(responseString.Contains("<m:count>10</m:count>"));
                 }
             }
         }
@@ -175,7 +175,7 @@ namespace Microsoft.Test.OData.Tests.Client
         /// $count=false is the default value 
         /// payload should be same with specifying nothing
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void FalseCountIsDefaultValue()
         {
             foreach (var mimeType in mimeTypes)
@@ -201,7 +201,7 @@ namespace Microsoft.Test.OData.Tests.Client
                     responseString = Regex.Replace(responseString, pattern, (match) => replacement);
                 }
 
-                Assert.AreEqual(defaultResponsestring, responseString);
+                Assert.Equal(defaultResponsestring, responseString);
             }
         }
 
@@ -217,7 +217,7 @@ namespace Microsoft.Test.OData.Tests.Client
 
         #region negative tests
 
-        [TestMethod]
+        [Fact]
         public void CountUriInvalidTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -256,12 +256,12 @@ namespace Microsoft.Test.OData.Tests.Client
             try
             {
                 context.Execute<Computer>(new Uri(this.ServiceUri.OriginalString + errorUrl));
-                Assert.Fail("Expected Exception not thrown for " + errorUrl);
+                Assert.True(false, "Expected Exception not thrown for " + errorUrl);
             }
             catch (DataServiceQueryException ex)
             {
-                Assert.IsNotNull(ex.InnerException, "No inner exception found");
-                Assert.IsInstanceOfType(ex.InnerException, typeof(DataServiceClientException), "Unexpected inner exception type");
+                Assert.NotNull(ex.InnerException);
+                Assert.IsType<DataServiceClientException>(ex.InnerException);
                 StringResourceUtil.VerifyDataServicesString(ClientExceptionUtil.ExtractServerErrorMessage(ex), errorString, arguments);
             }
         }
@@ -269,7 +269,7 @@ namespace Microsoft.Test.OData.Tests.Client
         /// <summary>
         /// Invalid getting count when $count=false
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void GetTotalCountInvalidTest()
         {
             string[] requests = new string[]
@@ -285,11 +285,11 @@ namespace Microsoft.Test.OData.Tests.Client
                 {
                     var response = context.Execute<Customer>(new Uri(this.ServiceUri.OriginalString + request)) as QueryOperationResponse<Customer>;
                     var count = response.Count;
-                    Assert.Fail("Should fail on getting customer count");
+                    Assert.True(false, "Should fail on getting customer count");
                 }
                 catch (Exception ex)
                 {
-                    Assert.AreEqual(true, ex.Message.Contains("Count value is not part of the response stream"));
+                    Assert.Equal(true, ex.Message.Contains("Count value is not part of the response stream"));
                 }
             }
         }
@@ -297,7 +297,7 @@ namespace Microsoft.Test.OData.Tests.Client
         /// <summary>
         /// Invalid getting count when IncludeCount(false)
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void CountWithBoolFalseParamLinqTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -307,11 +307,11 @@ namespace Microsoft.Test.OData.Tests.Client
             {
                 var response = query.Execute() as QueryOperationResponse<Customer>;
                 var count = response.Count;
-                Assert.Fail("Should fail on getting customer count");
+                Assert.True(false, "Should fail on getting customer count");
             }
             catch (Exception ex)
             {
-                Assert.AreEqual(true, ex.Message.Contains("Count value is not part of the response stream"));
+                Assert.Equal(true, ex.Message.Contains("Count value is not part of the response stream"));
             }
         }
         #endregion

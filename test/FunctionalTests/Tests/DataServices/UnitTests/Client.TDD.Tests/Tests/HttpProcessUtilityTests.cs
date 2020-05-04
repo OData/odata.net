@@ -8,14 +8,12 @@ namespace AstoriaUnitTests.Tests.Client
 {
     using System;
     using Microsoft.OData.Client;
-    using System.Diagnostics;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using FluentAssertions;
+    using Xunit;
 
-    [TestClass]
     public class HttpProcessUtilityTests
     {
-        [TestMethod]
+        [Fact]
         public void ValidHttpProcessUtilityReadMediaTypeTest()
         {
             MediaTypeTest[] tests = new MediaTypeTest[]
@@ -62,22 +60,30 @@ namespace AstoriaUnitTests.Tests.Client
                 ContentTypeUtil.MediaParameter[] parameters = null;
                 parameters = ContentTypeUtil.ReadContentType(test.InputText, out mimeType);
 
-                Assert.AreEqual(mimeType, test.MediaType, "Media types match.");
-                Assert.AreEqual(parameters != null, test.Parameters != null, "Parameter nullability matches.");
+                //Media types match
+                Assert.Equal(mimeType, test.MediaType);
+
+                //Parameter nullability matches.
+                Assert.Equal(parameters != null, test.Parameters != null);
                 if (parameters != null)
                 {
                     for (int i = 0; i < parameters.Length; i++)
                     {
-                        Assert.AreEqual(parameters[i].Name, test.Parameters[i].Name, "Parameters name do not match");
-                        Assert.AreEqual(parameters[i].Value, test.Parameters[i].Value, "Parameters value do not match");
-                        Assert.AreEqual(parameters[i].GetOriginalValue(), test.Parameters[i].GetOriginalValue(), "Parameters original value do not match");
-                        Assert.AreEqual(test.OutputText ?? test.InputText, ContentTypeUtil.WriteContentType(mimeType, parameters));
+                        //Parameters name do not match
+                        Assert.Equal(parameters[i].Name, test.Parameters[i].Name);
+
+                        //Parameters value do not match
+                        Assert.Equal(parameters[i].Value, test.Parameters[i].Value);
+
+                        //Parameters original value do not match
+                        Assert.Equal(parameters[i].GetOriginalValue(), test.Parameters[i].GetOriginalValue());
+                        Assert.Equal(test.OutputText ?? test.InputText, ContentTypeUtil.WriteContentType(mimeType, parameters));
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void HttpProcessUtilityReadMediaTypeTest()
         {
             MediaTypeTest[] tests = new MediaTypeTest[]

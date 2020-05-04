@@ -19,15 +19,14 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 #if !PORTABLELIB
     using Microsoft.OData.Tests;
 #endif
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
 #if !PORTABLELIB
     using ClientStrings = Microsoft.OData.Client.Strings;
+    using Xunit;
 #endif
 
-    [TestClass]
     public class DataServiceContextTests
     {
-        [TestMethod]
+        [Fact]
         public void UsePostTunnelingDefaultShouldBeFalseExceptOnSilverlightOrOnPortableLibraryRunningOnSilverlight()
         {
             bool usePostTunnelingDefault = false;
@@ -43,13 +42,12 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         private DataServiceContext testSubject;
         private EventHandler<SendingRequestEventArgs> sendingRequestHandler1 = (sender, args) => { };
 
-        [TestInitialize]
-        public void Init()
+        public DataServiceContextTests()
         {
             this.testSubject = new DataServiceContext(new Uri("http://base.org/")).ReConfigureForNetworkLoadingTests();
         }
 
-        [TestMethod]
+        [Fact]
         public void EntitySetNameGivenInAddObjectShouldBeRecorded()
         {
             const string entitySetName = "ThisIsMyEntitySetName";
@@ -57,7 +55,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             this.testSubject.Entities.Single().EntitySetName.Should().Be(entitySetName);
         }
 
-        [TestMethod]
+        [Fact]
         public void EntitySetNameGivenInAttachShouldBeRecorded()
         {
             const string entitySetName = "ThisIsMyEntitySetName";
@@ -65,14 +63,14 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             this.testSubject.Entities.Single().EntitySetName.Should().Be(entitySetName);
         }
 
-        [TestMethod]
+        [Fact]
         public void ChangeStateShouldFailWhenSettingToAdded()
         {
             Action changeToAdded = () => this.testSubject.ChangeState(new object(), EntityStates.Added);
             changeToAdded.ShouldThrow<NotSupportedException>().WithMessage(ClientStrings.Context_CannotChangeStateToAdded);
         }
 
-        [TestMethod]
+        [Fact]
         public void ChangeStateShouldFailWhenChangingAddedToDeleted()
         {
             var entity = new TestEntityType();
@@ -81,7 +79,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             changeToDeleted.ShouldThrow<InvalidOperationException>().WithMessage(ClientStrings.Context_CannotChangeStateIfAdded(EntityStates.Deleted));
         }
 
-        [TestMethod]
+        [Fact]
         public void ChangeStateShouldFailWhenChangingAddedToUnchanged()
         {
             var entity = new TestEntityType();
@@ -90,7 +88,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             changeToUnchanged.ShouldThrow<InvalidOperationException>().WithMessage(ClientStrings.Context_CannotChangeStateIfAdded(EntityStates.Unchanged));
         }
 
-        [TestMethod]
+        [Fact]
         public void ChangeStateShouldFailWhenChangingAddedToModified()
         {
             var entity = new TestEntityType();
@@ -99,7 +97,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             changeToModified.ShouldThrow<InvalidOperationException>().WithMessage(ClientStrings.Context_CannotChangeStateToModifiedIfNotUnchanged);
         }
 
-        [TestMethod]
+        [Fact]
         public void ChangeStateShouldFailWhenChangingDeletedToModified()
         {
             var entity = new TestEntityType();
@@ -109,7 +107,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             changeToModified.ShouldThrow<InvalidOperationException>().WithMessage(ClientStrings.Context_CannotChangeStateToModifiedIfNotUnchanged);
         }
 
-        [TestMethod]
+        [Fact]
         public void ChangeStateShouldAllowSettingModifiedToModified()
         {
             var entity = new TestEntityType();
@@ -121,7 +119,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             descriptor.State.Should().Be(EntityStates.Modified);
         }
 
-        [TestMethod]
+        [Fact]
         public void ChangeStateShouldSetToUnchangedAndNotModifyChangeOrder()
         {
             var entity = new TestEntityType();
@@ -136,7 +134,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             descriptor.ChangeOrder.Should().Be(2);
         }
 
-        [TestMethod]
+        [Fact]
         public void ChangeStateShouldSetToModifiedAndSetChangeOrder()
         {
             var entity = new TestEntityType();
@@ -147,7 +145,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             descriptor.ChangeOrder.Should().Be(2);
         }
 
-        [TestMethod]
+        [Fact]
         public void ChangeStateShouldSetToDeletedAndSetChangeOrder()
         {
             var entity = new TestEntityType();
@@ -168,7 +166,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             return descriptor;
         }
 
-        [TestMethod]
+        [Fact]
         public void ChangeStateShouldSetToDetachedAndActuallyRemoveFromTracking()
         {
             var entity = new TestEntityType();
@@ -180,7 +178,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
-        [TestMethod]
+        [Fact]
         public void ChangingStateToUnchangedShouldPreventRequestFromBeingSent()
         {
             // regression coverage for Light switch issue: due to attach detach workaround identity strings don't match and duplicates occur with doubles,
@@ -194,7 +192,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             saveChanges.ShouldNotThrow();
         }
 
-        [TestMethod]
+        [Fact]
         public void SettingETagOnDescriptorShouldOverrideWhatIsSent()
         {
             // regression coverage for Light switch issue: due to attach detach workaround identity strings don't match and duplicates occur with doubles,
@@ -210,7 +208,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             transportLayer.LastIfMatchHeaderValue.Should().Be("ETagSetInProperty");
         }
 
-        [TestMethod]
+        [Fact]
         public void HeadersInArgsShouldNotBeModifiedDuringGetReadStream()
         {
             // Regression coverage for: SendingRequest cannot set Accept-Charset header for SetSaveStream if reusing request arg
@@ -225,13 +223,13 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 #endif
 
-        [TestMethod]
+        [Fact]
         public void DefaultResolveTypeWithNullTypeNameShouldReturnNullType()
         {
-            Assert.IsNull(new DefaultResolveTypeContext().TestDefaultResolveType(null, null, null));
+            Assert.Null(new DefaultResolveTypeContext().TestDefaultResolveType(null, null, null));
         }
 
-        [TestMethod]
+        [Fact]
         public void DefaultResolveTypeShouldReturnType()
         {
             const string typeNamespace = "AstoriaUnitTests.TDD.Tests.Client";
@@ -239,7 +237,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
-        [TestMethod]
+        [Fact]
         public void DisposeShouldBeCalledOnResponseMessageForExecuteWithNoContent()
         {
             bool responseMessageDisposed = false;
@@ -255,21 +253,21 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             responseMessageDisposed.Should().BeTrue();
         }
 
-        [TestMethod]
+        [Fact]
         public void SaveChangesWithBatchAndBatchWithIndependentOperationsShouldThrow()
         {
             Action test = () => this.testSubject.SaveChanges(SaveChangesOptions.BatchWithSingleChangeset | SaveChangesOptions.BatchWithIndependentOperations);
             test.ShouldThrow<ArgumentOutOfRangeException>().WithMessage("options", ComparisonMode.Substring);
         }
 
-        [TestMethod]
+        [Fact]
         public void SaveChangesWithBatchAndContinueOnErrorShouldThrow()
         {
             Action test = () => this.testSubject.SaveChanges(SaveChangesOptions.BatchWithSingleChangeset | SaveChangesOptions.ContinueOnError);
             test.ShouldThrow<ArgumentOutOfRangeException>().WithMessage("options", ComparisonMode.Substring);
         }
 
-        [TestMethod]
+        [Fact]
         public void SaveChangesWithBatchWithIndependentOperationsAndContinueOnErrorShouldThrow()
         {
             Action test = () => this.testSubject.SaveChanges(SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.ContinueOnError);
@@ -277,7 +275,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 #endif
 
-        [TestMethod]
+        [Fact]
         public void DataServiceContextDoesNotRestrictBaseUriScheme()
         {
             Uri udpBaseUri = new Uri("udp://base.org/");

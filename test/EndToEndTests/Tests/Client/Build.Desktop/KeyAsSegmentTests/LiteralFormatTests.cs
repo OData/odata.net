@@ -10,12 +10,16 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
     using Microsoft.OData.Client;
     using System.Linq;
     using Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit.Abstractions;
+    using Xunit;
 
-    [TestClass]
     public class LiteralFormatTests : KeyAsSegmentTest
     {
-        [TestMethod]
+        public LiteralFormatTests(ITestOutputHelper helper)
+            :base(helper)
+        {
+        }
+        [Fact]
         public void PrimaryKeyValueBeginsWithDollarSign()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -27,14 +31,14 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
                 var newLogin = AddNewLoginForCustomer(contextWrapper.Context, customer, dollarSignKeyValue);
 
                 var loginQuery = contextWrapper.CreateQuery<Login>("Login").Where(l => l.Username == dollarSignKeyValue).ToArray();
-                Assert.IsTrue(newLogin == loginQuery.Single(), "Query result does not equal newly added login with key " + dollarSignKeyValue);
+                Assert.True(newLogin == loginQuery.Single(), "Query result does not equal newly added login with key " + dollarSignKeyValue);
 
                 var customerQuery = contextWrapper.Execute<Customer>(new Uri(this.ServiceUri + "/Login/$" + dollarSignKeyValue + "/Customer")).ToArray();
-                Assert.IsTrue(customer == customerQuery.Single(), "Execute query result does not equal associated customer");
+                Assert.True(customer == customerQuery.Single(), "Execute query result does not equal associated customer");
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void PrimaryKeyValueContainsForwardSlash()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -47,7 +51,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void PrimaryKeyValueContainsWhitespace()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -61,10 +65,10 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
                 var newLogin = AddNewLoginForCustomer(contextWrapper.Context, customer, keyValue);
 
                 var loginQuery = contextWrapper.CreateQuery<Login>("Login").Where(l => l.Username == keyValue).ToArray();
-                Assert.IsTrue(newLogin == loginQuery.Single(), "Query result does not equal newly added login with key " + keyValue);
+                Assert.True(newLogin == loginQuery.Single(), "Query result does not equal newly added login with key " + keyValue);
 
                 var customerQuery = contextWrapper.Execute<Customer>(new Uri(this.ServiceUri + "/Login/" + keyValue + "/Customer")).ToArray();
-                Assert.IsTrue(customer == customerQuery.Single(), "Execute query result does not equal associated customer");
+                Assert.True(customer == customerQuery.Single(), "Execute query result does not equal associated customer");
             }
         }
 

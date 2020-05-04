@@ -11,26 +11,25 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
     using Microsoft.OData.Client.Materialization;
     using FluentAssertions;
     using Microsoft.OData;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using ClientStrings = Microsoft.OData.Client.Strings;
+    using Xunit;
 
     /// <summary>
     /// TODO: test the rest of the functionality in <see cref="MaterializerEntry"/>.
     /// </summary>
-    [TestClass]
     public class MaterializerEntryTests
     {
         private const string ExpectedTypeName = "Fake.NS.Type";
         private readonly ClientEdmModel clientModel = new ClientEdmModel(ODataProtocolVersion.V4);
 
-        [TestMethod]
+        [Fact]
         public void ServerTypeNameShouldFromEntryInJsonIfNoAnnotationIsPresent()
         {
             var testSubject = this.CreateMaterializerEntry(ODataFormat.Json, e => e.TypeName = ExpectedTypeName);
             testSubject.EntityDescriptor.ServerTypeName.Should().Be(ExpectedTypeName);
         }
 
-        [TestMethod]
+        [Fact]
         public void ServerTypeNameShouldFromEntryInJsonIfAnnotationValueIsNull()
         {
             var testSubject = this.CreateMaterializerEntry(
@@ -43,7 +42,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             testSubject.EntityDescriptor.ServerTypeName.Should().Be(ExpectedTypeName);
         }
 
-        [TestMethod]
+        [Fact]
         public void ServerTypeNameShouldFromAnnotationInJsonIfAnnotationValueIsNotNull()
         {
             var testSubject = this.CreateMaterializerEntry(

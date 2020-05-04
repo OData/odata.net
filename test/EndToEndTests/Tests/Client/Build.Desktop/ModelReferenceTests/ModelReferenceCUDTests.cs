@@ -14,9 +14,8 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class ModelReferenceCUDTests : ODataWCFServiceTestsBase<InMemoryEntities>
     {
         private const string TestModelNameSpace = "Microsoft.OData.SampleService.Models.ModelRefDemo";
@@ -28,7 +27,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
         }
 
         #region CUD Testing
-        [TestMethod]
+        [Fact]
         public void PostDeleteTypeInReferencdModel()
         {
             var entryWrapper = CreateVehicleGPS(false);
@@ -57,9 +56,9 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                 var responseMessage = requestMessage.GetResponse();
 
                 // Verify Created
-                Assert.AreEqual(201, responseMessage.StatusCode);
+                Assert.Equal(201, responseMessage.StatusCode);
                 ODataResource entry = this.QueryEntityItem("VehicleGPSSet('000')") as ODataResource;
-                Assert.AreEqual("000", entry.Properties.Single(p => p.Name == "Key").Value);
+                Assert.Equal("000", entry.Properties.Single(p => p.Name == "Key").Value);
 
                 // Delete the entry
                 var deleteRequestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri + "VehicleGPSSet('000')"));
@@ -67,14 +66,14 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                 var deleteResponseMessage = deleteRequestMessage.GetResponse();
 
                 // Verift Deleted
-                Assert.AreEqual(204, deleteResponseMessage.StatusCode);
+                Assert.Equal(204, deleteResponseMessage.StatusCode);
                 ODataResource deletedEntry = this.QueryEntityItem("VehicleGPSSet('000')", 204) as ODataResource;
-                Assert.IsNull(deletedEntry);
+                Assert.Null(deletedEntry);
             }
             #endregion
         }
 
-        [TestMethod]
+        [Fact]
         public void PostDeleteTypeInReferencingModel()
         {
             var entryWrapper = CreateVehicleGPS(true);
@@ -104,9 +103,9 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                 var responseMessage = requestMessage.GetResponse();
 
                 // Verify Created
-                Assert.AreEqual(201, responseMessage.StatusCode);
+                Assert.Equal(201, responseMessage.StatusCode);
                 ODataResource entry = this.QueryEntityItem("VehicleGPSSetInGPS('000')") as ODataResource;
-                Assert.AreEqual("000", entry.Properties.Single(p => p.Name == "Key").Value);
+                Assert.Equal("000", entry.Properties.Single(p => p.Name == "Key").Value);
 
                 // Delete the entry
                 var deleteRequestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri + "VehicleGPSSetInGPS('000')"));
@@ -114,9 +113,9 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                 var deleteResponseMessage = deleteRequestMessage.GetResponse();
 
                 // Verift Deleted
-                Assert.AreEqual(204, deleteResponseMessage.StatusCode);
+                Assert.Equal(204, deleteResponseMessage.StatusCode);
                 ODataResource deletedEntry = this.QueryEntityItem("VehicleGPSSetInGPS('000')", 204) as ODataResource;
-                Assert.IsNull(deletedEntry);
+                Assert.Null(deletedEntry);
             }
             #endregion
         }
@@ -343,7 +342,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             var queryRequestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + uri, UriKind.Absolute));
             queryRequestMessage.SetHeader("Accept", MimeTypes.ApplicationJsonLight);
             var queryResponseMessage = queryRequestMessage.GetResponse();
-            Assert.AreEqual(expectedStatusCode, queryResponseMessage.StatusCode);
+            Assert.Equal(expectedStatusCode, queryResponseMessage.StatusCode);
 
             ODataItem item = null;
             if (expectedStatusCode == 200)
@@ -359,7 +358,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                         }
                     }
 
-                    Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                    Assert.Equal(ODataReaderState.Completed, reader.State);
                 }
             }
 

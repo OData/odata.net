@@ -11,10 +11,9 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using FluentAssertions;
     using Microsoft.OData;
     using Microsoft.OData.Client.TDDUnitTests;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using ClientStrings = Microsoft.OData.Client.Strings;
+    using Xunit;
 
-    [TestClass]
     public class ODataMessageWritingHelperTests
     {
         private DataServiceContext context;
@@ -23,8 +22,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         private ODataRequestMessageSimulator atomRequestMessage;
         private ODataRequestMessageSimulator jsonRequestMessage;
 
-        [TestInitialize]
-        public void Init()
+        public ODataMessageWritingHelperTests()
         {
             this.context = new DataServiceContext(new Uri("http://temp.org/"), ODataProtocolVersion.V4).ReConfigureForNetworkLoadingTests();
             this.requestInfo = new RequestInfo(context);
@@ -35,14 +33,14 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             this.jsonRequestMessage.SetHeader(XmlConstants.HttpContentType, "ApplIcAtIOn/jsOn");
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateWriterOnV3ShouldNotThrowForAtom()
         {
             this.writingHelper.CreateWriter(this.atomRequestMessage, new ODataMessageWriterSettings(), isParameterPayload: true);
             this.writingHelper.CreateWriter(this.atomRequestMessage, new ODataMessageWriterSettings(), isParameterPayload: false);
         }
 
-        [TestMethod]
+        [Fact]
         public void ShortIntegrationCreateWriterSettingsShouldSetInstanceAnnotationFilter()
         {
             this.requestInfo.Configurations.RequestPipeline.OnMessageWriterSettingsCreated((a => a.Settings.EnableMessageStreamDisposal = true));

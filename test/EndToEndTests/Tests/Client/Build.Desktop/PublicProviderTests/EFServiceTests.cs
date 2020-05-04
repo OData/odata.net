@@ -15,37 +15,35 @@ namespace Microsoft.Test.OData.Tests.Client.PublicProviderTests
     using Microsoft.Test.OData.Services.TestServices.PublicProviderEFServiceReference.AstoriaDefaultServiceDBModel;
     using Microsoft.Test.OData.Services.TestServices.PublicProviderEFServiceReference.Microsoft.Test.OData.Services.Astoria;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
+    using Xunit.Abstractions;
 
-    [TestClass]
     public class EFServiceTests : EndToEndTestBase
     {
-        public EFServiceTests()
-            : base(ServiceDescriptors.PublicProviderEFService)
+        public EFServiceTests(ITestOutputHelper helper)
+            : base(ServiceDescriptors.PublicProviderEFService, helper)
         {
         }
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
-        [TestMethod]
-        [Ignore("VSUpgrade19 - ContextHelper issue") ]
+        [Fact(Skip= "VSUpgrade19 - ContextHelper issue")]
         public void ValidReadEFEntity()
         {
             var context = CreateWrappedContext<AstoriaDefaultServiceDBEntities>().Context;
 
             //Verify feed is working
-            Assert.IsNotNull(context.EFCars.ToArray());
+            Assert.NotNull(context.EFCars.ToArray());
             //Verify filter is working
-            Assert.IsNotNull(context.EFCars.Where(c => c.Description == Guid.NewGuid().ToString()).ToArray());
+            Assert.NotNull(context.EFCars.Where(c => c.Description == Guid.NewGuid().ToString()).ToArray());
             //Verify paging is working
-            Assert.AreEqual(10, context.EFCars.ToArray().Count());
+            Assert.Equal(10, context.EFCars.ToArray().Count());
             //Verify count is working
-            Assert.IsTrue(context.EFCars.Count() >= 10);
+            Assert.True(context.EFCars.Count() >= 10);
             //Verify navigation link is working
-            Assert.IsNotNull(context.EFPersonMetadatas.Expand("EFPerson").FirstOrDefault().EFPerson);
+            Assert.NotNull(context.EFPersonMetadatas.Expand("EFPerson").FirstOrDefault().EFPerson);
         }
 
-        [TestMethod]
-        [Ignore("VSUpgrade19 - ContextHelper issue")]
+        [Fact(Skip= "VSUpgrade19 - ContextHelper issue")]
         public void ValidCUDEFEntity()
         {
             string desc = Guid.NewGuid().ToString();
@@ -55,44 +53,42 @@ namespace Microsoft.Test.OData.Tests.Client.PublicProviderTests
             var car = new EFCar {Description = desc};
             context.AddToEFCars(car);
             context.SaveChanges();
-            Assert.IsTrue(car.VIN != 0);
-            Assert.AreEqual(1, context.EFCars.Where(c => c.Description == desc).Count());
+            Assert.True(car.VIN != 0);
+            Assert.Equal(1, context.EFCars.Where(c => c.Description == desc).Count());
 
             //update
             string newdesc = Guid.NewGuid().ToString();
             car.Description = newdesc;
             context.UpdateObject(car);
             context.SaveChanges();
-            Assert.AreEqual(1, context.EFCars.Where(c => c.Description == newdesc).Count());
+            Assert.Equal(1, context.EFCars.Where(c => c.Description == newdesc).Count());
 
             //delete
             context.DeleteObject(car);
             context.SaveChanges();
-            Assert.AreEqual(0, context.EFCars.Where(c => c.Description == newdesc).Count());
+            Assert.Equal(0, context.EFCars.Where(c => c.Description == newdesc).Count());
         }
 
-        [TestMethod]
-        [Ignore("VSUpgrade19 - ContextHelper issue")]
+        [Fact(Skip= "VSUpgrade19 - ContextHelper issue")]
         public void ValidServiceOperationEFEntity()
         {
             var context = CreateWrappedContext<AstoriaDefaultServiceDBEntities>().Context;
 
             int count = context.GetEFPersonCount();
-            Assert.AreEqual(count, context.EFPersons.Count());
+            Assert.Equal(count, context.EFPersons.Count());
 
             var expectedPerson = context.EFPersons.FirstOrDefault();
 
             var person = context.GetEFPersonByExactName(expectedPerson.Name);
-            Assert.AreEqual(expectedPerson.PersonId, person.PersonId);
+            Assert.Equal(expectedPerson.PersonId, person.PersonId);
 
             var persons = context.GetEFPersonsByName(expectedPerson.Name.Substring(0,3)).ToArray();
-            Assert.IsTrue(persons.Any());
-            Assert.IsTrue(persons.Any(p=>p.PersonId == expectedPerson.PersonId));
+            Assert.True(persons.Any());
+            Assert.Contains(persons, p =>p.PersonId == expectedPerson.PersonId);
         }
 
         // Flaky test: OData.net GitHub #970
-        [TestMethod]
-        [Ignore("VSUpgrade19 - ContextHelper issue")]
+        [Fact(Skip= "VSUpgrade19 - ContextHelper issue")]
         public void ValidMetadata()
         {
             var message = new HttpWebRequestMessage(new Uri(ServiceUri + "$metadata"));
@@ -104,18 +100,17 @@ namespace Microsoft.Test.OData.Tests.Client.PublicProviderTests
                 var container = model.EntityContainer;
                 var entities = container.Elements.Where(e => e is IEdmEntitySet).ToArray();
                 // Verify all the entities are exposed
-                Assert.AreEqual(21, entities.Count(e => e.Name.StartsWith("EF")));
-                Assert.IsTrue(entities.All(e => e.Name.StartsWith("EF")));
+                Assert.Equal(21, entities.Count(e => e.Name.StartsWith("EF")));
+                Assert.True(entities.All(e => e.Name.StartsWith("EF")));
 
                 // Verify all the service operation are exposed
                 var functions = container.Elements.Where(e => e is IEdmOperationImport).ToArray();
-                Assert.AreEqual(3, functions.Count());
+                Assert.Equal(3, functions.Count());
             }
         }
 
         // Flaky test: OData.net GitHub #970
-        [TestMethod]
-        [Ignore("VSUpgrade19 - ContextHelper issue")]
+        [Fact(Skip= "VSUpgrade19 - ContextHelper issue")]
         public void ValidServiceDocument()
         {
             var metadataMessage = new HttpWebRequestMessage(new Uri(ServiceUri + "$metadata"));
@@ -131,8 +126,8 @@ namespace Microsoft.Test.OData.Tests.Client.PublicProviderTests
             using (var messageReader = new ODataMessageReader(message.GetResponse(), readerSettings, model))
             {
                 var workspace = messageReader.ReadServiceDocument();
-                Assert.AreEqual(21, workspace.EntitySets.Count(e => e.Name.StartsWith("EF")));
-                Assert.IsTrue(workspace.EntitySets.All(e => e.Name.StartsWith("EF")));
+                Assert.Equal(21, workspace.EntitySets.Count(e => e.Name.StartsWith("EF")));
+                Assert.True(workspace.EntitySets.All(e => e.Name.StartsWith("EF")));
             }
         }
 #endif

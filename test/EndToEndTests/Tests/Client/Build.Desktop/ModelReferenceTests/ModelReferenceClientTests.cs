@@ -13,9 +13,8 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
     using Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Location;
     using Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.Map;
     using Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class ModelReferenceClientTests : ODataWCFServiceTestsBase<TruckDemoService>
     {
         public ModelReferenceClientTests()
@@ -25,7 +24,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
 
         // Query set - Create entity - Get created entity - Update entity - Delete entity of set in referenced entity container
         // But type declared in main model
-        [TestMethod]
+        [Fact]
         public void EntitySetDeclaredInReferencedModelE2E()
         {
             // Query Entity Set in GPS
@@ -33,9 +32,9 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             var vehicleGPSSetInGPS = TestClientContext.VehicleGPSSetInGPS;
             foreach (var vehicleGPS in vehicleGPSSetInGPS)
             {
-                Assert.IsTrue(vehicleGPS != null);
+                Assert.True(vehicleGPS != null);
             }
-            Assert.AreEqual(3, vehicleGPSSetInGPS.Count());
+            Assert.Equal(3, vehicleGPSSetInGPS.Count());
 
             // Create an entity in VehicleGPSSetInGPS
             var newVehicleGPS = new VehicleGPSType()
@@ -79,7 +78,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             // Get the created entity
             var queryable = TestClientContext.VehicleGPSSetInGPS.Where(vehicleGPS => vehicleGPS.Key == "101");
             VehicleGPSType newCreated = queryable.Single();
-            Assert.AreEqual(100.1, newCreated.VehicleSpeed);
+            Assert.Equal(100.1, newCreated.VehicleSpeed);
 
             // Update the created entity 
             newCreated.VehicleSpeed = 200.1;
@@ -88,16 +87,16 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
 
             // Query and Delete entity
             VehicleGPSType updated = queryable.Single();
-            Assert.AreEqual(200.1, newCreated.VehicleSpeed);
+            Assert.Equal(200.1, newCreated.VehicleSpeed);
 
             TestClientContext.DeleteObject(updated);
             TestClientContext.SaveChanges();
-            Assert.AreEqual(3, vehicleGPSSetInGPS.Count());
+            Assert.Equal(3, vehicleGPSSetInGPS.Count());
         }
 
         // Query set - Create entity - Get created entity - Update entity - Delete entity of set in main entity container
         // But type declared in referenced model
-        [TestMethod]
+        [Fact]
         public void TypeDeclaredInReferencedModelE2E()
         {
             // Query VehicleGPSSet
@@ -105,9 +104,9 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             var vehicleGPSSet = TestClientContext.VehicleGPSSet;
             foreach (var vehicleGPS in vehicleGPSSet)
             {
-                Assert.IsTrue(vehicleGPS != null);
+                Assert.True(vehicleGPS != null);
             }
-            Assert.AreEqual(3, vehicleGPSSet.Count());
+            Assert.Equal(3, vehicleGPSSet.Count());
 
             // Create an entity in VehicleGPSSet
             var newVehicleGPS = new VehicleGPSType()
@@ -151,7 +150,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             // Get the created entity
             var queryable = TestClientContext.VehicleGPSSet.Where(vehicleGPS => vehicleGPS.Key == "101");
             VehicleGPSType newCreated = queryable.Single();
-            Assert.AreEqual(100.1, newCreated.VehicleSpeed);
+            Assert.Equal(100.1, newCreated.VehicleSpeed);
 
             // Update the created entity 
             newCreated.VehicleSpeed = 200.1;
@@ -160,16 +159,16 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
 
             // Query and Delete entity
             VehicleGPSType updated = queryable.Single();
-            Assert.AreEqual(200.1, newCreated.VehicleSpeed);
+            Assert.Equal(200.1, newCreated.VehicleSpeed);
 
             TestClientContext.DeleteObject(updated);
             TestClientContext.SaveChanges();
-            Assert.AreEqual(3, vehicleGPSSet.Count());
+            Assert.Equal(3, vehicleGPSSet.Count());
         }
 
         // Query set - Create entity - Get created entity - Update entity - Delete entity of set in main entity container
         // Type defined in main container, but derived from type referenced model
-        [TestMethod]
+        [Fact]
         public void EntitySetDerivedFromTypeDeclaredInReferencedE2E()
         {
             // Query VehicleGPSSet
@@ -177,9 +176,9 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             var derivedVehicleGPSSet = TestClientContext.DerivedVehicleGPSSet;
             foreach (var derivedVehicleGPS in derivedVehicleGPSSet)
             {
-                Assert.IsTrue(derivedVehicleGPS != null);
+                Assert.True(derivedVehicleGPS != null);
             }
-            Assert.AreEqual(2, derivedVehicleGPSSet.Count());
+            Assert.Equal(2, derivedVehicleGPSSet.Count());
 
             // Create an entity in VehicleGPSSet
             var newVehicleGPS = new DerivedVehicleGPSType()
@@ -224,7 +223,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             // Get the created entity
             var queryable = TestClientContext.DerivedVehicleGPSSet.Where(vehicleGPS => vehicleGPS.Key == "101");
             VehicleGPSType newCreated = queryable.Single();
-            Assert.AreEqual(100.1, newCreated.VehicleSpeed);
+            Assert.Equal(100.1, newCreated.VehicleSpeed);
 
             // Update the created entity 
             newCreated.VehicleSpeed = 200.1;
@@ -233,34 +232,34 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
 
             // Query and Delete entity
             VehicleGPSType updated = queryable.Single();
-            Assert.AreEqual(200.1, newCreated.VehicleSpeed);
+            Assert.Equal(200.1, newCreated.VehicleSpeed);
 
             TestClientContext.DeleteObject(updated);
             TestClientContext.SaveChanges();
-            Assert.AreEqual(2, derivedVehicleGPSSet.Count());
+            Assert.Equal(2, derivedVehicleGPSSet.Count());
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryProperty()
         {
             // Load property and navigation property from type declared in main model
             var outsideGeoFenceAlarm = (TestClientContext.Trucks.Where(t => t.Key == "Key1")).Select(t => t.OutsideGeoFenceAlarm).Single();
-            Assert.AreEqual(3, outsideGeoFenceAlarm.Severity);
+            Assert.Equal(3, outsideGeoFenceAlarm.Severity);
 
             var truck = (TestClientContext.Trucks.Where(t => t.Key == "Key1")).Single();
             TestClientContext.LoadProperty(truck, "VehicleGPS");
-            Assert.IsTrue(truck.VehicleGPS != null);
+            Assert.True(truck.VehicleGPS != null);
 
             // Load property from type declared in referenced model
             var currentLocation = (TestClientContext.VehicleGPSSet.Where(t => t.Key == "VehicleKey2")).Select(t => t.CurrentLocation).Single();
-            Assert.AreEqual(12.3, currentLocation.Long);
+            Assert.Equal(12.3, currentLocation.Long);
 
             // Load property from type derived from declared in referenced model
             var displayName = (TestClientContext.DerivedVehicleGPSSet.Where(t => t.Key == "VehicleKey4")).Select(t => t.DisplayName).Single();
-            Assert.AreEqual("DisplayName4", displayName);
+            Assert.Equal("DisplayName4", displayName);
         }
 
-        [TestMethod]
+        [Fact]
         public void AddNavigationProperty()
         {
             TestClientContext.MergeOption = MergeOption.OverwriteChanges;
@@ -306,7 +305,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             TestClientContext.SaveChanges();
 
             TestClientContext.LoadProperty(truck, "VehicleGPSGroup");
-            Assert.AreEqual(2, truck.VehicleGPSGroup.Count);
+            Assert.Equal(2, truck.VehicleGPSGroup.Count);
 
             // Add Navigation Property to VehicleGPSGroupFromGPS in TruckType
             var newVehicleGPSInGPS = new VehicleGPSType()
@@ -349,25 +348,25 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             TestClientContext.SaveChanges();
 
             TestClientContext.LoadProperty(truck, "VehicleGPSGroupFromGPS");
-            Assert.AreEqual(2, truck.VehicleGPSGroupFromGPS.Count);
+            Assert.Equal(2, truck.VehicleGPSGroupFromGPS.Count);
         }
 
-        [TestMethod]
+        [Fact]
         public void TypeCast()
         {
             // Cast type from referenced model to type
             var querable1 = TestClientContext.VehicleGPSSet.Where(v => v.Key == "VehicleKey6");
             var derivedEntity = querable1.Single() as DerivedVehicleGPSType;
-            Assert.AreEqual("DisplayName6", derivedEntity.DisplayName);
+            Assert.Equal("DisplayName6", derivedEntity.DisplayName);
 
             var querable2 = TestClientContext.VehicleGPSSetInGPS.Where(v => v.Key == "DerivedVehicleGPSInGPSKey3");
             var derivedEntity2 = querable2.Single() as DerivedVehicleGPSType;
-            Assert.AreEqual("DerivedVehicleGPSInGPSDP", derivedEntity2.DisplayName);
+            Assert.Equal("DerivedVehicleGPSInGPSDP", derivedEntity2.DisplayName);
 
             // Verify Linq result
             var querable3 = TestClientContext.VehicleGPSSet.Where(v => v.Key == "VehicleKey6").OfType<DerivedVehicleGPSType>();
             var test = querable3 as DataServiceQuery;
-            Assert.IsTrue(test.RequestUri.OriginalString.EndsWith("VehicleGPSSet/Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo.DerivedVehicleGPSType('VehicleKey6')"));
+            Assert.True(test.RequestUri.OriginalString.EndsWith("VehicleGPSSet/Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo.DerivedVehicleGPSType('VehicleKey6')"));
         }
     }
 }

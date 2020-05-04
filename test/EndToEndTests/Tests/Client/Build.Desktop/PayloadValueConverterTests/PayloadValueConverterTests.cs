@@ -11,12 +11,11 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.PluggableFormatServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
     /// <summary>
     /// Tests for pluggable format service
     /// </summary>
-    [TestClass]
     public class PayloadValueConverterTests : ODataWCFServiceTestsBase<PluggableFormatService>
     {
         public PayloadValueConverterTests()
@@ -24,7 +23,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         {
         }
 
-        [TestMethod]
+        [Fact]
         public void PostAndQuerySingleBinaryProperty()
         {
             var person = new Person
@@ -37,9 +36,9 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             var requestMessage =
                 new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "People(" + person.Id + ")/Picture", UriKind.Absolute));
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
             var dat = new StreamReader(responseMessage.GetStream()).ReadToEnd();
-            Assert.IsTrue(dat.Contains("\"value\":\"3-1-4\""));
+            Assert.True(dat.Contains("\"value\":\"3-1-4\""));
         }
     }
 }

@@ -9,12 +9,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using System;
     using System.Collections.Generic;
     using Microsoft.OData.Client;
-    using Microsoft.OData.Client.Metadata;
     using FluentAssertions;
     using Microsoft.OData.Edm;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class TypeResolverTests
     {
         private ClientEdmModel clientModel;
@@ -22,8 +20,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         private IEdmEntityType clientEntityType;
         private EdmStructuralProperty clientIdProperty;
 
-        [TestInitialize]
-        public void Init()
+        public TypeResolverTests()
         {
             this.serverModel = new EdmModel();
             this.clientModel = new ClientEdmModel(ODataProtocolVersion.V4);
@@ -36,19 +33,19 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             this.serverModel.AddElement(serverContainer);
             serverContainer.AddEntitySet("Entities", serverType);
 
-            var serverType2 = new EdmEntityType("FQ.NS", "TestServerType2"); 
+            var serverType2 = new EdmEntityType("FQ.NS", "TestServerType2");
             this.serverModel.AddElement(serverType2);
             serverType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo() { Name = "Navigation", Target = serverType2, TargetMultiplicity = EdmMultiplicity.ZeroOrOne });
         }
 
-        [TestMethod]
+        [Fact]
         public void ResolutionFromTypeShouldNotRequireTypeToNameResolverWhenServerModelIsPresent()
         {
             var testSubject = this.CreateTypeResolver(true, resolveNameFromType: t => null);
             testSubject.ResolveExpectedTypeForReading(typeof(TestClientEntityType)).Should().BeNull();
         }
 
-        [TestMethod]
+        [Fact]
         public void ResolutionFromTypeShouldUseServerModelWhenPresentForEntityTypes()
         {
             var entityType = new EdmEntityType("Fake", "MyServerType");
@@ -65,26 +62,26 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             testSubject.ResolveExpectedTypeForReading(typeof(TestClientEntityType)).Should().BeSameAs(entityType);
         }
 
-        [TestMethod]
+        [Fact]
         public void ResolutionFromTypeShouldReturnClientTypeWhenServerModelIsNotPresent()
         {
             var testSubject = this.CreateTypeResolver(false);
             testSubject.ResolveExpectedTypeForReading(typeof(TestClientEntityType)).Should().BeSameAs(this.clientEntityType);
         }
 
-        [TestMethod]
+        [Fact]
         public void ResolutionFromTypeShouldReturnClientTypeWhenServerModelNotPresentForComplexTypes()
         {
             this.TestNonEntityResolutionFromType<TestClientComplexType>(false);
         }
 
-        [TestMethod]
+        [Fact]
         public void ResolutionFromTypeShouldReturnClientTypeWhenServerModelNotPresentForComplexCollectionTypes()
         {
             this.TestNonEntityResolutionFromType<List<TestClientComplexType>>(false);
         }
 
-        [TestMethod]
+        [Fact]
         public void ResolutionFromTypeShouldUseServerModelWhenPresentForComplexTypes()
         {
             var complexType = new EdmComplexType("Fake", "MyServerType");
@@ -101,7 +98,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             testSubject.ResolveExpectedTypeForReading(typeof(TestClientComplexType)).Should().BeSameAs(complexType);
         }
 
-        [TestMethod]
+        [Fact]
         public void ResolutionFromTypeShouldUseServerModelWhenPresentForComplexCollectionTypes()
         {
             var complexType = new EdmComplexType("Fake", "MyServerType");
@@ -120,7 +117,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             result.As<IEdmCollectionType>().ElementType.Definition.Should().BeSameAs(complexType);
         }
 
-        [TestMethod]
+        [Fact]
         public void ResolutionFromTypeShouldReturnNullForCollectionTypeIfElementTypeCannotBeResolved()
         {
             // Regression coverage for: Query for collection of complex values fails on JSON client when type-name resolver is not defined.
@@ -132,21 +129,21 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             testSubject.ResolveExpectedTypeForReading(typeof(List<TestClientComplexType>)).Should().BeNull();
         }
 
-        [TestMethod]
+        [Fact]
         public void ResolutionFromTypeShouldNotUseServerModelForPrimitiveTypes()
         {
             this.TestNonEntityResolutionFromType<int>(true);
             this.TestNonEntityResolutionFromType<int>(false);
         }
 
-        [TestMethod]
+        [Fact]
         public void ResolutionFromTypeShouldNotUseServerModelForPrimitiveCollectionTypes()
         {
             this.TestNonEntityResolutionFromType<List<int>>(true);
             this.TestNonEntityResolutionFromType<List<int>>(false);
         }
 
-        [TestMethod]
+        [Fact]
         public void TypeResolverShouldTreatAllPropertiesAsDefinedWhenServerModelIsNotAvailable()
         {
             TypeResolver testSubject = this.CreateTypeResolver(false);
@@ -154,14 +151,14 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             testSubject.ShouldWriteClientTypeForOpenServerProperty(fakeProperty, "SomeServerType").Should().BeFalse();
         }
 
-        [TestMethod]
+        [Fact]
         public void TypeResolverShouldTreatAllPropertiesAsDefinedWhenServerTypeCannotBeFound()
         {
             TypeResolver testSubject = this.CreateTypeResolver(true);
             testSubject.ShouldWriteClientTypeForOpenServerProperty(this.clientIdProperty, "SomeServerType").Should().BeFalse();
         }
 
-        [TestMethod]
+        [Fact]
         public void TypeResolverShouldTreatAllPropertiesAsDefinedWhenDefiningTypeIsComplex()
         {
             TypeResolver testSubject = this.CreateTypeResolver(true);
@@ -169,21 +166,21 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             testSubject.ShouldWriteClientTypeForOpenServerProperty(fakeProperty, "SomeServerType").Should().BeFalse();
         }
 
-        [TestMethod]
+        [Fact]
         public void TypeResolverShouldTreatAllPropertiesAsDefinedWhenServerTypeNameIsUnknown()
         {
             var testSubject = this.CreateTypeResolver(true);
             testSubject.ShouldWriteClientTypeForOpenServerProperty(this.clientIdProperty, null).Should().BeFalse();
         }
 
-        [TestMethod]
+        [Fact]
         public void TypeResolverShouldAskServerModelWhetherPropertyIsDefinedIfMatchIsFound()
         {
             var testSubject = this.CreateTypeResolver(true);
             testSubject.ShouldWriteClientTypeForOpenServerProperty(this.clientIdProperty, "FQ.NS.TestServerType").Should().BeTrue();
         }
 
-        [TestMethod]
+        [Fact]
         public void TypeResolverShouldNotFindEntitySetBaseTypeIfItHasNoServerModel()
         {
             var testSubject = this.CreateTypeResolver(false);
@@ -192,7 +189,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             serverTypeName.Should().BeNull();
         }
 
-        [TestMethod]
+        [Fact]
         public void TypeResolverShouldNotFindEntitySetBaseTypeIfItHasAServerModelButSetDoesNotExist()
         {
             var testSubject = this.CreateTypeResolver(true);
@@ -201,7 +198,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             serverTypeName.Should().BeNull();
         }
 
-        [TestMethod]
+        [Fact]
         public void TypeResolverShouldFindEntitySetBaseTypeIfItHasAServerModel()
         {
             var testSubject = this.CreateTypeResolver(true);
@@ -210,7 +207,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             serverTypeName.Should().Be("FQ.NS.TestServerType");
         }
 
-        [TestMethod]
+        [Fact]
         public void TypeResolverShouldNotFindNavigationTargetTypeIfItHasNoServerModel()
         {
             var testSubject = this.CreateTypeResolver(false);
@@ -219,7 +216,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             serverTypeName.Should().BeNull();
         }
 
-        [TestMethod]
+        [Fact]
         public void TypeResolverShouldNotFindNavigationTargetTypeIfItHasAServerModelButSourceTypeDoesNotExist()
         {
             var testSubject = this.CreateTypeResolver(true);
@@ -228,7 +225,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             serverTypeName.Should().BeNull();
         }
         
-        [TestMethod]
+        [Fact]
         public void TypeResolverShouldNotFindNavigationTargetTypeIfItHasAServerModelButNavigationDoesNotExist()
         {
             var testSubject = this.CreateTypeResolver(true);
@@ -237,7 +234,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             serverTypeName.Should().BeNull();
         }
         
-        [TestMethod]
+        [Fact]
         public void TypeResolverShouldFindNavigationTargetTypeIfItHasAServerModel()
         {
             var testSubject = this.CreateTypeResolver(true);
@@ -246,7 +243,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             serverTypeName.Should().Be("FQ.NS.TestServerType2");
         }
 
-        [TestMethod]
+        [Fact]
         public void TypeResolverShouldFindNotNavigationTargetTypeIfItHasAServerModelButServerTypeNameIsNull()
         {
             var testSubject = this.CreateTypeResolver(true);

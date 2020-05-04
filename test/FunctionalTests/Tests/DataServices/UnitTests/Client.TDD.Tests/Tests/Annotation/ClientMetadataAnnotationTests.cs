@@ -12,12 +12,10 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
     using System.Reflection;
     using Microsoft.OData.Client.TDDUnitTests.Tests.Annotation.AnnotationTargetingOperationTestsProxy;
     using Microsoft.OData.Client.TDDUnitTests.Tests.Annotation.ConstantAnnotationProxy;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
+    using Xunit;
     using Edm = Microsoft.OData.Edm;
     using OperationProxy = Microsoft.OData.Client.TDDUnitTests.Tests.Annotation.AnnotationTargetingOperationTestsProxy;
 
-    [TestClass]
     public class ClientMetadataAnnotationTests
     {
         private const string DescriptionV1 = "Org.OData.Core.V1.Description";
@@ -34,7 +32,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
 
         #region Constant Annotation
 
-        [TestMethod]
+        [Fact]
         public void GetConstantAnnotationDefinedInAttribute()
         {
             var dsc = new ConstantAnnotationContainerPlus(new Uri("http://odata.org/"));
@@ -56,7 +54,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
             GetAndCheckAnnotation(entity, dsc, constAnnotationQualifiedNamePrefix + "EnumMemberTerm", ColorPlus.BluePlus);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetConstantAnnotationDefinedInElement()
         {
             var dsc = new ConstantAnnotationContainerPlus(new Uri("http://odata.org/"));
@@ -78,7 +76,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
             GetAndCheckAnnotation(entity, dsc, constAnnotationQualifiedNamePrefix + "EnumMemberTerm", ColorPlus.YellowPlus);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetNullAnnotationDefinedInElement()
         {
             var dsc = new ConstantAnnotationContainerPlus(new Uri("http://odata.org/"));
@@ -92,16 +90,16 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
         {
             T annotationValue = default(T);
             var result = dsc.TryGetAnnotation(entity, termName, out annotationValue);
-            Assert.IsTrue(result);
+            Assert.True(result);
             if (annotationValue is byte[])
             {
                 var binaryValue = annotationValue as byte[];
                 var expectedBinaryValue = expectedValue as byte[];
-                Assert.IsTrue(binaryValue.SequenceEqual(expectedBinaryValue));
+                Assert.True(binaryValue.SequenceEqual(expectedBinaryValue));
             }
             else
             {
-                Assert.AreEqual(expectedValue, annotationValue);
+                Assert.Equal(expectedValue, annotationValue);
             }
         }
 
@@ -109,26 +107,26 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
 
         #region Annotation targeting Edm type by using object instance
 
-        [TestMethod]
+        [Fact]
         public void GetConstantAnnotationTargetingEntityType()
         {
             PersonPlus person = CreatePerson();
             string description = null;
             var result = defaultContainer.TryGetAnnotation(person, DescriptionV1, out description);
-            Assert.IsTrue(result);
-            Assert.AreEqual("A person contains basic properties", description);
+            Assert.True(result);
+            Assert.Equal("A person contains basic properties", description);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetConstantAnnotationTargetingDerivedEntityType()
         {
             VipCustomerPlus vipCustomer = CreateVipCustomer();
             string description = null;
             var result = defaultContainer.TryGetAnnotation(vipCustomer, DescriptionV1, out description);
-            Assert.AreEqual("A person contains basic properties", description);
+            Assert.Equal("A person contains basic properties", description);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetPathAnnotationTargetingEntityType()
         {
             PersonPlus person = CreatePerson();
@@ -136,15 +134,15 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
             string CompanyAddress = null;
 
             var result = defaultContainer.TryGetAnnotation(person, "Microsoft.OData.SampleService.Models.TripPin.BillingAddress", out billingAddress);
-            Assert.IsTrue(result);
-            Assert.AreEqual("Lianhua Road", billingAddress);
+            Assert.True(result);
+            Assert.Equal("Lianhua Road", billingAddress);
 
             result = defaultContainer.TryGetAnnotation(person, "Microsoft.OData.SampleService.Models.TripPin.CompanyAddress", out CompanyAddress);
-            Assert.IsTrue(result);
-            Assert.AreEqual("Zixing Road", CompanyAddress);
+            Assert.True(result);
+            Assert.Equal("Zixing Road", CompanyAddress);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetPathAnnotationTargetingDerivedEntityType()
         {
             VipCustomerPlus person = CreateVipCustomer();
@@ -152,139 +150,139 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
             string billingAddress = null;
             string CompanyAddress = null;
             var result = defaultContainer.TryGetAnnotation(person, "Microsoft.OData.SampleService.Models.TripPin.BillingAddress", out billingAddress);
-            Assert.IsTrue(result);
-            Assert.AreEqual("Xuanwu Street", billingAddress);
+            Assert.True(result);
+            Assert.Equal("Xuanwu Street", billingAddress);
             result = defaultContainer.TryGetAnnotation(person, "Microsoft.OData.SampleService.Models.TripPin.CompanyAddress", out CompanyAddress);
-            Assert.IsTrue(result);
-            Assert.AreEqual("Wudong Road", CompanyAddress);
+            Assert.True(result);
+            Assert.Equal("Wudong Road", CompanyAddress);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetRecordAnnotationTargetingEntityType()
         {
             PersonPlus person = CreatePerson();
 
             PersonInPublicViewPlus personInPublicView = null;
             var result = defaultContainer.TryGetAnnotation(person, "Microsoft.OData.SampleService.Models.TripPin.PersonView", out personInPublicView);
-            Assert.IsTrue(result);
-            Assert.IsNotNull(personInPublicView);
-            Assert.AreEqual("NelsonW", personInPublicView.DisplayNamePlus);
-            Assert.AreEqual(PersonGenderPlus.FemalePlus, personInPublicView.MaleOrFemalePlus);
+            Assert.True(result);
+            Assert.NotNull(personInPublicView);
+            Assert.Equal("NelsonW", personInPublicView.DisplayNamePlus);
+            Assert.Equal(PersonGenderPlus.FemalePlus, personInPublicView.MaleOrFemalePlus);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetRecordAnnotationTargetingDerivedEntityType()
         {
             VipCustomerPlus person = CreateVipCustomer();
 
             PersonInPublicViewPlus personInPublicView = null;
             var result = defaultContainer.TryGetAnnotation(person, "Microsoft.OData.SampleService.Models.TripPin.PersonView", out personInPublicView);
-            Assert.IsTrue(result);
-            Assert.IsNotNull(personInPublicView);
-            Assert.AreEqual("TomN", personInPublicView.DisplayNamePlus);
-            Assert.AreEqual(PersonGenderPlus.MalePlus, personInPublicView.MaleOrFemalePlus);
+            Assert.True(result);
+            Assert.NotNull(personInPublicView);
+            Assert.Equal("TomN", personInPublicView.DisplayNamePlus);
+            Assert.Equal(PersonGenderPlus.MalePlus, personInPublicView.MaleOrFemalePlus);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetCollectionAnnotationTargetingEntityType()
         {
             PersonPlus person = CreatePerson();
             IEnumerable<string> seoTerms = null;
 
             var result = defaultContainer.TryGetAnnotation(person, "Microsoft.OData.SampleService.Models.TripPin.SeoTerms", out seoTerms);
-            Assert.IsTrue(result);
-            Assert.IsNotNull(seoTerms);
-            Assert.AreEqual(2, seoTerms.Count());
-            Assert.AreEqual("Nelson", seoTerms.ElementAt(0));
-            Assert.AreEqual("NelsonW", seoTerms.ElementAt(1));
+            Assert.True(result);
+            Assert.NotNull(seoTerms);
+            Assert.Equal(2, seoTerms.Count());
+            Assert.Equal("Nelson", seoTerms.ElementAt(0));
+            Assert.Equal("NelsonW", seoTerms.ElementAt(1));
         }
 
-        [TestMethod]
+        [Fact]
         public void GetPathAnnotationTargetingComplexType()
         {
             PersonPlus person = CreatePerson();
             string cityName = null;
 
             var result = defaultContainer.TryGetAnnotation(person.LocationPlus, "Microsoft.OData.SampleService.Models.TripPin.CityName", out cityName);
-            Assert.IsTrue(result);
-            Assert.AreEqual("Shanghai", cityName);
+            Assert.True(result);
+            Assert.Equal("Shanghai", cityName);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetPathAnnotationTargetingDerivedComplexType()
         {
             PersonPlus person = CreatePerson();
             string cityName = null;
 
             var result = defaultContainer.TryGetAnnotation(person.CompanyLocationPlus, "Microsoft.OData.SampleService.Models.TripPin.CityName", out cityName);
-            Assert.IsTrue(result);
-            Assert.AreEqual("Beijing", cityName);
+            Assert.True(result);
+            Assert.Equal("Beijing", cityName);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetConstantAnnotationTargetingEnumType()
         {
             PersonPlus person = CreatePerson();
             string description = null;
 
             var result = defaultContainer.TryGetAnnotation(person.GenderPlus, DescriptionV1, out description);
-            Assert.IsTrue(result);
-            Assert.AreEqual("This Enum type indicates a person's gender", description);
+            Assert.True(result);
+            Assert.Equal("This Enum type indicates a person's gender", description);
         }
 
         #endregion Annotation targeting Type
 
         #region Annotation targeting Edm type by using Type
 
-        [TestMethod]
+        [Fact]
         public void GetConstantAnnotationTargetingEntityTypeByUsingType()
         {
             PersonPlus person = CreatePerson();
             string description = null;
 
             var result = defaultContainer.TryGetAnnotation(typeof(PersonPlus), DescriptionV1, out description);
-            Assert.IsTrue(result);
-            Assert.AreEqual("A person contains basic properties", description);
+            Assert.True(result);
+            Assert.Equal("A person contains basic properties", description);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetConstantAnnotationTargetingDerivedEntityTypeByUsingType()
         {
             VipCustomerPlus vipCustomer = CreateVipCustomer();
             string description = null;
 
             var result = defaultContainer.TryGetAnnotation(typeof(VipCustomerPlus), DescriptionV1, out description);
-            Assert.IsTrue(result);
-            Assert.AreEqual("A person contains basic properties", description);
+            Assert.True(result);
+            Assert.Equal("A person contains basic properties", description);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetConstantAnnotationTargetingComplexTypeByUsingType()
         {
             PersonPlus person = CreatePerson();
             string description = null;
 
             var result = defaultContainer.TryGetAnnotation(typeof(CompanyLocationPlus), DescriptionV1, out description);
-            Assert.IsTrue(result);
-            Assert.AreEqual("Company name for this person", description);
+            Assert.True(result);
+            Assert.Equal("Company name for this person", description);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetConstantAnnotationTargetingEnumTypeByUsingType()
         {
             PersonPlus person = CreatePerson();
             string description = null;
 
             var result = defaultContainer.TryGetAnnotation(typeof(PersonGenderPlus), DescriptionV1, out description);
-            Assert.IsTrue(result);
-            Assert.AreEqual("This Enum type indicates a person's gender", description);
+            Assert.True(result);
+            Assert.Equal("This Enum type indicates a person's gender", description);
         }
 
         #endregion Annotation targeting Type
 
         #region Annotation targeting bound function
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingBoundFunction()
         {
             string annotationValue = null;
@@ -294,11 +292,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 () => et.FunctionWithoutParameterPlus(),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("FunctionWithoutParameter", annotationValue);
+            Assert.True(result);
+            Assert.Equal("FunctionWithoutParameter", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingBoundFunctionCalledFromDerivedEntityType()
         {
             string annotationValue = null;
@@ -308,11 +306,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 () => et.FunctionWithoutParameterPlus(),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("FunctionWithoutParameterBoundToDerivedET", annotationValue);
+            Assert.True(result);
+            Assert.Equal("FunctionWithoutParameterBoundToDerivedET", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingBoundFunctionWithParameter()
         {
             string annotationValue = null;
@@ -322,11 +320,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 (s) => et.FunctionWithParameterPlus(s),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("FunctionWithOneParameter", annotationValue);
+            Assert.True(result);
+            Assert.Equal("FunctionWithOneParameter", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingOverridedBoundFunctionWithParameterOverride()
         {
             string annotationValue = null;
@@ -336,11 +334,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 (s1, s2) => et.FunctionWithParameterPlus(s1, s2),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("FunctionWithTwoParameters", annotationValue);
+            Assert.True(result);
+            Assert.Equal("FunctionWithTwoParameters", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingFunctionBoundToBaseEntityTypeWithDerviedEntityType()
         {
             string annotationValue = null;
@@ -350,11 +348,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 (s1, s2) => et.FunctionWithParameterPlus(s1, s2),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("FunctionWithTwoParameters", annotationValue);
+            Assert.True(result);
+            Assert.Equal("FunctionWithTwoParameters", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingFunctionBoundToCollectionOfEntity()
         {
             string annotationValue = null;
@@ -363,11 +361,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 (s1) => operationTestServiceContainer.ETSetsPlus.FunctionBoundToCollectionOfEntityPlus(s1),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("FunctionBoundToCollectionOfEntity", annotationValue);
+            Assert.True(result);
+            Assert.Equal("FunctionBoundToCollectionOfEntity", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingFunctionBoundToCollectionofEntityCalledFromCollectionofDerivedEntity()
         {
             string annotationValue = null;
@@ -376,11 +374,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 (s1) => operationTestServiceContainer.DerivedETSetsPlus.FunctionBoundToCollectionOfEntityPlus(s1),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("FunctionBoundToCollectionOfDerivedEntity", annotationValue);
+            Assert.True(result);
+            Assert.Equal("FunctionBoundToCollectionOfDerivedEntity", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingFunctionBoundToCollectionofBaseEntityCalledFromCollectionofDerivedEntity()
         {
             string annotationValue = null;
@@ -389,11 +387,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 (s1) => operationTestServiceContainer.DerivedETSetsPlus.FunctionBoundToCollectionOfBaseEntityPlus(s1),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("FunctionBoundToCollectionOfBaseEntity", annotationValue);
+            Assert.True(result);
+            Assert.Equal("FunctionBoundToCollectionOfBaseEntity", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingFunctionBoundToEntityByCallingExtensionMethods()
         {
             string annotationValue = null;
@@ -402,11 +400,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 (s1) => operationTestServiceContainer.SingleETPlus.FunctionWithParameterPlus(s1),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("FunctionWithOneParameter", annotationValue);
+            Assert.True(result);
+            Assert.Equal("FunctionWithOneParameter", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingFunctionBoundToDerivedEntityByCallingExtensionMethodsWithDerivedEntity()
         {
             string annotationValue = null;
@@ -415,11 +413,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 (s1) => operationTestServiceContainer.DerivedETSetsPlus.ByKey("userName").FunctionWithParameterPlus(s1),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("FunctionWithOneParameterBoundToDerivedET", annotationValue);
+            Assert.True(result);
+            Assert.Equal("FunctionWithOneParameterBoundToDerivedET", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingFunctionBoundToBaseEntityByCallingExtensionMethodsWithDerivedEntity()
         {
             string annotationValue = null;
@@ -428,15 +426,15 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 (s1, s2) => operationTestServiceContainer.DerivedETSetsPlus.ByKey("userName").FunctionWithParameterPlus(s1, s2),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("FunctionWithTwoParameters", annotationValue);
+            Assert.True(result);
+            Assert.Equal("FunctionWithTwoParameters", annotationValue);
         }
 
         #endregion
 
         #region Annotation targeting bound function by using MethodInfo
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingBoundFunctionByUsingMethodInfo()
         {
             string annotationValue = null;
@@ -445,11 +443,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 typeof(ETPlus).GetMethod("FunctionWithoutParameterPlus"),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("FunctionWithoutParameter", annotationValue);
+            Assert.True(result);
+            Assert.Equal("FunctionWithoutParameter", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingFunctionBoundToDerivedEntityTypeByUsingMethodInfo()
         {
             string annotationValue = null;
@@ -458,11 +456,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 typeof(DerivedETPlus).GetMethod("FunctionWithoutParameterPlus"),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("FunctionWithoutParameterBoundToDerivedET", annotationValue);
+            Assert.True(result);
+            Assert.Equal("FunctionWithoutParameterBoundToDerivedET", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingFunctionWithParameterBoundToEntityTypeByUsingMethodInfo()
         {
             string annotationValue = null;
@@ -471,11 +469,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 typeof(ETPlus).GetMethod("FunctionWithParameterPlus", new Type[] { typeof(string) }),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("FunctionWithOneParameter", annotationValue);
+            Assert.True(result);
+            Assert.Equal("FunctionWithOneParameter", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingOverloadedFunctionWithParameterBoundToEntityTypeByUsingMethodInfo()
         {
             string annotationValue = null;
@@ -484,11 +482,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 typeof(ETPlus).GetMethod("FunctionWithParameterPlus", new Type[] { typeof(string), typeof(string) }),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("FunctionWithTwoParameters", annotationValue);
+            Assert.True(result);
+            Assert.Equal("FunctionWithTwoParameters", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingFunctionBoundToBaseEntityTypeCalledFromDerviedEntityTypeByUsingMethodInfo()
         {
             string annotationValue = null;
@@ -497,11 +495,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 typeof(DerivedETPlus).GetMethod("FunctionWithParameterPlus", new Type[] { typeof(string), typeof(string) }),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("FunctionWithTwoParameters", annotationValue);
+            Assert.True(result);
+            Assert.Equal("FunctionWithTwoParameters", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingFunctionBoundToCollectionOfEntityByUsingMethodInfo()
         {
             string annotationValue = null;
@@ -512,11 +510,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 new Type[] { typeof(DataServiceQuery<ETPlus>), typeof(string) }),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("FunctionBoundToCollectionOfEntity", annotationValue);
+            Assert.True(result);
+            Assert.Equal("FunctionBoundToCollectionOfEntity", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingFunctionBoundToCollectionofEntityCalledFromCollectionofDerivedEntityByUsingMethodInfo()
         {
             string annotationValue = null;
@@ -527,11 +525,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 new Type[] { typeof(DataServiceQuery<DerivedETPlus>), typeof(string) }),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("FunctionBoundToCollectionOfDerivedEntity", annotationValue);
+            Assert.True(result);
+            Assert.Equal("FunctionBoundToCollectionOfDerivedEntity", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingFunctionBoundToCollectionofBaseEntityCalledFromCollectionofDerivedEntityByUsingMethodInfo()
         {
             string annotationValue = null;
@@ -542,11 +540,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 new Type[] { typeof(DataServiceQuery<DerivedETPlus>), typeof(string) }),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("FunctionBoundToCollectionOfBaseEntity", annotationValue);
+            Assert.True(result);
+            Assert.Equal("FunctionBoundToCollectionOfBaseEntity", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingFunctionBoundToEntityByCallingExtensionMethodsByUsingMethodInfo()
         {
             string annotationValue = null;
@@ -555,11 +553,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 typeof(OperationProxy.ExtensionMethods).GetMethod("FunctionWithParameterPlus", new Type[] { typeof(DataServiceQuerySingle<ETPlus>), typeof(string) }),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("FunctionWithOneParameter", annotationValue);
+            Assert.True(result);
+            Assert.Equal("FunctionWithOneParameter", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingFunctionBoundToDerivedEntityByCallingExtensionMethodsWithDerivedEntityByUsingMethodInfo()
         {
             string annotationValue = null;
@@ -568,11 +566,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 typeof(OperationProxy.ExtensionMethods).GetMethod("FunctionWithParameterPlus", new Type[] { typeof(DataServiceQuerySingle<DerivedETPlus>), typeof(string) }),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("FunctionWithOneParameterBoundToDerivedET", annotationValue);
+            Assert.True(result);
+            Assert.Equal("FunctionWithOneParameterBoundToDerivedET", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingFunctionBoundToBaseEntityByCallingExtensionMethodsWithDerivedEntityByUsingMethodInfo()
         {
             string annotationValue = null;
@@ -581,15 +579,15 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 typeof(OperationProxy.ExtensionMethods).GetMethod("FunctionWithParameterPlus", new Type[] { typeof(DataServiceQuerySingle<DerivedETPlus>), typeof(string), typeof(string) }),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("FunctionWithTwoParameters", annotationValue);
+            Assert.True(result);
+            Assert.Equal("FunctionWithTwoParameters", annotationValue);
         }
 
         #endregion
 
         #region Annotation targeting bound action
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingBoundActionWithoutReturnType()
         {
             string annotationValue = null;
@@ -599,11 +597,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 () => et.ActionWithoutReturnTypePlus(),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("ActionWithoutReturnType", annotationValue);
+            Assert.True(result);
+            Assert.Equal("ActionWithoutReturnType", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingBoundActionWithParameterWithoutReturnType()
         {
             string annotationValue = null;
@@ -613,11 +611,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 (s1) => et.ActionWithParameterWithoutReturnTypePlus(s1),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("ActionWithParameterWithoutReturnType", annotationValue);
+            Assert.True(result);
+            Assert.Equal("ActionWithParameterWithoutReturnType", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingBoundActionWithoutParameter()
         {
             string annotationValue = null;
@@ -627,11 +625,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 () => et.ActionWithoutParameterPlus(),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("ActionWithoutParameter", annotationValue);
+            Assert.True(result);
+            Assert.Equal("ActionWithoutParameter", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingBoundActionWithParameter()
         {
             string annotationValue = null;
@@ -641,11 +639,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 (s1) => et.ActionWithParameterPlus(s1),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("ActionWithOneParameter", annotationValue);
+            Assert.True(result);
+            Assert.Equal("ActionWithOneParameter", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingOverloadedActionBoundToCollectionOfEntityType()
         {
             string annotationValue = null;
@@ -654,14 +652,14 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 (s1) => operationTestServiceContainer.ETSetsPlus.ActionBoundToCollectionOfEntityPlus(s1),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("ActionBoundToCollectionOfEntity", annotationValue);
+            Assert.True(result);
+            Assert.Equal("ActionBoundToCollectionOfEntity", annotationValue);
         }
         #endregion Annotation targeting bound Action
 
         #region Annotation targeting bound action by using MethodInfo
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingBoundActionWithoutReturnTypeByUsingMethodInfo()
         {
             string annotationValue = null;
@@ -670,11 +668,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 typeof(ETPlus).GetMethod("ActionWithoutReturnTypePlus"),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("ActionWithoutReturnType", annotationValue);
+            Assert.True(result);
+            Assert.Equal("ActionWithoutReturnType", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingBoundActionWithParameterWithoutReturnTypeByUsingMethodInfo()
         {
             string annotationValue = null;
@@ -683,15 +681,15 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 typeof(ETPlus).GetMethod("ActionWithParameterWithoutReturnTypePlus", new Type[] { typeof(string) }),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("ActionWithParameterWithoutReturnType", annotationValue);
+            Assert.True(result);
+            Assert.Equal("ActionWithParameterWithoutReturnType", annotationValue);
         }
 
         #endregion
 
         #region Annotation targeting Navigation Property or Property
 
-        [TestMethod]
+        [Fact]
         public void GetConstantAnnotationTargetingProperty()
         {
             bool annotationValue = false;
@@ -699,11 +697,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
 
             var result = defaultContainer.TryGetAnnotation<Func<long>, bool>(
                 () => person.ConcurrencyPlus, "Org.OData.Core.V1.Computed", out annotationValue);
-            Assert.IsTrue(result);
-            Assert.IsTrue(annotationValue);
+            Assert.True(result);
+            Assert.True(annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetPathAnnotationTargetingProperty()
         {
             string annotationValue = null;
@@ -713,11 +711,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 () => person.LocationPlus,
                 "Microsoft.OData.SampleService.Models.TripPin.CompanyCityName",
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("Beijing", annotationValue);
+            Assert.True(result);
+            Assert.Equal("Beijing", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetConstantAnnotationTargetingNavigationProperty()
         {
             string annotationValue = null;
@@ -727,26 +725,26 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 () => person.FriendsPlus,
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("A friend of this person", annotationValue);
+            Assert.True(result);
+            Assert.Equal("A friend of this person", annotationValue);
         }
 
         #endregion
 
         #region Annotation targeting navigation property or property by using PropertyInfo
 
-        [TestMethod]
+        [Fact]
         public void GetConstantAnnotationTargetingPropertyByUsingPropertyInfo()
         {
             bool annotationValue = false;
 
             var result = defaultContainer.TryGetAnnotation(
                 typeof(PersonPlus).GetProperty("ConcurrencyPlus"), "Org.OData.Core.V1.Computed", out annotationValue);
-            Assert.IsTrue(result);
-            Assert.IsTrue(annotationValue);
+            Assert.True(result);
+            Assert.True(annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetPathAnnotationTargetingPropertyByUsingPropertyInfo()
         {
             string annotationValue = null;
@@ -755,11 +753,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 typeof(PersonPlus).GetProperty("LocationPlus"),
                 "Microsoft.OData.SampleService.Models.TripPin.CompanyCityName",
                 out annotationValue);
-            Assert.IsFalse(result);
-            Assert.IsNull(annotationValue);
+            Assert.False(result);
+            Assert.Null(annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetConstantAnnotationTargetingNavigationPropertyByUsingPropertyInfo()
         {
             string annotationValue = null;
@@ -768,26 +766,26 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 typeof(PersonPlus).GetProperty("FriendsPlus"),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("A friend of this person", annotationValue);
+            Assert.True(result);
+            Assert.Equal("A friend of this person", annotationValue);
         }
         #endregion
 
         #region Annotation targeting entityContainer
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingEntityContainer()
         {
             string annotationValue = null;
 
             var result = defaultContainer.TryGetAnnotation<string>(defaultContainer, DescriptionV1, out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("TripPin Service", annotationValue);
+            Assert.True(result);
+            Assert.Equal("TripPin Service", annotationValue);
         }
         #endregion
 
         #region Annotation targeting operation import
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingFunctionImport()
         {
             string annotationValue = null;
@@ -796,11 +794,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 (s1) => operationTestServiceContainer.UnboundFunctionWithParameterPlus(s1),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("FunctionImportWithParameter", annotationValue);
+            Assert.True(result);
+            Assert.Equal("FunctionImportWithParameter", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingActionImport()
         {
             string annotationValue = null;
@@ -809,15 +807,15 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 (s1) => operationTestServiceContainer.UnboundActionWithParameterPlus(s1),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("ActionImportWithParameter", annotationValue);
+            Assert.True(result);
+            Assert.Equal("ActionImportWithParameter", annotationValue);
         }
 
         #endregion
 
         #region Annotation targeting operation import by using MethodInfo
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingFunctionImportByUsingMethodInfo()
         {
             string annotationValue = null;
@@ -826,11 +824,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 typeof(OperationTestServiceContainerPlus).GetMethod("UnboundFunctionWithParameterPlus", new[] { typeof(string) }),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("FunctionImportWithParameter", annotationValue);
+            Assert.True(result);
+            Assert.Equal("FunctionImportWithParameter", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingActionImportByUsingMethodInfo()
         {
             string annotationValue = null;
@@ -839,15 +837,15 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 typeof(OperationTestServiceContainerPlus).GetMethod("UnboundActionWithParameterPlus", new[] { typeof(string) }),
                 DescriptionV1,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("ActionImportWithParameter", annotationValue);
+            Assert.True(result);
+            Assert.Equal("ActionImportWithParameter", annotationValue);
         }
 
         #endregion
 
         #region Annotation targeting EntitySet or Singleton
 
-        [TestMethod]
+        [Fact]
         public void GetCollectionOfConstantAnnotationTargetingEntitySet()
         {
             IEnumerable<Nullable<long>> annotationValue = null;
@@ -856,63 +854,63 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 () => defaultContainer.PeoplePlus,
                 "Microsoft.OData.SampleService.Models.TripPin.VipCustomerWhiteList",
                 out annotationValue);
-            Assert.IsTrue(result);
+            Assert.True(result);
             var actualAnnotationValue = annotationValue as List<Nullable<long>>;
-            Assert.IsNotNull(actualAnnotationValue);
-            Assert.AreEqual(1, actualAnnotationValue[0]);
-            Assert.AreEqual(2, actualAnnotationValue[1]);
+            Assert.NotNull(actualAnnotationValue);
+            Assert.Equal(1, actualAnnotationValue[0]);
+            Assert.Equal(2, actualAnnotationValue[1]);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetConstantAnnotationTargetingEntitySet()
         {
             string annotationValue = null;
 
             var result = defaultContainer.TryGetAnnotation<Func<DataServiceQuery<PersonPlus>>, string>(
                 () => defaultContainer.PeoplePlus, DescriptionV1, out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("Entity set of Person", annotationValue);
+            Assert.True(result);
+            Assert.Equal("Entity set of Person", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetRecordAnnotationTargetingEntitySet()
         {
             SearchRestrictionsTypePlus annotationValue = null;
 
             var result = defaultContainer.TryGetAnnotation<Func<DataServiceQuery<PersonPlus>>, SearchRestrictionsTypePlus>(
                 () => defaultContainer.PeoplePlus, "Microsoft.OData.SampleService.Models.TripPin.SearchRestrictions", out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual(true, annotationValue.SearchablePlus);
-            Assert.AreEqual(SearchExpressionsPlus.NonePlus | SearchExpressionsPlus.NOTPlus, annotationValue.UnsupportedExpressionsPlus);
+            Assert.True(result);
+            Assert.Equal(true, annotationValue.SearchablePlus);
+            Assert.Equal(SearchExpressionsPlus.NonePlus | SearchExpressionsPlus.NOTPlus, annotationValue.UnsupportedExpressionsPlus);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetAnnotationTargetingSingleton()
         {
             string annotationValue = null;
 
             var result = defaultContainer.TryGetAnnotation<Func<DataServiceQuerySingle<PersonPlus>>, string>(
                 () => defaultContainer.MePlus, DescriptionV1, out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("Singleton of Person", annotationValue);
+            Assert.True(result);
+            Assert.Equal("Singleton of Person", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetRecordAnnotationTargetingSingleton()
         {
             SearchRestrictionsTypePlus annotationValue = null;
 
             var result = defaultContainer.TryGetAnnotation<Func<DataServiceQuerySingle<PersonPlus>>, SearchRestrictionsTypePlus>(
                 () => defaultContainer.MePlus, "Microsoft.OData.SampleService.Models.TripPin.SearchRestrictions", out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual(true, annotationValue.SearchablePlus);
-            Assert.AreEqual(SearchExpressionsPlus.NonePlus | SearchExpressionsPlus.NOTPlus, annotationValue.UnsupportedExpressionsPlus);
+            Assert.True(result);
+            Assert.Equal(true, annotationValue.SearchablePlus);
+            Assert.Equal(SearchExpressionsPlus.NonePlus | SearchExpressionsPlus.NOTPlus, annotationValue.UnsupportedExpressionsPlus);
         }
         #endregion
 
         #region Path Record Collection Annotation
 
-        [TestMethod]
+        [Fact]
         public void GetRecordAnnotationWithPathAndCollectionTargetingEntityType()
         {
             RecordAnnotationTypePlus annotationValue = null;
@@ -923,15 +921,15 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 RecordAnnotationTerm,
                 out annotationValue);
 
-            Assert.IsTrue(result);
-            Assert.AreEqual("ET", annotationValue.NamePlus);
-            Assert.AreEqual(1, annotationValue.OtherPropertiesPlus.Count());
-            Assert.AreEqual("CT", annotationValue.OtherPropertiesPlus[0]);
-            Assert.AreEqual(0, annotationValue.CollectionOfCTPPlus.Count());
-            Assert.AreEqual(0, annotationValue.CollectionOfDerivedCTPPlus.Count());
+            Assert.True(result);
+            Assert.Equal("ET", annotationValue.NamePlus);
+            Assert.Single(annotationValue.OtherPropertiesPlus);
+            Assert.Equal("CT", annotationValue.OtherPropertiesPlus[0]);
+            Assert.Empty(annotationValue.CollectionOfCTPPlus);
+            Assert.Empty(annotationValue.CollectionOfDerivedCTPPlus);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetOverridedRecordAnnotationWithPathAndCollectionTargetingDerivedEntityType()
         {
             RecordAnnotationTypePlus annotationValue = null;
@@ -943,20 +941,20 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 out annotationValue);
 
             // Annotation override : Derived entity type contains same annotation with that of the base entity type
-            Assert.IsTrue(result);
-            Assert.AreEqual("DerivedET", annotationValue.NamePlus);
-            Assert.AreEqual(3, annotationValue.OtherPropertiesPlus.Count());
-            Assert.AreEqual("CT", annotationValue.OtherPropertiesPlus[0]);
-            Assert.AreEqual("DerivedCT", annotationValue.OtherPropertiesPlus[1]);
-            Assert.AreEqual("DerivedCT Description", annotationValue.OtherPropertiesPlus[2]);
-            Assert.AreEqual(2, annotationValue.CollectionOfCTPPlus.Count());
-            Assert.AreEqual("CT", annotationValue.CollectionOfCTPPlus[0].NamePlus);
-            Assert.AreEqual("DerivedCT", annotationValue.CollectionOfCTPPlus[1].NamePlus);
-            Assert.AreEqual(1, annotationValue.CollectionOfDerivedCTPPlus.Count());
-            Assert.AreEqual("DerivedCT", annotationValue.CollectionOfDerivedCTPPlus[0].NamePlus);
+            Assert.True(result);
+            Assert.Equal("DerivedET", annotationValue.NamePlus);
+            Assert.Equal(3, annotationValue.OtherPropertiesPlus.Count());
+            Assert.Equal("CT", annotationValue.OtherPropertiesPlus[0]);
+            Assert.Equal("DerivedCT", annotationValue.OtherPropertiesPlus[1]);
+            Assert.Equal("DerivedCT Description", annotationValue.OtherPropertiesPlus[2]);
+            Assert.Equal(2, annotationValue.CollectionOfCTPPlus.Count());
+            Assert.Equal("CT", annotationValue.CollectionOfCTPPlus[0].NamePlus);
+            Assert.Equal("DerivedCT", annotationValue.CollectionOfCTPPlus[1].NamePlus);
+            Assert.Single(annotationValue.CollectionOfDerivedCTPPlus);
+            Assert.Equal("DerivedCT", annotationValue.CollectionOfDerivedCTPPlus[0].NamePlus);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetRecordAnnotationWithPathAndCollectionTargetingPropertyInEntityType()
         {
             RecordAnnotationTypePlus annotationValue = null;
@@ -967,15 +965,15 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 RecordAnnotationTerm,
                 out annotationValue);
 
-            Assert.IsTrue(result);
-            Assert.AreEqual("ET", annotationValue.NamePlus);
-            Assert.AreEqual(0, annotationValue.OtherPropertiesPlus.Count());
-            Assert.AreEqual(1, annotationValue.CollectionOfCTPPlus.Count());
-            Assert.AreEqual("CT", annotationValue.CollectionOfCTPPlus[0].NamePlus);
-            Assert.AreEqual(0, annotationValue.CollectionOfDerivedCTPPlus.Count());
+            Assert.True(result);
+            Assert.Equal("ET", annotationValue.NamePlus);
+            Assert.Empty(annotationValue.OtherPropertiesPlus);
+            Assert.Single(annotationValue.CollectionOfCTPPlus);
+            Assert.Equal("CT", annotationValue.CollectionOfCTPPlus[0].NamePlus);
+            Assert.Empty(annotationValue.CollectionOfDerivedCTPPlus);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetRecordAnnotationWithPathAndCollectionTargetingPropertyInDerivedEntityType()
         {
             RecordAnnotationTypePlus annotationValue = null;
@@ -986,15 +984,15 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 RecordAnnotationTerm,
                 out annotationValue);
 
-            Assert.IsTrue(result);
-            Assert.AreEqual("DerivedET", annotationValue.NamePlus);
-            Assert.AreEqual(0, annotationValue.OtherPropertiesPlus.Count());
-            Assert.AreEqual(1, annotationValue.CollectionOfCTPPlus.Count());
+            Assert.True(result);
+            Assert.Equal("DerivedET", annotationValue.NamePlus);
+            Assert.Empty(annotationValue.OtherPropertiesPlus);
+            Assert.Single(annotationValue.CollectionOfCTPPlus);
 
             // With type cast <Path>ComplexP/OperationTestService.DerivedCT</Path>
-            Assert.AreEqual("CT", annotationValue.CollectionOfCTPPlus[0].NamePlus);
+            Assert.Equal("CT", annotationValue.CollectionOfCTPPlus[0].NamePlus);
 
-            Assert.AreEqual(0, annotationValue.CollectionOfDerivedCTPPlus.Count());
+            Assert.Empty(annotationValue.CollectionOfDerivedCTPPlus);
 
             et.ComplexPPlus = new DerivedCTPlus()
             {
@@ -1008,12 +1006,12 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 RecordAnnotationTerm,
                 out annotationValue);
 
-            Assert.AreEqual(1, annotationValue.CollectionOfDerivedCTPPlus.Count());
-            Assert.AreEqual("DerivedCT", annotationValue.CollectionOfDerivedCTPPlus[0].NamePlus);
-            Assert.AreEqual("DerivedCT Description", annotationValue.CollectionOfDerivedCTPPlus[0].DescriptionPlus);
+            Assert.Single(annotationValue.CollectionOfDerivedCTPPlus);
+            Assert.Equal("DerivedCT", annotationValue.CollectionOfDerivedCTPPlus[0].NamePlus);
+            Assert.Equal("DerivedCT Description", annotationValue.CollectionOfDerivedCTPPlus[0].DescriptionPlus);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetRecordAnnotationWithPathAndCollectionTargetingDerivedComplexTypePropertyInDerivedEntityType()
         {
             RecordAnnotationTypePlus annotationValue = null;
@@ -1024,15 +1022,15 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 RecordAnnotationTerm,
                 out annotationValue);
 
-            Assert.IsTrue(result);
-            Assert.AreEqual("DerivedET", annotationValue.NamePlus);
-            Assert.AreEqual(1, annotationValue.OtherPropertiesPlus.Count());
-            Assert.AreEqual("CT", annotationValue.OtherPropertiesPlus[0]);
-            Assert.AreEqual(1, annotationValue.CollectionOfCTPPlus.Count());
-            Assert.AreEqual("CT", annotationValue.CollectionOfCTPPlus[0].NamePlus);
+            Assert.True(result);
+            Assert.Equal("DerivedET", annotationValue.NamePlus);
+            Assert.Single(annotationValue.OtherPropertiesPlus);
+            Assert.Equal("CT", annotationValue.OtherPropertiesPlus[0]);
+            Assert.Single(annotationValue.CollectionOfCTPPlus);
+            Assert.Equal("CT", annotationValue.CollectionOfCTPPlus[0].NamePlus);
 
             // With type cast <Path>ComplexP/OperationTestService.DerivedCT</Path>
-            Assert.AreEqual(0, annotationValue.CollectionOfDerivedCTPPlus.Count());
+            Assert.Empty(annotationValue.CollectionOfDerivedCTPPlus);
 
             et.ComplexPPlus = new DerivedCTPlus
             {
@@ -1046,12 +1044,12 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 RecordAnnotationTerm,
                 out annotationValue);
 
-            Assert.AreEqual(1, annotationValue.CollectionOfDerivedCTPPlus.Count());
-            Assert.AreEqual("DerivedCT1", annotationValue.CollectionOfDerivedCTPPlus[0].NamePlus);
-            Assert.AreEqual("DerivedCT1 Description", annotationValue.CollectionOfDerivedCTPPlus[0].DescriptionPlus);
+            Assert.Single(annotationValue.CollectionOfDerivedCTPPlus);
+            Assert.Equal("DerivedCT1", annotationValue.CollectionOfDerivedCTPPlus[0].NamePlus);
+            Assert.Equal("DerivedCT1 Description", annotationValue.CollectionOfDerivedCTPPlus[0].DescriptionPlus);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetRecordAnnotationWithoutExpressionTargetingDerivedComplexType()
         {
             RecordAnnotationTypePlus annotationValue = null;
@@ -1065,12 +1063,12 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
             // the path expression is evaluated starting at the directly enclosing type.
             // This allows e.g. specifying the value of an annotation on one property to be
             // calculated from values of other properties of the same type.
-            Assert.IsTrue(result);
-            Assert.IsNull(annotationValue.NamePlus);
-            Assert.AreEqual(0, annotationValue.OtherPropertiesPlus.Count());
+            Assert.True(result);
+            Assert.Null(annotationValue.NamePlus);
+            Assert.Empty(annotationValue.OtherPropertiesPlus);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetCollectionAnnotationWithPathOfCollectionNavigationPropertyTargetingEntityType()
         {
             IEnumerable<ETPlus> annotationValue = null;
@@ -1085,13 +1083,13 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 NavAnnotationTerm,
                 out annotationValue);
 
-            Assert.IsTrue(result);
-            Assert.AreEqual(2, annotationValue.Count());
-            Assert.AreEqual("ET", annotationValue.ElementAt(0).UserNamePlus);
-            Assert.AreEqual("DerivedET", annotationValue.ElementAt(1).UserNamePlus);
+            Assert.True(result);
+            Assert.Equal(2, annotationValue.Count());
+            Assert.Equal("ET", annotationValue.ElementAt(0).UserNamePlus);
+            Assert.Equal("DerivedET", annotationValue.ElementAt(1).UserNamePlus);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetCollectionAnnotationWithCollectionOfPathOfSingleNavigationPropertyTargetingEntityType()
         {
             IEnumerable<ETPlus> annotationValue = null;
@@ -1103,12 +1101,12 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 NavAnnotationTerm,
                 out annotationValue);
 
-            Assert.IsTrue(result);
-            Assert.AreEqual(1, annotationValue.Count());
-            Assert.AreEqual("ET", annotationValue.ElementAt(0).UserNamePlus);
+            Assert.True(result);
+            Assert.Single(annotationValue);
+            Assert.Equal("ET", annotationValue.ElementAt(0).UserNamePlus);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetCollectionAnnotationWithPathContainingTypeCastTargetingNavigation()
         {
             IEnumerable<DerivedETPlus> annotationValue = null;
@@ -1131,14 +1129,14 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
 
             // Only return the navigation property of derived Type 
             // <Path>NavP/OperationTestService.DerivedET</Path>
-            Assert.IsTrue(result);
-            Assert.AreEqual(3, annotationValue.Count());
-            Assert.AreEqual("DerivedET", annotationValue.ElementAt(0).UserNamePlus);
-            Assert.IsNull(annotationValue.ElementAt(1).NavPPlus);
-            Assert.AreEqual(0, annotationValue.ElementAt(2).NavPPlus.Count);
+            Assert.True(result);
+            Assert.Equal(3, annotationValue.Count());
+            Assert.Equal("DerivedET", annotationValue.ElementAt(0).UserNamePlus);
+            Assert.Null(annotationValue.ElementAt(1).NavPPlus);
+            Assert.Empty(annotationValue.ElementAt(2).NavPPlus);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetCollectionAnnotationWithPathOfSingleNavigationPropertyContainingTypeCastTargetingNavigation()
         {
             IEnumerable<DerivedETPlus> annotationValue = null;
@@ -1151,8 +1149,8 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 NavOfDerivedETAnnotationTerm,
                 out annotationValue);
 
-            Assert.IsTrue(result);
-            Assert.AreEqual(0, annotationValue.Count());
+            Assert.True(result);
+            Assert.Empty(annotationValue);
 
             et.SingleNavPPlus = CreateDerivedET();
 
@@ -1161,13 +1159,13 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 NavOfDerivedETAnnotationTerm,
                 out annotationValue);
 
-            Assert.IsTrue(result);
-            Assert.AreEqual(1, annotationValue.Count());
-            Assert.IsTrue(annotationValue.ElementAt(0) is DerivedETPlus);
-            Assert.AreEqual("DerivedET", annotationValue.ElementAt(0).UserNamePlus);
+            Assert.True(result);
+            Assert.Single(annotationValue);
+            Assert.True(annotationValue.ElementAt(0) is DerivedETPlus);
+            Assert.Equal("DerivedET", annotationValue.ElementAt(0).UserNamePlus);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetPathAnnotationWithDollarCountTargetingEntityType()
         {
             int annotationValue;
@@ -1182,11 +1180,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 "OperationTestService.NavCountAnnotation",
                 out annotationValue);
 
-            Assert.IsTrue(result);
-            Assert.AreEqual(2, annotationValue);
+            Assert.True(result);
+            Assert.Equal(2, annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetPathAnnotationWithTermCastTargetingEntityType()
         {
             string annotationValue = null;
@@ -1197,11 +1195,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 "OperationTestService.TermCastAnnotation",
                 out annotationValue);
 
-            Assert.IsTrue(result);
-            Assert.AreEqual("ET", annotationValue);
+            Assert.True(result);
+            Assert.Equal("ET", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetPathAnnotationWithNavigationPropertyAndTermCastTargetingEntityType()
         {
             IEnumerable<DerivedETPlus> annotationValue = null;
@@ -1217,16 +1215,16 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 "EntityType",
                 out annotationValue);
 
-            Assert.IsTrue(result);
-            Assert.IsNotNull(annotationValue);
-            Assert.AreEqual(1, annotationValue.Count());
+            Assert.True(result);
+            Assert.NotNull(annotationValue);
+            Assert.Single(annotationValue);
         }
 
         #endregion Path Record Collection Annotation
 
         #region External Targeting annotation
 
-        [TestMethod]
+        [Fact]
         public void GetExternalTargetingAnnotationsForEntityType()
         {
             Action<ETPlus> action = (et) =>
@@ -1239,16 +1237,16 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                     ExternalTargetingQualifier,
                     out collectionOfCTPropertyAnnotation);
 
-                Assert.IsTrue(result);
-                Assert.AreEqual(1, collectionOfCTPropertyAnnotation.Count());
-                Assert.AreEqual("CT", collectionOfCTPropertyAnnotation.ElementAt(0).NamePlus);
+                Assert.True(result);
+                Assert.Single(collectionOfCTPropertyAnnotation);
+                Assert.Equal("CT", collectionOfCTPropertyAnnotation.ElementAt(0).NamePlus);
             };
 
             action(CreateET());
             action(CreateDerivedET());
         }
 
-        [TestMethod]
+        [Fact]
         public void GetExternalTargetingAnnotationsForProperty()
         {
             Action<ETPlus> action = (et) =>
@@ -1267,16 +1265,16 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                     ExternalTargetingQualifier,
                     out collectionOfCTPropertyAnnotation);
 
-                Assert.IsTrue(result);
-                Assert.AreEqual(1, collectionOfCTPropertyAnnotation.Count());
-                Assert.AreEqual("DerviedCT", collectionOfCTPropertyAnnotation.ElementAt(0).NamePlus);
+                Assert.True(result);
+                Assert.Single(collectionOfCTPropertyAnnotation);
+                Assert.Equal("DerviedCT", collectionOfCTPropertyAnnotation.ElementAt(0).NamePlus);
             };
 
             action(CreateET());
             action(CreateDerivedET());
         }
 
-        [TestMethod]
+        [Fact]
         public void GetExternalTargetingAnnotationForFunctionImport()
         {
             string annotationValue = null;
@@ -1286,11 +1284,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 DescriptionV1,
                 ExternalTargetingQualifier,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("TestExternalTargetingAnnotationOnFunctionImport", annotationValue);
+            Assert.True(result);
+            Assert.Equal("TestExternalTargetingAnnotationOnFunctionImport", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetExternalTargetingAnnotationForActionImportByUsingMethodInfo()
         {
             string annotationValue = null;
@@ -1300,11 +1298,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 DescriptionV1,
                 ExternalTargetingQualifier,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("TestExternalTargetingAnnotationOnActionImport", annotationValue);
+            Assert.True(result);
+            Assert.Equal("TestExternalTargetingAnnotationOnActionImport", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetExternalTargetingAnnotationForEntitySetByUsingPropertyInfo()
         {
             string annotationValue = null;
@@ -1314,11 +1312,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 DescriptionV1,
                 ExternalTargetingQualifier,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("TestExternalTargetingAnnotationOnDerivedEntitySets", annotationValue);
+            Assert.True(result);
+            Assert.Equal("TestExternalTargetingAnnotationOnDerivedEntitySets", annotationValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetExternalTargetingAnnotationForSingleton()
         {
             string annotationValue = null;
@@ -1328,15 +1326,15 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 DescriptionV1,
                 ExternalTargetingQualifier,
                 out annotationValue);
-            Assert.IsTrue(result);
-            Assert.AreEqual("TestExternalTargetingAnnotationOnSingleton", annotationValue);
+            Assert.True(result);
+            Assert.Equal("TestExternalTargetingAnnotationOnSingleton", annotationValue);
         }
 
         #endregion
 
         #region NonExisting Annotation
 
-        [TestMethod]
+        [Fact]
         public void GetNonExistingAnnotationTargetingType()
         {
             Action<ETPlus> action = (et) =>
@@ -1346,14 +1344,14 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                     et,
                     NonExistingTermName,
                     out annotationValue);
-                Assert.IsFalse(result);
+                Assert.False(result);
             };
 
             action(CreateET());
             action(CreateDerivedET());
         }
 
-        [TestMethod]
+        [Fact]
         public void GetNonExistingAnnotationTargetingPropertyInfo()
         {
             Action<ETPlus> action = (et) =>
@@ -1363,14 +1361,14 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                     () => et.ComplexPPlus,
                     NonExistingTermName,
                     out annotationValue);
-                Assert.IsFalse(result);
+                Assert.False(result);
             };
 
             action(CreateET());
             action(CreateDerivedET());
         }
 
-        [TestMethod]
+        [Fact]
         public void GetNonExistingAnnotationTargetingBoundFunction()
         {
             string annotationValue = null;
@@ -1380,10 +1378,10 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 () => et.FunctionWithoutParameterPlus(),
                 NonExistingTermName,
                 out annotationValue);
-            Assert.IsFalse(result);
+            Assert.False(result);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetNonExistingAnnotationTargetingBoundFunctionCalledFromDerivedEntityType()
         {
             string annotationValue = null;
@@ -1393,10 +1391,10 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 () => et.FunctionWithoutParameterPlus(),
                 NonExistingTermName,
                 out annotationValue);
-            Assert.IsFalse(result);
+            Assert.False(result);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetNonExistingAnnotationTargetingFunctionBoundToCollectionOfEntity()
         {
             string annotationValue = null;
@@ -1405,16 +1403,16 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 (s1) => operationTestServiceContainer.ETSetsPlus.FunctionBoundToCollectionOfEntityPlus(s1),
                 NonExistingTermName,
                 out annotationValue);
-            Assert.IsFalse(result);
+            Assert.False(result);
 
             result = operationTestServiceContainer.TryGetAnnotation<Func<string, DataServiceQuery<ETPlus>>, string>(
                 (s1) => operationTestServiceContainer.DerivedETSetsPlus.FunctionBoundToCollectionOfEntityPlus(s1),
                 NonExistingTermName,
                 out annotationValue);
-            Assert.IsFalse(result);
+            Assert.False(result);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetNonExistingAnnotationTargetingFunctionBoundToEntityAsExtensionMethod()
         {
             string annotationValue = null;
@@ -1423,7 +1421,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 (s1) => operationTestServiceContainer.SingleETPlus.FunctionWithParameterPlus(s1),
                 NonExistingTermName,
                 out annotationValue);
-            Assert.IsFalse(result);
+            Assert.False(result);
         }
 
         #endregion

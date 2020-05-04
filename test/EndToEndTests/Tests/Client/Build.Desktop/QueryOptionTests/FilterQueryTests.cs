@@ -15,9 +15,8 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class FilterQueryTests : ODataWCFServiceTestsBase<InMemoryEntities>
     {
         public FilterQueryTests()
@@ -33,7 +32,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void FilterQueryTest()
         {
             foreach (var mimeType in mimeTypes)
@@ -44,7 +43,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(4, details.Count);
+                    Assert.Equal(4, details.Count);
                 }
 
                 // $count collection of enum type
@@ -52,7 +51,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
                     .Where(r => r != null && r.Id != null).ToList();
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(1, details.Count);
+                    Assert.Equal(1, details.Count);
                 }
 
                 // $count collection of complex type
@@ -60,7 +59,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
                     .Where(r => r != null && r.Id != null).ToList();
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(2, details.Count);
+                    Assert.Equal(2, details.Count);
                 }
 
                 // $count collection of entity type
@@ -68,7 +67,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
                     .Where(r => r != null && r.Id != null).ToList();
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(1, details.Count);
+                    Assert.Equal(1, details.Count);
                 }
             }
         }

@@ -12,17 +12,17 @@ namespace Microsoft.Test.OData.Tests.Client.UrlModifyingTests
     using Microsoft.Test.OData.Framework.Verification;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
+    using Xunit.Abstractions;
 
-    [TestClass]
     public class UrlModifyingTests : EndToEndTestBase
     {
-        public UrlModifyingTests()
-            : base(ServiceDescriptors.UrlModifyingService)
+        public UrlModifyingTests(ITestOutputHelper helper)
+            : base(ServiceDescriptors.UrlModifyingService, helper)
         {
         }
 
-        [TestMethod]
+        [Fact]
         public void ModifyQueryOptions()
         {
             var context = this.CreateWrappedContext<DefaultContainer>();
@@ -31,19 +31,20 @@ namespace Microsoft.Test.OData.Tests.Client.UrlModifyingTests
             try
             {
                 personQuery.Execute();
-                Assert.Fail("ModifyingQueryOptionsShouldFail");
+                Assert.True(false, "ModifyingQueryOptionsShouldFail");
             }
             catch (DataServiceQueryException ex)
             {
-                Assert.IsNotNull(ex.InnerException, "No inner exception found");
-                Assert.IsInstanceOfType(ex.InnerException, typeof(DataServiceClientException), "Unexpected inner exception type");
-
+                //No inner exception found
+                Assert.NotNull(ex.InnerException);
+                //Unexpected inner exception type
+                Assert.IsType<DataServiceClientException>(ex.InnerException);
                 StringResourceUtil.VerifyDataServicesString(ClientExceptionUtil.ExtractServerErrorMessage(ex),
                     "AstoriaRequestMessage_CannotChangeQueryString");
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void RemapRequestUri()
         {
             var context = this.CreateWrappedContext<DefaultContainer>();
@@ -51,10 +52,10 @@ namespace Microsoft.Test.OData.Tests.Client.UrlModifyingTests
             //Path should remap to the customers set
 
             var retrievedCustomers = (IEnumerable<Customer>)customQuery.Execute();
-            Assert.IsNotNull(retrievedCustomers);
+            Assert.NotNull(retrievedCustomers);
         }
 
-        [TestMethod]
+        [Fact]
         public void RemapBase()
         {
             var context = this.CreateWrappedContext<DefaultContainer>();
@@ -62,16 +63,16 @@ namespace Microsoft.Test.OData.Tests.Client.UrlModifyingTests
             //Path should remap to the customers set
             var retrievedPersons = (IEnumerable<Customer>)customQuery.Execute();
 
-            Assert.IsNotNull(retrievedPersons);
+            Assert.NotNull(retrievedPersons);
             EntityDescriptor descriptor = null;
             foreach (var element in retrievedPersons)
             {
                 descriptor = context.GetEntityDescriptor(element);
-                Assert.IsTrue(descriptor.EditLink.AbsoluteUri.StartsWith("http://potato"));
+                Assert.True(descriptor.EditLink.AbsoluteUri.StartsWith("http://potato"));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void RemapBaseAndPathSeparately()
         {
             var context = this.CreateWrappedContext<DefaultContainer>();
@@ -79,16 +80,16 @@ namespace Microsoft.Test.OData.Tests.Client.UrlModifyingTests
             //Path should remap to the customers set
             var retrievedPersons = (IEnumerable<Customer>)customQuery.Execute();
 
-            Assert.IsNotNull(retrievedPersons);
+            Assert.NotNull(retrievedPersons);
             EntityDescriptor descriptor = null;
             foreach (var element in retrievedPersons)
             {
                 descriptor = context.GetEntityDescriptor(element);
-                Assert.IsTrue(descriptor.EditLink.AbsoluteUri.StartsWith("http://potato"));
+                Assert.True(descriptor.EditLink.AbsoluteUri.StartsWith("http://potato"));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void BasesDontMatchFail()
         {
             var context = this.CreateWrappedContext<DefaultContainer>();
@@ -100,19 +101,20 @@ namespace Microsoft.Test.OData.Tests.Client.UrlModifyingTests
             try
             {
                 customQuery.Execute();
-                Assert.Fail("Different service bases between service uri and request uri should fail");
+                Assert.True(false, "Different service bases between service uri and request uri should fail");
             }
             catch (DataServiceQueryException ex)
             {
-                Assert.IsNotNull(ex.InnerException, "No inner exception found");
-                Assert.IsInstanceOfType(ex.InnerException, typeof(DataServiceClientException), "Unexpected inner exception type");
-
+                //No inner exception found
+                Assert.NotNull(ex.InnerException);
+                //Unexpected inner exception type
+                Assert.IsType<DataServiceClientException>(ex.InnerException);
                 StringResourceUtil.VerifyODataLibString(ClientExceptionUtil.ExtractServerErrorMessage(ex),
                     "UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri", true, expectedRequestUrl, expectedServiceUrl);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void BatchRequest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>();
@@ -123,16 +125,16 @@ namespace Microsoft.Test.OData.Tests.Client.UrlModifyingTests
             };
 
             var response = context.ExecuteBatch(reqs);
-            Assert.IsNotNull(response);
-            Assert.IsTrue(response.IsBatchResponse);
+            Assert.NotNull(response);
+            Assert.True(response.IsBatchResponse);
             foreach (var item in response)
             {
-                Assert.IsTrue(item.StatusCode == 200);
+                Assert.True(item.StatusCode == 200);
             }
         }
 
 
-        [TestMethod]
+        [Fact]
         public void BatchRequestBaseUriDifferentBetweenBatchAndRequest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>();
@@ -143,13 +145,14 @@ namespace Microsoft.Test.OData.Tests.Client.UrlModifyingTests
             };
 
             var response = context.ExecuteBatch(reqs);
-            Assert.IsNotNull(response);
-            Assert.IsTrue(response.IsBatchResponse);
+            Assert.NotNull(response);
+            Assert.True(response.IsBatchResponse);
             foreach (QueryOperationResponse item in response)
             {
-                Assert.IsNotNull(item.Error);
+                Assert.NotNull(item.Error);
 
-                Assert.IsInstanceOfType(item.Error, typeof(DataServiceClientException), "Unexpected inner exception type");
+                //Unexpected inner exception type
+                Assert.IsType<DataServiceClientException>(item.Error);
                 var ex = item.Error as DataServiceClientException;
                 StringResourceUtil.VerifyDataServicesString(ClientExceptionUtil.ExtractServerErrorMessage(item), "DataServiceOperationContext_CannotModifyServiceUriInsideBatch");
             }

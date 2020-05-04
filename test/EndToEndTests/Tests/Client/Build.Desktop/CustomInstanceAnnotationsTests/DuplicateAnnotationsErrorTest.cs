@@ -12,18 +12,17 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Tests.Client.Common;
     using Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
+    using Xunit.Abstractions;
 
-    [TestClass]
     public class DuplicateAnnotationsErrorTest : EndToEndTestBase
     {
-        public DuplicateAnnotationsErrorTest()
-            : base(ODataWriterServiceUtil.CreateODataWriterServiceDescriptor<DuplicateAnnotationsDataServiceODataWriter>())
+        public DuplicateAnnotationsErrorTest(ITestOutputHelper helper)
+            : base(ODataWriterServiceUtil.CreateODataWriterServiceDescriptor<DuplicateAnnotationsDataServiceODataWriter>(), helper)
         {
         }
 
-        [TestMethod]
-        [Ignore("VSUpgrade19 - DataDriven Test")]
+        [Fact(Skip= "VSUpgrade19 - DataDriven Test")]
         public void WriteDuplicateAnnotationOnFeedError()
         {
             this.Invoke(
@@ -33,8 +32,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
                 new DataDriven.Constraint[0]);
         }
 
-        [TestMethod]
-        [Ignore("VSUpgrade19 - DataDriven Test")]
+        [Fact(Skip="VSUpgrade19 - DataDriven Test")]
         public void WriteDuplicateAnnotationOnEntryError()
         {
             this.Invoke(
@@ -44,7 +42,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
                 new DataDriven.Constraint[0]);
         }
 
-        public void AssertDuplicateAnnotationErrorIsThrown(string uri, string contentType)
+        internal void AssertDuplicateAnnotationErrorIsThrown(string uri, string contentType)
         {
             this.AssertInStreamErrorThrown(uri, contentType, "JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection", CustomInstanceAnnotationsGenerator.DuplicateAnnotationName);
         }

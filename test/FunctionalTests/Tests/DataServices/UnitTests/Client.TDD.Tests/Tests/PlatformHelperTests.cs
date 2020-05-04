@@ -9,12 +9,8 @@ using Microsoft.OData.Client;
 using System.Globalization;
 using System.Reflection;
 using AstoriaUnitTests;
-#if WINDOWSPHONE
-    using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-#else
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
 using FluentAssertions;
+using Xunit;
 
 namespace AstoriaUnitTests.Tests
 {
@@ -23,12 +19,11 @@ namespace AstoriaUnitTests.Tests
     /// source on Modern versus other platforms, so by running the tests in both places but expecting the same output (except minor differences
     /// as noted in the tests), we can ensure that the Modern behavior is compatible with other platforms.
     /// </summary>
-    [TestClass]
     public class PlatformHelperTests
     {
         #region Type System testing
 
-        [TestMethod]
+        [Fact]
         public void AreMethodsEqualShouldBeTrue()
         {
             Type t = typeof(Type);
@@ -38,48 +33,48 @@ namespace AstoriaUnitTests.Tests
             PlatformHelper.AreMembersEqual(methodInfo, methodInfo2).Should().BeTrue();
         }
 
-        [TestMethod]
+        [Fact]
         public void GetPublicInstanceMethodWithNoTypes()
         {
             MethodInfo methodInfo = PlatformHelper.GetMethod(typeof (Type), "GetType",new Type[]{}, true, false);
-            Assert.IsNotNull(methodInfo);
-            Assert.AreEqual("GetType", methodInfo.Name);
+            Assert.NotNull(methodInfo);
+            Assert.Equal("GetType", methodInfo.Name);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetPublicInstanceMethod()
         {
             MethodInfo methodInfo = PlatformHelper.GetMethod(typeof(Type), "GetDefaultMembers", true, false);
-            Assert.IsNotNull(methodInfo);
-            Assert.AreEqual("GetDefaultMembers", methodInfo.Name);
+            Assert.NotNull(methodInfo);
+            Assert.Equal("GetDefaultMembers", methodInfo.Name);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetNonPublicStaticMethod()
         {
-            MethodInfo methodInfo = PlatformHelper.GetMethod(typeof(TestClassWithInternalStaticProperty), "MyTestMethod", false, true);
-            Assert.IsNotNull(methodInfo);
-            Assert.AreEqual("MyTestMethod", methodInfo.Name);
+            MethodInfo methodInfo = PlatformHelper.GetMethod(typeof(TestClassWithInternalStaticProperty), "MyFact", false, true);
+            Assert.NotNull(methodInfo);
+            Assert.Equal("MyFact", methodInfo.Name);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetConstructorInfo()
         {
             ConstructorInfo constructorInfo = PlatformHelper.GetInstanceConstructor(typeof(Version), true, new Type[] { typeof(int), typeof(int) });
-            Assert.IsNotNull(constructorInfo);
+            Assert.NotNull(constructorInfo);
         }
 
         #endregion
 
         internal class TestClassWithInternalStaticProperty
         {
-            internal static int MyTestMethod()
+            internal static int MyFact()
             {
                 return 1;
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ConvertStringToDateTimeOffsetShouldThrowIfTimeZoneIsMissing()
         {
             string dateTimeOffsetStr = "2013-11-04T19:09:26";
@@ -87,25 +82,25 @@ namespace AstoriaUnitTests.Tests
             test.ShouldThrow<FormatException>(Strings.PlatformHelper_DateTimeOffsetMustContainTimeZone(dateTimeOffsetStr));
         }
 
-        [TestMethod]
+        [Fact]
         public void ConvertStringToDateTimeOffsetShouldConvertDateTimeStringEndsWithUpperCaseZ()
         {
             PlatformHelper.ConvertStringToDateTimeOffset("2013-11-04T19:09:26Z").Offset.Should().Be(new TimeSpan(0));
         }
 
-        [TestMethod]
+        [Fact]
         public void ConvertStringToDateTimeOffsetShouldConvertDateTimeStringEndsWithLowerCaseZ()
         {
             PlatformHelper.ConvertStringToDateTimeOffset("2013-11-04T19:09:26z").Offset.Should().Be(new TimeSpan(0));
         }
 
-        [TestMethod]
+        [Fact]
         public void ConvertStringToDateTimeOffsetShouldConvertDateTimeStringWithPlusOffset()
         {
             PlatformHelper.ConvertStringToDateTimeOffset("2013-11-04T19:09:26+08:00").Offset.Should().Be(new TimeSpan(8, 0, 0));
         }
 
-        [TestMethod]
+        [Fact]
         public void ConvertStringToDateTimeOffsetShouldConvertDateTimeStringWithMinusOffset()
         {
             PlatformHelper.ConvertStringToDateTimeOffset("2013-11-04T19:09:26-08:00").Offset.Should().Be(new TimeSpan(-8, 0, 0));

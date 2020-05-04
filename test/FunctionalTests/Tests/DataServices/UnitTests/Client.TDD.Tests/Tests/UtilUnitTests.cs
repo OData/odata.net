@@ -9,59 +9,58 @@ namespace AstoriaUnitTests.Tests
     using System;
     using Microsoft.OData.Client;
     using FluentAssertions;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class UtilUnitTests
     {
-        [TestMethod]
+        [Fact]
         public void CreateEmptyConstructorType()
         {
             var result = Util.ActivatorCreateInstance(typeof(Address)) as Address;
-            Assert.IsNotNull(result);
+            Assert.NotNull(result);
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateTypeWithArguments()
         {
             var result = Util.ActivatorCreateInstance(typeof(AddressWithNoEmptyConstructor), "98102") as AddressWithNoEmptyConstructor;
-            Assert.IsNotNull(result);
+            Assert.NotNull(result);
             result.ZipCode.Should().Be("98102");
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateTypeWithNoEmptyConstructor()
         {
             Action test = () => Util.ActivatorCreateInstance(typeof(AddressWithNoEmptyConstructor));
             test.ShouldThrow<MissingMethodException>().WithMessage("No parameterless constructor defined for this object.");
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateTypeWithConstructorArgsMismatch()
         {
             Action test = () => Util.ActivatorCreateInstance(typeof(AddressWithNoEmptyConstructor), "zipcode", "streetname");
             test.ShouldThrow<MissingMethodException>().WithMessage("Constructor on type 'AstoriaUnitTests.Tests.UtilUnitTests+AddressWithNoEmptyConstructor' not found.");
         }
 
-        [TestMethod]
+        [Fact]
         public void IsNullableIntValueTypeShouldReturnFalse()
         {
             Util.IsNullableType(typeof(int)).Should().Be(false);
         }
 
-        [TestMethod]
+        [Fact]
         public void IsNullableStringTypeShouldReturnTrue()
         {
             Util.IsNullableType(typeof(string)).Should().Be(true);
         }
 
-        [TestMethod]
+        [Fact]
         public void IsNullableNullableIntValueTypeShouldReturnTrue()
         {
             Util.IsNullableType(typeof(int?)).Should().Be(true);
         }
 
-        [TestMethod]
+        [Fact]
         public void IsNullableClassTypeShouldReturnTrue()
         {
             Util.IsNullableType(typeof(Address)).Should().Be(true);
@@ -69,63 +68,63 @@ namespace AstoriaUnitTests.Tests
 
         //SaveChangesOptions.BatchWithSingleChangeset ==> batch with single changeset
         //SaveChangesOptions.BatchWithIndependentOpterations == > batch with independent operations
-        [TestMethod]
+        [Fact]
         public void IsBatchShouldBeTrueForBatchWithSingleChangeset()
         {
             Util.IsBatch(SaveChangesOptions.BatchWithSingleChangeset).Should().BeTrue();
         }
 
-        [TestMethod]
+        [Fact]
         public void IsBatchShouldBeTrueForBatchWithIndependentOperations()
         {
             Util.IsBatch(SaveChangesOptions.BatchWithIndependentOperations).Should().BeTrue();
         }
 
-        [TestMethod]
+        [Fact]
         public void IsBatchShouldBeFalseForNonBatchOptions()
         {
             Util.IsBatch(SaveChangesOptions.ReplaceOnUpdate).Should().BeFalse();
         }
 
-        [TestMethod]
+        [Fact]
         public void IsBatchShouldBeFalseForBatchBitwiseAndBatchWithIndependentOperations()
         {
             Util.IsBatch((SaveChangesOptions.BatchWithSingleChangeset & SaveChangesOptions.BatchWithIndependentOperations)).Should().BeFalse();
         }
 
         // test for IsBatchWithIndependentOperations
-        [TestMethod]
+        [Fact]
         public void IsBatchWithIndependentOperationsShouldBeFalseForBatchWithSingleChangeset()
         {
             Util.IsBatchWithIndependentOperations(SaveChangesOptions.BatchWithSingleChangeset).Should().BeFalse();
         }
 
-        [TestMethod]
+        [Fact]
         public void IsBatchWithIndependentOperationsShouldBeTrueForBatchWithIndependentOperations()
         {
             Util.IsBatchWithIndependentOperations(SaveChangesOptions.BatchWithIndependentOperations).Should().BeTrue();
         }
 
-        [TestMethod]
+        [Fact]
         public void IsBatchWithIndependentOperationsShouldBeFalseForBothBatchFlagsBitwiseAnd()
         {
             Util.IsBatchWithIndependentOperations((SaveChangesOptions.BatchWithSingleChangeset & SaveChangesOptions.BatchWithIndependentOperations)).Should().BeFalse();
         }
 
         // test for IsBatchWithSingleChangeset
-        [TestMethod]
+        [Fact]
         public void IsBatchWithSingleChangesetShouldBeTrueForBatchWithSingleChangeset()
         {
             Util.IsBatchWithSingleChangeset(SaveChangesOptions.BatchWithSingleChangeset).Should().BeTrue();
         }
 
-        [TestMethod]
+        [Fact]
         public void IsBatchWithSingleChangesetShouldBeFalseForBatchWithIndependentOperations()
         {
             Util.IsBatchWithSingleChangeset(SaveChangesOptions.BatchWithIndependentOperations).Should().BeFalse();
         }
 
-        [TestMethod]
+        [Fact]
         public void IsBatchWithSingleChangesetShouldBeFalseForBothBatchFlagsBitwiseAnd()
         {
             Util.IsBatchWithSingleChangeset((SaveChangesOptions.BatchWithSingleChangeset & SaveChangesOptions.BatchWithIndependentOperations)).Should().BeFalse();

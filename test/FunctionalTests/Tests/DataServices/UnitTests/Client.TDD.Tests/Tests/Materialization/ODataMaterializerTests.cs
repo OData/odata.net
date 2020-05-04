@@ -9,31 +9,28 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Materialization
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
-    public partial class ODataMaterializerTests
+    public partial class ODataMaterializerTests : IDisposable
     {
         private const string ServiceUri = "http://localhost/foo/";
         private const string Namespace = "NS";
 
         private DefaultContainer dsc;
 
-        [TestInitialize]
-        public void TestInitialize()
+        public ODataMaterializerTests()
         {
             this.dsc = new DefaultContainer(new Uri(ServiceUri));
         }
 
-        [TestCleanup]
-        public void TestCleanup()
+        public void Dispose()
         {
             this.dsc = null;
         }
 
         #region Expected collection of Non-Abstract type, return collection of Non-Abstract type
 
-        [TestMethod]
+        [Fact]
         public void MaterializeColOfNonAbstractComplexByFunctionImport()
         {
             MaterializeColOfBaseComplex("Collection(NS.BaseCT)", () => this.dsc.RColOfBaseCT().ToList());
@@ -41,7 +38,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Materialization
             MaterializeColOfDerivedComplex("Collection(NS.CT)", () => this.dsc.RColOfDerivedCT().ToList());
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializeColOfNonAbstractComplexProperty()
         {
             MaterializeColOfBaseComplex("BaseETs(0)/EColOfBaseCTP", () => this.dsc.BaseETs.ByKey(0).Select(e => e.EColOfBaseCTP).GetValue().ToList());
@@ -49,7 +46,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Materialization
             MaterializeColOfDerivedComplex("DerivedETs(0)/EColOfDerivedCTP", () => this.dsc.DerivedETs.ByKey(0).Select(e => e.EColOfDerivedCTP).GetValue().ToList());
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializeColOfNonAbstractComplexByBoundFunctionContextUriIsColOfBaseComplex()
         {
             MaterializeColOfBaseComplex("Collection(NS.BaseCT)", () => this.dsc.DerivedETs.ByKey(0).BETRColOfBaseCT().ToList());
@@ -57,7 +54,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Materialization
             MaterializeColOfDerivedComplex("Collection(NS.CT)", () => this.dsc.DerivedETs.ByKey(0).BETRColOfDerivedCT().ToList());
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializeColOfNonAbstractComplexByBoundFunctionContextUriIsProperty()
         {
             MaterializeColOfBaseComplex("BaseETs(0)/EColOfBaseCTP", () => this.dsc.DerivedETs.ByKey(0).BETRColOfBaseCT().ToList());
@@ -92,16 +89,16 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Materialization
             SetResponse(response);
 
             var cts = func();
-            Assert.AreEqual(3, cts.Count);
+            Assert.Equal(3, cts.Count);
 
-            Assert.AreEqual(1, cts.ElementAt(0).CP0);
-            Assert.AreEqual(2, cts.ElementAt(0).CP1);
+            Assert.Equal(1, cts.ElementAt(0).CP0);
+            Assert.Equal(2, cts.ElementAt(0).CP1);
 
-            Assert.AreEqual(3, cts.ElementAt(1).CP0);
-            Assert.AreEqual(0, cts.ElementAt(1).CP1);
+            Assert.Equal(3, cts.ElementAt(1).CP0);
+            Assert.Equal(0, cts.ElementAt(1).CP1);
 
-            Assert.AreEqual(0, cts.ElementAt(2).CP0);
-            Assert.AreEqual(4, cts.ElementAt(2).CP1);
+            Assert.Equal(0, cts.ElementAt(2).CP0);
+            Assert.Equal(4, cts.ElementAt(2).CP1);
         }
 
         private void MaterializeColOfNullableBaseComplex(string contextUri, Func<List<BaseCT>> func)
@@ -126,12 +123,12 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Materialization
             SetResponse(response);
 
             var cts = func();
-            Assert.AreEqual(2, cts.Count);
+            Assert.Equal(2, cts.Count);
 
-            Assert.AreEqual(1, cts.ElementAt(0).CP0);
-            Assert.AreEqual(2, cts.ElementAt(0).CP1);
+            Assert.Equal(1, cts.ElementAt(0).CP0);
+            Assert.Equal(2, cts.ElementAt(0).CP1);
 
-            Assert.IsNull(cts.ElementAt(1));
+            Assert.Null(cts.ElementAt(1));
         }
 
         private void MaterializeColOfDerivedComplex(string contextUri, Func<List<CT>> func)
@@ -164,25 +161,25 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Materialization
 
             var cts = func();
 
-            Assert.AreEqual(3, cts.Count);
-            Assert.AreEqual(1, cts.ElementAt(0).CP0);
-            Assert.AreEqual(2, cts.ElementAt(0).CP1);
-            Assert.AreEqual(3, cts.ElementAt(0).CP2);
+            Assert.Equal(3, cts.Count);
+            Assert.Equal(1, cts.ElementAt(0).CP0);
+            Assert.Equal(2, cts.ElementAt(0).CP1);
+            Assert.Equal(3, cts.ElementAt(0).CP2);
 
-            Assert.AreEqual(4, cts.ElementAt(1).CP0);
-            Assert.AreEqual(5, cts.ElementAt(1).CP1);
-            Assert.AreEqual(0, cts.ElementAt(1).CP2);
+            Assert.Equal(4, cts.ElementAt(1).CP0);
+            Assert.Equal(5, cts.ElementAt(1).CP1);
+            Assert.Equal(0, cts.ElementAt(1).CP2);
 
-            Assert.AreEqual(0, cts.ElementAt(2).CP0);
-            Assert.AreEqual(0, cts.ElementAt(2).CP1);
-            Assert.AreEqual(6, cts.ElementAt(2).CP2);
+            Assert.Equal(0, cts.ElementAt(2).CP0);
+            Assert.Equal(0, cts.ElementAt(2).CP1);
+            Assert.Equal(6, cts.ElementAt(2).CP2);
         }
 
         #endregion
 
         #region Expected collection of the ancestor type, return the contextUri with collection of ancestor type, but the real object might be sub type
 
-        [TestMethod]
+        [Fact]
         public void MaterializeColOfAncestorComplexByFunctionImport_ReturnSubtype()
         {
             MaterializeColOfComplex("Collection(NS.AbstractCT)", () => this.dsc.RColOfAbsCT().ToList());
@@ -192,7 +189,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Materialization
             MaterializeColOfNullableComplex("Collection(NS.BaseCT)", () => this.dsc.RColOfNullableBaseCT().ToList());
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializeColOfAncestorComplexProperty_ReturnSubtype()
         {
             MaterializeColOfComplex("BaseETs(0)/EColOfAbsCTP", () => this.dsc.BaseETs.ByKey(0).Select(e => e.EColOfAbsCTP).GetValue().ToList());
@@ -203,7 +200,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Materialization
             MaterializeColOfNullableComplex("DerivedETs(0)/EColOfNullableBaseCTP", () => this.dsc.DerivedETs.ByKey(0).Select(e => e.EColOfNullableBaseCTP).GetValue().ToList());
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializeColOfAncestorComplexByBoundFunctionContextUriIsColOfAncestorComplex_ReturnSubtype()
         {
             MaterializeColOfComplex("Collection(NS.AbstractCT)", () => this.dsc.BaseETs.ByKey(0).BETRColOfAbsCT().ToList());
@@ -213,7 +210,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Materialization
             MaterializeColOfNullableComplex("Collection(NS.BaseCT)", () => this.dsc.DerivedETs.ByKey(0).BETRColOfNullableBaseCT().ToList());
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializeColOfAncestorComplexByBoundFunctionContextUriIsProperty_ReturnSubtype()
         {
             MaterializeColOfComplex("BaseETs(0)/EColOfAbsCTP", () => this.dsc.BaseETs.ByKey(0).BETRColOfAbsCT().ToList());
@@ -252,18 +249,18 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Materialization
             SetResponse(response);
 
             List<T> cts = func();
-            Assert.AreEqual(2, cts.Count);
+            Assert.Equal(2, cts.Count);
 
             var e0 = cts.ElementAt(0) as BaseCT;
-            Assert.IsNotNull(e0);
-            Assert.AreEqual(1, e0.CP0);
-            Assert.AreEqual(2, e0.CP1);
+            Assert.NotNull(e0);
+            Assert.Equal(1, e0.CP0);
+            Assert.Equal(2, e0.CP1);
 
             var e1 = cts.ElementAt(1) as CT;
-            Assert.IsNotNull(e1);
-            Assert.AreEqual(0, e1.CP0);
-            Assert.AreEqual(3, e1.CP1);
-            Assert.AreEqual(4, e1.CP2);
+            Assert.NotNull(e1);
+            Assert.Equal(0, e1.CP0);
+            Assert.Equal(3, e1.CP1);
+            Assert.Equal(4, e1.CP2);
         }
 
         private void MaterializeColOfNullableComplex<T>(string contextUri, Func<List<T>> func)
@@ -296,27 +293,27 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Materialization
             SetResponse(response);
 
             List<T> cts = func();
-            Assert.AreEqual(3, cts.Count);
+            Assert.Equal(3, cts.Count);
 
             var e0 = cts.ElementAt(0) as BaseCT;
-            Assert.IsNotNull(e0);
-            Assert.AreEqual(1, e0.CP0);
-            Assert.AreEqual(2, e0.CP1);
+            Assert.NotNull(e0);
+            Assert.Equal(1, e0.CP0);
+            Assert.Equal(2, e0.CP1);
 
             var e1 = cts.ElementAt(1) as CT;
-            Assert.IsNotNull(e1);
-            Assert.AreEqual(0, e1.CP0);
-            Assert.AreEqual(3, e1.CP1);
-            Assert.AreEqual(4, e1.CP2);
+            Assert.NotNull(e1);
+            Assert.Equal(0, e1.CP0);
+            Assert.Equal(3, e1.CP1);
+            Assert.Equal(4, e1.CP2);
 
-            Assert.IsNull(cts.ElementAt(2));
+            Assert.Null(cts.ElementAt(2));
         }
 
         #endregion
 
         #region Expected collection of the ancestor Type, return the contextUri with collection of sub type
 
-        [TestMethod]
+        [Fact]
         public void MaterializeColOfAncestorComplexByFunctionImportContextUriIsColOfSubtype()
         {
             MaterializeColOfAncestorTypeFromColOfBaseComplex("Collection(NS.BaseCT)", () => this.dsc.RColOfAbsCT().ToList());
@@ -325,7 +322,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Materialization
             MaterializeColOfAncestorTypeActualColOfDerivedComplex("Collection(NS.CT)", () => this.dsc.RColOfBaseCT().ToList());
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializeColOfAncestorComplexByBoundFunctionContextUriIsColOfSubtype()
         {
             MaterializeColOfAncestorTypeFromColOfBaseComplex("Collection(NS.BaseCT)", () => this.dsc.BaseETs.ByKey(0).BETRColOfAbsCT().ToList());
@@ -334,7 +331,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Materialization
             MaterializeColOfAncestorTypeActualColOfDerivedComplex("Collection(NS.CT)", () => this.dsc.DerivedETs.ByKey(0).BETRColOfBaseCT().ToList());
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializeColOfAncestorComplexByBoundFunctionContextUriIsPropertyOfColOfSubtype()
         {
             MaterializeColOfAncestorTypeFromColOfBaseComplex("BaseETs(0)/EColOfBaseCTP", () => this.dsc.BaseETs.ByKey(0).BETRColOfAbsCT().ToList());
@@ -369,18 +366,18 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Materialization
             SetResponse(response);
 
             List<T> cts = func();
-            Assert.AreEqual(2, cts.Count);
+            Assert.Equal(2, cts.Count);
 
             BaseCT e0 = cts.ElementAt(0) as BaseCT;
-            Assert.IsNotNull(e0);
-            Assert.AreEqual(1, e0.CP0);
-            Assert.AreEqual(2, e0.CP1);
+            Assert.NotNull(e0);
+            Assert.Equal(1, e0.CP0);
+            Assert.Equal(2, e0.CP1);
 
             CT e1 = cts.ElementAt(1) as CT;
-            Assert.IsNotNull(e1);
-            Assert.AreEqual(0, e1.CP0);
-            Assert.AreEqual(3, e1.CP1);
-            Assert.AreEqual(4, e1.CP2);
+            Assert.NotNull(e1);
+            Assert.Equal(0, e1.CP0);
+            Assert.Equal(3, e1.CP1);
+            Assert.Equal(4, e1.CP2);
         }
 
         private void MaterializeColOfAncestorTypeActualColOfDerivedComplex<T>(string contextUri, Func<List<T>> func)
@@ -408,47 +405,47 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Materialization
             SetResponse(response);
 
             List<T> cts = func();
-            Assert.AreEqual(2, cts.Count);
+            Assert.Equal(2, cts.Count);
 
             CT e0 = cts.ElementAt(0) as CT;
-            Assert.IsNotNull(e0);
-            Assert.AreEqual(1, e0.CP0);
-            Assert.AreEqual(2, e0.CP1);
-            Assert.AreEqual(0, e0.CP2);
+            Assert.NotNull(e0);
+            Assert.Equal(1, e0.CP0);
+            Assert.Equal(2, e0.CP1);
+            Assert.Equal(0, e0.CP2);
 
             CT e1 = cts.ElementAt(1) as CT;
-            Assert.IsNotNull(e1);
-            Assert.AreEqual(0, e1.CP0);
-            Assert.AreEqual(3, e1.CP1);
-            Assert.AreEqual(4, e1.CP2);
+            Assert.NotNull(e1);
+            Assert.Equal(0, e1.CP0);
+            Assert.Equal(3, e1.CP1);
+            Assert.Equal(4, e1.CP2);
         }
 
         #endregion
 
         #region Expected collection of primitive type, or collection of nullable primitive type.
 
-        [TestMethod]
+        [Fact]
         public void MaterializeColOfPrimitiveByFunctionImport()
         {
             MaterializeColOfPrimitive("Collection(Edm.Int32)", () => this.dsc.RColOfInt().ToList());
             MaterializeColOfNullablePrimitive("Collection(Edm.Int32)", () => this.dsc.RColOfNullableInt().ToList());
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializeColOfPrimitiveProperty()
         {
             MaterializeColOfPrimitive("BaseETs(0)/EColOfInt", () => this.dsc.BaseETs.ByKey(0).Select(e => e.EColOfInt).GetValue().ToList());
             MaterializeColOfNullablePrimitive("BaseETs(0)/EColOfNullableInt", () => this.dsc.BaseETs.ByKey(0).Select(e => e.EColOfNullableInt).GetValue().ToList());
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializeColOfPrimitiveByBoundFunctionContextUriIsColOfPrimitive()
         {
             MaterializeColOfPrimitive("Collection(Edm.Int32)", () => this.dsc.DerivedETs.ByKey(0).BETRColOfInt().ToList());
             MaterializeColOfNullablePrimitive("Collection(Edm.Int32)", () => this.dsc.DerivedETs.ByKey(0).BETRColOfNullableInt().ToList());
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializeColOfPrimitiveByBoundFunctionContextUriIsProperty()
         {
             MaterializeColOfPrimitive("DerivedETs(0)/EColOfInt", () => this.dsc.DerivedETs.ByKey(0).BETRColOfInt().ToList());
@@ -475,11 +472,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Materialization
             SetResponse(response);
 
             var cts = func();
-            Assert.AreEqual(3, cts.Count);
+            Assert.Equal(3, cts.Count);
 
-            Assert.AreEqual(0, cts.ElementAt(0));
-            Assert.AreEqual(1, cts.ElementAt(1));
-            Assert.AreEqual(2, cts.ElementAt(2));
+            Assert.Equal(0, cts.ElementAt(0));
+            Assert.Equal(1, cts.ElementAt(1));
+            Assert.Equal(2, cts.ElementAt(2));
         }
 
         private void MaterializeColOfNullablePrimitive(string contextUri, Func<List<Int32?>> func)
@@ -502,51 +499,51 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Materialization
             SetResponse(response);
 
             var cts = func();
-            Assert.AreEqual(3, cts.Count);
+            Assert.Equal(3, cts.Count);
 
-            Assert.AreEqual(0, cts.ElementAt(0));
-            Assert.IsNull(cts.ElementAt(1));
-            Assert.AreEqual(2, cts.ElementAt(2));
+            Assert.Equal(0, cts.ElementAt(0));
+            Assert.Null(cts.ElementAt(1));
+            Assert.Equal(2, cts.ElementAt(2));
         }
 
         #endregion
 
         #region Expected collection of enum type, or collection of nullable enum type, or nullable enum
 
-        [TestMethod]
+        [Fact]
         public void MaterializeColOfEnumProperty()
         {
             MaterializeColOfEnum("BaseETs(0)/EColOfEnum", () => this.dsc.BaseETs.ByKey(0).Select(e => e.EColOfEnum).GetValue().ToList());
             MaterializeColOfNullableEnum("DerivedETs(0)/EColOfNullableEnum", () => this.dsc.DerivedETs.ByKey(0).Select(e => e.EColOfNullableEnum).GetValue().ToList());
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializeColOfEnumByBoundFunctionContextUriIsColOfEnum()
         {
             MaterializeColOfEnum("Collection(NS.EnumT)", () => this.dsc.DerivedETs.ByKey(0).BETRColOfEnum().ToList());
             MaterializeColOfNullableEnum("Collection(NS.EnumT)", () => this.dsc.DerivedETs.ByKey(0).BETRColOfNullableEnum().ToList());
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializeColOfEnumByBoundFunctionContextUriIsProperty()
         {
             MaterializeColOfEnum("DerivedETs(0)/EColOfEnum", () => this.dsc.DerivedETs.ByKey(0).BETRColOfEnum().ToList());
             MaterializeColOfNullableEnum("DerivedETs(0)/EColOfNullableEnum", () => this.dsc.DerivedETs.ByKey(0).BETRColOfNullableEnum().ToList());
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializeEnumProperty()
         {
             MaterializeNullableEnum("BaseETs(0)/ENullableEnum", () => this.dsc.BaseETs.ByKey(0).Select(e => e.ENullableEnum).GetValue());
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializeEnumByBoundFunctionContextUriIsEnum()
         {
             MaterializeNullableEnum("NS.EnumT", () => this.dsc.DerivedETs.ByKey(0).BETRNullableEnum().GetValue());
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializeEnumByBoundFunctionContextUriIsProperty()
         {
             MaterializeNullableEnum("DerivedETs(0)/ENullableEnum", () => this.dsc.DerivedETs.ByKey(0).BETRNullableEnum().GetValue());
@@ -571,10 +568,10 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Materialization
             SetResponse(response);
 
             var ets = func();
-            Assert.AreEqual(2, ets.Count);
+            Assert.Equal(2, ets.Count);
 
-            Assert.AreEqual(EnumT.EnumP1, ets.ElementAt(0));
-            Assert.AreEqual(EnumT.EnumP2, ets.ElementAt(1));
+            Assert.Equal(EnumT.EnumP1, ets.ElementAt(0));
+            Assert.Equal(EnumT.EnumP2, ets.ElementAt(1));
         }
 
         private void MaterializeColOfNullableEnum(string contextUri, Func<List<EnumT?>> func)
@@ -597,11 +594,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Materialization
             SetResponse(response);
 
             var ets = func();
-            Assert.AreEqual(3, ets.Count);
+            Assert.Equal(3, ets.Count);
 
-            Assert.AreEqual(EnumT.EnumP1, ets.ElementAt(0));
-            Assert.IsNull(ets.ElementAt(1));
-            Assert.AreEqual(EnumT.EnumP2, ets.ElementAt(2));
+            Assert.Equal(EnumT.EnumP1, ets.ElementAt(0));
+            Assert.Null(ets.ElementAt(1));
+            Assert.Equal(EnumT.EnumP2, ets.ElementAt(2));
         }
 
         private void MaterializeNullableEnum(string contextUri, Func<EnumT?> func)
@@ -619,7 +616,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Materialization
             SetResponse(response);
 
             var enumP = func();
-            Assert.AreEqual(EnumT.EnumP1, enumP);
+            Assert.Equal(EnumT.EnumP1, enumP);
         }
 
         #endregion
