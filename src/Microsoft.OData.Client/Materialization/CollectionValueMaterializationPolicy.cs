@@ -265,7 +265,7 @@ namespace Microsoft.OData.Client.Materialization
                     collectionInstance,
                     collectionItemType,
                     ClientTypeUtil.GetAddToCollectionDelegate(collectionICollectionType),
-                    false);  // TODO: Determine the appropriate value for isElementNullable
+                    false);
 
                 // We found an assignable type
                 return true;
