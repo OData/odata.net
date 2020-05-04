@@ -13,9 +13,8 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class SingletonUpdateTests : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>
     {
         private const string NameSpacePrefix = "Microsoft.Test.OData.Services.ODataWCFService.";
@@ -26,7 +25,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
 
         }
 
-        [TestMethod]
+        [Fact]
         public void UpdateSingletonProperty()
         {
             string[] cities = { "London", "Seattle", "Paris", "New York", "Washington" };
@@ -36,7 +35,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 List<ODataResource> entries = this.QueryEntry("VipCustomer", mimeTypes[i]);
                 if (!mimeTypes[i].Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(cities[i], entries[1].Properties.Single(p => p.Name == "City").Value);
+                    Assert.Equal(cities[i], entries[1].Properties.Single(p => p.Name == "City").Value);
                 }
 
                 var properties = new[] { new ODataProperty { Name = "City", Value = cities[i + 1] } };
@@ -45,12 +44,12 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 List<ODataResource> updatedEntries = this.QueryEntry("VipCustomer", mimeTypes[i]);
                 if (!mimeTypes[i].Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(cities[i + 1], updatedEntries[1].Properties.Single(p => p.Name == "City").Value);
+                    Assert.Equal(cities[i + 1], updatedEntries[1].Properties.Single(p => p.Name == "City").Value);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void UpdateSingletonComplexProperty()
         {
             ODataResource complex0 = new ODataResource()
@@ -101,7 +100,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 List<ODataResource> entries = this.QueryEntry("VipCustomer", mimeTypes[i]);
                 if (!mimeTypes[i].Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    ODataValueAssertEqualHelper.AssertODataPropertyAndResourceAreEqual(currentHomeAddress, entries[0] );
+                    ODataValueAssertEqualHelper.AssertODataPropertyAndResourceEqual(currentHomeAddress, entries[0] );
                 }
 
                 this.UpdateEntry("Customer", "VipCustomer", mimeTypes[i], properties);
@@ -109,7 +108,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 List<ODataResource> updatedentries = this.QueryEntry("VipCustomer", mimeTypes[i]);
                 if (!mimeTypes[i].Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    ODataValueAssertEqualHelper.AssertODataPropertyAndResourceAreEqual(updatedHomeAddress, updatedentries[0]);
+                    ODataValueAssertEqualHelper.AssertODataPropertyAndResourceEqual(updatedHomeAddress, updatedentries[0]);
                 }
             }
         }
@@ -124,7 +123,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + requestUri, UriKind.Absolute));
             requestMessage.SetHeader("Accept", mimeType);
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
 
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
             {
@@ -139,7 +138,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                             entries.Add(reader.Item as ODataResource);
                         }
                     }
-                    Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                    Assert.Equal(ODataReaderState.Completed, reader.State);
                 }
             }
             return entries;
@@ -186,7 +185,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
             var responseMessage = requestMessage.GetResponse();
 
             // verify the update
-            Assert.AreEqual(204, responseMessage.StatusCode);
+            Assert.Equal(204, responseMessage.StatusCode);
         }
 
         #endregion

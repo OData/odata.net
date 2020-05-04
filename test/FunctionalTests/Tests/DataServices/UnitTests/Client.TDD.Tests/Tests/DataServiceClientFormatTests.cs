@@ -17,10 +17,9 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using Microsoft.OData.Client.Metadata;
     using Microsoft.OData.Client.TDDUnitTests;
     using Microsoft.OData.Client.TDDUnitTests.Tests;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using ClientStrings = Microsoft.OData.Client.Strings;
+    using Xunit;
 
-    [TestClass]
     public class DataServiceClientFormatTests
     {
         private readonly IEdmModel serviceModel = new EdmModel();
@@ -38,30 +37,25 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         private static IODataRequestMessage RequestWithApplicationJson;
         private static IODataResponseMessage ResponseWithApplicationJson;
 
-        [ClassInitialize]
-        public static void InitClass(TestContext testContext)
+        public DataServiceClientFormatTests()
         {
             RequestWithApplicationJson = new ODataRequestMessageSimulator();
             RequestWithApplicationJson.SetHeader(XmlConstants.HttpContentType, "aPPlicaTion/jSoN");
 
             ResponseWithApplicationJson = new ODataResponseMessageSimulator();
             ResponseWithApplicationJson.SetHeader(XmlConstants.HttpContentType, "aPPlicaTion/jSoN");
-        }
 
-        [TestInitialize]
-        public void Init()
-        {
             this.v3Context = new DataServiceContext(new Uri("http://temp.org/"), ODataProtocolVersion.V4).ReConfigureForNetworkLoadingTests();
             this.v3TestSubject = this.v3Context.Format;
         }
 
-        [TestMethod]
+        [Fact]
         public void ApiSample()
         {
             this.v3Context.Format.UseJson(this.serviceModel);
         }
 
-        [TestMethod]
+        [Fact]
         public void ContextShouldTrackFormatting()
         {
             var format = this.v3Context.Format;
@@ -69,14 +63,14 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             this.v3Context.Format.Should().BeSameAs(format);
         }
 
-        [TestMethod]
+        [Fact]
         public void JsonFormatShouldRequireModelResolver()
         {
             Action passNullResolver = () => this.v3TestSubject.UseJson(null);
             passNullResolver.ShouldThrow<ArgumentNullException>();
         }
 
-        [TestMethod]
+        [Fact]
         public void JsonShouldStoreResolverAndFormat()
         {
             this.v3TestSubject.UseJson(this.serviceModel);
@@ -86,13 +80,13 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
 
 
-        [TestMethod]
+        [Fact]
         public void AtomShouldBeTheDefault()
         {
             this.v3TestSubject.ODataFormat.Should().BeSameAs(ODataFormat.Json);
         }
 
-        [TestMethod]
+        [Fact]
         public void TestNetworkLoading()
         {
 
@@ -102,32 +96,32 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
         }
 
-        [TestMethod]
+        [Fact]
         public void SetRequestAcceptHeaderShouldSetAcceptHeaderToJsonLightWhenUsingJson()
         {
             this.TestSetRequestAcceptHeader(f => f.UseJson(this.serviceModel), null, TestConstants.MimeApplicationJsonODataMinimalMetadata);
         }
 
-        [TestMethod]
+        [Fact]
         public void SetRequestAcceptHeaderShouldNotSetAcceptHeaderIfAlreadySetWhenUsingJson()
         {
             const string initialHeaderValue = "InitialHeaderValue";
             this.TestSetRequestAcceptHeader(f => f.UseJson(this.serviceModel), initialHeaderValue, initialHeaderValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void SetRequestAcceptHeaderForStream()
         {
             this.TestSetRequestHeader(f => f.UseJson(this.serviceModel), (f, r) => f.SetRequestAcceptHeaderForStream(r), "Accept", null, "*/*");
         }
 
-        [TestMethod]
+        [Fact]
         public void SetRequestAcceptHeaderForCount()
         {
             this.TestSetRequestHeader(f => f.UseJson(this.serviceModel), (f, r) => f.SetRequestAcceptHeaderForCount(r), "Accept", null, "text/plain");
         }
 
-        [TestMethod]
+        [Fact]
         public void SetRequestAcceptHeaderForMultipartBatch()
         {
             var headers = new HeaderCollection();
@@ -141,7 +135,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                 "multipart/mixed"); // Expected header value
         }
 
-        [TestMethod]
+        [Fact]
         public void SetRequestAcceptHeaderForJsonBatch()
         {
             var headers = new HeaderCollection();
@@ -155,7 +149,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                 "application/json"); // Expected header value
         }
 
-        [TestMethod]
+        [Fact]
         public void SetRequestAcceptHeaderForQueryInJsonWithSelect()
         {
             this.TestSetRequestHeader(
@@ -166,7 +160,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                 TestConstants.MimeApplicationJsonODataFullMetadata);
         }
 
-        [TestMethod]
+        [Fact]
         public void SetRequestAcceptHeaderForQueryInJsonWithoutSelect()
         {
             this.TestSetRequestHeader(
@@ -183,34 +177,34 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             this.TestSetRequestHeader(configureFormat, (f, r) => f.SetRequestAcceptHeader(r), TestConstants.HttpAccept, initialHeaderValue, expectedValueAfterSet);
         }
 
-        [TestMethod]
+        [Fact]
         public void SetRequestContentTypeHeaderShouldSetContentTypeHeaderToJsonLightWhenUsingJson()
         {
             this.TestSetRequestContentTypeHeaderForEntry(f => f.UseJson(this.serviceModel), null, TestConstants.MimeApplicationJsonODataMinimalMetadata);
         }
 
-        [TestMethod]
+        [Fact]
         public void SetRequestContentTypeHeaderShouldSetContentTypeHeaderToJsonLightWhenUsingJsonForLinks()
         {
             this.TestSetRequestContentTypeHeaderForLinks(f => f.UseJson(this.serviceModel), null, TestConstants.MimeApplicationJsonODataMinimalMetadata);
         }
 
-        [TestMethod]
+        [Fact]
         public void SetRequestContentTypeHeaderShouldSetContentTypeHeaderToJsonLightWhenUsingJsonForActions()
         {
             this.TestSetRequestContentTypeHeaderForAction(f => f.UseJson(this.serviceModel), null, TestConstants.MimeApplicationJsonODataMinimalMetadata);
         }
 
         // github: https://github.com/OData/odata.net/issues/879: Need to support instance annotations on feed or nestedResourceInfo.
-        [Ignore] // Remove Atom
-        // [TestMethod]
+        [Fact(Skip="Remove Atom")] // Remove Atom
+        // [Fact]
         public void SetRequestContentTypeHeaderShouldNotSetContentTypeHeaderIfAlreadySetWhenUsingJson()
         {
             const string initialHeaderValue = "InitialHeaderValue";
             this.TestSetRequestContentTypeHeaderForEntry(f => f.UseJson(this.serviceModel), initialHeaderValue, initialHeaderValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void UseJsonOverloadWithNoParameterShouldInvokeDelegate()
         {
             var otherModel = new EdmModel();
@@ -219,14 +213,14 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             this.v3TestSubject.ServiceModel.Should().BeSameAs(otherModel);
         }
 
-        [TestMethod]
+        [Fact]
         public void UseJsonOverloadWithNoParameterShouldPassIfNoDelegateProvided()
         {
              this.v3Context.Format.UseJson();
              this.v3TestSubject.ServiceModel.Should().NotBeNull();
         }
 
-        [TestMethod]
+        [Fact]
         public void UseJsonOverloadWithNoParameterShouldFailIfDelegateReturnsNull()
         {
             Action callOverload = () => this.v3Context.Format.UseJson();
@@ -234,14 +228,14 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             callOverload.ShouldThrow<InvalidOperationException>().WithMessage(ClientStrings.DataServiceClientFormat_LoadServiceModelRequired);
         }
 
-        [TestMethod]
+        [Fact]
         public void ValidateCanWriteRequestMessageShouldNotThrowForV3AndJsonLightWithModel()
         {
             this.v3TestSubject.UseJson(this.serviceModel);
             DataServiceClientFormat.ValidateCanWriteRequestFormat(RequestWithApplicationJson);
         }
 
-        [TestMethod]
+        [Fact]
         public void ValidateCanReadResponseMessageShouldNotThrowForV3AndJsonLightWithModel()
         {
             this.v3TestSubject.UseJson(this.serviceModel);

@@ -10,14 +10,19 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
     using System.Linq;
     using Microsoft.OData.Client;
     using Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
+    using Xunit.Abstractions;
 
-    [TestClass]
     public class UpdateTests : KeyAsSegmentTest
     {
         const int IdOfPerson = -10;
-        
-        [TestMethod]
+
+        public UpdateTests(ITestOutputHelper helper)
+            :base(helper)
+        {
+        }
+
+        [Fact]
         public void InsertSave()
         {
             var newPerson = new Person { PersonId = 9999, Name = "Some Person" };
@@ -27,17 +32,17 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             
             contextWrapper.IgnoreResourceNotFoundException = true;
             var retrievedPerson = personQuery.SingleOrDefault();
-            Assert.IsNull(retrievedPerson);
+            Assert.Null(retrievedPerson);
 
             contextWrapper.AddObject("Person", newPerson);
             contextWrapper.SaveChanges();
             
             retrievedPerson = personQuery.SingleOrDefault();
-            Assert.IsNotNull(retrievedPerson);
-            Assert.IsTrue(newPerson == retrievedPerson, "New entity and retrieved entity should reference same object");
+            Assert.NotNull(retrievedPerson);
+            Assert.True(newPerson == retrievedPerson, "New entity and retrieved entity should reference same object");
         }
 
-        [TestMethod]
+        [Fact]
         public void AttachUpdateObjectSave()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -49,10 +54,10 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             contextWrapper.SaveChanges();
 
             var retrievedBonus = contextWrapper.Context.Person.OfType<SpecialEmployee>().Where(p => p.PersonId == specialEmployee.PersonId).Select(p => p.Bonus);
-            Assert.AreEqual(Int32.MaxValue, retrievedBonus.Single());
+            Assert.Equal(Int32.MaxValue, retrievedBonus.Single());
         }
 
-        [TestMethod]
+        [Fact]
         public void AddObjectSave()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -65,7 +70,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             contextWrapper.SaveChanges();
         }
 
-        [TestMethod]
+        [Fact]
         public void AddObjectAddRelatedObjectSave()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -78,7 +83,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             contextWrapper.SaveChanges();
         }
 
-        [TestMethod]
+        [Fact]
         public void AddDeleteLinkSave()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -93,7 +98,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             contextWrapper.SaveChanges();
         }
 
-        [TestMethod]
+        [Fact]
         public void AddDeleteLinkSaveBatch()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -112,7 +117,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             contextWrapper.SaveChanges(SaveChangesOptions.BatchWithSingleChangeset);
         }
 
-        [TestMethod]
+        [Fact]
         public void SetLinkSave()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -123,7 +128,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             contextWrapper.SaveChanges();
         }
 
-        [TestMethod]
+        [Fact]
         public void AddRelatedObjectSave()
         {
             var contextWrapper = this.CreateWrappedContext();

@@ -25,33 +25,26 @@ namespace Microsoft.Test.OData.Tests.Client
     using Microsoft.Test.OData.Framework.Client;
     using Microsoft.Test.OData.Framework.Server;
     using Microsoft.Test.OData.Services.TestServices;
-    
-#if WIN8 || WINDOWSPHONE
-    using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-#else
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
+    using Xunit;
+    using Xunit.Abstractions;
+    using Xunit.Sdk;
+    using System.Reflection;
 
     /// <summary>
     /// Base class for OData End to End Tests.
     /// </summary>
-    [TestClass]
-#if !WIN8 && !WINDOWSPHONE
-    [DeploymentItem(@"EntityFramework.dll")]
-#endif
-#if !PORTABLELIB
-    [DeploymentItem(@"Microsoft.VisualStudio.QualityTools.Common.dll")]
-    [DeploymentItem(@"Microsoft.VisualStudio.TeamSystem.Licensing.dll")]
-#endif
     public class EndToEndTestBase
 #if !WIN8 && !PORTABLELIB && !(NETCOREAPP1_0 || NETCOREAPP2_0)
  : DataDrivenTest
 #endif
+        ,IDisposable
     {
-        public bool TestCompleted { get; set; }
 
+        public bool TestCompleted { get; set; }
         private readonly ServiceDescriptor serviceDescriptor;
         private IServiceWrapper serviceWrapper;
+        private string testClassName = "";
+        private string testName = "";
 
         /// <summary>
         /// Initializes a new instance of the EndToEndTestBase class.
@@ -62,33 +55,13 @@ namespace Microsoft.Test.OData.Tests.Client
 
         /// <summary>
         /// Initializes a new instance of the EndToEndTestBase class.
+        /// Initialization for the tests, called prior to running each test in this class.
         /// </summary>
         /// <param name="serviceDescriptor">Descriptor for the service that these tests will target.</param>
-        protected EndToEndTestBase(ServiceDescriptor serviceDescriptor)
+        protected EndToEndTestBase(ServiceDescriptor serviceDescriptor, ITestOutputHelper output)
         {
             TestServiceUtil.ServiceUriGenerator = ServiceGeneratorFactory.CreateServiceUriGenerator();
             this.serviceDescriptor = serviceDescriptor;
-        }
-
-        /// <summary>
-        /// Gets or sets the MSTest Test Context.
-        /// </summary>
-        public TestContext TestContext { get; set; }
-
-        /// <summary>
-        /// Gets the URI for the test's OData Service.
-        /// </summary>
-        protected Uri ServiceUri
-        {
-            get { return this.serviceWrapper == null ? null : this.serviceWrapper.ServiceUri; }
-        }
-
-        /// <summary>
-        /// Initialization for the tests, called prior to running each test in this class.
-        /// </summary>
-        [TestInitialize]
-        public void TestInitialize()
-        {
 #if WIN8 || PORTABLELIB
             this.serviceWrapper = new ExternalHostedServiceWrapper(this.serviceDescriptor);
 #else
@@ -99,6 +72,20 @@ namespace Microsoft.Test.OData.Tests.Client
 
             this.ResetDataSource();
             this.CustomTestInitialize();
+
+            var helper = (TestOutputHelper)output;
+            ITest test = (ITest)helper.GetType().GetField("test", BindingFlags.NonPublic | BindingFlags.Instance)
+                .GetValue(helper);
+            testClassName = test.TestCase.TestMethod.TestClass.Class.ToString();
+            testName = test.TestCase.TestMethod.Method.Name;
+        }
+
+        /// <summary>
+        /// Gets the URI for the test's OData Service.
+        /// </summary>
+        protected Uri ServiceUri
+        {
+            get { return this.serviceWrapper == null ? null : this.serviceWrapper.ServiceUri; }
         }
 
         private void ResetDataSource()
@@ -115,21 +102,18 @@ namespace Microsoft.Test.OData.Tests.Client
                 // catch it instead of having the test fail. If it does return 404 its fine this is just a reset call which makes the Datasource remak itself 
             }
         }
-
+        /// <summary>
+        /// Cleanup for the tests, called after running each test in this class.
+        /// </summary>
+        public void Dispose()
+        {
+            this.serviceWrapper.StopService();
+        }
         /// <summary>
         /// Custom test initialization for derived classes.
         /// </summary>
         public virtual void CustomTestInitialize()
         {
-        }
-
-        /// <summary>
-        /// Cleanup for the tests, called after running each test in this class.
-        /// </summary>
-        [TestCleanup]
-        public void TestCleanup()
-        {
-            this.serviceWrapper.StopService();
         }
 
 #if !WIN8 && !PORTABLELIB && !(NETCOREAPP1_0 || NETCOREAPP2_0)
@@ -157,13 +141,13 @@ namespace Microsoft.Test.OData.Tests.Client
         internal virtual DataServiceContextWrapper<TContext> CreateWrappedContext<TContext>() where TContext : DataServiceContext
         {
             var context = this.serviceDescriptor.CreateDataServiceContext(this.serviceWrapper.ServiceUri) as TContext;
-            Assert.IsNotNull(context, "Failed to cast DataServiceContext to specified type '{0}'", typeof(TContext).Name);
+            //Failed to cast DataServiceContext to specified type '{0}', typeof(TContext).Name)
+            Assert.NotNull(context);
 
             var contextWrapper = new DataServiceContextWrapper<TContext>(context);
 
 #if !WINDOWSPHONE
-            var testClassName = this.TestContext.FullyQualifiedTestClassName;
-            contextWrapper.BuildingRequest += (s, e) => e.Headers.Add("TestName", string.Format("{0}.{1}", testClassName, this.TestContext.TestName));
+            contextWrapper.BuildingRequest += (s, e) => e.Headers.Add("TestName", string.Format("{0}.{1}", testClassName, testName));
 
             // Override any url conventions that may be baked into the context by codegen
             contextWrapper.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Parentheses;

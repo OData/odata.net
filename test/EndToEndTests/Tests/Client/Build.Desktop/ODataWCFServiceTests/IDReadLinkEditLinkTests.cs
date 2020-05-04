@@ -12,10 +12,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-
-    [TestClass]
     public class IdReadLinkEditLinkTests : ODataWCFServiceTestsBase<InMemoryEntities>
     {
         private const string TestHeader = "Test_ODataEntryFieldToModify";
@@ -26,13 +24,13 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
         }
 
-        [TestMethod]
+        [Fact]
         public void ClientShouldUseTheEditLinkGotFromPayloadToUpdateTheEntryInMinimalMetadataJson()
         {
             this.UpdateObject(MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata);
         }
 
-        [TestMethod]
+        [Fact]
         public void ClientShouldUseTheEditLinkGotFromPayloadToUpdateTheEntryInMinimalFullJson()
         {
             this.UpdateObject(MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata);
@@ -62,25 +60,25 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             }
             //The test is to make sure that the request is sent to server incorrectly, so it is supposed to throw exception.
             //TODO: This verification may fail in other languages.
-            Assert.IsTrue(stringOfErrorMessage.Contains("No such host is known") //if fiddler is open
+            Assert.True(stringOfErrorMessage.Contains("No such host is known") //if fiddler is open
                           || stringOfErrorMessage.Contains("The remote name could not be resolved") //if fiddler is not open
                           || stringOfErrorMessage.Contains("Unable to connect to the remote server")
                           , String.Format("Exception message is expected to contain 'No such host is known' or 'The remote name could not be resolved', but actually not. The actual message is '{0}'.", stringOfErrorMessage));
         }
 
-        //[TestMethod]
+        //[Fact]
         //public void ItIsAbleToDeserializeObjectIfItIsTransientInAtom()
         //{
         //    this.QueryObjectWhenItIsTransient(MimeTypes.ApplicationAtomXml);
         //}
 
-        [TestMethod]
+        [Fact]
         public void ItIsAbleToDeserializeObjectIfItIsTransientInFullMetadataJson()
         {
             this.QueryObjectWhenItIsTransient(MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata);
         }
 
-        [TestMethod]
+        [Fact]
         public void ItIsAbleToDeserializeObjectIfItIsTransientInMinimalMetadataJson()
         {
             this.QueryObjectWhenItIsTransient(MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata);
@@ -96,24 +94,25 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             TestClientContext.Format.UseJson(Model);
 
             var person = TestClientContext.People.Where(p => p.PersonID == 2).SingleOrDefault();
-            Assert.AreEqual(2, person.PersonID, String.Format("Expected PersonID is '2', but actually it is '{0}'", person.PersonID));
+            //String.Format("Expected PersonID is '2', but actually it is '{0}'", person.PersonID
+            Assert.Equal(2, person.PersonID);
             var entityDescriptor = TestClientContext.GetEntityDescriptor(person);
-            Assert.IsNull(entityDescriptor);
+            Assert.Null(entityDescriptor);
         }
 
-        // [TestMethod] // github issuse: #896
+        // [Fact] // github issuse: #896
         public void ItIsAbleToDeserializeObjectsIfTheyAreTransientInAtom()
         {
             this.QueryObjectsWhenTheyAreTransient(MimeTypes.ApplicationAtomXml);
         }
 
-        [TestMethod]
+        [Fact]
         public void ItIsAbleToDeserializeObjectsIfTheyAreTransientInFullMetadataJson()
         {
             this.QueryObjectsWhenTheyAreTransient(MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata);
         }
 
-        [TestMethod]
+        [Fact]
         public void ItIsAbleToDeserializeObjectsIfTheyAreTransientInMinimalMetadataJson()
         {
             this.QueryObjectsWhenTheyAreTransient(MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata);
@@ -128,24 +127,25 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             TestClientContext.Format.UseJson(Model);
 
             var entryResults = TestClientContext.Execute<Person>(new Uri(ServiceBaseUri + "/People?$filter=PersonID eq 1")).ToArray();
-            Assert.AreEqual(1, entryResults.Count(), "Unexpected number of Products returned");
+            //Unexpected number of Products returned
+            Assert.Equal(1, entryResults.Count());
             var entityDescriptor = TestClientContext.GetEntityDescriptor(entryResults[0]);
-            Assert.IsNull(entityDescriptor);
+            Assert.Null(entityDescriptor);
         }
 
-        [TestMethod]
+        [Fact]
         public void ClientShouldUseTheReadLinkGotFromPayloadToLoadPropertyInFullJson()
         {
             this.LoadProperty(MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata);
         }
 
-        [TestMethod]
+        [Fact]
         public void ClientShouldUseTheReadLinkGotFromPayloadToLoadPropertyInMinimalJson()
         {
             this.LoadProperty(MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata);
         }
 
-        //[TestMethod]
+        //[Fact]
         //public void ClientShouldUseTheReadLinkGotFromPayloadToLoadPropertyInAtom()
         //{
         //    this.LoadProperty(MimeTypes.ApplicationAtomXml);
@@ -171,25 +171,25 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             }
             //The ReadLink in payload looks like http://potato987654321098, more infomation can be found in Microsoft.Test.OData.Services.ODataWCFService.ResponseWriter.WriteEntry()
             //The test is to make sure that the request is sent to server incorrectly, so it is supposed to throw exception.
-            Assert.IsTrue(stringOfErrorMessage.Contains("No such host is known") //if fiddler is open
+            Assert.True(stringOfErrorMessage.Contains("No such host is known") //if fiddler is open
                           || stringOfErrorMessage.Contains("The remote name could not be resolved") //if fiddler is not open
                           || stringOfErrorMessage.Contains("Unable to connect to the remote server")
                           , String.Format("Exception message is expected to contain 'No such host is known' or 'The remote name could not be resolved', but actually not. The actual message is '{0}'.", stringOfErrorMessage));
         }
 
-        //[TestMethod]
+        //[Fact]
         //public void ShouldBeAbleToAddLinkBetweenEntitiesInAtom()
         //{
         //    this.AddDeleteLink(MimeTypes.ApplicationAtomXml);
         //}
 
-        [TestMethod]
+        [Fact]
         public void ShouldBeAbleToAddLinkBetweenEntitiesInFullJson()
         {
             this.AddDeleteLink(MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata);
         }
 
-        [TestMethod]
+        [Fact]
         public void ShouldBeAbleToAddLinkBetweenEntitiesInMinimalJson()
         {
             this.AddDeleteLink(MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata);
@@ -217,14 +217,16 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             TestClientContext.SaveChanges();
             detailsInAProdct = TestClientContext.Execute<ProductDetail>(uri);
             var intOrderCountAfterAddLink = detailsInAProdct.Count();
-            Assert.AreEqual(intOriginalOrderCount + 1, intOrderCountAfterAddLink, "The link is added.");
+            //The link is added
+            Assert.Equal(intOriginalOrderCount + 1, intOrderCountAfterAddLink);
 
             //delete the added link
             TestClientContext.DeleteLink(prodct, "Details", productDetail);
             TestClientContext.SaveChanges();
             detailsInAProdct = TestClientContext.Execute<ProductDetail>(uri);
             var intOrderCountAfterDeleteLink = detailsInAProdct.Count();
-            Assert.AreEqual(intOriginalOrderCount, intOrderCountAfterDeleteLink, "The added link is deleted.");
+            //The added link is deleted
+            Assert.Equal(intOriginalOrderCount, intOrderCountAfterDeleteLink);
         }
     }
 }

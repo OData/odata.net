@@ -12,9 +12,8 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class ClientSingletonTest
     {
         private TestQueryable<Person> personQueryable;
@@ -22,8 +21,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         private Uri baseUri;
         private DataServiceContext context;
 
-        [TestInitialize]
-        public void Init()
+        public ClientSingletonTest()
         {
             baseUri = new Uri("http://base.org/");
             context = new DataServiceContext(baseUri);
@@ -38,50 +36,50 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             return new TestQueryable<TElement>(exp, provider);
         }
 
-        [TestMethod]
+        [Fact]
         public void TestBase()
         {
-            Assert.AreEqual("http://base.org/Vip", personQueryable.RootSingleton);
-            Assert.AreEqual("http://base.org/Vip", customerQueryable.RootSingleton);
+            Assert.Equal("http://base.org/Vip", personQueryable.RootSingleton);
+            Assert.Equal("http://base.org/Vip", customerQueryable.RootSingleton);
         }
 
-        [TestMethod]
+        [Fact]
         public void TestWhere()
         {
             // Test Key
-            Assert.AreEqual("http://base.org/Vip?$filter=PersonId eq 1", personQueryable.Where(p => p.PersonId == 1).ToString());
-            Assert.AreEqual("http://base.org/Vip?$filter=PersonId eq 1", customerQueryable.Where(p => p.PersonId == 1).ToString());
+            Assert.Equal("http://base.org/Vip?$filter=PersonId eq 1", personQueryable.Where(p => p.PersonId == 1).ToString());
+            Assert.Equal("http://base.org/Vip?$filter=PersonId eq 1", customerQueryable.Where(p => p.PersonId == 1).ToString());
             
             // Test NonKey
-            Assert.AreEqual("http://base.org/Vip?$filter=FirstName eq 'Alex'", personQueryable.Where(p => p.FirstName == "Alex").ToString());
-            Assert.AreEqual("http://base.org/Vip?$filter=FirstName eq 'Alex'", customerQueryable.Where(p => p.FirstName == "Alex").ToString());
-            Assert.AreEqual("http://base.org/Vip?$filter=CustomerNumber eq '10086'", customerQueryable.Where(p => p.CustomerNumber == "10086").ToString());
-            Assert.AreEqual("http://base.org/Vip?$filter=Card/CardNumber eq '10086'", customerQueryable.Where(p => p.Card.CardNumber == "10086").ToString());
+            Assert.Equal("http://base.org/Vip?$filter=FirstName eq 'Alex'", personQueryable.Where(p => p.FirstName == "Alex").ToString());
+            Assert.Equal("http://base.org/Vip?$filter=FirstName eq 'Alex'", customerQueryable.Where(p => p.FirstName == "Alex").ToString());
+            Assert.Equal("http://base.org/Vip?$filter=CustomerNumber eq '10086'", customerQueryable.Where(p => p.CustomerNumber == "10086").ToString());
+            Assert.Equal("http://base.org/Vip?$filter=Card/CardNumber eq '10086'", customerQueryable.Where(p => p.Card.CardNumber == "10086").ToString());
 
-            Assert.AreEqual("http://base.org/Vip?$filter=Microsoft.OData.Client.TDDUnitTests.Tests.Customer/CustomerNumber eq '1024'", personQueryable.Where(p => (p as Customer).CustomerNumber == "1024").ToString());
+            Assert.Equal("http://base.org/Vip?$filter=Microsoft.OData.Client.TDDUnitTests.Tests.Customer/CustomerNumber eq '1024'", personQueryable.Where(p => (p as Customer).CustomerNumber == "1024").ToString());
         }
 
-        [TestMethod]
+        [Fact]
         public void TestExpand()
         {
-            Assert.AreEqual("http://base.org/Vip?$expand=Order", personQueryable.Translate(personQueryable.Expand("Order")));
-            Assert.AreEqual("http://base.org/Vip?$expand=FirstName", personQueryable.Translate(personQueryable.Expand(p => p.FirstName)));
+            Assert.Equal("http://base.org/Vip?$expand=Order", personQueryable.Translate(personQueryable.Expand("Order")));
+            Assert.Equal("http://base.org/Vip?$expand=FirstName", personQueryable.Translate(personQueryable.Expand(p => p.FirstName)));
             
-            Assert.AreEqual("http://base.org/Vip?$expand=Microsoft.OData.Client.TDDUnitTests.Tests.Customer/Card", personQueryable.Translate(personQueryable.Expand(p => (p as Customer).Card)));
-            Assert.AreEqual("http://base.org/Vip?$expand=Card", customerQueryable.Translate(customerQueryable.Expand("Card")));
-            Assert.AreEqual("http://base.org/Vip?$expand=Card", customerQueryable.Translate(customerQueryable.Expand(p => p.Card)));
+            Assert.Equal("http://base.org/Vip?$expand=Microsoft.OData.Client.TDDUnitTests.Tests.Customer/Card", personQueryable.Translate(personQueryable.Expand(p => (p as Customer).Card)));
+            Assert.Equal("http://base.org/Vip?$expand=Card", customerQueryable.Translate(customerQueryable.Expand("Card")));
+            Assert.Equal("http://base.org/Vip?$expand=Card", customerQueryable.Translate(customerQueryable.Expand(p => p.Card)));
         }
 
-        [TestMethod]
+        [Fact]
         public void TestSelect()
         {
-            Assert.AreEqual("http://base.org/Vip/FirstName", personQueryable.Translate(personQueryable.Select(p => p.FirstName)));
-            Assert.AreEqual("http://base.org/Vip?$select=PersonId,FirstName", personQueryable.Translate(personQueryable.Select(p => new Person { PersonId = p.PersonId, FirstName = p.FirstName })));
-            Assert.AreEqual("http://base.org/Vip/Microsoft.OData.Client.TDDUnitTests.Tests.Customer/Card", personQueryable.Translate(personQueryable.Select(p => (p as Customer).Card)));
+            Assert.Equal("http://base.org/Vip/FirstName", personQueryable.Translate(personQueryable.Select(p => p.FirstName)));
+            Assert.Equal("http://base.org/Vip?$select=PersonId,FirstName", personQueryable.Translate(personQueryable.Select(p => new Person { PersonId = p.PersonId, FirstName = p.FirstName })));
+            Assert.Equal("http://base.org/Vip/Microsoft.OData.Client.TDDUnitTests.Tests.Customer/Card", personQueryable.Translate(personQueryable.Select(p => (p as Customer).Card)));
 
-            Assert.AreEqual("http://base.org/Vip/PersonId", customerQueryable.Translate(customerQueryable.Select(p => p.PersonId)));
-            Assert.AreEqual("http://base.org/Vip/CustomerNumber", customerQueryable.Translate(customerQueryable.Select(p => p.CustomerNumber)));
-            Assert.AreEqual("http://base.org/Vip?$select=PersonId,FirstName,CustomerNumber,Card", 
+            Assert.Equal("http://base.org/Vip/PersonId", customerQueryable.Translate(customerQueryable.Select(p => p.PersonId)));
+            Assert.Equal("http://base.org/Vip/CustomerNumber", customerQueryable.Translate(customerQueryable.Select(p => p.CustomerNumber)));
+            Assert.Equal("http://base.org/Vip?$select=PersonId,FirstName,CustomerNumber,Card", 
                 customerQueryable.Translate(customerQueryable.Select(p => new Customer()
                 {
                     PersonId = p.PersonId, 
@@ -91,77 +89,77 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 })));
         }
 
-        [TestMethod]
+        [Fact]
         public void TestSkip()
         {
-            Assert.AreEqual("http://base.org/Vip?$skip=2", personQueryable.Skip(2).ToString());
+            Assert.Equal("http://base.org/Vip?$skip=2", personQueryable.Skip(2).ToString());
 
-            Assert.AreEqual("http://base.org/Vip?$skip=2", customerQueryable.Skip(2).ToString());
+            Assert.Equal("http://base.org/Vip?$skip=2", customerQueryable.Skip(2).ToString());
         }
 
-        [TestMethod]
+        [Fact]
         public void TestExpandAndSkip()
         {
-            Assert.AreEqual("http://base.org/Vip?$skip=2&$expand=Order", personQueryable.Expand("Order").Skip(2).ToString());
+            Assert.Equal("http://base.org/Vip?$skip=2&$expand=Order", personQueryable.Expand("Order").Skip(2).ToString());
 
-            Assert.AreEqual("http://base.org/Vip?$skip=2&$expand=Order", customerQueryable.Expand("Order").Skip(2).ToString());
+            Assert.Equal("http://base.org/Vip?$skip=2&$expand=Order", customerQueryable.Expand("Order").Skip(2).ToString());
         }
 
-        [TestMethod]
+        [Fact]
         public void TestWhereAndExpand()
         {
-            Assert.AreEqual("http://base.org/Vip?$filter=PersonId eq 1&$expand=Order", personQueryable.Expand("Order").Where(p => p.PersonId == 1).ToString());
+            Assert.Equal("http://base.org/Vip?$filter=PersonId eq 1&$expand=Order", personQueryable.Expand("Order").Where(p => p.PersonId == 1).ToString());
             
-            Assert.AreEqual("http://base.org/Vip?$filter=PersonId eq 1&$expand=Order", customerQueryable.Expand("Order").Where(p => p.PersonId == 1).ToString());
-            Assert.AreEqual("http://base.org/Vip?$filter=CustomerNumber eq '100'&$expand=Order", customerQueryable.Expand("Order").Where(p => p.CustomerNumber == "100").ToString());
+            Assert.Equal("http://base.org/Vip?$filter=PersonId eq 1&$expand=Order", customerQueryable.Expand("Order").Where(p => p.PersonId == 1).ToString());
+            Assert.Equal("http://base.org/Vip?$filter=CustomerNumber eq '100'&$expand=Order", customerQueryable.Expand("Order").Where(p => p.CustomerNumber == "100").ToString());
         }
 
-        [TestMethod]
+        [Fact]
         public void TestSingleOrDefalut()
         {
-            Assert.AreEqual("http://base.org/Vip", personQueryable.Translate(CreateExpression("SingleOrDefault", personQueryable)));
+            Assert.Equal("http://base.org/Vip", personQueryable.Translate(CreateExpression("SingleOrDefault", personQueryable)));
 
-            Assert.AreEqual("http://base.org/Vip", customerQueryable.Translate(CreateExpression("SingleOrDefault", customerQueryable)));
+            Assert.Equal("http://base.org/Vip", customerQueryable.Translate(CreateExpression("SingleOrDefault", customerQueryable)));
         }
 
-        [TestMethod]
+        [Fact]
         public void TestSingle()
         {
-            Assert.AreEqual("http://base.org/Vip", personQueryable.Translate(CreateExpression("Single", personQueryable)));
+            Assert.Equal("http://base.org/Vip", personQueryable.Translate(CreateExpression("Single", personQueryable)));
 
-            Assert.AreEqual("http://base.org/Vip", customerQueryable.Translate(CreateExpression("Single", customerQueryable)));
+            Assert.Equal("http://base.org/Vip", customerQueryable.Translate(CreateExpression("Single", customerQueryable)));
         }
 
-        [TestMethod]
+        [Fact]
         public void TestFirst()
         {
-            Assert.AreEqual("http://base.org/Vip", personQueryable.Translate(CreateExpression("First", personQueryable)));
-            Assert.AreEqual("http://base.org/Vip", customerQueryable.Translate(CreateExpression("First", customerQueryable)));
+            Assert.Equal("http://base.org/Vip", personQueryable.Translate(CreateExpression("First", personQueryable)));
+            Assert.Equal("http://base.org/Vip", customerQueryable.Translate(CreateExpression("First", customerQueryable)));
         }
 
-        [TestMethod]
+        [Fact]
         public void TestFirstOrDefault()
         {
-            Assert.AreEqual("http://base.org/Vip", personQueryable.Translate(CreateExpression("FirstOrDefault", personQueryable)));
+            Assert.Equal("http://base.org/Vip", personQueryable.Translate(CreateExpression("FirstOrDefault", personQueryable)));
 
-            Assert.AreEqual("http://base.org/Vip", customerQueryable.Translate(CreateExpression("FirstOrDefault", customerQueryable)));
+            Assert.Equal("http://base.org/Vip", customerQueryable.Translate(CreateExpression("FirstOrDefault", customerQueryable)));
         }
 
-        [TestMethod]
+        [Fact]
         public void TestCount()
         {
-            Assert.AreEqual("http://base.org/Vip/$count", personQueryable.Translate(CreateExpression("Count", personQueryable)));
+            Assert.Equal("http://base.org/Vip/$count", personQueryable.Translate(CreateExpression("Count", personQueryable)));
 
-            Assert.AreEqual("http://base.org/Vip/$count", customerQueryable.Translate(CreateExpression("Count", customerQueryable)));
+            Assert.Equal("http://base.org/Vip/$count", customerQueryable.Translate(CreateExpression("Count", customerQueryable)));
         }
 
-        [TestMethod]
+        [Fact]
         public void TestCreateSingletonQuery()
         {
             DataServiceContext context = new DataServiceContext(new Uri("http://base.org/"));
             var query = context.CreateSingletonQuery<Customer>("Vip");
-            Assert.IsTrue(query.Expression is SingletonResourceExpression);
-            Assert.AreEqual(typeof(Customer), query.ElementType);
+            Assert.True(query.Expression is SingletonResourceExpression);
+            Assert.Equal(typeof(Customer), query.ElementType);
         }
 
         private Expression CreateExpression<TElement>(string methodName, TestQueryable<TElement> queryable)

@@ -17,24 +17,21 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
 #endif
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference;
-#if WIN8 || WINDOWSPHONE
-    using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-#else
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
+    using Xunit;
+    using Xunit.Abstractions;
+
 
     /// <summary>
     /// Client update tests using asynchronous APIs
     /// </summary>
-    [TestClass]
     public class AsyncMethodTests : EndToEndTestBase
     {
-        public AsyncMethodTests()
-            : base(ServiceDescriptors.AstoriaDefaultService)
+        public AsyncMethodTests(ITestOutputHelper helper)
+            : base(ServiceDescriptors.AstoriaDefaultService, helper)
         {
         }
 
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public async Task SaveChangesTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -45,7 +42,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             {
                 if (checkEntry)
                 {
-                    Assert.AreEqual(expectedPropertyCount, args.Entry.Properties.Count());
+                    Assert.Equal(expectedPropertyCount, args.Entry.Properties.Count());
                 }
             };
             context.Configurations.RequestPipeline.OnEntryEnding(onEntryEnding);
@@ -58,7 +55,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             //Partial Post an Entity
             expectedPropertyCount = 2;
             var response = await context.SaveChangesAsync(SaveChangesOptions.PostOnlySetProperties);
-            Assert.IsTrue((response.First() as ChangeOperationResponse).StatusCode == 201, "StatusCode == 201");
+            Assert.True((response.First() as ChangeOperationResponse).StatusCode == 201, "StatusCode == 201");
 
             Order o1 = new Order { OrderId = 1000, CustomerId = 1, Concurrency = new ConcurrencyInfo() { Token = "token1" } };
             context.AddToOrder(o1);
@@ -97,7 +94,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             {
                 if (args.Entry.TypeName.EndsWith("ConcurrencyInfo"))
                 {
-                    Assert.AreEqual("UpdatedToken", args.Entry.Properties.Single(p => p.Name == "Token").Value);
+                    Assert.Equal("UpdatedToken", args.Entry.Properties.Single(p => p.Name == "Token").Value);
                 }
             };
             context.Configurations.RequestPipeline.OnEntryEnding(onEntryEnding1);
@@ -108,7 +105,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             customers.Add(c2);
 
             var dataServiceResponse = await context.SaveChangesAsync(SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.UseRelativeUri);
-            Assert.AreEqual((dataServiceResponse.First() as ChangeOperationResponse).StatusCode, 201, "StatusCode == 201");
+            Assert.Equal((dataServiceResponse.First() as ChangeOperationResponse).StatusCode, 201);
 
             // UseJsonBatch
             c2.Name = "Customer Two Updated";
@@ -138,7 +135,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             this.EnqueueTestComplete();
         }
 
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public async Task QueryEntitySetPagingTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -153,14 +150,14 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             var response2 = await context.ExecuteAsync(continuation);
             var currentPageCount = (response2 as QueryOperationResponse<Customer>).Count();
             count += currentPageCount;
-            Assert.AreEqual(2, currentPageCount);
+            Assert.Equal(2, currentPageCount);
 
             //ExecuteAsync by nextLink
             continuation = (response2 as QueryOperationResponse<Customer>).GetContinuation();
             response2 = await context.ExecuteAsync<Customer>(continuation.NextLinkUri);
             currentPageCount = (response2 as QueryOperationResponse<Customer>).Count();
             count += currentPageCount;
-            Assert.AreEqual(2, currentPageCount);
+            Assert.Equal(2, currentPageCount);
 
             continuation = (response2 as QueryOperationResponse<Customer>).GetContinuation();
             while (continuation != null)
@@ -172,22 +169,22 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 continuation = (response2 as QueryOperationResponse<Customer>).GetContinuation();
             }
 
-            Assert.AreEqual(totalCount, count);
+            Assert.Equal(totalCount, count);
             this.EnqueueTestComplete();
         }
 
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public async Task LoadPropertyTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
             context.MergeOption = MergeOption.OverwriteChanges;
 
             var person = (await context.Person.ExecuteAsync()).First() as SpecialEmployee;
-            Assert.IsNull(person.Car);
+            Assert.Null(person.Car);
 
             //Load Derived Navigation property
             await context.LoadPropertyAsync(person, "Car");
-            Assert.IsNotNull(person.Car);
+            Assert.NotNull(person.Car);
 
             //var c1 = (await context.Customer.ExecuteAsync()).First();
             var c1 = new Customer() { CustomerId = -10 };
@@ -210,17 +207,17 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             //Load navigation property by using continuation
             var continuation = resp.GetContinuation(customer.Orders);
             var orderResp = await context.LoadPropertyAsync(customer, "Orders", continuation) as QueryOperationResponse<Order>;
-            Assert.IsTrue(customer.Orders.Count() == 4);
+            Assert.True(customer.Orders.Count() == 4);
 
             //Load navigation property by using nextLink
             continuation = orderResp.GetContinuation();
             var orderResp2 = await context.LoadPropertyAsync(customer, "Orders", continuation.NextLinkUri);
-            Assert.IsTrue(customer.Orders.Count() == 6);
+            Assert.True(customer.Orders.Count() == 6);
 
             this.EnqueueTestComplete();
         }
 
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public async Task GetReadStreamTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -238,7 +235,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             //gets the stream from the car in context and compares the values to what is in mediaEntry
             var receiveStream = (await context.GetReadStreamAsync(car, new DataServiceRequestArgs())).Stream;
             var sr2 = new StreamReader(receiveStream).ReadToEnd();
-            Assert.AreEqual(expectedString, sr2);
+            Assert.Equal(expectedString, sr2);
 
             // Create Stream Property
             mediaEntry = this.GetStream();
@@ -248,7 +245,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             //gets the stream from the car/Photo in context
             receiveStream = (await context.GetReadStreamAsync(car, "Photo", new DataServiceRequestArgs { AcceptContentType = "application/binary" })).Stream;
             sr2 = new StreamReader(receiveStream).ReadToEnd();
-            Assert.AreEqual(expectedString, sr2);
+            Assert.Equal(expectedString, sr2);
 
             this.EnqueueTestComplete();
         }
@@ -262,7 +259,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             return new MemoryStream(new byte[] { 64, 65, 66 });
         }
 
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public async Task ExecuteBatchTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -295,12 +292,12 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 }
             }
 
-            Assert.AreEqual(actualValues, ("-8-613"), "actualValues == -8-613");
-            Assert.IsTrue(countOfBatchParts > 0 && (countOfTimesSenderCalled - countOfBatchParts) == 1, "countOfBatchParts > 0 && (countOfTimesSenderCalled - countOfBatchParts ) == 1");
+            Assert.Equal(actualValues, ("-8-613"));
+            Assert.True(countOfBatchParts > 0 && (countOfTimesSenderCalled - countOfBatchParts) == 1, "countOfBatchParts > 0 && (countOfTimesSenderCalled - countOfBatchParts ) == 1");
             this.EnqueueTestComplete();
         }
 
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public async Task ExecuteBatchWithSaveChangesOptionsReturnsCorrectResults()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -343,12 +340,12 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
 
             bool isBatchPartsValid = countOfBatchParts > 0 && (countOfTimesSenderCalled - countOfBatchParts) == 1;
 
-            Assert.AreEqual(actualValues, ("-8-613"), "actualValues == -8-613");
-            Assert.IsTrue(isBatchPartsValid, "countOfBatchParts > 0 && (countOfTimesSenderCalled - countOfBatchParts ) == 1");
+            Assert.Equal(actualValues, ("-8-613"));
+            Assert.True(isBatchPartsValid, "countOfBatchParts > 0 && (countOfTimesSenderCalled - countOfBatchParts ) == 1");
             this.EnqueueTestComplete();
         }
 
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public async Task ActionFunction()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -364,7 +361,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 new BodyOperationParameter("n", 5));
 
             var currentEmployees = await queryable.ExecuteAsync();
-            Assert.AreEqual(expectedEmployee0Salary + 5, currentEmployees.First().Salary);
+            Assert.Equal(expectedEmployee0Salary + 5, currentEmployees.First().Salary);
 
             //ExecuteAsyncOfT with Uri and operation parameter
             await context.ExecuteAsync<int>(new Uri(queryable.RequestUri.ToString() + "/Microsoft.Test.OData.Services.AstoriaDefaultService.IncreaseSalaries"),
@@ -372,15 +369,15 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 new BodyOperationParameter("n", 5));
 
             currentEmployees = await queryable.ExecuteAsync();
-            Assert.AreEqual(expectedEmployee0Salary + 10, currentEmployees.First().Salary);
+            Assert.Equal(expectedEmployee0Salary + 10, currentEmployees.First().Salary);
 
             //ExecuteAsyncOfT which will return a singleResult
             int resultValue = (await context.ExecuteAsync<int>(new Uri("GetCustomerCount", UriKind.Relative), "GET", true)).Single();
-            Assert.AreEqual(10, resultValue);
+            Assert.Equal(10, resultValue);
             this.EnqueueTestComplete();
         }
 
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public async Task GetAllPagesAsyncTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -396,7 +393,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 //The first request should not be checked.
                 if (CheckNextLink)
                 {
-                    Assert.AreEqual(nextPageLink.AbsoluteUri, args.RequestMessage.Url.AbsoluteUri);
+                    Assert.Equal(nextPageLink.AbsoluteUri, args.RequestMessage.Url.AbsoluteUri);
                 }
                 CheckNextLink = true;
             };
@@ -408,7 +405,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
 
             context.SendingRequest2 += sendRequestEvent;
             int queryCustomersCount = (await context.Customer.GetAllPagesAsync()).ToList().Count();
-            Assert.AreEqual(allCustomersCount, queryCustomersCount);
+            Assert.Equal(allCustomersCount, queryCustomersCount);
 
             //$filter
             context.SendingRequest2 -= sendRequestEvent;
@@ -418,36 +415,36 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             context.SendingRequest2 += sendRequestEvent;
             CheckNextLink = false;
             queryCustomersCount = (await ((DataServiceQuery<Customer>)context.Customer.Where(c => c.CustomerId > -5)).GetAllPagesAsync()).ToList().Count();
-            Assert.AreEqual(filterCustomersCount, queryCustomersCount);
+            Assert.Equal(filterCustomersCount, queryCustomersCount);
 
             //$projection
             CheckNextLink = false;
             queryCustomersCount = (await ((DataServiceQuery<Customer>)context.Customer.Select(c => new Customer() { CustomerId = c.CustomerId, Name = c.Name })).GetAllPagesAsync()).ToList().Count();
-            Assert.AreEqual(allCustomersCount, queryCustomersCount);
+            Assert.Equal(allCustomersCount, queryCustomersCount);
 
             //$expand
             CheckNextLink = false;
             queryCustomersCount = (await context.Customer.Expand(c => c.Orders).GetAllPagesAsync()).ToList().Count();
-            Assert.AreEqual(allCustomersCount, queryCustomersCount);
+            Assert.Equal(allCustomersCount, queryCustomersCount);
 
             //$top
             CheckNextLink = false;
             queryCustomersCount = (await ((DataServiceQuery<Customer>)context.Customer.Take(4)).GetAllPagesAsync()).ToList().Count();
-            Assert.AreEqual(4, queryCustomersCount);
+            Assert.Equal(4, queryCustomersCount);
 
             //$orderby
             CheckNextLink = false;
             queryCustomersCount = (await ((DataServiceQuery<Customer>)context.Customer.OrderBy(c => c.Name)).GetAllPagesAsync()).ToList().Count();
-            Assert.AreEqual(allCustomersCount, queryCustomersCount);
+            Assert.Equal(allCustomersCount, queryCustomersCount);
 
             //$skip
             CheckNextLink = false;
             queryCustomersCount = (await ((DataServiceQuery<Customer>)context.Customer.Skip(4)).GetAllPagesAsync()).ToList().Count();
-            Assert.AreEqual(allCustomersCount - 4, queryCustomersCount);
+            Assert.Equal(allCustomersCount - 4, queryCustomersCount);
             this.EnqueueTestComplete();
         }
 
-        [TestMethod]
+        [Fact]
         public async Task PagingOnNavigationProperty()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -463,7 +460,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 //The first request should not be checked.
                 if (CheckNextLink)
                 {
-                    Assert.AreEqual(nextPageLink.AbsoluteUri, args.RequestMessage.Url.AbsoluteUri);
+                    Assert.Equal(nextPageLink.AbsoluteUri, args.RequestMessage.Url.AbsoluteUri);
                 }
                 CheckNextLink = true;
             };
@@ -478,10 +475,10 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             //Navigation Property
             CheckNextLink = false;
             var queryOrderCount = (await context.Customer.ByKey(new Dictionary<string, object> { { "CustomerId", -10 } }).Orders.GetAllPagesAsync()).ToList().Count();
-            Assert.AreEqual(allOrdersCount, queryOrderCount);
+            Assert.Equal(allOrdersCount, queryOrderCount);
         }
 
-        //[TestMethod, Asynchronous]
+        //[Fact, Asynchronous]
         //public async Task LoadNavigationPropertyAllPagesAsyncTest()
         //{
         //    var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -496,7 +493,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         //        //The first request should not be checked.
         //        if (CheckNextLink)
         //        {
-        //            Assert.AreEqual(nextPageLink.AbsoluteUri, args.RequestMessage.Url.AbsoluteUri);
+        //            Assert.Equal(nextPageLink.AbsoluteUri, args.RequestMessage.Url.AbsoluteUri);
         //        }
         //        CheckNextLink = true;
         //    };
@@ -512,7 +509,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         //    this.EnqueueTestComplete();
         //}
 
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public async Task GetParitalPagesAsyncTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -526,7 +523,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
 
             context.SendingRequest2 += sendRequestEvent;
             var customers = context.Customer.GetAllPagesAsync();
-            Assert.AreEqual(1, sentRequestCount);
+            Assert.Equal(1, sentRequestCount);
             foreach (var customer in await customers)
             {
                 if (++count == 3)
@@ -535,21 +532,21 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 }
             }
             //Only two Request sent
-            Assert.AreEqual(2, sentRequestCount);
+            Assert.Equal(2, sentRequestCount);
             this.EnqueueTestComplete();
         }
 
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public async Task UseDataServiceCollectionToTrackAllPages()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
             var customerCount = ((await context.Customer.IncludeCount().ExecuteAsync()) as QueryOperationResponse<Customer>).Count;
 
             var customers = new DataServiceCollection<Customer>(context, await context.Customer.GetAllPagesAsync(), TrackingMode.AutoChangeTracking, null, null, null);
-            Assert.AreEqual(customerCount, customers.Count());
+            Assert.Equal(customerCount, customers.Count());
             context.Configurations.RequestPipeline.OnEntryEnding((args) =>
             {
-                Assert.AreEqual(1, args.Entry.Properties.Count());
+                Assert.Equal(1, args.Entry.Properties.Count());
             });
             for (int i = 0; i < customers.Count(); i++)
             {
@@ -560,7 +557,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             //customers = new DataServiceCollection<Customer>(await ((DataServiceQuery<Customer>)context.Customer.Take(1)).ExecuteAsync());
             //context.Configurations.RequestPipeline.OnEntryEnding((args) =>
             //{
-            //    Assert.AreEqual(1, args.Entry.Properties.Count());
+            //    Assert.Equal(1, args.Entry.Properties.Count());
             //});
             //await context.LoadPropertyAllPagesAsync(customers[0], "Orders");
             //for (int i = 0; i < customers[0].Orders.Count(); i++)
@@ -578,7 +575,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             //await context.LoadPropertyAllPagesAsync(customers[0], "Orders");
             //for (int i = 0; i < customers[0].Orders.Count(); i++)
             //{
-            //    Assert.AreEqual(customers[0].Orders[i].Concurrency.Token, "Order_ConCurrency_" + i.ToString());
+            //    Assert.Equal(customers[0].Orders[i].Concurrency.Token, "Order_ConCurrency_" + i.ToString());
             //}
             this.EnqueueTestComplete();
         }

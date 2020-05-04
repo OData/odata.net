@@ -12,12 +12,11 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Xunit;
 
-     [TestClass]
     public class TypeDefinitionTests : ODataWCFServiceTestsBase<InMemoryEntities>
     {
         private const string NameSpacePrefix = "microsoft.odata.sampleService.models.typedefinition.";
@@ -28,7 +27,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
 
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryEntryWithTypeDefinition()
         {
             foreach (var mimeType in mimeTypes)
@@ -37,13 +36,13 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.IsNotNull(entry);
-                    Assert.AreEqual("Bob", entry.Properties.Single(p => p.Name == "FirstName").Value);
+                    Assert.NotNull(entry);
+                    Assert.Equal("Bob", entry.Properties.Single(p => p.Name == "FirstName").Value);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryTopLevelPropertyWithTypeDefinition()
         {
             foreach (var mimeType in mimeTypes)
@@ -52,12 +51,12 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual("Cat", property.Value);
+                    Assert.Equal("Cat", property.Value);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryComplexPropertyWithTypeDefinition()
         {
             foreach (var mimeType in mimeTypes)
@@ -66,13 +65,13 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual("Zixing Road", address.Properties.Single(p => p.Name == "Road").Value);
-                    Assert.AreEqual("Shanghai", address.Properties.Single(p => p.Name == "City").Value);
+                    Assert.Equal("Zixing Road", address.Properties.Single(p => p.Name == "Road").Value);
+                    Assert.Equal("Shanghai", address.Properties.Single(p => p.Name == "City").Value);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryCollectionPropertyWithTypeDefinition()
         {
             foreach (var mimeType in mimeTypes)
@@ -84,13 +83,13 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
                     var collectionValue = property.Value as ODataCollectionValue;
                     var items = collectionValue.Items.OfType<object>().ToArray();
 
-                    Assert.AreEqual(2, items.Length);
-                    Assert.AreEqual("Tall", items[1]);
+                    Assert.Equal(2, items.Length);
+                    Assert.Equal("Tall", items[1]);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryPropertyValueWithTypeDefinition()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -98,16 +97,16 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "People(1)/LastName/$value", UriKind.Absolute));
             requestMessage.SetHeader("Accept", "*/*");
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
 
             using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
             {
                 var lastNameValue = messageReader.ReadValue(EdmCoreModel.Instance.GetString(false));
-                Assert.AreEqual("Cat", lastNameValue);
+                Assert.Equal("Cat", lastNameValue);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryAndFilterOnPropertyWithTypeDefinition()
         {
             foreach (var mimeType in mimeTypes)
@@ -116,16 +115,16 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(4, entries.Count);
+                    Assert.Equal(4, entries.Count);
                     foreach (var entry in entries)
                     {
-                        Assert.AreNotEqual("Bob", entry.Properties.Single(p => p.Name == "FirstName").Value);
+                        Assert.NotEqual("Bob", entry.Properties.Single(p => p.Name == "FirstName").Value);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryAndOrderbyPropertyWithTypeDefinition()
         {
             foreach (var mimeType in mimeTypes)
@@ -134,16 +133,16 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(5, entries.Count);
+                    Assert.Equal(5, entries.Count);
                     foreach (var entry in entries)
                     {
-                        Assert.IsNotNull(entry.Properties.Single(p => p.Name == "FirstName").Value);
+                        Assert.NotNull(entry.Properties.Single(p => p.Name == "FirstName").Value);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void InvokeFunctionWithDefinedTypeParameterAndReturnType()
         {
             foreach (var mimeType in mimeTypes)
@@ -152,12 +151,12 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual("Bob (Moon) Cat", fullName.Value);
+                    Assert.Equal("Bob (Moon) Cat", fullName.Value);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateEntityWithDefinedTypeProperties()
         {
             var entry = new ODataResource() { TypeName = NameSpacePrefix + "Person" };
@@ -231,13 +230,13 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
             var responseMessage = requestMessage.GetResponse();
 
             // verify the insert
-            Assert.AreEqual(201, responseMessage.StatusCode);
+            Assert.Equal(201, responseMessage.StatusCode);
             entry = this.QueryEntry("People(101)", MimeTypes.ApplicationJson);
-            Assert.AreEqual(101, entry.Properties.Single(p => p.Name == "PersonId").Value);
-            Assert.AreEqual("Zhang", entry.Properties.Single(p => p.Name == "LastName").Value);
+            Assert.Equal(101, entry.Properties.Single(p => p.Name == "PersonId").Value);
+            Assert.Equal("Zhang", entry.Properties.Single(p => p.Name == "LastName").Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryEntryWithUnsignedIntegerProperties()
         {
             foreach (var mimeType in mimeTypes)
@@ -246,34 +245,34 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(5, entries.Count);
+                    Assert.Equal(5, entries.Count);
 
                     var productid = entries[0].Properties.Single(p => p.Name == "ProductId").Value;
                     var quantity = entries[0].Properties.Single(p => p.Name == "Quantity").Value;
                     var lifetime = entries[0].Properties.Single(p => p.Name == "LifeTimeInSeconds").Value;
-                    Assert.AreEqual((UInt16)11, productid);
-                    Assert.AreEqual(100u, quantity);
-                    Assert.AreEqual(3600ul, lifetime);
+                    Assert.Equal((UInt16)11, productid);
+                    Assert.Equal(100u, quantity);
+                    Assert.Equal(3600ul, lifetime);
 
                     productid = entries[1].Properties.Single(p => p.Name == "ProductId").Value;
                     quantity = entries[1].Properties.Single(p => p.Name == "Quantity").Value;
                     lifetime = entries[1].Properties.Single(p => p.Name == "LifeTimeInSeconds").Value;
-                    Assert.AreEqual((UInt16)12, productid);
-                    Assert.AreEqual(UInt32.MaxValue, quantity);
-                    Assert.AreEqual(UInt64.MaxValue, lifetime);
+                    Assert.Equal((UInt16)12, productid);
+                    Assert.Equal(UInt32.MaxValue, quantity);
+                    Assert.Equal(UInt64.MaxValue, lifetime);
 
                     productid = entries[2].Properties.Single(p => p.Name == "ProductId").Value;
                     quantity = entries[2].Properties.Single(p => p.Name == "Quantity").Value;
                     lifetime = entries[2].Properties.Single(p => p.Name == "LifeTimeInSeconds").Value;
-                    Assert.AreEqual((UInt16)13, productid);
-                    Assert.AreEqual(UInt32.MinValue, quantity);
-                    Assert.AreEqual(UInt64.MinValue, lifetime);
+                    Assert.Equal((UInt16)13, productid);
+                    Assert.Equal(UInt32.MinValue, quantity);
+                    Assert.Equal(UInt64.MinValue, lifetime);
 
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryUnsignedIntegerProperties()
         {
             foreach (var mimeType in mimeTypes)
@@ -284,14 +283,14 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual((UInt16)11, idProperty.Value);
-                    Assert.AreEqual(100u, quantityProperty.Value);
-                    Assert.AreEqual(3600ul, lifeTimeProperty.Value);
+                    Assert.Equal((UInt16)11, idProperty.Value);
+                    Assert.Equal(100u, quantityProperty.Value);
+                    Assert.Equal(3600ul, lifeTimeProperty.Value);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryComplexPropertyWithUintMembers()
         {
             foreach (var mimeType in mimeTypes)
@@ -300,14 +299,14 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual((UInt16)80, combo.Properties.Single(p => p.Name == "Small").Value);
-                    Assert.AreEqual((UInt32)196, combo.Properties.Single(p => p.Name == "Middle").Value);
-                    Assert.AreEqual((UInt64)3, combo.Properties.Single(p => p.Name == "Large").Value);
+                    Assert.Equal((UInt16)80, combo.Properties.Single(p => p.Name == "Small").Value);
+                    Assert.Equal((UInt32)196, combo.Properties.Single(p => p.Name == "Middle").Value);
+                    Assert.Equal((UInt64)3, combo.Properties.Single(p => p.Name == "Large").Value);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryCollectionPropertyOfUIntMembers()
         {
             foreach (var mimeType in mimeTypes)
@@ -319,13 +318,13 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
                     var collectionValue = property.Value as ODataCollectionValue;
                     var items = collectionValue.Items.OfType<object>().ToArray();
 
-                    Assert.AreEqual(3, items.Length);
-                    Assert.AreEqual((UInt64)36, items[0]);
+                    Assert.Equal(3, items.Length);
+                    Assert.Equal((UInt64)36, items[0]);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryPropertyValueOfUintMembers()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -333,10 +332,10 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Products(11)/Quantity/$value", UriKind.Absolute));
             requestMessage.SetHeader("Accept", "*/*");
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateEntityWithUIntProperties()
         {
             var entry = new ODataResource() { TypeName = NameSpacePrefix + "Product" };
@@ -417,14 +416,14 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
             var responseMessage = requestMessage.GetResponse();
 
             // verify the insert
-            Assert.AreEqual(201, responseMessage.StatusCode);
+            Assert.Equal(201, responseMessage.StatusCode);
 
             var createdEntry = this.QueryEntry("Products(101)", MimeTypes.ApplicationJson);
-            Assert.AreEqual((UInt16)101, createdEntry.Properties.Single(p => p.Name == "ProductId").Value);
-            Assert.AreEqual(86ul, createdEntry.Properties.Single(p => p.Name == "LifeTimeInSeconds").Value);
+            Assert.Equal((UInt16)101, createdEntry.Properties.Single(p => p.Name == "ProductId").Value);
+            Assert.Equal(86ul, createdEntry.Properties.Single(p => p.Name == "LifeTimeInSeconds").Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void InvokeActionWithUintParameterAndReturnType()
         {
             var writerSettings = new ODataMessageWriterSettings();
@@ -448,17 +447,17 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
 
             // send the http request
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
 
             using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
             {
                 var property = messageReader.ReadProperty();
-                Assert.IsNotNull(property);
-                Assert.AreEqual(4600ul, property.Value);
+                Assert.NotNull(property);
+                Assert.Equal(4600ul, property.Value);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryAndFilterByUnsignedIntegerProperties()
         {
             foreach (var mimeType in mimeTypes)
@@ -467,32 +466,32 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(1, entries.Count);
+                    Assert.Equal(1, entries.Count);
                     var quantity = entries[0].Properties.Single(p => p.Name == "Quantity").Value;
-                    Assert.AreEqual(100u, quantity);
+                    Assert.Equal(100u, quantity);
                 }
 
                 entries = this.QueryFeed("Products?$filter=18446744073709551615 eq LifeTimeInSeconds", mimeType, "Product"); //UInt64.Max
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(1, entries.Count);
+                    Assert.Equal(1, entries.Count);
                     var lifetime = entries[0].Properties.Single(p => p.Name == "LifeTimeInSeconds").Value;
-                    Assert.AreEqual(UInt64.MaxValue, lifetime);
+                    Assert.Equal(UInt64.MaxValue, lifetime);
                 }
 
                 entries = this.QueryFeed("Products?$filter=NullableUInt32 eq null", mimeType, "Product"); //null
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(2, entries.Count);
+                    Assert.Equal(2, entries.Count);
                     var nullable = entries[0].Properties.Single(p => p.Name == "NullableUInt32").Value;
-                    Assert.AreEqual(null, nullable);
+                    Assert.Equal(null, nullable);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryAndOrderByUnsignedIntegerProperties()
         {
             foreach (var mimeType in mimeTypes)
@@ -501,15 +500,15 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(5, entries.Count);
+                    Assert.Equal(5, entries.Count);
 
                     var lifetime = entries[0].Properties.Single(p => p.Name == "LifeTimeInSeconds").Value;
-                    Assert.AreEqual(UInt64.MaxValue, lifetime);
+                    Assert.Equal(UInt64.MaxValue, lifetime);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryAndSelectUnsignedIntegerProperties()
         {
             foreach (var mimeType in mimeTypes)
@@ -518,10 +517,10 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(5, entries.Count);
+                    Assert.Equal(5, entries.Count);
 
                     var lifetime = entries[0].Properties.Single(p => p.Name == "LifeTimeInSeconds").Value;
-                    Assert.AreEqual(3600ul, lifetime);
+                    Assert.Equal(3600ul, lifetime);
                 }
             }
         }
@@ -535,7 +534,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
             var queryRequestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + uri, UriKind.Absolute));
             queryRequestMessage.SetHeader("Accept", mimeType);
             var queryResponseMessage = queryRequestMessage.GetResponse();
-            Assert.AreEqual(200, queryResponseMessage.StatusCode);
+            Assert.Equal(200, queryResponseMessage.StatusCode);
 
             ODataResource entry = null;
 
@@ -552,7 +551,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
                         }
                     }
 
-                    Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                    Assert.Equal(ODataReaderState.Completed, reader.State);
                 }
             }
 
@@ -567,7 +566,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + uri, UriKind.Absolute));
             requestMessage.SetHeader("Accept", mimeType);
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
 
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
             {
@@ -587,10 +586,10 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
                         }
                         else if (reader.State == ODataReaderState.ResourceSetEnd)
                         {
-                            Assert.IsNotNull(reader.Item as ODataResourceSet);
+                            Assert.NotNull(reader.Item as ODataResourceSet);
                         }
                     }
-                    Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                    Assert.Equal(ODataReaderState.Completed, reader.State);
 
                 }
             }
@@ -607,14 +606,14 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + uri, UriKind.Absolute));
             requestMessage.SetHeader("Accept", mimeType);
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
 
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
             {
                 using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                 {
                     property = messageReader.ReadProperty();
-                    Assert.IsNotNull(property);
+                    Assert.NotNull(property);
                 }
             }
 
@@ -629,7 +628,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + uri, UriKind.Absolute));
             requestMessage.SetHeader("Accept", mimeType);
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
 
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
             {
@@ -644,7 +643,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
                         }
                     }
 
-                    Assert.IsNotNull(complex);
+                    Assert.NotNull(complex);
                 }
             }
 

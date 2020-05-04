@@ -11,10 +11,9 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using Microsoft.OData.Client;
     using Microsoft.OData;
     using Microsoft.OData.Client.TDDUnitTests;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using ClientStrings = Microsoft.OData.Client.Strings;
+    using Xunit;
 
-    [TestClass]
     public class ODataMessageReadingHelperTests
     {
         private DataServiceContext context;
@@ -23,8 +22,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         private ODataResponseMessageSimulator atomResponseMessage;
         private ODataResponseMessageSimulator jsonResponseMessage;
 
-        [TestInitialize]
-        public void Init()
+        public ODataMessageReadingHelperTests()
         {
             this.context = new DataServiceContext(new Uri("http://temp.org/"), ODataProtocolVersion.V4).ReConfigureForNetworkLoadingTests();
             this.responseInfo = new ResponseInfo(new RequestInfo(this.context), MergeOption.NoTracking);
@@ -35,13 +33,13 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             this.jsonResponseMessage.SetHeader(XmlConstants.HttpContentType, "ApplIcAtIOn/jsOn");
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateReaderOnV3ShouldNotThrowForAtom()
         {
             this.readingHelper.CreateReader(this.atomResponseMessage, new ODataMessageReaderSettings());
         }
 
-        [TestMethod]
+        [Fact]
         public void ShortIntegrationValidateSettingAnnotationFilterOnCreateSettings()
         {
             Func<string, bool> instanceAnnotationFilterFunc = (name) => name == "MyAnnotation" ? true : false;

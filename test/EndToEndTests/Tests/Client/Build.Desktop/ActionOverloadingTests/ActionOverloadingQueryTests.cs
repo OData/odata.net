@@ -15,9 +15,9 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
     using Microsoft.OData;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit.Abstractions;
+    using Xunit;
 
-    [TestClass]
     public class ActionOverloadingQueryTests : EndToEndTestBase
     {
         public const string PersonTypeName = "Microsoft.Test.OData.Services.AstoriaDefaultService.Person";
@@ -31,8 +31,8 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
 
         private IEdmModel model = null;
 
-        public ActionOverloadingQueryTests()
-            : base(ServiceDescriptors.ActionOverloadingService)
+        public ActionOverloadingQueryTests(ITestOutputHelper helper)
+            : base(ServiceDescriptors.ActionOverloadingService, helper)
         {
         }
 
@@ -51,7 +51,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
         /// <summary>
         /// Verify metadata of the operations defined in the test service.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void QueryMetadataTest()
         {
             Dictionary<string, string> expectedUpdatePersonInfoOperations = new Dictionary<string, string>()
@@ -72,7 +72,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
         /// <summary>
         /// Verify actions in entry payload format atom, json verbose, and json fullmetadata.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void QueryEntryTest()
         {
             List<string> mimeTypes = new List<string>()
@@ -135,7 +135,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
         /// <summary>
         /// Verify actions in entry payload format json minimalmetadata, and json nometadata.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void QueryEntryJsonLightTest()
         {
             List<string> mimeTypes = new List<string>()
@@ -187,14 +187,16 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
 
         private void VerifyOperationsInMetadata(Dictionary<string, string> expectedOperations, IEnumerable<IEdmOperationImport> actualActionImports)
         {
-            Assert.AreEqual(expectedOperations.Count, actualActionImports.Count(), "Wrong number of ActionImport");
+            //Wrong number of ActionImport
+            Assert.Equal(expectedOperations.Count, actualActionImports.Count());
 
             // Verify the binding type of the ActionImport in metadata.
             foreach (KeyValuePair<string, string> operation in expectedOperations)
             {
                 if (operation.Key == string.Empty)
                 {
-                    Assert.IsNotNull(actualActionImports.Where(fi => !fi.Operation.Parameters.Any()).SingleOrDefault(), "Action not found.");
+                    //Action not found
+                    Assert.NotNull(actualActionImports.Where(fi => !fi.Operation.Parameters.Any()).SingleOrDefault());
                 }
                 else
                 {
@@ -202,11 +204,11 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
                     IEdmTypeReference bindingParameterType = actionImport.Operation.Parameters.First().Type;
                     if (bindingParameterType.IsCollection())
                     {
-                        Assert.AreEqual(operation.Value, bindingParameterType.AsCollection().ElementType().FullName());
+                        Assert.Equal(operation.Value, bindingParameterType.AsCollection().ElementType().FullName());
                     }
                     else
                     {
-                        Assert.AreEqual(operation.Value, bindingParameterType.FullName());
+                        Assert.Equal(operation.Value, bindingParameterType.FullName());
                     }
                 }
             }
@@ -235,7 +237,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
             }
 
             // Verify the expected action metadata and target against the actual ODataActions in the ODataEntry.
-            Assert.AreEqual(expectedActions.Count, entry.Actions.Count());
+            Assert.Equal(expectedActions.Count, entry.Actions.Count());
             foreach (var expected in expectedActions)
             {
                 var actions = entry.Actions.Where(a => a.Metadata.AbsoluteUri == this.ServiceUri + expected.Item1);
@@ -247,7 +249,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
                         matched = true;
                     }
                 }
-                Assert.IsTrue(matched);
+                Assert.True(matched);
             }
         }
 
@@ -271,11 +273,11 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
             {
                 if (verifyActionNotInPayload)
                 {
-                    Assert.IsFalse(responseString.Contains(action));
+                    Assert.False(responseString.Contains(action));
                 }
                 else
                 {
-                    Assert.IsTrue(responseString.Contains(action));
+                    Assert.True(responseString.Contains(action));
                 }
             }
         }

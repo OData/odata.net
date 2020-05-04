@@ -14,7 +14,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
     using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
     public class QueryOptionTestsHelper
     {
@@ -38,7 +38,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
             var requestMessage = new HttpWebRequestMessage(new Uri(baseUri.AbsoluteUri + requestUri, UriKind.Absolute));
             requestMessage.SetHeader("Accept", mimeType);
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
 
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
             {
@@ -55,11 +55,11 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
                         }
                         else if (reader.State == ODataReaderState.ResourceSetEnd)
                         {
-                            Assert.IsNotNull(reader.Item as ODataResourceSet);
+                            Assert.NotNull(reader.Item as ODataResourceSet);
                         }
                     }
 
-                    Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                    Assert.Equal(ODataReaderState.Completed, reader.State);
                 }
             }
             return entries;
@@ -80,7 +80,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
             requestMessage.SetHeader("Accept", mimeType);
             requestMessage.SetHeader("Prefer", string.Format("{0}={1}", IncludeAnnotation, "*"));
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
 
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
             {
@@ -95,7 +95,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
                             entries.Add(reader.Item as ODataResource);
                         }
                     }
-                    Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                    Assert.Equal(ODataReaderState.Completed, reader.State);
                 }
             }
             return entries;
@@ -107,7 +107,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
             var requestMessage = new HttpWebRequestMessage(new Uri(baseUri.AbsoluteUri + requestUri, UriKind.Absolute));
             requestMessage.SetHeader("Accept", mimeType);
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
 
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
             {
@@ -138,7 +138,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
             requestMessage.SetHeader("Accept", mimeType);
 
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
 
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
             {
@@ -159,7 +159,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
             queryRequestMessage.SetHeader("Prefer", string.Format("{0}={1}", IncludeAnnotation, "*"));
 
             var queryResponseMessage = queryRequestMessage.GetResponse();
-            Assert.AreEqual(200, queryResponseMessage.StatusCode);
+            Assert.Equal(200, queryResponseMessage.StatusCode);
             ODataEntityReferenceLink item = null;
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
             {
@@ -181,7 +181,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
             queryRequestMessage.SetHeader("Prefer", string.Format("{0}={1}", IncludeAnnotation, "*"));
 
             var queryResponseMessage = queryRequestMessage.GetResponse();
-            Assert.AreEqual(200, queryResponseMessage.StatusCode);
+            Assert.Equal(200, queryResponseMessage.StatusCode);
             ODataEntityReferenceLinks item = null;
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
             {

@@ -11,12 +11,11 @@ namespace AstoriaUnitTests.Tests
     using Microsoft.OData.Client.Materialization;
     using FluentAssertions;
     using Microsoft.OData;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class FeedAndEntryMaterializerAdapterUnitTests
     {
-        [TestMethod]
+        [Fact]
         public void ValidateShortIntegrationFeedReading()
         {
             var initialFeed = new ODataResourceSet() {Id = new Uri("http://services.odata.org/OData/OData.svc/Products")};

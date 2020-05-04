@@ -9,9 +9,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
     using System.Linq;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class AbstractEntityTypeTests : ODataWCFServiceTestsBase<InMemoryEntities>
     {
         public AbstractEntityTypeTests()
@@ -20,18 +19,18 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
         }
 
-        [TestMethod]
+        [Fact]
         public void FunctionReturnDifferentTypes()
         {
             var customer = this.TestClientContext.Customers.First();
             var results = customer.getOrderAndOrderDetails().Execute().ToList();
 
-            Assert.AreEqual(2, results.Count);
-            Assert.IsTrue(results[0] is Order);
-            Assert.IsTrue(results[1] is OrderDetail);
+            Assert.Equal(2, results.Count);
+            Assert.True(results[0] is Order);
+            Assert.True(results[1] is OrderDetail);
 
             //var details = customer.getOrderAndOrderDetails().OfType<OrderDetail>().ToList();
-            //Assert.AreEqual(1, details.Count);
+            //Assert.Equal(1, details.Count);
         }
     }
 }

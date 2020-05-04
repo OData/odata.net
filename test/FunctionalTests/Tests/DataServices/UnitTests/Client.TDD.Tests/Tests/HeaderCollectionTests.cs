@@ -13,12 +13,11 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using System.Net;
     using FluentAssertions;
     using Microsoft.OData.Client;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class HeaderCollectionTests
     {
-        [TestMethod]
+        [Fact]
         public void HeaderDictionaryKeysShouldBeUnchanged()
         {
             var expectedKeys = GetInterestingHeaderNames().Select(InvertCase).ToList();
@@ -38,7 +37,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 #endif
         }
 
-        [TestMethod]
+        [Fact]
         public void HeaderDictionaryLookupsShouldBeCaseInsensitive()
         {
             WebHeaderCollection webHeaderCollection = new WebHeaderCollection();
@@ -48,7 +47,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             dictionary.GetHeader("content-type").Should().Be("something");
         }
 
-        [TestMethod]
+        [Fact]
         public void ResponseMessageShouldBeCaseInsensitive()
         {
             var dictionary = new Dictionary<string, string> { { "content-type", "some value" } };
@@ -57,7 +56,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             message.GetHeader("CONTENT-TYPE").Should().Be("some value");
         }
 
-        [TestMethod]
+        [Fact]
         public void ResponseMessageShouldSupportSettingHeaders()
         {
             var message = new HttpWebResponseMessage(new Dictionary<string, string>(), 201, () => { throw new Exception(); });
@@ -65,31 +64,31 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             setHeader.ShouldThrow<NotSupportedException>();
         }
 
-        [TestMethod]
+        [Fact]
         public void RequestMessageShouldBeCaseInsensitiveForContentType()
         {
             TestRequestHeaderRoundTrip("cOnTenT-TyPe", "CoNtEnT-tYpE", "some value");
         }
 
-        [TestMethod]
+        [Fact]
         public void RequestMessageShouldBeCaseInsensitiveForAccept()
         {
             TestRequestHeaderRoundTrip("accept", "ACCEPT", "some value");
         }
 
-        [TestMethod]
+        [Fact]
         public void RequestMessageShouldBeCaseInsensitiveForContentLength()
         {
             TestRequestHeaderRoundTrip("conTenT-LENGTH", "CONTENT-lEngTh", "1234");
         }
 
-        [TestMethod]
+        [Fact]
         public void RequestMessageShouldBeCaseInsensitiveForODataVersion()
         {
             TestRequestHeaderRoundTrip("odata-VERSION", "ODATA-version", "1.0");
         }
 
-        [TestMethod]
+        [Fact]
         public void ChangingCopyOfHeaderCollectionShouldNotChangeOriginal()
         {
             var original = new HeaderCollection();
@@ -99,7 +98,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             original.HeaderNames.Should().BeEmpty();
         }
 
-        [TestMethod]
+        [Fact]
         public void SetDefaultHeadersShouldSetUserAgent()
         {
             var headers = new HeaderCollection();
@@ -107,7 +106,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             headers.HeaderNames.Should().Contain("User-Agent");
         }
 
-        [TestMethod]
+        [Fact]
         public void SetUseAgentShouldSetCorrectValue()
         {
             var headers = new HeaderCollection();
@@ -118,7 +117,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             headers.GetHeader("User-Agent").Should().Be(string.Format(CultureInfo.InvariantCulture, "Microsoft.OData.Client/{0}.{1}.{2}", assemblyVersion.Major, assemblyVersion.Minor, assemblyVersion.Build));
         }
 
-        [TestMethod]
+        [Fact]
         public void SetRequestVersionShouldSetCorrectValue()
         {
             var headers = new HeaderCollection();
@@ -127,7 +126,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             headers.GetHeader("OData-MaxVersion").Should().Be("5.0");
         }
 
-        [TestMethod]
+        [Fact]
         public void SetRequestVersionShouldSetCorrectValueWhenHeaderCollectionContainsODataVersionLessThan40()
         {
             var headers = new HeaderCollection();
@@ -137,7 +136,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             headers.GetHeader("OData-MaxVersion").Should().Be("5.0");
         }
 
-        [TestMethod]
+        [Fact]
         public void SetRequestVersionShouldSetCorrectValueWhenHeaderCollectionContainsODataVersionGreaterThan40()
         {
             var headers = new HeaderCollection();

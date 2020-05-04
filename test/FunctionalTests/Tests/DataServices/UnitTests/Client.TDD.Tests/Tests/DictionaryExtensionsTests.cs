@@ -10,12 +10,11 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using System.Collections.Generic;
     using Microsoft.OData.Client;
     using FluentAssertions;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class DictionaryExtensionsTests
     {
-        [TestMethod]
+        [Fact]
         public void FindOrAddShouldReturnExistingWithoutCreatingNew()
         {
             new Dictionary<string, string> { { "foo", "bar" } }
@@ -23,7 +22,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                 .Should().Be("bar");
         }
 
-        [TestMethod]
+        [Fact]
         public void FindOrAddShouldCreateNewAndAddIt()
         {
             var testSubject = new Dictionary<string, string>();

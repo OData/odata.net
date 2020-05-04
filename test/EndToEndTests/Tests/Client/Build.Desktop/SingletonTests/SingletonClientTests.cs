@@ -13,9 +13,8 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
     using Microsoft.Test.OData.Framework.Client;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class SingletonClientTests : ODataWCFServiceTestsBase<InMemoryEntities>
     {
         public SingletonClientTests() : base(ServiceDescriptors.ODataWCFServiceDescriptor)
@@ -23,7 +22,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
 
         }
 
-        [TestMethod]
+        [Fact]
         public void SingletonClientTest()
         {
             Random rand = new Random();
@@ -33,7 +32,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 //Query Singleton
                 TestClientContext.MergeOption = Microsoft.OData.Client.MergeOption.OverwriteChanges;
                 var company = TestClientContext.Company.GetValue();
-                Assert.IsTrue(company != null);
+                Assert.True(company != null);
 
                 //Update Singleton Property and Verify
                 company.CompanyCategory = CompanyCategory.Communication;
@@ -44,30 +43,30 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
 
                 //Query Singleton Property - Select
                 var companyCategory = TestClientContext.Company.Select(c => c.CompanyCategory).GetValue();
-                Assert.IsTrue(companyCategory == CompanyCategory.Communication);
+                Assert.True(companyCategory == CompanyCategory.Communication);
                 var city = TestClientContext.CreateSingletonQuery<string>("Company/Address/City").Execute().Single();
-                Assert.IsTrue(city == "UpdatedCity");
+                Assert.True(city == "UpdatedCity");
                 var name = TestClientContext.Execute<string>(new Uri("Company/Name", UriKind.Relative)).Single();
-                Assert.IsTrue(name == "UpdatedName");
+                Assert.True(name == "UpdatedName");
 
                 //Projection with properties - Select
                 company = TestClientContext.Company.Select(c => new Company { CompanyID = c.CompanyID, Address = c.Address, Name = c.Name }).GetValue();
-                Assert.IsTrue(company != null);
-                Assert.IsTrue(company.Name == "UpdatedName");
+                Assert.True(company != null);
+                Assert.True(company.Name == "UpdatedName");
 
                 //Load Navigation Property
                 //Singleton
                 TestClientContext.LoadProperty(company, "VipCustomer");
-                Assert.IsTrue(company.VipCustomer != null);
+                Assert.True(company.VipCustomer != null);
 
                 //Collection
                 TestClientContext.LoadProperty(company, "Departments");
-                Assert.IsTrue(company.Departments != null);
-                Assert.IsTrue(company.Departments.Count > 0);
+                Assert.True(company.Departments != null);
+                Assert.True(company.Departments.Count > 0);
 
                 //Single Entity
                 TestClientContext.LoadProperty(company, "CoreDepartment");
-                Assert.IsTrue(company.CoreDepartment != null);
+                Assert.True(company.CoreDepartment != null);
 
                 //Add Navigation Property - Collection
                 company = TestClientContext.Company.GetValue();
@@ -94,9 +93,9 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 TestClientContext.Departments.ToList();
                 //Projection with Navigation properties - Select
                 company = TestClientContext.Company.Select(c => new Company { CompanyID = c.CompanyID, Departments = c.Departments }).GetValue();
-                Assert.IsTrue(company != null);
-                Assert.IsTrue(company.Departments.Any(c => c.DepartmentID == tmpDepartmentID));
-                Assert.IsTrue(company.Departments.Any(c => c.DepartmentID == tmpCoreDepartmentID));
+                Assert.True(company != null);
+                Assert.True(company.Departments.Any(c => c.DepartmentID == tmpDepartmentID));
+                Assert.True(company.Departments.Any(c => c.DepartmentID == tmpCoreDepartmentID));
 
                 //Update Navigation Property - Single Entity
                 TestClientContext.SetLink(company, "CoreDepartment", coreDepartment);
@@ -104,8 +103,8 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
 
                 //Projection with Navigation properties - Select
                 company = TestClientContext.Company.Select(c => new Company { CompanyID = c.CompanyID, CoreDepartment = c.CoreDepartment }).GetValue();
-                Assert.IsTrue(company != null);
-                Assert.IsTrue(company.CoreDepartment.DepartmentID == tmpCoreDepartmentID);
+                Assert.True(company != null);
+                Assert.True(company.CoreDepartment.DepartmentID == tmpCoreDepartmentID);
 
                 //Update EntitySet's Navigation Property - Singleton 
                 TestClientContext.SetLink(department, "Company", company);
@@ -113,8 +112,8 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
 
                 //Query(Expand) EntitySet's Navigation Property - Singleton
                 department = TestClientContext.Departments.Expand(d => d.Company).Where(d => d.DepartmentID == tmpDepartmentID).Single();
-                Assert.IsTrue(department != null);
-                Assert.IsTrue(department.Company.CompanyID == company.CompanyID);
+                Assert.True(department != null);
+                Assert.True(department.Company.CompanyID == company.CompanyID);
 
                 //Delete Navigation Property - EntitySet
                 TestClientContext.DeleteLink(company, "Departments", department);
@@ -123,13 +122,13 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 //Projection with Navigation Property - EntitySet
                 company.Departments = null;
                 company = TestClientContext.Company.Select(c => new Company { CompanyID = c.CompanyID, Departments = c.Departments }).GetValue();
-                Assert.IsTrue(company != null);
-                Assert.IsTrue(!company.Departments.Any(c => c.DepartmentID == tmpDepartmentID));
+                Assert.True(company != null);
+                Assert.True(!company.Departments.Any(c => c.DepartmentID == tmpDepartmentID));
 
                 //Query Singleton's Navigation Property - Singleton
                 company = TestClientContext.Company.Select(c => new Company { CompanyID = c.CompanyID, VipCustomer = c.VipCustomer }).GetValue();
-                Assert.IsTrue(company != null);
-                Assert.IsTrue(company.VipCustomer != null);
+                Assert.True(company != null);
+                Assert.True(company.VipCustomer != null);
 
                 //Query Singleton again with Execute
                 var vipCustomer = TestClientContext.Execute<Customer>(new Uri("VipCustomer", UriKind.Relative)).Single();
@@ -141,9 +140,9 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
 
                 company.VipCustomer = null;
                 company = TestClientContext.Company.Expand(c => c.VipCustomer).GetValue();
-                Assert.IsTrue(company != null);
-                Assert.IsTrue(company.VipCustomer != null);
-                Assert.IsTrue(company.VipCustomer.LastName == "UpdatedLastName");
+                Assert.True(company != null);
+                Assert.True(company.VipCustomer != null);
+                Assert.True(company.VipCustomer.LastName == "UpdatedLastName");
 
                 //Update Navigation Property - Delete the Singleton navigation
                 TestClientContext.SetLink(company, "VipCustomer", null);
@@ -152,8 +151,8 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 //Expand Navigation Property - Singleton
                 company.VipCustomer = null;
                 company = TestClientContext.Company.Expand(c => c.VipCustomer).GetValue();
-                Assert.IsTrue(company != null);
-                Assert.IsTrue(company.VipCustomer == null);
+                Assert.True(company != null);
+                Assert.True(company.VipCustomer == null);
 
                 //TODO: AttachTo doesn't support singleton.
                 //TestClientContext = new InMemoryEntities(ServiceBaseUri);
@@ -167,18 +166,18 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 TestClientContext.SetLink(company, "VipCustomer", vipCustomer);
                 TestClientContext.SaveChanges();
                 company = TestClientContext.Company.Select(c => new Company { CompanyID = c.CompanyID, VipCustomer = c.VipCustomer }).GetValue();
-                Assert.IsTrue(company != null);
-                Assert.IsTrue(company.VipCustomer != null);
+                Assert.True(company != null);
+                Assert.True(company.VipCustomer != null);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void DerivedTypeSingletonClientTest()
         {
             //Query Singleton
             TestClientContext.MergeOption = Microsoft.OData.Client.MergeOption.OverwriteChanges;
             var company = TestClientContext.PublicCompany.GetValue();
-            Assert.IsTrue(company != null);
+            Assert.True(company != null);
 
             //Update DerivedType Property and Verify
             PublicCompany publicCompany = company as PublicCompany;
@@ -189,36 +188,36 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
 
             //Query Singleton Property - Select            
             var name = TestClientContext.PublicCompany.Select(c => c.Name).GetValue();
-            Assert.IsTrue(name == "UpdatedName");
+            Assert.True(name == "UpdatedName");
             company = TestClientContext.CreateSingletonQuery<Company>("PublicCompany").Single();
-            Assert.IsTrue((company as PublicCompany).StockExchange == "Updated StockExchange");
+            Assert.True((company as PublicCompany).StockExchange == "Updated StockExchange");
 
             //Query properties of DerivedType
             var stockExchange = TestClientContext.PublicCompany.Select(c => (c as PublicCompany).StockExchange).GetValue();
-            Assert.IsTrue(stockExchange == "Updated StockExchange");
+            Assert.True(stockExchange == "Updated StockExchange");
 
             //Projection with properties - Select
             publicCompany = TestClientContext.PublicCompany.Select(c =>
                 new PublicCompany { CompanyID = c.CompanyID, Name = c.Name, StockExchange = (c as PublicCompany).StockExchange }).GetValue();
-            Assert.IsTrue(publicCompany != null);
-            Assert.IsTrue(publicCompany.Name == "UpdatedName");
-            Assert.IsTrue(publicCompany.StockExchange == "Updated StockExchange");
+            Assert.True(publicCompany != null);
+            Assert.True(publicCompany.Name == "UpdatedName");
+            Assert.True(publicCompany.StockExchange == "Updated StockExchange");
 
             company = TestClientContext.CreateSingletonQuery<Company>("PublicCompany").Single();
 
             //Load Navigation Property
             //Collection            
             TestClientContext.LoadProperty(company, "Assets");
-            Assert.IsTrue((company as PublicCompany).Assets != null);
-            Assert.IsTrue((company as PublicCompany).Assets.Count == 2);
+            Assert.True((company as PublicCompany).Assets != null);
+            Assert.True((company as PublicCompany).Assets.Count == 2);
 
             ////Single Enity
             TestClientContext.LoadProperty(company, "Club");
-            Assert.IsTrue((company as PublicCompany).Club != null);
+            Assert.True((company as PublicCompany).Club != null);
 
             //Singleton
             TestClientContext.LoadProperty(publicCompany, "LabourUnion");
-            Assert.IsTrue((company as PublicCompany).LabourUnion != null);
+            Assert.True((company as PublicCompany).LabourUnion != null);
 
             //Add Contained Navigation Property - Collection of derived type
             Random rand = new Random();
@@ -235,19 +234,19 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
 
             //Query contained Navigation Property - Collection of derived type
             company = TestClientContext.PublicCompany.Expand(c => (c as PublicCompany).Assets).GetValue();
-            Assert.IsTrue(company != null);
-            Assert.IsTrue((company as PublicCompany).Assets.Any(a => a.AssetID == tmpAssertId));
+            Assert.True(company != null);
+            Assert.True((company as PublicCompany).Assets.Any(a => a.AssetID == tmpAssertId));
 
             TestClientContext.DeleteObject(tmpAssert);
             TestClientContext.SaveChanges();
 
             company = TestClientContext.PublicCompany.Expand(c => (c as PublicCompany).Assets).GetValue();
-            Assert.IsTrue(company != null);
-            Assert.IsTrue(!(company as PublicCompany).Assets.Any(a => a.AssetID == tmpAssertId));
+            Assert.True(company != null);
+            Assert.True(!(company as PublicCompany).Assets.Any(a => a.AssetID == tmpAssertId));
 
             company = TestClientContext.PublicCompany.Expand(c => (c as PublicCompany).Club).GetValue();
-            Assert.IsTrue(company != null);
-            Assert.IsTrue((company as PublicCompany).Club != null);
+            Assert.True(company != null);
+            Assert.True((company as PublicCompany).Club != null);
 
             //Updated Conatined Navigation Property - SingleEntity of derived type
             var club = (company as PublicCompany).Club;
@@ -257,9 +256,9 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
 
             //Query Contained Navigation Property - Single Entity of derived type
             publicCompany = TestClientContext.PublicCompany.Select(c => new PublicCompany { CompanyID = c.CompanyID, Club = (c as PublicCompany).Club }).GetValue();
-            Assert.IsTrue(publicCompany != null);
-            Assert.IsTrue(publicCompany.Club != null);
-            Assert.IsTrue(publicCompany.Club.Name == "UpdatedClubName");
+            Assert.True(publicCompany != null);
+            Assert.True(publicCompany.Club != null);
+            Assert.True(publicCompany.Club.Name == "UpdatedClubName");
 
             //Projection with Navigation property of derived type - Singleton
             company = TestClientContext.PublicCompany.Expand(c => (c as PublicCompany).LabourUnion).GetValue();
@@ -272,34 +271,34 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
 
             //Query singleton of derived type.            
             publicCompany = TestClientContext.PublicCompany.Select(c => new PublicCompany { CompanyID = c.CompanyID, LabourUnion = (c as PublicCompany).LabourUnion }).GetValue();
-            Assert.IsTrue(publicCompany != null);
-            Assert.IsTrue(publicCompany.LabourUnion != null);
+            Assert.True(publicCompany != null);
+            Assert.True(publicCompany.LabourUnion != null);
         }
         #region Action/Function
-        [TestMethod]
+        [Fact]
         public void InvokeFunctionBoundedToSingleton()
         {
             var employeeCount = TestClientContext.Execute<int>(new Uri(ServiceBaseUri.AbsoluteUri + "Company/Microsoft.Test.OData.Services.ODataWCFService.GetEmployeesCount()", UriKind.Absolute)).Single();
-            Assert.AreEqual(2, employeeCount);
+            Assert.Equal(2, employeeCount);
 
             Company company = TestClientContext.Company.GetValue();
             OperationDescriptor descriptor = TestClientContext.GetEntityDescriptor(company).OperationDescriptors.Single(e => e.Title == "Microsoft.Test.OData.Services.ODataWCFService.GetEmployeesCount");
             employeeCount = TestClientContext.Execute<int>(descriptor.Target, "GET", true).Single();
-            Assert.AreEqual(2, employeeCount);
+            Assert.Equal(2, employeeCount);
         }
 
-        [TestMethod]
+        [Fact]
         public void InvokeActionBoundedToSingleton()
         {
             Company company = TestClientContext.Company.GetValue();
             TestClientContext.LoadProperty(company, "Revenue");
 
             var newValue = TestClientContext.Execute<Int64>(new Uri(ServiceBaseUri.AbsoluteUri + "Company/Microsoft.Test.OData.Services.ODataWCFService.IncreaseRevenue"), "POST", true, new BodyOperationParameter("IncreaseValue", 20000));
-            Assert.AreEqual(newValue.Single(), company.Revenue + 20000);
+            Assert.Equal(newValue.Single(), company.Revenue + 20000);
 
             OperationDescriptor descriptor = TestClientContext.GetEntityDescriptor(company).OperationDescriptors.Single(e => e.Title == "Microsoft.Test.OData.Services.ODataWCFService.IncreaseRevenue");
             newValue = TestClientContext.Execute<Int64>(descriptor.Target, "POST", new BodyOperationParameter("IncreaseValue", 40000));
-            Assert.AreEqual(newValue.Single(), company.Revenue + 60000);
+            Assert.Equal(newValue.Single(), company.Revenue + 60000);
         }
 
         #endregion

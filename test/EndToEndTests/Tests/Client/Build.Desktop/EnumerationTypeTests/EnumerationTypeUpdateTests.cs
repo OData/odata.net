@@ -15,13 +15,13 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using OClient = Microsoft.OData.Client;
+    using Xunit;
 
     /// <summary>
     /// Send query and verify the results from the service implemented using ODataLib and EDMLib.
     /// </summary>
-    [TestClass]
+
     public class EnumerationTypeUpdateTests : ODataWCFServiceTestsBase<InMemoryEntities>
     {
         private static string NameSpacePrefix = "Microsoft.Test.OData.Services.ODataWCFService.";
@@ -34,7 +34,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
         /// <summary>
         /// Create and delete a simple entity.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void CreateDeleteEntityWithEnumProperties()
         {
             // construct the request message to create an entity
@@ -89,13 +89,13 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
                 var responseMessage = requestMessage.GetResponse();
 
                 // verify the create
-                Assert.AreEqual(201, responseMessage.StatusCode);
+                Assert.Equal(201, responseMessage.StatusCode);
                 ODataResource entry = this.QueryEntityItem("Products(101)") as ODataResource;
                 ODataEnumValue skinColor = entry.Properties.Single(p => p.Name == "SkinColor").Value as ODataEnumValue;
                 ODataEnumValue userAccess = entry.Properties.Single(p => p.Name == "UserAccess").Value as ODataEnumValue;
-                Assert.AreEqual(101, entry.Properties.Single(p => p.Name == "ProductID").Value);
-                Assert.AreEqual("Green", skinColor.Value);
-                Assert.AreEqual("Read", userAccess.Value);
+                Assert.Equal(101, entry.Properties.Single(p => p.Name == "ProductID").Value);
+                Assert.Equal("Green", skinColor.Value);
+                Assert.Equal("Read", userAccess.Value);
 
                 // delete the entry
                 var deleteRequestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri + "Products(101)"));
@@ -103,16 +103,16 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
                 var deleteResponseMessage = deleteRequestMessage.GetResponse();
 
                 // verify the delete
-                Assert.AreEqual(204, deleteResponseMessage.StatusCode);
+                Assert.Equal(204, deleteResponseMessage.StatusCode);
                 ODataResource deletedEntry = this.QueryEntityItem("Products(101)", 204) as ODataResource;
-                Assert.IsNull(deletedEntry);
+                Assert.Null(deletedEntry);
             }
         }
 
         /// <summary>
         /// Update a simple entity.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void UpdateEnumProperty()
         {
             // query an entry
@@ -151,19 +151,19 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
                 var responseMessage = requestMessage.GetResponse();
 
                 // verify the update
-                Assert.AreEqual(204, responseMessage.StatusCode);
+                Assert.Equal(204, responseMessage.StatusCode);
                 ODataResource updatedProduct = this.QueryEntityItem("Products(5)") as ODataResource;
                 ODataEnumValue skinColor = updatedProduct.Properties.Single(p => p.Name == "SkinColor").Value as ODataEnumValue;
                 ODataEnumValue userAccess = updatedProduct.Properties.Single(p => p.Name == "UserAccess").Value as ODataEnumValue;
-                Assert.AreEqual("Green", skinColor.Value);
-                Assert.AreEqual("Read", userAccess.Value);
+                Assert.Equal("Green", skinColor.Value);
+                Assert.Equal("Read", userAccess.Value);
             }
         }
 
         #region client operations
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
-        [TestMethod]
+        [Fact]
         public void CreateUpdateEntityFromODataClient()
         {
             for (int i = 1; i < 2; i++)
@@ -182,7 +182,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
 
                 // query and verify
                 var result1 = queryable.ToList();
-                Assert.AreEqual(0, result1.Count);
+                Assert.Equal(0, result1.Count);
 
                 // create an entity
                 Product product = new Product()
@@ -206,8 +206,8 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
 
                 // query and verify
                 var result2 = queryable.ToList();
-                Assert.AreEqual(1, result2.Count);
-                Assert.AreEqual(Color.Red, result2[0].SkinColor);
+                Assert.Equal(1, result2.Count);
+                Assert.Equal(Color.Red, result2[0].SkinColor);
 
                 // update the Enum properties
                 product.SkinColor = Color.Green;
@@ -217,8 +217,8 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
 
                 // query and verify
                 var result3 = queryable.ToList();
-                Assert.AreEqual(1, result3.Count);
-                Assert.AreEqual(Color.Green, result3[0].SkinColor);
+                Assert.Equal(1, result3.Count);
+                Assert.Equal(Color.Green, result3[0].SkinColor);
             }
         }
 #endif
@@ -234,7 +234,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
             var queryRequestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + uri, UriKind.Absolute));
             queryRequestMessage.SetHeader("Accept", MimeTypes.ApplicationJsonLight);
             var queryResponseMessage = queryRequestMessage.GetResponse();
-            Assert.AreEqual(expectedStatusCode, queryResponseMessage.StatusCode);
+            Assert.Equal(expectedStatusCode, queryResponseMessage.StatusCode);
 
             ODataItem item = null;
             if (expectedStatusCode == 200)
@@ -250,7 +250,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
                         }
                     }
 
-                    Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                    Assert.Equal(ODataReaderState.Completed, reader.State);
                 }
             }
 

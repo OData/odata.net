@@ -13,34 +13,30 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
     using Microsoft.Test.OData.Framework.Client;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultWithAccessRestrictionsServiceReference;
-#if WIN8 || WINDOWSPHONE
-    using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-#else
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
+    using Xunit.Abstractions;
+    using Xunit;
 
-    [TestClass]
     public class TransportLayerErrorTests : EndToEndTestBase
     {
         private int lastResponseStatusCode;
 
-        public TransportLayerErrorTests() : base(ServiceDescriptors.AstoriaDefaultWithAccessRestrictions)
+        public TransportLayerErrorTests(ITestOutputHelper helper) : base(ServiceDescriptors.AstoriaDefaultWithAccessRestrictions, helper)
         {
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryWithInvalidUri()
         {
             this.CompareErrors((ctx) => ctx.Execute<Product>(new Uri("http://var1.svc/Products")));
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryForEntryWithInvalidKey()
         {
             this.CompareErrors((ctx) => ctx.Context.MessageAttachment.Where(ma => ma.AttachmentId == Guid.NewGuid()).ToList());
         }
 
-        [TestMethod]
+        [Fact]
         public void JsonQueryWithInvalidDataServiceVersion()
         {
             var defaultContext = this.CreateDefaultContext();
@@ -57,13 +53,13 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
                 });
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryEntitySetWithNoAccess()
         {
             this.CompareErrors((ctx) => ctx.Context.MappedEntityType.ToList());
         }
 
-        [TestMethod]
+        [Fact]
         public void WriteToEntitySetWithNoRights()
         {
             this.CompareErrors(
@@ -79,18 +75,18 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             args.RequestMessage.SetHeader("DataServiceVersion", "99.99;NetFx");
         }
 
-        private static void AssertExceptionsAreEqual(Exception expected, Exception actual)
+        private static void AssertExceptionsEqual(Exception expected, Exception actual)
         {
-            Assert.AreEqual(expected.GetType(), actual.GetType());
+            Assert.Equal(expected.GetType(), actual.GetType());
 
             if (expected.InnerException == null)
             {
-                Assert.IsNull(actual.InnerException); 
+                Assert.Null(actual.InnerException); 
             }
             else
             {
-                Assert.IsNotNull(actual.InnerException); 
-                AssertExceptionsAreEqual(expected.InnerException, actual.InnerException); 
+                Assert.NotNull(actual.InnerException); 
+                AssertExceptionsEqual(expected.InnerException, actual.InnerException); 
             }
         }
 
@@ -119,13 +115,13 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
                     responseDetails.Exception = ex;
                 }
 
-                Assert.IsNotNull(responseDetails.Exception, "Expected exception but none was thrown");
+                Assert.NotNull(responseDetails.Exception);
                 responseDetails.StatusCode = this.lastResponseStatusCode;
                 results[i++] = responseDetails;
             }
 
-            Assert.AreEqual(results[0].StatusCode, results[1].StatusCode);
-            AssertExceptionsAreEqual(results[0].Exception, results[1].Exception);
+            Assert.Equal(results[0].StatusCode, results[1].StatusCode);
+            AssertExceptionsEqual(results[0].Exception, results[1].Exception);
         }
 
         private DataServiceContextWrapper<DefaultContainer> CreateHttpClientBasedContext()

@@ -6,24 +6,20 @@
 
 namespace AstoriaUnitTests.Tests
 {
-    using System;
-    using Microsoft.OData.Client;
+ 
     using Microsoft.OData.Client.Materialization;
-    using FluentAssertions;
     using Microsoft.OData.Edm;
-    using Microsoft.OData;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class MaterializationPolicyTests
     {
         private EdmComplexTypeReference edmAddressComplexTypeRef;
 
-        [TestMethod]
+        [Fact]
         public void CreateComplexTypeTest()
         {
             var complexObject = new CustomMaterializationPolicy().CreateNewInstance(this.edmAddressComplexTypeRef, typeof(Address)) as Address;
-            Assert.IsNotNull(complexObject);
+            Assert.NotNull(complexObject);
         }
 
         public class Person
@@ -31,8 +27,7 @@ namespace AstoriaUnitTests.Tests
             public int ID { get; set; }
         }
 
-        [TestInitialize]
-        public void Initialize()
+        public MaterializationPolicyTests()
         {
             var addressEdmType = new EdmComplexType("Default", "Address");
             addressEdmType.AddStructuralProperty("ZipCode", EdmPrimitiveTypeKind.String);

@@ -6,23 +6,18 @@
 
 namespace AstoriaUnitTests.TDD.Tests.Client
 {
-#if WIN8 || WINDOWSPHONE
-    using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-#else
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
     using Microsoft.OData.Client;
     using System.Net;
     using FluentAssertions;
+    using Xunit;
 
     /// <summary>
     /// Unit tests for the HttpWebRequest class. Primarily used for testing differences accoss all the platforms
     /// </summary>
-    [TestClass]
     public class HttpWebRequestMessageUnitTests
     {
 #if PORTABLELIB || SILVERLIGHT
-        [TestMethod]
+        [Fact]
         public void IsRunningOnSilverlightShouldReturnTrueWhenRunningOnSilverlightOnly()
         {
 #if SILVERLIGHT
@@ -33,7 +28,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 #endif
 
-        [TestMethod]
+        [Fact]
         public void SetUserAgentShouldSucceed()
         {
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create("http://www.svc");
@@ -48,7 +43,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 #endif
         }
 
-        [TestMethod]
+        [Fact]
         public void SetAcceptCharsetShouldNotBeSetOnSilverlightAndSetOnOtherPlatforms()
         {
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create("http://www.svc");
@@ -60,7 +55,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 #endif
         }
 
-        [TestMethod]
+        [Fact]
         public void SetContentLengthShouldSucceed()
         {
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create("http://www.svc");

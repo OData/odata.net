@@ -12,19 +12,20 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
     using Microsoft.Test.OData.Framework.Client;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
+    using Xunit.Abstractions;
 
     public class KeyAsSegmentTest : EndToEndTestBase
     {
-        public KeyAsSegmentTest()
-            : base(ServiceDescriptors.KeyAsSegmentService)
+        public KeyAsSegmentTest(ITestOutputHelper helper)
+            : base(ServiceDescriptors.KeyAsSegmentService, helper)
         {
         }
 
         protected static void VerifyUriDoesNotContainParentheses(Uri uri)
         {
-            Assert.IsFalse(uri.OriginalString.Contains("("), "Uri contains left parentheses");
-            Assert.IsFalse(uri.OriginalString.Contains(")"), "Uri contains right parentheses");
+            Assert.False(uri.OriginalString.Contains("("), "Uri contains left parentheses");
+            Assert.False(uri.OriginalString.Contains(")"), "Uri contains right parentheses");
         }
 
         protected DataServiceContextWrapper<DefaultContainer> CreateWrappedContext()

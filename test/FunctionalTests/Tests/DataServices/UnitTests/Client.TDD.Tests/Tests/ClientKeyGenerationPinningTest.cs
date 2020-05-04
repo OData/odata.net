@@ -18,11 +18,11 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using Microsoft.OData.Client;
     using Microsoft.OData.Edm;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class ClientKeyGenerationPinningTest
     {
-        [TestMethod]
+        [Fact]
         public void ClientDoublePinning()
         {
             var keyValues = new object[] { 1.0D, 1D, 1e10D, -1.0D, -1D, -1e10D, -1e-10D, 1.23D, -1.23D, 1.23E123D, -1.23E123D, 1.23E-123D, double.PositiveInfinity, double.NegativeInfinity };
@@ -47,7 +47,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             RunClientPinningTest(expected, keyValues);
         }
 
-        [TestMethod]
+        [Fact]
         public void ClientFloatPinning()
         {
             var keyValues = new object[] { 1.0F, 1F, 1e10F, -1.0F, -1F, -1e10F, -1e-10F, 1.23F, -1.23F, 1.23E30F, -1.23E30F, 1.23E-30F, float.PositiveInfinity, float.NegativeInfinity };
@@ -72,7 +72,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             RunClientPinningTest(expected, keyValues);
         }
 
-        [TestMethod]
+        [Fact]
         public void ClientOtherTypesPinning()
         {
 #if (NETCOREAPP1_0 || NETCOREAPP2_0)
@@ -104,7 +104,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             RunClientPinningTest(expected, keyValues);
         }
 
-        [TestMethod]
+        [Fact]
         public void ClientGiantPinningTest()
         {
             StringBuilder builder = new StringBuilder();
@@ -381,7 +381,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             actual.Should().Be(expected);
         }
 
-        [TestMethod]
+        [Fact]
         public void ClientErrorPinningTest()
         {
             Action withNull = () => DataServiceUrlKeyDelimiter.Parentheses.AppendKeyExpression(new object[1], k => "foo", k => null, new StringBuilder());

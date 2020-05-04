@@ -13,18 +13,17 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using Microsoft.OData.Tests.Evaluation;
     using System.Text;
     using FluentAssertions;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class TemplatingIntegrationTests
     {
-        [TestMethod]
+        [Fact]
         public void ContextShouldUseConventionsByDefault()
         {
-            Assert.IsInstanceOfType(new TestClientContext().GetMetadataBuilder("Fake", new EdmStructuredValueSimulator()), typeof(ConventionalODataEntityMetadataBuilder));
+            Assert.IsType<ConventionalODataEntityMetadataBuilder>(new TestClientContext().GetMetadataBuilder("Fake", new EdmStructuredValueSimulator()));
         }
 
-        [TestMethod]
+        [Fact]
         public void AttachShouldUseBuilder()
         {
             const string fakeEditLink = "http://thisIsTheEditLink.org/";
@@ -47,7 +46,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             entityDescriptor.Identity.Should().Be(fakeId);
         }
         
-        [TestMethod]
+        [Fact]
         public void AttachShouldFailOnNullBuilder()
         {
             var testContext = new TestClientContext
@@ -59,7 +58,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             action.ShouldThrow<InvalidOperationException>().WithMessage(Strings.Context_EntityMetadataBuilderIsRequired);
         }
         
-        [TestMethod]
+        [Fact]
         public void AttachPinningTest()
         {
             const string expectedOutput = @"http://test.org/test/EntityS%C3%A9t1('foo%2B%2Fbar')
@@ -84,7 +83,7 @@ http://test.org/test/EntitySet2/Fake(1)/Navigation(Property1='foo',Property2='ba
             RunAttachPinningTest(ctx, expectedOutput);
         }
  
-        [TestMethod]
+        [Fact]
         public void AttachPinningTestWithEntitySetResolver()
         {
             const string expectedOutput = @"http://resolved.org/EntityS%C3%A9t1('foo%2B%2Fbar')
@@ -109,7 +108,7 @@ http://resolved.org/EntitySet2/Fake(1)/Navigation(Property1='foo',Property2='bar
             RunAttachPinningTest(ctx, expectedOutput);
         }
 
-        [TestMethod]
+        [Fact]
         public void AttachShouldFailOnNullKeys()
         {
             var ctx = new DataServiceContext(new Uri("http://test.org/test"));

@@ -12,9 +12,8 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class QueryOptionOnCollectionTypePropertyTests : ODataWCFServiceTestsBase<InMemoryEntities>
     {
 
@@ -35,7 +34,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
 
         #region Test Method
 
-        [TestMethod]
+        [Fact]
         public void BasicQueryOptionTest()
         {
             //$skip
@@ -43,7 +42,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
             ODataCollectionValue collectionValue = property.Value as ODataCollectionValue;
             if (collectionValue != null)
             {
-                Assert.AreEqual(3, collectionValue.Items.Cast<object>().Count());
+                Assert.Equal(3, collectionValue.Items.Cast<object>().Count());
             }
 
             //$top
@@ -51,7 +50,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
             collectionValue = property.Value as ODataCollectionValue;
             if (collectionValue != null)
             {
-                Assert.AreEqual(3, collectionValue.Items.Cast<object>().Count());
+                Assert.Equal(3, collectionValue.Items.Cast<object>().Count());
             }
 
             //$orderby
@@ -64,7 +63,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
                     TypeName = "Collection(Edm.String)",
                     Items = new [] {"012", "111-111-1111", "310", "ayz", "bca"}
                 };
-                ODataValueAssertEqualHelper.AssertODataValueAreEqual(expectedValue, collectionValue);
+                ODataValueAssertEqualHelper.AssertODataValueEqual(expectedValue, collectionValue);
             }
 
             //$filter
@@ -77,11 +76,11 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
                     TypeName = "Collection(Edm.String)",
                     Items = new[] { "012" }
                 };
-                ODataValueAssertEqualHelper.AssertODataValueAreEqual(expectedValue, collectionValue);
+                ODataValueAssertEqualHelper.AssertODataValueEqual(expectedValue, collectionValue);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void MiscQueryOptionTest()
         {
             ODataProperty property = this.TestsHelper.QueryProperty("Customers(1)/Numbers?$orderby=$it&$top=1", MimeType);
@@ -93,7 +92,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
                     TypeName = "Collection(Edm.String)",
                     Items = new[] { "012" }
                 };
-                ODataValueAssertEqualHelper.AssertODataValueAreEqual(expectedValue, collectionValue);
+                ODataValueAssertEqualHelper.AssertODataValueEqual(expectedValue, collectionValue);
             }
 
             property = this.TestsHelper.QueryProperty("Customers(1)/Numbers?$skip=1&$filter=contains($it,'a')", MimeType);
@@ -105,43 +104,43 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
                     TypeName = "Collection(Edm.String)",
                     Items = new[] { "ayz" }
                 };
-                ODataValueAssertEqualHelper.AssertODataValueAreEqual(expectedValue, collectionValue);
+                ODataValueAssertEqualHelper.AssertODataValueEqual(expectedValue, collectionValue);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void FilterOnCollectionCountTest()
         {
             var person = TestClientContext.People.Where(p => p.Emails.Count == 2) as DataServiceQuery<Person>;
-            Assert.IsTrue(person.RequestUri.OriginalString.EndsWith("/People?$filter=Emails/$count eq 2"));
+            Assert.True(person.RequestUri.OriginalString.EndsWith("/People?$filter=Emails/$count eq 2"));
 
             var product = TestClientContext.Products.Where(p => p.CoverColors.Count == 2) as DataServiceQuery<Product>;
-            Assert.IsTrue(product.RequestUri.OriginalString.EndsWith("/Products?$filter=CoverColors/$count eq 2"));
+            Assert.True(product.RequestUri.OriginalString.EndsWith("/Products?$filter=CoverColors/$count eq 2"));
 
             person = TestClientContext.People.Where(p => p.Addresses.Count == 2) as DataServiceQuery<Person>;
-            Assert.IsTrue(person.RequestUri.OriginalString.EndsWith("/People?$filter=Addresses/$count eq 2"));
+            Assert.True(person.RequestUri.OriginalString.EndsWith("/People?$filter=Addresses/$count eq 2"));
 
             var custoemers = TestClientContext.Customers.Where(p => p.Orders.Count == 2) as DataServiceQuery<Customer>;
-            Assert.IsTrue(custoemers.RequestUri.OriginalString.EndsWith("/Customers?$filter=Orders/$count eq 2"));
+            Assert.True(custoemers.RequestUri.OriginalString.EndsWith("/Customers?$filter=Orders/$count eq 2"));
         }
 
-        [TestMethod]
+        [Fact]
         public void OrderbyOnCollectionCountTest()
         {
             var person = TestClientContext.People.OrderBy(p => p.Emails.Count) as DataServiceQuery<Person>;
-            Assert.IsTrue(person.RequestUri.OriginalString.EndsWith("/People?$orderby=Emails/$count"));
+            Assert.True(person.RequestUri.OriginalString.EndsWith("/People?$orderby=Emails/$count"));
 
             person = TestClientContext.People.OrderByDescending(p => p.Emails.Count) as DataServiceQuery<Person>;
-            Assert.IsTrue(person.RequestUri.OriginalString.EndsWith("/People?$orderby=Emails/$count desc"));
+            Assert.True(person.RequestUri.OriginalString.EndsWith("/People?$orderby=Emails/$count desc"));
 
             var products = TestClientContext.Products.OrderBy(p => p.CoverColors.Count) as DataServiceQuery<Product>;
-            Assert.IsTrue(products.RequestUri.OriginalString.EndsWith("/Products?$orderby=CoverColors/$count"));
+            Assert.True(products.RequestUri.OriginalString.EndsWith("/Products?$orderby=CoverColors/$count"));
 
             person = TestClientContext.People.OrderBy(p => p.Addresses.Count) as DataServiceQuery<Person>;
-            Assert.IsTrue(person.RequestUri.OriginalString.EndsWith("/People?$orderby=Addresses/$count"));
+            Assert.True(person.RequestUri.OriginalString.EndsWith("/People?$orderby=Addresses/$count"));
 
             var custoemers = TestClientContext.Customers.OrderBy(p => p.Orders.Count) as DataServiceQuery<Customer>;
-            Assert.IsTrue(custoemers.RequestUri.OriginalString.EndsWith("/Customers?$orderby=Orders/$count"));
+            Assert.True(custoemers.RequestUri.OriginalString.EndsWith("/Customers?$orderby=Orders/$count"));
         }
 
         #endregion

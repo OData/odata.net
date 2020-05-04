@@ -12,7 +12,6 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -20,6 +19,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
+    using Xunit;
 
     /// <summary>
     /// Some helper methods to verify various ODataResourceSet/Entry/value payloads.
@@ -81,7 +81,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 }
             }
 
-            Assert.AreEqual(ODataReaderState.Completed, reader.State);
+            Assert.Equal(ODataReaderState.Completed, reader.State);
         }
 
         /// <summary>
@@ -111,11 +111,11 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 const string replacement = "<updated>0000-00-00T00:00:00Z</updated>";
                 writerOuput1 = Regex.Replace(writerOuput1, pattern, (match) => replacement);
                 writerOutput2 = Regex.Replace(writerOutput2, pattern, (match) => replacement);
-                Assert.AreEqual(writerOuput1, writerOutput2);
+                Assert.Equal(writerOuput1, writerOutput2);
             }
             else
             {
-                Assert.AreEqual(writerOuput1, writerOutput2);
+                Assert.Equal(writerOuput1, writerOutput2);
             }
         }
 

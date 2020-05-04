@@ -15,7 +15,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
     using Microsoft.OData;
     using Microsoft.Test.OData.Framework.Client;
     using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReferenceModifiedClientTypes;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
     public static class PipelineEventsTestsHelper
     {
@@ -42,18 +42,19 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
 
         public static void VerifyModfiedCustomerEntry(DataServiceContextWrapper<DefaultContainer> contextWrapper, Customer e)
         {
-            Assert.IsTrue(e.Name.EndsWith("ModifyPropertyValueCustomer_Materialized"), "Property value not updated");
+            Assert.True(e.Name.EndsWith("ModifyPropertyValueCustomer_Materialized"), "Property value not updated");
             EntityDescriptor descriptor = contextWrapper.GetEntityDescriptor(e);
-            Assert.IsTrue(descriptor.Identity.OriginalString.Contains("ModifyEntryId"), "Wrong Id");
-            Assert.IsTrue(descriptor.EditLink.AbsoluteUri.Contains("http://myeditlink/ModifyEntryEditLink"), "Wrong EditLink");
-            Assert.IsTrue(descriptor.OperationDescriptors.Where(op => op.Title == "ModifyEntryAction").Any(), "Action not added");
+            Assert.True(descriptor.Identity.OriginalString.Contains("ModifyEntryId"), "Wrong Id");
+            Assert.True(descriptor.EditLink.AbsoluteUri.Contains("http://myeditlink/ModifyEntryEditLink"), "Wrong EditLink");
+            Assert.True(descriptor.OperationDescriptors.Where(op => op.Title == "ModifyEntryAction").Any(), "Action not added");
             foreach (var linkInfo in descriptor.LinkInfos)
             {
                 if (linkInfo.NavigationLink != null)
                 {
                     // In Jsonlight, navigation link is calculated using edit link after the reading delegates
-                    Assert.IsTrue(linkInfo.NavigationLink.AbsoluteUri.StartsWith("http://myeditlink/ModifyEntryEditLink"), "Wrong navigation link");
-                    Assert.AreEqual("http://modifyassociationlinkurl/", linkInfo.AssociationLink.AbsoluteUri, "AssociationLink not updated");
+                    Assert.True(linkInfo.NavigationLink.AbsoluteUri.StartsWith("http://myeditlink/ModifyEntryEditLink"), "Wrong navigation link");
+                    //AssociationLink not updated
+                    Assert.Equal("http://modifyassociationlinkurl/", linkInfo.AssociationLink.AbsoluteUri);
                 }
             }
         }

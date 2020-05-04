@@ -10,17 +10,13 @@ namespace AstoriaUnitTests.Tests
     using System.Collections.Generic;
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Materialization;
-    using System.IO;
-    using System.Text;
-    using AstoriaUnitTests.TDD.Tests;
     using FluentAssertions;
     using Microsoft.OData;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class ODataReaderWrapperWithEventsUnitTests
     {
-        [TestMethod]
+        [Fact]
         public void ShouldRaiseEntryStart()
         {
             this.TestConfigureAction<ODataResource>((config) =>
@@ -31,7 +27,7 @@ namespace AstoriaUnitTests.Tests
             (entry) => entry.Id.Should().Be(new Uri("http://foo.org")));
         }
 
-        [TestMethod]
+        [Fact]
         public void ShouldRaiseEntryEnd()
         {
             this.TestConfigureAction<ODataResource>((config) =>
@@ -42,7 +38,7 @@ namespace AstoriaUnitTests.Tests
             (entry) => entry.Id.Should().Be(new Uri("http://foo.org")));
         }
 
-        [TestMethod]
+        [Fact]
         public void ShouldRaiseFeedStart()
         {
             this.TestConfigureAction<ODataResourceSet>((config) =>
@@ -53,7 +49,7 @@ namespace AstoriaUnitTests.Tests
             (feed) => feed.Id.Should().Be(new Uri("urn:foo")));
         }
 
-        [TestMethod]
+        [Fact]
         public void ShouldRaiseFeedEnd()
         {
             this.TestConfigureAction<ODataResourceSet>((config) =>
@@ -64,7 +60,7 @@ namespace AstoriaUnitTests.Tests
             (feed) => feed.Id.Should().Be(new Uri("urn:foo")));
         }
 
-        [TestMethod]
+        [Fact]
         public void ShouldRaiseNestedResourceInfoStart()
         {
             this.TestConfigureAction<ODataNestedResourceInfo>((config) =>
@@ -75,7 +71,7 @@ namespace AstoriaUnitTests.Tests
             (link) => link.Name.Should().Be("foo"));
         }
 
-        [TestMethod]
+        [Fact]
         public void ShouldRaiseNestedResourceInfoEnd()
         {
             this.TestConfigureAction<ODataNestedResourceInfo>((config) =>
@@ -86,7 +82,7 @@ namespace AstoriaUnitTests.Tests
             (link) => link.Name.Should().Be("foo"));
         }
 
-        [TestMethod]
+        [Fact]
         public void NoEventShouldBeFiredWhenReadIsFalse()
         {
             bool eventFiredIncorrectly = false;
@@ -97,10 +93,10 @@ namespace AstoriaUnitTests.Tests
             var odataReaderWrapper = ODataReaderWrapper.CreateForTest(reader, responsePipeline);
             odataReaderWrapper.Read();
 
-            Assert.IsFalse(eventFiredIncorrectly);
+            Assert.False(eventFiredIncorrectly);
         }
 
-        public void TestConfigureAction<T>(Func<DataServiceClientResponsePipelineConfiguration, ODataReaderState> setup, Action<T> verify) where T : ODataItem, new()
+        internal void TestConfigureAction<T>(Func<DataServiceClientResponsePipelineConfiguration, ODataReaderState> setup, Action<T> verify) where T : ODataItem, new()
         {
             var item = new T();
             var responsePipeline = new DataServiceClientResponsePipelineConfiguration(new DataServiceContext(new Uri("http://www.foo.com")));
@@ -111,7 +107,7 @@ namespace AstoriaUnitTests.Tests
             verify(item);
         }
 
-        [TestMethod]
+        [Fact]
         public void ShouldNotErrorOrRaiseyEventsForOtherReaderStateChanges()
         {
             var results = TestValidReadWithAllHooked(() =>
@@ -171,7 +167,7 @@ namespace AstoriaUnitTests.Tests
                     navArgs.Link.Name.Should().Be(expectedValue);
                     break;
                 default:
-                    throw new InternalTestFailureException("Shouldn't get here");
+                    throw new Exception("Shouldn't get here");
             }
         }
     }

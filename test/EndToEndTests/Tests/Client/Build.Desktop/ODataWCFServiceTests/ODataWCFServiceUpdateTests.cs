@@ -11,15 +11,14 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Linq;
     using System.Collections.ObjectModel;
+    using Xunit;
 
     /// <summary>
     /// CUD tests for the ODL service.
     /// </summary>
-    [TestClass]
     public class ODataWCFServiceUpdateTests : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>
     {
         private static string NameSpacePrefix = "Microsoft.Test.OData.Services.ODataWCFService.";
@@ -33,7 +32,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         /// <summary>
         /// Insert and delete a simple entity.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void UpsertEntityInstance()
         {
             // create entry and insert
@@ -67,9 +66,9 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             var responseMessage = requestMessage.GetResponse();
 
             // verify the insert
-            Assert.AreEqual(201, responseMessage.StatusCode);
+            Assert.Equal(201, responseMessage.StatusCode);
             ODataResource entry = this.QueryEntityItem("Orders(101)") as ODataResource;
-            Assert.AreEqual(101, entry.Properties.Single(p => p.Name == "OrderID").Value);
+            Assert.Equal(101, entry.Properties.Single(p => p.Name == "OrderID").Value);
 
             // delete the entry
             var deleteRequestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri + "Orders(101)"));
@@ -77,15 +76,15 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             var deleteResponseMessage = deleteRequestMessage.GetResponse();
 
             // verify the delete
-            Assert.AreEqual(204, deleteResponseMessage.StatusCode);
+            Assert.Equal(204, deleteResponseMessage.StatusCode);
             ODataResource deletedEntry = this.QueryEntityItem("Orders(101)", 204) as ODataResource;
-            Assert.IsNull(deletedEntry);
+            Assert.Null(deletedEntry);
         }
 
         /// <summary>
         /// Insert and delete a simple entity.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void InsertDeleteEntityInstance()
         {
             // create entry and insert
@@ -119,9 +118,9 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             var responseMessage = requestMessage.GetResponse();
 
             // verify the insert
-            Assert.AreEqual(201, responseMessage.StatusCode);
+            Assert.Equal(201, responseMessage.StatusCode);
             ODataResource entry = this.QueryEntityItem("Orders(101)") as ODataResource;
-            Assert.AreEqual(101, entry.Properties.Single(p => p.Name == "OrderID").Value);
+            Assert.Equal(101, entry.Properties.Single(p => p.Name == "OrderID").Value);
 
             // delete the entry
             var deleteRequestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri + "Orders(101)"));
@@ -129,20 +128,20 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             var deleteResponseMessage = deleteRequestMessage.GetResponse();
 
             // verify the delete
-            Assert.AreEqual(204, deleteResponseMessage.StatusCode);
+            Assert.Equal(204, deleteResponseMessage.StatusCode);
             ODataResource deletedEntry = this.QueryEntityItem("Orders(101)", 204) as ODataResource;
-            Assert.IsNull(deletedEntry);
+            Assert.Null(deletedEntry);
         }
 
         /// <summary>
         /// Update a simple entity.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void UpdateEntityInstanceProperty()
         {
             // query an entry
             ODataResource customerEntry = this.QueryEntityItem("Customers(1)") as ODataResource;
-            Assert.AreEqual("London", customerEntry.Properties.Single(p => p.Name == "City").Value);
+            Assert.Equal("London", customerEntry.Properties.Single(p => p.Name == "City").Value);
 
             // send a request to update an entry property
             customerEntry = new ODataResource() { TypeName = NameSpacePrefix + "Customer" };
@@ -169,9 +168,9 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             var responseMessage = requestMessage.GetResponse();
 
             // verify the update
-            Assert.AreEqual(204, responseMessage.StatusCode);
+            Assert.Equal(204, responseMessage.StatusCode);
             ODataResource updatedCustomer = this.QueryEntityItem("Customers(1)") as ODataResource;
-            Assert.AreEqual("Seattle", updatedCustomer.Properties.Single(p => p.Name == "City").Value);
+            Assert.Equal("Seattle", updatedCustomer.Properties.Single(p => p.Name == "City").Value);
         }
 
         private ODataItem QueryEntityItem(string uri, int expectedStatusCode = 200)
@@ -181,7 +180,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             var queryRequestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + uri, UriKind.Absolute));
             queryRequestMessage.SetHeader("Accept", MimeTypes.ApplicationJsonLight);
             var queryResponseMessage = queryRequestMessage.GetResponse();
-            Assert.AreEqual(expectedStatusCode, queryResponseMessage.StatusCode);
+            Assert.Equal(expectedStatusCode, queryResponseMessage.StatusCode);
 
             ODataItem item = null;
             if (expectedStatusCode == 200)
@@ -197,7 +196,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                         }
                     }
 
-                    Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                    Assert.Equal(ODataReaderState.Completed, reader.State);
                 }
             }
 

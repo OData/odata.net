@@ -15,9 +15,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using System.Linq;
     using FluentAssertions;
     using Microsoft.OData.Edm;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class ClientEdmStructuredValueTests
     {
         private Customer _entity;
@@ -25,11 +24,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         private ClientEdmStructuredValue _complexValue;
         private ClientEdmStructuredValue _entityValue;
 
-        [TestInitialize]
-        public void Init()
+        public ClientEdmStructuredValueTests()
         {
             this._address = new Address { Street = "123 fake st" };
-            this._entity = new Customer { Id = 1, Address = this._address, Emails = new List<string> { "fake@fake.com"} };
+            this._entity = new Customer { Id = 1, Address = this._address, Emails = new List<string> { "fake@fake.com" } };
 
             var model = new ClientEdmModel(ODataProtocolVersion.V4);
             var entityType = model.GetOrCreateEdmType(typeof(Customer));
@@ -39,31 +37,31 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             this._entityValue = new ClientEdmStructuredValue(this._entity, model, model.GetClientTypeAnnotation(entityType));
         }
 
-        [TestMethod]
+        [Fact]
         public void KindShouldBeStructured()
         {
             this._entityValue.ValueKind.Should().Be(EdmValueKind.Structured);
         }
 
-        [TestMethod]
+        [Fact]
         public void TypeReferenceShouldBeEntity()
         {
             this._entityValue.Type.Should().BeAssignableTo<EdmEntityTypeReference>();
         }
 
-        [TestMethod]
+        [Fact]
         public void TypeReferenceShouldBeComplex()
         {
             this._complexValue.Type.Should().BeAssignableTo<EdmComplexTypeReference>();
         }
 
-        [TestMethod]
+        [Fact]
         public void FindPropertyValueShouldNotFindProperty()
         {
             this._entityValue.FindPropertyValue("Fake").Should().BeNull();
         }
 
-        [TestMethod]
+        [Fact]
         public void FindPropertyValueShouldReturnPrimitive()
         {
             var property = this._entityValue.FindPropertyValue("Id");
@@ -73,7 +71,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             property.Value.As<EdmIntegerConstant>().Value.Should().Be(this._entity.Id);
         }
 
-        [TestMethod]
+        [Fact]
         public void FindPropertyValueShouldReturnComplex()
         {
             var property = this._entityValue.FindPropertyValue("Address");
@@ -83,7 +81,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             property.Value.As<ClientEdmStructuredValue>().FindPropertyValue("Street").Should().NotBeNull();
         }
 
-        [TestMethod]
+        [Fact]
         public void FindPropertyValueShouldReturnCollection()
         {
             var property = this._entityValue.FindPropertyValue("Emails");
@@ -94,7 +92,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
 
-        [TestMethod]
+        [Fact]
         public void FindPropertyValueShouldReturnNullValue()
         {
             this._entity.Address = null;
@@ -104,7 +102,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             property.Value.ValueKind.Should().Be(EdmValueKind.Null);
         }
 
-        [TestMethod]
+        [Fact]
         public void PropertyValuesShouldNotBeCached()
         {
             var property = this._entityValue.FindPropertyValue("Id");
@@ -115,13 +113,13 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             property.Value.As<EdmIntegerConstant>().Value.Should().Be(this._entity.Id);
         }
 
-        [TestMethod]
+        [Fact]
         public void PropertyValuesShouldContainFullSet()
         {
             this._entityValue.PropertyValues.Select(p => p.Name).Should().Contain(new[] { "Id", "Address", "Emails" });
         }
 
-        [TestMethod]
+        [Fact]
         public void ContextShouldCreateStructuredValueOnAttach()
         {
             var ctx = new DataServiceContext(new Uri("http://test.org/"), ODataProtocolVersion.V4);

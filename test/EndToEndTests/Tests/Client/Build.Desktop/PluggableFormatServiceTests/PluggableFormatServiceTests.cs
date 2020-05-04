@@ -18,14 +18,13 @@ using Microsoft.Test.OData.DependencyInjection;
 using Microsoft.Test.OData.Services.TestServices;
 using Microsoft.Test.OData.Services.TestServices.PluggableFormatServiceReference;
 using Microsoft.Test.OData.Tests.Client.Common;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 {
     /// <summary>
     /// Tests for pluggable format service
     /// </summary>
-    [TestClass]
     public class PluggableFormatQueryTests : ODataWCFServiceTestsBase<PluggableFormatService>
     {
         public PluggableFormatQueryTests()
@@ -33,7 +32,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         {
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryServiceDocument()
         {
             string[] types = new string[]
@@ -51,7 +50,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri, UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -59,14 +58,14 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                     {
                         ODataServiceDocument workSpace = messageReader.ReadServiceDocument();
 
-                        Assert.IsNotNull(workSpace.EntitySets.Single(c => c.Name == "People"));
+                        Assert.NotNull(workSpace.EntitySets.Single(c => c.Name == "People"));
                     }
                 }
             }
         }
 
 #if ENABLE_AVRO
-        [TestMethod]
+        [Fact]
         public void QueryVCardEntityProperty()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings()
@@ -78,7 +77,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             SetVCardMediaTypeResolver(requestMessage);
             requestMessage.SetHeader("Accept", "text/x-vCard");
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
 
             ODataResource resource = null;
             using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
@@ -93,18 +92,18 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 }
             }
 
-            Assert.IsNotNull(resource);
-            Assert.AreEqual("Name1", resource.Properties.Single(p => p.Name == "N").Value);
+            Assert.NotNull(resource);
+            Assert.Equal("Name1", resource.Properties.Single(p => p.Name == "N").Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryAvroEntity()
         {
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "People(31)", UriKind.Absolute));
             SetAvroMediaTypeResolver(requestMessage);
             requestMessage.SetHeader("Accept", "avro/binary");
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
 
             ODataResource entry = null;
             using (var messageReader = new ODataMessageReader(responseMessage, GetAvroReaderSettings(), Model))
@@ -119,7 +118,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 }
             }
 
-            Assert.IsNotNull(entry);
+            Assert.NotNull(entry);
             ODataResource expected = new ODataResource
             {
                 Properties = new[]
@@ -148,17 +147,17 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 }
             };
 
-            Assert.IsTrue(TestHelper.EntryEqual(expected, entry));
+            Assert.True(TestHelper.EntryEqual(expected, entry));
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryAvroFeed()
         {
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Products", UriKind.Absolute));
             SetAvroMediaTypeResolver(requestMessage);
             requestMessage.SetHeader("Accept", "avro/binary");
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
 
             IList<ODataResource> entries = new List<ODataResource>();
             using (var messageReader = new ODataMessageReader(responseMessage, GetAvroReaderSettings(), Model))
@@ -173,7 +172,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 }
             }
 
-            Assert.AreEqual(5, entries.Count);
+            Assert.Equal(5, entries.Count);
             ODataResource product2 = new ODataResource
             {
                 Properties = new[]
@@ -192,11 +191,11 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 }
             };
 
-            Assert.IsTrue(TestHelper.EntryEqual(info, entries[1]));
-            Assert.IsTrue(TestHelper.EntryEqual(product2, entries[2]));
+            Assert.True(TestHelper.EntryEqual(info, entries[1]));
+            Assert.True(TestHelper.EntryEqual(product2, entries[2]));
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryWithAvroError()
         {
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Products(-9)", UriKind.Absolute));
@@ -204,10 +203,10 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             var responseMessage = requestMessage.GetResponse();
 
             // This is not an error case per standard, and no content should be returned.
-            Assert.AreEqual(204, responseMessage.StatusCode);
+            Assert.Equal(204, responseMessage.StatusCode);
         }
 
-        [TestMethod]
+        [Fact]
         public void InvokeAvroAction()
         {
             ODataResource product1 = new ODataResource
@@ -263,7 +262,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             }
 
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(204, responseMessage.StatusCode);
+            Assert.Equal(204, responseMessage.StatusCode);
 
             requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Products(1)", UriKind.Absolute));
             SetAvroMediaTypeResolver(requestMessage);
@@ -282,8 +281,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 }
             }
 
-            Assert.IsNotNull(entry);
-            Assert.IsTrue(TestHelper.EntryEqual(product1, entry));
+            Assert.NotNull(entry);
+            Assert.True(TestHelper.EntryEqual(product1, entry));
         }
 
         private static void SetAvroMediaTypeResolver(HttpWebRequestMessage requestMessage)

@@ -15,13 +15,12 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
     using Microsoft.OData.Client.Metadata;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using DSClient = Microsoft.OData.Client;
+    using Xunit;
 
-    [TestClass]
     public class CollectionValueMaterializationPolicyTests
     {
-        [TestMethod]
+        [Fact]
         public void ShouldMaterializeIntCollection()
         {
             var primitiveValues = new List<int>(new int[] { 1, 5, 10 });
@@ -36,7 +35,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             outputCollection[2].Should().Be(10);
         }
 
-        [TestMethod]
+        [Fact]
         public void ShouldMaterializeNullableIntCollection()
         {
             var primitiveValues = new List<int?>(new int?[] { 1, null, 10 });
@@ -51,7 +50,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             outputCollection[2].Should().Be(10);
         }
 
-        [TestMethod]
+        [Fact]
         public void ShouldMaterializeDateCollection()
         {
             var primitiveValues = new List<Date>(new Date[] { Date.MinValue, new Date(2014, 9, 28), Date.MaxValue });
@@ -66,7 +65,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             outputCollection[2].Should().Be(Date.MaxValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void ShouldMaterializeTimeOfDayCollection()
         {
             var primitiveValues = new List<TimeOfDay>(new TimeOfDay[] { TimeOfDay.MinValue, new TimeOfDay(19, 9, 28, 123), TimeOfDay.MaxValue });
@@ -81,7 +80,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             outputCollection[2].Should().Be(TimeOfDay.MaxValue);
         }
 
-        [TestMethod]
+        [Fact]
         public void AddingPrimitiveValueToComplexCollectionShouldFail()
         {
             var primitiveValues = new List<object>(new object[] { 1 });
@@ -96,7 +95,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             test.ShouldThrow<InvalidOperationException>(DSClient.Strings.Collection_PrimitiveTypesInCollectionOfComplexTypesNotAllowed);
         }
 
-        [TestMethod]
+        [Fact]
         public void AddingCollectionToPrimitiveCollectionShouldFail()
         {
             var collectionValues = new List<object>(new object[] { new ODataCollectionValue() });
@@ -111,7 +110,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             test.ShouldThrow<InvalidOperationException>(DSClient.Strings.Collection_CollectionTypesInCollectionOfPrimitiveTypesNotAllowed);
         }
 
-        [TestMethod]
+        [Fact]
         public void AddingCollectionToComplexCollectionShouldFail()
         {
             var collectionValues = new List<object>(new object[] { new ODataCollectionValue() });
@@ -128,7 +127,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             test.ShouldThrow<InvalidOperationException>(DSClient.Strings.Collection_CollectionTypesInCollectionOfPrimitiveTypesNotAllowed);
         }
 
-        [TestMethod]
+        [Fact]
         public void DataServicCollectionOfTAsCollectionTypeShouldFailForPrimitiveOrComplexCollections()
         {
             var testContext = new TestMaterializerContext();
@@ -139,7 +138,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             test.ShouldThrow<InvalidOperationException>().WithMessage(DSClient.Strings.AtomMaterializer_DataServiceCollectionNotSupportedForNonEntities);
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateCollectionInstanceShouldFailOnTypeWithNoParametersLessConstructors()
         {
             var testContext = new TestMaterializerContext();
@@ -150,7 +149,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             test.ShouldThrow<InvalidOperationException>().WithMessage(DSClient.Strings.AtomMaterializer_MaterializationTypeError(clientTypeAnnotation.ElementType.FullName));
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateCollectionPropertyInstanceShouldFailOnTypeWithNoParametersLessConstructors()
         {
             var odataProperty = new ODataProperty() { Name = "foo", Value = new ODataCollectionValue() { TypeName = "Points" } };
@@ -165,7 +164,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             test.ShouldThrow<InvalidOperationException>().WithMessage(DSClient.Strings.AtomMaterializer_NoParameterlessCtorForCollectionProperty("foo", typeof(ListWithNoEmptyConstructors).Name));
         }
 
-        [TestMethod]
+        [Fact]
         public void NonMissingMethodExceptionOnCreateInstanceShouldNotBeCaught()
         {
             var testContext = new TestMaterializerContext();

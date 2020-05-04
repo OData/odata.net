@@ -14,22 +14,22 @@ namespace Microsoft.Test.OData.Tests.Client
     using Microsoft.Test.OData.Framework.Client;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.OpenTypesServiceReference;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit.Abstractions;
+    using Xunit;
 
     /// <summary>
     /// Generic client update test cases.
     /// </summary>
-    [TestClass]
     public class ClientOpenTypeUpdateTests : EndToEndTestBase
     {
         private DataServiceContextWrapper<DefaultContainer> contextWrapper;
 
-        public ClientOpenTypeUpdateTests()
-            : base(ServiceDescriptors.OpenTypesService)
+        public ClientOpenTypeUpdateTests(ITestOutputHelper helper)
+            : base(ServiceDescriptors.OpenTypesService, helper)
         {
         }
 
-        [TestMethod]
+        [Fact]
         public void UpdateOpenTypeWithUndeclaredProperties()
         {
             SetContextWrapper();
@@ -44,7 +44,7 @@ namespace Microsoft.Test.OData.Tests.Client
             // No more check, this case is to make sure that client doesn't throw exception.
         }
 
-        [TestMethod]
+        [Fact]
         public void AddOpenTypeWithUndeclaredProperties()
         {
             SetContextWrapper();

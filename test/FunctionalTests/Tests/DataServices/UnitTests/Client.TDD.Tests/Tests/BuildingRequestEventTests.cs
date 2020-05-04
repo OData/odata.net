@@ -8,38 +8,34 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 {
     using System;
     using Microsoft.OData.Client;
-    using System.Text;
-    using System.Collections.Generic;
-    using System.Linq;
     using FluentAssertions;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
     /// <summary>
     /// Unit tests for the BuildingRequestEventArgs class.
     /// </summary>
-    [TestClass]
     public class BuildingRequestEventTests
     {
-        [TestMethod]
+        [Fact]
         public void MethodComesFromRequestMessageArgs()
         {
             SetupTest("ABCD", new Uri("https://www.example.com/odata.svc/Customers(1)?$filter=something&Custom=Value")).Method.Should().Be("ABCD");
         }
 
-        [TestMethod]
+        [Fact]
         public void RequestUriComesFromRequestMessageArgs()
         {
             SetupTest("ABCD", new Uri("https://www.example.com/odata.svc/Customers(1)?$filter=something&Custom=Value")).RequestUri.Should().Be(new Uri("https://www.example.com/odata.svc/Customers(1)?$filter=something&Custom=Value"));
         }
 
-        [TestMethod]
+        [Fact]
         public void DescriptorIsSetInConstructor()
         {
             Descriptor descriptor = new ActionDescriptor();
             SetupTest("ABCD", new Uri("https://www.example.com/odata.svc/"), null, descriptor).Descriptor.Should().BeSameAs(descriptor);
         }
 
-        [TestMethod]
+        [Fact]
         public void InitialHeadersComesFromConstructor()
         {
             var headers = new HeaderCollection();
@@ -48,14 +44,14 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             SetupTest("ABCD", new Uri("https://www.example.com/odata.svc/"), headers).Headers.Should().Contain("Header1", "Value1").And.Contain("Header #2", "A Second *value*");
         }
 
-        [TestMethod]
+        [Fact]
         public void ConstructingEventArgsWithNullHeadersShouldCreateEmptyDictionary()
         {
             var eventArgs = SetupTest("ABCD", new Uri("https://www.example.com/odata.svc/"), null);
             eventArgs.Headers.Should().BeEmpty();
         }
 
-        [TestMethod]
+        [Fact]
         public void CanTotallyReplaceTheRequestUri()
         {
             var eventArgs = SetupTest("ABCD", new Uri("https://www.example.com/odata.svc/Customers(1)?$filter=something&Custom=Value"));
@@ -64,7 +60,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             eventArgs.RequestUri.Should().Be(uri);
         }
 
-        [TestMethod]
+        [Fact]
         public void CanSetMethodInBuildingRequestEventArgs()
         {
             var eventArgs = SetupTest("PUT", new Uri("https://www.example.com/odata.svc/"));

@@ -12,18 +12,17 @@ namespace Microsoft.Test.OData.Tests.Client.OpenTypesTests
     using Microsoft.Test.OData.Framework.Client;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.OpenTypesServiceReference;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
+    using Xunit.Abstractions;
 
-    [TestClass]
     public class OpenPropertyRoundtripTests : EndToEndTestBase
     {
-        public OpenPropertyRoundtripTests()
-            : base(ServiceDescriptors.OpenTypesService)
+        public OpenPropertyRoundtripTests(ITestOutputHelper helper)
+            : base(ServiceDescriptors.OpenTypesService, helper)
         {
         }
 
-        [TestMethod]
-        [Ignore("VSUpgrade19 - DataDriven Test")]
+        [Fact(Skip="VSUpgrade19 - DataDriven Test")]
         public void InsertRoundtripPrimitiveProperties()
         {
             this.RunOnAtomAndJsonFormats(
@@ -48,8 +47,7 @@ namespace Microsoft.Test.OData.Tests.Client.OpenTypesTests
                     });
         }
 
-        [TestMethod]
-        [Ignore("VSUpgrade19 - DataDriven Test")]
+        [Fact(Skip= "VSUpgrade19 - DataDriven Test")]
         public void InsertRoundtripPropertiesWithNullValues()
         {
             this.RunOnAtomAndJsonFormats(
@@ -75,8 +73,7 @@ namespace Microsoft.Test.OData.Tests.Client.OpenTypesTests
                     });
         }
 
-        [TestMethod]
-        [Ignore("VSUpgrade19 - DataDriven Test")]
+        [Fact(Skip= "VSUpgrade19 - DataDriven Test")]
         public void UpdateRoundTrip()
         {
             this.RunOnAtomAndJsonFormats(
@@ -121,33 +118,55 @@ namespace Microsoft.Test.OData.Tests.Client.OpenTypesTests
                     });
         }
 
-        private static void AssertAreEqual(Row expected, Row actual)
+        private static void AssertEqual(Row expected, Row actual)
         {
-            Assert.AreEqual(expected.Id, actual.Id, "Row Id values don't match");
-            Assert.AreEqual(expected.OpenBoolean, actual.OpenBoolean, "Row OpenBoolean values don't match");
-            Assert.AreEqual(expected.OpenDateTimeOffset, actual.OpenDateTimeOffset, "Row OpenDateTimeOffset values don't match");
-            Assert.AreEqual(expected.OpenDecimal, actual.OpenDecimal, "Row OpenDecimal values don't match");
-            Assert.AreEqual(expected.OpenFloat, actual.OpenFloat, "Row OpenFloat values don't match");
-            Assert.AreEqual(expected.OpenGuid, actual.OpenGuid, "Row OpenGuid values don't match");
-            Assert.AreEqual(expected.OpenInt16, actual.OpenInt16, "Row OpenInt16 values don't match");
-            Assert.AreEqual(expected.OpenInt64, actual.OpenInt64, "Row OpenInt64 values don't match");
-            Assert.AreEqual(expected.OpenString, actual.OpenString, "Row OpenString values don't match");
-            Assert.AreEqual(expected.OpenTime, actual.OpenTime, "Row OpenTime values don't match");
-            Assert.AreEqual(expected.OpenComplex, actual.OpenComplex, "Row OpenComplex values don't match");
+            //Row Id values don't match
+            Assert.Equal(expected.Id, actual.Id);
+            //Row OpenBoolean values don't match
+            Assert.Equal(expected.OpenBoolean, actual.OpenBoolean);
+            //Row OpenDateTimeOffset values don't match
+            Assert.Equal(expected.OpenDateTimeOffset, actual.OpenDateTimeOffset);
+            //Row OpenDecimal values don't match
+            Assert.Equal(expected.OpenDecimal, actual.OpenDecimal);
+            //Row OpenFloat values don't match
+            Assert.Equal(expected.OpenFloat, actual.OpenFloat);
+            //Row OpenGuid values don't match
+            Assert.Equal(expected.OpenGuid, actual.OpenGuid);
+            //Row OpenInt16 values don't match
+            Assert.Equal(expected.OpenInt16, actual.OpenInt16);
+            //Row OpenInt64 values don't match
+            Assert.Equal(expected.OpenInt64, actual.OpenInt64);
+            //Row OpenString values don't match
+            Assert.Equal(expected.OpenString, actual.OpenString);
+            //Row OpenTime values don't match
+            Assert.Equal(expected.OpenTime, actual.OpenTime);
+            //Row OpenComplex values don't match
+            Assert.Equal(expected.OpenComplex, actual.OpenComplex);
 
             if (expected.OpenComplex != null)
             {
-                Assert.AreEqual(expected.OpenComplex.Byte, actual.OpenComplex.Byte, "Row OpenComplex.Byte values don't match");
-                Assert.AreEqual(expected.OpenComplex.Short, actual.OpenComplex.Short, "Row OpenComplex.Short values don't match");
-                Assert.AreEqual(expected.OpenComplex.LastContacted, actual.OpenComplex.LastContacted, "Row OpenComplex.LastContacted values don't match");
-                Assert.AreEqual(expected.OpenComplex.Contacted, actual.OpenComplex.Contacted, "Row OpenComplex.Contacted values don't match");
-                Assert.AreEqual(expected.OpenComplex.GUID, actual.OpenComplex.GUID, "Row OpenComplex.GUID values don't match");
-                Assert.AreEqual(expected.OpenComplex.PreferedContactTime, actual.OpenComplex.PreferedContactTime, "Row OpenComplex.PreferedContactTime values don't match");
-                Assert.AreEqual(expected.OpenComplex.SignedByte, actual.OpenComplex.SignedByte, "Row OpenComplex.SignedByte values don't match");
-                Assert.AreEqual(expected.OpenComplex.Double, actual.OpenComplex.Double, "Row OpenComplex.Double values don't match");
-                Assert.AreEqual(expected.OpenComplex.Single, actual.OpenComplex.Single, "Row OpenComplex.Single values don't match");
-                Assert.AreEqual(expected.OpenComplex.Int, actual.OpenComplex.Int, "Row OpenComplex.Int values don't match");
-                Assert.AreEqual(expected.OpenComplex.Long, actual.OpenComplex.Long, "Row OpenComplex.Long values don't match");
+                //Row OpenComplex.Byte values don't match
+                Assert.Equal(expected.OpenComplex.Byte, actual.OpenComplex.Byte);
+                //Row OpenComplex.Short values don't match
+                Assert.Equal(expected.OpenComplex.Short, actual.OpenComplex.Short);
+                //Row OpenComplex.LastContacted values don't match
+                Assert.Equal(expected.OpenComplex.LastContacted, actual.OpenComplex.LastContacted);
+                //Row OpenComplex.Contacted values don't match
+                Assert.Equal(expected.OpenComplex.Contacted, actual.OpenComplex.Contacted);
+                //Row OpenComplex.GUID values don't match
+                Assert.Equal(expected.OpenComplex.GUID, actual.OpenComplex.GUID);
+                //Row OpenComplex.PreferedContactTime values don't match
+                Assert.Equal(expected.OpenComplex.PreferedContactTime, actual.OpenComplex.PreferedContactTime);
+                //Row OpenComplex.SignedByte values don't match
+                Assert.Equal(expected.OpenComplex.SignedByte, actual.OpenComplex.SignedByte);
+                //Row OpenComplex.Double values don't match
+                Assert.Equal(expected.OpenComplex.Double, actual.OpenComplex.Double);
+                //Row OpenComplex.Single values don't match
+                Assert.Equal(expected.OpenComplex.Single, actual.OpenComplex.Single);
+                //Row OpenComplex.Int values don't match
+                Assert.Equal(expected.OpenComplex.Int, actual.OpenComplex.Int);
+                //Row OpenComplex.Long values don't match
+                Assert.Equal(expected.OpenComplex.Long, actual.OpenComplex.Long);
             }
         }
 
@@ -165,8 +184,9 @@ namespace Microsoft.Test.OData.Tests.Client.OpenTypesTests
             contextWrapper.SaveChanges();
 
             var retrievedRow = contextWrapper.CreateQuery<Row>("Row").Where(r => r.Id == newRowId).SingleOrDefault();
-            Assert.IsNotNull(retrievedRow, "Failed to retrieve new row");
-            AssertAreEqual(newRow, retrievedRow);
+            //Failed to retrieve new row
+            Assert.NotNull(retrievedRow);
+            AssertEqual(newRow, retrievedRow);
         }
 
         private void UpdateRowRoundtrip(DataServiceContextWrapper<DefaultContainer> contextWrapper, Guid rowId, Action<Row> updateRow)
@@ -177,8 +197,9 @@ namespace Microsoft.Test.OData.Tests.Client.OpenTypesTests
             contextWrapper.SaveChanges();
 
             var retrievedRow = contextWrapper.CreateQuery<Row>("Row").Where(r => r.Id == rowId).SingleOrDefault();
-            Assert.IsNotNull(retrievedRow, "Failed to retrieve updated row");
-            AssertAreEqual(testRow, retrievedRow);
+            //Failed to retrieve updated row
+            Assert.NotNull(retrievedRow);
+            AssertEqual(testRow, retrievedRow);
         }
     }
 }

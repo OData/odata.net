@@ -15,15 +15,14 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using AstoriaUnitTests.Tests;
     using FluentAssertions;
     using Microsoft.OData;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
     /// <summary>
     /// Unit tests for the ODataEntriesEntityMaterializerUnitTests class.
     /// </summary>
-    [TestClass]
     public class ODataEntriesEntityMaterializerUnitTests
     {
-        [TestMethod]
+        [Fact]
         public void ShortIntegrationTestToValidateEntryShouldBeRead()
         {
             var odataEntry = new ODataResource() { Id = new Uri("http://services.odata.org/OData/OData.svc/Customers(0)") };
