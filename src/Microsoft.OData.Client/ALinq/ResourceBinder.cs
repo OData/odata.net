@@ -16,13 +16,11 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
-    using Microsoft.OData.Client.ALinq.UriParser;
-    using Microsoft.OData.Client.Metadata;
     using Microsoft.OData;
-    using Microsoft.OData.UriParser;
+    using Microsoft.OData.Client.Metadata;
     using Microsoft.OData.Edm;
-    using PathSegmentToken = Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken;
     using NonSystemToken = Microsoft.OData.Client.ALinq.UriParser.NonSystemToken;
+    using PathSegmentToken = Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken;
     #endregion Namespaces
 
     /// <summary>
@@ -46,6 +44,11 @@ namespace Microsoft.OData.Client
         /// </summary>
         private readonly DataServiceContext context;
 
+        /// <summary>
+        /// /// <summary>Whether a Where clause that just compares the id property becomes a by-key request instead of using $filter.</summary>
+        /// </summary>
+        private static bool makeIdPredicateByKey;
+
         /// <summary>Convenience property: model.</summary>
         private ClientEdmModel Model
         {
@@ -59,6 +62,7 @@ namespace Microsoft.OData.Client
         private ResourceBinder(DataServiceContext context)
         {
             this.context = context;
+            makeIdPredicateByKey = context.MakeIdPredicateByKey;
         }
 
         /// <summary>Analyzes and binds the specified expression.</summary>
@@ -276,7 +280,8 @@ namespace Microsoft.OData.Client
                     keyPredicates = ExtractKeyPredicate(input, currentPredicates, model, out nonKeyPredicates);
                 }
 
-                if (keyPredicates != null)
+                // A key predicate can only be applied if makeIdPredicateByKey=true
+                if (keyPredicates != null && makeIdPredicateByKey)
                 {
                     input.SetKeyPredicate(keyPredicates);
                     input.RemoveFilterExpression();
@@ -289,7 +294,7 @@ namespace Microsoft.OData.Client
                     input.ConvertKeyToFilterExpression();
                 }
 
-                if (keyPredicates == null)
+                if (keyPredicates == null || !makeIdPredicateByKey)
                 {
                     input.ConvertKeyToFilterExpression();
                     input.AddFilter(inputPredicates);

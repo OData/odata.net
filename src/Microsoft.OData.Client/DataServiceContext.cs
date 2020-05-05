@@ -142,6 +142,9 @@ namespace Microsoft.OData.Client
         /// <summary>The HTTP stack to use for requests.</summary>
         private HttpStack httpStack;
 
+        /// <summary>Whether a Where clause that just compares the id property becomes a by-key request instead of using $filter.</summary>
+        private bool makeIdPredicateByKey;
+
         #region Test hooks for header and payload verification
 
 #pragma warning disable 0169, 0649
@@ -253,6 +256,7 @@ namespace Microsoft.OData.Client
             this.httpStack = HttpStack.Auto;
             this.UsingDataServiceCollection = false;
             this.UsePostTunneling = false;
+            this.makeIdPredicateByKey = true;
 
             // Need to use the same defaults when running sl in portable lib as when running in SL normally.
 #if PORTABLELIB
@@ -658,6 +662,14 @@ namespace Microsoft.OData.Client
         /// </summary>
         public virtual bool EnableWritingODataAnnotationWithoutPrefix { get; set; }
 
+        /// <summary>
+        /// Indicates whether a Where clause that just compares the id property becomes a by-key request instead of using $filter.
+        /// </summary>
+        public virtual bool MakeIdPredicateByKey
+        {
+            get { return this.makeIdPredicateByKey; }
+            set { this.makeIdPredicateByKey = value; }
+        }
         /// <summary>Gets or sets whether to support undeclared properties.</summary>
         /// <returns>UndeclaredPropertyBehavior.</returns>
         internal UndeclaredPropertyBehavior UndeclaredPropertyBehavior
