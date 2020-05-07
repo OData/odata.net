@@ -11,6 +11,9 @@ using System.Text;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Xunit;
+using System.Globalization;
+using System.ComponentModel;
+using System.Linq;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
 {
@@ -182,6 +185,43 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         }
 
         [Fact]
+        public void GetValidChars()
+        {
+            string characters = "!@#$%^&*()-+-=|}{[]\\:;<>,.?/\"";
+            List<char> valid = new List<char>(), invalid = new List<char>(), firstChar = new List<char>();
+            foreach (char character in characters)
+            {
+                switch (char.GetUnicodeCategory(character))
+                {
+                    case UnicodeCategory.UppercaseLetter:
+                    case UnicodeCategory.LowercaseLetter:
+                    case UnicodeCategory.TitlecaseLetter:
+                    case UnicodeCategory.ModifierLetter:
+                    case UnicodeCategory.OtherLetter:
+                        // Always allowed in C# identifiers
+                        valid.Add(character);
+                        break;
+
+                    case UnicodeCategory.LetterNumber:
+                    case UnicodeCategory.NonSpacingMark:
+                    case UnicodeCategory.SpacingCombiningMark:
+                    case UnicodeCategory.DecimalDigitNumber:
+                    case UnicodeCategory.ConnectorPunctuation:
+                    case UnicodeCategory.Format:
+                        // Only allowed after first char
+                        firstChar.Add(character);
+                        break;
+                    default:
+                        invalid.Add(character);
+                        break;
+                }
+            }
+            Console.WriteLine("Valid = {0}", string.Concat(valid));
+            Console.WriteLine("First Only = {0}", string.Concat(firstChar));
+            Console.WriteLine("Invalid = {0}", string.Concat(invalid));
+        }
+
+        [Fact]
         public void ShouldThrowForComplexCollectionResponseWithoutUserModelAndWithoutItemTypeAndWithoutSerializationInfo_Inherit()
         {
             Action sync = () => WriteAndValidateSync(/*itemTypeReference*/ null, this.collectionStartWithoutSerializationInfo, derivedItems, "", writingResponse: true);
@@ -203,6 +243,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         {
             WriteAndValidateSync(itemTypeReference, collectionStart, items, expectedPayload, writingResponse);
             //WriteAndValidateAsync(itemTypeReference, collectionStart, items, expectedPayload, writingResponse);
+            WriteAndValidatePrimitivesSync(itemTypeReference, collectionStart, items, expectedPayload, writingResponse);
+//            WriteAndValidatePrimitivesASync(itemTypeReference, collectionStart, items, expectedPayload, writingResponse);
         }
 
         private static void WriteAndValidateSync(IEdmTypeReference itemTypeReference, ODataResourceSet collectionStart, IEnumerable<ODataResource> items, string expectedPayload, bool writingResponse)
@@ -238,6 +280,43 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         //    odataWriter.WriteEndAsync().Wait();
         //    ValidateWrittenPayload(stream, expectedPayload);
         //}
+
+        private static void WriteAndValidatePrimitivesSync(IEdmTypeReference itemTypeReference, ODataResourceSet collectionStart, IEnumerable<ODataResource> items, string expectedPayload, bool writingResponse)
+        {
+            MemoryStream stream = new MemoryStream();
+            var outputContext = CreateJsonLightOutputContext(stream, writingResponse, synchronous: true);
+            var odataWriter = outputContext.CreateODataResourceSetWriter(null, itemTypeReference == null ? null : itemTypeReference.ToStructuredType());
+            odataWriter.WriteStart(collectionStart);
+            foreach (ODataResource item in items)
+            {
+                odataWriter.WriteStart(new ODataResource
+                {
+                    Id = item.Id,
+                    SerializationInfo = item.SerializationInfo,
+                    InstanceAnnotations = item.InstanceAnnotations,
+                    TypeAnnotation = item.TypeAnnotation,
+                    TypeName = item.TypeName
+                });
+
+                foreach(var property in item.Properties)
+                {
+                    odataWriter.WriteStart(
+                        new ODataPropertyInfo
+                        {
+                            Name = property.Name,
+                            PrimitiveTypeKind = property.PrimitiveTypeKind
+                        });
+
+                    odataWriter.WritePrimitive(property.ODataValue as ODataPrimitiveValue);
+                    odataWriter.WriteEnd(); // property
+                }
+
+                odataWriter.WriteEnd(); // resource
+            }
+
+            odataWriter.WriteEnd(); // collection
+            ValidateWrittenPayload(stream, expectedPayload);
+        }
 
         private static void ValidateWrittenPayload(MemoryStream stream, string expectedPayload)
         {
