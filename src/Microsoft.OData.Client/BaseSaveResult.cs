@@ -262,7 +262,19 @@ namespace Microsoft.OData.Client
                     headers.Add(ODataConstants.ContentTypeHeader, JsonContentTypeHeader);
                     httpWebResponseMessage = new HttpWebResponseMessage(headers, (int)statusCode, getResponseStream);
                     ODataMessageReader messageReader = new ODataMessageReader(httpWebResponseMessage);
-                    errorException = new ODataErrorException(messageReader.ReadError());
+
+                    // If the error message response does not conform to the OData specifications
+                    // then pass the response back as a string without deserializing.
+                    // This is to take care of those clients whose response did not conform to OData spec
+                    // before this was implemented.
+                    try
+                    {
+                        errorException = new ODataErrorException(messageReader.ReadError());
+                    }
+                    catch (ODataException)
+                    {
+                        return new DataServiceClientException(message, (int)statusCode);
+                    }            
                 }
 
                 dataServiceClientException = new DataServiceClientException(message, errorException, (int)statusCode);
