@@ -546,10 +546,7 @@ namespace Microsoft.OData
         public override Task WriteDeltaLinkAsync(ODataDeltaLink deltaLink)
         {
             this.VerifyCanWriteLink(false, deltaLink);
-            return TaskUtils.GetTaskForSynchronousOperation(() =>
-            {
-                this.WriteDeltaLinkImplementation(deltaLink);
-            });
+            return this.WriteDeltaLinkAsyncImplementation(deltaLink);
         }
 
         /// <summary>
@@ -571,10 +568,7 @@ namespace Microsoft.OData
         public override Task WriteDeltaDeletedLinkAsync(ODataDeltaDeletedLink deltaLink)
         {
             this.VerifyCanWriteLink(false, deltaLink);
-            return TaskUtils.GetTaskForSynchronousOperation(() =>
-            {
-                this.WriteDeltaLinkImplementation(deltaLink);
-            });
+            return this.WriteDeltaLinkAsyncImplementation(deltaLink);
         }
 
         /// <summary>
@@ -596,7 +590,7 @@ namespace Microsoft.OData
         public sealed override Task WritePrimitiveAsync(ODataPrimitiveValue primitiveValue)
         {
             this.VerifyCanWritePrimitive(false, primitiveValue);
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.WritePrimitiveValueImplementation(primitiveValue));
+            return this.WritePrimitiveValueAsyncImplementation(primitiveValue);
         }
 
         /// <summary>Writes a primitive property within a resource.</summary>
@@ -610,7 +604,7 @@ namespace Microsoft.OData
         /// <summary> Asynchronously write a primitive property within a resource. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         /// <param name="primitiveProperty">The primitive property to write.</param>
-        public sealed override Task WriteStartAsync(ODataProperty primitiveProperty)
+        public sealed override Task WriteStartAsync(ODataPropertyInfo primitiveProperty)
         {
             this.VerifyCanWriteProperty(false, primitiveProperty);
             return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartPropertyImplementation(primitiveProperty));
@@ -1512,6 +1506,19 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Start writing a delta link or delta deleted link - implementation of the actual functionality.
+        /// </summary>
+        /// <param name="deltaLink">Delta (deleted) link to write.</param>
+        private async Task WriteDeltaLinkAsyncImplementation(ODataDeltaLinkBase deltaLink)
+        {
+            await TaskUtils.GetTaskForSynchronousOperation(() =>
+            {
+                this.EnterScope(deltaLink is ODataDeltaLink ? WriterState.DeltaLink : WriterState.DeltaDeletedLink, deltaLink);
+                this.StartDeltaLink(deltaLink);
+            }).FollowOnSuccessWithTask((t)=>this.WriteEndAsync());
+        }
+        
+        /// <summary>
         /// Verifies that calling WriteStart nested resource info is valid.
         /// </summary>
         /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
@@ -1574,6 +1581,29 @@ namespace Microsoft.OData
             });
         }
 
+        /// <summary>
+        /// Write primitive value asynchronously - implementation of the actual functionality.
+        /// </summary>
+        /// <param name="primitiveValue">Primitive value to write.</param>
+        private async Task WritePrimitiveValueAsyncImplementation(ODataPrimitiveValue primitiveValue)
+        {
+            await this.InterceptExceptionAsync(async () =>
+               {
+                   await TaskUtils.GetTaskForSynchronousOperation(() =>
+                   {
+                       this.EnterScope(WriterState.Primitive, primitiveValue);
+                       if (!(this.CurrentResourceSetValidator == null) && primitiveValue != null)
+                       {
+                           Debug.Assert(primitiveValue.Value != null, "PrimitiveValue.Value should never be null!");
+                           IEdmType itemType = EdmLibraryExtensions.GetPrimitiveTypeReference(primitiveValue.Value.GetType()).Definition;
+                           this.CurrentResourceSetValidator.ValidateResource(itemType);
+                       }
+                       this.WritePrimitiveValue(primitiveValue);
+                   }
+                   ).FollowOnSuccessWithTask((t) => this.WriteEndAsync());
+               });
+        }
+        
         /// <summary>
         /// Verifies that calling CreateWriteStream is valid.
         /// </summary>
@@ -2073,6 +2103,29 @@ namespace Microsoft.OData
             }
         }
 
+
+        /// <summary>
+        /// Catch any exception thrown by the action passed in; in the exception case move the writer into
+        /// state ExceptionThrown and then rethrow the exception.
+        /// </summary>
+        /// <param name="action">The action to execute.</param>
+        private async Task InterceptExceptionAsync(Func<Task> action)
+        {
+            try
+            {
+                await action();
+            }
+            catch
+            {
+                if (!IsErrorState(this.State))
+                {
+                    this.EnterScope(WriterState.Error, this.CurrentScope.Item);
+                }
+
+                throw;
+            }
+        }
+        
         /// <summary>
         /// Increments the nested resource count by one and fails if the new value exceeds the maximum nested resource depth limit.
         /// </summary>
