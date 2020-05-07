@@ -13,7 +13,7 @@ schedules:
     displayName: midnightly build
     branches:
      include:
-      - dev
+      - master
 
 # .NET Desktop
 
@@ -581,4 +581,4 @@ steps:
     packagesToPush: '$(Build.ArtifactStagingDirectory)\Nuget\*Nightly*.nupkg'
     nuGetFeedType: external
     publishFeedCredentials: 'MyGet.org - OData.net Nightly Feed'
-  enabled: false
+  enabled: true
