@@ -2,6 +2,7 @@
   <PropertyGroup>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
     <AssemblyName>AstoriaUnitTests</AssemblyName>
+    <RootNamespace>AstoriaUnitTests</RootNamespace>
     <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
     <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
     <TargetFrameworks>net45</TargetFrameworks>

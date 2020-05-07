@@ -1,5 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup> 
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Test.OData.Services.TestServices</RootNamespace>    
     <AssemblyName>Microsoft.Test.OData.Services.TestServices</AssemblyName>
     <TargetFrameworkFolderName>Desktop</TargetFrameworkFolderName>    
     <TargetFrameworks>net45</TargetFrameworks>    
@@ -9,6 +13,7 @@
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>    
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
   <ItemGroup>

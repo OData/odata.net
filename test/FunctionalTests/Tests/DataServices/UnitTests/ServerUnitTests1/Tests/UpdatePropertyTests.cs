@@ -896,7 +896,7 @@ namespace AstoriaUnitTests.Tests
                     });
             }
 
-            //--#comment#--[TestCategory("Partition2"), TestMethod, Variation]
+            [TestCategory("Partition2"), TestMethod, Variation]
             public void UpdatePutPrimitiveValue()
             {
                 string payload = "Foo";
@@ -912,7 +912,7 @@ namespace AstoriaUnitTests.Tests
                 UpdateTests.VerifyInvalidRequestForVariousProviders("foo", "/Orders(0)/DollarAmount/$value", UnitTestsUtil.MimeTextPlain, "PUT", 400);
             }
 
-            //--#comment#--[TestCategory("Partition2"), TestMethod, Variation]
+            [TestCategory("Partition2"), TestMethod, Variation]
             public void UpdatePutComplexPrimitiveValue()
             {
                 string payload = "New York";
@@ -923,7 +923,7 @@ namespace AstoriaUnitTests.Tests
                 UpdateTests.VerifyInvalidRequestForVariousProviders(payload, "/Customers(1)/Address/City/$value", UnitTestsUtil.MimeApplicationOctetStream, "PUT", 415);
             }
 
-            //--#comment#--[TestCategory("Partition2"), TestMethod, Variation]
+            [TestCategory("Partition2"), TestMethod, Variation]
             public void UpdatePutPrimitiveValueLarge()
             {
                 const int length = 5000;

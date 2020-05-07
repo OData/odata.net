@@ -1715,7 +1715,7 @@ namespace AstoriaUnitTests.Tests
                 internal Type ServiceType { get; set; }
             }
 
-            //--#comment#--[TestMethod, Variation]
+            [TestMethod, Variation]
             public void HiddenEntitySetsTest()
             {
                 // Repro: $metadata  fails to show up for an Astoria Web service when authorization is used
@@ -1752,7 +1752,7 @@ namespace AstoriaUnitTests.Tests
                 });
             }
 
-            //--#comment#--[TestMethod, Variation]
+            [TestMethod, Variation]
             public void ContainerRightsTest()
             {
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(

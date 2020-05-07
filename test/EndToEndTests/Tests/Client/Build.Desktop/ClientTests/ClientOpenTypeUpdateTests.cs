@@ -29,7 +29,7 @@ namespace Microsoft.Test.OData.Tests.Client
         {
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void UpdateOpenTypeWithUndeclaredProperties()
         {
             SetContextWrapper();

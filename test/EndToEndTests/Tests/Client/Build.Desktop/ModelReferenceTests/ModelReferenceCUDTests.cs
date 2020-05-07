@@ -28,7 +28,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
         }
 
         #region CUD Testing
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void PostDeleteTypeInReferencdModel()
         {
             var entryWrapper = CreateVehicleGPS(false);
@@ -74,7 +74,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             #endregion
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void PostDeleteTypeInReferencingModel()
         {
             var entryWrapper = CreateVehicleGPS(true);

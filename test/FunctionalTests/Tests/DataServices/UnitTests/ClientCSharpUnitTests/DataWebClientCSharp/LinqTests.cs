@@ -29,7 +29,7 @@ namespace AstoriaUnitTests.Tests
 
     // For comment out test cases, see github: https://github.com/OData/odata.net/issues/881
     [DeploymentItem("Workspaces", "Workspaces")]
-    //--#comment#-- [TestClass]
+     [TestClass]
     public class LinqTests
     {
         private static DataServiceContext context;

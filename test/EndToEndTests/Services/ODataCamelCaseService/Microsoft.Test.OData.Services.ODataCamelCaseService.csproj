@@ -1,15 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup> 
-    <AssemblyName>Microsoft.Test.OData.Services.ODataCamelCaseService</AssemblyName>
     <TargetFrameworks>net45</TargetFrameworks>
-    <SignAssemblyAttribute>false</SignAssemblyAttribute>
-    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>   
-    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
     <RestorePackages>true</RestorePackages>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>microsoft.odata.sampleService.models.camelcase</RootNamespace>
+    <AssemblyName>Microsoft.Test.OData.Services.ODataCamelCaseService</AssemblyName>
+    <SignAssemblyAttribute>true</SignAssemblyAttribute>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <TargetFrameworkProfile />
 
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />

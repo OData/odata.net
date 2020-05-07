@@ -1,6 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-
     <AssemblyName>Microsoft.Test.OData.Services.ODataPluggableFormatService</AssemblyName>
     <SignAssemblyAttribute>true</SignAssemblyAttribute>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
@@ -13,19 +12,15 @@
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <RestorePackages>true</RestorePackages>
     <IntermediateOutputPath>..\Temp</IntermediateOutputPath>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Test.OData.Services.PluggableFormat</RootNamespace>
+    <TargetFrameworkProfile/>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-  </PropertyGroup>
-  
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
   <PropertyGroup Condition="'$(BuildInOSS)' == 'true'">
     <DefineConstants>$(DefineConstants);ENABLE_AVRO</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net45|AnyCPU'">
-    <OutputPath></OutputPath>
   </PropertyGroup>
 
   <ItemGroup>

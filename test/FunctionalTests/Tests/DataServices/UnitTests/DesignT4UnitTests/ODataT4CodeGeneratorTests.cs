@@ -23,7 +23,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.OData.Client.Design.T4.UnitTests
 {
-    //--#comment#--[TestClass]
+    [TestClass]
     public class ODataT4CodeGeneratorTests
     {
         private const bool CompileGeneratedCode = true;

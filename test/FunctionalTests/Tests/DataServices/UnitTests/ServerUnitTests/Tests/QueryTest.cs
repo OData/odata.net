@@ -118,7 +118,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             /// <summary>Checks that skipping can be invoked correctly.</summary>
-           //--#comment#-- [TestMethod, Variation]
+            [TestMethod, Variation]
             public void QueryTestBasicSkipTop()
             {
                 // Test matrix:
@@ -468,7 +468,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            //--#comment#--[TestMethod, Variation]
+            [TestMethod, Variation]
             public void QueryTestExpandCustomized()
             {
                 Type[] dataContextTypes = new Type[]
@@ -601,7 +601,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            //--#comment#--[TestMethod, Variation]
+            [TestMethod, Variation]
             public void QueryTestExpandObjectContextMultiple()
             {
                 bool[] allowedValues = new bool[] { true, false };
@@ -867,7 +867,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            //--#comment#--[TestMethod, Variation]
+            [TestMethod, Variation]
             public void QueryTestExpandDeep()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcess())
@@ -1047,7 +1047,7 @@ namespace AstoriaUnitTests.Tests
 
             #endregion Types for QueryTestOrderByComparable.
 
-            //--#comment#-- [TestMethod, Variation]
+             [TestMethod, Variation]
             public void QueryTestNull()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcess())
@@ -1141,7 +1141,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             /// <summary>Checks that ordering can be invoked correctly.</summary>
-            //--#comment#--[TestMethod, Variation]
+            [TestMethod, Variation]
             public void QueryTestBasicOrderBy()
             {
                 // Test matrix:
@@ -1334,7 +1334,7 @@ namespace AstoriaUnitTests.Tests
 
             #region Row Count Query Test
 
-            //--#comment#--[TestMethod, Variation]
+            [TestMethod, Variation]
             public void QueryTestRowCountSegment()
             {
                 TestUtil.ClearMetadataCache();
@@ -1369,7 +1369,7 @@ namespace AstoriaUnitTests.Tests
                 });
             }
 
-            //--#comment#--[TestMethod, Variation]
+            [TestMethod, Variation]
             public void QueryTestRowCountSegmentMime()
             {
                 TestUtil.ClearMetadataCache();
@@ -1405,7 +1405,7 @@ namespace AstoriaUnitTests.Tests
                 });
             }
 
-            //--#comment#--[TestMethod, Variation]
+            [TestMethod, Variation]
             public void QueryTestRowCountSegmentFailureModes()
             {
                 TestUtil.ClearMetadataCache();
@@ -1443,7 +1443,7 @@ namespace AstoriaUnitTests.Tests
                 });
             }
 
-            //--#comment#--[TestMethod, Variation]
+            [TestMethod, Variation]
             public void QueryTestRowCountOpenTypes()
             {
                 TestUtil.ClearMetadataCache();
@@ -3821,7 +3821,7 @@ OData-Version: 4.0
                     });
             }
 
-            //--#comment#--[TestMethod, Variation]
+            [TestMethod, Variation]
             public void ImplicitOrderByPropertiesSorting_BuiltinProviders()
             {
                 string[] keyPropertyNames = new string[] { "bKey", "AKey" };

@@ -40,6 +40,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
         private const string ApplicationJsonODataLightNonStreaming = "application/json;odata.metadata=minimal;odata.streaming=false";
 
         [TestMethod, TestCategory("Reader.ContentType"), Variation(Description = "Verifies that we properly parse the content type header.")]
+        [Ignore("VSUpgrade19 - RegTest")]
         public void ContentTypeHeaderParsingTest()
         {
             IEnumerable<ContentTypeTestCase> testCases = new ContentTypeTestCase[]
@@ -303,6 +304,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
         }
 
         [TestMethod, TestCategory("Reader.ContentType"), Variation(Description = "Verifies that we properly parse batch content type headers.")]
+        [Ignore("VSUpgrade19 - RegTest")]
         public void BatchContentTypeHeaderParsingTest()
         {
             IEnumerable<ContentTypeTestCase> testCases = new ContentTypeTestCase[]

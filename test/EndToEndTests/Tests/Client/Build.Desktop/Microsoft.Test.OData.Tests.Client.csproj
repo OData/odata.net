@@ -12,6 +12,7 @@
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
     <NoWarn>$(NoWarn);NU1605</NoWarn>
+   <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
   </PropertyGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
@@ -42,8 +43,12 @@
    </ItemGroup> 
 
   <ItemGroup>
-    <Reference Include="..\..\..\..\CommonAssemblies\Microsoft.MadMan.3.1.112712.0\lib\net40\Microsoft.Test.DataDriven.dll" />
-    <Reference Include="..\..\..\..\CommonAssemblies\Microsoft.MadMan.3.1.112712.0\lib\net40\Microsoft.Test.Extensions.dll" />
+    <Reference Include="..\..\..\..\CommonAssemblies\Microsoft.MadMan.3.1.112712.0\lib\net40\Microsoft.Test.DataDriven.dll">
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="..\..\..\..\CommonAssemblies\Microsoft.MadMan.3.1.112712.0\lib\net40\Microsoft.Test.Extensions.dll">
+      <Private>true</Private>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
@@ -53,7 +58,7 @@
     <ProjectReference Include="..\..\..\..\..\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />
     <ProjectReference Include="..\..\..\..\..\test\FunctionalTests\Service\Microsoft.OData.Service.csproj" />
     <ProjectReference Include="..\..\..\..\Common\Microsoft.Test.OData.DependencyInjection\Microsoft.Test.OData.DependencyInjection.csproj" />
-    <ProjectReference Include="..\..\..\Framework\Core\Microsoft.Test.OData.Framework.csproj"/>
+    <ProjectReference Include="..\..\..\Framework\Core\Microsoft.Test.OData.Framework.csproj" />
     <ProjectReference Include="..\..\..\Framework\TestProviders\Microsoft.Test.OData.Framework.TestProviders.csproj" />
     <ProjectReference Include="..\..\..\Services\Astoria\Microsoft.Test.OData.Services.Astoria.csproj" />
     <ProjectReference Include="..\..\..\Services\TestServices\Microsoft.Test.OData.Services.TestServices.csproj" />
@@ -111,8 +116,8 @@
     <Compile Include="ClientWithoutTypeResolverTests\MismatchedClientModelWithoutTypeResolverTests.cs" />
     <Compile Include="ClientWithoutTypeResolverTests\OpenTypesWithoutTypeResolverTests.cs" />
     <Compile Include="ClientWithoutTypeResolverTests\JsonWithoutTypeResolverTests.cs" />
-    <Compile Include="CodeGenerationTests\CustomizeNamingTest.cs" />
-    <Compile Include="CodeGenerationTests\T4DelayQueryTest.cs" />
+    <!--<Compile Include="CodeGenerationTests\CustomizeNamingTest.cs" />
+    <Compile Include="CodeGenerationTests\T4DelayQueryTest.cs" />-->
     <Compile Include="Common\ODataAnnotatableExtensions.cs" />
     <Compile Include="EdmDateAndTimeOfDay\DateAndTimeOfDayCRUDTestings.cs" />
     <Compile Include="ODataSimplifiedServiceTests\ODataSimplifiedServiceTests.cs" />
@@ -124,9 +129,9 @@
     <Compile Include="OperationTests\OperationClientTests.cs" />
     <Compile Include="PayloadValueConverterTests\PayloadValueConverterTests.cs" />
     <Compile Include="PluggableFormatServiceTests\PluggableFormatServiceTests.cs" />
-    <Compile Include="PropertyTrackingTests\ChangeTrackingTest.cs" />
+    <!--<Compile Include="PropertyTrackingTests\ChangeTrackingTest.cs" />
     <Compile Include="CodeGenerationTests\T4OperationGenerationTests.cs" />
-    <Compile Include="CodeGenerationTests\T4CodeGenerationTests.cs" />
+    <Compile Include="CodeGenerationTests\T4CodeGenerationTests.cs" />-->
     <Compile Include="CollectionTests\CollectionNullableFacetTest.cs" />
     <Compile Include="Common\HttpWebRequestMessage.cs" />
     <Compile Include="Common\HttpWebResponseMessage.cs" />

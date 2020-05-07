@@ -24,7 +24,7 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
         {
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void PostPartialProperties()
         {
             this.TestClientContext.MergeOption = MergeOption.OverwriteChanges;
@@ -203,7 +203,7 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
             Assert.IsNull(department.DepartmentNOPlus);
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void PostPartialPropertiesInBatch()
         {
             var batchFlags = new SaveChangesOptions[] { SaveChangesOptions.BatchWithSingleChangeset, SaveChangesOptions.BatchWithIndependentOperations };
@@ -267,7 +267,7 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
             }
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void PostFullProperties()
         {
             int expectedPropertyCount = 0;
@@ -320,7 +320,7 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
         }
 
         //Related Fixed When an entity's nullable enum property is set to null, Client cannot correctly serializer the entry
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void PostFullPropertiesInBatch()
         {
             var batchFlags = new SaveChangesOptions[] { SaveChangesOptions.BatchWithSingleChangeset, SaveChangesOptions.BatchWithIndependentOperations };
@@ -378,13 +378,13 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
             }
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void PostFullPropertiesOfEntityParameterToAction()
         {
             PostPropertiesOfEntityParameterToAction(EntityParameterSendOption.SendFullProperties);
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void PostOnlySetPropertiesOfEntityParameterToAction()
         {
             PostPropertiesOfEntityParameterToAction(EntityParameterSendOption.SendOnlySetProperties);

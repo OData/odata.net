@@ -32,6 +32,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// This test covers modifying property values and modifying entry id/links/actions.
         /// </summary>
         [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void QueryEntitySet()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, QueryEntitySet);
@@ -70,7 +71,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// This test covers modifying ODataEntry to have null complex property
         /// </summary>
-        // //--#comment#--[TestMethod] // github issuse: #896
+        // [TestMethod] // github issuse: #896
         public void QueryEntitySetNull()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, QueryEntitySetNull);
@@ -91,7 +92,8 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// This test covers adding/removing property values and modifying primitive/complex/collection property values.
         /// </summary>
-        //--#comment#--[TestMethod]
+        [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void QueryEntityInstance()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, QueryEntityInstance);
@@ -159,7 +161,8 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// Verifies that user can change entry type name in pipeline events
         /// </summary>
-        //--#comment#--[TestMethod]
+        [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void QueryEntityInstanceChangeTypeName()
         {
             this.RunOnAtomAndJsonFormats(
@@ -227,7 +230,8 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// This test verifies that user can modify entry in a delegate in the case of LoadProperty.
         /// </summary>
-        //--#comment#--[TestMethod]
+        [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void LoadPropertyTest()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, LoadPropertyTest);
@@ -252,7 +256,8 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// Verify that user can modify entry property and expanded navigation entry property in a delegate.
         /// </summary>
-        //--#comment#--[TestMethod]
+        [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void ExpandQueryTest()
         {
             this.RunOnAtomAndJsonFormats(
@@ -295,7 +300,8 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// Verify that user can modify feed next link in a delegate.
         /// </summary>
-        //--#comment#--[TestMethod]
+        [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void PagingQueryTest()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, PagingQueryTest);
@@ -317,7 +323,8 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// This test covers adding/removing selected property and adding navigation that are not selected.
         /// </summary>
-        //--#comment#--[TestMethod]
+        [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void ProjectionQueryTest()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, ProjectionQueryTest);
@@ -342,7 +349,8 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// Verify that user can modify primitive/complex/collection property values in writing pipeline delegates.
         /// </summary>
-        //--#comment#--[TestMethod]
+        [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void AddObjectTest()
         {
             this.Invoke(
@@ -381,7 +389,8 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// Verify that user can modify primitive/complex/collection property values in writing pipeline delegates.
         /// </summary>
-        //--#comment#--[TestMethod]
+        [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void UpdateObjectTest()
         {
             this.Invoke(
@@ -422,7 +431,8 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
             contextWrapper.SaveChanges();
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void AddUpdateObjectStreamTest()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, AddUpdateObjectStreamTest);
@@ -458,7 +468,8 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
             contextWrapper.SaveChanges();
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void AddUpdateBatchTest()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, AddUpdateBatchTest);
@@ -493,7 +504,8 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// Verify that user can modify entity property and association link through pipeline delegates in AddObject+SetLink scenario.
         /// </summary>
-        //--#comment#--[TestMethod]
+        [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void AddObjectSetLinkTest()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, AddObjectSetLinkTest);
@@ -534,7 +546,8 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
             contextWrapper.SaveChanges();
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void ThrowExceptionInPipelineDelegateTest()
         {
             this.RunOnAtomAndJsonFormats(
@@ -558,7 +571,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// Verify delegate behavior of error response, inner error in batch response, in-stream error in response
         /// </summary>
-        // //--#comment#--[TestMethod] // github issuse: #896
+        // [TestMethod] // github issuse: #896
         // there is not feed id when using json format.
         public void ErrorResponseTest()
         {
@@ -602,7 +615,8 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// <summary>
         /// This test covers the handle of null entry in pipeline.
         /// </summary>
-        //--#comment#--[TestMethod]
+        [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void ExpandNullEntry()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, ExpandNullEntry);

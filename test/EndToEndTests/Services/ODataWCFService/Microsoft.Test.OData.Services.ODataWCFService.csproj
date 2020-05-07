@@ -1,9 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Test.OData.Services.ODataWCFService</RootNamespace>
     <AssemblyName>Microsoft.Test.OData.Services.ODataWCFService</AssemblyName>
- 
-    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
     <TargetFrameworks>net45</TargetFrameworks>
+    <SignAssemblyAttribute>true</SignAssemblyAttribute>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
     <RestorePackages>true</RestorePackages>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>

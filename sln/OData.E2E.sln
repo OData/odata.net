@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.1000
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{818C5A92-D7B8-4704-89F3-32E422BFFB9D}"
 EndProject
@@ -24,7 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "codeGen", "codeGen", "{AA69
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "codeGenTests", "codeGenTests", "{0035949E-4316-4146-AF73-84118CA8D758}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Service.TDDUnitTests", "..\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj", "{E7A080F5-2054-447F-B09C-4E7B9B1B1B6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Service.TDDUnitTests", "..\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj", "{E7A080F5-2054-447F-B09C-4E7B9B1B1B6A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Service.Test.Common", "..\test\FunctionalTests\Tests\CommonTestUtil\Microsoft.OData.Service.Test.Common.csproj", "{A7A080F5-2054-447F-B09C-4E7B8B1B1B4A}"
 EndProject
@@ -38,7 +38,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Client", ".
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Service", "..\test\FunctionalTests\Service\Microsoft.OData.Service.csproj", "{D1567C63-4A0D-4E18-A14E-79699B9BA325}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Client.TDDUnitTests", "..\test\FunctionalTests\Tests\DataServices\UnitTests\Client.TDD.Tests\Microsoft.OData.Client.TDDUnitTests.csproj", "{F7A080F5-2054-447F-B09C-4E7B9B1B1B00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Client.TDDUnitTests", "..\test\FunctionalTests\Tests\DataServices\UnitTests\Client.TDD.Tests\Microsoft.OData.Client.TDDUnitTests.csproj", "{F7A080F5-2054-447F-B09C-4E7B9B1B1B00}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Test.OData.Utils", "..\test\FunctionalTests\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Microsoft.Test.OData.Utils.csproj", "{EFA72CF8-A73A-4EB4-88D4-AE6D4CE1B270}"
 EndProject
@@ -60,7 +60,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdmLibTests", "..\test\Func
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Test.OData.Framework", "..\test\EndToEndTests\Framework\Core\Microsoft.Test.OData.Framework.csproj", "{CEC8AF29-77BC-4C62-B79C-A9B22C311E3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Data.ClientExtensions.UnitTests", "..\test\FunctionalTests\Tests\DataServices\UnitTests\ClientExtensions\Microsoft.Data.ClientExtensions.UnitTests.csproj", "{A5AB5A4F-3FDB-4BF0-BA8C-22C7EA438D67}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Data.ClientExtensions.UnitTests", "..\test\FunctionalTests\Tests\DataServices\UnitTests\ClientExtensions\Microsoft.Data.ClientExtensions.UnitTests.csproj", "{A5AB5A4F-3FDB-4BF0-BA8C-22C7EA438D67}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModuleCore", "..\tools\ModuleCore\src\ModuleCore.csproj", "{5E46C9E2-8B2F-4961-8C26-EFA9DF6CD68D}"
 EndProject
@@ -74,23 +74,23 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commander.Common", "..\test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KoKoMo", "..\tools\KoKoMo\KoKoMo.csproj", "{EB4C9641-0452-4E7F-AA38-3EBD871914A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Data.MetadataObjectModel.UnitTests", "..\test\FunctionalTests\Tests\DataServices\UnitTests\MetadataObjectModelTests\Microsoft.Data.MetadataObjectModel.UnitTests.csproj", "{69A5EB3B-5AE5-49AD-B4F3-025D087A4647}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Data.MetadataObjectModel.UnitTests", "..\test\FunctionalTests\Tests\DataServices\UnitTests\MetadataObjectModelTests\Microsoft.Data.MetadataObjectModel.UnitTests.csproj", "{69A5EB3B-5AE5-49AD-B4F3-025D087A4647}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Data.Web.UnitTests", "..\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests\Microsoft.Data.Web.UnitTests.csproj", "{BB7D22CB-7003-4AF6-9035-B369B00EA95E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Data.Web.UnitTests", "..\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests\Microsoft.Data.Web.UnitTests.csproj", "{BB7D22CB-7003-4AF6-9035-B369B00EA95E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Astoria.Northwind", "..\test\FunctionalTests\Tests\DataServices\Models\northwind\Astoria.Northwind.csproj", "{D93149FD-0D7F-41AB-AFCF-62270E7FD613}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Astoria.EFFKModel", "..\test\FunctionalTests\Tests\DataServices\Models\EFFK\Astoria.EFFKModel.csproj", "{3C8CB60D-D2C0-495E-A8D2-C8B1B244F27B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Data.ServerUnitTests2.UnitTests", "..\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests2\Microsoft.Data.ServerUnitTests2.UnitTests.csproj", "{406BEAB6-7437-471E-B72D-3CE9AAC3B7AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Data.ServerUnitTests2.UnitTests", "..\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests2\Microsoft.Data.ServerUnitTests2.UnitTests.csproj", "{406BEAB6-7437-471E-B72D-3CE9AAC3B7AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Data.ServerUnitTests1.UnitTests", "..\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests1\Microsoft.Data.ServerUnitTests1.UnitTests.csproj", "{99C025F4-3FA8-4078-BC9F-46774450B574}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Data.ServerUnitTests1.UnitTests", "..\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests1\Microsoft.Data.ServerUnitTests1.UnitTests.csproj", "{99C025F4-3FA8-4078-BC9F-46774450B574}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Data.NamedStream.UnitTests", "..\test\FunctionalTests\Tests\DataServices\UnitTests\NamedStreamTests\Microsoft.Data.NamedStream.UnitTests.csproj", "{D94501EA-4606-4A82-A591-79473D9EE368}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Data.NamedStream.UnitTests", "..\test\FunctionalTests\Tests\DataServices\UnitTests\NamedStreamTests\Microsoft.Data.NamedStream.UnitTests.csproj", "{D94501EA-4606-4A82-A591-79473D9EE368}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Data.WebClientCSharp.UnitTests", "..\test\FunctionalTests\Tests\DataServices\UnitTests\ClientCSharpUnitTests\Microsoft.Data.WebClientCSharp.UnitTests.csproj", "{9B78C515-20E7-49FF-B8A1-90F3D585E88D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Data.WebClientCSharp.UnitTests", "..\test\FunctionalTests\Tests\DataServices\UnitTests\ClientCSharpUnitTests\Microsoft.Data.WebClientCSharp.UnitTests.csproj", "{9B78C515-20E7-49FF-B8A1-90F3D585E88D}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Microsoft.Data.WebClient.UnitTests", "..\test\FunctionalTests\Tests\DataServices\UnitTests\ClientUnitTests\Microsoft.Data.WebClient.UnitTests.vbproj", "{2560BD0F-D2A5-4DB1-B260-7C07DF506E11}"
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "Microsoft.Data.WebClient.UnitTests", "..\test\FunctionalTests\Tests\DataServices\UnitTests\ClientUnitTests\Microsoft.Data.WebClient.UnitTests.vbproj", "{2560BD0F-D2A5-4DB1-B260-7C07DF506E11}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataWebRules", "..\tools\FxCopRules\DataWebRules.csproj", "{0854AF44-074A-41B4-909D-2AA4CAE82332}"
 EndProject
@@ -98,9 +98,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Service.Des
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Data.Web.Design.T4", "..\src\CodeGen\Microsoft.Data.Web.Design.T4.csproj", "{E4167281-C1AF-48C1-9BBD-0453BFB8CE2D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Data.Web.RegressionUnitTests", "..\test\FunctionalTests\Tests\DataServices\UnitTests\RegressionUnitTests\Microsoft.Data.Web.RegressionUnitTests.csproj", "{7BA26157-3062-4552-9C23-BB9B082C1ACE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Data.Web.RegressionUnitTests", "..\test\FunctionalTests\Tests\DataServices\UnitTests\RegressionUnitTests\Microsoft.Data.Web.RegressionUnitTests.csproj", "{7BA26157-3062-4552-9C23-BB9B082C1ACE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.Data.Services.DDBasics", "..\test\FunctionalTests\Tests\DataServices\ddbasics\Microsoft.Test.Data.Services.DDBasics.csproj", "{B9380603-5090-483C-ADF0-66D7FEE4DF7E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Test.Data.Services.DDBasics", "..\test\FunctionalTests\Tests\DataServices\ddbasics\Microsoft.Test.Data.Services.DDBasics.csproj", "{B9380603-5090-483C-ADF0-66D7FEE4DF7E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Test.Taupo.OData.Reader.Tests", "..\test\FunctionalTests\Tests\DataOData\Tests\OData.Reader.Tests\Microsoft.Test.Taupo.OData.Reader.Tests.csproj", "{70CCA883-E9EC-41C8-9A42-F910C4A6FCB6}"
 EndProject
@@ -117,14 +117,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Test.OData.PluggableFormat", "..\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat\Microsoft.Test.OData.PluggableFormat.csproj", "{1D872F31-6100-4C76-999E-ED948E2CD248}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Test.OData.PluggableFormat.Tests", "..\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat.Tests\Microsoft.Test.OData.PluggableFormat.Tests.csproj", "{1D872F31-6100-4C76-999E-ED948E2CD249}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Core.Tests", "..\test\FunctionalTests\Microsoft.OData.Core.Tests\Build.NetFramework\Microsoft.OData.Core.Tests.csproj", "{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Client.Tests", "..\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj", "{9F0AB290-8164-4885-BFCA-A6F87AB81740}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Edm.Tests", "..\test\FunctionalTests\Microsoft.OData.Edm.Tests\Build.NetFramework\Microsoft.OData.Edm.Tests.csproj", "{419F42FA-3313-46A7-B519-B2ED042B0F5C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Spatial.Tests", "..\test\FunctionalTests\Microsoft.Spatial.Tests\Build.NetFramework\Microsoft.Spatial.Tests.csproj", "{68C25902-0FBD-4694-9EE9-47F2219CE039}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Test.OData.Tests.Client", "..\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj", "{B57522A7-18B7-42F7-95FD-24835FC5AE46}"
 EndProject
@@ -173,6 +165,14 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Test.OData.Services.TestServices.Portable", "..\test\EndToEndTests\Services\TestServices\Build.PortableLibrary\Microsoft.Test.OData.Services.TestServices.Portable.csproj", "{E00AA924-A071-4FDD-AE81-13F49D76DF60}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Test.OData.Framework.Portable", "..\test\EndToEndTests\Framework\Core\Build.PortableLibrary\Microsoft.Test.OData.Framework.Portable.csproj", "{B4325A6C-F721-418D-AA1E-4687AA31407A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Client.Tests", "..\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj", "{36D032CD-CD42-4D38-B829-3EB11B8FDC21}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Core.Tests", "..\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj", "{DD3A9064-D828-4F12-BFB8-AEE241A6DE20}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Edm.Tests", "..\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj", "{63AFF9B5-2A39-4920-ADD2-DCD50EA71199}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Spatial.Tests", "..\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj", "{1D6FE7E1-BA5B-49DB-BA74-C019009CAFDD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1031,78 +1031,6 @@ Global
 		{1D872F31-6100-4C76-999E-ED948E2CD249}.Release|x64.Build.0 = Release|Any CPU
 		{1D872F31-6100-4C76-999E-ED948E2CD249}.Release|x86.ActiveCfg = Release|Any CPU
 		{1D872F31-6100-4C76-999E-ED948E2CD249}.Release|x86.Build.0 = Release|Any CPU
-		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Cover|Any CPU.ActiveCfg = Release|Any CPU
-		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Cover|Any CPU.Build.0 = Release|Any CPU
-		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Cover|x64.ActiveCfg = Release|Any CPU
-		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Cover|x64.Build.0 = Release|Any CPU
-		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Cover|x86.ActiveCfg = Release|Any CPU
-		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Cover|x86.Build.0 = Release|Any CPU
-		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Debug|x64.Build.0 = Debug|Any CPU
-		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Debug|x86.Build.0 = Debug|Any CPU
-		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Release|x64.ActiveCfg = Release|Any CPU
-		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Release|x64.Build.0 = Release|Any CPU
-		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Release|x86.ActiveCfg = Release|Any CPU
-		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}.Release|x86.Build.0 = Release|Any CPU
-		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Cover|Any CPU.ActiveCfg = Release|Any CPU
-		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Cover|Any CPU.Build.0 = Release|Any CPU
-		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Cover|x64.ActiveCfg = Release|Any CPU
-		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Cover|x64.Build.0 = Release|Any CPU
-		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Cover|x86.ActiveCfg = Release|Any CPU
-		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Cover|x86.Build.0 = Release|Any CPU
-		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Debug|x64.Build.0 = Debug|Any CPU
-		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Debug|x86.Build.0 = Debug|Any CPU
-		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Release|x64.ActiveCfg = Release|Any CPU
-		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Release|x64.Build.0 = Release|Any CPU
-		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Release|x86.ActiveCfg = Release|Any CPU
-		{9F0AB290-8164-4885-BFCA-A6F87AB81740}.Release|x86.Build.0 = Release|Any CPU
-		{419F42FA-3313-46A7-B519-B2ED042B0F5C}.Cover|Any CPU.ActiveCfg = Release|Any CPU
-		{419F42FA-3313-46A7-B519-B2ED042B0F5C}.Cover|Any CPU.Build.0 = Release|Any CPU
-		{419F42FA-3313-46A7-B519-B2ED042B0F5C}.Cover|x64.ActiveCfg = Release|Any CPU
-		{419F42FA-3313-46A7-B519-B2ED042B0F5C}.Cover|x64.Build.0 = Release|Any CPU
-		{419F42FA-3313-46A7-B519-B2ED042B0F5C}.Cover|x86.ActiveCfg = Release|Any CPU
-		{419F42FA-3313-46A7-B519-B2ED042B0F5C}.Cover|x86.Build.0 = Release|Any CPU
-		{419F42FA-3313-46A7-B519-B2ED042B0F5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{419F42FA-3313-46A7-B519-B2ED042B0F5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{419F42FA-3313-46A7-B519-B2ED042B0F5C}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{419F42FA-3313-46A7-B519-B2ED042B0F5C}.Debug|x64.Build.0 = Debug|Any CPU
-		{419F42FA-3313-46A7-B519-B2ED042B0F5C}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{419F42FA-3313-46A7-B519-B2ED042B0F5C}.Debug|x86.Build.0 = Debug|Any CPU
-		{419F42FA-3313-46A7-B519-B2ED042B0F5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{419F42FA-3313-46A7-B519-B2ED042B0F5C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{419F42FA-3313-46A7-B519-B2ED042B0F5C}.Release|x64.ActiveCfg = Release|Any CPU
-		{419F42FA-3313-46A7-B519-B2ED042B0F5C}.Release|x64.Build.0 = Release|Any CPU
-		{419F42FA-3313-46A7-B519-B2ED042B0F5C}.Release|x86.ActiveCfg = Release|Any CPU
-		{419F42FA-3313-46A7-B519-B2ED042B0F5C}.Release|x86.Build.0 = Release|Any CPU
-		{68C25902-0FBD-4694-9EE9-47F2219CE039}.Cover|Any CPU.ActiveCfg = Release|Any CPU
-		{68C25902-0FBD-4694-9EE9-47F2219CE039}.Cover|Any CPU.Build.0 = Release|Any CPU
-		{68C25902-0FBD-4694-9EE9-47F2219CE039}.Cover|x64.ActiveCfg = Release|Any CPU
-		{68C25902-0FBD-4694-9EE9-47F2219CE039}.Cover|x64.Build.0 = Release|Any CPU
-		{68C25902-0FBD-4694-9EE9-47F2219CE039}.Cover|x86.ActiveCfg = Release|Any CPU
-		{68C25902-0FBD-4694-9EE9-47F2219CE039}.Cover|x86.Build.0 = Release|Any CPU
-		{68C25902-0FBD-4694-9EE9-47F2219CE039}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{68C25902-0FBD-4694-9EE9-47F2219CE039}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{68C25902-0FBD-4694-9EE9-47F2219CE039}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{68C25902-0FBD-4694-9EE9-47F2219CE039}.Debug|x64.Build.0 = Debug|Any CPU
-		{68C25902-0FBD-4694-9EE9-47F2219CE039}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{68C25902-0FBD-4694-9EE9-47F2219CE039}.Debug|x86.Build.0 = Debug|Any CPU
-		{68C25902-0FBD-4694-9EE9-47F2219CE039}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{68C25902-0FBD-4694-9EE9-47F2219CE039}.Release|Any CPU.Build.0 = Release|Any CPU
-		{68C25902-0FBD-4694-9EE9-47F2219CE039}.Release|x64.ActiveCfg = Release|Any CPU
-		{68C25902-0FBD-4694-9EE9-47F2219CE039}.Release|x64.Build.0 = Release|Any CPU
-		{68C25902-0FBD-4694-9EE9-47F2219CE039}.Release|x86.ActiveCfg = Release|Any CPU
-		{68C25902-0FBD-4694-9EE9-47F2219CE039}.Release|x86.Build.0 = Release|Any CPU
 		{B57522A7-18B7-42F7-95FD-24835FC5AE46}.Cover|Any CPU.ActiveCfg = Release|Any CPU
 		{B57522A7-18B7-42F7-95FD-24835FC5AE46}.Cover|Any CPU.Build.0 = Release|Any CPU
 		{B57522A7-18B7-42F7-95FD-24835FC5AE46}.Cover|x64.ActiveCfg = Release|Any CPU
@@ -1535,6 +1463,78 @@ Global
 		{B4325A6C-F721-418D-AA1E-4687AA31407A}.Release|x64.Build.0 = Release|Any CPU
 		{B4325A6C-F721-418D-AA1E-4687AA31407A}.Release|x86.ActiveCfg = Release|Any CPU
 		{B4325A6C-F721-418D-AA1E-4687AA31407A}.Release|x86.Build.0 = Release|Any CPU
+		{36D032CD-CD42-4D38-B829-3EB11B8FDC21}.Cover|Any CPU.ActiveCfg = Debug|Any CPU
+		{36D032CD-CD42-4D38-B829-3EB11B8FDC21}.Cover|Any CPU.Build.0 = Debug|Any CPU
+		{36D032CD-CD42-4D38-B829-3EB11B8FDC21}.Cover|x64.ActiveCfg = Debug|Any CPU
+		{36D032CD-CD42-4D38-B829-3EB11B8FDC21}.Cover|x64.Build.0 = Debug|Any CPU
+		{36D032CD-CD42-4D38-B829-3EB11B8FDC21}.Cover|x86.ActiveCfg = Debug|Any CPU
+		{36D032CD-CD42-4D38-B829-3EB11B8FDC21}.Cover|x86.Build.0 = Debug|Any CPU
+		{36D032CD-CD42-4D38-B829-3EB11B8FDC21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36D032CD-CD42-4D38-B829-3EB11B8FDC21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36D032CD-CD42-4D38-B829-3EB11B8FDC21}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{36D032CD-CD42-4D38-B829-3EB11B8FDC21}.Debug|x64.Build.0 = Debug|Any CPU
+		{36D032CD-CD42-4D38-B829-3EB11B8FDC21}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{36D032CD-CD42-4D38-B829-3EB11B8FDC21}.Debug|x86.Build.0 = Debug|Any CPU
+		{36D032CD-CD42-4D38-B829-3EB11B8FDC21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36D032CD-CD42-4D38-B829-3EB11B8FDC21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36D032CD-CD42-4D38-B829-3EB11B8FDC21}.Release|x64.ActiveCfg = Release|Any CPU
+		{36D032CD-CD42-4D38-B829-3EB11B8FDC21}.Release|x64.Build.0 = Release|Any CPU
+		{36D032CD-CD42-4D38-B829-3EB11B8FDC21}.Release|x86.ActiveCfg = Release|Any CPU
+		{36D032CD-CD42-4D38-B829-3EB11B8FDC21}.Release|x86.Build.0 = Release|Any CPU
+		{DD3A9064-D828-4F12-BFB8-AEE241A6DE20}.Cover|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD3A9064-D828-4F12-BFB8-AEE241A6DE20}.Cover|Any CPU.Build.0 = Debug|Any CPU
+		{DD3A9064-D828-4F12-BFB8-AEE241A6DE20}.Cover|x64.ActiveCfg = Debug|Any CPU
+		{DD3A9064-D828-4F12-BFB8-AEE241A6DE20}.Cover|x64.Build.0 = Debug|Any CPU
+		{DD3A9064-D828-4F12-BFB8-AEE241A6DE20}.Cover|x86.ActiveCfg = Debug|Any CPU
+		{DD3A9064-D828-4F12-BFB8-AEE241A6DE20}.Cover|x86.Build.0 = Debug|Any CPU
+		{DD3A9064-D828-4F12-BFB8-AEE241A6DE20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD3A9064-D828-4F12-BFB8-AEE241A6DE20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD3A9064-D828-4F12-BFB8-AEE241A6DE20}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DD3A9064-D828-4F12-BFB8-AEE241A6DE20}.Debug|x64.Build.0 = Debug|Any CPU
+		{DD3A9064-D828-4F12-BFB8-AEE241A6DE20}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DD3A9064-D828-4F12-BFB8-AEE241A6DE20}.Debug|x86.Build.0 = Debug|Any CPU
+		{DD3A9064-D828-4F12-BFB8-AEE241A6DE20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD3A9064-D828-4F12-BFB8-AEE241A6DE20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD3A9064-D828-4F12-BFB8-AEE241A6DE20}.Release|x64.ActiveCfg = Release|Any CPU
+		{DD3A9064-D828-4F12-BFB8-AEE241A6DE20}.Release|x64.Build.0 = Release|Any CPU
+		{DD3A9064-D828-4F12-BFB8-AEE241A6DE20}.Release|x86.ActiveCfg = Release|Any CPU
+		{DD3A9064-D828-4F12-BFB8-AEE241A6DE20}.Release|x86.Build.0 = Release|Any CPU
+		{63AFF9B5-2A39-4920-ADD2-DCD50EA71199}.Cover|Any CPU.ActiveCfg = Debug|Any CPU
+		{63AFF9B5-2A39-4920-ADD2-DCD50EA71199}.Cover|Any CPU.Build.0 = Debug|Any CPU
+		{63AFF9B5-2A39-4920-ADD2-DCD50EA71199}.Cover|x64.ActiveCfg = Debug|Any CPU
+		{63AFF9B5-2A39-4920-ADD2-DCD50EA71199}.Cover|x64.Build.0 = Debug|Any CPU
+		{63AFF9B5-2A39-4920-ADD2-DCD50EA71199}.Cover|x86.ActiveCfg = Debug|Any CPU
+		{63AFF9B5-2A39-4920-ADD2-DCD50EA71199}.Cover|x86.Build.0 = Debug|Any CPU
+		{63AFF9B5-2A39-4920-ADD2-DCD50EA71199}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63AFF9B5-2A39-4920-ADD2-DCD50EA71199}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63AFF9B5-2A39-4920-ADD2-DCD50EA71199}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{63AFF9B5-2A39-4920-ADD2-DCD50EA71199}.Debug|x64.Build.0 = Debug|Any CPU
+		{63AFF9B5-2A39-4920-ADD2-DCD50EA71199}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{63AFF9B5-2A39-4920-ADD2-DCD50EA71199}.Debug|x86.Build.0 = Debug|Any CPU
+		{63AFF9B5-2A39-4920-ADD2-DCD50EA71199}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63AFF9B5-2A39-4920-ADD2-DCD50EA71199}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63AFF9B5-2A39-4920-ADD2-DCD50EA71199}.Release|x64.ActiveCfg = Release|Any CPU
+		{63AFF9B5-2A39-4920-ADD2-DCD50EA71199}.Release|x64.Build.0 = Release|Any CPU
+		{63AFF9B5-2A39-4920-ADD2-DCD50EA71199}.Release|x86.ActiveCfg = Release|Any CPU
+		{63AFF9B5-2A39-4920-ADD2-DCD50EA71199}.Release|x86.Build.0 = Release|Any CPU
+		{1D6FE7E1-BA5B-49DB-BA74-C019009CAFDD}.Cover|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D6FE7E1-BA5B-49DB-BA74-C019009CAFDD}.Cover|Any CPU.Build.0 = Debug|Any CPU
+		{1D6FE7E1-BA5B-49DB-BA74-C019009CAFDD}.Cover|x64.ActiveCfg = Debug|Any CPU
+		{1D6FE7E1-BA5B-49DB-BA74-C019009CAFDD}.Cover|x64.Build.0 = Debug|Any CPU
+		{1D6FE7E1-BA5B-49DB-BA74-C019009CAFDD}.Cover|x86.ActiveCfg = Debug|Any CPU
+		{1D6FE7E1-BA5B-49DB-BA74-C019009CAFDD}.Cover|x86.Build.0 = Debug|Any CPU
+		{1D6FE7E1-BA5B-49DB-BA74-C019009CAFDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D6FE7E1-BA5B-49DB-BA74-C019009CAFDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D6FE7E1-BA5B-49DB-BA74-C019009CAFDD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1D6FE7E1-BA5B-49DB-BA74-C019009CAFDD}.Debug|x64.Build.0 = Debug|Any CPU
+		{1D6FE7E1-BA5B-49DB-BA74-C019009CAFDD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1D6FE7E1-BA5B-49DB-BA74-C019009CAFDD}.Debug|x86.Build.0 = Debug|Any CPU
+		{1D6FE7E1-BA5B-49DB-BA74-C019009CAFDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D6FE7E1-BA5B-49DB-BA74-C019009CAFDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D6FE7E1-BA5B-49DB-BA74-C019009CAFDD}.Release|x64.ActiveCfg = Release|Any CPU
+		{1D6FE7E1-BA5B-49DB-BA74-C019009CAFDD}.Release|x64.Build.0 = Release|Any CPU
+		{1D6FE7E1-BA5B-49DB-BA74-C019009CAFDD}.Release|x86.ActiveCfg = Release|Any CPU
+		{1D6FE7E1-BA5B-49DB-BA74-C019009CAFDD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1596,10 +1596,6 @@ Global
 		{DB742DF2-9873-44CF-8439-DA5ACFF69A46} = {8A8C5DF6-B845-4044-8677-D877E6450CB4}
 		{1D872F31-6100-4C76-999E-ED948E2CD248} = {F1453B46-0B8B-4BD4-B7E4-69A8CA431A4A}
 		{1D872F31-6100-4C76-999E-ED948E2CD249} = {15AE273F-373F-4870-9B73-8F3B9DB05F98}
-		{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C} = {8CCBB4F7-EBD1-48B6-8A77-BD733EB9CB6B}
-		{9F0AB290-8164-4885-BFCA-A6F87AB81740} = {8CCBB4F7-EBD1-48B6-8A77-BD733EB9CB6B}
-		{419F42FA-3313-46A7-B519-B2ED042B0F5C} = {8CCBB4F7-EBD1-48B6-8A77-BD733EB9CB6B}
-		{68C25902-0FBD-4694-9EE9-47F2219CE039} = {8CCBB4F7-EBD1-48B6-8A77-BD733EB9CB6B}
 		{B57522A7-18B7-42F7-95FD-24835FC5AE46} = {88BCAAF8-C1CD-41A0-81AA-BF4D80CADD8C}
 		{1211B700-008A-4646-8F5F-25BC96EBC138} = {F1453B46-0B8B-4BD4-B7E4-69A8CA431A4A}
 		{ECF627BB-5156-488F-9F6B-CF6537F8D6FE} = {A8A0976E-E1D8-4C0E-B425-B4F74798D478}
@@ -1624,6 +1620,10 @@ Global
 		{E5747CE7-E096-40B2-9071-96DD00B0ABF0} = {F1453B46-0B8B-4BD4-B7E4-69A8CA431A4A}
 		{E00AA924-A071-4FDD-AE81-13F49D76DF60} = {F1453B46-0B8B-4BD4-B7E4-69A8CA431A4A}
 		{B4325A6C-F721-418D-AA1E-4687AA31407A} = {F1453B46-0B8B-4BD4-B7E4-69A8CA431A4A}
+		{36D032CD-CD42-4D38-B829-3EB11B8FDC21} = {8CCBB4F7-EBD1-48B6-8A77-BD733EB9CB6B}
+		{DD3A9064-D828-4F12-BFB8-AEE241A6DE20} = {8CCBB4F7-EBD1-48B6-8A77-BD733EB9CB6B}
+		{63AFF9B5-2A39-4920-ADD2-DCD50EA71199} = {8CCBB4F7-EBD1-48B6-8A77-BD733EB9CB6B}
+		{1D6FE7E1-BA5B-49DB-BA74-C019009CAFDD} = {8CCBB4F7-EBD1-48B6-8A77-BD733EB9CB6B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3381754F-0117-444E-9D95-4845461632CB}

@@ -25,7 +25,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         {
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void TestODataSimplifiedServiceQueryEntities()
         {
             TestClientContext.EnableWritingODataAnnotationWithoutPrefix = true;
@@ -35,7 +35,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             Assert.AreEqual(5, TestClientContext.Products.ToList().Count);
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void TestODataSimplifiedServiceQueryNavigationProperty()
         {
             TestClientContext.EnableWritingODataAnnotationWithoutPrefix = true;
@@ -44,7 +44,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             Assert.AreEqual(2, TestClientContext.People.ByKey(new Dictionary<string, object> { { "PersonId", 1 } }).Products.ToList().Count);
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void TestODataSimplifiedServiceQueryExpandedEntities()
         {
             TestClientContext.EnableWritingODataAnnotationWithoutPrefix = true;
@@ -54,7 +54,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             Assert.AreEqual(2, person[0].Products.ToList().Count);
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void TestODataSimplifiedServiceCreateEntity()
         {
             TestClientContext.EnableWritingODataAnnotationWithoutPrefix = true;

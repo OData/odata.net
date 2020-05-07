@@ -30,7 +30,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         /// Write payloads without model or serialization info.
         /// Note that ODL will succeed if writing requests or writing nometadata reponses.
         /// </summary>
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void WriteWithoutSerializationInfo()
         {
             foreach (var mimeType in this.testMimeTypes)
@@ -137,7 +137,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         /// <summary>
         /// Specify serialization info for both feed and entry should fail.
         /// </summary>
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void SpecifySerializationInfoForFeedAndEntry()
         {
             foreach (var mimeType in this.testMimeTypes)
@@ -193,7 +193,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         /// <summary>
         /// Write response payload with serialization info containing wrong values
         /// </summary>
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void WriteEntryWithWrongSerializationInfo()
         {
             foreach (var mimeType in this.testMimeTypes)
@@ -336,7 +336,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         /// <summary>
         /// Provide EDM model, and then write an entry with wrong serialization info
         /// </summary>
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void WriteEntryWithWrongSerializationInfoWithModel()
         {
             bool[] autoComputeMetadataBools = new bool[] { true, false, };
@@ -372,7 +372,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         /// <summary>
         /// Change serialization info value after WriteStart
         /// </summary>
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void ChangeSerializationInfoAfterWriteStart()
         {
             foreach (var mimeType in this.testMimeTypes)
@@ -406,7 +406,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         /// <summary>
         /// Do not provide model, but hand craft IEdmEntitySet and IEdmEntityType for writer
         /// </summary>
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void HandCraftEdmType()
         {
             foreach (var mimeType in this.testMimeTypes)

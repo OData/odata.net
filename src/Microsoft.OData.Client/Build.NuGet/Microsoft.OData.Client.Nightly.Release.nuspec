@@ -23,10 +23,9 @@ OData .NET library is open source at http://github.com/OData/odata.net. Document
     </frameworkAssemblies>
   </metadata>
   <files>
-    <file src="$ProductRoot$\Microsoft.OData.Client.dll" target="lib\net45" />
-    <file src="$ProductRoot$\Microsoft.OData.Client.xml" target="lib\net45" />
-    <file src="$ProductRoot$\Microsoft.OData.Client.pdb" target="lib\net45" />
-    
+    <file src="$ProductRoot$\Microsoft.OData.Client.dll" target="lib" />
+    <file src="$ProductRoot$\Microsoft.OData.Client.xml" target="lib" />
+    <file src="$ProductRoot$\Microsoft.OData.Client.pdb" target="lib" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Client\**\*.cs" target="src\Microsoft.OData.Client" />
     <!-- files imported from EdmLib -->
     <file src="$SourcesRoot$\src\Microsoft.OData.Edm\Csdl\EdmValueParser.cs" target="src\Microsoft.OData.Edm\Csdl\EdmValueParser.cs" />

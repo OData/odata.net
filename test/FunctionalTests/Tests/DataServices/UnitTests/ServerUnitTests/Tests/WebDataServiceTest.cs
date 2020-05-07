@@ -608,14 +608,14 @@ namespace AstoriaUnitTests.Tests
         /// <summary>
         /// A test for DataService.ctor(host) for an ObjectContext type.
         /// </summary>
-        //--#comment#--[TestMethod()]
+        [TestMethod()]
         public void GetMetadataObjectContext()
         {
             UnitTestsUtil.LoadMetadataFromDataServiceType(typeof(NorthwindModel.NorthwindContext), 
                 Path.Combine(TestUtil.GeneratedFilesLocation, "MetadataObjectContext.csdl"));
         }
 
-        //--#comment#--[TestMethod()]
+        [TestMethod()]
         public void GetMetadataForUnitTestProviders()
         {
             foreach (Type providerType in UnitTestsUtil.ProviderTypes)

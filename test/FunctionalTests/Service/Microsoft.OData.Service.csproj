@@ -6,8 +6,17 @@
     <TargetFrameworks>net45</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <TransparentAssembly>true</TransparentAssembly>
+    <SecurityMigration>false</SecurityMigration>
+    <AssemblyAttributeComCompatibleSideBySide>true</AssemblyAttributeComCompatibleSideBySide>
+    <DefineConstants>$(DefineConstants);ODATA_SERVICE</DefineConstants>
+    <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
+    <RootNamespace>System</RootNamespace>
+    <EnableLocalization>false</EnableLocalization>
+    <!--<SigningType>Product</SigningType>
+    <SigningScenario>Delay</SigningScenario>-->
+    <ShouldGenerateAssemblyAttributeFile>true</ShouldGenerateAssemblyAttributeFile> 
   </PropertyGroup>
   <Import Project="..\Build.props" />
 

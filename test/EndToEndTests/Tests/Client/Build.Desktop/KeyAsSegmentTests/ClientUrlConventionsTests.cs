@@ -15,7 +15,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
     [TestClass]
     public class ClientUrlConventionsTests : KeyAsSegmentTest
     {
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void ClientChangesUrlConventionsBetweenQueries()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -36,7 +36,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
         }
 
         // This is an unsupported scenario and does not currently work.
-        // //--#comment#--[TestMethod] // github issuse: #896
+        // [TestMethod] // github issuse: #896
         public void ClientChangesUrlConventionsBetweenQueryAndUpdate()
         {
             var contextWrapper = this.CreateWrappedContext();

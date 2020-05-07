@@ -36,7 +36,8 @@ namespace EdmLibTests.FunctionalTests
         }
 
 #if !SILVERLIGHT
-       //--#comment#-- [TestMethod]
+        [TestMethod]
+        [Ignore("VSUpgrade19 - RegTest")]
         public void InterfaceValidatorAutoCheck()
         {
             var edmLib = typeof(IEdmElement).Assembly;

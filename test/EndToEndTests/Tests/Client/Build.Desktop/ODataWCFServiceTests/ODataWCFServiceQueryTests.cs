@@ -104,7 +104,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             }
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void QueryEntityInstance()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -139,7 +139,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             }
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void QueryEntityProperty()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -169,7 +169,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             }
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void QueryDollarValue()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -186,7 +186,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             Assert.AreEqual(@"{""type"":""Point"",""coordinates"":[23.1,32.1],""crs"":{""type"":""name"",""properties"":{""name"":""EPSG:4326""}}}", property);
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void QueryEntityNavigation()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -223,7 +223,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             }
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void QueryEntityNavigationWithImplicitKeys()
         {
             // test Uri's
@@ -272,7 +272,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             }
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void QueryEntityPropertyValue()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -290,7 +290,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             }
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void QueryCount()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -308,7 +308,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             }
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void QueryWithFilter()
         {
             // test Uri and expected resulting PersonID
@@ -327,7 +327,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             this.SendRequestAndVerifyResponse(testCases);
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void QueryWithParameterAliasInFilter()
         {
             // test Uri and expected resulting PersonID
@@ -346,25 +346,13 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         private void SendRequestAndVerifyResponse(Dictionary<string, int> testCases)
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
-            
             foreach (var testCase in testCases)
             {
                 foreach (var mimeType in mimeTypes)
                 {
-                    var uri = new Uri(ServiceBaseUri.AbsoluteUri + testCase.Key, UriKind.Absolute);
-                    var requestMessage = new HttpWebRequestMessage(uri);
+                    var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + testCase.Key, UriKind.Absolute));
                     requestMessage.SetHeader("Accept", mimeType);
-                
-                    IODataResponseMessage responseMessage;
-                    try
-                    {
-                      responseMessage = requestMessage.GetResponse();
-                      //  throw new Exception("11msg----- "+ uri+" - "+responseMessage.StatusCode);
-                    }
-                    catch(Exception ex)
-                    {
-                       throw new Exception("999msg----- " + ex.Message);
-                    }
+                    var responseMessage = requestMessage.GetResponse();
                     Assert.AreEqual(200, responseMessage.StatusCode);
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
@@ -394,7 +382,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             }
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void QueryWithExpand()
         {
             Dictionary<string, bool> testCases = new Dictionary<string, bool>()
@@ -518,7 +506,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             }
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void QueryWithOrderBy()
         {
             Dictionary<string, int> testCases = new Dictionary<string, int>()
@@ -550,7 +538,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                             int depth = 0;
                             while (reader.Read())
                             {
-                                switch(reader.State)
+                                switch (reader.State)
                                 {
                                     case ODataReaderState.ResourceSetStart:
                                     case ODataReaderState.ResourceStart:
@@ -558,7 +546,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                                         depth++;
                                         break;
                                     case ODataReaderState.ResourceSetEnd:
-                                        if(depth == 1)
+                                        if (depth == 1)
                                         {
                                             feed = reader.Item as ODataResourceSet;
                                         }
@@ -566,7 +554,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                                         break;
 
                                     case ODataReaderState.ResourceEnd:
-                                        if(depth ==2)
+                                        if (depth == 2)
                                         {
                                             if (null == entry1)
                                             {
@@ -651,7 +639,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         }
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void QueryPropertyWithNullValueFromODataClient()
         {
             TestClientContext.Format.UseJson(Model);
@@ -661,7 +649,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             Assert.AreEqual(0, enumResult.Count);
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void QueryPropertyValueWhichIsNullFromODataClient()
         {
             TestClientContext.Format.UseJson(Model);
@@ -673,7 +661,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         }
 #endif
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void QueryDelta()
         {
             Uri deltaLink = null;

@@ -20,7 +20,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void FunctionReturnDifferentTypes()
         {
             var customer = this.TestClientContext.Customers.First();

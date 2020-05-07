@@ -51,7 +51,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
         /// <summary>
         /// Verify metadata of the operations defined in the test service.
         /// </summary>
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void QueryMetadataTest()
         {
             Dictionary<string, string> expectedUpdatePersonInfoOperations = new Dictionary<string, string>()
@@ -72,7 +72,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
         /// <summary>
         /// Verify actions in entry payload format atom, json verbose, and json fullmetadata.
         /// </summary>
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void QueryEntryTest()
         {
             List<string> mimeTypes = new List<string>()
@@ -135,7 +135,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
         /// <summary>
         /// Verify actions in entry payload format json minimalmetadata, and json nometadata.
         /// </summary>
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void QueryEntryJsonLightTest()
         {
             List<string> mimeTypes = new List<string>()

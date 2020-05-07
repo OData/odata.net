@@ -383,7 +383,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            //--#comment#--[TestMethod]
+            [TestMethod]
             public void NamedStreamEFMetadataSerializationTest()
             {
                 using (TestUtil.RestoreStaticMembersOnDispose(typeof(BlobDataServicePipelineHandlers)))
@@ -1455,7 +1455,7 @@ namespace AstoriaUnitTests.Tests
             
             #endregion IDSP Main Scenario Functional Tests
 
-            //--#comment#--[TestMethod]
+            [TestMethod]
             public void NamedStreamEFGetAndPutNamedStreamTest()
             {
                 EFBasicScenariosCombinations(EFGetAndPutNamedStream);

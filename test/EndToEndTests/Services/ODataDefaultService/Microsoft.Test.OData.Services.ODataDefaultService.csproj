@@ -1,7 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup> 
+  <PropertyGroup>
+    <RootNamespace>Microsoft.Test.OData.Services.ODataWCFService</RootNamespace>
     <AssemblyName>Microsoft.Test.OData.Services.ODataDefaultService</AssemblyName>
-    <SignAssemblyAttribute>false</SignAssemblyAttribute>
+    <SignAssemblyAttribute>true</SignAssemblyAttribute>
+     <TargetFrameworkProfile />
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
     <TargetFrameworks>net45</TargetFrameworks>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>

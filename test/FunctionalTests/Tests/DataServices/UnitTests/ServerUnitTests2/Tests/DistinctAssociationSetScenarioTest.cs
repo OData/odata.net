@@ -20,7 +20,8 @@ namespace AstoriaUnitTests.Tests
     [TestClass]
     public class DistinctAssociationSetScenarioTest
     {
-        //--#comment#--[TestCategory("Partition2"), TestMethod]
+        [TestCategory("Partition2"), TestMethod]
+        [Ignore("VSUpgrade19 - SQQLException")]
         public void MultipleAssociationsToTheSameEntitySetResultInDistinctAssociationSetNames()
         {
             using (TestWebRequest request = TestWebRequest.CreateForInProcess())

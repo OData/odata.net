@@ -24,7 +24,7 @@ namespace Microsoft.Test.OData.Tests.Client
         }
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void ExecuteDeleteMethod()
         {
             DataServiceQuery query =  this.TestClientContext.People.Where(p => p.PersonID == 1).Select(p => p.Parent) as DataServiceQuery;

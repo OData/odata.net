@@ -41,7 +41,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
         [InjectDependency(IsRequired = true)]
         public IExceptionVerifier ExceptionVerifier { get; set; }
 
-        //--#comment#--[TestMethod, Variation(Description = "Test the proper behavior of the headers of a request message.")]
+        [TestMethod, Variation(Description = "Test the proper behavior of the headers of a request message.")]
         public void RequestMessageHeaderTest()
         {
             const bool useMimeWriterAsListener = true;
@@ -72,7 +72,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                 });
         }
 
-       //--#comment#-- [TestMethod, Variation(Description = "Test the proper behavior of the headers of a response message.")]
+        [TestMethod, Variation(Description = "Test the proper behavior of the headers of a response message.")]
         public void ResponseMessageHeaderTest()
         {
             const bool useMimeWriterAsListener = true;

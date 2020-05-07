@@ -324,13 +324,16 @@ namespace Microsoft.OData.Client
         /// <returns>A System.Net.WebResponse that contains the response from the Internet resource.</returns>
         public override IODataResponseMessage GetResponse()
         {
+
             try
             {
                 HttpWebResponse httpResponse = (HttpWebResponse)this.httpRequest.GetResponse();
+                //throw new Exception("oooo test");
                 return new HttpWebResponseMessage(httpResponse);
             }
             catch (WebException webException)
             {
+                //throw new Exception("pppp test" +this.httpRequest.Address+" "+webException.Message);
                 throw ConvertToDataServiceWebException(webException);
             }
         }
@@ -576,5 +579,14 @@ namespace Microsoft.OData.Client
 
             return new DataServiceTransportException(errorResponseMessage, webException);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        //public override IODataResponseMessage GetResponse()
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

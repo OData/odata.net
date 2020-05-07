@@ -3,7 +3,10 @@
     <TestType Condition=" '$(TestType)' == '' ">Private</TestType>
     <OutputPath>bin\Latest\</OutputPath>
     <AssemblyName>ODataSamples.Services.Core</AssemblyName>
-    <SignAssemblyAttribute>false</SignAssemblyAttribute>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ODataSamples.Services.Core</RootNamespace>
+    <SignAssemblyAttribute>true</SignAssemblyAttribute>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
     <TargetFrameworks>net45</TargetFrameworks>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>

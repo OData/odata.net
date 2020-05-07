@@ -1,7 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-     <AssemblyName>Microsoft.Test.OData.Services.ODataSimplifiedService</AssemblyName>
-    <SignAssemblyAttribute>false</SignAssemblyAttribute>
+    <AssemblyName>Microsoft.Test.OData.Services.ODataSimplifiedService</AssemblyName>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.OData.SampleService.Models.ODataSimplified</RootNamespace>   
+    <SignAssemblyAttribute>true</SignAssemblyAttribute>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
     <TargetFrameworks>net45</TargetFrameworks>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
@@ -10,6 +13,7 @@
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  <TargetFrameworkProfile />
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
   <ItemGroup>

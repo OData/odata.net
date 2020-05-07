@@ -67,7 +67,7 @@ namespace Microsoft.Test.OData.Tests.Client.AnnotationTests
             }
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void ComplexTypeInstanceAnnotation()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -137,7 +137,7 @@ namespace Microsoft.Test.OData.Tests.Client.AnnotationTests
         #endregion
 
         #region Top Level
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void TopLevelComplexTypeInstanceAnnotation()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -178,7 +178,7 @@ namespace Microsoft.Test.OData.Tests.Client.AnnotationTests
             }
         }
 
-        // //--#comment#--[TestMethod] // github issuse: #896
+        // [TestMethod] // github issuse: #896
         public void TopLevelPropertyOfComplexTypeInstanceAnnotation()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };

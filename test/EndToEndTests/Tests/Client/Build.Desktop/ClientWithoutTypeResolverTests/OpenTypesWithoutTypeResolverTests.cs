@@ -87,7 +87,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
         }
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void ExpandQuery()
         {
             var contextWrapper = this.CreateContext();
@@ -97,7 +97,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
         }
 #endif
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void ProjectionQuery()
         {
             var contextWrapper = this.CreateContext();
@@ -106,7 +106,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
             var results = query.ToList();
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void DerivedTypesQuery()
         {
             var contextWrapper = this.CreateContext();
@@ -115,7 +115,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
             var results = query.ToArray();
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void BaseTypeQueryRealizesDerivedTypeObject()
         {
             var contextWrapper = this.CreateContext();
@@ -129,7 +129,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
             Assert.IsTrue(row is IndexedRow);
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void UpdateOpenProperties()
         {
             var contextWrapper = this.CreateContext();

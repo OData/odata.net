@@ -40,7 +40,7 @@ namespace Microsoft.Test.OData.Tests.Client
     [DeploymentItem(@"EntityFramework.dll")]
 #endif
 #if !PORTABLELIB
-   // [DeploymentItem(@"Microsoft.VisualStudio.QualityTools.Common.dll")]
+    [DeploymentItem(@"Microsoft.VisualStudio.QualityTools.Common.dll")]
     [DeploymentItem(@"Microsoft.VisualStudio.TeamSystem.Licensing.dll")]
 #endif
     public class EndToEndTestBase

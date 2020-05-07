@@ -33,7 +33,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
         }
 
         #region test method
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void SearchTest()
         {
             foreach (var mimeType in mimeTypes)
@@ -73,7 +73,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
             }
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void SearchCombinedWithQueryOptionTest()
         {
             foreach (var mimeType in mimeTypes)

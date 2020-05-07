@@ -68,24 +68,28 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
         };
 
         [TestMethod, Priority(1)]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void ReadFeed()
         {
             this.Invoke(this.ReadFeedTest, CreateData(this.feedQueries), CreateData(this.testMimeTypes), CreateData(false), CreateData(instanceAnnotationFilters), new Constraint[0]);
         }
 
         [TestMethod, Priority(1)]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void ReadEntry()
         {
             this.Invoke(this.ReadEntryTest, CreateData(this.entryQueries), CreateData(this.testMimeTypes), CreateData(false), CreateData(instanceAnnotationFilters), new Constraint[0]);
         }
 
         [TestMethod, Priority(2)]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void ReadFeedVerifyStateOfReader()
         {
             this.Invoke(this.ReadFeedTest, CreateData(this.feedQueries), CreateData(this.testMimeTypes), CreateData(true), CreateData(instanceAnnotationFilters), new Constraint[0]);
         }
 
         [TestMethod, Priority(2)]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void ReadEntryVerifyStateOfReader()
         {
             this.Invoke(this.ReadEntryTest, CreateData(this.entryQueries), CreateData(this.testMimeTypes), CreateData(true), CreateData(instanceAnnotationFilters), new Constraint[0]);

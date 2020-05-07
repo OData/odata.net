@@ -93,7 +93,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             }
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void EntryWhosePropertyDefinedInReferencedModel()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -161,7 +161,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             }
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void EntryTypeDefinedInReferencedModel()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -231,7 +231,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             }
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void TypeCastEntryDerivedFromReferencedModel()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -267,7 +267,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             }
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void PropertyDefinedInReferencedModel()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -326,7 +326,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             }
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void TypeCastEntryinCycleReferencingModels()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -365,7 +365,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
         #endregion
 
         #region Query Option
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void ModelReferenceWithExpandOption()
         {
             Dictionary<string, int[]> testCases = new Dictionary<string, int[]>()
@@ -416,7 +416,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             }
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void ModelReferneceWithFilterOption()
         {
             Dictionary<string, int> testCases = new Dictionary<string, int>()
@@ -462,7 +462,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             }
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void ModelReferenceWithSelectOption()
         {
             Dictionary<string, int> testCases = new Dictionary<string, int>()
@@ -506,7 +506,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             }
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void ModelReferenceWithOrderbyOption()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -550,7 +550,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
 
         #region Action/Function
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void BoundActionInReferencedModel()
         {
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "VehicleGPSSet('VehicleKey6')/Microsoft.OData.SampleService.Models.ModelRefDemo.GPS.ResetVehicleSpeed", UriKind.Absolute));
@@ -572,7 +572,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             Assert.AreEqual((double)80, actual);
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void UnBoundActionForEntryInReferencedModel()
         {
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "ResetVehicleSpeedToValue", UriKind.Absolute));
@@ -594,7 +594,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             Assert.AreEqual((double)80, actual);
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void BoundFunctionInReferencedModel()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };

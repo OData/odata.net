@@ -1,19 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
- 
+  <PropertyGroup> 
     <AssemblyName>Microsoft.Test.OData.Services.CSDSCReferences</AssemblyName>
- 
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Test.OData.Services.CSDSCReferences</RootNamespace>
     <TargetFrameworkFolderName>Desktop</TargetFrameworkFolderName>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
     <TargetFrameworks>net45</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
-    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>testkey.snk</AssemblyOriginatorKeyFile>
-    <DelaySign>false</DelaySign>
- 
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>     
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
 

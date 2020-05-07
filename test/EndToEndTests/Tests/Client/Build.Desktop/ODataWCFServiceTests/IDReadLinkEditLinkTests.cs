@@ -26,13 +26,13 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void ClientShouldUseTheEditLinkGotFromPayloadToUpdateTheEntryInMinimalMetadataJson()
         {
             this.UpdateObject(MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata);
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void ClientShouldUseTheEditLinkGotFromPayloadToUpdateTheEntryInMinimalFullJson()
         {
             this.UpdateObject(MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata);
@@ -68,19 +68,19 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                           , String.Format("Exception message is expected to contain 'No such host is known' or 'The remote name could not be resolved', but actually not. The actual message is '{0}'.", stringOfErrorMessage));
         }
 
-        ////--#comment#--[TestMethod]
+        //[TestMethod]
         //public void ItIsAbleToDeserializeObjectIfItIsTransientInAtom()
         //{
         //    this.QueryObjectWhenItIsTransient(MimeTypes.ApplicationAtomXml);
         //}
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void ItIsAbleToDeserializeObjectIfItIsTransientInFullMetadataJson()
         {
             this.QueryObjectWhenItIsTransient(MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata);
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void ItIsAbleToDeserializeObjectIfItIsTransientInMinimalMetadataJson()
         {
             this.QueryObjectWhenItIsTransient(MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata);
@@ -101,19 +101,19 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             Assert.IsNull(entityDescriptor);
         }
 
-        // //--#comment#--[TestMethod] // github issuse: #896
+        // [TestMethod] // github issuse: #896
         public void ItIsAbleToDeserializeObjectsIfTheyAreTransientInAtom()
         {
             this.QueryObjectsWhenTheyAreTransient(MimeTypes.ApplicationAtomXml);
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void ItIsAbleToDeserializeObjectsIfTheyAreTransientInFullMetadataJson()
         {
             this.QueryObjectsWhenTheyAreTransient(MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata);
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void ItIsAbleToDeserializeObjectsIfTheyAreTransientInMinimalMetadataJson()
         {
             this.QueryObjectsWhenTheyAreTransient(MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata);
@@ -133,19 +133,19 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             Assert.IsNull(entityDescriptor);
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void ClientShouldUseTheReadLinkGotFromPayloadToLoadPropertyInFullJson()
         {
             this.LoadProperty(MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata);
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void ClientShouldUseTheReadLinkGotFromPayloadToLoadPropertyInMinimalJson()
         {
             this.LoadProperty(MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata);
         }
 
-        ////--#comment#--[TestMethod]
+        //[TestMethod]
         //public void ClientShouldUseTheReadLinkGotFromPayloadToLoadPropertyInAtom()
         //{
         //    this.LoadProperty(MimeTypes.ApplicationAtomXml);
@@ -177,19 +177,19 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                           , String.Format("Exception message is expected to contain 'No such host is known' or 'The remote name could not be resolved', but actually not. The actual message is '{0}'.", stringOfErrorMessage));
         }
 
-        ////--#comment#--[TestMethod]
+        //[TestMethod]
         //public void ShouldBeAbleToAddLinkBetweenEntitiesInAtom()
         //{
         //    this.AddDeleteLink(MimeTypes.ApplicationAtomXml);
         //}
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void ShouldBeAbleToAddLinkBetweenEntitiesInFullJson()
         {
             this.AddDeleteLink(MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata);
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
         public void ShouldBeAbleToAddLinkBetweenEntitiesInMinimalJson()
         {
             this.AddDeleteLink(MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata);

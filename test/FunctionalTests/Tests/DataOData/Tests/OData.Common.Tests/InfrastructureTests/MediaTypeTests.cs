@@ -110,7 +110,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.InfrastructureTests
                 });
         }
 
-        //--#comment#--[TestMethod, Variation(Description = "Verifies that we report expected errors for invalid media types.")]
+        [TestMethod, Variation(Description = "Verifies that we report expected errors for invalid media types.")]
         public void MediaTypeErrorTest()
         {
             var testCases = new[]

@@ -18,7 +18,7 @@ namespace AstoriaUnitTests.Tests
     using AstoriaUnitTests.Stubs.DataServiceProvider;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    //--#comment#--[TestClass]
+    [TestClass]
     public class NonNullablePropertiesTests
     {
         private static DSPUnitTestServiceDefinition service;
@@ -109,6 +109,7 @@ namespace AstoriaUnitTests.Tests
 
         //TODO: Add test cases for complex property ("/People(1)/Office")
         [TestCategory("Partition2"), TestMethod]
+        [Ignore("VSUpgrade19 - RegTest")]
         public void NonNullableTopLevelPropertiesTest()
         {
             // Create a Test case

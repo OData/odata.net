@@ -22,7 +22,8 @@ namespace Microsoft.Test.OData.Tests.Client.OpenTypesTests
         {
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void InsertRoundtripPrimitiveProperties()
         {
             this.RunOnAtomAndJsonFormats(
@@ -47,7 +48,8 @@ namespace Microsoft.Test.OData.Tests.Client.OpenTypesTests
                     });
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void InsertRoundtripPropertiesWithNullValues()
         {
             this.RunOnAtomAndJsonFormats(
@@ -73,7 +75,8 @@ namespace Microsoft.Test.OData.Tests.Client.OpenTypesTests
                     });
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void UpdateRoundTrip()
         {
             this.RunOnAtomAndJsonFormats(

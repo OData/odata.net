@@ -8,7 +8,7 @@ trigger:
   branches:
     include:
     - dev
-    - dev-pipeline
+   
 
 # No Pull request (PR) triggers for nightly
 pr: none
@@ -33,6 +33,7 @@ variables:
   skipComponentGovernanceDetection: true
   snExe: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\sn.exe'
   snExe64: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\sn.exe'
+  gacUtil: '$(Build.SourcesDirectory)\test\CommonAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll'
   ProductBinPath1: '$(Build.SourcesDirectory)\src\Microsoft.OData.Edm\bin\$(BuildConfiguration)'
   mainDll1: 'Microsoft.OData.Edm.dll'
   ProductBinPath2: '$(Build.SourcesDirectory)\src\Microsoft.OData.Core\bin\$(BuildConfiguration)'
@@ -58,6 +59,20 @@ steps:
 - task: UseDotNet@2
   inputs:
     version: '2.1.3'
+
+
+
+ 
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Write your PowerShell commands here.      
+      Write-Host "Hello World"
+      [System.Reflection.Assembly]::Load("System.EnterpriseServices, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
+      $publish = New-Object System.EnterpriseServices.Internal.Publish
+      $publish.GacInstall("$(gacUtil)")
+
 
 
 - task: DotNetCoreCLI@2
@@ -102,7 +117,24 @@ steps:
     command: 'build'
     arguments: '--configuration $(BuildConfiguration) --no-incremental'
     projects: |
-     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
+      $(Build.SourcesDirectory)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\Astoria\Microsoft.Test.OData.Services.Astoria.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\CSDSCReferences\Microsoft.Test.OData.Services.CSDSCReferences.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataCamelCaseService\Microsoft.Test.OData.Services.ODataCamelCaseService.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataDefaultService\Microsoft.Test.OData.Services.ODataDefaultService.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataModelRefService\Microsoft.Test.OData.Services.ODataModelRefService.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataOperationService\Microsoft.Test.OData.Services.ODataOperationService.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataPluggableFormatService\Microsoft.Test.OData.Services.ODataPluggableFormatService.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataSimplifiedService\Microsoft.Test.OData.Services.ODataSimplifiedService.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataTypeDefinitionService\Microsoft.Test.OData.Services.ODataTypeDefinitionService.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataWCFService\Microsoft.Test.OData.Services.ODataWCFService.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\TestServices\Microsoft.Test.OData.Services.TestServices.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataWCFLibrary\ODataSamples.Services.Core.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataTripPinService\ODataSamples.Services.TripPin.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ServiceWrapperApp\ServiceWrapperApp.csproj
+      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataEdmLib\EdmLibTests.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
+     
 
 
 - task: DotNetCoreCLI@2
@@ -133,8 +165,6 @@ steps:
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\RegressionUnitTests\Microsoft.Data.Web.RegressionUnitTests.csproj
                
   enabled: true
-
- 
 
 
 
@@ -258,7 +288,6 @@ steps:
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\ddbasics\Microsoft.Test.Data.Services.DDBasics.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataEdmLib\EdmLibTests.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\DesignT4UnitTests\Microsoft.OData.Service.Design.T4.UnitTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Common.Tests\Microsoft.Test.Taupo.OData.Common.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Query.Tests\Microsoft.Test.Taupo.OData.Query.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Reader.Tests\Microsoft.Test.Taupo.OData.Reader.Tests.csproj
@@ -267,6 +296,7 @@ steps:
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\NamedStreamTests\Microsoft.Data.NamedStream.UnitTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat.Tests\Microsoft.Test.OData.PluggableFormat.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests1\Microsoft.Data.ServerUnitTests1.UnitTests.csproj     
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests2\Microsoft.Data.ServerUnitTests2.UnitTests.csproj  
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\RegressionUnitTests\Microsoft.Data.Web.RegressionUnitTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\MetadataObjectModelTests\Microsoft.Data.MetadataObjectModel.UnitTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj

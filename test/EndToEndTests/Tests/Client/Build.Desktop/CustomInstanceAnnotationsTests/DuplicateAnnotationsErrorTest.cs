@@ -22,7 +22,8 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
         {
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void WriteDuplicateAnnotationOnFeedError()
         {
             this.Invoke(
@@ -32,7 +33,8 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
                 new DataDriven.Constraint[0]);
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void WriteDuplicateAnnotationOnEntryError()
         {
             this.Invoke(

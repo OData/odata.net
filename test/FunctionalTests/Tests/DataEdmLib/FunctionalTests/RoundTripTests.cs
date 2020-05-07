@@ -20,9 +20,9 @@ namespace EdmLibTests.FunctionalTests
 #endif
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    //--#comment#--[TestClass]
+    [TestClass]
 #if !SILVERLIGHT
-    //--#comment#--[UseReporter(typeof(LoggingReporter))]
+    [UseReporter(typeof(LoggingReporter))]
     [DeploymentItem("FunctionalTests")]
 #endif
     public class RoundTripTests : EdmLibTestCaseBase

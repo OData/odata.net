@@ -1385,7 +1385,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-           //--#comment#-- [TestCategory("Partition1"), TestMethod, Variation]
+            [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdateTargetTests()
             {
                 // Matrix of changes that can be made.

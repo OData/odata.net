@@ -32,7 +32,8 @@ namespace Microsoft.Test.OData.Tests.Client.PublicProviderTests
         }
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
-        //--#comment#--[TestMethod]
+        [TestMethod]
+        [Ignore("VSUpgrade19 - ContextHelper issue")]
         public void ValidReadEFEntity()
         {
             var context = CreateWrappedContext<AstoriaDefaultServiceDBEntities>().Context;
@@ -49,7 +50,9 @@ namespace Microsoft.Test.OData.Tests.Client.PublicProviderTests
             Assert.IsNotNull(context.EFPersonMetadatas.Expand("EFPerson").FirstOrDefault().EFPerson);
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
+        [Ignore("VSUpgrade19 - ContextHelper issue")]
+
         public void ValidReadReflectionEntity()
         {
             var context = CreateWrappedContext<AstoriaDefaultServiceDBEntities>().Context;
@@ -66,7 +69,8 @@ namespace Microsoft.Test.OData.Tests.Client.PublicProviderTests
             Assert.IsNotNull(context.PersonMetadata.Expand("Person").FirstOrDefault().Person);
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
+        [Ignore("VSUpgrade19 - ContextHelper issue")]
         public void ValidCUDEFEntity()
         {
             string desc = Guid.NewGuid().ToString();
@@ -92,7 +96,8 @@ namespace Microsoft.Test.OData.Tests.Client.PublicProviderTests
             Assert.AreEqual(0, context.EFCars.Where(c => c.Description == newdesc).Count());
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
+        [Ignore("VSUpgrade19 - ContextHelper issue")]
         public void ValidCUDReflectionEntity()
         {
             string desc = Guid.NewGuid().ToString();
@@ -124,7 +129,8 @@ namespace Microsoft.Test.OData.Tests.Client.PublicProviderTests
             Assert.AreEqual(0, context.Car.Where(c => c.Description == newdesc).Count());
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
+        [Ignore("VSUpgrade19 - ContextHelper issue")]
         public void ValidServiceOperationEFEntity()
         {
             var context = CreateWrappedContext<AstoriaDefaultServiceDBEntities>().Context;
@@ -142,7 +148,8 @@ namespace Microsoft.Test.OData.Tests.Client.PublicProviderTests
             Assert.IsTrue(persons.Any(p => p.PersonId == expectedPerson.PersonId));
         }
 
-        //--#comment#--[TestMethod]
+        [TestMethod]
+        [Ignore("VSUpgrade19 - ContextHelper issue")]
         public void ValidServiceOperationReflectionEntity()
         {
             var context = CreateWrappedContext<AstoriaDefaultServiceDBEntities>().Context;
@@ -161,7 +168,8 @@ namespace Microsoft.Test.OData.Tests.Client.PublicProviderTests
         }
 
         // Flaky test: OData.net GitHub #970
-        //--#comment#--[TestMethod]
+        [TestMethod]
+        [Ignore("VSUpgrade19 - ContextHelper issue")]
         public void ValidMetadata()
         {
             var message = new HttpWebRequestMessage(new Uri(ServiceUri + "$metadata"));
@@ -186,7 +194,8 @@ namespace Microsoft.Test.OData.Tests.Client.PublicProviderTests
         }
 
         // Flaky test: OData.net GitHub #970
-        //--#comment#--[TestMethod]
+        [TestMethod]
+        [Ignore("VSUpgrade19 - ContextHelper issue")]
         public void ValidServiceDocument()
         {
             var metadataMessage = new HttpWebRequestMessage(new Uri(ServiceUri + "$metadata"));
