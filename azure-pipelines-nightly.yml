@@ -7,26 +7,15 @@ trigger: none
 pr: none
 
 # Nightly using schedules
-
 schedules:
-  - cron: "0 0 * * Mon,Tue,Wed,Thu,Fri"
-    displayName: midnightly build
-    branches:
-     include:
-      - master
-
-# .NET Desktop
-
-# Build and run tests for .NET Desktop or Windows classic desktop solutions.
-# Add steps that publish symbols, save build artifacts, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
-
+- cron: "0 0 * * Mon,Tue,Wed,Thu,Fri"
+  displayName: midnightly build
+  branches:
+   include:
+    - master
 
 pool:
   vmImage: 'windows-latest'
-  # name: OData
-  # demands:
- 
 
 variables:
   buildPlatform: 'Any CPU'
@@ -46,12 +35,11 @@ variables:
   ProductBinPath5: '$(Build.SourcesDirectory)\src\CodeGen\bin\$(BuildConfiguration)'
   mainDll5: 'Microsoft.OData.Service.Design.T4.dll'
   ProductBinPath: $(Build.SourcesDirectory)\bin\$(BuildPlatform)\$(BuildConfiguration)\Product
-steps:
 
+steps:
 - task: NuGetToolInstaller@0
   inputs:
     versionSpec: '>=5.2.0'
-
 
 - task: UseDotNet@2
   inputs:
@@ -60,9 +48,6 @@ steps:
 - task: UseDotNet@2
   inputs:
     version: '2.1.3'
-
-
-
  
 - task: PowerShell@2
   inputs:
@@ -73,8 +58,6 @@ steps:
       [System.Reflection.Assembly]::Load("System.EnterpriseServices, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
       $publish = New-Object System.EnterpriseServices.Internal.Publish
       $publish.GacInstall("$(gacUtil)")
-
-
 
 - task: DotNetCoreCLI@2
   displayName: 'Build Product'  
@@ -95,8 +78,6 @@ steps:
   inputs:
     version: '3.1.x'
 
-
-
 - task: DotNetCoreCLI@2
   displayName: 'Build Unit Test'  
   inputs:
@@ -109,8 +90,6 @@ steps:
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj     
-
-
 
 - task: DotNetCoreCLI@2
   displayName: 'Build E2E Test'  
@@ -135,8 +114,6 @@ steps:
       $(Build.SourcesDirectory)\test\EndToEndTests\Services\ServiceWrapperApp\ServiceWrapperApp.csproj
       $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataEdmLib\EdmLibTests.csproj
       $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
-     
-
 
 - task: DotNetCoreCLI@2
   displayName: 'Build Regression Test'  
@@ -166,8 +143,6 @@ steps:
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\RegressionUnitTests\Microsoft.Data.Web.RegressionUnitTests.csproj
                
   enabled: true
-
-
 
 - task: Powershell@2
   displayName: 'Skip strong name validation'
@@ -202,7 +177,6 @@ steps:
       & "$(snExe64)" /Vr $(ProductBinPath3)\netstandard2.0\$(mainDll3)      
   enabled: true
 
-
 - task: BatchScript@1
   displayName: 'Run script - Test Startup'
   inputs:
@@ -210,7 +184,6 @@ steps:
     arguments: '$(Build.SourcesDirectory)'
     modifyEnvironment: true
     workingFolder: '$(Build.SourcesDirectory)\tools\Scripts'
-
 
 - task: AzurePowerShell@2
   displayName: 'Cleanup DB'
@@ -232,7 +205,6 @@ steps:
      popd
     preferredAzurePowerShellVersion: 5.1.1
 
-
 - task: DotNetCoreCLI@2
   displayName: 'Spatial Test'
   inputs:
@@ -240,7 +212,6 @@ steps:
     arguments: '--configuration $(BuildConfiguration) --no-build'
     projects: |      
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
-
 
 - task: DotNetCoreCLI@2
   displayName: 'EDM Test'
@@ -258,8 +229,6 @@ steps:
     projects: |      
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
 
-
-
 - task: DotNetCoreCLI@2
   displayName: 'Client Test'
   inputs:
@@ -267,8 +236,6 @@ steps:
     arguments: '--configuration $(BuildConfiguration) --no-build'
     projects: |      
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj
-
-
 
 - task: DotNetCoreCLI@2  
   displayName: 'Test - E2E Test Suite'
@@ -278,7 +245,6 @@ steps:
     projects: |      
      $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
       
-
 - task: DotNetCoreCLI@2
   timeoutInMinutes: 100
   displayName: 'Test - Regression Test Suite'
@@ -304,10 +270,6 @@ steps:
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ClientCSharpUnitTests\Microsoft.Data.WebClientCSharp.UnitTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests\Microsoft.Data.Web.UnitTests.csproj
   enabled: true
-  
-
-
-
 
 # CredScan
 - task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@2
@@ -315,8 +277,6 @@ steps:
   inputs:    
     scanFolder: '$(Build.SourcesDirectory)\src'
     debugMode: false
-
-
 
 - task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@2
   displayName: 'Run CredScan - Test'
@@ -396,7 +356,6 @@ steps:
  
 # CodeSign
 - task: EsrpCodeSigning@1
-
   displayName: 'ESRP CodeSign - OData'
   inputs:
     ConnectedServiceName: 'ESRP CodeSigning - OData'
@@ -492,11 +451,8 @@ steps:
          "toolVersion": "6.2.9304.0"
        }
      ]
-
     SessionTimeout: 20
     VerboseLogin: true
-
- 
 
 - task: MSBuild@1
   displayName: 'Get Nuget Package Metadata'
@@ -504,8 +460,6 @@ steps:
     solution: '$(Build.SourcesDirectory)\tools\CustomMSBuild\GetNugetPackageMetadata.proj'
     platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
-
-
 
 - task: NuGetCommand@2
   displayName: 'NuGet - pack Microsoft.Spatial.Nightly.Release'
@@ -521,8 +475,6 @@ steps:
     feedsToUse: config
     arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.OData.Edm\Build.NuGet\Microsoft.OData.Edm.Nightly.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\Nuget -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath1)\**;SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);NightlyBuildVersion=$(VersionNugetNightlyBuild);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols'
 
-
-
 - task: NuGetCommand@2
   displayName: 'NuGet - pack Microsoft.OData.Core.Nightly.Release'
   inputs:
@@ -530,16 +482,12 @@ steps:
     feedsToUse: config
     arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.OData.Core\Build.NuGet\Microsoft.OData.Core.Nightly.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\Nuget -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath2)\**;SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);NightlyBuildVersion=$(VersionNugetNightlyBuild);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols'
 
-
-
 - task: NuGetCommand@2
   displayName: 'NuGet - pack Microsoft.OData.Client.Nightly.Release'
   inputs:
     command: custom
     feedsToUse: config
     arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.OData.Client\Build.NuGet\Microsoft.OData.Client.Nightly.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\Nuget -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath4)\**;SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);NightlyBuildVersion=$(VersionNugetNightlyBuild);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols'
-
-
 
 - task: EsrpCodeSigning@1
   displayName: 'ESRP CodeSigning Nuget Packages'
@@ -572,7 +520,6 @@ steps:
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)\Nuget'
     ArtifactName: Nuget
-    
 
 - task: NuGetCommand@2
   displayName: 'NuGet push - Nightly packages to MyGet'
