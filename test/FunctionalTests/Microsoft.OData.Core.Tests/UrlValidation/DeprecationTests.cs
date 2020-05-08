@@ -1,0 +1,175 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+//---------------------------------------------------------------------
+// <copyright file="DeprecationTests.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//--------
+
+using System.Linq;
+using System.Xml;
+using Microsoft.OData;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.UriParser;
+using Microsoft.OData.UriParser.Validation;
+using Xunit;
+
+namespace UrlValidationTests
+{
+    public class DeprecationTests
+    {
+        private static IEdmModel model;
+
+        [Theory]
+        [InlineData(@"company", "name","state")]
+        [InlineData(@"company/employees", "employees")]
+        [InlineData(@"competitors", "competitors", "name", "state")]
+        [InlineData(@"company/address", "state")]
+        [InlineData(@"company/address/state", "state")]
+        [InlineData(@"company/address?$select=state", "state")]
+        [InlineData(@"company?$expand=employees", "employees")]
+        [InlineData(@"company?$select=name", "name")]
+        [InlineData(@"competitors?$filter=contains(name,'sprocket')", "competitors", "name","state","name")]
+        private static void HasDeprecated(String request, params string[] expectedErrors)
+        {
+            IEdmModel model = GetModel();
+            ODataUriParser parser = new ODataUriParser(model, new Uri(request, UriKind.Relative));
+            ODataUri uri = parser.ParseUri();
+            
+            IEnumerable<ODataUrlValidationError> errors;
+            ODataUrlValidationRuleSet rules = new ODataUrlValidationRuleSet(new ODataUrlValidationRule[] 
+            {
+                ODataUrlValidationRules.DeprecatedNavigationSourceRule,
+                ODataUrlValidationRules.DeprecatedPropertyRule, 
+                ODataUrlValidationRules.DeprecatedTypeRule 
+            });
+            uri.Validate(model, rules, out errors);
+            int errorCount = errors.Count();
+            Assert.Equal(expectedErrors.Count(), errorCount);
+            int iError = 0;
+            foreach(ODataUrlValidationError error in errors)
+            {
+                Assert.Equal("deprecated", errors.FirstOrDefault().ErrorCode);
+                object elementName;
+                Assert.True(error.AdditionalInfo.TryGetValue("ElementName", out elementName));
+                Assert.Equal(elementName as string, expectedErrors[iError++]);
+            }
+        }
+
+        [Theory]
+        [InlineData(@"company?$select=stockSymbol")]
+        [InlineData(@"company/address?$select=city")]
+        [InlineData(@"company/address/city")]
+        private static void NotDeprecated(String request)
+        {
+            IEdmModel model = GetModel();
+            ODataUriParser parser = new ODataUriParser(model, new Uri(request, UriKind.Relative));
+            ODataUri uri = parser.ParseUri();
+
+            IEnumerable<ODataUrlValidationError> errors;
+            ODataUrlValidationRuleSet rules = new ODataUrlValidationRuleSet(new ODataUrlValidationRule[] { ODataUrlValidationRules.DeprecatedPropertyRule, ODataUrlValidationRules.DeprecatedTypeRule });
+            uri.Validate(model, rules, out errors);
+            Assert.Empty(errors);
+        }
+
+        private static IEdmModel GetModel()
+        {
+            if (model == null)
+            {
+                // Attempt to load the CSDL into an EdmModel 
+                XmlReader reader = XmlReader.Create(new StringReader(JetsonsModel));
+                IEnumerable<EdmError> errors;
+                if (!CsdlReader.TryParse(reader, out model, out errors))
+                {
+                    throw new Exception("Unable to parse Model");
+                }
+            }
+
+            return model;
+        }
+
+        private static string JetsonsModel = @"
+<edmx:Edmx xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" Version=""4.0"">
+  <edmx:DataServices>
+    <Schema xmlns = ""http://docs.oasis-open.org/odata/ns/edm"" Namespace=""Jetsons.Models"">
+      <ComplexType Name = ""address"" >
+        <Property Name=""city"" Type=""Edm.String""/>
+        <Property Name = ""state"" Type=""Edm.String"">
+          <Annotation Term = ""Core.Revisions"" >
+            <Collection>
+              <Record>
+                <PropertyValue Property=""Version"" String=""2022-03-30""/>
+                <PropertyValue Property = ""Kind"" EnumMember=""RevisionKind/Deprecated""/>
+                <PropertyValue Property = ""Description"" String=""'state' is deprecated and will be retired on Jun 30, 2022. Please use 'region'.""/>
+              </Record>
+            </Collection>
+          </Annotation>
+        </Property>
+        <Property Name = ""zip"" Type=""Edm.String""/>
+      </ComplexType>
+      <EntityType Name = ""company"" >
+        <Key>
+          <PropertyRef Name=""stockSymbol""/>
+        </Key>
+        <Property Name = ""stockSymbol"" Type=""Edm.String"" Nullable=""false""/>
+        <Property Name = ""name_2"" Type=""Edm.String""/>
+        <Property Name = ""name"" Type=""Edm.String"">
+          <Annotation Term = ""Core.Revisions"" >
+            <Collection>
+              <Record>
+                <PropertyValue Property=""Date"" Date=""2022-03-30""/>
+                <PropertyValue Property = ""Kind"" EnumMember=""RevisionKind/Deprecated""/>
+                <PropertyValue Property = ""Description"" String=""'name' is deprecated and will be retired on Jun 30, 2022. Please use 'name2'.""/>
+              </Record>
+            </Collection>
+          </Annotation>
+        </Property>
+        <Property Name = ""incorporated"" Type=""Edm.DateTimeOffset"" Nullable=""false""/>
+        <Property Name = ""address"" Type=""Jetsons.Models.address""/>
+        <NavigationProperty Name = ""employees"" Type=""Collection(Jetsons.Models.employee)"" ContainsTarget=""true"">
+          <Annotation Term = ""Core.Revisions"" >
+            <Collection>
+              <Record>
+                <PropertyValue Property=""Version"" String=""2022-03-30""/>
+                <PropertyValue Property = ""Kind"" EnumMember=""RevisionKind/Deprecated""/>
+                <PropertyValue Property = ""Description"" String=""'employees' is deprecated and will be retired on Jun 30, 2022. Please use 'directs'.""/>
+              </Record>
+            </Collection>
+          </Annotation>
+        </NavigationProperty>
+        <NavigationProperty Name = ""directs"" Type=""Collection(Jetsons.Models.employee)"" ContainsTarget=""true""/>
+      </EntityType>
+      <EntityType Name = ""employee"" >
+        <Key>
+          <PropertyRef Name=""id""/>
+        </Key>
+        <Property Name = ""id"" Type=""Edm.Int32"" Nullable=""false""/>
+        <Property Name = ""firstName"" Type=""Edm.String""/>
+        <Property Name = ""lastName"" Type=""Edm.String""/>
+        <Property Name = ""title"" Type=""Edm.String""/>
+      </EntityType>
+      <Action Name = ""ResetDataSource"" />
+      <EntityContainer Name=""Container"">
+        <EntitySet Name = ""competitors"" EntityType=""Jetsons.Models.company"">
+          <Annotation Term = ""Core.Revisions"" >
+            <Collection>
+              <Record>
+                <PropertyValue Property=""Date"" Date=""2022-03-30""/>
+                <PropertyValue Property = ""Kind"" EnumMember=""RevisionKind/Deprecated""/>
+                <PropertyValue Property = ""Description"" String=""'competitors' is deprecated and will be retired on Jun 30, 2022.""/>
+              </Record>
+            </Collection>
+          </Annotation>
+        </EntitySet>
+        <Singleton Name = ""company"" Type=""Jetsons.Models.company""/>
+        <ActionImport Name = ""ResetDataSource"" Action=""Jetsons.Models.ResetDataSource""/>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>";
+    }
+}
+
