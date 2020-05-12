@@ -207,7 +207,7 @@ steps:
   displayName: 'Spatial Test'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --no-build'
+    arguments: '--configuration $(BuildConfiguration) --no-build  --collect "Code coverage"'
     projects: |      
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
 
