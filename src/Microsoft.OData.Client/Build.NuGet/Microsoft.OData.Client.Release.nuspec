@@ -24,6 +24,7 @@ OData .NET library is open source at http://github.com/OData/odata.net. Document
     </frameworkAssemblies>
   </metadata>
   <files>
+
     <file src="$ProductRoot$\Microsoft.OData.Client.dll" target="lib" />
     <file src="$ProductRoot$\Microsoft.OData.Client.xml" target="lib" />
     <file src="$ProductRoot$\Microsoft.OData.Client.pdb" target="lib" />
