@@ -79,6 +79,7 @@
     <Compile Include="Tests\Materialization\PrimitiveValueMaterializationPolicyTests.cs" />
     <Compile Include="Tests\Materialization\PrimitivePropertyConverterTests.cs" />
     <Compile Include="Tests\Materialization\TestEntityTracker.cs" />
+    <Compile Include="Tests\ODataDynamicPropertyTests.cs" />
     <Compile Include="Tests\T4\DelayQueryTests.cs" />
     <Compile Include="Tests\T4\ODataT4CamelCaseTests.cs" />
     <Compile Include="Tests\UtilUnitTests.cs" />

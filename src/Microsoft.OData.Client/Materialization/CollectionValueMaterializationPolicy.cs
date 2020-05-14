@@ -9,6 +9,7 @@ namespace Microsoft.OData.Client.Materialization
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Diagnostics;
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Metadata;
@@ -238,6 +239,41 @@ namespace Microsoft.OData.Client.Materialization
 #endif
             {
                 throw DSClient.Error.InvalidOperation(error(), ex);
+            }
+        }
+
+        /// <summary>
+        /// Tries to create a collection instance and apply the materialized collection values.
+        /// </summary>
+        /// <param name="collectionItemType">Type of the collection item.</param>
+        /// <param name="collectionProperty">Atom property containing materialized collection items.</param>
+        /// <param name="collectionInstance">The collection instance.</param>
+        /// <returns>true if successful</returns>
+        internal bool TryMaterializeODataCollectionValue(Type collectionItemType, ODataProperty collectionProperty, out object collectionInstance)
+        {
+            Debug.Assert(collectionItemType != null, "collectionItemType != null");
+            Debug.Assert(collectionProperty != null, "collectionProperty != null");
+            Debug.Assert(collectionProperty.Value != null, "Collection should have already been checked for nullness");
+
+            try
+            {
+                Type collectionICollectionType = typeof(Collection<>).MakeGenericType(new Type[] { collectionItemType });
+                collectionInstance = this.CreateCollectionPropertyInstance(collectionProperty, collectionICollectionType);
+
+                this.ApplyCollectionDataValues(
+                    collectionProperty,
+                    collectionInstance,
+                    collectionItemType,
+                    ClientTypeUtil.GetAddToCollectionDelegate(collectionICollectionType),
+                    false);
+
+                // We found an assignable type
+                return true;
+            }
+            catch (InvalidOperationException)
+            {
+                collectionInstance = null;
+                return false;
             }
         }
     }

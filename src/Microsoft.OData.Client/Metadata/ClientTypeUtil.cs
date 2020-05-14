@@ -279,6 +279,17 @@ namespace Microsoft.OData.Client.Metadata
         }
 
         /// <summary>
+        /// Is the type a Complex Type?
+        /// </summary>
+        /// <param name="t">Type to examine</param>
+        /// <param name="model">The client model.</param>
+        /// <returns>bool indicating whether or not complex type</returns>
+        internal static bool TypeIsComplex(Type t, ClientEdmModel model)
+        {
+            return model.GetOrCreateEdmType(t).TypeKind == EdmTypeKind.Complex;
+        }
+
+        /// <summary>
         /// Is the type an structured type?
         /// </summary>
         /// <param name="t">Type to examine</param>
@@ -685,6 +696,79 @@ namespace Microsoft.OData.Client.Metadata
             }
 
             return string.Join(",", memberValues);
+        }
+
+        /// <summary>
+        /// Returns true if the <paramref name="instance"/> is an instance of an open type in the <paramref name="model"/>.
+        /// </summary>
+        /// <param name="instance">The instance to examine</param>
+        /// <param name="model">The client model.</param>
+        /// <returns>Returns true if the <paramref name="instance"/> is an instance of an open type in the <paramref name="model"/></returns>
+        internal static bool IsInstanceOfOpenType(object instance, ClientEdmModel model)
+        {
+            Debug.Assert(instance != null, "instance !=null");
+            Debug.Assert(model != null, "model !=null");
+
+            Type clientType = instance.GetType();
+            ClientTypeAnnotation clientTypeAnnotation = model.GetClientTypeAnnotation(clientType);
+
+            Debug.Assert(clientTypeAnnotation != null, "clientTypeAnnotation != null");
+
+            return clientTypeAnnotation.EdmType.IsOpen();
+        }
+
+        /// <summary>
+        /// Returns true if the <paramref name="instance"/> contains a non-null dictionary property of string and object
+        /// The dictionary should also not be decorated with IgnoreClientPropertyAttribute
+        /// </summary>
+        /// <param name="instance">Object with expected container property</param>
+        /// <param name="containerProperty">Reference to the container property</param>
+        /// <returns>true if expected container property is found</returns>
+        internal static bool TryGetContainerProperty(object instance, out IDictionary<string, object> containerProperty)
+        {
+            Debug.Assert(instance != null, "instance != null");
+
+            containerProperty = default(IDictionary<string, object>);
+
+            PropertyInfo propertyInfo = instance.GetType().GetPublicProperties(true /* instanceOnly */).Where(p =>
+                                p.GetCustomAttributes(typeof(ContainerPropertyAttribute), true).Any() &&
+                                typeof(IDictionary<string, object>).IsAssignableFrom(p.PropertyType)).FirstOrDefault();
+
+            if (propertyInfo == null)
+            {
+                return false;
+            }
+
+            containerProperty = (IDictionary<string, object>)propertyInfo.GetValue(instance);
+
+            // Is property initialized?
+            if (containerProperty == null)
+            {
+                Type propertyType = propertyInfo.PropertyType;
+                
+                // Handle Dictionary<,> , SortedDictionary<,> , ConcurrentDictionary<,> , etc - must also have parameterless constructor                
+                if (!propertyType.IsInterface() && !propertyType.IsAbstract() && propertyType.GetInstanceConstructor(true, new Type[0]) != null)
+                {
+                    containerProperty = (IDictionary<string, object>)Util.ActivatorCreateInstance(propertyType);
+                }
+                else if (propertyType.Equals(typeof(IDictionary<string, object>)))
+                {
+                    // Default to Dictionary<,> for IDictionary<,> property
+                    Type dictionaryType = typeof(Dictionary<,>).MakeGenericType(new Type[] { typeof(string), typeof(object) });
+                    containerProperty = (IDictionary<string, object>)Util.ActivatorCreateInstance(dictionaryType);
+                }
+                else
+                { 
+                    // Not easy to figure out the implementing type
+                    return false;
+                }
+
+                propertyInfo.SetValue(instance, containerProperty);
+
+                return true;
+            }
+
+            return true;
         }
 
         /// <summary>

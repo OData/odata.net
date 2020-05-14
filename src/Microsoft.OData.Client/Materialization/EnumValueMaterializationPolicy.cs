@@ -117,5 +117,22 @@ namespace Microsoft.OData.Client.Materialization
                 materializedValue = Enum.Parse(enumClrType, enumValueStr, false);
             }
         }
+
+        internal static bool TryMaterializeODataEnumValue(Type type, ODataEnumValue enumValue, out object materializedEnumValue)
+        {
+            Debug.Assert(type != null, "type != null");
+            Debug.Assert(enumValue != null, "enumValue != null");
+
+            try
+            {
+                materializedEnumValue = MaterializeODataEnumValue(type, enumValue);
+                return true;
+            }
+            catch (InvalidOperationException)
+            {
+                materializedEnumValue = null;
+                return false;
+            }
+        }
     }
 }

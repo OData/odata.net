@@ -275,5 +275,141 @@ namespace Microsoft.OData.Client.Materialization
                 }
             }
         }
+
+        internal Type ResolveClientTypeForDynamicProperty(string serverTypeName, object instance)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(serverTypeName), "!string.IsNullOrEmpty(serverTypeName)");
+            Debug.Assert(instance != null, "instance != null");
+
+            Type clientType;
+
+            // 1. Try to ride on user hook for resolving name into type
+            clientType = this.MaterializerContext.Context.ResolveTypeFromName(serverTypeName);
+            if (clientType != null)
+            {
+                return clientType;
+            }
+
+            // Assembly where client types are expected to be
+            Assembly assembly = instance.GetType().GetAssembly();
+
+            // 2. Try to find type with qualified name matching that of the server type
+            // Code generators (e.g. OData Connected Service extension) emit client types with the same qualified name as the server type
+            clientType = assembly.GetType(serverTypeName);
+            if (clientType != null)
+            {
+                return clientType;
+            }
+            
+            // 3. Try to find type with a matching name from the same namespace as the containing type
+            string containingTypeNamespace = instance.GetType().Namespace;
+            int lastIndexOf = serverTypeName.LastIndexOf('.');
+            if (lastIndexOf > 0)
+            {
+                string unqualifiedTypeName = serverTypeName.Substring(serverTypeName.LastIndexOf('.') + 1);
+                clientType = assembly.GetType(string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}.{1}", containingTypeNamespace, unqualifiedTypeName));
+                if (clientType != null)
+                {
+                    return clientType;
+                }
+            }
+
+            return clientType;
+        }
+
+
+
+        /// <summary>
+        /// Adds a data value to the dynamic properties dictionary (where it exists) on the specified <paramref name="instance"/>
+        /// </summary>
+        /// <param name="property">Property containing unmaterialzed value to apply</param>
+        /// <param name="instance">Instance that may optionally contain the dynamic properties dictionary</param>
+        internal void MaterializeDynamicProperty(ODataProperty property, object instance)
+        {
+            Debug.Assert(property != null, "property != null");
+            Debug.Assert(instance != null, "instance != null");
+
+            IDictionary<string, object> containerProperty;
+            // Stop if owning type is not an open type
+            // Or container property is not found
+            // Or key with matching name already exists in the dictionary
+            if (!ClientTypeUtil.IsInstanceOfOpenType(instance, this.MaterializerContext.Model)
+                || !ClientTypeUtil.TryGetContainerProperty(instance, out containerProperty) 
+                || containerProperty.ContainsKey(property.Name))
+            {
+                return;
+            }
+
+            object value = property.Value;
+
+            // Handles properties of known types returned with type annotations
+            if (!(value is ODataValue) && PrimitiveType.IsKnownType(value.GetType()))
+            {
+                containerProperty.Add(property.Name, value);
+                return;
+            }
+
+            // Handle untyped value
+            ODataUntypedValue untypedVal = value as ODataUntypedValue;
+            if (untypedVal != null)
+            {
+                value = CommonUtil.ParseJsonToPrimitiveValue(untypedVal.RawValue);
+                containerProperty.Add(property.Name, value);
+                return;
+            }
+
+            // Handle enum value
+            ODataEnumValue enumVal = value as ODataEnumValue;
+            if (enumVal != null)
+            {
+                Type clientType = ResolveClientTypeForDynamicProperty(enumVal.TypeName, instance);
+                // Unable to resolve type for dynamic property
+                if (clientType == null)
+                {
+                    return;
+                }
+
+                object materializedEnumValue;
+                if (EnumValueMaterializationPolicy.TryMaterializeODataEnumValue(clientType, enumVal, out materializedEnumValue))
+                {
+                    containerProperty.Add(property.Name, materializedEnumValue);
+                }
+
+                return;
+            }
+
+            // Handle collection
+            ODataCollectionValue collectionVal = value as ODataCollectionValue;
+            if (collectionVal != null)
+            {
+                string collectionItemTypeName = CommonUtil.GetCollectionItemTypeName(collectionVal.TypeName, false);
+                // Highly unlikely, but the method return null if the typeName argument does not meet certain expectations
+                if (collectionItemTypeName == null)
+                {
+                    return;
+                }
+
+                Type collectionItemType;
+                // ToNamedType will return true for primitive types
+                if (!ClientConvert.ToNamedType(collectionItemTypeName, out collectionItemType))
+                {
+                    // Non-primitive collection
+                    collectionItemType = ResolveClientTypeForDynamicProperty(collectionItemTypeName, instance);
+                }
+
+                if (collectionItemType == null)
+                {
+                    return;
+                }
+
+                object collectionInstance;
+                if (this.CollectionValueMaterializationPolicy.TryMaterializeODataCollectionValue(collectionItemType, property, out collectionInstance))
+                {
+                    containerProperty.Add(property.Name, collectionInstance);
+                }
+
+                return;
+            }
+        }
     }
 }

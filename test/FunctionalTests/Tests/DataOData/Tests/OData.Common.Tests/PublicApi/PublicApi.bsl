@@ -8042,6 +8042,13 @@ public sealed class Microsoft.OData.Client.ChangeOperationResponse : Microsoft.O
 	Microsoft.OData.Client.Descriptor Descriptor  { public get; }
 }
 
+[
+AttributeUsageAttribute(),
+]
+public sealed class Microsoft.OData.Client.ContainerPropertyAttribute : System.Attribute, _Attribute {
+	public ContainerPropertyAttribute ()
+}
+
 public sealed class Microsoft.OData.Client.DataServiceActionQuery`1 {
 	public DataServiceActionQuery`1 (Microsoft.OData.Client.DataServiceContext context, string requestUriString, Microsoft.OData.Client.BodyOperationParameter[] parameters)
 

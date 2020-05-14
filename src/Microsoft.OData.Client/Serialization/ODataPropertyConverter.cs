@@ -66,7 +66,56 @@ namespace Microsoft.OData.Client
                 }
             }
 
+            // Process non-structured dynamic properties stored in the container property
+            if (ClientTypeUtil.IsInstanceOfOpenType(resource, this.requestInfo.Model))
+            {
+                PopulateDynamicProperties(resource, serverTypeName, odataProperties);
+            }
+
             return odataProperties;
+        }
+
+        /// <summary>
+        /// Populates list of odata properties with non-structured dynamic properties in the container property
+        /// </summary>
+        /// <param name="resource">Instance of the resource which is getting serialized.</param>
+        /// <param name="serverTypeName">The server type name of the entity whose properties are being populated.</param>
+        /// <param name="odataProperties">List of ODataProperty</param>
+        private void PopulateDynamicProperties(object resource, string serverTypeName, List<ODataProperty> odataProperties)
+        {
+            Debug.Assert(resource != null, "resource !=null");
+            Debug.Assert(odataProperties != null, "odataProperties != null");
+
+            IDictionary<string, object> containerProperty;
+            if (ClientTypeUtil.TryGetContainerProperty(resource, out containerProperty))
+            {
+                ClientEdmModel model = this.requestInfo.Model;
+
+                foreach (KeyValuePair<string, object> kvPair in containerProperty)
+                {
+                    string dynamicPropertyName = kvPair.Key;
+                    object dynamicPropertyValue = kvPair.Value;
+                    Type dynamicPropertyType = dynamicPropertyValue.GetType();
+                    Type dynamicPropertyItemType = !(dynamicPropertyValue is ICollection) ? dynamicPropertyType : dynamicPropertyType.GetGenericArguments().Single();
+
+                    // Do not add any property if a declared property with a matching name exists on the type
+                    // Handle only non-structured dynamic properties
+                    if (!odataProperties.Any(el => el.Name.Equals(dynamicPropertyName, StringComparison.Ordinal))
+                        && !ClientTypeUtil.TypeIsStructured(dynamicPropertyItemType, model))
+                    {
+                        ODataValue odataValue;
+                        if (this.TryConvertDynamicPropertyValue(dynamicPropertyType, dynamicPropertyName, dynamicPropertyValue, serverTypeName, out odataValue))
+                        {
+                            odataProperties.Add(
+                                new ODataProperty
+                                {
+                                    Name = dynamicPropertyName,
+                                    Value = odataValue
+                                });
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -159,7 +208,58 @@ namespace Microsoft.OData.Client
                 }
             }
 
+            // Process complex dynamic properties stored in the container property
+            if (ClientTypeUtil.IsInstanceOfOpenType(resource, this.requestInfo.Model))
+            {
+                PopulateNestedComplexDynamicProperties(resource, serverTypeName, visitedComplexTypeObjects, odataNestedResourceInfoWrappers);
+            }
+
             return odataNestedResourceInfoWrappers;
+        }
+
+        /// <summary>
+        /// Populates list of odata properties with complex dynamic properties in the container property
+        /// </summary>
+        /// <param name="resource">Instance of the resource which is getting serialized.</param>
+        /// <param name="serverTypeName">The server type name of the entity whose properties are being populated.</param>
+        /// <param name="odataNestedResourceInfoWrappers">List of ODataNestedResourceInfoWrapper</param>
+        private void PopulateNestedComplexDynamicProperties(object resource, string serverTypeName, HashSet<object> visitedComplexTypeObjects, List<ODataNestedResourceInfoWrapper> odataNestedResourceInfoWrappers)
+        {
+            Debug.Assert(resource != null, "resource !=null");
+            Debug.Assert(odataNestedResourceInfoWrappers != null, "odataNestedResourceInfoWrappers != null");
+
+            IDictionary<string, object> containerProperty;
+            if (ClientTypeUtil.TryGetContainerProperty(resource, out containerProperty))
+            {
+                ClientEdmModel model = this.requestInfo.Model;
+
+                foreach (KeyValuePair<string, object> kvPair in containerProperty)
+                {
+                    string dynamicPropertyName = kvPair.Key;
+                    object dynamicPropertyValue = kvPair.Value;
+                    Type dynamicPropertyType = dynamicPropertyValue.GetType();
+                    bool isCollection = dynamicPropertyValue is ICollection;
+                    Type dynamicPropertyItemType = !isCollection ? dynamicPropertyType : dynamicPropertyType.GetGenericArguments().Single();
+
+                    // Do not add any property if a declared property with a matching name exists on the type
+                    // Handle only complex types
+                    if (!odataNestedResourceInfoWrappers.Any(el => el.NestedResourceInfo.Name.Equals(dynamicPropertyName, StringComparison.Ordinal))
+                        && ClientTypeUtil.TypeIsComplex(dynamicPropertyItemType, model))
+                    {
+                        ODataItemWrapper odataItem = this.ConvertDynamicPropertyToResourceOrResourceSet(dynamicPropertyName, dynamicPropertyValue, serverTypeName, visitedComplexTypeObjects);
+
+                        odataNestedResourceInfoWrappers.Add(new ODataNestedResourceInfoWrapper
+                        {
+                            NestedResourceInfo = new ODataNestedResourceInfo()
+                            {
+                                Name = dynamicPropertyName,
+                                IsCollection = isCollection
+                            },
+                            NestedResourceOrResourceSet = odataItem
+                        });
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -410,6 +510,10 @@ namespace Microsoft.OData.Client
                     });
             }
 
+            // TypeName for complex types need to be the client type name since it will be looked up in the client model
+            // Set the type name to use for client type lookups and validation
+            resourceSet.TypeName = GetCollectionName(collectionItemType.FullName);  // Mandatory for a dynamic property
+
             // Ideally, we should not set type annotation on collection value.
             // To keep backward compatibility, we'll keep it in request body, but do not include it in url.
             if (setTypeAnnotation)
@@ -511,6 +615,25 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Creates and returns an <see cref="ODataValue"/> for the given primitive value.
+        /// </summary>
+        /// <param name="propertyType">The type of the property being converted.</param>
+        /// <param name="propertyValue">The property value to convert..</param>
+        /// <returns>An ODataValue representing the given value.</returns>
+        public static ODataValue CreateODataPrimitiveValue(Type propertyType, object propertyValue)
+        {
+            if (propertyValue == null)
+            {
+                return new ODataNullValue();
+            }
+
+            object convertedValue = ConvertPrimitiveValueToRecognizedODataType(propertyValue, propertyType);
+
+            ODataPrimitiveValue odataPrimitiveValue = new ODataPrimitiveValue(convertedValue);
+            return odataPrimitiveValue;
+        }
+
+        /// <summary>
         /// Creates a list of ODataProperty instances for the given set of properties.
         /// </summary>
         /// <param name="resource">Instance of the resource which is getting serialized.</param>
@@ -535,6 +658,12 @@ namespace Microsoft.OData.Client
                         Value = odataValue
                     });
                 }
+            }
+
+            // Process non-structured dynamic properties stored in the container property
+            if (ClientTypeUtil.IsInstanceOfOpenType(resource, this.requestInfo.Model))
+            {
+                PopulateDynamicProperties(resource, serverTypeName, odataProperties);
             }
 
             return odataProperties;
@@ -585,6 +714,66 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Tries to convert the given value into an instance of <see cref="ODataValue"/>.
+        /// </summary>
+        /// <param name="property">The type of the entity whose properties are being populated.</param>
+        /// <param name="propertyValue">The property value to convert.</param>
+        /// <param name="serverTypeName">The server type name of the entity whose properties are being populated.</param>
+        /// <param name="odataValue">The odata value if one was created.</param>
+        /// <returns>true if the value was converted.</returns>
+        private bool TryConvertDynamicPropertyValue(Type clientType, string dynamicPropertyName, object value, string serverTypeName, out ODataValue odataValue)
+        {
+            bool shouldWriteClientType = this.requestInfo.TypeResolver.ShouldWriteClientTypeForOpenServerProperty(dynamicPropertyName, serverTypeName);
+
+            if (PrimitiveType.IsKnownType(clientType))
+            {
+                odataValue = CreateODataPrimitiveValue(clientType, value);
+                
+                PrimitiveType primitiveType;
+                PrimitiveType.TryGetPrimitiveType(value.GetType(), out primitiveType);
+                
+                if (shouldWriteClientType && !JsonSharedUtils.ValueTypeMatchesJsonType((ODataPrimitiveValue)odataValue, primitiveType.PrimitiveKind))
+                {
+                    odataValue.TypeAnnotation = new ODataTypeAnnotation(primitiveType.EdmTypeName);
+                }
+                
+                return true;
+            }
+
+            if (clientType.IsEnum())
+            {
+                string enumValue = null;
+                if (value != null)
+                {
+                    enumValue = ClientTypeUtil.GetEnumValuesString(value.ToString(), clientType);
+                }
+
+                string typeNameInMetadata = this.requestInfo.ResolveNameFromType(clientType);
+                string typeName = typeNameInMetadata;
+                // If type name not found in metadata but we're required to write client type, assume client and server typeName match
+                if (typeNameInMetadata == null && shouldWriteClientType)
+                {
+                    typeName = clientType.FullName;
+                }
+                ODataEnumValue odataEnumValue = new ODataEnumValue(enumValue, typeName);
+                odataEnumValue.TypeAnnotation = new ODataTypeAnnotation(typeName);
+                odataValue = odataEnumValue;
+                return true;
+            }
+
+            // Primitive or enum collection
+            if (value is ICollection)
+            {
+                Type dynamicPropertyItemType = clientType.GetGenericArguments().Single();
+                odataValue = this.CreateODataCollection(dynamicPropertyItemType, dynamicPropertyName, value, null, true);
+                return true;
+            }
+
+            odataValue = new ODataNullValue();
+            return false;
+        }
+
+        /// <summary>
         /// Tries to convert the given value into an instance of <see cref="ODataItemWrapper"/>.
         /// </summary>
         /// <param name="property">The property being converted.</param>
@@ -612,6 +801,31 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Tries to convert the given value into an instance of <see cref="ODataItemWrapper"/>.
+        /// </summary>
+        /// <param name="propertyName">Name of the dynamic property.</param>
+        /// <param name="propertyValue">The property value to convert.</param>
+        /// <param name="serverTypeName">The server type name of the entity whose properties are being populated.</param>
+        /// <param name="visitedComplexTypeObjects">Set of instances of complex types encountered in the hierarchy. Used to detect cycles.</param>
+        /// <param name="odataItem">The odata resource or resource set if one was created.</param>
+        /// <returns>Whether or not the value was converted.</returns>
+        private ODataItemWrapper ConvertDynamicPropertyToResourceOrResourceSet(string propertyName, object propertyValue, string serverTypeName, HashSet<object> visitedComplexTypeObjects)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
+            Debug.Assert(propertyValue != null, "propertyValue != null");
+            Debug.Assert(serverTypeName != null, "serverTypeName != null");
+
+            if (propertyValue is ICollection)
+            {
+                return this.CreateODataComplexCollectionDynamicPropertyResourceSet(propertyName, propertyValue, serverTypeName, visitedComplexTypeObjects);
+            }
+            else
+            {
+                return this.CreateODataComplexDynamicPropertyResouce(propertyName, propertyValue, visitedComplexTypeObjects);
+            }
+        }
+
+        /// <summary>
         /// Returns the resource of the complex property.
         /// </summary>
         /// <param name="property">Property which contains name, type, is key (if false and null value, will throw).</param>
@@ -628,6 +842,24 @@ namespace Microsoft.OData.Client
             }
 
             return this.CreateODataResourceWrapperForComplex(propertyType, propertyValue, property.PropertyName, visitedComplexTypeObjects);
+        }
+
+        /// <summary>
+        /// Returns the resource of the complex dynamic property.
+        /// </summary>
+        /// <param name="propertyName">Name of the dynamic property.</param>
+        /// <param name="propertyValue">Property value</param>
+        /// <param name="visitedComplexTypeObjects">List of instances of complex types encountered in the hierarchy. Used to detect cycles.</param>
+        /// <returns>An instance of ODataResourceWrapper containing the resource of the properties of the given complex type.</returns>
+        private ODataResourceWrapper CreateODataComplexDynamicPropertyResouce(string propertyName, object propertyValue, HashSet<object> visitedComplexTypeObjects)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
+            Debug.Assert(propertyValue != null, "propertyValue != null");
+            Debug.Assert(!(propertyValue is ICollection), "!(propertyValue is ICollection)");
+
+            Type propertyType = propertyValue.GetType();
+
+            return this.CreateODataResourceWrapperForComplex(propertyType, propertyValue, propertyName, visitedComplexTypeObjects);
         }
 
         /// <summary>
@@ -662,6 +894,26 @@ namespace Microsoft.OData.Client
             Debug.Assert(property.PropertyName != null, "property.PropertyName != null");
             bool isDynamic = this.requestInfo.TypeResolver.ShouldWriteClientTypeForOpenServerProperty(property.EdmProperty, serverTypeName);
             return this.CreateODataResourceSetWrapperForComplexCollection(property.PrimitiveOrComplexCollectionItemType, property.PropertyName, propertyValue, visitedComplexTypeObjects, isDynamic);
+        }
+
+        /// <summary>
+        /// Returns the resource set of the collection dynamic property.
+        /// </summary>
+        /// <param name="propertyName">Name of the collection dynamic property.</param>
+        /// <param name="propertyValue">Collection instance.</param>
+        /// <param name="serverTypeName">The server type name of the entity whose properties are being populated.</param>
+        /// <param name="visitedComplexTypeObjects">List of instances of complex types encountered in the hierarchy. Used to detect cycles.</param>
+        /// <returns>An instance of ODataResourceSetWrapper representing the value of the property.</returns>
+        private ODataResourceSetWrapper CreateODataComplexCollectionDynamicPropertyResourceSet(string propertyName, object propertyValue, string serverTypeName, HashSet<object> visitedComplexTypeObjects)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
+            Debug.Assert(propertyValue != null, "propertyValue != null");
+            Debug.Assert(propertyValue is ICollection, "propertyValue must be a collection");
+
+            Type collectionItemType = propertyValue.GetType().GetGenericArguments().Single();
+            bool isDynamicProperty = this.requestInfo.TypeResolver.ShouldWriteClientTypeForOpenServerProperty(propertyName, serverTypeName);
+
+            return this.CreateODataResourceSetWrapperForComplexCollection(collectionItemType, propertyName, propertyValue, visitedComplexTypeObjects, isDynamicProperty);
         }
 
         /// <summary>
