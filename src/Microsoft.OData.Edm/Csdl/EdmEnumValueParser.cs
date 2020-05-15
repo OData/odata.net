@@ -93,6 +93,97 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
+        /// Try parse enum members specified in a string value from declared schema types.
+        /// </summary>
+        /// <param name="value">Enum value string</param>
+        /// <param name="enumType">The enum type.</param>
+        /// <param name="location">The location of the enum member in csdl</param>
+        /// <param name="result">Parsed enum members</param>
+        /// <returns>True for successfully parsed, false for failed</returns>
+        internal static bool TryParseJsonEnumMember(string value, IEdmEnumType enumType, EdmLocation location, out IEnumerable<IEdmEnumMember> result)
+        {
+            result = null;
+            bool isUnresolved = enumType is UnresolvedEnumType;
+            if (isUnresolved)
+            {
+                result = new List<IEdmEnumMember>
+                {
+                    new UnresolvedEnumMember(value, enumType, location)
+                };
+
+                return true;
+            }
+
+            List<IEdmEnumMember> enumMembers = new List<IEdmEnumMember>();
+
+            // "@self.HasPattern": "1"
+            // or with numeric value 1 + 16
+            if (long.TryParse(value, out long longValue))
+            {
+                // In numeric value
+                IEdmEnumMember member = enumType.Members.SingleOrDefault(m => m.Value.Value == longValue);
+                if (member == null)
+                {
+                    if (enumType.IsFlags)
+                    {
+                        long memberValue = 1;
+                        ulong ulongValue = (ulong)longValue;
+                        ulong mask = 1;
+                        while (ulongValue != 0)
+                        {
+                            ulong add = ulongValue & mask;
+                            if (add != 0)
+                            {
+                                member = enumType.Members.SingleOrDefault(m => m.Value.Value == memberValue);
+                                if (member == null)
+                                {
+                                    return false;
+                                }
+
+                                enumMembers.Add(member);
+                            }
+
+                            ulongValue >>= 1;
+                            memberValue <<= 1;
+                        }
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    enumMembers.Add(member);
+                }
+            }
+            else
+            {
+                // in symbolic value
+                // "@self.HasPattern": "Red,Striped"
+                var enumValues = value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                if (enumValues.Count() > 1 && (!enumType.IsFlags || !EdmEnumValueParser.IsEnumIntegerType(enumType)))
+                {
+                    return false;
+                }
+
+                foreach (var enumValue in enumValues)
+                {
+                    IEdmEnumMember member = enumType.Members.SingleOrDefault(m => m.Name == enumValue.Trim());
+                    if (member == null)
+                    {
+                        return false;
+                    }
+
+                    enumMembers.Add(member);
+                }
+            }
+
+            result = enumMembers;
+            return true;
+        }
+
+        /// <summary>
         /// Determine if the underlying type of the enum type is integer type (byte, sbyte, int16, int32, int64).
         /// </summary>
         /// <param name="enumType">The enum type.</param>
