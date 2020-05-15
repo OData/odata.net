@@ -243,6 +243,17 @@ namespace Microsoft.OData.Edm
         internal const string CsdlSemantics_EnumMemberMustHaveValue = "CsdlSemantics_EnumMemberMustHaveValue";
         internal const string CsdlSemantics_ImpossibleAnnotationsTarget = "CsdlSemantics_ImpossibleAnnotationsTarget";
         internal const string CsdlSemantics_DuplicateAlias = "CsdlSemantics_DuplicateAlias";
+        internal const string CsdlJsonParser_UnexpectedJsonValueKind = "CsdlJsonParser_UnexpectedJsonValueKind";
+        internal const string CsdlJsonParser_MissingMemberInObject = "CsdlJsonParser_MissingMemberInObject";
+        internal const string CsdlJsonParser_UnexpectedJsonMember = "CsdlJsonParser_UnexpectedJsonMember";
+        internal const string CsdlJsonParser_CannotReadValueAsType = "CsdlJsonParser_CannotReadValueAsType";
+        internal const string CsdlJsonParser_MissingKindMember = "CsdlJsonParser_MissingKindMember";
+        internal const string CsdlJsonParser_MissingRequiredPropertyInObject = "CsdlJsonParser_MissingRequiredPropertyInObject";
+        internal const string CsdlJsonParser_UnknownJsonElementValueKind = "CsdlJsonParser_UnknownJsonElementValueKind";
+        internal const string CsdlJsonParser_InvalidJsonNumberType = "CsdlJsonParser_InvalidJsonNumberType";
+        internal const string CsdlJsonParser_UnsupportedJsonMember = "CsdlJsonParser_UnsupportedJsonMember";
+        internal const string CsdlJsonParser_InvalidCsdlVersion = "CsdlJsonParser_InvalidCsdlVersion";
+        internal const string CsdlJsonParser_SchemaCannotHaveMoreThanOneEntityContainer = "CsdlJsonParser_SchemaCannotHaveMoreThanOneEntityContainer";
         internal const string EdmxParser_EdmxVersionMismatch = "EdmxParser_EdmxVersionMismatch";
         internal const string EdmxParser_BodyElement = "EdmxParser_BodyElement";
         internal const string EdmxParser_InvalidReferenceIncorrectNumberOfIncludes = "EdmxParser_InvalidReferenceIncorrectNumberOfIncludes";
