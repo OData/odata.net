@@ -60,7 +60,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             NonResourceRangeVariable rangeVariable = new NonResourceRangeVariable("stuff", EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true), null);
             NonResourceRangeVariableReferenceNode nonentityRangeVariableReferenceNode = new NonResourceRangeVariableReferenceNode("stuff", rangeVariable);
-            Assert.Equal(nonentityRangeVariableReferenceNode.InternalKind, InternalQueryNodeKind.NonResourceRangeVariableReference);
+            Assert.Equal(InternalQueryNodeKind.NonResourceRangeVariableReference, nonentityRangeVariableReferenceNode.InternalKind);
         }
     }
 }

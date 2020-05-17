@@ -497,7 +497,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("Fully.Qualified.Namespace.Address", convertNode.TypeReference.FullName());
 
             var constNode = Assert.IsType<ConstantNode>(convertNode.Source);
-            Assert.Equal(constNode.Value, "{\"@odata.type\":\"Fully.Qualified.Namespace.Address\",\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"}");
+            Assert.Equal("{\"@odata.type\":\"Fully.Qualified.Namespace.Address\",\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"}", constNode.Value);
         }
 
         [Fact]
@@ -511,7 +511,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("Fully.Qualified.Namespace.Address", convertNode.TypeReference.FullName());
 
             var constNode = Assert.IsType<ConstantNode>(convertNode.Source);
-            Assert.Equal(constNode.Value, "{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"}");
+            Assert.Equal("{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"}", constNode.Value);
         }
         
         [Fact]
@@ -523,7 +523,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var constNode = Assert.IsType<ConstantNode>(parameter.Value);
 
             var collectionValue = Assert.IsType<ODataCollectionValue>(constNode.Value);
-            Assert.Equal(constNode.LiteralText, "[\"Barky\",\"Junior\"]");
+            Assert.Equal("[\"Barky\",\"Junior\"]", constNode.LiteralText);
             Assert.Contains("Barky", collectionValue.Items);
             Assert.Contains("Junior", collectionValue.Items);
         }
@@ -538,7 +538,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var segmentParameter = Assert.IsType<OperationSegmentParameter>(parameter);
             var innerParameterNode = Assert.IsType<ConvertNode>(segmentParameter.Value);
             var constNode = Assert.IsType<ConstantNode>(innerParameterNode.Source);
-            Assert.Equal(constNode.Value, "[{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"},{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}]");
+            Assert.Equal("[{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"},{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}]", constNode.Value);
             Assert.Equal("Collection(Fully.Qualified.Namespace.Address)", innerParameterNode.TypeReference.FullName());
         }
 
@@ -616,7 +616,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var model = ModelBuildingHelpers.GetTestModelForNavigationPropertyBinding();
             var path = new ODataUriParser(model, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/Vegetables(1)/GenesModified")).ParsePath();
-            Assert.Equal(path.LastSegment.Identifier, "GenesModified");
+            Assert.Equal("GenesModified", path.LastSegment.Identifier);
         }
 
         [Fact]
@@ -632,7 +632,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var model = ModelBuildingHelpers.GetTestModelForNavigationPropertyBinding();
             var path = new ODataUriParser(model, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/Vegetables(1)/DefectiveGene")).ParsePath();
-            Assert.Equal(path.LastSegment.Identifier, "DefectiveGene");
+            Assert.Equal("DefectiveGene", path.LastSegment.Identifier);
         }
 
         [Fact]

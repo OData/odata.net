@@ -134,7 +134,7 @@ namespace Microsoft.OData.Tests.UriParser
                 var nonODataqueryOptions = uriParserProcessingDupCustomQuery.CustomQueryOptions;
 
                 action.Throws<ODataException>(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce("$filter"));
-                Assert.Equal(nonODataqueryOptions.Count, 2);
+                Assert.Equal(2, nonODataqueryOptions.Count);
                 Assert.True(nonODataqueryOptions[0].Key.Equals("nonODataQuery") &&
                             nonODataqueryOptions[1].Key.Equals("nonODataQuery"));
             }
@@ -1254,7 +1254,6 @@ namespace Microsoft.OData.Tests.UriParser
         [InlineData("/entitySetEscaped/32/NS.SpecialDrive:/ComposableParameter::/nestedComposableParameter:", "/entitySetEscaped/32/NS.SpecialDrive/NS.SpecialOrders(path ='ComposableParameter')/NS.SpecialOrders(path ='nestedComposableParameter')")]
         [InlineData("/vsDrive/32:/ComposableParameter::/nestedComposableParameter:", "/vsDrive/32/NS.SpecialOrders(path ='ComposableParameter')/NS.SpecialOrders(path ='nestedComposableParameter')")]
         [InlineData("/vsDrive/32/NS.OneDrive:/ComposableParameter:", "/vsDrive/32/NS.OneDrive/NS.ComposableFunction(arg='ComposableParameter')")]
-        [InlineData("/vsDrive/32/NS.OneDrive:/ComposableParameter:", "/vsDrive/32/NS.OneDrive/NS.ComposableFunction(arg='ComposableParameter')")]
         [InlineData("/vsDrive/32:/NonComposableParameter", "/vsDrive/32/NS.NormalFunction(path='NonComposableParameter')")]
 
         public void ParseEscapeFunctionWithInheritance(string escapeFunctionUri, string functionUri)
@@ -1417,8 +1416,7 @@ namespace Microsoft.OData.Tests.UriParser
             OperationSegment segment = escapePath.Last() as OperationSegment;
             Assert.Equal(function, segment.Operations.First().FullName());
 
-            Assert.Equal(1, segment.Parameters.Count());
-            var parameter = segment.Parameters.First();
+            var parameter = Assert.Single(segment.Parameters);
             Assert.Equal("orderName", parameter.Name);
             Assert.Equal("abc:xyz", ((ConstantNode)parameter.Value).Value);
         }
@@ -1439,8 +1437,7 @@ namespace Microsoft.OData.Tests.UriParser
             OperationSegment segment = Assert.IsType<OperationSegment>(escapePath.Last());
             Assert.Equal("NS.FindAllOrders", segment.Operations.First().FullName());
 
-            Assert.Equal(1, segment.Parameters.Count());
-            var parameter = segment.Parameters.First();
+            var parameter = Assert.Single(segment.Parameters);
             Assert.Equal("name", parameter.Name);
             Assert.Equal("xyz/abc", ((ConstantNode)parameter.Value).Value);
         }

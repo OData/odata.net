@@ -237,9 +237,9 @@ namespace Microsoft.Spatial.Tests
         {
             var textReader = new StringReader("POINT(10 20 NULL 40)POINT(10 30 NULL 40)SRID=1234;POINT(10 30 NULL 40)");
             var serializer = new SpatialToPositionPipeline();
-            Assert.Equal(0, serializer.Coordinates.Count);
+            Assert.Empty(serializer.Coordinates);
             this.d4Formatter.Read<Geography>(textReader, serializer);
-            Assert.Equal(1, serializer.Coordinates.Count);
+            Assert.Single(serializer.Coordinates);
             this.d4Formatter.Read<Geography>(textReader, serializer);
             Assert.Equal(2, serializer.Coordinates.Count);
             this.d4Formatter.Read<Geography>(textReader, serializer);

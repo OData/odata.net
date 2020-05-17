@@ -1007,7 +1007,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
         public static List<string> RegisteredTestCases { get { return registeredTestCases; } }
 
-        public static void RegisterTestCase(string caseName)
+        private static void RegisterTestCase(string caseName)
         {
             if (!registeredTestCases.Contains(caseName))
             {

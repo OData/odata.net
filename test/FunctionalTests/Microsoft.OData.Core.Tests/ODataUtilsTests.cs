@@ -78,9 +78,9 @@ namespace Microsoft.OData.Tests
         {
             ODataMediaType mediaTypeObject = GetAppendedMediaTypeObject(MimeConstants.MimeApplicationAtomXml);
 
-            Assert.False(mediaTypeObject.ToText().Contains(MimeConstants.MimeStreamingParameterName));
-            Assert.False(mediaTypeObject.ToText().Contains(MimeConstants.MimeStreamingParameterName));
-            Assert.False(mediaTypeObject.ToText().Contains(MimeConstants.MimeIeee754CompatibleParameterName));
+            string test = mediaTypeObject.ToText();
+            Assert.DoesNotContain(MimeConstants.MimeStreamingParameterName, test);
+            Assert.DoesNotContain(MimeConstants.MimeIeee754CompatibleParameterName, test);
         }
 
         [Fact]
@@ -101,7 +101,7 @@ namespace Microsoft.OData.Tests
 
             var appendedHeaderValue = ODataUtils.AppendDefaultHeaderValue(ODataConstants.ContentTypeHeader, headerValue);
 
-            Assert.True(appendedHeaderValue.Contains("charset=utf-8"));
+            Assert.Contains("charset=utf-8", appendedHeaderValue);
         }
 
         [Fact]
@@ -114,7 +114,7 @@ namespace Microsoft.OData.Tests
 
             var appendedHeaderValue = ODataUtils.AppendDefaultHeaderValue(ODataConstants.ContentTypeHeader, headerValue);
 
-            Assert.True(appendedHeaderValue.Contains("charset=iso-8859-1"));
+            Assert.Contains("charset=iso-8859-1", appendedHeaderValue);
         }
 
         [Fact]
@@ -127,7 +127,7 @@ namespace Microsoft.OData.Tests
 
             var appendedHeaderValue = ODataUtils.AppendDefaultHeaderValue(ODataConstants.ContentTypeHeader, headerValue);
 
-            Assert.False(appendedHeaderValue.Contains("charset"));
+            Assert.DoesNotContain("charset", appendedHeaderValue);
         }
 
         private void TestMediaTypeOfJson(string mediaType, string metadata, string streaming, string ieee754Compatible)
@@ -172,9 +172,9 @@ namespace Microsoft.OData.Tests
             Assert.Equal("SingleCustomer", singletons[1].Url.ToString());
 
             var functionImports = serviceDocument.FunctionImports.ToList();
-            Assert.Equal(1, functionImports.Count);
-            Assert.Equal("SimpleFunctionImport3", functionImports[0].Name);
-            Assert.Equal("SimpleFunctionImport3", functionImports[0].Url.ToString());
+            var functionImport = Assert.Single(functionImports);
+            Assert.Equal("SimpleFunctionImport3", functionImport.Name);
+            Assert.Equal("SimpleFunctionImport3", functionImport.Url.ToString());
         }
 
         [Fact]

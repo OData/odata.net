@@ -192,7 +192,7 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.Equal("InnerMostPropertyValue",innerValue.Properties.ElementAt(0).Value);
 
             Assert.Equal("InnerMostNull", innerValue.Properties.ElementAt(1).Name);
-            Assert.Equal(null, innerValue.Properties.ElementAt(1).Value);
+            Assert.Null(innerValue.Properties.ElementAt(1).Value);
         }
 
         [Fact]

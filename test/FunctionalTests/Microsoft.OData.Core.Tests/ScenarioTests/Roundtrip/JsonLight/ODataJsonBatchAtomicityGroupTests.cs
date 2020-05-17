@@ -544,7 +544,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                 catch (Exception e)
                 {
                     Assert.IsType(testCase.ExceptionType, e);
-                    Assert.True(e.Message.Contains(testCase.TokenInExceptionMessage));
+                    Assert.Contains(testCase.TokenInExceptionMessage, e.Message);
                 }
             }
         }

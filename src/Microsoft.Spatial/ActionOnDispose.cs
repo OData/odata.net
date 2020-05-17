@@ -17,7 +17,7 @@ namespace Microsoft.Spatial
         private Action action;
 
         /// <summary>
-        /// Constructs an instance of the ActonOnDispose object
+        /// Initializes a new instance of the <see cref="ActionOnDispose" /> class.
         /// </summary>
         /// <param name="action">the action to be execute on dispose</param>
         public ActionOnDispose(Action action)
@@ -33,8 +33,8 @@ namespace Microsoft.Spatial
         {
             if (this.action != null)
             {
-                action();
-                action = null;
+                this.action();
+                this.action = null;
             }
         }
     }

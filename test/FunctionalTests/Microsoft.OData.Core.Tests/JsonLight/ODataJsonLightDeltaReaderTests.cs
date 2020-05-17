@@ -555,8 +555,8 @@ namespace Microsoft.OData.Tests.JsonLight
 
             Assert.NotNull(deletedResource);
             Assert.Equal(1, deletedResource.Properties.FirstOrDefault(p => p.Name == "Id").Value);
-            Assert.Equal(1, deletedResource.Properties.Count());
-            Assert.Equal(1, deletedResource.Properties.First(p => p.Name == "Id").Value);
+            var property = Assert.Single(deletedResource.Properties);
+            Assert.Equal(1, property.Value);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -1635,7 +1635,7 @@ namespace Microsoft.OData.Tests.JsonLight
                     case ODataDeltaReaderState.DeltaDeletedEntry:
                         var deltaDeletedEntry = tuple.Item1 as ODataDeltaDeletedEntry;
                         Assert.NotNull(deltaDeletedEntry);
-                        Assert.True(deltaDeletedEntry.Id.EndsWith(customerDeletedEntry.Id));
+                        Assert.EndsWith(customerDeletedEntry.Id, deltaDeletedEntry.Id);
                         Assert.Equal(deltaDeletedEntry.Reason, customerDeletedEntry.Reason);
                         break;
                     case ODataDeltaReaderState.DeltaLink:

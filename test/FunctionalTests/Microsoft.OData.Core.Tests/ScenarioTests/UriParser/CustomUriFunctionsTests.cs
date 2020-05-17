@@ -120,7 +120,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
                 // Assert
                 Assert.NotNull(resultFunctionSignaturesWithReturnType);
-                Assert.Equal(1, resultFunctionSignaturesWithReturnType.Length);
+                Assert.Single(resultFunctionSignaturesWithReturnType);
                 Assert.Same(customFunctionSignature, resultFunctionSignaturesWithReturnType[0]);
             }
             finally
@@ -199,7 +199,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 FunctionSignatureWithReturnType[] customFunctionSignatures =
                     GetCustomFunctionSignaturesOrNull(customFunctionName);
 
-                Assert.Equal(1, customFunctionSignatures.Length);
+                Assert.Single(customFunctionSignatures);
                 Assert.Same(newCustomFunctionSignature, customFunctionSignatures[0]);
             }
             finally
@@ -225,7 +225,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 FunctionSignatureWithReturnType[] customFunctionSignatures =
                     GetCustomFunctionSignaturesOrNull(customFunctionName);
 
-                Assert.Equal(1, customFunctionSignatures.Length);
+                Assert.Single(customFunctionSignatures);
                 Assert.Same(newCustomFunctionSignature, customFunctionSignatures[0]);
             }
             finally
@@ -467,7 +467,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 Assert.True(isRemoveSucceeded);
 
                 FunctionSignatureWithReturnType[] overloads = GetCustomFunctionSignaturesOrNull(customFunctionName);
-                Assert.Equal(1, overloads.Length);
+                Assert.Single(overloads);
                 Assert.Same(existingCustomFunctionSignatureTwo, overloads[0]);
             }
             finally
@@ -628,8 +628,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             }
             catch (ODataException e)
             {
-                Assert.True(e.Message.Equals("An unknown function with name 'mYMixedCasesTrInGfUnCtIoN' was found. " +
-                    "This may also be a function import or a key lookup on a navigation property, which is not allowed."));
+                Assert.Equal("An unknown function with name 'mYMixedCasesTrInGfUnCtIoN' was found. " +
+                    "This may also be a function import or a key lookup on a navigation property, which is not allowed.", e.Message);
                 exceptionThrown = true;
             }
             finally

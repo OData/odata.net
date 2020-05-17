@@ -59,7 +59,7 @@ namespace Microsoft.OData.Tests
         {
             var typeContext = ODataResourceTypeContext.Create(SerializationInfo, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null, throwIfMissingTypeInfo: true);
             Assert.NotNull(typeContext);
-            Assert.True(typeContext.GetType().Name.EndsWith("WithoutModel"));
+            Assert.EndsWith("WithoutModel", typeContext.GetType().Name);
         }
 
         [Fact]
@@ -67,7 +67,7 @@ namespace Microsoft.OData.Tests
         {
             var typeContext = ODataResourceTypeContext.Create(/*serializationInfo*/null, EntitySet, EntitySetElementType, ExpectedEntityType, throwIfMissingTypeInfo: true);
             Assert.NotNull(typeContext);
-            Assert.True(typeContext.GetType().Name.EndsWith("WithModel"));
+            Assert.EndsWith("WithModel", typeContext.GetType().Name);
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace Microsoft.OData.Tests
             var typeContext = ODataResourceTypeContext.Create(null, navigationSource: null,
                 navigationSourceEntityType: null, expectedResourceType: ComplexType, throwIfMissingTypeInfo: false);
             Assert.NotNull(typeContext);
-            Assert.True(typeContext.GetType().Name.EndsWith("WithModel"));
+            Assert.EndsWith("WithModel", typeContext.GetType().Name);
         }
 
         [Fact]
@@ -84,7 +84,7 @@ namespace Microsoft.OData.Tests
         {
             var typeContext = ODataResourceTypeContext.Create(SerializationInfo, EntitySet, EntitySetElementType, ExpectedEntityType, throwIfMissingTypeInfo: true);
             Assert.NotNull(typeContext);
-            Assert.True(typeContext.GetType().Name.EndsWith("WithoutModel"));
+            Assert.EndsWith("WithoutModel", typeContext.GetType().Name);
         }
 
         [Fact]

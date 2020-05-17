@@ -534,10 +534,9 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             PathSelectItem pathSelect = Assert.IsType<PathSelectItem>(selectItem);
 
             Assert.NotNull(pathSelect.SelectAndExpand);
-            Assert.Equal(1, pathSelect.SelectAndExpand.SelectedItems.Count()); // Street
 
             // Street
-            selectItem = pathSelect.SelectAndExpand.SelectedItems.First();
+            selectItem = Assert.Single(pathSelect.SelectAndExpand.SelectedItems);
             PathSelectItem subPathSelect = Assert.IsType<PathSelectItem>(selectItem);
             Assert.Equal("Street", subPathSelect.SelectedPath.ToResourcePathString(ODataUrlKeyDelimiter.Parentheses));
             Assert.NotNull(subPathSelect.SelectAndExpand);

@@ -554,7 +554,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             QueryToken token = Assert.Single(expandTerm.ApplyOptions);
             AggregateToken aggregate = Assert.IsType<AggregateToken>(token);
-            AggregateExpressionToken aggregateExpressionToken = Assert.Single(aggregate.Expressions);
+            AggregateExpressionToken aggregateExpressionToken = Assert.IsType<AggregateExpressionToken>(Assert.Single(aggregate.AggregateExpressions));
             Assert.Equal("Total", aggregateExpressionToken.Alias);
             Assert.Equal(AggregationMethod.Sum, aggregateExpressionToken.Method);
             aggregateExpressionToken.Expression.ShouldBeEndPathToken("Amount");
@@ -609,7 +609,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             Assert.NotNull(groupBy.Child);
             AggregateToken aggregate = Assert.IsType<AggregateToken>(groupBy.Child);
-            AggregateExpressionToken aggregateExpressionToken = Assert.Single(aggregate.Expressions);
+            AggregateExpressionToken aggregateExpressionToken = Assert.IsType<AggregateExpressionToken>(Assert.Single(aggregate.AggregateExpressions));
 
             Assert.Equal("Total", aggregateExpressionToken.Alias);
             Assert.Equal(AggregationMethod.Sum, aggregateExpressionToken.Method);

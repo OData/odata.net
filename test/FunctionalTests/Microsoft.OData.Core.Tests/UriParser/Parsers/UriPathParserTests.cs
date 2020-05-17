@@ -227,7 +227,6 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [InlineData("EntitySet('key%2fvalue'):/xyz", new[] { "EntitySet('key/value'):", "xyz" })]
         [InlineData("EntitySet/key%2fvalue:/xyz", new[] { "EntitySet", "key/value:", "xyz" })]
         [InlineData("EntitySet/key:%2fvalue:/xyz", new[] { "EntitySet", "key:/value:", "xyz" })]
-        [InlineData("EntitySet('key'):/xyz::/perm", new[] { "EntitySet('key'):", "xyz::", "perm" })]
         [InlineData("EntitySet('key'):/xyz:/:/perm", new[] { "EntitySet('key'):", "xyz:", ":", "perm" })]
         [InlineData(":/xyz::/perm", new[] { ":", "xyz::", "perm" })]
         [InlineData(":/xyz:/:/perm", new[] { ":", "xyz:", ":", "perm" })]
@@ -271,9 +270,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             VerifyPath(lastToken, new Action<string>[]
             {
-                s => Assert.Equal(s, "one"),
-                s => Assert.Equal(s, "two"),
-                s => Assert.Equal(s, "three")
+                s => Assert.Equal("one", s),
+                s => Assert.Equal("two", s),
+                s => Assert.Equal("three", s)
             });
         }
 
@@ -284,7 +283,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             VerifyPath(lastToken, new Action<string>[]
             {
-                s => Assert.Equal(s, "EntitySet('KeyValue')"),
+                s => Assert.Equal("EntitySet('KeyValue')", s),
             });
         }
 
@@ -295,7 +294,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             VerifyPath(lastToken, new Action<string>[]
             {
-                s => Assert.Equal(s, "EntitySet(first=1,second=2)"),
+                s => Assert.Equal("EntitySet(first=1,second=2)", s),
             });
         }
 
@@ -306,7 +305,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             VerifyPath(lastToken, new Action<string>[]
             {
-                s => Assert.Equal(s, "one"),
+                s => Assert.Equal("one", s),
             });
         }
 
@@ -333,15 +332,15 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string test = "' '";
             Assert.True(UriParserHelper.TryRemoveQuotes(ref test));
-            Assert.Equal(test, " ");
+            Assert.Equal(" ", test);
 
             test = "invalid";
             Assert.False(UriParserHelper.TryRemoveQuotes(ref test));
-            Assert.Equal(test, "invalid");
+            Assert.Equal("invalid", test);
 
             test = "'invalid";
             Assert.False(UriParserHelper.TryRemoveQuotes(ref test));
-            Assert.Equal(test, "'invalid");
+            Assert.Equal("'invalid", test);
         }
 
         /// <summary>

@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -152,7 +153,7 @@ namespace Microsoft.Spatial.Tests
         }
 
         [Fact]
-        public void ReadGmlUnexpectedSrsName_Whitespace()
+        public void ReadGmlUnexpectedSrsNameWhitespace()
         {
             // Whitespace between tags should not affect how attributes are handled
             var reader = XElement.Parse(@"<gml:Point xmlns:gml='http://www.opengis.net/gml'>
@@ -164,7 +165,7 @@ namespace Microsoft.Spatial.Tests
         }
 
         [Fact]
-        public void ReadGmlPosNumbers_WhitespaceSeparated()
+        public void ReadGmlPosNumbersWhitespaceSeparated()
         {
             var payloads = new[] 
             {
@@ -216,7 +217,7 @@ namespace Microsoft.Spatial.Tests
             var pipeline = new SpatialToPositionPipeline();
             new GmlReader(pipeline).ReadGeography(reader);
 
-            Assert.Equal(pipeline.Coordinates.Count, 0);
+            Assert.Empty(pipeline.Coordinates);
         }
 
         [Fact]
@@ -227,7 +228,7 @@ namespace Microsoft.Spatial.Tests
             var pipeline = new SpatialToPositionPipeline();
             new GmlReader(pipeline).ReadGeography(reader);
 
-            Assert.Equal(pipeline.Coordinates.Count, 0);
+            Assert.Empty(pipeline.Coordinates);
         }
 
         [Fact]
@@ -238,7 +239,7 @@ namespace Microsoft.Spatial.Tests
             var pipeline = new SpatialToPositionPipeline();
             new GmlReader(pipeline).ReadGeography(reader);
 
-            Assert.Equal(pipeline.Coordinates.Count, 0);
+            Assert.Empty(pipeline.Coordinates);
         }
 
         [Fact]
@@ -252,7 +253,7 @@ namespace Microsoft.Spatial.Tests
             var pipeline = new SpatialToPositionPipeline();
             new GmlReader(pipeline).ReadGeography(reader);
 
-            Assert.Equal(pipeline.Coordinates.Count, 0);
+            Assert.Empty(pipeline.Coordinates);
         }
 
         [Fact]
@@ -266,7 +267,7 @@ namespace Microsoft.Spatial.Tests
             var pipeline = new SpatialToPositionPipeline();
             new GmlReader(pipeline).ReadGeography(reader);
 
-            Assert.Equal(pipeline.Coordinates.Count, 0);
+            Assert.Empty(pipeline.Coordinates);
         }
 
         [Fact]
@@ -305,7 +306,7 @@ namespace Microsoft.Spatial.Tests
             var pipeline = new SpatialToPositionPipeline();
             new GmlReader(pipeline).ReadGeography(reader);
 
-            Assert.Equal(pipeline.Coordinates.Count, 12);
+            Assert.Equal(12, pipeline.Coordinates.Count);
         }
 
         [Fact]
@@ -347,7 +348,7 @@ namespace Microsoft.Spatial.Tests
             var pipeline = new SpatialToPositionPipeline();
             new GmlReader(pipeline).ReadGeography(reader);
 
-            Assert.Equal(pipeline.Coordinates.Count, 3);
+            Assert.Equal(3, pipeline.Coordinates.Count);
         }
 
         [Fact]
@@ -461,7 +462,7 @@ namespace Microsoft.Spatial.Tests
         }
 
         [Fact]
-        public void ReadEmptyGeography_Point()
+        public void ReadEmptyGeographyPoint()
         {
             var target = new CallSequenceLoggingPipeline();
             new GmlReader(target).ReadGeography(ExpectedEmptyGml(SpatialType.Point, CoordinateSystem.DefaultGeography));
@@ -469,7 +470,7 @@ namespace Microsoft.Spatial.Tests
         }
 
         [Fact]
-        public void ReadEmptyGeography_LineString()
+        public void ReadEmptyGeographyLineString()
         {
             var target = new CallSequenceLoggingPipeline();
             new GmlReader(target).ReadGeography(ExpectedEmptyGml(SpatialType.LineString, CoordinateSystem.DefaultGeography));
@@ -477,7 +478,7 @@ namespace Microsoft.Spatial.Tests
         }
 
         [Fact]
-        public void ReadEmptyGeography_Polygon()
+        public void ReadEmptyGeographyPolygon()
         {
             var target = new CallSequenceLoggingPipeline();
             new GmlReader(target).ReadGeography(ExpectedEmptyGml(SpatialType.Polygon, CoordinateSystem.DefaultGeography));
@@ -485,7 +486,7 @@ namespace Microsoft.Spatial.Tests
         }
 
         [Fact]
-        public void ReadEmptyGeography_MultiPoint()
+        public void ReadEmptyGeographyMultiPoint()
         {
             var target = new CallSequenceLoggingPipeline();
             new GmlReader(target).ReadGeography(ExpectedEmptyGml(SpatialType.MultiPoint, CoordinateSystem.DefaultGeography));
@@ -493,7 +494,7 @@ namespace Microsoft.Spatial.Tests
         }
 
         [Fact]
-        public void ReadEmptyGeography_MultiLineString()
+        public void ReadEmptyGeographyMultiLineString()
         {
             var target = new CallSequenceLoggingPipeline();
             new GmlReader(target).ReadGeography(ExpectedEmptyGml(SpatialType.MultiLineString, CoordinateSystem.DefaultGeography));
@@ -501,7 +502,7 @@ namespace Microsoft.Spatial.Tests
         }
 
         [Fact]
-        public void ReadEmptyGeography_MultiPolygon()
+        public void ReadEmptyGeographyMultiPolygon()
         {
             var target = new CallSequenceLoggingPipeline();
             new GmlReader(target).ReadGeography(ExpectedEmptyGml(SpatialType.MultiPolygon, CoordinateSystem.DefaultGeography));
@@ -509,7 +510,7 @@ namespace Microsoft.Spatial.Tests
         }
 
         [Fact]
-        public void ReadEmptyGeography_Collection()
+        public void ReadEmptyGeographyCollection()
         {
             var target = new CallSequenceLoggingPipeline();
             new GmlReader(target).ReadGeography(ExpectedEmptyGml(SpatialType.Collection, CoordinateSystem.DefaultGeography));
@@ -911,7 +912,7 @@ namespace Microsoft.Spatial.Tests
         private static XmlReader ExpectedFullGlobeGml(CoordinateSystem coordinateSystem)
         {
             StringBuilder payloadBuilder = new StringBuilder();
-            payloadBuilder.AppendFormat(@"<FullGlobe gml:srsName=""http://www.opengis.net/def/crs/EPSG/0/{0}"" xmlns:gml=""http://www.opengis.net/gml"" xmlns=""http://schemas.microsoft.com/sqlserver/2011/geography""/>", coordinateSystem.EpsgId);
+            payloadBuilder.AppendFormat(CultureInfo.InvariantCulture, @"<FullGlobe gml:srsName=""http://www.opengis.net/def/crs/EPSG/0/{0}"" xmlns:gml=""http://www.opengis.net/gml"" xmlns=""http://schemas.microsoft.com/sqlserver/2011/geography""/>", coordinateSystem.EpsgId);
             XElement xel = XElement.Parse(payloadBuilder.ToString());
             return xel.CreateReader();
         }
@@ -1065,22 +1066,22 @@ namespace Microsoft.Spatial.Tests
             builder.Append(GmlEndElement("Polygon"));
         }
 
-        private static String GmlShapeElement(string shapeType, int? epsgId)
+        private static string GmlShapeElement(string shapeType, int? epsgId)
         {
-            return String.Format(@"<gml:{0} xmlns:gml=""http://www.opengis.net/gml"" gml:srsName=""http://www.opengis.net/def/crs/EPSG/0/{1}"">", shapeType, epsgId.Value);
+            return string.Format(CultureInfo.InvariantCulture, @"<gml:{0} xmlns:gml=""http://www.opengis.net/gml"" gml:srsName=""http://www.opengis.net/def/crs/EPSG/0/{1}"">", shapeType, epsgId.Value);
         }
 
-        private static String GmlElement(string elementName)
+        private static string GmlElement(string elementName)
         {
-            return String.Format(@"<gml:{0}>", elementName);
+            return string.Format(CultureInfo.InvariantCulture, @"<gml:{0}>", elementName);
         }
 
-        private static String GmlEndElement(string shapeType)
+        private static string GmlEndElement(string shapeType)
         {
-            return String.Format("</gml:{0}>", shapeType);
+            return string.Format(CultureInfo.InvariantCulture, "</gml:{0}>", shapeType);
         }
 
-        private static String GmlPostionText(double x, double y, double? z, double? m)
+        private static string GmlPostionText(double x, double y, double? z, double? m)
         {
             var result = new StringBuilder();
             result.Append(XmlConvert.ToString(x));

@@ -41,7 +41,7 @@ namespace Microsoft.OData.Tests
 
             Uri uri = new Uri(@"http://host/People('abc')/Address/City");
             var paths = new ODataUriParser(Model, ServiceRoot, uri).ParsePath().ToList();
-            Assert.Equal(paths.Count(), 4);
+            Assert.Equal(4, paths.Count());
             paths[0].ShouldBeEntitySetSegment(EntitySet);
             paths[1].ShouldBeKeySegment(new KeyValuePair<string, object>("UserName", "abc"));
             paths[2].ShouldBePropertySegment(addressProperty);
@@ -49,7 +49,7 @@ namespace Microsoft.OData.Tests
 
             uri = new Uri(@"http://host/People('abc')/DefaultNs.Employee/Address/DefaultNs.WorkAddress/City");
             paths = new ODataUriParser(Model, ServiceRoot, uri).ParsePath().ToList();
-            Assert.Equal(paths.Count(), 6);
+            Assert.Equal(6, paths.Count());
             paths[0].ShouldBeEntitySetSegment(EntitySet);
             paths[1].ShouldBeKeySegment(new KeyValuePair<string, object>("UserName", "abc"));
             paths[2].ShouldBeTypeSegment(employeeType);
@@ -179,7 +179,7 @@ namespace Microsoft.OData.Tests
 
             Uri uri = new Uri(@"http://host/Entities('abc')/Complex/CollectionOfNav('def')");
             var paths = new ODataUriParser(CollectionModel, ServiceRoot, uri).ParsePath().ToList();
-            Assert.Equal(paths.Count(), 5);
+            Assert.Equal(5, paths.Count());
             paths[0].ShouldBeEntitySetSegment(entitySet);
             paths[1].ShouldBeKeySegment(new KeyValuePair<string, object>("ID", "abc"));
             paths[2].ShouldBePropertySegment(complexProperty);
@@ -188,7 +188,7 @@ namespace Microsoft.OData.Tests
 
             uri = new Uri(@"http://host/Entities('abc')/Complex/CollectionOfNav/$ref");
             paths = new ODataUriParser(CollectionModel, ServiceRoot, uri).ParsePath().ToList();
-            Assert.Equal(paths.Count(), 4);
+            Assert.Equal(4, paths.Count());
             paths[0].ShouldBeEntitySetSegment(entitySet);
             paths[1].ShouldBeKeySegment(new KeyValuePair<string, object>("ID", "abc"));
             paths[2].ShouldBePropertySegment(complexProperty);
@@ -1197,8 +1197,8 @@ namespace Microsoft.OData.Tests
                 writer.WriteEnd();
             }, false, isFullMetadata: true);
 
-            Assert.True(output.Contains("\"ContainedUnderDerivedComplex@odata.associationLink\":\"http://host/Entities1('abc')/Complex/NS.DerivedComplexType/ContainedUnderDerivedComplex/$ref\"," +
-                                        "\"ContainedUnderDerivedComplex@odata.navigationLink\":\"http://host/Entities1('abc')/Complex/NS.DerivedComplexType/ContainedUnderDerivedComplex\""));
+            Assert.Contains("\"ContainedUnderDerivedComplex@odata.associationLink\":\"http://host/Entities1('abc')/Complex/NS.DerivedComplexType/ContainedUnderDerivedComplex/$ref\"," +
+                "\"ContainedUnderDerivedComplex@odata.navigationLink\":\"http://host/Entities1('abc')/Complex/NS.DerivedComplexType/ContainedUnderDerivedComplex\"", output);
         }
 
         [Fact]
@@ -1228,7 +1228,7 @@ namespace Microsoft.OData.Tests
             }, false, isFullMetadata: true);
 
             // Verify the id of contained entity
-            Assert.True(output.Contains("\"@odata.id\":\"Entities1('abc')/Complex/ContainedUnderComplex('def')\""));
+            Assert.Contains("\"@odata.id\":\"Entities1('abc')/Complex/ContainedUnderComplex('def')\"", output);
         }
 
         [Fact]
