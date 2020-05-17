@@ -127,7 +127,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
             ShouldBeAbleToReadCustomInstanceAnnotationFromFeedAndEntry(JsonLightFeedAndEntryPayloadWithCustomInstanceAnnotations, "application/json;odata.streaming=true");
         }
 
-        public void ShouldBeAbleToReadCustomInstanceAnnotationFromFeedAndEntry(string payload, string contentType)
+        private static void ShouldBeAbleToReadCustomInstanceAnnotationFromFeedAndEntry(string payload, string contentType)
         {
             var stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
             var readerSettings = new ODataMessageReaderSettings { EnableMessageStreamDisposal = true };

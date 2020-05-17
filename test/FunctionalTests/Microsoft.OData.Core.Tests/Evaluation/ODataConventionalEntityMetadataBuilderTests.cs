@@ -989,7 +989,7 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void GetOperationTitle()
         {
-            Assert.Equal(this.productConventionalEntityMetadataBuilder.GetOperationTitle("OperationName"), "OperationName");
+            Assert.Equal("OperationName", this.productConventionalEntityMetadataBuilder.GetOperationTitle("OperationName"));
         }
         #endregion Tests for GetOperationTitle()
 
@@ -1036,7 +1036,7 @@ namespace Microsoft.OData.Tests.Evaluation
         public void DerivedProductShouldContainComputedActions()
         {
             var action = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetActions().Single();
-            Assert.Equal(action.Title, "TestModel.Action");
+            Assert.Equal("TestModel.Action", action.Title);
             Assert.Equal(action.Metadata, new Uri(MetadataDocumentUri, "#TestModel.Action"));
             Assert.Equal(action.Target, new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct/TestModel.Action"));
         }

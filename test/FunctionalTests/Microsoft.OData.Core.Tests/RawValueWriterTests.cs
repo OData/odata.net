@@ -106,7 +106,7 @@ namespace Microsoft.OData.Tests
             RawValueWriter target = new RawValueWriter(this.settings, this.stream, new UTF32Encoding());
             var value = GeographyPoint.Create(22.2, 22.2);
             target.WriteRawValue(value);
-            Assert.Equal(this.StreamAsString(target), @"{""type"":""Point"",""coordinates"":[22.2,22.2],""crs"":{""type"":""name"",""properties"":{""name"":""EPSG:4326""}}}");
+            Assert.Equal(@"{""type"":""Point"",""coordinates"":[22.2,22.2],""crs"":{""type"":""name"",""properties"":{""name"":""EPSG:4326""}}}", this.StreamAsString(target));
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace Microsoft.OData.Tests
             RawValueWriter target = new RawValueWriter(this.settings, this.stream, new UTF32Encoding());
             var value = GeometryPoint.Create(1.2, 3.16);
             target.WriteRawValue(value);
-            Assert.Equal(this.StreamAsString(target), @"{""type"":""Point"",""coordinates"":[1.2,3.16],""crs"":{""type"":""name"",""properties"":{""name"":""EPSG:0""}}}");
+            Assert.Equal(@"{""type"":""Point"",""coordinates"":[1.2,3.16],""crs"":{""type"":""name"",""properties"":{""name"":""EPSG:0""}}}", this.StreamAsString(target));
         }
 
         private string StreamAsString(RawValueWriter target)

@@ -513,7 +513,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var bon = Assert.IsType<BinaryOperatorNode>(semanticTree.Filter.Expression);
             var propertyAccessNode = Assert.IsType<SingleValuePropertyAccessNode>(bon.Left);
             var navigationNode = Assert.IsType<SingleNavigationNode>(propertyAccessNode.Source);
-            Assert.Equal(navigationNode.TargetMultiplicity, EdmMultiplicity.ZeroOrOne);
+            Assert.Equal(EdmMultiplicity.ZeroOrOne, navigationNode.TargetMultiplicity);
         }
 
         [Fact]

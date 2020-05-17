@@ -75,7 +75,7 @@ namespace Microsoft.OData.Tests
 
             Assert.NotNull(referencelinks);
             Assert.NotNull(referencelinks.Links);
-            Assert.Equal(1, referencelinks.Links.Count());
+            Assert.Single(referencelinks.Links);
         }
 
         [Fact]

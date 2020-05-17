@@ -22,7 +22,7 @@ namespace Microsoft.Spatial.Tests
             GeographyPoint p = TestData.PointG();
             var s = new SpatialToPositionPipeline();
             p.SendTo(s);
-            Assert.Equal(1, s.Coordinates.Count);
+            Assert.Single(s.Coordinates);
             Assert.Equal(new PositionData(p.Latitude, p.Longitude, p.Z, p.M), s.Coordinates[0]);
             Assert.Equal(p.CoordinateSystem, s.CoordinateSystem);
         }
@@ -45,8 +45,8 @@ namespace Microsoft.Spatial.Tests
             pipeline.GeometryPipeline.EndGeometry();
             Assert.False(pipeline.ConstructedGeography.IsEmpty);
             Assert.False(pipeline.ConstructedGeometry.IsEmpty);
-            Assert.Equal(1, this.constructedGeographyInstances.Count);
-            Assert.Equal(1, this.constructedGeometryInstances.Count);
+            Assert.Single(this.constructedGeographyInstances);
+            Assert.Single(this.constructedGeometryInstances);
             pipeline.ProduceGeography -= this.constructedGeographyInstances.Add;
             pipeline.ProduceGeometry -= this.constructedGeometryInstances.Add;
         }

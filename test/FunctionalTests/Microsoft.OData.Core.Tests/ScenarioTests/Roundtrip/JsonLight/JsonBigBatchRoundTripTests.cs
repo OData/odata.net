@@ -59,7 +59,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
         }
 
 //        [Fact(Skip = "Runtime is 7 minutes, too long.")]
-        public void BigBatchNCreationsTest()
+        internal void BigBatchNCreationsTest()
         {
             // Create multiple (N) big batches.
             // Each iteration's memory foot print is about 700kB.
@@ -73,8 +73,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             }
         }
 
-//        [Fact(Skip = "Runtime is >60 minutes, too long.")]
-        public void BigBatchNRoundTripsTest()
+        //        [Fact(Skip = "Runtime is >60 minutes, too long.")]
+        internal void BigBatchNRoundTripsTest()
         {
             // Create multiple (N) big batches and perform round trip testing
             // Memory usage should stay relatively flat.

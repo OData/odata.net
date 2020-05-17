@@ -124,7 +124,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void LibraryCompatibilityShouldBeLatestByDefault()
         {
-            Assert.Equal(this.settings.LibraryCompatibility, ODataLibraryCompatibility.Latest);
+            Assert.Equal(ODataLibraryCompatibility.Latest, this.settings.LibraryCompatibility);
         }
 
         [Fact]
@@ -142,19 +142,19 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void MaxPartsPerBatchShouldBeSetByDefault()
         {
-            Assert.Equal(this.settings.MessageQuotas.MaxPartsPerBatch, 100);
+            Assert.Equal(100, this.settings.MessageQuotas.MaxPartsPerBatch);
         }
 
         [Fact]
         public void MaxOperationsPerChangesetShouldBeSetByDefault()
         {
-            Assert.Equal(this.settings.MessageQuotas.MaxOperationsPerChangeset, 1000);
+            Assert.Equal(1000, this.settings.MessageQuotas.MaxOperationsPerChangeset);
         }
 
         [Fact]
         public void MaxNestingDepthShouldBeSetByDefault()
         {
-            Assert.Equal(this.settings.MessageQuotas.MaxNestingDepth, 100);
+            Assert.Equal(100, this.settings.MessageQuotas.MaxNestingDepth);
         }
 
         [Fact]
@@ -210,7 +210,7 @@ namespace Microsoft.OData.Tests
         public void CopyConstructorShouldCopyJsonPCallback()
         {
             this.settings.JsonPCallback = "jsonp";
-            Assert.Equal(this.settings.Clone().JsonPCallback, "jsonp");
+            Assert.Equal("jsonp", this.settings.Clone().JsonPCallback);
         }
 
         [Fact]
@@ -238,14 +238,14 @@ namespace Microsoft.OData.Tests
         public void CopyConstructorShouldCopyVersion()
         {
             this.settings.Version = ODataVersion.V4;
-            Assert.Equal(this.settings.Clone().Version, ODataVersion.V4);
+            Assert.Equal(ODataVersion.V4, this.settings.Clone().Version);
         }
 
         [Fact]
         public void CopyConstructorShouldCopyLibraryCompatibility()
         {
             this.settings.LibraryCompatibility = ODataLibraryCompatibility.Version6;
-            Assert.Equal(this.settings.Clone().LibraryCompatibility, ODataLibraryCompatibility.Version6);
+            Assert.Equal(ODataLibraryCompatibility.Version6, this.settings.Clone().LibraryCompatibility);
         }
 
         [Fact]
@@ -276,8 +276,8 @@ namespace Microsoft.OData.Tests
         {
             this.settings.SetContentType("application/json,application/atom+xml", "iso-8859-5, unicode-1-1;q=0.8");
             var copiedSettings = this.settings.Clone();
-            Assert.Equal(copiedSettings.AcceptableCharsets, "iso-8859-5, unicode-1-1;q=0.8");
-            Assert.Equal(copiedSettings.AcceptableMediaTypes, "application/json,application/atom+xml");
+            Assert.Equal("iso-8859-5, unicode-1-1;q=0.8", copiedSettings.AcceptableCharsets);
+            Assert.Equal("application/json,application/atom+xml", copiedSettings.AcceptableMediaTypes);
         }
 
         [Fact]
@@ -293,7 +293,7 @@ namespace Microsoft.OData.Tests
         {
             this.settings.MetadataSelector = new TestMetadataSelector() { PropertyToOmit = "TestProperty" };
             var newSetting = this.settings.Clone();
-            Assert.Equal((newSetting.MetadataSelector as TestMetadataSelector).PropertyToOmit, "TestProperty");
+            Assert.Equal("TestProperty", (newSetting.MetadataSelector as TestMetadataSelector).PropertyToOmit);
         }
 
         [Fact]
@@ -321,14 +321,14 @@ namespace Microsoft.OData.Tests
 
             var newSetting = this.settings.Clone();
             Assert.Equal(newSetting.MetadataDocumentUri, new Uri("http://test.org/$metadata"));
-            Assert.Equal(newSetting.ODataUri.Path.ToResourcePathString(ODataUrlKeyDelimiter.Parentheses), "Cities(1)/Name");
+            Assert.Equal("Cities(1)/Name", newSetting.ODataUri.Path.ToResourcePathString(ODataUrlKeyDelimiter.Parentheses));
             Assert.True(newSetting.IsIndividualProperty);
 
             string select, expand;
             foreach (ODataVersion version in new ODataVersion[] { ODataVersion.V4, ODataVersion.V401 })
             {
                 newSetting.SelectExpandClause.GetSelectExpandPaths(version, out select, out expand);
-                Assert.Equal(select, "*");
+                Assert.Equal("*", select);
             }
         }
 
@@ -422,13 +422,13 @@ namespace Microsoft.OData.Tests
             };
 
             var t = setting.BaseUri.ToString();
-            Assert.Equal(setting.BaseUri.ToString(), "http://example.org/odata.svc/");
+            Assert.Equal("http://example.org/odata.svc/", setting.BaseUri.ToString());
 
             setting = new ODataMessageWriterSettings()
             {
                 BaseUri = new Uri("http://example.org/odata.svc/"),
             };
-            Assert.Equal(setting.BaseUri.ToString(), "http://example.org/odata.svc/");
+            Assert.Equal("http://example.org/odata.svc/", setting.BaseUri.ToString());
         }
         #endregion Property getters and setters tests
 
@@ -467,8 +467,8 @@ namespace Microsoft.OData.Tests
             ODataMessageWriterSettings copyOfSettings = settings.Clone();
             Assert.Null(settings.Format);
             Assert.Null(copyOfSettings.Format);
-            Assert.Equal(settings.AcceptableMediaTypes, "application/xml");
-            Assert.Equal(copyOfSettings.AcceptableMediaTypes, "application/xml");
+            Assert.Equal("application/xml", settings.AcceptableMediaTypes);
+            Assert.Equal("application/xml", copyOfSettings.AcceptableMediaTypes);
             Assert.Null(settings.AcceptableCharsets);
             Assert.Null(copyOfSettings.AcceptableCharsets);
 
@@ -476,10 +476,10 @@ namespace Microsoft.OData.Tests
             copyOfSettings = settings.Clone();
             Assert.Null(settings.Format);
             Assert.Null(copyOfSettings.Format);
-            Assert.Equal(settings.AcceptableMediaTypes, "application/json");
-            Assert.Equal(copyOfSettings.AcceptableMediaTypes, "application/json");
-            Assert.Equal(settings.AcceptableCharsets, "utf8");
-            Assert.Equal(copyOfSettings.AcceptableCharsets, "utf8");
+            Assert.Equal("application/json", settings.AcceptableMediaTypes);
+            Assert.Equal("application/json", copyOfSettings.AcceptableMediaTypes);
+            Assert.Equal("utf8", settings.AcceptableCharsets);
+            Assert.Equal("utf8", copyOfSettings.AcceptableCharsets);
 
             settings.SetContentType(null, "utf8");
             copyOfSettings = settings.Clone();
@@ -487,8 +487,8 @@ namespace Microsoft.OData.Tests
             Assert.Null(copyOfSettings.Format);
             Assert.Null(settings.AcceptableMediaTypes);
             Assert.Null(copyOfSettings.AcceptableMediaTypes);
-            Assert.Equal(settings.AcceptableCharsets, "utf8");
-            Assert.Equal(copyOfSettings.AcceptableCharsets, "utf8");
+            Assert.Equal("utf8", settings.AcceptableCharsets);
+            Assert.Equal("utf8", copyOfSettings.AcceptableCharsets);
 
             settings.SetContentType(string.Empty, "utf8");
             copyOfSettings = settings.Clone();
@@ -496,17 +496,17 @@ namespace Microsoft.OData.Tests
             Assert.Null(copyOfSettings.Format);
             Assert.Empty(settings.AcceptableMediaTypes);
             Assert.Empty(copyOfSettings.AcceptableMediaTypes);
-            Assert.Equal(settings.AcceptableCharsets, "utf8");
-            Assert.Equal(copyOfSettings.AcceptableCharsets, "utf8");
+            Assert.Equal("utf8", settings.AcceptableCharsets);
+            Assert.Equal("utf8", copyOfSettings.AcceptableCharsets);
 
             settings.SetContentType("json", "utf8");
             copyOfSettings = settings.Clone();
             Assert.Null(settings.Format);
             Assert.Null(copyOfSettings.Format);
-            Assert.Equal(settings.AcceptableMediaTypes, "application/json");
-            Assert.Equal(copyOfSettings.AcceptableMediaTypes, "application/json");
-            Assert.Equal(settings.AcceptableCharsets, "utf8");
-            Assert.Equal(copyOfSettings.AcceptableCharsets, "utf8");
+            Assert.Equal("application/json", settings.AcceptableMediaTypes);
+            Assert.Equal("application/json", copyOfSettings.AcceptableMediaTypes);
+            Assert.Equal("utf8", settings.AcceptableCharsets);
+            Assert.Equal("utf8", copyOfSettings.AcceptableCharsets);
         }
         #endregion Set content type tests
     }

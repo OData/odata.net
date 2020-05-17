@@ -456,7 +456,7 @@ namespace Microsoft.OData.Tests.JsonLight
         };
 
         [Theory]
-        [MemberData("PrimitiveData")]
+        [MemberData(nameof(PrimitiveData))]
         public void WritingEdmPrimitiveTypePropertyShouldWork(object value, string expect)
         {
             var primitiveTypeProperty = new ODataProperty { Name = "PrimitiveProperty", Value = value };

@@ -131,7 +131,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void NullOrEmptyOrWhitespaceExpandBecomesEmptyList(string clauseToParse)
         {
             // Arrange
-            SelectExpandParser parser = new SelectExpandParser(null, ODataUriParserSettings.DefaultSelectExpandLimit);
+            SelectExpandParser parser = new SelectExpandParser(clauseToParse, ODataUriParserSettings.DefaultSelectExpandLimit);
 
             // Act
             ExpandToken expandToken = parser.ParseExpand();

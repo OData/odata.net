@@ -637,7 +637,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                      "</Collection>" +
                    "</Annotation>";
 
-            IEdmModel edmModel = GetOperationEdmModel(annotation);
+            IEdmModel edmModel = GetOperationEdmModel(annotation, inLineAnnotation);
 
             IEdmEntityType customer = edmModel.SchemaElements.OfType<IEdmEntityType>().First(c => c.Name == "Customer");
             IEdmEntityType vipCustomer = edmModel.SchemaElements.OfType<IEdmEntityType>().First(c => c.Name == "VipCustomer");
@@ -676,7 +676,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
       <EntityContainer Name =""Default"">
          <EntitySet Name=""Customers"" EntityType=""NS.Customer"" />
       </EntityContainer>
-      <Annotations Target=""NS.Image(NS.Customer)"">
+      <Annotations Target=""NS.Image(Collection(NS.Customer))/entity"">
         {1}
       </Annotations>
     </Schema>

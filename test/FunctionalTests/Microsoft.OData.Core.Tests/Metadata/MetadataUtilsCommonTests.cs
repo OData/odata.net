@@ -15,7 +15,7 @@ namespace Microsoft.OData.Tests.Metadata
         [Fact]
         public void ValidateSpecificSpatialTypesAreConvertable()
         {
-            Assert.Equal(true, MetadataUtilsCommon.CanConvertPrimitiveTypeTo(null, EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.GeographyCollection), EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Geography)));
+            Assert.True(MetadataUtilsCommon.CanConvertPrimitiveTypeTo(null, EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.GeographyCollection), EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Geography)));
         }
     }
 }

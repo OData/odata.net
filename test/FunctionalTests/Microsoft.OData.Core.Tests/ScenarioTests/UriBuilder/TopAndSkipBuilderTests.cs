@@ -72,7 +72,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             uri.Skip = 4;
             uri.Top = 5;
             uri.Path = new ODataPath(new EntitySetSegment(HardCodedTestModel.GetPeopleSet()));
-            Assert.Equal(uri.ParameterAliasNodes.Count, 0);
+            Assert.Empty(uri.ParameterAliasNodes);
 
             Uri res = uri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(new Uri("http://gobbledygook/People?$top=5&$skip=4"), res);
@@ -86,7 +86,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             uri.SkipToken = "MyToken";
             uri.Top = 5;
             uri.Path = new ODataPath(new EntitySetSegment(HardCodedTestModel.GetPeopleSet()));
-            Assert.Equal(uri.ParameterAliasNodes.Count, 0);
+            Assert.Empty(uri.ParameterAliasNodes);
 
             Uri res = uri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(new Uri("http://gobbledygook/People?$top=5&$skiptoken=MyToken"), res);
@@ -99,7 +99,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             uri.ServiceRoot = new Uri("http://gobbledygook/");
             uri.DeltaToken = "MyToken";
             uri.Path = new ODataPath(new EntitySetSegment(HardCodedTestModel.GetPeopleSet()));
-            Assert.Equal(uri.ParameterAliasNodes.Count, 0);
+            Assert.Empty(uri.ParameterAliasNodes);
 
             Uri res = uri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(new Uri("http://gobbledygook/People?$deltatoken=MyToken"), res);

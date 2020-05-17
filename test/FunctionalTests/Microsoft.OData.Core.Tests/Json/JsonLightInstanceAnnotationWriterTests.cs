@@ -548,7 +548,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 if (writingTypeName)
                 {
-                    Assert.Equal(s, "#GeographyPoint");
+                    Assert.Equal("#GeographyPoint", s);
                     wroteTypeName = true;
                 }
             };
@@ -574,7 +574,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(typeReference);
                 Assert.True(typeReference.IsComplex());
-                Assert.Equal(typeReference.AsComplex().FullName(), "My.Namespace.ComplexType");
+                Assert.Equal("My.Namespace.ComplexType", typeReference.AsComplex().FullName());
                 calledWriteResource = true;
             };
 

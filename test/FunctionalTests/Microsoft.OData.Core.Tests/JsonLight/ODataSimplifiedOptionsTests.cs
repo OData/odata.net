@@ -17,7 +17,7 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.False(options.EnableWritingKeyAsSegment);
             Assert.True(options.EnableParsingKeyAsSegmentUrl);
             Assert.False(options.EnableReadingODataAnnotationWithoutPrefix);
-            Assert.False(options.EnableWritingODataAnnotationWithoutPrefix);
+            Assert.False(options.GetOmitODataPrefix());
             Assert.False(options.EnableReadingKeyAsSegment);
             Assert.False(options.GetOmitODataPrefix());
             Assert.False(options.GetOmitODataPrefix(ODataVersion.V4));
@@ -31,7 +31,7 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.False(options.EnableWritingKeyAsSegment);
             Assert.True(options.EnableParsingKeyAsSegmentUrl);
             Assert.False(options.EnableReadingODataAnnotationWithoutPrefix);
-            Assert.False(options.EnableWritingODataAnnotationWithoutPrefix);
+            Assert.False(options.GetOmitODataPrefix());
             Assert.False(options.EnableReadingKeyAsSegment);
             Assert.False(options.GetOmitODataPrefix());
             Assert.False(options.GetOmitODataPrefix(ODataVersion.V4));
@@ -46,7 +46,7 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.False(options.EnableReadingKeyAsSegment);
             Assert.True(options.EnableParsingKeyAsSegmentUrl);
             Assert.True(options.EnableReadingODataAnnotationWithoutPrefix);
-            Assert.True(options.EnableWritingODataAnnotationWithoutPrefix);
+            Assert.True(options.GetOmitODataPrefix());
             Assert.True(options.GetOmitODataPrefix());
             Assert.False(options.GetOmitODataPrefix(ODataVersion.V4));
             Assert.True(options.GetOmitODataPrefix(ODataVersion.V401));
@@ -63,7 +63,7 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.True(options.GetOmitODataPrefix());
             Assert.True(options.GetOmitODataPrefix(ODataVersion.V4));
             Assert.True(options.GetOmitODataPrefix(ODataVersion.V401));
-            Assert.True(options.EnableWritingODataAnnotationWithoutPrefix);
+            Assert.True(options.GetOmitODataPrefix());
         }
 
         [Theory]
@@ -77,7 +77,7 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.False(options.GetOmitODataPrefix());
             Assert.False(options.GetOmitODataPrefix(ODataVersion.V4));
             Assert.False(options.GetOmitODataPrefix(ODataVersion.V401));
-            Assert.False(options.EnableWritingODataAnnotationWithoutPrefix);
+            Assert.False(options.GetOmitODataPrefix());
         }
 
         [Theory]
@@ -91,7 +91,7 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.Equal(version != null && version != ODataVersion.V4, options.GetOmitODataPrefix());
             Assert.True(options.GetOmitODataPrefix(ODataVersion.V4));
             Assert.True(options.GetOmitODataPrefix(ODataVersion.V401));
-            Assert.Equal(version != null && version != ODataVersion.V4, options.EnableWritingODataAnnotationWithoutPrefix);
+            Assert.Equal(version != null && version != ODataVersion.V4, options.GetOmitODataPrefix());
         }
 
         [Theory]
@@ -105,7 +105,7 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.Equal(version != null && version != ODataVersion.V4, options.GetOmitODataPrefix());
             Assert.False(options.GetOmitODataPrefix(ODataVersion.V4));
             Assert.True(options.GetOmitODataPrefix(ODataVersion.V401));
-            Assert.Equal(version != null && version != ODataVersion.V4, options.EnableWritingODataAnnotationWithoutPrefix);
+            Assert.Equal(version != null && version != ODataVersion.V4, options.GetOmitODataPrefix());
         }
 
         [Theory]
@@ -119,7 +119,7 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.Equal(version != null && version != ODataVersion.V4, options.GetOmitODataPrefix());
             Assert.False(options.GetOmitODataPrefix(ODataVersion.V4));
             Assert.True(options.GetOmitODataPrefix(ODataVersion.V401));
-            Assert.Equal(version != null && version != ODataVersion.V4, options.EnableWritingODataAnnotationWithoutPrefix);
+            Assert.Equal(version != null && version != ODataVersion.V4, options.GetOmitODataPrefix());
         }
 
         [Theory]
@@ -134,7 +134,7 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.Equal(version != null && version != ODataVersion.V4, options.GetOmitODataPrefix());
             Assert.False(options.GetOmitODataPrefix(ODataVersion.V4));
             Assert.False(options.GetOmitODataPrefix(ODataVersion.V401));
-            Assert.Equal(version != null && version != ODataVersion.V4, options.EnableWritingODataAnnotationWithoutPrefix);
+            Assert.Equal(version != null && version != ODataVersion.V4, options.GetOmitODataPrefix());
         }
 
         [Theory]
@@ -145,11 +145,11 @@ namespace Microsoft.OData.Tests.JsonLight
         public void SetEnableWritingODataAnnotationWithoutPrefixTrue(ODataVersion? version)
         {
             var options = new ODataSimplifiedOptions(version);
-            options.EnableWritingODataAnnotationWithoutPrefix = true;
+            options.SetOmitODataPrefix(true);
             Assert.True(options.GetOmitODataPrefix());
             Assert.True(options.GetOmitODataPrefix(ODataVersion.V4));
             Assert.True(options.GetOmitODataPrefix(ODataVersion.V401));
-            Assert.True(options.EnableWritingODataAnnotationWithoutPrefix);
+            Assert.True(options.GetOmitODataPrefix());
         }
 
         [Theory]
@@ -159,33 +159,33 @@ namespace Microsoft.OData.Tests.JsonLight
         public void SetEnableWritingODataAnnotationWithoutPrefixFalse(ODataVersion? version)
         {
             var options = new ODataSimplifiedOptions(version);
-            options.EnableWritingODataAnnotationWithoutPrefix = false;
+            options.SetOmitODataPrefix(false);
             Assert.False(options.GetOmitODataPrefix());
             Assert.False(options.GetOmitODataPrefix(ODataVersion.V4));
             Assert.False(options.GetOmitODataPrefix(ODataVersion.V401));
-            Assert.False(options.EnableWritingODataAnnotationWithoutPrefix);
+            Assert.False(options.GetOmitODataPrefix());
         }
 
         [Fact]
         public void SetDefaultEnableWritingODataAnnotationWithoutPrefixFalse()
         {
             var options = new ODataSimplifiedOptions();
-            options.EnableWritingODataAnnotationWithoutPrefix = false;
+            options.SetOmitODataPrefix(false);
             Assert.False(options.GetOmitODataPrefix());
             Assert.False(options.GetOmitODataPrefix(ODataVersion.V4));
             Assert.False(options.GetOmitODataPrefix(ODataVersion.V401));
-            Assert.False(options.EnableWritingODataAnnotationWithoutPrefix);
+            Assert.False(options.GetOmitODataPrefix());
         }
 
         [Fact]
         public void SetDefaultEnableWritingODataAnnotationWithoutPrefixTrue()
         {
             var options = new ODataSimplifiedOptions();
-            options.EnableWritingODataAnnotationWithoutPrefix = true;
+            options.SetOmitODataPrefix(true);
             Assert.True(options.GetOmitODataPrefix());
             Assert.True(options.GetOmitODataPrefix(ODataVersion.V4));
             Assert.True(options.GetOmitODataPrefix(ODataVersion.V401));
-            Assert.True(options.EnableWritingODataAnnotationWithoutPrefix);
+            Assert.True(options.GetOmitODataPrefix());
         }
     }
 }

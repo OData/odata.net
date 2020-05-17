@@ -200,7 +200,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
 
                 string expectedNormalizedPayload = GetNormalizedJsonMessage(expectedPayload);
                 string normalizedPayload = GetNormalizedJsonMessage(payload);
-                Assert.True(expectedNormalizedPayload.Equals(normalizedPayload));
+                Assert.Equal(expectedNormalizedPayload, normalizedPayload);
             }
         }
 

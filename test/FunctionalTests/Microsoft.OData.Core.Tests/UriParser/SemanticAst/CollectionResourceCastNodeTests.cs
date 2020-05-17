@@ -106,7 +106,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             EntitySetNode source = new EntitySetNode(HardCodedTestModel.GetDogsSet());
             CollectionResourceCastNode collectionResourceCastNode = new CollectionResourceCastNode(source, HardCodedTestModel.GetDogType());
-            Assert.Equal(collectionResourceCastNode.InternalKind, InternalQueryNodeKind.CollectionResourceCast);
+            Assert.Equal(InternalQueryNodeKind.CollectionResourceCast, collectionResourceCastNode.InternalKind);
         }
     }
 }

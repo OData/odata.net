@@ -565,7 +565,7 @@ namespace Microsoft.OData.Tests.UriParser
             convertNode = (ConvertNode)binaryNode.Right;
             Assert.Equal(6, ((IEdmDecimalTypeReference)convertNode.TypeReference).Precision);
             Assert.Equal(3, ((IEdmDecimalTypeReference)convertNode.TypeReference).Scale);
-            Assert.Equal(null, ((IEdmDecimalTypeReference)((ConstantNode)convertNode.Source).TypeReference).Precision);
+            Assert.Null(((IEdmDecimalTypeReference)((ConstantNode)convertNode.Source).TypeReference).Precision);
             Assert.Equal(0, ((IEdmDecimalTypeReference)((ConstantNode)convertNode.Source).TypeReference).Scale);
 
             tree = new ODataUriParser(model, svcRoot, new Uri("http://host/Set?$filter=Decimal_6_3_A mul Decimal_5_4 ne 0.0", UriKind.Absolute)).ParseUri().Filter;
@@ -638,7 +638,7 @@ namespace Microsoft.OData.Tests.UriParser
             convertNode = (ConvertNode)binaryNode.Right;
             Assert.Equal(6, ((IEdmDecimalTypeReference)convertNode.TypeReference).Precision);
             Assert.Equal(3, ((IEdmDecimalTypeReference)convertNode.TypeReference).Scale);
-            Assert.Equal(null, ((IEdmDecimalTypeReference)((ConstantNode)convertNode.Source).TypeReference).Precision);
+            Assert.Null(((IEdmDecimalTypeReference)((ConstantNode)convertNode.Source).TypeReference).Precision);
             Assert.Equal(0, ((IEdmDecimalTypeReference)((ConstantNode)convertNode.Source).TypeReference).Scale);
 
             tree = new ODataUriParser(model, svcRoot, new Uri("http://host/Set?$orderby=Decimal_6_3_A mul Decimal_5_4", UriKind.Absolute)).ParseUri().OrderBy;
@@ -742,7 +742,7 @@ namespace Microsoft.OData.Tests.UriParser
             convertNode = (ConvertNode)binaryNode.Right;
             Assert.Equal(6, ((IEdmDecimalTypeReference)convertNode.TypeReference).Precision);
             Assert.Equal(3, ((IEdmDecimalTypeReference)convertNode.TypeReference).Scale);
-            Assert.Equal(null, ((IEdmDecimalTypeReference)((ConstantNode)convertNode.Source).TypeReference).Precision);
+            Assert.Null(((IEdmDecimalTypeReference)((ConstantNode)convertNode.Source).TypeReference).Precision);
             Assert.Equal(0, ((IEdmDecimalTypeReference)((ConstantNode)convertNode.Source).TypeReference).Scale);
 
             parser = new ODataUriParser(model, svcRoot, new Uri("http://host/Set?$filter=Decimal_6_3_A mul Decimal_5_4 ne 0.0", UriKind.Absolute));
@@ -826,7 +826,7 @@ namespace Microsoft.OData.Tests.UriParser
             convertNode = (ConvertNode)binaryNode.Right;
             Assert.Equal(6, ((IEdmDecimalTypeReference)convertNode.TypeReference).Precision);
             Assert.Equal(3, ((IEdmDecimalTypeReference)convertNode.TypeReference).Scale);
-            Assert.Equal(null, ((IEdmDecimalTypeReference)((ConstantNode)convertNode.Source).TypeReference).Precision);
+            Assert.Null(((IEdmDecimalTypeReference)((ConstantNode)convertNode.Source).TypeReference).Precision);
             Assert.Equal(0, ((IEdmDecimalTypeReference)((ConstantNode)convertNode.Source).TypeReference).Scale);
 
             parser = new ODataUriParser(model, svcRoot, new Uri("http://host/Set?$orderby=Decimal_6_3_A mul Decimal_5_4", UriKind.Absolute));

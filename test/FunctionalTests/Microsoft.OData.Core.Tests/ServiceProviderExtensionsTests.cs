@@ -46,7 +46,7 @@ namespace Microsoft.OData.Tests
             IContainerBuilder builder = new TestContainerBuilder();
             builder.AddService(ServiceLifetime.Transient, typeof(Foo));
             IServiceProvider container = builder.BuildContainer();
-            Assert.Throws(typeof(ODataException), () => container.GetRequiredService<IFoo>());
+            Assert.Throws<ODataException>(() => container.GetRequiredService<IFoo>());
         }
 
         [Fact]

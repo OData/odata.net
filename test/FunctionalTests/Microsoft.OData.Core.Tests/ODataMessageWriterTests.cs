@@ -98,7 +98,7 @@ namespace Microsoft.OData.Tests
             request.GetStream().Position = 0;
             var reader = new StreamReader(request.GetStream());
             string output = reader.ReadToEnd();
-            Assert.Equal(output, "{\"@odata.context\":\"http://host/service/$metadata#MyNS.UInt32\",\"value\":123}");
+            Assert.Equal("{\"@odata.context\":\"http://host/service/$metadata#MyNS.UInt32\",\"value\":123}", output);
         }
 
         [Theory]
@@ -131,7 +131,7 @@ namespace Microsoft.OData.Tests
             request.GetStream().Position = 0;
             var reader = new StreamReader(request.GetStream());
             string output = reader.ReadToEnd();
-            Assert.Equal(output, "{\"@odata.context\":\"http://host/service/$metadata#Edm.String\",\"value\":\"\\u0438\\u044f\"}");
+            Assert.Equal("{\"@odata.context\":\"http://host/service/$metadata#Edm.String\",\"value\":\"\\u0438\\u044f\"}", output);
         }
 
         [Fact]
@@ -160,7 +160,7 @@ namespace Microsoft.OData.Tests
             request.GetStream().Position = 0;
             var reader = new StreamReader(request.GetStream());
             string output = reader.ReadToEnd();
-            Assert.Equal(output, "{\"@odata.context\":\"http://host/service/$metadata#Edm.String\",\"value\":\"ия\"}");
+            Assert.Equal("{\"@odata.context\":\"http://host/service/$metadata#Edm.String\",\"value\":\"ия\"}", output);
         }
 
         [Fact]

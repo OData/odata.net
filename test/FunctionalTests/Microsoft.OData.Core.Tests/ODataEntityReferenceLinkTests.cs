@@ -98,7 +98,7 @@ namespace Microsoft.OData.Tests
         {
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"@odata.context\":\"http://odata.org/test/$metadata#$ref\",\"@odata.id\":\"http://host/Customers(1)\",\"@TestNamespace.unknown\":123,\"@custom.annotation\":456}");
             ODataEntityReferenceLink link = deserializer.ReadEntityReferenceLink();
-            Assert.Equal(link.Url.ToString(), "http://host/Customers(1)");
+            Assert.Equal("http://host/Customers(1)", link.Url.ToString());
             Assert.Equal(2, link.InstanceAnnotations.Count);
             TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(123), link.InstanceAnnotations.Single(ia => ia.Name == "TestNamespace.unknown").Value);
             TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(456), link.InstanceAnnotations.Single(ia => ia.Name == "custom.annotation").Value);
