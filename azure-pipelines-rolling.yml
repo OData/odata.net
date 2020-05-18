@@ -204,36 +204,6 @@ steps:
      popd
     preferredAzurePowerShellVersion: 5.1.1
 
-
-
-
-# # Run all tests with "/p:CollectCoverage=true /p:CoverletOutputFormat=cobertura" to generate the code coverage file
-# - task: DotNetCoreCLI@2
-#   displayName: dotnet test
-#   inputs:
-#     command: test
-#     arguments: '--configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
-#     projects: |
-#      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
-#     nobuild: true
-
-# # Generate the report using ReportGenerator (https://github.com/danielpalme/ReportGenerator)
-# # First install the tool on the machine, then run it
-# - script: |
-#     dotnet tool install -g dotnet-reportgenerator-globaltool
-#     reportgenerator -reports:$(Build.SourcesDirectory)\tests\**\coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)\CodeCoverage -reporttypes:HtmlInline_AzurePipelines;Cobertura
-#   displayName: Create Code coverage report
-
-# # Publish the code coverage result (summary and web site)
-# # The summary allows to view the coverage percentage in the summary tab
-# # The web site allows to view which lines are covered directly in Azure Pipeline
-# - task: PublishCodeCoverageResults@1
-#   displayName: 'Publish code coverage'
-#   inputs:
-#     codeCoverageTool: Cobertura
-#     summaryFileLocation: '$(Build.SourcesDirectory)\CodeCoverage\Cobertura.xml'
-#     reportDirectory: '$(Build.SourcesDirectory)\CodeCoverage'
-
 - task: DotNetCoreCLI@2
   displayName: 'Spatial Test'
   inputs:
@@ -246,7 +216,7 @@ steps:
   displayName: 'EDM Test'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --no-build'
+    arguments: '--configuration $(BuildConfiguration) --no-build --collect "Code coverage"'
     projects: |      
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj
 
@@ -254,7 +224,7 @@ steps:
   displayName: 'Core Test'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --no-build'
+    arguments: '--configuration $(BuildConfiguration) --no-build --collect "Code coverage"'
     projects: |      
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
 
@@ -262,7 +232,7 @@ steps:
   displayName: 'Client Test'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --no-build'
+    arguments: '--configuration $(BuildConfiguration) --no-build --collect "Code coverage"'
     projects: |      
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj
 
@@ -270,13 +240,13 @@ steps:
   displayName: 'Test - E2E Test Suite'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --no-build'
+    arguments: '--configuration $(BuildConfiguration) --no-build --collect "Code coverage"'
     projects: |      
      $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
 
 - task: DotNetCoreCLI@2
   timeoutInMinutes: 100
-  displayName: 'Test - Regression Test Suite'
+  displayName: 'Test - Regression Test Suite --collect "Code coverage"'
   inputs:
     command: 'test'
     arguments: '--configuration $(BuildConfiguration) --no-build'
