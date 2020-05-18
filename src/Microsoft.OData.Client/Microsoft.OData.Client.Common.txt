@@ -81,6 +81,8 @@ Context_CannotChangeStateIfAdded=An entity in the 'Added' state cannot be change
 Context_OnMessageCreatingReturningNull=DataServiceContext.Configurations.RequestPipeline.OnMessageCreating property must not return a null value. Please return a non-null value for this property.
 Context_SendingRequest_InvalidWhenUsingOnMessageCreating=SendingRequest cannot be used in combination with the DataServiceContext.Configurations.RequestPipeline.OnMessageCreating property. Please use SendingRequest2 with DataServiceContext.Configurations.RequestPipeline.OnMessageCreating property instead.
 Context_MustBeUsedWith='{0}' must be used with '{1}'.
+Context_EntityMediaLinksNotTrackedInEntity=The context is currently in no tracking mode, in order to use streams make sure your entities extend BaseEntityType and query the Item again from the server to populate the read link or enable tracking.
+Context_EntityInNonTrackedContextLacksMediaLinks=The context is in non tracking mode, The entity does not seem to have the media links populated properly. Please verify server response is correct and that the entity extends BaseEntityType. 
 
 DataServiceClientFormat_LoadServiceModelRequired=When you call the UseJson method without a parameter, you must use the LoadServiceModel property to provide a valid IEdmModel instance.
 DataServiceClientFormat_ValidServiceModelRequiredForJson=To use the JSON format, you must first call DataServiceContext.Format.UseJson() and supply a valid service model.

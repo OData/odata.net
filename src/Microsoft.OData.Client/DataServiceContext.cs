@@ -1266,8 +1266,40 @@ namespace Microsoft.OData.Client
         public Uri GetReadStreamUri(object entity)
         {
             Util.CheckArgumentNull(entity, "entity");
-            EntityDescriptor box = this.entityTracker.GetEntityDescriptor(entity);
-            return box.ReadStreamUri;
+            EntityDescriptor descriptor = this.GetEntityDescriptorForStreamEntity(entity);
+            return descriptor.ReadStreamUri;
+        }
+
+        /// <summary>
+        /// This function is used to get the entity descriptor that is to be checked when trying to resolve streams.
+        /// For other use cases use the <see cref="GetEntityDescriptor"/> function
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        private EntityDescriptor GetEntityDescriptorForStreamEntity(object entity)
+        {
+            EntityDescriptor descriptor;
+            if (MergeOption == MergeOption.NoTracking)
+            {
+                BaseEntityType baseEntity = entity as BaseEntityType;
+                if (baseEntity == null)
+                {
+                    throw Error.InvalidOperation(Strings.Context_EntityMediaLinksNotTrackedInEntity);
+                }
+
+                descriptor = baseEntity.EntityDescriptor;
+
+                if (descriptor == null)
+                {
+                    throw Error.InvalidOperation(Strings.Context_EntityInNonTrackedContextLacksMediaLinks);
+                }
+            }
+            else
+            {
+                descriptor = this.entityTracker.GetEntityDescriptor(entity);
+            }
+
+            return descriptor;
         }
 
         /// <summary>Gets the URI that is used to return a named binary data stream.</summary>
@@ -1282,7 +1314,7 @@ namespace Microsoft.OData.Client
             Util.CheckArgumentNull(entity, "entity");
             Util.CheckArgumentNullAndEmpty(name, "name");
             this.EnsureMinimumProtocolVersionV3();
-            EntityDescriptor entityDescriptor = this.entityTracker.GetEntityDescriptor(entity);
+            EntityDescriptor entityDescriptor = this.GetEntityDescriptorForStreamEntity(entity);
             StreamDescriptor namedStreamInfo;
             if (entityDescriptor.TryGetNamedStreamInfo(name, out namedStreamInfo))
             {
@@ -3314,8 +3346,9 @@ namespace Microsoft.OData.Client
             Util.CheckArgumentNull(entity, "entity");
             Util.CheckArgumentNull(args, "args");
 
-            EntityDescriptor entityDescriptor = this.entityTracker.GetEntityDescriptor(entity);
+            EntityDescriptor entityDescriptor = this.GetEntityDescriptorForStreamEntity(entity);
             StreamDescriptor streamDescriptor;
+
             Uri requestUri;
             Version version;
             if (name == null)
