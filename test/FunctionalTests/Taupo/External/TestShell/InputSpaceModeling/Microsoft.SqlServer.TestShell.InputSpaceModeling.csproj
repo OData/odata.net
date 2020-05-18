@@ -11,7 +11,8 @@
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems> 
     <EnableStyleCop>false</EnableStyleCop>
     <TransparentAssembly>true</TransparentAssembly>
-    <DefineConstants>TAUPO_TESTSHELL</DefineConstants> 
+    <DefineConstants>TAUPO_TESTSHELL</DefineConstants>
+    <IntermediateOutputPath>..\Temp</IntermediateOutputPath>
   </PropertyGroup>
   <Import Project="..\Build.props" />
   <ItemGroup>

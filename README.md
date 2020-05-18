@@ -1,8 +1,8 @@
 ﻿# OData .NET Libraries
  Build  | Status
 --------|---------
-Rolling | <img src="https://identitydivision.visualstudio.com/_apis/public/build/definitions/2cfe7ec3-b94f-4ab9-85ab-2ebff928f3fd/422/badge"/>
-Nightly | <img src="https://identitydivision.visualstudio.com/_apis/public/build/definitions/2cfe7ec3-b94f-4ab9-85ab-2ebff928f3fd/107/badge"/>
+Rolling | <img src="https://identitydivision.visualstudio.com/OData/_build?definitionId=1103&_a=summary"/>
+Nightly | <img src="https://identitydivision.visualstudio.com/OData/_build?definitionId=1104&_a=summary"/>
 
 ## 1. Introduction
 
@@ -23,11 +23,12 @@ For more information about OData, please refer to the following resources:
 
 ## 2. Project structure
 
-The project currently has six branches: [master](https://github.com/OData/odata.net/tree/master), [release](https://github.com/OData/odata.net/tree/release), [gh-pages](https://github.com/OData/odata.net/tree/gh-pages), [maintenance-6.x](https://github.com/OData/odata.net/tree/maintenance-6.x), [maintenance-5.x](https://github.com/OData/odata.net/tree/maintenance-5.x), and [maintenance-wcf-dataservice-v4](https://github.com/OData/odata.net/tree/maintenance-wcf-dataservice-v4).
+The project currently has six branches: [master](https://github.com/OData/odata.net/tree/master), [release](https://github.com/OData/odata.net/tree/release), [gh-pages](https://github.com/OData/odata.net/tree/gh-pages), [maintenance-6.x](https://github.com/OData/odata.net/tree/maintenance-6.x), [maintenance-5.x](https://github.com/OData/odata.net/tree/maintenance-5.x), [maintenance-wcf-dataservice-v4](https://github.com/OData/odata.net/tree/maintenance-wcf-dataservice-v4) and [master_vs2015_maintenance] (https://github.com/OData/odata.net/tree/master_vs2015_maintenance).
 
 **master branch:**
 
-This master branch is the development branch for ODataV4 7.x and is now most actively iterated. It builds upon the OData 6.15 release which is now on [maintenance-6.x branch](https://github.com/OData/odata.net/tree/maintenance-6.x) and produces both [PCL (Portable Class Libraries) Profile111](https://msdn.microsoft.com/library/gg597391.aspx) and [.NET Standard 1.1](https://docs.microsoft.com/en-us/dotnet/articles/standard/library) libraries. The branch builds mostly with Visual Studio 2015, and it is undergoing migration towards Visual Studio 2017; currently, the .NET Standard and .NET Core projects have been migrated. Due to the number of test projects, complete migration to the latest version of Visual Studio will be broken down into multiple steps. The code is shared between the .NET Framework and .NET Standard platforms, and you may use either Visual Studio 2015/2017 to contribute.
+This master branch is the development branch for ODataV4 7.x and is now most actively iterated. It builds upon the OData 7.6 release which is now on [master_vs2015_maintenance](https://github.com/OData/odata.net/tree/master_vs2015_maintenance) and produces both [PCL (Portable Class Libraries) Profile111](https://msdn.microsoft.com/library/gg597391.aspx) and [.NET Standard 1.1](https://docs.microsoft.com/en-us/dotnet/articles/standard/library) libraries. The branch builds mostly with Visual Studio 2015, and it is undergoing migration towards Visual Studio 2017; currently, the .NET Standard and .NET Core projects have been migrated. Due to the number of test projects, complete migration to the latest version of Visual Studio will be broken down into multiple steps. The code is shared between the .NET Framework and .NET Standard platforms, and you may use either Visual Studio 2015/2017 to contribute.
+The product in the current master branch is built on .net 4.5 framework and .net standard 1.1 and .net standard 2.0
 
 For each profile above, it has the following libraries:
 
@@ -81,15 +82,8 @@ Simply open the shortcut `OData.sln` at the root level folder to launch a soluti
 
 Here is the usage of each solution file (the `OData.sln` shortcut opens the one marked default):
 
-- OData.CodeGen.sln - OData T4 client code generator product source.
-- OData.Net35.sln - Product source built with .Net Framework 3.5.
-- OData.Net45.sln (default) - Product source built with .Net Framework Portable 4.5 and contains corresponding unit tests. _Recommended_ for doing general bug fixes and feature development.
-- OData.NetStandard.sln - Product source built with .Net Standard 1.1.
-- OData.Tests.E2E.sln - Product source built with .Net Framework 4.5. Contains exhaustive list of tests (unit, E2E, and regression) and not intended to be opened frequently. The `Build.cmd` script will run all tests from here and this solution is used to _fully_ test your code.
-- OData.Tests.E2E.NetCore.VS2017.sln - Product source built with .Net Standard 1.1 and E2E OData Client tests build with .Net Core 1.0-2.0. The purpose of this solution is to house .Net Core E2E test cases. The `Build.cmd` script will run all tests from here and this solution is used to _fully_ test the .Net Standard versions of the product code.
-- OData.Tests.NetStandard.VS2017.sln - Product source built with .Net Standard 1.1 and contains corresponding unit tests written in .NET Core. Note that once OData has migrated to VS2017, this solution will replace OData.NetStandard.sln (and take its name) to reduce the number of solutions.
-- OData.Tests.Performance.sln - Product source and performance tests built with .Net Framework version 4.6.
-- OData.Tests.WindowsApps.sln - Product source and test harnesses written in Windows Portable and Windows Phone 8.1.
+- OData.sln - Main OData Solution with Product and unit test.
+- OData.E2E.sln - Product source built with .Net Framework 4.5. Contains exhaustive list of tests (unit, E2E, and regression) and not intended to be opened frequently. The `Build.cmd` script will run all tests from here and this solution is used to _fully_ test your code.
 
 Each solution contains some test projects. Please open it, build it and run all the tests in the test explorer. For running tests within OData.Tests.E2E.sln and OData.Tests.E2E.NetCore.VS2017.sln, you need to open Visual Studio IDE as **_Administrator_** so that the test services can be started properly.
 
