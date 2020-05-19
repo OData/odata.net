@@ -64,9 +64,6 @@ namespace Microsoft.OData.UriParser
         /// <summary>Token being processed.</summary>
         protected ExpressionToken token;
 
-        /// <summary>Indicates whether a double-quoted string is being parsed.</summary>
-        protected bool parsingDoubleQuotedString;
-
         /// <summary>
         /// For an identifier, EMD supports chars that match the regex  [\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Lm}\p{Nl}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\p{Cf}]
         /// IsLetterOrDigit covers Ll, Lu, Lt, Lo, Lm, Nd, this set covers the rest
@@ -88,6 +85,9 @@ namespace Microsoft.OData.UriParser
 
         /// <summary>Lexer ignores whitespace</summary>
         private bool ignoreWhitespace;
+
+        /// <summary>Indicates whether a double-quoted string is being parsed.</summary>
+        private bool parsingDoubleQuotedString;
 
         #endregion Protected and Private fields
 
@@ -116,6 +116,7 @@ namespace Microsoft.OData.UriParser
             this.TextLen = this.Text.Length;
             this.useSemicolonDelimiter = useSemicolonDelimiter;
             this.parsingFunctionParameters = parsingFunctionParameters;
+            this.parsingDoubleQuotedString = false;
 
             this.SetTextPos(0);
 
