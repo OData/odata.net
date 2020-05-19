@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>Microsoft.OData.PublicApi.Tests</AssemblyName>
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\tools\StrongNamePublicKeys\testkey.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="BaseLine\Microsoft.OData.PublicApi.net45.bsl" />
+    <None Remove="BaseLine\Microsoft.OData.PublicApi.netstandard1.1.bsl" />
+    <None Remove="BaseLine\Microsoft.OData.PublicApi.netstandard2.0.bsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="BaseLine\Microsoft.OData.PublicApi.net45.bsl" />
+    <EmbeddedResource Include="BaseLine\Microsoft.OData.PublicApi.netstandard1.1.bsl" />
+    <EmbeddedResource Include="BaseLine\Microsoft.OData.PublicApi.netstandard2.0.bsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>
