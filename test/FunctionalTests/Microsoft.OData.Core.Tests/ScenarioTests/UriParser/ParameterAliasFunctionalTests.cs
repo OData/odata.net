@@ -206,6 +206,71 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             parseUri.Throws<ODataException>(ODataErrorStrings.MetadataBinder_CannotConvertToType("Edm.Int32", "Edm.Int16"));
         }
 
+        [Fact]
+        public void ParsePath_AliasInUnboundFunction_SingleQuoteWithinDoubleQuotedString()
+        {
+            const string uri = "http://gobbledygook/GetRating(film=@p)?@p={\"@odata.type\":\"%23Fully.Qualified.Namespace.Film\",\"ID\":1,\"Title\":\"The Ogre's Lair\"}";
+
+            ParseUriAndVerify(
+                new Uri(uri),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    oDataPath.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetRating());
+
+                    var constNode = Assert.IsType<ConstantNode>(aliasNodes["@p"]);
+                    Assert.Equal("{\"@odata.type\":\"#Fully.Qualified.Namespace.Film\",\"ID\":1,\"Title\":\"The Ogre's Lair\"}", constNode.Value);
+                });
+        }
+
+        [Fact]
+        public void ParsePath_AliasInUnboundFunction_EscapedDoubleQuotesWithinDoubleQuotedString()
+        {
+            const string uri = "http://gobbledygook/GetRating(film=@p)?@p={\"@odata.type\":\"%23Fully.Qualified.Namespace.Film\",\"ID\":2,\"Title\":\"The \\\"Benevolent\\\" Dictator\"}";
+
+            ParseUriAndVerify(
+                new Uri(uri),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    oDataPath.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetRating());
+
+                    var constNode = Assert.IsType<ConstantNode>(aliasNodes["@p"]);
+                    Assert.Equal("{\"@odata.type\":\"#Fully.Qualified.Namespace.Film\",\"ID\":2,\"Title\":\"The \\\"Benevolent\\\" Dictator\"}", constNode.Value);
+                });
+        }
+
+        [Fact]
+        public void ParsePath_AliasInUnboundFunction_SingleAndEscapedDoubleQuotesWithinDoubleQuotedString()
+        {
+            const string uri = "http://gobbledygook/GetRating(film=@p)?@p={\"@odata.type\":\"%23Fully.Qualified.Namespace.Film\",\"ID\":3,\"Title\":\"The \\\"Gardener's\\\" Story\"}";
+
+            ParseUriAndVerify(
+                new Uri(uri),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    oDataPath.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetRating());
+
+                    var constNode = Assert.IsType<ConstantNode>(aliasNodes["@p"]);
+                    Assert.Equal("{\"@odata.type\":\"#Fully.Qualified.Namespace.Film\",\"ID\":3,\"Title\":\"The \\\"Gardener's\\\" Story\"}", constNode.Value);
+                });
+        }
+
+        [Fact]
+        public void ParsePath_AliasInUnboundFunction_SingleAndEscapedDoubleQuotesWithinDoubleQuotedStringsInJsonArray()
+        {
+            const string uri = "http://gobbledygook/GetRatings(films=@p)";
+            var queryString = "?@p=[{\"ID\":1,\"Title\":\"The Ogre's Lair\"},{\"ID\":2,\"Title\":\"The \\\"Benevolent\\\" Dictator\"},{\"ID\":3,\"Title\":\"The \\\"Gardener's\\\" Story\"}]";
+
+            ParseUriAndVerify(
+                new Uri(uri + queryString),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    oDataPath.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetRatings());
+
+                    var constNode = Assert.IsType<ConstantNode>(aliasNodes["@p"]);
+                    Assert.Equal("[{\"ID\":1,\"Title\":\"The Ogre's Lair\"},{\"ID\":2,\"Title\":\"The \\\"Benevolent\\\" Dictator\"},{\"ID\":3,\"Title\":\"The \\\"Gardener's\\\" Story\"}]", constNode.Value);
+                });
+        }
+
         #endregion
 
         #region alias in filter

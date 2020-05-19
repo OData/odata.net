@@ -64,6 +64,9 @@ namespace Microsoft.OData.UriParser
         /// <summary>Token being processed.</summary>
         protected ExpressionToken token;
 
+        /// <summary>Indicates whether a double-quoted string is being parsed.</summary>
+        protected bool parsingDoubleQuotedString;
+
         /// <summary>
         /// For an identifier, EMD supports chars that match the regex  [\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Lm}\p{Nl}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\p{Cf}]
         /// IsLetterOrDigit covers Ll, Lu, Lt, Lo, Lm, Nd, this set covers the rest
@@ -1231,7 +1234,12 @@ namespace Microsoft.OData.UriParser
 
             while (currentBracketDepth > 0)
             {
-                if (this.ch == '\'')
+                if (this.ch == '"')
+                {
+                    this.DoubleQuotedStringCheckpoint();
+                }
+
+                if (this.ch == '\'' && !this.parsingDoubleQuotedString)
                 {
                     this.AdvanceToNextOccurenceOf('\'');
                 }
@@ -1282,6 +1290,14 @@ namespace Microsoft.OData.UriParser
             if (!this.IsValidDigit)
             {
                 throw ParseError(ODataErrorStrings.ExpressionLexer_DigitExpected(this.textPos, this.Text));
+            }
+        }
+
+        private void DoubleQuotedStringCheckpoint()
+        {
+            if (this.textPos != 0 && this.Text[this.textPos - 1] != '\\')
+            {
+                this.parsingDoubleQuotedString = !this.parsingDoubleQuotedString;
             }
         }
 
