@@ -192,7 +192,7 @@ namespace Microsoft.OData.Client.Tests.Tracking
             Assert.NotNull(NonTrackingContext.GetReadStreamUri(document));
             Assert.Equal("https://localhost:8000/Documents/1/content", NonTrackingContext.GetReadStreamUri(document).ToString());
 
-            //try and get the content and verify that the content matches the values
+            // try and get the content and verify that the content matches the values
             Stream result = GetTestReadStreamResult(NonTrackingContext, document).GetAwaiter().GetResult();
 
             Assert.Equal("Hello World!", new StreamReader(result).ReadToEnd());
