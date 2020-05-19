@@ -306,6 +306,12 @@ namespace Microsoft.OData.Tests.Evaluation
         }
 
         [Fact]
+        public void SelectTokenForNavigationPropertyOnComplexShouldHaveOnlySelectedItem()
+        {
+            SelectedPropertiesNode.Create("NearestAirport/Districts").HaveChild(this.metropolisType, "NearestAirport", c => c.HaveNavigations(this.cityType, "Districts"));
+        }
+
+        [Fact]
         public void SubPropertyOfNavigationSpecifiedInBothTypeSegmentAndDirectlyShouldNotProduceDuplicates()
         {
             SelectedPropertiesNode.Create("TestModel.City/Districts/Thumbnail,Districts/Thumbnail")
