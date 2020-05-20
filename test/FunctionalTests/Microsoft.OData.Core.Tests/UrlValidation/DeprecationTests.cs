@@ -52,7 +52,7 @@ namespace UrlValidationTests
             int iError = 0;
             foreach(ODataUrlValidationMessage error in errors)
             {
-                Assert.Equal("deprecated", errors.FirstOrDefault().MessageCode);
+                Assert.Equal("deprecated", error.MessageCode);
                 object elementName;
                 Assert.True(error.ExtendedProperties.TryGetValue("ElementName", out elementName));
                 Assert.Equal(elementName as string, expectedErrors[iError++]);

@@ -31,6 +31,6 @@ namespace Microsoft.OData.UriParser.Validation
         /// <summary>
         /// Rule to validate that structured properties within the Url include an explicit select statement.
         /// </summary>
-        public static ODataUrlValidationRule RequireSelectRule = RequireSelectRules.RequireSelectRule;
+        public static ODataUrlValidationRule RequireSelectRule = Rules.RequireSelectRules.RequireSelectRule;
     }
 }

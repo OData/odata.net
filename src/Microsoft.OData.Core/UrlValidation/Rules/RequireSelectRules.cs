@@ -20,10 +20,11 @@ namespace Microsoft.OData.UriParser.Validation.Rules
         "RequireSelectRule",
         (ODataUrlValidationContext context, ODataUri path) =>
             {
-                bool isStructuredType = path.Path.LastSegment.EdmType.AsElementType() is IEdmStructuredType;
-                if (isStructuredType && AllSelected(path.SelectAndExpand))
+                ODataPathSegment lastSegment = path.Path.LastSegment;
+                bool isStructuredType = lastSegment.EdmType.AsElementType() is IEdmStructuredType;
+                if (isStructuredType)
                 {
-                    context.Messages.Add(new ODataUrlValidationMessage(ODataUrlValidationMessageCodes.MissingSelect, Strings.ODataUrlValidationError_SelectRequired, Severity.Warning));
+                    CheckAllSelected(lastSegment.Identifier, path.SelectAndExpand, context);
                 }
             }
         );
@@ -31,40 +32,50 @@ namespace Microsoft.OData.UriParser.Validation.Rules
         /// <summary>
         /// Walk through an ODataUrl checking to see if all included structured properties/expands have a $select.
         /// </summary>
+        /// <param name="identifier">The name of the segment being validated</param>
         /// <param name="selectExpand">The <see cref="SelectExpandClause"/>describing the selected/expanded properties of the element.</param>
-        /// <returns>true if all of the elements of a selected/expanded property are selected.</returns>
-        private static bool AllSelected(SelectExpandClause selectExpand)
+        /// <param name="validationContext">The validation context used for recording errors.</param>
+        private static void CheckAllSelected(string identifier, SelectExpandClause selectExpand, ODataUrlValidationContext validationContext)
         {
-            if (selectExpand == null || selectExpand.AllSelected)
+            if (selectExpand == null)
             {
-                return true;
+                AddError(identifier, validationContext);
+                return;
             }
 
-            bool allSelected = false;
+            if (selectExpand.AllSelected)
+            {
+                AddError(identifier, validationContext);
+            }
+
             foreach (SelectItem selectItem in selectExpand.SelectedItems)
             {
                 if (selectItem is WildcardSelectItem)
                 {
-                    allSelected = true;
+                    AddError(identifier, validationContext);
                 }
 
                 PathSelectItem pathSelectItem;
                 ExpandedNavigationSelectItem expandItem;
                 if ((pathSelectItem = selectItem as PathSelectItem) != null)
                 {
-                    bool isStructuredType = pathSelectItem.SelectedPath.LastSegment.EdmType.AsElementType() is IEdmStructuredType;
-                    if (isStructuredType && AllSelected(pathSelectItem.SelectAndExpand))
+                    ODataPathSegment lastSegment = pathSelectItem.SelectedPath.LastSegment;
+                    bool isStructuredType = lastSegment.EdmType.AsElementType() is IEdmStructuredType;
+                    if (isStructuredType)
                     {
-                        allSelected = true;
+                        CheckAllSelected(lastSegment.Identifier, pathSelectItem.SelectAndExpand, validationContext);
                     }
                 }
-                else if ((expandItem = selectItem as ExpandedNavigationSelectItem) != null && AllSelected(expandItem.SelectAndExpand))
+                else if ((expandItem = selectItem as ExpandedNavigationSelectItem) != null)
                 {
-                    allSelected = true;
+                    CheckAllSelected(expandItem.PathToNavigationProperty.LastSegment.Identifier, expandItem.SelectAndExpand, validationContext);
                 }
             }
+        }
 
-            return allSelected;
+        private static void AddError(string identifier, ODataUrlValidationContext validationContext)
+        {
+            validationContext.Messages.Add(new ODataUrlValidationMessage(ODataUrlValidationMessageCodes.MissingSelect, Strings.ODataUrlValidationError_SelectRequired(identifier), Severity.Warning));
         }
     }
 }

@@ -22,14 +22,14 @@ namespace UrlValidationTests
         private static IEdmModel model;
 
         [Theory]
-        [InlineData(@"company")]
-        [InlineData(@"company?$select=*")]
-        [InlineData(@"company/employees")]
-        [InlineData(@"company?$expand=employees")]
-        [InlineData(@"company?$expand=employees($select=*)")]
-        [InlineData(@"company/address")]
-        [InlineData(@"company?$select=name&$expand=employees")]
-        private static void MissingSelect(String request)
+        [InlineData(@"company", "company")]
+        [InlineData(@"company?$select=*", "company")]
+        [InlineData(@"company/employees", "employees")]
+        [InlineData(@"company?$expand=employees", "company", "employees")]
+        [InlineData(@"company?$expand=employees($select=*)", "company", "employees")]
+        [InlineData(@"company/address", "address")]
+        [InlineData(@"company?$select=name&$expand=employees", "employees")]
+        private static void MissingSelect(String request, params string[] expectedErrors)
         {
             IEdmModel model = GetModel();
             Uri uri = new Uri(request, UriKind.Relative);
@@ -37,8 +37,14 @@ namespace UrlValidationTests
             IEnumerable<ODataUrlValidationMessage> errors;
             ODataUrlValidationRuleSet rules = new ODataUrlValidationRuleSet(new ODataUrlValidationRule[] { ODataUrlValidationRules.RequireSelectRule });
             uri.ValidateODataUrl(model, rules, out errors);
-            Assert.Single(errors);
-            Assert.Equal("missingSelect", errors.Single().MessageCode);
+            int errorCount = errors.Count();
+            Assert.Equal(expectedErrors.Count(), errorCount);
+            int iError = 0;
+            foreach (ODataUrlValidationMessage error in errors)
+            {
+                Assert.Equal("missingSelect", error.MessageCode);
+                Assert.Contains(expectedErrors[iError++], error.Message);
+            }
         }
 
         [Theory]
