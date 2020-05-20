@@ -669,7 +669,6 @@ namespace Microsoft.OData.Client
             get { return this.InnerBuildingRequest != null; }
         }
 
-
         /// <summary>The tracker for user-specified format information.</summary>
         internal DataServiceClientFormat FormatTracker
         {
