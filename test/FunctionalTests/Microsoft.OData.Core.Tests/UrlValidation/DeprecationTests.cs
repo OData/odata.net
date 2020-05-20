@@ -39,7 +39,7 @@ namespace UrlValidationTests
             ODataUriParser parser = new ODataUriParser(model, new Uri(request, UriKind.Relative));
             ODataUri uri = parser.ParseUri();
             
-            IEnumerable<ODataUrlValidationError> errors;
+            IEnumerable<ODataUrlValidationMessage> errors;
             ODataUrlValidationRuleSet rules = new ODataUrlValidationRuleSet(new ODataUrlValidationRule[] 
             {
                 ODataUrlValidationRules.DeprecatedNavigationSourceRule,
@@ -50,11 +50,11 @@ namespace UrlValidationTests
             int errorCount = errors.Count();
             Assert.Equal(expectedErrors.Count(), errorCount);
             int iError = 0;
-            foreach(ODataUrlValidationError error in errors)
+            foreach(ODataUrlValidationMessage error in errors)
             {
-                Assert.Equal("deprecated", errors.FirstOrDefault().ErrorCode);
+                Assert.Equal("deprecated", errors.FirstOrDefault().MessageCode);
                 object elementName;
-                Assert.True(error.AdditionalInfo.TryGetValue("ElementName", out elementName));
+                Assert.True(error.ExtendedProperties.TryGetValue("ElementName", out elementName));
                 Assert.Equal(elementName as string, expectedErrors[iError++]);
             }
         }
@@ -69,7 +69,7 @@ namespace UrlValidationTests
             ODataUriParser parser = new ODataUriParser(model, new Uri(request, UriKind.Relative));
             ODataUri uri = parser.ParseUri();
 
-            IEnumerable<ODataUrlValidationError> errors;
+            IEnumerable<ODataUrlValidationMessage> errors;
             ODataUrlValidationRuleSet rules = new ODataUrlValidationRuleSet(new ODataUrlValidationRule[] { ODataUrlValidationRules.DeprecatedPropertyRule, ODataUrlValidationRules.DeprecatedTypeRule });
             uri.Validate(model, rules, out errors);
             Assert.Empty(errors);

@@ -22,7 +22,6 @@ namespace Microsoft.OData.UriParser.Validation.ValidationEngine
         private Dictionary<Type, List<ODataUrlValidationRule>> ruleDictionary = new Dictionary<Type, List<ODataUrlValidationRule>>();
         private ConcurrentDictionary<Type, byte> unusedTypes = new ConcurrentDictionary<Type, byte>();
         private IEdmModel model;
-        private string invalidRule = "InvalidRule";
         private string invalidRuleMessage = "Exception thrown by invalid rule {0}. {1}";
 
         /// <summary>
@@ -53,9 +52,9 @@ namespace Microsoft.OData.UriParser.Validation.ValidationEngine
         /// Validate the given <see cref="ODataUri"/>.
         /// </summary>
         /// <param name="odataUri">The <see cref="ODataUri"/ to validate.></param>
-        /// <param name="errors">An output parameter to return any errors associated with the oDataUri</param>
+        /// <param name="validationMessages">An output parameter to return any validation messages associated with the oDataUri</param>
         /// <returns>True, if any errors are found, otherwise false.</returns>
-        public bool ValidateUrl(ODataUri odataUri, out IEnumerable<ODataUrlValidationError> errors)
+        public bool ValidateUrl(ODataUri odataUri, out IEnumerable<ODataUrlValidationMessage> validationMessages)
         {
             ODataUrlValidationContext validationContext = new ODataUrlValidationContext(model, this);
 
@@ -96,8 +95,8 @@ namespace Microsoft.OData.UriParser.Validation.ValidationEngine
             // -SkipToken
             // -Delta
 
-            errors = validationContext.Errors;
-            return !errors.Any();
+            validationMessages = validationContext.Messages;
+            return !validationMessages.Any();
         }
 
         /// <summary>
@@ -199,7 +198,7 @@ namespace Microsoft.OData.UriParser.Validation.ValidationEngine
                         }
                         catch (Exception e)
                         {
-                            validationContext.AddError(invalidRule, String.Format(invalidRuleMessage, rule.RuleName, e.Message), Severity.Warning);
+                            validationContext.AddError(ODataUrlValidationMessageCodes.InvalidRule, String.Format(invalidRuleMessage, rule.RuleName, e.Message), Severity.Warning);
                         }
                     }
                 }

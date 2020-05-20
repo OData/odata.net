@@ -461,6 +461,25 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "All property paths, expands, and selects of complex types must include a SELECT statement."
+        /// </summary>
+        internal static string ODataUrlValidationError_SelectRequired
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataUrlValidationError_SelectRequired);
+            }
+        }
+
+        /// <summary>
+        /// A string like "Exception thrown by invalid rule {0}. {1}."
+        /// </summary>
+        internal static string ODataUrlValidationError_InvalidRule(object p0, object p1)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataUrlValidationError_InvalidRule, p0, p1);
+        }
+
+        /// <summary>
         /// A string like "The ODataMessageWriter has already been used to write a message payload. An ODataMessageWriter can only be used once to write a payload for a given message."
         /// </summary>
         internal static string ODataMessageWriter_WriterAlreadyUsed {

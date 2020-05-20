@@ -16,9 +16,9 @@ namespace Microsoft.OData.UriParser.Validation
     public sealed class ODataUrlValidationContext
     {
         /// <summary>
-        /// List of <see cref="ODataUrlValidationError"/>s discovered while validating the OData Url.
+        /// List of <see cref="ODataUrlValidationMessage"/>s discovered while validating the OData Url.
         /// </summary>
-        public List<ODataUrlValidationError> Errors { get; private set; }
+        public List<ODataUrlValidationMessage> Messages { get; private set; }
 
         /// <summary>
         /// The model against which the OData Url is to be validated.
@@ -48,21 +48,21 @@ namespace Microsoft.OData.UriParser.Validation
         internal ODataUrlValidationContext(IEdmModel model, ODataUrlValidator urlValidator)
         {
             this.Model = model;
-            this.Errors = new List<ODataUrlValidationError>();
+            this.Messages = new List<ODataUrlValidationMessage>();
             this.UrlValidator = urlValidator;
             this.ExpressionValidator = new ExpressionValidator((item) => urlValidator.ValidateItem(item, this));
             this.PathValidator = new PathSegmentValidator(this);
         }
 
         /// <summary>
-        /// Add an <see cref="ODataUrlValidationError"/> to the collection of validation errors.
+        /// Add an <see cref="ODataUrlValidationMessage"/> to the collection of validation errors.
         /// </summary>
         /// <param name="code">The error code of the error.</param>
         /// <param name="message">The error message.</param>
         /// <param name="severity">The severity of the error.</param>
         public void AddError(string code, string message, Severity severity)
         {
-            this.Errors.Add(new ODataUrlValidationError(code, message, severity));
+            this.Messages.Add(new ODataUrlValidationMessage(code, message, severity));
         }
     }
 }

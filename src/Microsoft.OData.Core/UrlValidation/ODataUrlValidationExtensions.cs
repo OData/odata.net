@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser.Validation.ValidationEngine;
@@ -16,33 +17,45 @@ namespace Microsoft.OData.UriParser.Validation
     public static class ODataUrlValidationExtensions
     {
         /// <summary>
-        /// Validate the ODataUrl for a given model using all rules.
+        /// Validate the OData Url for a given model using a specified set of rules.
         /// </summary>
-        /// <remarks>
-        /// Note that Uris that validate using current rules may fail to validate in the future as additional rules are added.
-        /// In order to guarantee a consistent behavior, pass an explicit set of rules to the Valdiate method.
-        /// </remarks>
-        /// <param name="odataUri">The <see cref="ODataUri"/> to validate.</param>
+        /// <param name="uri">The <see cref="Uri"/> to validate.</param>
         /// <param name="model">The model to validate the OData Uri against.</param>
-        /// <param name="errors">The collection of errors found during validation.</param>
-        /// <returns>True if errors are discovered during validation, otherwise false.</returns>
-        public static bool Validate(this ODataUri odataUri, IEdmModel model, out IEnumerable<ODataUrlValidationError> errors)
+        /// <param name="rules">The set of rules to use in validating the OData Uri.</param>
+        /// <param name="validationMessages">The collection of validation messages found during validation.</param>
+        /// <returns>True if validation messages are discovered during validation, otherwise false.</returns>
+        public static bool ValidateODataUrl(this Uri uri, IEdmModel model, ODataUrlValidationRuleSet rules, out IEnumerable<ODataUrlValidationMessage> validationMessages)
         {
-            return odataUri.Validate(model, new ODataUrlValidationRuleSet(), out errors);
+            try
+            {
+                ODataUriParser parser = new ODataUriParser(model, uri);
+                ODataUri odataUri = parser.ParseUri();
+                return odataUri.Validate(model, rules, out validationMessages);
+            }
+
+            catch (Exception e)
+            {
+                validationMessages = new ODataUrlValidationMessage[]
+                {
+                    new ODataUrlValidationMessage(ODataUrlValidationMessageCodes.UnableToParseUri, e.Message, Severity.Error)
+                };
+
+                return false;
+            }
         }
 
         /// <summary>
-        /// Validate the ODataUrl for a given model using a specified set of rules.
+        /// Validate the ODataUri for a given model using a specified set of rules.
         /// </summary>
         /// <param name="odataUri">The <see cref="ODataUri"/> to validate.</param>
         /// <param name="model">The model to validate the OData Uri against.</param>
         /// <param name="rules">The set of rules to use in validating the OData Uri.</param>
-        /// <param name="errors">The collection of errors found during validation.</param>
-        /// <returns>True if errors are discovered during validation, otherwise false.</returns>
-        public static bool Validate(this ODataUri odataUri, IEdmModel model, ODataUrlValidationRuleSet rules, out IEnumerable<ODataUrlValidationError> errors)
+        /// <param name="validationMessages">The collection of validation messages found during validation.</param>
+        /// <returns>True if validation messages are discovered during validation, otherwise false.</returns>
+        public static bool Validate(this ODataUri odataUri, IEdmModel model, ODataUrlValidationRuleSet rules, out IEnumerable<ODataUrlValidationMessage> validationMessages)
         {
             ODataUrlValidator validator = new ODataUrlValidator(model, rules);
-            return validator.ValidateUrl(odataUri, out errors);
+            return validator.ValidateUrl(odataUri, out validationMessages);
         }
     }
 }

@@ -13,9 +13,6 @@ namespace Microsoft.OData.UriParser.Validation.Rules
     /// </summary>
     internal class RequireSelectRules
     {
-        const string selectRequiredCode = "selectRequired";
-        const string selectRequiredMessage = "All property paths, expands, and selects of complex types must include a SELECT statement.";
-
         /// <summary>
         /// Validates that all included structured properties within an ODataUri include a $select.
         /// </summary>
@@ -26,7 +23,7 @@ namespace Microsoft.OData.UriParser.Validation.Rules
                 bool isStructuredType = path.Path.LastSegment.EdmType.AsElementType() is IEdmStructuredType;
                 if (isStructuredType && AllSelected(path.SelectAndExpand))
                 {
-                    context.Errors.Add(new ODataUrlValidationError(selectRequiredCode, selectRequiredMessage, Severity.Warning));
+                    context.Messages.Add(new ODataUrlValidationMessage(ODataUrlValidationMessageCodes.MissingSelect, Strings.ODataUrlValidationError_SelectRequired, Severity.Warning));
                 }
             }
         );
