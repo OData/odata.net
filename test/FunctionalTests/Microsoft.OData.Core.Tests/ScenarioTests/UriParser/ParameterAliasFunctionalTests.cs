@@ -254,20 +254,35 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 });
         }
 
-        [Fact]
-        public void ParsePath_AliasInUnboundFunction_SingleAndEscapedDoubleQuotesWithinDoubleQuotedStringsInJsonArray()
+        [Theory]
+        [InlineData("{\"@odata.type\":\"%23Fully.Qualified.Namespace.Film\",\"ID\":1,\"Title\":\"The Ogre's Lair\"}")]
+        [InlineData("{\"@odata.type\":\"%23Fully.Qualified.Namespace.Film\",\"ID\":2,\"Title\":\"The \\\"Benevolent\\\" Dictator\"}")]
+        [InlineData("{\"@odata.type\":\"%23Fully.Qualified.Namespace.Film\",\"ID\":3,\"Title\":\"The \\\"Gardener's\\\" Story\"}")]
+        public void ParsePath_AliasInUnboundFunction_QuotesWithinDoubleQuotedStrings(string parameterValue)
         {
-            const string uri = "http://gobbledygook/GetRatings(films=@p)";
-            var queryString = "?@p=[{\"ID\":1,\"Title\":\"The Ogre's Lair\"},{\"ID\":2,\"Title\":\"The \\\"Benevolent\\\" Dictator\"},{\"ID\":3,\"Title\":\"The \\\"Gardener's\\\" Story\"}]";
-
             ParseUriAndVerify(
-                new Uri(uri + queryString),
+                new Uri("http://gobbledygook/GetRating(film=@p)?@p=" + parameterValue),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    oDataPath.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetRating());
+
+                    var constNode = Assert.IsType<ConstantNode>(aliasNodes["@p"]);
+                    Assert.Equal(parameterValue.Replace("%23", "#"), constNode.Value);
+                });
+        }
+
+        [Theory]
+        [InlineData("[{\"ID\":1,\"Title\":\"The Ogre's Lair\"},{\"ID\":2,\"Title\":\"The \\\"Benevolent\\\" Dictator\"},{\"ID\":3,\"Title\":\"The \\\"Gardener's\\\" Story\"}]")]
+        public void ParsePath_AliasInUnboundFunction_QuotesWithinDoubleQuotedStringsInJsonArray(string parameterValue)
+        {
+            ParseUriAndVerify(
+                new Uri("http://gobbledygook/GetRatings(films=@p)?@p=" + parameterValue),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                     oDataPath.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetRatings());
 
                     var constNode = Assert.IsType<ConstantNode>(aliasNodes["@p"]);
-                    Assert.Equal("[{\"ID\":1,\"Title\":\"The Ogre's Lair\"},{\"ID\":2,\"Title\":\"The \\\"Benevolent\\\" Dictator\"},{\"ID\":3,\"Title\":\"The \\\"Gardener's\\\" Story\"}]", constNode.Value);
+                    Assert.Equal(parameterValue.Replace("%23", "#"), constNode.Value);
                 });
         }
 
