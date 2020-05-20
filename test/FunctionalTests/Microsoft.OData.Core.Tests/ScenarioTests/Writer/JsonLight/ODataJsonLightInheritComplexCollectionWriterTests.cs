@@ -202,7 +202,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         private static void WriteAndValidate(ODataResourceSet collectionStart, IEnumerable<ODataResource> items, string expectedPayload, bool writingResponse = true, IEdmTypeReference itemTypeReference = null)
         {
             WriteAndValidateSync(itemTypeReference, collectionStart, items, expectedPayload, writingResponse);
-            //WriteAndValidateAsync(itemTypeReference, collectionStart, items, expectedPayload, writingResponse);
+            WriteAndValidateAsync(itemTypeReference, collectionStart, items, expectedPayload, writingResponse);
+            WriteAndValidatePrimitivesSync(itemTypeReference, collectionStart, items, expectedPayload, writingResponse);
+            WriteAndValidatePrimitivesAsync(itemTypeReference, collectionStart, items, expectedPayload, writingResponse);
         }
 
         private static void WriteAndValidateSync(IEdmTypeReference itemTypeReference, ODataResourceSet collectionStart, IEnumerable<ODataResource> items, string expectedPayload, bool writingResponse)
@@ -221,23 +223,83 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             ValidateWrittenPayload(stream, expectedPayload);
         }
 
-        //private static void WriteAndValidateAsync(IEdmTypeReference itemTypeReference, ODataResourceSet collectionStart, IEnumerable<ODataResource> items, string expectedPayload, bool writingResponse)
-        //{
-        //    MemoryStream stream = new MemoryStream();
-        //    var outputContext = CreateJsonLightOutputContext(stream, writingResponse, synchronous: false);
-        //    var createODataWriterTask = outputContext.CreateODataResourceSetWriterAsync(null, itemTypeReference == null ? null : itemTypeReference.ToStructuredType());
-        //    createODataWriterTask.Wait();
-        //    var odataWriter = createODataWriterTask.Result;
-        //    odataWriter.WriteStartAsync(collectionStart).Wait();
-        //    foreach (ODataResource item in items)
-        //    {
-        //        odataWriter.WriteStartAsync(item).Wait();
-        //        odataWriter.WriteEndAsync().Wait();
-        //    }
+        private static void WriteAndValidateAsync(IEdmTypeReference itemTypeReference, ODataResourceSet collectionStart, IEnumerable<ODataResource> items, string expectedPayload, bool writingResponse)
+        {
+            MemoryStream stream = new MemoryStream();
+            var outputContext = CreateJsonLightOutputContext(stream, writingResponse, synchronous: false);
+            var createODataWriterTask = outputContext.CreateODataResourceSetWriterAsync(null, itemTypeReference == null ? null : itemTypeReference.ToStructuredType());
+            createODataWriterTask.Wait();
+            var odataWriter = createODataWriterTask.Result;
+            odataWriter.WriteStartAsync(collectionStart).Wait();
+            foreach (ODataResource item in items)
+            {
+                odataWriter.WriteStartAsync(item).Wait();
+                odataWriter.WriteEndAsync().Wait();
+            }
 
-        //    odataWriter.WriteEndAsync().Wait();
-        //    ValidateWrittenPayload(stream, expectedPayload);
-        //}
+            odataWriter.WriteEndAsync().Wait();
+            ValidateWrittenPayload(stream, expectedPayload);
+        }
+
+        private static void WriteAndValidatePrimitivesSync(IEdmTypeReference itemTypeReference, ODataResourceSet collectionStart, IEnumerable<ODataResource> items, string expectedPayload, bool writingResponse)
+        {
+            MemoryStream stream = new MemoryStream();
+            var outputContext = CreateJsonLightOutputContext(stream, writingResponse, synchronous: true);
+            var odataWriter = outputContext.CreateODataResourceSetWriter(null, itemTypeReference == null ? null : itemTypeReference.ToStructuredType());
+            odataWriter.WriteStart(collectionStart);
+            foreach (ODataResource item in items)
+            {
+                odataWriter.WriteStart(new ODataResource
+                {
+                    Id = item.Id,
+                    SerializationInfo = item.SerializationInfo,
+                    InstanceAnnotations = item.InstanceAnnotations,
+                    TypeAnnotation = item.TypeAnnotation,
+                    TypeName = item.TypeName
+                });
+
+                foreach(var property in item.Properties)
+                {
+                    odataWriter.WriteStart(property);
+                    odataWriter.WriteEnd();
+                }
+
+                odataWriter.WriteEnd(); // resource
+            }
+
+            odataWriter.WriteEnd(); // collection
+            ValidateWrittenPayload(stream, expectedPayload);
+        }
+
+        private static async void WriteAndValidatePrimitivesAsync(IEdmTypeReference itemTypeReference, ODataResourceSet collectionStart, IEnumerable<ODataResource> items, string expectedPayload, bool writingResponse)
+        {
+            MemoryStream stream = new MemoryStream();
+            var outputContext = CreateJsonLightOutputContext(stream, writingResponse, synchronous: false);
+            var odataWriter = await outputContext.CreateODataResourceSetWriterAsync(null, itemTypeReference == null ? null : itemTypeReference.ToStructuredType());
+            await odataWriter.WriteStartAsync(collectionStart);
+            foreach (ODataResource item in items)
+            {
+                await odataWriter.WriteStartAsync(new ODataResource
+                {
+                    Id = item.Id,
+                    SerializationInfo = item.SerializationInfo,
+                    InstanceAnnotations = item.InstanceAnnotations,
+                    TypeAnnotation = item.TypeAnnotation,
+                    TypeName = item.TypeName
+                });
+
+                foreach (var property in item.Properties)
+                {
+                    await odataWriter.WriteStartAsync(property);
+                    await odataWriter.WriteEndAsync();
+                }
+
+                await odataWriter.WriteEndAsync(); // resource
+            }
+
+            await odataWriter.WriteEndAsync(); // collection
+            ValidateWrittenPayload(stream, expectedPayload);
+        }
 
         private static void ValidateWrittenPayload(MemoryStream stream, string expectedPayload)
         {

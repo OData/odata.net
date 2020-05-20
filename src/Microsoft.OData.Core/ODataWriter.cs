@@ -324,7 +324,7 @@ namespace Microsoft.OData
         /// <summary> Asynchronously write a primitive property within a resource. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         /// <param name="primitiveProperty">The primitive property to write.</param>
-        public virtual Task WriteStartAsync(ODataProperty primitiveProperty)
+        public virtual Task WriteStartAsync(ODataPropertyInfo primitiveProperty)
         {
             return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStart(primitiveProperty));
         }
