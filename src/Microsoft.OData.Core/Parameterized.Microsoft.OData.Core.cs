@@ -461,14 +461,11 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "All property paths, expands, and selects of complex types must include a SELECT statement."
+        /// A string like "{0} is missing a $select clause. All property paths, expands, and selects of complex types must include a SELECT statement."
         /// </summary>
-        internal static string ODataUrlValidationError_SelectRequired
+        internal static string ODataUrlValidationError_SelectRequired(object p0)
         {
-            get
-            {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataUrlValidationError_SelectRequired);
-            }
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataUrlValidationError_SelectRequired, p0);
         }
 
         /// <summary>

@@ -22,7 +22,6 @@ namespace Microsoft.OData.UriParser.Validation.ValidationEngine
         private Dictionary<Type, List<ODataUrlValidationRule>> ruleDictionary = new Dictionary<Type, List<ODataUrlValidationRule>>();
         private ConcurrentDictionary<Type, byte> unusedTypes = new ConcurrentDictionary<Type, byte>();
         private IEdmModel model;
-        private string invalidRuleMessage = "Exception thrown by invalid rule {0}. {1}";
 
         /// <summary>
         /// Validates urls based on a provided model and collection of rules
@@ -198,7 +197,7 @@ namespace Microsoft.OData.UriParser.Validation.ValidationEngine
                         }
                         catch (Exception e)
                         {
-                            validationContext.AddError(ODataUrlValidationMessageCodes.InvalidRule, String.Format(invalidRuleMessage, rule.RuleName, e.Message), Severity.Warning);
+                            validationContext.AddError(ODataUrlValidationMessageCodes.InvalidRule, Strings.ODataUrlValidationError_InvalidRule(rule.RuleName, e.Message), Severity.Warning);
                         }
                     }
                 }

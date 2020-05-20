@@ -36,7 +36,7 @@ namespace Microsoft.OData.Tests.ObjectModelTests
             typeof(ODataUntypedValue),
             typeof(ODataPreferenceHeader),
             typeof(ODataPropertyInfo),
-            typeof(ODataUrlValidationError)
+            typeof(ODataUrlValidationMessage)
         };
 
         // List of types explicitly allowed to be not-sealed.

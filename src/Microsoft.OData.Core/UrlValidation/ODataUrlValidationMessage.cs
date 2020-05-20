@@ -29,7 +29,7 @@ namespace Microsoft.OData.UriParser.Validation
         Warning = 2,
 
         /// <summary>
-        /// Critical
+        /// Error
         /// </summary>
         Error = 3,
     }
