@@ -11,9 +11,6 @@ using System.Text;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Xunit;
-using System.Globalization;
-using System.ComponentModel;
-using System.Linq;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
 {

@@ -306,14 +306,14 @@ namespace Microsoft.OData
         /// Asynchronously creates an <see cref="ODataWriter" /> to write a delta resource set.
         /// </summary>
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
-        /// <param name="structuredType">The structured type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
-        public Task<ODataWriter> CreateODataDeltaResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmStructuredType structuredType)
+        public Task<ODataWriter> CreateODataDeltaResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
         {
             this.VerifyCanCreateODataResourceSetWriter();
             return this.WriteToOutputAsync(
                 ODataPayloadKind.ResourceSet,
-                (context) => context.CreateODataDeltaResourceSetWriterAsync(entitySet, structuredType));
+                (context) => context.CreateODataDeltaResourceSetWriterAsync(entitySet, entityType));
         }
 
         /// <summary>
