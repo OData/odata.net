@@ -63,7 +63,7 @@ namespace Microsoft.OData.UriParser.Validation.Rules
             Date? date;
             if (IsDeprecated(context.Model, edmType, out message, out version, out date))
             {
-                context.Errors.Add(CreateUrlValidationError(edmType.FullTypeName(), message, version, date));
+                context.Messages.Add(CreateUrlValidationError(edmType.FullTypeName(), message, version, date));
             }
         },
         /*includeImpliedProperties*/ true
@@ -77,12 +77,12 @@ namespace Microsoft.OData.UriParser.Validation.Rules
         /// <param name="version">The deprecation version, if specified.</param>
         /// <param name="date">The deprecation date, if specified.</param>
         /// <returns>An ODataUrlValidationError representing the deprecated element.</returns>
-        private static ODataUrlValidationError CreateUrlValidationError(string elementName, string message, string version, Date? date)
+        private static ODataUrlValidationMessage CreateUrlValidationError(string elementName, string message, string version, Date? date)
         {
-            ODataUrlValidationError error = new ODataUrlValidationError(RevisionKindDeprecated, message, Severity.Warning);
-            error.AdditionalInfo.Add(RevisionDateProperty, date);
-            error.AdditionalInfo.Add(RevisionVersionProperty, version);
-            error.AdditionalInfo.Add(RevisionElementNameProperty, elementName);
+            ODataUrlValidationMessage error = new ODataUrlValidationMessage(ODataUrlValidationMessageCodes.DeprecatedElement, message, Severity.Warning);
+            error.ExtendedProperties.Add(RevisionDateProperty, date);
+            error.ExtendedProperties.Add(RevisionVersionProperty, version);
+            error.ExtendedProperties.Add(RevisionElementNameProperty, elementName);
             return error;
         }
         
@@ -99,11 +99,11 @@ namespace Microsoft.OData.UriParser.Validation.Rules
             Date? date;
             if (IsDeprecated(context.Model, element, out message, out version, out date))
             {
-                context.Errors.Add(CreateUrlValidationError(element.Name, message, version, date));
+                context.Messages.Add(CreateUrlValidationError(element.Name, message, version, date));
             }
             else if (IsDeprecated(context.Model, elementType, out message, out version, out date))
             {
-                context.Errors.Add(CreateUrlValidationError(element.Name, message, version, date));
+                context.Messages.Add(CreateUrlValidationError(element.Name, message, version, date));
             }
         }
 

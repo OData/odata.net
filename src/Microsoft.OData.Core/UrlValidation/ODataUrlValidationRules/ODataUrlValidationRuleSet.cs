@@ -13,24 +13,20 @@ namespace Microsoft.OData.UriParser.Validation
     /// </summary>
     public sealed class ODataUrlValidationRuleSet : List<ODataUrlValidationRule>
     {
-        private static IEnumerable<ODataUrlValidationRule> allRules = new ODataUrlValidationRule[]
+        /// <summary>
+        /// An ODataUrlValidationRuleSet with all built-in rules.
+        /// </summary>
+        /// <remarks>
+        /// Note that Uris that validate using AllRules may fail to validate in the future as additional rules are added.
+        /// In order to guarantee a consistent behavior, pass an explicit set of rules to the <see cref="ODataUrlValidationRuleSet"/> constructor.
+        /// </remarks>
+        public static ODataUrlValidationRuleSet AllRules = new ODataUrlValidationRuleSet(new ODataUrlValidationRule[]
         {
             ODataUrlValidationRules.DeprecatedPropertyRule,
             ODataUrlValidationRules.DeprecatedTypeRule,
             ODataUrlValidationRules.DeprecatedNavigationSourceRule,
             ODataUrlValidationRules.RequireSelectRule
-        };
-
-        /// <summary>
-        /// Constructs an ODataUrlValidationRuleSet with all built-in rules.
-        /// </summary>
-        /// <remarks>
-        /// Note that Uris that validate using current rules may fail to validate in the future as additional rules are added.
-        /// In order to guarantee a consistent behavior, pass an explicit set of rules to the constructor.
-        /// </remarks>
-        public ODataUrlValidationRuleSet() : base(allRules)
-        {
-        }
+        });
 
         /// <summary>
         /// Constructs an ODataUrlValidationRuleSet given a list of <see cref="ODataUrlValidationRule">s 

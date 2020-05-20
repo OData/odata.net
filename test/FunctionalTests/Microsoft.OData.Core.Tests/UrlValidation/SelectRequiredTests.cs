@@ -4,11 +4,9 @@
 // </copyright>
 //--------
 
-using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
-using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Validation;
 using System;
 using System.Collections.Generic;
@@ -34,14 +32,13 @@ namespace UrlValidationTests
         private static void MissingSelect(String request)
         {
             IEdmModel model = GetModel();
-            ODataUriParser parser = new ODataUriParser(model, new Uri(request, UriKind.Relative));
-            ODataUri uri = parser.ParseUri();
+            Uri uri = new Uri(request, UriKind.Relative);
 
-            IEnumerable<ODataUrlValidationError> errors;
+            IEnumerable<ODataUrlValidationMessage> errors;
             ODataUrlValidationRuleSet rules = new ODataUrlValidationRuleSet(new ODataUrlValidationRule[] { ODataUrlValidationRules.RequireSelectRule });
-            uri.Validate(model, rules, out errors);
+            uri.ValidateODataUrl(model, rules, out errors);
             Assert.Single(errors);
-            Assert.Equal("selectRequired", errors.Single().ErrorCode);
+            Assert.Equal("missingSelect", errors.Single().MessageCode);
         }
 
         [Theory]
@@ -52,12 +49,11 @@ namespace UrlValidationTests
         private static void HaveSelect(String request)
         {
             IEdmModel model = GetModel();
-            ODataUriParser parser = new ODataUriParser(model, new Uri(request, UriKind.Relative));
-            ODataUri uri = parser.ParseUri();
+            Uri uri = new Uri(request, UriKind.Relative);
 
-            IEnumerable<ODataUrlValidationError> errors;
+            IEnumerable<ODataUrlValidationMessage> errors;
             ODataUrlValidationRuleSet rules = new ODataUrlValidationRuleSet(new ODataUrlValidationRule[] { ODataUrlValidationRules.RequireSelectRule });
-            uri.Validate(model, rules, out errors);
+            uri.ValidateODataUrl(model, rules, out errors);
             Assert.Empty(errors);
         }
 
