@@ -26,6 +26,9 @@ namespace Microsoft.OData.Client
         /// <summary>MIME type for JSON bodies in light mode (http://www.iana.org/assignments/media-types/application/).</summary>
         private const string MimeApplicationJsonODataLight = "application/json;odata.metadata=minimal";
 
+        /// <summary>MIME type for JSON (https://www.ietf.org/rfc/rfc4627.txt).</summary>
+        private const string MimeApplicationJson = "application/json";
+
         /// <summary>MIME type for JSON bodies in light mode with all metadata.</summary>
         private const string MimeApplicationJsonODataLightWithAllMetadata = "application/json;odata.metadata=full";
 
@@ -163,12 +166,15 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Sets the value of the Accept header for a count request (will set it to 'multipart/mixed').
+        /// Sets the value of the Accept header for a batch request
+        /// Will set it to 'multipart/mixed' for a multipart batch request
+        /// Will set it to 'application/json' for a json batch request
         /// </summary>
         /// <param name="headers">The headers to modify.</param>
         internal void SetRequestAcceptHeaderForBatch(HeaderCollection headers)
         {
-            this.SetAcceptHeaderAndCharset(headers, MimeMultiPartMixed);
+            bool useJsonBatch = headers.GetHeader(XmlConstants.HttpContentType).Equals(MimeApplicationJson);
+            this.SetAcceptHeaderAndCharset(headers, useJsonBatch? MimeApplicationJson : MimeMultiPartMixed);
         }
 
         /// <summary>

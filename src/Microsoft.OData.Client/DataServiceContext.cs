@@ -3027,7 +3027,7 @@ namespace Microsoft.OData.Client
         /// <param name="options">options as specified by the user.</param>
         private void ValidateSaveChangesOptions(SaveChangesOptions options)
         {
-            const SaveChangesOptions All = SaveChangesOptions.ContinueOnError | SaveChangesOptions.BatchWithSingleChangeset | SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.ReplaceOnUpdate | SaveChangesOptions.PostOnlySetProperties | SaveChangesOptions.UseRelativeUri;
+            const SaveChangesOptions All = SaveChangesOptions.ContinueOnError | SaveChangesOptions.BatchWithSingleChangeset | SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.ReplaceOnUpdate | SaveChangesOptions.PostOnlySetProperties | SaveChangesOptions.UseRelativeUri | SaveChangesOptions.UseJsonBatch;
 
             // Make sure no higher order bits are set.
             if ((options | All) != All)
@@ -3063,6 +3063,12 @@ namespace Microsoft.OData.Client
             if (Util.IsFlagSet(options, SaveChangesOptions.UseRelativeUri) && !Util.IsBatch(options))
             {
                 throw Error.InvalidOperation(Strings.Context_MustBeUsedWith("SaveChangesOptions.UseRelativeUri", "DataServiceCollection"));
+            }
+
+            // UseJsonBatch can only be used in Batch Requests
+            if (Util.IsFlagSet(options, SaveChangesOptions.UseJsonBatch) && !Util.IsBatch(options))
+            {
+                throw Error.InvalidOperation(Strings.Context_MustBeUsedWith("SaveChangesOptions.UseJsonBatch", "DataServiceCollection"));
             }
         }
 

@@ -128,9 +128,31 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
         [TestMethod]
-        public void SetRequestAcceptHeaderForBatch()
+        public void SetRequestAcceptHeaderForMultipartBatch()
         {
-            this.TestSetRequestHeader(f => f.UseJson(this.serviceModel), (f, r) => f.SetRequestAcceptHeaderForBatch(r), "Accept", null, "multipart/mixed");
+            var headers = new HeaderCollection();
+            headers.SetHeader("Content-Type", "multipart/mixed;boundary=xyz_ewquwdu");
+            this.TestSetRequestHeaderForBatch(
+                f => f.UseJson(this.serviceModel), // Configure DataServiceClientFormat
+                headers, // Header Collection
+                (f, r) => f.SetRequestAcceptHeaderForBatch(r), // set request header
+                "Accept", // Header to set
+                null, // Initial header value
+                "multipart/mixed"); // Expected header value
+        }
+
+        [TestMethod]
+        public void SetRequestAcceptHeaderForJsonBatch()
+        {
+            var headers = new HeaderCollection();
+            headers.SetHeader("Content-Type", "application/json");
+            this.TestSetRequestHeaderForBatch(
+                f => f.UseJson(this.serviceModel), // Configure DataServiceClientFormat
+                headers, // Header Collection
+                (f, r) => f.SetRequestAcceptHeaderForBatch(r), // set request header
+                "Accept", // Header to set
+                null, // Initial header value
+                "application/json"); // Expected header value
         }
 
         [TestMethod]
@@ -267,6 +289,26 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                     headers.GetHeader("OData-Version").Should().BeNull();
                 }
             }
+
+            if (expectedHeaderToSet == "Accept")
+            {
+                headers.GetHeader("Accept-Charset").Should().Be("UTF-8");
+            }
+        }
+
+        private void TestSetRequestHeaderForBatch(Action<DataServiceClientFormat> configureFormat, HeaderCollection headerCollection, Action<DataServiceClientFormat, HeaderCollection> setRequestHeader, string expectedHeaderToSet, string initialHeaderValue, string expectedValueAfterSet)
+        {
+            var headers = headerCollection;
+            configureFormat(this.v3TestSubject);
+
+            headers.SetHeader(expectedHeaderToSet, initialHeaderValue);
+
+            // Verify header has the expected initial value. This ensures that SetHeader above actually what we expect, and didn't use a default value or ignore the set request.
+            headers.GetHeader(expectedHeaderToSet).Should().Be(initialHeaderValue);
+
+            // Try to set header to new value and verify
+            setRequestHeader(this.v3TestSubject, headers);
+            headers.GetHeader(expectedHeaderToSet).Should().Be(expectedValueAfterSet);
 
             if (expectedHeaderToSet == "Accept")
             {

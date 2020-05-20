@@ -7513,6 +7513,7 @@ public enum Microsoft.OData.Client.SaveChangesOptions : int {
 	None = 0
 	PostOnlySetProperties = 8
 	ReplaceOnUpdate = 4
+	UseJsonBatch = 64
 	UseRelativeUri = 32
 }
 
