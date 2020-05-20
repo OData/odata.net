@@ -335,12 +335,6 @@ namespace Microsoft.OData.Client.Materialization
 
                 if (this.IsTracking)
                 {
-                    if (this.Id == null)
-                    {
-                        // TODO: Remove these lines since complex type doesn't have Id.
-                        // throw DSClient.Error.InvalidOperation(DSClient.Strings.Deserialize_MissingIdElement);
-                    }
-
                     this.EntityDescriptor.Identity = this.entry.Id;
                     this.EntityDescriptor.EditLink = this.entry.EditLink;
                     this.EntityDescriptor.SelfLink = this.entry.ReadLink;
