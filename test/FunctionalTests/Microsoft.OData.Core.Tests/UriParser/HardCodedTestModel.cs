@@ -102,6 +102,7 @@ namespace Microsoft.OData.Tests.UriParser
             var FullyQualifiedNamespaceHomeAddress = new EdmComplexType("Fully.Qualified.Namespace", "HomeAddress", FullyQualifiedNamespaceAddress);
 
             var FullyQualifiedNamespaceHeartbeat = new EdmComplexType("Fully.Qualified.Namespace", "Heartbeat");
+            var FullyQualifiedNamespaceFilm = new EdmEntityType("Fully.Qualified.Namespace", "Film", null, false, false);
 
             var FullyQualifiedNamespacePersonTypeReference = new EdmEntityTypeReference(FullyQualifiedNamespacePerson, true);
             var FullyQualifiedNamespaceEmployeeTypeReference = new EdmEntityTypeReference(FullyQualifiedNamespaceEmployee, true);
@@ -118,6 +119,7 @@ namespace Microsoft.OData.Tests.UriParser
             var FullyQualifiedNamespacePaintingTypeReference = new EdmEntityTypeReference(FullyQualifiedNamespacePainting, true);
             var FullyQualifiedNamespaceFramedPaintingTypeReference = new EdmEntityTypeReference(FullyQualifiedNamespaceFramedPainting, true);
             var FullyQualifiedNamespaceUserAccountTypeReference = new EdmEntityTypeReference(FullyQualifiedNamespaceUserAccount, true);
+            var FullyQualifiedNamespaceFilmTypeReference = new EdmEntityTypeReference(FullyQualifiedNamespaceFilm, true);
 
             var FullyQualifiedNamespaceLion_ID1 = FullyQualifiedNamespaceLion.AddStructuralProperty("ID1", EdmCoreModel.Instance.GetInt32(false));
             var FullyQualifiedNamespaceLion_ID2 = FullyQualifiedNamespaceLion.AddStructuralProperty("ID2", EdmCoreModel.Instance.GetInt32(false));
@@ -379,6 +381,10 @@ namespace Microsoft.OData.Tests.UriParser
             // entity type with enum as key
             var fullyQualifiedNamespaceShape = new EdmEntityType("Fully.Qualified.Namespace", "Shape", null, false, false);
             fullyQualifiedNamespaceShape.AddKeys(fullyQualifiedNamespaceShape.AddStructuralProperty("Color", colorTypeReference));
+
+            FullyQualifiedNamespaceFilm.AddKeys(FullyQualifiedNamespaceFilm.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32, false));
+            FullyQualifiedNamespaceFilm.AddStructuralProperty("Title", EdmPrimitiveTypeKind.String);
+            model.AddElement(FullyQualifiedNamespaceFilm);
             #endregion
 
             #region Annotation Terms
@@ -694,6 +700,14 @@ namespace Microsoft.OData.Tests.UriParser
             FullyQualifiedNamespaceGetFullNameFunction.AddParameter("nickname", FullyQualifiedNamespaceNameTypeReference);
             model.AddElement(FullyQualifiedNamespaceGetFullNameFunction);
 
+            var FullyQualifiedNamespaceGetRatingFunction = new EdmFunction("Fully.Qualified.Namespace", "GetRating", EdmCoreModel.Instance.GetInt32(true), false, null, true);
+            FullyQualifiedNamespaceGetRatingFunction.AddParameter("film", FullyQualifiedNamespaceFilmTypeReference);
+            model.AddElement(FullyQualifiedNamespaceGetRatingFunction);
+
+            var FullyQualifiedNamespaceGetRatingsFunction = new EdmFunction("Fully.Qualified.Namespace", "GetRatings", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(true))), false, null, true);
+            FullyQualifiedNamespaceGetRatingsFunction.AddParameter("films", new EdmCollectionTypeReference(new EdmCollectionType(FullyQualifiedNamespaceFilmTypeReference)));
+            model.AddElement(FullyQualifiedNamespaceGetRatingsFunction);
+
             #endregion
 
             #region Context Container
@@ -774,6 +788,9 @@ namespace Microsoft.OData.Tests.UriParser
             FullyQualifiedNamespaceContext.AddFunctionImport("GetMostImporantPerson", FullyQualifiedNamespaceGetMostImporantPersonFunction2);
 
             FullyQualifiedNamespaceContext.AddActionImport("MoveEveryone", FullyQualifiedNamespaceMoveEveryoneAction);
+
+            FullyQualifiedNamespaceContext.AddFunctionImport("GetRating", FullyQualifiedNamespaceGetRatingFunction);
+            FullyQualifiedNamespaceContext.AddFunctionImport("GetRatings", FullyQualifiedNamespaceGetRatingsFunction);
 
             #endregion
 
@@ -913,6 +930,8 @@ namespace Microsoft.OData.Tests.UriParser
         <ActionImport Name=""ResetAllData"" Action=""Fully.Qualified.Namespace.ResetAllData"" />
         <FunctionImport Name=""GetMostImporantPerson"" Function=""Fully.Qualified.Namespace.GetMostImporantPerson"" />
         <ActionImport Name=""MoveEveryone"" Action=""Fully.Qualified.Namespace.MoveEveryone"" />
+        <FunctionImport Name=""GetRating"" Function=""Fully.Qualified.Namespace.GetRating"" />
+        <FunctionImport Name=""GetRatings"" Function=""Fully.Qualified.Namespace.GetRatings"" />
       </EntityContainer>
     </Schema>
   </edmx:DataServices>
@@ -1187,6 +1206,13 @@ namespace Microsoft.OData.Tests.UriParser
         <Property Name=""Name"" Type=""Edm.String"" />
         <Property Name=""PetCategorysColorPattern"" Type=""Fully.Qualified.Namespace.ColorPattern"" Nullable=""false"" />
       </EntityType>
+      <EntityType Name=""Film"">
+        <Key>
+          <PropertyRef Name=""ID"" />
+        </Key>
+        <Property Name=""ID"" Type=""Edm.Int32"" Nullable=""false"" />
+        <Property Name=""Title"" Type=""Edm.String"" />
+      </EntityType>
       <Function Name=""GetPersonByDate"" IsComposable=""true"">
         <Parameter Name=""date"" Type=""Edm.Date"" Nullable=""false"" />
         <ReturnType Type=""Fully.Qualified.Namespace.Person"" />
@@ -1218,6 +1244,14 @@ namespace Microsoft.OData.Tests.UriParser
       <Function Name=""GetPet6"" IsComposable=""true"">
         <Parameter Name=""id"" Type=""Fully.Qualified.Namespace.IdType"" Nullable=""false"" />
         <ReturnType Type=""Fully.Qualified.Namespace.Pet6"" />
+      </Function>
+      <Function Name=""GetRating"">
+        <Parameter Name=""film"" Type=""Fully.Qualified.Namespace.Film"" />
+        <ReturnType Type=""Edm.Int32"" Nullable=""false"" />
+      </Function>
+      <Function Name=""GetRatings"">
+        <Parameter Name=""films"" Type=""Collection(Fully.Qualified.Namespace.Film)"" />
+        <ReturnType Type=""Collection(Edm.Int32)"" Nullable=""false"" />
       </Function>
       <Term Name=""PrimitiveTerm"" Type=""Edm.String""/>
       <Term Name=""ComplexTerm"" Type=""Fully.Qualified.Namespace.Address""/>
@@ -2464,6 +2498,16 @@ namespace Microsoft.OData.Tests.UriParser
         public static IEdmTerm GetComplexAnnotationTerm()
         {
             return TestModel.FindTerm("Fully.Qualified.Namespace.ComplexTerm") as IEdmTerm;
+        }
+
+        public static IEdmOperationImport GetFunctionImportForGetRating()
+        {
+            return TestModel.EntityContainer.FindOperationImports("GetRating").Single();
+        }
+
+        public static IEdmOperationImport GetFunctionImportForGetRatings()
+        {
+            return TestModel.EntityContainer.FindOperationImports("GetRatings").Single();
         }
     }
 }

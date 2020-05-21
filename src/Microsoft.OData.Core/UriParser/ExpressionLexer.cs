@@ -86,6 +86,9 @@ namespace Microsoft.OData.UriParser
         /// <summary>Lexer ignores whitespace</summary>
         private bool ignoreWhitespace;
 
+        /// <summary>Indicates whether a double-quoted string is being parsed.</summary>
+        private bool parsingDoubleQuotedString;
+
         #endregion Protected and Private fields
 
         #region Constructors
@@ -113,6 +116,7 @@ namespace Microsoft.OData.UriParser
             this.TextLen = this.Text.Length;
             this.useSemicolonDelimiter = useSemicolonDelimiter;
             this.parsingFunctionParameters = parsingFunctionParameters;
+            this.parsingDoubleQuotedString = false;
 
             this.SetTextPos(0);
 
@@ -1231,7 +1235,12 @@ namespace Microsoft.OData.UriParser
 
             while (currentBracketDepth > 0)
             {
-                if (this.ch == '\'')
+                if (this.ch == '"')
+                {
+                    this.DoubleQuotedStringCheckpoint();
+                }
+
+                if (this.ch == '\'' && !this.parsingDoubleQuotedString)
                 {
                     this.AdvanceToNextOccurenceOf('\'');
                 }
@@ -1282,6 +1291,14 @@ namespace Microsoft.OData.UriParser
             if (!this.IsValidDigit)
             {
                 throw ParseError(ODataErrorStrings.ExpressionLexer_DigitExpected(this.textPos, this.Text));
+            }
+        }
+
+        private void DoubleQuotedStringCheckpoint()
+        {
+            if (this.textPos != 0 && this.Text[this.textPos - 1] != '\\')
+            {
+                this.parsingDoubleQuotedString = !this.parsingDoubleQuotedString;
             }
         }
 
