@@ -147,7 +147,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         /// Check parsing status.
         /// </summary>
         /// <returns>True/false</returns>
-        public bool IsSuccessed()
+        public bool IsSucceeded()
         {
             return Errors.Count == 0;
         }

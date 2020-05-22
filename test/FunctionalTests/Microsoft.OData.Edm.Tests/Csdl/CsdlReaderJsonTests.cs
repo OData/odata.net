@@ -1779,7 +1779,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
             CsdlJsonReaderSettings setting = new CsdlJsonReaderSettings
             {
-                JsonReaderFactory = GetMeasureJsonReader
+                JsonSchemaReaderFactory = GetMeasureJsonReader
             };
 
             bool ok = CsdlReader.TryParse(ref jsonReader, setting, out IEdmModel model, out IEnumerable<EdmError> errors);
