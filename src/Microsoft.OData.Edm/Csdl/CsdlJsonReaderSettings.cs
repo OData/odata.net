@@ -34,7 +34,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// <summary>
         /// Gets/sets a call back to provide the JSON reader for referenced CSDL-JSON.
         /// </summary>
-        public CsdlJsonReaderFactory JsonReaderFactory { get; set;}
+        public CsdlJsonReaderFactory JsonSchemaReaderFactory { get; set;}
 
         /// <summary>
         /// Gets/sets a boolean value indicating whether include the default vocabularies Edm model.
@@ -62,7 +62,7 @@ namespace Microsoft.OData.Edm.Csdl
             {
                 IsBracketNotation = this.IsBracketNotation,
                 ReferencedModels = this.ReferencedModels,
-                JsonReaderFactory = this.JsonReaderFactory,
+                JsonSchemaReaderFactory = this.JsonSchemaReaderFactory,
                 IgnoreUnexpectedJsonElements = this.IgnoreUnexpectedJsonElements,
                 IncludeDefaultVocabularies = this.IncludeDefaultVocabularies
             };
