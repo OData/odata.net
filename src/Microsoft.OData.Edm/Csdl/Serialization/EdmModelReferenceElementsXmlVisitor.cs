@@ -13,11 +13,11 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
     /// <summary>
     /// The visitor for outputting &lt;edmx:referenced&gt; elements for referenced model.
     /// </summary>
-    internal class EdmModelReferenceElementsVisitor
+    internal class EdmModelReferenceElementsXmlVisitor
     {
         private readonly EdmModelCsdlSchemaXmlWriter schemaWriter;
 
-        internal EdmModelReferenceElementsVisitor(IEdmModel model, XmlWriter xmlWriter, Version edmxVersion)
+        internal EdmModelReferenceElementsXmlVisitor(IEdmModel model, XmlWriter xmlWriter, Version edmxVersion)
         {
             this.schemaWriter = new EdmModelCsdlSchemaXmlWriter(model, xmlWriter, edmxVersion);
         }

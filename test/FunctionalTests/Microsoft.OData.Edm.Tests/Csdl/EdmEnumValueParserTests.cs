@@ -130,7 +130,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
             // JSON
             string jsonEnumPath = " Read , Write ";
-            Assert.False(EdmEnumValueParser.TryParseJsonEnumMember(jsonEnumPath, enumType, null, out parsedMember));
+            Assert.True(EdmEnumValueParser.TryParseJsonEnumMember(jsonEnumPath, enumType, null, out parsedMember));
             Assert.Equal(2, parsedMember.Count());
             Assert.Equal(read, parsedMember.First());
             Assert.Equal(write, parsedMember.Last());
