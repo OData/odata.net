@@ -310,7 +310,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
             Version version = null;
             string strVersion = element.ParseAsString(context);
-            if (context.IsSuccessed())
+            if (context.IsSucceeded())
             {
                 if (strVersion == "4.0")
                 {
