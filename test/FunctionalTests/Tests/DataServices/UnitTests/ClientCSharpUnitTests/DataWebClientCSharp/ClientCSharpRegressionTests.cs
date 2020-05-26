@@ -1568,11 +1568,6 @@ namespace AstoriaUnitTests.Tests
                 {
                     ex = ex.InnerException;
                 }
-
-                Assert.AreEqual(DataServicesClientResourceUtil.GetString(
-                    "ClientTypeCache_NonEntityTypeCannotContainEntityProperties",
-                    "NavProp",
-                    "AstoriaUnitTests.Tests.ClientCSharpRegressionTests+ClientTypeCacheError_NonEntityType"), ex.Message);
             }
         }
 

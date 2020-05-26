@@ -25,7 +25,7 @@ namespace Microsoft.OData.Edm
         internal const string EdmPath_UnexpectedKind = "EdmPath_UnexpectedKind";
         internal const string Annotations_TypeMismatch = "Annotations_TypeMismatch";
         internal const string Constructable_VocabularyAnnotationMustHaveTarget = "Constructable_VocabularyAnnotationMustHaveTarget";
-        internal const string Constructable_EntityTypeOrCollectionOfEntityTypeExpected = "Constructable_EntityTypeOrCollectionOfEntityTypeExpected";
+        internal const string Constructable_EntityTypeOrCollectionOfEntityTypeOrComplexTypeExpected = "Constructable_EntityTypeOrCollectionOfEntityTypeOrComplexTypeExpected";
         internal const string Constructable_TargetMustBeStock = "Constructable_TargetMustBeStock";
         internal const string TypeSemantics_CouldNotConvertTypeReference = "TypeSemantics_CouldNotConvertTypeReference";
         internal const string EdmModel_CannotUseElementWithTypeNone = "EdmModel_CannotUseElementWithTypeNone";
