@@ -79,7 +79,7 @@ namespace EdmLibTests.FunctionalTests
         {
             var expectedErrors = new EdmLibTestErrors()
             {
-                {9, 14, EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType}
+                {9, 14, EdmErrorCode.InvalidInteger}
             };
             this.VerifySemanticValidation(ExpressionValidationTestModelBuilder.BadCollectionTermItemOfIncorrectType(this.EdmVersion), expectedErrors);
         }
@@ -89,7 +89,9 @@ namespace EdmLibTests.FunctionalTests
         {
             var expectedErrors = new EdmLibTestErrors()
             {
-                {6, 10, EdmErrorCode.ExpressionNotValidForTheAssertedType}
+                {6, 10, EdmErrorCode.ExpressionNotValidForTheAssertedType},
+                {7, 14, EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType},
+                {8, 14, EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType}
             };
             this.VerifySemanticValidation(ExpressionValidationTestModelBuilder.BadCollectionTermIncorrectDeclaredType(this.EdmVersion), expectedErrors);
         }

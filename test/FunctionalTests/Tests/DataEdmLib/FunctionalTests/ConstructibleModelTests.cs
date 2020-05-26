@@ -1068,7 +1068,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsNull(bazAction.FindParameter("Barney"), "Not finding Barney");
 
             this.CompareEdmModelToCsdl(
-                model, 
+                model,
 @"<Schema Namespace=""Westwind"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
   <EntityType Name=""Customer"">
     <Key>
@@ -1081,19 +1081,16 @@ namespace EdmLibTests.FunctionalTests
     <Parameter Name=""Fred"" Nullable=""false"" Type=""Edm.Int32"" />
     <ReturnType Type=""Edm.Int32"" />
   </Function>
+  <Action Name=""Foo"">
+    <Parameter Name=""Fred"" Nullable=""false"" Type=""Edm.Int32"" />
+    <ReturnType Type=""Edm.Int32"" />
+  </Action>
   <Action Name=""Bar"">
     <ReturnType Type=""Edm.Int32"" Nullable=""false"" />
   </Action>
   <Action Name=""baz"">
     <Parameter Name=""Wilma"" Nullable=""false"" Type=""Edm.Int32"" />
     <ReturnType Type=""Collection(Westwind.Customer)"" Nullable=""false"" />
-  </Action>
-  <Function Name=""Barre"">
-    <ReturnType Type=""Edm.String"" Nullable=""false"" />
-  </Function>
-  <Action Name=""Foo"">
-    <Parameter Name=""Fred"" Nullable=""false"" Type=""Edm.Int32"" />
-    <ReturnType Type=""Edm.Int32"" />
   </Action>
   <Action Name=""baz"">
     <Parameter Name=""Wilma"" Nullable=""false"" Type=""Edm.Int32"" />
@@ -1105,6 +1102,9 @@ namespace EdmLibTests.FunctionalTests
     <ActionImport Action=""Westwind.baz"" EntitySet=""Customers"" Name=""baz"" />
     <ActionImport Action=""Westwind.baz"" Name=""baz"" />
   </EntityContainer>
+  <Function Name=""Barre"">
+    <ReturnType Type=""Edm.String"" Nullable=""false"" />
+  </Function>
 </Schema>"
             );
         }

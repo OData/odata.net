@@ -769,7 +769,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
         private void EndElement<TElement>(TElement element, Action<TElement> elementEndWriter) where TElement : IEdmElement
         {
-            // DirectValueAnnotations are written in "BeginElement" ?
+            this.VisitPrimitiveElementAnnotations(this.Model.DirectValueAnnotations(element));
 
             IEdmVocabularyAnnotatable vocabularyAnnotatableElement = element as IEdmVocabularyAnnotatable;
             if (vocabularyAnnotatableElement != null)
@@ -782,7 +782,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
         private void EndElement(IEdmElement element)
         {
-            this.VisitPrimitiveElementAnnotations(this.Model.DirectValueAnnotations(element)); // this is old code, I don't know whether it's right or not?
+            this.VisitPrimitiveElementAnnotations(this.Model.DirectValueAnnotations(element));
             IEdmVocabularyAnnotatable vocabularyAnnotatableElement = element as IEdmVocabularyAnnotatable;
             if (vocabularyAnnotatableElement != null)
             {
