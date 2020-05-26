@@ -96,7 +96,7 @@ namespace Microsoft.OData.Edm.Csdl
 
         private void WriteReferenceElements()
         {
-            EdmModelReferenceElementsVisitor visitor = new EdmModelReferenceElementsVisitor(this.model, this.writer, this.edmxVersion);
+            EdmModelReferenceElementsXmlVisitor visitor = new EdmModelReferenceElementsXmlVisitor(this.model, this.writer, this.edmxVersion);
             visitor.VisitEdmReferences(this.model);
         }
 

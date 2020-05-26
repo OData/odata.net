@@ -18,13 +18,22 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         {
             var enumType = new EdmEnumType("Ns", "Color");
             var blue = enumType.AddMember("Blue", new EdmEnumMemberValue(0));
-            enumType.AddMember("White", new EdmEnumMemberValue(1));
+            var white = enumType.AddMember("White", new EdmEnumMemberValue(1));
             var complexType = new EdmComplexType("Ns", "Address");
             string enumPath = "  Ns.Color/Blue  ";
             List<IEdmSchemaType> types = new List<IEdmSchemaType> { enumType, complexType };
             IEnumerable<IEdmEnumMember> parsedMember;
             Assert.True(EdmEnumValueParser.TryParseEnumMember(enumPath, BuildModelFromTypes(types), null, out parsedMember));
             Assert.Equal(blue, parsedMember.Single());
+
+            // JSON
+            string jsonEnumPath = "Blue";
+            Assert.True(EdmEnumValueParser.TryParseJsonEnumMember(jsonEnumPath, enumType, null, out parsedMember));
+            Assert.Equal(blue, parsedMember.Single());
+
+            jsonEnumPath = "1";
+            Assert.True(EdmEnumValueParser.TryParseJsonEnumMember(jsonEnumPath, enumType, null, out parsedMember));
+            Assert.Equal(white, parsedMember.Single());
         }
 
         [Fact]
@@ -41,6 +50,9 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
             enumPath = "        /   ";
             Assert.False(EdmEnumValueParser.TryParseEnumMember(enumPath, BuildModelFromTypes(types), null, out parsedMember));
+
+            // JSON
+            Assert.False(EdmEnumValueParser.TryParseJsonEnumMember(enumPath, enumType, null, out parsedMember));
         }
 
         [Fact]
@@ -95,6 +107,10 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             List<IEdmSchemaType> types = new List<IEdmSchemaType> { enumType, complexType };
             IEnumerable<IEdmEnumMember> parsedMember;
             Assert.False(EdmEnumValueParser.TryParseEnumMember(enumPath, BuildModelFromTypes(types), null, out parsedMember));
+
+            // JSON
+            string jsonEnumPath = "Green";
+            Assert.False(EdmEnumValueParser.TryParseJsonEnumMember(jsonEnumPath, enumType, null, out parsedMember));
         }
 
         [Fact]
@@ -111,6 +127,39 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Equal(2, parsedMember.Count());
             Assert.Equal(read, parsedMember.First());
             Assert.Equal(write, parsedMember.Last());
+
+            // JSON
+            string jsonEnumPath = " Read , Write ";
+            Assert.True(EdmEnumValueParser.TryParseJsonEnumMember(jsonEnumPath, enumType, null, out parsedMember));
+            Assert.Equal(2, parsedMember.Count());
+            Assert.Equal(read, parsedMember.First());
+            Assert.Equal(write, parsedMember.Last());
+        }
+
+        [Fact]
+        public void TryParseEnumMemberWithFlagsOfTwoValuesInJsonShouldBeTrue()
+        {
+            var enumType = new EdmEnumType("Ns", "Color", true);
+            var red = enumType.AddMember("Red", new EdmEnumMemberValue(1));
+            var green = enumType.AddMember("Green", new EdmEnumMemberValue(2));
+            var blue = enumType.AddMember("Blue", new EdmEnumMemberValue(4));
+            var white = enumType.AddMember("White", new EdmEnumMemberValue(8));
+
+            // symbolic value
+            string jsonEnumPath = " Red , White ";
+            IEnumerable<IEdmEnumMember> parsedMember;
+            Assert.True(EdmEnumValueParser.TryParseJsonEnumMember(jsonEnumPath, enumType, null, out parsedMember));
+            Assert.Equal(2, parsedMember.Count());
+            Assert.Equal(red, parsedMember.First());
+            Assert.Equal(white, parsedMember.Last());
+
+            // numeric value
+            jsonEnumPath = " 11 ";  // 1 + 2 + 8
+            Assert.True(EdmEnumValueParser.TryParseJsonEnumMember(jsonEnumPath, enumType, null, out parsedMember));
+            Assert.Equal(3, parsedMember.Count());
+            Assert.Equal(red, parsedMember.ElementAt(0));
+            Assert.Equal(green, parsedMember.ElementAt(1));
+            Assert.Equal(white, parsedMember.ElementAt(2));
         }
 
         [Fact]
