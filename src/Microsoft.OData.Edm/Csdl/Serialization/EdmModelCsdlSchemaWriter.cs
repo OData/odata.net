@@ -66,14 +66,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
         internal abstract void WritePropertyRefElement(IEdmStructuralProperty property);
 
-<<<<<<< HEAD
-            if (member.Partner != null)
-            {
-                this.WriteRequiredAttribute(CsdlConstants.Attribute_Partner, member.GetPartnerPath()?.Path, EdmValueWriter.StringAsXml);
-            }
-=======
         internal abstract void WriteNavigationPropertyElementHeader(IEdmNavigationProperty property);
->>>>>>> Support JSON Metadata writer using System.Text.Json
 
         internal abstract void WriteNavigationOnDelectActionElement(EdmOnDeleteAction operationAction);
 
