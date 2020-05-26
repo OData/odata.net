@@ -192,8 +192,8 @@ EdmModel_Validator_Syntactic_InterfaceCriticalCycleInTypeHierarchy=The chain of 
 
 ;Error message for Serializer
 Serializer_SingleFileExpected=Single file provided but model cannot be serialized into single file.
-Serializer_UnknownEdmVersion=Unknown Edm version.
-Serializer_UnknownEdmxVersion=Unknown Edmx version.
+Serializer_UnknownEdmVersion=Unknown Edm version '{0}'.
+Serializer_UnknownEdmxVersion=Unknown Edmx version '{0}'.
 Serializer_NonInlineOperationImportReturnType=The operation import '{0}' could not be serialized because its return type cannot be represented inline.
 Serializer_ReferencedTypeMustHaveValidName=A referenced type can not be serialized with an invalid name. The name '{0}' is invalid.
 Serializer_OutOfLineAnnotationTargetMustHaveValidName=The annotation can not be serialized with an invalid target name. The name '{0}' is invalid.

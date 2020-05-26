@@ -81,7 +81,8 @@ namespace Microsoft.OData.Edm.Csdl
                 XmlWriter writer = writerProvider(schema.Namespace);
                 if (writer != null)
                 {
-                    visitor = new EdmModelCsdlSerializationVisitor(model, writer, edmVersion);
+                    var schemaWriter = new EdmModelCsdlSchemaXmlWriter(model, writer, edmVersion);
+                    visitor = new EdmModelCsdlSerializationVisitor(model, schemaWriter);
                     visitor.VisitEdmSchema(schema, model.GetNamespacePrefixMappings());
                 }
             }
