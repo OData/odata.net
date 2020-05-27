@@ -1,0 +1,531 @@
+name: $(TeamProject)_$(BuildDefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+
+# No trigger for nightly
+trigger: none
+
+# No Pull request (PR) triggers for nightly
+pr: none
+
+# Nightly using schedules
+schedules:
+- cron: "0 0 * * Mon,Tue,Wed,Thu,Fri"
+  displayName: midnightly build
+  branches:
+   include:
+    - master
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  skipComponentGovernanceDetection: true
+  snExe: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\sn.exe'
+  snExe64: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\sn.exe'
+  gacUtil: '$(Build.SourcesDirectory)\test\CommonAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll'
+  ProductBinPath1: '$(Build.SourcesDirectory)\src\Microsoft.OData.Edm\bin\$(BuildConfiguration)'
+  mainDll1: 'Microsoft.OData.Edm.dll'
+  ProductBinPath2: '$(Build.SourcesDirectory)\src\Microsoft.OData.Core\bin\$(BuildConfiguration)'
+  mainDll2: 'Microsoft.OData.Core.dll'
+  ProductBinPath3: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\bin\$(BuildConfiguration)'
+  mainDll3: 'Microsoft.Spatial.dll'
+  ProductBinPath4: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\bin\$(BuildConfiguration)'
+  mainDll4: 'Microsoft.OData.Client.dll'
+  ProductBinPath5: '$(Build.SourcesDirectory)\src\CodeGen\bin\$(BuildConfiguration)'
+  mainDll5: 'Microsoft.OData.Service.Design.T4.dll'
+  ProductBinPath: $(Build.SourcesDirectory)\bin\$(BuildPlatform)\$(BuildConfiguration)\Product
+
+steps:
+- task: NuGetToolInstaller@0
+  inputs:
+    versionSpec: '>=5.2.0'
+
+- task: UseDotNet@2
+  inputs:
+    version: '1.0.4'
+    
+- task: UseDotNet@2
+  inputs:
+    version: '2.1.3'
+ 
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Write your PowerShell commands here.      
+      Write-Host "Hello World"
+      [System.Reflection.Assembly]::Load("System.EnterpriseServices, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
+      $publish = New-Object System.EnterpriseServices.Internal.Publish
+      $publish.GacInstall("$(gacUtil)")
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build Product'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration)'
+    projects: |
+     $(Build.SourcesDirectory)\src\Microsoft.Spatial\Microsoft.Spatial.csproj
+     $(Build.SourcesDirectory)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj
+     $(Build.SourcesDirectory)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj
+     $(Build.SourcesDirectory)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj
+
+- task: UseDotNet@2
+  inputs:
+    version: '2.1.x'
+
+- task: UseDotNet@2
+  inputs:
+    version: '3.1.x'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build Unit Test'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    projects: |
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.TestCommon\Microsoft.OData.TestCommon.csproj
+     $(Build.SourcesDirectory)\test\Common\Microsoft.Test.OData.DependencyInjection\Microsoft.Test.OData.DependencyInjection.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj     
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build E2E Test'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    projects: |
+      $(Build.SourcesDirectory)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\Astoria\Microsoft.Test.OData.Services.Astoria.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\CSDSCReferences\Microsoft.Test.OData.Services.CSDSCReferences.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataCamelCaseService\Microsoft.Test.OData.Services.ODataCamelCaseService.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataDefaultService\Microsoft.Test.OData.Services.ODataDefaultService.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataModelRefService\Microsoft.Test.OData.Services.ODataModelRefService.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataOperationService\Microsoft.Test.OData.Services.ODataOperationService.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataPluggableFormatService\Microsoft.Test.OData.Services.ODataPluggableFormatService.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataSimplifiedService\Microsoft.Test.OData.Services.ODataSimplifiedService.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataTypeDefinitionService\Microsoft.Test.OData.Services.ODataTypeDefinitionService.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataWCFService\Microsoft.Test.OData.Services.ODataWCFService.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\TestServices\Microsoft.Test.OData.Services.TestServices.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataWCFLibrary\ODataSamples.Services.Core.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataTripPinService\ODataSamples.Services.TripPin.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ServiceWrapperApp\ServiceWrapperApp.csproj
+      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataEdmLib\EdmLibTests.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build Regression Test'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    projects: |     
+     $(Build.SourcesDirectory)\test\FunctionalTests\Framework\AstoriaTestFramework.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\RegressionUnitTests\Microsoft.Data.Web.RegressionUnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\MetadataObjectModelTests\Microsoft.Data.MetadataObjectModel.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ClientCSharpUnitTests\Microsoft.Data.WebClientCSharp.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests\Microsoft.Data.Web.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\ddbasics\Microsoft.Test.Data.Services.DDBasics.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\DesignT4UnitTests\Microsoft.OData.Service.Design.T4.UnitTests.csproj
+     $(Build.SourcesDirectory)\src\CodeGen\Microsoft.Data.Web.Design.T4.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Common.Tests\Microsoft.Test.Taupo.OData.Common.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataEdmLib\EdmLibTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Query.Tests\Microsoft.Test.Taupo.OData.Query.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Reader.Tests\Microsoft.Test.Taupo.OData.Reader.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Writer.Tests\Microsoft.Test.Taupo.OData.Writer.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Scenario.Tests\Microsoft.Test.Taupo.OData.Scenario.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\NamedStreamTests\Microsoft.Data.NamedStream.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat.Tests\Microsoft.Test.OData.PluggableFormat.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests1\Microsoft.Data.ServerUnitTests1.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests2\Microsoft.Data.ServerUnitTests2.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\RegressionUnitTests\Microsoft.Data.Web.RegressionUnitTests.csproj
+               
+  enabled: true
+
+- task: Powershell@2
+  displayName: 'Skip strong name validation'
+  inputs:
+    targetType: 'inline'
+    script: |
+      & "$(snExe)" /Vr $(ProductBinPath4)\net45\$(mainDll4)
+      & "$(snExe64)" /Vr $(ProductBinPath4)\net45\$(mainDll4)
+      & "$(snExe)" /Vr $(ProductBinPath1)\net45\$(mainDll1)
+      & "$(snExe64)" /Vr $(ProductBinPath1)\net45\$(mainDll1)
+      & "$(snExe)" /Vr $(ProductBinPath2)\net45\$(mainDll2)
+      & "$(snExe64)" /Vr $(ProductBinPath2)\net45\$(mainDll2)
+      & "$(snExe)" /Vr $(ProductBinPath3)\net45\$(mainDll3)
+      & "$(snExe64)" /Vr $(ProductBinPath3)\net45\$(mainDll3)
+      & "$(snExe)" /Vr $(ProductBinPath5)\net45\$(mainDll5)
+      & "$(snExe64)" /Vr $(ProductBinPath5)\net45\$(mainDll5)
+      & "$(snExe)" /Vr $(ProductBinPath4)\netstandard1.1\$(mainDll4)
+      & "$(snExe64)" /Vr $(ProductBinPath4)\netstandard1.1\$(mainDll4)
+      & "$(snExe)" /Vr $(ProductBinPath1)\netstandard1.1\$(mainDll1)
+      & "$(snExe64)" /Vr $(ProductBinPath1)\netstandard1.1\$(mainDll1)
+      & "$(snExe)" /Vr $(ProductBinPath2)\netstandard1.1\$(mainDll2)
+      & "$(snExe64)" /Vr $(ProductBinPath2)\netstandard1.1\$(mainDll2)
+      & "$(snExe)" /Vr $(ProductBinPath3)\netstandard1.1\$(mainDll3)
+      & "$(snExe64)" /Vr $(ProductBinPath3)\netstandard1.1\$(mainDll3)  
+      & "$(snExe)" /Vr $(ProductBinPath4)\netstandard2.0\$(mainDll4)
+      & "$(snExe64)" /Vr $(ProductBinPath4)\netstandard2.0\$(mainDll4)
+      & "$(snExe)" /Vr $(ProductBinPath1)\netstandard2.0\$(mainDll1)
+      & "$(snExe64)" /Vr $(ProductBinPath1)\netstandard2.0\$(mainDll1)
+      & "$(snExe)" /Vr $(ProductBinPath2)\netstandard2.0\$(mainDll2)
+      & "$(snExe64)" /Vr $(ProductBinPath2)\netstandard2.0\$(mainDll2)
+      & "$(snExe)" /Vr $(ProductBinPath3)\netstandard2.0\$(mainDll3)
+      & "$(snExe64)" /Vr $(ProductBinPath3)\netstandard2.0\$(mainDll3)      
+  enabled: true
+
+- task: BatchScript@1
+  displayName: 'Run script - Test Startup'
+  inputs:
+    filename: '$(Build.SourcesDirectory)\tools\Scripts\TestStartup.cmd'
+    arguments: '$(Build.SourcesDirectory)'
+    modifyEnvironment: true
+    workingFolder: '$(Build.SourcesDirectory)\tools\Scripts'
+
+- task: AzurePowerShell@2
+  displayName: 'Cleanup DB'
+  inputs:
+    azureConnectionType: ConnectedServiceName
+    azureClassicSubscription: ODataAzureSubs
+    ScriptType: InlineScript
+    Inline: |
+     # You can write your azure powershell scripts inline here. 
+     # You can also pass predefined and custom variables to this script using arguments
+     pushd "C:\Program Files\Microsoft SQL Server\130\Tools\Binn"
+     #.\SqlLocalDB.exe stop
+     #.\SqlLocalDB.exe delete MSSQLLocalDB
+     .\SqlLocalDB.exe create MSSQLLocalDB
+     .\SqlLocalDB.exe start MSSQLLocalDB
+     #cd "C:\Users\ODataBld"
+     #del *.ldf
+     #del *.mdf
+     popd
+    preferredAzurePowerShellVersion: 5.1.1
+
+- task: DotNetCoreCLI@2
+  displayName: 'Spatial Test'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(BuildConfiguration) --no-build'
+    projects: |      
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
+
+- task: DotNetCoreCLI@2
+  displayName: 'EDM Test'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(BuildConfiguration) --no-build'
+    projects: |      
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj
+
+- task: DotNetCoreCLI@2
+  displayName: 'Core Test'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(BuildConfiguration) --no-build'
+    projects: |      
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
+
+- task: DotNetCoreCLI@2
+  displayName: 'Client Test'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(BuildConfiguration) --no-build'
+    projects: |      
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj
+
+- task: DotNetCoreCLI@2  
+  displayName: 'Test - E2E Test Suite'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(BuildConfiguration) --no-build'
+    projects: |      
+     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
+      
+- task: DotNetCoreCLI@2
+  timeoutInMinutes: 100
+  displayName: 'Test - Regression Test Suite'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(BuildConfiguration) --no-build'
+    projects: |           
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\ddbasics\Microsoft.Test.Data.Services.DDBasics.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataEdmLib\EdmLibTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Common.Tests\Microsoft.Test.Taupo.OData.Common.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Query.Tests\Microsoft.Test.Taupo.OData.Query.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Reader.Tests\Microsoft.Test.Taupo.OData.Reader.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Writer.Tests\Microsoft.Test.Taupo.OData.Writer.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Scenario.Tests\Microsoft.Test.Taupo.OData.Scenario.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\NamedStreamTests\Microsoft.Data.NamedStream.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat.Tests\Microsoft.Test.OData.PluggableFormat.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests1\Microsoft.Data.ServerUnitTests1.UnitTests.csproj     
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests2\Microsoft.Data.ServerUnitTests2.UnitTests.csproj  
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\RegressionUnitTests\Microsoft.Data.Web.RegressionUnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\MetadataObjectModelTests\Microsoft.Data.MetadataObjectModel.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ClientCSharpUnitTests\Microsoft.Data.WebClientCSharp.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests\Microsoft.Data.Web.UnitTests.csproj
+  enabled: true
+
+# CredScan
+- task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@2
+  displayName: 'Run CredScan - Src'
+  inputs:    
+    scanFolder: '$(Build.SourcesDirectory)\src'
+    debugMode: false
+
+- task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@2
+  displayName: 'Run CredScan - Test'
+  inputs:
+    scanFolder: '$(Build.SourcesDirectory)\test'
+    debugMode: false
+
+- task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@2
+  displayName: 'Run CredScan - Tools'
+  inputs:
+    scanFolder: '$(Build.SourcesDirectory)\tools'
+    debugMode: false
+
+- task: BinSkim@3
+  displayName: 'Run BinSkim - Product Binaries'
+  inputs:
+    InputType: Basic
+    AnalyzeTarget: |
+     $(ProductBinPath1)\**\$(mainDll1)
+    AnalyzeSymPath: |
+     $(ProductBinPath1)
+    AnalyzeVerbose: true
+    AnalyzeHashes: true
+    AnalyzeEnvironment: true
+
+- task: BinSkim@3
+  displayName: 'Run BinSkim - Product Binaries'
+  inputs:
+    InputType: Basic
+    AnalyzeTarget: |
+     $(ProductBinPath2)\**\$(mainDll2)
+    AnalyzeSymPath: |
+     $(ProductBinPath2)
+    AnalyzeVerbose: true
+    AnalyzeHashes: true
+    AnalyzeEnvironment: true
+
+- task: BinSkim@3
+  displayName: 'Run BinSkim - Product Binaries'
+  inputs:
+    InputType: Basic
+    AnalyzeTarget: |
+     $(ProductBinPath3)\**\$(mainDll3)
+    AnalyzeSymPath: |
+     $(ProductBinPath3)
+    AnalyzeVerbose: true
+    AnalyzeHashes: true
+    AnalyzeEnvironment: true
+
+
+- task: BinSkim@3
+  displayName: 'Run BinSkim - Product Binaries'
+  inputs:
+    InputType: Basic
+    AnalyzeTarget: |
+     $(ProductBinPath4)\**\$(mainDll4)
+    AnalyzeSymPath: |
+     $(ProductBinPath4)
+    AnalyzeVerbose: true
+    AnalyzeHashes: true
+    AnalyzeEnvironment: true
+
+- task: PublishSecurityAnalysisLogs@2
+  displayName: 'Publish Security Analysis Logs'
+  inputs:
+    ArtifactName: SecurityLogs
+
+- task: PostAnalysis@1
+  displayName: 'Post Analysis'
+  inputs:
+    BinSkim: true
+    CredScan: true
+    PoliCheck: true
+    PoliCheckBreakOn: Severity2Above
+  enabled: true
+  continueOnError: true
+ 
+# CodeSign
+- task: EsrpCodeSigning@1
+  displayName: 'ESRP CodeSign - OData'
+  inputs:
+    ConnectedServiceName: 'ESRP CodeSigning - OData'
+    #FolderPath: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\bin\Debug\netstandard2.0'
+    FolderPath: '$(Build.SourcesDirectory)\src'
+
+    Pattern: 'Microsoft.Spatial.dll,Microsoft.OData.Edm.dll,Microsoft.OData.Core.dll,Microsoft.OData.Client.dll'
+
+    signConfigType: inlineSignParams
+
+    inlineOperation: |
+     [
+       {
+         "keyCode": "MSSharedLibSnKey",
+         "operationSetCode": "StrongNameSign",
+         "parameters": null,
+         "toolName": "sn.exe",
+         "toolVersion": "V4.6.1586.0"
+       },
+       {
+         "keyCode": "MSSharedLibSnKey",
+         "operationSetCode": "StrongNameVerify",
+         "parameters": null,
+         "toolName": "sn.exe",
+         "toolVersion": "V4.6.1586.0"
+       },
+       {
+         "keyCode": "CP-230012",
+         "operationSetCode": "SigntoolSign",
+         "parameters": [
+         {
+           "parameterName": "OpusName",
+           "parameterValue": "TestSign"
+         },
+         {
+           "parameterName": "OpusInfo",
+           "parameterValue": "http://test"
+         },
+         {
+           "parameterName": "PageHash",
+           "parameterValue": "/NPH"
+         },
+         {
+           "parameterName": "TimeStamp",
+           "parameterValue": "/t \"http://ts4096.gtm.microsoft.com/TSS/AuthenticodeTS\""
+         }
+         ],
+         "toolName": "signtool.exe",
+         "toolVersion": "6.2.9304.0"
+       },
+       {
+         "keyCode": "CP-230012",
+         "operationSetCode": "SigntoolSign",
+         "parameters": [
+         {
+           "parameterName": "OpusName",
+           "parameterValue": "TestSign"
+         },
+         {
+           "parameterName": "OpusInfo",
+           "parameterValue": "http://test"
+         },
+         {
+           "parameterName": "Append",
+           "parameterValue": "/AS"
+         },
+         {
+           "parameterName": "PageHash",
+           "parameterValue": "/NPH"
+         },
+         {
+           "parameterName": "FileDigest",
+           "parameterValue": "/fd sha256"
+         },
+         {
+           "parameterName": "TimeStamp",
+           "parameterValue": "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+         }
+         ],
+         "toolName": "signtool.exe",
+         "toolVersion": "6.2.9304.0"
+       },
+       {
+         "keyCode": "CP-230012",
+         "operationSetCode": "SigntoolVerify",
+         "parameters": [
+         {
+           "parameterName": "VerifyAll",
+           "parameterValue": "/all"
+         }
+         ],
+         "toolName": "signtool.exe",
+         "toolVersion": "6.2.9304.0"
+       }
+     ]
+    SessionTimeout: 20
+    VerboseLogin: true
+
+- task: MSBuild@1
+  displayName: 'Get Nuget Package Metadata'
+  inputs:
+    solution: '$(Build.SourcesDirectory)\tools\CustomMSBuild\GetNugetPackageMetadata.proj'
+    platform: '$(BuildPlatform)'
+    configuration: '$(BuildConfiguration)'
+
+- task: NuGetCommand@2
+  displayName: 'NuGet - pack Microsoft.Spatial.Release'
+  inputs:
+    command: custom
+    feedsToUse: config
+    arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.Spatial\Build.NuGet\Microsoft.Spatial.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\Nuget -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath3)\**;SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);NightlyBuildVersion=$(VersionNugetNightlyBuild);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols'
+
+- task: NuGetCommand@2
+  displayName: 'NuGet - pack Microsoft.OData.Edm.Release'
+  inputs:
+    command: custom
+    feedsToUse: config
+    arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.OData.Edm\Build.NuGet\Microsoft.OData.Edm.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\Nuget -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath1)\**;SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);NightlyBuildVersion=$(VersionNugetNightlyBuild);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols'
+
+- task: NuGetCommand@2
+  displayName: 'NuGet - pack Microsoft.OData.Core.Release'
+  inputs:
+    command: custom
+    feedsToUse: config
+    arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.OData.Core\Build.NuGet\Microsoft.OData.Core.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\Nuget -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath2)\**;SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);NightlyBuildVersion=$(VersionNugetNightlyBuild);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols'
+
+- task: NuGetCommand@2
+  displayName: 'NuGet - pack Microsoft.OData.Client.Release'
+  inputs:
+    command: custom
+    feedsToUse: config
+    arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.OData.Client\Build.NuGet\Microsoft.OData.Client.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\Nuget -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath4)\**;SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);NightlyBuildVersion=$(VersionNugetNightlyBuild);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols'
+
+- task: EsrpCodeSigning@1
+  displayName: 'ESRP CodeSigning Nuget Packages'
+  inputs:
+    ConnectedServiceName: 'ESRP CodeSigning - OData'
+    FolderPath: '$(Build.ArtifactStagingDirectory)\Nuget'
+    Pattern: '*.nupkg'
+    signConfigType: inlineSignParams
+    inlineOperation: |
+     [
+         {
+             "keyCode": "CP-401405",
+             "operationSetCode": "NuGetSign",
+             "parameters": [ ],
+             "toolName": "sign",
+             "toolVersion": "1.0"
+         },
+         {
+             "keyCode": "CP-401405",
+             "operationSetCode": "NuGetVerify",
+             "parameters": [ ],
+             "toolName": "sign",
+             "toolVersion": "1.0"
+         }
+     ]
+    VerboseLogin: true
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact - Nuget Packages'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)\Nuget'
+    ArtifactName: Nuget
+
+- task: NuGetCommand@2
+  displayName: 'NuGet push - Nightly packages to MyGet'
+  inputs:
+    command: push
+    packagesToPush: '$(Build.ArtifactStagingDirectory)\Nuget\*Nightly*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'MyGet.org - OData.net Nightly Feed'
+  enabled: true
