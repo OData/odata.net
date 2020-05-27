@@ -468,7 +468,7 @@ steps:
     feedsToUse: config
     arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.Spatial\Build.NuGet\Microsoft.Spatial.Nightly.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\Nuget -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath3)\**;SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);NightlyBuildVersion=$(VersionNugetNightlyBuild);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols'
     
- - task: NuGetCommand@2
+- task: NuGetCommand@2
   displayName: 'NuGet - pack Microsoft.Spatial.Release'
   inputs:
     command: custom
