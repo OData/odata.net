@@ -314,36 +314,31 @@ namespace Microsoft.OData.Client.Materialization
                     }
                 }
 
-                if (this.IsTracking)
+                // We need this to be populated as well for entities that may contain this
+                if (this.entry.MediaResource != null)
                 {
-                    if (this.Id == null)
+                    if (this.entry.MediaResource.ReadLink != null)
                     {
-                        // TODO: Remove these lines since complex type doesn't have Id.
-                        // throw DSClient.Error.InvalidOperation(DSClient.Strings.Deserialize_MissingIdElement);
+                        this.EntityDescriptor.ReadStreamUri = this.entry.MediaResource.ReadLink;
                     }
 
+                    if (this.entry.MediaResource.EditLink != null)
+                    {
+                        this.EntityDescriptor.EditStreamUri = this.entry.MediaResource.EditLink;
+                    }
+
+                    if (this.entry.MediaResource.ETag != null)
+                    {
+                        this.EntityDescriptor.StreamETag = this.entry.MediaResource.ETag;
+                    }
+                }
+
+                if (this.IsTracking)
+                {
                     this.EntityDescriptor.Identity = this.entry.Id;
                     this.EntityDescriptor.EditLink = this.entry.EditLink;
                     this.EntityDescriptor.SelfLink = this.entry.ReadLink;
                     this.EntityDescriptor.ETag = this.entry.ETag;
-
-                    if (this.entry.MediaResource != null)
-                    {
-                        if (this.entry.MediaResource.ReadLink != null)
-                        {
-                            this.EntityDescriptor.ReadStreamUri = this.entry.MediaResource.ReadLink;
-                        }
-
-                        if (this.entry.MediaResource.EditLink != null)
-                        {
-                            this.EntityDescriptor.EditStreamUri = this.entry.MediaResource.EditLink;
-                        }
-
-                        if (this.entry.MediaResource.ETag != null)
-                        {
-                            this.EntityDescriptor.StreamETag = this.entry.MediaResource.ETag;
-                        }
-                    }
 
                     if (this.entry.Functions != null)
                     {
