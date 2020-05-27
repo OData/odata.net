@@ -3250,6 +3250,13 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
 	XmlError = 5
 }
 
+public enum Microsoft.OData.Edm.Validation.Severity : int {
+	Error = 3
+	Message = 1
+	Undefined = 0
+	Warning = 2
+}
+
 public abstract class Microsoft.OData.Edm.Validation.ValidationRule {
 	protected ValidationRule ()
 
@@ -3420,9 +3427,12 @@ public sealed class Microsoft.OData.Edm.Validation.ValidationRules {
 
 public class Microsoft.OData.Edm.Validation.EdmError {
 	public EdmError (Microsoft.OData.Edm.EdmLocation errorLocation, Microsoft.OData.Edm.Validation.EdmErrorCode errorCode, string errorMessage)
+	public EdmError (Microsoft.OData.Edm.EdmLocation errorLocation, Microsoft.OData.Edm.Validation.EdmErrorCode errorCode, string errorMessage, Microsoft.OData.Edm.Validation.Severity severity)
 
 	Microsoft.OData.Edm.Validation.EdmErrorCode ErrorCode  { public get; }
+	Microsoft.OData.Edm.Validation.Severity Severity  { public get; }
 	Microsoft.OData.Edm.EdmLocation ErrorLocation  { public get; }
+	Dictionary<string, object> ExtendedPropertiese  { public get; }
 	string ErrorMessage  { public get; }
 
 	public virtual string ToString ()
