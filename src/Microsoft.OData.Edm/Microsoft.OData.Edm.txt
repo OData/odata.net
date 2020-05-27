@@ -192,8 +192,8 @@ EdmModel_Validator_Syntactic_InterfaceCriticalCycleInTypeHierarchy=The chain of 
 
 ;Error message for Serializer
 Serializer_SingleFileExpected=Single file provided but model cannot be serialized into single file.
-Serializer_UnknownEdmVersion=Unknown Edm version.
-Serializer_UnknownEdmxVersion=Unknown Edmx version.
+Serializer_UnknownEdmVersion=Unknown Edm version '{0}'.
+Serializer_UnknownEdmxVersion=Unknown Edmx version '{0}'.
 Serializer_NonInlineOperationImportReturnType=The operation import '{0}' could not be serialized because its return type cannot be represented inline.
 Serializer_ReferencedTypeMustHaveValidName=A referenced type can not be serialized with an invalid name. The name '{0}' is invalid.
 Serializer_OutOfLineAnnotationTargetMustHaveValidName=The annotation can not be serialized with an invalid target name. The name '{0}' is invalid.
@@ -237,6 +237,19 @@ CsdlSemantics_EnumMemberMustHaveValue=The enumeration member must have a value.
 CsdlSemantics_ImpossibleAnnotationsTarget=The annotation target '{0}' could not be resolved because it cannot refer to an annotatable element.
 CsdlSemantics_DuplicateAlias=The schema '{0}' contains the alias '{1}' more than once.
 
+; JsonParser
+CsdlJsonParser_UnexpectedJsonValueKind=An unexpected '{0}' value kind was found when parsing the JSON path '{1}'. A '{2}' value kind was expected.
+CsdlJsonParser_MissingMemberInObject=A member '{0}' is missing when parsing the JSON path '{1}'.
+CsdlJsonParser_UnexpectedJsonMember=A member '{0}' with value type '{1}' is unexpected.
+CsdlJsonParser_CannotReadValueAsType=Cannot read the value '{0}' at JSON path '{1}' as '{2}' numeric value.
+CsdlJsonParser_MissingKindMember=A schema '{0}' object MUST contain the member '$Kind' with a string value of '{1}'.
+CsdlJsonParser_MissingRequiredPropertyInObject=A property '{0}' is missing when parsing the JSON path '{1}'.
+CsdlJsonParser_UnknownJsonElementValueKind=Found an unknown value kind '{0}' when parsing the JSON path '{1}'.
+CsdlJsonParser_InvalidJsonNumberType=Cannot parse a JSON number '{0}' when parsing the JSON path '{1}'.
+CsdlJsonParser_UnsupportedJsonMember=A member at JSON path '{0}' is not supported.
+CsdlJsonParser_InvalidCsdlVersion=The version specified at '{0}' is not valid. It should be a string containing either '4.0' or '4.01'.
+CsdlJsonParser_SchemaCannotHaveMoreThanOneEntityContainer=The schema object at '{0}' cannot have more than one entity container.
+
 ;EdmxParser
 EdmxParser_EdmxVersionMismatch=The EDMX version specified in the 'Version' attribute does not match the version corresponding to the namespace of the 'Edmx' element.
 EdmxParser_BodyElement=Unexpected {0} element while parsing Edmx. Edmx is expected to have at most one of 'Runtime' or 'DataServices' elements.
@@ -244,7 +257,7 @@ EdmxParser_InvalidReferenceIncorrectNumberOfIncludes=edmx:Reference must contain
 EdmxParser_UnresolvedReferenceUriInEdmxReference=Unresolved Uri found in edmx:Reference, getReferencedModelReaderFunc should not return null when the URI is not a well-known schema.
 
 ;EdxmParseException
-EdmParseException_ErrorsEncounteredInEdmx=Encountered the following errors when parsing the EDMX document: \r\n{0}
+EdmParseException_ErrorsEncounteredInEdmx=Encountered the following errors when parsing the CSDL document: \r\n{0}
 
 ; Error message for the value parser
 ValueParser_InvalidBoolean=The value '{0}' is not a valid boolean. The value must be 'true' or 'false'.

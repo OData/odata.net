@@ -4,10 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+#if NETCOREAPP3_1
+using System.Text.Encodings.Web;
+using System.Text.Json;
+#endif
 using System.Xml;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
@@ -19,11 +24,90 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 {
     public class CsdlWriterTests
     {
+        #region Reference
+        [Fact]
+        public void ShouldWriteEdmReference()
+        {
+            // Arrange
+            EdmModel model = new EdmModel();
+            EdmReference reference1 = new EdmReference(new Uri("https://example.com/Org.OData.Authorization.V1.xml"));
+            reference1.AddInclude(new EdmInclude("Auth", "Org.OData.Authorization.V1"));
+            reference1.AddIncludeAnnotations(new EdmIncludeAnnotations("org.example.validation", null, null));
+            reference1.AddIncludeAnnotations(new EdmIncludeAnnotations("org.example.display", "Tablet", null));
+
+            EdmReference reference2 = new EdmReference(new Uri("https://example.com/Org.OData.Core.V1.xml"));
+            reference2.AddInclude(new EdmInclude("Core", "Org.OData.Core.V1"));
+            reference2.AddIncludeAnnotations(new EdmIncludeAnnotations("org.example.hcm", null, "com.example.Sales"));
+            reference2.AddIncludeAnnotations(new EdmIncludeAnnotations("org.example.hcm", "Tablet", "com.example.Person"));
+            model.SetEdmReferences(new[] { reference1, reference2 });
+
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+              "<edmx:Reference Uri=\"https://example.com/Org.OData.Authorization.V1.xml\">" +
+                "<edmx:Include Namespace=\"Org.OData.Authorization.V1\" Alias=\"Auth\" />" +
+                "<edmx:IncludeAnnotations TermNamespace=\"org.example.validation\" />" +
+                "<edmx:IncludeAnnotations TermNamespace=\"org.example.display\" Qualifier=\"Tablet\" />" +
+              "</edmx:Reference>" +
+              "<edmx:Reference Uri=\"https://example.com/Org.OData.Core.V1.xml\">" +
+                "<edmx:Include Namespace=\"Org.OData.Core.V1\" Alias=\"Core\" />" +
+                "<edmx:IncludeAnnotations TermNamespace=\"org.example.hcm\" TargetNamespace=\"com.example.Sales\" />" +
+                "<edmx:IncludeAnnotations TermNamespace=\"org.example.hcm\" Qualifier=\"Tablet\" TargetNamespace=\"com.example.Person\" />" +
+              "</edmx:Reference>" +
+              "<edmx:DataServices />" +
+            "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""$Reference"": {
+    ""https://example.com/Org.OData.Authorization.V1.xml"": {
+      ""$Include"": [
+        {
+          ""$Namespace"": ""Org.OData.Authorization.V1"",
+          ""$Alias"": ""Auth""
+        }
+      ],
+      ""$IncludeAnnotations"": [
+        {
+          ""$TermNamespace"": ""org.example.validation""
+        },
+        {
+          ""$TermNamespace"": ""org.example.display"",
+          ""$Qualifier"": ""Tablet""
+        }
+      ]
+    },
+    ""https://example.com/Org.OData.Core.V1.xml"": {
+      ""$Include"": [
+        {
+          ""$Namespace"": ""Org.OData.Core.V1"",
+          ""$Alias"": ""Core""
+        }
+      ],
+      ""$IncludeAnnotations"": [
+        {
+          ""$TermNamespace"": ""org.example.hcm"",
+          ""$TargetNamespace"": ""com.example.Sales""
+        },
+        {
+          ""$TermNamespace"": ""org.example.hcm"",
+          ""$Qualifier"": ""Tablet"",
+          ""$TargetNamespace"": ""com.example.Person""
+        }
+      ]
+    }
+  }
+}");
+        }
+        #endregion
+
         #region Annotation - Computed, OptimisticConcurrency
 
         [Fact]
         public void VerifyAnnotationComputedConcurrency()
         {
+            // Arrange
             var model = new EdmModel();
             var entity = new EdmEntityType("NS1", "Product");
             var entityId = entity.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false));
@@ -41,13 +125,76 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             model.SetOptimisticConcurrencyAnnotation(set1, new IEdmStructuralProperty[] { entityId, timeVer });
             entityContainer.AddElement(set1);
 
-            string csdlStr = GetCsdl(model, CsdlTarget.OData);
-            Assert.Equal(@"<?xml version=""1.0"" encoding=""utf-16""?><edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx""><edmx:DataServices><Schema Namespace=""NS1"" xmlns=""http://docs.oasis-open.org/odata/ns/edm""><EntityType Name=""Product""><Key><PropertyRef Name=""Id"" /></Key><Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false""><Annotation Term=""Org.OData.Core.V1.Computed"" Bool=""true"" /></Property><Property Name=""Name"" Type=""Edm.String"" Nullable=""false"" /><Property Name=""UpdatedTime"" Type=""Edm.Date"" Nullable=""false""><Annotation Term=""Org.OData.Core.V1.Computed"" Bool=""true"" /></Property></EntityType><EntityContainer Name=""Container""><EntitySet Name=""Products"" EntityType=""NS1.Product""><Annotation Term=""Org.OData.Core.V1.OptimisticConcurrency""><Collection><PropertyPath>Id</PropertyPath><PropertyPath>UpdatedTime</PropertyPath></Collection></Annotation></EntitySet></EntityContainer></Schema></edmx:DataServices></edmx:Edmx>", csdlStr);
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+                "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                  "<edmx:DataServices>" +
+                    "<Schema Namespace=\"NS1\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                      "<EntityType Name=\"Product\">" +
+                        "<Key>" +
+                          "<PropertyRef Name=\"Id\" />" +
+                        "</Key>" +
+                        "<Property Name=\"Id\" Type=\"Edm.Int32\" Nullable=\"false\">" +
+                          "<Annotation Term=\"Org.OData.Core.V1.Computed\" Bool=\"true\" />" +
+                        "</Property>" +
+                        "<Property Name=\"Name\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                        "<Property Name=\"UpdatedTime\" Type=\"Edm.Date\" Nullable=\"false\">" +
+                          "<Annotation Term=\"Org.OData.Core.V1.Computed\" Bool=\"true\" />" +
+                        "</Property>" +
+                      "</EntityType>" +
+                      "<EntityContainer Name=\"Container\">" +
+                        "<EntitySet Name=\"Products\" EntityType=\"NS1.Product\">" +
+                          "<Annotation Term=\"Org.OData.Core.V1.OptimisticConcurrency\">" +
+                            "<Collection>" +
+                              "<PropertyPath>Id</PropertyPath>" +
+                              "<PropertyPath>UpdatedTime</PropertyPath>" +
+                            "</Collection>" +
+                          "</Annotation>" +
+                        "</EntitySet>" +
+                      "</EntityContainer>" +
+                    "</Schema>" +
+                  "</edmx:DataServices>" +
+                "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""NS1.Container"",
+  ""NS1"": {
+    ""Product"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {
+        ""$Type"": ""Edm.Int32"",
+        ""@Org.OData.Core.V1.Computed"": true
+      },
+      ""Name"": {},
+      ""UpdatedTime"": {
+        ""$Type"": ""Edm.Date"",
+        ""@Org.OData.Core.V1.Computed"": true
+      }
+    },
+    ""Container"": {
+      ""$Kind"": ""EntityContainer"",
+      ""Products"": {
+        ""$Collection"": true,
+        ""$Type"": ""NS1.Product"",
+        ""@Org.OData.Core.V1.OptimisticConcurrency"": [
+          ""Id"",
+          ""UpdatedTime""
+        ]
+      }
+    }
+  }
+}");
         }
 
         [Fact]
         public void WriteNavigationPropertyInComplexType()
         {
+            // Arrange
             var model = new EdmModel();
 
             var person = new EdmEntityType("DefaultNs", "Person");
@@ -105,12 +252,10 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
             IEnumerable<EdmError> actualErrors = null;
             model.Validate(out actualErrors);
-            Assert.Equal(actualErrors.Count(), 0);
+            Assert.Empty(actualErrors);
 
-            string actual = GetCsdl(model, CsdlTarget.OData);
-
-            string expected =
-                "<?xml version=\"1.0\" encoding=\"utf-16\"?><edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?><edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
                 "<edmx:DataServices>" +
                 "<Schema Namespace=\"DefaultNs\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
                 "<EntityType Name=\"Person\">" +
@@ -145,14 +290,90 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 "<EntitySet Name=\"CountryOrRegion\" EntityType=\"DefaultNs.CountryOrRegion\" />" +
                 "</EntityContainer></Schema>" +
                 "</edmx:DataServices>" +
-                "</edmx:Edmx>";
+                "</edmx:Edmx>");
 
-            Assert.Equal(expected, actual);
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""DefaultNs.Container"",
+  ""DefaultNs"": {
+    ""Person"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""UserName""
+      ],
+      ""UserName"": {},
+      ""HomeAddress"": {
+        ""$Type"": ""DefaultNs.Address""
+      },
+      ""WorkAddress"": {
+        ""$Type"": ""DefaultNs.Address""
+      },
+      ""Addresses"": {
+        ""$Collection"": true,
+        ""$Type"": ""DefaultNs.Address""
+      }
+    },
+    ""City"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Name""
+      ],
+      ""Name"": {}
+    },
+    ""CountryOrRegion"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Name""
+      ],
+      ""Name"": {}
+    },
+    ""Address"": {
+      ""$Kind"": ""ComplexType"",
+      ""Id"": {
+        ""$Type"": ""Edm.Int32""
+      },
+      ""City"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Type"": ""DefaultNs.City""
+      }
+    },
+    ""WorkAddress"": {
+      ""$Kind"": ""ComplexType"",
+      ""$BaseType"": ""DefaultNs.Address"",
+      ""CountryOrRegion"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Type"": ""DefaultNs.CountryOrRegion""
+      }
+    },
+    ""Container"": {
+      ""$Kind"": ""EntityContainer"",
+      ""People"": {
+        ""$Collection"": true,
+        ""$Type"": ""DefaultNs.Person"",
+        ""$NavigationPropertyBinding"": {
+          ""Addresses/City"": ""City"",
+          ""HomeAddress/City"": ""City"",
+          ""WorkAddress/DefaultNs.WorkAddress/CountryOrRegion"": ""CountryOrRegion""
+        }
+      },
+      ""City"": {
+        ""$Collection"": true,
+        ""$Type"": ""DefaultNs.City""
+      },
+      ""CountryOrRegion"": {
+        ""$Collection"": true,
+        ""$Type"": ""DefaultNs.CountryOrRegion""
+      }
+    }
+  }
+}");
         }
 
         [Fact]
         public void WriteCollectionOfNavigationOnComplex()
         {
+            // Arrange
             var model = new EdmModel();
 
             var entity = new EdmEntityType("DefaultNs", "EntityType");
@@ -188,39 +409,89 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             entityContainer.AddElement(entites);
             entityContainer.AddElement(navEntities);
 
-            string actual = GetCsdl(model, CsdlTarget.OData);
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+                "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                  "<edmx:DataServices>" +
+                    "<Schema Namespace=\"DefaultNs\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                      "<EntityType Name=\"EntityType\">" +
+                        "<Key><PropertyRef Name=\"ID\" /></Key>" +
+                        "<Property Name=\"ID\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                        "<Property Name=\"Complex\" Type=\"DefaultNs.ComplexType\" Nullable=\"false\" />" +
+                      "</EntityType>" +
+                      "<EntityType Name=\"NavEntityType\">" +
+                        "<Key><PropertyRef Name=\"ID\" /></Key>" +
+                        "<Property Name=\"ID\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                      "</EntityType>" +
+                      "<ComplexType Name=\"ComplexType\">" +
+                        "<Property Name=\"Prop1\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                        "<NavigationProperty Name=\"CollectionOfNav\" Type=\"Collection(DefaultNs.NavEntityType)\" />" +
+                      "</ComplexType>" +
+                      "<EntityContainer Name=\"Container\">" +
+                        "<EntitySet Name=\"Entities\" EntityType=\"DefaultNs.EntityType\">" +
+                          "<NavigationPropertyBinding Path=\"Complex/CollectionOfNav\" Target=\"NavEntities\" />" +
+                        "</EntitySet>" +
+                        "<EntitySet Name=\"NavEntities\" EntityType=\"DefaultNs.NavEntityType\" />" +
+                      "</EntityContainer>" +
+                    "</Schema>" +
+                  "</edmx:DataServices>" +
+                "</edmx:Edmx>");
 
-            string expected = "<?xml version=\"1.0\" encoding=\"utf-16\"?><edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
-                              "<edmx:DataServices><Schema Namespace=\"DefaultNs\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
-                              "<EntityType Name=\"EntityType\">" +
-                                  "<Key><PropertyRef Name=\"ID\" /></Key>" +
-                                  "<Property Name=\"ID\" Type=\"Edm.String\" Nullable=\"false\" />" +
-                                  "<Property Name=\"Complex\" Type=\"DefaultNs.ComplexType\" Nullable=\"false\" />" +
-                              "</EntityType>" +
-                              "<EntityType Name=\"NavEntityType\">" +
-                                  "<Key><PropertyRef Name=\"ID\" /></Key>" +
-                                  "<Property Name=\"ID\" Type=\"Edm.String\" Nullable=\"false\" />" +
-                              "</EntityType>" +
-                              "<ComplexType Name=\"ComplexType\">" +
-                                  "<Property Name=\"Prop1\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
-                                  "<NavigationProperty Name=\"CollectionOfNav\" Type=\"Collection(DefaultNs.NavEntityType)\" />" +
-                              "</ComplexType>" +
-                              "<EntityContainer Name=\"Container\">" +
-                              "<EntitySet Name=\"Entities\" EntityType=\"DefaultNs.EntityType\">" +
-                                "<NavigationPropertyBinding Path=\"Complex/CollectionOfNav\" Target=\"NavEntities\" />" +
-                              "</EntitySet>" +
-                              "<EntitySet Name=\"NavEntities\" EntityType=\"DefaultNs.NavEntityType\" />" +
-                              "</EntityContainer>" +
-                              "</Schema>" +
-                              "</edmx:DataServices>" +
-                              "</edmx:Edmx>";
-
-            Assert.Equal(expected, actual);
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""DefaultNs.Container"",
+  ""DefaultNs"": {
+    ""EntityType"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""ID""
+      ],
+      ""ID"": {},
+      ""Complex"": {
+        ""$Type"": ""DefaultNs.ComplexType""
+      }
+    },
+    ""NavEntityType"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""ID""
+      ],
+      ""ID"": {}
+    },
+    ""ComplexType"": {
+      ""$Kind"": ""ComplexType"",
+      ""Prop1"": {
+        ""$Type"": ""Edm.Int32""
+      },
+      ""CollectionOfNav"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Collection"": true,
+        ""$Type"": ""DefaultNs.NavEntityType""
+      }
+    },
+    ""Container"": {
+      ""$Kind"": ""EntityContainer"",
+      ""Entities"": {
+        ""$Collection"": true,
+        ""$Type"": ""DefaultNs.EntityType"",
+        ""$NavigationPropertyBinding"": {
+          ""Complex/CollectionOfNav"": ""NavEntities""
+        }
+      },
+      ""NavEntities"": {
+        ""$Collection"": true,
+        ""$Type"": ""DefaultNs.NavEntityType""
+      }
+    }
+  }
+}");
         }
 
         [Fact]
         public void ContainedUnderComplexTest()
         {
+            // Arrange
             var model = new EdmModel();
 
             var entity = new EdmEntityType("NS", "EntityType");
@@ -266,15 +537,97 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             entityContainer.AddElement(entites1);
             entityContainer.AddElement(entites2);
 
-            string actual = GetCsdl(model, CsdlTarget.OData);
-
             var entitySet1 = model.EntityContainer.FindEntitySet("Entities1");
             var entitySet2 = model.EntityContainer.FindEntitySet("Entities2");
             var containedEntitySet = entitySet1.FindNavigationTarget(containedUnderComplex,
                 new EdmPathExpression("Complex/ContainedUnderComplex"));
-            Assert.Equal(containedEntitySet.Name, "ContainedUnderComplex");
+            Assert.Equal("ContainedUnderComplex", containedEntitySet.Name);
             var entitySetUnderContained = containedEntitySet.FindNavigationTarget(navUnderContained);
             Assert.Equal(entitySetUnderContained, entitySet2);
+
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+                "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                  "<edmx:DataServices><Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                    "<EntityType Name=\"EntityType\">" +
+                      "<Key><PropertyRef Name=\"ID\" /></Key>" +
+                      "<Property Name=\"ID\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                      "<Property Name=\"Complex\" Type=\"NS.ComplexType\" Nullable=\"false\" />" +
+                    "</EntityType>" +
+                    "<EntityType Name=\"ContainedEntityType\">" +
+                      "<Key><PropertyRef Name=\"ID\" /></Key>" +
+                      "<Property Name=\"ID\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                      "<NavigationProperty Name=\"NavUnderContained\" Type=\"Collection(NS.EntityType)\" />" +
+                    "</EntityType>" +
+                    "<ComplexType Name=\"ComplexType\">" +
+                      "<Property Name=\"Prop1\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                      "<NavigationProperty Name=\"ContainedUnderComplex\" Type=\"Collection(NS.ContainedEntityType)\" ContainsTarget=\"true\" />" +
+                    "</ComplexType>" +
+                    "<EntityContainer Name=\"Container\">" +
+                      "<EntitySet Name=\"Entities1\" EntityType=\"NS.EntityType\">" +
+                        "<NavigationPropertyBinding Path=\"Complex/ContainedUnderComplex/NavUnderContained\" Target=\"Entities2\" />" +
+                      "</EntitySet>" +
+                      "<EntitySet Name=\"Entities2\" EntityType=\"NS.EntityType\" />" +
+                    "</EntityContainer>" +
+                  "</Schema>" +
+                "</edmx:DataServices>" +
+              "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""NS.Container"",
+  ""NS"": {
+    ""EntityType"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""ID""
+      ],
+      ""ID"": {},
+      ""Complex"": {
+        ""$Type"": ""NS.ComplexType""
+      }
+    },
+    ""ContainedEntityType"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""ID""
+      ],
+      ""ID"": {},
+      ""NavUnderContained"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Collection"": true,
+        ""$Type"": ""NS.EntityType""
+      }
+    },
+    ""ComplexType"": {
+      ""$Kind"": ""ComplexType"",
+      ""Prop1"": {
+        ""$Type"": ""Edm.Int32""
+      },
+      ""ContainedUnderComplex"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Collection"": true,
+        ""$Type"": ""NS.ContainedEntityType"",
+        ""$ContainsTarget"": true
+      }
+    },
+    ""Container"": {
+      ""$Kind"": ""EntityContainer"",
+      ""Entities1"": {
+        ""$Collection"": true,
+        ""$Type"": ""NS.EntityType"",
+        ""$NavigationPropertyBinding"": {
+          ""Complex/ContainedUnderComplex/NavUnderContained"": ""Entities2""
+        }
+      },
+      ""Entities2"": {
+        ""$Collection"": true,
+        ""$Type"": ""NS.EntityType""
+      }
+    }
+  }
+}");
         }
 
         [Fact]
@@ -344,44 +697,123 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             });
             entityType1.SetNavigationPropertyPartner(
                 outerNav1B, new EdmPathExpression("OuterNavB"), outerNav2C, new EdmPathExpression("NS.EntityType3/OuterNavC"));
-            var str = GetCsdl(model, CsdlTarget.OData);
-            Assert.Equal(
-                "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
-                    "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
-                        "<edmx:DataServices>" +
-                            "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
-                                "<EntityType Name=\"EntityType1\">" +
-                                    "<Key><PropertyRef Name=\"ID\" /></Key>" +
-                                    "<Property Name=\"ID\" Type=\"Edm.Int32\" />" +
-                                    "<Property Name=\"ComplexProp\" Type=\"Collection(NS.ComplexType1)\" Nullable=\"false\" />" +
-                                    "<NavigationProperty Name=\"OuterNavA\" Type=\"NS.EntityType2\" Nullable=\"false\" Partner=\"OuterNavA\" />" +
-                                    "<NavigationProperty Name=\"OuterNavB\" Type=\"Collection(NS.EntityType2)\" Partner=\"NS.EntityType3/OuterNavC\" />" +
-                                "</EntityType>" +
-                                "<EntityType Name=\"EntityType2\">" +
-                                    "<Key><PropertyRef Name=\"ID\" /></Key>" +
-                                    "<Property Name=\"ID\" Type=\"Edm.Int32\" />" +
-                                    "<Property Name=\"ComplexProp\" Type=\"NS.ComplexType2\" Nullable=\"false\" />" +
-                                    "<NavigationProperty Name=\"OuterNavA\" Type=\"NS.EntityType1\" Nullable=\"false\" Partner=\"OuterNavA\" />" +
-                                    "<NavigationProperty Name=\"OuterNavB\" Type=\"NS.EntityType1\" Nullable=\"false\" Partner=\"ComplexProp/InnerNav\" />" +
-                                "</EntityType>" +
-                                "<EntityType Name=\"EntityType3\" BaseType=\"NS.EntityType2\">" +
-                                    "<NavigationProperty Name=\"OuterNavC\" Type=\"Collection(NS.EntityType1)\" Partner=\"OuterNavB\" />" +
-                                "</EntityType>" +
-                                "<ComplexType Name=\"ComplexType1\">" +
-                                    "<NavigationProperty Name=\"InnerNav\" Type=\"NS.EntityType2\" Nullable=\"false\" />" +
-                                "</ComplexType>" +
-                                "<ComplexType Name=\"ComplexType2\">" +
-                                    "<NavigationProperty Name=\"InnerNav\" Type=\"NS.EntityType1\" Nullable=\"false\" />" +
-                                "</ComplexType>" +
-                            "</Schema>" +
-                        "</edmx:DataServices>" +
-                    "</edmx:Edmx>",
-                str);
+
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+                "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                    "<edmx:DataServices>" +
+                        "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                            "<EntityType Name=\"EntityType1\">" +
+                                "<Key><PropertyRef Name=\"ID\" /></Key>" +
+                                "<Property Name=\"ID\" Type=\"Edm.Int32\" />" +
+                                "<Property Name=\"ComplexProp\" Type=\"Collection(NS.ComplexType1)\" Nullable=\"false\" />" +
+                                "<NavigationProperty Name=\"OuterNavA\" Type=\"NS.EntityType2\" Nullable=\"false\" Partner=\"OuterNavA\" />" +
+                                "<NavigationProperty Name=\"OuterNavB\" Type=\"Collection(NS.EntityType2)\" Partner=\"NS.EntityType3/OuterNavC\" />" +
+                            "</EntityType>" +
+                            "<EntityType Name=\"EntityType2\">" +
+                                "<Key><PropertyRef Name=\"ID\" /></Key>" +
+                                "<Property Name=\"ID\" Type=\"Edm.Int32\" />" +
+                                "<Property Name=\"ComplexProp\" Type=\"NS.ComplexType2\" Nullable=\"false\" />" +
+                                "<NavigationProperty Name=\"OuterNavA\" Type=\"NS.EntityType1\" Nullable=\"false\" Partner=\"OuterNavA\" />" +
+                                "<NavigationProperty Name=\"OuterNavB\" Type=\"NS.EntityType1\" Nullable=\"false\" Partner=\"ComplexProp/InnerNav\" />" +
+                            "</EntityType>" +
+                            "<EntityType Name=\"EntityType3\" BaseType=\"NS.EntityType2\">" +
+                                "<NavigationProperty Name=\"OuterNavC\" Type=\"Collection(NS.EntityType1)\" Partner=\"OuterNavB\" />" +
+                            "</EntityType>" +
+                            "<ComplexType Name=\"ComplexType1\">" +
+                                "<NavigationProperty Name=\"InnerNav\" Type=\"NS.EntityType2\" Nullable=\"false\" />" +
+                            "</ComplexType>" +
+                            "<ComplexType Name=\"ComplexType2\">" +
+                                "<NavigationProperty Name=\"InnerNav\" Type=\"NS.EntityType1\" Nullable=\"false\" />" +
+                            "</ComplexType>" +
+                        "</Schema>" +
+                    "</edmx:DataServices>" +
+                "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""EntityType1"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""ID""
+      ],
+      ""ID"": {
+        ""$Type"": ""Edm.Int32"",
+        ""$Nullable"": true
+      },
+      ""ComplexProp"": {
+        ""$Collection"": true,
+        ""$Type"": ""NS.ComplexType1""
+      },
+      ""OuterNavA"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Type"": ""NS.EntityType2"",
+        ""$Partner"": ""OuterNavA""
+      },
+      ""OuterNavB"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Collection"": true,
+        ""$Type"": ""NS.EntityType2"",
+        ""$Partner"": ""NS.EntityType3/OuterNavC""
+      }
+    },
+    ""EntityType2"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""ID""
+      ],
+      ""ID"": {
+        ""$Type"": ""Edm.Int32"",
+        ""$Nullable"": true
+      },
+      ""ComplexProp"": {
+        ""$Type"": ""NS.ComplexType2""
+      },
+      ""OuterNavA"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Type"": ""NS.EntityType1"",
+        ""$Partner"": ""OuterNavA""
+      },
+      ""OuterNavB"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Type"": ""NS.EntityType1"",
+        ""$Partner"": ""ComplexProp/InnerNav""
+      }
+    },
+    ""EntityType3"": {
+      ""$Kind"": ""EntityType"",
+      ""$BaseType"": ""NS.EntityType2"",
+      ""OuterNavC"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Collection"": true,
+        ""$Type"": ""NS.EntityType1"",
+        ""$Partner"": ""OuterNavB""
+      }
+    },
+    ""ComplexType1"": {
+      ""$Kind"": ""ComplexType"",
+      ""InnerNav"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Type"": ""NS.EntityType2""
+      }
+    },
+    ""ComplexType2"": {
+      ""$Kind"": ""ComplexType"",
+      ""InnerNav"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Type"": ""NS.EntityType1""
+      }
+    }
+  }
+}");
         }
 
         [Fact]
         public void SetNavigationPropertyPartnerTypeHierarchyTest()
         {
+            // Arrange
             var model = new EdmModel();
             var entityTypeA1 = new EdmEntityType("NS", "EntityTypeA1");
             var entityTypeA2 = new EdmEntityType("NS", "EntityTypeA2", entityTypeA1);
@@ -416,9 +848,9 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             });
             entityTypeA2.SetNavigationPropertyPartner(a1Nav, new EdmPathExpression("A1Nav"), bNav1, new EdmPathExpression("BNav1"));
             entityTypeA2.SetNavigationPropertyPartner(a3Nav, new EdmPathExpression("NS.EntityTypeA3/A3Nav"), bNav2, new EdmPathExpression("BNav2"));
-            var str = GetCsdl(model, CsdlTarget.OData);
-            Assert.Equal(
-                "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
                 "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
                     "<edmx:DataServices>" +
                         "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
@@ -439,11 +871,65 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                             "</EntityType>" +
                         "</Schema>" +
                     "</edmx:DataServices>" +
-                "</edmx:Edmx>",
-                str);
+                "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""EntityTypeA1"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""ID""
+      ],
+      ""ID"": {
+        ""$Type"": ""Edm.Int32"",
+        ""$Nullable"": true
+      },
+      ""A1Nav"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Type"": ""NS.EntityTypeB"",
+        ""$Partner"": ""BNav1""
+      }
+    },
+    ""EntityTypeA2"": {
+      ""$Kind"": ""EntityType"",
+      ""$BaseType"": ""NS.EntityTypeA1""
+    },
+    ""EntityTypeA3"": {
+      ""$Kind"": ""EntityType"",
+      ""$BaseType"": ""NS.EntityTypeA2"",
+      ""A3Nav"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Type"": ""NS.EntityTypeB"",
+        ""$Partner"": ""BNav2""
+      }
+    },
+    ""EntityTypeB"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""ID""
+      ],
+      ""ID"": {
+        ""$Type"": ""Edm.Int32"",
+        ""$Nullable"": true
+      },
+      ""BNav1"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Type"": ""NS.EntityTypeA2"",
+        ""$Partner"": ""A1Nav""
+      },
+      ""BNav2"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Type"": ""NS.EntityTypeA3"",
+        ""$Partner"": ""NS.EntityTypeA3/A3Nav""
+      }
+    }
+  }
+}");
         }
 
-        public static void SetComputedAnnotation(EdmModel model, IEdmProperty target)
+        private static void SetComputedAnnotation(EdmModel model, IEdmProperty target)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(target, "target");
@@ -456,7 +942,6 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.SetVocabularyAnnotation(annotation);
         }
-
         #endregion
 
         #region Optional Parameters
@@ -464,8 +949,21 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         [Fact]
         public void ShouldWriteInLineOptionalParameters()
         {
-            string expected =
-            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            // Arrange
+            var stringTypeReference = new EdmStringTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), false);
+            var model = new EdmModel();
+            var function = new EdmFunction("test", "TestFunction", stringTypeReference);
+            var requiredParam = new EdmOperationParameter(function, "requiredParam", stringTypeReference);
+            var optionalParam = new EdmOptionalParameter(function, "optionalParam", stringTypeReference, null);
+            var optionalParamWithDefault = new EdmOptionalParameter(function, "optionalParamWithDefault", stringTypeReference, "Smith");
+            function.AddParameter(requiredParam);
+            function.AddParameter(optionalParam);
+            function.AddParameter(optionalParamWithDefault);
+            model.AddElement(function);
+            model.AddEntityContainer("test", "Default").AddFunctionImport("TestFunction", function);
+
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
               "<edmx:DataServices>" +
                 "<Schema Namespace=\"test\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
@@ -488,53 +986,48 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                   "</EntityContainer>" +
                 "</Schema>" +
               "</edmx:DataServices>" +
-            "</edmx:Edmx>";
+            "</edmx:Edmx>");
 
-            var stringTypeReference = new EdmStringTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), false);
-            var model = new EdmModel();
-            var function = new EdmFunction("test", "TestFunction", stringTypeReference);
-            var requiredParam = new EdmOperationParameter(function, "requiredParam", stringTypeReference);
-            var optionalParam = new EdmOptionalParameter(function, "optionalParam", stringTypeReference, null);
-            var optionalParamWithDefault = new EdmOptionalParameter(function, "optionalParamWithDefault", stringTypeReference, "Smith");
-            function.AddParameter(requiredParam);
-            function.AddParameter(optionalParam);
-            function.AddParameter(optionalParamWithDefault);
-            model.AddElement(function);
-            model.AddEntityContainer("test", "Default").AddFunctionImport("TestFunction", function);
-            string csdlStr = GetCsdl(model, CsdlTarget.OData);
-            Assert.Equal(expected, csdlStr);
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""test.Default"",
+  ""test"": {
+    ""TestFunction"": [
+      {
+        ""$Kind"": ""Function"",
+        ""$Parameter"": [
+          {
+            ""$Name"": ""requiredParam""
+          },
+          {
+            ""$Name"": ""optionalParam"",
+            ""@Org.OData.Core.V1.OptionalParameter"": {}
+          },
+          {
+            ""$Name"": ""optionalParamWithDefault"",
+            ""@Org.OData.Core.V1.OptionalParameter"": {
+              ""DefaultValue"": ""Smith""
+            }
+          }
+        ],
+        ""$ReturnType"": {}
+      }
+    ],
+    ""Default"": {
+      ""$Kind"": ""EntityContainer"",
+      ""TestFunction"": {
+        ""$Kind"": ""FunctionImport"",
+        ""$Function"": ""test.TestFunction""
+      }
+    }
+  }
+}");
         }
 
         [Fact]
         public void ShouldWriteOutofLineOptionalParameters()
         {
-            string expected =
-            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
-            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
-              "<edmx:DataServices>" +
-                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
-                  "<Function Name=\"TestFunction\">" +
-                    "<Parameter Name=\"requiredParam\" Type=\"Edm.String\" Nullable=\"false\" />" +
-                    "<Parameter Name=\"optionalParam\" Type=\"Edm.String\" Nullable=\"false\" />" +
-                    "<Parameter Name=\"optionalParamWithDefault\" Type=\"Edm.String\" Nullable=\"false\" />" +
-                    "<ReturnType Type=\"Edm.String\" Nullable=\"false\" />" +
-                  "</Function>" +
-                  "<Annotations Target=\"NS.TestFunction(Edm.String, Edm.String, Edm.String)/optionalParam\">" +
-                   "<Annotation Term=\"Org.OData.Core.V1.OptionalParameter\">" +
-                     "<Record />" +
-                  "</Annotation>" +
-                 "</Annotations>" +
-                 "<Annotations Target=\"NS.TestFunction(Edm.String, Edm.String, Edm.String)/optionalParamWithDefault\">" +
-                   "<Annotation Term=\"Org.OData.Core.V1.OptionalParameter\">" +
-                     "<Record Type=\"Org.OData.Core.V1.OptionalParameterType\">" +
-                       "<PropertyValue Property=\"DefaultValue\" String=\"Smith\" />" +
-                     "</Record>" +
-                  "</Annotation>" +
-                 "</Annotations>" +
-                "</Schema>" +
-              "</edmx:DataServices>" +
-            "</edmx:Edmx>";
-
             var stringTypeReference = new EdmStringTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), false);
             var model = new EdmModel();
             var function = new EdmFunction("NS", "TestFunction", stringTypeReference);
@@ -562,33 +1055,73 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
             model.SetVocabularyAnnotation(annotation);
 
-            string csdlStr = GetCsdl(model, CsdlTarget.OData);
-            Assert.Equal(expected, csdlStr);
-        }
-
-        [Fact]
-        public void ShouldWriteOutOfLineOptionalParametersOverwriteInLineOptionalParameter()
-        {
-            string expected =
-            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
               "<edmx:DataServices>" +
                 "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
                   "<Function Name=\"TestFunction\">" +
+                    "<Parameter Name=\"requiredParam\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                    "<Parameter Name=\"optionalParam\" Type=\"Edm.String\" Nullable=\"false\" />" +
                     "<Parameter Name=\"optionalParamWithDefault\" Type=\"Edm.String\" Nullable=\"false\" />" +
                     "<ReturnType Type=\"Edm.String\" Nullable=\"false\" />" +
                   "</Function>" +
-                  "<Annotations Target=\"NS.TestFunction(Edm.String)/optionalParamWithDefault\">" +
+                  "<Annotations Target=\"NS.TestFunction(Edm.String, Edm.String, Edm.String)/optionalParam\">" +
+                   "<Annotation Term=\"Org.OData.Core.V1.OptionalParameter\">" +
+                     "<Record />" +
+                  "</Annotation>" +
+                 "</Annotations>" +
+                 "<Annotations Target=\"NS.TestFunction(Edm.String, Edm.String, Edm.String)/optionalParamWithDefault\">" +
                    "<Annotation Term=\"Org.OData.Core.V1.OptionalParameter\">" +
                      "<Record Type=\"Org.OData.Core.V1.OptionalParameterType\">" +
-                       "<PropertyValue Property=\"DefaultValue\" String=\"OutofLineValue\" />" +
+                       "<PropertyValue Property=\"DefaultValue\" String=\"Smith\" />" +
                      "</Record>" +
                   "</Annotation>" +
                  "</Annotations>" +
                 "</Schema>" +
               "</edmx:DataServices>" +
-            "</edmx:Edmx>";
+            "</edmx:Edmx>");
 
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""TestFunction"": [
+      {
+        ""$Kind"": ""Function"",
+        ""$Parameter"": [
+          {
+            ""$Name"": ""requiredParam""
+          },
+          {
+            ""$Name"": ""optionalParam""
+          },
+          {
+            ""$Name"": ""optionalParamWithDefault""
+          }
+        ],
+        ""$ReturnType"": {}
+      }
+    ],
+    ""$Annotations"": {
+      ""NS.TestFunction(Edm.String, Edm.String, Edm.String)/optionalParam"": {
+        ""@Org.OData.Core.V1.OptionalParameter"": {}
+      },
+      ""NS.TestFunction(Edm.String, Edm.String, Edm.String)/optionalParamWithDefault"": {
+        ""@Org.OData.Core.V1.OptionalParameter"": {
+          ""$Type"": ""Org.OData.Core.V1.OptionalParameterType"",
+          ""DefaultValue"": ""Smith""
+        }
+      }
+    }
+  }
+}");
+        }
+
+        [Fact]
+        public void ShouldWriteOutOfLineOptionalParametersOverwriteInLineOptionalParameter()
+        {
+            // Arrange
             var stringTypeReference = new EdmStringTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), false);
             var model = new EdmModel();
             var function = new EdmFunction("NS", "TestFunction", stringTypeReference);
@@ -607,8 +1140,51 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
             model.SetVocabularyAnnotation(annotation);
 
-            string csdlStr = GetCsdl(model, CsdlTarget.OData);
-            Assert.Equal(expected, csdlStr);
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+              "<edmx:DataServices>" +
+                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                  "<Function Name=\"TestFunction\">" +
+                    "<Parameter Name=\"optionalParamWithDefault\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                    "<ReturnType Type=\"Edm.String\" Nullable=\"false\" />" +
+                  "</Function>" +
+                  "<Annotations Target=\"NS.TestFunction(Edm.String)/optionalParamWithDefault\">" +
+                   "<Annotation Term=\"Org.OData.Core.V1.OptionalParameter\">" +
+                     "<Record Type=\"Org.OData.Core.V1.OptionalParameterType\">" +
+                       "<PropertyValue Property=\"DefaultValue\" String=\"OutofLineValue\" />" +
+                     "</Record>" +
+                  "</Annotation>" +
+                 "</Annotations>" +
+                "</Schema>" +
+              "</edmx:DataServices>" +
+            "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""TestFunction"": [
+      {
+        ""$Kind"": ""Function"",
+        ""$Parameter"": [
+          {
+            ""$Name"": ""optionalParamWithDefault""
+          }
+        ],
+        ""$ReturnType"": {}
+      }
+    ],
+    ""$Annotations"": {
+      ""NS.TestFunction(Edm.String)/optionalParamWithDefault"": {
+        ""@Org.OData.Core.V1.OptionalParameter"": {
+          ""$Type"": ""Org.OData.Core.V1.OptionalParameterType"",
+          ""DefaultValue"": ""OutofLineValue""
+        }
+      }
+    }
+  }
+}");
         }
 
         #endregion
@@ -616,55 +1192,99 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         [Fact]
         public void ShouldWriteInLineReturnTypeAnnotation()
         {
-            string expected =
-            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
-            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
-              "<edmx:DataServices>" +
-                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
-                  "<Function Name=\"TestFunction\">" +
-                    "<ReturnType Type=\"Edm.PrimitiveType\" Nullable=\"false\">" +
-                        "<Annotation Term=\"Org.OData.Validation.V1.DerivedTypeConstraint\">" +
-                          "<Collection>" +
-                            "<String>Edm.Int32</String>" +
-                            "<String>Edm.Boolean</String>" +
-                          "</Collection>" +
-                        "</Annotation>" +
-                    "</ReturnType>" +
-                  "</Function>" +
-                "</Schema>" +
-              "</edmx:DataServices>" +
-            "</edmx:Edmx>";
+            // Arrange
+            IEdmModel model = GetReturnTypeModel(EdmVocabularyAnnotationSerializationLocation.Inline);
 
-            Assert.Equal(expected, WriteReturnTypeAnnotation(EdmVocabularyAnnotationSerializationLocation.Inline));
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+              "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                "<edmx:DataServices>" +
+                  "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                    "<Function Name=\"TestFunction\">" +
+                      "<ReturnType Type=\"Edm.PrimitiveType\" Nullable=\"false\">" +
+                          "<Annotation Term=\"Org.OData.Validation.V1.DerivedTypeConstraint\">" +
+                            "<Collection>" +
+                              "<String>Edm.Int32</String>" +
+                              "<String>Edm.Boolean</String>" +
+                            "</Collection>" +
+                          "</Annotation>" +
+                      "</ReturnType>" +
+                    "</Function>" +
+                  "</Schema>" +
+                "</edmx:DataServices>" +
+              "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""TestFunction"": [
+      {
+        ""$Kind"": ""Function"",
+        ""$ReturnType"": {
+          ""$Type"": ""Edm.PrimitiveType"",
+          ""@Org.OData.Validation.V1.DerivedTypeConstraint"": [
+            ""Edm.Int32"",
+            ""Edm.Boolean""
+          ]
+        }
+      }
+    ]
+  }
+}");
         }
 
         [Fact]
         public void ShouldWriteOutofLineReturnTypeAnnotation()
         {
-            string expected =
-            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
-            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
-              "<edmx:DataServices>" +
-                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
-                  "<Function Name=\"TestFunction\">" +
-                    "<ReturnType Type=\"Edm.PrimitiveType\" Nullable=\"false\" />" +
-                  "</Function>" +
-                  "<Annotations Target=\"NS.TestFunction()/$ReturnType\">" +
-                    "<Annotation Term=\"Org.OData.Validation.V1.DerivedTypeConstraint\">" +
-                      "<Collection>" +
-                        "<String>Edm.Int32</String>" +
-                        "<String>Edm.Boolean</String>" +
-                      "</Collection>" +
-                    "</Annotation>" +
-                  "</Annotations>" +
-                "</Schema>" +
-              "</edmx:DataServices>" +
-            "</edmx:Edmx>";
+            // Arrange
+            IEdmModel model = GetReturnTypeModel(EdmVocabularyAnnotationSerializationLocation.OutOfLine);
 
-            Assert.Equal(expected, WriteReturnTypeAnnotation(EdmVocabularyAnnotationSerializationLocation.OutOfLine));
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+              "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                "<edmx:DataServices>" +
+                  "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                    "<Function Name=\"TestFunction\">" +
+                      "<ReturnType Type=\"Edm.PrimitiveType\" Nullable=\"false\" />" +
+                    "</Function>" +
+                    "<Annotations Target=\"NS.TestFunction()/$ReturnType\">" +
+                      "<Annotation Term=\"Org.OData.Validation.V1.DerivedTypeConstraint\">" +
+                        "<Collection>" +
+                          "<String>Edm.Int32</String>" +
+                          "<String>Edm.Boolean</String>" +
+                        "</Collection>" +
+                      "</Annotation>" +
+                    "</Annotations>" +
+                  "</Schema>" +
+                "</edmx:DataServices>" +
+              "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""TestFunction"": [
+      {
+        ""$Kind"": ""Function"",
+        ""$ReturnType"": {
+          ""$Type"": ""Edm.PrimitiveType""
+        }
+      }
+    ],
+    ""$Annotations"": {
+      ""NS.TestFunction()/$ReturnType"": {
+        ""@Org.OData.Validation.V1.DerivedTypeConstraint"": [
+          ""Edm.Int32"",
+          ""Edm.Boolean""
+        ]
+      }
+    }
+  }
+}");
         }
 
-        private string WriteReturnTypeAnnotation(EdmVocabularyAnnotationSerializationLocation location)
+        private IEdmModel GetReturnTypeModel(EdmVocabularyAnnotationSerializationLocation location)
         {
             var primitiveTypeRef = EdmCoreModel.Instance.GetPrimitiveType(false);
             var model = new EdmModel();
@@ -680,40 +1300,60 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             annotation.SetSerializationLocation(model, location);
             model.SetVocabularyAnnotation(annotation);
 
-            return GetCsdl(model, CsdlTarget.OData);
+            return model;
         }
 
         [Fact]
         public void ShouldWriteEdmComplexTypeProperty()
         {
-            string expected =
-            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
-            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
-              "<edmx:DataServices>" +
-                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
-                  "<EntityType Name=\"Customer\">" +
-                    "<Key>" +
-                      "<PropertyRef Name=\"Id\" />" +
-                    "</Key>" +
-                    "<Property Name=\"Id\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
-                    "<Property Name=\"ComplexProperty\" Type=\"Edm.ComplexType\" />" +
-                  "</EntityType>" +
-                "</Schema>" +
-              "</edmx:DataServices>" +
-            "</edmx:Edmx>";
-
+            // Arrange
             EdmModel model = new EdmModel();
             EdmEntityType customer = new EdmEntityType("NS", "Customer");
             customer.AddKeys(customer.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false)));
             customer.AddStructuralProperty("ComplexProperty", EdmCoreModel.Instance.GetComplexType(true));
             model.AddElement(customer);
-            string csdlStr = GetCsdl(model, CsdlTarget.OData);
-            Assert.Equal(expected, csdlStr);
+
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+              "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                "<edmx:DataServices>" +
+                  "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                    "<EntityType Name=\"Customer\">" +
+                      "<Key>" +
+                        "<PropertyRef Name=\"Id\" />" +
+                      "</Key>" +
+                      "<Property Name=\"Id\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                      "<Property Name=\"ComplexProperty\" Type=\"Edm.ComplexType\" />" +
+                    "</EntityType>" +
+                  "</Schema>" +
+                "</edmx:DataServices>" +
+              "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""Customer"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {
+        ""$Type"": ""Edm.Int32""
+      },
+      ""ComplexProperty"": {
+        ""$Type"": ""Edm.ComplexType"",
+        ""$Nullable"": true
+      }
+    }
+  }
+}");
         }
 
         [Fact]
         public void ShouldWriteEdmEntityTypeProperty()
         {
+            // Arrange
             string expected =
             "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
@@ -741,27 +1381,48 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 Name = "EntityNavigationProperty"
             });
             model.AddElement(customer);
-            string csdlStr = GetCsdl(model, CsdlTarget.OData);
-            Assert.Equal(expected, csdlStr);
+
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+              "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                "<edmx:DataServices>" +
+                  "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                    "<EntityType Name=\"Customer\">" +
+                      "<Key>" +
+                        "<PropertyRef Name=\"Id\" />" +
+                      "</Key>" +
+                      "<Property Name=\"Id\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                      "<NavigationProperty Name=\"EntityNavigationProperty\" Type=\"Edm.EntityType\" />" +
+                    "</EntityType>" +
+                  "</Schema>" +
+                "</edmx:DataServices>" +
+              "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""Customer"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {
+        ""$Type"": ""Edm.Int32""
+      },
+      ""EntityNavigationProperty"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Type"": ""Edm.EntityType""
+      }
+    }
+  }
+}");
         }
 
         [Fact]
         public void ShouldWriteEdmPathTypeProperty()
         {
-            string expected =
-            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
-            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
-              "<edmx:DataServices>" +
-                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
-                  "<ComplexType Name=\"SelectType\">" +
-                    "<Property Name=\"DefaultSelect\" Type=\"Collection(Edm.PropertyPath)\" />" +
-                    "<Property Name=\"DefaultHidden\" Type=\"Collection(Edm.NavigationPropertyPath)\" Nullable=\"false\" />" +
-                  "</ComplexType>" +
-                  "<Term Name=\"MyTerm\" Type=\"NS.SelectType\" />" +
-                "</Schema>" +
-              "</edmx:DataServices>" +
-            "</edmx:Edmx>";
-
+            // Arrange
             EdmModel model = new EdmModel();
             EdmComplexType complexType = new EdmComplexType("NS", "SelectType");
             complexType.AddStructuralProperty("DefaultSelect", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetPropertyPath(true))));
@@ -769,25 +1430,50 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             model.AddElement(complexType);
             EdmTerm term = new EdmTerm("NS", "MyTerm", new EdmComplexTypeReference(complexType, true));
             model.AddElement(term);
-            string csdlStr = GetCsdl(model, CsdlTarget.OData);
-            Assert.Equal(expected, csdlStr);
+
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+              "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                "<edmx:DataServices>" +
+                  "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                    "<ComplexType Name=\"SelectType\">" +
+                      "<Property Name=\"DefaultSelect\" Type=\"Collection(Edm.PropertyPath)\" />" +
+                      "<Property Name=\"DefaultHidden\" Type=\"Collection(Edm.NavigationPropertyPath)\" Nullable=\"false\" />" +
+                    "</ComplexType>" +
+                    "<Term Name=\"MyTerm\" Type=\"NS.SelectType\" />" +
+                  "</Schema>" +
+                "</edmx:DataServices>" +
+              "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""SelectType"": {
+      ""$Kind"": ""ComplexType"",
+      ""DefaultSelect"": {
+        ""$Collection"": true,
+        ""$Type"": ""Edm.PropertyPath"",
+        ""$Nullable"": true
+      },
+      ""DefaultHidden"": {
+        ""$Collection"": true,
+        ""$Type"": ""Edm.NavigationPropertyPath""
+      }
+    },
+    ""MyTerm"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""NS.SelectType"",
+      ""$Nullable"": true
+    }
+  }
+}");
         }
 
         [Fact]
         public void CanWriteEdmSingletonWithEdmEntityTypeButValidationFailed()
         {
-            string expected =
-            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
-            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
-              "<edmx:DataServices>" +
-                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
-                  "<EntityContainer Name=\"Default\">" +
-                    "<Singleton Name=\"VIP\" Type=\"Edm.EntityType\" />" +
-                  "</EntityContainer>" +
-                "</Schema>" +
-              "</edmx:DataServices>" +
-            "</edmx:Edmx>";
-
+            // Arrange
             EdmModel model = new EdmModel();
             EdmEntityContainer container = new EdmEntityContainer("NS", "Default");
             EdmSingleton singleton = new EdmSingleton(container, "VIP", EdmCoreModel.Instance.GetEntityType());
@@ -795,27 +1481,39 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             model.AddElement(container);
             IEnumerable<EdmError> errors;
             Assert.False(model.Validate(out errors));
-            Assert.Equal(1, errors.Count());
+            Assert.Single(errors);
 
-            string csdlStr = GetCsdl(model, CsdlTarget.OData);
-            Assert.Equal(expected, csdlStr);
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+              "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                "<edmx:DataServices>" +
+                  "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                    "<EntityContainer Name=\"Default\">" +
+                      "<Singleton Name=\"VIP\" Type=\"Edm.EntityType\" />" +
+                    "</EntityContainer>" +
+                  "</Schema>" +
+                "</edmx:DataServices>" +
+              "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""NS.Default"",
+  ""NS"": {
+    ""Default"": {
+      ""$Kind"": ""EntityContainer"",
+      ""VIP"": {
+        ""$Type"": ""Edm.EntityType""
+      }
+    }
+  }
+}");
         }
 
         [Fact]
         public void CanWriteEdmEntitySetWithEdmEntityTypeButValidationFailed()
         {
-            string expected =
-            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
-            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
-              "<edmx:DataServices>" +
-                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
-                  "<EntityContainer Name=\"Default\">" +
-                    "<EntitySet Name=\"Customers\" EntityType=\"Edm.EntityType\" />" +
-                  "</EntityContainer>" +
-                "</Schema>" +
-              "</edmx:DataServices>" +
-            "</edmx:Edmx>";
-
+            // Arrange
             EdmModel model = new EdmModel();
             EdmEntityContainer container = new EdmEntityContainer("NS", "Default");
             EdmEntitySet entitySet = new EdmEntitySet(container, "Customers", EdmCoreModel.Instance.GetEntityType());
@@ -825,59 +1523,81 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.False(model.Validate(out errors));
             Assert.Equal(2, errors.Count());
 
-            string csdlStr = GetCsdl(model, CsdlTarget.OData);
-            Assert.Equal(expected, csdlStr);
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+              "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                "<edmx:DataServices>" +
+                  "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                    "<EntityContainer Name=\"Default\">" +
+                      "<EntitySet Name=\"Customers\" EntityType=\"Edm.EntityType\" />" +
+                    "</EntityContainer>" +
+                  "</Schema>" +
+                "</edmx:DataServices>" +
+              "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""NS.Default"",
+  ""NS"": {
+    ""Default"": {
+      ""$Kind"": ""EntityContainer"",
+      ""Customers"": {
+        ""$Collection"": true,
+        ""$Type"": ""Edm.EntityType""
+      }
+    }
+  }
+}");
         }
 
         [Fact]
         public void CanWriteEdmEntityTypeWithEdmPrimitiveTypeKeyButValidationFailed()
         {
-            string expected =
-            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
-            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
-              "<edmx:DataServices>" +
-                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
-                  "<EntityType Name=\"Customer\">" +
-                    "<Key>" +
-                      "<PropertyRef Name=\"Id\" />" +
-                    "</Key>" +
-                    "<Property Name=\"Id\" Type=\"Edm.PrimitiveType\" Nullable=\"false\" />" +
-                  "</EntityType>" +
-                "</Schema>" +
-              "</edmx:DataServices>" +
-            "</edmx:Edmx>";
-
+            // Arrange
             EdmModel model = new EdmModel();
             EdmEntityType customer = new EdmEntityType("NS", "Customer");
             customer.AddKeys(customer.AddStructuralProperty("Id", EdmCoreModel.Instance.GetPrimitiveType(false)));
             model.AddElement(customer);
             IEnumerable<EdmError> errors;
             Assert.False(model.Validate(out errors));
-            Assert.Equal(1, errors.Count());
-            string csdlStr = GetCsdl(model, CsdlTarget.OData);
-            Assert.Equal(expected, csdlStr);
+            Assert.Single(errors);
+
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+              "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                "<edmx:DataServices>" +
+                  "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                    "<EntityType Name=\"Customer\">" +
+                      "<Key>" +
+                        "<PropertyRef Name=\"Id\" />" +
+                      "</Key>" +
+                      "<Property Name=\"Id\" Type=\"Edm.PrimitiveType\" Nullable=\"false\" />" +
+                    "</EntityType>" +
+                  "</Schema>" +
+                "</edmx:DataServices>" +
+              "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""Customer"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {
+        ""$Type"": ""Edm.PrimitiveType""
+      }
+    }
+  }
+}");
         }
 
         [Fact]
         public void CanWriteEdmEntityTypeWithCollectionAbstractTypeButValidationFailed()
         {
-            string expected =
-            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
-            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
-              "<edmx:DataServices>" +
-                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
-                  "<EntityType Name=\"Customer\">" +
-                    "<Key>" +
-                      "<PropertyRef Name=\"Id\" />" +
-                    "</Key>" +
-                    "<Property Name=\"Id\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
-                    "<Property Name=\"Primitive\" Type=\"Collection(Edm.PrimitiveType)\" />" +
-                    "<Property Name=\"Complex\" Type=\"Collection(Edm.ComplexType)\" />" +
-                  "</EntityType>" +
-                "</Schema>" +
-              "</edmx:DataServices>" +
-            "</edmx:Edmx>";
-
+            // Arrange
             EdmModel model = new EdmModel();
             EdmEntityType customer = new EdmEntityType("NS", "Customer");
             customer.AddKeys(customer.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false)));
@@ -889,24 +1609,55 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             IEnumerable<EdmError> errors;
             Assert.False(model.Validate(out errors));
             Assert.Equal(2, errors.Count());
-            string csdlStr = GetCsdl(model, CsdlTarget.OData);
-            Assert.Equal(expected, csdlStr);
+
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+              "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                "<edmx:DataServices>" +
+                  "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                    "<EntityType Name=\"Customer\">" +
+                      "<Key>" +
+                        "<PropertyRef Name=\"Id\" />" +
+                      "</Key>" +
+                      "<Property Name=\"Id\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                      "<Property Name=\"Primitive\" Type=\"Collection(Edm.PrimitiveType)\" />" +
+                      "<Property Name=\"Complex\" Type=\"Collection(Edm.ComplexType)\" />" +
+                    "</EntityType>" +
+                  "</Schema>" +
+                "</edmx:DataServices>" +
+              "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""Customer"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {
+        ""$Type"": ""Edm.Int32""
+      },
+      ""Primitive"": {
+        ""$Collection"": true,
+        ""$Type"": ""Edm.PrimitiveType"",
+        ""$Nullable"": true
+      },
+      ""Complex"": {
+        ""$Collection"": true,
+        ""$Type"": ""Edm.ComplexType"",
+        ""$Nullable"": true
+      }
+    }
+  }
+}");
         }
 
         [Fact]
         public void CanWriteEdmStructuredTypeWithAbstractBaseTypeButValidationFailed()
         {
-            string expected =
-            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
-            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
-              "<edmx:DataServices>" +
-                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
-                  "<EntityType Name=\"Customer\" BaseType=\"Edm.EntityType\" />" +
-                  "<ComplexType Name=\"Address\" BaseType=\"Edm.ComplexType\" />" +
-                "</Schema>" +
-              "</edmx:DataServices>" +
-            "</edmx:Edmx>";
-
+            // Arrange
             EdmModel model = new EdmModel();
             EdmEntityType customer = new EdmEntityType("NS", "Customer", EdmCoreModel.Instance.GetEntityType());
             model.AddElement(customer);
@@ -915,51 +1666,71 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             IEnumerable<EdmError> errors;
             Assert.False(model.Validate(out errors));
             Assert.Equal(2, errors.Count());
-            string csdlStr = GetCsdl(model, CsdlTarget.OData);
-            Assert.Equal(expected, csdlStr);
+
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+              "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                "<edmx:DataServices>" +
+                  "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                    "<EntityType Name=\"Customer\" BaseType=\"Edm.EntityType\" />" +
+                    "<ComplexType Name=\"Address\" BaseType=\"Edm.ComplexType\" />" +
+                  "</Schema>" +
+                "</edmx:DataServices>" +
+              "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""Customer"": {
+      ""$Kind"": ""EntityType"",
+      ""$BaseType"": ""Edm.EntityType""
+    },
+    ""Address"": {
+      ""$Kind"": ""ComplexType"",
+      ""$BaseType"": ""Edm.ComplexType""
+    }
+  }
+}");
         }
 
         [Fact]
         public void CanWriteEdmTypeDefinitionWithEdmPrimitiveTypeButValidationFailed()
         {
-            string expected =
-            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
-            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
-              "<edmx:DataServices>" +
-                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
-                  "<TypeDefinition Name=\"MyType\" UnderlyingType=\"Edm.PrimitiveType\" />" +
-                "</Schema>" +
-              "</edmx:DataServices>" +
-            "</edmx:Edmx>";
-
+            // Arrange
             EdmModel model = new EdmModel();
             EdmTypeDefinition definition = new EdmTypeDefinition("NS", "MyType", EdmPrimitiveTypeKind.PrimitiveType);
             model.AddElement(definition);
             IEnumerable<EdmError> errors;
             Assert.False(model.Validate(out errors));
-            Assert.Equal(1, errors.Count());
-            string csdlStr = GetCsdl(model, CsdlTarget.OData);
-            Assert.Equal(expected, csdlStr);
+            Assert.Single(errors);
+
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+              "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                "<edmx:DataServices>" +
+                  "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                    "<TypeDefinition Name=\"MyType\" UnderlyingType=\"Edm.PrimitiveType\" />" +
+                  "</Schema>" +
+                "</edmx:DataServices>" +
+              "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""MyType"": {
+      ""$Kind"": ""TypeDefinition"",
+      ""$UnderlyingType"": ""Edm.PrimitiveType""
+    }
+  }
+}");
         }
 
         [Fact]
         public void CanWriteEdmFunctioneWithCollectionAbstractTypeButValidationFailed()
         {
-            string expected =
-            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
-            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
-              "<edmx:DataServices>" +
-                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
-                  "<Function Name=\"GetCustomer\">" +
-                    "<ReturnType Type=\"Collection(Edm.PrimitiveType)\" />" +
-                  "</Function>" +
-                  "<Function Name=\"GetSomething\">" +
-                    "<ReturnType Type=\"Collection(Edm.ComplexType)\" Nullable=\"false\" />" +
-                  "</Function>" +
-                "</Schema>" +
-              "</edmx:DataServices>" +
-            "</edmx:Edmx>";
-
+            // Arrange
             EdmModel model = new EdmModel();
             EdmFunction function = new EdmFunction("NS", "GetCustomer", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetPrimitiveType(true))));
             model.AddElement(function);
@@ -968,37 +1739,53 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             IEnumerable<EdmError> errors;
             Assert.False(model.Validate(out errors));
             Assert.Equal(2, errors.Count());
-            string csdlStr = GetCsdl(model, CsdlTarget.OData);
-            Assert.Equal(expected, csdlStr);
+
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+              "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                "<edmx:DataServices>" +
+                  "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                    "<Function Name=\"GetCustomer\">" +
+                      "<ReturnType Type=\"Collection(Edm.PrimitiveType)\" />" +
+                    "</Function>" +
+                    "<Function Name=\"GetSomething\">" +
+                      "<ReturnType Type=\"Collection(Edm.ComplexType)\" Nullable=\"false\" />" +
+                    "</Function>" +
+                  "</Schema>" +
+                "</edmx:DataServices>" +
+              "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""GetCustomer"": [
+      {
+        ""$Kind"": ""Function"",
+        ""$ReturnType"": {
+          ""$Collection"": true,
+          ""$Type"": ""Edm.PrimitiveType"",
+          ""$Nullable"": true
+        }
+      }
+    ],
+    ""GetSomething"": [
+      {
+        ""$Kind"": ""Function"",
+        ""$ReturnType"": {
+          ""$Collection"": true,
+          ""$Type"": ""Edm.ComplexType""
+        }
+      }
+    ]
+  }
+}");
         }
 
         [Fact]
         public void ShouldWriteAnnotationForEnumMember()
         {
-            string expected =
-            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
-            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
-              "<edmx:DataServices>" +
-                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
-                  "<EnumType Name=\"Appliance\" UnderlyingType=\"Edm.Int64\" IsFlags=\"true\">" +
-                    "<Member Name=\"Stove\" Value=\"1\">" +
-                      "<Annotation Term=\"Org.OData.Core.V1.LongDescription\" String=\"Stove Inline LongDescription\" />" +
-                    "</Member>" +
-                    "<Member Name=\"Washer\" Value=\"2\">" +
-                      "<Annotation Term=\"NS.MyTerm\" String=\"Washer Inline MyTerm Value\" />" +
-                    "</Member>" +
-                  "</EnumType>" +
-                  "<Term Name=\"MyTerm\" Type=\"Edm.String\" />" +
-                  "<Annotations Target=\"NS.Appliance/Stove\">" +
-                    "<Annotation Term=\"NS.MyTerm\" String=\"Stove OutOfLine MyTerm Value\" />" +
-                  "</Annotations>" +
-                  "<Annotations Target=\"NS.Appliance/Washer\">" +
-                    "<Annotation Term=\"Org.OData.Core.V1.LongDescription\" String=\"Washer OutOfLine LongDescription\" />" +
-                  "</Annotations>" +
-                "</Schema>" +
-              "</edmx:DataServices>" +
-            "</edmx:Edmx>";
-
+            // Arrange
             EdmModel model = new EdmModel();
             EdmEnumType appliance = new EdmEnumType("NS", "Appliance", EdmPrimitiveTypeKind.Int64, isFlags: true);
             model.AddElement(appliance);
@@ -1027,26 +1814,62 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.SetVocabularyAnnotation(annotation);
 
-            string csdlStr = GetCsdl(model, CsdlTarget.OData);
-            Assert.Equal(expected, csdlStr);
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+              "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                "<edmx:DataServices>" +
+                  "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                    "<EnumType Name=\"Appliance\" UnderlyingType=\"Edm.Int64\" IsFlags=\"true\">" +
+                      "<Member Name=\"Stove\" Value=\"1\">" +
+                        "<Annotation Term=\"Org.OData.Core.V1.LongDescription\" String=\"Stove Inline LongDescription\" />" +
+                      "</Member>" +
+                      "<Member Name=\"Washer\" Value=\"2\">" +
+                        "<Annotation Term=\"NS.MyTerm\" String=\"Washer Inline MyTerm Value\" />" +
+                      "</Member>" +
+                    "</EnumType>" +
+                    "<Term Name=\"MyTerm\" Type=\"Edm.String\" />" +
+                    "<Annotations Target=\"NS.Appliance/Stove\">" +
+                      "<Annotation Term=\"NS.MyTerm\" String=\"Stove OutOfLine MyTerm Value\" />" +
+                    "</Annotations>" +
+                    "<Annotations Target=\"NS.Appliance/Washer\">" +
+                      "<Annotation Term=\"Org.OData.Core.V1.LongDescription\" String=\"Washer OutOfLine LongDescription\" />" +
+                    "</Annotations>" +
+                  "</Schema>" +
+                "</edmx:DataServices>" +
+              "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""Appliance"": {
+      ""$Kind"": ""EnumType"",
+      ""$UnderlyingType"": ""Edm.Int64"",
+      ""$IsFlags"": true,
+      ""Stove"": 1,
+      ""Stove@Org.OData.Core.V1.LongDescription"": ""Stove Inline LongDescription"",
+      ""Washer"": 2,
+      ""Washer@NS.MyTerm"": ""Washer Inline MyTerm Value""
+    },
+    ""MyTerm"": {
+      ""$Kind"": ""Term"",
+      ""$Nullable"": true
+    },
+    ""$Annotations"": {
+      ""NS.Appliance/Stove"": {
+        ""@NS.MyTerm"": ""Stove OutOfLine MyTerm Value""
+      },
+      ""NS.Appliance/Washer"": {
+        ""@Org.OData.Core.V1.LongDescription"": ""Washer OutOfLine LongDescription""
+      }
+    }
+  }
+}");
         }
 
         [Fact]
         public void CanWritePropertyWithCoreTypeDefinitionAndValidationPassed()
         {
-            string expected =
-            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
-            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
-              "<edmx:DataServices>" +
-                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
-                  "<ComplexType Name=\"Complex\">" +
-                    "<Property Name=\"ModifiedDate\" Type=\"Org.OData.Core.V1.LocalDateTime\" />" +
-                    "<Property Name=\"QualifiedName\" Type=\"Org.OData.Core.V1.QualifiedTypeName\" />" +
-                  "</ComplexType>" +
-                "</Schema>" +
-              "</edmx:DataServices>" +
-            "</edmx:Edmx>";
-
+            // Arrange
             EdmModel model = new EdmModel();
             var localDateTime = model.FindType("Org.OData.Core.V1.LocalDateTime") as IEdmTypeDefinition;
             Assert.NotNull(localDateTime);
@@ -1061,49 +1884,41 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             model.AddElement(type);
             IEnumerable<EdmError> errors;
             Assert.True(model.Validate(out errors));
-            string csdlStr = GetCsdl(model, CsdlTarget.OData);
-            Assert.Equal(expected, csdlStr);
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+              "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                "<edmx:DataServices>" +
+                  "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                    "<ComplexType Name=\"Complex\">" +
+                      "<Property Name=\"ModifiedDate\" Type=\"Org.OData.Core.V1.LocalDateTime\" />" +
+                      "<Property Name=\"QualifiedName\" Type=\"Org.OData.Core.V1.QualifiedTypeName\" />" +
+                    "</ComplexType>" +
+                  "</Schema>" +
+                "</edmx:DataServices>" +
+              "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""Complex"": {
+      ""$Kind"": ""ComplexType"",
+      ""ModifiedDate"": {
+        ""$Type"": ""Org.OData.Core.V1.LocalDateTime"",
+        ""$Nullable"": true
+      },
+      ""QualifiedName"": {
+        ""$Type"": ""Org.OData.Core.V1.QualifiedTypeName"",
+        ""$Nullable"": true
+      }
+    }
+  }
+}");
         }
 
         [Fact]
         public void CanWriteNavigationPropertyBindingWithTargetPathOnContainmentOnSingleton()
         {
-            string expected =
-            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
-            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
-              "<edmx:DataServices>" +
-                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
-                  "<EntityType Name=\"Customer\">" +
-                    "<Key>" +
-                      "<PropertyRef Name=\"Id\" />" +
-                    "</Key>" +
-                    "<Property Name=\"Id\" Type=\"Edm.Int32\" />" +
-                    "<NavigationProperty Name=\"ContainedOrders\" Type=\"Collection(NS.Order)\" ContainsTarget=\"true\" />" +
-                    "<NavigationProperty Name=\"ContainedOrderLines\" Type=\"Collection(NS.OrderLine)\" ContainsTarget=\"true\" />" +
-                  "</EntityType>" +
-                  "<EntityType Name=\"Order\">" +
-                    "<Key>" +
-                      "<PropertyRef Name=\"Id\" />" +
-                    "</Key>" +
-                    "<Property Name=\"Id\" Type=\"Edm.Int32\" />" +
-                    "<NavigationProperty Name=\"OrderLines\" Type=\"Collection(NS.OrderLine)\" />" +
-                  "</EntityType>" +
-                  "<EntityType Name=\"OrderLine\">" +
-                    "<Key>" +
-                      "<PropertyRef Name=\"Id\" />" +
-                    "</Key>" +
-                    "<Property Name=\"Id\" Type=\"Edm.Int32\" />" +
-                  "</EntityType>" +
-                  "<EntityContainer Name=\"Default\">" +
-                     "<Singleton Name=\"Me\" Type=\"NS.Customer\" />" +
-                     "<EntitySet Name=\"Customers\" EntityType=\"NS.Customer\">" +
-                       "<NavigationPropertyBinding Path=\"ContainedOrders/OrderLines\" Target=\"Me/ContainedOrderLines\" />" +
-                     "</EntitySet>" +
-                  "</EntityContainer>" +
-                "</Schema>" +
-              "</edmx:DataServices>" +
-            "</edmx:Edmx>";
-
+            // Arrange
             EdmModel model = new EdmModel();
             EdmEntityType customer = new EdmEntityType("NS", "Customer");
             customer.AddKeys(customer.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
@@ -1157,34 +1972,116 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
             IEnumerable<EdmError> errors;
             Assert.False(model.Validate(out errors));
-            string csdlStr = GetCsdl(model, CsdlTarget.OData);
-            Assert.Equal(expected, csdlStr);
+
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+              "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                "<edmx:DataServices>" +
+                  "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                    "<EntityType Name=\"Customer\">" +
+                      "<Key>" +
+                        "<PropertyRef Name=\"Id\" />" +
+                      "</Key>" +
+                      "<Property Name=\"Id\" Type=\"Edm.Int32\" />" +
+                      "<NavigationProperty Name=\"ContainedOrders\" Type=\"Collection(NS.Order)\" ContainsTarget=\"true\" />" +
+                      "<NavigationProperty Name=\"ContainedOrderLines\" Type=\"Collection(NS.OrderLine)\" ContainsTarget=\"true\" />" +
+                    "</EntityType>" +
+                    "<EntityType Name=\"Order\">" +
+                      "<Key>" +
+                        "<PropertyRef Name=\"Id\" />" +
+                      "</Key>" +
+                      "<Property Name=\"Id\" Type=\"Edm.Int32\" />" +
+                      "<NavigationProperty Name=\"OrderLines\" Type=\"Collection(NS.OrderLine)\" />" +
+                    "</EntityType>" +
+                    "<EntityType Name=\"OrderLine\">" +
+                      "<Key>" +
+                        "<PropertyRef Name=\"Id\" />" +
+                      "</Key>" +
+                      "<Property Name=\"Id\" Type=\"Edm.Int32\" />" +
+                    "</EntityType>" +
+                    "<EntityContainer Name=\"Default\">" +
+                       "<Singleton Name=\"Me\" Type=\"NS.Customer\" />" +
+                       "<EntitySet Name=\"Customers\" EntityType=\"NS.Customer\">" +
+                         "<NavigationPropertyBinding Path=\"ContainedOrders/OrderLines\" Target=\"Me/ContainedOrderLines\" />" +
+                       "</EntitySet>" +
+                    "</EntityContainer>" +
+                  "</Schema>" +
+                "</edmx:DataServices>" +
+              "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""NS.Default"",
+  ""NS"": {
+    ""Customer"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {
+        ""$Type"": ""Edm.Int32"",
+        ""$Nullable"": true
+      },
+      ""ContainedOrders"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Collection"": true,
+        ""$Type"": ""NS.Order"",
+        ""$ContainsTarget"": true
+      },
+      ""ContainedOrderLines"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Collection"": true,
+        ""$Type"": ""NS.OrderLine"",
+        ""$ContainsTarget"": true
+      }
+    },
+    ""Order"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {
+        ""$Type"": ""Edm.Int32"",
+        ""$Nullable"": true
+      },
+      ""OrderLines"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Collection"": true,
+        ""$Type"": ""NS.OrderLine""
+      }
+    },
+    ""OrderLine"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {
+        ""$Type"": ""Edm.Int32"",
+        ""$Nullable"": true
+      }
+    },
+    ""Default"": {
+      ""$Kind"": ""EntityContainer"",
+      ""Me"": {
+        ""$Type"": ""NS.Customer""
+      },
+      ""Customers"": {
+        ""$Collection"": true,
+        ""$Type"": ""NS.Customer"",
+        ""$NavigationPropertyBinding"": {
+          ""ContainedOrders/OrderLines"": ""Me/ContainedOrderLines""
+        }
+      }
+    }
+  }
+}");
         }
 
         [Fact]
         public void CanWriteUrlEscapeFunction()
         {
-            string expected =
-            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
-            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
-              "<edmx:DataServices>" +
-                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
-                  "<EntityType Name=\"Entity\">" +
-                    "<Key>" +
-                      "<PropertyRef Name=\"Id\" />" +
-                    "</Key>" +
-                    "<Property Name=\"Id\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
-                  "</EntityType>" +
-                  "<Function Name=\"Function\" IsBound=\"true\">" +
-                    "<Parameter Name=\"entity\" Type=\"NS.Entity\" />" +
-                    "<Parameter Name=\"path\" Type=\"Edm.String\" />" +
-                    "<ReturnType Type=\"Edm.Int32\" />" +
-                    "<Annotation Term=\"Org.OData.Community.V1.UrlEscapeFunction\" Bool=\"true\" />" +
-                  "</Function>" +
-                "</Schema>" +
-              "</edmx:DataServices>" +
-            "</edmx:Edmx>";
-
+            // Arrange
             EdmModel model = new EdmModel();
             EdmEntityType entityType = new EdmEntityType("NS", "Entity");
             entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false)));
@@ -1197,28 +2094,69 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
             IEnumerable<EdmError> errors;
             Assert.True(model.Validate(out errors));
-            string csdlStr = GetCsdl(model, CsdlTarget.OData);
-            Assert.Equal(expected, csdlStr);
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+              "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                "<edmx:DataServices>" +
+                  "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                    "<EntityType Name=\"Entity\">" +
+                      "<Key>" +
+                        "<PropertyRef Name=\"Id\" />" +
+                      "</Key>" +
+                      "<Property Name=\"Id\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                    "</EntityType>" +
+                    "<Function Name=\"Function\" IsBound=\"true\">" +
+                      "<Parameter Name=\"entity\" Type=\"NS.Entity\" />" +
+                      "<Parameter Name=\"path\" Type=\"Edm.String\" />" +
+                      "<ReturnType Type=\"Edm.Int32\" />" +
+                      "<Annotation Term=\"Org.OData.Community.V1.UrlEscapeFunction\" Bool=\"true\" />" +
+                    "</Function>" +
+                  "</Schema>" +
+                "</edmx:DataServices>" +
+              "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""Entity"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {
+        ""$Type"": ""Edm.Int32""
+      }
+    },
+    ""Function"": [
+      {
+        ""$Kind"": ""Function"",
+        ""$IsBound"": true,
+        ""$Parameter"": [
+          {
+            ""$Name"": ""entity"",
+            ""$Type"": ""NS.Entity"",
+            ""$Nullable"": true
+          },
+          {
+            ""$Name"": ""path"",
+            ""$Nullable"": true
+          }
+        ],
+        ""$ReturnType"": {
+          ""$Type"": ""Edm.Int32"",
+          ""$Nullable"": true
+        },
+        ""@Org.OData.Community.V1.UrlEscapeFunction"": true
+      }
+    ]
+  }
+}");
         }
 
         [Fact]
         public void CanWriteAnnotationPathExpression()
         {
-            string expected =
-            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
-            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
-              "<edmx:DataServices>" +
-                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
-                  "<ComplexType Name=\"Complex\">" +
-                    "<Annotation Term=\"NS.MyAnnotationPathTerm\" AnnotationPath=\"abc/efg\" />" +
-                    "<Annotation Term=\"NS.MyNavigationPathTerm\" NavigationPropertyPath=\"123/456.t\" />" +
-                  "</ComplexType>" +
-                  "<Term Name=\"MyAnnotationPathTerm\" Type=\"Edm.AnnotationPath\" Nullable=\"false\" />" +
-                  "<Term Name=\"MyNavigationPathTerm\" Type=\"Edm.NavigationPropertyPath\" Nullable=\"false\" />" +
-                "</Schema>" +
-              "</edmx:DataServices>" +
-            "</edmx:Edmx>";
-
+            // Arrange
             EdmModel model = new EdmModel();
             EdmComplexType complex = new EdmComplexType("NS", "Complex");
             model.AddElement(complex);
@@ -1237,8 +2175,41 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
             IEnumerable<EdmError> errors;
             Assert.True(model.Validate(out errors));
-            string csdlStr = GetCsdl(model, CsdlTarget.OData);
-            Assert.Equal(expected, csdlStr);
+
+            // Act & Assert for JSON
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+               "<edmx:DataServices>" +
+                 "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                   "<ComplexType Name=\"Complex\">" +
+                     "<Annotation Term=\"NS.MyAnnotationPathTerm\" AnnotationPath=\"abc/efg\" />" +
+                     "<Annotation Term=\"NS.MyNavigationPathTerm\" NavigationPropertyPath=\"123/456.t\" />" +
+                   "</ComplexType>" +
+                   "<Term Name=\"MyAnnotationPathTerm\" Type=\"Edm.AnnotationPath\" Nullable=\"false\" />" +
+                   "<Term Name=\"MyNavigationPathTerm\" Type=\"Edm.NavigationPropertyPath\" Nullable=\"false\" />" +
+                 "</Schema>" +
+               "</edmx:DataServices>" +
+             "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""Complex"": {
+      ""$Kind"": ""ComplexType"",
+      ""@NS.MyAnnotationPathTerm"": ""abc/efg"",
+      ""@NS.MyNavigationPathTerm"": ""123/456.t""
+    },
+    ""MyAnnotationPathTerm"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""Edm.AnnotationPath""
+    },
+    ""MyNavigationPathTerm"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""Edm.NavigationPropertyPath""
+    }
+  }
+}");
         }
 
         [Theory]
@@ -1246,20 +2217,19 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         [InlineData("4.01")]
         public void ValidateEdmxVersions(string odataVersion)
         {
-            string xml = "<?xml version=\"1.0\" encoding=\"utf-16\"?><edmx:Edmx Version=\"" + odataVersion + "\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\"><edmx:DataServices /></edmx:Edmx>";
-
             // Specify the model
             EdmModel edmModel = new EdmModel(false);
             edmModel.SetEdmVersion(odataVersion == "4.0" ? EdmConstants.EdmVersion4 : EdmConstants.EdmVersion401);
 
-            // Validate the CSDL for the specified version
-            Assert.Equal(GetCsdl(edmModel, CsdlTarget.OData), xml);
+            // XML
+            WriteAndVerifyXml(edmModel, "<?xml version=\"1.0\" encoding=\"utf-16\"?><edmx:Edmx Version=\"" + odataVersion + "\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\"><edmx:DataServices /></edmx:Edmx>");
+
+            // JSON
+            WriteAndVerifyJson(edmModel, "{\"$Version\":\"" + odataVersion + "\"}", false);
         }
 
-        private string GetCsdl(IEdmModel model, CsdlTarget target)
+        private void WriteAndVerifyXml(IEdmModel model, string expected, CsdlTarget target = CsdlTarget.OData)
         {
-            string edmx = string.Empty;
-
             using (StringWriter sw = new StringWriter())
             {
                 XmlWriterSettings settings = new XmlWriterSettings();
@@ -1272,10 +2242,38 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     xw.Flush();
                 }
 
-                edmx = sw.ToString();
+                string actual = sw.ToString();
+                Assert.Equal(expected, actual);
             }
+        }
 
-            return edmx;
+        internal void WriteAndVerifyJson(IEdmModel model, string expected, bool indented = true, bool isIeee754Compatible = false)
+        {
+#if NETCOREAPP3_1
+            using (MemoryStream memStream = new MemoryStream())
+            {
+                JsonWriterOptions options = new JsonWriterOptions
+                {
+                    Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                    Indented = indented,
+                    SkipValidation = false
+                };
+
+                using (Utf8JsonWriter jsonWriter = new Utf8JsonWriter(memStream, options))
+                {
+                    CsdlJsonWriterSettings settings = CsdlJsonWriterSettings.Default;
+                    settings.IsIeee754Compatible = isIeee754Compatible;
+                    IEnumerable<EdmError> errors;
+                    bool ok = CsdlWriter.TryWriteCsdl(model, jsonWriter, settings, out errors);
+                    jsonWriter.Flush();
+                    Assert.True(ok);
+                }
+
+                memStream.Seek(0, SeekOrigin.Begin);
+                string actual = new StreamReader(memStream).ReadToEnd();
+                Assert.Equal(expected, actual);
+            }
+#endif
         }
     }
 }

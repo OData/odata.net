@@ -10,7 +10,7 @@ using System.Globalization;
 namespace Microsoft.OData.Edm.Csdl
 {
     /// <summary>
-    /// Defines a location in a XML file.
+    /// Defines a location in a CSDL file.
     /// </summary>
     public class CsdlLocation : EdmLocation
     {
@@ -24,6 +24,11 @@ namespace Microsoft.OData.Edm.Csdl
             this.Source = source;
             this.LineNumber = number;
             this.LinePosition = position;
+        }
+
+        internal CsdlLocation(string jsonPath)
+        {
+            JsonPath = jsonPath;
         }
 
         /// <summary>
@@ -47,11 +52,21 @@ namespace Microsoft.OData.Edm.Csdl
         public int LinePosition { get; private set; }
 
         /// <summary>
+        /// Gets the json path path string
+        /// </summary>
+        public string JsonPath { get; private set; }
+
+        /// <summary>
         /// Gets a string representation of the location.
         /// </summary>
         /// <returns>A string representation of the location.</returns>
         public override string ToString()
         {
+            if (JsonPath != null)
+            {
+                return JsonPath;
+            }
+
             return "(" + Convert.ToString(this.LineNumber, CultureInfo.InvariantCulture) + ", " + Convert.ToString(this.LinePosition, CultureInfo.InvariantCulture) + ")";
         }
     }

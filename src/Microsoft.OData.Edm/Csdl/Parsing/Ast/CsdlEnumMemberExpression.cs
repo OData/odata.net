@@ -16,6 +16,12 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
             this.enumMemberPath = enumMemberPath;
         }
 
+        public CsdlEnumMemberExpression(string enumMemberPath, IEdmEnumType enumType, CsdlLocation location)
+            : this(enumMemberPath, location)
+        {
+            EnumType = enumType;
+        }
+
         public override EdmExpressionKind ExpressionKind
         {
             get { return EdmExpressionKind.EnumMember; }
@@ -25,5 +31,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         {
             get { return this.enumMemberPath; }
         }
+
+        public IEdmEnumType EnumType { get; }
     }
 }
