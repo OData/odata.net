@@ -1230,9 +1230,16 @@ namespace Microsoft.OData.JsonLight
                 if (structuredPropertyTypeOrItemType != null)
                 {
                     ODataJsonLightReaderNestedResourceInfo readerNestedResourceInfo = null;
-
                     // Complex property or collection of complex property.
-                    ValidateExpandedNestedResourceInfoPropertyValue(this.JsonReader, isCollection, propertyName);
+                    var derivedTypeConstraints = this.JsonLightInputContext.Model.GetDerivedTypeConstraints(edmProperty);
+                    if (derivedTypeConstraints != null)
+                    {
+                        resourceState.PropertyAndAnnotationCollector.SetDerivedTypeValidator(propertyName, new DerivedTypeValidator(edmProperty.Type.Definition, derivedTypeConstraints, "property", propertyName));
+                    }
+
+                    // NOTE: we currently do not check whether the property should be skipped
+                    //       here because this can only happen for navigation properties and open properties.
+                    this.ReadEntryDataProperty(resourceState, edmProperty, ValidateDataPropertyTypeNameAnnotation(resourceState.PropertyAndAnnotationCollector, propertyName));                  
 
                     if (isCollection)
                     {
