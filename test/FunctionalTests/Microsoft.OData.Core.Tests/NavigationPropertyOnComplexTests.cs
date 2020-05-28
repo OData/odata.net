@@ -1510,6 +1510,7 @@ namespace Microsoft.OData.Tests
 
             person.AddStructuralProperty("Address", new EdmComplexTypeReference(complex, false));
             person.AddStructuralProperty("Addresses", new EdmCollectionTypeReference(new EdmCollectionType(new EdmComplexTypeReference(complex, false))));
+            person.AddStructuralProperty("NewAddresses", new EdmCollectionTypeReference(new EdmCollectionType(new EdmComplexTypeReference(complex, true))));
 
             model.AddElement(person);
             model.AddElement(employee);
@@ -1652,5 +1653,53 @@ namespace Microsoft.OData.Tests
         }
 
         #endregion
+        [Fact]
+        public void NullValidationErrorMessageForCollectionsofComplexTypes()
+        {
+            string expectedErrorMessage = "A null value was found for the property named 'Addresses', which has the expected type 'Collection(DefaultNs.Address)[Nullable=False]'. The expected type 'Collection(DefaultNs.Address)[Nullable=False]' does not allow null values.";
+            string actualErrorMessage = "";
+            const string payload =
+                "{" +
+                    "\"@odata.context\":\"http://host/$metadata#People/$entity\"," +
+                    "\"UserName\":\"abc\"," +
+                    "\"Addresses\":null" +
+                "}";
+
+            try
+            {
+                ReadPayload(payload, Model, EntitySet, EntityType).OfType<ODataResource>().ToList();
+            }
+            catch (Exception e)
+            {
+                actualErrorMessage = e.Message;               
+            }
+            Assert.Equal(expectedErrorMessage, actualErrorMessage);
+        }
+
+        /// <summary>
+        /// A nullable collection cannot be null but it can have null values.
+        /// </summary>
+        [Fact]
+        public void NullValidationErrorMessageForANullableCollectionsofComplexTypes()
+        {
+            string expectedErrorMessage = "A null value was found for the property named 'NewAddresses', which has the expected type 'Collection(DefaultNs.Address)[Nullable=True]'. The expected type 'Collection(DefaultNs.Address)[Nullable=True]' cannot be null but it can have null values.";
+            string actualErrorMessage = "";
+            const string payload =
+                "{" +
+                    "\"@odata.context\":\"http://host/$metadata#People/$entity\"," +
+                    "\"UserName\":\"abc\"," +
+                    "\"NewAddresses\":null" +
+                "}";
+
+            try
+            {
+                ReadPayload(payload, Model, EntitySet, EntityType).OfType<ODataResource>().ToList();
+            }
+            catch (Exception e)
+            {
+                actualErrorMessage = e.Message;
+            }
+            Assert.Equal(expectedErrorMessage, actualErrorMessage);
+        }
     }
 }
