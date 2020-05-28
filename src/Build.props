@@ -8,8 +8,8 @@
     <!--<StyleCopOverrideSettingsFile Condition="'$(StyleCopOverrideSettingsFile)' == ''">$(MSBuildThisFileDirectory)Common.StyleCop</StyleCopOverrideSettingsFile>
    
     <ShouldGenerateAssemblyAttributeFile Condition="'$(ShouldGenerateAssemblyAttributeFile)' == '' ">true</ShouldGenerateAssemblyAttributeFile>
-    <RunCodeAnalysis Condition="'$(RunCodeAnalysis)' == ''">false</RunCodeAnalysis>
-    <ShouldGenerateAssemblyAttributeFile Condition="'$(ShouldGenerateAssemblyAttributeFile)' == ''">true</ShouldGenerateAssemblyAttributeFile>-->
+    <RunCodeAnalysis Condition="'$(RunCodeAnalysis)' == ''">false</RunCodeAnalysis>-->
+    <ShouldGenerateAssemblyAttributeFile Condition="'$(ShouldGenerateAssemblyAttributeFile)' == ''">true</ShouldGenerateAssemblyAttributeFile>
 
     <SigningScenario Condition="'$(SigningScenario)' == '' and '$(Configuration)' == 'Release'">$(SigningScenarioForRelease)</SigningScenario>
     <SigningScenario Condition="'$(SigningScenario)' == '' and '$(TargetFrameworkIdentifier)' != 'Silverlight'">Delay</SigningScenario>
