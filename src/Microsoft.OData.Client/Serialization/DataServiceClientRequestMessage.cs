@@ -68,7 +68,7 @@ namespace Microsoft.OData.Client
         public abstract int Timeout { get; set; }
 
         /// <summary>
-        /// Gets or sets the read or write timeout (in seconds) for this request.
+        /// Gets or sets the read and write timeout (in seconds) for this request.
         /// </summary>
         public abstract int ReadWriteTimeout { get; set; }
 #endif

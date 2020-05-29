@@ -26,6 +26,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Core", "..\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Core.Tests", "..\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj", "{E67E13D2-92D7-4AA9-AF2C-502AD0C76F1D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp2", "ConsoleApp2\ConsoleApp2.csproj", "{1B877D66-FFAA-4910-A966-3F377C95CCCF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Cover|Any CPU = Cover|Any CPU
@@ -207,6 +209,24 @@ Global
 		{E67E13D2-92D7-4AA9-AF2C-502AD0C76F1D}.Release|x64.Build.0 = Release|Any CPU
 		{E67E13D2-92D7-4AA9-AF2C-502AD0C76F1D}.Release|x86.ActiveCfg = Release|Any CPU
 		{E67E13D2-92D7-4AA9-AF2C-502AD0C76F1D}.Release|x86.Build.0 = Release|Any CPU
+		{1B877D66-FFAA-4910-A966-3F377C95CCCF}.Cover|Any CPU.ActiveCfg = Release|Any CPU
+		{1B877D66-FFAA-4910-A966-3F377C95CCCF}.Cover|Any CPU.Build.0 = Release|Any CPU
+		{1B877D66-FFAA-4910-A966-3F377C95CCCF}.Cover|x64.ActiveCfg = Release|Any CPU
+		{1B877D66-FFAA-4910-A966-3F377C95CCCF}.Cover|x64.Build.0 = Release|Any CPU
+		{1B877D66-FFAA-4910-A966-3F377C95CCCF}.Cover|x86.ActiveCfg = Release|Any CPU
+		{1B877D66-FFAA-4910-A966-3F377C95CCCF}.Cover|x86.Build.0 = Release|Any CPU
+		{1B877D66-FFAA-4910-A966-3F377C95CCCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B877D66-FFAA-4910-A966-3F377C95CCCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B877D66-FFAA-4910-A966-3F377C95CCCF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1B877D66-FFAA-4910-A966-3F377C95CCCF}.Debug|x64.Build.0 = Debug|Any CPU
+		{1B877D66-FFAA-4910-A966-3F377C95CCCF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1B877D66-FFAA-4910-A966-3F377C95CCCF}.Debug|x86.Build.0 = Debug|Any CPU
+		{1B877D66-FFAA-4910-A966-3F377C95CCCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B877D66-FFAA-4910-A966-3F377C95CCCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B877D66-FFAA-4910-A966-3F377C95CCCF}.Release|x64.ActiveCfg = Release|Any CPU
+		{1B877D66-FFAA-4910-A966-3F377C95CCCF}.Release|x64.Build.0 = Release|Any CPU
+		{1B877D66-FFAA-4910-A966-3F377C95CCCF}.Release|x86.ActiveCfg = Release|Any CPU
+		{1B877D66-FFAA-4910-A966-3F377C95CCCF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

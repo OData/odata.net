@@ -1,0 +1,26 @@
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="ODataActions.Models" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="ProductDetails">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="ProdOrigin" Type="Edm.String" />
+        <Property Name="ProdSup" Type="Edm.String" />
+        <Property Name="Name" Type="Edm.String" />
+        <Property Name="Price" Type="Edm.Decimal" Nullable="false" />
+        <Property Name="Category" Type="Edm.String" />
+      </EntityType>
+    </Schema>
+    <Schema Namespace="ProductService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <Action Name="Rate" IsBound="true">
+        <Parameter Name="bindingParameter" Type="ODataActions.Models.ProductDetails" />
+        <ReturnType Type="Collection(ODataActions.Models.ProductDetails)" />
+      </Action>
+      <EntityContainer Name="Container">
+        <EntitySet Name="ProductDetails" EntityType="ODataActions.Models.ProductDetails" />
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
