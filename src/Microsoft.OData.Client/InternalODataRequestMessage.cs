@@ -116,6 +116,15 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Gets or sets the read or write timeout (in seconds) for this request.
+        /// </summary>
+        public override int ReadWriteTimeout
+        {
+            get { throw new NotSupportedException(); }
+            set { throw new NotSupportedException(); }
+        }
+
+        /// <summary>
         /// Gets or sets a value that indicates whether to send data in segments to the
         ///  Internet resource.
         /// </summary>

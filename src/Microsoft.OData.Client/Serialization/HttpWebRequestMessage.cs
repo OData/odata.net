@@ -188,6 +188,15 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Gets or sets the read or write timeout (in seconds) for this request.
+        /// </summary>
+        public override int ReadWriteTimeout
+        {
+            get { return this.httpRequest.ReadWriteTimeout; }
+            set { this.httpRequest.ReadWriteTimeout = (int)Math.Min(Int32.MaxValue, new TimeSpan(0, 0, value).TotalMilliseconds); }
+        }
+
+        /// <summary>
         /// Gets or sets a value that indicates whether to send data in segments to the
         ///  Internet resource.
         /// </summary>

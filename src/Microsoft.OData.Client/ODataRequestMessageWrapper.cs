@@ -161,6 +161,7 @@ namespace Microsoft.OData.Client
             if (requestInfo.Timeout != 0)
             {
                 requestMessage.Timeout = requestInfo.Timeout;
+                requestMessage.ReadWriteTimeout = requestInfo.Timeout;
             }
 #endif
 
