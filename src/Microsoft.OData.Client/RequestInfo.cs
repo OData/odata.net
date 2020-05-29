@@ -148,7 +148,6 @@ namespace Microsoft.OData.Client
             get { return this.Context.Credentials; }
         }
 
-#if !PORTABLELIB
         /// <summary>
         /// Get the timeout span in seconds to use for the underlying HTTP request to the data service.
         /// </summary>
@@ -156,7 +155,14 @@ namespace Microsoft.OData.Client
         {
             get { return this.Context.Timeout; }
         }
-#endif
+
+        /// <summary>
+        /// Get the read or write timeout span in seconds to use for the underlying HTTP request to the data service.
+        /// </summary>
+        internal int ReadWriteTimeout
+        {
+            get { return this.Context.ReadWriteTimeout; }
+        }
 
         /// <summary>
         /// Whether to use post-tunneling for PUT/DELETE.

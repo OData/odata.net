@@ -137,6 +137,18 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             }
         }
 
+        public override int ReadWriteTimeout
+        {
+            get
+            {
+                return (int)this.client.Timeout.TotalSeconds;
+            }
+            set
+            {
+                this.client.Timeout = new TimeSpan(0, 0, value);
+            }
+        }
+
         /// <summary>
         /// Gets or sets a value that indicates whether to send data in segments to the Internet resource. 
         /// </summary>
