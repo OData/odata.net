@@ -90,13 +90,12 @@ $BUILDLOG = $LOGDIR + "\msbuild.log"
 $TESTLOG = $LOGDIR + "\mstest.log"
 $TESTDIR = $ENLISTMENT_ROOT + "\bin\AnyCPU\$Configuration\Test\Desktop\net452"
 $TESTDIRE2E = $ENLISTMENT_ROOT + "\bin\AnyCPU\$Configuration\Test\Desktop\net45"
-$NETCORETESTDIR = $ENLISTMENT_ROOT + "\bin\AnyCPU\$Configuration\Test\.NETPortable\netcoreapp3.1"
-$PRODUCTDIR = $ENLISTMENT_ROOT + "\bin\AnyCPU\$Configuration\Product\Desktop\net45"
+$NETCORETESTDIR = $ENLISTMENT_ROOT + "\bin\AnyCPU\$Configuration\Test\netcoreapp3.1"
+$PRODUCTDIR = $ENLISTMENT_ROOT + "\bin\AnyCPU\$Configuration\Product\net45"
 $NUGETEXE = $ENLISTMENT_ROOT + "\sln\.nuget\NuGet.exe"
 $NUGETPACK = $ENLISTMENT_ROOT + "\sln\packages"
 $XUNITADAPTER = "/TestAdapterPath:" + $NUGETPACK + "\xunit.runner.visualstudio.2.1.0\build\_common"
 
-$NugetRestoreSolutions = "OData.sln"
 
 $ProductDlls = "Microsoft.OData.Client.dll",
     "Microsoft.OData.Core.dll",
@@ -571,7 +570,8 @@ Function TestProcess
 		RunTest -title 'NetCoreE2ETests' -testdir $NetCoreE2ETestProjs -framework 'dotnet'
     }
     elseif ($TestType -eq 'Quick')
-    {	Write-Output "==Running Quick Test 9999999 =="
+    {	
+		Write-Output "==Running Quick Test =="
         RunTest -title 'NetCoreUnitTests' -testdir $NetCoreXUnitTestProjs -framework 'dotnet'
     }
     else
@@ -583,10 +583,9 @@ Function TestProcess
 
     if ($DOTNETTEST)
     {
-		Write-Output "==Running Quick Test 00000 =="
-        RunTest -title 'NetCoreUnitTests' -testdir $NetCoreXUnitTestProjs -framework 'dotnet'
-		RunTest -title 'NetCoreE2ETests' -testdir $NetCoreE2ETestProjs -framework 'dotnet'
-		
+		Write-Output "==Running Quick Test =="
+		RunTest -title 'NetCoreUnitTests' -testdir $NetCoreXUnitTestProjs -framework 'dotnet'
+		RunTest -title 'NetCoreE2ETests' -testdir $NetCoreE2ETestProjs -framework 'dotnet'		
     }
     else
     {

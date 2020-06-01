@@ -68,11 +68,6 @@
     <DebugType>pdbonly</DebugType>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.vbproj'">
-    <!-- VB's prejudices against semi-colons extend to the defines passed to the compiler, so convert them to commas.  Unescape string since string methods return escaped strings. -->
-    <DefineConstants>$([MSBuild]::Unescape($(DefineConstants.Replace(';',','))))</DefineConstants>
-  </PropertyGroup>
-  
   <Import Project="$(EnlistmentRoot)\tools\CustomMSBuild\Build.props" />
 
   <!-- NuGet packages settings -->
