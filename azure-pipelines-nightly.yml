@@ -100,6 +100,7 @@ steps:
   inputs:
     command: 'build'
     arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    projects: |
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj
       
      
@@ -108,6 +109,7 @@ steps:
   inputs:
     command: 'build'
     arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    projects: |
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
        
      
@@ -116,6 +118,7 @@ steps:
   inputs:
     command: 'build'
     arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    projects: |
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
      
      
@@ -124,6 +127,7 @@ steps:
   inputs:
     command: 'build'
     arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    projects: |
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj          
           
     
