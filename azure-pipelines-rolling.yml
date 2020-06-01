@@ -78,17 +78,52 @@ steps:
     version: '3.1.x'
 
 - task: DotNetCoreCLI@2
-  displayName: 'Build Unit Test'  
+  displayName: 'Build Unit Test - DI'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    projects: |
+     $(Build.SourcesDirectory)\test\Common\Microsoft.Test.OData.DependencyInjection\Microsoft.Test.OData.DependencyInjection.csproj
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build Unit Test - Common'  
   inputs:
     command: 'build'
     arguments: '--configuration $(BuildConfiguration) --no-incremental'
     projects: |
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.TestCommon\Microsoft.OData.TestCommon.csproj
-     $(Build.SourcesDirectory)\test\Common\Microsoft.Test.OData.DependencyInjection\Microsoft.Test.OData.DependencyInjection.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
+     
+- task: DotNetCoreCLI@2
+  displayName: 'Build Unit Test - EDM'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration) --no-incremental'
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj
+      
+     
+- task: DotNetCoreCLI@2
+  displayName: 'Build Unit Test - Spatial'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration) --no-incremental'
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
+       
+     
+- task: DotNetCoreCLI@2
+  displayName: 'Build Unit Test - Core'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration) --no-incremental'
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj
+
+     
+- task: DotNetCoreCLI@2
+  displayName: 'Build Unit Test - Client'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration) --no-incremental'
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj          
+          
 
 - task: DotNetCoreCLI@2
   displayName: 'Build E2E Test'  
