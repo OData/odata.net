@@ -30,7 +30,7 @@ namespace UrlValidationTests
         [InlineData(@"company/address", "state")]
         [InlineData(@"company/address/state", "state")]
         [InlineData(@"company/address?$select=state", "state")]
-        [InlineData(@"company?$expand=employees", "employees")]
+        [InlineData(@"company?$expand=employees", "name", "state", "employees")]
         [InlineData(@"company?$select=name", "name")]
         [InlineData(@"competitors?$filter=contains(name,'sprocket')", "competitors", "name","state","name")]
         private static void HasDeprecated(String request, params string[] expectedErrors)

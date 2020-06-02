@@ -216,11 +216,8 @@ namespace Microsoft.OData.UriParser.Validation.ValidationEngine
 
         private void ValidateSelectExpandClause(IEdmType segmentType, SelectExpandClause selectExpand, ODataUrlValidationContext validationContext)
         {
-            if (selectExpand == null)
-            {
-                ValidateImpliedProperties(segmentType, selectExpand, validationContext);
-            }
-            else
+            ValidateImpliedProperties(segmentType, selectExpand, validationContext);
+            if (selectExpand != null)
             {
                 ValidateItem(selectExpand, validationContext);
                 foreach (SelectItem selectExpandItem in selectExpand.SelectedItems)
@@ -369,6 +366,7 @@ namespace Microsoft.OData.UriParser.Validation.ValidationEngine
             }
             else
             {
+                bool propertySelected = false;
                 // Check each property in the SelectAndExpand to see if they terminate in a structured type with no select
                 foreach (SelectItem selectItem in selectExpand.SelectedItems)
                 {
@@ -376,6 +374,9 @@ namespace Microsoft.OData.UriParser.Validation.ValidationEngine
                     {
                         // Validate all properties for the type
                         ValidateProperties(segmentType, validationContext);
+                        
+                        // Make sure we don't validate the type again at the end
+                        propertySelected = true;
                     }
                     else
                     {
@@ -385,12 +386,21 @@ namespace Microsoft.OData.UriParser.Validation.ValidationEngine
                         {
                             // SelectItem is a propety. See if it is structured with no select
                             ValidateImpliedProperties(pathSelectItem.SelectedPath.LastSegment.EdmType.AsElementType(), pathSelectItem.SelectAndExpand, validationContext);
+
+                            // At least one non-navigation property was in the select list
+                            propertySelected = true;
                         }
                         else if ((expandItem = selectItem as ExpandedNavigationSelectItem) != null)
                         {
                             // SelectItem is a navigation property. Make sure it has a select.
                             ValidateImpliedProperties(expandItem.PathToNavigationProperty.LastSegment.EdmType.AsElementType(), expandItem.SelectAndExpand, validationContext);
                         }
+                    }
+
+                    // If we didn't find any non-expand properties, and didn't already validate due to a WildCard, then validate type now
+                    if(!propertySelected)
+                    {
+                        ValidateProperties(segmentType, validationContext);
                     }
                 }
             }

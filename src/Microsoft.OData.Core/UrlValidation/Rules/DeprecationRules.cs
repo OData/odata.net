@@ -80,9 +80,21 @@ namespace Microsoft.OData.UriParser.Validation.Rules
         private static ODataUrlValidationMessage CreateUrlValidationError(string elementName, string message, string version, Date? date)
         {
             ODataUrlValidationMessage error = new ODataUrlValidationMessage(ODataUrlValidationMessageCodes.DeprecatedElement, message, Severity.Warning);
-            error.ExtendedProperties.Add(RevisionDateProperty, date);
-            error.ExtendedProperties.Add(RevisionVersionProperty, version);
-            error.ExtendedProperties.Add(RevisionElementNameProperty, elementName);
+            if (date != null)
+            {
+                error.ExtendedProperties.Add(RevisionDateProperty, date);
+            }
+
+            if (!String.IsNullOrEmpty(version))
+            {
+                error.ExtendedProperties.Add(RevisionVersionProperty, version);
+            }
+
+            if (!String.IsNullOrEmpty(elementName))
+            {
+                error.ExtendedProperties.Add(RevisionElementNameProperty, elementName);
+            }
+
             return error;
         }
         
