@@ -16,9 +16,6 @@ namespace Microsoft.OData.Client
     /// <summary>Utility functions for processing Expression trees</summary>
     internal static class TypeSystem
     {
-        /// <summary>Used for comparison with external assemblies for silverlight like Microsoft.VisualBasic.</summary>
-        private const string OfficialSilverLightPublicKeyToken = "31bf3856ad364e35";
-
         /// <summary>Used for comparison with external assemblies for desktop like Microsoft.VisualBasic.</summary>
         private const string OfficialDesktopPublicKeyToken = "b03f5f7f11d50a3a";
 
