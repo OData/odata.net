@@ -1219,7 +1219,7 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
         public void Linq_Where_Generates_Filter_By_Id_When_MakeIdPredicateByKey_Is_True()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
-            context.MakeIdPredicateByKey = false;
+            context.MakeIdPredicateByKey = true;
             var query = (from c in context.Customer
                          where c.CustomerId == -10
                          select new Customer { Name = c.Name, CustomerId = c.CustomerId }) as DataServiceQuery<Customer>;
