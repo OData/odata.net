@@ -45,9 +45,9 @@ namespace Microsoft.OData.Client
         private readonly DataServiceContext context;
 
         /// <summary>
-        /// /// <summary>Whether a Where clause that just compares the id property becomes a by-key request instead of using $filter.</summary>
+        /// /// <summary>Whether a Where clause that just compares the id property generates a $filter query option.</summary>
         /// </summary>
-        private static bool makeIdPredicateByKey;
+        private static bool idPredicateGeneratesFilterQueryOption;
 
         /// <summary>Convenience property: model.</summary>
         private ClientEdmModel Model
@@ -62,7 +62,7 @@ namespace Microsoft.OData.Client
         private ResourceBinder(DataServiceContext context)
         {
             this.context = context;
-            makeIdPredicateByKey = context.MakeIdPredicateByKey;
+            idPredicateGeneratesFilterQueryOption = context.IdPredicateGeneratesFilterQueryOption;
         }
 
         /// <summary>Analyzes and binds the specified expression.</summary>
@@ -280,8 +280,8 @@ namespace Microsoft.OData.Client
                     keyPredicates = ExtractKeyPredicate(input, currentPredicates, model, out nonKeyPredicates);
                 }
 
-                // A key predicate can only be applied if makeIdPredicateByKey=true
-                if (keyPredicates != null && makeIdPredicateByKey)
+                // A key predicate can only be applied if IdPredicateGeneratesFilterQueryOption=false
+                if (keyPredicates != null && !idPredicateGeneratesFilterQueryOption)
                 {
                     input.SetKeyPredicate(keyPredicates);
                     input.RemoveFilterExpression();
@@ -294,7 +294,7 @@ namespace Microsoft.OData.Client
                     input.ConvertKeyToFilterExpression();
                 }
 
-                if (keyPredicates == null || !makeIdPredicateByKey)
+                if (keyPredicates == null || idPredicateGeneratesFilterQueryOption)
                 {
                     input.ConvertKeyToFilterExpression();
                     input.AddFilter(inputPredicates);
