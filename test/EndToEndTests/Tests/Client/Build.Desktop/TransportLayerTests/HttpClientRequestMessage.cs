@@ -124,7 +124,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
         /// <summary>
         /// Gets or sets the timeout (in seconds) for this request.
         /// </summary>
-#if !PORTABLELIB && !(NETCOREAPP1_0 || NETCOREAPP2_0)
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         public override int Timeout 
         { 
             get
