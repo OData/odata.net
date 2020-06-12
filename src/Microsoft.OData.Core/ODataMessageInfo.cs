@@ -12,7 +12,7 @@ namespace Microsoft.OData
     using Microsoft.OData.Edm;
 
     /// <summary>
-    /// Class provides context informatation of certain <see cref="IODataRequestMessage"/>
+    /// Class provides context information of certain <see cref="IODataRequestMessage"/>
     /// or <see cref="IODataResponseMessage"/>
     /// </summary>
     public sealed class ODataMessageInfo

@@ -313,7 +313,7 @@ namespace Microsoft.OData.Service
                 }
             }
 
-            // No Charset was specifed, or if charsets were specified, no valid charset was found.
+            // No Charset was specified, or if charsets were specified, no valid charset was found.
             // Returning a different charset is also valid.
             return result ?? FallbackEncoding;
         }
@@ -688,7 +688,7 @@ namespace Microsoft.OData.Service
 
             // PERF: optimize for common patterns.
             bool commaRequired = false; // Whether a comma should be found
-            int headerIndex = 0;        // Index of character being procesed on headerValue.
+            int headerIndex = 0;        // Index of character being processed on headerValue.
             int headerStart;            // Index into headerValue for the start of the charset name.
             int headerNameEnd;          // Index into headerValue for the end of the charset name (+1).
             int headerEnd;              // Index into headerValue for this charset part (+1).

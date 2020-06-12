@@ -381,8 +381,8 @@ namespace Microsoft.OData.Client
                     break;
 #endif
 
-                default:
-                    throw new InvalidOperationException(Strings.DataBinding_DataServiceCollectionChangedUnknownActionCollection(eventArgs.Action));
+                default: // No Action
+                    break;
             }
         }
 
@@ -427,8 +427,8 @@ namespace Microsoft.OData.Client
                     case NotifyCollectionChangedAction.Reset:
                         this.bindingGraph.RemoveCollection(sender);
                         break;
-                    default:
-                        throw new InvalidOperationException(Strings.DataBinding_CollectionChangedUnknownActionCollection(e.Action, sender.GetType()));
+                    default: // No Action
+                        break;
                 }
             }
 
@@ -614,7 +614,7 @@ namespace Microsoft.OData.Client
 
             // Do we need an operation on context to handle the Delete operation.
             // Detach behavior is special because it is only applicable in Clear
-            // cases, where we don't callback users for detach nofications.
+            // cases, where we don't callback users for detach notifications.
             bool contextOperationRequired = this.IsContextTrackingEntity(target) && !this.DetachBehavior;
 
             if (contextOperationRequired)

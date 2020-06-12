@@ -23,7 +23,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
         {
         }
 
-        [TestMethod]
+        [TestMethod]//--#comment#--[TestMethod]
         public void DelayQueryOnEntitySet()
         {
             TestClientContext.MergeOption = MergeOption.OverwriteChanges;
@@ -89,7 +89,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             }
         }
 
-        [TestMethod]
+        [TestMethod]//--#comment#--[TestMethod]
         public void DelayQueryOnSingleton()
         {
             TestClientContext.MergeOption = MergeOption.OverwriteChanges;
@@ -167,7 +167,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             Assert.IsNotNull(address);
         }
 
-        [TestMethod]
+        [TestMethod]//--#comment#--[TestMethod]
         public void FunctionBoundOnContainedSingleNavigation()
         {
             var getActualAmountFunction = TestClientContext.Accounts.ByKey(new Dictionary<string, object> { { "AccountID", 101 } }).MyGiftCard.GetActualAmount(1);
@@ -189,7 +189,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
         {
         }
 
-        [TestMethod]
+        [TestMethod]//--#comment#--[TestMethod]
         public void DelayQueryOnDerivedSingleton()
         {
             TestClientContext.MergeOption = MergeOption.OverwriteChanges;
@@ -248,7 +248,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             Assert.AreEqual("changedLabourUnion", labourUnion);
         }
 
-        [TestMethod]
+        [TestMethod]//--#comment#--[TestMethod]
         public void DelayQueryOnFunctionImport()
         {
             TestClientContext.MergeOption = MergeOption.OverwriteChanges;
@@ -297,7 +297,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             Assert.IsTrue(productsName.Count() > 0);
         }
 
-        [TestMethod]
+        [TestMethod]//--#comment#--[TestMethod]
         public void DelayQueryOnActionImport()
         {
             TestClientContext.MergeOption = MergeOption.OverwriteChanges;
@@ -314,7 +314,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             Assert.AreEqual(originalPrice * 50 / 100, product.UnitPricePlus);
         }
 
-        [TestMethod]
+        [TestMethod]//--#comment#--[TestMethod]
         public void ByMultipleKey()
         {
             TestClientContext.MergeOption = MergeOption.OverwriteChanges;

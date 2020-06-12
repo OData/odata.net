@@ -1,97 +1,96 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{B57522A7-18B7-42F7-95FD-24835FC5AE46}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Microsoft.Test.OData.Tests.Client</RootNamespace>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <AssemblyName>Microsoft.Test.OData.Tests.Client</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
-    <TargetFrameworkFolderName>Desktop</TargetFrameworkFolderName>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworks>net45</TargetFrameworks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <NoWarn>$(NoWarn);NU1605</NoWarn>
+   <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
   </PropertyGroup>
+
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
+
   <PropertyGroup Condition="'$(BuildInOSS)' == 'true'">
     <DefineConstants>$(DefineConstants);ENABLE_AVRO</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net45|AnyCPU'">
+    <WarningsAsErrors>NU1605</WarningsAsErrors>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="$(NugetPack)\EntityFramework.5.0.0\lib\net45\EntityFramework.dll" />
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="$(NuGetPack)\Microsoft.TextTemplating.CBT.10.1.0.1\Microsoft.VisualStudio.TextTemplating.Interfaces.10.0.dll" Condition="'$(BuildInOSS)' != 'true'" />
-    <Reference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" Condition="'$(BuildInOSS)' == 'true'" />
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.Entity" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.ServiceModel.Web" />
-    <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="$(NugetPack)\$(MadManPackageName)\lib\net40\Microsoft.Test.DataDriven.dll" />
-    <Reference Include="$(NugetPack)\$(MadManPackageName)\lib\net40\Microsoft.Test.Extensions.dll" />
+    <Compile Remove="LegacyReferences\**" />
+    <Compile Remove="ServiceWrapper\**" />
+    <EmbeddedResource Remove="LegacyReferences\**" />
+    <EmbeddedResource Remove="ServiceWrapper\**" />
+    <None Remove="LegacyReferences\**" />
+    <None Remove="ServiceWrapper\**" />
+  </ItemGroup>  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.0" />
+    <PackageReference Include="FluentAssertions" Version="4.1.0" />
+    <PackageReference Include="EntityFramework" Version="5.0.0" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <PackageReference Include="System.ServiceModel.Web" Version="1.0.0" />
+   </ItemGroup> 
+
+  <ItemGroup>
+    <Reference Include="..\..\..\..\CommonAssemblies\Microsoft.MadMan.3.1.112712.0\lib\net40\Microsoft.Test.DataDriven.dll">
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="..\..\..\..\CommonAssemblies\Microsoft.MadMan.3.1.112712.0\lib\net40\Microsoft.Test.Extensions.dll">
+      <Private>true</Private>
+    </Reference>
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
-      <Project>{7D921888-FE03-4C3F-80FE-2F624505461C}</Project>
-      <Name>Microsoft.OData.Edm</Name>
-    </ProjectReference>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
-      <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
-      <Name>Microsoft.OData.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj">
-      <Project>{5d921888-fe03-4c3f-40fe-2f624505461d}</Project>
-      <Name>Microsoft.Spatial</Name>
-    </ProjectReference>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj">
-      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BFFFF}</Project>
-      <Name>Microsoft.OData.Client</Name>
-    </ProjectReference>
-    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj">
-      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BA325}</Project>
-      <Name>Microsoft.OData.Service</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\Common\Microsoft.Test.OData.DependencyInjection\Build.NetFramework\Microsoft.Test.OData.DependencyInjection.csproj">
-      <Project>{50aa23b2-56ef-4c51-a270-8d5bd0c899b6}</Project>
-      <Name>Microsoft.Test.OData.DependencyInjection</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Framework\Core\Microsoft.Test.OData.Framework.csproj">
-      <Project>{CEC8AF29-77BC-4C62-B79C-A9B22C311E3B}</Project>
-      <Name>Microsoft.Test.OData.Framework</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Framework\TestProviders\Microsoft.Test.OData.Framework.TestProviders.csproj">
-      <Project>{1211B700-008A-4646-8F5F-25BC96EBC138}</Project>
-      <Name>Microsoft.Test.OData.Framework.TestProviders</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Services\Astoria\Microsoft.Test.OData.Services.Astoria.csproj">
-      <Project>{ECF627BB-5156-488F-9F6B-CF6537F8D6FE}</Project>
-      <Name>Microsoft.Test.OData.Services.Astoria</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Services\TestServices\Microsoft.Test.OData.Services.TestServices.csproj">
-      <Project>{B8A072BE-5B90-4193-A289-6CC8750D0DAD}</Project>
-      <Name>Microsoft.Test.OData.Services.TestServices</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Services\CSDSCReferences\Microsoft.Test.OData.Services.CSDSCReferences.csproj">
-      <Project>{ae503558-f7bc-4ce4-9a90-066b580bb1ed}</Project>
-      <Name>Microsoft.Test.OData.Services.CSDSCReferences</Name>
-    </ProjectReference>
-    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat\Microsoft.Test.OData.PluggableFormat.csproj">
-      <Project>{1d872f31-6100-4c76-999e-ed948e2cd248}</Project>
-      <Name>Microsoft.Test.OData.PluggableFormat</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
+    <ProjectReference Include="..\..\..\..\..\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\..\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />
+    <ProjectReference Include="..\..\..\..\..\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />
+    <ProjectReference Include="..\..\..\..\..\test\FunctionalTests\Service\Microsoft.OData.Service.csproj" />
+    <ProjectReference Include="..\..\..\..\Common\Microsoft.Test.OData.DependencyInjection\Microsoft.Test.OData.DependencyInjection.csproj" />
+    <ProjectReference Include="..\..\..\Framework\Core\Microsoft.Test.OData.Framework.csproj" />
+    <ProjectReference Include="..\..\..\Framework\TestProviders\Microsoft.Test.OData.Framework.TestProviders.csproj" />
+    <ProjectReference Include="..\..\..\Services\Astoria\Microsoft.Test.OData.Services.Astoria.csproj" />
+    <ProjectReference Include="..\..\..\Services\TestServices\Microsoft.Test.OData.Services.TestServices.csproj" />
+    <ProjectReference Include="..\..\..\Services\CSDSCReferences\Microsoft.Test.OData.Services.CSDSCReferences.csproj" />
+    <ProjectReference Include="..\..\..\..\..\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat\Microsoft.Test.OData.PluggableFormat.csproj" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDependentAssemblyPaths Condition=" '$(VS100COMNTOOLS)' != '' " Include="$(VS100COMNTOOLS)..\IDE\PrivateAssemblies">
       <Visible>False</Visible>
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\..\..\..\src\CodeGen\ODataT4CodeGenerator.cs">
+      <Link>ODataT4CodeGenerator.cs</Link>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ODataT4CodeGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="ODataItemWrapper.cs" />
+    <Compile Include="ODataNestedResourceInfoWrapper.cs" />
+    <Compile Include="ODataResourceSetWrapper.cs" />
+    <Compile Include="ODataResourceWrapper.cs" />
+    <Compile Include="ODataWriterHelper.cs" />
+    <None Include="..\..\..\..\..\src\CodeGen\ODataT4CodeGenerator.tt">
+      <Link>ODataT4CodeGenerator.tt</Link>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>ODataT4CodeGenerator.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
   <ItemGroup>
     <Compile Include="..\AsynchronousTests\AsynchronousAttribute.cs" />
     <Compile Include="..\AsynchronousTests\AsynchronousDelayQueryTests.cs" />
@@ -117,8 +116,8 @@
     <Compile Include="ClientWithoutTypeResolverTests\MismatchedClientModelWithoutTypeResolverTests.cs" />
     <Compile Include="ClientWithoutTypeResolverTests\OpenTypesWithoutTypeResolverTests.cs" />
     <Compile Include="ClientWithoutTypeResolverTests\JsonWithoutTypeResolverTests.cs" />
-    <Compile Include="CodeGenerationTests\CustomizeNamingTest.cs" />
-    <Compile Include="CodeGenerationTests\T4DelayQueryTest.cs" />
+    <!--<Compile Include="CodeGenerationTests\CustomizeNamingTest.cs" />
+    <Compile Include="CodeGenerationTests\T4DelayQueryTest.cs" />-->
     <Compile Include="Common\ODataAnnotatableExtensions.cs" />
     <Compile Include="EdmDateAndTimeOfDay\DateAndTimeOfDayCRUDTestings.cs" />
     <Compile Include="ODataSimplifiedServiceTests\ODataSimplifiedServiceTests.cs" />
@@ -130,9 +129,9 @@
     <Compile Include="OperationTests\OperationClientTests.cs" />
     <Compile Include="PayloadValueConverterTests\PayloadValueConverterTests.cs" />
     <Compile Include="PluggableFormatServiceTests\PluggableFormatServiceTests.cs" />
-    <Compile Include="PropertyTrackingTests\ChangeTrackingTest.cs" />
+    <!--<Compile Include="PropertyTrackingTests\ChangeTrackingTest.cs" />
     <Compile Include="CodeGenerationTests\T4OperationGenerationTests.cs" />
-    <Compile Include="CodeGenerationTests\T4CodeGenerationTests.cs" />
+    <Compile Include="CodeGenerationTests\T4CodeGenerationTests.cs" />-->
     <Compile Include="CollectionTests\CollectionNullableFacetTest.cs" />
     <Compile Include="Common\HttpWebRequestMessage.cs" />
     <Compile Include="Common\HttpWebResponseMessage.cs" />
@@ -210,88 +209,72 @@
     <Compile Include="WriteJsonPayloadTests\WritePayloadHelper.cs" />
     <Compile Include="WriteJsonPayloadTests\WriteJsonWithoutModelTests.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="$(EnlistmentRoot)\src\CodeGen\ODataT4CodeGenerator.cs">
-      <Link>ODataT4CodeGenerator.cs</Link>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ODataT4CodeGenerator.tt</DependentUpon>
-    </Compile>
-    <None Include="$(EnlistmentRoot)\src\CodeGen\ODataT4CodeGenerator.tt">
-      <Link>ODataT4CodeGenerator.tt</Link>
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>ODataT4CodeGenerator.cs</LastGenOutput>
-    </None>
-    <None Include="packages.config" />
-  </ItemGroup>
+
   <ItemGroup>
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="AfterBuild">
-    <CreateItem Include="$(EnlistmentRoot)\test\EndToEndTests\Services\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.ActionOverloadingServiceReference.cs">
+
+  <Target Name="AnotherCustomTarget" AfterTargets="CoreCompile">
+    <CreateItem Include="..\..\..\..\..\test\EndToEndTests\Services\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.ActionOverloadingServiceReference.cs">
       <Output TaskParameter="Include" ItemName="CSDSCReferences" />
     </CreateItem>
-    <CreateItem Include="$(EnlistmentRoot)\test\EndToEndTests\Services\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference.cs">
+    <CreateItem Include="..\..\..\..\..\test\EndToEndTests\Services\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference.cs">
       <Output TaskParameter="Include" ItemName="CSDSCReferences" />
     </CreateItem>
-    <CreateItem Include="$(EnlistmentRoot)\test\EndToEndTests\Services\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.cs">
+    <CreateItem Include="..\..\..\..\..\test\EndToEndTests\Services\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.cs">
       <Output TaskParameter="Include" ItemName="CSDSCReferences" />
     </CreateItem>
-    <CreateItem Include="$(EnlistmentRoot)\test\EndToEndTests\Services\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.ODataWriterDefaultServiceReference.cs">
+    <CreateItem Include="..\..\..\..\..\test\EndToEndTests\Services\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.ODataWriterDefaultServiceReference.cs">
       <Output TaskParameter="Include" ItemName="CSDSCReferences" />
     </CreateItem>
-    <CreateItem Include="$(EnlistmentRoot)\test\EndToEndTests\Services\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReference.cs">
+    <CreateItem Include="..\..\..\..\..\test\EndToEndTests\Services\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReference.cs">
       <Output TaskParameter="Include" ItemName="CSDSCReferences" />
     </CreateItem>
-    <CreateItem Include="$(EnlistmentRoot)\test\EndToEndTests\Services\CSReferences\Microsoft.Test.OData.Services.TestServices.ActionOverloadingServiceReference.cs">
+    <CreateItem Include="..\..\..\..\..\test\EndToEndTests\Services\CSReferences\Microsoft.Test.OData.Services.TestServices.ActionOverloadingServiceReference.cs">
       <Output TaskParameter="Include" ItemName="CSReferences" />
     </CreateItem>
-    <CreateItem Include="$(EnlistmentRoot)\test\EndToEndTests\Services\CSReferences\Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference.cs">
+    <CreateItem Include="..\..\..\..\..\test\EndToEndTests\Services\CSReferences\Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference.cs">
       <Output TaskParameter="Include" ItemName="CSReferences" />
     </CreateItem>
-    <CreateItem Include="$(EnlistmentRoot)\test\EndToEndTests\Services\CSReferences\Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.cs">
+    <CreateItem Include="..\..\..\..\..\test\EndToEndTests\Services\CSReferences\Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.cs">
       <Output TaskParameter="Include" ItemName="CSReferences" />
     </CreateItem>
-    <CreateItem Include="$(EnlistmentRoot)\test\EndToEndTests\Services\CSReferences\Microsoft.Test.OData.Services.TestServices.ODataWriterDefaultServiceReference.cs">
+    <CreateItem Include="..\..\..\..\..\test\EndToEndTests\Services\CSReferences\Microsoft.Test.OData.Services.TestServices.ODataWriterDefaultServiceReference.cs">
       <Output TaskParameter="Include" ItemName="CSReferences" />
     </CreateItem>
-    <CreateItem Include="$(EnlistmentRoot)\test\EndToEndTests\Services\CSReferences\Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReference.cs">
+    <CreateItem Include="..\..\..\..\..\test\EndToEndTests\Services\CSReferences\Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReference.cs">
       <Output TaskParameter="Include" ItemName="CSReferences" />
     </CreateItem>
-    <CreateItem Include="$(EnlistmentRoot)\test\EndToEndTests\Services\VBDSCReferences\Microsoft.Test.OData.Services.TestServices.ActionOverloadingServiceReference.vb">
+    <CreateItem Include="..\..\..\..\..\test\EndToEndTests\Services\VBDSCReferences\Microsoft.Test.OData.Services.TestServices.ActionOverloadingServiceReference.vb">
       <Output TaskParameter="Include" ItemName="VBDSCReferences" />
     </CreateItem>
-    <CreateItem Include="$(EnlistmentRoot)\test\EndToEndTests\Services\VBDSCReferences\Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference.vb">
+    <CreateItem Include="..\..\..\..\..\test\EndToEndTests\Services\VBDSCReferences\Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference.vb">
       <Output TaskParameter="Include" ItemName="VBDSCReferences" />
     </CreateItem>
-    <CreateItem Include="$(EnlistmentRoot)\test\EndToEndTests\Services\VBDSCReferences\Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.vb">
+    <CreateItem Include="..\..\..\..\..\test\EndToEndTests\Services\VBDSCReferences\Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.vb">
       <Output TaskParameter="Include" ItemName="VBDSCReferences" />
     </CreateItem>
-    <CreateItem Include="$(EnlistmentRoot)\test\EndToEndTests\Services\VBDSCReferences\Microsoft.Test.OData.Services.TestServices.ODataWriterDefaultServiceReference.vb">
+    <CreateItem Include="..\..\..\..\..\test\EndToEndTests\Services\VBDSCReferences\Microsoft.Test.OData.Services.TestServices.ODataWriterDefaultServiceReference.vb">
       <Output TaskParameter="Include" ItemName="VBDSCReferences" />
     </CreateItem>
-    <CreateItem Include="$(EnlistmentRoot)\test\EndToEndTests\Services\VBDSCReferences\Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReference.vb">
+    <CreateItem Include="..\..\..\..\..\test\EndToEndTests\Services\VBDSCReferences\Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReference.vb">
       <Output TaskParameter="Include" ItemName="VBDSCReferences" />
     </CreateItem>
-    <CreateItem Include="$(EnlistmentRoot)\test\EndToEndTests\Services\VBReferences\Microsoft.Test.OData.Services.TestServices.ActionOverloadingServiceReference.vb">
+    <CreateItem Include="..\..\..\..\..\test\EndToEndTests\Services\VBReferences\Microsoft.Test.OData.Services.TestServices.ActionOverloadingServiceReference.vb">
       <Output TaskParameter="Include" ItemName="VBReferences" />
     </CreateItem>
-    <CreateItem Include="$(EnlistmentRoot)\test\EndToEndTests\Services\VBReferences\Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference.vb">
+    <CreateItem Include="..\..\..\..\..\test\EndToEndTests\Services\VBReferences\Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference.vb">
       <Output TaskParameter="Include" ItemName="VBReferences" />
     </CreateItem>
-    <CreateItem Include="$(EnlistmentRoot)\test\EndToEndTests\Services\VBReferences\Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.vb">
+    <CreateItem Include="..\..\..\..\..\test\EndToEndTests\Services\VBReferences\Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.vb">
       <Output TaskParameter="Include" ItemName="VBReferences" />
     </CreateItem>
-    <CreateItem Include="$(EnlistmentRoot)\test\EndToEndTests\Services\VBReferences\Microsoft.Test.OData.Services.TestServices.ODataWriterDefaultServiceReference.vb">
+    <CreateItem Include="..\..\..\..\..\test\EndToEndTests\Services\VBReferences\Microsoft.Test.OData.Services.TestServices.ODataWriterDefaultServiceReference.vb">
       <Output TaskParameter="Include" ItemName="VBReferences" />
     </CreateItem>
-    <CreateItem Include="$(EnlistmentRoot)\test\EndToEndTests\Services\VBReferences\Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReference.vb">
+    <CreateItem Include="..\..\..\..\..\test\EndToEndTests\Services\VBReferences\Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReference.vb">
       <Output TaskParameter="Include" ItemName="VBReferences" />
     </CreateItem>
     <Copy SourceFiles="@(CSDSCReferences)" DestinationFiles="@(CSDSCReferences->'$(OutDir)CSDSCReferences\%(Filename)%(Extension)')" />
@@ -299,4 +282,5 @@
     <Copy SourceFiles="@(VBDSCReferences)" DestinationFiles="@(VBReferences->'$(OutDir)VBDSCReferences\%(Filename)%(Extension)')" />
     <Copy SourceFiles="@(VBReferences)" DestinationFiles="@(VBReferences->'$(OutDir)VBReferences\%(Filename)%(Extension)')" />
   </Target>
+  
 </Project>

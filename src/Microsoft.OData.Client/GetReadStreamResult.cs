@@ -114,7 +114,7 @@ namespace Microsoft.OData.Client
         {
             try
             {
-                this.responseMessage = this.requestInfo.GetSyncronousResponse(this.requestMessage, true);
+                this.responseMessage = this.requestInfo.GetSynchronousResponse(this.requestMessage, true);
                 Debug.Assert(this.responseMessage != null, "Can't set a null response.");
             }
             catch (Exception e)
@@ -128,7 +128,7 @@ namespace Microsoft.OData.Client
                 this.CompletedRequest();
             }
 
-            if (null != this.Failure)
+            if (this.Failure != null)
             {
                 throw this.Failure;
             }
@@ -140,8 +140,8 @@ namespace Microsoft.OData.Client
         /// <summary>invoked for derived classes to cleanup before callback is invoked</summary>
         protected override void CompletedRequest()
         {
-            Debug.Assert(null != this.responseMessage || null != this.Failure, "should have response or exception");
-            if (null != this.responseMessage)
+            Debug.Assert(this.responseMessage != null || this.Failure != null, "should have response or exception");
+            if (this.responseMessage != null)
             {
                 // Can't use DataServiceContext.HandleResponse as this request didn't necessarily go to our server
                 //   the MR could have been served by arbitrary server.

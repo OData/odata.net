@@ -18,7 +18,7 @@ namespace Microsoft.OData.Client.Metadata
     using Microsoft.OData.Edm;
     using c = Microsoft.OData.Client;
 
-    #endregion Namespaces.
+#endregion Namespaces.
 
     /// <summary>
     /// Utility methods for client types.
@@ -170,18 +170,18 @@ namespace Microsoft.OData.Client.Metadata
         /// <returns>element types</returns>
         internal static MethodInfo GetMethodForGenericType(Type propertyType, Type genericTypeDefinition, string methodName, out Type type)
         {
-            Debug.Assert(null != propertyType, "null propertyType");
-            Debug.Assert(null != genericTypeDefinition, "null genericTypeDefinition");
+            Debug.Assert(propertyType != null, "null propertyType");
+            Debug.Assert(genericTypeDefinition != null, "null genericTypeDefinition");
             Debug.Assert(genericTypeDefinition.IsGenericTypeDefinition(), "!IsGenericTypeDefinition");
 
             type = null;
 
             Type implementationType = ClientTypeUtil.GetImplementationType(propertyType, genericTypeDefinition);
-            if (null != implementationType)
+            if (implementationType != null)
             {
                 Type[] genericArguments = implementationType.GetGenericArguments();
                 MethodInfo methodInfo = implementationType.GetMethod(methodName);
-                Debug.Assert(null != methodInfo, "should have found the method");
+                Debug.Assert(methodInfo != null, "should have found the method");
 
 #if DEBUG
                 Debug.Assert(null != genericArguments, "null genericArguments");
@@ -238,7 +238,7 @@ namespace Microsoft.OData.Client.Metadata
         /// </summary>
         /// <param name="type">starting type</param>
         /// <param name="genericTypeDefinition">the generic type definition to find</param>
-        /// <returns>concrete type that implementats the generic type</returns>
+        /// <returns>concrete type that implements the generic type</returns>
         internal static Type GetImplementationType(Type type, Type genericTypeDefinition)
         {
             if (IsConstructedGeneric(type, genericTypeDefinition))
@@ -252,8 +252,8 @@ namespace Microsoft.OData.Client.Metadata
                 {
                     if (IsConstructedGeneric(interfaceType, genericTypeDefinition))
                     {
-                        if (null == implementationType)
-                        {   // found implmentation of genericTypeDefinition (e.g. ICollection<T>)
+                        if (implementationType == null)
+                        {   // found implementation of genericTypeDefinition (e.g. ICollection<T>)
                             implementationType = interfaceType;
                         }
                         else
@@ -276,6 +276,17 @@ namespace Microsoft.OData.Client.Metadata
         internal static bool TypeIsEntity(Type t, ClientEdmModel model)
         {
             return model.GetOrCreateEdmType(t).TypeKind == EdmTypeKind.Entity;
+        }
+
+        /// <summary>
+        /// Is the type a Complex Type?
+        /// </summary>
+        /// <param name="t">Type to examine</param>
+        /// <param name="model">The client model.</param>
+        /// <returns>bool indicating whether or not complex type</returns>
+        internal static bool TypeIsComplex(Type t, ClientEdmModel model)
+        {
+            return model.GetOrCreateEdmType(t).TypeKind == EdmTypeKind.Complex;
         }
 
         /// <summary>
@@ -364,7 +375,7 @@ namespace Microsoft.OData.Client.Metadata
                     //// we do support adding elements to collections
                     //// ICollection<PropertyType> { get; /*ignored set;*/ }
 
-                    //// indexed properties are not suported because
+                    //// indexed properties are not supporter because
                     //// we don't have anything to use as the index
                     //// PropertyType Property[object x] { /*ignored get;*/ /*ignored set;*/ }
 
@@ -401,7 +412,7 @@ namespace Microsoft.OData.Client.Metadata
                     if (propertyInfo.CanRead &&
                         (!propertyType.IsValueType() || propertyInfo.CanWrite) &&
                         !propertyType.ContainsGenericParameters() &&
-                        (0 == propertyInfo.GetIndexParameters().Length))
+                        propertyInfo.GetIndexParameters().Length == 0)
                     {
                         yield return propertyInfo;
                     }
@@ -439,8 +450,8 @@ namespace Microsoft.OData.Client.Metadata
             KeyAttribute dataServiceKeyAttribute = customAttributes.OfType<KeyAttribute>().FirstOrDefault();
             List<PropertyInfo> keyProperties = new List<PropertyInfo>();
             PropertyInfo[] properties = ClientTypeUtil.GetPropertiesOnType(type, false /*declaredOnly*/).ToArray();
+ 
             hasProperties = properties.Length > 0;
-
             KeyKind currentKeyKind = KeyKind.NotKey;
             KeyKind newKeyKind = KeyKind.NotKey;
             foreach (PropertyInfo propertyInfo in properties)
@@ -463,7 +474,7 @@ namespace Microsoft.OData.Client.Metadata
             Type keyPropertyDeclaringType = null;
             foreach (PropertyInfo key in keyProperties)
             {
-                if (null == keyPropertyDeclaringType)
+                if (keyPropertyDeclaringType == null)
                 {
                     keyPropertyDeclaringType = key.DeclaringType;
                 }
@@ -478,12 +489,12 @@ namespace Microsoft.OData.Client.Metadata
                 }
             }
 
-            if (newKeyKind == KeyKind.AttributedKey && keyProperties.Count != dataServiceKeyAttribute.KeyNames.Count)
+            if (newKeyKind == KeyKind.AttributedKey && keyProperties.Count != dataServiceKeyAttribute?.KeyNames.Count)
             {
                 var m = (from string a in dataServiceKeyAttribute.KeyNames
-                         where null == (from b in properties
-                                        where b.Name == a
-                                        select b).FirstOrDefault()
+                         where (from b in properties
+                                where b.Name == a
+                                select b).FirstOrDefault() == null
                          select a).First<string>();
                 throw c.Error.InvalidOperation(c.Strings.ClientType_MissingProperty(typeName, m));
             }
@@ -688,11 +699,84 @@ namespace Microsoft.OData.Client.Metadata
         }
 
         /// <summary>
-        /// Returns the KeyKind if <paramref name="propertyInfo"/> is declared as a key in <paramref name="dataServiceKeyAttribute"/> or it follows the key naming convension.
+        /// Returns true if the <paramref name="instance"/> is an instance of an open type in the <paramref name="model"/>.
+        /// </summary>
+        /// <param name="instance">The instance to examine</param>
+        /// <param name="model">The client model.</param>
+        /// <returns>Returns true if the <paramref name="instance"/> is an instance of an open type in the <paramref name="model"/></returns>
+        internal static bool IsInstanceOfOpenType(object instance, ClientEdmModel model)
+        {
+            Debug.Assert(instance != null, "instance !=null");
+            Debug.Assert(model != null, "model !=null");
+
+            Type clientType = instance.GetType();
+            ClientTypeAnnotation clientTypeAnnotation = model.GetClientTypeAnnotation(clientType);
+
+            Debug.Assert(clientTypeAnnotation != null, "clientTypeAnnotation != null");
+
+            return clientTypeAnnotation.EdmType.IsOpen();
+        }
+
+        /// <summary>
+        /// Returns true if the <paramref name="instance"/> contains a non-null dictionary property of string and object
+        /// The dictionary should also not be decorated with IgnoreClientPropertyAttribute
+        /// </summary>
+        /// <param name="instance">Object with expected container property</param>
+        /// <param name="containerProperty">Reference to the container property</param>
+        /// <returns>true if expected container property is found</returns>
+        internal static bool TryGetContainerProperty(object instance, out IDictionary<string, object> containerProperty)
+        {
+            Debug.Assert(instance != null, "instance != null");
+
+            containerProperty = default(IDictionary<string, object>);
+
+            PropertyInfo propertyInfo = instance.GetType().GetPublicProperties(true /* instanceOnly */).Where(p =>
+                                p.GetCustomAttributes(typeof(ContainerPropertyAttribute), true).Any() &&
+                                typeof(IDictionary<string, object>).IsAssignableFrom(p.PropertyType)).FirstOrDefault();
+
+            if (propertyInfo == null)
+            {
+                return false;
+            }
+
+            containerProperty = (IDictionary<string, object>)propertyInfo.GetValue(instance);
+
+            // Is property initialized?
+            if (containerProperty == null)
+            {
+                Type propertyType = propertyInfo.PropertyType;
+                
+                // Handle Dictionary<,> , SortedDictionary<,> , ConcurrentDictionary<,> , etc - must also have parameterless constructor                
+                if (!propertyType.IsInterface() && !propertyType.IsAbstract() && propertyType.GetInstanceConstructor(true, new Type[0]) != null)
+                {
+                    containerProperty = (IDictionary<string, object>)Util.ActivatorCreateInstance(propertyType);
+                }
+                else if (propertyType.Equals(typeof(IDictionary<string, object>)))
+                {
+                    // Default to Dictionary<,> for IDictionary<,> property
+                    Type dictionaryType = typeof(Dictionary<,>).MakeGenericType(new Type[] { typeof(string), typeof(object) });
+                    containerProperty = (IDictionary<string, object>)Util.ActivatorCreateInstance(dictionaryType);
+                }
+                else
+                { 
+                    // Not easy to figure out the implementing type
+                    return false;
+                }
+
+                propertyInfo.SetValue(instance, containerProperty);
+
+                return true;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Returns the KeyKind if <paramref name="propertyInfo"/> is declared as a key in <paramref name="dataServiceKeyAttribute"/> or it follows the key naming convention.
         /// </summary>
         /// <param name="propertyInfo">Property in question.</param>
         /// <param name="dataServiceKeyAttribute">DataServiceKeyAttribute instance.</param>
-        /// <returns>Returns the KeyKind if <paramref name="propertyInfo"/> is declared as a key in <paramref name="dataServiceKeyAttribute"/> or it follows the key naming convension.</returns>
+        /// <returns>Returns the KeyKind if <paramref name="propertyInfo"/> is declared as a key in <paramref name="dataServiceKeyAttribute"/> or it follows the key naming convention.</returns>
         private static KeyKind IsKeyProperty(PropertyInfo propertyInfo, KeyAttribute dataServiceKeyAttribute)
         {
             Debug.Assert(propertyInfo != null, "propertyInfo != null");
@@ -704,6 +788,12 @@ namespace Microsoft.OData.Client.Metadata
             {
                 keyKind = KeyKind.AttributedKey;
             }
+#if !PORTABLELIB
+            else if (propertyInfo.GetCustomAttributes().OfType<System.ComponentModel.DataAnnotations.KeyAttribute>().Any())
+            {
+                keyKind = KeyKind.AttributedKey;              
+            }
+#endif
             else if (propertyName.EndsWith("ID", StringComparison.Ordinal))
             {
                 string declaringTypeName = propertyInfo.DeclaringType.Name;
@@ -712,7 +802,7 @@ namespace Microsoft.OData.Client.Metadata
                     // matched "DeclaringType.Name+ID" pattern
                     keyKind = KeyKind.TypeNameId;
                 }
-                else if (2 == propertyName.Length)
+                else if (propertyName.Length == 2)
                 {
                     // matched "ID" pattern
                     keyKind = KeyKind.Id;
@@ -727,7 +817,7 @@ namespace Microsoft.OData.Client.Metadata
         /// closed constructed type of the generic type.
         /// </summary>
         /// <param name="type">Type to check.</param>
-        /// <param name="genericTypeDefinition">Generic type for checkin.</param>
+        /// <param name="genericTypeDefinition">Generic type for checking.</param>
         /// <returns>true if <paramref name="type"/> is a constructed type of <paramref name="genericTypeDefinition"/>.</returns>
         /// <remarks>The check is an immediate check; no inheritance rules are applied.</remarks>
         private static bool IsConstructedGeneric(Type type, Type genericTypeDefinition)

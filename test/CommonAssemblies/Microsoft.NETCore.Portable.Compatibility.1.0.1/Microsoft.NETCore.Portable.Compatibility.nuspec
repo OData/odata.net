@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata minClientVersion="2.12">
+    <id>Microsoft.NETCore.Portable.Compatibility</id>
+    <version>1.0.1</version>
+    <title>Microsoft.NETCore.Portable.Compatibility</title>
+    <authors>Microsoft</authors>
+    <owners>microsoft,dotnetframework</owners>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl>http://go.microsoft.com/fwlink/?LinkId=329770</licenseUrl>
+    <projectUrl>https://dot.net/</projectUrl>
+    <iconUrl>http://go.microsoft.com/fwlink/?LinkID=288859</iconUrl>
+    <description>Enables compatiblity with portable libraries targeting previous .NET releases like .NET Framework 4.0 and Silverlight.
+This package supports retargeting references to classic reference assemblies (mscorlib.dll, system.dll, etc) to new contract assemblies (System.Runtime.dll, System.IO, etc).  It does this in a pay-for-play way to prevent consuming assemblies from having to reference all of the contracts that happen to overlap with mscorlib.  As such, when using this package you may encounter errors like
+	error CS0012: The type 'WebRequest' is defined in an assembly that is not referenced. You must add a reference to assembly 'System.Net.Requests, Version=0.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'.
+To resolve these errors install the package with the same name name as the missing assembly. 
+TFS ID: 1612576, GitHub SHA: https://github.com/dotnet/corefx/tree/f47c814b003d17da52940739e227f04e52b10279 
+When using NuGet 3.x this package requires at least version 3.4.</description>
+    <releaseNotes>https://go.microsoft.com/fwlink/?LinkID=799417</releaseNotes>
+    <copyright>© Microsoft Corporation.  All rights reserved.</copyright>
+    <serviceable>true</serviceable>
+    <dependencies>
+      <group targetFramework=".NETFramework4.5" />
+      <group targetFramework=".NETCore5.0">
+        <dependency id="Microsoft.NETCore.Runtime.CoreCLR" version="1.0.2" />
+      </group>
+      <group targetFramework=".NETStandard1.0">
+        <dependency id="Microsoft.NETCore.Runtime.CoreCLR" version="1.0.2" />
+      </group>
+      <group targetFramework="Windows8.0" />
+      <group targetFramework="WindowsPhone8.0" />
+      <group targetFramework="WindowsPhoneApp8.1" />
+    </dependencies>
+  </metadata>
+</package>

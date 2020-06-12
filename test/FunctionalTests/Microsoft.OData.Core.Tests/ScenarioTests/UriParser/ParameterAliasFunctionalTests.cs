@@ -156,7 +156,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 {
                     oDataPath.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForCanMoveToAddress());
                     var constNode = Assert.IsType<ConstantNode>(aliasNodes["@address"]);
-                    Assert.Equal(constNode.Value, "{\"@odata.type\":\"#Fully.Qualified.Namespace.Address\",\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"}");
+                    Assert.Equal("{\"@odata.type\":\"#Fully.Qualified.Namespace.Address\",\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"}", constNode.Value);
                 });
         }
 
@@ -170,7 +170,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 {
                     oDataPath.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForCanMoveToAddresses());
                     var constNode = Assert.IsType<ConstantNode>(aliasNodes["@addresses"]);
-                    Assert.Equal(constNode.Value, "[{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"},{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}]");
+                    Assert.Equal("[{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"},{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}]", constNode.Value);
                 });
         }
 
@@ -204,6 +204,38 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 });
             // TODO: This is a bug repro. Remove this assertion after the bug is fixed.
             parseUri.Throws<ODataException>(ODataErrorStrings.MetadataBinder_CannotConvertToType("Edm.Int32", "Edm.Int16"));
+        }
+
+        [Theory]
+        [InlineData("{\"@odata.type\":\"%23Fully.Qualified.Namespace.Film\",\"ID\":1,\"Title\":\"The Ogre's Lair\"}")]
+        [InlineData("{\"@odata.type\":\"%23Fully.Qualified.Namespace.Film\",\"ID\":2,\"Title\":\"The \\\"Benevolent\\\" Dictator\"}")]
+        [InlineData("{\"@odata.type\":\"%23Fully.Qualified.Namespace.Film\",\"ID\":3,\"Title\":\"The \\\"Gardener's\\\" Story\"}")]
+        public void ParsePath_AliasInUnboundFunction_QuotesWithinDoubleQuotedStrings(string parameterValue)
+        {
+            ParseUriAndVerify(
+                new Uri("http://gobbledygook/GetRating(film=@p)?@p=" + parameterValue),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    oDataPath.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetRating());
+
+                    var constNode = Assert.IsType<ConstantNode>(aliasNodes["@p"]);
+                    Assert.Equal(parameterValue.Replace("%23", "#"), constNode.Value);
+                });
+        }
+
+        [Theory]
+        [InlineData("[{\"ID\":1,\"Title\":\"The Ogre's Lair\"},{\"ID\":2,\"Title\":\"The \\\"Benevolent\\\" Dictator\"},{\"ID\":3,\"Title\":\"The \\\"Gardener's\\\" Story\"}]")]
+        public void ParsePath_AliasInUnboundFunction_QuotesWithinDoubleQuotedStringsInJsonArray(string parameterValue)
+        {
+            ParseUriAndVerify(
+                new Uri("http://gobbledygook/GetRatings(films=@p)?@p=" + parameterValue),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    oDataPath.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetRatings());
+
+                    var constNode = Assert.IsType<ConstantNode>(aliasNodes["@p"]);
+                    Assert.Equal(parameterValue.Replace("%23", "#"), constNode.Value);
+                });
         }
 
         #endregion

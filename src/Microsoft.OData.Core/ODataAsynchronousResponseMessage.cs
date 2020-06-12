@@ -11,22 +11,18 @@ namespace Microsoft.OData
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
+
     #endregion Namespaces
 
     /// <summary>
     /// Representing the message of a non-batch async response.
     /// </summary>
     public sealed class ODataAsynchronousResponseMessage : IContainerProvider,
-#if PORTABLELIB
+
         IODataResponseMessageAsync
-#else
-        IODataResponseMessage
-#endif
     {
-        /// <summary>True if we are wrting the response; false if we are reading it.</summary>
+        /// <summary>True if we are writing the response; false if we are reading it.</summary>
         private readonly bool writing;
 
         /// <summary>The stream of the response message.</summary>
@@ -166,14 +162,12 @@ namespace Microsoft.OData
             return this.stream;
         }
 
-#if PORTABLELIB
         /// <summary>Asynchronously get the stream backing for this message.</summary>
         /// <returns>The stream backing for this message.</returns>
         public Task<Stream> GetStreamAsync()
         {
             return Task<Stream>.Factory.StartNew(this.GetStream);
         }
-#endif
 
         /// <summary>
         /// Creates an async response message that can be used to write the response content to.

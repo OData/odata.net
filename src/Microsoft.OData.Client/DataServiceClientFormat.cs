@@ -6,37 +6,34 @@
 
 namespace Microsoft.OData.Client
 {
+    #region namespaces
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.IO;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Xml;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
-
+    using Microsoft.OData.Edm.Csdl;
+    #endregion
     /// <summary>
     /// Tracks the user-preferred format which the client should use when making requests.
     /// </summary>
     public sealed class DataServiceClientFormat
     {
-        /// <summary>MIME type for ATOM bodies (http://www.iana.org/assignments/media-types/application/).</summary>
-        private const string MimeApplicationAtom = "application/atom+xml";
-
-        /// <summary>MIME type for JSON bodies (implies light in V3, verbose otherwise) (http://www.iana.org/assignments/media-types/application/).</summary>
-        private const string MimeApplicationJson = "application/json";
-
         /// <summary>MIME type for JSON bodies in light mode (http://www.iana.org/assignments/media-types/application/).</summary>
         private const string MimeApplicationJsonODataLight = "application/json;odata.metadata=minimal";
+
+        /// <summary>MIME type for JSON (https://www.ietf.org/rfc/rfc4627.txt).</summary>
+        private const string MimeApplicationJson = "application/json";
 
         /// <summary>MIME type for JSON bodies in light mode with all metadata.</summary>
         private const string MimeApplicationJsonODataLightWithAllMetadata = "application/json;odata.metadata=full";
 
         /// <summary>MIME type for changeset multipart/mixed</summary>
         private const string MimeMultiPartMixed = "multipart/mixed";
-
-        /// <summary>MIME type for XML bodies.</summary>
-        private const string MimeApplicationXml = "application/xml";
-
-        /// <summary>Combined accept header value for either 'application/atom+xml' or 'application/xml'.</summary>
-        private const string MimeApplicationAtomOrXml = MimeApplicationAtom + "," + MimeApplicationXml;
 
         /// <summary>text for the utf8 encoding</summary>
         private const string Utf8Encoding = "UTF-8";
@@ -80,14 +77,30 @@ namespace Microsoft.OData.Client
         {
             get
             {
-                if (serviceModel == null && LoadServiceModel != null)
+                if (serviceModel != null)
+                {
+                    return serviceModel;
+                }
+
+                if (LoadServiceModel != null)
                 {
                     serviceModel = LoadServiceModel();
                 }
+                else
+                {
+                    serviceModel = LoadServiceModelFromNetwork();
+                }
 
+                PopulateEdmStructuredSchemaElements();
                 return serviceModel;
             }
         }
+
+        /// <summary>
+        /// Invoked during test cases to fake out network calls to get the metadata
+        /// returns a string that is passed to the csdl parser and is used to bypass the network call while testing
+        /// </summary>
+        internal Func<HttpWebRequestMessage> InjectMetadataHttpNetworkRequest { get; set; }
 
         /// <summary>
         /// Indicates that the client should use the efficient JSON format.
@@ -99,6 +112,7 @@ namespace Microsoft.OData.Client
 
             this.ODataFormat = ODataFormat.Json;
             this.serviceModel = serviceModel;
+            PopulateEdmStructuredSchemaElements();
         }
 
         /// <summary>
@@ -152,12 +166,15 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Sets the value of the Accept header for a count request (will set it to 'multipart/mixed').
+        /// Sets the value of the Accept header for a batch request
+        /// Will set it to 'multipart/mixed' for a multipart batch request
+        /// Will set it to 'application/json' for a json batch request
         /// </summary>
         /// <param name="headers">The headers to modify.</param>
         internal void SetRequestAcceptHeaderForBatch(HeaderCollection headers)
         {
-            this.SetAcceptHeaderAndCharset(headers, MimeMultiPartMixed);
+            bool useJsonBatch = headers.GetHeader(XmlConstants.HttpContentType).Equals(MimeApplicationJson);
+            this.SetAcceptHeaderAndCharset(headers, useJsonBatch? MimeApplicationJson : MimeMultiPartMixed);
         }
 
         /// <summary>
@@ -206,6 +223,80 @@ namespace Microsoft.OData.Client
         {
             string contentType = responseMessage.GetHeader(XmlConstants.HttpContentType);
             ValidateContentType(contentType);
+        }
+
+        /// <summary>
+        /// Loads the metadata and converts it into an EdmModel that is then used by a dataservice context
+        /// This allows the user to use the DataServiceContext directly without having to manually pass an IEdmModel in the Format
+        /// </summary>
+        /// <returns>A service model to be used in format tracking</returns>
+        internal IEdmModel LoadServiceModelFromNetwork()
+        {
+            HttpWebRequestMessage httpRequest;
+            BuildingRequestEventArgs requestEventArgs = null;
+
+            // test hook for injecting a network request to use instead of the default
+            if (InjectMetadataHttpNetworkRequest != null)
+            {
+                httpRequest = InjectMetadataHttpNetworkRequest();
+            }
+            else
+            {
+                requestEventArgs = new BuildingRequestEventArgs(
+                    "GET",
+                    context.GetMetadataUri(),
+                    null,
+                    null,
+                    context.HttpStack);
+
+                // fire the right events if they exist to allow user to modify the request
+                if (context.HasBuildingRequestEventHandlers)
+                {
+                    requestEventArgs = context.CreateRequestArgsAndFireBuildingRequest(
+                        requestEventArgs.Method,
+                        requestEventArgs.RequestUri,
+                        requestEventArgs.HeaderCollection,
+                        requestEventArgs.ClientHttpStack,
+                        requestEventArgs.Descriptor);
+                }
+
+                DataServiceClientRequestMessageArgs args = new DataServiceClientRequestMessageArgs(
+                    requestEventArgs.Method,
+                    requestEventArgs.RequestUri,
+                    context.UseDefaultCredentials,
+                    context.UsePostTunneling,
+                    requestEventArgs.Headers);
+
+                httpRequest = new HttpWebRequestMessage(args);
+            }
+
+            Descriptor descriptor = requestEventArgs != null ? requestEventArgs.Descriptor : null;
+
+            // fire the right events if they exist
+            if (context.HasSendingRequest2EventHandlers)
+            {
+                SendingRequest2EventArgs eventArgs = new SendingRequest2EventArgs(
+                    httpRequest,
+                    descriptor,
+                    false);
+
+                context.FireSendingRequest2(eventArgs);
+            }
+
+            Task<IODataResponseMessage> asyncResponse =
+                Task<IODataResponseMessage>.Factory.FromAsync(httpRequest.BeginGetResponse, httpRequest.EndGetResponse,
+                    httpRequest);
+            IODataResponseMessage response = asyncResponse.GetAwaiter().GetResult();
+
+            ReceivingResponseEventArgs responseEvent = new ReceivingResponseEventArgs(response, descriptor);
+
+            context.FireReceivingResponseEvent(responseEvent);
+
+            using (StreamReader streamReader = new StreamReader(response.GetStream()))
+            using (XmlReader xmlReader = XmlReader.Create(streamReader))
+            {
+                return CsdlReader.Parse(xmlReader);
+            }
         }
 
         /// <summary>
@@ -273,6 +364,20 @@ namespace Microsoft.OData.Client
             }
 
             return MimeApplicationJsonODataLight;
+        }
+
+        /// <summary>
+        /// Populates the client edm model EdmStructuredSchemaElements dictionary with the schema elements in the service model
+        /// </summary>
+        private void PopulateEdmStructuredSchemaElements()
+        {
+            if (serviceModel != null && this.context.Model != null)
+            {
+                foreach (var element in serviceModel.SchemaElements.Where(el => el is IEdmStructuredType))
+                {
+                    this.context.Model.EdmStructuredSchemaElements.TryAdd(element.Name, element);
+                }
+            }
         }
     }
 }

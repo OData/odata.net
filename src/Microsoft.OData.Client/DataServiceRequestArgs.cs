@@ -7,8 +7,6 @@
 namespace Microsoft.OData.Client
 {
     using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Runtime.Serialization;
 
     /// <summary>Represents additional metadata that is included in a request message to WCF Data Services.</summary>
     public class DataServiceRequestArgs

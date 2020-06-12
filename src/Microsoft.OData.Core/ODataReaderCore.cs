@@ -13,9 +13,7 @@ namespace Microsoft.OData
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
 
@@ -390,7 +388,6 @@ namespace Microsoft.OData
             return this.InterceptException(this.ReadSynchronously);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously reads the next <see cref="ODataItem"/> from the message payload.
         /// </summary>
@@ -400,7 +397,6 @@ namespace Microsoft.OData
             this.VerifyCanRead(false);
             return this.ReadAsynchronously().FollowOnFaultWith(t => this.EnterScope(new Scope(ODataReaderState.Exception, null, null)));
         }
-#endif
 
         /// <summary>
         /// Creates a stream for reading an inline stream property.
@@ -455,7 +451,6 @@ namespace Microsoft.OData
         {
         }
 
-#if PORTABLELIB
         /// <summary>
         /// This method is called when an async stream is requested. It is a no-op.
         /// </summary>
@@ -464,7 +459,6 @@ namespace Microsoft.OData
         {
             return TaskUtils.GetTaskForSynchronousOperation(() => ((IODataStreamListener)this).StreamRequested());
         }
-#endif
 
         /// <summary>
         /// This method is called when a stream is disposed.
@@ -786,7 +780,6 @@ namespace Microsoft.OData
             return this.ReadImplementation();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously reads the next <see cref="ODataItem"/> from the message payload.
         /// </summary>
@@ -798,10 +791,9 @@ namespace Microsoft.OData
             // NOTE: once we switch to fully async reading this will have to change
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadImplementation);
         }
-#endif
 
         /// <summary>
-        /// Increments the nested resource count by one and fails if the new value exceeds the maxiumum nested resource depth limit.
+        /// Increments the nested resource count by one and fails if the new value exceeds the maxium nested resource depth limit.
         /// </summary>
         protected void IncreaseResourceDepth()
         {
@@ -978,14 +970,10 @@ namespace Microsoft.OData
             }
             else
             {
-#if PORTABLELIB
                 if (this.inputContext.Synchronous)
                 {
                     throw new ODataException(Strings.ODataReaderCore_AsyncCallOnSyncReader);
                 }
-#else
-                Debug.Assert(false, "Async calls are not allowed in this build.");
-#endif
             }
         }
 

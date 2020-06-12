@@ -20,7 +20,7 @@ namespace Microsoft.OData.Client
         /// <summary>The function provided by the user to resolve the baseUri of entity sets. can be null</summary>
         private readonly Func<string, Uri> resolveEntitySet;
 
-        /// <summary>base uri with guranteed trailing slash</summary>
+        /// <summary>base uri with guaranteed trailing slash</summary>
         private readonly Uri baseUriWithSlash;
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace Microsoft.OData.Client
         /// Creates a UriResolver from a baseUri
         /// </summary>
         /// <param name="baseUri">The baseUri to use in the UriResolver</param>
-        /// <param name="parameterName">The name of the paramter that the user passed the baseUri in from.</param>
+        /// <param name="parameterName">The name of the parameter that the user passed the baseUri in from.</param>
         /// <returns>The new UriResolver using the passed in baseUri</returns>
         internal static UriResolver CreateFromBaseUri(Uri baseUri, string parameterName)
         {
@@ -80,7 +80,7 @@ namespace Microsoft.OData.Client
         /// Creates a new BaseUriResolver with all the same values except a new BaseUri value
         /// </summary>
         /// <param name="overrideBaseUriValue">The new BaseUri value</param>
-        /// <param name="parameterName">The name of the paramter that the user passed the baseUri in from.</param>
+        /// <param name="parameterName">The name of the parameter that the user passed the baseUri in from.</param>
         /// <returns>A new BaseUriResolver with the BaseUri property set to the new value.</returns>
         internal UriResolver CloneWithOverrideValue(Uri overrideBaseUriValue, string parameterName)
         {
@@ -99,7 +99,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>base uri with no trailing slash</summary>
-        /// <param name="entitySetName">the name of the entitSet whose Uri will be retrieved.</param>
+        /// <param name="entitySetName">the name of the entitySet whose Uri will be retrieved.</param>
         /// <returns>the baseUri ended with a slash for the entitySetName passed in.</returns>
         internal Uri GetEntitySetUri(string entitySetName)
         {
@@ -132,7 +132,7 @@ namespace Microsoft.OData.Client
         /// If necessary will create an absolute uri by combining the BaseUri and requestUri
         /// </summary>
         /// <param name="requestUri">The uri specified by the user</param>
-        /// <returns>An absolute Uri based on the requestUri and if nessesary the BaseUri</returns>
+        /// <returns>An absolute Uri based on the requestUri and if necessary the BaseUri</returns>
         internal Uri GetOrCreateAbsoluteUri(Uri requestUri)
         {
             Util.CheckArgumentNull(requestUri, "requestUri");
@@ -149,7 +149,7 @@ namespace Microsoft.OData.Client
         /// usable by the system.
         /// </summary>
         /// <param name="baseUri">The user provided baseUri value.</param>
-        /// <param name="parameterName">The name of the paramter that the user passed the baseUri in from.</param>
+        /// <param name="parameterName">The name of the parameter that the user passed the baseUri in from.</param>
         private static void ConvertToAbsoluteAndValidateBaseUri(ref Uri baseUri, string parameterName)
         {
             baseUri = ConvertToAbsoluteUri(baseUri);

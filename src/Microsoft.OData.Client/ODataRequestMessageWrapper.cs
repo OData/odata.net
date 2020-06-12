@@ -112,14 +112,22 @@ namespace Microsoft.OData.Client
         /// <param name="requestMessageArgs">RequestMessageArgs for the request.</param>
         /// <param name="requestInfo">RequestInfo instance.</param>
         /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
+        /// <param name="isRelativeUri">If the request is using a relative uri.</param>
         /// <returns>an instance of ODataRequestMessageWrapper.</returns>
         internal static ODataRequestMessageWrapper CreateBatchPartRequestMessage(
             ODataBatchWriter batchWriter,
             BuildingRequestEventArgs requestMessageArgs,
             RequestInfo requestInfo,
-            string contentId)
+            string contentId,
+            bool isRelativeUri)
         {
-            IODataRequestMessage requestMessage = batchWriter.CreateOperationRequestMessage(requestMessageArgs.Method, requestMessageArgs.RequestUri, contentId);
+            IODataRequestMessage requestMessage;
+
+            requestMessage = batchWriter.CreateOperationRequestMessage(
+                requestMessageArgs.Method,
+                requestMessageArgs.RequestUri,
+                contentId,
+                isRelativeUri ? BatchPayloadUriOption.RelativeUri : BatchPayloadUriOption.AbsoluteUri);
 
             foreach (var h in requestMessageArgs.Headers)
             {
@@ -144,17 +152,21 @@ namespace Microsoft.OData.Client
 
             var requestMessage = requestInfo.CreateRequestMessage(requestMessageArgs);
 
-            if (null != requestInfo.Credentials)
+            if (requestInfo.Credentials != null)
             {
                 requestMessage.Credentials = requestInfo.Credentials;
             }
 
-#if !PORTABLELIB // Timeout not available
-            if (0 != requestInfo.Timeout)
+            if (requestInfo.Timeout != 0)
             {
                 requestMessage.Timeout = requestInfo.Timeout;
+               
             }
-#endif
+
+            if (requestInfo.ReadWriteTimeout != 0)
+            {
+                requestMessage.ReadWriteTimeout = requestInfo.ReadWriteTimeout;
+            }
 
             return new TopLevelRequestMessageWrapper(requestMessage, requestInfo, requestMessageArgs.Descriptor);
         }
@@ -294,9 +306,11 @@ namespace Microsoft.OData.Client
         /// <returns>A System.Net.WebResponse that contains the response from the Internet resource.</returns>
         internal IODataResponseMessage GetResponse()
         {
+           
 #if DEBUG
             this.ValidateHeaders();
 #endif
+            
             return this.requestMessage.GetResponse();
         }
 #endif
@@ -354,7 +368,7 @@ namespace Microsoft.OData.Client
             // Once the actions have descriptors, we can enable this assert.
             // Debug.Assert(
             //    descriptor != null || this.requestMessage.Method == XmlConstants.HttpMethodGet || this.requestMessage.Url.AbsoluteUri.Contains("$batch"),
-            //    "For CUD operations, decriptor must be specified in every SendingRequest2 event except top level batch request");
+            //    "For CUD operations, descriptor must be specified in every SendingRequest2 event except top level batch request");
 #endif
 
             // Do we need to fire these events if someone has replaced the transport layer? Maybe no.
@@ -387,7 +401,7 @@ namespace Microsoft.OData.Client
             else
             {
                 // Cache the headers if there is no sending request 2 event subscribers. At the time of GetRequestStream
-                // or GetSyncronousResponse, we will validate that the headers are the same.
+                // or GetSynchronousResponse, we will validate that the headers are the same.
                 this.cachedRequestHeaders = new HeaderCollection();
                 foreach (var header in this.requestMessage.Headers)
                 {

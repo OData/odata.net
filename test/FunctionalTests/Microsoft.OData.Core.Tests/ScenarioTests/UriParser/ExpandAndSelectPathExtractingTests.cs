@@ -25,6 +25,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var baseNavigation1 = this.baseType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "Navigation1", Target = this.baseType, TargetMultiplicity = EdmMultiplicity.ZeroOrOne });
             var baseNavigation2 = this.baseType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "Navigation2", Target = this.baseType, TargetMultiplicity = EdmMultiplicity.ZeroOrOne });
 
+            var addressType = new EdmComplexType("FQ.NS", "Address");
+            addressType.AddStructuralProperty("City", EdmPrimitiveTypeKind.String);
+            addressType.AddStructuralProperty("Region", EdmPrimitiveTypeKind.String);
+            addressType.AddStructuralProperty("NearestAirports", new EdmCollectionTypeReference(new EdmCollectionType(new EdmComplexTypeReference(addressType, false))));
+            addressType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "Residents", Target = this.baseType, TargetMultiplicity = EdmMultiplicity.Many });
+
+            this.baseType.AddStructuralProperty("Address", new EdmComplexTypeReference(addressType, false));
+
             this.derivedType = new EdmEntityType("FQ.NS", "Derived", this.baseType);
             this.derivedType.AddStructuralProperty("Derived", EdmPrimitiveTypeKind.Int32);
             var derivedNavigation = this.derivedType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "DerivedNavigation", Target = this.derivedType, TargetMultiplicity = EdmMultiplicity.ZeroOrOne });
@@ -168,12 +176,107 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void SelectDuplicatePropertyThrows()
+        public void SelectDuplicatePropertySucceeds()
         {
-            const string selectClauseText = "Id,Id";
-            const string expectedSelectClauseText = "Id";
-            System.Action test = () => this.ParseAndExtract(selectClauseText: selectClauseText, expandClauseText: null, expectedSelectClauseFromOM: expectedSelectClauseText, expectedExpandClauseFromOM: null);
-            test.Throws<ODataException>("Found mutliple select terms with same select path 'Id' at one $select, please combine them together.");
+            const string selectClauseText = "Address,Address";
+            const string expectedSelectClauseText = "Address";
+            this.ParseAndExtract(selectClauseText: selectClauseText, expandClauseText: null, expectedSelectClauseFromOM: expectedSelectClauseText, expectedExpandClauseFromOM: null);
+        }
+
+        [Fact]
+        public void SelectAndExpandOnComplexIncludesBoth()
+        {
+            const string selectClauseText = "Address/City";
+            const string expandClauseText = "Address/Residents";
+            this.ParseAndExtract(selectClauseText: selectClauseText, expandClauseText: expandClauseText, expectedSelectClauseFromOM: selectClauseText, expectedExpandClauseFromOM: expandClauseText);
+        }
+
+
+        [Fact]
+        public void MultipleSelectPathsSucceed()
+        {
+            const string selectClauseText = "Address/City,Address/Region";
+            this.ParseAndExtract(selectClauseText: selectClauseText, expandClauseText: null, expectedSelectClauseFromOM: selectClauseText, expectedExpandClauseFromOM: null);
+        }
+
+        [Fact]
+        public void SelectDuplicatePropertyWithOptionsFails()
+        {
+            const string selectClauseText = "Address($select=City),Address($select=Region)";
+            System.Action test = () => this.ParseAndExtract(selectClauseText: selectClauseText, expandClauseText: null, expectedSelectClauseFromOM: null, expectedExpandClauseFromOM: null);
+            test.Throws<ODataException>("Found multiple select terms with same select path 'Address' at one $select, please combine them together.");
+        }
+
+        [Fact]
+        public void DifferentPathsToSamePropertyFails()
+        {
+            const string selectClauseText = "Address($select=NearestAirports),Address/NearestAirports";
+            System.Action test = () => this.ParseAndExtract(selectClauseText: selectClauseText, expandClauseText: null, expectedSelectClauseFromOM: null, expectedExpandClauseFromOM: null);
+            test.Throws<ODataException>("Found multiple select terms with same select path 'Address/NearestAirports' at one $select, please combine them together.");
+        }
+
+        [Fact]
+        public void DifferentPathsToSamePropertyWithOptionsFails()
+        {
+            const string selectClauseText = "Address($select=NearestAirports($top=2)),Address/NearestAirports";
+            System.Action test = () => this.ParseAndExtract(selectClauseText: selectClauseText, expandClauseText: null, expectedSelectClauseFromOM: null, expectedExpandClauseFromOM: null);
+            test.Throws<ODataException>("Found multiple select terms with same select path 'Address/NearestAirports' at one $select, please combine them together.");
+        }
+
+        [Fact]
+        public void DifferentPathsToSamePropertyWithOptionsOnBothFails()
+        {
+            const string selectClauseText = "Address($select=NearestAirports($top=2)),Address/NearestAirports($skip=2)";
+            System.Action test = () => this.ParseAndExtract(selectClauseText: selectClauseText, expandClauseText: null, expectedSelectClauseFromOM: null, expectedExpandClauseFromOM: null);
+            test.Throws<ODataException>("Found multiple select terms with same select path 'Address/NearestAirports' at one $select, please combine them together.");
+        }
+
+        [Fact]
+        public void DifferentPathsToSamePropertyWithSubselectsOnBothFails()
+        {
+            const string selectClauseText = "Address($select=NearestAirports($select=City)),Address/NearestAirports($select=Region)";
+            System.Action test = () => this.ParseAndExtract(selectClauseText: selectClauseText, expandClauseText: null, expectedSelectClauseFromOM: null, expectedExpandClauseFromOM: null);
+            test.Throws<ODataException>("Found multiple select terms with same select path 'Address/NearestAirports' at one $select, please combine them together.");
+        }
+
+        [Fact]
+        public void SelectDuplicatePropertyWithOptionsFirstFails()
+        {
+            const string selectClauseText = "Address($select=City),Address";
+            System.Action test = () => this.ParseAndExtract(selectClauseText: selectClauseText, expandClauseText: null, expectedSelectClauseFromOM: null, expectedExpandClauseFromOM: null);
+            test.Throws<ODataException>("Found multiple select terms with same select path 'Address' at one $select, please combine them together.");
+        }
+
+        [Fact]
+        public void SelectDuplicatePropertyWithOptionsLastFails()
+        {
+            const string selectClauseText = "Address,Address($select=City)";
+            System.Action test = () => this.ParseAndExtract(selectClauseText: selectClauseText, expandClauseText: null, expectedSelectClauseFromOM: null, expectedExpandClauseFromOM: null);
+            test.Throws<ODataException>("Found multiple select terms with same select path 'Address' at one $select, please combine them together.");
+        }
+
+        [Fact]
+        public void SelectDuplicatePropertyWithSubselectAndOptionsFails()
+        {
+            const string selectClauseText = "Address/NearestAirports($select=City),Address/NearestAirports($top=2)";
+            System.Action test = () => this.ParseAndExtract(selectClauseText: selectClauseText, expandClauseText: null, expectedSelectClauseFromOM: null, expectedExpandClauseFromOM: null);
+            test.Throws<ODataException>("Found multiple select terms with same select path 'Address/NearestAirports' at one $select, please combine them together.");
+        }
+
+        [Fact]
+        public void SelectDuplicatePropertyWithTopFails()
+        {
+            const string selectClauseText = "Address/NearestAirports($top=2),Address/NearestAirports";
+            System.Action test = () => this.ParseAndExtract(selectClauseText: selectClauseText, expandClauseText: null, expectedSelectClauseFromOM: null, expectedExpandClauseFromOM: null);
+            test.Throws<ODataException>("Found multiple select terms with same select path 'Address/NearestAirports' at one $select, please combine them together.");
+        }
+
+        [Fact]
+        public void DuplicateDeepSelectOptionsFails()
+        {
+            const string selectClauseText = "Address($select=NearestAirports($select=City),NearestAirports($select=Region))";
+            System.Action test = () => this.ParseAndExtract(selectClauseText: selectClauseText, expandClauseText: null, expectedSelectClauseFromOM: null, expectedExpandClauseFromOM: null);
+            test.Throws<ODataException>("Found multiple select terms with same select path 'NearestAirports' at one $select, please combine them together.");
         }
 
         [Fact]

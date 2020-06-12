@@ -9,9 +9,7 @@ namespace Microsoft.OData.JsonLight
     #region Namespaces
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Json;
@@ -78,7 +76,6 @@ namespace Microsoft.OData.JsonLight
             return this.ReadAtStartImplementationSynchronously();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Implementation of the parameter reader logic when in state 'Start'.
         /// </summary>
@@ -108,14 +105,13 @@ namespace Microsoft.OData.JsonLight
                 .FollowOnSuccessWith(t =>
                     this.ReadAtStartImplementationSynchronously());
         }
-#endif
 
         /// <summary>
         /// Implementation of the reader logic on the subsequent reads after the first parameter is read.
         /// </summary>
         /// <returns>true if more items can be read from the reader; otherwise false.</returns>
         /// <remarks>
-        /// Pre-Condition:  JsonNodeType.Property or JsonNodeType.EndObject:     assumes the last read puts the reader at the begining of the next parameter or at the end of the payload.
+        /// Pre-Condition:  JsonNodeType.Property or JsonNodeType.EndObject:     assumes the last read puts the reader at the beginning of the next parameter or at the end of the payload.
         /// Post-Condition: When the new state is Value, the reader is positioned at the closing '}' or at the name of the next parameter.
         ///                 When the new state is Resource, the reader is positioned at the starting '{' of the resource payload.
         ///                 When the new state is Resource Set or Collection, the reader is positioned at the starting '[' of the resource set or collection payload.
@@ -125,13 +121,12 @@ namespace Microsoft.OData.JsonLight
             return this.ReadNextParameterImplementationSynchronously();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Implementation of the reader logic when in state Value, Resource, Resource Set or Collection state.
         /// </summary>
         /// <returns>true if more items can be read from the reader; otherwise false.</returns>
         /// <remarks>
-        /// Pre-Condition:  JsonNodeType.Property or JsonNodeType.EndObject:     assumes the last read puts the reader at the begining of the next parameter or at the end of the payload.
+        /// Pre-Condition:  JsonNodeType.Property or JsonNodeType.EndObject:     assumes the last read puts the reader at the beginning of the next parameter or at the end of the payload.
         /// Post-Condition: When the new state is Value, the reader is positioned at the closing '}' or at the name of the next parameter.
         ///                 When the new state is Resource, the reader is positioned at the starting '{' of the resource payload.
         ///                 When the new state is Resource Set or Collection, the reader is positioned at the starting '[' of the resource set or collection payload.
@@ -140,7 +135,6 @@ namespace Microsoft.OData.JsonLight
         {
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadNextParameterImplementationSynchronously);
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedResourceType"/>.
@@ -152,7 +146,6 @@ namespace Microsoft.OData.JsonLight
             return this.CreateResourceReaderSynchronously(expectedResourceType);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Creates an <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedResourceType"/>.
         /// </summary>
@@ -162,7 +155,6 @@ namespace Microsoft.OData.JsonLight
         {
             return TaskUtils.GetTaskForSynchronousOperation<ODataReader>(() => this.CreateResourceReaderSynchronously(expectedResourceType));
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedResourceType"/>.
@@ -174,9 +166,8 @@ namespace Microsoft.OData.JsonLight
             return this.CreateResourceSetReaderSynchronously(expectedResourceType);
         }
 
-#if PORTABLELIB
         /// <summary>
-        /// Cretes an <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedResourceType"/>.
+        /// Creates an <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedResourceType"/>.
         /// </summary>
         /// <param name="expectedResourceType">Expected resource set element type to read.</param>
         /// <returns>An <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedResourceType"/>.</returns>
@@ -184,7 +175,6 @@ namespace Microsoft.OData.JsonLight
         {
             return TaskUtils.GetTaskForSynchronousOperation<ODataReader>(() => this.CreateResourceSetReaderSynchronously(expectedResourceType));
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataCollectionReader"/> to read the collection with type <paramref name="expectedItemTypeReference"/>.
@@ -201,7 +191,6 @@ namespace Microsoft.OData.JsonLight
             return this.CreateCollectionReaderSynchronously(expectedItemTypeReference);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Creates an <see cref="ODataCollectionReader"/> to read the collection with type <paramref name="expectedItemTypeReference"/>.
         /// </summary>
@@ -216,7 +205,6 @@ namespace Microsoft.OData.JsonLight
         {
             return TaskUtils.GetTaskForSynchronousOperation<ODataCollectionReader>(() => this.CreateCollectionReaderSynchronously(expectedItemTypeReference));
         }
-#endif
 
         /// <summary>
         /// Implementation of the reader logic when in state 'Start'.
@@ -245,7 +233,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <returns>true if more items can be read from the reader; otherwise false.</returns>
         /// <remarks>
-        /// Pre-Condition:  JsonNodeType.Property or JsonNodeType.EndObject:     assumes the last read puts the reader at the begining of the next parameter or at the end of the payload.
+        /// Pre-Condition:  JsonNodeType.Property or JsonNodeType.EndObject:     assumes the last read puts the reader at the beginning of the next parameter or at the end of the payload.
         /// Post-Condition: When the new state is Value, the reader is positioned at the closing '}' or at the name of the next parameter.
         ///                 When the new state is Resource, the reader is positioned at the starting '{' of the resource payload.
         ///                 When the new state is Resource Set or Collection, the reader is positioned at the starting '[' of the resource set or collection payload.

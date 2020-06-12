@@ -80,7 +80,7 @@ namespace Microsoft.OData.Client
         /// <param name="context">Wrapping context instance.</param>
         /// <param name="keys">The dictionary containing key pairs.</param>
         /// <returns>The string of keys.</returns>
-        public static string GetKeyString(DataServiceContext context, Dictionary<string, object> keys)
+        public static string GetKeyString(DataServiceContext context, IDictionary<string, object> keys)
         {
             var requestInfo = new RequestInfo(context);
             var serializer = new Serializer(requestInfo);
@@ -134,7 +134,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Seriliaze the parameter value to string.
+        /// Serialize the parameter value to string.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="parameter">The parameter.</param>
@@ -349,7 +349,7 @@ namespace Microsoft.OData.Client
         internal void WriteNestedResourceInfo(EntityDescriptor entityDescriptor, IEnumerable<LinkDescriptor> relatedLinks, ODataWriterWrapper odataWriter)
         {
             // TODO: create instance of odatawriter.
-            // TODO: send clientType once, so that we dont need entity descriptor
+            // TODO: send clientType once, so that we don't need entity descriptor
             Debug.Assert(EntityStates.Added == entityDescriptor.State, "entity not added state");
 
             Dictionary<string, List<LinkDescriptor>> groupRelatedLinks = new Dictionary<string, List<LinkDescriptor>>(EqualityComparer<string>.Default);
@@ -368,7 +368,7 @@ namespace Microsoft.OData.Client
             ClientTypeAnnotation clientType = null;
             foreach (var grlinks in groupRelatedLinks)
             {
-                if (null == clientType)
+                if (clientType == null)
                 {
                     ClientEdmModel model = this.requestInfo.Model;
                     clientType = model.GetClientTypeAnnotation(model.GetOrCreateEdmType(entityDescriptor.Entity.GetType()));
@@ -381,7 +381,7 @@ namespace Microsoft.OData.Client
                 {
                     Debug.Assert(!end.ContentGeneratedForSave, "already saved link");
                     end.ContentGeneratedForSave = true;
-                    Debug.Assert(null != end.Target, "null is DELETE");
+                    Debug.Assert(end.Target != null, "null is DELETE");
 
                     ODataNestedResourceInfo navigationLink = new ODataNestedResourceInfo();
                     navigationLink.Url = this.requestInfo.EntityTracker.GetEntityDescriptor(end.Target).GetLatestEditLink();
@@ -588,7 +588,7 @@ namespace Microsoft.OData.Client
                         }
                         else
                         {
-                            throw new NotSupportedException(Strings.Serializer_NullCollectionParamterItemValue(operationParameter.Name));
+                            throw new NotSupportedException(Strings.Serializer_NullCollectionParameterItemValue(operationParameter.Name));
                         }
                     }
 
@@ -597,7 +597,7 @@ namespace Microsoft.OData.Client
 
                     if (edmItemType.TypeKind != EdmTypeKind.Entity && edmItemType.TypeKind != EdmTypeKind.Complex)
                     {
-                        throw new NotSupportedException(Strings.Serializer_InvalidCollectionParamterItemType(operationParameter.Name, edmItemType.TypeKind));
+                        throw new NotSupportedException(Strings.Serializer_InvalidCollectionParameterItemType(operationParameter.Name, edmItemType.TypeKind));
                     }
 
                     Debug.Assert(model.GetClientTypeAnnotation(edmItemType).ElementType != null, "edmItemType.GetClientTypeAnnotation().ElementType != null");
@@ -649,7 +649,7 @@ namespace Microsoft.OData.Client
                             // EdmTypeKind.Entity
                             // EdmTypeKind.Row
                             // EdmTypeKind.EntityReference
-                            throw new NotSupportedException(Strings.Serializer_InvalidCollectionParamterItemType(operationParameter.Name, edmItemType.TypeKind));
+                            throw new NotSupportedException(Strings.Serializer_InvalidCollectionParameterItemType(operationParameter.Name, edmItemType.TypeKind));
                     }
                 }
 
@@ -749,8 +749,9 @@ namespace Microsoft.OData.Client
             // When calling Execute() to invoke an Action, the client doesn't support parsing the target url
             // to determine which IEdmOperationImport to pass to the ODL writer. So the ODL writer is
             // serializing the parameter payload without metadata. Setting the model to null so ODL doesn't
-            // do unecessary validations when writing without metadata.
-            string literal = ODataUriUtils.ConvertToUriLiteral(valueInODataFormat, CommonUtil.ConvertToODataVersion(this.requestInfo.MaxProtocolVersionAsVersion), null /* edmModel */);
+            // do unnecessary validations when writing without metadata.
+            bool isIeee754Compatible = this.requestInfo.IsIeee754Compatible;
+            string literal = ODataUriUtils.ConvertToUriLiteral(valueInODataFormat, CommonUtil.ConvertToODataVersion(this.requestInfo.MaxProtocolVersionAsVersion), null /* edmModel */, isIeee754Compatible);
 
             // The value from ConvertToUriValue will not be escaped, but will already contain literal delimiters like single quotes, so we
             // need to use our own escape method that will preserve those characters instead of directly calling Uri.EscapeDataString that may escape them.
@@ -895,7 +896,7 @@ namespace Microsoft.OData.Client
                     break;
 
                 default:
-                    throw new NotSupportedException(Strings.Serializer_InvalidCollectionParamterItemType(paramName, itemTypeAnnotation.EdmType.TypeKind));
+                    throw new NotSupportedException(Strings.Serializer_InvalidCollectionParameterItemType(paramName, itemTypeAnnotation.EdmType.TypeKind));
             }
 
             return valueInODataFormat;

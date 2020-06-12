@@ -1,4 +1,10 @@
-﻿using System.Collections.Generic;
+﻿//---------------------------------------------------------------------
+// <copyright file="ODataMetadataSelector.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using System.Collections.Generic;
 using Microsoft.OData.Edm;
 
 namespace Microsoft.OData.Evaluation
@@ -14,7 +20,7 @@ namespace Microsoft.OData.Evaluation
         /// </summary>
         /// <param name="type">Edm type of the resource on which the navigation property exists.</param>
         /// <param name="navigationProperties">Enumerable of selected navigation properties.</param>
-        /// <returns></returns>
+        /// <returns>The list of navigation properties to be written.</returns>
         public virtual IEnumerable<IEdmNavigationProperty> SelectNavigationProperties(IEdmStructuredType type, IEnumerable<IEdmNavigationProperty> navigationProperties)
         {
             return navigationProperties;
@@ -25,7 +31,7 @@ namespace Microsoft.OData.Evaluation
         /// </summary>
         /// <param name="type">Edm type of the resource on which the navigation property exists.</param>
         /// <param name="bindableOperations">Enumerable of the operations whose metadata gets written out by convention.</param>
-        /// <returns></returns>
+        /// <returns>The list of bound operations to be written.</returns>
         public virtual IEnumerable<IEdmOperation> SelectBindableOperations(IEdmStructuredType type, IEnumerable<IEdmOperation> bindableOperations)
         {
             return bindableOperations;
@@ -36,7 +42,7 @@ namespace Microsoft.OData.Evaluation
         /// </summary>
         /// <param name="type">Edm type of the resource on which the navigation property exists.</param>
         /// <param name="selectedStreamProperties">enumerable of the selected stream properties.</param>
-        /// <returns></returns>
+        /// <returns>The list of stream properties to be written.</returns>
         public virtual IEnumerable<IEdmStructuralProperty> SelectStreamProperties(IEdmStructuredType type, IEnumerable<IEdmStructuralProperty> selectedStreamProperties)
         {
             return selectedStreamProperties;

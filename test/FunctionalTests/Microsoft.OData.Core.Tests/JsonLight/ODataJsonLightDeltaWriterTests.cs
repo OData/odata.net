@@ -253,7 +253,7 @@ namespace Microsoft.OData.Tests.JsonLight
             writer.WriteEnd();
             writer.Flush();
 
-            Assert.Equal(this.TestPayload(), "{\"@odata.context\":\"http://host/service/$metadata#Products/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Products(1)/Details/$entity\",\"Id\":1,\"Detail\":\"made in china\"},{\"@odata.context\":\"http://host/service/$metadata#Products(1)/Details/1/Items/$entity\",\"ItemId\":1,\"Description\":\"made by HCC\"}]}");
+            Assert.Equal("{\"@odata.context\":\"http://host/service/$metadata#Products/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Products(1)/Details/$entity\",\"Id\":1,\"Detail\":\"made in china\"},{\"@odata.context\":\"http://host/service/$metadata#Products(1)/Details/1/Items/$entity\",\"ItemId\":1,\"Description\":\"made by HCC\"}]}", this.TestPayload());
         }
 
         [InlineData(/*isResponse*/true)]
@@ -309,7 +309,7 @@ namespace Microsoft.OData.Tests.JsonLight
             writer.WriteEnd();
             writer.Flush();
 
-            Assert.Equal(this.TestPayload(), "{\"@odata.context\":\"http://host/service/$metadata#Products/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Products/1/Details/$entity\",\"Id\":1,\"Detail\":\"made in china\"},{\"@odata.context\":\"http://host/service/$metadata#Products/1/Details/1/Items/$entity\",\"ItemId\":1,\"Description\":\"made by HCC\"}]}");
+            Assert.Equal("{\"@odata.context\":\"http://host/service/$metadata#Products/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Products/1/Details/$entity\",\"Id\":1,\"Detail\":\"made in china\"},{\"@odata.context\":\"http://host/service/$metadata#Products/1/Details/1/Items/$entity\",\"ItemId\":1,\"Description\":\"made by HCC\"}]}", this.TestPayload());
         }
 
         [InlineData(/*isResponse*/true)]
@@ -357,7 +357,7 @@ namespace Microsoft.OData.Tests.JsonLight
             writer.WriteEnd();
             writer.Flush();
 
-            Assert.Equal(this.TestPayload(), "{\"@odata.context\":\"http://host/service/$metadata#Products(Name,Details(Detail))/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Products(1)/Details/$entity\",\"Id\":1,\"Detail\":\"made in china\"},{\"Id\":1,\"Name\":\"Car\"}]}");
+            Assert.Equal("{\"@odata.context\":\"http://host/service/$metadata#Products(Name,Details(Detail))/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Products(1)/Details/$entity\",\"Id\":1,\"Detail\":\"made in china\"},{\"Id\":1,\"Name\":\"Car\"}]}", this.TestPayload());
         }
 
         [InlineData(/*isResponse*/true)]
@@ -413,7 +413,7 @@ namespace Microsoft.OData.Tests.JsonLight
             writer.WriteEnd();
             writer.Flush();
 
-            Assert.Equal(this.TestPayload(), "{\"@odata.context\":\"http://host/service/$metadata#Products(ContactName,Orders(ShippingAddress))/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Orders/$entity\",\"ShippingAddress\":{\"City\":\"Shanghai\"}}]}");
+            Assert.Equal("{\"@odata.context\":\"http://host/service/$metadata#Products(ContactName,Orders(ShippingAddress))/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Orders/$entity\",\"ShippingAddress\":{\"City\":\"Shanghai\"}}]}", this.TestPayload());
         }
 
         [InlineData(/*isResponse*/true)]
@@ -442,7 +442,7 @@ namespace Microsoft.OData.Tests.JsonLight
             writer.WriteEnd();
             writer.Flush();
 
-            Assert.Equal(this.TestPayload(), "{\"@odata.context\":\"http://host/service/$metadata#Products/$delta\",\"value\":[{\"@odata.type\":\"#MyNS.PhysicalProduct\",\"Id\":1,\"Name\":\"car\",\"Material\":\"gold\"}]}");
+            Assert.Equal("{\"@odata.context\":\"http://host/service/$metadata#Products/$delta\",\"value\":[{\"@odata.type\":\"#MyNS.PhysicalProduct\",\"Id\":1,\"Name\":\"car\",\"Material\":\"gold\"}]}", this.TestPayload());
         }
 
         [InlineData(/*isResponse*/true)]
@@ -472,7 +472,7 @@ namespace Microsoft.OData.Tests.JsonLight
             writer.WriteEnd();
             writer.Flush();
 
-            Assert.Equal(this.TestPayload(), "{\"@context\":\"http://host/service/$metadata#Products/$delta\",\"value\":[{\"@removed\":{\"reason\":\"changed\"},\"@type\":\"#MyNS.PhysicalProduct\",\"Id\":1,\"Name\":\"car\",\"Material\":\"gold\"}]}");
+            Assert.Equal("{\"@context\":\"http://host/service/$metadata#Products/$delta\",\"value\":[{\"@removed\":{\"reason\":\"changed\"},\"@type\":\"#MyNS.PhysicalProduct\",\"Id\":1,\"Name\":\"car\",\"Material\":\"gold\"}]}", this.TestPayload());
         }
 
         [InlineData(/*isResponse*/true)]
@@ -564,7 +564,7 @@ namespace Microsoft.OData.Tests.JsonLight
             writer.WriteEnd();
             writer.Flush();
 
-            Assert.Equal(this.TestPayload(), "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Products/$entity\",\"@odata.type\":\"#MyNS.PhysicalProduct\",\"Id\":1,\"Name\":\"car\",\"Material\":\"gold\"}]}");
+            Assert.Equal("{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Products/$entity\",\"@odata.type\":\"#MyNS.PhysicalProduct\",\"Id\":1,\"Name\":\"car\",\"Material\":\"gold\"}]}", this.TestPayload());
         }
 
         #region Expanded Feeds
@@ -1830,7 +1830,7 @@ namespace Microsoft.OData.Tests.JsonLight
             writer.WriteEnd();
             writer.Flush();
 
-            Assert.Equal(this.TestPayload(), "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@context\":\"http://host/service/$metadata#Orders/$deletedEntity\",\"@removed\":{\"reason\":\"changed\"},\"@id\":\"orders/1\",\"ShippingAddress\":{\"City\":\"Shanghai\"}}]}");
+            Assert.Equal("{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@context\":\"http://host/service/$metadata#Orders/$deletedEntity\",\"@removed\":{\"reason\":\"changed\"},\"@id\":\"orders/1\",\"ShippingAddress\":{\"City\":\"Shanghai\"}}]}", this.TestPayload());
         }
 
         [InlineData(/*isResponse*/true)]
@@ -1885,7 +1885,7 @@ namespace Microsoft.OData.Tests.JsonLight
             writer.WriteEnd();
             writer.Flush();
 
-            Assert.Equal(this.TestPayload(), "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@context\":\"http://host/service/$metadata#Orders/$deletedEntity\",\"@removed\":{\"reason\":\"changed\"},\"@id\":\"orders/1\",\"ShippingAddress\":{\"City\":\"Shanghai\"}}]}");
+            Assert.Equal("{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@context\":\"http://host/service/$metadata#Orders/$deletedEntity\",\"@removed\":{\"reason\":\"changed\"},\"@id\":\"orders/1\",\"ShippingAddress\":{\"City\":\"Shanghai\"}}]}", this.TestPayload());
         }
 
         [InlineData(/*isResponse*/true)]
@@ -2144,10 +2144,82 @@ namespace Microsoft.OData.Tests.JsonLight
             writer.WriteEnd(); // delta resource set
             writer.Flush();
 
-            Assert.Equal(this.TestPayload(), isResponse ?
+            Assert.Equal(isResponse ?
                 "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"@count\":5,\"@deltaLink\":\"Customers?$expand=Orders&$deltatoken=8015\",\"value\":[{\"@id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\",\"Orders@delta\":[{\"@id\":\"Orders(10643)\"},{\"@removed\":{\"reason\":\"deleted\"},\"@id\":\"Orders(10643)\"}]}]}" :
-                "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\",\"Orders@delta\":[{\"@id\":\"Orders(10643)\"},{\"@removed\":{\"reason\":\"deleted\"},\"@id\":\"Orders(10643)\"}]}]}" 
-                );
+                "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\",\"Orders@delta\":[{\"@id\":\"Orders(10643)\"},{\"@removed\":{\"reason\":\"deleted\"},\"@id\":\"Orders(10643)\"}]}]}",
+                this.TestPayload());
+        }
+
+        [Fact]
+        public void WriteResourceWithNestedDeltaRequestIn41()
+        {
+            this.TestInit(this.GetModel());
+
+            ODataJsonLightWriter writer = new ODataJsonLightWriter(GetV401OutputContext(false), this.GetCustomers(), this.GetCustomerType(), false);
+            writer.WriteStart(new ODataResource
+            {
+                Properties = new ODataProperty[]
+                {
+                    new ODataProperty{ Name = "Id", Value = 1}
+                }
+            });
+            writer.WriteStart(new ODataNestedResourceInfo
+            {
+                Name = "FavouriteProducts",
+                IsCollection = true,
+            });
+            writer.WriteStart(new ODataDeltaResourceSet());
+            writer.WriteStart(new ODataResource
+            {
+                Properties = new ODataProperty[]
+                {
+                    new ODataProperty{ Name = "Id", Value = 1},
+                    new ODataProperty{ Name = "Name", Value = "Car"}
+                }
+            });
+            writer.WriteEnd(); // resource
+            writer.WriteStart(new ODataDeletedResource
+            {
+                Reason = DeltaDeletedEntryReason.Deleted,
+                Properties = new ODataProperty[]
+                {
+                    new ODataProperty{ Name = "Id", Value = 10}
+                }
+            });
+            writer.WriteEnd(); // deleted resource
+            writer.WriteEnd(); // delta resourceSet
+            writer.WriteEnd(); // nestedInfo
+            writer.WriteEnd(); // customer
+            writer.Flush();
+
+            Assert.Equal("{\"@context\":\"http://host/service/$metadata#Customers/$entity\",\"Id\":1,\"FavouriteProducts@delta\":[{\"Id\":1,\"Name\":\"Car\"},{\"@removed\":{\"reason\":\"deleted\"},\"Id\":10}]}",
+                this.TestPayload());
+        }
+
+        [Fact]
+        public void WriteResourceWithNestedDeltaResponseShouldFail()
+        {
+            this.TestInit(this.GetModel());
+
+            Action writeAction = () =>
+            {
+                ODataJsonLightWriter writer = new ODataJsonLightWriter(GetV401OutputContext(true), this.GetCustomers(), this.GetCustomerType(), false);
+                writer.WriteStart(new ODataResource
+                {
+                    Properties = new ODataProperty[]
+                    {
+                        new ODataProperty{ Name = "Id", Value = 1}
+                    }
+                });
+                writer.WriteStart(new ODataNestedResourceInfo
+                {
+                    Name = "FavouriteProducts",
+                    IsCollection = true,
+                });
+                writer.WriteStart(new ODataDeltaResourceSet());
+            };
+
+            writeAction.Throws<ODataException>(Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
         }
 
         [InlineData(/*isResponse*/true)]

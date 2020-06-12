@@ -71,48 +71,5 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                 .NextToken.ShouldBeNonSystemToken("6");
             Assert.Equal("4/5/6", tokens[1].ToPathString());
         }
-
-        [Fact]
-        public void NormalizeSelectTreeThrowsForMultipleTermsWithSameSelectPath()
-        {
-            // Arrange: $select=1($count=true), 1($count=false)
-            List<SelectTermToken> selectTerms = new List<SelectTermToken>();
-            selectTerms.Add(new SelectTermToken(new NonSystemToken("1", /*namedValues*/null, /*nextToken*/null),
-                null, null, null, null, true, null, null, null));
-
-            selectTerms.Add(new SelectTermToken(new NonSystemToken("1", /*namedValues*/null, /*nextToken*/null),
-                null, null, null, null, false, null, null, null));
-
-            SelectToken select = new SelectToken(selectTerms);
-
-            // Act
-            Action test = () => SelectTreeNormalizer.NormalizeSelectTree(select);
-
-            // Assert
-            ODataException exception = Assert.Throws<ODataException>(test);
-            Assert.Equal("Found mutliple select terms with same select path '1' at one $select, please combine them together.", exception.Message);
-        }
-
-        [Fact]
-        public void NormalizeSelectTreeThrowsForMultipleSelectTermsInDeepLevel()
-        {
-            // Arrange: $select=1($select=2($top=5),2($count=true))
-            List<SelectTermToken> selectTerms = new List<SelectTermToken>();
-            selectTerms.Add(new SelectTermToken(new NonSystemToken("1", /*namedValues*/null, /*nextToken*/null),
-                new SelectToken(new List<SelectTermToken>()
-                {
-                    new SelectTermToken(new NonSystemToken("2", null, null), null, null, 5, null, null, null, null, null),
-                    new SelectTermToken(new NonSystemToken("2", null, null), null, null, null, null, true, null, null, null)
-                })));
-
-            SelectToken select = new SelectToken(selectTerms);
-
-            // Act
-            Action test = () => SelectTreeNormalizer.NormalizeSelectTree(select);
-
-            // Assert
-            ODataException exception = Assert.Throws<ODataException>(test);
-            Assert.Equal("Found mutliple select terms with same select path '2' at one $select, please combine them together.", exception.Message);
-        }
     }
 }

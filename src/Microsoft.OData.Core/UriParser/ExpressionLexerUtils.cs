@@ -4,6 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Diagnostics;
+
 #if ODATA_CORE
 namespace Microsoft.OData.UriParser
 #else
@@ -11,8 +14,7 @@ namespace Microsoft.OData.Service.Parsing
 #endif
 {
     #region Namespaces
-    using System;
-    using System.Diagnostics;
+    
 
     #endregion Namespaces
 

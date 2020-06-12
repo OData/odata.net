@@ -9,6 +9,7 @@ namespace Microsoft.Test.OData.Tests.Client
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Microsoft.OData;
     using Microsoft.OData.Client;
     using Microsoft.Test.OData.Framework;
     using Microsoft.Test.OData.Framework.Client;
@@ -29,6 +30,7 @@ namespace Microsoft.Test.OData.Tests.Client
         }
 
         [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void NavigationPropertyOnEntityWithMultipleKeys()
         {
             this.RunOnAtomAndJsonFormats(
@@ -175,11 +177,17 @@ namespace Microsoft.Test.OData.Tests.Client
                     Assert.IsTrue(testCase.Value);
                     Assert.AreEqual(400, ex.Response.StatusCode);
                     StringResourceUtil.VerifyDataServicesString(ClientExceptionUtil.ExtractServerErrorMessage(ex), "BadRequest_KeyCountMismatch", "Microsoft.Test.OData.Services.AstoriaDefaultService.Message");
+                    //InnerException for DataServiceClientException must be set with the exception response from the server.
+                    ODataErrorException oDataErrorException = ex.InnerException.InnerException as ODataErrorException;
+                    Assert.IsTrue(oDataErrorException != null, "InnerException for DataServiceClientException has not been set.");
+                    Assert.AreEqual("An error was read from the payload. See the 'Error' property for more details.", oDataErrorException.Message);
+                    
                 }
             }
         }
 
         [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void MergeProjectionAndQueryOptionTest()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, MergeProjectionAndQueryOptionTest);
@@ -198,6 +206,7 @@ namespace Microsoft.Test.OData.Tests.Client
         }
 
         [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void DataServiceCollectionSubQueryTrackingItems()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, DataServiceCollectionSubQueryTrackingItems);
@@ -238,6 +247,7 @@ namespace Microsoft.Test.OData.Tests.Client
         }
 
         [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void DataServiceCollectionTrackingItems()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, DataServiceCollectionTrackingItems);

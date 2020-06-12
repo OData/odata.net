@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+
 #pragma warning disable 436
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("AstoriaUnitTests" + AssemblyRef.TestPublicKey)]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("AstoriaUnitTests.TDDUnitTests" + AssemblyRef.TestPublicKey)]

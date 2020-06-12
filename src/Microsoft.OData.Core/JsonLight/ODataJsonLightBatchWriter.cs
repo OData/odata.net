@@ -13,10 +13,7 @@ namespace Microsoft.OData.JsonLight
     using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
-
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Json;
     #endregion Namespaces
 
@@ -163,7 +160,6 @@ namespace Microsoft.OData.JsonLight
             this.SetState(BatchWriterState.OperationStreamRequested);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// This method is called to notify that the content stream for a batch operation has been requested.
         /// </summary>
@@ -181,7 +177,6 @@ namespace Microsoft.OData.JsonLight
             return this.JsonLightOutputContext.FlushBuffersAsync()
                 .FollowOnSuccessWith(task => this.SetState(BatchWriterState.OperationStreamRequested));
         }
-#endif
 
         /// <summary>
         /// This method is called to notify that the content stream of a batch operation has been disposed.
@@ -194,7 +189,7 @@ namespace Microsoft.OData.JsonLight
             this.CurrentOperationRequestMessage = null;
             this.CurrentOperationResponseMessage = null;
 
-            EnsurePreceedingMessageIsClosed();
+            this.EnsurePrecedingMessageIsClosed();
         }
 
         /// <summary>
@@ -224,7 +219,6 @@ namespace Microsoft.OData.JsonLight
             this.JsonLightOutputContext.Flush();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Flush the output.
         /// </summary>
@@ -233,7 +227,6 @@ namespace Microsoft.OData.JsonLight
         {
             return this.JsonLightOutputContext.FlushAsync();
         }
-#endif
 
         /// <summary>
         /// Starts a new batch - implementation of the actual functionality.
@@ -380,8 +373,7 @@ namespace Microsoft.OData.JsonLight
             this.jsonWriter.WriteName(PropertyMethod);
             this.jsonWriter.WriteValue(method);
 
-            this.jsonWriter.WriteName(PropertyUrl);
-            this.jsonWriter.WriteValue(UriUtils.UriToString(uri));
+            this.WriteRequestUri(uri, payloadUriOption);
 
             return this.CurrentOperationRequestMessage;
         }
@@ -555,7 +547,7 @@ namespace Microsoft.OData.JsonLight
                     this.CurrentOperationRequestMessage = null;
                     this.CurrentOperationResponseMessage = null;
 
-                    EnsurePreceedingMessageIsClosed();
+                    this.EnsurePrecedingMessageIsClosed();
                 }
             }
         }
@@ -563,7 +555,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Closes preceding message Json object if any.
         /// </summary>
-        private void EnsurePreceedingMessageIsClosed()
+        private void EnsurePrecedingMessageIsClosed()
         {
             // There shouldn't be any pending message object.
             Debug.Assert(this.CurrentOperationMessage == null, "this.CurrentOperationMessage == null");
@@ -572,7 +564,7 @@ namespace Microsoft.OData.JsonLight
 
         /// <summary>
         /// Writes the json format batch envelope.
-        /// Always sets the isBatchEvelopeWritten flag to true before return.
+        /// Always sets the isBatchEnvelopeWritten flag to true before return.
         /// </summary>
         private void WriteBatchEnvelope()
         {
@@ -646,6 +638,42 @@ namespace Microsoft.OData.JsonLight
             }
 
             this.jsonWriter.EndObjectScope();
+        }
+
+        private void WriteRequestUri(Uri uri, BatchPayloadUriOption payloadUriOption)
+        {
+            this.jsonWriter.WriteName(PropertyUrl);
+
+            if (uri.IsAbsoluteUri)
+            {
+                Uri baseUri = this.OutputContext.MessageWriterSettings.BaseUri;
+                string absoluteUriString = uri.AbsoluteUri;
+
+                switch (payloadUriOption)
+                {
+                    case BatchPayloadUriOption.AbsoluteUri:
+                        this.jsonWriter.WriteValue(UriUtils.UriToString(uri));
+                        break;
+
+                    case BatchPayloadUriOption.AbsoluteUriUsingHostHeader:
+                        string absoluteResourcePath = absoluteUriString.Substring(absoluteUriString.IndexOf('/', absoluteUriString.IndexOf("//", StringComparison.Ordinal) + 2));
+                        this.jsonWriter.WriteValue(absoluteResourcePath);
+                        this.CurrentOperationRequestMessage.SetHeader("host", string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}:{1}", uri.Host, uri.Port));
+                        break;
+
+                    case BatchPayloadUriOption.RelativeUri:
+                        Debug.Assert(baseUri != null, "baseUri != null");
+                        string baseUriString = UriUtils.UriToString(baseUri);
+                        Debug.Assert(uri.AbsoluteUri.StartsWith(baseUriString, StringComparison.Ordinal), "absoluteUriString.StartsWith(baseUriString)");
+                        string relativeResourcePath = uri.AbsoluteUri.Substring(baseUriString.Length);
+                        this.jsonWriter.WriteValue(relativeResourcePath);
+                        break;
+                }
+            }
+            else
+            {
+                this.jsonWriter.WriteValue(UriUtils.UriToString(uri));
+            }
         }
     }
 }

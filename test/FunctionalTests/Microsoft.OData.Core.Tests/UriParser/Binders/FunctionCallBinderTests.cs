@@ -275,7 +275,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                     new ConstantNode(new DateTimeOffset(2012, 11, 19, 1, 1, 1, 1, new TimeSpan(0, 1, 1, 0)))
                 };
             var result = FunctionCallBinder.ValidateArgumentsAreSingleValue("year", argumentNodes);
-            Assert.Equal(1, result.Length);
+            Assert.Single(result);
             Assert.Equal("Edm.DateTimeOffset", result[0].TypeReference.Definition.FullTypeName());
         }
 
@@ -296,7 +296,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void EnsureArgumentsAreSingleValueNoArguments()
         {
             var result = FunctionCallBinder.ValidateArgumentsAreSingleValue("year", new List<QueryNode>());
-            Assert.Equal(0, result.Length);
+            Assert.Empty(result);
         }
 
         //MatchArgumentsToSignature tests
@@ -1345,7 +1345,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
                 // Assert
                 Assert.NotNull(resultUriFunctionSignatures);
-                Assert.Equal(1, resultUriFunctionSignatures.Length);
+                Assert.Single(resultUriFunctionSignatures);
                 Assert.True(resultUriFunctionSignatures.All(x => x == customFunctionSignature));
             }
             finally

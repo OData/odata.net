@@ -7,6 +7,8 @@
 //// Uncomment the following line to trace projection building activity.
 ////#define TRACE_CLIENT_PROJECTIONS
 
+using System.Globalization;
+
 namespace Microsoft.OData.Client
 {
     #region Namespaces
@@ -377,7 +379,7 @@ namespace Microsoft.OData.Client
                 Debug.Assert(nex != null, "nex != null");
 
                 // Special case DataServiceCollection creation so context instance
-                // and paging (continuations) propperly flow through
+                // and paging (continuations) properly flow through
                 if (ResourceBinder.PatternRules.MatchNewDataServiceCollectionOfT(nex))
                 {
                     return this.RebindNewExpressionForDataServiceCollectionOfT(nex);
@@ -401,8 +403,8 @@ namespace Microsoft.OData.Client
             {
                 this.topLevelProjectionFound = true;
 
-                ParameterExpression expectedTypeParameter = Expression.Parameter(typeof(Type), "type" + this.identifierId);
-                ParameterExpression entryParameter = Expression.Parameter(typeof(object), "entry" + this.identifierId);
+                ParameterExpression expectedTypeParameter = Expression.Parameter(typeof(Type), "type" + this.identifierId.ToString(CultureInfo.InvariantCulture));
+                ParameterExpression entryParameter = Expression.Parameter(typeof(object), "entry" + this.identifierId.ToString(CultureInfo.InvariantCulture));
                 this.identifierId++;
 
                 this.pathBuilder.EnterLambdaScope(lambda, entryParameter, expectedTypeParameter);
@@ -628,7 +630,7 @@ namespace Microsoft.OData.Client
             {
                 entryToInitValue = this.GetDeepestEntry(expressions);
                 expectedParamValue = projectedTypeExpression;
-                entryParameterForMembers = Expression.Parameter(typeof(object), "subentry" + this.identifierId++);
+                entryParameterForMembers = Expression.Parameter(typeof(object), "subentry" + (this.identifierId++).ToString(CultureInfo.InvariantCulture));
                 expectedParameterForMembers = (ParameterExpression)this.pathBuilder.ExpectedParamTypeInScope;
 
                 // Annotate the entry expression with 'how we get to it' information.
@@ -668,7 +670,7 @@ namespace Microsoft.OData.Client
                         Expression.Constant(assignment.Member.Name, typeof(string)));
                     ParameterExpression nestedEntryParameter = Expression.Parameter(
                         typeof(object),
-                        "subentry" + this.identifierId++);
+                        "subentry" + (this.identifierId++).ToString(CultureInfo.InvariantCulture));
 
                     // Register the rewrite from the top to the entry if necessary.
                     ProjectionPath entryPath;

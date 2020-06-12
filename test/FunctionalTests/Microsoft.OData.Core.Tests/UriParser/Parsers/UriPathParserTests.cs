@@ -31,7 +31,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "One/Two/Three/Four/Five/Six/Seven/Eight/Nine/Ten/Eleven"), this.baseUri);
             string[] expectedListOrder = new[] { "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven" };
 
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             Assert.True(list.SequenceEqual(expectedListOrder));
 #else
             list.ContainExactly(expectedListOrder);
@@ -44,7 +44,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "One/Two(1)/Three"), this.baseUri);
             string[] expectedListOrder = new[] { "One", "Two(1)", "Three" };
 
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             Assert.True(list.SequenceEqual(expectedListOrder));
 #else
             list.ContainExactly(expectedListOrder);
@@ -58,7 +58,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "One////Three"), this.baseUri);
             string[] expectedListOrder = new[] { "One", "Three" };
 
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             Assert.True(list.SequenceEqual(expectedListOrder));
 #else
             list.ContainExactly(expectedListOrder);
@@ -71,7 +71,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "EntitySet('stringkey')"), this.baseUri);
             string[] expectedListOrder = new[] { "EntitySet('stringkey')" };
 
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             Assert.True(list.SequenceEqual(expectedListOrder));
 #else
             list.ContainExactly(expectedListOrder);
@@ -84,7 +84,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "EntitySet('string/key')"), this.baseUri);
             string[] expectedListOrder = new[] { "EntitySet('string", "key')" };
 
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             Assert.True(list.SequenceEqual(expectedListOrder));
 #else
             list.ContainExactly(expectedListOrder);
@@ -97,7 +97,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "S p a c e"), this.baseUri);
             string[] expectedListOrder = new[] { "S p a c e" };
 
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             Assert.True(list.SequenceEqual(expectedListOrder));
 #else
             list.ContainExactly(expectedListOrder);
@@ -113,7 +113,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "Newline\n"), this.baseUri);
             string[] expectedListOrder = new[] { "Newline" };
 
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             Assert.True(list.SequenceEqual(expectedListOrder));
 #else
             list.ContainExactly(expectedListOrder);
@@ -126,7 +126,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + Uri.EscapeDataString("Space ")), this.baseUri);
             string[] expectedListOrder = new[] { "Space " };
 
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             Assert.True(list.SequenceEqual(expectedListOrder));
 #else
             list.ContainExactly(expectedListOrder);
@@ -139,7 +139,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + Uri.EscapeDataString("Tab\t")), this.baseUri);
             string[] expectedListOrder = new[] { "Tab\t" };
 
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             Assert.True(list.SequenceEqual(expectedListOrder));
 #else
             list.ContainExactly(expectedListOrder);
@@ -152,7 +152,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + Uri.EscapeDataString("Newline\n")), this.baseUri);
             string[] expectedListOrder = new[] { "Newline\n" };
 
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             Assert.True(list.SequenceEqual(expectedListOrder));
 #else
             list.ContainExactly(expectedListOrder);
@@ -165,7 +165,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + Uri.EscapeDataString("CarriageReturn\r")), this.baseUri);
             string[] expectedListOrder = new[] { "CarriageReturn\r" };
 
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             Assert.True(list.SequenceEqual(expectedListOrder));
 #else
             list.ContainExactly(expectedListOrder);
@@ -178,7 +178,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "One/Two?query=value"), this.baseUri);
             string[] expectedListOrder = new[] { "One", "Two" };
 
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             Assert.True(list.SequenceEqual(expectedListOrder));
 #else
             list.ContainExactly(expectedListOrder);
@@ -191,7 +191,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "One/Two?query=value/with/slashes"), this.baseUri);
             string[] expectedListOrder = new[] { "One", "Two" };
 
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             Assert.True(list.SequenceEqual(expectedListOrder));
 #else
             list.ContainExactly(expectedListOrder);
@@ -200,38 +200,40 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
         [Theory]
         [InlineData("root", new[] { "root" })]
-        [InlineData("root:/", new[] { "root", ":" })]
-        [InlineData("root:/:", new[] { "root", "::" })]
-        [InlineData("root:/abc", new[] { "root", ":abc" })]
-        [InlineData("root:/abc:", new[] { "root", ":abc:" })]
-        [InlineData("root:/::/", new[] { "root", "::", ":" })]
-        [InlineData("root:/:/:/", new[] { "root", "::", ":" })]
-        [InlineData("root:/:///////////:/", new[] { "root", "::", ":" })]
-        [InlineData("root:/::/:", new[] { "root", "::", "::" })]
-        [InlineData("root:/abc:/property", new[] { "root", ":abc:", "property" })]
-        [InlineData("root:/abc:/property:/", new[] { "root", ":abc:", "property", ":" })]
-        [InlineData("root:/abc:/property:/:", new[] { "root", ":abc:", "property", "::" })]
-        [InlineData("root:/abc:/property:/::/", new[] { "root", ":abc:", "property", "::", ":" })]
-        [InlineData("root:/:/property", new[] { "root", "::", "property" })]
-        [InlineData("root:/photos/2018/February", new[] { "root", ":photos/2018/February" } )]
-        [InlineData("root:/photos%2f2018%2fFebruary", new[] { "root", ":photos%2f2018%2fFebruary" } )]
-        [InlineData("root:/photos%2f2018%2fFebruary/Others", new[] { "root", ":photos%2f2018%2fFebruary/Others" } )]
-        [InlineData("root:/photos%2f2018%2f/////February/Others", new[] { "root", ":photos%2f2018%2f/////February/Others" } )]
-        [InlineData("root:/photos/2018%2fFebruary:/permissions", new[] { "root", ":photos/2018%2fFebruary:", "permissions" } )]
-        [InlineData("root:/photos:2018:/permissions:/abc", new[] { "root", ":photos:2018:", "permissions", ":abc" } )]
-        [InlineData("root:/photos::::::2018:/permissions:/abc", new[] { "root", ":photos::::::2018:", "permissions", ":abc" })]
-        [InlineData("root:/photos/::::::2018:/permissions:/abc", new[] { "root", ":photos/::::::2018:", "permissions", ":abc" })]
-        [InlineData("EntitySet('key'):/xyz:/perm", new[] { "EntitySet('key')", ":xyz:", "perm" } )]
-        [InlineData("EntitySet('key'):/xyz::/perm", new[] { "EntitySet('key')", ":xyz:", ":perm" } )]
-        [InlineData("EntitySet('key'):/xyz/abc:", new[] { "EntitySet('key')", ":xyz/abc:" } )]
-        [InlineData("EntitySet('key%2fvalue'):/xyz", new[] { "EntitySet('key%2fvalue')", ":xyz" })]
-        [InlineData("EntitySet/key%2fvalue:/xyz", new[] { "EntitySet", "key%2fvalue", ":xyz" })]
-        [InlineData("EntitySet/key:%2fvalue:/xyz", new[] { "EntitySet", "key:%2fvalue", ":xyz" })]
-        [InlineData("EntitySet('key'):/xyz::/perm", new[] { "EntitySet('key')", ":xyz:", ":perm" })]
-        [InlineData("EntitySet('key'):/xyz:/:/perm", new[] { "EntitySet('key')", ":xyz:", ":perm" })]
-        [InlineData(":/xyz::/perm", new[] { ":xyz:", ":perm" })]
-        [InlineData(":/xyz:/:/perm", new[] { ":xyz:", ":perm" })]
-        [InlineData(":/xyz://///:/perm", new[] { ":xyz:", ":perm" })]
+        [InlineData("root:/", new[] { "root:"})]
+        [InlineData("root:/:", new[] { "root:", ":" })]
+        [InlineData("root:/abc", new[] { "root:", "abc" })]
+        [InlineData("root:/abc:", new[] { "root:", "abc:" })]
+        [InlineData("root:/::/", new[] { "root:", "::"})]
+        [InlineData("root:/:/:/", new[] { "root:", ":", ":" })]
+        [InlineData("root:/:///////////:/", new[] { "root:", ":", ":" })]
+        [InlineData("root:/::/:", new[] { "root:", "::", ":" })]
+        [InlineData("root:/abc:/property", new[] { "root:", "abc:", "property" })]
+        [InlineData("root:/abc:/property:/", new[] { "root:", "abc:", "property:"})]
+        [InlineData("root:/abc:/property:/:", new[] { "root:", "abc:", "property:", ":" })]
+        [InlineData("root:/abc:/property:/::/", new[] { "root:", "abc:", "property:", "::" })]
+        [InlineData("root:/:/property", new[] { "root:", ":", "property" })]
+        [InlineData("root:/photos/2018/February", new[] { "root:", "photos", "2018", "February" })]
+        [InlineData("root:/photos%2f2018%2fFebruary", new[] { "root:", "photos/2018/February" })]
+        [InlineData("root:/photos%2f2018%2fFebruary/Others", new[] { "root:", "photos/2018/February", "Others" })]
+        [InlineData("root:/photos%2f2018%2f/////February/Others", new[] { "root:", "photos/2018/", "February", "Others" })]
+        [InlineData("root:/photos/2018%2fFebruary:/permissions", new[] { "root:", "photos", "2018/February:", "permissions" })]
+        [InlineData("root:/photos:2018:/permissions:/abc", new[] { "root:", "photos:2018:", "permissions:", "abc" })]
+        [InlineData("root:/photos::::::2018:/permissions:/abc", new[] { "root:", "photos::::::2018:", "permissions:", "abc" })]
+        [InlineData("root:/photos/::::::2018:/permissions:/abc", new[] { "root:", "photos","::::::2018:", "permissions:", "abc" })]
+        [InlineData("EntitySet('key'):/xyz:/perm", new[] { "EntitySet('key'):", "xyz:", "perm" })]
+        [InlineData("EntitySet('key'):/xyz::/perm", new[] { "EntitySet('key'):", "xyz::", "perm" })]
+        [InlineData("EntitySet('key'):/xyz/abc:", new[] { "EntitySet('key'):", "xyz", "abc:" })]
+        [InlineData("EntitySet('key%2fvalue'):/xyz", new[] { "EntitySet('key/value'):", "xyz" })]
+        [InlineData("EntitySet/key%2fvalue:/xyz", new[] { "EntitySet", "key/value:", "xyz" })]
+        [InlineData("EntitySet/key:%2fvalue:/xyz", new[] { "EntitySet", "key:/value:", "xyz" })]
+        [InlineData("EntitySet('key'):/xyz:/:/perm", new[] { "EntitySet('key'):", "xyz:", ":", "perm" })]
+        [InlineData(":/xyz::/perm", new[] { ":", "xyz::", "perm" })]
+        [InlineData(":/xyz:/:/perm", new[] { ":", "xyz:", ":", "perm" })]
+        [InlineData(":/xyz://///:/perm", new[] { ":", "xyz:", ":", "perm" })]
+        [InlineData("root::/abc", new[] { "root::", "abc" })]
+        [InlineData("EntitySet('key')::/abc", new[] { "EntitySet('key')::", "abc" })]
+        [InlineData("EntitySet/key:/abc", new[] { "EntitySet","key:", "abc" })]
         public void ParsePathShouldAllowEscapeFunctionPattern(string pattern, string[] expected)
         {
             // Arrange
@@ -242,22 +244,6 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // Assert
             Assert.Equal(expected, actual);
-        }
-
-        [Theory]
-        [InlineData("root::/abc", "root::")]
-        [InlineData("EntitySet('key')::/abc", "EntitySet('key')::")]
-        public void ParseInvalidEscapeUriPathShouldThrow(string pattern, string segment)
-        {
-            // Arrange
-            var fullUrl = new Uri(this.baseUri.AbsoluteUri + pattern);
-
-            // Act
-            Action test = () => this.pathParser.ParsePathIntoSegments(fullUrl, this.baseUri);
-
-            // Assert
-            var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.UriQueryPathParser_InvalidEscapeUri(segment), exception.Message);
         }
 
         [Fact]
@@ -284,9 +270,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             VerifyPath(lastToken, new Action<string>[]
             {
-                s => Assert.Equal(s, "one"),
-                s => Assert.Equal(s, "two"),
-                s => Assert.Equal(s, "three")
+                s => Assert.Equal("one", s),
+                s => Assert.Equal("two", s),
+                s => Assert.Equal("three", s)
             });
         }
 
@@ -297,7 +283,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             VerifyPath(lastToken, new Action<string>[]
             {
-                s => Assert.Equal(s, "EntitySet('KeyValue')"),
+                s => Assert.Equal("EntitySet('KeyValue')", s),
             });
         }
 
@@ -308,7 +294,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             VerifyPath(lastToken, new Action<string>[]
             {
-                s => Assert.Equal(s, "EntitySet(first=1,second=2)"),
+                s => Assert.Equal("EntitySet(first=1,second=2)", s),
             });
         }
 
@@ -319,7 +305,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             VerifyPath(lastToken, new Action<string>[]
             {
-                s => Assert.Equal(s, "one"),
+                s => Assert.Equal("one", s),
             });
         }
 
@@ -346,15 +332,15 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string test = "' '";
             Assert.True(UriParserHelper.TryRemoveQuotes(ref test));
-            Assert.Equal(test, " ");
+            Assert.Equal(" ", test);
 
             test = "invalid";
             Assert.False(UriParserHelper.TryRemoveQuotes(ref test));
-            Assert.Equal(test, "invalid");
+            Assert.Equal("invalid", test);
 
             test = "'invalid";
             Assert.False(UriParserHelper.TryRemoveQuotes(ref test));
-            Assert.Equal(test, "'invalid");
+            Assert.Equal("'invalid", test);
         }
 
         /// <summary>

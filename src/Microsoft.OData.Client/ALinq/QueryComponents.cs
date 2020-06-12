@@ -60,7 +60,7 @@ namespace Microsoft.OData.Client
         /// <summary> Select query option as it appears as the beginning of an embedded expand. </summary>
         private const string SelectQueryOptionWithLeftParen = "(" + SelectQueryOption;
 
-        /// <summary> Select query option as it appers as in the middle of an embedded expand. </summary>
+        /// <summary> Select query option as it appears as in the middle of an embedded expand. </summary>
         private const string SelectQueryOptionWithSemi = ";" + SelectQueryOption;
 
         /// <summary> Version for query </summary>

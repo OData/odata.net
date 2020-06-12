@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="EntryValueMaterializationPolicy.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -11,10 +11,13 @@ namespace Microsoft.OData.Client.Materialization
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using System.Reflection;
     using Microsoft.OData;
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Metadata;
+    using Microsoft.OData.Edm;
     using DSClient = Microsoft.OData.Client;
+
 
     /// <summary>
     /// Used to materialize entities from an <see cref="ODataResource"/> to an object.
@@ -201,7 +204,7 @@ namespace Microsoft.OData.Client.Materialization
                 this.ResolveByCreatingWithType(entry, actualType.ElementType);
             }
 
-            Debug.Assert(entry.ResolvedObject != null, "entry.ResolvedObject != null -- otherwise ResolveOrCreateInstnace didn't do its job");
+            Debug.Assert(entry.ResolvedObject != null, "entry.ResolvedObject != null -- otherwise ResolveOrCreateInstance didn't do its job");
 
             this.MaterializeResolvedEntry(entry, includeLinks);
         }
@@ -428,7 +431,7 @@ namespace Microsoft.OData.Client.Materialization
             }
             else
             {
-                Debug.Assert(!entry.ForLoadProperty, "LoadProperty should always have ShouldUpateForPayload set to true.");
+                Debug.Assert(!entry.ForLoadProperty, "LoadProperty should always have ShouldUpdateForPayload set to true.");
 
                 foreach (object item in items)
                 {
@@ -466,7 +469,7 @@ namespace Microsoft.OData.Client.Materialization
             {
                 Type collectionType = property.PropertyType;
 
-                // For backward compatiblity we need to have different strategy of collection creation b/w
+                // For backward compatibility we need to have different strategy of collection creation b/w
                 // LoadProperty scenario versus regular collection creation scenario.
                 if (forLoadProperty)
                 {
@@ -575,7 +578,7 @@ namespace Microsoft.OData.Client.Materialization
             // entries. This keeps this code compatible with V1 behavior.
             this.MaterializeDataValues(actualType, entry.Properties, this.MaterializerContext.UndeclaredPropertyBehavior);
 
-            if (entry.NestedResourceInfos != null)
+            if (entry.NestedResourceInfos?.Any() == true)
             {
                 foreach (ODataNestedResourceInfo link in entry.NestedResourceInfos)
                 {
@@ -599,6 +602,10 @@ namespace Microsoft.OData.Client.Materialization
 
                     if (prop == null)
                     {
+                        if (entry.ShouldUpdateFromPayload)
+                        {
+                            this.MaterializeDynamicProperty(entry, link);
+                        }
                         continue;
                     }
 
@@ -651,6 +658,10 @@ namespace Microsoft.OData.Client.Materialization
                 var prop = actualType.GetProperty(e.Name, this.MaterializerContext.UndeclaredPropertyBehavior);
                 if (prop == null)
                 {
+                    if (entry.ShouldUpdateFromPayload)
+                    {
+                        this.MaterializeDynamicProperty(e, entry.ResolvedObject);
+                    }
                     continue;
                 }
 
@@ -671,9 +682,97 @@ namespace Microsoft.OData.Client.Materialization
             if (entity != null)
             {
                 entity.Context = this.EntityTrackingAdapter.Context;
+
+                if (!entry.IsTracking)
+                {
+                    int? streamDescriptorsCount = entry.EntityDescriptor.StreamDescriptors?.Count;
+                    IEdmEntityType entityType =
+                        this.EntityTrackingAdapter.Model.FindDeclaredType(entry.Entry.TypeName) as IEdmEntityType;
+
+                    if (streamDescriptorsCount > 0 || entityType?.HasStream == true)
+                    {
+                        entity.EntityDescriptor = entry.EntityDescriptor;
+                    }
+                }
             }
 
             this.MaterializerContext.ResponsePipeline.FireEndEntryEvents(entry);
+        }
+
+        /// <summary>Materializes the specified <paramref name="entry"/> as dynamic property.</summary>
+        /// <param name="entry">Entry with object to materialize.</param>
+        /// <param name="link">Nested resource link as parsed.</param>
+        private void MaterializeDynamicProperty(MaterializerEntry entry, ODataNestedResourceInfo link)
+        {
+            Debug.Assert(entry != null, "entry != null");
+            Debug.Assert(entry.ResolvedObject != null, "entry.ResolvedObject != null -- otherwise not resolved/created!");
+            Debug.Assert(link != null, "link != null");
+
+            ClientEdmModel model = this.MaterializerContext.Model;
+
+            IDictionary<string, object> containerProperty;
+            // Stop if owning type is not an open type
+            // Or container property is not found
+            // Or key with matching name already exists in the dictionary
+            if (!ClientTypeUtil.IsInstanceOfOpenType(entry.ResolvedObject, model)
+                || !ClientTypeUtil.TryGetContainerProperty(entry.ResolvedObject, out containerProperty)
+                || containerProperty.ContainsKey(link.Name))
+            {
+                return;
+            }
+
+            MaterializerNavigationLink linkState = MaterializerNavigationLink.GetLink(link);
+            if (linkState == null || (linkState.Entry == null && linkState.Feed == null))
+            {
+                return;
+            }
+
+            // NOTE: ODL (and OData WebApi) support navigational property on complex types
+            // That support has not yet been implemented in OData client
+
+            // An entity or entity collection as a dynamic property currently doesn't work as expected 
+            // due to the absence of a navigational property definition in the metadata 
+            // to express the relationship between that entity and the parent entity - unless they're the same type!
+            // Only materialize a nested resource if its a complex or complex collection
+
+            if (linkState.Feed != null)
+            {
+                string collectionTypeName = linkState.Feed.TypeName; // TypeName represents a collection e.g. Collection(NS.Type)
+                string collectionItemTypeName = CommonUtil.GetCollectionItemTypeName(collectionTypeName, false);
+                // Highly unlikely, but the method return null if the typeName argument does not meet certain expectations
+                if (collectionItemTypeName == null)
+                {
+                    return;
+                }
+
+                Type collectionItemType = ResolveClientTypeForDynamicProperty(collectionItemTypeName, entry.ResolvedObject);
+
+                if (collectionItemType != null && ClientTypeUtil.TypeIsComplex(collectionItemType, model))
+                {
+                    Type collectionType = typeof(System.Collections.ObjectModel.Collection<>).MakeGenericType(new Type[] { collectionItemType });
+                    IList collection = (IList)Util.ActivatorCreateInstance(collectionType);
+
+                    IEnumerable<ODataResource> feedEntries = MaterializerFeed.GetFeed(linkState.Feed).Entries;
+                    foreach (ODataResource feedEntry in feedEntries)
+                    {
+                        MaterializerEntry linkEntry = MaterializerEntry.GetEntry(feedEntry);
+                        this.Materialize(linkEntry, collectionItemType, false /*includeLinks*/);
+                        collection.Add(linkEntry.ResolvedObject);
+                    }
+                    containerProperty.Add(link.Name, collection);
+                }
+            }
+            else 
+            {
+                MaterializerEntry linkEntry = linkState.Entry;
+                Type itemType = ResolveClientTypeForDynamicProperty(linkEntry.Entry.TypeName, entry.ResolvedObject);
+
+                if (itemType != null && ClientTypeUtil.TypeIsComplex(itemType, model))
+                {
+                    this.Materialize(linkEntry, itemType, false /*includeLinks*/);
+                    containerProperty.Add(link.Name, linkEntry.ResolvedObject);
+                }
+            }
         }
     }
 }

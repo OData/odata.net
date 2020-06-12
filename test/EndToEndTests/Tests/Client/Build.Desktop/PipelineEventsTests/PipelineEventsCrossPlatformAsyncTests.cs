@@ -34,6 +34,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// This test covers modifying property values and modifying entry id/links/actions.
         /// </summary>
         [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void QueryEntitySetLinqAsync()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, QueryEntitySetLinqAsync);
@@ -70,6 +71,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         }
 
         [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void QueryEntitySetExecuteAsync()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, QueryEntitySetExecuteAsync);
@@ -106,6 +108,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// This test covers adding/removing property values and modifying primitive/complex/collection property values.
         /// </summary>
         [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void QueryEntityInstanceExecuteAsync()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, QueryEntityInstanceExecuteAsync);
@@ -137,6 +140,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         }
 
         [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void QueryEntityInstanceBatchAsync()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, QueryEntityInstanceBatchAsync);
@@ -237,6 +241,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// Verify that user can modify primitive/complex/collection property values in writing pipeline delegates.
         /// </summary>
         [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void AddObjectTestAsync()
         {
             this.Invoke(
@@ -299,6 +304,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// Verify that user can modify primitive/complex/collection property values in writing pipeline delegates.
         /// </summary>
         [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void UpdateObjectTestAsync()
         {
             this.Invoke(
@@ -374,6 +380,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         /// Verify that user can modify entity property and association link through pipeline delegates in AddObject+SetLink scenario.
         /// </summary>
         [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void AddObjectSetLinkTestAsync()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, AddObjectSetLinkTestAsync);
@@ -450,6 +457,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         }
 
         [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void CancelRequestTest()
         {
             this.RunOnAtomAndJsonFormats(CreateContext, CancelRequestTest);

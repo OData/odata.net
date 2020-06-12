@@ -1,19 +1,17 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AssemblyName>Microsoft.Test.Taupo</AssemblyName>
-    <DefineConstants>TAUPO_CORE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <OutputType>Library</OutputType>
-    <ProjectGuid>{34010F3A-20CC-479C-83CF-EC99B1C90CD1}</ProjectGuid>
+    <DefineConstants>TAUPO_CORE</DefineConstants>    
     <DocumentationFile>obj\Microsoft.Test.Taupo.xml</DocumentationFile>
-    <PublishMetaAssemblyToSDK>false</PublishMetaAssemblyToSDK>
-    <RootNamespace>Microsoft.Test.Taupo</RootNamespace>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <WarningLevel>4</WarningLevel>
-    <NoWarn>1591</NoWarn>
+    <PublishMetaAssemblyToSDK>false</PublishMetaAssemblyToSDK> 
     <EnableStyleCop>true</EnableStyleCop>
     <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworks>net45</TargetFrameworks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>    
   </PropertyGroup>
   <Import Project="..\Build.props" />
   <ItemGroup>
@@ -28,10 +26,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\External\TestShell\InputSpaceModeling\Microsoft.SqlServer.TestShell.InputSpaceModeling.csproj">
-      <Project>{EDC237AA-6875-4034-BA39-7F2A83533BFC}</Project>
-      <Name>Microsoft.SqlServer.TestShell.InputSpaceModeling</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\..\External\TestShell\InputSpaceModeling\Microsoft.SqlServer.TestShell.InputSpaceModeling.csproj" />  
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\PlatformHelper.cs">
@@ -715,13 +710,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\Contracts.WebServices.CompilerService.DotNet\" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!---->
 </Project>

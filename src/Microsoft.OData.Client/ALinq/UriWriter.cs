@@ -275,9 +275,9 @@ namespace Microsoft.OData.Client
             else if (rse.MemberExpression != null)
             {
                 // this is a resource set expression
-                // we should be at the very begining of
+                // we should be at the very beginning of
                 // the URI
-                Debug.Assert(this.uriBuilder.Length == 0, "The builder is not empty while we are adding a resourset");
+                Debug.Assert(this.uriBuilder.Length == 0, "The builder is not empty while we are adding a resourceset");
                 string entitySetName = (String)((ConstantExpression)rse.MemberExpression).Value;
                 this.uriBuilder.Append(this.context.BaseUriResolver.GetEntitySetUri(entitySetName));
             }
@@ -314,10 +314,12 @@ namespace Microsoft.OData.Client
             return rse;
         }
 
+
         /// <summary>
         /// Visit Function Invocation
         /// </summary>
         /// <param name="rse">Resource Expression with function invocation</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:Specify IFormatProvider", Justification = "<Pending>")]
         internal void VisitOperationInvocation(QueryableResourceExpression rse)
         {
             if (!this.uriBuilder.ToString().EndsWith(UriHelper.FORWARDSLASH.ToString(), StringComparison.Ordinal))
@@ -354,7 +356,7 @@ namespace Microsoft.OData.Client
                         int count = 1;
                         while (this.alias.ContainsKey(aliasName))
                         {
-                            aliasName = UriHelper.ATSIGN + param.Key + count;
+                            aliasName = UriHelper.ATSIGN + param.Key + count.ToString(CultureInfo.InvariantCulture);
                             count++;
                         }
 
@@ -408,7 +410,7 @@ namespace Microsoft.OData.Client
                                 this.VisitQueryOptionExpression((FilterQueryOptionExpression)e);
                                 break;
                             default:
-                                Debug.Assert(false, "Unexpected expression type " + (int)et);
+                                Debug.Assert(false, "Unexpected expression type " + ((int)et).ToString(CultureInfo.InvariantCulture));
                                 break;
                         }
                     }
@@ -424,9 +426,14 @@ namespace Microsoft.OData.Client
                     this.VisitProjectionPaths(re.Projection.Paths);
                 }
 
-                if (re.CountOption == CountOption.CountQuery)
+                if (re.CountOption == CountOption.CountQueryTrue)
                 {
-                    this.VisitCountQueryOptions();
+                    this.VisitCountQueryOptions(true);
+                }
+
+                if (re.CountOption == CountOption.CountQueryFalse)
+                {
+                    this.VisitCountQueryOptions(false);
                 }
 
                 if (re.CustomQueryOptions.Count > 0)
@@ -546,9 +553,17 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// VisitCountQueryOptions visit method.
         /// </summary>
-        internal void VisitCountQueryOptions()
+        /// <param name = "countQueryOption" > Count query option, either true or false</param>
+        internal void VisitCountQueryOptions(bool countQueryOption)
         {
-            this.AddAsCachedQueryOption(UriHelper.DOLLARSIGN + UriHelper.OPTIONCOUNT, UriHelper.COUNTTRUE);
+            if (countQueryOption)
+            {
+                this.AddAsCachedQueryOption(UriHelper.DOLLARSIGN + UriHelper.OPTIONCOUNT, UriHelper.COUNTTRUE);
+            }
+            else
+            {
+                this.AddAsCachedQueryOption(UriHelper.DOLLARSIGN + UriHelper.OPTIONCOUNT, UriHelper.COUNTFALSE);
+            }
         }
 
         /// <summary>

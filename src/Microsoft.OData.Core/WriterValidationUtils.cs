@@ -477,7 +477,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Validates the input <see cref="IEdmStructuredType"/> meets the derived type constaints on the odata item.
+        /// Validates the input <see cref="IEdmStructuredType"/> meets the derived type constraints on the odata item.
         /// </summary>
         /// <param name="resourceType">The input resource type.</param>
         /// <param name="metadataType">The type from metadata.</param>

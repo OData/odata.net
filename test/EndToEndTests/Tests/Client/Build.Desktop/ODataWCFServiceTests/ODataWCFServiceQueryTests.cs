@@ -538,7 +538,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                             int depth = 0;
                             while (reader.Read())
                             {
-                                switch(reader.State)
+                                switch (reader.State)
                                 {
                                     case ODataReaderState.ResourceSetStart:
                                     case ODataReaderState.ResourceStart:
@@ -546,7 +546,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                                         depth++;
                                         break;
                                     case ODataReaderState.ResourceSetEnd:
-                                        if(depth == 1)
+                                        if (depth == 1)
                                         {
                                             feed = reader.Item as ODataResourceSet;
                                         }
@@ -554,7 +554,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                                         break;
 
                                     case ODataReaderState.ResourceEnd:
-                                        if(depth ==2)
+                                        if (depth == 2)
                                         {
                                             if (null == entry1)
                                             {

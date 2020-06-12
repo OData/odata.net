@@ -128,7 +128,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Sorts the patterns in the array from highest to lowest priorities.
         /// </summary>
-        /// <param name="pattersToSort">The source array to sort. When the method returns the items in this array instance will be rearragned.</param>
+        /// <param name="pattersToSort">The source array to sort. When the method returns the items in this array instance will be rearranged.</param>
         internal static void Sort(AnnotationFilterPattern[] pattersToSort)
         {
             Array.Sort(pattersToSort);

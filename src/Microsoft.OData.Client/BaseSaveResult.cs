@@ -66,6 +66,9 @@ namespace Microsoft.OData.Client
         /// <summary>temporary buffer when cache results from CUD op in non-batching save changes</summary>
         protected byte[] buildBatchBuffer;
 
+        /// <summary>application/json Content-Type header</summary>
+        private const string JsonContentTypeHeader = "application/json";
+
         #endregion Private Fields
 
         /// <summary>
@@ -85,7 +88,7 @@ namespace Microsoft.OData.Client
             this.Options = options;
             this.SerializerInstance = new Serializer(this.RequestInfo, options);
 
-            if (null == queries)
+            if (queries == null)
             {
                 #region changed entries
                 this.ChangedEntries = context.EntityTracker.Entities.Cast<Descriptor>()
@@ -104,7 +107,7 @@ namespace Microsoft.OData.Client
                     if (e.DescriptorKind == DescriptorKind.Link)
                     {
                         object target = ((LinkDescriptor)e).Target;
-                        if (null != target)
+                        if (target != null)
                         {
                             Descriptor f = context.EntityTracker.GetEntityDescriptor(target);
                             if (EntityStates.Unchanged == f.State)
@@ -235,21 +238,49 @@ namespace Microsoft.OData.Client
         internal static DataServiceClientException GetResponseText(Func<Stream> getResponseStream, HttpStatusCode statusCode)
         {
             string message = null;
+            HttpWebResponseMessage httpWebResponseMessage = null;
+            DataServiceClientException dataServiceClientException;
+            ODataErrorException errorException = null;
+
+            IDictionary<string, string> headers = new Dictionary<string, string>();
+
             using (Stream stream = getResponseStream())
             {
-                if ((null != stream) && stream.CanRead)
+                if ((stream != null) && stream.CanRead && stream.CanSeek)
                 {
-                    // this StreamReader can go out of scope without dispose because the underly stream is disposed of
+                    // This StreamReader can go out of scope without dispose because the underlying stream is disposed of.
                     message = new StreamReader(stream).ReadToEnd();
+                    stream.Position = 0;
                 }
+
+                if (string.IsNullOrEmpty(message))
+                {
+                    message = statusCode.ToString();
+                }
+                else if (Util.MayBeJson(message))
+                {
+                    headers.Add(ODataConstants.ContentTypeHeader, JsonContentTypeHeader);
+                    httpWebResponseMessage = new HttpWebResponseMessage(headers, (int)statusCode, getResponseStream);
+                    ODataMessageReader messageReader = new ODataMessageReader(httpWebResponseMessage);
+
+                    // If the error message response does not conform to the OData specifications
+                    // then pass the response back as a string without deserializing.
+                    // This is to take care of those clients whose response did not conform to OData spec
+                    // before this was implemented.
+                    try
+                    {
+                        errorException = new ODataErrorException(messageReader.ReadError());
+                    }
+                    catch (ODataException)
+                    {
+                        return new DataServiceClientException(message, (int)statusCode);
+                    }            
+                }
+
+                dataServiceClientException = new DataServiceClientException(message, errorException, (int)statusCode);
             }
 
-            if (string.IsNullOrEmpty(message))
-            {
-                message = statusCode.ToString();
-            }
-
-            return new DataServiceClientException(message, (int)statusCode);
+            return dataServiceClientException;
         }
 
         /// <summary>process the batch</summary>
@@ -272,8 +303,8 @@ namespace Microsoft.OData.Client
         {
             if (!link.IsSourcePropertyCollection)
             {
-                Debug.Assert(EntityStates.Modified == link.State, "not Modified state");
-                if (null == link.Target)
+                Debug.Assert(link.State == EntityStates.Modified, "not Modified state");
+                if (link.Target == null)
                 {   // REMOVE/DELETE a reference
                     return XmlConstants.HttpMethodDelete;
                 }
@@ -392,8 +423,8 @@ namespace Microsoft.OData.Client
             {
                 descriptor.ContentGeneratedForSave = true;
                 LinkDescriptor link = (LinkDescriptor)descriptor;
-                if ((EntityStates.Added == link.State) ||
-                    ((EntityStates.Modified == link.State) && (null != link.Target)))
+                if ((link.State == EntityStates.Added) ||
+                    ((link.State == EntityStates.Modified) && (link.Target != null)))
                 {
                     this.CreateRequestData(link, requestMessage);
                     return true;
@@ -407,7 +438,7 @@ namespace Microsoft.OData.Client
         /// <param name="pereq">the request object</param>
         protected override void HandleCompleted(PerRequest pereq)
         {
-            if (null != pereq)
+            if (pereq != null)
             {
                 this.SetCompletedSynchronously(pereq.RequestCompletedSynchronously);
 
@@ -462,9 +493,9 @@ namespace Microsoft.OData.Client
                 Stream httpResponseStream = responseMessage.GetStream();
                 pereq.ResponseStream = httpResponseStream;
 
-                if ((null != httpResponseStream) && httpResponseStream.CanRead)
+                if ((httpResponseStream != null) && httpResponseStream.CanRead)
                 {
-                    if (null == this.buildBatchBuffer)
+                    if (this.buildBatchBuffer == null)
                     {
                         this.buildBatchBuffer = new byte[8000];
                     }
@@ -572,7 +603,7 @@ namespace Microsoft.OData.Client
                             odataId = UriUtil.CreateUri(location, UriKind.Absolute);
                         }
 
-                        if (null != editLink)
+                        if (editLink != null)
                         {
                             this.RequestInfo.EntityTracker.AttachLocation(entityDescriptor.Entity, odataId, editLink);
                         }
@@ -738,7 +769,7 @@ namespace Microsoft.OData.Client
             {
                 if (end.Source == entityDescriptor.Entity)
                 {
-                    if (null != end.Target)
+                    if (end.Target != null)
                     {   // null TargetResource is equivalent to Deleted
                         EntityDescriptor target = this.RequestInfo.EntityTracker.GetEntityDescriptor(end.Target);
 
@@ -757,9 +788,9 @@ namespace Microsoft.OData.Client
                         // 2) target entity is processed before source to qualify (1) better during the second pass
                         // 3) the link target has not been saved and is in the added state
                         // 4) or the link target has been saved and was in the added state
-                        if (Util.IncludeLinkState(target.SaveResultWasProcessed) || ((0 == target.SaveResultWasProcessed) && Util.IncludeLinkState(target.State)) ||
-                            ((null != target.Identity) && (target.ChangeOrder < entityDescriptor.ChangeOrder) &&
-                             ((0 == target.SaveResultWasProcessed && EntityStates.Added == target.State) ||
+                        if (Util.IncludeLinkState(target.SaveResultWasProcessed) || ((target.SaveResultWasProcessed == 0) && Util.IncludeLinkState(target.State)) ||
+                            ((target.Identity != null) && (target.ChangeOrder < entityDescriptor.ChangeOrder) &&
+                             ((target.SaveResultWasProcessed == 0 && target.State == EntityStates.Added) ||
                               (EntityStates.Added == target.SaveResultWasProcessed))))
                         {
                             Debug.Assert(entityDescriptor.ChangeOrder < end.ChangeOrder, "saving is out of order");
@@ -785,7 +816,7 @@ namespace Microsoft.OData.Client
                 {
                     if (end.ContentGeneratedForSave)
                     {
-                        Debug.Assert(0 == end.SaveResultWasProcessed, "this link already had a result");
+                        Debug.Assert(end.SaveResultWasProcessed == 0, "this link already had a result");
                         end.SaveResultWasProcessed = end.State;
                         count++;
                     }
@@ -802,14 +833,14 @@ namespace Microsoft.OData.Client
         /// <returns>An instance of ODataRequestMessage for the link request.</returns>
         protected ODataRequestMessageWrapper CreateRequest(LinkDescriptor binding)
         {
-            Debug.Assert(null != binding, "null binding");
+            Debug.Assert(binding != null, "null binding");
             if (binding.ContentGeneratedForSave)
             {
                 return null;
             }
 
             EntityDescriptor sourceEntityDescriptor = this.RequestInfo.EntityTracker.GetEntityDescriptor(binding.Source);
-            EntityDescriptor targetEntityDescriptor = (null != binding.Target) ? this.RequestInfo.EntityTracker.GetEntityDescriptor(binding.Target) : null;
+            EntityDescriptor targetEntityDescriptor = (binding.Target != null) ? this.RequestInfo.EntityTracker.GetEntityDescriptor(binding.Target) : null;
 
             // We allow the source and target to be in Added state, i.e. without identities, for batch with single changeset.
             if (!Util.IsBatchWithSingleChangeset(this.Options))
@@ -817,7 +848,7 @@ namespace Microsoft.OData.Client
                 ValidateLinkDescriptorSourceAndTargetHaveIdentities(binding, sourceEntityDescriptor, targetEntityDescriptor);
             }
 
-            Debug.Assert(this.IsBatchRequest || null != sourceEntityDescriptor.GetLatestIdentity(), "missing sourceResource.Identity in non-batch");
+            Debug.Assert(this.IsBatchRequest || sourceEntityDescriptor.GetLatestIdentity() != null, "missing sourceResource.Identity in non-batch");
 
             Uri requestUri = null;
             LinkInfo linkInfo = null;
@@ -825,7 +856,7 @@ namespace Microsoft.OData.Client
             if (sourceEntityDescriptor.TryGetLinkInfo(binding.SourceProperty, out linkInfo)
                 && linkInfo.AssociationLink != null)
             {
-                Debug.Assert(null != sourceEntityDescriptor.GetLatestIdentity(), "Source must have an identity in order to have link info");
+                Debug.Assert(sourceEntityDescriptor.GetLatestIdentity() != null, "Source must have an identity in order to have link info");
 
                 // If there is already an Association link from the payload, use that
                 requestUri = linkInfo.AssociationLink;
@@ -833,7 +864,7 @@ namespace Microsoft.OData.Client
             else
             {
                 Uri sourceEntityUri;
-                if (null == sourceEntityDescriptor.GetLatestIdentity())
+                if (sourceEntityDescriptor.GetLatestIdentity() == null)
                 {
                     Debug.Assert(this.IsBatchRequest && Util.IsBatchWithSingleChangeset(this.Options), "Source must have an identity outside of batch with single changeset");
 
@@ -871,7 +902,7 @@ namespace Microsoft.OData.Client
 
             // if (EntityStates.Deleted || (EntityState.Modifed && null == TargetResource))
             // then the server will fail the batch section if content type exists
-            if ((EntityStates.Added == binding.State) || (EntityStates.Modified == binding.State && (null != binding.Target)))
+            if ((EntityStates.Added == binding.State) || (EntityStates.Modified == binding.State && (binding.Target != null)))
             {
                 this.RequestInfo.Format.SetRequestContentTypeForLinks(headers);
             }
@@ -886,13 +917,13 @@ namespace Microsoft.OData.Client
         /// <returns>An instance of ODataRequestMessage for the given entity.</returns>
         protected ODataRequestMessageWrapper CreateRequest(EntityDescriptor entityDescriptor)
         {
-            Debug.Assert(null != entityDescriptor, "null entityDescriptor");
+            Debug.Assert(entityDescriptor != null, "null entityDescriptor");
             Debug.Assert(entityDescriptor.State == EntityStates.Added || entityDescriptor.State == EntityStates.Deleted || entityDescriptor.State == EntityStates.Modified, "the entity must be in one of the 3 possible states");
 
             EntityStates state = entityDescriptor.State;
             Uri requestUri = entityDescriptor.GetResourceUri(this.RequestInfo.BaseUriResolver, false /*queryLink*/);
 
-            Debug.Assert(null != requestUri, "request uri is null");
+            Debug.Assert(requestUri != null, "request uri is null");
             Debug.Assert(requestUri.IsAbsoluteUri, "request uri is not absolute uri");
 
             ClientEdmModel model = this.RequestInfo.Model;
@@ -992,7 +1023,7 @@ namespace Microsoft.OData.Client
         /// <param name="linkDescriptor">headers of changeset response</param>
         private static void HandleResponsePost(LinkDescriptor linkDescriptor)
         {
-            if (!((EntityStates.Added == linkDescriptor.State) || (EntityStates.Modified == linkDescriptor.State && null != linkDescriptor.Target)))
+            if (!((linkDescriptor.State == EntityStates.Added) || (linkDescriptor.State == EntityStates.Modified && linkDescriptor.Target != null)))
             {
                 Error.ThrowBatchUnexpectedContent(InternalError.LinkNotAddedState);
             }
@@ -1011,17 +1042,17 @@ namespace Microsoft.OData.Client
             Debug.Assert(!binding.ContentGeneratedForSave, "already saved link");
 
             // In non-batch scenarios, the source should always have an identity
-            if (null == sourceResource.GetLatestIdentity())
+            if (sourceResource.GetLatestIdentity() == null)
             {
                 binding.ContentGeneratedForSave = true;
                 Debug.Assert(EntityStates.Added == sourceResource.State, "expected added state");
                 throw Error.InvalidOperation(Strings.Context_LinkResourceInsertFailure, sourceResource.SaveError);
             }
 
-            if (null != targetResource && null == targetResource.GetLatestIdentity())
+            if (targetResource != null && targetResource.GetLatestIdentity() == null)
             {
                 binding.ContentGeneratedForSave = true;
-                Debug.Assert(EntityStates.Added == targetResource.State, "expected added state");
+                Debug.Assert(targetResource.State == EntityStates.Added, "expected added state");
                 throw Error.InvalidOperation(Strings.Context_LinkResourceInsertFailure, targetResource.SaveError);
             }
         }
@@ -1078,7 +1109,7 @@ namespace Microsoft.OData.Client
         /// <returns>True if the payload was generated, otherwise false.</returns>
         private bool CreateRequestData(EntityDescriptor entityDescriptor, ODataRequestMessageWrapper requestMessage)
         {
-            Debug.Assert(null != entityDescriptor, "null entityDescriptor");
+            Debug.Assert(entityDescriptor != null, "null entityDescriptor");
             bool generateRequestPayload = false;
             switch (entityDescriptor.State)
             {
@@ -1111,7 +1142,7 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(
                 (binding.State == EntityStates.Added) ||
-                (binding.State == EntityStates.Modified && null != binding.Target),
+                (binding.State == EntityStates.Modified && binding.Target != null),
                 "This method must be called only when a binding is added or put");
 #if DEBUG
             Debug.Assert(!Util.IsBatchWithSingleChangeset(this.Options) || this.IsBatchRequest, "If this.Options.IsBatchWithSingleChangeset() is true, this.IsBatchRequest must also be true.");
@@ -1166,7 +1197,7 @@ namespace Microsoft.OData.Client
                     // For MR - entityDescriptor.State is merged, we don't need to do link folding since MR will never fold links.
                     foreach (LinkDescriptor end in this.RelatedLinks(entityDescriptor))
                     {
-                        Debug.Assert(0 != end.SaveResultWasProcessed, "link should have been saved with the entity");
+                        Debug.Assert(end.SaveResultWasProcessed != 0, "link should have been saved with the entity");
 
                         // Since we allow link folding on collection properties also, we need to check if the link
                         // was in added state also, and make sure we put that link in unchanged state.
@@ -1319,7 +1350,7 @@ namespace Microsoft.OData.Client
 #else
                 count = httpResponseStream.EndRead(asyncResult);
 #endif
-                if (0 < count)
+                if (count > 0)
                 {
                     Stream outputResponse = Util.NullCheck(this.ResponseStream, InternalError.InvalidEndReadCopy);
                     outputResponse.Write(this.buildBatchBuffer, 0, count);
@@ -1392,9 +1423,9 @@ namespace Microsoft.OData.Client
                     materializedEntity = x;
                 }
 
-                Debug.Assert(null != entityDescriptor.GetLatestIdentity(), "updated inserted should always gain an identity");
+                Debug.Assert(entityDescriptor.GetLatestIdentity() != null, "updated inserted should always gain an identity");
                 Debug.Assert(materializedEntity == entityDescriptor.Entity, "x == entityDescriptor.Entity, should have same object generated by response");
-                Debug.Assert(EntityStates.Unchanged == entityDescriptor.State, "should have moved out of insert");
+                Debug.Assert(entityDescriptor.State == EntityStates.Unchanged, "should have moved out of insert");
                 Debug.Assert(this.RequestInfo.EntityTracker.TryGetEntityDescriptor(entityDescriptor.GetLatestIdentity()) != null, "should have identity tracked");
 
                 // If there was no etag specified in the payload, then we need to set the etag from the header

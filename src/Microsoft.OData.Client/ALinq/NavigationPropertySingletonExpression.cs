@@ -38,7 +38,7 @@ namespace Microsoft.OData.Client
         /// <param name="resourceType">resource type for expression</param>
         /// <param name="expandPaths">expand paths for resource set</param>
         /// <param name="countOption">count option for the resource set</param>
-        /// <param name="customQueryOptions">custom query options for resourcse set</param>
+        /// <param name="customQueryOptions">custom query options for resource set</param>
         /// <param name="projection">projection expression</param>
         /// <param name="resourceTypeAs">target expression type for a TypeAs conversion</param>
         /// <param name="uriVersion">version of the Uri from the expand and projection paths</param>
@@ -95,7 +95,8 @@ namespace Microsoft.OData.Client
             get
             {
                 return this.ExpandPaths.Count > 0 ||
-                    this.CountOption == CountOption.CountQuery ||
+                    this.CountOption == CountOption.CountQueryTrue ||
+                    this.CountOption == CountOption.CountQueryFalse ||
                     this.CustomQueryOptions.Count > 0 ||
                     this.Projection != null;
             }
@@ -107,6 +108,25 @@ namespace Microsoft.OData.Client
         internal override bool IsOperationInvocation
         {
             get { return false; }
+        }
+
+        /// <summary>
+        /// clone the ResourceExpression
+        /// </summary>
+        /// <returns>new NavigationPropertySingletonExpression</returns>
+        internal override ResourceExpression CreateCloneResourceExpression()
+        {
+            return new NavigationPropertySingletonExpression(
+                 this.Type,
+                 this.source,
+                 this.MemberExpression,
+                 this.resourceType,
+                 this.ExpandPaths.ToList(),
+                 this.CountOption,
+                 this.CustomQueryOptions.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
+                 this.Projection,
+                 this.ResourceTypeAs,
+                 this.UriVersion);
         }
 
         /// <summary>

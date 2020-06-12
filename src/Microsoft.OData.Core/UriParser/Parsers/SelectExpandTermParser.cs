@@ -145,7 +145,7 @@ namespace Microsoft.OData.UriParser
                 }
                 else if (previousSegment != null && !isSelect)
                 {
-                    // expand option like "customer?$expand=VIPCUstomer/*" is not allowed as specification does not allowed any property before *.
+                    // expand option like "customer?$expand=VIPCustomer/*" is not allowed as specification does not allowed any property before *.
                     throw new ODataException(ODataErrorStrings.ExpressionToken_NoSegmentAllowedBeforeStarInExpand);
                 }
 

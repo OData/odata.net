@@ -37,6 +37,7 @@ namespace EdmLibTests.FunctionalTests
 
 #if !SILVERLIGHT
         [TestMethod]
+        [Ignore("VSUpgrade19 - RegTest")]
         public void InterfaceValidatorAutoCheck()
         {
             var edmLib = typeof(IEdmElement).Assembly;
@@ -915,13 +916,13 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ValidateOperationParamterValidTypeTest()
+        public void ValidateOperationParameterValidTypeTest()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.BadUnresolvedType},
             };
-            this.VerifySemanticValidation(ValidationTestModelBuilder.OperationParamterValidTypeTest(this.EdmVersion), expectedErrors);
+            this.VerifySemanticValidation(ValidationTestModelBuilder.OperationParameterValidTypeTest(this.EdmVersion), expectedErrors);
         }
 
         [TestMethod]

@@ -53,7 +53,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="expandClause">Returns the expand clause.</param>
         internal static void GetSelectExpandPaths(this SelectExpandClause selectExpandClause, ODataVersion version, out string selectClause, out string expandClause)
         {
-            Debug.Assert(selectExpandClause != null, "selectExpandCluase != null");
+            Debug.Assert(selectExpandClause != null, "selectExpandClause != null");
 
             StringBuilder selectClauseBuilder, expandClauseBuilder;
             selectExpandClause.GetSelectExpandPaths(version, out selectClauseBuilder, out expandClauseBuilder);
@@ -86,7 +86,59 @@ namespace Microsoft.OData.UriParser
         /// <returns>String list generated from selected items</returns>
         internal static List<string> GetCurrentLevelSelectList(this SelectExpandClause selectExpandClause)
         {
-            return selectExpandClause.SelectedItems.Select(GetSelectString).Where(i => i != null).ToList();
+            HashSet<string> levelSelectList = new HashSet<string>();
+            List<string> masterSelectList = new List<string>();
+
+            foreach (var selectItem in selectExpandClause.SelectedItems)
+            {
+                if (selectItem is WildcardSelectItem)
+                {
+                    levelSelectList.Add("*");
+                    continue;
+                }
+
+                NamespaceQualifiedWildcardSelectItem namespaceQualifiedWildcard = selectItem as NamespaceQualifiedWildcardSelectItem;
+                if (namespaceQualifiedWildcard != null)
+                {
+                    levelSelectList.Add(namespaceQualifiedWildcard.Namespace + ".*" );
+                    continue;
+                }
+
+                PathSelectItem pathSelectItem = selectItem as PathSelectItem;
+                if (pathSelectItem != null)
+                {
+                    IList<string> pathSelectItems = GetSelectStringFromPathSelectItem(pathSelectItem);
+
+                    for (int i = 0; i< pathSelectItems.Count; i++)
+                    {
+                        levelSelectList.Add(pathSelectItems[i]);                       
+                    }
+                }
+            }
+
+            // If a select item is a child of a complex property, and that complex property already has all properties selected,
+            // then the child is redundant and should not be included in the contextUrl. i.e.; $select=address,address/city => address
+            foreach (string item in levelSelectList)
+            {
+                if (!levelSelectList.Contains(GetPreviousSegments(item)))
+                {
+                    masterSelectList.Add(item);
+                }
+            }
+
+            return masterSelectList;
+        }
+
+        private static string GetPreviousSegments(string item)
+        {
+            int index = item.LastIndexOf('/');
+
+            if(index > 0)
+            {
+                return item.Substring(0, index);
+            }
+
+            return string.Empty;
         }
 
         /// <summary>
@@ -103,36 +155,46 @@ namespace Microsoft.OData.UriParser
             List<string> selectList = selectExpandClause.GetCurrentLevelSelectList();
             List<T> expandList = new List<T>();
 
-            foreach (ExpandedNavigationSelectItem expandSelectItem in selectExpandClause.SelectedItems.Where(I => I.GetType() == typeof(ExpandedNavigationSelectItem)))
+            foreach (SelectItem selectItem in selectExpandClause.SelectedItems)
             {
-                string currentExpandClause = String.Join("/", expandSelectItem.PathToNavigationProperty.WalkWith(PathSegmentToStringTranslator.Instance).ToArray());
-                T subResult = default(T);
-                if (expandSelectItem.SelectAndExpand.SelectedItems.Any())
+                // $expand=..../$ref
+                ExpandedNavigationSelectItem expandSelectItem = selectItem as ExpandedNavigationSelectItem;
+
+                if (expandSelectItem != null)
                 {
-                    Traverse(expandSelectItem.SelectAndExpand, processSubResult, combineSelectAndExpand, processApply, out subResult);
+                    string currentExpandClause = String.Join("/", expandSelectItem.PathToNavigationProperty.WalkWith(PathSegmentToStringTranslator.Instance).ToArray());
+                    T subResult = default(T);
+                    if (expandSelectItem.SelectAndExpand.SelectedItems.Any())
+                    {
+                        Traverse(expandSelectItem.SelectAndExpand, processSubResult, combineSelectAndExpand, processApply, out subResult);
+                    }
+
+                    if (expandSelectItem.ApplyOption != null && processApply != null)
+                    {
+                        subResult = processApply(expandSelectItem.ApplyOption);
+                    }
+
+                    var expandItem = processSubResult(currentExpandClause, subResult);
+                    if (expandItem != null)
+                    {
+                        expandList.Add(expandItem);
+                    }
                 }
-
-                if (expandSelectItem.ApplyOption != null && processApply != null)
+                else
                 {
-                    subResult = processApply(expandSelectItem.ApplyOption);
-                }
+                    ExpandedReferenceSelectItem expandRefItem = selectItem as ExpandedReferenceSelectItem;
 
-                var expandItem = processSubResult(currentExpandClause, subResult);
-                if (expandItem != null)
-                {
-                    expandList.Add(expandItem);
-                }
-            }
+                    if (expandRefItem != null)
+                    {
+                        string currentExpandClause = String.Join("/", expandRefItem.PathToNavigationProperty.WalkWith(PathSegmentToStringTranslator.Instance).ToArray());
+                        currentExpandClause += "/$ref";
 
-            foreach (ExpandedReferenceSelectItem expandSelectItem in selectExpandClause.SelectedItems.Where(I => I.GetType() == typeof(ExpandedReferenceSelectItem)))
-            {
-                string currentExpandClause = String.Join("/", expandSelectItem.PathToNavigationProperty.WalkWith(PathSegmentToStringTranslator.Instance).ToArray());
-                currentExpandClause += "/$ref";
-
-                var expandItem = processSubResult(currentExpandClause, default(T));
-                if (expandItem != null)
-                {
-                    expandList.Add(expandItem);
+                        var expandItem = processSubResult(currentExpandClause, default(T));
+                        if (expandItem != null)
+                        {
+                            expandList.Add(expandItem);
+                        }
+                    }
                 }
             }
 
@@ -146,38 +208,43 @@ namespace Microsoft.OData.UriParser
         /// <returns>the string representation of the top level select clause.</returns>
         private static string BuildTopLevelSelect(SelectExpandClause selectExpandClause)
         {
-            // Special case to build the top level select clause (this it the only time that we actualy
+            // Special case to build the top level select clause (this it the only time that we actually
             // modify the selectClause because in V4 the the top level select clause can only modify the top
             // level).
             return String.Join(",", selectExpandClause.GetCurrentLevelSelectList().ToArray());
         }
 
         /// <summary>
-        /// Get the string representation of a select item (that isn't an expandedNavPropSelectItem
+        /// Get the string representation of a Pathselect item (that isn't an expandedNavPropSelectItem
         /// </summary>
-        /// <param name="selectedItem">the select item to translate</param>
-        /// <returns>the string representation of this select item, or null if the select item is an expandedNavPropSelectItem</returns>
-        private static string GetSelectString(SelectItem selectedItem)
+        /// <param name="pathSelectItem">the pathselect item to translate</param>
+        /// <returns>the string representation of this select pathselectitem</returns>
+        private static IList<string> GetSelectStringFromPathSelectItem(PathSelectItem pathSelectItem)
         {
-            WildcardSelectItem wildcardSelect = selectedItem as WildcardSelectItem;
-            NamespaceQualifiedWildcardSelectItem namespaceQualifiedWildcard = selectedItem as NamespaceQualifiedWildcardSelectItem;
-            PathSelectItem pathSelectItem = selectedItem as PathSelectItem;
+            IList<string> nextLevelSelectList = null;
 
-            if (wildcardSelect != null)
+            //Recursively call next level to get all the nested select items
+            if (pathSelectItem.SelectAndExpand != null)
             {
-                return "*";
+                nextLevelSelectList = GetCurrentLevelSelectList(pathSelectItem.SelectAndExpand);
             }
-            else if (namespaceQualifiedWildcard != null)
+
+            string selectListItem = String.Join("/", pathSelectItem.SelectedPath.WalkWith(PathSegmentToStringTranslator.Instance).ToArray());
+
+            if (nextLevelSelectList != null && nextLevelSelectList.Any())
             {
-                return namespaceQualifiedWildcard.Namespace + ".*";
-            }
-            else if (pathSelectItem != null)
-            {
-                return String.Join("/", pathSelectItem.SelectedPath.WalkWith(PathSegmentToStringTranslator.Instance).ToArray());
+                List<string> selectList = new List<string>();
+
+                foreach (var listItem in nextLevelSelectList)
+                {
+                    selectList.Add(selectListItem + "/" + listItem);
+                }
+
+                return selectList;
             }
             else
             {
-                return null;
+                return new List<string>() { selectListItem };
             }
         }
 
@@ -212,7 +279,7 @@ namespace Microsoft.OData.UriParser
             return String.Join(",", currentLevelExpandClauses.ToArray());
         }
 
-        /// <summary>Process sub expand node, contact with subexpad result</summary>
+        /// <summary>Process sub expand node, contact with subexpand result</summary>
         /// <param name="expandNode">The current expanded node.</param>
         /// <param name="subExpand">Generated sub expand node.</param>
         /// <returns>The generated expand string.</returns>

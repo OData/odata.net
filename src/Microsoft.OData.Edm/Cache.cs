@@ -39,7 +39,7 @@ namespace Microsoft.OData.Edm
             {
                 lock (lockOn)
                 {
-                    // If another thread computed a value, use that. If the value is still unknown after aquiring the lock, compute the value.
+                    // If another thread computed a value, use that. If the value is still unknown after acquiring the lock, compute the value.
                     if (this.value == CacheHelper.Unknown)
                     {
                         this.value = CacheHelper.CycleSentinel;

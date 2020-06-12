@@ -80,17 +80,17 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Context associated with this query.
         /// </summary>
-        public DataServiceContext Context { get; private set; }
+        public virtual DataServiceContext Context { get; private set; }
 
         /// <summary>
         /// Whether this query is composable.
         /// </summary>
-        public bool IsComposable { get; private set; }
+        public virtual bool IsComposable { get; private set; }
 
         /// <summary>
         /// Get the URI for the query.
         /// </summary>
-        public Uri RequestUri
+        public virtual Uri RequestUri
         {
             get
             {
@@ -109,7 +109,7 @@ namespace Microsoft.OData.Client
         /// <param name="isComposable">Whether this query is composable.</param>
         /// <param name="parameters">The function parameters.</param>
         /// <returns>A new <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> instance that represents the function call.</returns>
-        public DataServiceQuery<T> CreateFunctionQuery<T>(string functionName, bool isComposable, params UriOperationParameter[] parameters)
+        public virtual DataServiceQuery<T> CreateFunctionQuery<T>(string functionName, bool isComposable, params UriOperationParameter[] parameters)
         {
             return this.Query.CreateFunctionQuery<T>(functionName, isComposable, parameters);
         }
@@ -120,7 +120,7 @@ namespace Microsoft.OData.Client
         /// <param name="isComposable">Whether this query is composable.</param>
         /// <param name="parameters">The function parameters.</param>
         /// <returns>A new <see cref="T:Microsoft.OData.Client.DataServiceQuerySingle`1" /> instance that represents the function call.</returns>
-        public DataServiceQuerySingle<T> CreateFunctionQuerySingle<T>(string functionName, bool isComposable, params UriOperationParameter[] parameters)
+        public virtual DataServiceQuerySingle<T> CreateFunctionQuerySingle<T>(string functionName, bool isComposable, params UriOperationParameter[] parameters)
         {
             return new DataServiceQuerySingle<T>(this.CreateFunctionQuery<T>(functionName, isComposable, parameters), isComposable);
         }
@@ -131,7 +131,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <returns>Query result.</returns>
         /// <exception cref="InvalidOperationException">Problem materializing result of query into object.</exception>
-        public TElement GetValue()
+        public virtual TElement GetValue()
         {
             if (this.isFunction)
             {
@@ -146,7 +146,7 @@ namespace Microsoft.OData.Client
         /// <returns>An <see cref="T:System.IAsyncResult" /> that represents the status of the asynchronous operation.</returns>
         /// <param name="callback">The delegate to invoke when the operation completes.</param>
         /// <param name="state">User defined object used to transfer state between the start of the operation and the callback defined by <paramref name="callback" />.</param>
-        public IAsyncResult BeginGetValue(AsyncCallback callback, object state)
+        public virtual IAsyncResult BeginGetValue(AsyncCallback callback, object state)
         {
             if (this.isFunction)
             {
@@ -158,7 +158,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>Starts an asynchronous network operation that executes the query represented by this object instance.</summary>
         /// <returns>A task that represents the result of the query operation.</returns>
-        public Task<TElement> GetValueAsync()
+        public virtual Task<TElement> GetValueAsync()
         {
             return Task<TElement>.Factory.FromAsync(this.BeginGetValue, this.EndGetValue, null);
         }
@@ -167,7 +167,7 @@ namespace Microsoft.OData.Client
         /// <returns>Returns the results of the query operation.</returns>
         /// <param name="asyncResult">The pending asynchronous query request.</param>
         /// <exception cref="T:Microsoft.OData.Client.DataServiceQueryException">When the data service returns an HTTP 404: Resource Not Found error.</exception>
-        public TElement EndGetValue(IAsyncResult asyncResult)
+        public virtual TElement EndGetValue(IAsyncResult asyncResult)
         {
             Util.CheckArgumentNull(asyncResult, "asyncResult");
             if (this.isFunction)
@@ -185,7 +185,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="nextSegment">The next segment to add to path.</param>
         /// <returns>The new URI path string.</returns>
-        public string GetPath(string nextSegment)
+        public virtual string GetPath(string nextSegment)
         {
             string resourcePath = UriUtil.UriToString(this.RequestUri).Substring(UriUtil.UriToString(this.Context.BaseUri).Length);
             return nextSegment == null ? resourcePath : resourcePath + UriHelper.FORWARDSLASH + nextSegment;
@@ -196,7 +196,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="nextSegment">Name of the action.</param>
         /// <returns>The new URI string.</returns>
-        public string AppendRequestUri(string nextSegment)
+        public virtual string AppendRequestUri(string nextSegment)
         {
             return UriUtil.UriToString(this.RequestUri).Replace(this.RequestUri.AbsolutePath, this.RequestUri.AbsolutePath + UriHelper.FORWARDSLASH + nextSegment);
         }
@@ -231,7 +231,7 @@ namespace Microsoft.OData.Client
         /// <summary>Expands a query to include entities from a related entity set in the query response.</summary>
         /// <returns>A new query that includes the requested $expand query option appended to the URI of the supplied query.</returns>
         /// <param name="path">The expand path in the format Orders/Order_Details.</param>
-        public DataServiceQuerySingle<TElement> Expand(string path)
+        public virtual DataServiceQuerySingle<TElement> Expand(string path)
         {
             return new DataServiceQuerySingle<TElement>(this.Query.Expand(path), true);
         }
@@ -241,7 +241,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <typeparam name="TResult">Derived type of TElement to be casted to.</typeparam>
         /// <returns>Returns a <see cref="T:Microsoft.OData.Client.DataServiceQuerySingle`1" /> of TResult type.</returns>
-        public DataServiceQuerySingle<TResult> CastTo<TResult>()
+        public virtual DataServiceQuerySingle<TResult> CastTo<TResult>()
         {
             return new DataServiceQuerySingle<TResult>((DataServiceQuery<TResult>)this.Query.OfType<TResult>(), true);
         }

@@ -23,6 +23,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
         }
 
         [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void WriteDuplicateAnnotationOnFeedError()
         {
             this.Invoke(
@@ -33,6 +34,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
         }
 
         [TestMethod]
+        [Ignore("VSUpgrade19 - DataDriven Test")]
         public void WriteDuplicateAnnotationOnEntryError()
         {
             this.Invoke(

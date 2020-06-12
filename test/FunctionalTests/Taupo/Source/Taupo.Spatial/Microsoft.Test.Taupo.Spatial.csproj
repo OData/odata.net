@@ -1,12 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <ProjectGuid>{7FF7E0D4-B00C-4C08-80F1-C7EFF617597D}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>Microsoft.Test.Taupo.Spatial</RootNamespace>
     <AssemblyName>Microsoft.Test.Taupo.Spatial</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworks>net45</TargetFrameworks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <TransparentAssembly>true</TransparentAssembly>
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <EnableStyleCop>true</EnableStyleCop>
@@ -14,10 +14,7 @@
   </PropertyGroup>
   <Import Project="..\Build.props" />
   <ItemGroup>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj">
-      <Project>{5D921888-FE03-4C3F-40FE-2F624505461D}</Project>
-      <Name>Microsoft.Spatial</Name>
-    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj" /> 
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
@@ -56,10 +53,7 @@
     <Compile Include="$(AssemblyKeysCSharpFilePath)" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Taupo\Microsoft.Test.Taupo.csproj">
-      <Project>{34010F3A-20CC-479C-83CF-EC99B1C90CD1}</Project>
-      <Name>Microsoft.Test.Taupo</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\Taupo\Microsoft.Test.Taupo.csproj" />   
   </ItemGroup>
   <ItemGroup>
     <Content Include="Microsoft.Test.Taupo.Spatial.layering.xml" />
@@ -80,5 +74,5 @@
     <EmbeddedResource Include="Resources\SpatialData\GEOMETRYPOLYGON_0.txt" />
     <EmbeddedResource Include="Resources\SpatialData\GEOMETRY_0.txt" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!---->
 </Project>

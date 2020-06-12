@@ -7,9 +7,7 @@
 namespace Microsoft.OData.Edm
 {
     using System;
-#if PORTABLELIB
     using System.Collections.Concurrent;
-#endif
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
@@ -22,11 +20,8 @@ namespace Microsoft.OData.Edm
     {
         private const int MaxHashElements = 100;
 
-#if PORTABLELIB
         private static readonly ConcurrentDictionary<IEdmEnumType, HashEntry> fieldInfoHash = new ConcurrentDictionary<IEdmEnumType, HashEntry>(4, EnumHelper.MaxHashElements);
-#else
-        private static readonly IDictionary<IEdmEnumType, HashEntry> fieldInfoHash = new Dictionary<IEdmEnumType, HashEntry>();
-#endif
+
 
         /// <summary>
         /// Parse an enum literal value to integer. The literal value can be Enum member name (e.g. "Red"), underlying value (e.g. "2"), or combined values (e.g. "Red, Green, Blue", "1,2,4").
@@ -38,7 +33,7 @@ namespace Microsoft.OData.Edm
         /// <returns>true if parse succeeds, false if parse fails</returns>
         public static bool TryParseEnum(this IEdmEnumType enumType, string value, bool ignoreCase, out long parseResult)
         {
-            char[] enumSeperatorCharArray = new[] { ',' };
+            char[] enumSeparatorCharArray = new[] { ',' };
 
             string[] enumNames;
             ulong[] enumValues;
@@ -58,7 +53,7 @@ namespace Microsoft.OData.Edm
             }
 
             ulong num = 0L;
-            string[] values = value.Split(enumSeperatorCharArray);
+            string[] values = value.Split(enumSeparatorCharArray);
 
             if ((!enumType.IsFlags) && values.Length > 1)
             {
@@ -157,7 +152,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="enumType">edm enum type</param>
         /// <param name="value">input integer value</param>
-        /// <returns>string seperated by comma</returns>
+        /// <returns>string separated by comma</returns>
         private static string ToStringWithFlags(this IEdmEnumType enumType, Int64 value)
         {
             string[] strArray;
@@ -284,7 +279,6 @@ namespace Microsoft.OData.Edm
             names = sortedDict.Select(d => d.Key).ToArray();
         }
 
-#if PORTABLELIB
         private static HashEntry GetHashEntry(IEdmEnumType enumType)
         {
             try
@@ -298,23 +292,6 @@ namespace Microsoft.OData.Edm
             }
         }
 
-#else
-        private static HashEntry GetHashEntry(IEdmEnumType enumType)
-        {
-            if (fieldInfoHash.Count > MaxHashElements)
-            {
-                lock (fieldInfoHash)
-                {
-                    if (fieldInfoHash.Count > MaxHashElements)
-                    {
-                        fieldInfoHash.Clear();
-                    }
-                }
-            }
-
-            return EdmUtil.DictionaryGetOrUpdate(fieldInfoHash, enumType, type => new HashEntry(null, null));
-        }
-#endif
 
         private class HashEntry
         {

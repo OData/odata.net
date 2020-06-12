@@ -156,7 +156,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Retrieves the type reference associated to a segment.
         /// </summary>
-        /// <param name="segment">The node to retrive the type reference from.</param>
+        /// <param name="segment">The node to retrieve the type reference from.</param>
         /// <returns>The Type reference of the node (item type reference for collections).</returns>
         internal static IEdmTypeReference GetEdmTypeReference(this QueryNode segment)
         {

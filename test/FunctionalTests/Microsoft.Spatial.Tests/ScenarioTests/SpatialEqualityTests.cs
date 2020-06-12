@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Globalization;
 using Microsoft.Spatial.Tests;
 using Xunit;
 
@@ -143,7 +144,7 @@ namespace Microsoft.Spatial.Tests.ScenarioTests
         }
 
         [Fact]
-        public void RepresentationEquality_EqualsTests()
+        public void RepresentationEqualityEqualsTests()
         {
             var gp1 = TestData.PointG();
             var gp2 = TestData.PointG();
@@ -259,7 +260,7 @@ namespace Microsoft.Spatial.Tests.ScenarioTests
         }
 
         [Fact]
-        public void DefaultEqualityTest()
+        public void DefaultEqualityTests()
         {
             // no impl for GeographyCurve
 
@@ -376,7 +377,7 @@ namespace Microsoft.Spatial.Tests.ScenarioTests
                 return (T)geographyTypes[(int)GeographyTypeKind.FullGlobe];
             }
 
-            Assert.True(false, String.Format("Invalid Geography type encountered - {0}", typeof(T).FullName));
+            Assert.True(false, String.Format(CultureInfo.InvariantCulture, "Invalid Geography type encountered - {0}", typeof(T).FullName));
             return null;
         }
 
@@ -411,7 +412,7 @@ namespace Microsoft.Spatial.Tests.ScenarioTests
                 return (T)geometryTypes[(int)GeometryTypeKind.Collection];
             }
 
-            Assert.True(false, String.Format("Invalid Geometry type encountered - {0}", typeof(T).FullName));
+            Assert.True(false, String.Format(CultureInfo.InvariantCulture, "Invalid Geometry type encountered - {0}", typeof(T).FullName));
             return null;
         }
     }

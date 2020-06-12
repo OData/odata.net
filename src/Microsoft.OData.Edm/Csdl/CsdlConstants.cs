@@ -142,6 +142,7 @@ namespace Microsoft.OData.Edm.Csdl
         internal const string Element_NavigationProperty = "NavigationProperty";
         internal const string Element_NavigationPropertyBinding = "NavigationPropertyBinding";
         internal const string Element_NavigationPropertyPath = "NavigationPropertyPath";
+        internal const string Element_AnnotationPath = "AnnotationPath";
         internal const string Element_Null = "Null";
         internal const string Element_OnDelete = "OnDelete";
         internal const string Element_Parameter = "Parameter";

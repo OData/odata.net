@@ -155,7 +155,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Translates the <paramref name="annotationFilter"/> to a func that would evalutate whether the filter would match a given annotation name.
+        /// Translates the <paramref name="annotationFilter"/> to a func that would evaluate whether the filter would match a given annotation name.
         /// The func would evaluate to true if the <paramref name="annotationFilter"/> matches the annotation name that's passed to the it, and false otherwise.
         /// </summary>
         /// <param name="annotationFilter">

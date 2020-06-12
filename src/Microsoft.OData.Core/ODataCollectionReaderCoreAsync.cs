@@ -9,9 +9,7 @@ namespace Microsoft.OData
     #region Namespaces
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Edm;
     #endregion Namespaces
 
@@ -34,7 +32,6 @@ namespace Microsoft.OData
         {
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Implementation of the collection reader logic when in state 'Start'.
         /// </summary>
@@ -86,6 +83,5 @@ namespace Microsoft.OData
                     return TaskUtils.GetFaultedTask<bool>(new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataCollectionReaderCoreAsync_ReadAsynchronously)));
             }
         }
-#endif
     }
 }

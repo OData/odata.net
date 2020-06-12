@@ -105,7 +105,7 @@ namespace Microsoft.OData.Client
                 ODataRequestMessageWrapper requestMessage = null;
                 try
                 {
-                    if (null != this.perRequest)
+                    if (this.perRequest != null)
                     {
                         this.SetCompleted();
                         Error.ThrowInternalError(InternalError.InvalidBeginNextChange);
@@ -120,7 +120,7 @@ namespace Microsoft.OData.Client
                         this.Abortable = null;
                     }
 
-                    if ((null != requestMessage) || (this.entryIndex < this.ChangedEntries.Count))
+                    if ((requestMessage != null) || (this.entryIndex < this.ChangedEntries.Count))
                     {
                         if (this.ChangedEntries[this.entryIndex].ContentGeneratedForSave)
                         {
@@ -139,7 +139,7 @@ namespace Microsoft.OData.Client
 
                         AsyncStateBag asyncStateBag = new AsyncStateBag(pereq);
 
-                        if (null == contentStream || null == contentStream.Stream)
+                        if (contentStream == null || contentStream.Stream == null)
                         {
                             asyncResult = BaseAsyncResult.InvokeAsync(requestMessage.BeginGetResponse, this.AsyncEndGetResponse, asyncStateBag);
                         }
@@ -184,7 +184,7 @@ namespace Microsoft.OData.Client
                 // FinishCurrentchange() will then call BeginCreateNextChange() from the async thread and we need to exit this loop.
                 // If requestMessage = this.CreateNextRequest() returns null, we would have called this.SetCompleted() above and this.IsCompletedInternally
                 // would be true. This means we are done processing all changed entries and we should not call this.FinishCurrentChange().
-                if (null != pereq && pereq.RequestCompleted && pereq.RequestCompletedSynchronously && !this.IsCompletedInternally)
+                if (pereq != null && pereq.RequestCompleted && pereq.RequestCompletedSynchronously && !this.IsCompletedInternally)
                 {
                     Debug.Assert(requestMessage != null, "httpWebRequest != null");
                     this.FinishCurrentChange(pereq);
@@ -195,7 +195,7 @@ namespace Microsoft.OData.Client
                 // pereq.RequestCompletedSynchronously is false, the current thread and an async thread will both re-enter BeginCreateNextChange()
                 // and we will fail.  We can only process one request at a given time.
             }
-            while (((null == pereq) || (pereq.RequestCompleted && pereq.RequestCompletedSynchronously)) && !this.IsCompletedInternally);
+            while (((pereq == null) || (pereq.RequestCompleted && pereq.RequestCompletedSynchronously)) && !this.IsCompletedInternally);
             Debug.Assert((this.CompletedSynchronously && this.IsCompleted) || !this.CompletedSynchronously, "sync without complete");
             Debug.Assert(this.entryIndex < this.ChangedEntries.Count || this.ChangedEntries.All(o => o.ContentGeneratedForSave), "didn't generate content for all entities/links");
         }
@@ -215,7 +215,7 @@ namespace Microsoft.OData.Client
                 try
                 {
                     requestMessage = this.CreateNextRequest();
-                    if ((null != requestMessage) || (this.entryIndex < this.ChangedEntries.Count))
+                    if ((requestMessage != null) || (this.entryIndex < this.ChangedEntries.Count))
                     {
                         if (this.ChangedEntries[this.entryIndex].ContentGeneratedForSave)
                         {
@@ -228,12 +228,12 @@ namespace Microsoft.OData.Client
                         }
 
                         ContentStream contentStream = this.CreateNonBatchChangeData(this.entryIndex, requestMessage);
-                        if (null != contentStream && null != contentStream.Stream)
+                        if (contentStream != null && contentStream.Stream != null)
                         {
                             requestMessage.SetRequestStream(contentStream);
                         }
 
-                        responseMsg = this.RequestInfo.GetSyncronousResponse(requestMessage, false);
+                        responseMsg = this.RequestInfo.GetSynchronousResponse(requestMessage, false);
 
                         this.HandleOperationResponse(responseMsg);
                         this.HandleOperationResponseHeaders((HttpStatusCode)responseMsg.StatusCode, new HeaderCollection(responseMsg));
@@ -475,13 +475,13 @@ namespace Microsoft.OData.Client
                 {
                     EntityDescriptor entityDescriptor = (EntityDescriptor)descriptor;
 
-                    if (((EntityStates.Unchanged == descriptor.State) || (EntityStates.Modified == descriptor.State)) &&
-                        (null != (requestMessage = this.CheckAndProcessMediaEntryPut(entityDescriptor))))
+                    if (((descriptor.State == EntityStates.Unchanged) || (descriptor.State == EntityStates.Modified)) &&
+                        ((requestMessage = this.CheckAndProcessMediaEntryPut(entityDescriptor)) != null))
                     {
                         this.streamRequestKind = StreamRequestKind.PutMediaResource;
-                        descriptorForSendingRequest2 = entityDescriptor.DefaultStreamDescriptor;  // We want to give SendingRequest2 the StreamDecriptor
+                        descriptorForSendingRequest2 = entityDescriptor.DefaultStreamDescriptor;  // We want to give SendingRequest2 the StreamDescriptor
                     }
-                    else if ((EntityStates.Added == descriptor.State) && (null != (requestMessage = this.CheckAndProcessMediaEntryPost(entityDescriptor))))
+                    else if ((descriptor.State == EntityStates.Added) && ((requestMessage = this.CheckAndProcessMediaEntryPost(entityDescriptor)) != null))
                     {
                         this.streamRequestKind = StreamRequestKind.PostMediaResource;
 
@@ -752,7 +752,7 @@ namespace Microsoft.OData.Client
             HttpStatusCode statusCode = HttpStatusCode.InternalServerError;
 
             Version responseVersion = null;
-            if (null != response)
+            if (response != null)
             {
                 headers = new HeaderCollection(response);
                 statusCode = (HttpStatusCode)response.StatusCode;
@@ -820,7 +820,7 @@ namespace Microsoft.OData.Client
 
             using (Stream stream = response.GetStream())
             {
-                if (null != stream)
+                if (stream != null)
                 {
                     // we need to check for whether the incoming stream was data or not. Hence we need to copy it to a temporary memory stream
                     using (MemoryStream memoryStream = new MemoryStream())

@@ -199,7 +199,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         [TestInitialize]
         public void Init()
         {
-            this.context = new DataServiceContext(new Uri("http://www.odata.org/service.svc"));
+            this.context = new DataServiceContext(new Uri("http://www.odata.org/service.svc")).ReConfigureForNetworkLoadingTests();
         }
 
         [TestMethod]

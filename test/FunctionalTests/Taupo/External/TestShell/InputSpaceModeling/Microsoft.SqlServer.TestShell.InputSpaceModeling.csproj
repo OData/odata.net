@@ -1,20 +1,17 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AssemblyAttributeComCompatibleSideBySide>true</AssemblyAttributeComCompatibleSideBySide>
-    <AssemblyName>Microsoft.SqlServer.TestShell.InputSpaceModeling</AssemblyName>
-    <OutputType>Library</OutputType>
-    <ProjectGuid>{EDC237AA-6875-4034-BA39-7F2A83533BFC}</ProjectGuid>
-    <DocumentationFile>obj\Microsoft.SqlServer.TestShell.InputSpaceModeling.xml</DocumentationFile>
-    <PublishMetaAssemblyToSDK>false</PublishMetaAssemblyToSDK>
-    <RootNamespace>Microsoft.SqlServer.Test.TestShell.Core.InputSpaceModeling</RootNamespace>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <WarningLevel>4</WarningLevel>
-    <NoWarn>1574;1591</NoWarn>
+    <AssemblyName>Microsoft.SqlServer.TestShell.InputSpaceModeling</AssemblyName> 
+     <PublishMetaAssemblyToSDK>false</PublishMetaAssemblyToSDK> 
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworks>net45</TargetFrameworks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems> 
     <EnableStyleCop>false</EnableStyleCop>
     <TransparentAssembly>true</TransparentAssembly>
-    <DefineConstants>TAUPO_TESTSHELL</DefineConstants>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <DefineConstants>TAUPO_TESTSHELL</DefineConstants> 
   </PropertyGroup>
   <Import Project="..\Build.props" />
   <ItemGroup>
@@ -85,5 +82,5 @@
   <ItemGroup>
     <CodeAnalysisDictionary Include="..\CustomDictionary.xml" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!---->
 </Project>

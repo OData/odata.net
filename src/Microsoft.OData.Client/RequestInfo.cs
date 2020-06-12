@@ -148,7 +148,6 @@ namespace Microsoft.OData.Client
             get { return this.Context.Credentials; }
         }
 
-#if !PORTABLELIB
         /// <summary>
         /// Get the timeout span in seconds to use for the underlying HTTP request to the data service.
         /// </summary>
@@ -156,7 +155,14 @@ namespace Microsoft.OData.Client
         {
             get { return this.Context.Timeout; }
         }
-#endif
+
+        /// <summary>
+        /// Get the read or write timeout span in seconds to use for the underlying HTTP request to the data service.
+        /// </summary>
+        internal int ReadWriteTimeout
+        {
+            get { return this.Context.ReadWriteTimeout; }
+        }
 
         /// <summary>
         /// Whether to use post-tunneling for PUT/DELETE.
@@ -205,13 +211,23 @@ namespace Microsoft.OData.Client
         {
             get { return this.Context.UseDefaultCredentials; }
         }
+
+        /// <summary>
+        /// Gets IsIeee754Compatible header value.
+        /// This value determines if the request should be treated as IEEE 754 Compatible.
+        /// </summary>
+        internal bool IsIeee754Compatible 
+        {
+            get { return this.Context.IsIeee754Compatible; }
+        }
+
         #endregion Properties
 
         #region Methods
 
 #if !PORTABLELIB
         /// <summary>
-        /// This method wraps the HttpWebRequest.GetSyncronousResponse method call. The reasons for doing this are to give us a place
+        /// This method wraps the HttpWebRequest.GetSynchronousResponse method call. The reasons for doing this are to give us a place
         /// to invoke internal test hook callbacks that can validate the response headers, and also so that we can do
         /// debug validation to make sure that the headers have not changed since they were originally configured on the request.
         /// </summary>
@@ -219,11 +235,11 @@ namespace Microsoft.OData.Client
         /// <param name="handleWebException">If set to true, this method will only re-throw the WebException that was caught if
         /// the response in the exception is null. If set to false, this method will always re-throw in case of a WebException.</param>
         /// <returns>
-        /// Returns the HttpWebResponse from the wrapped GetSyncronousResponse method.
+        /// Returns the HttpWebResponse from the wrapped GetSynchronousResponse method.
         /// </returns>
-        internal IODataResponseMessage GetSyncronousResponse(ODataRequestMessageWrapper request, bool handleWebException)
+        internal IODataResponseMessage GetSynchronousResponse(ODataRequestMessageWrapper request, bool handleWebException)
         {
-            return this.Context.GetSyncronousResponse(request, handleWebException);
+            return this.Context.GetSynchronousResponse(request, handleWebException);
         }
 #endif
 

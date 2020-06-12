@@ -10,9 +10,7 @@ namespace Microsoft.OData
     using System.Diagnostics;
     using System.IO;
     using System.Text;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
 
     /// <summary>
     /// Wrapper for TextWriter to listen for dispose.
@@ -264,7 +262,6 @@ namespace Microsoft.OData
 
         #region async methods
 
-#if PORTABLELIB
 
         /// <inheritdoc/>
         public override Task FlushAsync()
@@ -313,8 +310,6 @@ namespace Microsoft.OData
         {
             return this.textWriter.WriteLineAsync(value);
         }
-
-#endif
 
         #endregion
 

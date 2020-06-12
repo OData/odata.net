@@ -27,6 +27,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="model">The model.</param>
         /// <param name="edmType">the type of the current scope based on type segments.</param>
         /// <param name="resolver">Resolver for uri parser.</param>
+        /// <param name="state">The binding state.</param>
         /// <returns>The segment created from the token.</returns>
         public static ODataPathSegment ConvertNonTypeTokenToSegment(PathSegmentToken tokenIn, IEdmModel model, IEdmStructuredType edmType, ODataUriResolver resolver, BindingState state = null)
         {
@@ -66,7 +67,7 @@ namespace Microsoft.OData.UriParser
                 return nextSegment;
             }
 
-            // Operations must be container-qualified, and because the token type indicates it was not a .-seperated identifier, we should not try to look up operations.
+            // Operations must be container-qualified, and because the token type indicates it was not a .-separated identifier, we should not try to look up operations.
             if (tokenIn.IsNamespaceOrContainerQualified())
             {
                 if (TryBindAsOperation(tokenIn, model, edmType, out nextSegment))
@@ -133,14 +134,14 @@ namespace Microsoft.OData.UriParser
         /// <returns>True if the token was bound successfully, or false otherwise.</returns>
         internal static bool TryBindAsOperation(PathSegmentToken pathToken, IEdmModel model, IEdmStructuredType entityType, out ODataPathSegment segment)
         {
-            Debug.Assert(pathToken != null, "pathToken != null");
-            Debug.Assert(entityType != null, "bindingType != null");
+            ExceptionUtils.CheckArgumentNotNull(pathToken, "pathToken");
+            ExceptionUtils.CheckArgumentNotNull(entityType, "entityType");
 
             IEnumerable<IEdmOperation> possibleFunctions = Enumerable.Empty<IEdmOperation>();
             IList<string> parameterNames = new List<string>();
 
             // Catch all catchable exceptions as FindDeclaredBoundOperations is implemented by anyone.
-            // If an exception occurs it will be supressed and the possible functions will be empty and return false.
+            // If an exception occurs it will be suppressed and the possible functions will be empty and return false.
             try
             {
                 int wildCardPos = pathToken.Identifier.IndexOf("*", StringComparison.Ordinal);
@@ -185,7 +186,7 @@ namespace Microsoft.OData.UriParser
             // If more than one overload matches, try to select based on optional parameters
             if (possibleFunctions.Count() > 1 && parameterNames.Count > 0)
             {
-                possibleFunctions = possibleFunctions.FindBestOverloadBasedOnParameters(parameterNames);
+                possibleFunctions = possibleFunctions.FilterOverloadsBasedOnParameterCount(parameterNames.Count);
             }
 
             if (!possibleFunctions.HasAny())

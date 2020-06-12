@@ -1,29 +1,29 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <NoWarn>;1699;1570;1572;1573;1591;3005;3006;3003;3008;3016;3001;3002;3009;0618;0168;0169;1684</NoWarn>
-    <AssemblyName>AstoriaTestFramework</AssemblyName>
-    <OutputType>Library</OutputType>
+    <AssemblyName>AstoriaTestFramework</AssemblyName> 
     <CreateMetaAssembly>false</CreateMetaAssembly>
     <AssemblyKeyType>ECMA</AssemblyKeyType>
     <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
     <AssemblyAttributeComCompatibleSideBySide>true</AssemblyAttributeComCompatibleSideBySide>
-    <PublishMetaAssemblyToSDK>false</PublishMetaAssemblyToSDK>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <PublishMetaAssemblyToSDK>false</PublishMetaAssemblyToSDK> 
     <DefineConstants>$(DefineConstants);CODE_ANALYSIS_BASELINE;MICROSOFT_ASTORIA;ClientFramework</DefineConstants>
-    <RootNamespace>Microsoft.Data.Test</RootNamespace>
-    <ProjectGuid>{F3EE82F0-8DDD-45EE-BD9C-47AC3A3AF4BB}</ProjectGuid>
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworks>net45</TargetFrameworks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <SignAssemblyAttribute>false</SignAssemblyAttribute>
-    <DocumentationFile>AstoriaTestFramework.xml</DocumentationFile>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <DocumentationFile>AstoriaTestFramework.xml</DocumentationFile> 
     <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
   </PropertyGroup>
   <Import Project="..\Build.props" />
   <PropertyGroup>
-    <DefineConstants Condition=" '$(VisualStudioVersion)' == '14.0' and '$(BuildingInLab)' != 'true'">$(DefineConstants);USELOCALDB</DefineConstants>
+    <DefineConstants Condition=" '$(VisualStudioVersion)' == '16.0' and '$(BuildingInLab)' != 'true'">$(DefineConstants);USELOCALDB</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CustomMarshalers" />
@@ -34,26 +34,16 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.Entity.Design" />
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
-      <Project>{7D921888-FE03-4C3F-80FE-2F624505461C}</Project>
-      <Name>Microsoft.OData.Edm</Name>
-    </ProjectReference>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj">
-      <Project>{5d921888-fe03-4c3f-40fe-2f624505461d}</Project>
-      <Name>Microsoft.Spatial</Name>
-    </ProjectReference>
-    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj">
-      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BA325}</Project>
-      <Name>Microsoft.OData.Service</Name>
-    </ProjectReference>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj">
-      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BFFFF}</Project>
-      <Name>Microsoft.OData.Client</Name>
-    </ProjectReference>
-    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
-      <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
-      <Name>Microsoft.OData.Core</Name>
-    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
+ 
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />
+  
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj" />
+ 
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />
+ 
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
+   
     <Reference Include="System.Management" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.Remoting" />
@@ -67,26 +57,11 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase" />
     <Reference Include="System.Data.Linq" />
-    <ProjectReference Include="$(EnlistmentRoot)\tools\KoKoMo\KoKoMo.csproj">
-      <Project>{EB4C9641-0452-4E7F-AA38-3EBD871914A3}</Project>
-      <Name>KoKoMo</Name>
-    </ProjectReference>
-    <ProjectReference Include="$(EnlistmentRoot)\tools\ModuleCore\src\ModuleCore.csproj">
-      <Project>{5E46C9E2-8B2F-4961-8C26-EFA9DF6CD68D}</Project>
-      <Name>ModuleCore</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Tools\CustomData.ObjectContext\CustomData.ObjectContext.csproj">
-      <Project>{6762001D-60F0-4E70-A816-C15897C39B7F}</Project>
-      <Name>CustomData.ObjectContext</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Tools\Commander.Common\Commander.Common.csproj">
-      <Project>{39F660EC-A5D8-4753-B3F2-28117EB3224B}</Project>
-      <Name>Commander.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Framework.FullTrust\AstoriaTestFramework.FullTrust.csproj">
-      <Project>{B01915F6-37E4-4E7E-9A45-8722829E49F1}</Project>
-      <Name>AstoriaTestFramework.FullTrust</Name>
-    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\tools\KoKoMo\KoKoMo.csproj" />   
+    <ProjectReference Include="$(EnlistmentRoot)\tools\ModuleCore\src\ModuleCore.csproj" />    
+    <ProjectReference Include="..\Tools\CustomData.ObjectContext\CustomData.ObjectContext.csproj" />      
+    <ProjectReference Include="..\Tools\Commander.Common\Commander.Common.csproj" /> 
+    <ProjectReference Include="..\Framework.FullTrust\AstoriaTestFramework.FullTrust.csproj" />     
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(DataFxIncPath)\AssemblyRefs.cs" />
@@ -438,7 +413,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  
   <ItemGroup>
     <NorthwindMetadata Include="$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\Northwind\Northwind.csdl;$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\Northwind\Northwind.msl;$(EnlistmentRoot)\test\FunctionalTests\Tests\Data\Northwind\Northwind.ssdl" />
   </ItemGroup>

@@ -181,8 +181,8 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
         {
             ODataException ode = Assert.Throws<ODataException>(
                  () => ReadBatch(RequestPayloadVerifyDuplicateContentId, ODataVersion.V401));
-            Assert.True(ode.Message.Contains(
-                 "The content ID '1' was found more than once in the same change set or same batch request. Content IDs have to be unique across all operations of a change set for OData V4.0 and have to be unique across all operations in the whole batch request for OData V4.01."));
+            Assert.Contains("The content ID '1' was found more than once in the same change set or same batch request. Content IDs have to be unique across all operations of a change set for OData V4.0 and have to be unique across all operations in the whole batch request for OData V4.01.",
+                ode.Message);
         }
 
         private bool ReadBatch(string requestPayload, ODataVersion version)
@@ -251,8 +251,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             // should trigger an exception because request reference scope is limited to change set in V4 implementation.
             ODataException ode = Assert.Throws<ODataException>(
                  () => this.ServiceReadRequestAndWriterResponseForMultipartBatchVerifyDependsOnIds(customizedValidRequest, ODataVersion.V4));
-            Assert.True(ode.Message.Contains(
-                 "When the relative URI is a reference to a content ID, the content ID does not exist in the current change set."));
+            Assert.Contains("When the relative URI is a reference to a content ID, the content ID does not exist in the current change set.", ode.Message);
         }
 
         private void VerifyPayloadForMultipartBatch(byte[] payloadBytes, string expectedPayload)

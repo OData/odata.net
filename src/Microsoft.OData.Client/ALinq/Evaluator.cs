@@ -148,7 +148,7 @@ namespace Microsoft.OData.Client
             /// Creates the Nominator based on the function passed.
             /// </summary>
             /// <param name="functionCanBeEvaluated">
-            /// A Func speficying whether an expression can be evaluated or not.
+            /// A Func specifying whether an expression can be evaluated or not.
             /// </param>
             /// <returns>visited expression</returns>
             internal Nominator(Func<Expression, bool> functionCanBeEvaluated)

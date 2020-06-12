@@ -17,7 +17,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
     using System.Collections.Generic;
     using System.Linq;
 
-    [TestClass]
+     [TestClass]
     public class TypeDefinitionTests : ODataWCFServiceTestsBase<InMemoryEntities>
     {
         private const string NameSpacePrefix = "microsoft.odata.sampleService.models.typedefinition.";

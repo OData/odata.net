@@ -80,6 +80,10 @@ namespace Microsoft.Test.OData.Tests.Client.Common
             }
             catch (WebException webException)
             {
+                //var msg = "testing testing ..";
+                //var msg = "007msg ---  " + request.RequestUri + "  " + webException.Message + " " + webException.StackTrace + " " + webException.InnerException ?? "";
+                //throw new Exception(msg);
+
                 if (webException.Response == null)
                 {
                     throw;

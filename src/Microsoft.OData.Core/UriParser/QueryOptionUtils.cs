@@ -79,7 +79,7 @@ namespace Microsoft.OData.UriParser
 
         /// <summary>
         /// Returns a query option value by its name and removes the query option from the <paramref name="queryOptions"/> collection.
-        /// Currently, it is only used by un-exposed syntatic tree parsing.
+        /// Currently, it is only used by un-exposed syntactic tree parsing.
         /// </summary>
         /// <param name="queryOptions">The collection of query options.</param>
         /// <param name="queryOptionName">The name of the query option to get.</param>

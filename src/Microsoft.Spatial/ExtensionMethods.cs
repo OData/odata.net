@@ -16,7 +16,7 @@ namespace Microsoft.Spatial
     internal static class ExtensionMethods
     {
         /// <summary>
-        ///   Write a double to a TextWriter ensuring that the value will be roundtrippable thorugh double.parse
+        ///   Write a double to a TextWriter ensuring that the value will be roundtrippable through double.parse
         /// </summary>
         /// <param name = "writer">the writer</param>
         /// <param name = "d">the double value to be written</param>
@@ -26,7 +26,7 @@ namespace Microsoft.Spatial
         }
 
         /// <summary>
-        /// If the arg is non-null, evaluate the op. Otherwise, propogate the null.
+        /// If the arg is non-null, evaluate the op. Otherwise, propagate the null.
         /// </summary>
         /// <typeparam name="TArg">The type of the arg.</typeparam>
         /// <typeparam name="TResult">The type of the result.</typeparam>
@@ -41,7 +41,7 @@ namespace Microsoft.Spatial
         }
 
         /// <summary>
-        /// If the arg is non-null, evaluate the op. Otherwise, propogate the null.
+        /// If the arg is non-null, evaluate the op. Otherwise, propagate the null.
         /// </summary>
         /// <typeparam name="TArg">The type of the arg.</typeparam>
         /// <typeparam name="TResult">The type of the result.</typeparam>

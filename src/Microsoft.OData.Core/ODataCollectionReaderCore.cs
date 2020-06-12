@@ -11,9 +11,7 @@ namespace Microsoft.OData
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
     #endregion Namespaces
@@ -148,7 +146,6 @@ namespace Microsoft.OData
             return this.InterceptException(this.ReadSynchronously);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously reads the next item from the message payload.
         /// </summary>
@@ -158,7 +155,6 @@ namespace Microsoft.OData
             this.VerifyCanRead(false);
             return this.ReadAsynchronously().FollowOnFaultWith(t => this.EnterScope(ODataCollectionReaderState.Exception, null));
         }
-#endif
 
         /// <summary>
         /// Reads the next <see cref="ODataItem"/> from the message payload.
@@ -226,7 +222,6 @@ namespace Microsoft.OData
             return this.ReadImplementation();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously reads the next <see cref="ODataItem"/> from the message payload.
         /// </summary>
@@ -238,7 +233,6 @@ namespace Microsoft.OData
             // NOTE: once we switch to fully async reading this will have to change
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadImplementation);
         }
-#endif
 
         /// <summary>
         /// Creates a new <see cref="Scope"/> for the specified <paramref name="state"/> and
@@ -363,11 +357,7 @@ namespace Microsoft.OData
             }
             else
             {
-#if PORTABLELIB
                 this.VerifyAsynchronousCallAllowed();
-#else
-                Debug.Assert(false, "Async calls are not allowed in this build.");
-#endif
             }
         }
 
@@ -382,7 +372,6 @@ namespace Microsoft.OData
             }
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Verifies that an asynchronous operation is allowed on this reader.
         /// </summary>
@@ -393,7 +382,6 @@ namespace Microsoft.OData
                 throw new ODataException(Strings.ODataCollectionReaderCore_AsyncCallOnSyncReader);
             }
         }
-#endif
 
         /// <summary>
         /// A collection reader scope; keeping track of the current reader state and an item associated with this state.
@@ -446,7 +434,7 @@ namespace Microsoft.OData
                 // When isCollectionElementEmpty is true, Reader needs to be in CollectionStart state.
                 Debug.Assert(!this.isCollectionElementEmpty ||
                         (this.isCollectionElementEmpty && state == ODataCollectionReaderState.CollectionStart),
-                        "Expected state to be CollectionStart if isCollectionElementyEmpty is true.");
+                        "Expected state to be CollectionStart if isCollectionElementEmpty is true.");
             }
 
             /// <summary>

@@ -42,7 +42,6 @@ namespace Microsoft.OData.UriParser.Aggregation
         /// <summary>
         /// Create an AggregateToken.
         /// </summary>
-        /// <param name="expressions">The list of AggregateExpressionToken.</param>
         [Obsolete("Use AggregateExpressions for all aggregation expressions or AggregateExpressions.OfType<AggregateExpressionToken>()  for aggregate(..) expressions only.")]
         public IEnumerable<AggregateExpressionToken> Expressions
         {

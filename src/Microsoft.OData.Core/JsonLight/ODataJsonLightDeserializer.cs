@@ -13,9 +13,7 @@ namespace Microsoft.OData.JsonLight
     using System.Globalization;
     using System.Linq;
     using System.Text;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Edm;
     using Microsoft.OData;
     using Microsoft.OData.Evaluation;
@@ -84,7 +82,7 @@ namespace Microsoft.OData.JsonLight
             /// <summary>A metadata reference property was found.</summary>
             MetadataReferenceProperty,
 
-            /// <summary>A property representing a nested delta resoruce set was found.</summary>
+            /// <summary>A property representing a nested delta resource set was found.</summary>
             NestedDeltaResourceSet,
         }
 
@@ -264,7 +262,6 @@ namespace Microsoft.OData.JsonLight
 #endif
         }
 
-#if PORTABLELIB
 
         /// <summary>
         /// Read the start of the top-level data wrapper in JSON responses.
@@ -314,7 +311,6 @@ namespace Microsoft.OData.JsonLight
 #endif
                 });
         }
-#endif
 
         /// <summary>
         /// Reads the end of the top-level data wrapper in JSON responses.
@@ -740,7 +736,7 @@ namespace Microsoft.OData.JsonLight
                 {
                     annotationNameFromReader = this.CompleteSimplifiedODataAnnotation(annotationNameFromReader);
 
-                    // If this is a unknown odata annotation targeting a property, we skip over it. See remark on the method SkippedOverUnknownODataAnnotation() for detailed explaination.
+                    // If this is a unknown odata annotation targeting a property, we skip over it. See remark on the method SkippedOverUnknownODataAnnotation() for detailed explanation.
                     // Note that we don't skip over unknown odata annotations targeting another annotation. We don't allow annotations (except odata.type) targeting other annotations,
                     // so this.ProcessPropertyAnnotation() will test and fail for that case.
                     if (!ODataJsonLightReaderUtils.IsAnnotationProperty(propertyNameFromReader) && this.SkippedOverUnknownODataAnnotation(annotationNameFromReader, out annotationValue))
@@ -757,7 +753,7 @@ namespace Microsoft.OData.JsonLight
                     continue;
                 }
 
-                // If this is a unknown odata annotation, skip over it. See remark on the method SkippedOverUnknownODataAnnotation() for detailed explaination.
+                // If this is a unknown odata annotation, skip over it. See remark on the method SkippedOverUnknownODataAnnotation() for detailed explanation.
                 if (isInstanceAnnotation && this.SkippedOverUnknownODataAnnotation(propertyNameFromReader, out annotationValue))
                 {
                     // collect 'odata.<unknown>' annotation:

@@ -588,6 +588,24 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
+        /// A string like "The context is currently in no tracking mode, in order to use streams make sure your entities extend BaseEntityType and query the Item again from the server to populate the read link or enable tracking."
+        /// </summary>
+        internal static string Context_EntityMediaLinksNotTrackedInEntity {
+            get {
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Context_EntityMediaLinksNotTrackedInEntity);
+            }
+        }
+
+        /// <summary>
+        /// A string like "The context is in non tracking mode, The entity does not seem to have the media links populated properly. Please verify server response is correct and that the entity extends BaseEntityType."
+        /// </summary>
+        internal static string Context_EntityInNonTrackedContextLacksMediaLinks {
+            get {
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Context_EntityInNonTrackedContextLacksMediaLinks);
+            }
+        }
+
+        /// <summary>
         /// A string like "When you call the UseJson method without a parameter, you must use the LoadServiceModel property to provide a valid IEdmModel instance."
         /// </summary>
         internal static string DataServiceClientFormat_LoadServiceModelRequired {
@@ -736,10 +754,10 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
-        /// A string like "The property '{0}' is of entity type and it cannot be a property of the type '{1}', which is not of entity type.  Only entity types can contain navigation properties."
+        /// A string like "The property '{0}' is of entity type and it cannot be a property of the type '{1}', which is not of entity type or complex type.  Only entity types and complex types can contain navigation properties."
         /// </summary>
-        internal static string ClientTypeCache_NonEntityTypeCannotContainEntityProperties(object p0, object p1) {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ClientTypeCache_NonEntityTypeCannotContainEntityProperties, p0, p1);
+        internal static string ClientTypeCache_NonEntityTypeOrNonComplexTypeCannotContainEntityProperties(object p0, object p1) {
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ClientTypeCache_NonEntityTypeOrNonComplexTypeCannotContainEntityProperties, p0, p1);
         }
 
         /// <summary>
@@ -1246,10 +1264,10 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
-        /// A string like "Can't add query option '{0}' because it begins with reserved character '$'."
+        /// A string like "The query option '{0}' is not supported or is controlled by the OData service."
         /// </summary>
-        internal static string ALinq_CantAddQueryOptionStartingWithDollarSign(object p0) {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ALinq_CantAddQueryOptionStartingWithDollarSign, p0);
+        internal static string ALinq_QueryOptionNotSupported(object p0) {
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ALinq_QueryOptionNotSupported, p0);
         }
 
         /// <summary>
@@ -1843,15 +1861,15 @@ namespace Microsoft.OData.Client {
         /// <summary>
         /// A string like "The operation parameter named '{0}' has a collection item of Edm type kind '{1}'. A collection item must be either a primitive type or a complex Edm type kind."
         /// </summary>
-        internal static string Serializer_InvalidCollectionParamterItemType(object p0, object p1) {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Serializer_InvalidCollectionParamterItemType, p0, p1);
+        internal static string Serializer_InvalidCollectionParameterItemType(object p0, object p1) {
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Serializer_InvalidCollectionParameterItemType, p0, p1);
         }
 
         /// <summary>
         /// A string like "The operation parameter named '{0}' has a null collection item. The items of a collection must not be null."
         /// </summary>
-        internal static string Serializer_NullCollectionParamterItemValue(object p0) {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Serializer_NullCollectionParamterItemValue, p0);
+        internal static string Serializer_NullCollectionParameterItemValue(object p0) {
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Serializer_NullCollectionParameterItemValue, p0);
         }
 
         /// <summary>

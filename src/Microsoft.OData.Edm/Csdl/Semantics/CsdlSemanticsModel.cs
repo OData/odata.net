@@ -4,9 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if PORTABLELIB
 using System.Collections.Concurrent;
-#endif
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -29,11 +27,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly CsdlModel astModel;        // current internal CsdlModel
         private readonly List<CsdlSemanticsSchema> schemata = new List<CsdlSemanticsSchema>();
         private readonly Dictionary<string, List<CsdlSemanticsAnnotations>> outOfLineAnnotations = new Dictionary<string, List<CsdlSemanticsAnnotations>>();
-#if PORTABLELIB
         private readonly ConcurrentDictionary<CsdlAnnotation, CsdlSemanticsVocabularyAnnotation> wrappedAnnotations = new ConcurrentDictionary<CsdlAnnotation, CsdlSemanticsVocabularyAnnotation>();
-#else
-        private readonly Dictionary<CsdlAnnotation, CsdlSemanticsVocabularyAnnotation> wrappedAnnotations = new Dictionary<CsdlAnnotation, CsdlSemanticsVocabularyAnnotation>();
-#endif
         private readonly Dictionary<string, List<IEdmStructuredType>> derivedTypeMappings = new Dictionary<string, List<IEdmStructuredType>>();
 
         /// <summary>
@@ -41,7 +35,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         /// </summary>
         /// <param name="astModel">The raw CsdlModel.</param>
         /// <param name="annotationsManager">The IEdmDirectValueAnnotationsManager.</param>
-        /// <param name="referencedModels">The IEdmModels to be referenced. if any element or namespce is not supposed to be include, you should have removed it before passing to this constructor.</param>
+        /// <param name="referencedModels">The IEdmModels to be referenced. if any element or namespace is not supposed to be include, you should have removed it before passing to this constructor.</param>
         /// <param name="includeDefaultVocabularies">A value indicating enable/disable the built-in vocabulary supporting.</param>
         public CsdlSemanticsModel(CsdlModel astModel, IEdmDirectValueAnnotationsManager annotationsManager, IEnumerable<IEdmModel> referencedModels, bool includeDefaultVocabularies = true)
             : base(referencedModels, annotationsManager, includeDefaultVocabularies)

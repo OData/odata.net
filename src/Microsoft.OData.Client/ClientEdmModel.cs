@@ -323,12 +323,12 @@ namespace Microsoft.OData.Client
             }
             else
             {
-                // type is a complex type. Return all types on the hierarchy where there are properties defined.
+                // type is a complex type. Return all types on the hierarchy with or without properties defined.
                 do
                 {
                     hierarchy.Insert(0, type);
                 }
-                while ((type = c.PlatformHelper.GetBaseType(type)) != null && ClientTypeUtil.GetPropertiesOnType(type, false /*declaredOnly*/).Any());
+                while ((type = c.PlatformHelper.GetBaseType(type)) != null);
             }
 
             return hierarchy.ToArray();
@@ -372,7 +372,7 @@ namespace Microsoft.OData.Client
         private void SetMimeTypeForProperties(IEdmStructuredType edmStructuredType)
         {
             MimeTypePropertyAttribute attribute = (MimeTypePropertyAttribute)this.GetClientTypeAnnotation(edmStructuredType).ElementType.GetCustomAttributes(typeof(MimeTypePropertyAttribute), true).SingleOrDefault();
-            if (null != attribute)
+            if (attribute != null)
             {
                 IEdmProperty dataProperty = edmStructuredType.Properties().SingleOrDefault(p => p.Name == attribute.DataPropertyName);
                 if (dataProperty == null)
@@ -591,32 +591,34 @@ namespace Microsoft.OData.Client
                 propertyEdmType.TypeKind == EdmTypeKind.Collection,
                 "Property kind should be Entity, Complex, Enum, Primitive or Collection.");
 
-            IEdmProperty edmProperty;
+            IEdmProperty edmProperty = null;
             bool isPropertyNullable = ClientTypeUtil.CanAssignNull(propertyInfo.PropertyType);
             if (propertyEdmType.TypeKind == EdmTypeKind.Entity || (propertyEdmType.TypeKind == EdmTypeKind.Collection && ((IEdmCollectionType)propertyEdmType).ElementType.TypeKind() == EdmTypeKind.Entity))
             {
-                IEdmEntityType declaringEntityType = declaringType as IEdmEntityType;
-                if (declaringEntityType == null)
+                if (declaringType.TypeKind == EdmTypeKind.Entity || declaringType.TypeKind == EdmTypeKind.Complex)
                 {
-                    throw c.Error.InvalidOperation(c.Strings.ClientTypeCache_NonEntityTypeCannotContainEntityProperties(propertyInfo.Name, propertyInfo.DeclaringType.ToString()));
-                }
+                    if (declaringType as IEdmEntityType == null && declaringType as IEdmComplexType == null)
+                    {
+                        throw c.Error.InvalidOperation(c.Strings.ClientTypeCache_NonEntityTypeOrNonComplexTypeCannotContainEntityProperties(propertyInfo.Name, propertyInfo.DeclaringType.ToString()));
+                    }
 
-                // Create a navigation property representing one side of an association.
-                // The partner representing the other side exists only inside this property and is not added to the target entity type,
-                // so it should not cause any name collisions.
-                edmProperty = EdmNavigationProperty.CreateNavigationPropertyWithPartner(
-                    ClientTypeUtil.GetServerDefinedName(propertyInfo),
-                    propertyEdmType.ToEdmTypeReference(isPropertyNullable),
-                    /*dependentProperties*/ null,
-                    /*principalProperties*/ null,
-                    /*containsTarget*/ false,
-                    EdmOnDeleteAction.None,
-                    "Partner",
-                    declaringEntityType.ToEdmTypeReference(true),
-                    /*partnerDependentProperties*/ null,
-                    /*partnerPrincipalProperties*/ null,
-                    /*partnerContainsTarget*/ false,
-                    EdmOnDeleteAction.None);
+                    // Create a navigation property representing one side of an association.
+                    // The partner representing the other side exists only inside this property and is not added to the target entity type,
+                    // so it should not cause any name collisions.
+                    edmProperty = EdmNavigationProperty.CreateNavigationPropertyWithPartner(
+                        ClientTypeUtil.GetServerDefinedName(propertyInfo),
+                        propertyEdmType.ToEdmTypeReference(isPropertyNullable),
+                        /*dependentProperties*/ null,
+                        /*principalProperties*/ null,
+                        /*containsTarget*/ false,
+                        EdmOnDeleteAction.None,
+                        "Partner",
+                        declaringType.ToEdmTypeReference(true),
+                        /*partnerDependentProperties*/ null,
+                        /*partnerPrincipalProperties*/ null,
+                        /*partnerContainsTarget*/ false,
+                        EdmOnDeleteAction.None);
+                }
             }
             else
             {

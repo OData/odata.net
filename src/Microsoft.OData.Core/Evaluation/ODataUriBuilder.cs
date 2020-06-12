@@ -18,7 +18,7 @@ namespace Microsoft.OData.Evaluation
 #endif
 {
     /// <summary>
-    /// Extensibility point for customizing how OData uri's are built.
+    /// Extensibility point for customizing how OData URIs are built.
     /// </summary>
     internal abstract class ODataUriBuilder
     {

@@ -801,6 +801,17 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         }
 
         [Fact]
+        public void TestHasAnyParity()
+        {
+            IList<IEdmEntityType> list = new List<IEdmEntityType>();
+            for(int i=1; i <10; i++)
+            {
+                Assert.Equal(HasAnyCheap(list), HasAnyExpensive(list));
+                list.Add(new EdmEntityType("NS", "f" + i, TestModel.Instance.EntitySet.EntityType()));
+            }
+        }
+
+        [Fact]
         public void FindDeclaredEntitySetWithSingletonName()
         {
             Assert.Null(TestModel.Instance.Model.FindDeclaredEntitySet(TestModel.Instance.Singleton.Name));
@@ -878,6 +889,14 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         }
 
         [Fact]
+        public void FindDeclaredOperationImportsReturnsEmptyEnumerableForNoEntityContainerInModel()
+        {
+            var operationImportName = "NonExistingOperationImport";
+            var result = new EdmModel().FindDeclaredOperationImports(operationImportName);
+            Assert.Empty(result);
+        }
+
+        [Fact]
         public void FindTypeByAliasName()
         {
             Assert.Equal("TestModelNameSpace.T1", TestModel.Instance.Model.FindType("TestModelAlias.T1").FullName());
@@ -937,6 +956,46 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
             Assert.Null(unknownType);
         }
 
+        [Theory]
+        [InlineData("TestModelNameSpace.MyFunction")]
+        [InlineData("TestModelAlias.MyFunction")]
+        public void FindBoundFunctionByNamespaceAndAlias(string operation)
+        {
+            var operations = TestModel.Instance.Model.FindBoundOperations(operation, TestModel.Instance.T1);
+            var foundOperation = Assert.Single(operations);
+            Assert.Equal("TestModelNameSpace.MyFunction", foundOperation.FullName());
+        }
+
+        [Theory]
+        [InlineData("TestModelNameSpace.MyAction")]
+        [InlineData("TestModelAlias.MyAction")]
+        public void FindBoundActionByNamespaceAndAlias(string operation)
+        {
+            var operations = TestModel.Instance.Model.FindBoundOperations(operation, TestModel.Instance.T1);
+            var foundOperation = Assert.Single(operations);
+            Assert.Equal("TestModelNameSpace.MyAction", foundOperation.FullName());
+        }
+
+        [Fact]
+        public void GetNamespaceAliasReturnsNullForNamespaceWithoutAlias()
+        {
+            Assert.Null(TestModel.Instance.Model.GetNamespaceAlias("SomeNamespace.NotIn.Model"));
+        }
+
+        [Fact]
+        public void GetNamespaceAliasReturnsNullForModelsWithoutAliases()
+        {
+            EdmModel model = new EdmModel(false);
+            Assert.Null(model.GetNamespaceAlias("SomeNamespace"));
+        }
+
+        [Fact]
+        public void GetNamespaceAliasForNamespaceWithAlias()
+        {
+            Assert.Equal(TestModel.TestModelAlias, TestModel.Instance.Model.GetNamespaceAlias(TestModel.TestModelNameSpace));
+            Assert.Equal(TestModel.TestModelAlias2, TestModel.Instance.Model.GetNamespaceAlias(TestModel.TestModelNameSpace2));
+        }
+        
         internal class TestModel
         {
             public static TestModel Instance = new TestModel();
@@ -962,6 +1021,14 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
                 this.Model.AddElement(this.T2);
 
                 this.Model.AddElement(new EdmEnumType(TestModelNameSpace2, "E1"));
+
+                var function = new EdmFunction(TestModelNameSpace, "MyFunction", EdmCoreModel.Instance.GetBoolean(false), true, null, false);
+                function.AddParameter("entity", new EdmEntityTypeReference(this.T1, true));
+                this.Model.AddElement(function);
+
+                var action = new EdmAction(TestModelNameSpace, "MyAction", null, true, null);
+                action.AddParameter("entity", new EdmEntityTypeReference(this.T1, true));
+                this.Model.AddElement(action);
 
                 this.functionImport = new EdmFunction(TestModelNameSpace, "Function1", new EdmEntityTypeReference(this.T1, true));
                 this.functionImport.AddParameter("id", EdmCoreModel.Instance.GetInt32(false));
@@ -1031,6 +1098,33 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
             {
                 get { return type; }
             }
+        }
+
+        internal static bool HasAnyExpensive<T>(IEnumerable<T> enumerable) where T : class
+        {
+            IList<T> list = enumerable as IList<T>;
+            if (list != null)
+            {
+                return list.Count > 0;
+            }
+
+            T[] array = enumerable as T[];
+            if (array != null)
+            {
+                return array.Length > 0;
+            }
+
+            return enumerable.FirstOrDefault() != null;
+        }
+
+        internal static bool HasAnyCheap<T>(IEnumerable<T> enumerable) where T : class
+        {
+            if (enumerable != null && enumerable.GetEnumerator().MoveNext())
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

@@ -734,7 +734,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
         {
             ExceptionUtilities.CheckArgumentNotNull(type, "type");
             bool isGenericType = false;
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             isGenericType = type.GetTypeInfo().IsGenericType;
 #else
             isGenericType = type.IsGenericType;
@@ -765,7 +765,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
         {
             ExceptionUtilities.CheckArgumentNotNull(type, "type");
             bool isValueType = false;
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             isValueType = type.GetTypeInfo().IsValueType;
 #else
             isValueType = type.IsValueType;
@@ -806,7 +806,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
             }
 
             bool isGenericType = false;
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             isGenericType = seqType.GetTypeInfo().IsGenericType;
 #else
             isGenericType = seqType.IsGenericType;
@@ -835,7 +835,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
             }
 
             Type baseType = null;
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             baseType = seqType.GetTypeInfo().BaseType;
 #else
             baseType = seqType.BaseType;

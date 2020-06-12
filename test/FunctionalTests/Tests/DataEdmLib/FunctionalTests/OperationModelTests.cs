@@ -31,7 +31,7 @@ namespace EdmLibTests.FunctionalTests
             this.EdmVersion = EdmVersion.V40;
         }
 
-        [TestMethod]
+         [TestMethod]
         [MethodImpl(MethodImplOptions.NoOptimization)]
         public void OperationStandaloneTestRoundtripVerify()
         {

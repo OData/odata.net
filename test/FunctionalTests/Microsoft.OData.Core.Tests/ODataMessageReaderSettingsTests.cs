@@ -154,7 +154,33 @@ namespace Microsoft.OData.Tests
             copyOfSettings = settings.Clone();
             this.CompareMessageReaderSettings(settings, copyOfSettings);
         }
+#if NETCOREAPP3_1
+        [Fact]
+        public void ODataMessageReaderSettingsErrorTest()
+        {
+            // MaxPartsPerBatch
+            Action test = () => new ODataMessageReaderSettings() { MessageQuotas = new ODataMessageQuotas() { MaxPartsPerBatch = -1 } };
+            test.Throws<ArgumentOutOfRangeException>(Strings.ExceptionUtils_CheckIntegerNotNegative("-1") + " (Parameter 'MaxPartsPerBatch')");
 
+            // MaxOperationsPerChangeset
+            test = () => new ODataMessageReaderSettings() { MessageQuotas = new ODataMessageQuotas() { MaxOperationsPerChangeset = -1 } };
+            test.Throws<ArgumentOutOfRangeException>(Strings.ExceptionUtils_CheckIntegerNotNegative("-1") + " (Parameter 'MaxOperationsPerChangeset')");
+
+            // MaxNestingDepth
+            test = () => new ODataMessageReaderSettings() { MessageQuotas = new ODataMessageQuotas() { MaxNestingDepth = -1 } };
+            test.Throws<ArgumentOutOfRangeException>(Strings.ExceptionUtils_CheckIntegerPositive("-1") + " (Parameter 'MaxNestingDepth')");
+
+            test = () => new ODataMessageReaderSettings() { MessageQuotas = new ODataMessageQuotas() { MaxNestingDepth = 0 } };
+            test.Throws<ArgumentOutOfRangeException>(Strings.ExceptionUtils_CheckIntegerPositive("0") + " (Parameter 'MaxNestingDepth')");
+
+            // MaxMessageSize
+            test = () => new ODataMessageReaderSettings() { MessageQuotas = new ODataMessageQuotas() { MaxReceivedMessageSize = -1 } };
+            test.Throws<ArgumentOutOfRangeException>(Strings.ExceptionUtils_CheckLongPositive("-1") + " (Parameter 'MaxReceivedMessageSize')");
+
+            test = () => new ODataMessageReaderSettings() { MessageQuotas = new ODataMessageQuotas() { MaxReceivedMessageSize = 0 } };
+            test.Throws<ArgumentOutOfRangeException>(Strings.ExceptionUtils_CheckLongPositive("0") + " (Parameter 'MaxReceivedMessageSize')");
+        }
+#else
         [Fact]
         public void ODataMessageReaderSettingsErrorTest()
         {
@@ -180,31 +206,16 @@ namespace Microsoft.OData.Tests
             test = () => new ODataMessageReaderSettings() { MessageQuotas = new ODataMessageQuotas() { MaxReceivedMessageSize = 0 } };
             test.Throws<ArgumentOutOfRangeException>(Strings.ExceptionUtils_CheckLongPositive("0") + "\r\nParameter name: MaxReceivedMessageSize");
         }
-
+#endif
         private void CompareMessageReaderSettings(ODataMessageReaderSettings expected, ODataMessageReaderSettings actual)
         {
             if (expected == null && actual == null)
             {
                 return;
             }
-
-            Assert.True(expected != null, "expected settings cannot be null");
-            Assert.True(actual != null, "actual settings cannot be null");
-            Assert.True(expected.Validations == actual.Validations, "Validations does not match");
-            Assert.True(Uri.Compare(expected.BaseUri, actual.BaseUri, UriComponents.AbsoluteUri, UriFormat.Unescaped, StringComparison.CurrentCulture) == 0,
-                "BaseUri does not match");
-            Assert.True(expected.ClientCustomTypeResolver == actual.ClientCustomTypeResolver, "ClientCustomTypeResolver does not match");
-            Assert.True(expected.PrimitiveTypeResolver == actual.PrimitiveTypeResolver, "PrimitiveTypeResolver does not match");
-            Assert.True(expected.EnableMessageStreamDisposal == actual.EnableMessageStreamDisposal, "EnableMessageStreamDisposal does not match");
-            Assert.True(expected.EnablePrimitiveTypeConversion == actual.EnablePrimitiveTypeConversion, "EnablePrimitiveTypeConversion does not match");
-            Assert.True(expected.EnableCharactersCheck == actual.EnableCharactersCheck, "CheckCharacters does not match");
-            Assert.True(expected.ShouldIncludeAnnotation == actual.ShouldIncludeAnnotation, "UseKeyAsSegment does not match");
-            Assert.True(expected.Validations == actual.Validations, "Validations does not match");
-            Assert.True(expected.MaxProtocolVersion == actual.MaxProtocolVersion, "MaxProtocolVersion does not match.");
-            Assert.True(expected.MessageQuotas.MaxPartsPerBatch == actual.MessageQuotas.MaxPartsPerBatch, "MaxPartsPerBatch does not match");
-            Assert.True(expected.MessageQuotas.MaxOperationsPerChangeset == actual.MessageQuotas.MaxOperationsPerChangeset, "MaxOperationsPerChangeset does not match");
-            Assert.True(expected.MessageQuotas.MaxNestingDepth == actual.MessageQuotas.MaxNestingDepth, "MaxNestingDepth does not match");
-            Assert.True(expected.MessageQuotas.MaxReceivedMessageSize == actual.MessageQuotas.MaxReceivedMessageSize, "MaxMessageSize does not match");
+            
+            var differences = ValidationHelper.GetDifferences<ODataMessageReaderSettings>(expected, actual);
+            Assert.True(differences.Count == 0, String.Join(",", differences));      
         }
 
         [Fact]

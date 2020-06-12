@@ -14,9 +14,7 @@ namespace Microsoft.OData.JsonLight
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Edm;
     using Microsoft.OData.Json;
     using Microsoft.OData.Metadata;
@@ -75,7 +73,6 @@ namespace Microsoft.OData.JsonLight
             return resultProperty;
         }
 
-#if PORTABLELIB
         /// <summary>
         /// This method creates an reads the property from the input and
         /// returns an <see cref="ODataProperty"/> representing the read property.
@@ -108,7 +105,6 @@ namespace Microsoft.OData.JsonLight
                     return resultProperty;
                 });
         }
-#endif
 
         /// <summary>
         /// Reads a primitive value, enum, resource (complex or entity) value or collection.
@@ -186,7 +182,7 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Reads bulit-in "odata." or custom instance annotation's value.
+        /// Reads built-in "odata." or custom instance annotation's value.
         /// </summary>
         /// <param name="annotationName">The annotation name.</param>
         /// <param name="odataType">the odata.type value if exists.</param>

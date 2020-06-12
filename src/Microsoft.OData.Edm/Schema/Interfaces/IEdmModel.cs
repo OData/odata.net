@@ -16,7 +16,7 @@ namespace Microsoft.OData.Edm
     /// This interface, and all interfaces reachable from it, preserve certain invariants:
     ///    -- The backing implementation of an element can be loaded or created on demand.
     ///    -- No direct element mutation occurs through the interfaces.
-    /// Only the MainModel and ReferencedModels properties are for referneced models scenario. all other properties and methods only focus on this model, not main/sibling/referenced models .
+    /// Only the MainModel and ReferencedModels properties are for referenced models scenario. all other properties and methods only focus on this model, not main/sibling/referenced models .
     /// </remarks>
     public interface IEdmModel : IEdmElement
     {

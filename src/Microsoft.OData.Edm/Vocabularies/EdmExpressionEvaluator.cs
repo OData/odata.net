@@ -405,6 +405,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                 case EdmExpressionKind.Null:
                     return (IEdmNullExpression)expression;
                 case EdmExpressionKind.Path:
+                case EdmExpressionKind.AnnotationPath:
                     {
                         if (context == null)
                         {
@@ -431,9 +432,9 @@ namespace Microsoft.OData.Edm.Vocabularies
                         {
                             if (hop.Contains("@"))
                             {
-                                var currentPathSegementInfos = hop.Split('@');
-                                var propertyName = currentPathSegementInfos[0];
-                                var termInfo = currentPathSegementInfos[1];
+                                var currentPathSegmentInfos = hop.Split('@');
+                                var propertyName = currentPathSegmentInfos[0];
+                                var termInfo = currentPathSegmentInfos[1];
                                 IEdmExpression termCastExpression = null;
 
                                 if (!string.IsNullOrWhiteSpace(termInfo))

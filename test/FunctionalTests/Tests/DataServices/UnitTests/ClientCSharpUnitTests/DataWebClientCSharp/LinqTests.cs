@@ -22,11 +22,14 @@ namespace AstoriaUnitTests.Tests
     using AstoriaUnitTests.Stubs;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using NorthwindModel;
+    using System.IO;
+    using System.Text;
+    using Microsoft.OData;
     #endregion Namespaces
 
     // For comment out test cases, see github: https://github.com/OData/odata.net/issues/881
     [DeploymentItem("Workspaces", "Workspaces")]
-    [TestClass]
+     [TestClass]
     public class LinqTests
     {
         private static DataServiceContext context;
@@ -3425,7 +3428,7 @@ namespace AstoriaUnitTests.Tests
             // with inline count
             ReadOnlyTestContext.ClearBaselineIncludes();
 
-            var val9 = (from s in context.CreateQuery<Stadium>("Stadiums").IncludeTotalCount()
+            var val9 = (from s in context.CreateQuery<Stadium>("Stadiums").IncludeCount()
                         where true
                         select new NarrowStadium
                         {
@@ -3644,9 +3647,9 @@ namespace AstoriaUnitTests.Tests
             }
             ReadOnlyTestContext.ClearBaselineIncludes();
 
-            //IncludeTotalCount - Entity Type.
+            //IncludeCount - Entity Type.
             ReadOnlyTestContext.ClearBaselineIncludes();
-            var queryable = from c in context.CreateQuery<BigCity>("BigCities").IncludeTotalCount()
+            var queryable = from c in context.CreateQuery<BigCity>("BigCities").IncludeCount()
                             select new LittleCity
                             {
                                 BigCityID = c.BigCityID,
@@ -3665,16 +3668,16 @@ namespace AstoriaUnitTests.Tests
 
             QueryOperationResponse qor = (QueryOperationResponse)(results);
 
-            if ((qor.TotalCount != baseline.Count()) || (qor.TotalCount != baseLineContext.BigCities.Count()))
+            if ((qor.Count != baseline.Count()) || (qor.Count != baseLineContext.BigCities.Count()))
             {
                 throw new Exception("Test failed");
             }
 
             RunTest(baseline, queryable, true);
 
-            //IncludeTotalCount - non Entity Type.
+            //IncludeCount - non Entity Type.
             ReadOnlyTestContext.ClearBaselineIncludes();
-            var queryable2 = from c in context.CreateQuery<BigCity>("BigCities").IncludeTotalCount()
+            var queryable2 = from c in context.CreateQuery<BigCity>("BigCities").IncludeCount()
                              select new
                              {
                                  BigCityID = c.BigCityID,
@@ -3693,21 +3696,21 @@ namespace AstoriaUnitTests.Tests
 
             QueryOperationResponse qor2 = (QueryOperationResponse)(results2);
 
-            if ((qor2.TotalCount != baseline.Count()) || (qor2.TotalCount != baseLineContext.BigCities.Count()))
+            if ((qor2.Count != baseline.Count()) || (qor2.Count != baseLineContext.BigCities.Count()))
             {
                 throw new Exception("Test failed");
             }
 
             RunTest(baseline2, queryable2, true);
 
-            //IncludeTotalCount - Entity Type, after projection
+            //IncludeCount - Entity Type, after projection
             ReadOnlyTestContext.ClearBaselineIncludes();
             var queryable3 = ((DataServiceQuery<LittleCity>)from c in context.CreateQuery<BigCity>("BigCities")
                                                             select new LittleCity
                                                             {
                                                                 BigCityID = c.BigCityID,
                                                                 Name = c.Name
-                                                            }).IncludeTotalCount();
+                                                            }).IncludeCount();
 
             var baseline3 = from c in baseLineContext.BigCities
                             select new LittleCity
@@ -3721,16 +3724,16 @@ namespace AstoriaUnitTests.Tests
 
             QueryOperationResponse qor3 = (QueryOperationResponse)(results3);
 
-            if ((qor3.TotalCount != baseline3.Count()) || (qor3.TotalCount != baseLineContext.BigCities.Count()))
+            if ((qor3.Count != baseline3.Count()) || (qor3.Count != baseLineContext.BigCities.Count()))
             {
                 throw new Exception("Test failed");
             }
 
             RunTest(baseline3, queryable3, true);
 
-            // IncludeTotalCount with query options
+            // IncludeCount with query options
             ReadOnlyTestContext.ClearBaselineIncludes();
-            var queryable4 = from c in context.CreateQuery<BigCity>("BigCities").IncludeTotalCount()
+            var queryable4 = from c in context.CreateQuery<BigCity>("BigCities").IncludeCount()
                              where c.BigCityID > 0
                              orderby c.Population
                              select new LittleCity
@@ -3753,7 +3756,7 @@ namespace AstoriaUnitTests.Tests
 
             QueryOperationResponse qor4 = (QueryOperationResponse)(results);
 
-            if (qor4.TotalCount != baseline.Count())
+            if (qor4.Count != baseline.Count())
             {
                 throw new Exception("Test failed");
             }
@@ -7899,7 +7902,7 @@ namespace AstoriaUnitTests.Tests
             return value;
         }
 
-        // [TestMethod]
+        [TestMethod]
         public void LinqAddQueryOption()
         {
             {
@@ -8035,24 +8038,44 @@ namespace AstoriaUnitTests.Tests
             }
             catch (Exception e)
             {
-                if (e.Message != "Can't add query option '$custom' because it begins with reserved character '$'.")
+                if (e.Message != "The query option '$custom' is not supported or is controlled by the OData service.")
                 {
                     throw new Exception("Test Failed");
                 }
             }
 
+            Trace.WriteLine("known, but unsupported query  options");
+
+            foreach (var option in new string[] { "$apply", "$skiptoken", "$delta"})
+            {
+                var queryableUnsupportedOption = ((DataServiceQuery<League>)from l in context.CreateQuery<League>("Leagues")
+                                                                            select l)
+                                                        .AddQueryOption(option, 1);
+
+                try
+                {
+                    queryableUnsupportedOption.GetEnumerator();
+                }
+                catch (Exception e)
+                {
+                    if (e.Message != $"The query option '{option}' is not supported or is controlled by the OData service.")
+                    {
+                        throw new Exception("Test Failed");
+                    }
+                }
+            }
 
             Trace.WriteLine("user specified Astoria option which is dup");
 
             ReadOnlyTestContext.ClearBaselineIncludes();
 
-            var queryable8 = ((DataServiceQuery<League>)(from l in context.CreateQuery<League>("Leagues")
+            var queryableTopOptionDuplicate = ((DataServiceQuery<League>)(from l in context.CreateQuery<League>("Leagues")
                                                          select l).Take(1)).AddQueryOption("$skip", 2).AddQueryOption("$filter", 2)
                                                         .AddQueryOption("$top", 2);
 
             try
             {
-                queryable8.GetEnumerator();
+                queryableTopOptionDuplicate.GetEnumerator();
             }
             catch (Exception e)
             {
@@ -8065,18 +8088,18 @@ namespace AstoriaUnitTests.Tests
             Trace.WriteLine("user specified just $");
             ReadOnlyTestContext.ClearBaselineIncludes();
 
-            var queryable9 = ((DataServiceQuery<League>)from l in context.CreateQuery<League>("Leagues")
+            var queryableJustDollarSignOption = ((DataServiceQuery<League>)from l in context.CreateQuery<League>("Leagues")
                                                         select l)
                                                         .AddQueryOption("$", 1)
                                                         .AddQueryOption("$$", 1);
 
             try
             {
-                queryable9.GetEnumerator();
+                queryableJustDollarSignOption.GetEnumerator();
             }
             catch (Exception e)
             {
-                if (e.Message != "Can't add query option '$' because it begins with reserved character '$'.")
+                if (e.Message != "The query option '$' is not supported or is controlled by the OData service.")
                 {
                     throw new Exception("Test Failed");
                 }
@@ -8141,8 +8164,9 @@ namespace AstoriaUnitTests.Tests
                 IQueryable q = baseQueries[i];
 
                 // 1: Inline Counting
-                MethodInfo IncludeTotalCountMethod = typeof(DataServiceQuery<>).MakeGenericType(q.ElementType).GetMethod("IncludeTotalCount");
-                IQueryable inlineQuery = (IQueryable)IncludeTotalCountMethod.Invoke(q, null);
+                MethodInfo IncludeCountMethod = typeof(DataServiceQuery<>).MakeGenericType(q.ElementType).GetMethods()
+                    .First(m => m.Name == "IncludeCount" && m.GetParameters().Length == 0);
+                IQueryable inlineQuery = (IQueryable)IncludeCountMethod.Invoke(q, null);
                 string uri = inlineQuery.ToString();
                 Assert.IsTrue(uri.EndsWith(expectedUris[i * 2]));
 
@@ -8153,17 +8177,41 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
+        [TestMethod]
+        public void VerifyCountIsNotCarriedOver()
+        {
+            var expectedLongCountFunctionUri = "/service.svc/Leagues/LongCountFunction(Param1='Param1',Param2='Param2')?$orderby=ID";
+            var expectedCountFunctionUri = "/service.svc/Leagues/CountFunction(Param1='Param1',Param2='Param2')?$orderby=ID";
+
+            var countQuery = context.CreateQuery<League>("Leagues");
+            var longcountQuery = context.CreateQuery<League>("Leagues");
+
+            var countFunctionQuery = countQuery.CreateFunctionQuery<League>("CountFunction", true, new UriOperationParameter("Param1", "Param1"),
+                    new UriOperationParameter("Param2", "Param2"));
+            var longCountFunctionQuery = longcountQuery.CreateFunctionQuery<League>("LongCountFunction", true, new UriOperationParameter("Param1", "Param1"),
+                    new UriOperationParameter("Param2", "Param2"));
+            
+            context.Configurations.RequestPipeline.OnMessageCreating = args => new CustomReqMsg(args);
+
+            countFunctionQuery.Count();
+            longCountFunctionQuery.LongCount();
+
+            var countOrderQuery = countFunctionQuery.OrderBy(x => x.ID);
+            var longCountOrderQuery = longCountFunctionQuery.OrderBy(x => x.ID);
+            Assert.IsTrue(countOrderQuery.ToString().EndsWith(expectedCountFunctionUri), "Wrong uri generated with count option");
+            Assert.IsTrue(longCountOrderQuery.ToString().EndsWith(expectedLongCountFunctionUri), "Wrong uri generated with longcount option");
+        }
         // [TestMethod]
         public void ProjectionAndCountTest()
         {
-            DataServiceQuery q = (DataServiceQuery)from t in context.CreateQuery<Team>("Teams").IncludeTotalCount()
+            DataServiceQuery q = (DataServiceQuery)from t in context.CreateQuery<Team>("Teams").IncludeCount()
                                                    select new { TID = t.TeamID };
 
             // Try both the sync and async version
             var qor = (QueryOperationResponse)q.Execute();
             var qor1 = (QueryOperationResponse)q.EndExecute(q.BeginExecute(null, null));
 
-            Assert.IsTrue(qor.TotalCount == qor1.TotalCount, "The counts must be the same from sync and async versions");
+            Assert.IsTrue(qor.Count == qor1.Count, "The counts must be the same from sync and async versions");
         }
 
         // [TestMethod]
@@ -8792,5 +8840,19 @@ namespace AstoriaUnitTests.Tests
         }
         #endregion
 
+    }
+
+    class CustomReqMsg : HttpWebRequestMessage
+    {
+        public CustomReqMsg(DataServiceClientRequestMessageArgs args) : base(args) { }
+
+        public override IODataResponseMessage GetResponse()
+        {
+            return new HttpWebResponseMessage(
+                headers: new Dictionary<string, string>(),
+                statusCode: 200,
+                getResponseStream: () => new MemoryStream(Encoding.UTF8.GetBytes("2"))
+                );
+        }
     }
 }

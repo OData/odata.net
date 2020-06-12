@@ -84,7 +84,7 @@ namespace Microsoft.OData.Client
         /// <param name="state">user state</param>
         internal BaseAsyncResult(object source, string method, AsyncCallback callback, object state)
         {
-            Debug.Assert(null != source, "null source");
+            Debug.Assert(source != null, "null source");
             this.Source = source;
             this.Method = method;
             this.userCallback = callback;
@@ -115,14 +115,14 @@ namespace Microsoft.OData.Client
         /// <summary>wait handle for when waiting is required</summary>
         /// <remarks>if displayed by debugger, it undesirable to create the WaitHandle</remarks>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        public System.Threading.WaitHandle AsyncWaitHandle
+        public WaitHandle AsyncWaitHandle
         {
             get
             {
-                if (null == this.asyncWait)
+                if (this.asyncWait == null)
                 {   // delay create the wait handle since the user may never use it
                     // like asyncWait which will be GC'd, the losers in creating the asyncWait will also be GC'd
-                    System.Threading.Interlocked.CompareExchange(ref this.asyncWait, new System.Threading.ManualResetEvent(this.IsCompleted), null);
+                    Interlocked.CompareExchange(ref this.asyncWait, new System.Threading.ManualResetEvent(this.IsCompleted), null);
 
                     // multi-thread condition
                     // 1) thread 1 returned IAsyncResult and !IsCompleted so AsyncWaitHandle.WaitOne()
@@ -164,13 +164,13 @@ namespace Microsoft.OData.Client
         /// <summary>is the result complete?</summary>
         internal bool IsCompletedInternally
         {
-            get { return (0 != this.completed); }
+            get { return  this.completed != 0; }
         }
 
         /// <summary>abort the result</summary>
         internal bool IsAborted
         {
-            get { return (2 == this.completed); }
+            get { return this.completed == 2; }
         }
 
         #endregion
@@ -188,7 +188,7 @@ namespace Microsoft.OData.Client
             set
             {
                 this.abortable = value;
-                if ((null != value) && this.IsAborted)
+                if ((value != null) && this.IsAborted)
                 {   // if the value hadn't been set yet, but aborting then propagate the abort
                     value.Abort();
                 }
@@ -214,7 +214,7 @@ namespace Microsoft.OData.Client
             Util.CheckArgumentNull(asyncResult, "asyncResult");
 
             T result = (asyncResult as T);
-            if ((null == result) || (source != result.Source) || (result.Method != method))
+            if ((result == null) || (source != result.Source) || (result.Method != method))
             {
                 throw Error.Argument(Strings.Context_DidNotOriginateAsync, "asyncResult");
             }
@@ -229,13 +229,13 @@ namespace Microsoft.OData.Client
             }
 
             // Prevent EndExecute from being called more than once.
-            if (System.Threading.Interlocked.Exchange(ref result.done, 1) != 0)
+            if (Interlocked.Exchange(ref result.done, 1) != 0)
             {
                 throw Error.Argument(Strings.Context_AsyncAlreadyDone, "asyncResult");
             }
 
             // Dispose the wait handle.
-            if (null != result.asyncWait)
+            if (result.asyncWait != null)
             {
                 System.Threading.Interlocked.CompareExchange(ref result.asyncWaitDisposeLock, new object(), null);
                 lock (result.asyncWaitDisposeLock)
@@ -250,9 +250,9 @@ namespace Microsoft.OData.Client
                 throw Error.InvalidOperation(Strings.Context_OperationCanceled);
             }
 
-            if (null != result.Failure)
+            if (result.Failure != null)
             {
-                if (Util.IsKnownClientExcption(result.Failure))
+                if (Util.IsKnownClientException(result.Failure))
                 {
                     throw result.Failure;
                 }
@@ -398,7 +398,7 @@ namespace Microsoft.OData.Client
                 finally
                 {
                     // 1. set IAsyncResult.IsCompleted, otherwise user was
-                    // signalled on another thread, but the property may not be true.
+                    // signaled on another thread, but the property may not be true.
                     this.userCompleted = true;
 
                     // 2. signal the wait handle because it can't be first nor can it be last.
@@ -413,9 +413,9 @@ namespace Microsoft.OData.Client
 
                     // 3. invoke the callback because user may throw an exception and stop any further processing
 #if PORTABLELIB
-                    if ((null != this.userCallback))
+                    if ((this.userCallback != null))
 #else
-                    if ((null != this.userCallback) && !(this.Failure is System.Threading.ThreadAbortException) && !(this.Failure is System.StackOverflowException))
+                    if ((this.userCallback != null) && !(this.Failure is ThreadAbortException) && !(this.Failure is StackOverflowException))
 #endif
                     {   // any exception thrown by user should be "unhandled"
                         // it's possible callback will be invoked while another creates and sets the asyncWait
@@ -475,7 +475,7 @@ namespace Microsoft.OData.Client
         /// <param name="errorcode">error code if null or completed</param>
         protected virtual void CompleteCheck(PerRequest value, InternalError errorcode)
         {
-            if ((null == value) || value.RequestCompleted)
+            if ((value == null) || value.RequestCompleted)
             {
                 // since PerRequest is nested, it won't get set true during Abort unlike BaseAsyncResult
                 // but like QueryAsyncResult, when the request is aborted it it lets the request throw on next operation
@@ -495,7 +495,7 @@ namespace Microsoft.OData.Client
             // Note that this.perRequest can be set to null by another thread executing concurrently in this.HandleCompleted(pereq).
             // We need to cache the value for this.perRequest and only call EqualRefCheck() if it is not null.
             PerRequest request = this.perRequest;
-            if (null != request)
+            if (request != null)
             {
                 EqualRefCheck(request, pereq, InternalError.InvalidSaveNextChange);
             }
@@ -507,7 +507,7 @@ namespace Microsoft.OData.Client
         /// <returns>true if the exception should be rethrown</returns>
         protected bool HandleFailure(PerRequest pereq, Exception e)
         {
-            if (null != pereq)
+            if (pereq != null)
             {
                 if (this.IsAborted)
                 {
@@ -557,7 +557,7 @@ namespace Microsoft.OData.Client
 #endif
                     int bufferOffset = checked((int)memoryStream.Position);
                     int bufferLength = checked((int)memoryStream.Length) - bufferOffset;
-                    if ((null == buffer) || (0 == bufferLength))
+                    if ((buffer == null) || (bufferLength == 0))
                     {
                         Error.ThrowInternalError(InternalError.InvalidEndGetRequestStreamContentLength);
                     }
@@ -707,9 +707,9 @@ namespace Microsoft.OData.Client
         /// </summary>
         private void SetAsyncWaitHandle()
         {
-            if (null != this.asyncWait)
+            if (this.asyncWait != null)
             {
-                System.Threading.Interlocked.CompareExchange(ref this.asyncWaitDisposeLock, new object(), null);
+                Interlocked.CompareExchange(ref this.asyncWaitDisposeLock, new object(), null);
                 lock (this.asyncWaitDisposeLock)
                 {
                     if (!this.asyncWaitDisposed)
@@ -767,7 +767,7 @@ namespace Microsoft.OData.Client
 #else
                 int count = contentStream.Stream.EndRead(asyncResult);
 #endif
-                if (0 < count)
+                if (count > 0)
                 {
                     bool firstEndRead = (pereq.RequestContentBufferValidLength == -1);
                     pereq.RequestContentBufferValidLength = count;
@@ -1103,13 +1103,13 @@ namespace Microsoft.OData.Client
                     {
                         this.isDisposed = true;
 
-                        if (null != this.ResponseStream)
+                        if (this.ResponseStream != null)
                         {
                             this.ResponseStream.Dispose();
                             this.ResponseStream = null;
                         }
 
-                        if (null != this.RequestContentStream)
+                        if (this.RequestContentStream != null)
                         {
                             if (this.RequestContentStream.Stream != null && this.RequestContentStream.IsKnownMemoryStream)
                             {
@@ -1122,7 +1122,7 @@ namespace Microsoft.OData.Client
                             this.RequestContentStream = null;
                         }
 
-                        if (null != this.RequestStream)
+                        if (this.RequestStream != null)
                         {
                             try
                             {

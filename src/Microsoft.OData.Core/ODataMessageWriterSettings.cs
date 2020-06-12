@@ -216,6 +216,12 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// isIEEE754Compatible is used to determine if the message follows IEEE 754 standard.
+        /// If this is set to true then long and decimals will be serialized as strings.
+        /// </summary>
+        internal bool IsIeee754Compatible { get; set; }
+
+        /// <summary>
         /// The acceptable charsets used to the determine the encoding of the message.
         /// This is a comma separated list of charsets as specified in RFC 2616, Section 14.2
         /// </summary>
@@ -419,11 +425,13 @@ namespace Microsoft.OData
             this.Version = other.Version;
             this.LibraryCompatibility = other.LibraryCompatibility;
             this.MetadataSelector = other.MetadataSelector;
+            this.IsIeee754Compatible = other.IsIeee754Compatible;
 
             this.validations = other.validations;
             this.ThrowIfTypeConflictsWithMetadata = other.ThrowIfTypeConflictsWithMetadata;
             this.ThrowOnDuplicatePropertyNames = other.ThrowOnDuplicatePropertyNames;
             this.ThrowOnUndeclaredPropertyForNonOpenType = other.ThrowOnUndeclaredPropertyForNonOpenType;
+            this.ArrayPool = other.ArrayPool;
         }
     }
 }

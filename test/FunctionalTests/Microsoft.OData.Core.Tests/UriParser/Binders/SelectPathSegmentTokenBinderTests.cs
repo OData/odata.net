@@ -219,7 +219,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             Assert.False(SelectPathSegmentTokenBinder.TryBindAsOperation(new SystemToken("f*oo", null), model, entityType, out foundPathSegment));
         }
 
-        public void ValidateNonCatchableExceptionsThrowInFindOperationsByBindingParameterTypeHierarchyExceptionAndSurfaces()
+        internal void ValidateNonCatchableExceptionsThrowInFindOperationsByBindingParameterTypeHierarchyExceptionAndSurfaces()
         {
             var model = new FindOperationsByBindingParameterTypeHierarchyThrowingNonCatchableExceptionEdmModel();
             IEdmEntityType entityType = new EdmEntityType("n", "EntityType");

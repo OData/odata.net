@@ -11,10 +11,8 @@ namespace Microsoft.OData.JsonLight
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
-#if PORTABLELIB
     using System.Threading.Tasks;
     using Microsoft.OData.Buffers;
-#endif
     using Microsoft.OData.Edm;
     using Microsoft.OData.Json;
     #endregion Namespaces
@@ -132,7 +130,8 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(messageWriterSettings != null, "messageWriterSettings != null");
 
             this.textWriter = textWriter;
-            this.jsonWriter = CreateJsonWriter(messageInfo.Container, textWriter, true /*isIeee754Compatible*/, messageWriterSettings);
+            bool ieee754CompatibleSetToTrue = (messageInfo.MediaType != null) ? messageInfo.MediaType.HasIeee754CompatibleSetToTrue() : false;
+            this.jsonWriter = CreateJsonWriter(messageInfo.Container, textWriter, ieee754CompatibleSetToTrue, messageWriterSettings);
             this.metadataLevel = new JsonMinimalMetadataLevel();
             this.propertyCacheHandler = new PropertyCacheHandler();
         }
@@ -209,7 +208,6 @@ namespace Microsoft.OData.JsonLight
             return this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, false, false);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataWriter" /> to write a resource set.
         /// </summary>
@@ -223,7 +221,6 @@ namespace Microsoft.OData.JsonLight
 
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, false, false));
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataWriter" /> to write a delta resource set.
@@ -239,7 +236,6 @@ namespace Microsoft.OData.JsonLight
             return this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, false, true);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataWriter" /> to write a delta resource set.
         /// </summary>
@@ -253,7 +249,6 @@ namespace Microsoft.OData.JsonLight
 
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, false, true));
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataWriter" /> to write a resource.
@@ -269,7 +264,6 @@ namespace Microsoft.OData.JsonLight
             return this.CreateODataResourceWriterImplementation(navigationSource, resourceType);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataWriter" /> to write a resource.
         /// </summary>
@@ -283,7 +277,6 @@ namespace Microsoft.OData.JsonLight
 
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataResourceWriterImplementation(navigationSource, resourceType));
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataCollectionWriter" /> to write a collection of primitive or complex values (as result of a service operation invocation).
@@ -298,7 +291,6 @@ namespace Microsoft.OData.JsonLight
             return this.CreateODataCollectionWriterImplementation(itemTypeReference);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataCollectionWriter" /> to write a collection of primitive or complex values (as result of a service operation invocation).
         /// </summary>
@@ -311,7 +303,6 @@ namespace Microsoft.OData.JsonLight
 
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataCollectionWriterImplementation(itemTypeReference));
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataWriter" /> to write a resource into a Uri operation parameter.
@@ -325,7 +316,6 @@ namespace Microsoft.OData.JsonLight
             return this.CreateODataResourceWriter(navigationSource, resourceType);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataWriter" /> to write a resource into a Uri operation parameter.
         /// </summary>
@@ -337,7 +327,6 @@ namespace Microsoft.OData.JsonLight
         {
             return this.CreateODataResourceWriterAsync(navigationSource, resourceType);
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataWriter" /> to write a resource set into a Uri operation parameter.
@@ -353,8 +342,6 @@ namespace Microsoft.OData.JsonLight
             return this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, true, false);
         }
 
-#if PORTABLELIB
-
         /// <summary>
         /// Asynchronously Creates an <see cref="ODataWriter" /> to write a resource set into a Uri operation parameter.
         /// </summary>
@@ -368,7 +355,6 @@ namespace Microsoft.OData.JsonLight
 
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, true, false));
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataParameterWriter" /> to write a parameter payload.
@@ -383,7 +369,6 @@ namespace Microsoft.OData.JsonLight
             return this.CreateODataParameterWriterImplementation(operation);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataParameterWriter" /> to write a parameter payload.
         /// </summary>
@@ -396,7 +381,6 @@ namespace Microsoft.OData.JsonLight
 
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataParameterWriterImplementation(operation));
         }
-#endif
 
         /// <summary>
         /// Writes an <see cref="ODataProperty"/> as message payload.
@@ -411,7 +395,6 @@ namespace Microsoft.OData.JsonLight
             this.Flush();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously writes an <see cref="ODataProperty"/> as message payload.
         /// </summary>
@@ -429,7 +412,6 @@ namespace Microsoft.OData.JsonLight
                     return this.FlushAsync();
                 });
         }
-#endif
 
         /// <summary>
         /// Writes an <see cref="ODataError"/> as the message payload.
@@ -448,7 +430,6 @@ namespace Microsoft.OData.JsonLight
             this.Flush();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously writes an <see cref="ODataError"/> as the message payload.
         /// </summary>
@@ -470,7 +451,6 @@ namespace Microsoft.OData.JsonLight
                     return this.FlushAsync();
                 });
         }
-#endif
 
         /// <summary>
         /// Check if the object has been disposed; called from all public API methods. Throws an ObjectDisposedException if the object
@@ -497,7 +477,6 @@ namespace Microsoft.OData.JsonLight
             this.jsonWriter.Flush();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously flush the writer.
         /// </summary>
@@ -520,7 +499,6 @@ namespace Microsoft.OData.JsonLight
                 })
                 .FollowOnSuccessWithTask((asyncBufferedStreamFlushTask) => this.messageOutputStream.FlushAsync());
         }
-#endif
 
          /// <summary>
         /// Flushes all buffered data to the underlying stream synchronously.
@@ -533,7 +511,6 @@ namespace Microsoft.OData.JsonLight
             }
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Flushes all buffered data to the underlying stream asynchronously.
         /// </summary>
@@ -549,7 +526,6 @@ namespace Microsoft.OData.JsonLight
                 return TaskUtils.CompletedTask;
             }
         }
-#endif
 
         /// <summary>
         /// The output stream to write the payload to.
@@ -575,7 +551,6 @@ namespace Microsoft.OData.JsonLight
             return this.CreateODataBatchWriterImplementation();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataBatchWriter" /> to write a batch of requests or responses.
         /// </summary>
@@ -588,7 +563,6 @@ namespace Microsoft.OData.JsonLight
 
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataBatchWriterImplementation());
         }
-#endif
 
         /// <summary>
         /// Writes an <see cref="ODataError"/> into the message payload.
@@ -613,7 +587,6 @@ namespace Microsoft.OData.JsonLight
             this.Flush();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Writes an <see cref="ODataError"/> into the message payload.
         /// </summary>
@@ -643,7 +616,6 @@ namespace Microsoft.OData.JsonLight
                     return this.FlushAsync();
                 });
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataDeltaWriter" /> to write a delta response.
@@ -658,7 +630,6 @@ namespace Microsoft.OData.JsonLight
             return this.CreateODataDeltaWriterImplementation(entitySet, entityType);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataDeltaWriter" /> to write a delta response.
         /// </summary>
@@ -672,7 +643,6 @@ namespace Microsoft.OData.JsonLight
 
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataDeltaWriterImplementation(entitySet, entityType));
         }
-#endif
 
         /// <summary>
         /// Writes a service document with the specified <paramref name="serviceDocument"/>
@@ -688,7 +658,6 @@ namespace Microsoft.OData.JsonLight
             this.Flush();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously writes a service document with the specified <paramref name="serviceDocument"/>
         /// as message payload.
@@ -707,7 +676,6 @@ namespace Microsoft.OData.JsonLight
                     return this.FlushAsync();
                 });
         }
-#endif
 
         /// <summary>
         /// Writes the result of a $ref query as the message payload.
@@ -722,7 +690,6 @@ namespace Microsoft.OData.JsonLight
             this.Flush();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously writes the result of a $ref query as the message payload.
         /// </summary>
@@ -740,7 +707,6 @@ namespace Microsoft.OData.JsonLight
                     return this.FlushAsync();
                 });
         }
-#endif
 
         /// <summary>
         /// Writes a singleton result of a $ref query as the message payload.
@@ -755,7 +721,6 @@ namespace Microsoft.OData.JsonLight
             this.Flush();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously writes a singleton result of a $ref query as the message payload.
         /// </summary>
@@ -773,7 +738,6 @@ namespace Microsoft.OData.JsonLight
                     return this.FlushAsync();
                 });
         }
-#endif
 
         /// <summary>
         /// Perform the actual cleanup work.

@@ -11,9 +11,7 @@ namespace Microsoft.OData.MultipartMixed
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
 
     #endregion Namespaces
 
@@ -78,7 +76,6 @@ namespace Microsoft.OData.MultipartMixed
             return new ODataMultipartMixedBatchOutputContext(this, messageInfo, messageWriterSettings);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously detects the payload kinds supported by this format for the specified message payload.
         /// </summary>
@@ -127,7 +124,6 @@ namespace Microsoft.OData.MultipartMixed
             return Task.FromResult<ODataOutputContext>(
                 new ODataMultipartMixedBatchOutputContext(this, messageInfo, messageWriterSettings));
         }
-#endif
 
         /// <summary>
         /// Returns the content type for the MultipartMime Batch format

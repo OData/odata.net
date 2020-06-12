@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>StyleCop.MSBuild</id>
+    <version>5.0.0</version>
+    <authors>StyleCop contributors, Chris Dahlberg</authors>
+    <owners>StyleCop contributors, Chris Dahlberg</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <developmentDependency>true</developmentDependency>
+    <licenseUrl>https://github.com/StyleCop/StyleCop/blob/master/License.html</licenseUrl>
+    <projectUrl>https://github.com/StyleCop/StyleCop</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/StyleCop/StyleCop/master/logo.png</iconUrl>
+    <description>Integrates source code analysis into the build process of C# projects to enforce a set of style and consistency rules.</description>
+    <language>en-US</language>
+    <releaseNotes>* Added parser support for property ref returns
+* Fixed the line numbers reported for violations within verbatim interpolated strings
+* Fixed a false positive of SA1502 for expression bodied properties that contain object/collection initializers
+* Fixed the parsing of catch statements with exception filters
+* Fixed a bug when trying to open included XML documentation files on case-sensitive filesystems
+* Fixed a bug where the StyleCop extension would not be properly removed
+
+For 5.0.0-beta02:
+* Fixed the parsing of backslashes in multi-line interpolated string literals (GitHub issue #88)
+* Fixed the name of the default settings file included in the VSIX (changed from DefaultSettings.StyleCop to Settings.StyleCop)
+* Changed SA1202 to be more permissive with dependency properties (GitHub issue #51)
+* Added parser support for pattern matching (GitHub issue #106)
+* Added parser support for throw expressions (GitHub issue #92)
+* Added parser support for binary literals and digit separators (GitHub issue #94)
+* Added parser support for ref returns and ref locals
+* Added parser support for local functions
+* Added parser support for tuple types and tuple literals
+* Added parser support for deconstruction
+
+For 5.0.0-beta01:
+* Renamed SA1216:NoValueFirstComparison to SA1131:UseReadableConditions to match the StyleCopAnalyzers project (CodePlex issue #7737)
+* Renamed SA1217:UsingStaticDirectivesMustBePlacedAfterUsingNamespaceDirectives to SA1216:UsingStaticDirectivesMustBePlacedAtTheCorrectLocation to match the StyleCopAnalyzers project (CodePlex issue #7738)
+* Fixed a potential IndexOutOfRangeException when parsing newline characters near a ternary operator (CodePlex issues #7748, #7743, #7742)
+* Modified CurlyBracketsForMultiLineStatementsMustNotShareLine to allow object and collection initializers on a single line within a multi-line lambda.
+* Documentation of all &lt;exception&gt; elements is now checked, instead of just the first one (CodePlex issue #7731)
+* Fixed parsing of fields or method parameters with a type similar to int?, (CodePlex issue #7729)
+* Stopped reporting SA1648:InheritDocMustBeUsedWithInheritingClass if the documentation includes a cref attribute (CodePlex issue #7488)
+* Included preferred alternate spellings when spellchecking (CodePlex issue #7733)
+* Documentation rules are no longer checked if an &lt;exclude/&gt; tag is present (CodePlex issue #7732)
+* Added support for Office 2013 and 2016 (including click-to-run installations) to SpellChecker.</releaseNotes>
+  </metadata>
+</package>

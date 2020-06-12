@@ -5,17 +5,19 @@
 '---------------------------------------------------------------------
 
 Imports System
-Imports Microsoft.OData.Service
-Imports Microsoft.OData.Client
-Imports System.Diagnostics
-Imports System.Text
 Imports System.Collections
 Imports System.Collections.Generic
+Imports System.Diagnostics
+Imports System.Text
 Imports System.Xml
 Imports System.Xml.Linq
-Imports Microsoft.VisualStudio.TestTools.UnitTesting
-Imports AstoriaUnitTests.Stubs
 Imports AstoriaUnitTests.Data
+Imports AstoriaUnitTests.Stubs
+Imports Microsoft.OData.Client
+Imports Microsoft.OData.Edm
+Imports Microsoft.OData.Service
+Imports Microsoft.VisualStudio.TestTools.UnitTesting
+
 
 Partial Public Class ClientModule
 
@@ -26,6 +28,7 @@ Partial Public Class ClientModule
 
         <TestInitialize()> Public Sub BeforeEachTestMethod()
             ctx = New DataServiceContext(New Uri("http://localhost/svc"))
+            ctx.Format.UseJson(New EdmModel())
         End Sub
 
         <TestCleanup()> Public Sub AfterEachTestMethod()
@@ -541,8 +544,8 @@ Partial Public Class ClientModule
             End Try
 
             For i As Int32 = 0 To 1
-                For Each entity In ctx.Entities
-                    Assert.IsTrue(ctx.Detach(entity.Entity))
+                For Each entity1 In ctx.Entities
+                    Assert.IsTrue(ctx.Detach(entity1.Entity))
                 Next
                 Assert.AreEqual(0, ctx.Links.Count)
                 Assert.AreEqual(0, ctx.Entities.Count)

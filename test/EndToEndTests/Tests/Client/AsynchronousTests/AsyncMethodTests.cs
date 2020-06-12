@@ -103,6 +103,38 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             context.Configurations.RequestPipeline.OnEntryEnding(onEntryEnding1);
             await context.SaveChangesAsync(SaveChangesOptions.None);
 
+            // Batch relative URIs
+            Customer c2 = new Customer { CustomerId = 11, Name = "customerTwo" };
+            customers.Add(c2);
+
+            var dataServiceResponse = await context.SaveChangesAsync(SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.UseRelativeUri);
+            Assert.AreEqual((dataServiceResponse.First() as ChangeOperationResponse).StatusCode, 201, "StatusCode == 201");
+
+            // UseJsonBatch
+            c2.Name = "Customer Two Updated";
+            context.UpdateObject(c2);
+
+            // Use client hooks to check request headers
+            context.SendingRequest2 += (sender, eventArgs) =>
+            {
+                if (!eventArgs.IsBatchPart) // Check top level headers only
+                {
+                    Assert.AreEqual("application/json", eventArgs.RequestMessage.GetHeader("Content-Type"));
+                }
+            };
+
+            // Use client hooks to check response headers
+            context.ReceivingResponse += (sender, eventArgs) =>
+            {
+                if (!eventArgs.IsBatchPart) // Check top level headers only
+                {
+                    Assert.AreEqual("application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8", eventArgs.ResponseMessage.GetHeader("Content-Type"));
+                }
+            };
+
+            var dscResponse = await context.SaveChangesAsync(SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.UseJsonBatch);
+            Assert.AreEqual((dscResponse.First() as ChangeOperationResponse).StatusCode, 204, "StatusCode == 204");
+
             this.EnqueueTestComplete();
         }
 
@@ -110,9 +142,9 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         public async Task QueryEntitySetPagingTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
-            var query = context.Customer.IncludeTotalCount();
+            var query = context.Customer.IncludeCount();
             var response = (await query.ExecuteAsync()) as QueryOperationResponse<Customer>;
-            var totalCount = response.TotalCount;
+            var totalCount = response.Count;
             var count = response.Count();
 
 
@@ -269,6 +301,54 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         }
 
         [TestMethod, Asynchronous]
+        public async Task ExecuteBatchWithSaveChangesOptionsReturnsCorrectResults()
+        {
+            var context = this.CreateWrappedContext<DefaultContainer>().Context;
+            var countOfBatchParts = 0;
+            var countOfTimesSenderCalled = 0;
+            context.SendingRequest2 += ((sender, args) =>
+            {
+                if (args.IsBatchPart)
+                {
+                    countOfBatchParts++;
+                }
+
+                countOfTimesSenderCalled++;
+            });
+
+            var queryResponse = await context.ExecuteBatchAsync(
+                SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.UseRelativeUri,
+                new DataServiceRequest[] 
+                {
+                    new DataServiceRequest<Customer>(((context.Customer.Where(c => c.CustomerId == -8)) as DataServiceQuery<Customer>).RequestUri),
+                    new DataServiceRequest<Customer>(((context.Customer.Where(c => c.CustomerId == -6)) as DataServiceQuery<Customer>).RequestUri),
+                    new DataServiceRequest<Driver>(((context.Driver.Where(c => c.Name == "1")) as DataServiceQuery<Driver>).RequestUri),
+                    new DataServiceRequest<Driver>(((context.Driver.Where(c => c.Name == "3")) as DataServiceQuery<Driver>).RequestUri)
+                });
+            var actualValues = "";
+            foreach (var r in queryResponse)
+            {
+                if (r is QueryOperationResponse<Customer>)
+                {
+                    var customer = (r as QueryOperationResponse<Customer>).Single();
+                    actualValues += customer.CustomerId;
+                }
+
+                if (r is QueryOperationResponse<Driver>)
+                {
+                    var driver = (r as QueryOperationResponse<Driver>).Single();
+                    actualValues += driver.Name;
+                }
+            }
+
+            bool isBatchPartsValid = countOfBatchParts > 0 && (countOfTimesSenderCalled - countOfBatchParts) == 1;
+
+            Assert.AreEqual(actualValues, ("-8-613"), "actualValues == -8-613");
+            Assert.IsTrue(isBatchPartsValid, "countOfBatchParts > 0 && (countOfTimesSenderCalled - countOfBatchParts ) == 1");
+            this.EnqueueTestComplete();
+        }
+
+        [TestMethod, Asynchronous]
         public async Task ActionFunction()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -305,8 +385,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
 
-            var query = context.Customer.IncludeTotalCount();
-            var allCustomersCount = ((await query.ExecuteAsync()) as QueryOperationResponse<Customer>).TotalCount;
+            var query = context.Customer.IncludeCount();
+            var allCustomersCount = ((await query.ExecuteAsync()) as QueryOperationResponse<Customer>).Count;
 
             bool CheckNextLink = false;
             Uri nextPageLink = null;
@@ -332,8 +412,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
 
             //$filter
             context.SendingRequest2 -= sendRequestEvent;
-            query = ((DataServiceQuery<Customer>)context.Customer.Where(c => c.CustomerId > -5)).IncludeTotalCount();
-            var filterCustomersCount = ((await query.ExecuteAsync()) as QueryOperationResponse<Customer>).TotalCount;
+            query = ((DataServiceQuery<Customer>)context.Customer.Where(c => c.CustomerId > -5)).IncludeCount();
+            var filterCustomersCount = ((await query.ExecuteAsync()) as QueryOperationResponse<Customer>).Count;
 
             context.SendingRequest2 += sendRequestEvent;
             CheckNextLink = false;
@@ -372,8 +452,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
 
-            var query = context.Customer.ByKey(new Dictionary<string, object> { { "CustomerId", -10 } }).Orders.IncludeTotalCount();
-            var allOrdersCount = ((await query.ExecuteAsync()) as QueryOperationResponse<Order>).TotalCount;
+            var query = context.Customer.ByKey(new Dictionary<string, object> { { "CustomerId", -10 } }).Orders.IncludeCount();
+            var allOrdersCount = ((await query.ExecuteAsync()) as QueryOperationResponse<Order>).Count;
 
             bool CheckNextLink = false;
             Uri nextPageLink = null;
@@ -463,7 +543,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         public async Task UseDataServiceCollectionToTrackAllPages()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
-            var customerCount = ((await context.Customer.IncludeTotalCount().ExecuteAsync()) as QueryOperationResponse<Customer>).TotalCount;
+            var customerCount = ((await context.Customer.IncludeCount().ExecuteAsync()) as QueryOperationResponse<Customer>).Count;
 
             var customers = new DataServiceCollection<Customer>(context, await context.Customer.GetAllPagesAsync(), TrackingMode.AutoChangeTracking, null, null, null);
             Assert.AreEqual(customerCount, customers.Count());

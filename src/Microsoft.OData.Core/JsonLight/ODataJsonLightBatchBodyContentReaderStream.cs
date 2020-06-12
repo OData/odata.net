@@ -253,7 +253,7 @@ namespace Microsoft.OData.JsonLight
             // Reader is on the value node after the "body" property name node.
             IJsonWriter jsonWriter = new JsonWriter(
                 new StreamWriter(this),
-                true /*isIeee754Compatible*/);
+                reader.IsIeee754Compatible);
 
             WriteCurrentJsonObject(reader, jsonWriter);
             this.Flush();

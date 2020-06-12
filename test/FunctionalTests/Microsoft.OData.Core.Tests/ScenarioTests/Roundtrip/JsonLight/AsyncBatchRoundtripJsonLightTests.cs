@@ -1026,11 +1026,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
         }
 
         [Fact]
-        public void AsyncBatchJsonLightWritingAbsoluteResourcePathAndHostTest()
+        public void AsyncBatchMultipartMixedWritingAbsoluteResourcePathAndHostTest()
         {
             var requestPayload = this.ClientWriteAsyncBatchRequest(BatchPayloadUriOption.AbsoluteUriUsingHostHeader, batchContentTypeMultipartMixed);
 
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             var payloadString = System.Text.Encoding.GetEncoding(0).GetString(requestPayload);
 #else
             var payloadString = System.Text.Encoding.Default.GetString(requestPayload);
@@ -1045,11 +1045,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
         }
 
         [Fact]
-        public void AsyncBatchJsonLightWritingRelativeResourcePathTest()
+        public void AsyncBatchMultipartMixedWritingRelativeResourcePathTest()
         {
             var requestPayload = this.ClientWriteAsyncBatchRequest(BatchPayloadUriOption.RelativeUri, batchContentTypeMultipartMixed);
 
-#if NETCOREAPP1_0
+#if NETCOREAPP1_1
             var payloadString = System.Text.Encoding.GetEncoding(0).GetString(requestPayload);
 #else
             var payloadString = System.Text.Encoding.Default.GetString(requestPayload);
@@ -1062,20 +1062,66 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             var responsePayload = this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload, batchContentTypeMultipartMixed);
             this.ClientReadAsyncBatchResponse(responsePayload, batchContentTypeMultipartMixed);
         }
+
+
+        [Fact]
+        public void AsyncBatchJsonLightWritingAbsoluteResourcePathAndHostTest()
+        {
+            var baseUri = "http://example.com/root/service";
+            var requestPayload = this.ClientWriteAsyncBatchRequest(BatchPayloadUriOption.AbsoluteUriUsingHostHeader, batchContentTypeApplicationJson,
+                SkipBatchWriterStep.None, baseUri);
+
+#if NETCOREAPP1_1
+            var payloadString = System.Text.Encoding.GetEncoding(0).GetString(requestPayload);
+#else
+            var payloadString = System.Text.Encoding.Default.GetString(requestPayload);
+#endif
+
+            Assert.Contains("\"url\":\"/root/service/Customers('ALFKI')\"", payloadString);
+            Assert.Contains("\"url\":\"/root/service/Customers\"", payloadString);
+            Assert.Contains("\"url\":\"/root/service/Products\"", payloadString);
+            Assert.Contains("\"headers\":{\"host\":\"example.com:80\"}}", payloadString);
+
+            var responsePayload = this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload, batchContentTypeApplicationJson);
+            this.ClientReadAsyncBatchResponse(responsePayload, batchContentTypeApplicationJson);
+        }
+
+        [Fact]
+        public void AsyncBatchJsonLightWritingRelativeResourcePathTest()
+        {
+            var baseUri = "http://example.com/root/service";
+            var requestPayload = this.ClientWriteAsyncBatchRequest(BatchPayloadUriOption.RelativeUri, batchContentTypeApplicationJson,
+                SkipBatchWriterStep.None, baseUri);
+
+#if NETCOREAPP1_1
+            var payloadString = System.Text.Encoding.GetEncoding(0).GetString(requestPayload);
+#else
+            var payloadString = System.Text.Encoding.Default.GetString(requestPayload);
+#endif
+
+            Assert.Contains("\"url\":\"Customers('ALFKI')\"", payloadString);
+            Assert.Contains("\"url\":\"Customers\"", payloadString);
+            Assert.Contains("\"url\":\"Products\"", payloadString);
+
+            var responsePayload = this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload, batchContentTypeApplicationJson);
+            this.ClientReadAsyncBatchResponse(responsePayload, batchContentTypeApplicationJson);
+        }
         #endregion
 
         #region Helper Functions
         private byte[] ClientWriteAsyncBatchRequest(
             BatchPayloadUriOption payloadUriOption,
             string batchContentType,
-            SkipBatchWriterStep skipBatchWriterStep = SkipBatchWriterStep.None)
+            SkipBatchWriterStep skipBatchWriterStep = SkipBatchWriterStep.None,
+            string baseUri = null)
         {
             var stream = new MemoryStream();
+            baseUri = baseUri ?? serviceDocumentUri;
 
             IODataRequestMessage requestMessage = new InMemoryMessage { Stream = stream };
             requestMessage.SetHeader("Content-Type", batchContentType);
 
-            using (var messageWriter = new ODataMessageWriter(requestMessage, new ODataMessageWriterSettings { BaseUri = new Uri(serviceDocumentUri) }))
+            using (var messageWriter = new ODataMessageWriter(requestMessage, new ODataMessageWriterSettings { BaseUri = new Uri(baseUri) }))
             {
                 var batchWriter = messageWriter.CreateODataBatchWriter();
 
@@ -1087,7 +1133,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 // Write a query operation.
                 if (skipBatchWriterStep != SkipBatchWriterStep.OperationCreated)
                 {
-                    batchWriter.CreateOperationRequestMessage("GET", new Uri(serviceDocumentUri + "/Customers('ALFKI')"), /*contentId*/ null, payloadUriOption);
+                    batchWriter.CreateOperationRequestMessage("GET", new Uri(baseUri + "/Customers('ALFKI')"), /*contentId*/ null, payloadUriOption);
                 }
 
                 // Write a change set with multi update operation.
@@ -1099,7 +1145,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 // Create a creation operation in the change set.
                 if (skipBatchWriterStep != SkipBatchWriterStep.OperationCreated)
                 {
-                    var updateOperationMessage = batchWriter.CreateOperationRequestMessage("POST", new Uri(serviceDocumentUri + "/Customers"), "1", payloadUriOption);
+                    var updateOperationMessage = batchWriter.CreateOperationRequestMessage("POST", new Uri(baseUri + "/Customers"), "1", payloadUriOption);
 
                     // Use a new message writer to write the body of this operation.
                     using (var operationMessageWriter = new ODataMessageWriter(updateOperationMessage))
@@ -1110,7 +1156,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                         entryWriter.WriteEnd();
                     }
 
-                    updateOperationMessage = batchWriter.CreateOperationRequestMessage("PATCH", new Uri(serviceDocumentUri + "/Customers('ALFKI')"), "2", payloadUriOption);
+                    updateOperationMessage = batchWriter.CreateOperationRequestMessage("PATCH", new Uri(baseUri + "/Customers('ALFKI')"), "2", payloadUriOption);
 
                     using (var operationMessageWriter = new ODataMessageWriter(updateOperationMessage))
                     {
@@ -1129,7 +1175,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 // Write a query operation.
                 if (skipBatchWriterStep != SkipBatchWriterStep.OperationCreated)
                 {
-                    batchWriter.CreateOperationRequestMessage("GET", new Uri(serviceDocumentUri + "/Products"), /*contentId*/ null, payloadUriOption);
+                    batchWriter.CreateOperationRequestMessage("GET", new Uri(baseUri + "/Products"), /*contentId*/ null, payloadUriOption);
                 }
 
                 if (skipBatchWriterStep != SkipBatchWriterStep.BatchCompleted)

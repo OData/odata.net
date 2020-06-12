@@ -51,6 +51,12 @@ namespace Microsoft.OData.Client
         /// <summary>Buffer used for caching operation response body streams.</summary>
         private byte[] streamCopyBuffer;
 
+        /// <summary>If batch request is allowed to use Relative Uri.</summary>
+        private bool useRelativeUri = false;
+
+        /// <summary>If we are making a json batch request.</summary>
+        private bool useJsonBatch = false;
+
         #endregion
 
         /// <summary>
@@ -68,6 +74,8 @@ namespace Microsoft.OData.Client
             Debug.Assert(Util.IsBatch(options), "the options must have batch  flag set");
             this.Queries = queries;
             this.streamCopyBuffer = new byte[StreamCopyBufferSize];
+            this.useRelativeUri = Util.UseRelativeUri(options);
+            this.useJsonBatch = Util.UseJsonBatch(options);
         }
 
         /// <summary>returns true since this class handles batch requests.</summary>
@@ -156,7 +164,7 @@ namespace Microsoft.OData.Client
 
                 try
                 {
-                    this.batchResponseMessage = this.RequestInfo.GetSyncronousResponse(batchRequestMessage, false);
+                    this.batchResponseMessage = this.RequestInfo.GetSynchronousResponse(batchRequestMessage, false);
                 }
                 catch (DataServiceTransportException ex)
                 {
@@ -263,7 +271,7 @@ namespace Microsoft.OData.Client
         protected override ODataRequestMessageWrapper CreateRequestMessage(string method, Uri requestUri, HeaderCollection headers, HttpStack httpStack, Descriptor descriptor, string contentId)
         {
             BuildingRequestEventArgs args = this.RequestInfo.CreateRequestArgsAndFireBuildingRequest(method, requestUri, headers, this.RequestInfo.HttpStack, descriptor);
-            return ODataRequestMessageWrapper.CreateBatchPartRequestMessage(this.batchWriter, args, this.RequestInfo, contentId);
+            return ODataRequestMessageWrapper.CreateBatchPartRequestMessage(this.batchWriter, args, this.RequestInfo, contentId, this.useRelativeUri);
         }
 
         /// <summary>
@@ -276,6 +284,15 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Creates the type of the application/json content.
+        /// </summary>
+        /// <returns>An application/json header</returns>
+        private static string CreateApplicationJsonContentType()
+        {
+            return XmlConstants.MimeApplicationType + "/" + XmlConstants.MimeJsonSubType;
+        }
+
+        /// <summary>
         /// Creates a ODataRequestMessage for batch request.
         /// </summary>
         /// <returns>Returns an instance of ODataRequestMessage for the batch request.</returns>
@@ -284,7 +301,14 @@ namespace Microsoft.OData.Client
             Uri requestUri = UriUtil.CreateUri(this.RequestInfo.BaseUriResolver.GetBaseUriWithSlash(), UriUtil.CreateUri("$batch", UriKind.Relative));
             HeaderCollection headers = new HeaderCollection();
             headers.SetRequestVersion(Util.ODataVersion4, this.RequestInfo.MaxProtocolVersionAsVersion);
-            headers.SetHeader(XmlConstants.HttpContentType, CreateMultiPartMimeContentType());
+            if(useJsonBatch)
+            {
+                headers.SetHeader(XmlConstants.HttpContentType, CreateApplicationJsonContentType());
+            }
+            else
+            {
+                headers.SetHeader(XmlConstants.HttpContentType, CreateMultiPartMimeContentType());
+            }
             this.RequestInfo.Format.SetRequestAcceptHeaderForBatch(headers);
 
             return this.CreateTopLevelRequest(XmlConstants.HttpMethodPost, requestUri, headers, this.RequestInfo.HttpStack, null /*descriptor*/);
@@ -317,6 +341,7 @@ namespace Microsoft.OData.Client
                     foreach (DataServiceRequest query in this.Queries)
                     {
                         QueryComponents queryComponents = query.QueryComponents(this.RequestInfo.Model);
+
                         Uri requestUri = this.RequestInfo.BaseUriResolver.GetOrCreateAbsoluteUri(queryComponents.Uri);
 
                         Debug.Assert(requestUri != null, "request uri is null");
@@ -333,7 +358,7 @@ namespace Microsoft.OData.Client
                         batchOperationRequestMessage.FireSendingEventHandlers(null /*descriptor*/);
                     }
                 }
-                else if (0 < this.ChangedEntries.Count)
+                else if (this.ChangedEntries.Count > 0)
                 {
                     if (Util.IsBatchWithSingleChangeset(this.Options))
                     {
@@ -520,7 +545,7 @@ namespace Microsoft.OData.Client
         /// The message reader for the entire batch response is stored in the this.batchMessageReader.
         /// The message reader is disposable, but this method should not dispose it itself. It will be either disposed by the caller (in case of exception)
         /// or the ownership will be passed to the returned response object (in case of success).
-        /// In could also be diposed indirectly by this method when it enumerates through the responses.
+        /// In could also be disposed indirectly by this method when it enumerates through the responses.
         /// </remarks>
         private DataServiceResponse HandleBatchResponseInternal(ODataBatchReader batchReader)
         {
@@ -748,7 +773,11 @@ namespace Microsoft.OData.Client
                         #endregion
 
                         default:
-                            Error.ThrowBatchExpectedResponse(InternalError.UnexpectedBatchState);
+                            // In ODataJsonLightBatchReader, readerState remains Initial after calling Read() the first time
+                            if (!this.useJsonBatch)
+                            {
+                                Error.ThrowBatchExpectedResponse(InternalError.UnexpectedBatchState);
+                            }
                             break;
                     }
                 }
@@ -759,7 +788,7 @@ namespace Microsoft.OData.Client
                 // either all saved entries must be processed or it was a batch and one of the entries has the error
                 if ((this.Queries == null &&
                     (!changesetFound ||
-                     0 < queryCount ||
+                     queryCount > 0 ||
                      this.ChangedEntries.Any(o => o.ContentGeneratedForSave && o.SaveResultWasProcessed == 0) &&
                      (!this.IsBatchRequest || this.ChangedEntries.FirstOrDefault(o => o.SaveError != null) == null))) ||
                     (this.Queries != null && queryCount != this.Queries.Length))
@@ -800,7 +829,7 @@ namespace Microsoft.OData.Client
             }
 
             // If we hit en error inside a batch, we will never expose a descriptor since we don't know which one to return.
-            // The descriptor we fetched above based on the content-ID is bogus because the server returns an errounous content-id when
+            // The descriptor we fetched above based on the content-ID is bogus because the server returns an erroneous content-id when
             // it hits an error inside batch.
             if (!WebUtil.SuccessStatusCode((HttpStatusCode)operationResponseMessage.StatusCode))
             {
@@ -875,7 +904,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Stores information about the currenly processed operation response.
+        /// Stores information about the currently processed operation response.
         /// </summary>
         private sealed class CurrentOperationResponse
         {
@@ -898,7 +927,7 @@ namespace Microsoft.OData.Client
             {
                 Debug.Assert(headers != null, "headers != null");
                 Debug.Assert(contentStream != null, "contentStream != null");
-                Debug.Assert(contentStream.Position == 0, "The stream should have been reset to the begining.");
+                Debug.Assert(contentStream.Position == 0, "The stream should have been reset to the beginning.");
 
                 this.statusCode = statusCode;
                 this.contentStream = contentStream;

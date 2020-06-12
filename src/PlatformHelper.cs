@@ -31,17 +31,10 @@ namespace Microsoft.OData.Edm
 {
     using System;
     using System.Collections.Generic;
-#if PORTABLELIB
     using System.Diagnostics;
     using System.Linq;
-#endif
     using System.Reflection;
-#if PORTABLELIB
-#endif
     using System.Xml;
-#if !SPATIAL
-
-#endif
 
     /// <summary>
     /// Helper methods that provide a common API surface on all platforms.
@@ -69,29 +62,15 @@ namespace Microsoft.OData.Edm
         /// </summary>
         internal static readonly Regex PotentialDateTimeOffsetValidator = CreateCompiled(@"^(\d{2,4})-(\d{1,2})-(\d{1,2})(T|(\s+))(\d{1,2}):(\d{1,2})", RegexOptions.Singleline);
 
-#if PORTABLELIB
         /// <summary>
         /// Replacement for Uri.UriSchemeHttp, which does not exist on.
         /// </summary>
-        internal static readonly string UriSchemeHttp = "http";
+        internal const string UriSchemeHttp = "http";
 
         /// <summary>
         /// Replacement for Uri.UriSchemeHttps, which does not exist on.
         /// </summary>
-        internal static readonly string UriSchemeHttps = "https";
-#else
-        /// <summary>
-        /// Use this instead of Uri.UriSchemeHttp.
-        /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static readonly string UriSchemeHttp = Uri.UriSchemeHttp;
-
-        /// <summary>
-        /// Use this instead of Uri.UriSchemeHttps.
-        /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static readonly string UriSchemeHttps = Uri.UriSchemeHttps;
-#endif
+        internal const string UriSchemeHttps = "https";
 
         #region Helper methods for properties
 
@@ -103,11 +82,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static Assembly GetAssembly(this Type type)
         {
-#if PORTABLELIB
             return type.GetTypeInfo().Assembly;
-#else
-            return type.Assembly;
-#endif
         }
 
         /// <summary>
@@ -118,11 +93,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsValueType(this Type type)
         {
-#if PORTABLELIB
             return type.GetTypeInfo().IsValueType;
-#else
-            return type.IsValueType;
-#endif
         }
 
         /// <summary>
@@ -133,11 +104,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsAbstract(this Type type)
         {
-#if PORTABLELIB
             return type.GetTypeInfo().IsAbstract;
-#else
-            return type.IsAbstract;
-#endif
         }
 
         /// <summary>
@@ -148,11 +115,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsGenericType(this Type type)
         {
-#if PORTABLELIB
             return type.GetTypeInfo().IsGenericType;
-#else
-            return type.IsGenericType;
-#endif
         }
 
         /// <summary>
@@ -163,11 +126,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsGenericTypeDefinition(this Type type)
         {
-#if PORTABLELIB
             return type.GetTypeInfo().IsGenericTypeDefinition;
-#else
-            return type.IsGenericTypeDefinition;
-#endif
         }
 
         /// <summary>
@@ -178,11 +137,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsVisible(this Type type)
         {
-#if PORTABLELIB
             return type.GetTypeInfo().IsVisible;
-#else
-            return type.IsVisible;
-#endif
         }
 
         /// <summary>
@@ -193,11 +148,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsInterface(this Type type)
         {
-#if PORTABLELIB
             return type.GetTypeInfo().IsInterface;
-#else
-            return type.IsInterface;
-#endif
         }
 
         /// <summary>
@@ -208,11 +159,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsClass(this Type type)
         {
-#if PORTABLELIB
             return type.GetTypeInfo().IsClass;
-#else
-            return type.IsClass;
-#endif
         }
 
         /// <summary>
@@ -223,11 +170,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsEnum(this Type type)
         {
-#if PORTABLELIB
             return type.GetTypeInfo().IsEnum;
-#else
-            return type.IsEnum;
-#endif
         }
 
         /// <summary>
@@ -238,11 +181,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static Type GetBaseType(this Type type)
         {
-#if PORTABLELIB
             return type.GetTypeInfo().BaseType;
-#else
-            return type.BaseType;
-#endif
         }
 
         /// <summary>
@@ -253,11 +192,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool ContainsGenericParameters(this Type type)
         {
-#if PORTABLELIB
             return type.GetTypeInfo().ContainsGenericParameters;
-#else
-            return type.ContainsGenericParameters;
-#endif
         }
 
         #endregion
@@ -453,11 +388,7 @@ namespace Microsoft.OData.Edm
         internal static UnicodeCategory GetUnicodeCategory(Char c)
         {
             // Portable Library platform doesn't have Char.GetUnicodeCategory, its on CharUnicodeInfo instead.
-#if PORTABLELIB
             return CharUnicodeInfo.GetUnicodeCategory(c);
-#else
-            return Char.GetUnicodeCategory(c);
-#endif
         }
 
         /// <summary>
@@ -468,11 +399,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsProperty(MemberInfo member)
         {
-#if PORTABLELIB
             return member is PropertyInfo;
-#else
-            return member.MemberType == MemberTypes.Property;
-#endif
         }
 
         /// <summary>
@@ -483,11 +410,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsPrimitive(this Type type)
         {
-#if PORTABLELIB
             return type.GetTypeInfo().IsPrimitive;
-#else
-            return type.IsPrimitive;
-#endif
         }
 
         /// <summary>
@@ -498,11 +421,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsSealed(this Type type)
         {
-#if PORTABLELIB
             return type.GetTypeInfo().IsSealed;
-#else
-            return type.IsSealed;
-#endif
         }
 
         /// <summary>
@@ -513,11 +432,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool IsMethod(MemberInfo member)
         {
-#if PORTABLELIB
             return member is MethodInfo;
-#else
-            return member.MemberType == MemberTypes.Method;
-#endif
         }
 
         /// <summary>
@@ -530,11 +445,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static bool AreMembersEqual(MemberInfo member1, MemberInfo member2)
         {
-#if PORTABLELIB
             return member1 == member2;
-#else
-            return member1.MetadataToken == member2.MetadataToken;
-#endif
         }
 
         /// <summary>
@@ -562,24 +473,10 @@ namespace Microsoft.OData.Edm
             // PORTABLELIB: The BindingFlags enum and all related reflection method overloads have been removed from PORTABLELIB. Instead of trying to provide
             // a general purpose flags enum and methods that can take any combination of the flags, we provide more restrictive methods that
             // still allow for the same functionality as needed by the calling code.
-#if PORTABLELIB
+
             // TypeInfo.DeclaredProperties and Type.GetRuntimeProperties return both public and private properties, so need to filter out only public ones.
             IEnumerable<PropertyInfo> properties = declaredOnly ? type.GetTypeInfo().DeclaredProperties : type.GetRuntimeProperties();
             return properties.Where(p => IsPublic(p) && (!instanceOnly || IsInstance(p)));
-#else
-            BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance;
-            if (!instanceOnly)
-            {
-                bindingFlags |= BindingFlags.Static;
-            }
-
-            if (declaredOnly)
-            {
-                bindingFlags |= BindingFlags.DeclaredOnly;
-            }
-
-            return type.GetProperties(bindingFlags);
-#endif
         }
 
         /// <summary>
@@ -594,24 +491,9 @@ namespace Microsoft.OData.Edm
             // PORTABLELIB: The BindingFlags enum and all related reflection method overloads have been removed from PORTABLELIB. Instead of trying to provide
             // a general purpose flags enum and methods that can take any combination of the flags, we provide more restrictive methods that
             // still allow for the same functionality as needed by the calling code.
-#if PORTABLELIB
             // TypeInfo.DeclaredProperties and Type.GetRuntimeProperties return both public and private properties, so need to filter out only public ones.
             IEnumerable<PropertyInfo> properties = declaredOnly ? type.GetTypeInfo().DeclaredProperties : type.GetRuntimeProperties();
             return properties.Where(p => !IsPublic(p) && (!instanceOnly || IsInstance(p)));
-#else
-            BindingFlags bindingFlags = BindingFlags.NonPublic | BindingFlags.Instance;
-            if (!instanceOnly)
-            {
-                bindingFlags |= BindingFlags.Static;
-            }
-
-            if (declaredOnly)
-            {
-                bindingFlags |= BindingFlags.DeclaredOnly;
-            }
-
-            return type.GetProperties(bindingFlags);
-#endif
         }
 
         /// <summary>
@@ -623,13 +505,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static IEnumerable<ConstructorInfo> GetInstanceConstructors(this Type type, bool isPublic)
         {
-#if PORTABLELIB
             return type.GetTypeInfo().DeclaredConstructors.Where(c => !c.IsStatic && isPublic == c.IsPublic);
-#else
-            BindingFlags bindingFlags = BindingFlags.Instance;
-            bindingFlags |= isPublic ? BindingFlags.Public : BindingFlags.NonPublic;
-            return type.GetConstructors(bindingFlags);
-#endif
         }
 
         /// <summary>
@@ -642,15 +518,9 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static ConstructorInfo GetInstanceConstructor(this Type type, bool isPublic, Type[] argTypes)
         {
-#if PORTABLELIB
             return GetInstanceConstructors(type, isPublic).SingleOrDefault(c => CheckTypeArgs(c, argTypes));
-#endif
-#if !PORTABLELIB
-            BindingFlags bindingFlags = BindingFlags.Instance;
-            bindingFlags |= isPublic ? BindingFlags.Public : BindingFlags.NonPublic;
-            return type.GetConstructor(bindingFlags, null, argTypes, null);
-#endif
         }
+
 
         /// <summary>
         /// Tries to the get method from the type, returns null if not found.
@@ -658,7 +528,9 @@ namespace Microsoft.OData.Edm
         /// <param name="type">The type.</param>
         /// <param name="name">The name.</param>
         /// <param name="parameterTypes">The parameter types.</param>
+        /// <param name="foundMethod">The method output.</param>
         /// <returns>Returns True if found.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<Pending>")]
         internal static bool TryGetMethod(this Type type, string name, Type[] parameterTypes, out MethodInfo foundMethod)
         {
             foundMethod = null;
@@ -680,11 +552,7 @@ namespace Microsoft.OData.Edm
         /// <returns>Enumerable of all methods for the specified type.</returns>
         internal static IEnumerable<MethodInfo> GetMethods(this Type type)
         {
-#if PORTABLELIB
             return type.GetRuntimeMethods();
-#else
-            return type.GetMethods();
-#endif
         }
 
         /// <summary>
@@ -701,7 +569,6 @@ namespace Microsoft.OData.Edm
             // WIN8: The BindingFlags enum and all related reflection method overloads have been removed from Win8. Instead of trying to provide
             // a general purpose flags enum and methods that can take any combination of the flags, we provide more restrictive methods that
             // still allow for the same functionality as needed by the calling code.
-#if PORTABLELIB
             return type.GetRuntimeMethods()
                 .Where(
                     m =>
@@ -709,12 +576,6 @@ namespace Microsoft.OData.Edm
                         isPublic == m.IsPublic &&
                         isStatic == m.IsStatic)
                 .SingleOrDefault();
-#else
-            BindingFlags bindingFlags = BindingFlags.Default;
-            bindingFlags |= isPublic ? BindingFlags.Public : BindingFlags.NonPublic;
-            bindingFlags |= isStatic ? BindingFlags.Static : BindingFlags.Instance;
-            return type.GetMethod(name, bindingFlags);
-#endif
         }
 
         /// <summary>
@@ -729,7 +590,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static MethodInfo GetMethod(this Type type, string name, Type[] types, bool isPublic, bool isStatic)
         {
-#if PORTABLELIB
             MethodInfo methodInfo = type.GetMethod(name, types);
             if (isPublic == methodInfo.IsPublic && isStatic == methodInfo.IsStatic)
             {
@@ -737,12 +597,6 @@ namespace Microsoft.OData.Edm
             }
 
             return null;
-#else
-            BindingFlags bindingFlags = BindingFlags.Default;
-            bindingFlags |= isPublic ? BindingFlags.Public : BindingFlags.NonPublic;
-            bindingFlags |= isStatic ? BindingFlags.Static : BindingFlags.Instance;
-            return type.GetMethod(name, bindingFlags, null, types, null);
-#endif
         }
 
         /// <summary>
@@ -753,11 +607,7 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static IEnumerable<MethodInfo> GetPublicStaticMethods(this Type type)
         {
-#if PORTABLELIB
             return type.GetRuntimeMethods().Where(m => m.IsPublic && m.IsStatic);
-#else
-            return type.GetMethods(BindingFlags.Static | BindingFlags.Public);
-#endif
         }
 
         /// <summary>
@@ -768,15 +618,10 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static IEnumerable<Type> GetNonPublicNestedTypes(this Type type)
         {
-#if PORTABLELIB
             return type.GetTypeInfo().DeclaredNestedTypes.Where(t => !t.IsNestedPublic).Select(t => t.AsType());
-#else
-            return type.GetNestedTypes(BindingFlags.NonPublic);
-#endif
         }
         #endregion
 
-#if PORTABLELIB
         /// <summary>
         /// Checks if the specified constructor takes arguments of the specified types.
         /// </summary>
@@ -1112,7 +957,6 @@ namespace Microsoft.OData.Edm
             return (propertyInfo.GetMethod != null && propertyInfo.GetMethod.IsPublic) || (propertyInfo.SetMethod != null && propertyInfo.SetMethod.IsPublic);
         }
         #endregion
-#endif
 
         /// <summary>
         /// Creates a Compiled Regex expression
@@ -1123,11 +967,7 @@ namespace Microsoft.OData.Edm
         /// <remarks>Is marked as compiled option only in platforms otherwise RegexOption.None is used</remarks>
         public static Regex CreateCompiled(string pattern, RegexOptions options)
         {
-#if ORCAS || PORTABLELIB
             options = options | RegexOptions.None;
-#else
-            options = options | RegexOptions.Compiled;
-#endif
             return new Regex(pattern, options);
         }
     }

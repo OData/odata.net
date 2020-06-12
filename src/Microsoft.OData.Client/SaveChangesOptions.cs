@@ -33,6 +33,18 @@ namespace Microsoft.OData.Client
         /// Use partial payload when doing post.
         /// Note it can only be used when using <see cref="T:Microsoft.OData.Client.DataServiceCollection`1" />
         /// </summary>
-        PostOnlySetProperties = 8
+        PostOnlySetProperties = 8,
+
+        /// <summary>
+        /// Allow usage of Relative Uri.
+        /// Note it can only be used in a batch request.
+        /// </summary>
+        UseRelativeUri = 32,
+
+        /// <summary>
+        /// Allow usage of Json in batch requests.
+        /// Note it can only be used in a batch request.
+        /// </summary>
+        UseJsonBatch = 64
     }
 }

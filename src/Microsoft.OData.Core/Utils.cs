@@ -10,9 +10,8 @@ namespace Microsoft.OData
     using System;
     using System.Collections.Generic;
     using System.IO;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
+
     #endregion Namespaces
 
     /// <summary>
@@ -38,7 +37,6 @@ namespace Microsoft.OData
             return false;
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously flushes a stream.
         /// </summary>
@@ -48,7 +46,6 @@ namespace Microsoft.OData
         {
             return Task.Factory.StartNew(stream.Flush);
         }
-#endif
 
         /// <summary>
         /// Perform a stable sort of the <paramref name="array"/> using the specified <paramref name="comparison"/>.
@@ -105,7 +102,7 @@ namespace Microsoft.OData
             /// A value &gt; 0 if <paramref name="x"/> is greater than <paramref name="y"/>.
             /// </returns>
             /// <remarks>This method will never return the value 0 since the input sequence is constructed in a way
-            /// that all key/value pairs have unique indeces.</remarks>
+            /// that all key/value pairs have unique indices.</remarks>
             public int Compare(KeyValuePair<int, T> x, KeyValuePair<int, T> y)
             {
                 int result = this.innerComparer(x.Value, y.Value);

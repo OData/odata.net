@@ -20,6 +20,7 @@ Imports System.Web
 Imports AstoriaUnitTests.Data
 Imports AstoriaUnitTests.Stubs
 Imports Microsoft.OData
+Imports Microsoft.OData.Edm
 Imports Microsoft.Test.ModuleCore
 Imports Microsoft.VisualStudio.TestTools.UnitTesting
 Imports NorthwindModel
@@ -49,6 +50,7 @@ Partial Public Class ClientModule
             Me.ctx = New DataServiceContext(web.ServiceRoot)
             'Me.'ctx.EnableAtom = True
             'Me.'ctx.Format.UseAtom()
+            Me.ctx.Format.UseJson(New EdmModel())
         End Sub
 
         <TestCleanup()> Public Sub PerTestCleanup()
@@ -240,7 +242,6 @@ Partial Public Class ClientModule
             ' Ensure that keys are produced in key format rather than XML format.
             Dim e = New SimpleEntityWithLong()
             e.ID = 1
-            Dim ctx = New DataServiceContext(web.ServiceRoot, ODataProtocolVersion.V4)
             ctx.AddAndUpdateResponsePreference = DataServiceResponsePreference.IncludeContent
             ctx.AttachTo("SimpleEntityWithLong", e)
             ctx.UpdateObject(e)
@@ -263,7 +264,6 @@ Partial Public Class ClientModule
         <TestCategory("Partition2")> <TestMethod()>
         Public Sub BytesConsistency()
             ' Astoria Client: byte[] and Binary used as keys are supported inconsistently
-            Dim ctx = New DataServiceContext(web.ServiceRoot, ODataProtocolVersion.V4)
             ctx.AddAndUpdateResponsePreference = DataServiceResponsePreference.IncludeContent
             Dim arr As Byte()
             ReDim arr(0)
@@ -282,7 +282,6 @@ Partial Public Class ClientModule
         <TestCategory("Partition2")> <TestMethod()>
         Public Sub BinaryConsistency()
             ' Astoria Client: byte[] and Binary used as keys are supported inconsistently
-            Dim ctx = New DataServiceContext(web.ServiceRoot, ODataProtocolVersion.V4)
             ctx.AddAndUpdateResponsePreference = DataServiceResponsePreference.IncludeContent
             Dim arr As Byte()
             ReDim arr(0)

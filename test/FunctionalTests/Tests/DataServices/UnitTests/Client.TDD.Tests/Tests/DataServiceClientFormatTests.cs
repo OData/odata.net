@@ -8,12 +8,15 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 {
     using System;
     using System.Collections.Generic;
-    using Microsoft.OData.Client;
-    using Microsoft.OData.Client.Metadata;
+    using System.IO;
     using AstoriaUnitTests.TDD.Common;
     using FluentAssertions;
     using Microsoft.OData.Edm;
     using Microsoft.OData;
+    using Microsoft.OData.Client;
+    using Microsoft.OData.Client.Metadata;
+    using Microsoft.OData.Client.TDDUnitTests;
+    using Microsoft.OData.Client.TDDUnitTests.Tests;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using ClientStrings = Microsoft.OData.Client.Strings;
 
@@ -23,6 +26,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         private readonly IEdmModel serviceModel = new EdmModel();
         private DataServiceClientFormat v3TestSubject;
         private DataServiceContext v3Context;
+
+
 #if (NETCOREAPP1_0 || NETCOREAPP2_0)
         private readonly QueryComponents queryComponentsWithSelect = new QueryComponents(new Uri("http://temp.org/?$select=foo"), new Version(1, 1, 1, 1), typeof(object), null, null);
         private readonly QueryComponents queryComponentsWithoutSelect = new QueryComponents(new Uri("http://temp.org/"), new Version(1, 1, 1, 1), typeof(object), null, null);
@@ -46,7 +51,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestInitialize]
         public void Init()
         {
-            this.v3Context = new DataServiceContext(new Uri("http://temp.org/"), ODataProtocolVersion.V4);
+            this.v3Context = new DataServiceContext(new Uri("http://temp.org/"), ODataProtocolVersion.V4).ReConfigureForNetworkLoadingTests();
             this.v3TestSubject = this.v3Context.Format;
         }
 
@@ -88,6 +93,16 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
         [TestMethod]
+        public void TestNetworkLoading()
+        {
+
+            // forces metadata to be loaded
+            this.v3Context.Format.UseJson();
+            this.v3Context.Format.ServiceModel.Should().NotBeNull();
+
+        }
+
+        [TestMethod]
         public void SetRequestAcceptHeaderShouldSetAcceptHeaderToJsonLightWhenUsingJson()
         {
             this.TestSetRequestAcceptHeader(f => f.UseJson(this.serviceModel), null, TestConstants.MimeApplicationJsonODataMinimalMetadata);
@@ -113,9 +128,31 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
         [TestMethod]
-        public void SetRequestAcceptHeaderForBatch()
+        public void SetRequestAcceptHeaderForMultipartBatch()
         {
-            this.TestSetRequestHeader(f => f.UseJson(this.serviceModel), (f, r) => f.SetRequestAcceptHeaderForBatch(r), "Accept", null, "multipart/mixed");
+            var headers = new HeaderCollection();
+            headers.SetHeader("Content-Type", "multipart/mixed;boundary=xyz_ewquwdu");
+            this.TestSetRequestHeaderForBatch(
+                f => f.UseJson(this.serviceModel), // Configure DataServiceClientFormat
+                headers, // Header Collection
+                (f, r) => f.SetRequestAcceptHeaderForBatch(r), // set request header
+                "Accept", // Header to set
+                null, // Initial header value
+                "multipart/mixed"); // Expected header value
+        }
+
+        [TestMethod]
+        public void SetRequestAcceptHeaderForJsonBatch()
+        {
+            var headers = new HeaderCollection();
+            headers.SetHeader("Content-Type", "application/json");
+            this.TestSetRequestHeaderForBatch(
+                f => f.UseJson(this.serviceModel), // Configure DataServiceClientFormat
+                headers, // Header Collection
+                (f, r) => f.SetRequestAcceptHeaderForBatch(r), // set request header
+                "Accept", // Header to set
+                null, // Initial header value
+                "application/json"); // Expected header value
         }
 
         [TestMethod]
@@ -183,10 +220,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
         [TestMethod]
-        public void UseJsonOverloadWithNoParameterShouldFailIfNoDelegateProvided()
+        public void UseJsonOverloadWithNoParameterShouldPassIfNoDelegateProvided()
         {
-            Action callOverload = () => this.v3Context.Format.UseJson();
-            callOverload.ShouldThrow<InvalidOperationException>().WithMessage(ClientStrings.DataServiceClientFormat_LoadServiceModelRequired);
+             this.v3Context.Format.UseJson();
+             this.v3TestSubject.ServiceModel.Should().NotBeNull();
         }
 
         [TestMethod]
@@ -252,6 +289,26 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                     headers.GetHeader("OData-Version").Should().BeNull();
                 }
             }
+
+            if (expectedHeaderToSet == "Accept")
+            {
+                headers.GetHeader("Accept-Charset").Should().Be("UTF-8");
+            }
+        }
+
+        private void TestSetRequestHeaderForBatch(Action<DataServiceClientFormat> configureFormat, HeaderCollection headerCollection, Action<DataServiceClientFormat, HeaderCollection> setRequestHeader, string expectedHeaderToSet, string initialHeaderValue, string expectedValueAfterSet)
+        {
+            var headers = headerCollection;
+            configureFormat(this.v3TestSubject);
+
+            headers.SetHeader(expectedHeaderToSet, initialHeaderValue);
+
+            // Verify header has the expected initial value. This ensures that SetHeader above actually what we expect, and didn't use a default value or ignore the set request.
+            headers.GetHeader(expectedHeaderToSet).Should().Be(initialHeaderValue);
+
+            // Try to set header to new value and verify
+            setRequestHeader(this.v3TestSubject, headers);
+            headers.GetHeader(expectedHeaderToSet).Should().Be(expectedValueAfterSet);
 
             if (expectedHeaderToSet == "Accept")
             {

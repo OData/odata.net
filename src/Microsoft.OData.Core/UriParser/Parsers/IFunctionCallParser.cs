@@ -7,7 +7,7 @@
 namespace Microsoft.OData.UriParser
 {
     /// <summary>
-    /// Interface for a class that can parse an identifier as a function and return a representitive QueryToken.
+    /// Interface for a class that can parse an identifier as a function and return a representative QueryToken.
     /// </summary>
     internal interface IFunctionCallParser
     {

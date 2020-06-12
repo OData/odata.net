@@ -11,7 +11,7 @@ using System.Xml;
 namespace Microsoft.OData.Edm.Csdl.Serialization
 {
     /// <summary>
-    /// The visitor for outputing &lt;edmx:referneced&gt; elements for referenced model.
+    /// The visitor for outputting &lt;edmx:referenced&gt; elements for referenced model.
     /// </summary>
     internal class EdmModelReferenceElementsVisitor
     {

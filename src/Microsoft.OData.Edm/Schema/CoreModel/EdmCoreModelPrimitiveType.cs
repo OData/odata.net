@@ -28,7 +28,7 @@ namespace Microsoft.OData.Edm
         public string Name { get; }
 
         /// <summary>
-        /// Getst the namespace of this type.
+        /// Gets the namespace of this type.
         /// </summary>
         public string Namespace
         {

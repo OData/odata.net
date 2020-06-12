@@ -70,8 +70,8 @@ namespace Microsoft.OData.Client
             IODataResponseMessage message,
             ODataPayloadKind expectedPayloadKind)
         {
-            Debug.Assert(null != queryComponents, "querycomponents");
-            Debug.Assert(null != message, "message");
+            Debug.Assert(queryComponents != null, "querycomponents");
+            Debug.Assert(message != null, "message");
 
             // If there is no content (For e.g. /Customers(1)/BestFriend is null), we need to return empty results.
             if (message.StatusCode == (int)HttpStatusCode.NoContent || String.IsNullOrEmpty(contentType))
@@ -113,13 +113,16 @@ namespace Microsoft.OData.Client
             }
             catch (DataServiceQueryException ex)
             {
-                Exception inEx = ex;
-                while (inEx.InnerException != null)
+                Exception currentInnerException = ex;
+                Exception previousInnerException = null;
+                while (currentInnerException.InnerException != null)
                 {
-                    inEx = inEx.InnerException;
+                    previousInnerException = currentInnerException;
+                    currentInnerException = currentInnerException.InnerException;
                 }
 
-                DataServiceClientException serviceEx = inEx as DataServiceClientException;
+                DataServiceClientException serviceEx = currentInnerException as DataServiceClientException;
+                serviceEx = serviceEx ?? previousInnerException as DataServiceClientException;
                 if (context.IgnoreResourceNotFoundException && serviceEx != null && serviceEx.StatusCode == (int)HttpStatusCode.NotFound)
                 {
                     QueryOperationResponse qor = new QueryOperationResponse<TElement>(ex.Response.HeaderCollection, ex.Response.Query, MaterializeAtom.EmptyResults);
@@ -161,7 +164,7 @@ namespace Microsoft.OData.Client
                 {
                     QueryOperationResponse operationResponse = result.GetResponse<TElement>(MaterializeAtom.EmptyResults);
 
-                    if (null != operationResponse)
+                    if (operationResponse != null)
                     {
                         if (context.IgnoreResourceNotFoundException)
                         {
@@ -189,7 +192,7 @@ namespace Microsoft.OData.Client
         /// <returns>The server side count of the query set</returns>
         internal long GetQuerySetCount(DataServiceContext context)
         {
-            Debug.Assert(null != context, "context is null");
+            Debug.Assert(context != null, "context is null");
             Version requestVersion = this.QueryComponents(context.Model).Version;
             if (requestVersion == null)
             {
@@ -242,7 +245,7 @@ namespace Microsoft.OData.Client
             {
                 QueryOperationResponse operationResponse = null;
                 operationResponse = response.GetResponse<long>(MaterializeAtom.EmptyResults);
-                if (null != operationResponse)
+                if (operationResponse != null)
                 {
                     operationResponse.Error = ex;
                     throw new DataServiceQueryException(Strings.DataServiceException_GeneralError, ex, operationResponse);
@@ -280,7 +283,7 @@ namespace Microsoft.OData.Client
         /// <returns>Result representing the create request. The request has not been initiated yet.</returns>
         private QueryResult CreateExecuteResult(object source, DataServiceContext context, AsyncCallback callback, object state, string method)
         {
-            Debug.Assert(null != context, "context is null");
+            Debug.Assert(context != null, "context is null");
 
             QueryComponents qc = this.QueryComponents(context.Model);
             RequestInfo requestInfo = new RequestInfo(context);

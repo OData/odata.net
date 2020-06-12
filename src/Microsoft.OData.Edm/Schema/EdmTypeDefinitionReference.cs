@@ -16,7 +16,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmTypeDefinitionReference"/> class.
         /// </summary>
-        /// <param name="typeDefinition">The definition refered to by this reference.</param>
+        /// <param name="typeDefinition">The definition referred to by this reference.</param>
         /// <param name="isNullable">Denotes whether the type can be nullable.</param>
         public EdmTypeDefinitionReference(IEdmTypeDefinition typeDefinition, bool isNullable)
             : base(typeDefinition, isNullable)
@@ -32,7 +32,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmTypeDefinitionReference"/> class.
         /// </summary>
-        /// <param name="typeDefinition">The definition refered to by this reference.</param>
+        /// <param name="typeDefinition">The definition referred to by this reference.</param>
         /// <param name="isNullable">Denotes whether the type can be nullable.</param>
         /// <param name="isUnbounded">Denotes whether the length is unbounded.</param>
         /// <param name="maxLength">Maximum length of a value of this type.</param>

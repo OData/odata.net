@@ -20,7 +20,7 @@ namespace Microsoft.OData.Tests.Metadata
         {
             var bindingType = this.model.FindType("TestModel.Movie");
             var bindableOperations = MetadataUtils.CalculateBindableOperationsForType(bindingType, this.model, new EdmTypeReaderResolver(this.model, null));
-            Assert.Equal(1, bindableOperations.Count());
+            Assert.Single(bindableOperations);
             foreach (var operation in bindableOperations)
             {
                 Assert.Equal("Rate", operation.Name);
@@ -72,7 +72,7 @@ namespace Microsoft.OData.Tests.Metadata
         {
             var bindingType = this.model.FindType("TestModel.Movie");
             var bindableOperations = MetadataUtils.CalculateBindableOperationsForType(bindingType, this.model, new EdmTypeReaderResolver(this.model, this.NameToTypeResolver));
-            Assert.Equal(1, bindableOperations.Count());
+            Assert.Single(bindableOperations);
             foreach (var operation in bindableOperations)
             {
                 Assert.Equal("Rate", operation.Name);

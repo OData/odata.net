@@ -410,7 +410,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
 
         #region Action/Function
 
-        [TestMethod]
+         [TestMethod]
         public void InvokeFunctionBoundedToSingleton()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };

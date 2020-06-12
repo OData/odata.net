@@ -15,7 +15,7 @@ namespace Microsoft.OData.UriParser
     using Microsoft.OData.Metadata;
 
     /// <summary>
-    /// Extension methods for <see cref="ODataPath"/>. These method provide convenince functions.
+    /// Extension methods for <see cref="ODataPath"/>. These method provide convenience functions.
     /// TODO: Implement this class and it's visitors. These are stubs.
     /// </summary>
     /// <remarks>

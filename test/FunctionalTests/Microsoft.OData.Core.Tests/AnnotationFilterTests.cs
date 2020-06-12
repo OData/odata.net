@@ -47,9 +47,9 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public void TestCreateInclueAllFilter()
+        public void TestCreateIncludeAllFilter()
         {
-            var filter = AnnotationFilter.CreateInclueAllFilter();
+            var filter = AnnotationFilter.CreateIncludeAllFilter();
             Assert.True(filter.Matches("any.any"));
             Assert.Equal(filter.GetType(), AnnotationFilter.Create("*").GetType());
         }

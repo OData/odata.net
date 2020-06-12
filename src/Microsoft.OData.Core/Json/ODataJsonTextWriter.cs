@@ -10,9 +10,7 @@ namespace Microsoft.OData
     using System.IO;
     using System.Linq;
     using System.Text;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Buffers;
     using Microsoft.OData.Json;
 
@@ -294,8 +292,6 @@ namespace Microsoft.OData
 
         #region async methods
 
-#if PORTABLELIB
-
         /// <inheritdoc/>
         public override Task FlushAsync()
         {
@@ -350,7 +346,6 @@ namespace Microsoft.OData
                 this.WriteLine(value));
         }
 
-#endif
 
         #endregion
 

@@ -152,10 +152,10 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         public void QueryEntitySetWithServerDrivenPagingTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
-            var query = context.Customer.IncludeTotalCount();
+            var query = context.Customer.IncludeCount();
             var ar = query.BeginExecute(null, null).EnqueueWait(this);
             var response = query.EndExecute(ar) as QueryOperationResponse<Customer>;
-            var totalCount = response.TotalCount;
+            var totalCount = response.Count;
             var count = response.Count();
             var continuation = response.GetContinuation();
 
@@ -244,6 +244,58 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             this.EnqueueTestComplete();
         }
 
+        /// <summary>
+        /// ExcuteBatch Requests
+        /// </summary>
+        [TestMethod, Asynchronous]
+        public void ExecuteBatchWithSaveChangesOptionsReturnsCorrectResults()
+        {
+            var context = this.CreateWrappedContext<DefaultContainer>().Context;
+            var countOfBatchParts = 0;
+            var countOfTimesSenderCalled = 0;
+            context.SendingRequest2 += ((sender, args) =>
+            {
+                if (args.IsBatchPart)
+                {
+                    countOfBatchParts++;
+                }
+
+                countOfTimesSenderCalled++;
+            });
+
+            var arBatch = context.BeginExecuteBatch(
+                null, // callback
+                null, // state
+                SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.UseRelativeUri,
+                new DataServiceRequest[]
+                {
+                    new DataServiceRequest<Customer>(((context.Customer.Where(c => c.CustomerId == -8)) as DataServiceQuery<Customer>).RequestUri),
+                    new DataServiceRequest<Customer>(((context.Customer.Where(c => c.CustomerId == -6)) as DataServiceQuery<Customer>).RequestUri),
+                    new DataServiceRequest<Driver>(((context.Driver.Where(c => c.Name == "1")) as DataServiceQuery<Driver>).RequestUri),
+                    new DataServiceRequest<Driver>(((context.Driver.Where(c => c.Name == "3")) as DataServiceQuery<Driver>).RequestUri)
+                }).EnqueueWait(this);
+            DataServiceResponse qr = context.EndExecuteBatch(arBatch);
+            string actualValues = "";
+            foreach (var r in qr)
+            {
+                if (r is QueryOperationResponse<Customer>)
+                {
+                    var customer = (r as QueryOperationResponse<Customer>).Single();
+                    actualValues += customer.CustomerId;
+                }
+
+                if (r is QueryOperationResponse<Driver>)
+                {
+                    var driver = (r as QueryOperationResponse<Driver>).Single();
+                    actualValues += driver.Name;
+                }
+            }
+
+            Assert.AreEqual(actualValues, ("-8-613"), "actualValues == -8-613");
+            Assert.IsTrue(countOfBatchParts > 0 && (countOfTimesSenderCalled - countOfBatchParts) == 1, "countOfBatchParts > 0 && (countOfTimesSenderCalled - countOfBatchParts ) == 1");
+            this.EnqueueTestComplete();
+        }
+
 #if !PORTABLELIB && !NETCOREAPP1_0
         /// <summary>
         /// CancelRequest for Batch Requests
@@ -297,18 +349,18 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         }
 
         /// <summary>
-        /// IncludeTotalCount Test
+        /// IncludeCount Test
         /// </summary>
         [TestMethod, Asynchronous]
-        public void IncludeTotalCountTest()
+        public void IncludeCountTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
-            var query = context.Computer.IncludeTotalCount();
+            var query = context.Computer.IncludeCount();
             query.BeginExecute(
                 (ar) =>
                 {
                     var customers = query.EndExecute(ar) as QueryOperationResponse<Computer>;
-                    Assert.AreEqual(10, customers.TotalCount);
+                    Assert.AreEqual(10, customers.Count);
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -317,18 +369,18 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         }
 
         /// <summary>
-        /// IncludeTotalCount Test
+        /// IncludeCount Test
         /// </summary>
         [TestMethod, Asynchronous]
-        public void IncludeTotalCountTestWithServerDrivenPaging()
+        public void IncludeCountTestWithServerDrivenPaging()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
-            var query = context.Customer.IncludeTotalCount();
+            var query = context.Customer.IncludeCount();
             query.BeginExecute(
                 (ar) =>
                 {
                     var customers = query.EndExecute(ar) as QueryOperationResponse<Customer>;
-                    Assert.AreEqual(10, customers.TotalCount);
+                    Assert.AreEqual(10, customers.Count);
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -344,12 +396,12 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
             var query = context.Customer.Where(c => c.Logins.All(l => l.Orders.All(o => o.OrderId > 0))) as DataServiceQuery<Customer>;
-            query = query.IncludeTotalCount();
+            query = query.IncludeCount();
             query.BeginExecute(
                 (ar) =>
                 {
                     var customers = query.EndExecute(ar) as QueryOperationResponse<Customer>;
-                    Assert.AreEqual(6, customers.TotalCount);
+                    Assert.AreEqual(6, customers.Count);
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -365,12 +417,12 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
             var query = context.Customer.Where(c => c.Orders.All(o => o.OrderId > 0)) as DataServiceQuery<Customer>;
-            query = query.IncludeTotalCount();
+            query = query.IncludeCount();
             query.BeginExecute(
                 (ar) =>
                 {
                     var customers = query.EndExecute(ar) as QueryOperationResponse<Customer>;
-                    Assert.AreEqual(6, customers.TotalCount);
+                    Assert.AreEqual(6, customers.Count);
                     this.EnqueueTestComplete();
                 },
                     null);
@@ -386,12 +438,12 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
             var query = context.Customer.Where(c => c.Logins.Any(l => l.Orders.Any())) as DataServiceQuery<Customer>;
-            query = query.IncludeTotalCount();
+            query = query.IncludeCount();
             query.BeginExecute(
                 (ar) =>
                 {
                     var customers = query.EndExecute(ar) as QueryOperationResponse<Customer>;
-                    Assert.AreEqual(4, customers.TotalCount);
+                    Assert.AreEqual(4, customers.Count);
                     this.EnqueueTestComplete();
                 },
                     null);
@@ -407,13 +459,13 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
             var query = context.Customer.Where(c => c.Orders.Any(o => o.OrderId < 0)) as DataServiceQuery<Customer>;
-            query = query.IncludeTotalCount();
+            query = query.IncludeCount();
 
             query.BeginExecute(
                 (ar) =>
                 {
                     var customers = query.EndExecute(ar) as QueryOperationResponse<Customer>;
-                    Assert.AreEqual(4, customers.TotalCount);
+                    Assert.AreEqual(4, customers.Count);
                     this.EnqueueTestComplete();
                 },
                 null);

@@ -813,6 +813,11 @@ namespace Microsoft.OData.JsonLight
                 case ODataAnnotationNames.ODataMediaETag:  // 'odata.mediaEtag'
                     return this.ReadAndValidateAnnotationStringValue(annotationName);
 
+                case ODataAnnotationNames.ODataRemoved: // 'odata.removed'
+                    {
+                        throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_UnexpectedDeletedEntryInResponsePayload);
+                    }
+
                 default:
                     ODataAnnotationNames.ValidateIsCustomAnnotationName(annotationName);
                     Debug.Assert(
@@ -1249,7 +1254,7 @@ namespace Microsoft.OData.JsonLight
                     ValidateExpandedNestedResourceInfoPropertyValue(this.JsonReader, isCollection, propertyName);
                     if (isCollection)
                     {
-                        readerNestedResourceInfo = this.ReadingResponse
+                        readerNestedResourceInfo = this.ReadingResponse || isDeltaResourceSet
                             ? ReadExpandedResourceSetNestedResourceInfo(resourceState, navigationProperty, navigationProperty.Type.ToStructuredType(), propertyName, /*isDeltaResourceSet*/ isDeltaResourceSet)
                             : ReadEntityReferenceLinksForCollectionNavigationLinkInRequest(resourceState, navigationProperty, propertyName, /*isExpanded*/ true);
                     }
@@ -1265,10 +1270,10 @@ namespace Microsoft.OData.JsonLight
                 }
                 else
                 {
-                    var derivedTypeConstrants = this.JsonLightInputContext.Model.GetDerivedTypeConstraints(edmProperty);
-                    if (derivedTypeConstrants != null)
+                    var derivedTypeConstraints = this.JsonLightInputContext.Model.GetDerivedTypeConstraints(edmProperty);
+                    if (derivedTypeConstraints != null)
                     {
-                        resourceState.PropertyAndAnnotationCollector.SetDerivedTypeValidator(propertyName, new DerivedTypeValidator(edmProperty.Type.Definition, derivedTypeConstrants, "property", propertyName));
+                        resourceState.PropertyAndAnnotationCollector.SetDerivedTypeValidator(propertyName, new DerivedTypeValidator(edmProperty.Type.Definition, derivedTypeConstraints, "property", propertyName));
                     }
 
                     // NOTE: we currently do not check whether the property should be skipped
@@ -1278,7 +1283,7 @@ namespace Microsoft.OData.JsonLight
             }
             else
             {
-                // Undeclared property - we need to run detection alogorithm here.
+                // Undeclared property - we need to run detection algorithm here.
                 readerNestedInfo = this.ReadUndeclaredProperty(resourceState, propertyName, /*propertyWithValue*/ true);
 
                 // Note that if nested resource info is returned it's already validated, so we just report it here.
@@ -2220,7 +2225,7 @@ namespace Microsoft.OData.JsonLight
             /// <summary>
             /// Adds the specified action to the current resource.
             /// </summary>
-            /// <param name="action">The action whcih is fully populated with the data from the payload.</param>
+            /// <param name="action">The action which is fully populated with the data from the payload.</param>
             public void AddActionToResource(ODataAction action)
             {
                 Debug.Assert(action != null, "action != null");
@@ -2230,7 +2235,7 @@ namespace Microsoft.OData.JsonLight
             /// <summary>
             /// Adds the specified function to the current resource.
             /// </summary>
-            /// <param name="function">The function whcih is fully populated with the data from the payload.</param>
+            /// <param name="function">The function which is fully populated with the data from the payload.</param>
             public void AddFunctionToResource(ODataFunction function)
             {
                 Debug.Assert(function != null, "function != null");

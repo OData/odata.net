@@ -1208,13 +1208,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void DuplicatePropertiesThrows()
+        public void DuplicatePropertiesWithNoOptionsReturnsSingle()
         {
             const string expandClauseText = "";
             const string selectClauseText = "Name, Name";
+            const string expectedSelect = "Name";
 
-            Action test = () => RunParseSelectExpand(selectClauseText, expandClauseText, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            test.Throws<ODataException>("Found mutliple select terms with same select path 'Name' at one $select, please combine them together.");
+            var results = RunParseSelectExpand(selectClauseText, expandClauseText, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            AssertSelectString(expectedSelect, results);
         }
 
         [Fact]
@@ -1560,8 +1561,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             // TODO: Can't use AssertExpandString, because SelectExpandClauseExtensions doesn't support $compute,$filter,$apply etc.
             var expandedSelectionItem = expandClause.SelectedItems.OfType<ExpandedNavigationSelectItem>().Single();
             Assert.NotNull(expandedSelectionItem.ApplyOption);
-            Assert.Equal((expandedSelectionItem.ApplyOption.Transformations.Single() as AggregateTransformationNode).Expressions.Single().Alias, "MaxColor");
-            Assert.Equal(expandedSelectionItem.SelectAndExpand.SelectedItems.Single().ShouldBeSelectedItemOfType<PathSelectItem>().SelectedPath.LastSegment.Identifier, "MaxColor");
+            Assert.Equal("MaxColor", (expandedSelectionItem.ApplyOption.Transformations.Single() as AggregateTransformationNode).AggregateExpressions.Single().Alias);
+            Assert.Equal("MaxColor", expandedSelectionItem.SelectAndExpand.SelectedItems.Single().ShouldBeSelectedItemOfType<PathSelectItem>().SelectedPath.LastSegment.Identifier);
         }
 
         [Fact]
@@ -1577,7 +1578,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             // TODO: Can't use AssertExpandString, because SelectExpandClauseExtensions doesn't support $compute,$filter,$apply etc.
             var expandedSelectionItem = expandClause.SelectedItems.OfType<ExpandedNavigationSelectItem>().Single();
             Assert.NotNull(expandedSelectionItem.ApplyOption);
-            Assert.Equal((expandedSelectionItem.ApplyOption.Transformations.Single() as AggregateTransformationNode).Expressions.Single().Alias, "MaxColor");
+            Assert.Equal("MaxColor", (expandedSelectionItem.ApplyOption.Transformations.Single() as AggregateTransformationNode).AggregateExpressions.Single().Alias);
             var binaryOperatorNode = expandedSelectionItem.FilterOption.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
             (binaryOperatorNode.Left as ConvertNode).Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("MaxColor");
         }

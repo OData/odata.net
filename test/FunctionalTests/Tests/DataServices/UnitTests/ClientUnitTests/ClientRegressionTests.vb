@@ -11,8 +11,6 @@ Imports System.Collections
 Imports System.Collections.Generic
 Imports System.Collections.ObjectModel
 Imports System.ComponentModel
-Imports Microsoft.OData.Service
-Imports Microsoft.OData.Client
 Imports System.Data.Test.Astoria
 Imports System.Diagnostics
 Imports System.IO
@@ -23,10 +21,13 @@ Imports AstoriaUnitTests
 Imports AstoriaUnitTests.Data
 Imports AstoriaUnitTests.Stubs
 Imports AstoriaUnitTests.Tests
+Imports AstoriaUnitTests.ClientExtensions
+Imports Microsoft.OData.Client
+Imports Microsoft.OData.Edm
+Imports Microsoft.OData.Service
 Imports Microsoft.Test.ModuleCore
 Imports Microsoft.VisualStudio.TestTools.UnitTesting
 Imports NorthwindModel
-Imports AstoriaUnitTests.ClientExtensions
 Imports <xmlns:atom="http://www.w3.org/2005/Atom">
 Imports <xmlns:d="http://docs.oasis-open.org/odata/ns/data">
 Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
@@ -443,6 +444,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 
         <TestInitialize()> Public Sub PerTestSetup()
             Me.ctx = New DataServiceContext(web.ServiceRoot)
+            Me.ctx.Format.UseJson(New EdmModel())
             'Me.'ctx.EnableAtom = True
             'Me.'ctx.Format.UseAtom()
         End Sub
@@ -455,7 +457,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 
         <TestCategory("Partition2")> <TestMethod()> Public Sub BatchVersioning()
             Dim contentStream = FetchContentStream(
-                    New Action(Function() ctx.ExecuteBatch(ctx.CreateQuery(Of northwindClient.Customers)("Customers").IncludeTotalCount(),
+                    New Action(Function() ctx.ExecuteBatch(ctx.CreateQuery(Of northwindClient.Customers)("Customers").IncludeCount(),
                     ctx.CreateQuery(Of northwindClient.Customers)("Customers"))))
             Assert.IsNotNull(contentStream)
 

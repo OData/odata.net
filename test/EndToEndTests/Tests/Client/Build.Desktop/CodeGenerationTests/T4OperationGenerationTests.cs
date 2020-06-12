@@ -42,7 +42,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             Assert.AreEqual(2, result);
         }
 
-        [TestMethod]
+        [TestMethod]//--#comment#--[TestMethod]
         public void FunctionBoundOnEntityTypeTest()
         {
             var account = TestClientContext.Accounts.Where(a => a.AccountID == 101).Single();
@@ -50,7 +50,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             Assert.AreEqual(101901, result.PaymentInstrumentID);
         }
 
-        [TestMethod]
+        [TestMethod]//--#comment#--[TestMethod]
         public void FunctionBoundOnNavigationPropertyTest()
         {
             var account = TestClientContext.Accounts.Expand("MyGiftCard").Where(a => a.AccountID == 101).Single();
@@ -66,7 +66,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             Assert.AreEqual(100001, result);
         }
 
-        [TestMethod]
+        [TestMethod]//--#comment#--[TestMethod]
         public void ActionBoundOnEntityTypeTest()
         {
             var product = TestClientContext.Products.Where(p => p.ProductID == 7).Single();
@@ -74,7 +74,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             Assert.AreEqual(AccessLevel.ReadWrite, result);
         }
 
-        [TestMethod]
+        [TestMethod]//--#comment#--[TestMethod]
         public void ActionBoundOnNavigationPropertyTest()
         {
             var account = TestClientContext.Accounts.Where(ac => ac.AccountID == 101).Single();
@@ -82,7 +82,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             Assert.AreEqual(101901, result.PaymentInstrumentID);
         }
 
-        [TestMethod]
+        [TestMethod]//--#comment#--[TestMethod]
         public void ActionBoundOnSingletonOfDerivedType()
         {
             TestClientContext.MergeOption = Microsoft.OData.Client.MergeOption.OverwriteChanges;
@@ -95,7 +95,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             Assert.IsTrue(revenue == publicCompany.Revenue);
         }
 
-        [TestMethod]
+        [TestMethod]//--#comment#--[TestMethod]
         public void ActionBoundOnEntityWithCollectionParameter()
         {
             TestClientContext.MergeOption = Microsoft.OData.Client.MergeOption.OverwriteChanges;
@@ -132,7 +132,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             Assert.AreEqual(null, person.HomeAddress);
         }
 
-        [TestMethod]
+        [TestMethod]//--#comment#--[TestMethod]
         public void ActionBoundOnEntityWithEntityOrEntityCollectionParameter()
         {
             var customer = TestClientContext.Customers.First();
@@ -158,7 +158,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             Assert.AreEqual(2, orderList.Count());
         }
 
-        [TestMethod]
+        [TestMethod]//--#comment#--[TestMethod]
         public void ActionImportWithPrimitiveParameter()
         {
             int percentage = 50;
@@ -182,7 +182,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             Assert.IsTrue(boss.Emails[0] == "test1@var1.com" && boss.Emails[1] == "test2@var1.com");
         }
 
-        [TestMethod]
+        [TestMethod]//--#comment#--[TestMethod]
         public void ActionImportWithComplexTypeParameter()
         {
             TestClientContext.MergeOption = Microsoft.OData.Client.MergeOption.OverwriteChanges;
@@ -194,7 +194,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
         }
 
         //Complex type as function parameter in uri is not supported
-        // [TestMethod] // github issuse: #896
+        // [TestMethod]//--#comment#--[TestMethod] // github issuse: #896
         public void UnBoundFunctionReturnEntity()
         {
             TestClientContext.MergeOption = Microsoft.OData.Client.MergeOption.OverwriteChanges;
@@ -205,7 +205,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
         }
 
         //Doesn't support pass complexType in Parameter
-        [TestMethod]
+        [TestMethod]//--#comment#--[TestMethod]
         public void FunctionBoundToEntityReturnCollectionOfEntity()
         {
             TestClientContext.MergeOption = Microsoft.OData.Client.MergeOption.OverwriteChanges;
@@ -225,7 +225,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             Assert.IsTrue(emails.Count == actualEmails.Count());
         }
 
-        [TestMethod]
+        [TestMethod]//--#comment#--[TestMethod]
         public void UnboundFunctionPrimitiveTypeReturnEntity()
         {
             TestClientContext.MergeOption = Microsoft.OData.Client.MergeOption.OverwriteChanges;
@@ -245,7 +245,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             Assert.IsTrue(products.Count() == expectedProducts.Count());
         }
 
-        [TestMethod]
+        [TestMethod]//--#comment#--[TestMethod]
         public void UnBoundFunctionEnumParameter()
         {
             TestClientContext.MergeOption = Microsoft.OData.Client.MergeOption.OverwriteChanges;

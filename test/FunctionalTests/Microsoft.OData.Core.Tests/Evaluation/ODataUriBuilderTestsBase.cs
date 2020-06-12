@@ -24,32 +24,32 @@ namespace Microsoft.OData.Tests.Evaluation
             this.defaultProductInstance = TestModel.BuildDefaultProductValue(TestModel.GetEntityType(this.model, "TestModel.Product"));
         }
 
-        internal void BuildEntitySetUriShouldValidateArguments(ODataUriBuilder builder)
+        internal void BuildEntitySetUriShouldValidateArgumentsImpl(ODataUriBuilder builder)
         {
             this.VerifyBaseUriAndStringNullOrEmptyArgumentValidation((baseUri, entitySet) => builder.BuildEntitySetUri(baseUri, entitySet), "entitySetName");
         }
 
-        internal void BuildStreamEditLinkUriShouldValidateArguments(ODataUriBuilder builder)
+        internal void BuildStreamEditLinkUriShouldValidateArgumentsImpl(ODataUriBuilder builder)
         {
             this.VerifyBaseUriAndStringEmptyArgumentValidation((baseUri, streamPropertyName) => builder.BuildStreamEditLinkUri(baseUri, streamPropertyName), "streamPropertyName");
         }
 
-        internal void BuildStreamReadLinkUriShouldValidateArguments(ODataUriBuilder builder)
+        internal void BuildStreamReadLinkUriShouldValidateArgumentsImpl(ODataUriBuilder builder)
         {
             this.VerifyBaseUriAndStringEmptyArgumentValidation((baseUri, streamPropertyName) => builder.BuildStreamReadLinkUri(baseUri, streamPropertyName), "streamPropertyName");
         }
 
-        internal void BuildNavigationLinkUriShouldValidateArguments(ODataUriBuilder builder)
+        internal void BuildNavigationLinkUriShouldValidateArgumentsImpl(ODataUriBuilder builder)
         {
             this.VerifyBaseUriAndStringNullOrEmptyArgumentValidation((baseUri, navigationPropertyName) => builder.BuildNavigationLinkUri(baseUri, navigationPropertyName), "navigationPropertyName");
         }
 
-        internal void BuildAssociationLinkUriShouldValidateArguments(ODataUriBuilder builder)
+        internal void BuildAssociationLinkUriShouldValidateArgumentsImpl(ODataUriBuilder builder)
         {
             this.VerifyBaseUriAndStringNullOrEmptyArgumentValidation((baseUri, associationLinkName) => builder.BuildAssociationLinkUri(baseUri, associationLinkName), "navigationPropertyName");
         }
 
-        internal void BuildOperationTargetUriShouldValidateArguments(ODataUriBuilder builder)
+        internal void BuildOperationTargetUriShouldValidateArgumentsImpl(ODataUriBuilder builder)
         {
             this.VerifyBaseUriAndStringNullOrEmptyArgumentValidation((baseUri, operationName) => builder.BuildOperationTargetUri(baseUri, operationName, null, null), "operationName");
         }

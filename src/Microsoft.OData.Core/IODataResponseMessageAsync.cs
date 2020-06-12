@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if PORTABLELIB
 namespace Microsoft.OData
 {
     #region Namespaces
@@ -24,4 +23,3 @@ namespace Microsoft.OData
         Task<Stream> GetStreamAsync();
     }
 }
-#endif

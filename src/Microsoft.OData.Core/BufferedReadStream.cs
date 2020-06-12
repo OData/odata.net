@@ -6,7 +6,6 @@
 
 namespace Microsoft.OData
 {
-#if PORTABLELIB
     #region Namespaces
     using System;
     using System.Collections.Generic;
@@ -226,7 +225,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Resets the stream to the begining and prepares it for reading.
+        /// Resets the stream to the beginning and prepares it for reading.
         /// </summary>
         internal void ResetForReading()
         {
@@ -261,7 +260,6 @@ namespace Microsoft.OData
                     currentBuffer = this.AddNewBuffer();
                 }
 
-#if PORTABLELIB
                 yield return inputStream.ReadAsync(currentBuffer.Buffer, currentBuffer.OffsetToWriteTo, currentBuffer.FreeBytes)
                     .ContinueWith(t =>
                     {
@@ -288,42 +286,6 @@ namespace Microsoft.OData
                             throw;
                         }
                     });
-
-#else
-                yield return Task.Factory.FromAsync(
-                    (asyncCallback, asyncState) => this.inputStream.BeginRead(
-                        currentBuffer.Buffer,
-                        currentBuffer.OffsetToWriteTo,
-                        currentBuffer.FreeBytes,
-                        asyncCallback,
-                        asyncState),
-                    (asyncResult) =>
-                    {
-                        try
-                        {
-                            int bytesRead = this.inputStream.EndRead(asyncResult);
-                            if (bytesRead == 0)
-                            {
-                                this.inputStream = null;
-                            }
-                            else
-                            {
-                                currentBuffer.MarkBytesAsWritten(bytesRead);
-                            }
-                        }
-                        catch (Exception exception)
-                        {
-                            if (!ExceptionUtils.IsCatchableExceptionType(exception))
-                            {
-                                throw;
-                            }
-
-                            this.inputStream = null;
-                            throw;
-                        }
-                    },
-                    null);
-#endif
             }
         }
 
@@ -411,5 +373,4 @@ namespace Microsoft.OData
             }
         }
     }
-#endif
 }

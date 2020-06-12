@@ -190,7 +190,7 @@ namespace Microsoft.OData.Client.Materialization
                 list.Add((TTarget)item);
             }
 
-            // We can flow the same continuation becaues they're immutable, and
+            // We can flow the same continuation because they're immutable, and
             // we don't need to set the continuation property because List<T> doesn't
             // have one.
             DataServiceQueryContinuation continuation;

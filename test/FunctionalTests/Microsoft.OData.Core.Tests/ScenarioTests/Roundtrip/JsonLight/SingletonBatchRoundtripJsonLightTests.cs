@@ -942,7 +942,7 @@ Content-Type: application/json;odata.metadata=none
                     () => ClientWriteRequestForMultipartBatchVerifyDependsOnIds(
                         contentIdRef, odataVersion));
 
-                Assert.True(ode.Message.Contains(referenceIdNotIncludedInDependsOn));
+                Assert.Contains(referenceIdNotIncludedInDependsOn, ode.Message);
             }
         }
 
@@ -956,7 +956,7 @@ Content-Type: application/json;odata.metadata=none
             ODataException ode = Assert.Throws<ODataException>(
                     () => ClientWriteRequestForMultipartBatchVerifyDependsOnIdsForTopLevelRequest(
                         topLevelContentId, ODataVersion.V4));
-            Assert.True(ode.Message.Contains(referenceIdNotIncludedInDependsOn));
+            Assert.Contains(referenceIdNotIncludedInDependsOn, ode.Message);
         }
 
         [Fact]
@@ -1018,7 +1018,7 @@ Content-Type: application/json;odata.metadata=none
             }
             catch (Exception e)
             {
-                Assert.True(e.Message.Contains(dependsOnIdNotFound));
+                Assert.Contains(dependsOnIdNotFound, e.Message);
             }
             Assert.True(expectedExceptionThrown, "Uri self-referencing with its Content-ID should not be allowed.");
         }
@@ -1489,7 +1489,7 @@ Content-Type: application/json;odata.metadata=none
                                 // Verify that the content id of the response is matching that of the request.
                                 if (500 == operationMessage.StatusCode)
                                 {
-                                    Assert.True(operationMessage.ContentId.Equals("3"));
+                                    Assert.Equal("3", operationMessage.ContentId);
                                 }
                             }
                             break;

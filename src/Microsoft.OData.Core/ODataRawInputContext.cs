@@ -12,9 +12,7 @@ namespace Microsoft.OData
     using System.Diagnostics;
     using System.IO;
     using System.Text;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Edm;
     #endregion Namespaces
 
@@ -89,7 +87,6 @@ namespace Microsoft.OData
             return this.CreateAsynchronousReaderImplementation();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously create an <see cref="ODataAsynchronousReader"/>.
         /// </summary>
@@ -99,7 +96,6 @@ namespace Microsoft.OData
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
             return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateAsynchronousReaderImplementation());
         }
-#endif
 
         /// <summary>
         /// Read a top-level value.
@@ -111,7 +107,6 @@ namespace Microsoft.OData
             return this.ReadValueImplementation(expectedPrimitiveTypeReference);
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Asynchronously read a top-level value.
         /// </summary>
@@ -122,7 +117,6 @@ namespace Microsoft.OData
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
             return TaskUtils.GetTaskForSynchronousOperation(() => this.ReadValueImplementation(expectedPrimitiveTypeReference));
         }
-#endif
 
         /// <summary>
         /// Perform the actual cleanup work.

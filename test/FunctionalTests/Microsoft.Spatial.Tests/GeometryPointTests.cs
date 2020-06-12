@@ -33,6 +33,7 @@ namespace Microsoft.Spatial.Tests
             Assert.Equal(CoordinateSystem.DefaultGeometry, point.CoordinateSystem);
         }
 
+
         [Fact]
         public void TestCreateMethod2DimensionsDefaultCoords()
         {

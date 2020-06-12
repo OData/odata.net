@@ -11,6 +11,7 @@ Imports System.Collections
 Imports System.Collections.Generic
 Imports Microsoft.OData.Service
 Imports Microsoft.OData.Client
+Imports Microsoft.OData.Edm
 Imports System.Data.Test.Astoria
 Imports AstoriaUnitTests.Stubs
 Imports Microsoft.Test.ModuleCore
@@ -44,6 +45,8 @@ Partial Public Class ClientModule
             New Tuple(Of String, Uri)("Uri has Query", New Uri("http://foo/awesome.svc?id=10", UriKind.Absolute)),
             New Tuple(Of String, Uri)("Uri is Relative", New Uri("MySet", UriKind.Relative))}
 
+        Private context As DataServiceContext
+
         <CLSCompliant(False)>
         Public Class MyAllTypes1
             Inherits AllTypes
@@ -74,6 +77,7 @@ Partial Public Class ClientModule
             streamContentWeb.ServiceType = GetType(AstoriaUnitTests.Stubs.StreamingContentService)
             streamContentWeb.StartService()
             Dim ctx = New DataServiceContext(streamingWeb.ServiceRoot)
+            ctx.Format.UseJson(New EdmModel())
 
             ' Since we are sending $value payload, we must correctly set the accept type header.
             ' Otherwise, astoria server sends application/atom+xml as the header value and then client fails to parse.
@@ -98,6 +102,8 @@ Partial Public Class ClientModule
             Me.northwindCtx = New NorthwindSimpleModel.NorthwindContext(northwindWeb.ServiceRoot)
             'Me.northwindCtx.EnableAtom = True
             'Me.northwindCtx.Format.UseAtom()
+            Me.context = New DataServiceContext()
+            context.Format.UseJson(New EdmModel())
         End Sub
 
         '<TestCleanup()> Public Sub PerTestCleanup()
@@ -105,7 +111,7 @@ Partial Public Class ClientModule
 
         <TestCategory("Partition3")> <TestMethod()>
         Public Sub ApiContextBeginExecute_NullBaseUri_Error()
-            Dim context = New DataServiceContext()
+
             Dim act As Action = Sub()
                                     context.BeginExecute(Of Object)(New Uri("MySet", UriKind.Relative), Sub(ar As IAsyncResult) Return, Nothing)
                                 End Sub
@@ -117,9 +123,7 @@ Partial Public Class ClientModule
 
         <TestCategory("Partition3")> <TestMethod()>
         Public Sub ApiContextBeginExecute_NullBaseUri_AbsoluteRequestUri_Success()
-            Dim context = New DataServiceContext()
-            'context.EnableAtom = True
-            'context.Format.UseAtom()
+
             context.BeginExecute(Of Object)(entitySet1AbsoluteUri, Sub(ar As IAsyncResult)
                                                                        CType(ar, DataServiceQuery(Of Object)).EndExecute(ar).ToList()
                                                                    End Sub,
@@ -136,9 +140,7 @@ Partial Public Class ClientModule
 
         <TestCategory("Partition3")> <TestMethod()>
         Public Sub ApiContextExecute_NullBaseUri_Error()
-            Dim context = New DataServiceContext()
-            'context.EnableAtom = True
-            'context.Format.UseAtom()
+
             Dim act As Action = Sub()
                                     context.Execute(Of Object)(New Uri("MySet", UriKind.Relative))
                                 End Sub
@@ -149,9 +151,7 @@ Partial Public Class ClientModule
 
         <TestCategory("Partition3")> <TestMethod()>
         Public Sub ApiContextGetMetadataUri_NullBaseUri_Error()
-            Dim context = New DataServiceContext()
-            'context.EnableAtom = True
-            'context.Format.UseAtom()
+
             Dim act As Action = Sub()
                                     context.GetMetadataUri()
                                 End Sub
@@ -168,7 +168,6 @@ Partial Public Class ClientModule
 
                 Console.WriteLine("Running variation - " + variation.Item1)
                 Dim act As Action = Sub()
-                                        Dim context = New DataServiceContext()
                                         context.BaseUri = variation.Item2
                                     End Sub
                 AssertUtil.RunCatch(Of InvalidOperationException)(act,
@@ -179,11 +178,11 @@ Partial Public Class ClientModule
 
         <TestCategory("Partition3")> <TestMethod()>
         Public Sub ApiContextBaseUriStateEquvilentBetweenDefaultCtorAndNullPassedToBaseUriCtor()
-            Dim context = New DataServiceContext()
+
             'context.EnableAtom = True
             'context.Format.UseAtom()
             Dim contextNull = New DataServiceContext(Nothing)
-
+            
             Assert.AreEqual(context.BaseUri, contextNull.BaseUri, "the base uri's should be equivelent")
             Assert.AreEqual(context.ResolveEntitySet, contextNull.ResolveEntitySet, "the base uri's should be equivelent")
 
@@ -191,9 +190,7 @@ Partial Public Class ClientModule
 
         <TestCategory("Partition3")> <TestMethod()>
         Public Sub ApiContextBaseUriProperty()
-            Dim context = New DataServiceContext()
-            'context.EnableAtom = True
-            'context.Format.UseAtom()
+
             Assert.IsNull(context.BaseUri, "The BaseUri property didn't default to null")
 
             Dim absoluteUri As Uri = New Uri("http://foo.com/Awesome.svc")
@@ -223,9 +220,7 @@ Partial Public Class ClientModule
         <TestCategory("Partition3")> <TestMethod()>
         Public Sub ApiContextResolveEntitySetProperty()
             Const absoluteUri As String = "http://foo.com/Awesome.svc"
-            Dim context = New DataServiceContext()
-            'context.EnableAtom = True
-            'context.Format.UseAtom()
+
             Dim esr As Func(Of String, Uri) = Function(setName As String) New Uri(absoluteUri)
             context.ResolveEntitySet = esr
             Assert.AreEqual(esr, context.ResolveEntitySet, "the ResolveEntitySet property didn't set properly")
@@ -261,7 +256,6 @@ Partial Public Class ClientModule
                 Console.WriteLine("Running variation - " + variation.Item1)
 
                 Dim act As Action = Sub()
-                                        Dim context = New DataServiceContext()
                                         context.ResolveEntitySet = Function(setName As String)
                                                                        Dim uri = variation.Item2
                                                                        Return uri
@@ -284,7 +278,8 @@ Partial Public Class ClientModule
         Public Sub ApiContextResolveEntitySetProperty_Throws()
             ' we shouldn't catch or modify what the resolver is throwing
             Dim SetupContext As Func(Of DataServiceContext) = Function()
-                                                                  Dim context = New DataServiceContext
+                                                                  Dim context = New DataServiceContext()
+                                                                  context.Format.UseJson(New EdmModel())
                                                                   context.ResolveEntitySet = Function(setName As String)
                                                                                                  Throw New MyTestException
                                                                                              End Function
@@ -318,7 +313,7 @@ Partial Public Class ClientModule
 
             context = New DataServiceContext(New Uri("http://mudd", UriKind.Absolute))
             'context.EnableAtom = True
-            'context.Format.UseAtom()
+            context.Format.UseJson(New EdmModel())
             Assert.IsNull(context.ResolveEntitySet, "The default value of the ResolveEntitySetProperty should be null")
         End Sub
 
@@ -328,6 +323,7 @@ Partial Public Class ClientModule
             Dim context = New DataServiceContext(New Uri("http://foo/ReturnsNull"))
             'context.EnableAtom = True
             'context.Format.UseAtom()
+            context.Format.UseJson(New EdmModel())
             context.ResolveEntitySet = Function(setName As String)
                                            Return Nothing
                                        End Function
@@ -524,7 +520,7 @@ Partial Public Class ClientModule
         <TestCategory("Partition3")> <TestMethod()>
         Public Sub NoBaseUriAndNoEntitySetResolverOnAddObject_Error()
             Dim act As Action = Sub()
-                                    Dim context As New DataServiceContext()
+
                                     context.AddObject("foo", New MyAllTypes1())
                                 End Sub
             AssertUtil.RunCatch(Of InvalidOperationException)(act,
@@ -561,7 +557,7 @@ Partial Public Class ClientModule
             Assert.AreEqual(1, TypedCustomDataContext(Of MyAllTypes1).CurrentValues.Count, "Wrong number of objects added")
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod()>
+        '<TestCategory("Partition3")> <TestMethod()>
         Public Sub CaptureUriDuringAttachToCall()
             'Arrange
             TypedCustomDataContext(Of MyAllTypes1).ClearData()
@@ -573,7 +569,7 @@ Partial Public Class ClientModule
             ' context with good uri
             Dim context = New DataServiceContext(New Uri(web1.BaseUri, UriKind.Absolute))
             'context.EnableAtom = True
-            'context.Format.UseAtom()
+            context.Format.UseJson(New EdmModel())
             context.ResolveEntitySet = Function(entitySetName As String) New Uri(context.BaseUri.OriginalString + "/Values", UriKind.Absolute)
 
 

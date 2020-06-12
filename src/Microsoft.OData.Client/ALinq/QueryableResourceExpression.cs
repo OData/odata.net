@@ -147,7 +147,8 @@ namespace Microsoft.OData.Client
             {
                 return this.sequenceQueryOptions.Count > 0 ||
                     this.ExpandPaths.Count > 0 ||
-                    this.CountOption == CountOption.CountQuery ||        // value only count is not an option
+                    this.CountOption == CountOption.CountQueryTrue ||        // value only count is not an option
+                    this.CountOption == CountOption.CountQueryFalse ||       // value only count is not an option
                     this.CustomQueryOptions.Count > 0 ||
                     this.Projection != null;
             }
@@ -216,6 +217,25 @@ namespace Microsoft.OData.Client
         internal override ResourceExpression CreateCloneWithNewType(Type type)
         {
             QueryableResourceExpression clone = this.CreateCloneWithNewTypes(type, TypeSystem.GetElementType(type));
+
+            if (this.keyPredicateConjuncts != null && this.keyPredicateConjuncts.Count > 0)
+            {
+                clone.SetKeyPredicate(this.keyPredicateConjuncts);
+            }
+
+            clone.keyFilter = this.keyFilter;
+            clone.sequenceQueryOptions = this.sequenceQueryOptions;
+            clone.transparentScope = this.transparentScope;
+            return clone;
+        }
+
+        /// <summary>
+        /// Create a clone of the ResourceExpression.
+        /// </summary>
+        /// <returns>The new clone.</returns>
+        internal override ResourceExpression CreateCloneResourceExpression()
+        {
+            QueryableResourceExpression clone = this.CreateClone();
 
             if (this.keyPredicateConjuncts != null && this.keyPredicateConjuncts.Count > 0)
             {
@@ -314,8 +334,8 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Adds a filter to this ResourceSetExpression.
-        /// If filter is already presents, adds the predicateConjunts to the
-        /// PredicateConjucts of the filter
+        /// If filter is already presents, adds the predicateConjuncts to the
+        /// PredicateConjuncts of the filter
         /// </summary>
         /// <param name="predicateConjuncts">The predicate conjuncts.</param>
         internal void AddFilter(IEnumerable<Expression> predicateConjuncts)
@@ -432,6 +452,12 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Creates a copy of the current ResourceSetExpression. Object references remain the same.
+        /// </summary>
+        /// <returns>A copy of this</returns>
+        internal abstract QueryableResourceExpression CreateClone();
+
+        /// <summary>
         /// Creates a clone of the current QueryableResourceExpression with the specified expression and resource types
         /// </summary>
         /// <param name="newType">The new expression type</param>
@@ -457,9 +483,9 @@ namespace Microsoft.OData.Client
         ///   .SelectMany($ => $.o, ($, od) => od)
         ///
         /// PatternRules.MatchPropertyProjectionSet identifies Orders as the target of the collector.
-        /// PatternRules.MatchTransparentScopeSelector identifies the introduction of a transparent identifer.
+        /// PatternRules.MatchTransparentScopeSelector identifies the introduction of a transparent identifier.
         ///
-        /// A transparent accessor is associated with Orders, with 'c' being the source accesor,
+        /// A transparent accessor is associated with Orders, with 'c' being the source accessor,
         /// and 'o' being the (introduced) accessor.
         /// </remarks>
         [DebuggerDisplay("{ToString()}")]
@@ -485,18 +511,18 @@ namespace Microsoft.OData.Client
             /// Constructs a new transparent scope with the specified set and source set accessors
             /// </summary>
             /// <param name="acc">The name of the property required to access the resource set</param>
-            /// <param name="sourceAccesors">The names of the property required to access the resource set's sources.</param>
-            internal TransparentAccessors(string acc, Dictionary<string, Expression> sourceAccesors)
+            /// <param name="sourceAccessors">The names of the property required to access the resource set's sources.</param>
+            internal TransparentAccessors(string acc, Dictionary<string, Expression> sourceAccessors)
             {
                 Debug.Assert(!string.IsNullOrEmpty(acc), "Set accessor cannot be null or empty");
-                Debug.Assert(sourceAccesors != null, "sourceAccesors != null");
+                Debug.Assert(sourceAccessors != null, "sourceAccessors != null");
 
                 this.Accessor = acc;
-                this.SourceAccessors = sourceAccesors;
+                this.SourceAccessors = sourceAccessors;
             }
 
             /// <summary>Provides a string representation of this accessor.</summary>
-            /// <returns>The text represntation of this accessor.</returns>
+            /// <returns>The text representation of this accessor.</returns>
             public override string ToString()
             {
                 string result = "SourceAccessors=[" + string.Join(",", this.SourceAccessors.Keys.ToArray());

@@ -181,17 +181,32 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(propertyType, "propertyType");
             EdmUtil.CheckArgumentNull(partnerPropertyName, "partnerPropertyName");
             EdmUtil.CheckArgumentNull(partnerPropertyType, "partnerPropertyType");
-
-            IEdmEntityType declaringType = GetEntityType(partnerPropertyType);
-            if (declaringType == null)
+            IEdmStructuredType declaringType = null;
+            if (partnerPropertyType.Definition.TypeKind == EdmTypeKind.Entity)
             {
-                throw new ArgumentException(Strings.Constructable_EntityTypeOrCollectionOfEntityTypeExpected, "partnerPropertyType");
+                declaringType = GetEntityType(partnerPropertyType) as IEdmEntityType;
+                if (declaringType == null)
+                {
+                    throw new ArgumentException(Strings.Constructable_EntityTypeOrCollectionOfEntityTypeOrComplexTypeExpected, "partnerPropertyType");
+                }
+            }
+            else if (partnerPropertyType.Definition.TypeKind == EdmTypeKind.Complex)
+            {
+                declaringType = GetComplexType(partnerPropertyType) as IEdmComplexType;
+                if (declaringType == null)
+                {
+                    throw new ArgumentException(Strings.Constructable_EntityTypeOrCollectionOfEntityTypeOrComplexTypeExpected, "partnerPropertyType");
+                }
+            }
+            else
+            {
+                throw new ArgumentException(Strings.Constructable_EntityTypeOrCollectionOfEntityTypeOrComplexTypeExpected, "partnerPropertyType");
             }
 
             IEdmEntityType partnerDeclaringType = GetEntityType(propertyType);
             if (partnerDeclaringType == null)
             {
-                throw new ArgumentException(Strings.Constructable_EntityTypeOrCollectionOfEntityTypeExpected, "propertyType");
+                throw new ArgumentException(Strings.Constructable_EntityTypeOrCollectionOfEntityTypeOrComplexTypeExpected, "propertyType");
             }
 
             EdmNavigationProperty end1 = new EdmNavigationProperty(
@@ -225,8 +240,8 @@ namespace Microsoft.OData.Edm
         internal void SetPartner(IEdmNavigationProperty navigationProperty, IEdmPathExpression navigationPropertyPath)
         {
             Debug.Assert(
-                DeclaringType is IEdmEntityType,
-                "Partner info cannot be set for nav. property on a non-entity type.");
+                DeclaringType is IEdmEntityType || DeclaringType is IEdmComplexType,
+                "Partner info cannot be set for nav. property on a non-entity or non-complex type.");
             partner = navigationProperty;
             PartnerPath = navigationPropertyPath;
         }
@@ -248,6 +263,24 @@ namespace Microsoft.OData.Edm
             }
 
             return entityType;
+        }
+        private static IEdmComplexType GetComplexType(IEdmTypeReference type)
+        {
+            if (type.IsComplex())
+            {
+                return (IEdmComplexType)type.Definition;
+ 
+            }
+            else if (type.IsCollection())
+            {
+                type = ((IEdmCollectionType)type.Definition).ElementType;
+                if (type.IsComplex())
+                {
+                    return (IEdmComplexType)type.Definition;
+                }
+            }
+
+            return null;
         }
 
         private static IEdmTypeReference CreateNavigationPropertyType(IEdmEntityType entityType, EdmMultiplicity multiplicity, string multiplicityParameterName)

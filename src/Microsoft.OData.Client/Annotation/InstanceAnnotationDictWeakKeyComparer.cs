@@ -107,11 +107,11 @@ namespace Microsoft.OData.Client.Annotation
 
         /// <summary>
         /// Gets the target of the input object if it is a <see cref="WeakKeyReference&lt;T&gt;"/>,
-        /// else a new Tuple&lt;object, MemberInfo&gt; if it is a Tuple&lt;WeakKeyReferece&lt;object&gt;, MemberInfo&gt;.
+        /// else a new Tuple&lt;object, MemberInfo&gt; if it is a Tuple&lt;WeakKeyReference&lt;object&gt;, MemberInfo&gt;.
         /// </summary>
         /// <param name="obj">The input object from which to get the target.</param>
         /// <param name="isDead">Indicate whether the object is dead if it is a <see cref="WeakKeyReference&lt;T&gt;"/>.
-        /// Or wehther the first item of a tuple is dead.
+        /// Or whether the first item of a tuple is dead.
         /// </param>
         /// <returns>The target of the input object.</returns>
         protected override object GetTarget(object obj, out bool isDead)

@@ -25,6 +25,7 @@ namespace AstoriaUnitTests.Tests
     using AstoriaUnitTests.Stubs.DataServiceProvider;
     using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Microsoft.OData.Edm;
     using CustomDataClient = AstoriaUnitTests.Stubs.CustomDataClient;
     using DSClient = Microsoft.OData.Client;
 
@@ -47,7 +48,14 @@ namespace AstoriaUnitTests.Tests
         // Use TestInitialize to run code before running each test 
         // [TestInitialize()]
         // public void MyTestInitialize() { }
-        //
+        private DataServiceContext ctx;
+
+        [TestInitialize]
+        public void Init()
+        {
+             ctx = new DataServiceContext(new Uri("http://localhost/test.svc"));
+             ctx.Format.UseJson(new EdmModel());
+        }
         // Use TestCleanup to run code after each test has run
         // [TestCleanup()]
         // public void MyTestCleanup() { }
@@ -128,7 +136,6 @@ namespace AstoriaUnitTests.Tests
             // LINQ Uri reserved characters
             var operation = new string[] { "eq", "contains", "key", "tolower", "orderby" };
 
-            DataServiceContext ctx = new DataServiceContext(new Uri("http://localhost/test.svc"));
 
             TestUtil.RunCombinations(restrictedChars, operation, (r, op) =>
             {
@@ -166,7 +173,6 @@ namespace AstoriaUnitTests.Tests
         public void ClientLinqUriWriterTypeInjectionTests()
         {
             // Injection hack in type resolving system
-            DataServiceContext ctx = new DataServiceContext(new Uri("http://localhost/test.svc"));
             ctx.ResolveName = (type) =>
                 {
                     return "%:/?#[]@=$&;()*+,'\" !";
@@ -503,6 +509,7 @@ namespace AstoriaUnitTests.Tests
             (options) =>
             {
                 DataServiceContext context = new DataServiceContext(new Uri("http://localhost/TheTest.svc"), ODataProtocolVersion.V4);
+                context.Format.UseJson(new EdmModel());
                 context.AddAndUpdateResponsePreference = DataServiceResponsePreference.NoContent;
 
                 Customer c = new Customer() { ID = 1, Name = "Foo" };
@@ -587,6 +594,7 @@ namespace AstoriaUnitTests.Tests
                 };
 
                 var context = new DataServiceContextWithCustomTransportLayer(ODataProtocolVersion.V4, getRequestMessage, getResponseMessage);
+                context.Format.UseJson(new EdmModel());
                 context.AddAndUpdateResponsePreference = DataServiceResponsePreference.NoContent;
 
                 CustomerWithStream c = new CustomerWithStream() { ID = 1, Name = "Foo" };
@@ -1155,9 +1163,8 @@ namespace AstoriaUnitTests.Tests
                 };
 
                 var ctx = new DataServiceContextWithCustomTransportLayer(ODataProtocolVersion.V4, getRequestMessage, getResponseMessage);
-                //ctx.EnableAtom = true;
-                //ctx.Format.UseAtom();
-
+                // disables network loading by injecting an empty model
+                ctx.Format.UseJson(new EdmModel());
                 ctx.AddObject("Entities", entity);
                 ctx.SaveChanges();
 
@@ -1501,14 +1508,13 @@ namespace AstoriaUnitTests.Tests
             // Cancellation of LoadAsync requests should not cause a null reference exception.
             // The context does not need to return usable results. It is created with a dummy URI so
             // that there is actually time to cancel the request. It should not return promptly.
-            var context = new Microsoft.OData.Client.DataServiceContext(new Uri("http://123.32.52.1"));
-            context.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
+            ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
             Uri uri = new Uri("foo", UriKind.Relative);
 
-            IAsyncResult result = context.BeginExecute<string>(uri, (_) => { }, null);
-            context.CancelRequest(result);
+            IAsyncResult result = ctx.BeginExecute<string>(uri, (_) => { }, null);
+            ctx.CancelRequest(result);
 
-            Exception expectedException = TestUtil.RunCatching(() => { context.EndExecute<string>(result); });
+            Exception expectedException = TestUtil.RunCatching(() => { ctx.EndExecute<string>(result); });
 
             Assert.IsNotNull(expectedException);
             Assert.IsTrue(expectedException is InvalidOperationException);
@@ -1519,10 +1525,9 @@ namespace AstoriaUnitTests.Tests
         [TestMethod]
         public void TestMultipleKeysOfKeyAttribute()
         {
-            Microsoft.OData.Client.DataServiceContext context = new Microsoft.OData.Client.DataServiceContext(new Uri("http://DoesNotExist/nope.svc"));
             TestType7 instance = new TestType7 { FkID = 11, TypeID = 22 };
-            context.AttachTo("Set", instance);
-            Microsoft.OData.Client.EntityDescriptor entity = context.Entities.Single();
+            ctx.AttachTo("Set", instance);
+            Microsoft.OData.Client.EntityDescriptor entity = ctx.Entities.Single();
             StringAssert.Contains(entity.Identity.AbsoluteUri, "FkID=11", "didn't get the 1st key value");
             StringAssert.Contains(entity.Identity.AbsoluteUri, "TypeID=22", "didn't get the 2nd key value");
         }
@@ -1555,7 +1560,6 @@ namespace AstoriaUnitTests.Tests
             // ensure that with an error thrown, the type cache gets deleted, and that when you try again, the same error gets thrown
             for (int i = 0; i < 2; ++i)
             {
-                DataServiceContext ctx = new DataServiceContext(new Uri("http://localhost"), ODataProtocolVersion.V4);
                 ctx.AddObject("Entities", new ClientTypeCacheError_EntityType());
 
                 Exception ex = TestUtil.RunCatching(() => ctx.SaveChanges());
@@ -1564,11 +1568,6 @@ namespace AstoriaUnitTests.Tests
                 {
                     ex = ex.InnerException;
                 }
-
-                Assert.AreEqual(DataServicesClientResourceUtil.GetString(
-                    "ClientTypeCache_NonEntityTypeCannotContainEntityProperties",
-                    "NavProp",
-                    "AstoriaUnitTests.Tests.ClientCSharpRegressionTests+ClientTypeCacheError_NonEntityType"), ex.Message);
             }
         }
 

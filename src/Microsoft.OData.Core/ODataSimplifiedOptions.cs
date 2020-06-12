@@ -52,7 +52,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// True if url parser support parsing path with key as segment, otherwise false. The defualt is true.
+        /// True if url parser support parsing path with key as segment, otherwise false. The default is true.
         /// </summary>
         public bool EnableParsingKeyAsSegmentUrl { get; set; }
 
@@ -177,7 +177,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Return the instatnce of ODataSimplifiedOptions from container if it container not null.
+        /// Return the instance of ODataSimplifiedOptions from container if it container not null.
         /// Otherwise return the static instance of ODataSimplifiedOptions.
         /// </summary>
         /// <param name="container">Container</param>

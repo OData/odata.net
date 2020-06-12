@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client.Materialization
     /// </summary>
     internal class ODataReaderEntityMaterializer : ODataEntityMaterializer
     {
-        /// <summary>The enty or feed reader.</summary>
+        /// <summary>The entry or feed reader.</summary>
         private FeedAndEntryMaterializerAdapter feedEntryAdapter;
 
         /// <summary>The message reader.</summary>

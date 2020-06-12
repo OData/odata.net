@@ -11,9 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
-#if PORTABLELIB
 using System.Threading.Tasks;
-#endif
 using Microsoft.OData.Edm;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.Metadata;
@@ -74,7 +72,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <param name="writingResourceSet">true if the writer is created for writing a resource set; false when it is created for writing a resource.</param>
         /// <param name="writingParameter">true if the writer is created for writing a parameter; false otherwise.</param>
-        /// <param name="writingDelta">True if the writer is created for writing delta response; false otherwise.</param>
+        /// <param name="writingDelta">True if the writer is created for writing delta payload; false otherwise.</param>
         /// <param name="listener">If not null, the writer will notify the implementer of the interface of relevant state changes in the writer.</param>
         internal ODataJsonLightWriter(
             ODataJsonLightOutputContext jsonLightOutputContext,
@@ -182,7 +180,6 @@ namespace Microsoft.OData.JsonLight
             this.jsonLightOutputContext.Flush();
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Flush the output.
         /// </summary>
@@ -191,7 +188,6 @@ namespace Microsoft.OData.JsonLight
         {
             return this.jsonLightOutputContext.FlushAsync();
         }
-#endif
 
         /// <summary>
         /// Starts writing a payload (called exactly once before anything else)
@@ -612,7 +608,7 @@ namespace Microsoft.OData.JsonLight
                     // End the array which holds the entries in the resource set.
                     // NOTE: in requests we will only write the EndArray of a resource set
                     //       when we hit the nested resource info end since a nested resource info
-                    //       can contain multiple resource sets that get collapesed into a single array value.
+                    //       can contain multiple resource sets that get collapsed into a single array value.
                     this.jsonWriter.EndArrayScope();
 
                     // Write the next link if it's available.
@@ -1830,7 +1826,7 @@ namespace Microsoft.OData.JsonLight
             /// <summary>
             /// Marks the <paramref name="jsonLightMetadataProperty"/> as written in this resource scope.
             /// </summary>
-            /// <param name="jsonLightMetadataProperty">The metadta property which was written.</param>
+            /// <param name="jsonLightMetadataProperty">The metadata property which was written.</param>
             private void SetWrittenMetadataProperty(JsonLightEntryMetadataProperty jsonLightMetadataProperty)
             {
                 Debug.Assert(!this.IsMetadataPropertyWritten(jsonLightMetadataProperty), "Can't write the same metadata property twice.");
@@ -2130,7 +2126,7 @@ namespace Microsoft.OData.JsonLight
             /// <summary>
             /// Marks the <paramref name="jsonLightMetadataProperty"/> as written in this resource scope.
             /// </summary>
-            /// <param name="jsonLightMetadataProperty">The metadta property which was written.</param>
+            /// <param name="jsonLightMetadataProperty">The metadata property which was written.</param>
             private void SetWrittenMetadataProperty(JsonLightEntryMetadataProperty jsonLightMetadataProperty)
             {
                 Debug.Assert(!this.IsMetadataPropertyWritten(jsonLightMetadataProperty), "Can't write the same metadata property twice.");

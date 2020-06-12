@@ -28,9 +28,9 @@ namespace Microsoft.OData.Client
         /// <param name="requestHeaders">The request header collection.</param>
         internal SendingRequestEventArgs(System.Net.WebRequest request, System.Net.WebHeaderCollection requestHeaders)
         {
-            // In Silverlight the request object is not accesible
-            Debug.Assert(null != request, "null request");
-            Debug.Assert(null != requestHeaders, "null requestHeaders");
+            // In Silverlight the request object is not accessible
+            Debug.Assert(request != null, "null request");
+            Debug.Assert(requestHeaders != null, "null requestHeaders");
             this.request = request;
             this.requestHeaders = requestHeaders;
         }

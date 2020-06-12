@@ -53,7 +53,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         private string ComputeValue()
         {
-            // [EdmLib] Determine what escaping is necissary in String expression, or do not cache the value.
+            // [EdmLib] Determine what escaping is necessary in String expression, or do not cache the value.
             return this.expression.Value;
         }
     }

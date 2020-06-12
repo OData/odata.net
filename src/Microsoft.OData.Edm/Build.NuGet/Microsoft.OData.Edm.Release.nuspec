@@ -17,12 +17,9 @@ OData .NET library is open source at http://github.com/OData/odata.net. Document
     <copyright>© Microsoft Corporation. All rights reserved.</copyright>
   </metadata>
   <files>
-    <file src="$ProductRoot$\.NETPortable\v4.5\Microsoft.OData.Edm.dll" target="lib\portable-net45+win8+wpa81" />
-    <file src="$ProductRoot$\.NETPortable\v4.5\Microsoft.OData.Edm.pdb" target="lib\portable-net45+win8+wpa81" />
-    <file src="$ProductRoot$\.NETPortable\v4.5\Microsoft.OData.Edm.xml" target="lib\portable-net45+win8+wpa81" />
-    <file src="$ProductRoot$\.NETPortable\v5.0\Microsoft.OData.Edm.dll" target="lib\netstandard1.1" />
-    <file src="$ProductRoot$\.NETPortable\v5.0\Microsoft.OData.Edm.pdb" target="lib\netstandard1.1" />
-    <file src="$ProductRoot$\.NETPortable\v5.0\Microsoft.OData.Edm.xml" target="lib\netstandard1.1" />
+    <file src="$ProductRoot$\Microsoft.OData.Edm.dll" target="lib" />
+    <file src="$ProductRoot$\Microsoft.OData.Edm.pdb" target="lib" />
+    <file src="$ProductRoot$\Microsoft.OData.Edm.xml" target="lib" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Edm\**\*.cs" target="src\Microsoft.OData.Edm" />
     <file src="$SourcesRoot$\src\PlatformHelper.cs" target="src\PlatformHelper.cs" />
     <file src="$SourcesRoot$\src\AssemblyInfo\AssemblyMetadataAttribute.cs" target="src\AssemblyMetadataAttribute.cs" />

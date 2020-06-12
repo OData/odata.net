@@ -118,24 +118,24 @@ namespace Microsoft.Spatial.Tests
             Assert.Null(result);
         }
 
-        [Fact]
-        public void DistanceGeometryCallsRegisteredImplementation()
-        {
+       // [Fact]
+        //public void DistanceGeometryCallsRegisteredImplementation()
+        //{
             
-            this.implementation.callback = (methodName, arguments) =>
-                                               {
-                                                   Assert.Equal("Distance", methodName);
-                                                   Assert.Same(this.geomPoints[0], arguments[0]);
-                                                   Assert.Same(this.geomPoints[1], arguments[1]);
-                                               };
-            this.implementation.getReturnValue = (t) =>
-                                                     {
-                                                         Assert.True(typeof(double) == t, "we should only see double");
-                                                         return TestSpatialOperations.DefaultDistanceReturn;
-                                                     };
-            var result = this.geomPoints[0].Distance(this.geomPoints[1]);
-            Assert.Equal(TestSpatialOperations.DefaultDistanceReturn, result);
-        }
+        //    this.implementation.callback = (methodName, arguments) =>
+        //                                       {
+        //                                           Assert.Equal("Distance", methodName);
+        //                                           Assert.Same(this.geomPoints[0], arguments[0]);
+        //                                           Assert.Same(this.geomPoints[1], arguments[1]);
+        //                                       };
+        //    this.implementation.getReturnValue = (t) =>
+        //                                             {
+        //                                                 Assert.True(typeof(double) == t, "we should only see double");
+        //                                                 return TestSpatialOperations.DefaultDistanceReturn;
+        //                                             };
+        //    var result = this.geomPoints[0].Distance(this.geomPoints[1]);
+        //    Assert.Equal(TestSpatialOperations.DefaultDistanceReturn, result);
+        //}
 
         [Fact]
         public void DistanceGeographyCallsRegisteredImplementation()

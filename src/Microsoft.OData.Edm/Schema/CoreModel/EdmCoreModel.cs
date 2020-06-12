@@ -106,7 +106,7 @@ namespace Microsoft.OData.Edm
 
             EdmCoreModelPathType[] pathTypes =
             {
-                new EdmCoreModelPathType(EdmPathTypeKind.AnnotationPath),  // Edm.AnotationPath
+                new EdmCoreModelPathType(EdmPathTypeKind.AnnotationPath),  // Edm.AnnotationPath
                 new EdmCoreModelPathType(EdmPathTypeKind.PropertyPath), // Edm.PropertyPath
                 new EdmCoreModelPathType(EdmPathTypeKind.NavigationPropertyPath), // Edm.NavigationPropertyPath
             };

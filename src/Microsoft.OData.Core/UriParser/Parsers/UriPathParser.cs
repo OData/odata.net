@@ -75,7 +75,6 @@ namespace Microsoft.OData.UriParser
                 string[] uriSegments = uri.Segments;
 #endif
 
-                int escapedStart = -1;
                 List<string> segments = new List<string>();
                 for (int i = numberOfSegmentsToSkip; i < uriSegments.Length; i++)
                 {
@@ -99,57 +98,7 @@ namespace Microsoft.OData.UriParser
                         throw new ODataException(Strings.UriQueryPathParser_TooManySegments);
                     }
 
-                    // Handle the "root...::/{xyz}"
-                    if (segment.Length >= 2 && segment.EndsWith("::", StringComparison.Ordinal))
-                    {
-                        // It should be the terminal of the provious escape segment and the start of next escape semgent.
-                        // Otherwise, it's an invalid Uri.
-                        if (escapedStart == -1)
-                        {
-                            throw new ODataException(Strings.UriQueryPathParser_InvalidEscapeUri(segment));
-                        }
-                        else
-                        {
-                            string value = String.Join("/", uriSegments, escapedStart, i - escapedStart + 1);
-                            segments.Add(":" + value.Substring(0, value.Length - 1)); // because the last one has "::", remove one.
-                            escapedStart = i + 1;
-                        }
-                    }
-                    else if (segment.Length >= 1 && segment[segment.Length - 1] == ':')
-                    {
-                        // root:/{abc}....
-                        if (escapedStart == -1)
-                        {
-                            if (segment != ":")
-                            {
-                                segments.Add(segment.Substring(0, segment.Length - 1)); // remove the last ':'
-                            }
-
-                            escapedStart = i + 1;
-                        }
-                        else
-                        {
-                            // root:/{abc}:....
-                            string escapedSegment = ":" + String.Join("/", uriSegments, escapedStart, i - escapedStart + 1); // the last has one ":";
-                            segments.Add(escapedSegment);
-                            escapedStart = -1;
-                        }
-                    }
-                    else
-                    {
-                        // if we didn't find a starting escape, the current segment is normal segment, accept it.
-                        // otherwise, it's part of the escape, skip it and process it when we find the ending delimiter.
-                        if (escapedStart == -1)
-                        {
-                            segments.Add(Uri.UnescapeDataString(segment));
-                        }
-                    }
-                }
-
-                if (escapedStart != -1 && escapedStart < uriSegments.Length)
-                {
-                    string escapedSegment = ":" + String.Join("/", uriSegments, escapedStart, uriSegments.Length - escapedStart);
-                    segments.Add(escapedSegment); // We should not use "segments.Add(Uri.UnescapeDataString(escapedSegment));" to keep the orignal string.
+                    segments.Add(Uri.UnescapeDataString(segment));
                 }
 
                 return segments.ToArray();

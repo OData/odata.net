@@ -80,7 +80,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 batchWriter.WriteStartBatch();
 
                 ArgumentNullException ane = Assert.Throws<ArgumentNullException>(() => batchWriter.WriteStartChangeset(null));
-                Assert.True(ane.Message.Contains("changesetId"));
+                Assert.Contains("changesetId", ane.Message);
             }
         }
 

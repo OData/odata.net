@@ -11,9 +11,7 @@ namespace Microsoft.OData
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     #endregion Namespaces
 
     /// <summary>
@@ -203,17 +201,12 @@ namespace Microsoft.OData
             }
         }
 
-#if PORTABLELIB
 
         /// <summary>
         /// Asynchronous flush operation. This will flush all buffered bytes to the underlying stream through asynchronous writes.
         /// </summary>
         /// <returns>The task representing the asynchronous flush operation.</returns>
-#if PORTABLELIB
         internal new Task FlushAsync()
-#else
-        internal Task FlushAsync()
-#endif
         {
             return this.FlushAsyncInternal();
         }
@@ -234,7 +227,6 @@ namespace Microsoft.OData
             // Note that this relies on lazy eval of the enumerator
             return Task.Factory.Iterate(this.FlushBuffersAsync(buffers));
         }
-#endif
 
         /// <summary>
         /// Disposes the object.
@@ -285,7 +277,6 @@ namespace Microsoft.OData
             return buffers;
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Returns enumeration of tasks to run to flush all pending buffers to the underlying stream.
         /// </summary>
@@ -300,7 +291,6 @@ namespace Microsoft.OData
                 yield return buffer.WriteToStreamAsync(this.innerStream);
             }
         }
-#endif
 
         /// <summary>
         /// Class to wrap a byte buffer used to store portion of the buffered data.
@@ -365,7 +355,6 @@ namespace Microsoft.OData
                 stream.Write(this.buffer, 0, this.storedCount);
             }
 
-#if PORTABLELIB
             /// <summary>
             /// Creates a task which writes the buffer to the specified stream.
             /// </summary>
@@ -374,16 +363,8 @@ namespace Microsoft.OData
             public Task WriteToStreamAsync(Stream stream)
             {
                 Debug.Assert(stream != null, "stream != null");
-#if PORTABLELIB
                 return stream.WriteAsync(this.buffer, 0, this.storedCount);
-#else
-                return Task.Factory.FromAsync(
-                    (callback, state) => stream.BeginWrite(this.buffer, 0, this.storedCount, callback, state),
-                    stream.EndWrite,
-                    null);
-#endif
             }
-#endif
         }
     }
 }

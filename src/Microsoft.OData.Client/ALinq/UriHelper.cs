@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client
         /// <summary>forwardslash character</summary>
         internal const char FORWARDSLASH = '/';
 
-        /// <summary>leftparan character</summary>
+        /// <summary>leftparen character</summary>
         internal const char LEFTPAREN = '(';
 
         /// <summary>rightparan character</summary>
@@ -85,6 +85,9 @@ namespace Microsoft.OData.Client
 
         /// <summary>true</summary>
         internal const string COUNTTRUE = "true";
+
+        /// <summary>false</summary>
+        internal const string COUNTFALSE = "false";
 
         /// <summary>value</summary>
         internal const string COUNT = "count";

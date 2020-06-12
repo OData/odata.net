@@ -43,7 +43,10 @@ namespace Microsoft.OData.Client
                 // we do not need to dispose the stream. Since for inner batch requests, the request
                 // message is an internal implementation of IODataRequestMessage in ODataLib,
                 // we can do this here.
-                EnableMessageStreamDisposal = isBatchPartRequest
+                EnableMessageStreamDisposal = isBatchPartRequest,
+
+                // When using relative URIs in batch requests, we need to set the baseUri in ODataWriter
+                BaseUri = this.requestInfo.BaseUriResolver.BaseUriOrNull == null ? null : this.requestInfo.BaseUriResolver.GetBaseUriWithSlash()
             };
 
             // [#623] As client does not support DI currently, odata simplifiedoptions cannot be customize pre request.
@@ -73,7 +76,7 @@ namespace Microsoft.OData.Client
             // When calling Execute() to invoke an Action, the client doesn't support parsing the target url
             // to determine which IEdmOperationImport to pass to the ODL writer. So the ODL writer is
             // serializing the parameter payload without metadata. Setting the model to null so ODL doesn't
-            // do unecessary validations when writing without metadata.
+            // do unnecessary validations when writing without metadata.
             var model = isParameterPayload ? null : this.requestInfo.Model;
             return new ODataMessageWriter(requestMessage, writerSettings, model);
         }

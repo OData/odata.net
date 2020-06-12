@@ -82,6 +82,15 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Creates a copy of the current SingletResourceExpression
+        /// </summary>
+        /// <returns>A copy of the SingletonResourceExpression.</returns>
+        internal override QueryableResourceExpression CreateClone()
+        {
+            return CreateCloneWithNewTypes(this.Type, this.ResourceType);
+        }
+
+        /// <summary>
         /// Creates a clone of the current SingletResourceExpression with the specified expression and resource types
         /// </summary>
         /// <param name="newType">The new expression type</param>

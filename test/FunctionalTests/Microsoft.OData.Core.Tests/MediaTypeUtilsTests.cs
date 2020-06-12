@@ -544,7 +544,7 @@ namespace Microsoft.OData.Tests
 
         public static TestMediaTypeWithFormat HaveParameterValue(this TestMediaTypeWithFormat mediaType, string[] parameterNames, string parameterValue)
         {
-            Assert.True(parameterNames.Any(p => mediaType.MediaType.MediaTypeHasParameterWithValue(p, parameterValue)));
+            Assert.Contains(parameterNames, p => mediaType.MediaType.MediaTypeHasParameterWithValue(p, parameterValue));
             return mediaType;
         }
 

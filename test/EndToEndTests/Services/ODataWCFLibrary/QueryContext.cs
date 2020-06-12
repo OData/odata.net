@@ -218,7 +218,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         /// <summary>
         /// Gets the total count of the query. The value is only avialable when count option specified.
         /// </summary>
-        public long? TotalCount { get; private set; }
+        public long? Count { get; private set; }
 
         /// <summary>
         /// Get the UriParser.
@@ -473,7 +473,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                     allResults = collectionResults.Cast<object>();
                     if (this.CountOption == true)
                     {
-                        this.TotalCount = allResults.LongCount();
+                        this.Count = allResults.LongCount();
                     }
                 }
 

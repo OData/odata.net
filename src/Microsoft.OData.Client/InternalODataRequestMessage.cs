@@ -105,11 +105,19 @@ namespace Microsoft.OData.Client
             set { throw new NotSupportedException(); }
         }
 
-#if !PORTABLELIB
         /// <summary>
         /// Gets or sets the timeout (in seconds) for this request.
         /// </summary>
         public override int Timeout
+        {
+            get { throw new NotSupportedException(); }
+            set { throw new NotSupportedException(); }
+        }
+
+        /// <summary>
+        /// Gets or sets the read and write timeout (in seconds) for this request.
+        /// </summary>
+        public override int ReadWriteTimeout
         {
             get { throw new NotSupportedException(); }
             set { throw new NotSupportedException(); }
@@ -131,7 +139,6 @@ namespace Microsoft.OData.Client
                 throw new NotImplementedException();
             }
         }
-#endif
 
         /// <summary>
         /// internal headers dictionary

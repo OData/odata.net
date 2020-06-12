@@ -28,9 +28,9 @@ namespace Microsoft.OData.Metadata
         /// Post-Condition:  Any                   - the node after the element.
         ///
         /// This method is similar to ReadElementContentAsString with one difference:
-        /// - It ignores Whitespace nodes - this is needed for compatiblity, WCF DS ignores insignificant whitespaces
+        /// - It ignores Whitespace nodes - this is needed for compatibility, WCF DS ignores insignificant whitespaces
         ///     it does that by setting the IgnoreWhitespace option on reader settings, ODataLib can't do that
-        ///     cause it doesn't always control the creation of the XmlReader, so it has to explicitely ignore
+        ///     cause it doesn't always control the creation of the XmlReader, so it has to explicitly ignore
         ///     insignificant whitespaces.
         /// </remarks>
         internal static string ReadElementValue(this XmlReader reader)
@@ -52,9 +52,9 @@ namespace Microsoft.OData.Metadata
         ///                  XmlNodeType.EndElement - the element had some value.
         ///
         /// This method is similar to ReadElementContentAsString with two differences:
-        /// - It ignores Whitespace nodes - this is needed for compatiblity, WCF DS ignores insignificant whitespaces
+        /// - It ignores Whitespace nodes - this is needed for compatibility, WCF DS ignores insignificant whitespaces
         ///     it does that by setting the IgnoreWhitespace option on reader settings, ODataLib can't do that
-        ///     cause it doesn't always control the creation of the XmlReader, so it has to explicitely ignore
+        ///     cause it doesn't always control the creation of the XmlReader, so it has to explicitly ignore
         ///     insignificant whitespaces.
         /// - It leaves the reader positioned on the EndElement node (or the start node if it was empty).
         /// </remarks>

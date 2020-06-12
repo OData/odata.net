@@ -41,6 +41,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Returns true if DataServiceCollection&lt;&gt; type is available or false otherwise.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<Pending>")]
         private static bool DataServiceCollectionAvailable
         {
             get
@@ -71,18 +72,18 @@ namespace Microsoft.OData.Client
         /// <returns>count of copied bytes</returns>
         internal static long CopyStream(Stream input, Stream output, ref byte[] refBuffer)
         {
-            Debug.Assert(null != input, "null input stream");
-            Debug.Assert(null != output, "null output stream");
+            Debug.Assert(input != null, "null input stream");
+            Debug.Assert(output != null, "null output stream");
 
             long total = 0;
             byte[] buffer = refBuffer;
-            if (null == buffer)
+            if (buffer == null)
             {
                 refBuffer = buffer = new byte[1000];
             }
 
-            int count = 0;
-            while (input.CanRead && (0 < (count = input.Read(buffer, 0, buffer.Length))))
+            int count;
+            while (input.CanRead && ((count = input.Read(buffer, 0, buffer.Length)) > 0))
             {
                 output.Write(buffer, 0, count);
                 total += count;
@@ -93,14 +94,14 @@ namespace Microsoft.OData.Client
 
         /// <summary>get response object from possible WebException</summary>
         /// <param name="exception">exception to probe</param>
-        /// <param name="response">http web respose object from exception</param>
+        /// <param name="response">http web response object from exception</param>
         /// <returns>an instance of InvalidOperationException.</returns>
         internal static InvalidOperationException GetHttpWebResponse(InvalidOperationException exception, ref IODataResponseMessage response)
         {
-            if (null == response)
+            if (response == null)
             {
                 DataServiceTransportException webexception = (exception as DataServiceTransportException);
-                if (null != webexception)
+                if (webexception != null)
                 {
                     response = webexception.Response;
                     return (InvalidOperationException)webexception.InnerException;
@@ -115,7 +116,7 @@ namespace Microsoft.OData.Client
         /// <returns>true if status is between 200-299</returns>
         internal static bool SuccessStatusCode(System.Net.HttpStatusCode status)
         {
-            return (200 <= (int)status && (int)status < 300);
+            return (int)status >= 200 && (int)status < 300;
         }
 
         /// <summary>
@@ -202,7 +203,7 @@ namespace Microsoft.OData.Client
         /// <returns>returns the argument back</returns>
         internal static T CheckArgumentNull<T>([ValidatedNotNull] T value, string parameterName) where T : class
         {
-            if (null == value)
+            if (value == null)
             {
                 throw Error.ArgumentNull(parameterName);
             }
@@ -221,7 +222,7 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(collectionItemType != null, "collectionItemType != null");
 
-            // nested collections are not supported. Need to exclude primitve types - e.g. string implements IEnumerable<char>
+            // nested collections are not supported. Need to exclude primitive types - e.g. string implements IEnumerable<char>
             if (!PrimitiveType.IsKnownNullableType(collectionItemType) &&
                 collectionItemType.GetInterfaces().SingleOrDefault(t => t == typeof(IEnumerable)) != null)
             {
@@ -412,7 +413,7 @@ namespace Microsoft.OData.Client
         /// <param name="typeArguments">Types to be used for creating DataServiceCollection&lt;&gt; object.</param>
         /// <returns>
         /// Instance of DataServiceCollection&lt;&gt; class created using provided types or null if DataServiceCollection&lt;&gt;
-        /// type is not avaiable.
+        /// type is not available.
         /// </returns>
         internal static Type GetDataServiceCollectionOfT(params Type[] typeArguments)
         {
@@ -479,6 +480,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <remarks>This has been suggested as a workaround in msdn forums by the VS team. Note that even though this is production code
         /// the attribute has no effect on anything else.</remarks>
+        [AttributeUsage(AttributeTargets.Parameter)]
         private sealed class ValidatedNotNullAttribute : Attribute
         {
         }

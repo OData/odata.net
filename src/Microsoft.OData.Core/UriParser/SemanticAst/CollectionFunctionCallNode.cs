@@ -86,7 +86,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets the list of operation imports represeted by this node
+        /// Gets the list of operation imports represented by this node
         /// </summary>
         public IEnumerable<IEdmFunction> Functions
         {

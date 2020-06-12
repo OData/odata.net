@@ -63,7 +63,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Create a parser token from text representation ($value end points)
         /// </summary>
-        /// <param name="text">The text form reprensentation</param>
+        /// <param name="text">The text form representation</param>
         /// <returns>token</returns>
         internal virtual PrimitiveParserToken TokenizeFromText(String text)
         {

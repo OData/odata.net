@@ -20,6 +20,7 @@ Imports AstoriaUnitTests.Data
 Imports AstoriaUnitTests.Stubs
 Imports AstoriaUnitTests.Stubs.DataServiceProvider
 Imports AstoriaUnitTests.Tests
+Imports Microsoft.OData.Edm
 Imports Microsoft.Test.ModuleCore
 Imports Microsoft.VisualStudio.TestTools.UnitTesting
 Imports <xmlns:dns="http://docs.oasis-open.org/odata/ns/data">
@@ -55,6 +56,7 @@ Partial Public Class ClientModule
             Me.ctx = New NorthwindSimpleModel.NorthwindContext(web.ServiceRoot)
             'Me.'ctx.EnableAtom = True
             'Me.'ctx.Format.UseAtom()
+            Me.ctx.Format.UseJson(New EdmModel())
             AddHandler Me.ctx.SendingRequest2, AddressOf SendingRequestListenHttpMethod
         End Sub
 
@@ -1663,6 +1665,7 @@ Partial Public Class ClientModule
             Dim saveChangesOption = CType(values("SaveChangesOption"), SaveChangesOptions)
 
             Dim context As DataServiceContext = New DataServiceContext(web1.ServiceRoot)
+            context.Format.UseJson(New EdmModel())
             Dim location = web1.ServiceRoot.OriginalString & "/foo.svc/location/Customers(1)"
             Dim etag = "'Foo'"
 
@@ -1681,6 +1684,7 @@ Partial Public Class ClientModule
             web1.StartService()
 
             Dim context As DataServiceContext = New DataServiceContext(web1.ServiceRoot)
+            context.Format.UseJson(New EdmModel())
             Dim location = web1.ServiceRoot.OriginalString & "/foo.svc/location/Customers(key%3avalue)"
             Dim etag = "'Foo'"
 

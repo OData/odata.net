@@ -143,7 +143,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.WriteOptionalAttribute(CsdlConstants.Attribute_HasStream, writeHasStream, CsdlConstants.Default_HasStream, EdmValueWriter.BooleanAsXml);
         }
 
-        internal void WriteDelaredKeyPropertiesElementHeader()
+        internal void WriteDeclaredKeyPropertiesElementHeader()
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_Key);
         }
@@ -168,7 +168,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
             if (member.Partner != null)
             {
-                this.WriteRequiredAttribute(CsdlConstants.Attribute_Partner, member.GetPartnerPath().Path, EdmValueWriter.StringAsXml);
+                this.WriteRequiredAttribute(CsdlConstants.Attribute_Partner, member.GetPartnerPath()?.Path, EdmValueWriter.StringAsXml);
             }
 
             this.WriteOptionalAttribute(CsdlConstants.Attribute_ContainsTarget, member.ContainsTarget, CsdlConstants.Default_ContainsTarget, EdmValueWriter.BooleanAsXml);
@@ -468,6 +468,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 case EdmExpressionKind.NavigationPropertyPath:
                     this.WriteRequiredAttribute(CsdlConstants.Attribute_NavigationPropertyPath, ((IEdmPathExpression)expression).PathSegments, PathAsXml);
                     break;
+                case EdmExpressionKind.AnnotationPath:
+                    this.WriteRequiredAttribute(CsdlConstants.Attribute_AnnotationPath, ((IEdmPathExpression)expression).PathSegments, PathAsXml);
+                    break;
                 case EdmExpressionKind.StringConstant:
                     this.WriteRequiredAttribute(CsdlConstants.Attribute_String, ((IEdmStringConstantExpression)expression).Value, EdmValueWriter.StringAsXml);
                     break;
@@ -623,6 +626,13 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         internal void WriteNavigationPropertyPathExpressionElement(IEdmPathExpression expression)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_NavigationPropertyPath);
+            this.xmlWriter.WriteString(PathAsXml(expression.PathSegments));
+            this.WriteEndElement();
+        }
+
+        internal void WriteAnnotationPathExpressionElement(IEdmPathExpression expression)
+        {
+            this.xmlWriter.WriteStartElement(CsdlConstants.Element_AnnotationPath);
             this.xmlWriter.WriteString(PathAsXml(expression.PathSegments));
             this.WriteEndElement();
         }

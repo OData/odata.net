@@ -11,13 +11,14 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using System.IO;
     using System.Linq;
     using System.Xml;
+    using FluentAssertions;
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Metadata;
-    using FluentAssertions;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Spatial;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Microsoft.OData.Client.TDDUnitTests;
 
     /// <summary>
     /// Unit tests for client request serialization code.
@@ -25,6 +26,13 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     [TestClass]
     public class ClientSerializerTests
     {
+        private DataServiceContext context;
+
+        [TestInitialize]
+        public void Init()
+        {
+            context = new DataServiceContext(new Uri("http://www.odata.org/service.svc")) { ResolveName = type => type.FullName }.ReConfigureForNetworkLoadingTests();
+        }
         [TestMethod]
         public void ClientShouldNotIncludeIdInJsonLightUpdates()
         {
@@ -108,7 +116,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void WriteNullUriOperationParametersToUriShouldReturnUri()
         {
-            DataServiceContext context = new DataServiceContext(new Uri("http://www.odata.org/service.svc"));
             var requestInfo = new RequestInfo(context);
             var serializer = new Serializer(requestInfo);
             Uri requestUri = new Uri("http://www.odata.org/service.svc/Function");
@@ -120,7 +127,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void WriteOneUriOperationParametersToUriShouldReturnUri()
         {
-            DataServiceContext context = new DataServiceContext(new Uri("http://www.odata.org/service.svc"));
             var requestInfo = new RequestInfo(context);
             var serializer = new Serializer(requestInfo);
             Uri requestUri = new Uri("http://www.odata.org/service.svc/Function");
@@ -133,7 +139,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void WriteTwoUriOperationParametersToUriShouldReturnUri()
         {
-            DataServiceContext context = new DataServiceContext(new Uri("http://www.odata.org/service.svc"));
             var requestInfo = new RequestInfo(context);
             var serializer = new Serializer(requestInfo);
             Uri requestUri = new Uri("http://www.odata.org/service.svc/Function");
@@ -147,7 +152,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void WriteStringAndBoolUriOperationParametersToUriShouldReturnUri()
         {
-            DataServiceContext context = new DataServiceContext(new Uri("http://www.odata.org/service.svc"));
             var requestInfo = new RequestInfo(context);
             var serializer = new Serializer(requestInfo);
             Uri requestUri = new Uri("http://www.odata.org/service.svc/Function");
@@ -161,7 +165,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void WritePrimitiveUriOperationParametersToUriShouldReturnUri()
         {
-            DataServiceContext context = new DataServiceContext(new Uri("http://www.odata.org/service.svc"));
             var requestInfo = new RequestInfo(context);
             var serializer = new Serializer(requestInfo);
             Uri requestUri = new Uri("http://www.odata.org/service.svc/Function");
@@ -178,7 +181,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void WriteDateAndTimeUriOperationParametersToUriShouldReturnUri()
         {
-            DataServiceContext context = new DataServiceContext(new Uri("http://www.odata.org/service.svc"));
             var requestInfo = new RequestInfo(context);
             var serializer = new Serializer(requestInfo);
             Uri requestUri = new Uri("http://www.odata.org/service.svc/Function");
@@ -194,7 +196,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void WriteGeographyUriOperationParametersToUriShouldReturnUri()
         {
-            DataServiceContext context = new DataServiceContext(new Uri("http://www.odata.org/service.svc"));
             var requestInfo = new RequestInfo(context);
             var serializer = new Serializer(requestInfo);
             Uri requestUri = new Uri("http://www.odata.org/service.svc/Function");
@@ -209,7 +210,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void WriteCollectionUriOperationParametersToUriShouldReturnUri()
         {
-            DataServiceContext context = new DataServiceContext(new Uri("http://www.odata.org/service.svc"));
             var requestInfo = new RequestInfo(context);
             var serializer = new Serializer(requestInfo);
             Uri requestUri = new Uri("http://www.odata.org/service.svc/Function");
@@ -224,7 +224,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void WriteEnumUriOperationParametersToUriShouldReturnUri()
         {
-            DataServiceContext context = new DataServiceContext(new Uri("http://www.odata.org/service.svc"));
             var requestInfo = new RequestInfo(context);
             var serializer = new Serializer(requestInfo);
             Uri functionBaseRequestUri = new Uri("http://www.odata.org/service.svc/Function");
@@ -246,7 +245,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void WriteComplexTypeUriOperationParametersToUriShouldReturnUri()
         {
-            DataServiceContext context = new DataServiceContext(new Uri("http://www.odata.org/service.svc")) { ResolveName = type => type.FullName };
             var requestInfo = new RequestInfo(context);
             var serializer = new Serializer(requestInfo);
             Uri requestUri = new Uri("http://www.odata.org/service.svc/Function");
@@ -261,7 +259,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void WriteCollectionOfComplexTypeInUri()
         {
-            DataServiceContext context = new DataServiceContext(new Uri("http://www.odata.org/service.svc")) { ResolveName = type => type.FullName };
             var requestInfo = new RequestInfo(context);
             var serializer = new Serializer(requestInfo);
             Uri requestUri = new Uri("http://www.odata.org/service.svc/Function");
@@ -281,7 +278,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void WriteCollectionOfComplexTypeInBody()
         {
-            DataServiceContext context = new DataServiceContext(new Uri("http://www.odata.org/service.svc")) { ResolveName = type => type.FullName };
             var requestInfo = new RequestInfo(context);
             var serializer = new Serializer(requestInfo);
             List<Address> addresses = new List<Address>()
@@ -300,7 +296,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void WriteEntryAsBodyOperationParameter()
         {
-            DataServiceContext context = new DataServiceContext(new Uri("http://www.odata.org/service.svc")) { ResolveName = type => type.FullName };
             var requestInfo = new RequestInfo(context);
             var serializer = new Serializer(requestInfo);
             Customer customer = new Customer()
@@ -320,7 +315,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void WriteNullAsBodyOperationParameter()
         {
-            DataServiceContext context = new DataServiceContext(new Uri("http://www.odata.org/service.svc")) { ResolveName = type => type.FullName };
             var requestInfo = new RequestInfo(context);
             var serializer = new Serializer(requestInfo);
             List<BodyOperationParameter> parameters = new List<BodyOperationParameter> { new BodyOperationParameter("customer", null) };
@@ -333,7 +327,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void WriteFeedAsBodyOperationParameter()
         {
-            DataServiceContext context = new DataServiceContext(new Uri("http://www.odata.org/service.svc")) { ResolveName = type => type.FullName };
             var requestInfo = new RequestInfo(context);
             var serializer = new Serializer(requestInfo);
             Customer customer1 = new Customer()
@@ -359,7 +352,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void WriteEmptyFeedAsBodyOperationParameter()
         {
-            DataServiceContext context = new DataServiceContext(new Uri("http://www.odata.org/service.svc")) { ResolveName = type => type.FullName };
             var requestInfo = new RequestInfo(context);
             var serializer = new Serializer(requestInfo);
             List<BodyOperationParameter> parameters = new List<BodyOperationParameter> { new BodyOperationParameter("customer", new List<Customer>()) };
@@ -389,7 +381,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void WriteEnumTypeUriOperationParameterWithNonExistingValueShouldThrow()
         {
-            DataServiceContext context = new DataServiceContext(new Uri("http://www.odata.org/service.svc"));
             var requestInfo = new RequestInfo(context);
             var serializer = new Serializer(requestInfo);
             Uri requestUri = new Uri("http://www.odata.org/service.svc/Function");

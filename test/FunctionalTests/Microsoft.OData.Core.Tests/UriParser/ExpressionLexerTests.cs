@@ -634,7 +634,7 @@ namespace Microsoft.OData.Tests.UriParser
             EdmValidNamesNotAllowedInUri("_some_name");
         }
 
-#if !NETCOREAPP1_0
+#if !NETCOREAPP1_1 && !NETCOREAPP2_1 && !NETCOREAPP3_1
         [Fact]
         public void EdmValidNamesNotAllowedInUri_Combinations()
         {
@@ -976,7 +976,7 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal("next", lexer.NextToken().Text);
         }
 
-#if !NETCOREAPP1_0
+#if !NETCOREAPP1_1 && !NETCOREAPP2_1&& !NETCOREAPP3_1
         private char FindMatchingChar(UnicodeCategory category)
         {
             for (int i = 0; i <= 0xffff; i++)

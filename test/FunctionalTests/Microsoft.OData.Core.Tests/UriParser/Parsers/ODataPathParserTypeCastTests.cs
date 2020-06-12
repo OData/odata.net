@@ -19,6 +19,40 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 {
     public class ODataPathParserTypeCastTests
     {
+        #region Type cast with Namespace alias
+        [Fact]
+        public void ParseTypeCastOnSingletonWithoutAliasSettingThrows()
+        {
+            IEdmModel edmModel = GetSingletonEdmModel(""); // without Derived type constraint
+
+            ODataPathParser pathParser = new ODataPathParser(new ODataUriParserConfiguration(edmModel));
+            Action parsePath = () => pathParser.ParsePath(new[] { "Me", "MyAlias.VipCustomer" });
+            parsePath.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_ResourceNotFound("MyAlias.VipCustomer"));
+        }
+
+        [Theory]
+        [InlineData("Customer", "NS.")]
+        [InlineData("Customer", "MyAlias.")]
+        [InlineData("VipCustomer", "NS.")]
+        [InlineData("VipCustomer", "MyAlias.")]
+        [InlineData("NormalCustomer", "NS.")]
+        [InlineData("NormalCustomer", "MyAlias.")]
+        public void ParseTypeCastOnSingletonWithNamespaceAndAliasWorks(string typeCastName, string namespaceOrAlias)
+        {
+            IEdmModel edmModel = GetSingletonEdmModel(""); // without Derived type constraint
+            edmModel.SetNamespaceAlias("NS", "MyAlias");
+
+            IEdmEntityType customer = edmModel.SchemaElements.OfType<IEdmEntityType>().First(c => c.Name == "Customer");
+            IEdmEntityType targetType = edmModel.SchemaElements.OfType<IEdmEntityType>().First(c => c.Name == typeCastName);
+
+            ODataPathParser pathParser = new ODataPathParser(new ODataUriParserConfiguration(edmModel));
+
+            // ~/Me/NS.Customer
+            var path = pathParser.ParsePath(new[] { "Me", namespaceOrAlias + typeCastName });
+            path[1].ShouldBeTypeSegment(targetType, customer);
+        }
+        #endregion
+
         #region Singleton Type cast
         [Theory]
         [InlineData("Customer")]
@@ -39,8 +73,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Theory]
-        [InlineData("true")]
-        [InlineData("false")]
+        [InlineData(true)]
+        [InlineData(false)]
         public void ParseTypeCastOnSingletonWithDerivedTypeConstraintAnnotationWorks(bool isInLine)
         {
             string annotation =
@@ -71,8 +105,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Theory]
-        [InlineData("true")]
-        [InlineData("false")]
+        [InlineData(true)]
+        [InlineData(false)]
         public void ParseTypeCastOnSingletonWithDerivedTypeConstraintButEmptyCollectionAnnotationWorks(bool isInLine)
         {
             string annotation =
@@ -153,8 +187,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Theory]
-        [InlineData("true")]
-        [InlineData("false")]
+        [InlineData(true)]
+        [InlineData(false)]
         public void ParseTypeCastOnEntitySetWithDerivedTypeConstraintAnnotationWorks(bool isInLine)
         {
             string annotation =
@@ -256,8 +290,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Theory]
-        [InlineData("true")]
-        [InlineData("false")]
+        [InlineData(true)]
+        [InlineData(false)]
         public void ParseTypeCastOnPropertyWithDerivedTypeConstraintAnnotationWorks(bool isInLine)
         {
             string annotation =
@@ -371,8 +405,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Theory]
-        [InlineData("true")]
-        [InlineData("false")]
+        [InlineData(true)]
+        [InlineData(false)]
         public void ParseTypeCastOnNavigationPropertyWithDerivedTypeConstraintAnnotationWorks(bool isInLine)
         {
             string annotation =
@@ -412,8 +446,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Theory]
-        [InlineData("true")]
-        [InlineData("false")]
+        [InlineData(true)]
+        [InlineData(false)]
         public void ParseTypeCastOnNavigationPropertyWithKeySegmentWithDerivedTypeConstraintAnnotationWorks(bool isInLine)
         {
             string annotation =
@@ -506,8 +540,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Theory(Skip = "Should pass if fix issue: see: https://github.com/OData/odata.net/issues/1326")]
-        [InlineData("true")]
-        [InlineData("false")]
+        [InlineData(true)]
+        [InlineData(false)]
         public void ParseTypeCastOnTypeDefinitionPropertyWithDerivedTypeConstraintAnnotationWorks(bool isInLine)
         {
             string annotation =
@@ -592,8 +626,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Theory]
-        [InlineData("true")]
-        [InlineData("false")]
+        [InlineData(true)]
+        [InlineData(false)]
         public void ParseBoundOperationWithDerivedTypeConstraintAnnotationWorks(bool inLineAnnotation)
         {
             string annotation =
@@ -603,7 +637,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                      "</Collection>" +
                    "</Annotation>";
 
-            IEdmModel edmModel = GetOperationEdmModel(annotation);
+            IEdmModel edmModel = GetOperationEdmModel(annotation, inLineAnnotation);
 
             IEdmEntityType customer = edmModel.SchemaElements.OfType<IEdmEntityType>().First(c => c.Name == "Customer");
             IEdmEntityType vipCustomer = edmModel.SchemaElements.OfType<IEdmEntityType>().First(c => c.Name == "VipCustomer");
@@ -642,7 +676,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
       <EntityContainer Name =""Default"">
          <EntitySet Name=""Customers"" EntityType=""NS.Customer"" />
       </EntityContainer>
-      <Annotations Target=""NS.Image(NS.Customer)"">
+      <Annotations Target=""NS.Image(Collection(NS.Customer))/entity"">
         {1}
       </Annotations>
     </Schema>

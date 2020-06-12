@@ -8,6 +8,7 @@ namespace Microsoft.OData.Metadata
 {
     #region Namespaces
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -25,6 +26,7 @@ namespace Microsoft.OData.Metadata
 #endif
 #if !ODATA_SERVICE && !ODATA_CLIENT
     using Microsoft.OData.JsonLight;
+    using Microsoft.OData.UriParser;
     using ErrorStrings = Microsoft.OData.Strings;
     using PlatformHelper = Microsoft.OData.PlatformHelper;
 #endif
@@ -252,17 +254,117 @@ namespace Microsoft.OData.Metadata
         }
 
         /// <summary>
-        /// Filters the operations by parameter names.
+        /// Filters the operations by parameter count.
         /// </summary>
-        /// <param name="functions">The operations.</param>
-        /// <param name="parameters">The list of non-binding parameter names to match.</param>
-        /// <param name="caseInsensitive">Whether case insensitive.</param>
+        /// <param name="operations">The operations.</param>
+        /// <param name="parameterCount">The count of non-binding parameter names to match.</param>
         /// <returns>The best matching operations based on parameters.</returns>
-        internal static IEnumerable<IEdmOperation> FindBestOverloadBasedOnParameters(this IEnumerable<IEdmOperation> functions, IEnumerable<string> parameters, bool caseInsensitive = false)
+        internal static IEnumerable<IEdmOperation> FilterOverloadsBasedOnParameterCount(this IEnumerable<IEdmOperation> operations, int parameterCount)
         {
             // The best match out of a list of candidates is the one that has the same number of (non-binding) parameters as specified.
-            IEnumerable<IEdmOperation> exactMatches = functions.Where(f => f.Parameters.Count() == parameters.Count() + (f.IsBound ? 1 : 0));
-            return exactMatches.Count() > 0 ? exactMatches : functions;
+            IEnumerable<IEdmOperation> exactMatches = operations.Where(f => f.Parameters.Count() == parameterCount + (f.IsBound ? 1 : 0));
+            return exactMatches.Count() > 0 ? exactMatches : operations;
+        }
+
+        /// <summary>
+        /// Filters the operations by parameter count.
+        /// </summary>
+        /// <param name="operations">The operations.</param>
+        /// <param name="parameterCount">The count of non-binding parameter names to match.</param>
+        /// <returns>The best matching operations based on parameters.</returns>
+        internal static IList<IEdmOperation> FilterOverloadsBasedOnParameterCount(this IList<IEdmOperation> operations, int parameterCount)
+        {
+            IList<IEdmOperation> exactMatches = null;
+
+            // The best match out of a list of candidates is the one that has the same number of (non-binding) parameters as specified.
+            for (int i = 0; i < operations.Count; i++)
+            {
+                if (operations[i].Parameters.Count() == parameterCount + (operations[i].IsBound ? 1 : 0))
+                {
+                    if (exactMatches == null)
+                    {
+                        exactMatches = new List<IEdmOperation>();
+                    }
+
+                    exactMatches.Add(operations[i]);
+                }
+            }
+
+            return exactMatches == null ? operations : exactMatches;
+        }
+
+        /// <summary>
+        /// Filters the operations candidates based on parameters.
+        /// </summary>
+        /// <param name="operations">The operations.</param>
+        /// <param name="bindingType">Binding type for the operation.</param>
+        /// <param name="parameterNameList">The parameters.</param>
+        /// <param name="caseInsensitive">Whether case insensitive.</param>
+        /// <param name="actionItemsExists">outputs the actions found while matching functions</param>
+        /// <returns>Operations filtered by parameter.</returns>
+        internal static IList<IEdmOperation> FilterOperationCandidatesBasedOnParameterList(this IEnumerable<IEdmOperation> operations, IEdmType bindingType, IList<string> parameterNameList, bool caseInsensitive, out bool actionItemsExists)
+        {
+            Debug.Assert(operations != null, "operations");
+            Debug.Assert(parameterNameList != null, "parameters");
+
+            bool hasParameters = parameterNameList.Count > 0;
+            actionItemsExists = false;
+            IList<IEdmOperation> operationCandidates = new List<IEdmOperation>();
+
+            foreach (var operation in operations)
+            {
+                Debug.Assert(bindingType == null || (bindingType != null && operation.IsBound && operation.Parameters.Any()));
+                bool suitableCandidate = true;
+
+                // If the number of parameters specified in the url is > 0 then we should only keep functions as actions can't have parameters on the uri, only in the payload. Filter further by parameters in this case, otherwise don't.
+                if (hasParameters)
+                {
+                    if (operation.IsAction())
+                    {
+                        actionItemsExists = true;
+                        suitableCandidate = false;
+                    }
+                    else if (!ParametersSatisfyFunction(operation, parameterNameList, caseInsensitive))
+                    {
+                        suitableCandidate = false;
+                    }
+                }
+                else
+                {
+                    // If it is a bound function without required parameters, then the parameter list should only have one parameter and any others as optional.
+                    if (operation.IsFunction())
+                    {
+                        // Binding type requires atleast one parameter for a function. 
+                        bool parameterFound = bindingType != null ? false : true;
+                        foreach (IEdmOperationParameter param in operation.Parameters)
+                        {
+                            // If multiple required parameters found then mark as unsuitable. 
+                            bool isParamOptional = param is IEdmOptionalParameter;
+                            if (parameterFound && !(isParamOptional))
+                            {
+                                suitableCandidate = false;
+                                break;
+                            }
+                            else if (!(isParamOptional))
+                            {
+                                parameterFound = true;
+                            }
+                        }
+
+                        if (!parameterFound)
+                        {
+                            suitableCandidate = false;
+                        }
+                    }
+                }
+
+                if (suitableCandidate)
+                {
+                    operationCandidates.Add(operation);
+                }
+            }
+
+            return operationCandidates;
         }
 
         /// <summary>
@@ -292,22 +394,38 @@ namespace Microsoft.OData.Metadata
         }
 
         /// <summary>
+        /// Filters the operations by parameter names.
+        /// </summary>
+        /// <param name="operations">The operations.</param>
+        /// <param name="parameterNameList">The parameters.</param>
+        /// <param name="caseInsensitive">Whether case insensitive.</param>
+        /// <returns>Operations filtered by parameter.</returns>
+        internal static IEnumerable<IEdmOperation> FilterOperationsByParameterNames(this IList<IEdmOperation> operations, IList<string> parameterNameList, bool caseInsensitive)
+        {
+            Debug.Assert(operations != null, "operations");
+            Debug.Assert(parameterNameList != null, "parameters");
+
+            // TODO: update code that is duplicate between operation and operation import, add more tests.
+            for (int i = 0; i < operations.Count; i++)
+            {
+                if (!ParametersSatisfyFunction(operations[i], parameterNameList, caseInsensitive))
+                {
+                    continue;
+                }
+
+                yield return operations[i];
+            }
+        }
+
+        /// <summary>
         /// Ensures that operations are bound and have a binding parameter, other wise throws an exception.
         /// </summary>
         /// <param name="operations">The operations.</param>
         internal static void EnsureOperationsBoundWithBindingParameter(this IEnumerable<IEdmOperation> operations)
         {
-            foreach (IEdmOperation operation in operations)
+            foreach (var operation in operations)
             {
-                if (!operation.IsBound)
-                {
-                    throw new ODataException(ErrorStrings.EdmLibraryExtensions_UnBoundOperationsFoundFromIEdmModelFindMethodIsInvalid(operation.Name));
-                }
-
-                if (operation.Parameters.FirstOrDefault() == null)
-                {
-                    throw new ODataException(ErrorStrings.EdmLibraryExtensions_NoParameterBoundOperationsFoundFromIEdmModelFindMethodIsInvalid(operation.Name));
-                }
+                operation.EnsureOperationBoundWithBindingParameter();
             }
         }
 
@@ -427,32 +545,6 @@ namespace Microsoft.OData.Metadata
             Debug.Assert(operationImport != null, "operationImport != null");
 
             return operationImport.FullName() + operationImport.ParameterTypesToString();
-        }
-
-        /// <summary>
-        /// Removes the actions.
-        /// </summary>
-        /// <param name="source">The source.</param>
-        /// <param name="actionItems">The action items.</param>
-        /// <returns>Only the functions from the operation sequence.</returns>
-        internal static IEnumerable<IEdmOperation> RemoveActions(this IEnumerable<IEdmOperation> source, out IList<IEdmOperation> actionItems)
-        {
-            List<IEdmOperation> functions = new List<IEdmOperation>();
-
-            actionItems = new List<IEdmOperation>();
-            foreach (var item in source)
-            {
-                if (item.IsAction())
-                {
-                    actionItems.Add(item);
-                }
-                else
-                {
-                    functions.Add(item);
-                }
-            }
-
-            return functions;
         }
 
         /// <summary>
@@ -1570,7 +1662,8 @@ namespace Microsoft.OData.Metadata
             }
 
             // if the container name of the operationImport doesn't equal the current container, don't search just return empty as there are no matches.
-            if (containerName != null && !(container.Name.Equals(containerName) || container.FullName().Equals(containerName)))
+            if (containerName != null &&
+                !(container.Name.Equals(containerName, StringComparison.Ordinal) || container.FullName().Equals(containerName, StringComparison.Ordinal)))
             {
                 return Enumerable.Empty<IEdmOperationImport>();
             }
@@ -1711,7 +1804,7 @@ namespace Microsoft.OData.Metadata
         /// Gets the operation parameter types in string.
         /// </summary>
         /// <param name="operation">Operation in question.</param>
-        /// <returns>Comma separated operation parameter types enclosed in parantheses.</returns>
+        /// <returns>Comma separated operation parameter types enclosed in parentheses.</returns>
         private static string ParameterTypesToString(this IEdmOperation operation)
         {
             // TODO: Resolve duplication of operationImport and operation
@@ -1724,7 +1817,7 @@ namespace Microsoft.OData.Metadata
         /// Gets the non binding operation parameter names in string.
         /// </summary>
         /// <param name="operation">Operation in question.</param>
-        /// <returns>Comma separated operation parameter names enclosed in parantheses.</returns>
+        /// <returns>Comma separated operation parameter names enclosed in parentheses.</returns>
         private static string NonBindingParameterNamesToString(this IEdmOperation operation)
         {
             IEnumerable<IEdmOperationParameter> nonBindingParameters = operation.IsBound ? operation.Parameters.Skip(1) : operation.Parameters;
@@ -1740,7 +1833,7 @@ namespace Microsoft.OData.Metadata
         /// <remarks>
         /// The following rules are used for collection type names:
         /// - it has to start with "Collection(" and end with ")" - trailing and leading whitespaces make the type not to be recognized as collection.
-        /// - there is to be no characters (including whitespaces) between "Collection" and "(" - otherwise it won't berecognized as collection
+        /// - there is to be no characters (including whitespaces) between "Collection" and "(" - otherwise it won't be recognized as collection
         /// - collection item type name has to be a non-empty string - i.e. "Collection()" won't be recognized as collection
         /// - nested collection - e.g. "Collection(Collection(Edm.Int32))" - are not supported - we will throw
         /// Note the following are examples of valid type names which are not collection:
@@ -1779,7 +1872,7 @@ namespace Microsoft.OData.Metadata
         /// Gets the operation import parameter types in string.
         /// </summary>
         /// <param name="operationImport">Function import in question.</param>
-        /// <returns>Comma separated operation import parameter types enclosed in parantheses.</returns>
+        /// <returns>Comma separated operation import parameter types enclosed in parentheses.</returns>
         private static string ParameterTypesToString(this IEdmOperationImport operationImport)
         {
             // TODO: Resolve duplication of operationImport and operation
@@ -1830,23 +1923,33 @@ namespace Microsoft.OData.Metadata
                 parametersToMatch = parametersToMatch.Skip(1);
             }
 
-            List<IEdmOperationParameter> functionParameters = parametersToMatch.ToList();
-
             // if any required parameters are missing, don't consider it a match.
-            if (functionParameters.Where(
-                p => !(p is IEdmOptionalParameter)).Any(
-                    p => parameterNameList.All(
-                        k => !string.Equals(k, p.Name, caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))))
+            BitArray matchedUrlParameters = new BitArray(parameterNameList.Count);
+            foreach (var functionParameter in parametersToMatch)
             {
-                return false;
+                bool matched = false;
+                for (int j = 0; j < parameterNameList.Count; j++)
+                {
+                    if (string.Equals(parameterNameList[j], functionParameter.Name, caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+                    {
+                        matched = true;
+                        matchedUrlParameters[j] = true;
+                    }
+                }
+
+                if (!matched && !(functionParameter is IEdmOptionalParameter))
+                {
+                    return false;
+                }
             }
 
             // if any specified parameters don't match, don't consider it a match.
-            if (parameterNameList.Any(
-                k => functionParameters.All(
-                    p => !string.Equals(k, p.Name, caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))))
+            for (int i = 0; i < parameterNameList.Count; i++)
             {
-                return false;
+                if (!matchedUrlParameters[i])
+                {
+                    return false;
+                }
             }
 
             return true;
@@ -1864,13 +1967,26 @@ namespace Microsoft.OData.Metadata
 
             IEdmStructuredType currentType = structuredType;
             int inheritanceLevelsFromBase = 0;
-            while (currentType.InheritsFrom(rootType))
+            while (currentType != null && currentType.InheritsFrom(rootType))
             {
                 currentType = currentType.BaseType;
                 inheritanceLevelsFromBase++;
             }
 
             return inheritanceLevelsFromBase;
+        }
+
+        private static void EnsureOperationBoundWithBindingParameter(this IEdmOperation operation)
+        {
+            if (!operation.IsBound)
+            {
+                throw new ODataException(ErrorStrings.EdmLibraryExtensions_UnBoundOperationsFoundFromIEdmModelFindMethodIsInvalid(operation.Name));
+            }
+
+            if (!operation.Parameters.Any())
+            {
+                throw new ODataException(ErrorStrings.EdmLibraryExtensions_NoParameterBoundOperationsFoundFromIEdmModelFindMethodIsInvalid(operation.Name));
+            }
         }
 #endif
         #endregion

@@ -1047,7 +1047,7 @@ namespace AstoriaUnitTests.Tests
 
             #endregion Types for QueryTestOrderByComparable.
 
-            [TestMethod, Variation]
+             [TestMethod, Variation]
             public void QueryTestNull()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcess())

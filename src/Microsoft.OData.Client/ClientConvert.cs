@@ -29,7 +29,7 @@ namespace Microsoft.OData.Client
         /// <returns>converted value</returns>
         internal static object ChangeType(string propertyValue, Type propertyType)
         {
-            Debug.Assert(null != propertyValue, "should never be passed null");
+            Debug.Assert(propertyValue != null, "should never be passed null");
 
             PrimitiveType primitiveType;
             if (PrimitiveType.TryGetPrimitiveType(propertyType, out primitiveType) && primitiveType.TypeConverter != null)
@@ -41,12 +41,12 @@ namespace Microsoft.OData.Client
                 }
                 catch (FormatException ex)
                 {
-                    propertyValue = (0 == propertyValue.Length ? "String.Empty" : "String");
+                    propertyValue = propertyValue.Length == 0 ? "String.Empty" : "String";
                     throw Error.InvalidOperation(Strings.Deserialize_Current(propertyType.ToString(), propertyValue), ex);
                 }
                 catch (OverflowException ex)
                 {
-                    propertyValue = (0 == propertyValue.Length ? "String.Empty" : "String");
+                    propertyValue = propertyValue.Length == 0 ? "String.Empty" : "String";
                     throw Error.InvalidOperation(Strings.Deserialize_Current(propertyType.ToString(), propertyValue), ex);
                 }
             }
@@ -83,7 +83,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// change primtive typeName into non-nullable type
+        /// change primitive typeName into non-nullable type
         /// </summary>
         /// <param name="typeName">like Edm.String or Edm.Binary</param>
         /// <param name="type">the mapped output type</param>
@@ -117,7 +117,7 @@ namespace Microsoft.OData.Client
         /// <returns>converted value</returns>
         internal static string ToString(object propertyValue)
         {
-            Debug.Assert(null != propertyValue, "null should be handled by caller");
+            Debug.Assert(propertyValue != null, "null should be handled by caller");
             Debug.Assert(!(propertyValue is ODataUntypedValue), "!(propertyValue is ODataUntypedValue)");
 
             PrimitiveType primitiveType;

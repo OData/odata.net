@@ -111,6 +111,44 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return this.Parameters.SingleOrDefault(p => p.Name == name);
         }
 
+        internal static string ParameterizedTargetName(IList<IEdmOperationParameter> parameters)
+        {
+            int index = 0;
+            int parameterCount = parameters.Count();
+
+            StringBuilder sb = new StringBuilder("(");
+            foreach (IEdmOperationParameter parameter in parameters)
+            {
+                string typeName = "";
+                if (parameter.Type == null)
+                {
+                    typeName = CsdlConstants.TypeName_Untyped;
+                }
+                else if (parameter.Type.IsCollection())
+                {
+                    typeName = CsdlConstants.Value_Collection + "(" + parameter.Type.AsCollection().ElementType().FullName() + ")";
+                }
+                else if (parameter.Type.IsEntityReference())
+                {
+                    typeName = CsdlConstants.Value_Ref + "(" + parameter.Type.AsEntityReference().EntityType().FullName() + ")";
+                }
+                else
+                {
+                    typeName = parameter.Type.FullName();
+                }
+
+                sb.Append(typeName);
+                index++;
+                if (index < parameterCount)
+                {
+                    sb.Append(", ");
+                }
+            }
+
+            sb.Append(")");
+            return sb.ToString();
+        }
+
         protected override IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations()
         {
             return this.Model.WrapInlineVocabularyAnnotations(this, this.Context);
@@ -152,9 +190,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 }
             }
 
-            // Handle the out-of-line optinal parameter annotation for parameters.
+            // Handle the out-of-line optional parameter annotation for parameters.
             // First, use the above built parameters to create the full target name, for example: NS.TestFunction(Edm.String, Edm.String, Edm.String)
-            // Then, go through each prameters by visiting the out-of-line optional parameter annotation.
+            // Then, go through each parameters by visiting the out-of-line optional parameter annotation.
             // If we find at least one of out-of-line optional parameter annotation, we replace it as an optional parameter.
             // Otherwise, re-use the built parameter.
             // Be noted: if a parameter has inline and out-of-line optional parameter, the out-of-line will win.
@@ -233,44 +271,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             }
 
             return isOptional;
-        }
-
-        internal static string ParameterizedTargetName(IList<IEdmOperationParameter> parameters)
-        {
-            int index = 0;
-            int parameterCount = parameters.Count();
-
-            StringBuilder sb = new StringBuilder("(");
-            foreach (IEdmOperationParameter parameter in parameters)
-            {
-                string typeName = "";
-                if (parameter.Type == null)
-                {
-                    typeName = CsdlConstants.TypeName_Untyped;
-                }
-                else if (parameter.Type.IsCollection())
-                {
-                    typeName = CsdlConstants.Value_Collection + "(" + parameter.Type.AsCollection().ElementType().FullName() + ")";
-                }
-                else if (parameter.Type.IsEntityReference())
-                {
-                    typeName = CsdlConstants.Value_Ref + "(" + parameter.Type.AsEntityReference().EntityType().FullName() + ")";
-                }
-                else
-                {
-                    typeName = parameter.Type.FullName();
-                }
-
-                sb.Append(typeName);
-                index++;
-                if (index < parameterCount)
-                {
-                    sb.Append(", ");
-                }
-            }
-
-            sb.Append(")");
-            return sb.ToString();
         }
 
         private sealed class OperationPathExpression : EdmPathExpression, IEdmLocatable

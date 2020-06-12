@@ -88,6 +88,39 @@ namespace Microsoft.OData.Json
             }
         }
 
+        internal static void ODataValueToString(StringBuilder sb, ODataValue value)
+        {
+            if (value == null || value is ODataNullValue)
+            {
+                sb.Append("null");
+            }
+
+            ODataCollectionValue collectionValue = value as ODataCollectionValue;
+            if (collectionValue != null)
+            {
+                ODataCollectionValueToString(sb, collectionValue);
+            }
+
+            ODataResourceValue resourceValue = value as ODataResourceValue;
+            if (resourceValue != null)
+            {
+                ODataResourceValueToString(sb, resourceValue);
+            }
+
+            ODataPrimitiveValue primitiveValue = value as ODataPrimitiveValue;
+            if (primitiveValue != null)
+            {
+                if (primitiveValue.FromODataValue() is string)
+                {
+                    sb.Append("\"" + JsonValueUtils.GetEscapedJsonString(value.FromODataValue()?.ToString()) + "\"");
+                }
+                else
+                {
+                    sb.Append(JsonValueUtils.GetEscapedJsonString(value.FromODataValue()?.ToString()));
+                }
+            }
+        }
+
         /// <summary>
         /// Write an error message.
         /// </summary>
@@ -255,39 +288,6 @@ namespace Microsoft.OData.Json
 
             // }
             jsonWriter.EndObjectScope();
-        }
-
-        internal static void ODataValueToString(StringBuilder sb, ODataValue value)
-        {
-            if (value == null || value is ODataNullValue)
-            {
-                sb.Append("null");
-            }
-
-            ODataCollectionValue collectionValue = value as ODataCollectionValue;
-            if (collectionValue != null)
-            {
-                ODataCollectionValueToString(sb, collectionValue);
-            }
-
-            ODataResourceValue resourceValue = value as ODataResourceValue;
-            if (resourceValue != null)
-            {
-                ODataResourceValueToString(sb, resourceValue);
-            }
-
-            ODataPrimitiveValue primitiveValue = value as ODataPrimitiveValue;
-            if (primitiveValue != null)
-            {
-                if (primitiveValue.FromODataValue() is string)
-                {
-                    sb.Append("\"" + JsonValueUtils.GetEscapedJsonString(value.FromODataValue()?.ToString()) + "\"");
-                }
-                else
-                {
-                    sb.Append(JsonValueUtils.GetEscapedJsonString(value.FromODataValue()?.ToString()));
-                }
-            }
         }
 
         private static void ODataCollectionValueToString(StringBuilder sb, ODataCollectionValue value)

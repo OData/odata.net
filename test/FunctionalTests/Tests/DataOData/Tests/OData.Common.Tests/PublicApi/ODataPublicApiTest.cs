@@ -20,6 +20,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.PublicApi
     public class ODataPublicApiTests : ODataTestCase
     {
         [TestMethod, Variation(Description = "Test the public api change.")]
+        [Ignore("VSUpgrade19 - RegTest")]
         public void PublicApiTest()
         {
             string testDirectory = TestContext.TestRunDirectory;

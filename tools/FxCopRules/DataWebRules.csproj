@@ -1,15 +1,23 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
   <PropertyGroup>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{0854AF44-074A-41B4-909D-2AA4CAE82332}</ProjectGuid>
-    <RootNamespace>DataWebRules</RootNamespace>
     <AssemblyName>DataWebRules</AssemblyName>
     <WarningLevel>4</WarningLevel>
     <OutputType>Library</OutputType>
     <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <TargetFrameworks>net45</TargetFrameworks>
+    <RestorePackages>true</RestorePackages>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <FileUpgradeFlags>40</FileUpgradeFlags>
+    <!--<UpgradeBackupLocation>D:\GitHub\odata.net\sln\Backup4\</UpgradeBackupLocation>-->
+    <OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
+
   <ItemGroup>
     <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft\OData\Service\Serializers\PayloadMetadataKind.cs">
       <Link>PayloadMetadataKind.cs</Link>
@@ -17,6 +25,7 @@
     <Compile Include="AtomMaterializerInvokerRule.cs" />
     <Compile Include="BaseDataWebRule.cs" />
     <Compile Include="CodeTypeReferenceRule.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="ShouldNotDireclyAccessPayloadMetadataProperties.cs" />
     <Compile Include="DoNotHandleProhibitedExceptionsRule.cs" />
     <Compile Include="EntityDescriptorPublicProperties.cs" />
@@ -40,16 +49,21 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="FxCopSdk">
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\PrivateAssemblies\FxCopSdk.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Cci">
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\PrivateAssemblies\Microsoft.Cci.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
-    <Reference Include="$(VisualStudioInstallLocation)PrivateAssemblies\FxCopSdk.dll" />
-    <Reference Include="$(VisualStudioInstallLocation)PrivateAssemblies\Microsoft.Cci.dll" />
+    <Reference Include="$(VS140COMNTOOLS)..\IDE\PrivateAssemblies\Microsoft.Cci.dll" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="DataWebRules.ruleset">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!---->
 </Project>

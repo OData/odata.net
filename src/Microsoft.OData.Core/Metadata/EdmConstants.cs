@@ -119,7 +119,7 @@ namespace Microsoft.OData.Metadata
         #region CSDL serialization constants
 
         /// <summary>
-        /// The namespace for Oasis verion of Edmx
+        /// The namespace for Oasis version of Edmx
         /// </summary>
         internal const string EdmxOasisNamespace = "http://docs.oasis-open.org/odata/ns/edmx";
 

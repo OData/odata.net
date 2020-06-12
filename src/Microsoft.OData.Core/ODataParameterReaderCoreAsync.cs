@@ -9,9 +9,7 @@ namespace Microsoft.OData
     #region Namespaces
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Edm;
     #endregion Namespaces
 
@@ -32,7 +30,6 @@ namespace Microsoft.OData
         {
         }
 
-#if PORTABLELIB
         /// <summary>
         /// Implementation of the parameter reader logic when in state 'Start'.
         /// </summary>
@@ -53,7 +50,7 @@ namespace Microsoft.OData
         protected abstract Task<ODataReader> CreateResourceReaderAsync(IEdmStructuredType expectedResourceType);
 
         /// <summary>
-        /// Cretes an <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedResourceType"/>.
+        /// Creates an <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedResourceType"/>.
         /// </summary>
         /// <param name="expectedResourceType">Expected resource set element type to read.</param>
         /// <returns>An <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedResourceType"/>.</returns>
@@ -126,6 +123,5 @@ namespace Microsoft.OData
                     throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataParameterReaderCoreAsync_ReadAsynchronously));
             }
         }
-#endif
     }
 }

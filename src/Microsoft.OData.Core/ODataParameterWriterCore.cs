@@ -13,9 +13,7 @@ namespace Microsoft.OData
     using System.Globalization;
     using System.Linq;
     using System.IO;
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
     #endregion Namespaces
@@ -109,7 +107,7 @@ namespace Microsoft.OData
             this.InterceptException(this.FlushSynchronously);
         }
 
-#if PORTABLELIB
+
         /// <summary>
         /// Asynchronously flushes the write buffer to the underlying stream.
         /// </summary>
@@ -121,7 +119,6 @@ namespace Microsoft.OData
             // make sure we switch to writer state Error if an exception is thrown during flushing.
             return this.FlushAsynchronously().FollowOnFaultWith(t => this.EnterErrorScope());
         }
-#endif
 
         /// <summary>
         /// Start writing a parameter payload.
@@ -132,7 +129,7 @@ namespace Microsoft.OData
             this.InterceptException(() => this.WriteStartImplementation());
         }
 
-#if PORTABLELIB
+
         /// <summary>
         /// Asynchronously start writing a parameter payload.
         /// </summary>
@@ -142,7 +139,6 @@ namespace Microsoft.OData
             this.VerifyCanWriteStart(false /*synchronousCall*/);
             return TaskUtils.GetTaskForSynchronousOperation(() => this.InterceptException(() => this.WriteStartImplementation()));
         }
-#endif
 
         /// <summary>
         /// Start writing a value parameter.
@@ -156,7 +152,7 @@ namespace Microsoft.OData
             this.InterceptException(() => this.WriteValueImplementation(parameterName, parameterValue, expectedTypeReference));
         }
 
-#if PORTABLELIB
+
         /// <summary>
         /// Asynchronously start writing a value parameter.
         /// </summary>
@@ -169,7 +165,6 @@ namespace Microsoft.OData
             IEdmTypeReference expectedTypeReference = this.VerifyCanWriteValueParameter(false /*synchronousCall*/, parameterName, parameterValue);
             return TaskUtils.GetTaskForSynchronousOperation(() => this.InterceptException(() => this.WriteValueImplementation(parameterName, parameterValue, expectedTypeReference)));
         }
-#endif
 
         /// <summary>
         /// Creates an <see cref="ODataCollectionWriter"/> to write the value of a collection parameter.
@@ -183,7 +178,7 @@ namespace Microsoft.OData
             return this.InterceptException(() => this.CreateCollectionWriterImplementation(parameterName, itemTypeReference));
         }
 
-#if PORTABLELIB
+
         /// <summary>
         /// Asynchronously creates an <see cref="ODataCollectionWriter"/> to write the value of a collection parameter.
         /// </summary>
@@ -196,7 +191,6 @@ namespace Microsoft.OData
             return TaskUtils.GetTaskForSynchronousOperation(
                 () => this.InterceptException(() => this.CreateCollectionWriterImplementation(parameterName, itemTypeReference)));
         }
-#endif
 
         /// <summary> Creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a resource. </summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
@@ -208,7 +202,7 @@ namespace Microsoft.OData
             return this.InterceptException(() => this.CreateResourceWriterImplementation(parameterName, itemTypeReference));
         }
 
-#if PORTABLELIB
+
         /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.ODataWriter" /> to  write a resource.</summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <returns>The asynchronously created <see cref="T:Microsoft.OData.ODataWriter" />.</returns>
@@ -219,7 +213,6 @@ namespace Microsoft.OData
             return TaskUtils.GetTaskForSynchronousOperation(
                 () => this.InterceptException(() => this.CreateResourceWriterImplementation(parameterName, itemTypeReference)));
         }
-#endif
 
         /// <summary> Creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a resource set. </summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
@@ -231,7 +224,7 @@ namespace Microsoft.OData
             return this.InterceptException(() => this.CreateResourceSetWriterImplementation(parameterName, itemTypeReference));
         }
 
-#if PORTABLELIB
+
         /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.ODataWriter" /> to  write a resource set.</summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <returns>The asynchronously created <see cref="T:Microsoft.OData.ODataWriter" />.</returns>
@@ -242,7 +235,6 @@ namespace Microsoft.OData
             return TaskUtils.GetTaskForSynchronousOperation(
                 () => this.InterceptException(() => this.CreateResourceSetWriterImplementation(parameterName, itemTypeReference)));
         }
-#endif
 
         /// <summary>
         /// Finish writing a parameter payload.
@@ -258,7 +250,7 @@ namespace Microsoft.OData
             }
         }
 
-#if PORTABLELIB
+
         /// <summary>
         /// Asynchronously finish writing a parameter payload.
         /// </summary>
@@ -281,7 +273,6 @@ namespace Microsoft.OData
                         }
                     });
         }
-#endif
 
         /// <summary>
         /// This method notifies the implementer of this interface that the created reader is in Exception state.
@@ -310,7 +301,7 @@ namespace Microsoft.OData
         /// </remarks>
         void IODataOutputInStreamErrorListener.OnInStreamError()
         {
-            // The parameter payload is writen by the client and read by the server, we do not support
+            // The parameter payload is written by the client and read by the server, we do not support
             // writing an in-stream error payload in this scenario.
             throw new ODataException(Strings.ODataParameterWriter_InStreamErrorNotSupported);
         }
@@ -326,13 +317,12 @@ namespace Microsoft.OData
         /// </summary>
         protected abstract void FlushSynchronously();
 
-#if PORTABLELIB
+
         /// <summary>
         /// Flush the output.
         /// </summary>
         /// <returns>Task representing the pending flush operation.</returns>
         protected abstract Task FlushAsynchronously();
-#endif
 
         /// <summary>
         /// Start writing an OData payload.
@@ -673,14 +663,11 @@ namespace Microsoft.OData
             }
             else
             {
-#if PORTABLELIB
+
                 if (this.outputContext.Synchronous)
                 {
                     throw new ODataException(Strings.ODataParameterWriterCore_AsyncCallOnSyncWriter);
                 }
-#else
-                Debug.Assert(false, "Async calls are not allowed in this build.");
-#endif
             }
         }
 

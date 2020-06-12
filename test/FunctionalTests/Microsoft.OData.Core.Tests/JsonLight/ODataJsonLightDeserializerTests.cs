@@ -841,7 +841,7 @@ namespace Microsoft.OData.Tests.JsonLight
         };
 
         [Theory]
-        [MemberData("PrimitiveData")]
+        [MemberData(nameof(PrimitiveData))]
         public void TopLevelPropertyShouldReadEdmPrimitiveTypeProperty(object value, string valueString)
         {
             string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#Customers(1)/PrimitiveProperty\"," + valueString + "}";

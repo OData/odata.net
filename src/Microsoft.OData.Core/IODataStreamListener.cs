@@ -7,9 +7,8 @@
 namespace Microsoft.OData
 {
     #region Namespaces
-#if PORTABLELIB
     using System.Threading.Tasks;
-#endif
+
     #endregion
 
     /// <summary>
@@ -23,7 +22,6 @@ namespace Microsoft.OData
         /// </summary>
         void StreamRequested();
 
-#if PORTABLELIB
         /// <summary>
         /// This method notifies the implementer of this interface that the content stream for a batch operation has been requested.
         /// </summary>
@@ -32,7 +30,6 @@ namespace Microsoft.OData
         /// status change (or null if no such action is required).
         /// </returns>
         Task StreamRequestedAsync();
-#endif
 
         /// <summary>
         /// This method notifies the implementer of this interface that the content stream of a batch operation has been disposed.

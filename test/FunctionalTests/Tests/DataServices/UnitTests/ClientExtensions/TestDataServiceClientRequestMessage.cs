@@ -85,6 +85,18 @@ namespace AstoriaUnitTests.ClientExtensions
                 throw new NotImplementedException();
             }
         }
+
+        public override int ReadWriteTimeout
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
 #endif
 
         public override string GetHeader(string headerName)

@@ -277,7 +277,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Cannot write a delta deleted resource, link, or deleted link using ODataResourceSetWriter. Please use an ODataDeltaResourceSetWriter."
+        /// A string like "Cannot write a deleted resource, link, deleted link, or nested delta resource set to a non-delta payload. Please use a delta resource set writer, or a request resource writer."
         /// </summary>
         internal static string ODataWriterCore_CannotWriteDeltaWithResourceSetWriter {
             get {
@@ -425,10 +425,9 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Unable to serialize an object in a collection as it is not an ODataPrimitve or ODataResourceValue."
+        /// A string like "Unable to serialize an object in a collection as it is not a supported ODataValue."
         /// </summary>
-        internal static string ODataJsonWriter_UnsupportedValueInCollection
-        {
+        internal static string ODataJsonWriter_UnsupportedValueInCollection {
             get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonWriter_UnsupportedValueInCollection);
             }
@@ -776,7 +775,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The parameter '{0}' is of Edm type kind '{1}'. You cannot call WriteValue on a parameter that is not of Edm type kinds 'Primitive', 'Enum' or 'Complex'."
+        /// A string like "The parameter '{0}' is of Edm type kind '{1}'. You cannot call WriteValue on a parameter that is not of Edm type kinds 'Primitive' or 'Enum'."
         /// </summary>
         internal static string ODataParameterWriterCore_CannotWriteValueOnNonValueTypeKind(object p0, object p1) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataParameterWriterCore_CannotWriteValueOnNonValueTypeKind, p0, p1);
@@ -3597,6 +3596,15 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "Encountered a deleted entity when reading a non-delta response payload. Deleted entities are only supported in request payloads and delta responses."
+        /// </summary>
+        internal static string ODataJsonLightResourceDeserializer_UnexpectedDeletedEntryInResponsePayload {
+            get {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_UnexpectedDeletedEntryInResponsePayload);
+            }
+        }
+
+        /// <summary>
         /// A string like "A node of type '{0}' was read from the JSON reader when trying to read the start of the content of a resource set; however, a node of type 'StartArray' was expected."
         /// </summary>
         internal static string ODataJsonLightResourceDeserializer_CannotReadResourceSetContentStart(object p0) {
@@ -5148,7 +5156,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Found mutliple select terms with same select path '{0}' at one $select, please combine them together."
+        /// A string like "Found multiple select terms with same select path '{0}' at one $select, please combine them together."
         /// </summary>
         internal static string SelectTreeNormalizer_MultipleSelecTermWithSamePathFound(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.SelectTreeNormalizer_MultipleSelecTermWithSamePathFound, p0);
@@ -5768,7 +5776,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The request URI is not valid. The bound function binding to '{0}' does not support the escape function annotation."
+        /// A string like "The request URI is not valid. The bound function binding to '{0}' does not match the composability of the escape function in the URI."
         /// </summary>
         internal static string RequestUriProcessor_NoBoundEscapeFunctionSupported(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_NoBoundEscapeFunctionSupported, p0);
@@ -5779,6 +5787,15 @@ namespace Microsoft.OData {
         /// </summary>
         internal static string RequestUriProcessor_EscapeFunctionMustHaveOneStringParameter(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_EscapeFunctionMustHaveOneStringParameter, p0);
+        }
+
+        /// <summary>
+        /// A string like "A composable escape function must have a valid operation passed as a parameter."
+        /// </summary>
+        internal static string RequestUriProcessor_ComposableEscapeFunctionShouldHaveValidParameter {
+            get {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.RequestUriProcessor_ComposableEscapeFunctionShouldHaveValidParameter);
+            }
         }
 
         /// <summary>

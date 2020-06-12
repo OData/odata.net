@@ -30,7 +30,7 @@ namespace Microsoft.OData.Client
         /// <param name="headers">HTTP headers</param>
         internal OperationResponse(HeaderCollection headers)
         {
-            Debug.Assert(null != headers, "null headers");
+            Debug.Assert(headers != null, "null headers");
             this.headers = headers;
         }
 

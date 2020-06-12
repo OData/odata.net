@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -99,14 +100,23 @@ namespace Microsoft.OData.UriParser
             }
 
             var result = container.Elements.OfType<IEdmNavigationSource>()
-                .Where(source => string.Equals(identifier, source.Name, StringComparison.OrdinalIgnoreCase)).ToList();
+                .Where(source => string.Equals(identifier, source.Name, StringComparison.OrdinalIgnoreCase));
 
-            if (result.Count > 1)
+            IEdmNavigationSource resolvedNavigationSource = null;
+
+            foreach (IEdmNavigationSource candidate in result)
             {
-                throw new ODataException(Strings.UriParserMetadata_MultipleMatchingNavigationSourcesFound(identifier));
+                if (resolvedNavigationSource == null)
+                {
+                    resolvedNavigationSource = candidate;
+                }
+                else
+                {
+                    throw new ODataException(Strings.UriParserMetadata_MultipleMatchingNavigationSourcesFound(identifier));
+                }
             }
 
-            return result.SingleOrDefault();
+            return resolvedNavigationSource;
         }
 
         /// <summary>
@@ -124,15 +134,23 @@ namespace Microsoft.OData.UriParser
             }
 
             var result = type.Properties()
-            .Where(_ => string.Equals(propertyName, _.Name, StringComparison.OrdinalIgnoreCase))
-            .ToList();
+            .Where(_ => string.Equals(propertyName, _.Name, StringComparison.OrdinalIgnoreCase));
 
-            if (result.Count > 1)
+            IEdmProperty resolvedProperty = null;
+
+            foreach (IEdmProperty candidate in result)
             {
-                throw new ODataException(Strings.UriParserMetadata_MultipleMatchingPropertiesFound(propertyName, type.FullTypeName()));
+                if (resolvedProperty == null)
+                {
+                    resolvedProperty = candidate;
+                }
+                else
+                {
+                    throw new ODataException(Strings.UriParserMetadata_MultipleMatchingPropertiesFound(propertyName, type.FullTypeName()));
+                }
             }
 
-            return result.SingleOrDefault();
+            return resolvedProperty;
         }
 
         /// <summary>
@@ -151,12 +169,17 @@ namespace Microsoft.OData.UriParser
 
             IList<IEdmTerm> results = FindAcrossModels<IEdmTerm>(model, termName, /*caseInsensitive*/ true);
 
+            if (results == null || results.Count == 0)
+            {
+                return null;
+            }
+
             if (results.Count > 1)
             {
                 throw new ODataException(Strings.UriParserMetadata_MultipleMatchingTypesFound(termName));
             }
 
-            return results.SingleOrDefault();
+            return results[0];
         }
 
         /// <summary>
@@ -174,12 +197,18 @@ namespace Microsoft.OData.UriParser
             }
 
             IList<IEdmSchemaType> results = FindAcrossModels<IEdmSchemaType>(model, typeName, /*caseInsensitive*/ true);
+
+            if (results == null || results.Count == 0)
+            {
+                return null;
+            }
+
             if (results.Count > 1)
             {
                 throw new ODataException(Strings.UriParserMetadata_MultipleMatchingTypesFound(typeName));
             }
 
-            return results.SingleOrDefault();
+            return results[0];
         }
 
         /// <summary>
@@ -198,10 +227,10 @@ namespace Microsoft.OData.UriParser
             }
 
             IList<IEdmOperation> operations = FindAcrossModels<IEdmOperation>(model, identifier, /*caseInsensitive*/ true);
-            if (operations != null && operations.Count() > 0)
+            if (operations != null && operations.Count > 0)
             {
                 IList<IEdmOperation> matchedOperation = new List<IEdmOperation>();
-                for (int i = 0; i < operations.Count(); i++)
+                for (int i = 0; i < operations.Count; i++)
                 {
                     if (operations[i].HasEquivalentBindingType(bindingType))
                     {
@@ -230,10 +259,10 @@ namespace Microsoft.OData.UriParser
             }
 
             IList<IEdmOperation> operations = FindAcrossModels<IEdmOperation>(model, identifier, /*caseInsensitive*/ true);
-            if (operations != null && operations.Count() > 0)
+            if (operations != null && operations.Count > 0)
             {
                 IList<IEdmOperation> matchedOperation = new List<IEdmOperation>();
-                for (int i = 0; i < operations.Count(); i++)
+                for (int i = 0; i < operations.Count; i++)
                 {
                     if (!operations[i].IsBound)
                     {
@@ -264,7 +293,7 @@ namespace Microsoft.OData.UriParser
             IEdmEntityContainer container = model.EntityContainer;
             if (container == null)
             {
-                return null;
+                return Enumerable.Empty<IEdmOperationImport>();
             }
 
             return container.Elements.OfType<IEdmOperationImport>()
@@ -292,7 +321,7 @@ namespace Microsoft.OData.UriParser
                     functionParameter = operation.FindParameter(item.Key);
                 }
 
-                // ensure parameter name existis
+                // ensure parameter name exists
                 if (functionParameter == null)
                 {
                     throw new ODataException(Strings.ODataParameterWriterCore_ParameterNameNotFoundInOperation(item.Key, operation.Name));
@@ -313,22 +342,21 @@ namespace Microsoft.OData.UriParser
         /// <returns>The resolved key list.</returns>
         public virtual IEnumerable<KeyValuePair<string, object>> ResolveKeys(IEdmEntityType type, IList<string> positionalValues, Func<IEdmTypeReference, string, object> convertFunc)
         {
-            var keyProperties = type.Key().ToList();
-
             // Throw an error if key size from url doesn't match that from model.
             // Other derived ODataUriResolver intended for alternative key resolution, such as the built in AlternateKeysODataUriResolver,
             // should override this ResolveKeys method.
-            if (keyProperties.Count != positionalValues.Count)
+            IEnumerable<IEdmStructuralProperty> keys = type.Key();
+            if (keys.Count() != positionalValues.Count)
             {
                 throw ExceptionUtil.CreateBadRequestError(Strings.BadRequest_KeyCountMismatch(type.FullName()));
             }
 
             var keyPairList = new List<KeyValuePair<string, object>>(positionalValues.Count);
 
-            for (int i = 0; i < keyProperties.Count; i++)
+            int i = 0;
+            foreach (IEdmProperty keyProperty in keys)
             {
-                string valueText = positionalValues[i];
-                IEdmProperty keyProperty = keyProperties[i];
+                string valueText = positionalValues[i++];
                 object convertedValue = convertFunc(keyProperty.Type, valueText);
                 if (convertedValue == null)
                 {
@@ -351,17 +379,17 @@ namespace Microsoft.OData.UriParser
         public virtual IEnumerable<KeyValuePair<string, object>> ResolveKeys(IEdmEntityType type, IDictionary<string, string> namedValues, Func<IEdmTypeReference, string, object> convertFunc)
         {
             var convertedPairs = new Dictionary<string, object>(StringComparer.Ordinal);
-            var keyProperties = type.Key().ToList();
 
             // Throw an error if key size from url doesn't match that from model.
             // Other derived ODataUriResolver intended for alternative key resolution, such as the built in AlternateKeysODataUriResolver,
             // should override this ResolveKeys method.
-            if (keyProperties.Count != namedValues.Count)
+            IEnumerable<IEdmStructuralProperty> keys = type.Key();
+            if (keys.Count() != namedValues.Count)
             {
                 throw ExceptionUtil.CreateBadRequestError(Strings.BadRequest_KeyCountMismatch(type.FullName()));
             }
 
-            foreach (IEdmStructuralProperty property in keyProperties)
+            foreach (IEdmStructuralProperty property in keys)
             {
                 string valueText;
 
@@ -369,17 +397,27 @@ namespace Microsoft.OData.UriParser
                 {
                     if (EnableCaseInsensitive)
                     {
-                        var list = namedValues.Keys.Where(key => string.Equals(property.Name, key, StringComparison.OrdinalIgnoreCase)).ToList();
-                        if (list.Count > 1)
+                        var list = namedValues.Keys.Where(key => string.Equals(property.Name, key, StringComparison.OrdinalIgnoreCase));
+
+                        string caseInsensitiveKey = string.Empty;
+                        bool keyFound = false;
+                        foreach (string key in list)
                         {
-                            throw new ODataException(Strings.UriParserMetadata_MultipleMatchingKeysFound(property.Name));
+                            if (keyFound)
+                            {
+                                throw new ODataException(Strings.UriParserMetadata_MultipleMatchingKeysFound(property.Name));
+                            }
+
+                            caseInsensitiveKey = key;
+                            keyFound = true;
                         }
-                        else if (list.Count == 0)
+
+                        if (!keyFound)
                         {
                             throw ExceptionUtil.CreateSyntaxError();
                         }
 
-                        valueText = namedValues[list.Single()];
+                        valueText = namedValues[caseInsensitiveKey];
                     }
                     else
                     {
@@ -408,24 +446,28 @@ namespace Microsoft.OData.UriParser
         internal static IEdmOperationParameter ResolveOperationParameterNameCaseInsensitive(IEdmOperation operation, string identifier)
         {
             // first look for a case-sensitive match
-            var list = operation.Parameters.Where(parameter => string.Equals(identifier, parameter.Name, StringComparison.Ordinal)).ToList();
-            if (list.Count == 0)
+            var list = operation.Parameters.Where(parameter => string.Equals(identifier, parameter.Name, StringComparison.Ordinal));
+            if (!list.Any())
             {
                 // if no case sensitive, try case-insensitive
-                list = operation.Parameters.Where(parameter => string.Equals(identifier, parameter.Name, StringComparison.OrdinalIgnoreCase)).ToList();
+                list = operation.Parameters.Where(parameter => string.Equals(identifier, parameter.Name, StringComparison.OrdinalIgnoreCase));
             }
 
-            if (list.Count > 1)
+            IEdmOperationParameter resolvedOperationParameter = null;
+
+            foreach (var parameter in list)
             {
-                throw new ODataException(Strings.UriParserMetadata_MultipleMatchingParametersFound(identifier));
+                if (resolvedOperationParameter == null)
+                {
+                    resolvedOperationParameter = parameter;
+                }
+                else
+                {
+                    throw new ODataException(Strings.UriParserMetadata_MultipleMatchingParametersFound(identifier));
+                }
             }
 
-            if (list.Count == 1)
-            {
-                return list.Single();
-            }
-
-            return null;
+            return resolvedOperationParameter;
         }
 
         internal static ODataUriResolver GetUriResolver(IServiceProvider container)
@@ -438,22 +480,31 @@ namespace Microsoft.OData.UriParser
             return container.GetRequiredService<ODataUriResolver>();
         }
 
-        private static List<T> FindAcrossModels<T>(IEdmModel model, String qualifiedName, bool caseInsensitive) where T : IEdmSchemaElement
+        private static IList<T> FindAcrossModels<T>(IEdmModel model, String qualifiedName, bool caseInsensitive) where T : IEdmSchemaElement
         {
-            List<T> results = FindSchemaElements<T>(model, qualifiedName, caseInsensitive).ToList();
+            IList<T> results = new List<T>();
+            FindSchemaElements<T>(model, qualifiedName, caseInsensitive, ref results);
 
             foreach (IEdmModel reference in model.ReferencedModels)
             {
-                results.AddRange(FindSchemaElements<T>(reference, qualifiedName, caseInsensitive));
+                FindSchemaElements<T>(reference, qualifiedName, caseInsensitive, ref results);
             }
 
             return results;
         }
 
-        private static IEnumerable<T> FindSchemaElements<T>(IEdmModel model, string qualifiedName, bool caseInsensitive) where T : IEdmSchemaElement
+        private static void FindSchemaElements<T>(IEdmModel model, string qualifiedName, bool caseInsensitive, ref IList<T> results) where T : IEdmSchemaElement
         {
-            return model.SchemaElements.OfType<T>()
-            .Where(e => string.Equals(qualifiedName, e.FullName(), caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal));
+            foreach (IEdmSchemaElement schema in model.SchemaElements)
+            {
+                if (string.Equals(qualifiedName, schema.FullName(), caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+                {
+                    if (schema is T)
+                    {
+                        results.Add((T)schema);
+                    }
+                }
+            }
         }
     }
 }

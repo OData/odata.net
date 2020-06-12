@@ -115,7 +115,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
 
                 case EdmTypeKind.Collection:
                     var elementType = GetTypeFromModels((type as IEdmCollectionType).ElementType.Definition.FullTypeName());
-                    result = typeof (List<>).MakeGenericType(new[] {elementType});
+                    result = typeof(List<>).MakeGenericType(new[] { elementType });
                     break;
                 // It seems we never hit here.
                 default:

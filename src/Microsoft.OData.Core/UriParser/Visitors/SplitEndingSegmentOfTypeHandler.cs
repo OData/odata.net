@@ -18,12 +18,12 @@ namespace Microsoft.OData.UriParser
     internal sealed class SplitEndingSegmentOfTypeHandler<T> : PathSegmentHandler where T : ODataPathSegment
     {
         /// <summary>
-        /// Queue contianing first part of ODataPath segment
+        /// Queue containing first part of ODataPath segment
         /// </summary>
         private readonly Queue<ODataPathSegment> first;
 
         /// <summary>
-        /// Queue contianing last part of ODataPath segment
+        /// Queue containing last part of ODataPath segment
         /// </summary>
         private readonly Queue<ODataPathSegment> last;
 

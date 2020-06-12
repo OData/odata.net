@@ -177,7 +177,6 @@ namespace Microsoft.OData.Client
             set { this.httpRequest.Credentials = value; }
         }
 
-#if !PORTABLELIB
         /// <summary>
         /// Gets or sets the timeout (in seconds) for this request.
         /// </summary>
@@ -185,6 +184,15 @@ namespace Microsoft.OData.Client
         {
             get { return this.httpRequest.Timeout; }
             set { this.httpRequest.Timeout = (int)Math.Min(Int32.MaxValue, new TimeSpan(0, 0, value).TotalMilliseconds); }
+        }
+
+        /// <summary>
+        /// Gets or sets the read and write timeout (in seconds) for this request.
+        /// </summary>
+        public override int ReadWriteTimeout
+        {
+            get { return this.httpRequest.ReadWriteTimeout; }
+            set { this.httpRequest.ReadWriteTimeout = (int)Math.Min(Int32.MaxValue, new TimeSpan(0, 0, value).TotalMilliseconds); }
         }
 
         /// <summary>
@@ -196,7 +204,7 @@ namespace Microsoft.OData.Client
             get { return this.httpRequest.SendChunked; }
             set { this.httpRequest.SendChunked = value; }
         }
-#endif
+
         #endregion
 
         /// <summary>
@@ -324,13 +332,16 @@ namespace Microsoft.OData.Client
         /// <returns>A System.Net.WebResponse that contains the response from the Internet resource.</returns>
         public override IODataResponseMessage GetResponse()
         {
+
             try
             {
                 HttpWebResponse httpResponse = (HttpWebResponse)this.httpRequest.GetResponse();
+                //throw new Exception("oooo test");
                 return new HttpWebResponseMessage(httpResponse);
             }
             catch (WebException webException)
             {
+                //throw new Exception("pppp test" +this.httpRequest.Address+" "+webException.Message);
                 throw ConvertToDataServiceWebException(webException);
             }
         }
@@ -576,5 +587,14 @@ namespace Microsoft.OData.Client
 
             return new DataServiceTransportException(errorResponseMessage, webException);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        //public override IODataResponseMessage GetResponse()
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

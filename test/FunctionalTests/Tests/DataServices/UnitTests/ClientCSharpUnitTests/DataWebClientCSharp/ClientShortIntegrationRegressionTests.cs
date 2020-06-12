@@ -229,7 +229,7 @@ namespace AstoriaUnitTests.Tests
             odataResponseMessage.SetHeader("Content-Type", "0");
 
             DataServiceContextWithCustomTransportLayer context = new DataServiceContextWithCustomTransportLayer(ODataProtocolVersion.V4, () => odataRequestMessage, () => odataResponseMessage);
-
+            context.Format.UseJson(new EdmModel());
             Action test = () => context.CreateQuery<SimpleNorthwind.Product>("Products").ToList();
             test.ShouldThrow<DataServiceQueryException>().WithInnerMessage("NotModified");
         }

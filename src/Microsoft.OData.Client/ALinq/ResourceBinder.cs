@@ -34,7 +34,7 @@ namespace Microsoft.OData.Client
 
         private const string ExpandMethodName = "Expand";
 
-        private const string IncludeTotalCountMethodName = "IncludeTotalCount";
+        private const string IncludeCountMethodName = "IncludeCount";
 
         /// <summary>
         /// The associated DataServiceContext instance. DevNote(shank): this is used for determining
@@ -320,6 +320,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="target">Target set.</param>
         /// <param name="predicates">Candidate predicates.</param>
+        /// <param name="edmModel">edm model.</param>
         /// <param name="nonKeyPredicates">Returns list of non-key predicates.</param>
         /// <returns>List of key predicates if found, otherwise null</returns>
         private static List<Expression> ExtractKeyPredicate(
@@ -401,7 +402,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>Adds all AND'ed expressions to the specified <paramref name="conjuncts"/> list.</summary>
         /// <param name="e">Expression to recursively add conjuncts from.</param>
-        /// <param name="conjuncts">Target list of conjucts.</param>
+        /// <param name="conjuncts">Target list of conjuncts.</param>
         private static void AddConjuncts(Expression e, List<Expression> conjuncts)
         {
             Debug.Assert(conjuncts != null, "conjuncts != null");
@@ -657,7 +658,7 @@ namespace Microsoft.OData.Client
         /// <param name="navPropRef">The navigation property reference to analyze</param>
         /// <param name="context">Data service context instance</param>
         /// <param name="result">The resource set expression</param>
-        /// <returns>true if succesful, else false</returns>
+        /// <returns>true if successful, else false</returns>
         private static bool TryAnalyzeSelectManyCollector(ResourceExpression input, Expression navPropRef, DataServiceContext context, out QueryableResourceExpression result)
         {
             MethodCallExpression call = StripTo<MethodCallExpression>(navPropRef);
@@ -1036,7 +1037,7 @@ namespace Microsoft.OData.Client
 
             if (((string)name.Value).Trim() == UriHelper.DOLLARSIGN + UriHelper.OPTIONEXPAND)
             {
-                // if the user is setting $expand option, need to merge with other existing expand paths that may have been alredy added
+                // if the user is setting $expand option, need to merge with other existing expand paths that may have been already added
                 // check for allow expansion
                 ValidationRules.RequireCanExpand(re);
                 re.ExpandPaths = re.ExpandPaths.Union(new string[] { (string)value.Value }, StringComparer.Ordinal).ToList();
@@ -1050,7 +1051,7 @@ namespace Microsoft.OData.Client
             return re;
         }
 
-        private static Expression AnalyzeAddCountOption(MethodCallExpression mce, CountOption countOption)
+        private static Expression AnalyzeAddCountOption(MethodCallExpression mce)
         {
             Expression obj = StripConvert(mce.Object, null);
             QueryableResourceExpression rse = obj as QueryableResourceExpression;
@@ -1061,7 +1062,16 @@ namespace Microsoft.OData.Client
 
             ValidationRules.RequireCanAddCount(rse);
             rse.ConvertKeyToFilterExpression();
-            rse.CountOption = countOption;
+
+            ConstantExpression countQueryOption = StripTo<ConstantExpression>(mce.Arguments[0]);
+            if ((bool)countQueryOption.Value == true)
+            {
+                rse.CountOption = CountOption.CountQueryTrue;
+            }
+            else
+            {
+                rse.CountOption = CountOption.CountQueryFalse;
+            }
 
             return rse;
         }
@@ -1167,7 +1177,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Strips the specifed <paramref name="expression"/> of intermediate
+        /// Strips the specified <paramref name="expression"/> of intermediate
         /// expression (unnecessary converts and quotes) and returns
         /// the underlying expression of type T (or null if it's not of that type).
         /// </summary>
@@ -1191,7 +1201,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Strips the specifed <paramref name="expression"/> of intermediate unnecessary converts
+        /// Strips the specified <paramref name="expression"/> of intermediate unnecessary converts
         /// and quotes, and returns the underlying expression of type T (or null if it's not of that type).
         /// </summary>
         /// <typeparam name="T">Type of expression to return.</typeparam>
@@ -1315,9 +1325,13 @@ namespace Microsoft.OData.Client
 
             ValidationRules.RequireCanAddCount(rse);
             rse.ConvertKeyToFilterExpression();
-            rse.CountOption = CountOption.CountSegment;
 
-            return rse;
+            //Create a copy of ResourceExpression to prevent carrying over 
+            //of count an longcount functions to subsequent queries.
+            QueryableResourceExpression rseCopy = rse.CreateCloneResourceExpression() as QueryableResourceExpression;
+            rseCopy.CountOption = CountOption.CountSegment;
+
+            return rseCopy;
         }
 
         private static void AddSequenceQueryOption(ResourceExpression target, QueryOptionExpression qoe)
@@ -1405,7 +1419,7 @@ namespace Microsoft.OData.Client
             Expression e;
 
             // check first to see if projection (not a navigation) so that func does recursively analyze selector
-            // Currently the patterns being looked for in the selector are mutually exclusive from naviagtion patterns looked at later.
+            // Currently the patterns being looked for in the selector are mutually exclusive from navigation patterns looked at later.
             SequenceMethod sequenceMethod;
             if (ReflectionUtil.TryIdentifySequenceMethod(mce.Method, out sequenceMethod))
             {
@@ -1500,9 +1514,9 @@ namespace Microsoft.OData.Client
                     {
                         return AnalyzeAddCustomQueryOption(mce);
                     }
-                    if (mce.Method.Name == IncludeTotalCountMethodName && mce.Method.DeclaringType == t)
+                    if (mce.Method.Name == IncludeCountMethodName && mce.Method.DeclaringType == t)
                     {
-                        return AnalyzeAddCountOption(mce, CountOption.CountQuery);
+                        return AnalyzeAddCountOption(mce);
                     }
                     else
                     {
@@ -1548,7 +1562,7 @@ namespace Microsoft.OData.Client
         ///
         /// - Return true/false for matches, and interesting matched information in out parameters.
         ///
-        /// - If one of the inputs to be matched undergoes "skipping" for unnecesary converts,
+        /// - If one of the inputs to be matched undergoes "skipping" for unnecessary converts,
         ///   return the same member as an out parameter. This forces callers to be aware that
         ///   they should use the more precise representation for computation (without having
         ///   to rely on a normalization step).
@@ -1586,7 +1600,7 @@ namespace Microsoft.OData.Client
             /// <returns>true if the expression is a match; false otherwise.</returns>
             /// <remarks>
             /// This method strip .Call methods because it's currently used only
-            /// to supporte .SelectMany() collector selectors. If this method
+            /// to support .SelectMany() collector selectors. If this method
             /// is reused for other purposes, this behavior should be made
             /// conditional or factored out.
             /// </remarks>
@@ -1809,11 +1823,9 @@ namespace Microsoft.OData.Client
                 // Call Order: Do not short circuit the get key properties call
                 // in V1 we will always call this for memberaccess expr, and thus always create a client type.
                 // There are certain types that we don't support and this could be throwing.
-#if PORTABLELIB
-                Type resourceType = pi.DeclaringType;
-#else
+
                 Type resourceType = pi.ReflectedType;
-#endif
+
                 if ((ClientTypeUtil.GetKeyPropertiesOnType(resourceType) ?? ClientTypeUtil.EmptyPropertyInfoArray).Contains(pi, PropertyInfoEqualityComparer.Instance) && boundTarget is InputReferenceExpression)
                 {
                     property = pi;
@@ -1860,7 +1872,7 @@ namespace Microsoft.OData.Client
             }
 
             /// <summary>
-            /// Checks whether the specifed <paramref name="expression"/> refers to a resource.
+            /// Checks whether the specified <paramref name="expression"/> refers to a resource.
             /// </summary>
             /// <param name="expression">Expression to check.</param>
             /// <param name="resource">Resource expression if successful.</param>
@@ -1916,7 +1928,7 @@ namespace Microsoft.OData.Client
             /// <param name="input">Input expression (source) for the selector.</param>
             /// <param name="selector">Selector lambda.</param>
             /// <param name="context">Data service context</param>
-            /// <returns>true if the selector's body looks like [input's transparent scope].[accesor].</returns>
+            /// <returns>true if the selector's body looks like [input's transparent scope].[accessor].</returns>
             internal static bool MatchTransparentIdentitySelector(Expression input, LambdaExpression selector, DataServiceContext context)
             {
                 if (selector.Parameters.Count != 1)
@@ -1953,7 +1965,7 @@ namespace Microsoft.OData.Client
             }
 
             /// <summary>
-            /// Checks wheter the specified lambda matches a selector that yields
+            /// Checks whether the specified lambda matches a selector that yields
             /// a transparent identifier.
             /// </summary>
             /// <param name="input">
@@ -2088,7 +2100,7 @@ namespace Microsoft.OData.Client
                     }
                 }
 
-                // Transparent identifers should add at least one new range variable.
+                // Transparent identifiers should add at least one new range variable.
                 if (introducedMemberIndex == -1)
                 {
                     return false;
@@ -2458,7 +2470,7 @@ namespace Microsoft.OData.Client
             /// <param name="argument">Argument to match.</param>
             /// <param name="expressions">Candidate parameters.</param>
             /// <returns>
-            /// true if the argument is a parmater or a member from a
+            /// true if the argument is a parameter or a member from a
             /// parameter; false otherwise.
             /// </returns>
             private static bool ExpressionIsSimpleAccess(Expression argument, ReadOnlyCollection<ParameterExpression> expressions)
@@ -2492,7 +2504,7 @@ namespace Microsoft.OData.Client
             /// (possibly quoted).
             /// </summary>
             /// <param name="expression">Expression to match.</param>
-            /// <param name="parameterCount">Expected number of parametrs.</param>
+            /// <param name="parameterCount">Expected number of parameters.</param>
             /// <param name="lambda">If the expression matches, the lambda with the two parameters.</param>
             /// <returns>true if the expression is a lambda with parameterCount parameters.</returns>
             private static bool MatchNaryLambda(Expression expression, int parameterCount, out LambdaExpression lambda)
@@ -2520,7 +2532,7 @@ namespace Microsoft.OData.Client
                 /// <summary>Whether the expression analyzed matches a null check pattern.</summary>
                 internal bool Match;
 
-                /// <summary>Expression being checked againt null.</summary>
+                /// <summary>Expression being checked against null.</summary>
                 internal Expression TestToNullExpression;
             }
 
@@ -2685,7 +2697,7 @@ namespace Microsoft.OData.Client
                                 ThrowNotSupportedExceptionForTheFormatOption();
                                 break;
                             default:
-                                throw new NotSupportedException(Strings.ALinq_CantAddQueryOptionStartingWithDollarSign(name));
+                                throw new NotSupportedException(Strings.ALinq_QueryOptionNotSupported(name));
                         }
                     }
                 }
@@ -2877,11 +2889,9 @@ namespace Microsoft.OData.Client
                         {
                             foundInstance = unaryInstance.Operand;
                         }
-#if PORTABLELIB
-                        Type resourceType = propertyMember.Member.DeclaringType;
-#else
+
                         Type resourceType = propertyMember.Member.ReflectedType;
-#endif
+
                         if (foundInstance == le.Parameters[0] && ClientTypeUtil.TypeOrElementTypeIsEntity(resourceType))
                         {
                             Debug.Assert(propertyPath != null, "propertyPath != null");
