@@ -177,7 +177,6 @@ namespace Microsoft.OData.Client
             set { this.httpRequest.Credentials = value; }
         }
 
-#if !PORTABLELIB
         /// <summary>
         /// Gets or sets the timeout (in seconds) for this request.
         /// </summary>
@@ -185,6 +184,15 @@ namespace Microsoft.OData.Client
         {
             get { return this.httpRequest.Timeout; }
             set { this.httpRequest.Timeout = (int)Math.Min(Int32.MaxValue, new TimeSpan(0, 0, value).TotalMilliseconds); }
+        }
+
+        /// <summary>
+        /// Gets or sets the read and write timeout (in seconds) for this request.
+        /// </summary>
+        public override int ReadWriteTimeout
+        {
+            get { return this.httpRequest.ReadWriteTimeout; }
+            set { this.httpRequest.ReadWriteTimeout = (int)Math.Min(Int32.MaxValue, new TimeSpan(0, 0, value).TotalMilliseconds); }
         }
 
         /// <summary>
@@ -196,7 +204,7 @@ namespace Microsoft.OData.Client
             get { return this.httpRequest.SendChunked; }
             set { this.httpRequest.SendChunked = value; }
         }
-#endif
+
         #endregion
 
         /// <summary>

@@ -61,12 +61,15 @@ namespace Microsoft.OData.Client
         /// </summary>
         public abstract ICredentials Credentials { get; set; }
 
-#if !PORTABLELIB
         /// <summary>
         /// Gets or sets the timeout (in seconds) for this request.
         /// </summary>
         public abstract int Timeout { get; set; }
-#endif
+
+        /// <summary>
+        /// Gets or sets the read and write timeout (in seconds) for this request.
+        /// </summary>
+        public abstract int ReadWriteTimeout { get; set; }
 
         /// <summary>
         /// Gets or sets a value that indicates whether to send data in segments to the

@@ -112,10 +112,11 @@ namespace Microsoft.OData.Client
         /// <summary>resolve typename from a type</summary>
         private Func<string, Type> resolveType;
 
-#if !PORTABLELIB // Timeout not available
         /// <summary>time-out value in seconds, 0 for default</summary>
         private int timeout;
-#endif
+
+        /// <summary>read or write time-out value in seconds, 0 for default</summary>
+        private int readWriteTimeout;
         /// <summary>whether to use post-tunneling for PUT/DELETE</summary>
         private bool postTunneling;
 
@@ -480,7 +481,6 @@ namespace Microsoft.OData.Client
             set { this.resolveType = value; }
         }
 
-#if !PORTABLELIB // Timeout not available
         /// <summary>Gets or sets the time-out option (in seconds) that is used for the underlying HTTP request to the data service.</summary>
         /// <returns>An integer that indicates the time interval (in seconds) before time-out of a service request.</returns>
         /// <remarks>
@@ -507,7 +507,33 @@ namespace Microsoft.OData.Client
                 this.timeout = value;
             }
         }
-#endif
+
+        /// <summary>Gets or sets the readwrite time-out option (in seconds) that is used for the underlying HTTP request to the data service.</summary>
+        /// <returns>An integer that indicates the time interval (in seconds) before readwritetime-out of a service request.</returns>
+        /// <remarks>
+        /// A value of 0 will use the default readwritetimeout of the underlying HTTP request.
+        /// This value must be set before executing any query or update operations against
+        /// the target data service for it to have effect on the on the request.
+        /// The value may be changed between requests to a data service and the new value
+        /// will be picked up by the next data service request.
+        /// </remarks>
+        public virtual int ReadWriteTimeout
+        {
+            get
+            {
+                return this.readWriteTimeout;
+            }
+
+            set
+            {
+                if (value < 0)
+                {
+                    throw Error.ArgumentOutOfRange("ReadWriteTimeout");
+                }
+
+                this.readWriteTimeout = value;
+            }
+        }
 
         /// <summary>Gets or sets a Boolean value that indicates whether to use post tunneling.</summary>
         /// <returns>A Boolean value that indicates whether to use post tunneling.</returns>
