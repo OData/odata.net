@@ -7,6 +7,7 @@
 namespace Microsoft.OData.Client
 {
     using System;
+    using System.Collections.Generic;
 
 
     /// <summary>
@@ -47,6 +48,15 @@ namespace Microsoft.OData.Client
 
         /// <summary>State of the modified entity or link.</summary>
         private EntityStates state;
+
+        /// <summary>DependsOnIds for the modified entity.</summary>
+        private List<string> dependsOnIds;
+
+        /// <summary>DependsOnChangeSetIds for the modified entity.</summary>
+        private List<string> dependsOnChangeSetIds;
+
+        /// <summary>ChangeSetId for the modified entity.</summary>
+        private string changeSetId;
 
         #endregion
 
@@ -123,6 +133,27 @@ namespace Microsoft.OData.Client
 
                 return (EntityStates.Unchanged != this.state);
             }
+        }
+
+        /// <summary>DependsOnIds for the modified entity.</summary>
+        internal List<string> DependsOnIds
+        {
+            get { return this.dependsOnIds; }
+            set { this.dependsOnIds = value; }
+        }
+
+        /// <summary>DependsOnChangeSetIds for the modified entity.</summary>
+        internal List<string> DependsOnChangeSetIds
+        {
+            get { return this.dependsOnChangeSetIds; }
+            set { this.dependsOnChangeSetIds = value; }
+        }
+
+        /// <summary>ChangeSetId for the modified entity.</summary>
+        internal string ChangeSetId
+        {
+            get { return this.changeSetId; }
+            set { this.changeSetId = value; }
         }
 
         #endregion

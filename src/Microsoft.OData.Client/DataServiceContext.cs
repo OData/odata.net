@@ -16,6 +16,7 @@ namespace Microsoft.OData.Client
     using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Linq.Expressions;
@@ -2560,11 +2561,29 @@ namespace Microsoft.OData.Client
 
         /// <summary>Changes the state of the specified object in the <see cref="Microsoft.OData.Client.DataServiceContext" /> to <see cref="Microsoft.OData.Client.EntityStates.Modified" />.</summary>
         /// <param name="entity">The tracked entity to be assigned to the <see cref="Microsoft.OData.Client.EntityStates.Modified" /> state.</param>
+        /// <param name="dependsOnIds">DependsOnIds for the modified entity.</param>
         /// <exception cref="System.ArgumentNullException">When <paramref name="entity" /> is null.</exception>
         /// <exception cref="System.ArgumentException">When <paramref name="entity" /> is in the <see cref="Microsoft.OData.Client.EntityStates.Detached" /> state.</exception>
+        public virtual void UpdateObject(object entity, params object[] dependsOnIds)
+        {
+            var dependsOn = new List<string>();
+            if(dependsOnIds != null)
+            {
+                foreach(var id in dependsOnIds)
+                {
+                    dependsOn.Add(id.ToString());
+                }
+            }
+            this.UpdateObjectInternal(entity, false /*failIfNotUnchanged*/, dependsOn.Count>0 ? dependsOn:null);
+        }
+
+        /// <summary>Changes the state of the specified object in the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> to <see cref="F:Microsoft.OData.Client.EntityStates.Modified" />.</summary>
+        /// <param name="entity">The tracked entity to be assigned to the <see cref="F:Microsoft.OData.Client.EntityStates.Modified" /> state.</param>
+        /// <exception cref="T:System.ArgumentNullException">When <paramref name="entity" /> is null.</exception>
+        /// <exception cref="T:System.ArgumentException">When <paramref name="entity" /> is in the <see cref="F:Microsoft.OData.Client.EntityStates.Detached" /> state.</exception>
         public virtual void UpdateObject(object entity)
         {
-            this.UpdateObjectInternal(entity, false /*failIfNotUnchanged*/);
+            this.UpdateObject(entity, null);
         }
 
         /// <summary>Update a related object to the context.</summary>
@@ -3871,10 +3890,11 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="entity">entity to be mark for update</param>
         /// <param name="failIfNotUnchanged">If true, then an exception should be thrown if the entity is in neither the unchanged nor modified states.</param>
+        /// <param name="dependsOnIds">DependsOnIds for the modified entity.</param>
         /// <exception cref="ArgumentNullException">if entity is null</exception>
         /// <exception cref="ArgumentException">if entity is detached</exception>
         /// <exception cref="InvalidOperationException">if entity is not unchanged or modified and <paramref name="failIfNotUnchanged"/> is true.</exception>
-        private void UpdateObjectInternal(object entity, bool failIfNotUnchanged)
+        private void UpdateObjectInternal(object entity, bool failIfNotUnchanged, List<string> dependsOnIds)
         {
             Util.CheckArgumentNull(entity, "entity");
 
@@ -3899,8 +3919,48 @@ namespace Microsoft.OData.Client
                 return;
             }
 
+            if(dependsOnIds != null)
+            {
+                //In DataServiceContext.UpdateObject, we pass entity Id(s) as dependsOnIds.
+                //We will extract ChangeOrder from the entity descriptor based on the Id.
+                //This is because we pass the ChangeOrder as Content-ID to the batch writer.
+                //We will pass the Content-ID(s) as dependsOnIds to the batch writer.
+                var dependsOnIdsAsChangeOrders = new List<string>();
+                var dependsOnChangeSetIds = new List<string>();
+                foreach (var dependOnId in dependsOnIds)
+                {
+                    foreach (var entityDescriptor in this.EntityTracker.Entities)
+                    {
+                        var e = (object)entityDescriptor.Entity;
+                        var id = e.GetType().GetProperty("Id").GetValue(e, null);
+                        if(dependOnId == id.ToString())
+                        {
+                            var changeOrder = entityDescriptor.ChangeOrder;
+                            dependsOnIdsAsChangeOrders.Add(changeOrder.ToString(CultureInfo.CurrentCulture));
+                            dependsOnChangeSetIds.Add(entityDescriptor.ChangeSetId);
+                        }
+                    }
+                }
+                resource.DependsOnIds = dependsOnIdsAsChangeOrders;
+                resource.DependsOnChangeSetIds = dependsOnChangeSetIds.Distinct().ToList();
+            }
+
             resource.State = EntityStates.Modified;
+            resource.ChangeSetId = Guid.NewGuid().ToString();
             this.entityTracker.IncrementChange(resource);
+        }
+
+        /// <summary>
+        /// Mark an existing object for update in the context.
+        /// </summary>
+        /// <param name="entity">entity to be mark for update</param>
+        /// <param name="failIfNotUnchanged">If true, then an exception should be thrown if the entity is in neither the unchanged nor modified states.</param>
+        /// <exception cref="ArgumentNullException">if entity is null</exception>
+        /// <exception cref="ArgumentException">if entity is detached</exception>
+        /// <exception cref="InvalidOperationException">if entity is not unchanged or modified and <paramref name="failIfNotUnchanged"/> is true.</exception>
+        private void UpdateObjectInternal(object entity, bool failIfNotUnchanged)
+        {
+            this.UpdateObjectInternal(entity, failIfNotUnchanged, null);
         }
 
         /// <summary>
