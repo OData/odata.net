@@ -370,12 +370,27 @@ namespace Microsoft.OData.Client
 
                     for (int i = 0; i < this.ChangedEntries.Count; ++i)
                     {
+                        Descriptor descriptor = this.ChangedEntries[i];
+
                         if (Util.IsBatchWithIndependentOperations(this.Options))
                         {
-                            this.batchWriter.WriteStartChangeset();
+                            if(descriptor.ChangeSetId != null)
+                            {
+                                this.batchWriter.WriteStartChangeset(descriptor.ChangeSetId);
+                            }
+                            else
+                            {
+                                this.batchWriter.WriteStartChangeset();
+                            }
                         }
 
-                        Descriptor descriptor = this.ChangedEntries[i];
+                        // In BatchWithIndependentOperations, we use atomicityGroup(in this case changeSetId)
+                        // as the dependsOn property
+                        if(descriptor.DependsOnIds != null && Util.IsBatchWithIndependentOperations(this.Options))
+                        {
+                            descriptor.DependsOnIds = descriptor.DependsOnChangeSetIds;
+                        }
+
                         if (descriptor.ContentGeneratedForSave)
                         {
                             continue;
