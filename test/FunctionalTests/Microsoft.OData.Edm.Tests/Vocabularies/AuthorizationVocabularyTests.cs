@@ -166,8 +166,8 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
 
             Assert.Equal(2, referencedModels.Count());
 
-            Assert.True(referencedModels.Contains(EdmCoreModel.Instance));
-            Assert.True(referencedModels.Contains(CoreVocabularyModel.Instance));
+            Assert.Contains(EdmCoreModel.Instance, referencedModels);
+            Assert.Contains(CoreVocabularyModel.Instance, referencedModels);
         }
 
         [Fact]

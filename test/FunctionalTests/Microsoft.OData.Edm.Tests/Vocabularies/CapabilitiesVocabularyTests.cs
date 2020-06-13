@@ -764,10 +764,10 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
 
             Assert.Equal(4, referencedModels.Count());
 
-            Assert.True(referencedModels.Contains(EdmCoreModel.Instance));
-            Assert.True(referencedModels.Contains(CoreVocabularyModel.Instance));
-            Assert.True(referencedModels.Contains(ValidationVocabularyModel.Instance));
-            Assert.True(referencedModels.Contains(AuthorizationVocabularyModel.Instance));
+            Assert.Contains(EdmCoreModel.Instance, referencedModels);
+            Assert.Contains(CoreVocabularyModel.Instance, referencedModels);
+            Assert.Contains(ValidationVocabularyModel.Instance, referencedModels);
+            Assert.Contains(AuthorizationVocabularyModel.Instance, referencedModels);
         }
 
         [Theory]
