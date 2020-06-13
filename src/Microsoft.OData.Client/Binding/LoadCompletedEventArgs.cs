@@ -11,7 +11,7 @@ namespace Microsoft.OData.Client
     using System.ComponentModel;
     #endregion Namespaces.
 
-    /// <summary>Used as the <see cref="T:System.EventArgs" /> class for the <see cref="E:Microsoft.OData.Service.Client.DataServiceCollection`1.LoadCompleted" /> event.Supported only by the WCF Data Services 5.0 client for Silverlight.</summary>
+    /// <summary>Used as the <see cref="System.EventArgs" /> class for the <see cref="Microsoft.OData.Service.Client.DataServiceCollection`1.LoadCompleted" /> event.Supported only by the WCF Data Services 5.0 client for Silverlight.</summary>
     public sealed class LoadCompletedEventArgs : AsyncCompletedEventArgs
     {
         /// <summary>The <see cref="QueryOperationResponse"/> which represents
@@ -46,7 +46,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Gets the response to an asynchronous load operation.Supported only by the WCF Data Services 5.0 client for Silverlight.</summary>
-        /// <returns>A <see cref="T:Microsoft.OData.Service.Client.QueryOperationResponse" /> that represents the response to a load operation.</returns>
+        /// <returns>A <see cref="Microsoft.OData.Service.Client.QueryOperationResponse" /> that represents the response to a load operation.</returns>
         /// <remarks>Accessing this property will throw exception if the Load operation failed
         /// or it was canceled.</remarks>
         public QueryOperationResponse QueryOperationResponse

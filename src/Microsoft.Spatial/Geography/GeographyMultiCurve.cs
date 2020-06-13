@@ -9,7 +9,7 @@ namespace Microsoft.Spatial
     /// <summary>Represents the multi-curve of geography.</summary>
     public abstract class GeographyMultiCurve : GeographyCollection
     {
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.Spatial.GeographyMultiCurve" /> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.Spatial.GeographyMultiCurve" /> class.</summary>
         /// <param name="coordinateSystem">The coordinate system of this instance.</param>
         /// <param name="creator">The implementation that created this instance.</param>
         protected GeographyMultiCurve(CoordinateSystem coordinateSystem, SpatialImplementation creator)

@@ -11,7 +11,7 @@ namespace Microsoft.OData.Client
     /// <summary>Represents additional metadata that is included in a request message to WCF Data Services.</summary>
     public class DataServiceRequestArgs
     {
-        /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.Client.DataServiceRequestArgs" /> class.</summary>
+        /// <summary>Creates a new instance of the <see cref="Microsoft.OData.Client.DataServiceRequestArgs" /> class.</summary>
         public DataServiceRequestArgs()
         {
             this.HeaderCollection = new HeaderCollection();

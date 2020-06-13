@@ -76,14 +76,14 @@ namespace Microsoft.OData
         /// <summary>The context information for the message.</summary>
         private ODataMessageInfo messageInfo;
 
-        /// <summary> Creates a new <see cref="T:Microsoft.OData.ODataMessageWriter" /> for the given request message. </summary>
+        /// <summary> Creates a new <see cref="Microsoft.OData.ODataMessageWriter" /> for the given request message. </summary>
         /// <param name="requestMessage">The request message for which to create the writer.</param>
         public ODataMessageWriter(IODataRequestMessage requestMessage)
             : this(requestMessage, null)
         {
         }
 
-        /// <summary> Creates a new <see cref="T:Microsoft.OData.ODataMessageWriter" /> for the given request message and message writer settings. </summary>
+        /// <summary> Creates a new <see cref="Microsoft.OData.ODataMessageWriter" /> for the given request message and message writer settings. </summary>
         /// <param name="requestMessage">The request message for which to create the writer.</param>
         /// <param name="settings">The message writer settings to use for writing the message payload.</param>
         public ODataMessageWriter(IODataRequestMessage requestMessage, ODataMessageWriterSettings settings)
@@ -115,14 +115,14 @@ namespace Microsoft.OData
             this.settings.ShouldIncludeAnnotation = AnnotationFilter.CreateIncludeAllFilter().Matches;
         }
 
-        /// <summary> Creates a new <see cref="T:Microsoft.OData.ODataMessageWriter" /> for the given response message. </summary>
+        /// <summary> Creates a new <see cref="Microsoft.OData.ODataMessageWriter" /> for the given response message. </summary>
         /// <param name="responseMessage">The response message for which to create the writer.</param>
         public ODataMessageWriter(IODataResponseMessage responseMessage)
             : this(responseMessage, null)
         {
         }
 
-        /// <summary> Creates a new <see cref="T:Microsoft.OData.ODataMessageWriter" /> for the given response message and message writer settings. </summary>
+        /// <summary> Creates a new <see cref="Microsoft.OData.ODataMessageWriter" /> for the given response message and message writer settings. </summary>
         /// <param name="responseMessage">The response message for which to create the writer.</param>
         /// <param name="settings">The message writer settings to use for writing the message payload.</param>
         public ODataMessageWriter(IODataResponseMessage responseMessage, ODataMessageWriterSettings settings)
@@ -169,7 +169,7 @@ namespace Microsoft.OData
             }
         }
 
-        /// <summary> Creates an <see cref="T:Microsoft.OData.ODataAsyncWriter" /> to write an async response. </summary>
+        /// <summary> Creates an <see cref="Microsoft.OData.ODataAsyncWriter" /> to write an async response. </summary>
         /// <returns>The created writer.</returns>
         public ODataAsynchronousWriter CreateODataAsynchronousWriter()
         {
@@ -179,7 +179,7 @@ namespace Microsoft.OData
                 context => context.CreateODataAsynchronousWriter());
         }
 
-        /// <summary> Creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a resource set. </summary>
+        /// <summary> Creates an <see cref="Microsoft.OData.ODataWriter" /> to write a resource set. </summary>
         /// <returns>The created writer.</returns>
         public ODataWriter CreateODataResourceSetWriter()
         {
@@ -211,7 +211,7 @@ namespace Microsoft.OData
         }
 
 
-        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.ODataAsyncWriter" /> to write an async response. </summary>
+        /// <summary> Asynchronously creates an <see cref="Microsoft.OData.ODataAsyncWriter" /> to write an async response. </summary>
         /// <returns>A running task for the created writer.</returns>
         public Task<ODataAsynchronousWriter> CreateODataAsynchronousWriterAsync()
         {
@@ -221,7 +221,7 @@ namespace Microsoft.OData
                 (context) => context.CreateODataAsynchronousWriterAsync());
         }
 
-        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a resource set. </summary>
+        /// <summary> Asynchronously creates an <see cref="Microsoft.OData.ODataWriter" /> to write a resource set. </summary>
         /// <returns>A running task for the created writer.</returns>
         public Task<ODataWriter> CreateODataResourceSetWriterAsync()
         {
@@ -252,7 +252,7 @@ namespace Microsoft.OData
                 (context) => context.CreateODataResourceSetWriterAsync(entitySet, structuredType));
         }
 
-        /// <summary> Creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a delta resource set. </summary>
+        /// <summary> Creates an <see cref="Microsoft.OData.ODataWriter" /> to write a delta resource set. </summary>
         /// <returns>The created writer.</returns>
         public ODataWriter CreateODataDeltaResourceSetWriter()
         {
@@ -285,7 +285,7 @@ namespace Microsoft.OData
 
 
 
-        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a delta resource set. </summary>
+        /// <summary> Asynchronously creates an <see cref="Microsoft.OData.ODataWriter" /> to write a delta resource set. </summary>
         /// <returns>A running task for the created writer.</returns>
         public Task<ODataWriter> CreateODataDeltaResourceSetWriterAsync()
         {
@@ -347,7 +347,7 @@ namespace Microsoft.OData
                 (context) => context.CreateODataDeltaWriterAsync(entitySet, entityType));
         }
 
-        /// <summary> Creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a resource. </summary>
+        /// <summary> Creates an <see cref="Microsoft.OData.ODataWriter" /> to write a resource. </summary>
         /// <returns>The created writer.</returns>
         public ODataWriter CreateODataResourceWriter()
         {
@@ -379,7 +379,7 @@ namespace Microsoft.OData
         }
 
 
-        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a resource. </summary>
+        /// <summary> Asynchronously creates an <see cref="Microsoft.OData.ODataWriter" /> to write a resource. </summary>
         /// <returns>A running task for the created writer.</returns>
         public Task<ODataWriter> CreateODataResourceWriterAsync()
         {
@@ -468,7 +468,7 @@ namespace Microsoft.OData
                 (context) => context.CreateODataUriParameterResourceSetWriterAsync(entitySetBase, resourceType));
         }
 
-        /// <summary> Creates an <see cref="T:Microsoft.OData.ODataCollectionWriter" /> to write a collection of primitive or complex values (as result of a service operation invocation). </summary>
+        /// <summary> Creates an <see cref="Microsoft.OData.ODataCollectionWriter" /> to write a collection of primitive or complex values (as result of a service operation invocation). </summary>
         /// <returns>The created collection writer.</returns>
         public ODataCollectionWriter CreateODataCollectionWriter()
         {
@@ -489,7 +489,7 @@ namespace Microsoft.OData
         }
 
 
-        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.ODataCollectionWriter" /> to write a collection of primitive or complex values (as result of a service operation invocation). </summary>
+        /// <summary> Asynchronously creates an <see cref="Microsoft.OData.ODataCollectionWriter" /> to write a collection of primitive or complex values (as result of a service operation invocation). </summary>
         /// <returns>A running task for the created collection writer.</returns>
         public Task<ODataCollectionWriter> CreateODataCollectionWriterAsync()
         {
@@ -509,7 +509,7 @@ namespace Microsoft.OData
                 (context) => context.CreateODataCollectionWriterAsync(itemTypeReference));
         }
 
-        /// <summary> Creates an <see cref="T:Microsoft.OData.ODataBatchWriter" /> to write a batch of requests or responses. </summary>
+        /// <summary> Creates an <see cref="Microsoft.OData.ODataBatchWriter" /> to write a batch of requests or responses. </summary>
         /// <returns>The created batch writer.</returns>
         public ODataBatchWriter CreateODataBatchWriter()
         {
@@ -520,7 +520,7 @@ namespace Microsoft.OData
         }
 
 
-        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.ODataBatchWriter" /> to write a batch of requests or responses. </summary>
+        /// <summary> Asynchronously creates an <see cref="Microsoft.OData.ODataBatchWriter" /> to write a batch of requests or responses. </summary>
         /// <returns>A running task for the created batch writer.</returns>
         public Task<ODataBatchWriter> CreateODataBatchWriterAsync()
         {
@@ -579,7 +579,7 @@ namespace Microsoft.OData
                 (context) => context.WriteServiceDocumentAsync(serviceDocument));
         }
 
-        /// <summary> Writes an <see cref="T:Microsoft.OData.ODataProperty" /> as the message payload. </summary>
+        /// <summary> Writes an <see cref="Microsoft.OData.ODataProperty" /> as the message payload. </summary>
         /// <param name="property">The property to write.</param>
         public void WriteProperty(ODataProperty property)
         {
@@ -590,7 +590,7 @@ namespace Microsoft.OData
         }
 
 
-        /// <summary> Asynchronously writes an <see cref="T:Microsoft.OData.ODataProperty" /> as the message payload. </summary>
+        /// <summary> Asynchronously writes an <see cref="Microsoft.OData.ODataProperty" /> as the message payload. </summary>
         /// <returns>A task representing the asynchronous operation of writing the property.</returns>
         /// <param name="property">The property to write</param>
         public Task WritePropertyAsync(ODataProperty property)
@@ -601,7 +601,7 @@ namespace Microsoft.OData
                 (context) => context.WritePropertyAsync(property));
         }
 
-        /// <summary> Writes an <see cref="T:Microsoft.OData.ODataError" /> as the message payload. </summary>
+        /// <summary> Writes an <see cref="Microsoft.OData.ODataError" /> as the message payload. </summary>
         /// <param name="error">The error to write.</param>
         /// <param name="includeDebugInformation"> A flag indicating whether debug information (for example, the inner error from the <paramref name="error" />) should be included in the payload. This should only be used in debug scenarios. </param>
         public void WriteError(ODataError error, bool includeDebugInformation)
@@ -626,7 +626,7 @@ namespace Microsoft.OData
         }
 
 
-        /// <summary> Asynchronously writes an <see cref="T:Microsoft.OData.ODataError" /> as the message payload. </summary>
+        /// <summary> Asynchronously writes an <see cref="Microsoft.OData.ODataError" /> as the message payload. </summary>
         /// <returns>A task representing the asynchronous operation of writing the error.</returns>
         /// <param name="error">The error to write.</param>
         /// <param name="includeDebugInformation"> A flag indicating whether debug information (for example, the inner error from the <paramref name="error" />) should be included in the payload. This should only be used in debug scenarios. </param>
@@ -725,7 +725,7 @@ namespace Microsoft.OData
                 (context) => context.WriteMetadataDocument());
         }
 
-        /// <summary><see cref="M:System.IDisposable.Dispose()" /> implementation to cleanup unmanaged resources of the writer. </summary>
+        /// <summary><see cref="System.IDisposable.Dispose()" /> implementation to cleanup unmanaged resources of the writer. </summary>
         public void Dispose()
         {
             this.Dispose(true);

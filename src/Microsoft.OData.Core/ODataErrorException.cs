@@ -34,7 +34,7 @@ namespace Microsoft.OData
 #endif
         private ODataErrorExceptionSafeSerializationState state;
 
-        /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.ODataErrorException" /> class with default values.</summary>
+        /// <summary>Creates a new instance of the <see cref="Microsoft.OData.ODataErrorException" /> class with default values.</summary>
         /// <remarks>
         /// The Message property is initialized to a system-supplied message
         /// that describes the error. This message takes into account the
@@ -45,7 +45,7 @@ namespace Microsoft.OData
         {
         }
 
-        /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.ODataErrorException" /> class with an error message.</summary>
+        /// <summary>Creates a new instance of the <see cref="Microsoft.OData.ODataErrorException" /> class with an error message.</summary>
         /// <param name="message">The plain text error message for this exception.</param>
         /// <remarks>
         /// The Error property will be initialized with an empty <see cref="ODataError"/> instance.
@@ -55,7 +55,7 @@ namespace Microsoft.OData
         {
         }
 
-        /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.ODataErrorException" /> class with an error message and an inner exception.</summary>
+        /// <summary>Creates a new instance of the <see cref="Microsoft.OData.ODataErrorException" /> class with an error message and an inner exception.</summary>
         /// <param name="message">The plain text error message for this exception.</param>
         /// <param name="innerException">The inner exception that is the cause of this exception to be thrown.</param>
         /// <remarks>
@@ -66,8 +66,8 @@ namespace Microsoft.OData
         {
         }
 
-        /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.ODataErrorException" /> class with an <see cref="T:Microsoft.OData.ODataError" /> object.</summary>
-        /// <param name="error">The <see cref="T:Microsoft.OData.ODataError" /> instance representing the error read from the payload.</param>
+        /// <summary>Creates a new instance of the <see cref="Microsoft.OData.ODataErrorException" /> class with an <see cref="Microsoft.OData.ODataError" /> object.</summary>
+        /// <param name="error">The <see cref="Microsoft.OData.ODataError" /> instance representing the error read from the payload.</param>
         /// <remarks>
         /// The Message property is initialized to a system-supplied message
         /// that describes the error. This message takes into account the
@@ -78,18 +78,18 @@ namespace Microsoft.OData
         {
         }
 
-        /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.ODataErrorException" /> class with an error message and an <see cref="T:Microsoft.OData.ODataError" /> object.</summary>
+        /// <summary>Creates a new instance of the <see cref="Microsoft.OData.ODataErrorException" /> class with an error message and an <see cref="Microsoft.OData.ODataError" /> object.</summary>
         /// <param name="message">The plain text error message for this exception.</param>
-        /// <param name="error">The <see cref="T:Microsoft.OData.ODataError" /> instance representing the error read from the payload.</param>
+        /// <param name="error">The <see cref="Microsoft.OData.ODataError" /> instance representing the error read from the payload.</param>
         public ODataErrorException(string message, ODataError error)
             : this(message, null, error)
         {
         }
 
-        /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.ODataErrorException" /> class with an error message, an inner exception, and an <see cref="T:Microsoft.OData.ODataError" /> object.</summary>
+        /// <summary>Creates a new instance of the <see cref="Microsoft.OData.ODataErrorException" /> class with an error message, an inner exception, and an <see cref="Microsoft.OData.ODataError" /> object.</summary>
         /// <param name="message">The plain text error message for this exception.</param>
         /// <param name="innerException">The inner exception that is the cause of this exception to be thrown.</param>
-        /// <param name="error">The <see cref="T:Microsoft.OData.ODataError" /> instance representing the error read from the payload.</param>
+        /// <param name="error">The <see cref="Microsoft.OData.ODataError" /> instance representing the error read from the payload.</param>
         public ODataErrorException(string message, Exception innerException, ODataError error)
             : base(message, innerException)
         {
@@ -128,8 +128,8 @@ namespace Microsoft.OData
 #pragma warning restore 0628
 #endif
 
-        /// <summary>Gets the <see cref="T:Microsoft.OData.ODataError" /> instance representing the error read from the payload.</summary>
-        /// <returns>The <see cref="T:Microsoft.OData.ODataError" /> instance representing the error read from the payload.</returns>
+        /// <summary>Gets the <see cref="Microsoft.OData.ODataError" /> instance representing the error read from the payload.</summary>
+        /// <returns>The <see cref="Microsoft.OData.ODataError" /> instance representing the error read from the payload.</returns>
         public ODataError Error
         {
             get

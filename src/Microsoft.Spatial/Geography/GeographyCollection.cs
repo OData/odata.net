@@ -12,7 +12,7 @@ namespace Microsoft.Spatial
     /// <summary>Represents the collection of geographies.</summary>
     public abstract class GeographyCollection : Geography
     {
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.Spatial.GeographyCollection" /> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.Spatial.GeographyCollection" /> class.</summary>
         /// <param name="coordinateSystem">The coordinate system of this geography collection.</param>
         /// <param name="creator">The implementation that created this instance.</param>
         protected GeographyCollection(CoordinateSystem coordinateSystem, SpatialImplementation creator)

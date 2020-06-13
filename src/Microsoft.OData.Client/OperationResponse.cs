@@ -35,7 +35,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>When overridden in a derived class, contains the HTTP response headers associated with a single operation.</summary>
-        /// <returns><see cref="T:System.Collections.IDictionary" /> object that contains name value pairs of headers and values.</returns>
+        /// <returns><see cref="System.Collections.IDictionary" /> object that contains name value pairs of headers and values.</returns>
         public IDictionary<string, string> Headers
         {
             get { return this.headers.UnderlyingDictionary; }
@@ -50,7 +50,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Gets error thrown by the operation.</summary>
-        /// <returns>An <see cref="T:System.Exception" /> object that contains the error.</returns>
+        /// <returns>An <see cref="System.Exception" /> object that contains the error.</returns>
         public Exception Error
         {
             get

@@ -27,7 +27,7 @@ namespace Microsoft.OData.Client
         OperationDescriptor,
     }
 
-    /// <summary>Abstract class from which <see cref="T:Microsoft.OData.Client.EntityDescriptor" /> is derived.</summary>
+    /// <summary>Abstract class from which <see cref="Microsoft.OData.Client.EntityDescriptor" /> is derived.</summary>
     public abstract class Descriptor
     {
         #region Fields
@@ -62,7 +62,7 @@ namespace Microsoft.OData.Client
         #region Public Properties
 
         /// <summary>When overridden in a derived class, gets the state of the object at the time this instance was constructed.</summary>
-        /// <returns>An <see cref="T:Microsoft.OData.Client.EntityStates" /> of the object returned at the time this instance was constructed.  </returns>
+        /// <returns>An <see cref="Microsoft.OData.Client.EntityStates" /> of the object returned at the time this instance was constructed.  </returns>
         public EntityStates State
         {
             get { return this.state; }

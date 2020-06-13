@@ -75,22 +75,22 @@ namespace Microsoft.OData.Client
         }
 
         #region IQueryable implementation
-        /// <summary>Returns the type of the object used in the template to create the <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> instance.</summary>
-        /// <returns>Returns <see cref="T:System.Type" /> representing the type used in the template when the query is created.</returns>
+        /// <summary>Returns the type of the object used in the template to create the <see cref="Microsoft.OData.Client.DataServiceQuery`1" /> instance.</summary>
+        /// <returns>Returns <see cref="System.Type" /> representing the type used in the template when the query is created.</returns>
         public override Type ElementType
         {
             get { return typeof(TElement); }
         }
 
         /// <summary>Represents an expression containing the query to the data service.</summary>
-        /// <returns>A <see cref="T:System.Linq.Expressions.Expression" /> object representing the query.</returns>
+        /// <returns>A <see cref="System.Linq.Expressions.Expression" /> object representing the query.</returns>
         public override Expression Expression
         {
             get { return this.queryExpression; }
         }
 
         /// <summary>Represents the query provider instance.</summary>
-        /// <returns>A <see cref="T:System.Linq.IQueryProvider" /> representing the data source provider.</returns>
+        /// <returns>A <see cref="System.Linq.IQueryProvider" /> representing the data source provider.</returns>
         public override IQueryProvider Provider
         {
             get { return this.queryProvider; }
@@ -158,7 +158,7 @@ namespace Microsoft.OData.Client
         /// <param name="functionName">The function name.</param>
         /// <param name="isComposable">Whether this query is composable.</param>
         /// <param name="parameters">The function parameters.</param>
-        /// <returns>A new <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> instance that represents the function call.</returns>
+        /// <returns>A new <see cref="Microsoft.OData.Client.DataServiceQuery`1" /> instance that represents the function call.</returns>
         public virtual DataServiceQuery<T> CreateFunctionQuery<T>(string functionName, bool isComposable, params UriOperationParameter[] parameters)
         {
             Dictionary<string, string> operationParameters = this.Context.SerializeOperationParameters(parameters);
@@ -171,7 +171,7 @@ namespace Microsoft.OData.Client
         /// <param name="functionName">The function name.</param>
         /// <param name="isComposable">Whether this query is composable.</param>
         /// <param name="parameters">The function parameters.</param>
-        /// <returns>A new <see cref="T:Microsoft.OData.Client.DataServiceQuerySingle`1" /> instance that represents the function call.</returns>
+        /// <returns>A new <see cref="Microsoft.OData.Client.DataServiceQuerySingle`1" /> instance that represents the function call.</returns>
         public virtual DataServiceQuerySingle<T> CreateFunctionQuerySingle<T>(string functionName, bool isComposable, params UriOperationParameter[] parameters)
         {
             return new DataServiceQuerySingle<T>(CreateFunctionQuery<T>(functionName, isComposable, parameters), isComposable);
@@ -200,7 +200,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Starts an asynchronous network operation that executes the query represented by this object instance.</summary>
-        /// <returns>An <see cref="T:System.IAsyncResult" /> that represents the status of the asynchronous operation.</returns>
+        /// <returns>An <see cref="System.IAsyncResult" /> that represents the status of the asynchronous operation.</returns>
         /// <param name="callback">The delegate to invoke when the operation completes.</param>
         /// <param name="state">User defined object used to transfer state between the start of the operation and the callback defined by <paramref name="callback" />.</param>
         public virtual new IAsyncResult BeginExecute(AsyncCallback callback, object state)
@@ -216,16 +216,16 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Starts an asynchronous network operation that executes the query represented by this object instance.</summary>
-        /// <returns>A task that represents an <see cref="T:System.Collections.Generic.IEnumerable`1" />  that contains the results of the query operation.</returns>
+        /// <returns>A task that represents an <see cref="System.Collections.Generic.IEnumerable`1" />  that contains the results of the query operation.</returns>
         public virtual new Task<IEnumerable<TElement>> ExecuteAsync()
         {
             return Task<IEnumerable<TElement>>.Factory.FromAsync(this.BeginExecute, this.EndExecute, null);
         }
 
         /// <summary>Ends an asynchronous query request to a data service.</summary>
-        /// <returns>Returns an <see cref="T:System.Collections.Generic.IEnumerable`1" />  that contains the results of the query operation.</returns>
+        /// <returns>Returns an <see cref="System.Collections.Generic.IEnumerable`1" />  that contains the results of the query operation.</returns>
         /// <param name="asyncResult">The pending asynchronous query request.</param>
-        /// <exception cref="T:Microsoft.OData.Client.DataServiceQueryException">When the data service returns an HTTP 404: Resource Not Found error.</exception>
+        /// <exception cref="Microsoft.OData.Client.DataServiceQueryException">When the data service returns an HTTP 404: Resource Not Found error.</exception>
         public virtual new IEnumerable<TElement> EndExecute(IAsyncResult asyncResult)
         {
             if (this.IsFunction)
@@ -241,7 +241,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Asynchronously sends a request to get all items by auto iterating all pages
         /// </summary>
-        /// <returns>A task that represents an <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains the results of the query operation.</returns>
+        /// <returns>A task that represents an <see cref="System.Collections.Generic.IEnumerable`1" /> that contains the results of the query operation.</returns>
         public virtual Task<IEnumerable<TElement>> GetAllPagesAsync()
         {
             var currentTask = Task<IEnumerable<TElement>>.Factory.FromAsync(this.BeginExecute, this.EndExecute, null);
@@ -251,9 +251,9 @@ namespace Microsoft.OData.Client
 
 #if !PORTABLELIB // Synchronous methods not available
         /// <summary>Executes the query and returns the results as a collection that implements IEnumerable.</summary>
-        /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1" /> in which TElement represents the type of the query results.</returns>
-        /// <exception cref="T:Microsoft.OData.Client.DataServiceQueryException">When the data service returns an HTTP 404: Resource Not Found error.</exception>
-        /// <exception cref="T:System.NotSupportedException">When during materialization an object is encountered in the input stream that cannot be deserialized to an instance of TElement.</exception>
+        /// <returns>An <see cref="System.Collections.Generic.IEnumerable`1" /> in which TElement represents the type of the query results.</returns>
+        /// <exception cref="Microsoft.OData.Client.DataServiceQueryException">When the data service returns an HTTP 404: Resource Not Found error.</exception>
+        /// <exception cref="System.NotSupportedException">When during materialization an object is encountered in the input stream that cannot be deserialized to an instance of TElement.</exception>
         public virtual new IEnumerable<TElement> Execute()
         {
             if (this.IsFunction)
@@ -293,7 +293,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Expands a query to include entities from a related entity set in the query response, where the related entity is of a specific type in a type hierarchy. </summary>
-        /// <returns>Returns a <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> that with the expand option included.</returns>
+        /// <returns>Returns a <see cref="Microsoft.OData.Client.DataServiceQuery`1" /> that with the expand option included.</returns>
         /// <param name="navigationPropertyAccessor">A lambda expression that indicates the navigation property that returns the entity set to include in the expanded query.</param>
         /// <typeparam name="TTarget">Target type of the last property on the expand path.</typeparam>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design")]
@@ -311,7 +311,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Requests that the count of all entities in the entity set be returned inline with the query results.</summary>
-        /// <returns>A new <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> object that has the inline count option set.</returns>
+        /// <returns>A new <see cref="Microsoft.OData.Client.DataServiceQuery`1" /> object that has the inline count option set.</returns>
         [Obsolete("Please use IncludeCount()")]
         public virtual DataServiceQuery<TElement> IncludeTotalCount()
         {
@@ -319,7 +319,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Requests that the count of all entities in the entity set be returned inline with the query results.</summary>
-        /// <returns>A new <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> object that has the inline count option set.</returns>
+        /// <returns>A new <see cref="Microsoft.OData.Client.DataServiceQuery`1" /> object that has the inline count option set.</returns>
         /// <param name="countQuery">Whether to include total count.</param>
         [Obsolete("Please use IncludeCount(bool countQuery)")]
         public virtual DataServiceQuery<TElement> IncludeTotalCount(bool countQuery)
@@ -328,14 +328,14 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Requests that the count of all entities in the entity set be returned inline with the query results.</summary>
-        /// <returns>A new <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> object that has the inline count option set.</returns>
+        /// <returns>A new <see cref="Microsoft.OData.Client.DataServiceQuery`1" /> object that has the inline count option set.</returns>
         public virtual DataServiceQuery<TElement> IncludeCount()
         {
             return this.IncludeCount(true);
         }
 
         /// <summary>Requests that the count of all entities in the entity set be returned inline with the query results.</summary>
-        /// <returns>A new <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> object that has the inline count option set.</returns>
+        /// <returns>A new <see cref="Microsoft.OData.Client.DataServiceQuery`1" /> object that has the inline count option set.</returns>
         /// <param name="countQuery">Whether to include count.</param>
         public virtual DataServiceQuery<TElement> IncludeCount(bool countQuery)
         {
@@ -349,7 +349,7 @@ namespace Microsoft.OData.Client
                     new Expression[] { Expression.Constant(countQuery, typeof(bool)) }));
         }
 
-        /// <summary>Creates a new <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> with the query option set in the URI generated by the returned query.</summary>
+        /// <summary>Creates a new <see cref="Microsoft.OData.Client.DataServiceQuery`1" /> with the query option set in the URI generated by the returned query.</summary>
         /// <returns>A new query that includes the requested query option appended to the URI of the supplied query</returns>
         /// <param name="name">The string value that contains the name of the query string option to add.</param>
         /// <param name="value">The object that contains the value of the query string option.</param>
@@ -380,7 +380,7 @@ namespace Microsoft.OData.Client
 #endif
 
         /// <summary>Represents the URI of the query to the data service.</summary>
-        /// <returns>A URI as string that represents the query to the data service for this <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> instance.</returns>
+        /// <returns>A URI as string that represents the query to the data service for this <see cref="Microsoft.OData.Client.DataServiceQuery`1" /> instance.</returns>
         public override string ToString()
         {
             try

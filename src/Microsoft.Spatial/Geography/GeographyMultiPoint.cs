@@ -12,7 +12,7 @@ namespace Microsoft.Spatial
     /// <summary>Represents the multi-point of geography.</summary>
     public abstract class GeographyMultiPoint : GeographyCollection
     {
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.Spatial.GeographyMultiPoint" /> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.Spatial.GeographyMultiPoint" /> class.</summary>
         /// <param name="coordinateSystem">The coordinate system of this instance.</param>
         /// <param name="creator">The implementation that created this instance.</param>
         protected GeographyMultiPoint(CoordinateSystem coordinateSystem, SpatialImplementation creator)

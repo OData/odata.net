@@ -65,8 +65,8 @@ namespace Microsoft.OData.Client
 
         #region Public Properties
 
-        /// <summary>The source entity in a link returned by a <see cref="T:Microsoft.OData.Client.DataServiceResponse" />. </summary>
-        /// <returns><see cref="T:System.Object" />.</returns>
+        /// <summary>The source entity in a link returned by a <see cref="Microsoft.OData.Client.DataServiceResponse" />. </summary>
+        /// <returns><see cref="System.Object" />.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811", Justification = "The setter is called during de-serialization")]
         public object Target
         {
@@ -81,8 +81,8 @@ namespace Microsoft.OData.Client
             }
         }
 
-        /// <summary>A source entity in a link returned by a <see cref="T:Microsoft.OData.Client.DataServiceResponse" />.</summary>
-        /// <returns><see cref="T:System.Object" />.</returns>
+        /// <summary>A source entity in a link returned by a <see cref="Microsoft.OData.Client.DataServiceResponse" />.</summary>
+        /// <returns><see cref="System.Object" />.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811", Justification = "The setter is called during de-serialization")]
         public object Source
         {
@@ -97,7 +97,7 @@ namespace Microsoft.OData.Client
             }
         }
 
-        /// <summary>The identifier property of the source entity in a link returned by a <see cref="T:Microsoft.OData.Client.DataServiceResponse" />.</summary>
+        /// <summary>The identifier property of the source entity in a link returned by a <see cref="Microsoft.OData.Client.DataServiceResponse" />.</summary>
         /// <returns>The string identifier of an identity property in a source entity. </returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811", Justification = "The setter is called during de-serialization")]
         public string SourceProperty

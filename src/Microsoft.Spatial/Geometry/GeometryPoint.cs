@@ -9,7 +9,7 @@ namespace Microsoft.Spatial
     /// <summary>Represents the Geometry Point.</summary>
     public abstract class GeometryPoint : Geometry
     {
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.Spatial.GeometryPoint" /> class. Empty Point constructor.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.Spatial.GeometryPoint" /> class. Empty Point constructor.</summary>
         /// <param name="coordinateSystem">The CoordinateSystem.</param>
         /// <param name="creator">The implementation that created this instance.</param>
         protected GeometryPoint(CoordinateSystem coordinateSystem, SpatialImplementation creator)

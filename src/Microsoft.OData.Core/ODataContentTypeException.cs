@@ -13,7 +13,7 @@ namespace Microsoft.OData
     [DebuggerDisplay("{Message}")]
     public class ODataContentTypeException : ODataException
     {
-        /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.ODataContentTypeException" /> class.</summary>
+        /// <summary>Creates a new instance of the <see cref="Microsoft.OData.ODataContentTypeException" /> class.</summary>
         /// <remarks>
         /// The Message property is initialized to a system-supplied message
         /// that describes the error. This message takes into account the
@@ -24,14 +24,14 @@ namespace Microsoft.OData
         {
         }
 
-        /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.ODataContentTypeException" /> class.</summary>
+        /// <summary>Creates a new instance of the <see cref="Microsoft.OData.ODataContentTypeException" /> class.</summary>
         /// <param name="message">Plain text error message for this exception.</param>
         public ODataContentTypeException(string message)
             : this(message, null)
         {
         }
 
-        /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.ODataContentTypeException" /> class.</summary>
+        /// <summary>Creates a new instance of the <see cref="Microsoft.OData.ODataContentTypeException" /> class.</summary>
         /// <param name="message">Plain text error message for this exception.</param>
         /// <param name="innerException">Exception that caused this exception to be thrown.</param>
         public ODataContentTypeException(string message, Exception innerException)
@@ -40,7 +40,7 @@ namespace Microsoft.OData
         }
 
 #if ORCAS
-        /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.ODataContentTypeException" /> class from the  specified SerializationInfo and StreamingContext instances.</summary>
+        /// <summary>Creates a new instance of the <see cref="Microsoft.OData.ODataContentTypeException" /> class from the  specified SerializationInfo and StreamingContext instances.</summary>
         /// <param name="info"> A SerializationInfo containing the information required to serialize  the new ODataException. </param>
         /// <param name="context"> A StreamingContext containing the source of the serialized stream  associated with the new ODataException. </param>
         [SuppressMessage("Microsoft.Design", "CA1047", Justification = "Follows serialization info pattern.")]

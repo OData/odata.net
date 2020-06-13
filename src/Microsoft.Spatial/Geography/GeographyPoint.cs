@@ -9,7 +9,7 @@ namespace Microsoft.Spatial
     /// <summary>Represents a geography point.</summary>
     public abstract class GeographyPoint : Geography
     {
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.Spatial.GeographyPoint" /> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.Spatial.GeographyPoint" /> class.</summary>
         /// <param name="coordinateSystem">The coordinate system of this instance.</param>
         /// <param name="creator">The implementation that created this instance.</param>
         protected GeographyPoint(CoordinateSystem coordinateSystem, SpatialImplementation creator)

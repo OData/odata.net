@@ -12,7 +12,7 @@ namespace Microsoft.Spatial
     /// <summary>Represents the geometry collection.</summary>
     public abstract class GeometryCollection : Geometry
     {
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.Spatial.GeometryCollection" /> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.Spatial.GeometryCollection" /> class.</summary>
         /// <param name="coordinateSystem">The coordinate system of this instance.</param>
         /// <param name="creator">The implementation that created this instance.</param>
         protected GeometryCollection(CoordinateSystem coordinateSystem, SpatialImplementation creator)

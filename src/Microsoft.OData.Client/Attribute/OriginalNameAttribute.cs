@@ -15,7 +15,7 @@ namespace Microsoft.OData.Client
         /// <summary>The original name.</summary>
         private readonly string originalName;
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Client.OriginalNameAttribute" /> class. </summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.OriginalNameAttribute" /> class. </summary>
         /// <param name="originalName">The string that contains original name of the variable.</param>
         public OriginalNameAttribute(string originalName)
         {

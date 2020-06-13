@@ -18,7 +18,7 @@ namespace Microsoft.OData.Client
         /// <summary>Name of the properties that form the key.</summary>
         private readonly ReadOnlyCollection<string> keyNames;
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Client.KeyAttribute" /> class. </summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.KeyAttribute" /> class. </summary>
         /// <param name="keyName">The string that contains name of the key attribute.</param>
         public KeyAttribute(string keyName)
         {
@@ -27,7 +27,7 @@ namespace Microsoft.OData.Client
             this.keyNames = new ReadOnlyCollection<string>(new string[1] { keyName });
         }
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Client.KeyAttribute" /> class. </summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.KeyAttribute" /> class. </summary>
         /// <param name="keyNames">An array of string values that contain key attribute names.</param>
         public KeyAttribute(params string[] keyNames)
         {

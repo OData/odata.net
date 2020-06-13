@@ -69,7 +69,7 @@ namespace Microsoft.OData
         /// </summary>
         private ValidationKinds validations;
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageWriterSettings" /> class with default settings. </summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.ODataMessageWriterSettings" /> class with default settings. </summary>
         public ODataMessageWriterSettings()
         {
             this.EnableMessageStreamDisposal = true;
@@ -80,12 +80,12 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Gets or sets library compatibility version. Default value is <see cref="T:ODataLibraryCompatibilityLevel.Latest"/>,
+        /// Gets or sets library compatibility version. Default value is <see cref="ODataLibraryCompatibilityLevel.Latest"/>,
         /// </summary>
         public ODataLibraryCompatibility LibraryCompatibility { get; set; }
 
         /// <summary>
-        /// Gets or sets validations to perform. Default value is <see cref="T:Microsoft.OData.Validations.FullValidation"/>,
+        /// Gets or sets validations to perform. Default value is <see cref="Microsoft.OData.Validations.FullValidation"/>,
         /// </summary>
         public ValidationKinds Validations
         {

@@ -28,13 +28,13 @@ namespace Microsoft.OData
         /// </summary>
         private ValidationKinds validations;
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageReaderSettings" /> class
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.ODataMessageReaderSettings" /> class
         /// with default values for OData 4.0.</summary>
         public ODataMessageReaderSettings() : this(ODataConstants.ODataDefaultProtocolVersion)
         {
         }
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageReaderSettings" /> class
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.ODataMessageReaderSettings" /> class
         /// with default values for the specified OData version.</summary>
         /// <param name="odataVersion">OData Version for which to create default settings.</param>
         public ODataMessageReaderSettings(ODataVersion odataVersion)
@@ -63,7 +63,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Gets or sets library compatibility version. Default value is <see cref="T:ODataLibraryCompatibilityLevel.Latest"/>,
+        /// Gets or sets library compatibility version. Default value is <see cref="ODataLibraryCompatibilityLevel.Latest"/>,
         /// </summary>
         public ODataLibraryCompatibility LibraryCompatibility { get; set; }
 

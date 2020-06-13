@@ -31,13 +31,13 @@ namespace Microsoft.Spatial
         /// </summary>
         private SpatialPipeline startingLink;
 
-        /// <summary> Initializes a new instance of the <see cref="T:Microsoft.Spatial.SpatialPipeline" /> class. </summary>
+        /// <summary> Initializes a new instance of the <see cref="Microsoft.Spatial.SpatialPipeline" /> class. </summary>
         public SpatialPipeline()
         {
             this.startingLink = this;
         }
 
-        /// <summary> Initializes a new instance of the <see cref="T:Microsoft.Spatial.SpatialPipeline" /> class. </summary>
+        /// <summary> Initializes a new instance of the <see cref="Microsoft.Spatial.SpatialPipeline" /> class. </summary>
         /// <param name="geographyPipeline">The geography chain.</param>
         /// <param name="geometryPipeline">The geometry chain.</param>
         public SpatialPipeline(GeographyPipeline geographyPipeline, GeometryPipeline geometryPipeline)
