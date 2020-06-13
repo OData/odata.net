@@ -189,14 +189,8 @@ namespace Microsoft.OData
         /// </summary>
         public void Dispose()
         {
-            if (this.disposed)
-            {
-                return;
-            }
-
             this.Dispose(true);
             GC.SuppressFinalize(this);
-            this.disposed = true;
         }
 
         /// <summary>
@@ -619,6 +613,12 @@ namespace Microsoft.OData
         /// <param name="disposing">If 'true' this method is called from user code; if 'false' it is called by the runtime.</param>
         protected virtual void Dispose(bool disposing)
         {
+            if (this.disposed)
+            {
+                return;
+            }
+
+            this.disposed = true;
         }
 
         /// <summary>
