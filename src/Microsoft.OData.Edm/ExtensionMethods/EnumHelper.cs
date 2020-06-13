@@ -103,7 +103,7 @@ namespace Microsoft.OData.Edm
                         }
                         else
                         {
-                            if (!enumNames[j].Equals(values[i]))
+                            if (!enumNames[j].Equals(values[i], StringComparison.Ordinal))
                             {
                                 continue;
                             }

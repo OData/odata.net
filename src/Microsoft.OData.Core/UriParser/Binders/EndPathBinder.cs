@@ -176,7 +176,7 @@ namespace Microsoft.OData.UriParser
             // Collection with any or all expression is already supported and handled separately.
             // Add support of collection with $count segment.
             CollectionNode colNode = parent as CollectionNode;
-            if (colNode != null && endPathToken.Identifier.Equals(UriQueryConstants.CountSegment))
+            if (colNode != null && endPathToken.Identifier.Equals(UriQueryConstants.CountSegment, System.StringComparison.Ordinal))
             {
                 // create a collection count node for collection node property.
                 return new CountNode(colNode);

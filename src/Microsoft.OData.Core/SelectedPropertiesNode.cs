@@ -295,7 +295,7 @@ namespace Microsoft.OData
 
             // $select=Orders will include the entire subtree when there are no same expanded entity.
             if (this.selectedProperties != null && this.selectedProperties.Contains(navigationPropertyName) &&
-                (this.children == null || !this.children.Any(n => n.Key.Equals(navigationPropertyName) && n.Value.isExpandedNavigationProperty)))
+                (this.children == null || !this.children.Any(n => n.Key.Equals(navigationPropertyName, StringComparison.Ordinal) && n.Value.isExpandedNavigationProperty)))
             {
                 return new SelectedPropertiesNode(SelectionType.EntireSubtree);
             }

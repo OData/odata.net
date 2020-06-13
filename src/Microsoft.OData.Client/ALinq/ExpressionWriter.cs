@@ -463,7 +463,7 @@ namespace Microsoft.OData.Client
             var parentType = m.Member.DeclaringType;
             Type collectionType = ClientTypeUtil.GetImplementationType(parentType, typeof(ICollection<>));
             if (!PrimitiveType.IsKnownNullableType(parentType) && collectionType != null &&
-                m.Member.Name.Equals(ReflectionUtil.COUNTPROPNAME))
+                m.Member.Name.Equals(ReflectionUtil.COUNTPROPNAME, StringComparison.Ordinal))
             {
                 this.builder.Append(UriHelper.DOLLARSIGN).Append(UriHelper.COUNT);
             }

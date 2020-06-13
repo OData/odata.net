@@ -69,7 +69,7 @@ namespace Microsoft.OData.UriParser
                 return false;
             }
 
-            return this.Name.Equals(otherPath.Name);
+            return this.Name.Equals(otherPath.Name, System.StringComparison.Ordinal);
         }
 
         /// <summary>Returns a hash code for this instance.</summary>

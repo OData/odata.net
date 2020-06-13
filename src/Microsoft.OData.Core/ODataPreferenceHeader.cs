@@ -154,12 +154,12 @@ namespace Microsoft.OData
                 var returnContentPreference = this.Get(ReturnPreferenceTokenName);
                 if (returnContentPreference != null && returnContentPreference.Value != null)
                 {
-                    if (returnContentPreference.Value.ToLowerInvariant().Equals(ReturnRepresentationPreferenceTokenValue))
+                    if (returnContentPreference.Value.ToLowerInvariant().Equals(ReturnRepresentationPreferenceTokenValue, System.StringComparison.Ordinal))
                     {
                         return true;
                     }
 
-                    if (returnContentPreference.Value.ToLowerInvariant().Equals(ReturnMinimalPreferenceTokenValue))
+                    if (returnContentPreference.Value.ToLowerInvariant().Equals(ReturnMinimalPreferenceTokenValue, System.StringComparison.Ordinal))
                     {
                         return false;
                     }

@@ -211,7 +211,7 @@ namespace Microsoft.OData.UriParser.Aggregation
             if (aggregateExpressionsCache != null)
             {
                 AggregateExpression expression = aggregateExpressionsCache.OfType<AggregateExpression>()
-                    .FirstOrDefault(statement => statement.AggregateKind == AggregateExpressionKind.PropertyAggregate && statement.Alias.Equals(name));
+                    .FirstOrDefault(statement => statement.AggregateKind == AggregateExpressionKind.PropertyAggregate && statement.Alias.Equals(name, StringComparison.Ordinal));
                 if (expression != null)
                 {
                     return expression.TypeReference;

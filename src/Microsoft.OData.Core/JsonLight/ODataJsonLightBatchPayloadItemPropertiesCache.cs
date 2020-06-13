@@ -227,7 +227,7 @@ namespace Microsoft.OData.JsonLight
                                     string headerValue = this.jsonReader.ReadPrimitiveValue().ToString();
 
                                     // Remember the Content-Type header value.
-                                    if (headerName.Equals(ODataConstants.ContentTypeHeader, StringComparison.CurrentCultureIgnoreCase))
+                                    if (headerName.Equals(ODataConstants.ContentTypeHeader, StringComparison.OrdinalIgnoreCase))
                                     {
                                         contentTypeHeader = headerValue;
                                     }

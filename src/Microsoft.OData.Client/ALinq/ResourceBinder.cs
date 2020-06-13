@@ -2772,7 +2772,7 @@ namespace Microsoft.OData.Client
                         PropertyInfo pi = (PropertyInfo)m.Member;
 
                         // For member like "c.Trips.Count", when Count is visited, no future visit if declare type is a Collection
-                        if (pi.Name.Equals(ReflectionUtil.COUNTPROPNAME))
+                        if (pi.Name.Equals(ReflectionUtil.COUNTPROPNAME, StringComparison.Ordinal))
                         {
                             MemberExpression me = StripTo<MemberExpression>(m.Expression);
                             if (me != null && !PrimitiveType.IsKnownNullableType(me.Type))
@@ -2951,7 +2951,7 @@ namespace Microsoft.OData.Client
 
                 // If the declaring type and the name of the property are the same,
                 // both the property infos refer to the same property.
-                return object.ReferenceEquals(left.DeclaringType, right.DeclaringType) && left.Name.Equals(right.Name);
+                return object.ReferenceEquals(left.DeclaringType, right.DeclaringType) && left.Name.Equals(right.Name, StringComparison.Ordinal);
             }
 
             /// <summary>
