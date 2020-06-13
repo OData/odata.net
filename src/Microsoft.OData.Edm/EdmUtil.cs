@@ -245,7 +245,7 @@ namespace Microsoft.OData.Edm
         {
             if (values == null)
             {
-                throw new ArgumentNullException("values");
+                throw new ArgumentNullException(nameof(values));
             }
 
             if (separator == null)

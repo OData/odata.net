@@ -157,7 +157,7 @@ namespace Microsoft.OData.Client
         {
             if (getEnumerator == null)
             {
-                throw new ArgumentNullException("getEnumerator");
+                throw new ArgumentNullException(nameof(getEnumerator));
             }
 
             if (this.Results.Context != null)

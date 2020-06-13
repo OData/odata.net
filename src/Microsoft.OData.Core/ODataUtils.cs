@@ -40,7 +40,7 @@ namespace Microsoft.OData
 
             if (payloadKind == ODataPayloadKind.Unsupported)
             {
-                throw new ArgumentException(Strings.ODataMessageWriter_CannotSetHeadersWithInvalidPayloadKind(payloadKind), "payloadKind");
+                throw new ArgumentException(Strings.ODataMessageWriter_CannotSetHeadersWithInvalidPayloadKind(payloadKind), nameof(payloadKind));
             }
 
             return messageWriter.SetHeaders(payloadKind);

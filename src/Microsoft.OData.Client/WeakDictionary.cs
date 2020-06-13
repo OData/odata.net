@@ -131,7 +131,7 @@ namespace Microsoft.OData.Client
         {
             if (key == null)
             {
-                throw new ArgumentNullException("key");
+                throw new ArgumentNullException(nameof(key));
             }
 
             if (countForRefresh >= countLimitForRefresh)
@@ -242,7 +242,7 @@ namespace Microsoft.OData.Client
         {
             if (target == null)
             {
-                throw new ArgumentNullException("target");
+                throw new ArgumentNullException(nameof(target));
             }
 
             // retain the object's hash code immediately so that even

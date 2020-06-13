@@ -87,7 +87,7 @@ namespace Microsoft.OData
 
             if (value is ODataStreamReferenceValue)
             {
-                throw new ArgumentException(Strings.ODataInstanceAnnotation_ValueCannotBeODataStreamReferenceValue, "value");
+                throw new ArgumentException(Strings.ODataInstanceAnnotation_ValueCannotBeODataStreamReferenceValue, nameof(value));
             }
         }
     }

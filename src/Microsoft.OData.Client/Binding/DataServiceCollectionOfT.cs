@@ -316,7 +316,7 @@ namespace Microsoft.OData.Client
             DataServiceQuery<T> dsq = query as DataServiceQuery<T>;
             if (dsq == null)
             {
-                throw new ArgumentException(Strings.DataServiceCollection_LoadAsyncRequiresDataServiceQuery, "query");
+                throw new ArgumentException(Strings.DataServiceCollection_LoadAsyncRequiresDataServiceQuery, nameof(query));
             }
 
             if (this.ongoingAsyncOperation != null)
@@ -481,7 +481,7 @@ namespace Microsoft.OData.Client
             // When loading a single item,
             if (item == null)
             {
-                throw Error.ArgumentNull("item");
+                throw Error.ArgumentNull(nameof(item));
             }
 
             this.StartLoading();

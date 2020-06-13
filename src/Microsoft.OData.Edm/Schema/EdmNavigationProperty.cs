@@ -187,7 +187,7 @@ namespace Microsoft.OData.Edm
                 declaringType = GetEntityType(partnerPropertyType) as IEdmEntityType;
                 if (declaringType == null)
                 {
-                    throw new ArgumentException(Strings.Constructable_EntityTypeOrCollectionOfEntityTypeOrComplexTypeExpected, "partnerPropertyType");
+                    throw new ArgumentException(Strings.Constructable_EntityTypeOrCollectionOfEntityTypeOrComplexTypeExpected, nameof(partnerPropertyType));
                 }
             }
             else if (partnerPropertyType.Definition.TypeKind == EdmTypeKind.Complex)
@@ -195,18 +195,18 @@ namespace Microsoft.OData.Edm
                 declaringType = GetComplexType(partnerPropertyType) as IEdmComplexType;
                 if (declaringType == null)
                 {
-                    throw new ArgumentException(Strings.Constructable_EntityTypeOrCollectionOfEntityTypeOrComplexTypeExpected, "partnerPropertyType");
+                    throw new ArgumentException(Strings.Constructable_EntityTypeOrCollectionOfEntityTypeOrComplexTypeExpected, nameof(partnerPropertyType));
                 }
             }
             else
             {
-                throw new ArgumentException(Strings.Constructable_EntityTypeOrCollectionOfEntityTypeOrComplexTypeExpected, "partnerPropertyType");
+                throw new ArgumentException(Strings.Constructable_EntityTypeOrCollectionOfEntityTypeOrComplexTypeExpected, nameof(partnerPropertyType));
             }
 
             IEdmEntityType partnerDeclaringType = GetEntityType(propertyType);
             if (partnerDeclaringType == null)
             {
-                throw new ArgumentException(Strings.Constructable_EntityTypeOrCollectionOfEntityTypeOrComplexTypeExpected, "propertyType");
+                throw new ArgumentException(Strings.Constructable_EntityTypeOrCollectionOfEntityTypeOrComplexTypeExpected, nameof(propertyType));
             }
 
             EdmNavigationProperty end1 = new EdmNavigationProperty(

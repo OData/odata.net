@@ -47,7 +47,7 @@ namespace Microsoft.Spatial
         {
             if (factory == null)
             {
-                throw new ArgumentNullException("factory");
+                throw new ArgumentNullException(nameof(factory));
             }
 
             return factory.Build();

@@ -657,7 +657,7 @@ namespace Microsoft.OData.Metadata
             {
                 if (i < 0 || i >= this.AttributeCount)
                 {
-                    throw new ArgumentOutOfRangeException("i");
+                    throw new ArgumentOutOfRangeException(nameof(i));
                 }
 
                 LinkedListNode<BufferedNode> attributeNode = this.FindAttributeBufferedNode(i);

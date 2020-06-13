@@ -71,7 +71,7 @@ namespace Microsoft.OData.Client
             {
                 Debug.Assert(value == null || value.IsAbsoluteUri, "self link must be an absolute uri");
                 this.selfLink = value;
-                this.OnPropertyChanged("SelfLink");
+                this.OnPropertyChanged(nameof(SelfLink));
             }
         }
 
@@ -88,7 +88,7 @@ namespace Microsoft.OData.Client
             {
                 Debug.Assert(value.IsAbsoluteUri, "edit link must be an absolute uri");
                 this.editLink = value;
-                this.OnPropertyChanged("EditLink");
+                this.OnPropertyChanged(nameof(EditLink));
             }
         }
 
@@ -104,7 +104,7 @@ namespace Microsoft.OData.Client
             internal set
             {
                 this.contentType = value;
-                this.OnPropertyChanged("ContentType");
+                this.OnPropertyChanged(nameof(ContentType));
             }
         }
 
@@ -120,7 +120,7 @@ namespace Microsoft.OData.Client
             internal set
             {
                 this.etag = value;
-                this.OnPropertyChanged("ETag");
+                this.OnPropertyChanged(nameof(ETag));
             }
         }
 

@@ -1518,7 +1518,7 @@ namespace Microsoft.OData.Client
             {
                 throw new ArgumentException(
                     Strings.Context_SetSaveStreamOnMediaEntryProperty(clientType.ElementTypeName),
-                    "entity");
+                    nameof(entity));
             }
 
             box.SaveStream = new DataServiceSaveStream(stream, closeStream, args);
@@ -3090,25 +3090,25 @@ namespace Microsoft.OData.Client
             // Make sure no higher order bits are set.
             if ((options | All) != All)
             {
-                throw Error.ArgumentOutOfRange("options");
+                throw Error.ArgumentOutOfRange(nameof(options));
             }
 
             // SaveChangesOptions.BatchWithSingleChangeset and SaveChangesOptions.BatchWithIndependentOperations can't be set together.
             if (Util.IsFlagSet(options, SaveChangesOptions.BatchWithSingleChangeset | SaveChangesOptions.BatchWithIndependentOperations))
             {
-                throw Error.ArgumentOutOfRange("options");
+                throw Error.ArgumentOutOfRange(nameof(options));
             }
 
             // BatchWithSingleChangeset and continueOnError can't be set together
             if (Util.IsFlagSet(options, SaveChangesOptions.BatchWithSingleChangeset | SaveChangesOptions.ContinueOnError))
             {
-                throw Error.ArgumentOutOfRange("options");
+                throw Error.ArgumentOutOfRange(nameof(options));
             }
 
             // BatchWithIndependentOperations and continueOnError can't be set together
             if (Util.IsFlagSet(options, SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.ContinueOnError))
             {
-                throw Error.ArgumentOutOfRange("options");
+                throw Error.ArgumentOutOfRange(nameof(options));
             }
 
             // OnlyPostExplicitProperties cannot be used without DataServiceCollection to track properties change
@@ -3154,7 +3154,7 @@ namespace Microsoft.OData.Client
                 string.CompareOrdinal(XmlConstants.HttpMethodPost, httpMethod) != 0 &&
                 string.CompareOrdinal(XmlConstants.HttpMethodDelete, httpMethod) != 0)
             {
-                throw new ArgumentException(Strings.Context_ExecuteExpectsGetOrPostOrDelete, "httpMethod");
+                throw new ArgumentException(Strings.Context_ExecuteExpectsGetOrPostOrDelete, nameof(httpMethod));
             }
 
             if (ClientTypeUtil.TypeOrElementTypeIsStructured(typeof(TElement)))
@@ -3389,7 +3389,7 @@ namespace Microsoft.OData.Client
                 requestUri = entityDescriptor.ReadStreamUri;
                 if (requestUri == null)
                 {
-                    throw new ArgumentException(Strings.Context_EntityNotMediaLinkEntry, "entity");
+                    throw new ArgumentException(Strings.Context_EntityNotMediaLinkEntry, nameof(entity));
                 }
 
                 streamDescriptor = entityDescriptor.DefaultStreamDescriptor;
@@ -3399,14 +3399,14 @@ namespace Microsoft.OData.Client
                 version = Util.ODataVersion4;
                 if (!entityDescriptor.TryGetNamedStreamInfo(name, out streamDescriptor))
                 {
-                    throw new ArgumentException(Strings.Context_EntityDoesNotContainNamedStream(name), "name");
+                    throw new ArgumentException(Strings.Context_EntityDoesNotContainNamedStream(name), nameof(name));
                 }
 
                 // use the edit link, if self link is not specified.
                 requestUri = streamDescriptor.SelfLink ?? streamDescriptor.EditLink;
                 if (requestUri == null)
                 {
-                    throw new ArgumentException(Strings.Context_MissingSelfAndEditLinkForNamedStream(name), "name");
+                    throw new ArgumentException(Strings.Context_MissingSelfAndEditLinkForNamedStream(name), nameof(name));
                 }
             }
 
