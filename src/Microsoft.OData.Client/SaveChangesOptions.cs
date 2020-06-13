@@ -31,7 +31,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Use partial payload when doing post.
-        /// Note it can only be used when using <see cref="Microsoft.OData.Client.DataServiceCollection`1" />
+        /// Note it can only be used when using <see cref="Microsoft.OData.Client.DataServiceCollection{T}" />
         /// </summary>
         PostOnlySetProperties = 8,
 

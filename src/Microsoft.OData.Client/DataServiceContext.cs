@@ -733,7 +733,7 @@ namespace Microsoft.OData.Client
 
 
         /// <summary>
-        /// Indicates whether user is using <see cref="Microsoft.OData.Client.DataServiceCollection`1" /> to track changes.
+        /// Indicates whether user is using <see cref="Microsoft.OData.Client.DataServiceCollection{T}" /> to track changes.
         /// </summary>
         internal bool UsingDataServiceCollection { get; set; }
 
@@ -1002,7 +1002,7 @@ namespace Microsoft.OData.Client
 
         #region CreateQuery
         /// <summary>Creates a data service query for data of a specified generic type.</summary>
-        /// <returns>A new <see cref="Microsoft.OData.Client.DataServiceQuery`1" /> instance that represents a data service query.</returns>
+        /// <returns>A new <see cref="Microsoft.OData.Client.DataServiceQuery{TElement}" /> instance that represents a data service query.</returns>
         /// <param name="entitySetName">A string that resolves to a URI.</param>
         /// <typeparam name="T">The type returned by the query</typeparam>
         /// <remarks>create a query based on (BaseUri + relativeUri)</remarks>
@@ -1018,7 +1018,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Creates a data service query for a function with return type in a specified generic type.</summary>
-        /// <returns>A new <see cref="Microsoft.OData.Client.DataServiceQuery`1" /> instance that represents a data service query.</returns>
+        /// <returns>A new <see cref="Microsoft.OData.Client.DataServiceQuery{TElement}" /> instance that represents a data service query.</returns>
         /// <param name="resourcePath">A string ends with function invocation that resolves to a URI.</param>
         /// <param name="isComposable">Whether this function query is composable</param>
         /// <typeparam name="T">The type returned by the query</typeparam>
@@ -1036,7 +1036,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Creates a data service query for a function invocation that returns a specified generic type.</summary>
-        /// <returns>A new <see cref="Microsoft.OData.Client.DataServiceQuery`1" /> instance that represents a data service query.</returns>
+        /// <returns>A new <see cref="Microsoft.OData.Client.DataServiceQuery{TElement}" /> instance that represents a data service query.</returns>
         /// <typeparam name="T">The type returned by the query</typeparam>
         /// <remarks>create a query based on (BaseUri + relativeUri)</remarks>
         public virtual DataServiceQuery<T> CreateFunctionQuery<T>()
@@ -1051,7 +1051,7 @@ namespace Microsoft.OData.Client
         /// <param name="functionName">The function name.</param>
         /// <param name="isComposable">Whether this query is composable.</param>
         /// <param name="parameters">The function parameters.</param>
-        /// <returns>A new <see cref="Microsoft.OData.Client.DataServiceQuery`1" /> instance that represents the function call.</returns>
+        /// <returns>A new <see cref="Microsoft.OData.Client.DataServiceQuery{TElement}" /> instance that represents the function call.</returns>
         public virtual DataServiceQuery<T> CreateFunctionQuery<T>(string path, string functionName, bool isComposable, params UriOperationParameter[] parameters)
         {
             this.CreateRequestArgsAndFireBuildingRequest(null, null, new HeaderCollection(), this.HttpStack, null /*descriptor*/);
@@ -1076,7 +1076,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Creates a data service query for singleton data of a specified generic type.</summary>
-        /// <returns>A new <see cref="Microsoft.OData.Client.DataServiceQuery`1" /> instance that represents a data service query.</returns>
+        /// <returns>A new <see cref="Microsoft.OData.Client.DataServiceQuery{TElement}" /> instance that represents a data service query.</returns>
         /// <param name="singletonName">A string that resolves to a URI.</param>
         /// <typeparam name="T">The type returned by the query</typeparam>
         /// <remarks>create a query based on (BaseUri + relativeUri)</remarks>
@@ -1156,7 +1156,7 @@ namespace Microsoft.OData.Client
         /// <returns>An <see cref="System.IAsyncResult" /> that represents the status of the operation.</returns>
         /// <param name="entity">The entity that contains the property to load.</param>
         /// <param name="propertyName">The name of the property of the specified entity to load.</param>
-        /// <param name="continuation">A <see cref="Microsoft.OData.Client.DataServiceQueryContinuation`1" /> object that represents the next page of related entity data to return from the data service.</param>
+        /// <param name="continuation">A <see cref="Microsoft.OData.Client.DataServiceQueryContinuation{T}" /> object that represents the next page of related entity data to return from the data service.</param>
         /// <param name="callback">Delegate to invoke when results are available for client consumption.</param>
         /// <param name="state">User-defined state object passed to the callback.</param>
         public virtual IAsyncResult BeginLoadProperty(object entity, string propertyName, DataServiceQueryContinuation continuation, AsyncCallback callback, object state)
@@ -1171,7 +1171,7 @@ namespace Microsoft.OData.Client
         /// <returns>A Task that represents the response to the load operation.</returns>
         /// <param name="entity">The entity that contains the property to load.</param>
         /// <param name="propertyName">The name of the property on the specified entity to load.</param>
-        /// <param name="continuation">A <see cref="Microsoft.OData.Client.DataServiceQueryContinuation`1" /> object that represents the next page of related entity data to return from the data service.</param>
+        /// <param name="continuation">A <see cref="Microsoft.OData.Client.DataServiceQueryContinuation{T}" /> object that represents the next page of related entity data to return from the data service.</param>
         public virtual Task<QueryOperationResponse> LoadPropertyAsync(object entity, string propertyName, DataServiceQueryContinuation continuation)
         {
             return Task<QueryOperationResponse>.Factory.FromAsync(this.BeginLoadProperty, this.EndLoadProperty, entity, propertyName, continuation, null);
@@ -1233,7 +1233,7 @@ namespace Microsoft.OData.Client
         /// <returns>The response that contains the next page of related entity data.</returns>
         /// <param name="entity">The entity that contains the property to load.</param>
         /// <param name="propertyName">The name of the property of the specified entity to load.</param>
-        /// <param name="continuation">A <see cref="Microsoft.OData.Client.DataServiceQueryContinuation`1" /> object that represents the next page of related entities to load from the data service.</param>
+        /// <param name="continuation">A <see cref="Microsoft.OData.Client.DataServiceQueryContinuation{T}" /> object that represents the next page of related entities to load from the data service.</param>
         /// <exception cref="System.InvalidOperationException">When <paramref name="entity" /> is in the <see cref="Microsoft.OData.Client.EntityStates.Detached" /> or <see cref="Microsoft.OData.Client.EntityStates.Added" /> state.</exception>
         /// <remarks>
         /// If <paramref name="entity"/> is in in detached or added state, this method will throw an InvalidOperationException
@@ -1256,7 +1256,7 @@ namespace Microsoft.OData.Client
         /// <returns>The response that contains the next page of related entity data.</returns>
         /// <param name="entity">The entity that contains the property to load.</param>
         /// <param name="propertyName">The name of the property of the specified entity to load.</param>
-        /// <param name="continuation">A <see cref="Microsoft.OData.Client.DataServiceQueryContinuation`1" /> object that represents the next page of related entities to load from the data service.</param>
+        /// <param name="continuation">A <see cref="Microsoft.OData.Client.DataServiceQueryContinuation{T}" /> object that represents the next page of related entities to load from the data service.</param>
         /// <typeparam name="T">Element type of collection to load.</typeparam>
         /// <exception cref="System.InvalidOperationException">When <paramref name="entity" /> is in the <see cref="Microsoft.OData.Client.EntityStates.Detached" /> or <see cref="Microsoft.OData.Client.EntityStates.Added" /> state.</exception>
         /// <remarks>
@@ -1791,7 +1791,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>Asynchronously sends a request to the data service to retrieve the next page of data in a paged query result.</summary>
         /// <returns>An <see cref="System.IAsyncResult" /> that represents the status of the operation.</returns>
-        /// <param name="continuation">A <see cref="Microsoft.OData.Client.DataServiceQueryContinuation`1" /> object that represents the next page of data to return from the data service.</param>
+        /// <param name="continuation">A <see cref="Microsoft.OData.Client.DataServiceQueryContinuation{T}" /> object that represents the next page of data to return from the data service.</param>
         /// <param name="callback">Delegate to invoke when results are available for client consumption.</param>
         /// <param name="state">User-defined state object passed to the callback.</param>
         /// <typeparam name="T">The type returned by the query.</typeparam>
@@ -1806,7 +1806,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>Asynchronously sends a request to the data service to retrieve the next page of data in a paged query result.</summary>
         /// <returns>A task that represents the results returned by the query operation.</returns>
-        /// <param name="continuation">A <see cref="Microsoft.OData.Client.DataServiceQueryContinuation`1" /> object that represents the next page of data to return from the data service.</param>
+        /// <param name="continuation">A <see cref="Microsoft.OData.Client.DataServiceQueryContinuation{T}" /> object that represents the next page of data to return from the data service.</param>
         /// <typeparam name="TElement">The type returned by the query.</typeparam>
         public virtual Task<IEnumerable<TElement>> ExecuteAsync<TElement>(DataServiceQueryContinuation<TElement> continuation)
         {
@@ -1867,7 +1867,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>Sends a request to the data service to retrieve the next page of data in a paged query result.</summary>
         /// <returns>The response that contains the next page of data in the query result.</returns>
-        /// <param name="continuation">A <see cref="Microsoft.OData.Client.DataServiceQueryContinuation`1" /> object that represents the next page of data to return from the data service.</param>
+        /// <param name="continuation">A <see cref="Microsoft.OData.Client.DataServiceQueryContinuation{T}" /> object that represents the next page of data to return from the data service.</param>
         /// <typeparam name="T">The type returned by the query.</typeparam>
         public virtual QueryOperationResponse<T> Execute<T>(DataServiceQueryContinuation<T> continuation)
         {
@@ -1903,7 +1903,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Sends a request to the data service to execute a specific URI by using a specific HTTP method.</summary>
-        /// <returns>Returns <see cref="System.Collections.Generic.IEnumerable`1" />.</returns>
+        /// <returns>Returns <see cref="System.Collections.Generic.IEnumerable{T}" />.</returns>
         /// <param name="requestUri">The URI to which the query request will be sent. The URI may be any valid data service URI. Can contain $ query parameters.</param>
         /// <param name="httpMethod">The HTTP data transfer method used by the client.</param>
         /// <param name="singleResult">Attribute used on service operations to specify that they return a single instance of their return element.</param>
@@ -1921,7 +1921,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Sends a request to the data service to execute a specific URI by using a specific HTTP method.</summary>
-        /// <returns>Returns <see cref="System.Collections.Generic.IEnumerable`1" />.</returns>
+        /// <returns>Returns <see cref="System.Collections.Generic.IEnumerable{T}" />.</returns>
         /// <param name="requestUri">The URI to which the query request will be sent. The URI may be any valid data service URI. Can contain $ query parameters.</param>
         /// <param name="httpMethod">The HTTP data transfer method used by the client.</param>
         /// <param name="operationParameters">The operation parameters used.</param>

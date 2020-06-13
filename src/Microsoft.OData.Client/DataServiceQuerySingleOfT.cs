@@ -108,7 +108,7 @@ namespace Microsoft.OData.Client
         /// <param name="functionName">The function name.</param>
         /// <param name="isComposable">Whether this query is composable.</param>
         /// <param name="parameters">The function parameters.</param>
-        /// <returns>A new <see cref="Microsoft.OData.Client.DataServiceQuery`1" /> instance that represents the function call.</returns>
+        /// <returns>A new <see cref="Microsoft.OData.Client.DataServiceQuery{TElement}" /> instance that represents the function call.</returns>
         public virtual DataServiceQuery<T> CreateFunctionQuery<T>(string functionName, bool isComposable, params UriOperationParameter[] parameters)
         {
             return this.Query.CreateFunctionQuery<T>(functionName, isComposable, parameters);

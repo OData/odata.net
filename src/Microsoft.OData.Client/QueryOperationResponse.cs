@@ -115,7 +115,7 @@ namespace Microsoft.OData.Client
             return this.results.GetContinuation(collection);
         }
 
-        /// <summary>Gets a <see cref="Microsoft.OData.Client.DataServiceQueryContinuation`1" /> object that contains the URI that is used to retrieve the next page of related entities in the specified collection.</summary>
+        /// <summary>Gets a <see cref="Microsoft.OData.Client.DataServiceQueryContinuation{T}" /> object that contains the URI that is used to retrieve the next page of related entities in the specified collection.</summary>
         /// <returns>A continuation object that points to the next page for the collection.</returns>
         /// <param name="collection">The collection of related objects being loaded.</param>
         /// <typeparam name="T">The type of the items in the collection.</typeparam>

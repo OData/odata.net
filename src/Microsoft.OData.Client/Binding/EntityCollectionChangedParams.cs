@@ -84,7 +84,7 @@ namespace Microsoft.OData.Client
 
         #region Properties
 
-        /// <summary>The <see cref="Microsoft.OData.Client.DataServiceContext" /> associated with the <see cref="Microsoft.OData.Client.DataServiceCollection`1" /> that has changed.</summary>
+        /// <summary>The <see cref="Microsoft.OData.Client.DataServiceContext" /> associated with the <see cref="Microsoft.OData.Client.DataServiceCollection{T}" /> that has changed.</summary>
         /// <returns>The context associated with the collection that has changed</returns>
         public DataServiceContext Context
         {
@@ -126,7 +126,7 @@ namespace Microsoft.OData.Client
             get { return this.targetEntitySet; }
         }
 
-        /// <summary>The <see cref="Microsoft.OData.Client.DataServiceCollection`1" /> that has changed.</summary>
+        /// <summary>The <see cref="Microsoft.OData.Client.DataServiceCollection{T}" /> that has changed.</summary>
         /// <returns>A reference to the collection that has changed.</returns>
         public ICollection Collection
         {
