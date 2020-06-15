@@ -1,22 +1,22 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="SelectRequiredTests.cs" company="Microsoft">
+// <copyright file="ODataUrlValidationTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //--------
 
-using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Csdl;
-using Microsoft.OData.Edm.Validation;
-using Microsoft.OData.UriParser;
-using Microsoft.OData.UriParser.Validation;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.UriParser;
+using Microsoft.OData.UriParser.Validation;
 using Xunit;
 
-namespace UrlValidationTests
+namespace Microsoft.OData.Tests
 {
     public class ODataUrlValidatorTests
     {
@@ -24,7 +24,7 @@ namespace UrlValidationTests
         private const string invalidRuleText = "This rule is invalid.";
 
         [Fact]
-        private static void InvalidRule()
+        public static void InvalidRule()
         {
             const string request = @"company";
 
@@ -40,7 +40,7 @@ namespace UrlValidationTests
         }
 
         [Fact]
-        private static void FailedParse()
+        public static void FailedParse()
         {
             const string request = @"myInvalidRequest";
 

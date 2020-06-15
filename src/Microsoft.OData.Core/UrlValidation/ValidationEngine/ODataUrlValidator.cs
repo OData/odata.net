@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Microsoft.OData.Edm;
@@ -182,6 +183,7 @@ namespace Microsoft.OData.UriParser.Validation.ValidationEngine
         /// <param name="validationContext">Validation Context.</param>
         /// <param name="impliedProperty">Whether the item being validated is an implied property.</param>
         /// <returns>True, if at least one rule was found for the type, otherwise false.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1031", Justification = "Catch user code exception and surface as a validation error.")]
         private bool ValidateByType(object item, Type itemType, ODataUrlValidationContext validationContext, bool impliedProperty)
         {
             List<ODataUrlValidationRule> ruleList;
@@ -189,7 +191,7 @@ namespace Microsoft.OData.UriParser.Validation.ValidationEngine
             {
                 foreach (ODataUrlValidationRule rule in ruleList)
                 {
-                    if (!impliedProperty || rule.IncludeImpliedPropeties)
+                    if (!impliedProperty || rule.IncludeImpliedProperties)
                     {
                         try
                         {

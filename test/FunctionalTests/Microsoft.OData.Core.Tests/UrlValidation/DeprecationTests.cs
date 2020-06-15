@@ -1,15 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 //---------------------------------------------------------------------
 // <copyright file="DeprecationTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //--------
 
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml;
-using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
@@ -17,7 +16,7 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Validation;
 using Xunit;
 
-namespace UrlValidationTests
+namespace Microsoft.OData.Tests
 {
     public class DeprecationTests
     {
@@ -33,7 +32,7 @@ namespace UrlValidationTests
         [InlineData(@"company?$expand=employees", "name", "state", "employees")]
         [InlineData(@"company?$select=name", "name")]
         [InlineData(@"competitors?$filter=contains(name,'sprocket')", "competitors", "name","state","name")]
-        private static void HasDeprecated(String request, params string[] expectedErrors)
+        public static void WithDeprecatedElementsGeneratesErrors(String request, params string[] expectedErrors)
         {
             IEdmModel model = GetModel();
             ODataUriParser parser = new ODataUriParser(model, new Uri(request, UriKind.Relative));
@@ -63,7 +62,7 @@ namespace UrlValidationTests
         [InlineData(@"company?$select=stockSymbol")]
         [InlineData(@"company/address?$select=city")]
         [InlineData(@"company/address/city")]
-        private static void NotDeprecated(String request)
+        public static void WithoutDeprecatedElementsDoesntGenerateErrors(String request)
         {
             IEdmModel model = GetModel();
             ODataUriParser parser = new ODataUriParser(model, new Uri(request, UriKind.Relative));
@@ -82,10 +81,7 @@ namespace UrlValidationTests
                 // Attempt to load the CSDL into an EdmModel 
                 XmlReader reader = XmlReader.Create(new StringReader(JetsonsModel));
                 IEnumerable<EdmError> errors;
-                if (!CsdlReader.TryParse(reader, out model, out errors))
-                {
-                    throw new Exception("Unable to parse Model");
-                }
+                Assert.True(CsdlReader.TryParse(reader, out model, out errors), "Failed Parsing Model");
             }
 
             return model;

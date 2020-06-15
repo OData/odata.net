@@ -17,10 +17,10 @@ namespace Microsoft.OData.UriParser.Validation
     public static class ODataUrlValidationExtensions
     {
         /// <summary>
-        /// Validate the OData Url for a given model using a specified set of rules.
+        /// Validate a Uri as an OData Url for a given model using a specified set of rules.
         /// </summary>
         /// <param name="uri">The <see cref="Uri"/> to validate.</param>
-        /// <param name="model">The model to validate the OData Uri against.</param>
+        /// <param name="model">The model to validate the Uri against.</param>
         /// <param name="rules">The set of rules to use in validating the OData Uri.</param>
         /// <param name="validationMessages">The collection of validation messages found during validation.</param>
         /// <returns>True if validation messages are discovered during validation, otherwise false.</returns>
@@ -33,7 +33,7 @@ namespace Microsoft.OData.UriParser.Validation
                 return odataUri.Validate(model, rules, out validationMessages);
             }
 
-            catch (Exception e)
+            catch (ODataException e)
             {
                 validationMessages = new ODataUrlValidationMessage[]
                 {

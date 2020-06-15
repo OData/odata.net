@@ -4,18 +4,18 @@
 // </copyright>
 //--------
 
-using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Csdl;
-using Microsoft.OData.Edm.Validation;
-using Microsoft.OData.UriParser.Validation;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.UriParser.Validation;
 using Xunit;
 
-namespace UrlValidationTests
+namespace Microsoft.OData.Tests
 {
     public class SelectRequiredTests
     {
@@ -29,7 +29,7 @@ namespace UrlValidationTests
         [InlineData(@"company?$expand=employees($select=*)", "company", "employees")]
         [InlineData(@"company/address", "address")]
         [InlineData(@"company?$select=name&$expand=employees", "employees")]
-        private static void MissingSelect(String request, params string[] expectedErrors)
+        public static void MissingSelectGeneratesErrors(String request, params string[] expectedErrors)
         {
             IEdmModel model = GetModel();
             Uri uri = new Uri(request, UriKind.Relative);
@@ -52,7 +52,7 @@ namespace UrlValidationTests
         [InlineData(@"company/employees?$select=firstName")]
         [InlineData(@"company/address?$select=city,state,zip")]
         [InlineData(@"company?$select=name&$expand=employees($select=firstName)")]
-        private static void HaveSelect(String request)
+        public static void HasSelectGeneratesNoErrors(String request)
         {
             IEdmModel model = GetModel();
             Uri uri = new Uri(request, UriKind.Relative);
@@ -71,10 +71,7 @@ namespace UrlValidationTests
                 // Attempt to load the CSDL into an EdmModel 
                 XmlReader reader = XmlReader.Create(new StringReader(JetsonsModel));
                 IEnumerable<EdmError> errors;
-                if (!CsdlReader.TryParse(reader, out model, out errors))
-                {
-                    throw new Exception("Unable to parse Model");
-                }
+                Assert.True(CsdlReader.TryParse(reader, out model, out errors), "Could not Parse CSDL");
             }
 
             return model;

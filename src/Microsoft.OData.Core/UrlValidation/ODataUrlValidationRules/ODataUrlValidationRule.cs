@@ -16,7 +16,7 @@ namespace Microsoft.OData.UriParser.Validation
         /// <summary>
         /// True if rule should include implicitly selected properties (i.e., in the absence of a $select)
         /// </summary>
-        public bool IncludeImpliedPropeties { get; set; }
+        public bool IncludeImpliedProperties { get; set; }
 
         /// <summary>
         /// Name of the rule.
@@ -57,10 +57,9 @@ namespace Microsoft.OData.UriParser.Validation
         /// Constructs an instance of an ODataValdiationRule of a particular type.
         /// </summary>
         /// <param name="validateMethod">The Action that validates an instance of the specified type.></param>
-        public ODataUrlValidationRule(string ruleName, Action<ODataUrlValidationContext, T> validateMethod)
+        public ODataUrlValidationRule(string ruleName, Action<ODataUrlValidationContext, T> validateMethod) :
+            this (ruleName, validateMethod, /*includeImpliedProperties*/ false)
         {
-            this.RuleName = ruleName;
-            this.validateMethod = validateMethod;
         }
 
         /// <summary>
@@ -70,8 +69,9 @@ namespace Microsoft.OData.UriParser.Validation
         /// <param name="includeImpliedProperties">Whether the rule should include implicitly selected properties.</param>
         public ODataUrlValidationRule(string ruleName, Action<ODataUrlValidationContext, T> validateMethod, bool includeImpliedProperties)
         {
+            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(ruleName, "ruleName");
             this.RuleName = ruleName;
-            this.IncludeImpliedPropeties = true;
+            this.IncludeImpliedProperties = includeImpliedProperties;
             this.validateMethod = validateMethod;
         }
 
