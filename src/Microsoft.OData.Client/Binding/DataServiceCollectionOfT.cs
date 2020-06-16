@@ -85,7 +85,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceCollection{T}" /> class based on query execution and with the specified tracking mode.</summary>
         /// <param name="trackingMode">A <see cref="Microsoft.OData.Client.TrackingMode" /> value that indicated whether or not changes made to items in the collection are automatically tracked.</param>
-        /// <param name="item">A <see cref="Microsoft.OData.Client.DataServiceQuerySingle`1" /> or LINQ query that returns an object that are used to initialize the collection.</param>
+        /// <param name="item">A <see cref="Microsoft.OData.Client.DataServiceQuerySingle{T}" /> or LINQ query that returns an object that are used to initialize the collection.</param>
         public DataServiceCollection(TrackingMode trackingMode, DataServiceQuerySingle<T> item)
             : this(null, item.Query, trackingMode, null, null, null)
         {
