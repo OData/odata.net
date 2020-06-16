@@ -34,7 +34,7 @@ namespace Microsoft.OData.Client
 
         #region Constructors
 
-        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceRequest`1" /> class. </summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceRequest{TElement}" /> class. </summary>
         /// <param name="requestUri">The URI object that contains the request string.</param>
         public DataServiceRequest(Uri requestUri)
         {
@@ -58,7 +58,7 @@ namespace Microsoft.OData.Client
 
         #endregion Constructors
 
-        /// <summary>Gets the type of the object used to create the <see cref="Microsoft.OData.Client.DataServiceRequest`1" /> instance.</summary>
+        /// <summary>Gets the type of the object used to create the <see cref="Microsoft.OData.Client.DataServiceRequest{TElement}" /> instance.</summary>
         /// <returns>A <see cref="System.Type" /> value that indicates the type of data returned.</returns>
         public override Type ElementType
         {
