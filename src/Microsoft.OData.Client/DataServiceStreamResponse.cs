@@ -64,7 +64,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Gets the collection of headers from the response.</summary>
-        /// <returns>The headers collection from the response message as a <see cref="System.Collections.Generic.Dictionary`2" /> object.</returns>
+        /// <returns>The headers collection from the response message as a <see cref="System.Collections.Generic.Dictionary{TKey,TValue}" /> object.</returns>
         public Dictionary<string, string> Headers
         {
             get
