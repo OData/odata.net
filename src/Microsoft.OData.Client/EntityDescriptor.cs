@@ -248,7 +248,7 @@ namespace Microsoft.OData.Client
         public String ServerTypeName { get; internal set; }
 
         /// <summary>Returns a collection of links that are the relationships in which the entity participates.</summary>
-        /// <returns>A <see cref="System.Collections.ObjectModel.ReadOnlyCollection`1" /> of <see cref="Microsoft.OData.Client.LinkInfo" /> objects that represents links in which the entity participates.</returns>
+        /// <returns>A <see cref="System.Collections.ObjectModel.ReadOnlyCollection{T}" /> of <see cref="Microsoft.OData.Client.LinkInfo" /> objects that represents links in which the entity participates.</returns>
         [SuppressMessage("Microsoft.Naming", "CA1704", Justification = "LinkInfoCollection is cumbersome and Links isn't expressive enough")]
         public ReadOnlyCollection<LinkInfo> LinkInfos
         {
@@ -259,7 +259,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Returns a collection of named binary data streams that belong to the entity.</summary>
-        /// <returns>A <see cref="System.Collections.ObjectModel.ReadOnlyCollection`1" /> of <see cref="Microsoft.OData.Client.StreamDescriptor" /> objects that are the named binary data streams that belong to the entity.</returns>
+        /// <returns>A <see cref="System.Collections.ObjectModel.ReadOnlyCollection{T}" /> of <see cref="Microsoft.OData.Client.StreamDescriptor" /> objects that are the named binary data streams that belong to the entity.</returns>
         public ReadOnlyCollection<StreamDescriptor> StreamDescriptors
         {
             get
