@@ -1207,7 +1207,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Loads a page of related entities by using the supplied next link URI.</summary>
-        /// <returns>An instance of <see cref="Microsoft.OData.Client.QueryOperationResponse`1" /> that contains the results of the request.</returns>
+        /// <returns>An instance of <see cref="Microsoft.OData.Client.QueryOperationResponse{T}" /> that contains the results of the request.</returns>
         /// <param name="entity">The entity that contains the property to load.</param>
         /// <param name="propertyName">The name of the property of the specified entity to load.</param>
         /// <param name="nextLinkUri">The URI that is used to load the next results page.</param>
@@ -2544,7 +2544,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="entity">The entity that contains the property to load.</param>
         /// <param name="propertyName">The name of the property of the specified entity to load.</param>
-        /// <returns>An instance of <see cref="Microsoft.OData.Client.QueryOperationResponse`1" /> that contains the results of the last page request.</returns>
+        /// <returns>An instance of <see cref="Microsoft.OData.Client.QueryOperationResponse{T}" /> that contains the results of the last page request.</returns>
         internal Task<QueryOperationResponse> LoadPropertyAllPagesAsync(object entity, string propertyName)
         {
             var currentTask = Task<QueryOperationResponse>.Factory.FromAsync(this.BeginLoadProperty, this.EndLoadProperty, entity, propertyName, null);
@@ -2559,7 +2559,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="entity">The entity that contains the property to load.</param>
         /// <param name="propertyName">The name of the property of the specified entity to load.</param>
-        /// <returns>An instance of <see cref="Microsoft.OData.Client.QueryOperationResponse`1" /> that contains the results of the last page request.</returns>
+        /// <returns>An instance of <see cref="Microsoft.OData.Client.QueryOperationResponse{T}" /> that contains the results of the last page request.</returns>
         internal QueryOperationResponse LoadPropertyAllPages(object entity, string propertyName)
         {
             DataServiceQueryContinuation continuation = null;
@@ -2923,7 +2923,7 @@ namespace Microsoft.OData.Client
         /// <param name="response">The response of previous page</param>
         /// <param name="entity">The entity that contains the property to load.</param>
         /// <param name="propertyName">The name of the property of the specified entity to load.</param>
-        /// <returns>An instance of <see cref="Microsoft.OData.Client.QueryOperationResponse`1" /> that contains the results of the request.</returns>
+        /// <returns>An instance of <see cref="Microsoft.OData.Client.QueryOperationResponse{T}" /> that contains the results of the request.</returns>
         private QueryOperationResponse ContinuePage(QueryOperationResponse response, object entity, string propertyName)
         {
             var continuation = response.GetContinuation();

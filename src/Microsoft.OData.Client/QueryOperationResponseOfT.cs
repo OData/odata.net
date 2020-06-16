@@ -80,8 +80,8 @@ namespace Microsoft.OData.Client
             return (DataServiceQueryContinuation<T>)base.GetContinuation();
         }
 
-        /// <summary>Executes the <see cref="Microsoft.OData.Client.DataServiceQuery{TElement}" /> and gets <see cref="Microsoft.OData.Client.QueryOperationResponse`1" /> items.</summary>
-        /// <returns>An enumerator to a collection of <see cref="Microsoft.OData.Client.QueryOperationResponse`1" /> items.</returns>
+        /// <summary>Executes the <see cref="Microsoft.OData.Client.DataServiceQuery{TElement}" /> and gets <see cref="Microsoft.OData.Client.QueryOperationResponse{T}" /> items.</summary>
+        /// <returns>An enumerator to a collection of <see cref="Microsoft.OData.Client.QueryOperationResponse{T}" /> items.</returns>
         /// <remarks>In the case of Collection(primitive) or Collection(complex), the entire collection is
         /// materialized when this is called.</remarks>
         public new IEnumerator<T> GetEnumerator()
