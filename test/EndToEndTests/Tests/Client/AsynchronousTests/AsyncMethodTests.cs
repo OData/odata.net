@@ -105,7 +105,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             customers.Add(c2);
 
             var dataServiceResponse = await context.SaveChangesAsync(SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.UseRelativeUri);
-            Assert.Equal((dataServiceResponse.First() as ChangeOperationResponse).StatusCode, 201);
+            Assert.Equal(201, (dataServiceResponse.First() as ChangeOperationResponse).StatusCode);
 
             // UseJsonBatch
             c2.Name = "Customer Two Updated";
@@ -116,7 +116,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             {
                 if (!eventArgs.IsBatchPart) // Check top level headers only
                 {
-                    Assert.AreEqual("application/json", eventArgs.RequestMessage.GetHeader("Content-Type"));
+                    Assert.Equal("application/json", eventArgs.RequestMessage.GetHeader("Content-Type"));
                 }
             };
 
@@ -125,12 +125,12 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             {
                 if (!eventArgs.IsBatchPart) // Check top level headers only
                 {
-                    Assert.AreEqual("application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8", eventArgs.ResponseMessage.GetHeader("Content-Type"));
+                    Assert.Equal("application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8", eventArgs.ResponseMessage.GetHeader("Content-Type"));
                 }
             };
 
             var dscResponse = await context.SaveChangesAsync(SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.UseJsonBatch);
-            Assert.AreEqual((dscResponse.First() as ChangeOperationResponse).StatusCode, 204, "StatusCode == 204");
+            Assert.Equal(204, (dscResponse.First() as ChangeOperationResponse).StatusCode);
 
             this.EnqueueTestComplete();
         }
@@ -546,7 +546,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             Assert.Equal(customerCount, customers.Count());
             context.Configurations.RequestPipeline.OnEntryEnding((args) =>
             {
-                Assert.Equal(1, args.Entry.Properties.Count());
+                Assert.Single(args.Entry.Properties);
             });
             for (int i = 0; i < customers.Count(); i++)
             {

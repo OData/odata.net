@@ -385,7 +385,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                         }
 
                         Assert.Equal(ODataReaderState.Completed, reader.State);
-                        Assert.Equal(1, entries.Count);
+                        Assert.Single(entries);
 
                         Assert.Equal(800, entries[0].Properties.Single(p => p.Name == "StoredPIID").Value);
                         Assert.Equal("The Default Stored PI", entries[0].Properties.Single(p => p.Name == "PIName").Value);
@@ -838,8 +838,8 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                             }
 
                             Assert.Equal(ODataReaderState.Completed, reader.State);
-                            Assert.Equal(1, entries.Count);
-                            Assert.Equal(0, navigationLinks.Count);
+                            Assert.Single(entries);
+                            Assert.Empty(navigationLinks);
                             Assert.Equal(testCase.Value, entries[0].Properties.Count());
                         }
                     }
@@ -1053,10 +1053,10 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
             TestClientContext.Format.UseJson(Model);
 
             var queryable = TestClientContext.CreateQuery<GiftCard>("Accounts(101)/MyGiftCard");
-            Assert.True(queryable.RequestUri.OriginalString.EndsWith("Accounts(101)/MyGiftCard", StringComparison.Ordinal));
+            Assert.EndsWith("Accounts(101)/MyGiftCard", queryable.RequestUri.OriginalString, StringComparison.Ordinal);
 
             List<GiftCard> result = queryable.ToList();
-            Assert.Equal(1, result.Count);
+            Assert.Single(result);
             Assert.Equal(301, result[0].GiftCardID);
             Assert.Equal("AAA123A", result[0].GiftCardNO);
         }
@@ -1067,7 +1067,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
             TestClientContext.Format.UseJson(Model);
 
             var queryable = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments");
-            Assert.True(queryable.RequestUri.OriginalString.EndsWith("Accounts(103)/MyPaymentInstruments", StringComparison.Ordinal));
+            Assert.EndsWith("Accounts(103)/MyPaymentInstruments", queryable.RequestUri.OriginalString, StringComparison.Ordinal);
 
             List<PaymentInstrument> result = queryable.ToList();
             Assert.Equal(4, result.Count);
@@ -1081,10 +1081,10 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
             TestClientContext.Format.UseJson(Model);
 
             var queryable = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments(103902)");
-            Assert.True(queryable.RequestUri.OriginalString.EndsWith("Accounts(103)/MyPaymentInstruments(103902)", StringComparison.Ordinal));
+            Assert.EndsWith("Accounts(103)/MyPaymentInstruments(103902)", queryable.RequestUri.OriginalString, StringComparison.Ordinal);
 
             List<PaymentInstrument> result = queryable.ToList();
-            Assert.Equal(1, result.Count);
+            Assert.Single(result);
             Assert.Equal(103902, result[0].PaymentInstrumentID);
             Assert.Equal("103 second PI", result[0].FriendlyName);
 
@@ -1095,10 +1095,10 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
         {
             TestClientContext.Format.UseJson(Model);
             var queryable = TestClientContext.CreateQuery<int>("Accounts(103)/MyPaymentInstruments(103902)/PaymentInstrumentID");
-            Assert.True(queryable.RequestUri.OriginalString.EndsWith("Accounts(103)/MyPaymentInstruments(103902)/PaymentInstrumentID", StringComparison.Ordinal));
+            Assert.EndsWith("Accounts(103)/MyPaymentInstruments(103902)/PaymentInstrumentID", queryable.RequestUri.OriginalString, StringComparison.Ordinal);
 
             List<int> result = queryable.ToList();
-            Assert.Equal(1, result.Count);
+            Assert.Single(result);
             Assert.Equal(103902, result[0]);
 
         }
@@ -1272,7 +1272,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
             TestClientContext.SaveChanges();
 
             List<PaymentInstrument> piResult2 = queryable.ToList();
-            Assert.Equal(0, piResult2.Count);
+            Assert.Empty(piResult2);
         }
 
         [Fact]
@@ -1293,7 +1293,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
         }
 
         // [Fact] // github issuse: #896
-        public void CreateContainedEntityFromODataClientUsingAddRelatedObjectUsingBatchRequest()
+        internal void CreateContainedEntityFromODataClientUsingAddRelatedObjectUsingBatchRequest()
         {
             TestClientContext.Format.UseJson(Model);
 
@@ -1356,7 +1356,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
 
             var queryable1 = TestClientContext.CreateQuery<GiftCard>("Accounts(120)/MyGiftCard");
             List<GiftCard> giftCardResult = queryable1.ToList();
-            Assert.Equal(1, giftCardResult.Count);
+            Assert.Single(giftCardResult);
             Assert.Equal(76, giftCardResult[0].Amount);
         }
 
