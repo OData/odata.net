@@ -207,6 +207,7 @@ namespace Microsoft.OData.Client
         internal const string ALinq_IllegalSystemQueryOption = "ALinq_IllegalSystemQueryOption";
         internal const string ALinq_IllegalPathStructure = "ALinq_IllegalPathStructure";
         internal const string ALinq_TypeTokenWithNoTrailingNavProp = "ALinq_TypeTokenWithNoTrailingNavProp";
+        internal const string ALinq_AggregationMethodNotSupported = "ALinq_AggregationMethodNotSupported";
         internal const string DSKAttribute_MustSpecifyAtleastOnePropertyName = "DSKAttribute_MustSpecifyAtleastOnePropertyName";
         internal const string DataServiceCollection_LoadRequiresTargetCollectionObserved = "DataServiceCollection_LoadRequiresTargetCollectionObserved";
         internal const string DataServiceCollection_CannotStopTrackingChildCollection = "DataServiceCollection_CannotStopTrackingChildCollection";
@@ -270,6 +271,7 @@ namespace Microsoft.OData.Client
         internal const string ValueParser_InvalidDuration = "ValueParser_InvalidDuration";
         internal const string PlatformHelper_DateTimeOffsetMustContainTimeZone = "PlatformHelper_DateTimeOffsetMustContainTimeZone";
         internal const string DataServiceRequest_FailGetCount = "DataServiceRequest_FailGetCount";
+        internal const string DataServiceRequest_FailGetValue = "DataServiceRequest_FailGetValue";
         internal const string Context_ExecuteExpectedVoidResponse = "Context_ExecuteExpectedVoidResponse";
 
         static TextRes loader = null;

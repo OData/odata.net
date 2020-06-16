@@ -1805,6 +1805,14 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
+        /// A string like "The aggregation method '{0}' is not supported."
+        /// </summary>
+        internal static string ALinq_AggregationMethodNotSupported(object p0)
+        {
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ALinq_AggregationMethodNotSupported, p0);
+        }
+
+        /// <summary>
         /// A string like "DataServiceKey attribute must specify at least one property name."
         /// </summary>
         internal static string DSKAttribute_MustSpecifyAtleastOnePropertyName
@@ -2359,6 +2367,17 @@ namespace Microsoft.OData.Client {
             get
             {
                 return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.DataServiceRequest_FailGetCount);
+            }
+        }
+
+        /// <summary>
+        /// A string like "Failed to get the value from the server."
+        /// </summary>
+        internal static string DataServiceRequest_FailGetValue
+        {
+            get
+            {
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.DataServiceRequest_FailGetValue);
             }
         }
 

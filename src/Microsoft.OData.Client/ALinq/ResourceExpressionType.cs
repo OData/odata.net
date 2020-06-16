@@ -41,5 +41,8 @@ namespace Microsoft.OData.Client
 
         /// <summary>Expand Query Option Expression</summary>
         ExpandQueryOption,
+
+        /// <summary>Apply Query Option Expression</summary>
+        ApplyQueryOption
     }
 }

@@ -206,7 +206,8 @@ ALinq_AnyAllNotSupportedInOrderBy=The method '{0}' is not supported by the 'orde
 ALinq_FormatQueryOptionNotSupported=The '$format' query option is not supported. Use the DataServiceContext.Format property to set the desired format.
 ALinq_IllegalSystemQueryOption=Found the following illegal system token while building a projection or expansion path: '{0}'
 ALinq_IllegalPathStructure=Found a projection as a non-leaf segment in an expand path. Please rephrase your query. The projected property was : '{0}'
-ALinq_TypeTokenWithNoTrailingNavProp=Found an illegal type token '{0}' without a trailing navigation property. 
+ALinq_TypeTokenWithNoTrailingNavProp=Found an illegal type token '{0}' without a trailing navigation property.
+ALinq_AggregationMethodNotSupported=The aggregation method '{0}' is not supported.
 
 DSKAttribute_MustSpecifyAtleastOnePropertyName=DataServiceKey attribute must specify at least one property name.
 
@@ -299,6 +300,7 @@ PlatformHelper_DateTimeOffsetMustContainTimeZone=The time zone information is mi
 ; Error Messages
 
 DataServiceRequest_FailGetCount=Failed to get the count value from the server.
+DataServiceRequest_FailGetValue=Failed to get the value from the server.
 
 Context_ExecuteExpectedVoidResponse=Execute overload for void service operations and actions received a non-void response from the server.
 ;END

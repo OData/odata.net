@@ -83,6 +83,21 @@ namespace Microsoft.OData.Client
         /// <summary>The $format query option.</summary>
         internal const string OPTIONFORMAT = "format";
 
+        /// <summary>apply</summary>
+        internal const string OPTIONAPPLY = "apply";
+
+        /// <summary>groupby</summary>
+        internal const string GROUPBY = "groupby";
+
+        /// <summary>aggregate</summary>
+        internal const string AGGREGATE = "aggregate";
+
+        /// <summary>aggregate</summary>
+        internal const string WITH = "with";
+
+        /// <summary>aggregate</summary>
+        internal const string AS = "as";
+
         /// <summary>true</summary>
         internal const string COUNTTRUE = "true";
 

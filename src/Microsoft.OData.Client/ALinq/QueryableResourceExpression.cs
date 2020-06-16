@@ -196,6 +196,14 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Apply query option for ResourceSet
+        /// </summary>
+        internal ApplyQueryOptionExpression Apply
+        {
+            get { return this.sequenceQueryOptions.OfType<ApplyQueryOptionExpression>().SingleOrDefault(); }
+        }
+
+        /// <summary>
         /// Gets sequence query options for ResourceSet
         /// </summary>
         internal IEnumerable<QueryOptionExpression> SequenceQueryOptions
