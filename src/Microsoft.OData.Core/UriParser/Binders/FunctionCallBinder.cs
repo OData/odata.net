@@ -112,7 +112,7 @@ namespace Microsoft.OData.UriParser
                 KeyValuePair<string, FunctionSignatureWithReturnType> found = nameSignatures.FirstOrDefault(pair => pair.Value.ArgumentTypes.Length == argumentCount);
                 if (found.Equals(TypePromotionUtils.NotFoundKeyValuePair))
                 {
-                    throw new ODataException(ODataErrorStrings.FunctionCallBinder_CannotFindASuitableOverload(functionCallToken, argumentTypes.Count()));
+                    throw new ODataException(ODataErrorStrings.FunctionCallBinder_CannotFindASuitableOverload(functionCallToken, argumentTypes.Length));
                 }
                 else
                 {
