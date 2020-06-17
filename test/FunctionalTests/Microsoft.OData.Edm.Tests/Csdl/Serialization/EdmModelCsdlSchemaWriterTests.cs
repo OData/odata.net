@@ -114,12 +114,14 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
         #endregion
 
         #region FunctionImport tests.
+        [Fact]
         public void ValidateCorrectFunctionNameAndFunctionAttributeValueWrittenCorrectly()
         {
             EdmFunctionImport functionImport = new EdmFunctionImport(defaultContainer, "GetStuff", defaultGetStuffFunction, new EdmPathExpression("Customers", "Orders"), false);
             TestWriteFunctionImportElementHeaderMethod(functionImport, @"<FunctionImport Name=""GetStuff"" Action=""Default.NameSpace2.GetStuff"" EntitySet=""Customers/Orders""");
         }
 
+        [Fact]
         public void ValidateFunctionIncludeInServiceDocumentWrittenAsTrue()
         {
             EdmFunctionImport functionImport = new EdmFunctionImport(defaultContainer, "GetStuff", defaultGetStuffFunction, new EdmPathExpression("Customers", "Orders"), true);
