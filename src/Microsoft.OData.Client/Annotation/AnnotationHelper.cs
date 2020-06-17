@@ -258,7 +258,7 @@ namespace Microsoft.OData.Client.Annotation
             var edmValueAnnotations = serviceModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(edmVocabularyAnnotatable, term, qualifier)
                 .Where(a => a.Qualifier == qualifier && a.Target == edmVocabularyAnnotatable);
 
-            if (edmValueAnnotations.Count() == 0)
+            if (!edmValueAnnotations.Any())
             {
                 edmValueAnnotation = GetOrInsertCachedMetadataAnnotationForType(context, type.GetBaseType(), term, qualifier);
             }

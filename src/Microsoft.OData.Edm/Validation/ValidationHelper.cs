@@ -41,17 +41,17 @@ namespace Microsoft.OData.Edm.Validation
 
         internal static bool AllPropertiesAreNullable(IEnumerable<IEdmStructuralProperty> properties)
         {
-            return properties.Where(p => !p.Type.IsNullable).Count() == 0;
+            return !properties.Where(p => !p.Type.IsNullable).Any();
         }
 
         internal static bool HasNullableProperty(IEnumerable<IEdmStructuralProperty> properties)
         {
-            return properties.Where(p => p.Type.IsNullable).Count() > 0;
+            return properties.Where(p => p.Type.IsNullable).Any();
         }
 
         internal static bool PropertySetIsSubset(IEnumerable<IEdmStructuralProperty> set, IEnumerable<IEdmStructuralProperty> subset)
         {
-            return subset.Except(set).Count() <= 0;
+            return !subset.Except(set).Any();
         }
 
         internal static bool PropertySetsAreEquivalent(IEnumerable<IEdmStructuralProperty> set1, IEnumerable<IEdmStructuralProperty> set2)

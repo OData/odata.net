@@ -303,7 +303,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private static IEdmOperationImport FindParameterizedOperationImport(string parameterizedName, Func<string, IEnumerable<IEdmOperationImport>> findFunctions, Func<IEnumerable<IEdmOperationImport>, IEdmOperationImport> ambiguityCreator)
         {
             IEnumerable<IEdmOperationImport> matchingFunctions = findFunctions(parameterizedName);
-            if (matchingFunctions.Count() == 0)
+            if (!matchingFunctions.Any())
             {
                 return null;
             }
@@ -331,7 +331,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             string name = parameterizedName.Substring(0, openParen);
             string[] parameters = parameterizedName.Substring(openParen + 1, closeParen - (openParen + 1)).Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
             IEnumerable<IEdmOperation> matchingFunctions = this.FindParameterizedOperationFromList(findFunctions(name).Cast<IEdmOperation>(), parameters);
-            if (matchingFunctions.Count() == 0)
+            if (!matchingFunctions.Any())
             {
                 return null;
             }

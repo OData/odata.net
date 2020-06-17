@@ -215,7 +215,7 @@ namespace Microsoft.OData.Client.Metadata
                 && property != type.MediaDataMember
                 && !property.IsStreamLinkProperty
                 && (type.MediaDataMember == null || type.MediaDataMember.MimeTypeProperty != property)
-                && property.PropertyInfo.GetCustomAttributes(typeof(IgnoreClientPropertyAttribute)).Count() == 0;
+                && !property.PropertyInfo.GetCustomAttributes(typeof(IgnoreClientPropertyAttribute)).Any();
         }
 
         /// <summary>

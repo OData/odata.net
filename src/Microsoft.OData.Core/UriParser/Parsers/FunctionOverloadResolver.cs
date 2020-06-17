@@ -90,7 +90,7 @@ namespace Microsoft.OData.UriParser
             // If parameter count is zero and there is one function import whose parameter count is zero, return this function import.
             if (candidateMatchingOperationImports.Count() > 1 && parameterNames.Count == 0)
             {
-                candidateMatchingOperationImports = candidateMatchingOperationImports.Where(operationImport => operationImport.Operation.Parameters.Count() == 0);
+                candidateMatchingOperationImports = candidateMatchingOperationImports.Where(operationImport => !operationImport.Operation.Parameters.Any());
             }
 
             if (!candidateMatchingOperationImports.HasAny())

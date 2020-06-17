@@ -60,7 +60,7 @@ namespace Microsoft.OData.Edm.Csdl
                 return false;
             }
 
-            if (schemas.Count() == 0)
+            if (!schemas.Any())
             {
                 errors = new EdmError[] { new EdmError(new CsdlLocation(0, 0), EdmErrorCode.NoSchemasProduced, Edm.Strings.Serializer_NoSchemasProduced) };
                 return false;
