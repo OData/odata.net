@@ -100,7 +100,7 @@ namespace Microsoft.OData.UriParser
                 NamespaceQualifiedWildcardSelectItem namespaceQualifiedWildcard = selectItem as NamespaceQualifiedWildcardSelectItem;
                 if (namespaceQualifiedWildcard != null)
                 {
-                    levelSelectList.Add(namespaceQualifiedWildcard.Namespace + ".*" );
+                    levelSelectList.Add(namespaceQualifiedWildcard.Namespace + ".*");
                     continue;
                 }
 
@@ -109,7 +109,7 @@ namespace Microsoft.OData.UriParser
                 {
                     IList<string> pathSelectItems = GetSelectStringFromPathSelectItem(pathSelectItem);
 
-                    for (int i = 0; i< pathSelectItems.Count; i++)
+                    for (int i = 0; i < pathSelectItems.Count; i++)
                     {
                         levelSelectList.Add(pathSelectItems[i]);                       
                     }

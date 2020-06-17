@@ -1114,8 +1114,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             XmlElementValue optionalAnnotationValue = childValues.Where(c =>
                 c is XmlElementValue<CsdlAnnotation> &&
                     (c.ValueAs<CsdlAnnotation>().Term == CoreVocabularyModel.OptionalParameterTerm.ShortQualifiedName() ||
-                     c.ValueAs<CsdlAnnotation>().Term == CoreVocabularyModel.OptionalParameterTerm.FullName())
-            ).FirstOrDefault();
+                     c.ValueAs<CsdlAnnotation>().Term == CoreVocabularyModel.OptionalParameterTerm.FullName()))
+                .FirstOrDefault();
 
             if (optionalAnnotationValue != null)
             {

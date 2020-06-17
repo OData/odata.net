@@ -1305,7 +1305,7 @@ namespace Microsoft.OData.Client
         {
             ResourceExpression input = (ResourceExpression)mce.Arguments[0];
             ConstantExpression constantArg = StripTo<ConstantExpression>(mce.Arguments[1]);
-            if (null == constantArg)
+            if (constantArg == null)
             {
                 // UNSUPPORTED: A ConstantExpression is expected
                 return mce;
@@ -2954,7 +2954,7 @@ namespace Microsoft.OData.Client
 
                 // If either side is null, return false order (both can't be null because of
                 // the previous check)
-                if (null == left || null == right) { return false; }
+                if (left == null || right == null) { return false; }
 
                 // If the declaring type and the name of the property are the same,
                 // both the property infos refer to the same property.
@@ -2969,7 +2969,7 @@ namespace Microsoft.OData.Client
             public int GetHashCode(PropertyInfo obj)
             {
                 Debug.Assert(obj != null, "obj != null");
-                return (null != obj) ? obj.GetHashCode() : 0;
+                return (obj != null) ? obj.GetHashCode() : 0;
             }
 
             #endregion

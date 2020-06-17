@@ -479,7 +479,7 @@ namespace Microsoft.OData.Client
             // argument. As a result, we always set argumentOrdinal to 1 when there is a match and
             // we can safely ignore all methods taking fewer than 2 arguments
             SequenceMethod sequenceMethod;
-            if (2 <= callExpression.Arguments.Count &&
+            if (callExpression.Arguments.Count >= 2 &&
                 ReflectionUtil.TryIdentifySequenceMethod(callExpression.Method, out sequenceMethod))
             {
                 switch (sequenceMethod)

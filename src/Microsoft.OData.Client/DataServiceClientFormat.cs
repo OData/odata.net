@@ -174,7 +174,7 @@ namespace Microsoft.OData.Client
         internal void SetRequestAcceptHeaderForBatch(HeaderCollection headers)
         {
             bool useJsonBatch = headers.GetHeader(XmlConstants.HttpContentType).Equals(MimeApplicationJson, StringComparison.Ordinal);
-            this.SetAcceptHeaderAndCharset(headers, useJsonBatch? MimeApplicationJson : MimeMultiPartMixed);
+            this.SetAcceptHeaderAndCharset(headers, useJsonBatch ? MimeApplicationJson : MimeMultiPartMixed);
         }
 
         /// <summary>

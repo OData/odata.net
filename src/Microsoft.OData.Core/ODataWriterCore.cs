@@ -1515,7 +1515,7 @@ namespace Microsoft.OData
             {
                 this.EnterScope(deltaLink is ODataDeltaLink ? WriterState.DeltaLink : WriterState.DeltaDeletedLink, deltaLink);
                 this.StartDeltaLink(deltaLink);
-            }).FollowOnSuccessWithTask((t)=>this.WriteEndAsync());
+            }).FollowOnSuccessWithTask((t) => this.WriteEndAsync());
         }
         
         /// <summary>
@@ -1600,8 +1600,7 @@ namespace Microsoft.OData
                        }
 
                        this.WritePrimitiveValue(primitiveValue);
-                   }
-                   ).FollowOnSuccessWithTask((t) => this.WriteEndAsync());
+                   }).FollowOnSuccessWithTask((t) => this.WriteEndAsync());
                });
         }
         
