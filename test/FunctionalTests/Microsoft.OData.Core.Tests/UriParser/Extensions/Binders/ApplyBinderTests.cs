@@ -60,6 +60,27 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
         }
 
         [Fact]
+        public void BindApplyWithAverageInAggregateShouldReturnApplyClause()
+        {
+            IEnumerable<QueryToken> tokens = _parser.ParseApply("aggregate(UnitPrice with average as AveragePrice)");
+
+            ApplyBinder binder = new ApplyBinder(FakeBindMethods.BindMethodReturningASingleSinglePrimitive, _bindingState);
+            ApplyClause actual = binder.BindApply(tokens);
+
+            Assert.NotNull(actual);
+            AggregateTransformationNode aggregate = Assert.IsType<AggregateTransformationNode>(Assert.Single(actual.Transformations));
+
+            Assert.Equal(TransformationNodeKind.Aggregate, aggregate.Kind);
+            Assert.NotNull(aggregate.AggregateExpressions);
+
+            AggregateExpression statement = Assert.IsType<AggregateExpression>(Assert.Single(aggregate.AggregateExpressions));
+            Assert.NotNull(statement.Expression);
+            Assert.Same(FakeBindMethods.FakeSingleSinglePrimitive, statement.Expression);
+            Assert.Equal(AggregationMethod.Average, statement.Method);
+            Assert.Equal("AveragePrice", statement.Alias);
+        }
+
+        [Fact]
         public void BindApplyWithCountInAggregateShouldReturnApplyClause()
         {
             IEnumerable<QueryToken> tokens = _parser.ParseApply("aggregate($count as TotalCount)");
