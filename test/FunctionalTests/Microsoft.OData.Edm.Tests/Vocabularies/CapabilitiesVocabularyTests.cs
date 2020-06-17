@@ -786,7 +786,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
 
             // Core.Description
             var annotations = this.capVocModel.FindDeclaredVocabularyAnnotations(term).ToList();
-            Assert.Equal(1, annotations.Count());
+            Assert.Single(annotations);
             var description = annotations.SingleOrDefault(a => a.Term is CsdlSemanticsTerm && a.Term.Name == "Description");
             Assert.NotNull(description);
             Assert.Equal("Org.OData.Core.V1", description.Term.Namespace);

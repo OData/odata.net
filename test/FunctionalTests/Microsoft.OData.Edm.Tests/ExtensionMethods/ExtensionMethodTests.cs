@@ -947,7 +947,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
 
             // Arrange - create the EdmModel without vacabulary models
             model = new EdmModel(false);
-            Assert.Equal(1, model.ReferencedModels.Count()); // We have the core model added by default
+            Assert.Single(model.ReferencedModels); // We have the core model added by default
 
             // Act
             unknownType = model.FindType("NS.UnKnownType");
