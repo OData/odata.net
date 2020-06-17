@@ -1660,7 +1660,7 @@ namespace Microsoft.OData.Client
 #if !PORTABLELIB // Synchronous methods not available
         /// <summary>Synchronously submits a group of queries as a batch to the data service.</summary>
         /// <returns>The response to the batch operation.</returns>
-        /// <param name="queries">Array of <see cref="Microsoft.OData.Client.DataServiceRequest[]" /> objects that make up the queries.</param>
+        /// <param name="queries">Array of <see cref="Microsoft.OData.Client.DataServiceRequest" /> objects that make up the queries.</param>
         public virtual DataServiceResponse ExecuteBatch(params DataServiceRequest[] queries)
         {
             Util.CheckArgumentNotEmpty(queries, "queries");
@@ -1670,7 +1670,7 @@ namespace Microsoft.OData.Client
         /// <summary>Synchronously submits a group of queries as a batch to the data service.</summary>
         /// <returns>The response to the batch operation.</returns>
         /// <param name="options">A member of the <see cref="Microsoft.OData.Client.SaveChangesOptions" /> enumeration for how the client can save the pending set of changes.</param>
-        /// <param name="queries">Array of <see cref="Microsoft.OData.Client.DataServiceRequest[]" /> objects that make up the queries.</param>
+        /// <param name="queries">Array of <see cref="Microsoft.OData.Client.DataServiceRequest" /> objects that make up the queries.</param>
         public virtual DataServiceResponse ExecuteBatch(SaveChangesOptions options, params DataServiceRequest[] queries)
         {
             Util.CheckArgumentNotEmpty(queries, "queries");
