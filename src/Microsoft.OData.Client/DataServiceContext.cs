@@ -1813,7 +1813,7 @@ namespace Microsoft.OData.Client
             return Task<IEnumerable<TElement>>.Factory.FromAsync(this.BeginExecute, this.EndExecute<TElement>, continuation, null);
         }
 
-        /// <summary>Called to complete the <see cref="Microsoft.OData.Client.DataServiceContext.BeginExecute``1(System.Uri,System.AsyncCallback,System.Object)" />.</summary>
+        /// <summary>Called to complete the <see cref="Microsoft.OData.Client.DataServiceContext.BeginExecute{TElement}(System.Uri,System.AsyncCallback,System.Object)" />.</summary>
         /// <returns>The results returned by the query operation.</returns>
         /// <param name="asyncResult">
         ///   <see cref="System.IAsyncResult" /> object.</param>
@@ -1829,7 +1829,7 @@ namespace Microsoft.OData.Client
             return DataServiceRequest.EndExecute<TElement>(this, this, Util.ExecuteMethodName, asyncResult);
         }
 
-        /// <summary>Called to complete the <see cref="Microsoft.OData.Client.DataServiceContext.BeginExecute``1(System.Uri,System.AsyncCallback,System.Object)" />.</summary>
+        /// <summary>Called to complete the <see cref="Microsoft.OData.Client.DataServiceContext.BeginExecute{TElement}(System.Uri,System.AsyncCallback,System.Object)" />.</summary>
         /// <returns>The result of the operation.</returns>
         /// <param name="asyncResult">An <see cref="System.IAsyncResult" /> that represents the status of the asynchronous operation.</param>
         /// <remarks>This method should be used in combination with the BeginExecute overload which
