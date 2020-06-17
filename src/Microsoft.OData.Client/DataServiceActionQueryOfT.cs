@@ -78,7 +78,7 @@ namespace Microsoft.OData.Client
         /// <param name="asyncResult">
         ///   <see cref="System.IAsyncResult" /> object.</param>
         /// <exception cref="System.ArgumentNullException">When<paramref name=" asyncResult" /> is null.</exception>
-        /// <exception cref="System.ArgumentException">When<paramref name=" asyncResult" /> did not originate from this <see cref="Microsoft.OData.Client.DataServiceContext" /> instance. -or- When the <see cref="Microsoft.OData.Client.DataServiceContext.EndExecute``1(System.IAsyncResult)" /> method was previously called.</exception>
+        /// <exception cref="System.ArgumentException">When<paramref name=" asyncResult" /> did not originate from this <see cref="Microsoft.OData.Client.DataServiceContext" /> instance. -or- When the <see cref="Microsoft.OData.Client.DataServiceContext.EndExecute{TElement}(System.IAsyncResult)" /> method was previously called.</exception>
         /// <exception cref="System.InvalidOperationException">When an error is raised either during execution of the request or when it converts the contents of the response message into objects.</exception>
         /// <exception cref="Microsoft.OData.Client.DataServiceQueryException">When the data service returns an HTTP 404: Resource Not Found error.</exception>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Type is used to infer result")]
