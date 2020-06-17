@@ -960,7 +960,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 {
                     case CsdlConstants.Value_Collection:
                         {
-                            string elementTypeName = typeInformation.Count() > 1 ? typeInformation[1] : typeString;
+                            string elementTypeName = typeInformation.Length > 1 ? typeInformation[1] : typeString;
                             elementType = new CsdlExpressionTypeReference(
                                           new CsdlCollectionType(
                                           this.ParseNamedTypeReference(elementTypeName, isNullable, parentLocation), parentLocation), isNullable, parentLocation);
@@ -969,7 +969,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                         break;
                     case CsdlConstants.Value_Ref:
                         {
-                            string elementTypeName = typeInformation.Count() > 1 ? typeInformation[1] : typeString;
+                            string elementTypeName = typeInformation.Length > 1 ? typeInformation[1] : typeString;
                             elementType = new CsdlExpressionTypeReference(
                                           new CsdlEntityReferenceType(
                                           this.ParseNamedTypeReference(elementTypeName, isNullable, parentLocation), parentLocation), CsdlConstants.Default_Nullable, parentLocation);

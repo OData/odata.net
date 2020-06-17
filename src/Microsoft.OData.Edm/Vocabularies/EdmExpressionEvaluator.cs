@@ -560,7 +560,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                         if (target != null)
                         {
                             IList<IEdmExpression> argumentExpressions = apply.Arguments.ToList();
-                            IEdmValue[] arguments = new IEdmValue[argumentExpressions.Count()];
+                            IEdmValue[] arguments = new IEdmValue[argumentExpressions.Count];
 
                             {
                                 int argumentIndex = 0;
@@ -670,7 +670,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                     var enumMembers = enumMemberExpression.EnumMembers.ToList();
                     IEdmEnumType enumType = enumMembers.First().DeclaringType;
                     IEdmEnumTypeReference enumTypeReference = new EdmEnumTypeReference(enumType, false);
-                    if (enumMembers.Count() == 1)
+                    if (enumMembers.Count == 1)
                     {
                         return new EdmEnumValue(enumTypeReference, enumMemberExpression.EnumMembers.Single());
                     }

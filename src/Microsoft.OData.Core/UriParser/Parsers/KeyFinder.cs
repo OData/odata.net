@@ -35,7 +35,7 @@ namespace Microsoft.OData.UriParser
             ReadOnlyCollection<IEdmStructuralProperty> targetKeyPropertyList = targetEntityKeyProperties != null ? new ReadOnlyCollection<IEdmStructuralProperty>(targetEntityKeyProperties.ToList()) : new ReadOnlyCollection<IEdmStructuralProperty>(new List<IEdmStructuralProperty>());
 
             // should only get here if the number of raw parameters from the uri is different than the number of key properties for the target entity.
-            Debug.Assert(rawKeyValuesFromUri.ValueCount < targetKeyPropertyList.Count(), "rawKeyValuesFromUri.ValueCount < targetEntityKeyProperties.Count()");
+            Debug.Assert(rawKeyValuesFromUri.ValueCount < targetKeyPropertyList.Count, "rawKeyValuesFromUri.ValueCount < targetEntityKeyProperties.Count()");
 
             // if the raw key from the uri has positional values, there must be only one of them
             // its important to cache this value here because we'll change it when we add new

@@ -295,7 +295,7 @@ namespace Microsoft.OData.Edm
         internal static bool IsQualifiedName(string name)
         {
             string[] nameTokens = name.Split('.');
-            if (nameTokens.Count() < 2)
+            if (nameTokens.Length < 2)
             {
                 return false;
             }

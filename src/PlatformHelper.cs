@@ -735,7 +735,7 @@ namespace Microsoft.OData.Edm
         /// <returns>MethodInfo for the method that was found.</returns>
         internal static MethodInfo GetMethodWithGenericArgs(this Type type, string name, bool isPublic, bool isStatic, int genericArgCount)
         {
-            return type.GetRuntimeMethods().Single(m => m.Name == name && m.IsPublic == isPublic && m.IsStatic == isStatic && m.GetGenericArguments().Count() == genericArgCount);
+            return type.GetRuntimeMethods().Single(m => m.Name == name && m.IsPublic == isPublic && m.IsStatic == isStatic && m.GetGenericArguments().Length == genericArgCount);
         }
 
         /// <summary>

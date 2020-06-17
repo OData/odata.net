@@ -78,7 +78,7 @@ namespace Microsoft.OData.UriParser
                     }
                 }
 
-                if (parameterNames.Count() != 0)
+                if (parameterNames.Count != 0)
                 {
                     throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates(identifier));
                 }

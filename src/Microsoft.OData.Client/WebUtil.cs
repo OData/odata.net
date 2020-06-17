@@ -35,7 +35,7 @@ namespace Microsoft.OData.Client
 #if PORTABLELIB
         private static MethodInfo getDefaultValueMethodInfo = typeof(WebUtil).GetMethodWithGenericArgs("GetDefaultValue", false /*isPublic*/, true /*isStatic*/, 1 /*genericArgCount*/);
 #else
-        private static MethodInfo getDefaultValueMethodInfo = (MethodInfo)typeof(WebUtil).GetMember("GetDefaultValue", BindingFlags.NonPublic | BindingFlags.Static).Single(m => ((MethodInfo)m).GetGenericArguments().Count() == 1);
+        private static MethodInfo getDefaultValueMethodInfo = (MethodInfo)typeof(WebUtil).GetMember("GetDefaultValue", BindingFlags.NonPublic | BindingFlags.Static).Single(m => ((MethodInfo)m).GetGenericArguments().Length == 1);
 #endif
 
         /// <summary>

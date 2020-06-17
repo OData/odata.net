@@ -341,7 +341,7 @@ namespace Microsoft.OData
             }
 
             if (this.selectionType == SelectionType.EntireSubtree || this.hasWildcard
-                || ((this.selectedProperties == null || this.selectedProperties.Count() == 0) && this.children.Values.All(n => n.isExpandedNavigationProperty)))
+                || ((this.selectedProperties == null || this.selectedProperties.Count == 0) && this.children.Values.All(n => n.isExpandedNavigationProperty)))
             {
                 return structuredType.NavigationProperties();
             }

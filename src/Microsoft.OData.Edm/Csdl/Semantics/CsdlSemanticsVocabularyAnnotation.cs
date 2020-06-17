@@ -142,7 +142,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 Debug.Assert(this.annotationsContext != null, "Annotation must either have a target context or annotations context");
                 string target = this.annotationsContext.Annotations.Target;
                 string[] targetSegments = target.Split('/');
-                int targetSegmentsCount = targetSegments.Count();
+                int targetSegmentsCount = targetSegments.Length;
                 IEdmEntityContainer container;
 
                 if (targetSegmentsCount == 1)
@@ -386,7 +386,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             List<IEdmOperation> matchingOperations = new List<IEdmOperation>();
             foreach (IEdmOperation function in operations)
             {
-                if (function.Parameters.Count() != parameters.Count())
+                if (function.Parameters.Count() != parameters.Length)
                 {
                     continue;
                 }
