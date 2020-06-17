@@ -1598,6 +1598,7 @@ namespace Microsoft.OData
                            IEdmType itemType = EdmLibraryExtensions.GetPrimitiveTypeReference(primitiveValue.Value.GetType()).Definition;
                            this.CurrentResourceSetValidator.ValidateResource(itemType);
                        }
+
                        this.WritePrimitiveValue(primitiveValue);
                    }
                    ).FollowOnSuccessWithTask((t) => this.WriteEndAsync());

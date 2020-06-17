@@ -964,7 +964,7 @@ namespace Microsoft.OData.Tests.JsonLight
                             nestedResource = reader.Item as ODataResource;
                         break;
                     case ODataReaderState.DeltaResourceSetEnd:
-                        if(nestedDeltaResourceSet == null)
+                        if (nestedDeltaResourceSet == null)
                         {
                             nestedDeltaResourceSet = reader.Item as ODataDeltaResourceSet;
                         }

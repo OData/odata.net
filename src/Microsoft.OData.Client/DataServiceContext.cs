@@ -117,6 +117,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>read or write time-out value in seconds, 0 for default</summary>
         private int readWriteTimeout;
+
         /// <summary>whether to use post-tunneling for PUT/DELETE</summary>
         private bool postTunneling;
 

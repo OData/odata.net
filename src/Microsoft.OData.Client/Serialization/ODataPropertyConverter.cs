@@ -750,11 +750,13 @@ namespace Microsoft.OData.Client
 
                 string typeNameInMetadata = this.requestInfo.ResolveNameFromType(clientType);
                 string typeName = typeNameInMetadata;
+
                 // If type name not found in metadata but we're required to write client type, assume client and server typeName match
                 if (typeNameInMetadata == null && shouldWriteClientType)
                 {
                     typeName = clientType.FullName;
                 }
+
                 ODataEnumValue odataEnumValue = new ODataEnumValue(enumValue, typeName);
                 odataEnumValue.TypeAnnotation = new ODataTypeAnnotation(typeName);
                 odataValue = odataEnumValue;

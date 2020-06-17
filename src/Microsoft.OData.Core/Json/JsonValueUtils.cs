@@ -26,12 +26,12 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// PositiveInfinitySymbol used in OData Json format
         /// </summary>
-        internal static readonly string ODataJsonPositiveInfinitySymbol = "INF";
+        internal const string ODataJsonPositiveInfinitySymbol = "INF";
 
         /// <summary>
         /// NegativeInfinitySymbol used in OData Json format
         /// </summary>
-        internal static readonly string ODataJsonNegativeInfinitySymbol = "-INF";
+        internal const string ODataJsonNegativeInfinitySymbol = "-INF";
 
         /// <summary>
         /// The NumberFormatInfo used in OData Json format.

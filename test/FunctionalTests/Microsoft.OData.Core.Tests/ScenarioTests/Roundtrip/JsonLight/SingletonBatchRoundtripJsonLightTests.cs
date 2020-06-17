@@ -1641,7 +1641,7 @@ Content-Type: application/json;odata.metadata=none
                 {
                     dependsOnIds = new string[] { "nonExistant" };
                 }
-                else if(useRequestIdOfGroupForDependsOnIds)
+                else if (useRequestIdOfGroupForDependsOnIds)
                 {
                     dependsOnIds = new string[] {"1", "2"};
                 }

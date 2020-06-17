@@ -133,7 +133,7 @@ namespace Microsoft.OData.UriParser
         {
             int index = item.LastIndexOf('/');
 
-            if(index > 0)
+            if (index > 0)
             {
                 return item.Substring(0, index);
             }

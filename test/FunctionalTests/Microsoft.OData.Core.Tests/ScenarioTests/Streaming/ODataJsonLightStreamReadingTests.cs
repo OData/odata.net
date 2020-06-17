@@ -1200,7 +1200,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
         private ODataReader CreateODataReader(string payload, Variant variant)
         {
-            if(variant.Version < ODataVersion.V401)
+            if (variant.Version < ODataVersion.V401)
             {
                 payload = payload.Replace("@", "@odata.");
             }

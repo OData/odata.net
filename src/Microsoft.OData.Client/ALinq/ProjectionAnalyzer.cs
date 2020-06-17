@@ -81,7 +81,7 @@ namespace Microsoft.OData.Client
             bool knownEntityType = ClientTypeUtil.TypeOrElementTypeIsEntity(e.Body.Type);
             ParameterExpression pe = e.Parameters.Last();
             bool isEntityParameter = ClientTypeUtil.TypeOrElementTypeIsEntity(pe.Type);
-            if(isEntityParameter)
+            if (isEntityParameter)
             {
                 pb.PushParamExpression(pe);
             }

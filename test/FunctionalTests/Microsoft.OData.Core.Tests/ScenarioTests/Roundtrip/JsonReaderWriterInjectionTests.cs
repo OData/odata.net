@@ -345,7 +345,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 
                 while (reader.Read())
                 {
-                    if(reader.State == ODataReaderState.ResourceEnd)
+                    if (reader.State == ODataReaderState.ResourceEnd)
                     {
                         resources.Add(reader.Item as ODataResource);
                     }

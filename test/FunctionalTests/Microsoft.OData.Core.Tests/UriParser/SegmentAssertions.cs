@@ -227,7 +227,7 @@ namespace Microsoft.OData.Tests.UriParser
                     Assert.NotNull(tmp);
                     Assert.Equal(value, tmp);
                 }
-                else if(typeof(TValue) == typeof(UriTemplateExpression))
+                else if (typeof(TValue) == typeof(UriTemplateExpression))
                 {
                     UriTemplateExpression actual = Assert.IsType<UriTemplateExpression>(constantNode.Value);
                     UriTemplateExpression expect = Assert.IsType<UriTemplateExpression>(value);

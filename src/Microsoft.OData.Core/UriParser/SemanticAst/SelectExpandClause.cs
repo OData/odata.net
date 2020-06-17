@@ -92,10 +92,10 @@ namespace Microsoft.OData.UriParser
                     {
                         newSelectedItems.Add(selectedItem);
                     }
-                    else if(getOnlySubset)
+                    else if (getOnlySubset)
                     {
                         var pathItem = selectedItem as PathSelectItem;
-                        if(pathItem != null && pathItem.SelectAndExpand != null)
+                        if (pathItem != null && pathItem.SelectAndExpand != null)
                         {
                             newSelectedItems.Add(selectedItem);
                         }

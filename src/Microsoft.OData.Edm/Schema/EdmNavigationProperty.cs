@@ -264,6 +264,7 @@ namespace Microsoft.OData.Edm
 
             return entityType;
         }
+
         private static IEdmComplexType GetComplexType(IEdmTypeReference type)
         {
             if (type.IsComplex())

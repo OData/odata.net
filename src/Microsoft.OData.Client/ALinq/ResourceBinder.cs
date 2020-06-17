@@ -700,6 +700,7 @@ namespace Microsoft.OData.Client
                     result = null;
                 }
             }
+
             return result != null;
         }
 
@@ -827,6 +828,7 @@ namespace Microsoft.OData.Client
                         AddSequenceQueryOption(rse, new TakeQueryOptionExpression(mce.Type, Expression.Constant(maxCardinality)));
                     }
                 }
+
                 return mce.Arguments[0];
             }
             else if (mce.Arguments[0] is NavigationPropertySingletonExpression || mce.Arguments[0] is SingletonResourceExpression)
@@ -1506,14 +1508,17 @@ namespace Microsoft.OData.Client
                     {
                         return AnalyzeExpand(mce, this.context);
                     }
+
                     if (mce.Method.GetParameters().Any() && mce.Method.GetParameters()[0].ParameterType == t)
                     {
                         return AnalyzeFunc(mce, true);
                     }
+
                     if (mce.Method.Name == AddQueryOptionMethodName && mce.Method.DeclaringType == t)
                     {
                         return AnalyzeAddCustomQueryOption(mce);
                     }
+
                     if (mce.Method.Name == IncludeCountMethodName && mce.Method.DeclaringType == t)
                     {
                         return AnalyzeAddCountOption(mce);
@@ -1773,6 +1778,7 @@ namespace Microsoft.OData.Client
 
                 propInfo = null;
                 target = null;
+
                 // must be member expression
                 MemberExpression me = e as MemberExpression;
                 if (me == null)
@@ -1784,6 +1790,7 @@ namespace Microsoft.OData.Client
                 if (PlatformHelper.IsProperty(me.Member))
                 {
                     PropertyInfo pi = (PropertyInfo)me.Member;
+
                     // must be readable and non-private
                     if (pi.CanRead && !TypeSystem.IsPrivate(pi))
                     {

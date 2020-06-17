@@ -998,6 +998,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 {
                     Debug.Assert(this.Errors.Any(), "There should be an error reported for the missing required type attribute.");
                 }
+
                 elementType = new CsdlNamedTypeReference(String.Empty, isNullable, parentLocation);
             }
 
