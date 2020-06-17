@@ -73,7 +73,7 @@ namespace Microsoft.OData.Client
             return Context.ExecuteAsync<T>(this.RequestUri, XmlConstants.HttpMethodPost, false, Parameters);
         }
 
-        /// <summary>Called to complete the <see cref="Microsoft.OData.Client.DataServiceActionQuery.BeginExecute``1(System.AsyncCallback,System.Object)" />.</summary>
+        /// <summary>Called to complete the <see cref="Microsoft.OData.Client.DataServiceActionQuery.BeginExecute(System.AsyncCallback,System.Object)" />.</summary>
         /// <returns>The results returned by the query operation.</returns>
         /// <param name="asyncResult">
         ///   <see cref="System.IAsyncResult" /> object.</param>
