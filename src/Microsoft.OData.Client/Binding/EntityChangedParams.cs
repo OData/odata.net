@@ -6,7 +6,7 @@
 
 namespace Microsoft.OData.Client
 {
-    /// <summary>Encapsulates the arguments of a <see cref="E:System.ComponentModel.INotifyPropertyChanged.PropertyChanged" /> delegate</summary>
+    /// <summary>Encapsulates the arguments of a <see cref="System.ComponentModel.INotifyPropertyChanged.PropertyChanged" /> delegate</summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704", Justification = "Name gets too long with Parameters")]
     public sealed class EntityChangedParams
     {

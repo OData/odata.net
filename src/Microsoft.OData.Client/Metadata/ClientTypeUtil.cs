@@ -184,9 +184,9 @@ namespace Microsoft.OData.Client.Metadata
                 Debug.Assert(methodInfo != null, "should have found the method");
 
 #if DEBUG
-                Debug.Assert(null != genericArguments, "null genericArguments");
+                Debug.Assert(genericArguments != null, "null genericArguments");
                 ParameterInfo[] parameters = methodInfo.GetParameters();
-                if (0 < parameters.Length)
+                if (parameters.Length > 0)
                 {
                     // following assert was disabled for Contains which returns bool
                     //// Debug.Assert(typeof(void) == methodInfo.ReturnParameter.ParameterType, "method doesn't return void");

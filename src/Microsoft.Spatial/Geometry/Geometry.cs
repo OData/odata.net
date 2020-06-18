@@ -19,7 +19,7 @@ namespace Microsoft.Spatial
         /// </summary>
         private CoordinateSystem coordinateSystem;
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.Spatial.Geometry" /> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.Spatial.Geometry" /> class.</summary>
         /// <param name="coordinateSystem">The coordinate system of this instance.</param>
         /// <param name="creator">The implementation that created this instance.</param>
         protected Geometry(CoordinateSystem coordinateSystem, SpatialImplementation creator)

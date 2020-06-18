@@ -61,7 +61,7 @@ namespace Microsoft.OData.JsonLight
                 "!(isWithinAtomicGroup && precedingMessageGroupId == null)");
 
             if (!isWithinAtomicGroup
-                || ((precedingMessageGroupId != null) && precedingMessageGroupId.Equals(groupId))
+                || ((precedingMessageGroupId != null) && precedingMessageGroupId.Equals(groupId, StringComparison.Ordinal))
                 /*groupId is member of existing atomic group scope*/)
             {
                 return false;

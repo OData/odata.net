@@ -109,10 +109,10 @@ namespace Microsoft.OData.UriParser
                 // we specifically want to find just the first function that matches the number of arguments, we don't care about
                 // ambiguity here because we're already in an ambiguous case where we don't know what kind of types
                 // those arguments are.
-                KeyValuePair<string, FunctionSignatureWithReturnType> found = nameSignatures.FirstOrDefault(pair => pair.Value.ArgumentTypes.Count() == argumentCount);
+                KeyValuePair<string, FunctionSignatureWithReturnType> found = nameSignatures.FirstOrDefault(pair => pair.Value.ArgumentTypes.Length == argumentCount);
                 if (found.Equals(TypePromotionUtils.NotFoundKeyValuePair))
                 {
-                    throw new ODataException(ODataErrorStrings.FunctionCallBinder_CannotFindASuitableOverload(functionCallToken, argumentTypes.Count()));
+                    throw new ODataException(ODataErrorStrings.FunctionCallBinder_CannotFindASuitableOverload(functionCallToken, argumentTypes.Length));
                 }
                 else
                 {

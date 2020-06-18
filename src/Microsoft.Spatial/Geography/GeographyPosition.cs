@@ -29,7 +29,7 @@ namespace Microsoft.Spatial
         /// <summary>altitude portion of position</summary>
         private readonly double? z;
 
-        /// <summary>Creates a new instance of the <see cref="T:Microsoft.Spatial.GeographyPosition" /> class from components.</summary>
+        /// <summary>Creates a new instance of the <see cref="Microsoft.Spatial.GeographyPosition" /> class from components.</summary>
         /// <param name="latitude">The latitude portion of a position.</param>
         /// <param name="longitude">The longitude portion of a position.</param>
         /// <param name="z">The altitude portion of a position.</param>
@@ -43,7 +43,7 @@ namespace Microsoft.Spatial
             this.m = m;
         }
 
-        /// <summary>Creates a new instance of the <see cref="T:Microsoft.Spatial.GeographyPosition" /> class from components.</summary>
+        /// <summary>Creates a new instance of the <see cref="Microsoft.Spatial.GeographyPosition" /> class from components.</summary>
         /// <param name="latitude">The latitude portion of a position.</param>
         /// <param name="longitude">The longitude portion of a position.</param>
         public GeographyPosition(double latitude, double longitude)

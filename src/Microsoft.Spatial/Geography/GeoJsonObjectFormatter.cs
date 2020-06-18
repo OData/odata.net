@@ -13,14 +13,14 @@ namespace Microsoft.Spatial
     public abstract class GeoJsonObjectFormatter
     {
         /// <summary>Creates the implementation of the formatter.</summary>
-        /// <returns>The created <see cref="T:Microsoft.Spatial.GeoJsonObjectFormatter" /> implementation.</returns>
+        /// <returns>The created <see cref="Microsoft.Spatial.GeoJsonObjectFormatter" /> implementation.</returns>
         public static GeoJsonObjectFormatter Create()
         {
             return SpatialImplementation.CurrentImplementation.CreateGeoJsonObjectFormatter();
         }
 
         /// <summary>Reads from the source.</summary>
-        /// <returns>The <see cref="T:Microsoft.Spatial.GeoJsonObjectFormatter" /> object that was read.</returns>
+        /// <returns>The <see cref="Microsoft.Spatial.GeoJsonObjectFormatter" /> object that was read.</returns>
         /// <param name="source">The source json object.</param>
         /// <typeparam name="T">The spatial type to read.</typeparam>
         public abstract T Read<T>(IDictionary<String, Object> source) where T : class, ISpatial;

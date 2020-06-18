@@ -499,7 +499,7 @@ namespace Microsoft.OData.Client
             description.Append(")");
 
             // include return type
-            if (null != method.ReturnType)
+            if (method.ReturnType != null)
             {
                 description.Append("->");
                 AppendCanonicalTypeDescription(method.ReturnType, genericArgumentOrdinals, description);
@@ -513,7 +513,7 @@ namespace Microsoft.OData.Client
             int ordinal;
 
             // if this a type argument for the method, substitute
-            if (null != genericArgumentOrdinals && genericArgumentOrdinals.TryGetValue(type, out ordinal))
+            if (genericArgumentOrdinals != null && genericArgumentOrdinals.TryGetValue(type, out ordinal))
             {
                 description.Append("T").Append(ordinal.ToString(CultureInfo.InvariantCulture));
 

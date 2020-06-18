@@ -47,7 +47,7 @@ namespace Microsoft.OData.Client
     }
 
     /// <summary>
-    /// The <see cref="T:Microsoft.OData.Client.DataServiceContext" /> represents the runtime context of the data service.
+    /// The <see cref="Microsoft.OData.Client.DataServiceContext" /> represents the runtime context of the data service.
     /// </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506", Justification = "Central class of the API, likely to have many cross-references")]
     public class DataServiceContext
@@ -117,6 +117,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>read or write time-out value in seconds, 0 for default</summary>
         private int readWriteTimeout;
+
         /// <summary>whether to use post-tunneling for PUT/DELETE</summary>
         private bool postTunneling;
 
@@ -178,17 +179,17 @@ namespace Microsoft.OData.Client
 
         #region ctor
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceContext" /> class.</summary>
         /// <remarks>It is expected that the BaseUri or ResolveEntitySet properties will be set before using the newly created context.</remarks>
         public DataServiceContext()
             : this(null)
         {
         }
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> class with the specified <paramref name="serviceRoot" />.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceContext" /> class with the specified <paramref name="serviceRoot" />.</summary>
         /// <param name="serviceRoot">An absolute URI that identifies the root of a data service.</param>
-        /// <exception cref="T:System.ArgumentNullException">When the <paramref name="serviceRoot" /> is null.</exception>
-        /// <exception cref="T:System.ArgumentException">If the <paramref name="serviceRoot" /> is not an absolute URI -or-If the <paramref name="serviceRoot" /> is a well formed URI without a query or query fragment.</exception>
+        /// <exception cref="System.ArgumentNullException">When the <paramref name="serviceRoot" /> is null.</exception>
+        /// <exception cref="System.ArgumentException">If the <paramref name="serviceRoot" /> is not an absolute URI -or-If the <paramref name="serviceRoot" /> is a well formed URI without a query or query fragment.</exception>
         /// <remarks>
         /// The library expects the Uri to point to the root of a data service,
         /// but does not issue a request to validate it does indeed identify the root of a service.
@@ -202,9 +203,9 @@ namespace Microsoft.OData.Client
         {
         }
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> class with the specified <paramref name="serviceRoot" /> and targeting the specific <paramref name="maxProtocolVersion" />.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceContext" /> class with the specified <paramref name="serviceRoot" /> and targeting the specific <paramref name="maxProtocolVersion" />.</summary>
         /// <param name="serviceRoot">An absolute URI that identifies the root of a data service.</param>
-        /// <param name="maxProtocolVersion">A <see cref="T:Microsoft.OData.Client.ODataProtocolVersion" /> value that is the maximum protocol version that the client understands.</param>
+        /// <param name="maxProtocolVersion">A <see cref="Microsoft.OData.Client.ODataProtocolVersion" /> value that is the maximum protocol version that the client understands.</param>
         /// <remarks>
         /// The library expects the Uri to point to the root of a data service,
         /// but does not issue a request to validate it does indeed identify the root of a service.
@@ -330,7 +331,7 @@ namespace Microsoft.OData.Client
         #region BaseUri, Credentials, MergeOption, Timeout, Links, Entities, Prefer header
 
         /// <summary>Gets or sets the delegate method that is used to resolve the entity set URI when the value cannot be determined from an edit-link or self-link URI.</summary>
-        /// <returns>A delegate that takes a <see cref="T:System.String" /> and returns a <see cref="T:System.Uri" /> value.</returns>
+        /// <returns>A delegate that takes a <see cref="System.String" /> and returns a <see cref="System.Uri" /> value.</returns>
         public virtual Func<String, Uri> ResolveEntitySet
         {
             get
@@ -371,7 +372,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Gets or sets whether the client requests that the data service return entity data in the response message to a change request.</summary>
-        /// <returns>A <see cref="T:Microsoft.OData.Client.DataServiceResponsePreference" /> object that determines whether to request a response form the data service. </returns>
+        /// <returns>A <see cref="Microsoft.OData.Client.DataServiceResponsePreference" /> object that determines whether to request a response form the data service. </returns>
         /// <remarks>Whether POST/PUT/PATCH requests will process response from the server. Corresponds to Prefer header in HTTP POST/PUT/PATCH request.</remarks>
         public virtual DataServiceResponsePreference AddAndUpdateResponsePreference
         {
@@ -408,7 +409,7 @@ namespace Microsoft.OData.Client
             }
         }
 
-        /// <summary>Gets or sets the authentication information that is used by each query created by using the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> object.</summary>
+        /// <summary>Gets or sets the authentication information that is used by each query created by using the <see cref="Microsoft.OData.Client.DataServiceContext" /> object.</summary>
         /// <returns>The base authentication interface for retrieving credentials for Web client authentication.</returns>
         public virtual System.Net.ICredentials Credentials
         {
@@ -417,7 +418,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Gets or sets the option for sending entity parameters to service.</summary>
-        /// <returns>One of the members of the <see cref="T:Microsoft.OData.Client.EntityParameterSendOption" /> enumeration.</returns>
+        /// <returns>One of the members of the <see cref="Microsoft.OData.Client.EntityParameterSendOption" /> enumeration.</returns>
         public virtual EntityParameterSendOption EntityParameterSendOption
         {
             get { return this.entityParameterSendOption; }
@@ -425,7 +426,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Gets or sets the synchronization option for receiving entities from a data service.</summary>
-        /// <returns>One of the members of the <see cref="T:Microsoft.OData.Client.MergeOption" /> enumeration.</returns>
+        /// <returns>One of the members of the <see cref="Microsoft.OData.Client.MergeOption" /> enumeration.</returns>
         /// <remarks>
         /// Used to specify a synchronization strategy when sending/receiving entities to/from a data service.
         /// This value is read by the deserialization component of the client prior to materializing objects.
@@ -439,7 +440,7 @@ namespace Microsoft.OData.Client
             set { this.mergeOption = Util.CheckEnumerationValue(value, "MergeOption"); }
         }
 
-        /// <summary>Gets a value that indicates whether the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> is currently applying changes to tracked objects.</summary>
+        /// <summary>Gets a value that indicates whether the <see cref="Microsoft.OData.Client.DataServiceContext" /> is currently applying changes to tracked objects.</summary>
         /// <returns>Returns true when changes are currently being applied; otherwise returns false.</returns>
         public virtual bool ApplyingChanges
         {
@@ -448,7 +449,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Gets or sets a function to override the default type resolution strategy used by the client library when you send entities to a data service.</summary>
-        /// <returns>Returns a string that contains the name of the <see cref="T:Microsoft.OData.Client.DataServiceContext" />.</returns>
+        /// <returns>Returns a string that contains the name of the <see cref="Microsoft.OData.Client.DataServiceContext" />.</returns>
         /// <remarks>
         /// Enables one to override the default type resolution strategy used by the client library.
         /// Set this property to a delegate which identifies a function that resolves
@@ -543,8 +544,8 @@ namespace Microsoft.OData.Client
             set { this.postTunneling = value; }
         }
 
-        /// <summary>Gets the collection of all associations or links currently being tracked by the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> object.</summary>
-        /// <returns>A collection of <see cref="T:Microsoft.OData.Client.LinkDescriptor" /> objects that represent all associations or links current being tracked by the current being tracked by the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> object.</returns>
+        /// <summary>Gets the collection of all associations or links currently being tracked by the <see cref="Microsoft.OData.Client.DataServiceContext" /> object.</summary>
+        /// <returns>A collection of <see cref="Microsoft.OData.Client.LinkDescriptor" /> objects that represent all associations or links current being tracked by the current being tracked by the <see cref="Microsoft.OData.Client.DataServiceContext" /> object.</returns>
         /// <remarks>If no links are being tracked, a collection with 0 elements is returned.</remarks>
         public virtual ReadOnlyCollection<LinkDescriptor> Links
         {
@@ -554,8 +555,8 @@ namespace Microsoft.OData.Client
             }
         }
 
-        /// <summary>Gets a list of all the resources currently being tracked by the <see cref="T:Microsoft.OData.Client.DataServiceContext" />.</summary>
-        /// <returns>A list of <see cref="T:Microsoft.OData.Client.EntityDescriptor" /> objects that represent all the resources currently being tracked by the <see cref="T:Microsoft.OData.Client.DataServiceContext" />. </returns>
+        /// <summary>Gets a list of all the resources currently being tracked by the <see cref="Microsoft.OData.Client.DataServiceContext" />.</summary>
+        /// <returns>A list of <see cref="Microsoft.OData.Client.EntityDescriptor" /> objects that represent all the resources currently being tracked by the <see cref="Microsoft.OData.Client.DataServiceContext" />. </returns>
         /// <remarks>If no resources are being tracked, a collection with 0 elements is returned.</remarks>
         public virtual ReadOnlyCollection<EntityDescriptor> Entities
         {
@@ -575,7 +576,7 @@ namespace Microsoft.OData.Client
             }
         }
 
-        /// <summary>Gets or sets the <see cref="T:Microsoft.OData.Client.SaveChangesOptions" /> values that are used by the <see cref="M:Microsoft.OData.Client.DataServiceContext.SaveChanges" /> method.</summary>
+        /// <summary>Gets or sets the <see cref="Microsoft.OData.Client.SaveChangesOptions" /> values that are used by the <see cref="Microsoft.OData.Client.DataServiceContext.SaveChanges" /> method.</summary>
         /// <returns>The current options for the save changes operation.</returns>
         public virtual SaveChangesOptions SaveChangesDefaultOptions
         {
@@ -594,7 +595,7 @@ namespace Microsoft.OData.Client
         #endregion
 
         /// <summary>Gets or sets whether an exception is raised when a 404 error (resource not found) is returned by the data service. </summary>
-        /// <returns>When set to true, the client library returns an empty set instead of raising a <see cref="T:Microsoft.OData.Client.DataServiceQueryException" /> when the data service returns an HTTP 404: Resource Not Found error.</returns>
+        /// <returns>When set to true, the client library returns an empty set instead of raising a <see cref="Microsoft.OData.Client.DataServiceQueryException" /> when the data service returns an HTTP 404: Resource Not Found error.</returns>
         public virtual bool IgnoreResourceNotFoundException
         {
             get { return this.ignoreResourceNotFoundException; }
@@ -671,7 +672,7 @@ namespace Microsoft.OData.Client
         internal bool UseDefaultCredentials { get; set; }
 
         /// <summary>Gets a value that indicates the type of HTTP implementation to use when accessing the data service in Silverlight.</summary>
-        /// <returns>A <see cref="T:Microsoft.OData.Client.HttpStack" /> value that indicates the HTTP implementation to use when accessing the data service.</returns>
+        /// <returns>A <see cref="Microsoft.OData.Client.HttpStack" /> value that indicates the HTTP implementation to use when accessing the data service.</returns>
         /// <remarks>Default value is HttpStack.Auto</remarks>
         internal HttpStack HttpStack
         {
@@ -733,7 +734,7 @@ namespace Microsoft.OData.Client
 
 
         /// <summary>
-        /// Indicates whether user is using <see cref="T:Microsoft.OData.Client.DataServiceCollection`1" /> to track changes.
+        /// Indicates whether user is using <see cref="Microsoft.OData.Client.DataServiceCollection{T}" /> to track changes.
         /// </summary>
         internal bool UsingDataServiceCollection { get; set; }
 
@@ -925,8 +926,8 @@ namespace Microsoft.OData.Client
 
         #region Entity and Link Tracking
 
-        /// <summary>Gets the <see cref="T:Microsoft.OData.Client.EntityDescriptor" /> for the supplied entity object.</summary>
-        /// <returns>The <see cref="T:Microsoft.OData.Client.EntityDescriptor" /> instance for the <paramref name="entity" />, or null if an <see cref="T:Microsoft.OData.Client.EntityDescriptor" /> does not exist for the object.</returns>
+        /// <summary>Gets the <see cref="Microsoft.OData.Client.EntityDescriptor" /> for the supplied entity object.</summary>
+        /// <returns>The <see cref="Microsoft.OData.Client.EntityDescriptor" /> instance for the <paramref name="entity" />, or null if an <see cref="Microsoft.OData.Client.EntityDescriptor" /> does not exist for the object.</returns>
         /// <param name="entity">The object for which to return the entity descriptor.</param>
         public virtual EntityDescriptor GetEntityDescriptor(object entity)
         {
@@ -934,8 +935,8 @@ namespace Microsoft.OData.Client
             return this.entityTracker.TryGetEntityDescriptor(entity);
         }
 
-        /// <summary>Gets the <see cref="T:Microsoft.OData.Client.LinkDescriptor" /> for a specific link that defines the relationship between two entities.</summary>
-        /// <returns>The <see cref="T:Microsoft.OData.Client.LinkDescriptor" /> instance for the specified relationship, or null if a <see cref="T:Microsoft.OData.Client.LinkDescriptor" /> does not exist for the relationship.</returns>
+        /// <summary>Gets the <see cref="Microsoft.OData.Client.LinkDescriptor" /> for a specific link that defines the relationship between two entities.</summary>
+        /// <returns>The <see cref="Microsoft.OData.Client.LinkDescriptor" /> instance for the specified relationship, or null if a <see cref="Microsoft.OData.Client.LinkDescriptor" /> does not exist for the relationship.</returns>
         /// <param name="source">Source object in the link</param>
         /// <param name="sourceProperty">The name of the navigation property on the <paramref name="source" /> object that returns the related object.</param>
         /// <param name="target">The related entity.</param>
@@ -951,8 +952,8 @@ namespace Microsoft.OData.Client
         #endregion
 
         #region CancelRequest
-        /// <summary>Attempts to cancel the operation that is associated with the supplied <see cref="T:System.IAsyncResult" /> object.</summary>
-        /// <param name="asyncResult">The <see cref="T:System.IAsyncResult" /> object from the operation being canceled.</param>
+        /// <summary>Attempts to cancel the operation that is associated with the supplied <see cref="System.IAsyncResult" /> object.</summary>
+        /// <param name="asyncResult">The <see cref="System.IAsyncResult" /> object from the operation being canceled.</param>
         /// <remarks>DataServiceContext is not safe to use until asyncResult.IsCompleted is true.</remarks>
         public virtual void CancelRequest(IAsyncResult asyncResult)
         {
@@ -1002,7 +1003,7 @@ namespace Microsoft.OData.Client
 
         #region CreateQuery
         /// <summary>Creates a data service query for data of a specified generic type.</summary>
-        /// <returns>A new <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> instance that represents a data service query.</returns>
+        /// <returns>A new <see cref="Microsoft.OData.Client.DataServiceQuery{TElement}" /> instance that represents a data service query.</returns>
         /// <param name="entitySetName">A string that resolves to a URI.</param>
         /// <typeparam name="T">The type returned by the query</typeparam>
         /// <remarks>create a query based on (BaseUri + relativeUri)</remarks>
@@ -1018,7 +1019,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Creates a data service query for a function with return type in a specified generic type.</summary>
-        /// <returns>A new <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> instance that represents a data service query.</returns>
+        /// <returns>A new <see cref="Microsoft.OData.Client.DataServiceQuery{TElement}" /> instance that represents a data service query.</returns>
         /// <param name="resourcePath">A string ends with function invocation that resolves to a URI.</param>
         /// <param name="isComposable">Whether this function query is composable</param>
         /// <typeparam name="T">The type returned by the query</typeparam>
@@ -1036,7 +1037,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Creates a data service query for a function invocation that returns a specified generic type.</summary>
-        /// <returns>A new <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> instance that represents a data service query.</returns>
+        /// <returns>A new <see cref="Microsoft.OData.Client.DataServiceQuery{TElement}" /> instance that represents a data service query.</returns>
         /// <typeparam name="T">The type returned by the query</typeparam>
         /// <remarks>create a query based on (BaseUri + relativeUri)</remarks>
         public virtual DataServiceQuery<T> CreateFunctionQuery<T>()
@@ -1051,7 +1052,7 @@ namespace Microsoft.OData.Client
         /// <param name="functionName">The function name.</param>
         /// <param name="isComposable">Whether this query is composable.</param>
         /// <param name="parameters">The function parameters.</param>
-        /// <returns>A new <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> instance that represents the function call.</returns>
+        /// <returns>A new <see cref="Microsoft.OData.Client.DataServiceQuery{TElement}" /> instance that represents the function call.</returns>
         public virtual DataServiceQuery<T> CreateFunctionQuery<T>(string path, string functionName, bool isComposable, params UriOperationParameter[] parameters)
         {
             this.CreateRequestArgsAndFireBuildingRequest(null, null, new HeaderCollection(), this.HttpStack, null /*descriptor*/);
@@ -1066,7 +1067,7 @@ namespace Microsoft.OData.Client
         /// <param name="functionName">The function name.</param>
         /// <param name="isComposable">Whether this query is composable.</param>
         /// <param name="parameters">The function parameters.</param>
-        /// <returns>A new <see cref="T:Microsoft.OData.Client.DataServiceQuerySingle`1" /> instance that represents the function call.</returns>
+        /// <returns>A new <see cref="Microsoft.OData.Client.DataServiceQuerySingle{T}" /> instance that represents the function call.</returns>
         public virtual DataServiceQuerySingle<T> CreateFunctionQuerySingle<T>(string path, string functionName, bool isComposable, params UriOperationParameter[] parameters)
         {
             this.CreateRequestArgsAndFireBuildingRequest(null, null, new HeaderCollection(), this.HttpStack, null /*descriptor*/);
@@ -1076,7 +1077,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Creates a data service query for singleton data of a specified generic type.</summary>
-        /// <returns>A new <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> instance that represents a data service query.</returns>
+        /// <returns>A new <see cref="Microsoft.OData.Client.DataServiceQuery{TElement}" /> instance that represents a data service query.</returns>
         /// <param name="singletonName">A string that resolves to a URI.</param>
         /// <typeparam name="T">The type returned by the query</typeparam>
         /// <remarks>create a query based on (BaseUri + relativeUri)</remarks>
@@ -1129,7 +1130,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Asynchronously loads a page of related entities from the data service by using the supplied next link URI.</summary>
-        /// <returns>An <see cref="T:System.IAsyncResult" /> object that is used to track the status of the asynchronous operation. </returns>
+        /// <returns>An <see cref="System.IAsyncResult" /> object that is used to track the status of the asynchronous operation. </returns>
         /// <param name="entity">The entity that contains the property to load.</param>
         /// <param name="propertyName">The name of the property of the specified entity to load.</param>
         /// <param name="nextLinkUri">The URI used to load the next results page.</param>
@@ -1153,10 +1154,10 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Asynchronously loads the next page of related entities from the data service by using the supplied query continuation object.</summary>
-        /// <returns>An <see cref="T:System.IAsyncResult" /> that represents the status of the operation.</returns>
+        /// <returns>An <see cref="System.IAsyncResult" /> that represents the status of the operation.</returns>
         /// <param name="entity">The entity that contains the property to load.</param>
         /// <param name="propertyName">The name of the property of the specified entity to load.</param>
-        /// <param name="continuation">A <see cref="T:Microsoft.OData.Client.DataServiceQueryContinuation`1" /> object that represents the next page of related entity data to return from the data service.</param>
+        /// <param name="continuation">A <see cref="Microsoft.OData.Client.DataServiceQueryContinuation{T}" /> object that represents the next page of related entity data to return from the data service.</param>
         /// <param name="callback">Delegate to invoke when results are available for client consumption.</param>
         /// <param name="state">User-defined state object passed to the callback.</param>
         public virtual IAsyncResult BeginLoadProperty(object entity, string propertyName, DataServiceQueryContinuation continuation, AsyncCallback callback, object state)
@@ -1171,15 +1172,15 @@ namespace Microsoft.OData.Client
         /// <returns>A Task that represents the response to the load operation.</returns>
         /// <param name="entity">The entity that contains the property to load.</param>
         /// <param name="propertyName">The name of the property on the specified entity to load.</param>
-        /// <param name="continuation">A <see cref="T:Microsoft.OData.Client.DataServiceQueryContinuation`1" /> object that represents the next page of related entity data to return from the data service.</param>
+        /// <param name="continuation">A <see cref="Microsoft.OData.Client.DataServiceQueryContinuation{T}" /> object that represents the next page of related entity data to return from the data service.</param>
         public virtual Task<QueryOperationResponse> LoadPropertyAsync(object entity, string propertyName, DataServiceQueryContinuation continuation)
         {
             return Task<QueryOperationResponse>.Factory.FromAsync(this.BeginLoadProperty, this.EndLoadProperty, entity, propertyName, continuation, null);
         }
 
-        /// <summary>Called to complete the <see cref="M:Microsoft.OData.Client.DataServiceContext.BeginLoadProperty(System.Object,System.String,System.AsyncCallback,System.Object)" /> operation.</summary>
+        /// <summary>Called to complete the <see cref="Microsoft.OData.Client.DataServiceContext.BeginLoadProperty(System.Object,System.String,System.AsyncCallback,System.Object)" /> operation.</summary>
         /// <returns>The response to the load operation.</returns>
-        /// <param name="asyncResult">An <see cref="T:System.IAsyncResult" /> that represents the status of the asynchronous operation.</param>
+        /// <param name="asyncResult">An <see cref="System.IAsyncResult" /> that represents the status of the asynchronous operation.</param>
         public virtual QueryOperationResponse EndLoadProperty(IAsyncResult asyncResult)
         {
             LoadPropertyResult response = BaseAsyncResult.EndExecute<LoadPropertyResult>(this, Util.LoadPropertyMethodName, asyncResult);
@@ -1207,11 +1208,11 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Loads a page of related entities by using the supplied next link URI.</summary>
-        /// <returns>An instance of <see cref="T:Microsoft.OData.Client.QueryOperationResponse`1" /> that contains the results of the request.</returns>
+        /// <returns>An instance of <see cref="Microsoft.OData.Client.QueryOperationResponse{T}" /> that contains the results of the request.</returns>
         /// <param name="entity">The entity that contains the property to load.</param>
         /// <param name="propertyName">The name of the property of the specified entity to load.</param>
         /// <param name="nextLinkUri">The URI that is used to load the next results page.</param>
-        /// <exception cref="T:System.InvalidOperationException">When <paramref name="entity" /> is in a <see cref="F:Microsoft.OData.Client.EntityStates.Detached" /> or <see cref="F:Microsoft.OData.Client.EntityStates.Added" /> state.</exception>
+        /// <exception cref="System.InvalidOperationException">When <paramref name="entity" /> is in a <see cref="Microsoft.OData.Client.EntityStates.Detached" /> or <see cref="Microsoft.OData.Client.EntityStates.Added" /> state.</exception>
         /// <remarks>
         /// If <paramref name="entity"/> is in in detached or added state, this method will throw an InvalidOperationException
         /// since there is nothing it can load from the server.
@@ -1233,8 +1234,8 @@ namespace Microsoft.OData.Client
         /// <returns>The response that contains the next page of related entity data.</returns>
         /// <param name="entity">The entity that contains the property to load.</param>
         /// <param name="propertyName">The name of the property of the specified entity to load.</param>
-        /// <param name="continuation">A <see cref="T:Microsoft.OData.Client.DataServiceQueryContinuation`1" /> object that represents the next page of related entities to load from the data service.</param>
-        /// <exception cref="T:System.InvalidOperationException">When <paramref name="entity" /> is in the <see cref="F:Microsoft.OData.Client.EntityStates.Detached" /> or <see cref="F:Microsoft.OData.Client.EntityStates.Added" /> state.</exception>
+        /// <param name="continuation">A <see cref="Microsoft.OData.Client.DataServiceQueryContinuation{T}" /> object that represents the next page of related entities to load from the data service.</param>
+        /// <exception cref="System.InvalidOperationException">When <paramref name="entity" /> is in the <see cref="Microsoft.OData.Client.EntityStates.Detached" /> or <see cref="Microsoft.OData.Client.EntityStates.Added" /> state.</exception>
         /// <remarks>
         /// If <paramref name="entity"/> is in in detached or added state, this method will throw an InvalidOperationException
         /// since there is nothing it can load from the server.
@@ -1256,9 +1257,9 @@ namespace Microsoft.OData.Client
         /// <returns>The response that contains the next page of related entity data.</returns>
         /// <param name="entity">The entity that contains the property to load.</param>
         /// <param name="propertyName">The name of the property of the specified entity to load.</param>
-        /// <param name="continuation">A <see cref="T:Microsoft.OData.Client.DataServiceQueryContinuation`1" /> object that represents the next page of related entities to load from the data service.</param>
+        /// <param name="continuation">A <see cref="Microsoft.OData.Client.DataServiceQueryContinuation{T}" /> object that represents the next page of related entities to load from the data service.</param>
         /// <typeparam name="T">Element type of collection to load.</typeparam>
-        /// <exception cref="T:System.InvalidOperationException">When <paramref name="entity" /> is in the <see cref="F:Microsoft.OData.Client.EntityStates.Detached" /> or <see cref="F:Microsoft.OData.Client.EntityStates.Added" /> state.</exception>
+        /// <exception cref="System.InvalidOperationException">When <paramref name="entity" /> is in the <see cref="Microsoft.OData.Client.EntityStates.Detached" /> or <see cref="Microsoft.OData.Client.EntityStates.Added" /> state.</exception>
         /// <remarks>
         /// If <paramref name="entity"/> is in in detached or added state, this method will throw an InvalidOperationException
         /// since there is nothing it can load from the server.
@@ -1286,8 +1287,8 @@ namespace Microsoft.OData.Client
         /// <summary>Gets the URI that is used to return a binary data stream.</summary>
         /// <returns>The read URI of the binary data stream.</returns>
         /// <param name="entity">The entity that has a related binary stream to retrieve. </param>
-        /// <exception cref="T:System.ArgumentNullException">If the entity specified is null.</exception>
-        /// <exception cref="T:System.ArgumentException">The <paramref name="entity" /> is not tracked by this <see cref="T:Microsoft.OData.Client.DataServiceContext" />.</exception>
+        /// <exception cref="System.ArgumentNullException">If the entity specified is null.</exception>
+        /// <exception cref="System.ArgumentException">The <paramref name="entity" /> is not tracked by this <see cref="Microsoft.OData.Client.DataServiceContext" />.</exception>
         /// <remarks>If the specified entity is a Media Link Entry, this method will return an URI which can be used to access the content of the Media Resource. This URI should only be used to GET/Read the content of the MR. It may not respond to POST/PUT/DELETE requests.</remarks>
         public virtual Uri GetReadStreamUri(object entity)
         {
@@ -1355,13 +1356,13 @@ namespace Microsoft.OData.Client
         #region GetReadStream, BeginGetReadStream, EndGetReadStream
 
         /// <summary>Asynchronously gets the binary data stream that belongs to the specified entity, by using the specified message headers.</summary>
-        /// <returns>An <see cref="T:System.IAsyncResult" /> object that is used to track the status of the asynchronous operation. </returns>
+        /// <returns>An <see cref="System.IAsyncResult" /> object that is used to track the status of the asynchronous operation. </returns>
         /// <param name="entity">The entity that has a the binary data stream to retrieve. </param>
-        /// <param name="args">Instance of the <see cref="T:Microsoft.OData.Client.DataServiceRequestArgs" /> class that contains settings for the HTTP request message.</param>
+        /// <param name="args">Instance of the <see cref="Microsoft.OData.Client.DataServiceRequestArgs" /> class that contains settings for the HTTP request message.</param>
         /// <param name="callback">Delegate to invoke when results are available for client consumption.</param>
         /// <param name="state">User-defined state object passed to the callback.</param>
-        /// <exception cref="T:System.ArgumentNullException">Any of the parameters supplied to the method is null.</exception>
-        /// <exception cref="T:System.ArgumentException">The <paramref name="entity" /> is not tracked by this <see cref="T:Microsoft.OData.Client.DataServiceContext" />.-or-The <paramref name="entity" /> is in the <see cref="F:Microsoft.OData.Client.EntityStates.Added" /> state.-or-The <paramref name="entity" /> is not a Media Link Entry and does not have a related binary data stream.</exception>
+        /// <exception cref="System.ArgumentNullException">Any of the parameters supplied to the method is null.</exception>
+        /// <exception cref="System.ArgumentException">The <paramref name="entity" /> is not tracked by this <see cref="Microsoft.OData.Client.DataServiceContext" />.-or-The <paramref name="entity" /> is in the <see cref="Microsoft.OData.Client.EntityStates.Added" /> state.-or-The <paramref name="entity" /> is not a Media Link Entry and does not have a related binary data stream.</exception>
         public virtual IAsyncResult BeginGetReadStream(object entity, DataServiceRequestArgs args, AsyncCallback callback, object state)
         {
             GetReadStreamResult result = this.CreateGetReadStreamResult(entity, args, callback, state, null /*name*/);
@@ -1370,21 +1371,21 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Asynchronously gets the binary data stream that belongs to the specified entity, by using the specified message headers.</summary>
-        /// <returns>A Task that represents an instance of <see cref="T:Microsoft.OData.Client.DataServiceStreamResponse" /> which contains the response stream along with its metadata.</returns>
+        /// <returns>A Task that represents an instance of <see cref="Microsoft.OData.Client.DataServiceStreamResponse" /> which contains the response stream along with its metadata.</returns>
         /// <param name="entity">The entity that has a the binary data stream to retrieve. </param>
-        /// <param name="args">Instance of the <see cref="T:Microsoft.OData.Client.DataServiceRequestArgs" /> class that contains settings for the HTTP request message.</param>
-        /// <exception cref="T:System.ArgumentNullException">Any of the parameters supplied to the method is null.</exception>
-        /// <exception cref="T:System.ArgumentException">The <paramref name="entity" /> is not tracked by this <see cref="T:Microsoft.OData.Client.DataServiceContext" />.-or-The <paramref name="entity" /> is in the <see cref="F:Microsoft.OData.Client.EntityStates.Added" /> state.-or-The <paramref name="entity" /> is not a Media Link Entry and does not have a related binary data stream.</exception>
+        /// <param name="args">Instance of the <see cref="Microsoft.OData.Client.DataServiceRequestArgs" /> class that contains settings for the HTTP request message.</param>
+        /// <exception cref="System.ArgumentNullException">Any of the parameters supplied to the method is null.</exception>
+        /// <exception cref="System.ArgumentException">The <paramref name="entity" /> is not tracked by this <see cref="Microsoft.OData.Client.DataServiceContext" />.-or-The <paramref name="entity" /> is in the <see cref="Microsoft.OData.Client.EntityStates.Added" /> state.-or-The <paramref name="entity" /> is not a Media Link Entry and does not have a related binary data stream.</exception>
         public virtual Task<DataServiceStreamResponse> GetReadStreamAsync(object entity, DataServiceRequestArgs args)
         {
             return Task<DataServiceStreamResponse>.Factory.FromAsync(this.BeginGetReadStream, this.EndGetReadStream, entity, args, null);
         }
 
         /// <summary>Asynchronously gets a named binary data stream that belongs to the specified entity, by using the specified message headers.</summary>
-        /// <returns>An <see cref="T:System.IAsyncResult" /> object that is used to track the status of the asynchronous operation. </returns>
+        /// <returns>An <see cref="System.IAsyncResult" /> object that is used to track the status of the asynchronous operation. </returns>
         /// <param name="entity">The entity that has the binary data stream to retrieve.</param>
         /// <param name="name">The name of the binary stream to request.</param>
-        /// <param name="args">Instance of the <see cref="T:Microsoft.OData.Client.DataServiceRequestArgs" /> class that contains settings for the HTTP request message.</param>
+        /// <param name="args">Instance of the <see cref="Microsoft.OData.Client.DataServiceRequestArgs" /> class that contains settings for the HTTP request message.</param>
         /// <param name="callback">Delegate to invoke when results are available for client consumption.</param>
         /// <param name="state">User-defined state object passed to the callback.</param>
         public virtual IAsyncResult BeginGetReadStream(object entity, string name, DataServiceRequestArgs args, AsyncCallback callback, object state)
@@ -1397,18 +1398,18 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Asynchronously gets the binary data stream that belongs to the specified entity, by using the specified message headers.</summary>
-        /// <returns>A task that represents an instance of <see cref="T:Microsoft.OData.Client.DataServiceStreamResponse" /> which contains the response stream along with its metadata.</returns>
+        /// <returns>A task that represents an instance of <see cref="Microsoft.OData.Client.DataServiceStreamResponse" /> which contains the response stream along with its metadata.</returns>
         /// <param name="entity">The entity that has a the binary data stream to retrieve. </param>
         /// <param name="name">The name of the binary stream to request.</param>
-        /// <param name="args">Instance of the <see cref="T:Microsoft.OData.Client.DataServiceRequestArgs" /> class that contains settings for the HTTP request message.</param>
+        /// <param name="args">Instance of the <see cref="Microsoft.OData.Client.DataServiceRequestArgs" /> class that contains settings for the HTTP request message.</param>
         public virtual Task<DataServiceStreamResponse> GetReadStreamAsync(object entity, string name, DataServiceRequestArgs args)
         {
             return Task<DataServiceStreamResponse>.Factory.FromAsync(this.BeginGetReadStream, this.EndGetReadStream, entity, name, args, null);
         }
 
         /// <summary>Called to complete the asynchronous operation of retrieving a binary data stream.</summary>
-        /// <returns>An instance of <see cref="T:Microsoft.OData.Client.DataServiceStreamResponse" /> which contains the response stream along with its metadata.</returns>
-        /// <param name="asyncResult">The result from the <see cref="M:Microsoft.OData.Client.DataServiceContext.BeginGetReadStream(System.Object,Microsoft.OData.Client.DataServiceRequestArgs,System.AsyncCallback,System.Object)" /> operation that contains the binary data stream.</param>
+        /// <returns>An instance of <see cref="Microsoft.OData.Client.DataServiceStreamResponse" /> which contains the response stream along with its metadata.</returns>
+        /// <param name="asyncResult">The result from the <see cref="Microsoft.OData.Client.DataServiceContext.BeginGetReadStream(System.Object,Microsoft.OData.Client.DataServiceRequestArgs,System.AsyncCallback,System.Object)" /> operation that contains the binary data stream.</param>
         /// <remarks>The method will block if the request have not finished yet.</remarks>
         public virtual DataServiceStreamResponse EndGetReadStream(IAsyncResult asyncResult)
         {
@@ -1418,10 +1419,10 @@ namespace Microsoft.OData.Client
 
 #if !PORTABLELIB
         /// <summary>Gets the binary data stream that belongs to the specified entity.</summary>
-        /// <returns>An instance of <see cref="T:Microsoft.OData.Client.DataServiceStreamResponse" /> that represents the response.</returns>
+        /// <returns>An instance of <see cref="Microsoft.OData.Client.DataServiceStreamResponse" /> that represents the response.</returns>
         /// <param name="entity">The entity that has the binary stream to retrieve. </param>
-        /// <exception cref="T:System.ArgumentNullException">The<paramref name=" entity" /> is null.</exception>
-        /// <exception cref="T:System.ArgumentException">The <paramref name="entity" /> is not tracked by this <see cref="T:Microsoft.OData.Client.DataServiceContext" />.-or-The <paramref name="entity" /> is in the <see cref="F:Microsoft.OData.Client.EntityStates.Added" /> state.-or-The <paramref name="entity" /> is not a Media Link Entry and does not have a related binary stream.</exception>
+        /// <exception cref="System.ArgumentNullException">The<paramref name=" entity" /> is null.</exception>
+        /// <exception cref="System.ArgumentException">The <paramref name="entity" /> is not tracked by this <see cref="Microsoft.OData.Client.DataServiceContext" />.-or-The <paramref name="entity" /> is in the <see cref="Microsoft.OData.Client.EntityStates.Added" /> state.-or-The <paramref name="entity" /> is not a Media Link Entry and does not have a related binary stream.</exception>
         public virtual DataServiceStreamResponse GetReadStream(object entity)
         {
             DataServiceRequestArgs args = new DataServiceRequestArgs();
@@ -1429,12 +1430,12 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Gets the binary data stream that belongs to the specified entity, by using the specified Content-Type message header.</summary>
-        /// <returns>An instance of <see cref="T:Microsoft.OData.Client.DataServiceStreamResponse" /> that represents the response.</returns>
+        /// <returns>An instance of <see cref="Microsoft.OData.Client.DataServiceStreamResponse" /> that represents the response.</returns>
         /// <param name="entity">The entity that has the binary data stream to retrieve. </param>
         /// <param name="acceptContentType">The Content-Type of the binary data stream requested from the data service, specified in the Accept header.</param>
-        /// <exception cref="T:System.ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         ///   <paramref name="entity" /> is null.-or- <paramref name="acceptContentType" /> is null.</exception>
-        /// <exception cref="T:System.ArgumentException">The <paramref name="entity" /> is not tracked by this <see cref="T:Microsoft.OData.Client.DataServiceContext" />.-or-The <paramref name="entity" /> is in the <see cref="F:Microsoft.OData.Client.EntityStates.Added" /> state.-or-The <paramref name="entity" /> is not a Media Link Entry and does not have a related stream.</exception>
+        /// <exception cref="System.ArgumentException">The <paramref name="entity" /> is not tracked by this <see cref="Microsoft.OData.Client.DataServiceContext" />.-or-The <paramref name="entity" /> is in the <see cref="Microsoft.OData.Client.EntityStates.Added" /> state.-or-The <paramref name="entity" /> is not a Media Link Entry and does not have a related stream.</exception>
         public virtual DataServiceStreamResponse GetReadStream(object entity, string acceptContentType)
         {
             Util.CheckArgumentNullAndEmpty(acceptContentType, "acceptContentType");
@@ -1444,12 +1445,12 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Gets binary data stream for the specified entity by using the specified message headers.</summary>
-        /// <returns>An instance of <see cref="T:Microsoft.OData.Client.DataServiceStreamResponse" /> that represents the response.</returns>
+        /// <returns>An instance of <see cref="Microsoft.OData.Client.DataServiceStreamResponse" /> that represents the response.</returns>
         /// <param name="entity">The entity that has the binary stream to retrieve. </param>
-        /// <param name="args">Instance of <see cref="T:Microsoft.OData.Client.DataServiceRequestArgs" /> class that contains settings for the HTTP request message.</param>
-        /// <exception cref="T:System.ArgumentNullException">
+        /// <param name="args">Instance of <see cref="Microsoft.OData.Client.DataServiceRequestArgs" /> class that contains settings for the HTTP request message.</param>
+        /// <exception cref="System.ArgumentNullException">
         ///   <paramref name="entity" /> is null.-or- <paramref name="args" /> is null.</exception>
-        /// <exception cref="T:System.ArgumentException">The <paramref name="entity" /> is not tracked by this <see cref="T:Microsoft.OData.Client.DataServiceContext" />.-or-The <paramref name="entity" /> is in the <see cref="F:Microsoft.OData.Client.EntityStates.Added" /> state.-or-The <paramref name="entity" /> is not a Media Link Entry and does not have a related binary stream.</exception>
+        /// <exception cref="System.ArgumentException">The <paramref name="entity" /> is not tracked by this <see cref="Microsoft.OData.Client.DataServiceContext" />.-or-The <paramref name="entity" /> is in the <see cref="Microsoft.OData.Client.EntityStates.Added" /> state.-or-The <paramref name="entity" /> is not a Media Link Entry and does not have a related binary stream.</exception>
         public virtual DataServiceStreamResponse GetReadStream(object entity, DataServiceRequestArgs args)
         {
             GetReadStreamResult result = this.CreateGetReadStreamResult(entity, args, null, null, null);
@@ -1457,10 +1458,10 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Gets a named binary data stream that belongs to the specified entity, by using the specified Content-Type message header.</summary>
-        /// <returns>An instance of <see cref="T:Microsoft.OData.Client.DataServiceStreamResponse" /> that represents the response.</returns>
+        /// <returns>An instance of <see cref="Microsoft.OData.Client.DataServiceStreamResponse" /> that represents the response.</returns>
         /// <param name="entity">The entity that has the binary data stream to retrieve.</param>
         /// <param name="name">The name of the binary stream to request.</param>
-        /// <param name="args">Instance of <see cref="T:Microsoft.OData.Client.DataServiceRequestArgs" /> class that contains settings for the HTTP request message.</param>
+        /// <param name="args">Instance of <see cref="Microsoft.OData.Client.DataServiceRequestArgs" /> class that contains settings for the HTTP request message.</param>
         /// <exception cref="ArgumentNullException">Either entity or args parameters are null.</exception>
         /// <exception cref="ArgumentException">The specified entity is either not tracked, is in the added state.</exception>
         public virtual DataServiceStreamResponse GetReadStream(object entity, string name, DataServiceRequestArgs args)
@@ -1478,12 +1479,12 @@ namespace Microsoft.OData.Client
 
         /// <summary>Sets a binary data stream that belongs to the specified entity, with the specified Content-Type and Slug headers in the request message.</summary>
         /// <param name="entity">The entity to which the data stream belongs.</param>
-        /// <param name="stream">The <see cref="T:System.IO.Stream" /> from which to read the binary data. </param>
-        /// <param name="closeStream">A <see cref="T:System.Boolean" /> value that determines whether the data stream is closed when the <see cref="M:Microsoft.OData.Client.DataServiceContext.SaveChanges" /> method is completed. </param>
+        /// <param name="stream">The <see cref="System.IO.Stream" /> from which to read the binary data. </param>
+        /// <param name="closeStream">A <see cref="System.Boolean" /> value that determines whether the data stream is closed when the <see cref="Microsoft.OData.Client.DataServiceContext.SaveChanges" /> method is completed. </param>
         /// <param name="contentType">The Content-Type header value for the request message.</param>
         /// <param name="slug">The Slug header value for the request message.</param>
-        /// <exception cref="T:System.ArgumentNullException">Any of the parameters supplied to the method are null.</exception>
-        /// <exception cref="T:System.ArgumentException">The <paramref name="entity" /> is not being tracked by this <see cref="T:Microsoft.OData.Client.DataServiceContext" /> instance. -or-The entity has the <see cref="T:Microsoft.OData.Client.MediaEntryAttribute" /> applied. </exception>
+        /// <exception cref="System.ArgumentNullException">Any of the parameters supplied to the method are null.</exception>
+        /// <exception cref="System.ArgumentException">The <paramref name="entity" /> is not being tracked by this <see cref="Microsoft.OData.Client.DataServiceContext" /> instance. -or-The entity has the <see cref="Microsoft.OData.Client.MediaEntryAttribute" /> applied. </exception>
         /// <remarks>Calling this method marks the entity as media link resource (MLE). It also marks the entity as modified
         /// so that it will participate in the next call to SaveChanges.</remarks>
         public virtual void SetSaveStream(object entity, Stream stream, bool closeStream, string contentType, string slug)
@@ -1499,11 +1500,11 @@ namespace Microsoft.OData.Client
 
         /// <summary>Sets a binary data stream for the specified entity, with the specified headers in the request message.</summary>
         /// <param name="entity">The entity to which the binary stream belongs.</param>
-        /// <param name="stream">The <see cref="T:System.IO.Stream" /> from which to read the binary data. </param>
-        /// <param name="closeStream">A <see cref="T:System.Boolean" /> value that determines whether the data stream is closed when the <see cref="M:Microsoft.OData.Client.DataServiceContext.SaveChanges" /> method is completed. </param>
-        /// <param name="args">An instance of the <see cref="T:Microsoft.OData.Client.DataServiceRequestArgs" /> class that contains settings for the HTTP request message.</param>
-        /// <exception cref="T:System.ArgumentNullException">Any of the parameters supplied to the method are null.</exception>
-        /// <exception cref="T:System.ArgumentException">The <paramref name="entity" /> is not being tracked by this <see cref="T:Microsoft.OData.Client.DataServiceContext" /> instance. -or-The <paramref name="entity" /> has the <see cref="T:Microsoft.OData.Client.MediaEntryAttribute" /> applied. </exception>
+        /// <param name="stream">The <see cref="System.IO.Stream" /> from which to read the binary data. </param>
+        /// <param name="closeStream">A <see cref="System.Boolean" /> value that determines whether the data stream is closed when the <see cref="Microsoft.OData.Client.DataServiceContext.SaveChanges" /> method is completed. </param>
+        /// <param name="args">An instance of the <see cref="Microsoft.OData.Client.DataServiceRequestArgs" /> class that contains settings for the HTTP request message.</param>
+        /// <exception cref="System.ArgumentNullException">Any of the parameters supplied to the method are null.</exception>
+        /// <exception cref="System.ArgumentException">The <paramref name="entity" /> is not being tracked by this <see cref="Microsoft.OData.Client.DataServiceContext" /> instance. -or-The <paramref name="entity" /> has the <see cref="Microsoft.OData.Client.MediaEntryAttribute" /> applied. </exception>
         /// <remarks>Calling this method marks the entity as media link resource (MLE). It also marks the entity as modified
         /// so that it will participate in the next call to SaveChanges.</remarks>
         public virtual void SetSaveStream(object entity, Stream stream, bool closeStream, DataServiceRequestArgs args)
@@ -1518,7 +1519,7 @@ namespace Microsoft.OData.Client
             {
                 throw new ArgumentException(
                     Strings.Context_SetSaveStreamOnMediaEntryProperty(clientType.ElementTypeName),
-                    "entity");
+                    nameof(entity));
             }
 
             box.SaveStream = new DataServiceSaveStream(stream, closeStream, args);
@@ -1548,8 +1549,8 @@ namespace Microsoft.OData.Client
         /// <summary>Sets a binary data stream for the specified entity.</summary>
         /// <param name="entity">The entity to which the binary stream belongs.</param>
         /// <param name="name">The name of the binary stream to save.</param>
-        /// <param name="stream">The <see cref="T:System.IO.Stream" /> from which to read the binary data.</param>
-        /// <param name="closeStream">A <see cref="T:System.Boolean" /> value that determines whether the data stream is closed when the <see cref="M:Microsoft.OData.Client.DataServiceContext.SaveChanges" /> method is completed.</param>
+        /// <param name="stream">The <see cref="System.IO.Stream" /> from which to read the binary data.</param>
+        /// <param name="closeStream">A <see cref="System.Boolean" /> value that determines whether the data stream is closed when the <see cref="Microsoft.OData.Client.DataServiceContext.SaveChanges" /> method is completed.</param>
         /// <param name="contentType">The Content-Type header value for the request message.</param>
         /// <exception cref="ArgumentException">The entity is not being tracked or name is an empty string.</exception>
         /// <exception cref="ArgumentNullException">Any of the arguments is null.</exception>
@@ -1564,9 +1565,9 @@ namespace Microsoft.OData.Client
         /// <summary>Sets a named binary data stream that belongs to the specified entity, with the specified headers in the request message.</summary>
         /// <param name="entity">The entity to which the binary stream belongs.</param>
         /// <param name="name">The name of the binary stream to save.</param>
-        /// <param name="stream">The <see cref="T:System.IO.Stream" /> from which to read the binary data.</param>
-        /// <param name="closeStream">A <see cref="T:System.Boolean" /> value that determines whether the data stream is closed when the <see cref="M:Microsoft.OData.Client.DataServiceContext.SaveChanges" /> method is completed.</param>
-        /// <param name="args">An instance of the <see cref="T:Microsoft.OData.Client.DataServiceRequestArgs" /> class that contains settings for the HTTP request message.</param>
+        /// <param name="stream">The <see cref="System.IO.Stream" /> from which to read the binary data.</param>
+        /// <param name="closeStream">A <see cref="System.Boolean" /> value that determines whether the data stream is closed when the <see cref="Microsoft.OData.Client.DataServiceContext.SaveChanges" /> method is completed.</param>
+        /// <param name="args">An instance of the <see cref="Microsoft.OData.Client.DataServiceRequestArgs" /> class that contains settings for the HTTP request message.</param>
         /// <remarks>Calling this method marks the entity as media link resource (MLE). It also marks the entity as modified
         /// so that it will participate in the next call to SaveChanges.</remarks>
         /// <exception cref="ArgumentException">The entity is not being tracked. The entity has the MediaEntry attribute
@@ -1603,7 +1604,7 @@ namespace Microsoft.OData.Client
         #region ExecuteBatch, BeginExecuteBatch, EndExecuteBatch
 
         /// <summary>Asynchronously submits a group of queries as a batch to the data service.</summary>
-        /// <returns>An <see cref="T:System.IAsyncResult" /> object that is used to track the status of the asynchronous operation. </returns>
+        /// <returns>An <see cref="System.IAsyncResult" /> object that is used to track the status of the asynchronous operation. </returns>
         /// <param name="callback">The delegate that is called when a response to the batch request is received.</param>
         /// <param name="state">User-defined state object that is used to pass context data to the callback method.</param>
         /// <param name="queries">The array of query requests to include in the batch request.</param>
@@ -1613,10 +1614,10 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Asynchronously submits a group of queries as a batch to the data service.</summary>
-        /// <returns>An <see cref="T:System.IAsyncResult" /> object that is used to track the status of the asynchronous operation. </returns>
+        /// <returns>An <see cref="System.IAsyncResult" /> object that is used to track the status of the asynchronous operation. </returns>
         /// <param name="callback">The delegate that is called when a response to the batch request is received.</param>
         /// <param name="state">User-defined state object that is used to pass context data to the callback method.</param>
-        /// <param name="options">A member of the <see cref="T:Microsoft.OData.Client.SaveChangesOptions" /> enumeration for how the client can save the pending set of changes.</param>
+        /// <param name="options">A member of the <see cref="Microsoft.OData.Client.SaveChangesOptions" /> enumeration for how the client can save the pending set of changes.</param>
         /// <param name="queries">The array of query requests to include in the batch request.</param>
         public virtual IAsyncResult BeginExecuteBatch(AsyncCallback callback, object state, SaveChangesOptions options, params DataServiceRequest[] queries)
         {
@@ -1636,7 +1637,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>Asynchronously submits a group of queries as a batch to the data service.</summary>
         /// <returns>An Task that represents the DataServiceResult object that indicates the result of the batch operation.</returns>
-        /// <param name="options">A member of the <see cref="T:Microsoft.OData.Client.SaveChangesOptions" /> enumeration for how the client can save the pending set of changes.</param>
+        /// <param name="options">A member of the <see cref="Microsoft.OData.Client.SaveChangesOptions" /> enumeration for how the client can save the pending set of changes.</param>
         /// <param name="queries">The array of query requests to include in the batch request.</param>
         public virtual Task<DataServiceResponse> ExecuteBatchAsync(SaveChangesOptions options, params DataServiceRequest[] queries)
         {
@@ -1648,9 +1649,9 @@ namespace Microsoft.OData.Client
             return Task<DataServiceResponse>.Factory.FromAsync((callback, state) => this.BeginExecuteBatch(callback, state, options, queries), this.EndExecuteBatch, null);
         }
 
-        /// <summary>Called to complete the <see cref="M:Microsoft.OData.Client.DataServiceContext.BeginExecuteBatch(System.AsyncCallback,System.Object,Microsoft.OData.Client.DataServiceRequest[])" />.</summary>
+        /// <summary>Called to complete the <see cref="Microsoft.OData.Client.DataServiceContext.BeginExecuteBatch(System.AsyncCallback,System.Object,Microsoft.OData.Client.DataServiceRequest[])" />.</summary>
         /// <returns>The DataServiceResult object that indicates the result of the batch operation.</returns>
-        /// <param name="asyncResult">An <see cref="T:System.IAsyncResult" /> that represents the status of the asynchronous operation.</param>
+        /// <param name="asyncResult">An <see cref="System.IAsyncResult" /> that represents the status of the asynchronous operation.</param>
         public virtual DataServiceResponse EndExecuteBatch(IAsyncResult asyncResult)
         {
             BatchSaveResult result = BaseAsyncResult.EndExecute<BatchSaveResult>(this, "ExecuteBatch", asyncResult);
@@ -1660,7 +1661,7 @@ namespace Microsoft.OData.Client
 #if !PORTABLELIB // Synchronous methods not available
         /// <summary>Synchronously submits a group of queries as a batch to the data service.</summary>
         /// <returns>The response to the batch operation.</returns>
-        /// <param name="queries">Array of <see cref="T:Microsoft.OData.Client.DataServiceRequest[]" /> objects that make up the queries.</param>
+        /// <param name="queries">Array of <see cref="Microsoft.OData.Client.DataServiceRequest" /> objects that make up the queries.</param>
         public virtual DataServiceResponse ExecuteBatch(params DataServiceRequest[] queries)
         {
             Util.CheckArgumentNotEmpty(queries, "queries");
@@ -1669,8 +1670,8 @@ namespace Microsoft.OData.Client
 
         /// <summary>Synchronously submits a group of queries as a batch to the data service.</summary>
         /// <returns>The response to the batch operation.</returns>
-        /// <param name="options">A member of the <see cref="T:Microsoft.OData.Client.SaveChangesOptions" /> enumeration for how the client can save the pending set of changes.</param>
-        /// <param name="queries">Array of <see cref="T:Microsoft.OData.Client.DataServiceRequest[]" /> objects that make up the queries.</param>
+        /// <param name="options">A member of the <see cref="Microsoft.OData.Client.SaveChangesOptions" /> enumeration for how the client can save the pending set of changes.</param>
+        /// <param name="queries">Array of <see cref="Microsoft.OData.Client.DataServiceRequest" /> objects that make up the queries.</param>
         public virtual DataServiceResponse ExecuteBatch(SaveChangesOptions options, params DataServiceRequest[] queries)
         {
             Util.CheckArgumentNotEmpty(queries, "queries");
@@ -1790,8 +1791,8 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Asynchronously sends a request to the data service to retrieve the next page of data in a paged query result.</summary>
-        /// <returns>An <see cref="T:System.IAsyncResult" /> that represents the status of the operation.</returns>
-        /// <param name="continuation">A <see cref="T:Microsoft.OData.Client.DataServiceQueryContinuation`1" /> object that represents the next page of data to return from the data service.</param>
+        /// <returns>An <see cref="System.IAsyncResult" /> that represents the status of the operation.</returns>
+        /// <param name="continuation">A <see cref="Microsoft.OData.Client.DataServiceQueryContinuation{T}" /> object that represents the next page of data to return from the data service.</param>
         /// <param name="callback">Delegate to invoke when results are available for client consumption.</param>
         /// <param name="state">User-defined state object passed to the callback.</param>
         /// <typeparam name="T">The type returned by the query.</typeparam>
@@ -1806,22 +1807,22 @@ namespace Microsoft.OData.Client
 
         /// <summary>Asynchronously sends a request to the data service to retrieve the next page of data in a paged query result.</summary>
         /// <returns>A task that represents the results returned by the query operation.</returns>
-        /// <param name="continuation">A <see cref="T:Microsoft.OData.Client.DataServiceQueryContinuation`1" /> object that represents the next page of data to return from the data service.</param>
+        /// <param name="continuation">A <see cref="Microsoft.OData.Client.DataServiceQueryContinuation{T}" /> object that represents the next page of data to return from the data service.</param>
         /// <typeparam name="TElement">The type returned by the query.</typeparam>
         public virtual Task<IEnumerable<TElement>> ExecuteAsync<TElement>(DataServiceQueryContinuation<TElement> continuation)
         {
             return Task<IEnumerable<TElement>>.Factory.FromAsync(this.BeginExecute, this.EndExecute<TElement>, continuation, null);
         }
 
-        /// <summary>Called to complete the <see cref="M:Microsoft.OData.Client.DataServiceContext.BeginExecute``1(System.Uri,System.AsyncCallback,System.Object)" />.</summary>
+        /// <summary>Called to complete the <see cref="Microsoft.OData.Client.DataServiceContext.BeginExecute{TElement}(System.Uri,System.AsyncCallback,System.Object)" />.</summary>
         /// <returns>The results returned by the query operation.</returns>
         /// <param name="asyncResult">
-        ///   <see cref="T:System.IAsyncResult" /> object.</param>
+        ///   <see cref="System.IAsyncResult" /> object.</param>
         /// <typeparam name="TElement">The type returned by the query.</typeparam>
-        /// <exception cref="T:System.ArgumentNullException">When<paramref name=" asyncResult" /> is null.</exception>
-        /// <exception cref="T:System.ArgumentException">When<paramref name=" asyncResult" /> did not originate from this <see cref="T:Microsoft.OData.Client.DataServiceContext" /> instance. -or- When the <see cref="M:Microsoft.OData.Client.DataServiceContext.EndExecute``1(System.IAsyncResult)" /> method was previously called.</exception>
-        /// <exception cref="T:System.InvalidOperationException">When an error is raised either during execution of the request or when it converts the contents of the response message into objects.</exception>
-        /// <exception cref="T:Microsoft.OData.Client.DataServiceQueryException">When the data service returns an HTTP 404: Resource Not Found error.</exception>
+        /// <exception cref="System.ArgumentNullException">When<paramref name=" asyncResult" /> is null.</exception>
+        /// <exception cref="System.ArgumentException">When<paramref name=" asyncResult" /> did not originate from this <see cref="Microsoft.OData.Client.DataServiceContext" /> instance. -or- When the <see cref="Microsoft.OData.Client.DataServiceContext.EndExecute{TElement}(System.IAsyncResult)" /> method was previously called.</exception>
+        /// <exception cref="System.InvalidOperationException">When an error is raised either during execution of the request or when it converts the contents of the response message into objects.</exception>
+        /// <exception cref="Microsoft.OData.Client.DataServiceQueryException">When the data service returns an HTTP 404: Resource Not Found error.</exception>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Type is used to infer result")]
         public virtual IEnumerable<TElement> EndExecute<TElement>(IAsyncResult asyncResult)
         {
@@ -1829,9 +1830,9 @@ namespace Microsoft.OData.Client
             return DataServiceRequest.EndExecute<TElement>(this, this, Util.ExecuteMethodName, asyncResult);
         }
 
-        /// <summary>Called to complete the <see cref="M:Microsoft.OData.Client.DataServiceContext.BeginExecute``1(System.Uri,System.AsyncCallback,System.Object)" />.</summary>
+        /// <summary>Called to complete the <see cref="Microsoft.OData.Client.DataServiceContext.BeginExecute{TElement}(System.Uri,System.AsyncCallback,System.Object)" />.</summary>
         /// <returns>The result of the operation.</returns>
-        /// <param name="asyncResult">An <see cref="T:System.IAsyncResult" /> that represents the status of the asynchronous operation.</param>
+        /// <param name="asyncResult">An <see cref="System.IAsyncResult" /> that represents the status of the asynchronous operation.</param>
         /// <remarks>This method should be used in combination with the BeginExecute overload which
         /// expects the request uri to end with a service operation or service action that returns void.</remarks>
         public virtual OperationResponse EndExecute(IAsyncResult asyncResult)
@@ -1851,11 +1852,11 @@ namespace Microsoft.OData.Client
         /// <returns>The results of the query operation.</returns>
         /// <param name="requestUri">The URI to which the query request will be sent. The URI may be any valid data service URI. Can contain $ query parameters.</param>
         /// <typeparam name="TElement">The type that the query returns.</typeparam>
-        /// <exception cref="T:System.Net.WebException">When a response is not received from a request to the <paramref name="requestUri" />.</exception>
-        /// <exception cref="T:System.ArgumentNullException">When <paramref name="requestUri" /> is null.</exception>
-        /// <exception cref="T:System.ArgumentException">When <paramref name="requestUri" /> is not a valid URI for the data service.</exception>
-        /// <exception cref="T:System.InvalidOperationException">When an error is raised either during execution of the request or when it converts the contents of the response message into objects.</exception>
-        /// <exception cref="T:Microsoft.OData.Client.DataServiceQueryException">When the data service returns an HTTP 404: Resource Not Found error.</exception>
+        /// <exception cref="System.Net.WebException">When a response is not received from a request to the <paramref name="requestUri" />.</exception>
+        /// <exception cref="System.ArgumentNullException">When <paramref name="requestUri" /> is null.</exception>
+        /// <exception cref="System.ArgumentException">When <paramref name="requestUri" /> is not a valid URI for the data service.</exception>
+        /// <exception cref="System.InvalidOperationException">When an error is raised either during execution of the request or when it converts the contents of the response message into objects.</exception>
+        /// <exception cref="Microsoft.OData.Client.DataServiceQueryException">When the data service returns an HTTP 404: Resource Not Found error.</exception>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Type is used to infer result")]
         public virtual IEnumerable<TElement> Execute<TElement>(Uri requestUri)
         {
@@ -1867,7 +1868,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>Sends a request to the data service to retrieve the next page of data in a paged query result.</summary>
         /// <returns>The response that contains the next page of data in the query result.</returns>
-        /// <param name="continuation">A <see cref="T:Microsoft.OData.Client.DataServiceQueryContinuation`1" /> object that represents the next page of data to return from the data service.</param>
+        /// <param name="continuation">A <see cref="Microsoft.OData.Client.DataServiceQueryContinuation{T}" /> object that represents the next page of data to return from the data service.</param>
         /// <typeparam name="T">The type returned by the query.</typeparam>
         public virtual QueryOperationResponse<T> Execute<T>(DataServiceQueryContinuation<T> continuation)
         {
@@ -1903,7 +1904,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Sends a request to the data service to execute a specific URI by using a specific HTTP method.</summary>
-        /// <returns>Returns <see cref="T:System.Collections.Generic.IEnumerable`1" />.</returns>
+        /// <returns>Returns <see cref="System.Collections.Generic.IEnumerable{T}" />.</returns>
         /// <param name="requestUri">The URI to which the query request will be sent. The URI may be any valid data service URI. Can contain $ query parameters.</param>
         /// <param name="httpMethod">The HTTP data transfer method used by the client.</param>
         /// <param name="singleResult">Attribute used on service operations to specify that they return a single instance of their return element.</param>
@@ -1921,7 +1922,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Sends a request to the data service to execute a specific URI by using a specific HTTP method.</summary>
-        /// <returns>Returns <see cref="T:System.Collections.Generic.IEnumerable`1" />.</returns>
+        /// <returns>Returns <see cref="System.Collections.Generic.IEnumerable{T}" />.</returns>
         /// <param name="requestUri">The URI to which the query request will be sent. The URI may be any valid data service URI. Can contain $ query parameters.</param>
         /// <param name="httpMethod">The HTTP data transfer method used by the client.</param>
         /// <param name="operationParameters">The operation parameters used.</param>
@@ -1943,7 +1944,7 @@ namespace Microsoft.OData.Client
 
         #region SaveChanges, BeginSaveChanges, EndSaveChanges
 
-        /// <summary>Asynchronously submits the pending changes to the data service collected by the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> since the last time changes were saved.</summary>
+        /// <summary>Asynchronously submits the pending changes to the data service collected by the <see cref="Microsoft.OData.Client.DataServiceContext" /> since the last time changes were saved.</summary>
         /// <returns>An IAsyncResult that represents the status of the asynchronous operation.</returns>
         /// <param name="callback">The delegate to call when the operation is completed.</param>
         /// <param name="state">The user-defined state object that is used to pass context data to the callback method.</param>
@@ -1952,16 +1953,16 @@ namespace Microsoft.OData.Client
             return this.BeginSaveChanges(this.SaveChangesDefaultOptions, callback, state);
         }
 
-        /// <summary>Asynchronously submits the pending changes to the data service collected by the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> since the last time changes were saved.</summary>
-        /// <returns>A task that represents a <see cref="T:Microsoft.OData.Client.DataServiceResponse" /> object that indicates the result of the batch operation.</returns>
+        /// <summary>Asynchronously submits the pending changes to the data service collected by the <see cref="Microsoft.OData.Client.DataServiceContext" /> since the last time changes were saved.</summary>
+        /// <returns>A task that represents a <see cref="Microsoft.OData.Client.DataServiceResponse" /> object that indicates the result of the batch operation.</returns>
         public virtual Task<DataServiceResponse> SaveChangesAsync()
         {
             return SaveChangesAsync(this.SaveChangesDefaultOptions);
         }
 
-        /// <summary>Asynchronously submits the pending changes to the data service collected by the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> since the last time changes were saved.</summary>
-        /// <returns>A task that represents a <see cref="T:Microsoft.OData.Client.DataServiceResponse" /> object that indicates the result of the batch operation.</returns>
-        /// <param name="options">A member of the <see cref="T:Microsoft.OData.Client.SaveChangesOptions" /> enumeration for how the client can save the pending set of changes.</param>
+        /// <summary>Asynchronously submits the pending changes to the data service collected by the <see cref="Microsoft.OData.Client.DataServiceContext" /> since the last time changes were saved.</summary>
+        /// <returns>A task that represents a <see cref="Microsoft.OData.Client.DataServiceResponse" /> object that indicates the result of the batch operation.</returns>
+        /// <param name="options">A member of the <see cref="Microsoft.OData.Client.SaveChangesOptions" /> enumeration for how the client can save the pending set of changes.</param>
         /// <param name="callback">The delegate to call when the operation is completed.</param>
         /// <param name="state">The user-defined state object that is used to pass context data to the callback method.</param>
         /// <remarks>
@@ -1984,17 +1985,17 @@ namespace Microsoft.OData.Client
             return result;
         }
 
-        /// <summary>Asynchronously submits the pending changes to the data service collected by the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> since the last time changes were saved.</summary>
-        /// <returns>A task that represents a <see cref="T:Microsoft.OData.Client.DataServiceResponse" /> object that indicates the result of the batch operation.</returns>
-        /// <param name="options">A member of the <see cref="T:Microsoft.OData.Client.SaveChangesOptions" /> enumeration for how the client can save the pending set of changes.</param>
+        /// <summary>Asynchronously submits the pending changes to the data service collected by the <see cref="Microsoft.OData.Client.DataServiceContext" /> since the last time changes were saved.</summary>
+        /// <returns>A task that represents a <see cref="Microsoft.OData.Client.DataServiceResponse" /> object that indicates the result of the batch operation.</returns>
+        /// <param name="options">A member of the <see cref="Microsoft.OData.Client.SaveChangesOptions" /> enumeration for how the client can save the pending set of changes.</param>
         public virtual Task<DataServiceResponse> SaveChangesAsync(SaveChangesOptions options)
         {
             return Task<DataServiceResponse>.Factory.FromAsync(this.BeginSaveChanges, this.EndSaveChanges, options, null);
         }
 
-        /// <summary>Called to complete the <see cref="M:Microsoft.OData.Client.DataServiceContext.BeginSaveChanges(System.AsyncCallback,System.Object)" /> operation.</summary>
-        /// <returns>A <see cref="T:Microsoft.OData.Client.DataServiceResponse" /> object that indicates the result of the batch operation.</returns>
-        /// <param name="asyncResult">An <see cref="T:System.IAsyncResult" /> that represents the status of the asynchronous operation.</param>
+        /// <summary>Called to complete the <see cref="Microsoft.OData.Client.DataServiceContext.BeginSaveChanges(System.AsyncCallback,System.Object)" /> operation.</summary>
+        /// <returns>A <see cref="Microsoft.OData.Client.DataServiceResponse" /> object that indicates the result of the batch operation.</returns>
+        /// <param name="asyncResult">An <see cref="System.IAsyncResult" /> that represents the status of the asynchronous operation.</param>
         public virtual DataServiceResponse EndSaveChanges(IAsyncResult asyncResult)
         {
             BaseSaveResult result = BaseAsyncResult.EndExecute<BaseSaveResult>(this, Util.SaveChangesMethodName, asyncResult);
@@ -2010,16 +2011,16 @@ namespace Microsoft.OData.Client
         }
 
 #if !PORTABLELIB // Synchronous methods not available
-        /// <summary>Saves the changes that the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> is tracking to storage.</summary>
-        /// <returns>A <see cref="T:Microsoft.OData.Client.DataServiceResponse" /> that contains status, headers, and errors that result from the call to <see cref="M:Microsoft.OData.Client.DataServiceContext.SaveChanges.Remarks" />.</returns>
+        /// <summary>Saves the changes that the <see cref="Microsoft.OData.Client.DataServiceContext" /> is tracking to storage.</summary>
+        /// <returns>A <see cref="Microsoft.OData.Client.DataServiceResponse" /> that contains status, headers, and errors that result from the call to <see cref="Microsoft.OData.Client.DataServiceContext.SaveChanges.Remarks" />.</returns>
         public virtual DataServiceResponse SaveChanges()
         {
             return this.SaveChanges(this.SaveChangesDefaultOptions);
         }
 
-        /// <summary>Saves the changes that the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> is tracking to storage.</summary>
-        /// <returns>A <see cref="T:Microsoft.OData.Client.DataServiceResponse" /> that contains status, headers, and errors that result from the call to <see cref="M:Microsoft.OData.Client.DataServiceContext.SaveChanges" />.</returns>
-        /// <param name="options">A member of the <see cref="T:Microsoft.OData.Client.SaveChangesOptions" /> enumeration for how the client can save the pending set of changes.</param>
+        /// <summary>Saves the changes that the <see cref="Microsoft.OData.Client.DataServiceContext" /> is tracking to storage.</summary>
+        /// <returns>A <see cref="Microsoft.OData.Client.DataServiceResponse" /> that contains status, headers, and errors that result from the call to <see cref="Microsoft.OData.Client.DataServiceContext.SaveChanges" />.</returns>
+        /// <param name="options">A member of the <see cref="Microsoft.OData.Client.SaveChangesOptions" /> enumeration for how the client can save the pending set of changes.</param>
         public virtual DataServiceResponse SaveChanges(SaveChangesOptions options)
         {
             DataServiceResponse errors = null;
@@ -2051,12 +2052,12 @@ namespace Microsoft.OData.Client
 
         #region Add, Attach, Delete, Detach, Update, TryGetEntity, TryGetUri
 
-        /// <summary>Adds the specified link to the set of objects the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> is tracking.</summary>
+        /// <summary>Adds the specified link to the set of objects the <see cref="Microsoft.OData.Client.DataServiceContext" /> is tracking.</summary>
         /// <param name="source">The source object for the new link.</param>
         /// <param name="sourceProperty">The name of the navigation property on the source object that returns the related object.</param>
         /// <param name="target">The object related to the source object by the new link. </param>
-        /// <exception cref="T:System.ArgumentNullException">When <paramref name="source" />, <paramref name="sourceProperty" />, or <paramref name="target" /> are null.</exception>
-        /// <exception cref="T:System.InvalidOperationException">If a link already exists.-or-If either the <paramref name="source" /> or <paramref name="target" /> objects are in a <see cref="F:Microsoft.OData.Client.EntityStates.Detached" /> or <see cref="F:Microsoft.OData.Client.EntityStates.Deleted" /> state.-or-If <paramref name="sourceProperty" /> is not a collection.</exception>
+        /// <exception cref="System.ArgumentNullException">When <paramref name="source" />, <paramref name="sourceProperty" />, or <paramref name="target" /> are null.</exception>
+        /// <exception cref="System.InvalidOperationException">If a link already exists.-or-If either the <paramref name="source" /> or <paramref name="target" /> objects are in a <see cref="Microsoft.OData.Client.EntityStates.Detached" /> or <see cref="Microsoft.OData.Client.EntityStates.Deleted" /> state.-or-If <paramref name="sourceProperty" /> is not a collection.</exception>
         /// <remarks>
         /// Notifies the context that a new link exists between the <paramref name="source"/> and <paramref name="target"/> objects
         /// and that the link is represented via the source.<paramref name="sourceProperty"/> which is a collection.
@@ -2075,24 +2076,24 @@ namespace Microsoft.OData.Client
             this.entityTracker.IncrementChange(descriptor);
         }
 
-        /// <summary>Notifies the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> to start tracking the specified link that defines a relationship between entity objects.</summary>
+        /// <summary>Notifies the <see cref="Microsoft.OData.Client.DataServiceContext" /> to start tracking the specified link that defines a relationship between entity objects.</summary>
         /// <param name="source">The source object in the new link.</param>
         /// <param name="sourceProperty">The name of the property on the source object that represents the link between the source and target object.</param>
         /// <param name="target">The target object in the link that is bound to the source object specified in this call. The target object must be of the type identified by the source property or a subtype.</param>
-        /// <exception cref="T:System.ArgumentNullException">When <paramref name="source" />, <paramref name="sourceProperty" />, or <paramref name="target" /> is null.</exception>
-        /// <exception cref="T:System.InvalidOperationException">When the link between the two entities already exists.-or-When <paramref name="source" /> or <paramref name="target" /> is in an <see cref="F:Microsoft.OData.Client.EntityStates.Added" /> or <see cref="F:Microsoft.OData.Client.EntityStates.Deleted" /> state.</exception>
+        /// <exception cref="System.ArgumentNullException">When <paramref name="source" />, <paramref name="sourceProperty" />, or <paramref name="target" /> is null.</exception>
+        /// <exception cref="System.InvalidOperationException">When the link between the two entities already exists.-or-When <paramref name="source" /> or <paramref name="target" /> is in an <see cref="Microsoft.OData.Client.EntityStates.Added" /> or <see cref="Microsoft.OData.Client.EntityStates.Deleted" /> state.</exception>
         public virtual void AttachLink(object source, string sourceProperty, object target)
         {
             this.AttachLink(source, sourceProperty, target, MergeOption.NoTracking);
         }
 
-        /// <summary>Removes the specified link from the list of links being tracked by the <see cref="T:Microsoft.OData.Client.DataServiceContext" />.</summary>
+        /// <summary>Removes the specified link from the list of links being tracked by the <see cref="Microsoft.OData.Client.DataServiceContext" />.</summary>
         /// <returns>Returns true if the specified entity was detached; otherwise false.</returns>
         /// <param name="source">The source object participating in the link to be marked for deletion.</param>
         /// <param name="sourceProperty">The name of the property on the source object that represents the source in the link between the source and the target.</param>
         /// <param name="target">The target object involved in the link that is bound to the source object. The target object must be of the type identified by the source property or a subtype.</param>
-        /// <exception cref="T:System.ArgumentNullException">When <paramref name="source" /> or <paramref name="sourceProperty" /> are null.</exception>
-        /// <exception cref="T:System.ArgumentException">When <paramref name="sourceProperty" /> is an empty string.</exception>
+        /// <exception cref="System.ArgumentNullException">When <paramref name="source" /> or <paramref name="sourceProperty" /> are null.</exception>
+        /// <exception cref="System.ArgumentException">When <paramref name="sourceProperty" /> is an empty string.</exception>
         /// <remarks>Any link being tracked by the context, regardless of its current state, can be detached.  </remarks>
         public virtual bool DetachLink(object source, string sourceProperty, object target)
         {
@@ -2109,12 +2110,12 @@ namespace Microsoft.OData.Client
             return true;
         }
 
-        /// <summary>Changes the state of the link to deleted in the list of links being tracked by the <see cref="T:Microsoft.OData.Client.DataServiceContext" />.</summary>
+        /// <summary>Changes the state of the link to deleted in the list of links being tracked by the <see cref="Microsoft.OData.Client.DataServiceContext" />.</summary>
         /// <param name="source">The source object in the link to be marked for deletion.</param>
         /// <param name="sourceProperty">The name of the navigation property on the source object that is used to access the target object.</param>
         /// <param name="target">The target object involved in the link that is bound to the source object. The target object must be of the type identified by the source property or a subtype.</param>
-        /// <exception cref="T:System.ArgumentNullException">When <paramref name="source" />, <paramref name="sourceProperty" />, or <paramref name="target" /> is null.</exception>
-        /// <exception cref="T:System.InvalidOperationException">When <paramref name="source" /> or <paramref name="target" /> is in a <see cref="F:Microsoft.OData.Client.EntityStates.Detached" /> or <see cref="F:Microsoft.OData.Client.EntityStates.Added" /> state.-or-When <paramref name="sourceProperty" /> is not a collection.</exception>
+        /// <exception cref="System.ArgumentNullException">When <paramref name="source" />, <paramref name="sourceProperty" />, or <paramref name="target" /> is null.</exception>
+        /// <exception cref="System.InvalidOperationException">When <paramref name="source" /> or <paramref name="target" /> is in a <see cref="Microsoft.OData.Client.EntityStates.Detached" /> or <see cref="Microsoft.OData.Client.EntityStates.Added" /> state.-or-When <paramref name="sourceProperty" /> is not a collection.</exception>
         /// <remarks>
         /// Notifies the context that a link exists between the <paramref name="source"/> and <paramref name="target"/> object
         /// and that the link is represented via the source.<paramref name="sourceProperty"/> which is a collection.
@@ -2156,12 +2157,12 @@ namespace Microsoft.OData.Client
             }
         }
 
-        /// <summary>Notifies the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> that a new link exists between the objects specified and that the link is represented by the property specified by the <paramref name="sourceProperty" /> parameter.</summary>
+        /// <summary>Notifies the <see cref="Microsoft.OData.Client.DataServiceContext" /> that a new link exists between the objects specified and that the link is represented by the property specified by the <paramref name="sourceProperty" /> parameter.</summary>
         /// <param name="source">The source object for the new link.</param>
         /// <param name="sourceProperty">The property on the source object that identifies the target object of the new link.</param>
         /// <param name="target">The child object involved in the new link that is to be initialized by calling this method. The target object must be a subtype of the type identified by the <paramref name="sourceProperty" /> parameter. If <paramref name="target" /> is set to null, the call represents a delete link operation.</param>
-        /// <exception cref="T:System.ArgumentNullException">When <paramref name="source" />, <paramref name="sourceProperty" /> or <paramref name="target" /> are null.</exception>
-        /// <exception cref="T:System.InvalidOperationException">When the specified link already exists.-or-When the objects supplied as <paramref name="source" /> or <paramref name="target" /> are in the <see cref="F:Microsoft.OData.Client.EntityStates.Detached" /> or <see cref="F:Microsoft.OData.Client.EntityStates.Deleted" /> state.-or-When <paramref name="sourceProperty" /> is not a navigation property that defines a reference to a single related object.</exception>
+        /// <exception cref="System.ArgumentNullException">When <paramref name="source" />, <paramref name="sourceProperty" /> or <paramref name="target" /> are null.</exception>
+        /// <exception cref="System.InvalidOperationException">When the specified link already exists.-or-When the objects supplied as <paramref name="source" /> or <paramref name="target" /> are in the <see cref="Microsoft.OData.Client.EntityStates.Detached" /> or <see cref="Microsoft.OData.Client.EntityStates.Deleted" /> state.-or-When <paramref name="sourceProperty" /> is not a navigation property that defines a reference to a single related object.</exception>
         /// <remarks>
         /// Notifies the context that a modified link exists between the <paramref name="source"/> and <paramref name="target"/> objects
         /// and that the link is represented via the source.<paramref name="sourceProperty"/> which is a reference.
@@ -2196,12 +2197,12 @@ namespace Microsoft.OData.Client
         #endregion
 
         #region AddObject, AttachTo, DeleteObject, Detach, TryGetEntity, TryGetUri
-        /// <summary>Adds the specified object to the set of objects that the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> is tracking.</summary>
+        /// <summary>Adds the specified object to the set of objects that the <see cref="Microsoft.OData.Client.DataServiceContext" /> is tracking.</summary>
         /// <param name="entitySetName">The name of the entity set to which the resource will be added.</param>
-        /// <param name="entity">The object to be tracked by the <see cref="T:Microsoft.OData.Client.DataServiceContext" />.</param>
-        /// <exception cref="T:System.ArgumentNullException">When <paramref name="entitySetName" /> or <paramref name="entity" /> is null.</exception>
-        /// <exception cref="T:System.ArgumentException">When <paramref name="entitySetName" /> is empty.-or-When <paramref name="entity" /> does not have a key property defined.</exception>
-        /// <exception cref="T:System.InvalidOperationException">When the entity is already being tracked by the context.</exception>
+        /// <param name="entity">The object to be tracked by the <see cref="Microsoft.OData.Client.DataServiceContext" />.</param>
+        /// <exception cref="System.ArgumentNullException">When <paramref name="entitySetName" /> or <paramref name="entity" /> is null.</exception>
+        /// <exception cref="System.ArgumentException">When <paramref name="entitySetName" /> is empty.-or-When <paramref name="entity" /> does not have a key property defined.</exception>
+        /// <exception cref="System.InvalidOperationException">When the entity is already being tracked by the context.</exception>
         /// <remarks>
         /// It does not follow the object graph and add related objects.
         /// Any leading or trailing forward slashes will automatically be trimmed from entitySetName.
@@ -2283,25 +2284,25 @@ namespace Microsoft.OData.Client
             this.entityTracker.IncrementChange(targetResource);
         }
 
-        /// <summary>Notifies the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> to start tracking the specified resource and supplies the location of the resource within the specified resource set.</summary>
+        /// <summary>Notifies the <see cref="Microsoft.OData.Client.DataServiceContext" /> to start tracking the specified resource and supplies the location of the resource within the specified resource set.</summary>
         /// <param name="entitySetName">The name of the set that contains the resource.</param>
-        /// <param name="entity">The resource to be tracked by the <see cref="T:Microsoft.OData.Client.DataServiceContext" />. The resource is attached in the Unchanged state.</param>
-        /// <exception cref="T:System.ArgumentNullException">When <paramref name="entity" /> or <paramref name="entitySetName" /> is null.</exception>
-        /// <exception cref="T:System.ArgumentException">When <paramref name="entitySetName" /> is an empty string.-or-When the <paramref name="entity" /> does not have a key property defined.</exception>
-        /// <exception cref="T:System.InvalidOperationException">When the <paramref name="entity" /> is already being tracked by the context.</exception>
+        /// <param name="entity">The resource to be tracked by the <see cref="Microsoft.OData.Client.DataServiceContext" />. The resource is attached in the Unchanged state.</param>
+        /// <exception cref="System.ArgumentNullException">When <paramref name="entity" /> or <paramref name="entitySetName" /> is null.</exception>
+        /// <exception cref="System.ArgumentException">When <paramref name="entitySetName" /> is an empty string.-or-When the <paramref name="entity" /> does not have a key property defined.</exception>
+        /// <exception cref="System.InvalidOperationException">When the <paramref name="entity" /> is already being tracked by the context.</exception>
         /// <remarks>It does not follow the object graph and attach related objects.</remarks>
         public virtual void AttachTo(string entitySetName, object entity)
         {
             this.AttachTo(entitySetName, entity, null);
         }
 
-        /// <summary>Notifies the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> to start tracking the specified resource and supplies the location of the resource in the specified resource set.</summary>
+        /// <summary>Notifies the <see cref="Microsoft.OData.Client.DataServiceContext" /> to start tracking the specified resource and supplies the location of the resource in the specified resource set.</summary>
         /// <param name="entitySetName">The string value that contains the name of the entity set to which to the entity is attached.</param>
         /// <param name="entity">The entity to add.</param>
         /// <param name="etag">An etag value that represents the state of the entity the last time it was retrieved from the data service. This value is treated as an opaque string; no validation is performed on it by the client library.</param>
-        /// <exception cref="T:System.ArgumentNullException">When <paramref name="entitySetName" /> is null.-or-When <paramref name="entity" /> is null.</exception>
-        /// <exception cref="T:System.ArgumentException">When <paramref name="entitySetName" /> is an empty string.-or-When the supplied object does not have a key property.</exception>
-        /// <exception cref="T:System.InvalidOperationException">When the supplied object is already being tracked by the context</exception>
+        /// <exception cref="System.ArgumentNullException">When <paramref name="entitySetName" /> is null.-or-When <paramref name="entity" /> is null.</exception>
+        /// <exception cref="System.ArgumentException">When <paramref name="entitySetName" /> is an empty string.-or-When the supplied object does not have a key property.</exception>
+        /// <exception cref="System.InvalidOperationException">When the supplied object is already being tracked by the context</exception>
         /// <remarks>It does not follow the object graph and attach related objects.</remarks>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704", MessageId = "etag", Justification = "represents ETag in request")]
         public virtual void AttachTo(string entitySetName, object entity, string etag)
@@ -2325,10 +2326,10 @@ namespace Microsoft.OData.Client
             this.entityTracker.InternalAttachEntityDescriptor(descriptor, true /*failIfDuplicated*/);
         }
 
-        /// <summary>Changes the state of the specified object to be deleted in the <see cref="T:Microsoft.OData.Client.DataServiceContext" />.</summary>
+        /// <summary>Changes the state of the specified object to be deleted in the <see cref="Microsoft.OData.Client.DataServiceContext" />.</summary>
         /// <param name="entity">The tracked entity to be changed to the deleted state.</param>
-        /// <exception cref="T:System.ArgumentNullException">When <paramref name="entity" /> is null.</exception>
-        /// <exception cref="T:System.InvalidOperationException">When the object is not being tracked by the <see cref="T:Microsoft.OData.Client.DataServiceContext" />.</exception>
+        /// <exception cref="System.ArgumentNullException">When <paramref name="entity" /> is null.</exception>
+        /// <exception cref="System.InvalidOperationException">When the object is not being tracked by the <see cref="Microsoft.OData.Client.DataServiceContext" />.</exception>
         /// <remarks>
         /// Existing objects in the Added state become detached.
         /// </remarks>
@@ -2337,10 +2338,10 @@ namespace Microsoft.OData.Client
             this.DeleteObjectInternal(entity, false /*failIfInAddedState*/);
         }
 
-        /// <summary>Removes the entity from the list of entities that the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> is tracking.</summary>
+        /// <summary>Removes the entity from the list of entities that the <see cref="Microsoft.OData.Client.DataServiceContext" /> is tracking.</summary>
         /// <returns>Returns true if the specified entity was detached; otherwise false.</returns>
-        /// <param name="entity">The tracked entity to be detached from the <see cref="T:Microsoft.OData.Client.DataServiceContext" />.</param>
-        /// <exception cref="T:System.ArgumentNullException">When <paramref name="entity" /> is null.</exception>
+        /// <param name="entity">The tracked entity to be detached from the <see cref="Microsoft.OData.Client.DataServiceContext" />.</param>
+        /// <exception cref="System.ArgumentNullException">When <paramref name="entity" /> is null.</exception>
         public virtual bool Detach(object entity)
         {
             Util.CheckArgumentNull(entity, "entity");
@@ -2354,10 +2355,10 @@ namespace Microsoft.OData.Client
             return false;
         }
 
-        /// <summary>Changes the state of the specified object in the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> to <see cref="F:Microsoft.OData.Client.EntityStates.Modified" />.</summary>
-        /// <param name="entity">The tracked entity to be assigned to the <see cref="F:Microsoft.OData.Client.EntityStates.Modified" /> state.</param>
-        /// <exception cref="T:System.ArgumentNullException">When <paramref name="entity" /> is null.</exception>
-        /// <exception cref="T:System.ArgumentException">When <paramref name="entity" /> is in the <see cref="F:Microsoft.OData.Client.EntityStates.Detached" /> state.</exception>
+        /// <summary>Changes the state of the specified object in the <see cref="Microsoft.OData.Client.DataServiceContext" /> to <see cref="Microsoft.OData.Client.EntityStates.Modified" />.</summary>
+        /// <param name="entity">The tracked entity to be assigned to the <see cref="Microsoft.OData.Client.EntityStates.Modified" /> state.</param>
+        /// <exception cref="System.ArgumentNullException">When <paramref name="entity" /> is null.</exception>
+        /// <exception cref="System.ArgumentException">When <paramref name="entity" /> is in the <see cref="Microsoft.OData.Client.EntityStates.Detached" /> state.</exception>
         public virtual void UpdateObject(object entity)
         {
             this.UpdateObjectInternal(entity, false /*failIfNotUnchanged*/);
@@ -2478,12 +2479,12 @@ namespace Microsoft.OData.Client
 #endif
         }
 
-        /// <summary>Test retrieval of an entity being tracked by the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> by reference to the URI of the entity.</summary>
+        /// <summary>Test retrieval of an entity being tracked by the <see cref="Microsoft.OData.Client.DataServiceContext" /> by reference to the URI of the entity.</summary>
         /// <returns>If an entity is found at <paramref name="identity" />, the entity is returned in the out parameter <paramref name="entity" /> and true is returned. If no entity is found, false is returned.</returns>
         /// <param name="identity">The URI of the tracked entity to be retrieved.</param>
         /// <param name="entity">The entity to be retrieved.</param>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
-        /// <exception cref="T:System.ArgumentNullException">When <paramref name="identity" /> is null.</exception>
+        /// <exception cref="System.ArgumentNullException">When <paramref name="identity" /> is null.</exception>
         /// <remarks>entities in added state are not likely to have a identity</remarks>
         public virtual bool TryGetEntity<TEntity>(Uri identity, out TEntity entity) where TEntity : class
         {
@@ -2498,10 +2499,10 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Retrieves the canonical URI associated with the specified entity, if available.</summary>
-        /// <returns>Returns true if the canonical URI is returned in the out parameter. If the specified entity is not tracked by the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> or is in the added state, no URI is available and false is returned.</returns>
+        /// <returns>Returns true if the canonical URI is returned in the out parameter. If the specified entity is not tracked by the <see cref="Microsoft.OData.Client.DataServiceContext" /> or is in the added state, no URI is available and false is returned.</returns>
         /// <param name="entity">The entity identified by the <paramref name="identity" />.</param>
         /// <param name="identity">The URI of the entity.</param>
-        /// <exception cref="T:System.ArgumentNullException">When <paramref name="entity" /> is null.</exception>
+        /// <exception cref="System.ArgumentNullException">When <paramref name="entity" /> is null.</exception>
         /// <remarks>Entities in added state are not likely to have an identity. Though the identity might use a dereferencable scheme, you MUST NOT assume it can be dereferenced.</remarks>
         public virtual bool TryGetUri(object entity, out Uri identity)
         {
@@ -2544,7 +2545,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="entity">The entity that contains the property to load.</param>
         /// <param name="propertyName">The name of the property of the specified entity to load.</param>
-        /// <returns>An instance of <see cref="T:Microsoft.OData.Client.QueryOperationResponse`1" /> that contains the results of the last page request.</returns>
+        /// <returns>An instance of <see cref="Microsoft.OData.Client.QueryOperationResponse{T}" /> that contains the results of the last page request.</returns>
         internal Task<QueryOperationResponse> LoadPropertyAllPagesAsync(object entity, string propertyName)
         {
             var currentTask = Task<QueryOperationResponse>.Factory.FromAsync(this.BeginLoadProperty, this.EndLoadProperty, entity, propertyName, null);
@@ -2559,7 +2560,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="entity">The entity that contains the property to load.</param>
         /// <param name="propertyName">The name of the property of the specified entity to load.</param>
-        /// <returns>An instance of <see cref="T:Microsoft.OData.Client.QueryOperationResponse`1" /> that contains the results of the last page request.</returns>
+        /// <returns>An instance of <see cref="Microsoft.OData.Client.QueryOperationResponse{T}" /> that contains the results of the last page request.</returns>
         internal QueryOperationResponse LoadPropertyAllPages(object entity, string propertyName)
         {
             DataServiceQueryContinuation continuation = null;
@@ -2923,7 +2924,7 @@ namespace Microsoft.OData.Client
         /// <param name="response">The response of previous page</param>
         /// <param name="entity">The entity that contains the property to load.</param>
         /// <param name="propertyName">The name of the property of the specified entity to load.</param>
-        /// <returns>An instance of <see cref="T:Microsoft.OData.Client.QueryOperationResponse`1" /> that contains the results of the request.</returns>
+        /// <returns>An instance of <see cref="Microsoft.OData.Client.QueryOperationResponse{T}" /> that contains the results of the request.</returns>
         private QueryOperationResponse ContinuePage(QueryOperationResponse response, object entity, string propertyName)
         {
             var continuation = response.GetContinuation();
@@ -3090,25 +3091,25 @@ namespace Microsoft.OData.Client
             // Make sure no higher order bits are set.
             if ((options | All) != All)
             {
-                throw Error.ArgumentOutOfRange("options");
+                throw Error.ArgumentOutOfRange(nameof(options));
             }
 
             // SaveChangesOptions.BatchWithSingleChangeset and SaveChangesOptions.BatchWithIndependentOperations can't be set together.
             if (Util.IsFlagSet(options, SaveChangesOptions.BatchWithSingleChangeset | SaveChangesOptions.BatchWithIndependentOperations))
             {
-                throw Error.ArgumentOutOfRange("options");
+                throw Error.ArgumentOutOfRange(nameof(options));
             }
 
             // BatchWithSingleChangeset and continueOnError can't be set together
             if (Util.IsFlagSet(options, SaveChangesOptions.BatchWithSingleChangeset | SaveChangesOptions.ContinueOnError))
             {
-                throw Error.ArgumentOutOfRange("options");
+                throw Error.ArgumentOutOfRange(nameof(options));
             }
 
             // BatchWithIndependentOperations and continueOnError can't be set together
             if (Util.IsFlagSet(options, SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.ContinueOnError))
             {
-                throw Error.ArgumentOutOfRange("options");
+                throw Error.ArgumentOutOfRange(nameof(options));
             }
 
             // OnlyPostExplicitProperties cannot be used without DataServiceCollection to track properties change
@@ -3154,7 +3155,7 @@ namespace Microsoft.OData.Client
                 string.CompareOrdinal(XmlConstants.HttpMethodPost, httpMethod) != 0 &&
                 string.CompareOrdinal(XmlConstants.HttpMethodDelete, httpMethod) != 0)
             {
-                throw new ArgumentException(Strings.Context_ExecuteExpectsGetOrPostOrDelete, "httpMethod");
+                throw new ArgumentException(Strings.Context_ExecuteExpectsGetOrPostOrDelete, nameof(httpMethod));
             }
 
             if (ClientTypeUtil.TypeOrElementTypeIsStructured(typeof(TElement)))
@@ -3389,7 +3390,7 @@ namespace Microsoft.OData.Client
                 requestUri = entityDescriptor.ReadStreamUri;
                 if (requestUri == null)
                 {
-                    throw new ArgumentException(Strings.Context_EntityNotMediaLinkEntry, "entity");
+                    throw new ArgumentException(Strings.Context_EntityNotMediaLinkEntry, nameof(entity));
                 }
 
                 streamDescriptor = entityDescriptor.DefaultStreamDescriptor;
@@ -3399,14 +3400,14 @@ namespace Microsoft.OData.Client
                 version = Util.ODataVersion4;
                 if (!entityDescriptor.TryGetNamedStreamInfo(name, out streamDescriptor))
                 {
-                    throw new ArgumentException(Strings.Context_EntityDoesNotContainNamedStream(name), "name");
+                    throw new ArgumentException(Strings.Context_EntityDoesNotContainNamedStream(name), nameof(name));
                 }
 
                 // use the edit link, if self link is not specified.
                 requestUri = streamDescriptor.SelfLink ?? streamDescriptor.EditLink;
                 if (requestUri == null)
                 {
-                    throw new ArgumentException(Strings.Context_MissingSelfAndEditLinkForNamedStream(name), "name");
+                    throw new ArgumentException(Strings.Context_MissingSelfAndEditLinkForNamedStream(name), nameof(name));
                 }
             }
 

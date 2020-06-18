@@ -202,12 +202,12 @@ namespace Microsoft.OData.Client
         {
             this.current = null;
 
-            if (null != this.materializer)
+            if (this.materializer != null)
             {
                 this.materializer.Dispose();
             }
 
-            if (null != this.writer)
+            if (this.writer != null)
             {
                 this.writer.Dispose();
             }
@@ -333,7 +333,7 @@ namespace Microsoft.OData.Client
                 result = true;
             }
 
-            if (null == this.current)
+            if (this.current == null)
             {
                 if (this.expectingPrimitiveValue && this.moved)
                 {
@@ -489,7 +489,7 @@ namespace Microsoft.OData.Client
                     case XmlNodeType.CDATA:
                     case XmlNodeType.Text:
                     case XmlNodeType.SignificantWhitespace:
-                        if (null != result)
+                        if (result != null)
                         {
                             throw Error.InvalidOperation(Strings.Deserialize_MixedTextWithComment);
                         }

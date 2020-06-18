@@ -11,12 +11,12 @@ namespace Microsoft.Spatial
     /// <summary>The exception that is thrown on an unsuccessful parsing of the serialized format.</summary>
     public class ParseErrorException : Exception
     {
-        /// <summary>Creates a new instance of the <see cref="T:Microsoft.Spatial.ParseErrorException" /> class.</summary>
+        /// <summary>Creates a new instance of the <see cref="Microsoft.Spatial.ParseErrorException" /> class.</summary>
         public ParseErrorException()
         {
         }
 
-        /// <summary>Creates a new instance of the <see cref="T:Microsoft.Spatial.ParseErrorException" /> class from a message and previous exception.</summary>
+        /// <summary>Creates a new instance of the <see cref="Microsoft.Spatial.ParseErrorException" /> class from a message and previous exception.</summary>
         /// <param name="message">The message about the exception.</param>
         /// <param name="innerException">The exception that preceded this one.</param>
         public ParseErrorException(string message, Exception innerException)
@@ -24,7 +24,7 @@ namespace Microsoft.Spatial
         {
         }
 
-        /// <summary>Creates a new instance of the <see cref="T:Microsoft.Spatial.ParseErrorException" /> class from a message.</summary>
+        /// <summary>Creates a new instance of the <see cref="Microsoft.Spatial.ParseErrorException" /> class from a message.</summary>
         /// <param name="message">The message about the exception.</param>
         public ParseErrorException(string message)
             : base(message)

@@ -12,7 +12,7 @@ namespace Microsoft.OData.Client
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public sealed class EntityTypeAttribute : System.Attribute
     {
-        /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.Client.EntityTypeAttribute" /> class.</summary>
+        /// <summary>Creates a new instance of the <see cref="Microsoft.OData.Client.EntityTypeAttribute" /> class.</summary>
         public EntityTypeAttribute()
         {
         }

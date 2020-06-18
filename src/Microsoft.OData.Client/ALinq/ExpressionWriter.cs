@@ -329,7 +329,7 @@ namespace Microsoft.OData.Client
                         {
                             // SequenceMethod.Any represents Enumerable.Any(), which has only source argument
                             // AnyPredicate and All has a second parameter which is the predicate lambda.
-                            Debug.Assert(m.Arguments.Count() == 2, "m.Arguments.Count() == 2");
+                            Debug.Assert(m.Arguments.Count == 2, "m.Arguments.Count() == 2");
                             LambdaExpression le = (LambdaExpression)m.Arguments[1];
                             string rangeVariable = le.Parameters[0].Name;
                             this.builder.Append(rangeVariable);
@@ -463,7 +463,7 @@ namespace Microsoft.OData.Client
             var parentType = m.Member.DeclaringType;
             Type collectionType = ClientTypeUtil.GetImplementationType(parentType, typeof(ICollection<>));
             if (!PrimitiveType.IsKnownNullableType(parentType) && collectionType != null &&
-                m.Member.Name.Equals(ReflectionUtil.COUNTPROPNAME))
+                m.Member.Name.Equals(ReflectionUtil.COUNTPROPNAME, StringComparison.Ordinal))
             {
                 this.builder.Append(UriHelper.DOLLARSIGN).Append(UriHelper.COUNT);
             }

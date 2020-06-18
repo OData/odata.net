@@ -330,6 +330,7 @@ namespace Microsoft.OData.Client.Materialization
             Debug.Assert(instance != null, "instance != null");
 
             IDictionary<string, object> containerProperty;
+
             // Stop if owning type is not an open type
             // Or container property is not found
             // Or key with matching name already exists in the dictionary
@@ -383,6 +384,7 @@ namespace Microsoft.OData.Client.Materialization
             if (collectionVal != null)
             {
                 string collectionItemTypeName = CommonUtil.GetCollectionItemTypeName(collectionVal.TypeName, false);
+
                 // Highly unlikely, but the method return null if the typeName argument does not meet certain expectations
                 if (collectionItemTypeName == null)
                 {
@@ -390,6 +392,7 @@ namespace Microsoft.OData.Client.Materialization
                 }
 
                 Type collectionItemType;
+
                 // ToNamedType will return true for primitive types
                 if (!ClientConvert.ToNamedType(collectionItemTypeName, out collectionItemType))
                 {

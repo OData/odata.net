@@ -58,13 +58,13 @@ namespace Microsoft.OData.Client
         /// <returns>true if actually added, false if a duplicate was discovered</returns>
         public bool Add(T item, Func<T, T, bool> equalityComparer)
         {
-            if ((null != equalityComparer) && this.Contains(item, equalityComparer))
+            if ((equalityComparer != null) && this.Contains(item, equalityComparer))
             {
                 return false;
             }
 
             int index = this.count++;
-            if ((null == this.items) || (index == this.items.Length))
+            if ((this.items == null) || (index == this.items.Length))
             {   // grow array in size, with minimum size being 32
                 Array.Resize<T>(ref this.items, Math.Min(Math.Max(index, 16), Int32.MaxValue / 2) * 2);
             }
@@ -84,7 +84,7 @@ namespace Microsoft.OData.Client
         /// <returns>true if the element is contained</returns>
         public bool Contains(T item, Func<T, T, bool> equalityComparer)
         {
-            return (0 <= this.IndexOf(item, equalityComparer));
+            return (this.IndexOf(item, equalityComparer) >= 0);
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace Microsoft.OData.Client
         public int IndexOf<K>(K item, Func<T, K> select, Func<K, K, bool> comparer)
         {
             T[] array = this.items;
-            if (null != array)
+            if (array != null)
             {
                 int length = this.count;
                 for (int i = 0; i < length; ++i)
@@ -148,7 +148,7 @@ namespace Microsoft.OData.Client
         public T Remove(T item, Func<T, T, bool> equalityComparer)
         {
             int index = this.IndexOf(item, equalityComparer);
-            if (0 <= index)
+            if (index >= 0)
             {
                 item = this.items[index];
                 this.RemoveAt(index);
@@ -168,11 +168,11 @@ namespace Microsoft.OData.Client
             array[index] = array[lastIndex];
             array[lastIndex] = default(T);
 
-            if ((0 == lastIndex) && (256 <= array.Length))
+            if ((lastIndex == 0) && (array.Length >= 256))
             {
                 this.items = null;
             }
-            else if ((256 < array.Length) && (lastIndex < array.Length / 4))
+            else if ((array.Length > 256) && (lastIndex < array.Length / 4))
             {   // shrink to half size when count is a quarter
                 Array.Resize(ref this.items, array.Length / 2);
             }
@@ -189,7 +189,7 @@ namespace Microsoft.OData.Client
         /// <param name="comparer">comparer</param>
         public void Sort<K>(Func<T, K> selector, Func<K, K, int> comparer)
         {
-            if (null != this.items)
+            if (this.items != null)
             {
                 SelectorComparer<K> scomp;
                 scomp.Selector = selector;

@@ -129,6 +129,7 @@ namespace Microsoft.OData.Client
             if (_patterns.TryGetValue(visited.Left, out pattern) && pattern.Kind == PatternKind.Compare && IsConstantZero(visited.Right))
             {
                 ComparePattern comparePattern = (ComparePattern)pattern;
+
                 // handle relational operators
                 BinaryExpression relationalExpression;
                 if (TryCreateRelationalOperator(visited.NodeType, comparePattern.Left, comparePattern.Right, out relationalExpression))
@@ -174,7 +175,7 @@ namespace Microsoft.OData.Client
                 if (!PrimitiveType.IsKnownNullableType(visited.Operand.Type) && !PrimitiveType.IsKnownNullableType(visited.Type) || visited.Operand.Type == visited.Type)
                 {
                     // x is not a collection of entity types
-                    if(!(ClientTypeUtil.TypeOrElementTypeIsEntity(visited.Operand.Type) && ProjectionAnalyzer.IsCollectionProducingExpression(visited.Operand)))
+                    if (!(ClientTypeUtil.TypeOrElementTypeIsEntity(visited.Operand.Type) && ProjectionAnalyzer.IsCollectionProducingExpression(visited.Operand)))
                     {
                         // x is not an enum type
                         if (!visited.Operand.Type.IsEnum())
@@ -383,10 +384,13 @@ namespace Microsoft.OData.Client
             }
 
             MethodCallExpression normalizedResult;
+
             // check for coalesce operators added by the VB compiler to predicate arguments
             normalizedResult = NormalizePredicateArgument(visited);
+
             // check for type conversions in a Select that can be converted to Cast
             normalizedResult = NormalizeSelectWithTypeCast(normalizedResult);
+
             // check for type conversion for Any/All/OfType source
             normalizedResult = NormalizeEnumerableSource(normalizedResult);
 
@@ -475,7 +479,7 @@ namespace Microsoft.OData.Client
             // argument. As a result, we always set argumentOrdinal to 1 when there is a match and
             // we can safely ignore all methods taking fewer than 2 arguments
             SequenceMethod sequenceMethod;
-            if (2 <= callExpression.Arguments.Count &&
+            if (callExpression.Arguments.Count >= 2 &&
                 ReflectionUtil.TryIdentifySequenceMethod(callExpression.Method, out sequenceMethod))
             {
                 switch (sequenceMethod)
@@ -623,6 +627,7 @@ namespace Microsoft.OData.Client
                 if (lambda.Parameters.Count == 1 && lambda.Body.NodeType == ExpressionType.Convert)
                 {
                     UnaryExpression convertExpression = (UnaryExpression)lambda.Body;
+
                     // Make sure the parameter being converted is the single lambda parameter
                     if (convertExpression.Operand == lambda.Parameters[0])
                     {

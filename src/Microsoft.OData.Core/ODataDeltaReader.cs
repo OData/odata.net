@@ -29,15 +29,15 @@ namespace Microsoft.OData
         /// </remarks>
         public abstract ODataReaderState SubState { get; }
 
-        /// <summary>Gets the most recent <see cref="T:Microsoft.OData.ODataItem" /> that has been read. </summary>
-        /// <returns>The most recent <see cref="T:Microsoft.OData.ODataItem" /> that has been read.</returns>
+        /// <summary>Gets the most recent <see cref="Microsoft.OData.ODataItem" /> that has been read. </summary>
+        /// <returns>The most recent <see cref="Microsoft.OData.ODataItem" /> that has been read.</returns>
         public abstract ODataItem Item { get; }
 
-        /// <summary> Reads the next <see cref="T:Microsoft.OData.ODataItem" /> from the message payload. </summary>
+        /// <summary> Reads the next <see cref="Microsoft.OData.ODataItem" /> from the message payload. </summary>
         /// <returns>true if more items were read; otherwise false.</returns>
         public abstract bool Read();
 
-        /// <summary> Asynchronously reads the next <see cref="T:Microsoft.OData.ODataItem" /> from the message payload. </summary>
+        /// <summary> Asynchronously reads the next <see cref="Microsoft.OData.ODataItem" /> from the message payload. </summary>
         /// <returns>A task that when completed indicates whether more items were read.</returns>
         public abstract Task<bool> ReadAsync();
     }

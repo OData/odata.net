@@ -53,7 +53,7 @@ namespace Microsoft.OData.Edm.Csdl
                 enumType = new UnresolvedEnumType(enumTypeName, location);
                 isUnresolved = true;
             }
-            else if (enumValues.Count() > 1 && (!enumType.IsFlags || !EdmEnumValueParser.IsEnumIntegerType(enumType)))
+            else if (enumValues.Length > 1 && (!enumType.IsFlags || !EdmEnumValueParser.IsEnumIntegerType(enumType)))
             {
                 return false;
             }
@@ -62,7 +62,7 @@ namespace Microsoft.OData.Edm.Csdl
             foreach (var enumValue in enumValues)
             {
                 string[] path = enumValue.Split('/');
-                if (path.Count() != 2)
+                if (path.Length != 2)
                 {
                     return false;
                 }

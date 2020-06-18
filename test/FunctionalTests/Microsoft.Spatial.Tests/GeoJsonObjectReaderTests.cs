@@ -928,7 +928,7 @@ namespace Microsoft.Spatial.Tests
         
         private static string GetGeoJsonTypeName(SpatialType spatialType)
         {
-            if(spatialType == SpatialType.Collection)
+            if (spatialType == SpatialType.Collection)
             {
                 return "GeometryCollection";
             }

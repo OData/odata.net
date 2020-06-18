@@ -258,7 +258,7 @@ namespace Microsoft.OData.Client.Annotation
             var edmValueAnnotations = serviceModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(edmVocabularyAnnotatable, term, qualifier)
                 .Where(a => a.Qualifier == qualifier && a.Target == edmVocabularyAnnotatable);
 
-            if (edmValueAnnotations.Count() == 0)
+            if (!edmValueAnnotations.Any())
             {
                 edmValueAnnotation = GetOrInsertCachedMetadataAnnotationForType(context, type.GetBaseType(), term, qualifier);
             }
@@ -409,7 +409,7 @@ namespace Microsoft.OData.Client.Annotation
             if (key != null && context.MetadataAnnotationsDictionary.ContainsKey(key))
             {
                 var annotations = context.MetadataAnnotationsDictionary[key]
-                    .Where(a => a.Term.FullName().Equals(term) && a.Qualifier == qualifier);
+                    .Where(a => a.Term.FullName().Equals(term, StringComparison.Ordinal) && a.Qualifier == qualifier);
 
                 // If there are more than one annotation per term and qualifier returned, we will return null
                 if (annotations.Count() == 1)

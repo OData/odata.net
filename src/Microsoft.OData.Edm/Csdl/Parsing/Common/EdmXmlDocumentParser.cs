@@ -384,7 +384,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             foreach (var enumValue in enumValues)
             {
                 string[] segments = enumValue.Split('/');
-                if (!(segments.Count() == 2 &&
+                if (!(segments.Length == 2 &&
                     EdmUtil.IsValidDottedName(segments[0]) &&
                     EdmUtil.IsValidUndottedName(segments[1])))
                 {
@@ -412,7 +412,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             {
                 case CsdlConstants.Value_Collection:
                     // 'Collection' on its own is a valid type string.
-                    if (typeInformation.Count() == 1)
+                    if (typeInformation.Length == 1)
                     {
                         return name;
                     }
@@ -424,7 +424,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
                     break;
                 case CsdlConstants.Value_Ref:
                     // 'Ref' on its own is not a valid type string.
-                    if (typeInformation.Count() == 1)
+                    if (typeInformation.Length == 1)
                     {
                         this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidTypeName, Edm.Strings.CsdlParser_InvalidTypeName(name));
                         return name;
@@ -461,7 +461,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
         private string ValidateEntitySetPath(string path)
         {
             string[] segments = path.Split('/');
-            if (!(segments.Count() == 2 &&
+            if (!(segments.Length == 2 &&
                 EdmUtil.IsValidDottedName(segments[0]) &&
                 EdmUtil.IsValidUndottedName(segments[1])))
             {
@@ -474,7 +474,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
         private string ValidateEnumMemberPath(string path)
         {
             string[] segments = path.Split('/');
-            if (!(segments.Count() == 2 &&
+            if (!(segments.Length == 2 &&
                 EdmUtil.IsValidDottedName(segments[0]) &&
                 EdmUtil.IsValidUndottedName(segments[1])))
             {

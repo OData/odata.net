@@ -700,6 +700,7 @@ namespace Microsoft.OData.Client
                     result = null;
                 }
             }
+
             return result != null;
         }
 
@@ -827,6 +828,7 @@ namespace Microsoft.OData.Client
                         AddSequenceQueryOption(rse, new TakeQueryOptionExpression(mce.Type, Expression.Constant(maxCardinality)));
                     }
                 }
+
                 return mce.Arguments[0];
             }
             else if (mce.Arguments[0] is NavigationPropertySingletonExpression || mce.Arguments[0] is SingletonResourceExpression)
@@ -1303,7 +1305,7 @@ namespace Microsoft.OData.Client
         {
             ResourceExpression input = (ResourceExpression)mce.Arguments[0];
             ConstantExpression constantArg = StripTo<ConstantExpression>(mce.Arguments[1]);
-            if (null == constantArg)
+            if (constantArg == null)
             {
                 // UNSUPPORTED: A ConstantExpression is expected
                 return mce;
@@ -1506,14 +1508,17 @@ namespace Microsoft.OData.Client
                     {
                         return AnalyzeExpand(mce, this.context);
                     }
+
                     if (mce.Method.GetParameters().Any() && mce.Method.GetParameters()[0].ParameterType == t)
                     {
                         return AnalyzeFunc(mce, true);
                     }
+
                     if (mce.Method.Name == AddQueryOptionMethodName && mce.Method.DeclaringType == t)
                     {
                         return AnalyzeAddCustomQueryOption(mce);
                     }
+
                     if (mce.Method.Name == IncludeCountMethodName && mce.Method.DeclaringType == t)
                     {
                         return AnalyzeAddCountOption(mce);
@@ -1773,6 +1778,7 @@ namespace Microsoft.OData.Client
 
                 propInfo = null;
                 target = null;
+
                 // must be member expression
                 MemberExpression me = e as MemberExpression;
                 if (me == null)
@@ -1784,6 +1790,7 @@ namespace Microsoft.OData.Client
                 if (PlatformHelper.IsProperty(me.Member))
                 {
                     PropertyInfo pi = (PropertyInfo)me.Member;
+
                     // must be readable and non-private
                     if (pi.CanRead && !TypeSystem.IsPrivate(pi))
                     {
@@ -2772,7 +2779,7 @@ namespace Microsoft.OData.Client
                         PropertyInfo pi = (PropertyInfo)m.Member;
 
                         // For member like "c.Trips.Count", when Count is visited, no future visit if declare type is a Collection
-                        if (pi.Name.Equals(ReflectionUtil.COUNTPROPNAME))
+                        if (pi.Name.Equals(ReflectionUtil.COUNTPROPNAME, StringComparison.Ordinal))
                         {
                             MemberExpression me = StripTo<MemberExpression>(m.Expression);
                             if (me != null && !PrimitiveType.IsKnownNullableType(me.Type))
@@ -2947,11 +2954,11 @@ namespace Microsoft.OData.Client
 
                 // If either side is null, return false order (both can't be null because of
                 // the previous check)
-                if (null == left || null == right) { return false; }
+                if (left == null || right == null) { return false; }
 
                 // If the declaring type and the name of the property are the same,
                 // both the property infos refer to the same property.
-                return object.ReferenceEquals(left.DeclaringType, right.DeclaringType) && left.Name.Equals(right.Name);
+                return object.ReferenceEquals(left.DeclaringType, right.DeclaringType) && left.Name.Equals(right.Name, StringComparison.Ordinal);
             }
 
             /// <summary>
@@ -2962,7 +2969,7 @@ namespace Microsoft.OData.Client
             public int GetHashCode(PropertyInfo obj)
             {
                 Debug.Assert(obj != null, "obj != null");
-                return (null != obj) ? obj.GetHashCode() : 0;
+                return (obj != null) ? obj.GetHashCode() : 0;
             }
 
             #endregion

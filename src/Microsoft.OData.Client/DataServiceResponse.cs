@@ -45,7 +45,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>The headers from an HTTP response associated with a batch request.</summary>
-        /// <returns>An <see cref="T:System.Collections.IDictionary" /> object containing the name-value pairs of an HTTP response.</returns>
+        /// <returns>An <see cref="System.Collections.IDictionary" /> object containing the name-value pairs of an HTTP response.</returns>
         public IDictionary<string, string> BatchHeaders
         {
             get { return this.headers.UnderlyingDictionary; }
@@ -65,14 +65,14 @@ namespace Microsoft.OData.Client
             get { return this.batchResponse; }
         }
 
-        /// <summary>Gets an enumerator that enables retrieval of responses to operations being tracked by <see cref="T:Microsoft.OData.Client.OperationResponse" /> objects within the <see cref="T:Microsoft.OData.Client.DataServiceResponse" />.</summary>
+        /// <summary>Gets an enumerator that enables retrieval of responses to operations being tracked by <see cref="Microsoft.OData.Client.OperationResponse" /> objects within the <see cref="Microsoft.OData.Client.DataServiceResponse" />.</summary>
         /// <returns>An enumerator over the response received from the service.</returns>
         public IEnumerator<OperationResponse> GetEnumerator()
         {
             return this.response.GetEnumerator();
         }
 
-        /// <summary>Gets an enumerator that enables retrieval of responses to operations being tracked by <see cref="T:Microsoft.OData.Client.OperationResponse" /> objects within the <see cref="T:Microsoft.OData.Client.DataServiceResponse" />.</summary>
+        /// <summary>Gets an enumerator that enables retrieval of responses to operations being tracked by <see cref="Microsoft.OData.Client.OperationResponse" /> objects within the <see cref="Microsoft.OData.Client.DataServiceResponse" />.</summary>
         /// <returns>An enumerator over the response received from the service.</returns>
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {

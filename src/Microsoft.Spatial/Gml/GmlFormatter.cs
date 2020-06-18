@@ -14,7 +14,7 @@ namespace Microsoft.Spatial
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Gml", Justification = "Gml is the accepted name in the industry")]
     public abstract class GmlFormatter : SpatialFormatter<XmlReader, XmlWriter>
     {
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.Spatial.GmlFormatter" /> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.Spatial.GmlFormatter" /> class.</summary>
         /// <param name="creator">The implementation that created this instance.</param>
         protected GmlFormatter(SpatialImplementation creator) : base(creator)
         {

@@ -19,7 +19,7 @@ namespace Microsoft.Spatial
         /// </summary>
         private readonly SpatialImplementation creator;
 
-        /// <summary>Initializes a new instance of the &lt;see cref="T:Microsoft.Spatial.SpatialFormatter`2" /&gt; class. </summary>
+        /// <summary>Initializes a new instance of the &lt;see cref="Microsoft.Spatial.SpatialFormatter`2" /&gt; class. </summary>
         /// <param name="creator">The implementation that created this instance.</param>
         protected SpatialFormatter(SpatialImplementation creator)
         {

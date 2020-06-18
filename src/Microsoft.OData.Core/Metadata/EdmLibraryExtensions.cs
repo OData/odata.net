@@ -173,7 +173,7 @@ namespace Microsoft.OData.Metadata
         {
             // The best match out of a list of candidates is the one that has the same number of (non-binding) parameters as specified.
             IEnumerable<IEdmOperationImport> exactMatches = functions.Where(f => f.Operation.Parameters.Count() == parameters.Count());
-            return exactMatches.Count() > 0 ? exactMatches : functions;
+            return exactMatches.Any() ? exactMatches : functions;
         }
 
         /// <summary>
@@ -263,7 +263,7 @@ namespace Microsoft.OData.Metadata
         {
             // The best match out of a list of candidates is the one that has the same number of (non-binding) parameters as specified.
             IEnumerable<IEdmOperation> exactMatches = operations.Where(f => f.Parameters.Count() == parameterCount + (f.IsBound ? 1 : 0));
-            return exactMatches.Count() > 0 ? exactMatches : operations;
+            return exactMatches.Any() ? exactMatches : operations;
         }
 
         /// <summary>

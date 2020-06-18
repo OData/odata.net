@@ -606,6 +606,7 @@ namespace Microsoft.OData.Client.Materialization
                         {
                             this.MaterializeDynamicProperty(entry, link);
                         }
+
                         continue;
                     }
 
@@ -662,6 +663,7 @@ namespace Microsoft.OData.Client.Materialization
                     {
                         this.MaterializeDynamicProperty(e, entry.ResolvedObject);
                     }
+
                     continue;
                 }
 
@@ -739,6 +741,7 @@ namespace Microsoft.OData.Client.Materialization
             {
                 string collectionTypeName = linkState.Feed.TypeName; // TypeName represents a collection e.g. Collection(NS.Type)
                 string collectionItemTypeName = CommonUtil.GetCollectionItemTypeName(collectionTypeName, false);
+
                 // Highly unlikely, but the method return null if the typeName argument does not meet certain expectations
                 if (collectionItemTypeName == null)
                 {
@@ -759,6 +762,7 @@ namespace Microsoft.OData.Client.Materialization
                         this.Materialize(linkEntry, collectionItemType, false /*includeLinks*/);
                         collection.Add(linkEntry.ResolvedObject);
                     }
+
                     containerProperty.Add(link.Name, collection);
                 }
             }

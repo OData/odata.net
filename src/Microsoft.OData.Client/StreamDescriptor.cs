@@ -56,15 +56,15 @@ namespace Microsoft.OData.Client
             this.entityDescriptor = entityDescriptor;
         }
 
-        /// <summary>The <see cref="T:Microsoft.OData.Client.DataServiceStreamLink" /> that represents the binary resource stream.</summary>
-        /// <returns>Returns <see cref="T:Microsoft.OData.Client.DataServiceStreamLink" />.</returns>
+        /// <summary>The <see cref="Microsoft.OData.Client.DataServiceStreamLink" /> that represents the binary resource stream.</summary>
+        /// <returns>Returns <see cref="Microsoft.OData.Client.DataServiceStreamLink" />.</returns>
         public DataServiceStreamLink StreamLink
         {
             get { return this.streamLink; }
         }
 
-        /// <summary>The <see cref="T:Microsoft.OData.Client.EntityDescriptor" /> that represents the entity to which the named resource stream belongs.</summary>
-        /// <returns>The <see cref="T:Microsoft.OData.Client.EntityDescriptor" /> of the entity.</returns>
+        /// <summary>The <see cref="Microsoft.OData.Client.EntityDescriptor" /> that represents the entity to which the named resource stream belongs.</summary>
+        /// <returns>The <see cref="Microsoft.OData.Client.EntityDescriptor" /> of the entity.</returns>
         public EntityDescriptor EntityDescriptor
         {
             get

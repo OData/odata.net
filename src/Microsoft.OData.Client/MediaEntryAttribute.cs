@@ -19,7 +19,7 @@ namespace Microsoft.OData.Client
         /// <summary>Name of the member that contains the data for the media entry</summary>
         private readonly string mediaMemberName;
 
-        /// <summary>Creates a new instance of <see cref="T:Microsoft.OData.Client.MediaEntryAttribute" />.</summary>
+        /// <summary>Creates a new instance of <see cref="Microsoft.OData.Client.MediaEntryAttribute" />.</summary>
         /// <param name="mediaMemberName">A string value that identifies the property that holds media data.</param>
         /// <remarks>
         /// Creates a new MediaEntryAttribute attribute and sets the name

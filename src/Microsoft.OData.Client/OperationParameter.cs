@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client
         /// <summary>The value of the operation parameter.</summary>
         private readonly Object parameterValue;
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Client.OperationParameter" /> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.OperationParameter" /> class.</summary>
         /// <param name="name">The name of the operation parameter.</param>
         /// <param name="value">The value of the operation parameter.</param>
         protected OperationParameter(string name, Object value)

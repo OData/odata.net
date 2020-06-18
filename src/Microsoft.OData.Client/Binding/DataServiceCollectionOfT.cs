@@ -18,7 +18,7 @@ namespace Microsoft.OData.Client
 
     #endregion Namespaces
 
-    /// <summary>Determines whether changes that are made to a <see cref="T:Microsoft.OData.Client.DataServiceCollection`1" /> are tracked.</summary>
+    /// <summary>Determines whether changes that are made to a <see cref="Microsoft.OData.Client.DataServiceCollection{T}" /> are tracked.</summary>
     public enum TrackingMode
     {
         /// <summary>The collection should not track changes.</summary>
@@ -62,52 +62,52 @@ namespace Microsoft.OData.Client
 
         #endregion Private fields
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Client.DataServiceCollection`1" /> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceCollection{T}" /> class.</summary>
         /// <remarks>Creates a default data service collection, with auto-change tracking enabled as soon as data is loaded into it.</remarks>
         public DataServiceCollection()
             : this(null, null, TrackingMode.AutoChangeTracking, null, null, null)
         {
         }
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Client.DataServiceCollection`1" /> class based on query execution.</summary>
-        /// <param name="item">A <see cref="T:Microsoft.OData.Client.DataServiceQuerySingle`1" /> or LINQ query that returns an object that are used to initialize the collection.</param>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceCollection{T}" /> class based on query execution.</summary>
+        /// <param name="item">A <see cref="Microsoft.OData.Client.DataServiceQuerySingle{T}" /> or LINQ query that returns an object that are used to initialize the collection.</param>
         public DataServiceCollection(DataServiceQuerySingle<T> item)
             : this(null, item.Query, TrackingMode.AutoChangeTracking, null, null, null)
         {
         }
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Client.DataServiceCollection`1" /> class based on query execution.</summary>
-        /// <param name="items">A <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> or LINQ query that  returns an <see cref="T:System.Collections.Generic.IEnumerable`1" /> collection of objects that are used to initialize the collection.</param>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceCollection{T}" /> class based on query execution.</summary>
+        /// <param name="items">A <see cref="Microsoft.OData.Client.DataServiceQuery{TElement}" /> or LINQ query that  returns an <see cref="System.Collections.Generic.IEnumerable{T}" /> collection of objects that are used to initialize the collection.</param>
         public DataServiceCollection(IEnumerable<T> items)
             : this(null, items, TrackingMode.AutoChangeTracking, null, null, null)
         {
         }
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Client.DataServiceCollection`1" /> class based on query execution and with the specified tracking mode.</summary>
-        /// <param name="trackingMode">A <see cref="T:Microsoft.OData.Client.TrackingMode" /> value that indicated whether or not changes made to items in the collection are automatically tracked.</param>
-        /// <param name="item">A <see cref="T:Microsoft.OData.Client.DataServiceQuerySingle`1" /> or LINQ query that returns an object that are used to initialize the collection.</param>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceCollection{T}" /> class based on query execution and with the specified tracking mode.</summary>
+        /// <param name="trackingMode">A <see cref="Microsoft.OData.Client.TrackingMode" /> value that indicated whether or not changes made to items in the collection are automatically tracked.</param>
+        /// <param name="item">A <see cref="Microsoft.OData.Client.DataServiceQuerySingle{T}" /> or LINQ query that returns an object that are used to initialize the collection.</param>
         public DataServiceCollection(TrackingMode trackingMode, DataServiceQuerySingle<T> item)
             : this(null, item.Query, trackingMode, null, null, null)
         {
         }
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Client.DataServiceCollection`1" /> class based on query execution and with the specified tracking mode.</summary>
-        /// <param name="items">A <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> or LINQ query that returns an <see cref="T:System.Collections.Generic.IEnumerable`1" /> collection of objects that are used to initialize the collection.</param>
-        /// <param name="trackingMode">A <see cref="T:Microsoft.OData.Client.TrackingMode" /> value that indicated whether or not changes made to items in the collection are automatically tracked.</param>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceCollection{T}" /> class based on query execution and with the specified tracking mode.</summary>
+        /// <param name="items">A <see cref="Microsoft.OData.Client.DataServiceQuery{TElement}" /> or LINQ query that returns an <see cref="System.Collections.Generic.IEnumerable{T}" /> collection of objects that are used to initialize the collection.</param>
+        /// <param name="trackingMode">A <see cref="Microsoft.OData.Client.TrackingMode" /> value that indicated whether or not changes made to items in the collection are automatically tracked.</param>
         public DataServiceCollection(IEnumerable<T> items, TrackingMode trackingMode)
             : this(null, items, trackingMode, null, null, null)
         {
         }
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Client.DataServiceCollection`1" /> class that uses the specified <see cref="T:Microsoft.OData.Client.DataServiceContext" />.</summary>
-        /// <param name="context">The <see cref="T:Microsoft.OData.Client.DataServiceContext" /> used to track changes to objects in the collection.</param>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceCollection{T}" /> class that uses the specified <see cref="Microsoft.OData.Client.DataServiceContext" />.</summary>
+        /// <param name="context">The <see cref="Microsoft.OData.Client.DataServiceContext" /> used to track changes to objects in the collection.</param>
         public DataServiceCollection(DataServiceContext context)
             : this(context, null, TrackingMode.AutoChangeTracking, null, null, null)
         {
         }
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Client.DataServiceCollection`1" /> class with the supplied change method delegates and that uses the specified <see cref="T:Microsoft.OData.Client.DataServiceContext" />.</summary>
-        /// <param name="context">The <see cref="T:Microsoft.OData.Client.DataServiceContext" /> used to track items in the collection.</param>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceCollection{T}" /> class with the supplied change method delegates and that uses the specified <see cref="Microsoft.OData.Client.DataServiceContext" />.</summary>
+        /// <param name="context">The <see cref="Microsoft.OData.Client.DataServiceContext" /> used to track items in the collection.</param>
         /// <param name="entitySetName">The entity set of the objects in the collection.</param>
         /// <param name="entityChangedCallback">A delegate that encapsulates a method that is called when an entity changes.</param>
         /// <param name="collectionChangedCallback">A delegate that encapsulates a method that is called when the collection of entities changes.</param>
@@ -120,9 +120,9 @@ namespace Microsoft.OData.Client
         {
         }
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Client.DataServiceCollection`1" /> class based on query execution and with the supplied change method delegates.</summary>
-        /// <param name="items">A <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> or LINQ query that returns an <see cref="T:System.Collections.Generic.IEnumerable`1" /> collection of objects that are used to initialize the collection.</param>
-        /// <param name="trackingMode">A <see cref="T:Microsoft.OData.Client.TrackingMode" /> value that indicated whether or not changes made to items in the collection are automatically tracked.</param>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceCollection{T}" /> class based on query execution and with the supplied change method delegates.</summary>
+        /// <param name="items">A <see cref="Microsoft.OData.Client.DataServiceQuery{TElement}" /> or LINQ query that returns an <see cref="System.Collections.Generic.IEnumerable{T}" /> collection of objects that are used to initialize the collection.</param>
+        /// <param name="trackingMode">A <see cref="Microsoft.OData.Client.TrackingMode" /> value that indicated whether or not changes made to items in the collection are automatically tracked.</param>
         /// <param name="entitySetName">The entity set of the objects in the collection.</param>
         /// <param name="entityChangedCallback">A delegate that encapsulates a method that is called when an entity changes.</param>
         /// <param name="collectionChangedCallback">A delegate that encapsulates a method that is called when the collection of entities changes.</param>
@@ -136,10 +136,10 @@ namespace Microsoft.OData.Client
         {
         }
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Client.DataServiceCollection`1" /> class based on query execution, with the supplied change method delegates, and that uses the supplied <see cref="T:Microsoft.OData.Client.DataServiceContext" />.</summary>
-        /// <param name="context">The <see cref="T:Microsoft.OData.Client.DataServiceContext" /> used to track items in the collection.</param>
-        /// <param name="items">A <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> or LINQ query that returns an <see cref="T:System.Collections.Generic.IEnumerable`1" /> collection of objects that are used to initialize the collection.</param>
-        /// <param name="trackingMode">A <see cref="T:Microsoft.OData.Client.TrackingMode" /> value that indicated whether or not changes made to items in the collection are automatically tracked.</param>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceCollection{T}" /> class based on query execution, with the supplied change method delegates, and that uses the supplied <see cref="Microsoft.OData.Client.DataServiceContext" />.</summary>
+        /// <param name="context">The <see cref="Microsoft.OData.Client.DataServiceContext" /> used to track items in the collection.</param>
+        /// <param name="items">A <see cref="Microsoft.OData.Client.DataServiceQuery{TElement}" /> or LINQ query that returns an <see cref="System.Collections.Generic.IEnumerable{T}" /> collection of objects that are used to initialize the collection.</param>
+        /// <param name="trackingMode">A <see cref="Microsoft.OData.Client.TrackingMode" /> value that indicated whether or not changes made to items in the collection are automatically tracked.</param>
         /// <param name="entitySetName">The entity set of the objects in the collection.</param>
         /// <param name="entityChangedCallback">A delegate that encapsulates a method that is called when an entity changes.</param>
         /// <param name="collectionChangedCallback">A delegate that encapsulates a method that is called when the collection of entities changes.</param>
@@ -232,7 +232,7 @@ namespace Microsoft.OData.Client
         public event EventHandler<LoadCompletedEventArgs> LoadCompleted;
 
         /// <summary>Gets a continuation object that is used to return the next set of paged results.</summary>
-        /// <returns>A <see cref="T:Microsoft.OData.Client.DataServiceQueryContinuation`1" /> object that contains the URI to return the next set of paged results.</returns>
+        /// <returns>A <see cref="Microsoft.OData.Client.DataServiceQueryContinuation{T}" /> object that contains the URI to return the next set of paged results.</returns>
         public DataServiceQueryContinuation<T> Continuation
         {
             get { return this.continuation; }
@@ -265,7 +265,7 @@ namespace Microsoft.OData.Client
         #endregion Properties
 
         /// <summary>Loads a collection of entity objects into the collection.</summary>
-        /// <param name="items">Collection of entity objects to be added to the <see cref="T:Microsoft.OData.Client.DataServiceCollection`1" />.</param>
+        /// <param name="items">Collection of entity objects to be added to the <see cref="Microsoft.OData.Client.DataServiceCollection{T}" />.</param>
         /// <remarks>
         /// When tracking is enabled, the behavior of Load would be to attach all those entities that are not already tracked by the context
         /// associated with the collection. The operation will go deep into the input entities so that all related
@@ -301,10 +301,10 @@ namespace Microsoft.OData.Client
             }
         }
 
-        /// <summary>Asynchronously loads the collection by executing a <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" />.Supported only by the WCF Data Services 5.0 client for Silverlight.</summary>
-        /// <param name="query">The <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> that, when executed, returns the entities to load into the collection.</param>
-        /// <exception cref="T:System.ArgumentException">When query is null or not a <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" />.</exception>
-        /// <exception cref="T:System.InvalidOperationException">When a previous call to <see cref="M:Microsoft.OData.Client.DataServiceCollection`1.LoadAsync" /> is not yet complete.</exception>
+        /// <summary>Asynchronously loads the collection by executing a <see cref="Microsoft.OData.Client.DataServiceQuery{TElement}" />.Supported only by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <param name="query">The <see cref="Microsoft.OData.Client.DataServiceQuery{TElement}" /> that, when executed, returns the entities to load into the collection.</param>
+        /// <exception cref="System.ArgumentException">When query is null or not a <see cref="Microsoft.OData.Client.DataServiceQuery{TElement}" />.</exception>
+        /// <exception cref="System.InvalidOperationException">When a previous call to <see cref="Microsoft.OData.Client.DataServiceCollection{T}.LoadAsync" /> is not yet complete.</exception>
         /// <remarks>This method uses the event-based async pattern.
         /// The method returns immediately without waiting for the query to complete. Then it calls the handler of the
         /// <see cref="LoadCompleted"/> event exactly once on the UI thread. The event will be raised regardless
@@ -316,7 +316,7 @@ namespace Microsoft.OData.Client
             DataServiceQuery<T> dsq = query as DataServiceQuery<T>;
             if (dsq == null)
             {
-                throw new ArgumentException(Strings.DataServiceCollection_LoadAsyncRequiresDataServiceQuery, "query");
+                throw new ArgumentException(Strings.DataServiceCollection_LoadAsyncRequiresDataServiceQuery, nameof(query));
             }
 
             if (this.ongoingAsyncOperation != null)
@@ -380,7 +380,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Asynchronously loads items into the collection, when it represents the navigation property of an entity.Supported only by the WCF Data Services 5.0 client for Silverlight.</summary>
-        /// <exception cref="T:System.InvalidOperationException">When the collection does not belong to a parent entity.-or-When the parent entity is not tracked by the <see cref="T:Microsoft.OData.Client.DataServiceContext" />.-or-When a previous call to <see cref="M:Microsoft.OData.Client.DataServiceCollection`1.LoadAsync" /> is not yet complete.</exception>
+        /// <exception cref="System.InvalidOperationException">When the collection does not belong to a parent entity.-or-When the parent entity is not tracked by the <see cref="Microsoft.OData.Client.DataServiceContext" />.-or-When a previous call to <see cref="Microsoft.OData.Client.DataServiceCollection{T}.LoadAsync" /> is not yet complete.</exception>
         /// <remarks>This method loads the content of a property represented by this DataServiceCollection.
         /// If this instance is not associated with any property and entity the method will fail.
         /// This method uses the event-based async pattern.
@@ -413,7 +413,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Loads the next page of data into the collection.Supported only by the WCF Data Services 5.0 client for Silverlight.</summary>
-        /// <returns>A <see cref="T:System.Boolean" /> value that is true when the Microsoft.OData.Client.DataServiceCollection has a continuation token; otherwise false.</returns>
+        /// <returns>A <see cref="System.Boolean" /> value that is true when the Microsoft.OData.Client.DataServiceCollection has a continuation token; otherwise false.</returns>
         /// <remarks>This method is the same as <see cref="LoadAsync(System.Linq.IQueryable&lt;T&gt;)"/> except that it runs the query as defined
         /// by the continuation token of this collection.
         /// The method returns immediately without waiting for the query to complete. Then it calls the handler of the
@@ -481,7 +481,7 @@ namespace Microsoft.OData.Client
             // When loading a single item,
             if (item == null)
             {
-                throw Error.ArgumentNull("item");
+                throw Error.ArgumentNull(nameof(item));
             }
 
             this.StartLoading();
@@ -527,7 +527,7 @@ namespace Microsoft.OData.Client
             }
         }
 
-        /// <summary>Disables the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> tracking of all items in the collection.</summary>
+        /// <summary>Disables the <see cref="Microsoft.OData.Client.DataServiceContext" /> tracking of all items in the collection.</summary>
         /// <remarks>
         /// All the entitities in the root collection and all it's related objects will be untracked at the
         /// end of this operation.

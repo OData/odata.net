@@ -173,8 +173,8 @@ namespace Microsoft.OData.Client
         /// <param name="headers">The headers to modify.</param>
         internal void SetRequestAcceptHeaderForBatch(HeaderCollection headers)
         {
-            bool useJsonBatch = headers.GetHeader(XmlConstants.HttpContentType).Equals(MimeApplicationJson);
-            this.SetAcceptHeaderAndCharset(headers, useJsonBatch? MimeApplicationJson : MimeMultiPartMixed);
+            bool useJsonBatch = headers.GetHeader(XmlConstants.HttpContentType).Equals(MimeApplicationJson, StringComparison.Ordinal);
+            this.SetAcceptHeaderAndCharset(headers, useJsonBatch ? MimeApplicationJson : MimeMultiPartMixed);
         }
 
         /// <summary>

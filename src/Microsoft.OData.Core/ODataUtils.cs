@@ -40,7 +40,7 @@ namespace Microsoft.OData
 
             if (payloadKind == ODataPayloadKind.Unsupported)
             {
-                throw new ArgumentException(Strings.ODataMessageWriter_CannotSetHeadersWithInvalidPayloadKind(payloadKind), "payloadKind");
+                throw new ArgumentException(Strings.ODataMessageWriter_CannotSetHeadersWithInvalidPayloadKind(payloadKind), nameof(payloadKind));
             }
 
             return messageWriter.SetHeaders(payloadKind);
@@ -48,7 +48,7 @@ namespace Microsoft.OData
 
         /// <summary>Returns the format used by the message reader for reading the payload.</summary>
         /// <returns>The format used by the messageReader for reading the payload.</returns>
-        /// <param name="messageReader">The <see cref="T:Microsoft.OData.ODataMessageReader" /> to get the read format from.</param>
+        /// <param name="messageReader">The <see cref="Microsoft.OData.ODataMessageReader" /> to get the read format from.</param>
         /// <remarks>This method must only be called once reading has started.
         /// This means that a read method has been called on the <paramref name="messageReader"/> or that a reader (for entries, resource sets, collections, etc.) has been created.
         /// If the method is called prior to that it will throw.</remarks>

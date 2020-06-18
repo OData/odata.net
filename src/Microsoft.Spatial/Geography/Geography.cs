@@ -22,7 +22,7 @@ namespace Microsoft.Spatial
         /// </summary>
         private CoordinateSystem coordinateSystem;
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.Spatial.Geography" /> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.Spatial.Geography" /> class.</summary>
         /// <param name="coordinateSystem">The coordinate system of this geography.</param>
         /// <param name="creator">The implementation that created this instance.</param>
         protected Geography(CoordinateSystem coordinateSystem, SpatialImplementation creator)

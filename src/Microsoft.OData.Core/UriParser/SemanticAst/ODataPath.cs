@@ -38,7 +38,7 @@ namespace Microsoft.OData.UriParser
             this.segments = segments.ToList();
             if (this.segments.Any(s => s == null))
             {
-                throw Error.ArgumentNull("segments");
+                throw Error.ArgumentNull(nameof(segments));
             }
         }
 

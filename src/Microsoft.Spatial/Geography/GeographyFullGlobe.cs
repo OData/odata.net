@@ -9,7 +9,7 @@ namespace Microsoft.Spatial
     /// <summary>Represents the full globe of geography.</summary>
     public abstract class GeographyFullGlobe : GeographySurface
     {
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.Spatial.GeographyFullGlobe" /> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.Spatial.GeographyFullGlobe" /> class.</summary>
         /// <param name="coordinateSystem">The coordinate system of this instance.</param>
         /// <param name="creator">The implementation that created this instance.</param>
         protected GeographyFullGlobe(CoordinateSystem coordinateSystem, SpatialImplementation creator)

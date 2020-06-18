@@ -22,7 +22,7 @@ namespace Microsoft.Spatial
         /// </summary>
         private readonly IGeometryProvider geometryOutput;
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.Spatial.SpatialBuilder" /> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.Spatial.SpatialBuilder" /> class.</summary>
         /// <param name="geographyInput">The geography input.</param>
         /// <param name="geometryInput">The geometry input.</param>
         /// <param name="geographyOutput">The geography output.</param>

@@ -1095,7 +1095,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                         var odatareader = omReader.CreateODataResourceReader();
                         while(odatareader.Read())
                         {
-                            if(odatareader.State == ODataReaderState.ResourceEnd)
+                            if (odatareader.State == ODataReaderState.ResourceEnd)
                             {
                                 Assert.NotNull(odatareader.Item as ODataResource);
                             }

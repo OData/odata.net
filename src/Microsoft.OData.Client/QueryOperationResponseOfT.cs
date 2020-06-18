@@ -72,7 +72,7 @@ namespace Microsoft.OData.Client
 
         #region Public methods
 
-        /// <summary>Gets a <see cref="T:Microsoft.OData.Client.DataServiceQueryContinuation`1" /> object that contains the URI that is used to retrieve the next results page.</summary>
+        /// <summary>Gets a <see cref="Microsoft.OData.Client.DataServiceQueryContinuation{T}" /> object that contains the URI that is used to retrieve the next results page.</summary>
         /// <returns>An object that contains the URI that is used to return the next results page.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "required for this feature")]
         public new DataServiceQueryContinuation<T> GetContinuation()
@@ -80,8 +80,8 @@ namespace Microsoft.OData.Client
             return (DataServiceQueryContinuation<T>)base.GetContinuation();
         }
 
-        /// <summary>Executes the <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> and gets <see cref="T:Microsoft.OData.Client.QueryOperationResponse`1" /> items.</summary>
-        /// <returns>An enumerator to a collection of <see cref="T:Microsoft.OData.Client.QueryOperationResponse`1" /> items.</returns>
+        /// <summary>Executes the <see cref="Microsoft.OData.Client.DataServiceQuery{TElement}" /> and gets <see cref="Microsoft.OData.Client.QueryOperationResponse{T}" /> items.</summary>
+        /// <returns>An enumerator to a collection of <see cref="Microsoft.OData.Client.QueryOperationResponse{T}" /> items.</returns>
         /// <remarks>In the case of Collection(primitive) or Collection(complex), the entire collection is
         /// materialized when this is called.</remarks>
         public new IEnumerator<T> GetEnumerator()

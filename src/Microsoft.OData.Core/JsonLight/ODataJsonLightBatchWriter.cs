@@ -427,7 +427,7 @@ namespace Microsoft.OData.JsonLight
                 string currentGroupId;
                 this.requestIdToAtomicGroupId.TryGetValue(requestId, out currentGroupId);
 
-                if (dependsOnId.Equals(currentGroupId))
+                if (dependsOnId.Equals(currentGroupId, StringComparison.Ordinal))
                 {
                     throw new ODataException(
                         Strings.ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed(requestId, dependsOnId));
@@ -449,7 +449,7 @@ namespace Microsoft.OData.JsonLight
                     string currentGroupId;
                     this.requestIdToAtomicGroupId.TryGetValue(requestId, out currentGroupId);
 
-                    if (!groupId.Equals(currentGroupId))
+                    if (!groupId.Equals(currentGroupId, StringComparison.Ordinal))
                     {
                         throw new ODataException(
                             Strings.ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed(requestId, groupId));

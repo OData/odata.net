@@ -301,7 +301,7 @@ namespace Microsoft.OData.Client
             Uri requestUri = UriUtil.CreateUri(this.RequestInfo.BaseUriResolver.GetBaseUriWithSlash(), UriUtil.CreateUri("$batch", UriKind.Relative));
             HeaderCollection headers = new HeaderCollection();
             headers.SetRequestVersion(Util.ODataVersion4, this.RequestInfo.MaxProtocolVersionAsVersion);
-            if(useJsonBatch)
+            if (useJsonBatch)
             {
                 headers.SetHeader(XmlConstants.HttpContentType, CreateApplicationJsonContentType());
             }
@@ -309,6 +309,7 @@ namespace Microsoft.OData.Client
             {
                 headers.SetHeader(XmlConstants.HttpContentType, CreateMultiPartMimeContentType());
             }
+
             this.RequestInfo.Format.SetRequestAcceptHeaderForBatch(headers);
 
             return this.CreateTopLevelRequest(XmlConstants.HttpMethodPost, requestUri, headers, this.RequestInfo.HttpStack, null /*descriptor*/);

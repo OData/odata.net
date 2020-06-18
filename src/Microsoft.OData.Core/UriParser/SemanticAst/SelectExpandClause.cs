@@ -71,7 +71,7 @@ namespace Microsoft.OData.UriParser
         /// Add a select item to the current list of selection items
         /// </summary>
         /// <param name="itemToAdd">The item to add</param>
-        internal void AddToSelectedItems(SelectItem itemToAdd, bool getOnlySubset =false)
+        internal void AddToSelectedItems(SelectItem itemToAdd, bool getOnlySubset = false)
         {
             ExceptionUtils.CheckArgumentNotNull(itemToAdd, "itemToAdd");
 
@@ -92,10 +92,10 @@ namespace Microsoft.OData.UriParser
                     {
                         newSelectedItems.Add(selectedItem);
                     }
-                    else if(getOnlySubset)
+                    else if (getOnlySubset)
                     {
                         var pathItem = selectedItem as PathSelectItem;
-                        if(pathItem != null && pathItem.SelectAndExpand != null)
+                        if (pathItem != null && pathItem.SelectAndExpand != null)
                         {
                             newSelectedItems.Add(selectedItem);
                         }

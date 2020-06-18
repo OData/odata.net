@@ -78,14 +78,14 @@ namespace Microsoft.OData
         /// <summary>The context information for the message.</summary>
         private ODataMessageInfo messageInfo;
 
-        /// <summary>Creates a new <see cref="T:Microsoft.OData.ODataMessageReader" /> for the given request message.</summary>
+        /// <summary>Creates a new <see cref="Microsoft.OData.ODataMessageReader" /> for the given request message.</summary>
         /// <param name="requestMessage">The request message for which to create the reader.</param>
         public ODataMessageReader(IODataRequestMessage requestMessage)
             : this(requestMessage, null)
         {
         }
 
-        /// <summary>Creates a new <see cref="T:Microsoft.OData.ODataMessageReader" /> for the given request message and message reader settings.</summary>
+        /// <summary>Creates a new <see cref="Microsoft.OData.ODataMessageReader" /> for the given request message and message reader settings.</summary>
         /// <param name="requestMessage">The request message for which to create the reader.</param>
         /// <param name="settings">The message reader settings to use for reading the message payload.</param>
         public ODataMessageReader(IODataRequestMessage requestMessage, ODataMessageReaderSettings settings)
@@ -123,14 +123,14 @@ namespace Microsoft.OData
             this.edmTypeResolver = new EdmTypeReaderResolver(this.model, this.settings.ClientCustomTypeResolver);
         }
 
-        /// <summary>Creates a new <see cref="T:System.Data.OData.ODataMessageReader" /> for the given response message.</summary>
+        /// <summary>Creates a new <see cref="System.Data.OData.ODataMessageReader" /> for the given response message.</summary>
         /// <param name="responseMessage">The response message for which to create the reader.</param>
         public ODataMessageReader(IODataResponseMessage responseMessage)
             : this(responseMessage, null)
         {
         }
 
-        /// <summary>Creates a new <see cref="T:Microsoft.OData.ODataMessageReader" /> for the given response message and message reader settings.</summary>
+        /// <summary>Creates a new <see cref="Microsoft.OData.ODataMessageReader" /> for the given response message and message reader settings.</summary>
         /// <param name="responseMessage">The response message for which to create the reader.</param>
         /// <param name="settings">The message reader settings to use for reading the message payload.</param>
         public ODataMessageReader(IODataResponseMessage responseMessage, ODataMessageReaderSettings settings)
@@ -285,7 +285,7 @@ namespace Microsoft.OData
                     });
         }
 
-        /// <summary>Creates an <see cref="T:Microsoft.OData.ODataAsyncReader" /> to read an async response.</summary>
+        /// <summary>Creates an <see cref="Microsoft.OData.ODataAsyncReader" /> to read an async response.</summary>
         /// <returns>The created async reader.</returns>
         public ODataAsynchronousReader CreateODataAsynchronousReader()
         {
@@ -295,7 +295,7 @@ namespace Microsoft.OData
                 ODataPayloadKind.Asynchronous);
         }
 
-        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.ODataAsyncReader" /> to read an async response.</summary>
+        /// <summary>Asynchronously creates an <see cref="Microsoft.OData.ODataAsyncReader" /> to read an async response.</summary>
         /// <returns>A running task for the created async reader.</returns>
         public Task<ODataAsynchronousReader> CreateODataAsynchronousReaderAsync()
         {
@@ -305,7 +305,7 @@ namespace Microsoft.OData
                 ODataPayloadKind.Asynchronous);
         }
 
-        /// <summary>Creates an <see cref="T:Microsoft.OData.ODataReader" /> to read a resource set.</summary>
+        /// <summary>Creates an <see cref="Microsoft.OData.ODataReader" /> to read a resource set.</summary>
         /// <returns>The created reader.</returns>
         public ODataReader CreateODataResourceSetReader()
         {
@@ -337,7 +337,7 @@ namespace Microsoft.OData
                 ODataPayloadKind.ResourceSet);
         }
 
-        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.ODataReader" /> to read a resource set.</summary>
+        /// <summary>Asynchronously creates an <see cref="Microsoft.OData.ODataReader" /> to read a resource set.</summary>
         /// <returns>A running task for the created reader.</returns>
         public Task<ODataReader> CreateODataResourceSetReaderAsync()
         {
@@ -369,7 +369,7 @@ namespace Microsoft.OData
                 ODataPayloadKind.ResourceSet);
         }
 
-        /// <summary>Creates an <see cref="T:Microsoft.OData.ODataReader" /> to read a delta resource set.</summary>
+        /// <summary>Creates an <see cref="Microsoft.OData.ODataReader" /> to read a delta resource set.</summary>
         /// <returns>The created reader.</returns>
         public ODataReader CreateODataDeltaResourceSetReader()
         {
@@ -401,7 +401,7 @@ namespace Microsoft.OData
                 ODataPayloadKind.ResourceSet);
         }
 
-        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.ODataReader" /> to read a delta resource set.</summary>
+        /// <summary>Asynchronously creates an <see cref="Microsoft.OData.ODataReader" /> to read a delta resource set.</summary>
         /// <returns>A running task for the created reader.</returns>
         public Task<ODataReader> CreateODataDeltaResourceSetReaderAsync()
         {
@@ -465,7 +465,7 @@ namespace Microsoft.OData
                 ODataPayloadKind.ResourceSet);
         }
 
-        /// <summary>Creates an <see cref="T:Microsoft.OData.ODataReader" /> to read a resource.</summary>
+        /// <summary>Creates an <see cref="Microsoft.OData.ODataReader" /> to read a resource.</summary>
         /// <returns>The created reader.</returns>
         public ODataReader CreateODataResourceReader()
         {
@@ -497,7 +497,7 @@ namespace Microsoft.OData
                 ODataPayloadKind.Resource);
         }
 
-        /// <summary>Asynchronously creates an <see cref="T:System.Data.OData.ODataReader" /> to read a resource.</summary>
+        /// <summary>Asynchronously creates an <see cref="System.Data.OData.ODataReader" /> to read a resource.</summary>
         /// <returns>A running task for the created reader.</returns>
         public Task<ODataReader> CreateODataResourceReaderAsync()
         {
@@ -529,7 +529,7 @@ namespace Microsoft.OData
                 ODataPayloadKind.Resource);
         }
 
-        /// <summary>Creates an <see cref="T:Microsoft.OData.ODataCollectionReader" /> to read a collection of primitive or complex values (as result of a service operation invocation).</summary>
+        /// <summary>Creates an <see cref="Microsoft.OData.ODataCollectionReader" /> to read a collection of primitive or complex values (as result of a service operation invocation).</summary>
         /// <returns>The created collection reader.</returns>
         public ODataCollectionReader CreateODataCollectionReader()
         {
@@ -549,7 +549,7 @@ namespace Microsoft.OData
                 ODataPayloadKind.Collection);
         }
 
-        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.ODataCollectionReader" /> to read a collection of primitive or complex values (as result of a service operation invocation).</summary>
+        /// <summary>Asynchronously creates an <see cref="Microsoft.OData.ODataCollectionReader" /> to read a collection of primitive or complex values (as result of a service operation invocation).</summary>
         /// <returns>A running task for the created collection reader.</returns>
         public Task<ODataCollectionReader> CreateODataCollectionReaderAsync()
         {
@@ -570,7 +570,7 @@ namespace Microsoft.OData
         }
 
 
-        /// <summary>Creates an <see cref="T:Microsoft.OData.ODataBatchReader" /> to read a batch of requests or responses.</summary>
+        /// <summary>Creates an <see cref="Microsoft.OData.ODataBatchReader" /> to read a batch of requests or responses.</summary>
         /// <returns>The created batch reader.</returns>
         public ODataBatchReader CreateODataBatchReader()
         {
@@ -580,7 +580,7 @@ namespace Microsoft.OData
                 ODataPayloadKind.Batch);
         }
 
-        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.ODataBatchReader" /> to read a batch of requests or responses.</summary>
+        /// <summary>Asynchronously creates an <see cref="Microsoft.OData.ODataBatchReader" /> to read a batch of requests or responses.</summary>
         /// <returns>A running task for the created batch reader.</returns>
         public Task<ODataBatchReader> CreateODataBatchReaderAsync()
         {
@@ -696,7 +696,7 @@ namespace Microsoft.OData
                 ODataPayloadKind.ServiceDocument);
         }
 
-        /// <summary>Reads an <see cref="T:Microsoft.OData.ODataProperty" /> as message payload.</summary>
+        /// <summary>Reads an <see cref="Microsoft.OData.ODataProperty" /> as message payload.</summary>
         /// <returns>The property read from the payload.</returns>
         public ODataProperty ReadProperty()
         {
@@ -730,7 +730,7 @@ namespace Microsoft.OData
         }
 
 
-        /// <summary>Asynchronously reads an <see cref="T:Microsoft.OData.ODataProperty" /> as message payload.</summary>
+        /// <summary>Asynchronously reads an <see cref="Microsoft.OData.ODataProperty" /> as message payload.</summary>
         /// <returns>A task representing the asynchronous operation of reading the property.</returns>
         public Task<ODataProperty> ReadPropertyAsync()
         {
@@ -764,8 +764,8 @@ namespace Microsoft.OData
         }
 
 
-        /// <summary>Reads an <see cref="T:Microsoft.OData.ODataError" /> as the message payload.</summary>
-        /// <returns>The <see cref="T:Microsoft.OData.ODataError" /> read from the message payload.</returns>
+        /// <summary>Reads an <see cref="Microsoft.OData.ODataError" /> as the message payload.</summary>
+        /// <returns>The <see cref="Microsoft.OData.ODataError" /> read from the message payload.</returns>
         public ODataError ReadError()
         {
             this.VerifyCanReadError();
@@ -775,7 +775,7 @@ namespace Microsoft.OData
         }
 
 
-        /// <summary>Asynchronously reads an <see cref="T:Microsoft.OData.ODataError" /> as the message payload.</summary>
+        /// <summary>Asynchronously reads an <see cref="Microsoft.OData.ODataError" /> as the message payload.</summary>
         /// <returns>A task representing the asynchronous operation of reading the error.</returns>
         public Task<ODataError> ReadErrorAsync()
         {
@@ -857,7 +857,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>Reads the message body as metadata document.</summary>
-        /// <returns>Returns <see cref="T:Microsoft.OData.Edm.IEdmModel" />.</returns>
+        /// <returns>Returns <see cref="Microsoft.OData.Edm.IEdmModel" />.</returns>
         public IEdmModel ReadMetadataDocument()
         {
             this.VerifyCanReadMetadataDocument();
@@ -868,7 +868,7 @@ namespace Microsoft.OData
 
         /// <summary>Reads the message body as metadata document.</summary>
         /// <param name="getReferencedModelReaderFunc">The function to load referenced model xml. If null, will stop loading the referenced models. Normally it should throw no exception.</param>
-        /// <returns>Returns <see cref="T:Microsoft.OData.Edm.IEdmModel" />.</returns>
+        /// <returns>Returns <see cref="Microsoft.OData.Edm.IEdmModel" />.</returns>
         /// <remarks>
         /// User should handle the disposal of XmlReader created by getReferencedModelReaderFunc.
         /// </remarks>
@@ -880,7 +880,7 @@ namespace Microsoft.OData
                 ODataPayloadKind.MetadataDocument);
         }
 
-        /// <summary><see cref="M:System.IDisposable.Dispose()" /> implementation to cleanup unmanaged resources of the reader. </summary>
+        /// <summary><see cref="System.IDisposable.Dispose()" /> implementation to cleanup unmanaged resources of the reader. </summary>
         public void Dispose()
         {
             this.Dispose(true);
@@ -1020,7 +1020,7 @@ namespace Microsoft.OData
             {
                 if (entitySet != null)
                 {
-                    throw new ArgumentException(Strings.ODataMessageReader_EntitySetSpecifiedWithoutMetadata("entitySet"), "entitySet");
+                    throw new ArgumentException(Strings.ODataMessageReader_EntitySetSpecifiedWithoutMetadata("entitySet"), nameof(entitySet));
                 }
 
                 if (expectedBaseResourceType != null)
@@ -1048,12 +1048,12 @@ namespace Microsoft.OData
             {
                 if (entitySet != null)
                 {
-                    throw new ArgumentException(Strings.ODataMessageReader_EntitySetSpecifiedWithoutMetadata("entitySet"), "entitySet");
+                    throw new ArgumentException(Strings.ODataMessageReader_EntitySetSpecifiedWithoutMetadata("entitySet"), nameof(entitySet));
                 }
 
                 if (expectedBaseEntityType != null)
                 {
-                    throw new ArgumentException(Strings.ODataMessageReader_ExpectedTypeSpecifiedWithoutMetadata("expectedBaseEntityType"), "expectedBaseEntityType");
+                    throw new ArgumentException(Strings.ODataMessageReader_ExpectedTypeSpecifiedWithoutMetadata("expectedBaseEntityType"), nameof(expectedBaseEntityType));
                 }
             }
         }
@@ -1071,12 +1071,12 @@ namespace Microsoft.OData
             {
                 if (navigationSource != null)
                 {
-                    throw new ArgumentException(Strings.ODataMessageReader_EntitySetSpecifiedWithoutMetadata("navigationSource"), "navigationSource");
+                    throw new ArgumentException(Strings.ODataMessageReader_EntitySetSpecifiedWithoutMetadata("navigationSource"), nameof(navigationSource));
                 }
 
                 if (resourceType != null)
                 {
-                    throw new ArgumentException(Strings.ODataMessageReader_ExpectedTypeSpecifiedWithoutMetadata("resourceType"), "resourceType");
+                    throw new ArgumentException(Strings.ODataMessageReader_ExpectedTypeSpecifiedWithoutMetadata("resourceType"), nameof(resourceType));
                 }
             }
         }
@@ -1094,7 +1094,7 @@ namespace Microsoft.OData
             {
                 if (!this.model.IsUserModel())
                 {
-                    throw new ArgumentException(Strings.ODataMessageReader_ExpectedTypeSpecifiedWithoutMetadata("expectedItemTypeReference"), "expectedItemTypeReference");
+                    throw new ArgumentException(Strings.ODataMessageReader_ExpectedTypeSpecifiedWithoutMetadata("expectedItemTypeReference"), nameof(expectedItemTypeReference));
                 }
 
                 if (!expectedItemTypeReference.IsODataPrimitiveTypeKind()
@@ -1103,7 +1103,7 @@ namespace Microsoft.OData
                 {
                     throw new ArgumentException(
                         Strings.ODataMessageReader_ExpectedCollectionTypeWrongKind(expectedItemTypeReference.TypeKind().ToString()),
-                        "expectedItemTypeReference");
+                        nameof(expectedItemTypeReference));
                 }
             }
         }
@@ -1139,7 +1139,7 @@ namespace Microsoft.OData
 
             if (operation != null && !this.model.IsUserModel())
             {
-                throw new ArgumentException(Strings.ODataMessageReader_OperationSpecifiedWithoutMetadata("operation"), "operation");
+                throw new ArgumentException(Strings.ODataMessageReader_OperationSpecifiedWithoutMetadata("operation"), nameof(operation));
             }
         }
 
@@ -1195,22 +1195,22 @@ namespace Microsoft.OData
             {
                 if (!this.model.IsUserModel())
                 {
-                    throw new ArgumentException(Strings.ODataMessageReader_ExpectedTypeSpecifiedWithoutMetadata("expectedPropertyTypeReference"), "expectedPropertyTypeReference");
+                    throw new ArgumentException(Strings.ODataMessageReader_ExpectedTypeSpecifiedWithoutMetadata("expectedPropertyTypeReference"), nameof(expectedPropertyTypeReference));
                 }
 
                 IEdmCollectionType collectionType = expectedPropertyTypeReference.Definition as IEdmCollectionType;
                 if (collectionType != null && collectionType.ElementType.IsODataEntityTypeKind())
                 {
-                    throw new ArgumentException(Strings.ODataMessageReader_ExpectedPropertyTypeEntityCollectionKind, "expectedPropertyTypeReference");
+                    throw new ArgumentException(Strings.ODataMessageReader_ExpectedPropertyTypeEntityCollectionKind, nameof(expectedPropertyTypeReference));
                 }
 
                 if (expectedPropertyTypeReference.IsODataEntityTypeKind())
                 {
-                    throw new ArgumentException(Strings.ODataMessageReader_ExpectedPropertyTypeEntityKind, "expectedPropertyTypeReference");
+                    throw new ArgumentException(Strings.ODataMessageReader_ExpectedPropertyTypeEntityKind, nameof(expectedPropertyTypeReference));
                 }
                 else if (expectedPropertyTypeReference.IsStream())
                 {
-                    throw new ArgumentException(Strings.ODataMessageReader_ExpectedPropertyTypeStream, "expectedPropertyTypeReference");
+                    throw new ArgumentException(Strings.ODataMessageReader_ExpectedPropertyTypeStream, nameof(expectedPropertyTypeReference));
                 }
             }
         }
@@ -1261,7 +1261,7 @@ namespace Microsoft.OData
                 {
                     throw new ArgumentException(
                         Strings.ODataMessageReader_ExpectedValueTypeWrongKind(expectedTypeReference.TypeKind().ToString()),
-                        "expectedTypeReference");
+                        nameof(expectedTypeReference));
                 }
 
                 if (expectedTypeReference.IsBinary())

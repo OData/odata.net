@@ -42,16 +42,16 @@ namespace Microsoft.OData.Client
             this.baseUri = baseUri;
         }
 
-        /// <summary>Gets the object representation of data returned from the <see cref="P:Microsoft.OData.Client.ReadingWritingEntityEventArgs.Data" /> property. </summary>
-        /// <returns><see cref="T:System.Object" /> representation of the <see cref="P:Microsoft.OData.Client.ReadingWritingEntityEventArgs.Data" /> property.</returns>
+        /// <summary>Gets the object representation of data returned from the <see cref="Microsoft.OData.Client.ReadingWritingEntityEventArgs.Data" /> property. </summary>
+        /// <returns><see cref="System.Object" /> representation of the <see cref="Microsoft.OData.Client.ReadingWritingEntityEventArgs.Data" /> property.</returns>
         public object Entity
         {
             get { return this.entity; }
         }
 
-        /// <summary>Gets an entry or feed data represented as an <see cref="T:System.Xml.Linq.XElement" />.</summary>
+        /// <summary>Gets an entry or feed data represented as an <see cref="System.Xml.Linq.XElement" />.</summary>
         /// <returns>
-        ///   <see cref="T:System.Xml.Linq.XElement" />
+        ///   <see cref="System.Xml.Linq.XElement" />
         /// </returns>
         public XElement Data
         {
@@ -60,7 +60,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Gets the base URI base of the entry or feed.</summary>
-        /// <returns>Returns <see cref="T:System.Uri" />.</returns>
+        /// <returns>Returns <see cref="System.Uri" />.</returns>
         public Uri BaseUri
         {
             [DebuggerStepThrough]
