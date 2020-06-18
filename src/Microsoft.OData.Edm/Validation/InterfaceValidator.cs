@@ -222,7 +222,7 @@ namespace Microsoft.OData.Edm.Validation
         private static bool IsCheckableBad(object element)
         {
             IEdmCheckable checkable = element as IEdmCheckable;
-            return checkable != null && checkable.Errors != null && checkable.Errors.Count() > 0;
+            return checkable != null && checkable.Errors != null && checkable.Errors.Any();
         }
 
         private static EdmLocation GetLocation(object item)

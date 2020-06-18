@@ -172,7 +172,7 @@ namespace Microsoft.OData.Edm
             }
             catch (System.ArgumentOutOfRangeException)
             {
-                throw new ArgumentOutOfRangeException("value", Strings.Date_InvalidAddedOrSubtractedResults);
+                throw new ArgumentOutOfRangeException(nameof(value), Strings.Date_InvalidAddedOrSubtractedResults);
             }
         }
 
@@ -189,7 +189,7 @@ namespace Microsoft.OData.Edm
             }
             catch (System.ArgumentOutOfRangeException)
             {
-                throw new ArgumentOutOfRangeException("value", Strings.Date_InvalidAddedOrSubtractedResults);
+                throw new ArgumentOutOfRangeException(nameof(value), Strings.Date_InvalidAddedOrSubtractedResults);
             }
         }
 
@@ -206,7 +206,7 @@ namespace Microsoft.OData.Edm
             }
             catch (System.ArgumentOutOfRangeException)
             {
-                throw new ArgumentOutOfRangeException("value", Strings.Date_InvalidAddedOrSubtractedResults);
+                throw new ArgumentOutOfRangeException(nameof(value), Strings.Date_InvalidAddedOrSubtractedResults);
             }
         }
 

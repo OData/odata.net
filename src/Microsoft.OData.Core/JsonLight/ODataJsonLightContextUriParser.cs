@@ -301,7 +301,7 @@ namespace Microsoft.OData.JsonLight
                 string previous = fragment.Substring(0, index + 1);
 
                 // Don't treat Collection(Edm.Type) as SelectExpand segment
-                if (!previous.Equals("Collection"))
+                if (!previous.Equals("Collection", StringComparison.Ordinal))
                 {
                     string selectExpandStr = fragment.Substring(index + 2);
                     selectExpandStr = selectExpandStr.Substring(0, selectExpandStr.Length - 1);
@@ -327,11 +327,11 @@ namespace Microsoft.OData.JsonLight
                 {
                     detectedPayloadKind = ODataPayloadKind.ServiceDocument;
                 }
-                else if (fragment.Equals(ODataConstants.CollectionPrefix + "(" + ODataConstants.EntityReferenceSegmentName + ")"))
+                else if (fragment.Equals(ODataConstants.CollectionPrefix + "(" + ODataConstants.EntityReferenceSegmentName + ")", StringComparison.Ordinal))
                 {
                     detectedPayloadKind = ODataPayloadKind.EntityReferenceLinks;
                 }
-                else if (fragment.Equals(ODataConstants.EntityReferenceSegmentName))
+                else if (fragment.Equals(ODataConstants.EntityReferenceSegmentName, StringComparison.Ordinal))
                 {
                     detectedPayloadKind = ODataPayloadKind.EntityReferenceLink;
                 }

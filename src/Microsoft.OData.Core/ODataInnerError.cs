@@ -24,7 +24,7 @@ namespace Microsoft.OData
 #endif
     public sealed class ODataInnerError
     {
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataInnerError" /> class with default values.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.ODataInnerError" /> class with default values.</summary>
         public ODataInnerError()
         {
             Properties = new Dictionary<string, ODataValue>();
@@ -36,8 +36,8 @@ namespace Microsoft.OData
             Properties.Add(JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataNullValue());
         }
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataInnerError" /> class with exception object.</summary>
-        /// <param name="exception">The <see cref="T:System.Exception" /> used to create the inner error.</param>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.ODataInnerError" /> class with exception object.</summary>
+        /// <param name="exception">The <see cref="System.Exception" /> used to create the inner error.</param>
         public ODataInnerError(Exception exception)
         {
             ExceptionUtils.CheckArgumentNotNull(exception, "exception");
@@ -57,7 +57,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        ///  Initializes a new instance of the <see cref="T:Microsoft.OData.ODataInnerError" /> class with a dictionary of property names and corresponding ODataValues.
+        ///  Initializes a new instance of the <see cref="Microsoft.OData.ODataInnerError" /> class with a dictionary of property names and corresponding ODataValues.
         /// </summary>
         /// <param name="properties">Dictionary of string keys with ODataValue as value. Key string indicates the property name where as the value of the property is encapsulated in ODataValue.</param>
         public ODataInnerError(IDictionary<string, ODataValue> properties)

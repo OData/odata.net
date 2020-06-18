@@ -12,7 +12,7 @@ namespace Microsoft.Spatial
     /// <summary>Represents the multi-polygon of geography.</summary>
     public abstract class GeographyMultiPolygon : GeographyMultiSurface
     {
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.Spatial.GeographyMultiPolygon" /> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.Spatial.GeographyMultiPolygon" /> class.</summary>
         /// <param name="coordinateSystem">The coordinate system of this instance.</param>
         /// <param name="creator">The implementation that created this instance.</param>
         protected GeographyMultiPolygon(CoordinateSystem coordinateSystem, SpatialImplementation creator)

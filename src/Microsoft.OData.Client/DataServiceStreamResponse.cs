@@ -64,7 +64,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Gets the collection of headers from the response.</summary>
-        /// <returns>The headers collection from the response message as a <see cref="T:System.Collections.Generic.Dictionary`2" /> object.</returns>
+        /// <returns>The headers collection from the response message as a <see cref="System.Collections.Generic.Dictionary{TKey,TValue}" /> object.</returns>
         public Dictionary<string, string> Headers
         {
             get
@@ -84,7 +84,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>Gets the binary property data from the data service as a binary stream. </summary>
         /// <returns>The stream that contains the binary property data.</returns>
-        /// <exception cref="T:System.ObjectDisposedException">When the <see cref="T:Microsoft.OData.Client.DataServiceStreamResponse" /> is already disposed.</exception>
+        /// <exception cref="System.ObjectDisposedException">When the <see cref="Microsoft.OData.Client.DataServiceStreamResponse" /> is already disposed.</exception>
         /// <remarks>
         /// Returns the stream obtained from the data service. When reading from this stream
         /// the operations may throw if a network error occurs. This stream is read-only.
@@ -109,7 +109,7 @@ namespace Microsoft.OData.Client
 
         #region IDisposable Members
 
-        /// <summary>Releases all resources used by the current instance of the <see cref="T:Microsoft.OData.Client.DataServiceStreamResponse" /> class.</summary>
+        /// <summary>Releases all resources used by the current instance of the <see cref="Microsoft.OData.Client.DataServiceStreamResponse" /> class.</summary>
         public void Dispose()
         {
             WebUtil.DisposeMessage(this.responseMessage);

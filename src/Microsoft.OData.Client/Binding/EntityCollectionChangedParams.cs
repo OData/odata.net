@@ -11,7 +11,7 @@ namespace Microsoft.OData.Client
     using System.Collections.Specialized;
 #endregion
 
-    /// <summary>Encapsulates the arguments of a <see cref="E:System.Collections.Specialized.INotifyCollectionChanged.CollectionChanged" /> delegate.</summary>
+    /// <summary>Encapsulates the arguments of a <see cref="System.Collections.Specialized.INotifyCollectionChanged.CollectionChanged" /> delegate.</summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704", Justification = "Name gets too long with Parameters")]
     public sealed class EntityCollectionChangedParams
     {
@@ -84,7 +84,7 @@ namespace Microsoft.OData.Client
 
         #region Properties
 
-        /// <summary>The <see cref="T:Microsoft.OData.Client.DataServiceContext" /> associated with the <see cref="T:Microsoft.OData.Client.DataServiceCollection`1" /> that has changed.</summary>
+        /// <summary>The <see cref="Microsoft.OData.Client.DataServiceContext" /> associated with the <see cref="Microsoft.OData.Client.DataServiceCollection{T}" /> that has changed.</summary>
         /// <returns>The context associated with the collection that has changed</returns>
         public DataServiceContext Context
         {
@@ -126,14 +126,14 @@ namespace Microsoft.OData.Client
             get { return this.targetEntitySet; }
         }
 
-        /// <summary>The <see cref="T:Microsoft.OData.Client.DataServiceCollection`1" /> that has changed.</summary>
+        /// <summary>The <see cref="Microsoft.OData.Client.DataServiceCollection{T}" /> that has changed.</summary>
         /// <returns>A reference to the collection that has changed.</returns>
         public ICollection Collection
         {
             get { return this.collection; }
         }
 
-        /// <summary>A <see cref="T:System.Collections.Specialized.NotifyCollectionChangedAction" /> value that indicates how the collection was changed. </summary>
+        /// <summary>A <see cref="System.Collections.Specialized.NotifyCollectionChangedAction" /> value that indicates how the collection was changed. </summary>
         /// <returns>A value that indicates how the collection was changed.</returns>
         public NotifyCollectionChangedAction Action
         {

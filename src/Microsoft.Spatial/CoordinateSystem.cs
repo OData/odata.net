@@ -40,7 +40,7 @@ namespace Microsoft.Spatial
         /// </summary>
         private Topology topology;
 
-        /// <summary>Initializes a static instance of the <see cref="T:Microsoft.Spatial.CoordinateSystem" /> class.</summary>
+        /// <summary>Initializes a static instance of the <see cref="Microsoft.Spatial.CoordinateSystem" /> class.</summary>
         [SuppressMessage("Microsoft.Performance", "CA1810", Justification = "Static Constructor required")]
         static CoordinateSystem()
         {
@@ -49,7 +49,7 @@ namespace Microsoft.Spatial
             AddRef(DefaultGeography);
         }
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.Spatial.CoordinateSystem" /> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.Spatial.CoordinateSystem" /> class.</summary>
         /// <param name = "epsgId">The coordinate system ID, according to the EPSG</param>
         /// <param name = "name">The Name of the system</param>
         /// <param name = "topology">The topology of this coordinate system</param>

@@ -9,7 +9,7 @@ namespace Microsoft.Spatial
     /// <summary>Represents the multi-surface of geography.</summary>
     public abstract class GeographyMultiSurface : GeographyCollection
     {
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.Spatial.GeographyMultiSurface" /> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.Spatial.GeographyMultiSurface" /> class.</summary>
         /// <param name="coordinateSystem">The coordinate system of this instance.</param>
         /// <param name="creator">The implementation that created this instance.</param>
         protected GeographyMultiSurface(CoordinateSystem coordinateSystem, SpatialImplementation creator)

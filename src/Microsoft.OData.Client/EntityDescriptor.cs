@@ -78,7 +78,7 @@ namespace Microsoft.OData.Client
         #region Properties
 
         /// <summary>Gets the URI that is the identity value of the entity.</summary>
-        /// <returns>The <see cref="P:Microsoft.OData.Client.EntityDescriptor.Identity" /> property corresponds to the identity element of the entry that represents the entity in the Atom response.</returns>
+        /// <returns>The <see cref="Microsoft.OData.Client.EntityDescriptor.Identity" /> property corresponds to the identity element of the entry that represents the entity in the Atom response.</returns>
         public Uri Identity
         {
             get
@@ -155,7 +155,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Gets the URI that modifies the binary property data of the entity.</summary>
-        /// <returns>The <see cref="P:Microsoft.OData.Client.EntityDescriptor.EditStreamUri" /> property contains the edit-media link URI for the Media Resource that is associated with the entity, which is a Media Link Entry.</returns>
+        /// <returns>The <see cref="Microsoft.OData.Client.EntityDescriptor.EditStreamUri" /> property contains the edit-media link URI for the Media Resource that is associated with the entity, which is a Media Link Entry.</returns>
         /// <remarks>
         /// If the entity for the box is an MLE this property stores the edit-media link URI.
         /// That is, it stores the URI to send PUTs for the associated MR.
@@ -206,7 +206,7 @@ namespace Microsoft.OData.Client
             }
         }
 
-        /// <summary>Gets an eTag value that indicates the state of data targeted for update since the last call to <see cref="M:Microsoft.OData.Client.DataServiceContext.SaveChanges" />.</summary>
+        /// <summary>Gets an eTag value that indicates the state of data targeted for update since the last call to <see cref="Microsoft.OData.Client.DataServiceContext.SaveChanges" />.</summary>
         /// <returns>The state of data.</returns>
         public string ETag { get; set; }
 
@@ -248,7 +248,7 @@ namespace Microsoft.OData.Client
         public String ServerTypeName { get; internal set; }
 
         /// <summary>Returns a collection of links that are the relationships in which the entity participates.</summary>
-        /// <returns>A <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> of <see cref="T:Microsoft.OData.Client.LinkInfo" /> objects that represents links in which the entity participates.</returns>
+        /// <returns>A <see cref="System.Collections.ObjectModel.ReadOnlyCollection{T}" /> of <see cref="Microsoft.OData.Client.LinkInfo" /> objects that represents links in which the entity participates.</returns>
         [SuppressMessage("Microsoft.Naming", "CA1704", Justification = "LinkInfoCollection is cumbersome and Links isn't expressive enough")]
         public ReadOnlyCollection<LinkInfo> LinkInfos
         {
@@ -259,7 +259,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Returns a collection of named binary data streams that belong to the entity.</summary>
-        /// <returns>A <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> of <see cref="T:Microsoft.OData.Client.StreamDescriptor" /> objects that are the named binary data streams that belong to the entity.</returns>
+        /// <returns>A <see cref="System.Collections.ObjectModel.ReadOnlyCollection{T}" /> of <see cref="Microsoft.OData.Client.StreamDescriptor" /> objects that are the named binary data streams that belong to the entity.</returns>
         public ReadOnlyCollection<StreamDescriptor> StreamDescriptors
         {
             get

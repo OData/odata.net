@@ -358,7 +358,7 @@ namespace Microsoft.OData.JsonLight
                 Debug.Assert(dependsOnId != null, "dependsOnId != null");
 
                 // Self reference to atomicityGroup is not allowed.
-                if (dependsOnId.Equals(atomicityGroupId))
+                if (dependsOnId.Equals(atomicityGroupId, StringComparison.Ordinal))
                 {
                     throw new ODataException(Strings.ODataBatchReader_SameRequestIdAsAtomicityGroupIdNotAllowed(
                         dependsOnId,
@@ -366,7 +366,7 @@ namespace Microsoft.OData.JsonLight
                 }
 
                 // Self reference is not allowed.
-                if (dependsOnId.Equals(requestId))
+                if (dependsOnId.Equals(requestId, StringComparison.Ordinal))
                 {
                     throw new ODataException(Strings.ODataBatchReader_SelfReferenceDependsOnRequestIdNotAllowed(
                         dependsOnId,
@@ -376,7 +376,7 @@ namespace Microsoft.OData.JsonLight
                 // For request Id referred to by dependsOn attribute, check that it is not part of any atomic group
                 // other than the dependent request's atomic group (if dependent request belongs to an atomic group).
                 string groupId = this.atomicGroups.GetGroupId(dependsOnId);
-                if (groupId != null && !groupId.Equals(this.atomicGroups.GetGroupId(requestId)))
+                if (groupId != null && !groupId.Equals(this.atomicGroups.GetGroupId(requestId), StringComparison.Ordinal))
                 {
                     throw new ODataException(Strings.ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed(
                         dependsOnId,

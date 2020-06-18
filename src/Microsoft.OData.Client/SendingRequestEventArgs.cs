@@ -35,8 +35,8 @@ namespace Microsoft.OData.Client
             this.requestHeaders = requestHeaders;
         }
 
-        /// <summary>Gets or sets the <see cref="T:System.Net.HttpWebRequest" /> instance about to be sent by the client library to the data service.</summary>
-        /// <returns><see cref="T:System.Net.HttpWebRequest" />.</returns>
+        /// <summary>Gets or sets the <see cref="System.Net.HttpWebRequest" /> instance about to be sent by the client library to the data service.</summary>
+        /// <returns><see cref="System.Net.HttpWebRequest" />.</returns>
         public System.Net.WebRequest Request
         {
             get

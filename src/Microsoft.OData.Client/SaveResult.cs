@@ -745,7 +745,7 @@ namespace Microsoft.OData.Client
         /// <param name="response">response object</param>
         private void HandleOperationException(InvalidOperationException e, IODataResponseMessage response)
         {
-            Debug.Assert(this.entryIndex >= 0 && this.entryIndex < this.ChangedEntries.Count(), string.Format(System.Globalization.CultureInfo.InvariantCulture, "this.entryIndex = '{0}', this.ChangedEntries.Count = '{1}'", this.entryIndex, this.ChangedEntries.Count()));
+            Debug.Assert(this.entryIndex >= 0 && this.entryIndex < this.ChangedEntries.Count, string.Format(System.Globalization.CultureInfo.InvariantCulture, "this.entryIndex = '{0}', this.ChangedEntries.Count = '{1}'", this.entryIndex, this.ChangedEntries.Count));
 
             Descriptor current = this.ChangedEntries[this.entryIndex];
             HeaderCollection headers = null;
@@ -848,7 +848,7 @@ namespace Microsoft.OData.Client
         /// <param name="responseStream">stream containing the response payload.</param>
         private void HandleOperationResponseData(IODataResponseMessage responseMsg, Stream responseStream)
         {
-            Debug.Assert(this.entryIndex >= 0 && this.entryIndex < this.ChangedEntries.Count(), string.Format(System.Globalization.CultureInfo.InvariantCulture, "this.entryIndex = '{0}', this.ChangedEntries.Count() = '{1}'", this.entryIndex, this.ChangedEntries.Count()));
+            Debug.Assert(this.entryIndex >= 0 && this.entryIndex < this.ChangedEntries.Count, string.Format(System.Globalization.CultureInfo.InvariantCulture, "this.entryIndex = '{0}', this.ChangedEntries.Count() = '{1}'", this.entryIndex, this.ChangedEntries.Count));
 
             // Parse the response
             Descriptor current = this.ChangedEntries[this.entryIndex];

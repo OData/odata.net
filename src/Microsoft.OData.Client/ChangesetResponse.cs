@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client
         /// <summary>Descriptor containing the response object.</summary>
         private Descriptor descriptor;
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Client.ChangeOperationResponse" /> class. </summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.ChangeOperationResponse" /> class. </summary>
         /// <param name="headers">HTTP headers</param>
         /// <param name="descriptor">response object containing information about resources that got changed.</param>
         internal ChangeOperationResponse(HeaderCollection headers, Descriptor descriptor)
@@ -27,8 +27,8 @@ namespace Microsoft.OData.Client
             this.descriptor = descriptor;
         }
 
-        /// <summary>Gets the <see cref="T:Microsoft.OData.Client.EntityDescriptor" /> or <see cref="T:Microsoft.OData.Client.LinkDescriptor" /> modified by a change operation.</summary>
-        /// <returns>An <see cref="T:Microsoft.OData.Client.EntityDescriptor" /> or <see cref="T:Microsoft.OData.Client.LinkDescriptor" /> modified by a change operation. </returns>
+        /// <summary>Gets the <see cref="Microsoft.OData.Client.EntityDescriptor" /> or <see cref="Microsoft.OData.Client.LinkDescriptor" /> modified by a change operation.</summary>
+        /// <returns>An <see cref="Microsoft.OData.Client.EntityDescriptor" /> or <see cref="Microsoft.OData.Client.LinkDescriptor" /> modified by a change operation. </returns>
         public Descriptor Descriptor
         {
             get { return this.descriptor; }

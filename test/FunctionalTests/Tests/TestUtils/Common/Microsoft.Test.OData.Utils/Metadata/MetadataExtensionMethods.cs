@@ -531,7 +531,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
 
             var annotationValue = annotations.Single().Value as IEdmRecordExpression;
 
-            if(annotationValue == null)
+            if (annotationValue == null)
             {
                 throw new InvalidOperationException("Type " + contextType.ToTraceString() + " must have a single annotation containing a record expression with term " + term.ToTraceString());
             }

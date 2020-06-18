@@ -1037,7 +1037,7 @@ namespace Microsoft.OData.Edm.Validation
                         }
                     }
 
-                    if (composableEscapeFunctions.Count() > 1)
+                    if (composableEscapeFunctions.Count > 1)
                     {
                         string escapeFunctionString = String.Join(",", composableEscapeFunctions.Select(c => c.Name).ToArray());
                         context.AddError(
@@ -1046,7 +1046,7 @@ namespace Microsoft.OData.Edm.Validation
                                 Strings.EdmModel_Validator_Semantic_EntityComposableBoundEscapeFunctionMustBeLessOne(entityType.FullName(), escapeFunctionString));
                     }
 
-                    if (nonComposableEscapeFunctions.Count() > 1)
+                    if (nonComposableEscapeFunctions.Count > 1)
                     {
                         string escapeFunctionString = String.Join(",", nonComposableEscapeFunctions.Select(c => c.Name).ToArray());
                         context.AddError(

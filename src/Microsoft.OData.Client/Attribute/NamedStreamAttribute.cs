@@ -12,7 +12,7 @@ namespace Microsoft.OData.Client
     [AttributeUsage(AttributeTargets.Class, Inherited = true, AllowMultiple = true)]
     public sealed class NamedStreamAttribute : Attribute
     {
-        /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.Client.NamedStreamAttribute" /> class.</summary>
+        /// <summary>Creates a new instance of the <see cref="Microsoft.OData.Client.NamedStreamAttribute" /> class.</summary>
         /// <param name="name">The name of a binary stream that belongs to the attributed entity.</param>
         public NamedStreamAttribute(string name)
         {

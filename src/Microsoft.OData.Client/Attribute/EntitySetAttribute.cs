@@ -22,7 +22,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         private readonly string entitySet;
 
-        /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.Client.EntitySetAttribute" />.</summary>
+        /// <summary>Creates a new instance of the <see cref="Microsoft.OData.Client.EntitySetAttribute" />.</summary>
         /// <param name="entitySet">The entity set to which the class belongs.</param>
         public EntitySetAttribute(string entitySet)
         {

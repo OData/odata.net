@@ -108,7 +108,7 @@ namespace Microsoft.OData.Client
         /// <param name="functionName">The function name.</param>
         /// <param name="isComposable">Whether this query is composable.</param>
         /// <param name="parameters">The function parameters.</param>
-        /// <returns>A new <see cref="T:Microsoft.OData.Client.DataServiceQuery`1" /> instance that represents the function call.</returns>
+        /// <returns>A new <see cref="Microsoft.OData.Client.DataServiceQuery{TElement}" /> instance that represents the function call.</returns>
         public virtual DataServiceQuery<T> CreateFunctionQuery<T>(string functionName, bool isComposable, params UriOperationParameter[] parameters)
         {
             return this.Query.CreateFunctionQuery<T>(functionName, isComposable, parameters);
@@ -119,7 +119,7 @@ namespace Microsoft.OData.Client
         /// <param name="functionName">The function name.</param>
         /// <param name="isComposable">Whether this query is composable.</param>
         /// <param name="parameters">The function parameters.</param>
-        /// <returns>A new <see cref="T:Microsoft.OData.Client.DataServiceQuerySingle`1" /> instance that represents the function call.</returns>
+        /// <returns>A new <see cref="Microsoft.OData.Client.DataServiceQuerySingle{T}" /> instance that represents the function call.</returns>
         public virtual DataServiceQuerySingle<T> CreateFunctionQuerySingle<T>(string functionName, bool isComposable, params UriOperationParameter[] parameters)
         {
             return new DataServiceQuerySingle<T>(this.CreateFunctionQuery<T>(functionName, isComposable, parameters), isComposable);
@@ -143,7 +143,7 @@ namespace Microsoft.OData.Client
 #endif
 
         /// <summary>Starts an asynchronous network operation that executes the query represented by this object instance.</summary>
-        /// <returns>An <see cref="T:System.IAsyncResult" /> that represents the status of the asynchronous operation.</returns>
+        /// <returns>An <see cref="System.IAsyncResult" /> that represents the status of the asynchronous operation.</returns>
         /// <param name="callback">The delegate to invoke when the operation completes.</param>
         /// <param name="state">User defined object used to transfer state between the start of the operation and the callback defined by <paramref name="callback" />.</param>
         public virtual IAsyncResult BeginGetValue(AsyncCallback callback, object state)
@@ -166,7 +166,7 @@ namespace Microsoft.OData.Client
         /// <summary>Ends an asynchronous query request to a data service.</summary>
         /// <returns>Returns the results of the query operation.</returns>
         /// <param name="asyncResult">The pending asynchronous query request.</param>
-        /// <exception cref="T:Microsoft.OData.Client.DataServiceQueryException">When the data service returns an HTTP 404: Resource Not Found error.</exception>
+        /// <exception cref="Microsoft.OData.Client.DataServiceQueryException">When the data service returns an HTTP 404: Resource Not Found error.</exception>
         public virtual TElement EndGetValue(IAsyncResult asyncResult)
         {
             Util.CheckArgumentNull(asyncResult, "asyncResult");
@@ -206,7 +206,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <typeparam name="TResult">The type of the value returned by selector.</typeparam>
         /// <param name="selector">A lambda expression that indicates the property returns.</param>
-        /// <returns>A <see cref="T:Microsoft.OData.Client.DataServiceQuerySingle`1" /> whose element is the result of invoking the transform function on the element of source.</returns>
+        /// <returns>A <see cref="Microsoft.OData.Client.DataServiceQuerySingle{T}" /> whose element is the result of invoking the transform function on the element of source.</returns>
         public DataServiceQuerySingle<TResult> Select<TResult>(Expression<Func<TElement, TResult>> selector)
         {
             if (this.Query == null)
@@ -222,7 +222,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <typeparam name="TTarget">Target type of the last property on the expand path.</typeparam>
         /// <param name="navigationPropertyAccessor">A lambda expression that indicates the navigation property that returns the entity set to include in the expanded query.</param>
-        /// <returns>Returns a <see cref="T:Microsoft.OData.Client.DataServiceQuerySingle`1" /> that with the expand option included.</returns>
+        /// <returns>Returns a <see cref="Microsoft.OData.Client.DataServiceQuerySingle{T}" /> that with the expand option included.</returns>
         public DataServiceQuerySingle<TElement> Expand<TTarget>(Expression<Func<TElement, TTarget>> navigationPropertyAccessor)
         {
             return new DataServiceQuerySingle<TElement>(this.Query.Expand(navigationPropertyAccessor), true);
@@ -240,7 +240,7 @@ namespace Microsoft.OData.Client
         /// Cast this query type into its derived type.
         /// </summary>
         /// <typeparam name="TResult">Derived type of TElement to be casted to.</typeparam>
-        /// <returns>Returns a <see cref="T:Microsoft.OData.Client.DataServiceQuerySingle`1" /> of TResult type.</returns>
+        /// <returns>Returns a <see cref="Microsoft.OData.Client.DataServiceQuerySingle{T}" /> of TResult type.</returns>
         public virtual DataServiceQuerySingle<TResult> CastTo<TResult>()
         {
             return new DataServiceQuerySingle<TResult>((DataServiceQuery<TResult>)this.Query.OfType<TResult>(), true);

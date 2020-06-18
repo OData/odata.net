@@ -135,7 +135,7 @@ namespace Microsoft.OData.JsonLight
             ODataMediaType mediaType = GetMediaType(contentTypeHeader);
 
             // Content-Type can be either textual or binary, since json content is not cached.
-            if (mediaType != null && mediaType.Type.Equals(MimeConstants.MimeTextType))
+            if (mediaType != null && mediaType.Type.Equals(MimeConstants.MimeTextType, StringComparison.Ordinal))
             {
                 // Explicit check for matching of textual content-type.
                 string bodyContent = string.Format(CultureInfo.InvariantCulture,
@@ -192,7 +192,7 @@ namespace Microsoft.OData.JsonLight
             {
                 // We have processed the content-type header and should determine batch operation request
                 // content type now.
-                if (mediaType != null && mediaType.Type.Equals(MimeConstants.MimeTextType))
+                if (mediaType != null && mediaType.Type.Equals(MimeConstants.MimeTextType, StringComparison.Ordinal))
                 {
                     // Explicit check for matching of textual content-type.
                     result = BatchPayloadBodyContentType.Textual;

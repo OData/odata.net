@@ -1515,7 +1515,7 @@ namespace Microsoft.OData
             {
                 this.EnterScope(deltaLink is ODataDeltaLink ? WriterState.DeltaLink : WriterState.DeltaDeletedLink, deltaLink);
                 this.StartDeltaLink(deltaLink);
-            }).FollowOnSuccessWithTask((t)=>this.WriteEndAsync());
+            }).FollowOnSuccessWithTask((t) => this.WriteEndAsync());
         }
         
         /// <summary>
@@ -1598,9 +1598,9 @@ namespace Microsoft.OData
                            IEdmType itemType = EdmLibraryExtensions.GetPrimitiveTypeReference(primitiveValue.Value.GetType()).Definition;
                            this.CurrentResourceSetValidator.ValidateResource(itemType);
                        }
+
                        this.WritePrimitiveValue(primitiveValue);
-                   }
-                   ).FollowOnSuccessWithTask((t) => this.WriteEndAsync());
+                   }).FollowOnSuccessWithTask((t) => this.WriteEndAsync());
                });
         }
         

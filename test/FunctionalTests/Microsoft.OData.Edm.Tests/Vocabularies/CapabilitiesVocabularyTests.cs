@@ -764,10 +764,10 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
 
             Assert.Equal(4, referencedModels.Count());
 
-            Assert.True(referencedModels.Contains(EdmCoreModel.Instance));
-            Assert.True(referencedModels.Contains(CoreVocabularyModel.Instance));
-            Assert.True(referencedModels.Contains(ValidationVocabularyModel.Instance));
-            Assert.True(referencedModels.Contains(AuthorizationVocabularyModel.Instance));
+            Assert.Contains(EdmCoreModel.Instance, referencedModels);
+            Assert.Contains(CoreVocabularyModel.Instance, referencedModels);
+            Assert.Contains(ValidationVocabularyModel.Instance, referencedModels);
+            Assert.Contains(AuthorizationVocabularyModel.Instance, referencedModels);
         }
 
         [Theory]
@@ -786,7 +786,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
 
             // Core.Description
             var annotations = this.capVocModel.FindDeclaredVocabularyAnnotations(term).ToList();
-            Assert.Equal(1, annotations.Count());
+            Assert.Single(annotations);
             var description = annotations.SingleOrDefault(a => a.Term is CsdlSemanticsTerm && a.Term.Name == "Description");
             Assert.NotNull(description);
             Assert.Equal("Org.OData.Core.V1", description.Term.Namespace);

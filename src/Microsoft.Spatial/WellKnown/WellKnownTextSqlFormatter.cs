@@ -13,7 +13,7 @@ namespace Microsoft.Spatial
     /// </summary>
     public abstract class WellKnownTextSqlFormatter : SpatialFormatter<TextReader, TextWriter>
     {
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.Spatial.WellKnownTextSqlFormatter" /> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.Spatial.WellKnownTextSqlFormatter" /> class.</summary>
         /// <param name="creator">The implementation that created this instance.</param>
         protected WellKnownTextSqlFormatter(SpatialImplementation creator) : base(creator)
         {

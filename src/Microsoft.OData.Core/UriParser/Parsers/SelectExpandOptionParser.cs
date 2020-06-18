@@ -412,7 +412,7 @@ namespace Microsoft.OData.UriParser
                 var tmpPathToken = default(PathSegmentToken);
 
                 // create path token for each navigation properties.
-                if (pathToken.Identifier.Equals(UriQueryConstants.RefSegment))
+                if (pathToken.Identifier.Equals(UriQueryConstants.RefSegment, StringComparison.Ordinal))
                 {
                     tmpPathToken = new NonSystemToken(navigationProperty.Name, null, pathToken.NextToken.NextToken);
                     tmpPathToken = new NonSystemToken(UriQueryConstants.RefSegment, null, tmpPathToken);

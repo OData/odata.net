@@ -62,7 +62,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             foreach (var timeSpan in this.validTimeSpans)
             {
                 var result = EdmValueWriter.DurationAsXml(timeSpan);
-                Assert.True(EdmValueParser.DayTimeDurationValidator.IsMatch(result));
+                Assert.Matches(EdmValueParser.DayTimeDurationValidator, result);
             }
         }
 

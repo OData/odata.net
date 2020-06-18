@@ -17,12 +17,12 @@ namespace Microsoft.OData
     public abstract class ODataCollectionWriter
     {
         /// <summary>Start writing a collection.</summary>
-        /// <param name="collectionStart">The <see cref="T:Microsoft.OData.ODataCollectionStart" /> representing the collection.</param>
+        /// <param name="collectionStart">The <see cref="Microsoft.OData.ODataCollectionStart" /> representing the collection.</param>
         public abstract void WriteStart(ODataCollectionStart collectionStart);
 
         /// <summary>Asynchronously start writing a collection.</summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        /// <param name="collectionStart">The <see cref="T:Microsoft.OData.ODataCollectionStart" /> representing the collection.</param>
+        /// <param name="collectionStart">The <see cref="Microsoft.OData.ODataCollectionStart" /> representing the collection.</param>
         public abstract Task WriteStartAsync(ODataCollectionStart collectionStart);
 
         /// <summary>Write a collection item.</summary>

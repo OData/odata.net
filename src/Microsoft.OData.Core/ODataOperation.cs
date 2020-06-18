@@ -45,12 +45,12 @@ namespace Microsoft.OData
         /// <summary>The parameter names for this operation.</summary>
         private string parameterNames;
 
-        /// <summary>Gets or sets the URI to get metadata for the <see cref="T:Microsoft.OData.ODataAction" />.</summary>
-        /// <returns>The URI to get metadata for the <see cref="T:Microsoft.OData.ODataAction" />.</returns>
+        /// <summary>Gets or sets the URI to get metadata for the <see cref="Microsoft.OData.ODataAction" />.</summary>
+        /// <returns>The URI to get metadata for the <see cref="Microsoft.OData.ODataAction" />.</returns>
         public Uri Metadata { get; set; }
 
-        /// <summary>Gets or sets a human-readable description of the <see cref="T:Microsoft.OData.ODataAction" />.</summary>
-        /// <returns>A human-readable description of the <see cref="T:Microsoft.OData.ODataAction" />.</returns>
+        /// <summary>Gets or sets a human-readable description of the <see cref="Microsoft.OData.ODataAction" />.</summary>
+        /// <returns>A human-readable description of the <see cref="Microsoft.OData.ODataAction" />.</returns>
         public string Title
         {
             get
@@ -67,8 +67,8 @@ namespace Microsoft.OData
             }
         }
 
-        /// <summary>Gets or sets the URI to invoke the <see cref="T:Microsoft.OData.ODataAction" />.</summary>
-        /// <returns> The URI to invoke the <see cref="T:Microsoft.OData.ODataAction" />.</returns>
+        /// <summary>Gets or sets the URI to invoke the <see cref="Microsoft.OData.ODataAction" />.</summary>
+        /// <returns> The URI to invoke the <see cref="Microsoft.OData.ODataAction" />.</returns>
         public Uri Target
         {
             get

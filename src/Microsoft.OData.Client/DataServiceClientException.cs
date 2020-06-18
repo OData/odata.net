@@ -30,20 +30,20 @@ namespace Microsoft.OData.Client
 
         #region Constructors
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Client.DataServiceClientException" /> class with a system-supplied message that describes the error. </summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceClientException" /> class with a system-supplied message that describes the error. </summary>
         public DataServiceClientException()
             : this(Strings.DataServiceException_GeneralError)
         {
         }
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Client.DataServiceClientException" /> class with a specified message that describes the error. </summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceClientException" /> class with a specified message that describes the error. </summary>
         /// <param name="message">The message that describes the exception. The caller of this constructor is required to ensure that this string has been localized for the current system culture.</param>
         public DataServiceClientException(string message)
             : this(message, null)
         {
         }
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Client.DataServiceClientException" /> class with a specified error message and a reference to the inner exception that is the cause of this exception. </summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceClientException" /> class with a specified error message and a reference to the inner exception that is the cause of this exception. </summary>
         /// <param name="message">The message that describes the exception. The caller of this constructor is required to ensure that this string has been localized for the current system culture. </param>
         /// <param name="innerException">The exception that is the cause of the current exception. If the <paramref name="innerException" /> parameter is not null, the current exception is raised in a catch block that handles the inner exception. </param>
         public DataServiceClientException(string message, Exception innerException)
@@ -51,7 +51,7 @@ namespace Microsoft.OData.Client
         {
         }
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Client.DataServiceClientException" /> class. </summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceClientException" /> class. </summary>
         /// <param name="message">The string value that contains the error message.</param>
         /// <param name="statusCode">The integer value that contains status code.</param>
         public DataServiceClientException(string message, int statusCode)
@@ -59,7 +59,7 @@ namespace Microsoft.OData.Client
         {
         }
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Client.DataServiceClientException" /> class. </summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceClientException" /> class. </summary>
         /// <param name="message">The string value that contains the error message.</param>
         /// <param name="innerException">The System.Exception object that contains the inner exception.</param>
         /// <param name="statusCode">The integer value that contains status code.</param>
@@ -77,7 +77,7 @@ namespace Microsoft.OData.Client
 
         #region Public properties
 
-        /// <summary>Gets the HTTP error status code returned after <see cref="T:Microsoft.OData.Client.DataServiceClientException" />.</summary>
+        /// <summary>Gets the HTTP error status code returned after <see cref="Microsoft.OData.Client.DataServiceClientException" />.</summary>
         /// <returns>An integer value that represents the exception.</returns>
         public int StatusCode
         {

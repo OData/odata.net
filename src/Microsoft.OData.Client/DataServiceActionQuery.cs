@@ -70,9 +70,9 @@ namespace Microsoft.OData.Client
             return Context.ExecuteAsync(this.RequestUri, XmlConstants.HttpMethodPost, Parameters);
         }
 
-        /// <summary>Called to complete the <see cref="M:Microsoft.OData.Client.DataServiceActionQuery.BeginExecute``1(System.AsyncCallback,System.Object)" />.</summary>
+        /// <summary>Called to complete the <see cref="Microsoft.OData.Client.DataServiceActionQuery.BeginExecute(System.AsyncCallback,System.Object)" />.</summary>
         /// <returns>The result of the operation.</returns>
-        /// <param name="asyncResult">An <see cref="T:System.IAsyncResult" /> that represents the status of the asynchronous operation.</param>
+        /// <param name="asyncResult">An <see cref="System.IAsyncResult" /> that represents the status of the asynchronous operation.</param>
         /// <remarks>This method should be used in combination with the BeginExecute overload which
         /// expects the request uri to end with an action that returns void.</remarks>
         public OperationResponse EndExecute(IAsyncResult asyncResult)

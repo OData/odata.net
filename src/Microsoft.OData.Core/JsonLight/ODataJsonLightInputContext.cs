@@ -646,7 +646,7 @@ namespace Microsoft.OData.JsonLight
 
             if (operation == null)
             {
-                throw new ArgumentNullException("operation", ODataErrorStrings.ODataJsonLightInputContext_OperationCannotBeNullForCreateParameterReader("operation"));
+                throw new ArgumentNullException(nameof(operation), ODataErrorStrings.ODataJsonLightInputContext_OperationCannotBeNullForCreateParameterReader("operation"));
             }
         }
 

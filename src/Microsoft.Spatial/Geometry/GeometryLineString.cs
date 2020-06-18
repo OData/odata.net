@@ -12,7 +12,7 @@ namespace Microsoft.Spatial
     /// <summary>Represents the geometry line string.</summary>
     public abstract class GeometryLineString : GeometryCurve
     {
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.Spatial.GeometryLineString" /> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.Spatial.GeometryLineString" /> class.</summary>
         /// <param name="coordinateSystem">The coordinate system of this instance.</param>
         /// <param name="creator">The implementation that created this instance.</param>
         protected GeometryLineString(CoordinateSystem coordinateSystem, SpatialImplementation creator)

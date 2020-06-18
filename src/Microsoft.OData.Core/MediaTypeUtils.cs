@@ -408,7 +408,7 @@ namespace Microsoft.OData
             }
 
             // We're calling the ToArray here since not all platforms support the string.Join which takes IEnumerable.
-            var str = String.Join(", ", mediaTypeResolver.GetMediaTypeFormats(supportedPayloadKinds[0]).ToList().Select(x=>x.MediaType));
+            var str = String.Join(", ", mediaTypeResolver.GetMediaTypeFormats(supportedPayloadKinds[0]).ToList().Select(x => x.MediaType));
             string supportedTypesAsString = String.Join(", ", supportedPayloadKinds.SelectMany(pk => mediaTypeResolver.GetMediaTypeFormats(pk).Select(mt => mt.MediaType.ToText())).ToArray());
             throw new ODataContentTypeException(Strings.MediaTypeUtils_CannotDetermineFormatFromContentType(str, contentTypeName));
         }

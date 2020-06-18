@@ -26,7 +26,7 @@ namespace Microsoft.Spatial
         /// <summary>altitude portion of position</summary>
         private readonly double? z;
 
-        /// <summary>Creates a new instance of the <see cref="T:Microsoft.Spatial.GeometryPosition" /> from components.</summary>
+        /// <summary>Creates a new instance of the <see cref="Microsoft.Spatial.GeometryPosition" /> from components.</summary>
         /// <param name="x">The X portion of position.</param>
         /// <param name="y">The Y portion of position.</param>
         /// <param name="z">The altitude portion of position.</param>
@@ -40,7 +40,7 @@ namespace Microsoft.Spatial
             this.m = m;
         }
 
-        /// <summary>Creates a new instance of the <see cref="T:Microsoft.Spatial.GeometryPosition" /> from components.</summary>
+        /// <summary>Creates a new instance of the <see cref="Microsoft.Spatial.GeometryPosition" /> from components.</summary>
         /// <param name="x">The X portion of position.</param>
         /// <param name="y">The Y portion of position.</param>
         [SuppressMessage("Microsoft.Naming", "CA1704", Justification = "x, y make sense in context")]

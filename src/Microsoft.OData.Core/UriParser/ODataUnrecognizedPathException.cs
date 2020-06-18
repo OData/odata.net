@@ -57,7 +57,7 @@ namespace Microsoft.OData.UriParser
         }
 
 #if ORCAS
-        /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.ODataUnrecognizedPathException" /> class from the  specified SerializationInfo and StreamingContext instances.</summary>
+        /// <summary>Creates a new instance of the <see cref="Microsoft.OData.ODataUnrecognizedPathException" /> class from the  specified SerializationInfo and StreamingContext instances.</summary>
         /// <param name="info"> A SerializationInfo containing the information required to serialize the new ODataUnrecognizedPathException. </param>
         /// <param name="context"> A StreamingContext containing the source of the serialized stream  associated with the new ODataUnrecognizedPathException. </param>
         [SuppressMessage("Microsoft.Design", "CA1047", Justification = "Follows serialization info pattern.")]

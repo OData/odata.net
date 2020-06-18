@@ -161,7 +161,7 @@ namespace Microsoft.Spatial
                             throw new FormatException(Strings.GmlReader_InvalidSpatialType(this.reader.LocalName));
                     }
                 }
-                else if (object.ReferenceEquals(this.reader.NamespaceURI, this.fullGlobeNamespace) && this.reader.LocalName.Equals(GmlConstants.FullGlobe))
+                else if (object.ReferenceEquals(this.reader.NamespaceURI, this.fullGlobeNamespace) && this.reader.LocalName.Equals(GmlConstants.FullGlobe, StringComparison.Ordinal))
                 {
                     this.ReadAttributes(readCoordinateSystem);
                     this.ParseGmlFullGlobeElement();

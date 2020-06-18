@@ -60,8 +60,8 @@ namespace Microsoft.OData
         /// <returns>Returns an <see cref="ODataReader"/> to read the resource set value when the state is ODataParameterReaderState.ResourceSet.</returns>
         public abstract ODataReader CreateResourceSetReader();
 
-        /// <summary> Creates an <see cref="T:Microsoft.OData.ODataCollectionReader" /> to read the collection value when the state is ODataParameterReaderState.Collection. </summary>
-        /// <returns>An <see cref="T:Microsoft.OData.ODataCollectionReader" /> to read the collection value when the state is ODataParameterReaderState.Collection.</returns>
+        /// <summary> Creates an <see cref="Microsoft.OData.ODataCollectionReader" /> to read the collection value when the state is ODataParameterReaderState.Collection. </summary>
+        /// <returns>An <see cref="Microsoft.OData.ODataCollectionReader" /> to read the collection value when the state is ODataParameterReaderState.Collection.</returns>
         /// <remarks>
         /// When the state is ODataParameterReaderState.Collection, the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
         /// and the Value property of the <see cref="ODataParameterReader"/> returns null. Calling this method in any other state will cause an ODataException to be thrown.

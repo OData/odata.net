@@ -23,20 +23,20 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Represents an expression that contains the query to the data service.</summary>
-        /// <returns>An <see cref="T:System.Linq.Expressions.Expression" /> object that represents the query.</returns>
+        /// <returns>An <see cref="System.Linq.Expressions.Expression" /> object that represents the query.</returns>
         public abstract Expression Expression
         {
             get;
         }
 
         /// <summary>Represents the query provider instance.</summary>
-        /// <returns>An <see cref="T:System.Linq.IQueryProvider" /> representing the data source provider.</returns>
+        /// <returns>An <see cref="System.Linq.IQueryProvider" /> representing the data source provider.</returns>
         public abstract IQueryProvider Provider
         {
             get;
         }
 
-        /// <summary>Gets the <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection returned by the query.</summary>
+        /// <summary>Gets the <see cref="System.Collections.IEnumerator" /> object that can be used to iterate through the collection returned by the query.</summary>
         /// <returns>An enumerator over the query results.</returns>
         /// <remarks>Expect derived class to override this with an explicit interface implementation</remarks>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1033", Justification = "required for this feature")]
@@ -47,8 +47,8 @@ namespace Microsoft.OData.Client
 
 #if !PORTABLELIB
         /// <summary>Executes the query against the data service.</summary>
-        /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains the results of the query operation.</returns>
-        /// <exception cref="T:Microsoft.OData.Client.DataServiceQueryException">When the data service returns an HTTP 404: Resource Not Found error.</exception>
+        /// <returns>An <see cref="System.Collections.Generic.IEnumerable{T}" /> that contains the results of the query operation.</returns>
+        /// <exception cref="Microsoft.OData.Client.DataServiceQueryException">When the data service returns an HTTP 404: Resource Not Found error.</exception>
         public virtual IEnumerable Execute()
         {
             return this.ExecuteInternal();
@@ -56,7 +56,7 @@ namespace Microsoft.OData.Client
 #endif
 
         /// <summary>Asynchronously sends a request to execute the data service query.</summary>
-        /// <returns>An <see cref="T:System.IAsyncResult" /> object that is used to track the status of the asynchronous operation.</returns>
+        /// <returns>An <see cref="System.IAsyncResult" /> object that is used to track the status of the asynchronous operation.</returns>
         /// <param name="callback">Delegate to invoke when results are available for client consumption.</param>
         /// <param name="state">User-defined state object passed to the callback.</param>
         public virtual IAsyncResult BeginExecute(AsyncCallback callback, object state)
@@ -65,16 +65,16 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Asynchronously sends a request to execute the data service query.</summary>
-        /// <returns>A task represents An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains the results of the query operation.</returns>
+        /// <returns>A task represents An <see cref="System.Collections.Generic.IEnumerable{T}" /> that contains the results of the query operation.</returns>
         public virtual Task<IEnumerable> ExecuteAsync()
         {
             return Task<IEnumerable>.Factory.FromAsync(this.BeginExecute, this.EndExecute, null);
         }
 
         /// <summary>Called to complete the asynchronous operation of executing a data service query.</summary>
-        /// <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains the results of the query operation.</returns>
-        /// <param name="asyncResult">The result from the <see cref="M:Microsoft.OData.Client.DataServiceQuery.BeginExecute(System.AsyncCallback,System.Object)" /> operation that contains the query results.</param>
-        /// <exception cref="T:Microsoft.OData.Client.DataServiceQueryException">When the data service returns an HTTP 404: Resource Not Found error.</exception>
+        /// <returns>An <see cref="System.Collections.Generic.IEnumerable{T}" /> that contains the results of the query operation.</returns>
+        /// <param name="asyncResult">The result from the <see cref="Microsoft.OData.Client.DataServiceQuery.BeginExecute(System.AsyncCallback,System.Object)" /> operation that contains the query results.</param>
+        /// <exception cref="Microsoft.OData.Client.DataServiceQueryException">When the data service returns an HTTP 404: Resource Not Found error.</exception>
         public virtual IEnumerable EndExecute(IAsyncResult asyncResult)
         {
             return this.EndExecuteInternal(asyncResult);

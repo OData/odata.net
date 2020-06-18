@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.Edm.Validation
 {
+    /// <summary>
     /// </summary>
     public enum Severity
     {

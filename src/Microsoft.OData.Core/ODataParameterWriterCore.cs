@@ -192,7 +192,7 @@ namespace Microsoft.OData
                 () => this.InterceptException(() => this.CreateCollectionWriterImplementation(parameterName, itemTypeReference)));
         }
 
-        /// <summary> Creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a resource. </summary>
+        /// <summary> Creates an <see cref="Microsoft.OData.ODataWriter" /> to write a resource. </summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <returns>The created writer.</returns>
         public sealed override ODataWriter CreateResourceWriter(string parameterName)
@@ -203,9 +203,9 @@ namespace Microsoft.OData
         }
 
 
-        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.ODataWriter" /> to  write a resource.</summary>
+        /// <summary>Asynchronously creates an <see cref="Microsoft.OData.ODataWriter" /> to  write a resource.</summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
-        /// <returns>The asynchronously created <see cref="T:Microsoft.OData.ODataWriter" />.</returns>
+        /// <returns>The asynchronously created <see cref="Microsoft.OData.ODataWriter" />.</returns>
         public sealed override Task<ODataWriter> CreateResourceWriterAsync(string parameterName)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(parameterName, "parameterName");
@@ -214,7 +214,7 @@ namespace Microsoft.OData
                 () => this.InterceptException(() => this.CreateResourceWriterImplementation(parameterName, itemTypeReference)));
         }
 
-        /// <summary> Creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a resource set. </summary>
+        /// <summary> Creates an <see cref="Microsoft.OData.ODataWriter" /> to write a resource set. </summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <returns>The created writer.</returns>
         public sealed override ODataWriter CreateResourceSetWriter(string parameterName)
@@ -225,9 +225,9 @@ namespace Microsoft.OData
         }
 
 
-        /// <summary>Asynchronously creates an <see cref="T:Microsoft.OData.ODataWriter" /> to  write a resource set.</summary>
+        /// <summary>Asynchronously creates an <see cref="Microsoft.OData.ODataWriter" /> to  write a resource set.</summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
-        /// <returns>The asynchronously created <see cref="T:Microsoft.OData.ODataWriter" />.</returns>
+        /// <returns>The asynchronously created <see cref="Microsoft.OData.ODataWriter" />.</returns>
         public sealed override Task<ODataWriter> CreateResourceSetWriterAsync(string parameterName)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(parameterName, "parameterName");

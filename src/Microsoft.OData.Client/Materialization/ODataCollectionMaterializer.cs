@@ -120,7 +120,7 @@ namespace Microsoft.OData.Client.Materialization
             /// Gets the current element in the collection.
             /// </summary>
             /// <returns>The current element in the collection.</returns>
-            /// <exception cref="T:System.InvalidOperationException">The enumerator is positioned before the first element of the collection or after the last element.-or- The collection was modified after the enumerator was created.</exception>
+            /// <exception cref="System.InvalidOperationException">The enumerator is positioned before the first element of the collection or after the last element.-or- The collection was modified after the enumerator was created.</exception>
             public object Current
             {
                 get { return this.collectionReader.Item; }
@@ -130,7 +130,7 @@ namespace Microsoft.OData.Client.Materialization
             /// Returns an enumerator that iterates through a collection.
             /// </summary>
             /// <returns>
-            /// An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
+            /// An <see cref="System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
             /// </returns>
             public IEnumerator GetEnumerator()
             {
@@ -143,7 +143,7 @@ namespace Microsoft.OData.Client.Materialization
             /// <returns>
             /// true if the enumerator was successfully advanced to the next element; false if the enumerator has passed the end of the collection.
             /// </returns>
-            /// <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
+            /// <exception cref="System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
             public bool MoveNext()
             {
                 // Move to the next value
@@ -159,7 +159,7 @@ namespace Microsoft.OData.Client.Materialization
             /// <summary>
             /// Sets the enumerator to its initial position, which is before the first element in the collection.
             /// </summary>
-            /// <exception cref="T:System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
+            /// <exception cref="System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
             public void Reset()
             {
                 throw new InvalidOperationException(DSClient.Strings.AtomMaterializer_ResetAfterEnumeratorCreationError);

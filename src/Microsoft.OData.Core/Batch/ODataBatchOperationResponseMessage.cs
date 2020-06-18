@@ -138,7 +138,7 @@ namespace Microsoft.OData
         }
 
         /// <summary> Method to implement a custom URL resolution scheme. This method returns null if not custom resolution is desired. If the method returns a non-null URL that value will be used without further validation. </summary>
-        /// <returns> A <see cref="T:System.Uri" /> instance that reflects the custom resolution of the method arguments into a URL or null if no custom resolution is desired; in that case the default resolution is used. </returns>
+        /// <returns> A <see cref="System.Uri" /> instance that reflects the custom resolution of the method arguments into a URL or null if no custom resolution is desired; in that case the default resolution is used. </returns>
         /// <param name="baseUri">The (optional) base URI to use for the resolution.</param>
         /// <param name="payloadUri">The URI read from the payload.</param>
         Uri IODataPayloadUriConverter.ConvertPayloadUri(Uri baseUri, Uri payloadUri)

@@ -114,7 +114,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         internal static string ParameterizedTargetName(IList<IEdmOperationParameter> parameters)
         {
             int index = 0;
-            int parameterCount = parameters.Count();
+            int parameterCount = parameters.Count;
 
             StringBuilder sb = new StringBuilder("(");
             foreach (IEdmOperationParameter parameter in parameters)

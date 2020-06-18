@@ -47,8 +47,8 @@ namespace Microsoft.OData.Client
             this.results = results;
         }
 
-        /// <summary>Gets the <see cref="T:Microsoft.OData.Client.DataServiceQuery" /> that generates the <see cref="T:Microsoft.OData.Client.QueryOperationResponse" /> items. </summary>
-        /// <returns>A <see cref="T:Microsoft.OData.Client.DataServiceQuery" /> object.</returns>
+        /// <summary>Gets the <see cref="Microsoft.OData.Client.DataServiceQuery" /> that generates the <see cref="Microsoft.OData.Client.QueryOperationResponse" /> items. </summary>
+        /// <returns>A <see cref="Microsoft.OData.Client.DataServiceQuery" /> object.</returns>
         public DataServiceRequest Query
         {
             get { return this.query; }
@@ -56,7 +56,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>Gets the server result set count value from a query, if the query has requested the value.</summary>
         /// <returns>The return value can be either a zero or positive value equal to the number of entities in the set on the server.</returns>
-        /// <exception cref="T:System.InvalidOperationException">Thrown when the count tag is not found in the response stream.</exception>
+        /// <exception cref="System.InvalidOperationException">Thrown when the count tag is not found in the response stream.</exception>
         [Obsolete("Please use Count")]
         public virtual long TotalCount
         {
@@ -68,7 +68,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>Gets the server result set count value from a query, if the query has requested the value.</summary>
         /// <returns>The return value can be either a zero or positive value equal to the number of entities in the set on the server.</returns>
-        /// <exception cref="T:System.InvalidOperationException">Thrown when the count tag is not found in the response stream.</exception>
+        /// <exception cref="System.InvalidOperationException">Thrown when the count tag is not found in the response stream.</exception>
         public virtual long Count
         {
             get
@@ -91,8 +91,8 @@ namespace Microsoft.OData.Client
             }
         }
 
-        /// <summary>Executes the <see cref="T:Microsoft.OData.Client.DataServiceQuery" /> and returns <see cref="T:Microsoft.OData.Client.QueryOperationResponse" /> items. </summary>
-        /// <returns>The enumerator to a collection of <see cref="T:Microsoft.OData.Client.QueryOperationResponse" /> items.</returns>
+        /// <summary>Executes the <see cref="Microsoft.OData.Client.DataServiceQuery" /> and returns <see cref="Microsoft.OData.Client.QueryOperationResponse" /> items. </summary>
+        /// <returns>The enumerator to a collection of <see cref="Microsoft.OData.Client.QueryOperationResponse" /> items.</returns>
         /// <remarks>In the case of Collection(primitive) or Collection(complex), the entire collection is
         /// materialized when this is called.</remarks>
         public IEnumerator GetEnumerator()
@@ -100,14 +100,14 @@ namespace Microsoft.OData.Client
             return this.GetEnumeratorHelper<IEnumerator>(() => this.Results.GetEnumerator());
         }
 
-        /// <summary>Gets a <see cref="T:Microsoft.OData.Client.DataServiceQueryContinuation" /> object containing the URI that is used to retrieve the next results page.</summary>
+        /// <summary>Gets a <see cref="Microsoft.OData.Client.DataServiceQueryContinuation" /> object containing the URI that is used to retrieve the next results page.</summary>
         /// <returns>An object containing the URI that is used to return the next results page.</returns>
         public DataServiceQueryContinuation GetContinuation()
         {
             return this.results.GetContinuation(null);
         }
 
-        /// <summary>Gets a <see cref="T:Microsoft.OData.Client.DataServiceQueryContinuation" /> object containing the URI that is used to retrieve the next page of related entities in the specified collection.</summary>
+        /// <summary>Gets a <see cref="Microsoft.OData.Client.DataServiceQueryContinuation" /> object containing the URI that is used to retrieve the next page of related entities in the specified collection.</summary>
         /// <returns>A continuation object that points to the next page for the collection.</returns>
         /// <param name="collection">The collection of related objects being loaded.</param>
         public DataServiceQueryContinuation GetContinuation(IEnumerable collection)
@@ -115,7 +115,7 @@ namespace Microsoft.OData.Client
             return this.results.GetContinuation(collection);
         }
 
-        /// <summary>Gets a <see cref="T:Microsoft.OData.Client.DataServiceQueryContinuation`1" /> object that contains the URI that is used to retrieve the next page of related entities in the specified collection.</summary>
+        /// <summary>Gets a <see cref="Microsoft.OData.Client.DataServiceQueryContinuation{T}" /> object that contains the URI that is used to retrieve the next page of related entities in the specified collection.</summary>
         /// <returns>A continuation object that points to the next page for the collection.</returns>
         /// <param name="collection">The collection of related objects being loaded.</param>
         /// <typeparam name="T">The type of the items in the collection.</typeparam>
@@ -149,7 +149,7 @@ namespace Microsoft.OData.Client
 #endif
         }
 
-        /// <summary>Gets the enumeration helper for the <see cref="T:Microsoft.OData.Client.QueryOperationResponse" />.</summary>
+        /// <summary>Gets the enumeration helper for the <see cref="Microsoft.OData.Client.QueryOperationResponse" />.</summary>
         /// <param name="getEnumerator">The enumerator.</param>
         /// <typeparam name="T">The generic type.</typeparam>
         /// <returns>An enumerator to enumerator through the results.</returns>
@@ -157,7 +157,7 @@ namespace Microsoft.OData.Client
         {
             if (getEnumerator == null)
             {
-                throw new ArgumentNullException("getEnumerator");
+                throw new ArgumentNullException(nameof(getEnumerator));
             }
 
             if (this.Results.Context != null)

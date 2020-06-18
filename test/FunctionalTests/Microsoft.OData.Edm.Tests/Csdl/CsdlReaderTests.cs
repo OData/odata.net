@@ -539,7 +539,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Action parseAction = () => CsdlReader.Parse(XElement.Parse(EdmxwithMultipleEntityContainers).CreateReader());
             var exception = Assert.Throws<EdmParseException>(parseAction);
             Assert.Contains(Strings.CsdlParser_MetadataDocumentCannotHaveMoreThanOneEntityContainer, exception.Message);
-            Assert.Equal(1, exception.Errors.Count);
+            Assert.Single(exception.Errors);
         }
 
         [Fact]

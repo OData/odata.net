@@ -12,7 +12,7 @@ namespace Microsoft.Spatial
     /// <summary>Represents a geography line string consist of an array of geo points.</summary>
     public abstract class GeographyLineString : GeographyCurve
     {
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.Spatial.GeographyLineString" /> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.Spatial.GeographyLineString" /> class.</summary>
         /// <param name="coordinateSystem">The coordinate system of this instance.</param>
         /// <param name="creator">The implementation that created this instance.</param>
         protected GeographyLineString(CoordinateSystem coordinateSystem, SpatialImplementation creator)

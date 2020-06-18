@@ -31,7 +31,7 @@ namespace Microsoft.OData.Client
         /// false. This parameter is ignored for properties and events; see Remarks.
         /// </param>
         /// <returns>
-        /// An <see cref="T:System.Collections.Generic.IEnumerable`1" /> of custom attributes applied to this member, or an array with zero
+        /// An <see cref="System.Collections.Generic.IEnumerable{T}" /> of custom attributes applied to this member, or an array with zero
         /// elements if no attributes assignable to attributeType have been applied.
         /// </returns>
         public static IEnumerable<object> GetCustomAttributes(Type type, Type attributeType, bool inherit)

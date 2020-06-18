@@ -245,7 +245,7 @@ namespace Microsoft.OData.Edm
         {
             if (values == null)
             {
-                throw new ArgumentNullException("values");
+                throw new ArgumentNullException(nameof(values));
             }
 
             if (separator == null)
@@ -295,7 +295,7 @@ namespace Microsoft.OData.Edm
         internal static bool IsQualifiedName(string name)
         {
             string[] nameTokens = name.Split('.');
-            if (nameTokens.Count() < 2)
+            if (nameTokens.Length < 2)
             {
                 return false;
             }

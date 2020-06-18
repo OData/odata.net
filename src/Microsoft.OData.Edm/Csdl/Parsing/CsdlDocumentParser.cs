@@ -960,7 +960,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 {
                     case CsdlConstants.Value_Collection:
                         {
-                            string elementTypeName = typeInformation.Count() > 1 ? typeInformation[1] : typeString;
+                            string elementTypeName = typeInformation.Length > 1 ? typeInformation[1] : typeString;
                             elementType = new CsdlExpressionTypeReference(
                                           new CsdlCollectionType(
                                           this.ParseNamedTypeReference(elementTypeName, isNullable, parentLocation), parentLocation), isNullable, parentLocation);
@@ -969,7 +969,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                         break;
                     case CsdlConstants.Value_Ref:
                         {
-                            string elementTypeName = typeInformation.Count() > 1 ? typeInformation[1] : typeString;
+                            string elementTypeName = typeInformation.Length > 1 ? typeInformation[1] : typeString;
                             elementType = new CsdlExpressionTypeReference(
                                           new CsdlEntityReferenceType(
                                           this.ParseNamedTypeReference(elementTypeName, isNullable, parentLocation), parentLocation), CsdlConstants.Default_Nullable, parentLocation);
@@ -996,8 +996,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 }
                 else
                 {
-                    Debug.Assert(this.Errors.Count() > 0, "There should be an error reported for the missing required type attribute.");
+                    Debug.Assert(this.Errors.Any(), "There should be an error reported for the missing required type attribute.");
                 }
+
                 elementType = new CsdlNamedTypeReference(String.Empty, isNullable, parentLocation);
             }
 
@@ -1113,8 +1114,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             XmlElementValue optionalAnnotationValue = childValues.Where(c =>
                 c is XmlElementValue<CsdlAnnotation> &&
                     (c.ValueAs<CsdlAnnotation>().Term == CoreVocabularyModel.OptionalParameterTerm.ShortQualifiedName() ||
-                     c.ValueAs<CsdlAnnotation>().Term == CoreVocabularyModel.OptionalParameterTerm.FullName())
-            ).FirstOrDefault();
+                     c.ValueAs<CsdlAnnotation>().Term == CoreVocabularyModel.OptionalParameterTerm.FullName()))
+                .FirstOrDefault();
 
             if (optionalAnnotationValue != null)
             {

@@ -12,7 +12,7 @@ namespace Microsoft.Spatial
     /// <summary>Represents the Geometry polygon.</summary>
     public abstract class GeometryPolygon : GeometrySurface
     {
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.Spatial.GeometryPolygon" /> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.Spatial.GeometryPolygon" /> class.</summary>
         /// <param name="coordinateSystem">The CoordinateSystem.</param>
         /// <param name="creator">The implementation that created this instance.</param>
         protected GeometryPolygon(CoordinateSystem coordinateSystem, SpatialImplementation creator)

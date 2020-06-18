@@ -987,7 +987,7 @@ namespace Microsoft.OData.Edm
                 {
                     operationImports = model.EntityContainer.FindOperationImportsExtended(simpleOperationName);
 
-                    if (operationImports != null && operationImports.Count() > 0)
+                    if (operationImports != null && operationImports.Any())
                     {
                         return true;
                     }
