@@ -40,7 +40,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public static readonly SingleValueNode FakeSingleIntPrimitive =
             new ConstantNode(100);
 
-        public static readonly SingleValueNode FakeSingleSinglePrimitive =
+        public static readonly SingleValueNode FakeSingleFloatPrimitive =
             new ConstantNode(100.50f);
 
         public static readonly SingleValueNode FakeSingleOpenProperty =
@@ -93,9 +93,9 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             return FakeSingleIntPrimitive;
         }
 
-        public static SingleValueNode BindMethodReturningASingleSinglePrimitive(QueryToken token)
+        public static SingleValueNode BindMethodReturningASingleFloatPrimitive(QueryToken token)
         {
-            return FakeSingleSinglePrimitive;
+            return FakeSingleFloatPrimitive;
         }
 
         public static SingleValueNode BindMethodReturningASingleOpenProperty(QueryToken token)

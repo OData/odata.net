@@ -64,7 +64,7 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
         {
             IEnumerable<QueryToken> tokens = _parser.ParseApply("aggregate(UnitPrice with average as AveragePrice)");
 
-            ApplyBinder binder = new ApplyBinder(FakeBindMethods.BindMethodReturningASingleSinglePrimitive, _bindingState);
+            ApplyBinder binder = new ApplyBinder(FakeBindMethods.BindMethodReturningASingleFloatPrimitive, _bindingState);
             ApplyClause actual = binder.BindApply(tokens);
 
             Assert.NotNull(actual);
@@ -75,7 +75,7 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
 
             AggregateExpression statement = Assert.IsType<AggregateExpression>(Assert.Single(aggregate.AggregateExpressions));
             Assert.NotNull(statement.Expression);
-            Assert.Same(FakeBindMethods.FakeSingleSinglePrimitive, statement.Expression);
+            Assert.Same(FakeBindMethods.FakeSingleFloatPrimitive, statement.Expression);
             Assert.Equal(AggregationMethod.Average, statement.Method);
             Assert.Equal("AveragePrice", statement.Alias);
         }
