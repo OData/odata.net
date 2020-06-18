@@ -337,7 +337,7 @@ namespace Microsoft.OData.JsonLight
 
             value = converter.ConvertToPayloadValue(value, expectedTypeReference);
 
-            if (actualTypeReference != null && (actualTypeReference.IsSpatial() || actualTypeReference.IsDictionary()))
+            if (actualTypeReference != null && actualTypeReference.IsSpatial() || actualTypeReference.IsDictionaryOfStringObject() || actualTypeReference.IsDictionaryOfStringString())
             {
                 PrimitiveConverter.Instance.WriteJsonLight(value, this.JsonWriter);
             }

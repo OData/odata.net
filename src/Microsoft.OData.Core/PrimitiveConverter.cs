@@ -21,14 +21,17 @@ namespace Microsoft.OData
     /// </summary>
     internal sealed class PrimitiveConverter
     {
+        /// <summary>Instance of DictionaryStringObject to register for Dictionary of String, Object types.</summary>
+        private static readonly IPrimitiveTypeConverter dictionaryStringObjectTypeConverter = new DictionaryOfStringObjectTypeConverter();
+
+        /// <summary>Instance of DictionaryStringObject to register for Dictionary of String, String types.</summary>
+        private static readonly IPrimitiveTypeConverter dictionaryStringStringTypeConverter = new DictionaryOfStringStringTypeConverter();
+
         /// <summary>Instance of GeographyTypeConverter to register for all Geography types.</summary>
         private static readonly IPrimitiveTypeConverter geographyTypeConverter = new GeographyTypeConverter();
 
         /// <summary>Instance of GeographyTypeConverter to register for all Geography types.</summary>
         private static readonly IPrimitiveTypeConverter geometryTypeConverter = new GeometryTypeConverter();
-
-        /// <summary>Instance of DictionaryTypeConverter to register for all Dictionary types.</summary>
-        private static readonly IPrimitiveTypeConverter dictionaryStringStringTypeConverter = new DictionaryOfStringStringTypeConverter();
 
         /// <summary>Set of type converters that implement their own conversion using IPrimitiveTypeConverter.</summary>
         private static readonly PrimitiveConverter primitiveConverter =
@@ -120,6 +123,11 @@ namespace Microsoft.OData
 
                 primitiveTypeConverter = bestMatch.Value;
                 return bestMatch.Value != null;
+            }
+            else if (typeof(IDictionary<string, object>).IsAssignableFrom(type))
+            {
+                primitiveTypeConverter = dictionaryStringObjectTypeConverter;
+                return true;
             }
             else if (typeof(IDictionary<string, string>).IsAssignableFrom(type))
             {

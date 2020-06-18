@@ -8,12 +8,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 
 namespace Microsoft.OData
 {
     /// <summary>
-    /// Handles serialization and deserialization for Dictionary of String, String.
+    /// Handles serialization and deserialization for types derived from Geography.
     /// </summary>
     internal sealed class DictionaryOfStringStringTypeConverter : IPrimitiveTypeConverter
     {
@@ -44,11 +45,11 @@ namespace Microsoft.OData
         /// <param name="jsonWriter">Instance of JsonWriter.</param>
         public void WriteJsonLight(object instance, IJsonWriter jsonWriter)
         {
-            var dictionary = (Dictionary<string, string>)instance;
+            var dictionary = (IDictionary<string, string>)instance;
 
             jsonWriter.StartObjectScope();
 
-            foreach(var item in dictionary)
+            foreach (var item in dictionary)
             {
                 jsonWriter.WriteName(item.Key);
                 jsonWriter.WriteValue(item.Value);

@@ -306,6 +306,8 @@ namespace Microsoft.OData.Edm
                     break;
                 case EdmPrimitiveTypeKind.Boolean:
                 case EdmPrimitiveTypeKind.Byte:
+                case EdmPrimitiveTypeKind.DictionaryOfStringObject:
+                case EdmPrimitiveTypeKind.DictionaryOfStringString:
                 case EdmPrimitiveTypeKind.Double:
                 case EdmPrimitiveTypeKind.Guid:
                 case EdmPrimitiveTypeKind.Int16:
@@ -317,7 +319,6 @@ namespace Microsoft.OData.Edm
                 case EdmPrimitiveTypeKind.Date:
                 case EdmPrimitiveTypeKind.PrimitiveType:
                 case EdmPrimitiveTypeKind.None:
-                case EdmPrimitiveTypeKind.DictionaryOfStringString:
                     this.ProcessPrimitiveTypeReference(reference);
                     break;
                 default:
