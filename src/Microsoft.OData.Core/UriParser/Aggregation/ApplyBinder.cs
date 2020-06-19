@@ -182,6 +182,8 @@ namespace Microsoft.OData.UriParser.Aggregation
                             return EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, expressionType.IsNullable);
                         case EdmPrimitiveTypeKind.Decimal:
                             return EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Decimal, expressionType.IsNullable);
+                        case EdmPrimitiveTypeKind.Single:
+                            return EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Single, expressionType.IsNullable);
                         case EdmPrimitiveTypeKind.None:
                             return expressionType;
                         default:
