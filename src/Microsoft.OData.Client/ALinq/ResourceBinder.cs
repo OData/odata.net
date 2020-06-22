@@ -45,9 +45,9 @@ namespace Microsoft.OData.Client
         private readonly DataServiceContext context;
 
         /// <summary>
-        /// /// <summary>Whether a Where clause that just compares the id property generates a $filter query option.</summary>
+        /// If true, a Where clause that compares only the key property, will generate a $filter query option.
         /// </summary>
-        private static bool idPredicateGeneratesFilterQueryOption;
+        private static bool keyComparisonGeneratesFilterQuery;
 
         /// <summary>Convenience property: model.</summary>
         private ClientEdmModel Model
@@ -62,7 +62,7 @@ namespace Microsoft.OData.Client
         private ResourceBinder(DataServiceContext context)
         {
             this.context = context;
-            idPredicateGeneratesFilterQueryOption = context.IdPredicateGeneratesFilterQueryOption;
+            keyComparisonGeneratesFilterQuery = context.KeyComparisonGeneratesFilterQuery;
         }
 
         /// <summary>Analyzes and binds the specified expression.</summary>
@@ -280,8 +280,8 @@ namespace Microsoft.OData.Client
                     keyPredicates = ExtractKeyPredicate(input, currentPredicates, model, out nonKeyPredicates);
                 }
 
-                // A key predicate can only be applied if IdPredicateGeneratesFilterQueryOption=false
-                if (keyPredicates != null && !idPredicateGeneratesFilterQueryOption)
+                // A key predicate should only be applied if keyComparisonGeneratesFilterQuery=false
+                if (keyPredicates != null && !keyComparisonGeneratesFilterQuery)
                 {
                     input.SetKeyPredicate(keyPredicates);
                     input.RemoveFilterExpression();
@@ -294,7 +294,7 @@ namespace Microsoft.OData.Client
                     input.ConvertKeyToFilterExpression();
                 }
 
-                if (keyPredicates == null || idPredicateGeneratesFilterQueryOption)
+                if (keyPredicates == null || keyComparisonGeneratesFilterQuery)
                 {
                     input.ConvertKeyToFilterExpression();
                     input.AddFilter(inputPredicates);

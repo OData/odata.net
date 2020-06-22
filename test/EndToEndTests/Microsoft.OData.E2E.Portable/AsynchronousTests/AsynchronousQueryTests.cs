@@ -1198,34 +1198,29 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
         }
 
         /// <summary>
-        /// When DataServiceContext.IdPredicateGeneratesFilterQueryOption=true, An expression with an Id as a predicate should create an Uri with a $filter in query options
+        /// When DataServiceContext.KeyComparisonGeneratesFilterQuery=true, An expression that compares only the key property, will generate a $filter query option.
         /// </summary>
         [Fact]
-        public void Linq_Where_Generates_Filter_When_IdPredicateGeneratesFilterQueryOption_Is_True()
+        public void Linq_Where_Generates_Filter_When_KeyComparisonGeneratesFilterQuery_Is_True()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
-            context.IdPredicateGeneratesFilterQueryOption = true;
-            var query = (from c in context.Customer
-                         where c.CustomerId == -10
-                         select new Customer { Name = c.Name, CustomerId = c.CustomerId }) as DataServiceQuery<Customer>;
+            context.KeyComparisonGeneratesFilterQuery = true;
+            var query = context.Customer.Where(c => c.CustomerId == -10);
             var uri = query.ToString();
-            Assert.Contains("$filter=CustomerId eq -10", uri);
             Assert.Equal("$filter=CustomerId eq -10", uri);
         }
 
         /// <summary>
-        /// When DataServiceContext.IdPredicateGeneratesFilterQueryOption=false, An expression with an Id as a predicate should create a ByKey Uri
+        /// When DataServiceContext.KeyComparisonGeneratesFilterQuery=false, An expression that compares only the key property, should create a ByKey Uri.
         /// </summary>
         [Fact]
-        public void Linq_Where_Generates_ByKey_When_IdPredicateGeneratesFilterQueryOption_Is_False()
+        public void Linq_Where_Generates_ByKey_When_KeyComparisonGeneratesFilterQuery_Is_False()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
-            context.IdPredicateGeneratesFilterQueryOption = false;
-            var query = (from c in context.Customer
-                         where c.CustomerId == -10
-                         select new Customer { Name = c.Name, CustomerId = c.CustomerId }) as DataServiceQuery<Customer>;
+            // By default context.KeyComparisonGeneratesFilterQuery = false; 
+            // So we don't need to set it
+            var query = context.Customer.Where(c => c.CustomerId == -10);
             var uri = query.ToString();
-            Assert.Contains("Customer(-10)", uri);
             Assert.Equal("Customer(-10)", uri);
         }
 
