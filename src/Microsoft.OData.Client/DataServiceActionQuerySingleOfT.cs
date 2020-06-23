@@ -73,7 +73,7 @@ namespace Microsoft.OData.Client
             return Task<T>.Factory.FromAsync(this.BeginGetValue, this.EndGetValue, null);
         }
 
-        /// <summary>Called to complete the <see cref="Microsoft.OData.Client.ActionSingleReturnOfT.BeginExecute``1(System.AsyncCallback,System.Object)" />.</summary>
+        /// <summary>Called to complete the <see cref="Microsoft.OData.Client.ActionSingleReturnOfT.BeginExecute{AsyncCallback,Object}" />.</summary>
         /// <returns>The results returned by the query operation.</returns>
         /// <param name="asyncResult">
         ///   <see cref="System.IAsyncResult" /> object.</param>
