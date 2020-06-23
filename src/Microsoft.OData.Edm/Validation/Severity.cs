@@ -18,7 +18,7 @@ namespace Microsoft.OData.Edm.Validation
         /// <summary>
         /// Informational Message
         /// </summary>
-        Message = 1,
+        Info = 1,
 
         /// <summary>
         /// Warning
