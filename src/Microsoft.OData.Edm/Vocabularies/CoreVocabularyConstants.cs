@@ -11,6 +11,9 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
     /// </summary>
     public static class CoreVocabularyConstants
     {
+        /// <summary>Org.OData.Core.V1</summary>
+        public const string CoreNamespace = "Org.OData.Core.V1";
+
         /// <summary>Org.OData.Core.V1.Description </summary>
         public const string Description = "Org.OData.Core.V1.Description";
 
@@ -58,6 +61,9 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
 
         /// <summary>Org.OData.Core.V1.OptionalParameter</summary>
         public const string OptionalParameter = "Org.OData.Core.V1.OptionalParameter";
+
+        /// <summary>Org.OData.Core.V1.Revisions</summary>
+        public const string Revisions = "Org.OData.Core.V1.Revisions";
 
         /// <summary>Org.OData.Core.V1.xml file suffix</summary>
         internal const string VocabularyUrlSuffix = "/Org.OData.Core.V1.xml";

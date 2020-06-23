@@ -21,7 +21,7 @@ namespace Microsoft.OData.UriParser.Validation
         /// <summary>
         /// Informational Message
         /// </summary>
-        Message = 1,
+        Info = 1,
 
         /// <summary>
         /// Warning

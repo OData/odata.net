@@ -18,8 +18,8 @@ namespace Microsoft.OData.UriParser.Validation.Rules
     /// </summary>
     internal class DeprecationRules
     {
-        private const string CoreVocabularyNamespace = "Core";
-        private const string RevisionTerm = CoreVocabularyNamespace + ".Revisions";
+        private const string DefaultCoreAlias = "Core";
+        private const string RevisionTerm = "Revisions";
         private const string RevisionVersionProperty = "Version";
         private const string RevisionKindProperty = "Kind";
         private const string RevisionDateProperty = "Date";
@@ -130,14 +130,13 @@ namespace Microsoft.OData.UriParser.Validation.Rules
         /// <returns>True if the element is marked as deprecated, otherwise false.</returns>
         private static bool IsDeprecated(IEdmModel model, IEdmElement element, out string message, out string version, out Date? date)
         {
-            string coreModelNamespace = model.GetNamespaceAlias("Org.OData.V1");
-            IEdmModel coreModel = model.ReferencedModels.Where(m => m is CoreVocabularyModel).FirstOrDefault();
             IEdmVocabularyAnnotatable annotatedElement = element as IEdmVocabularyAnnotatable;
             if (annotatedElement != null)
             {
                 foreach (IEdmVocabularyAnnotation annotation in annotatedElement.VocabularyAnnotations(model))
                 {
-                    if (String.Equals(annotation.Term.FullName(), RevisionTerm, StringComparison.OrdinalIgnoreCase))
+                    if (String.Equals(annotation.Term.FullName(), CoreVocabularyConstants.Revisions, StringComparison.OrdinalIgnoreCase) ||
+                        String.Equals(annotation.Term.FullName(), DefaultCoreAlias + "." + RevisionTerm, StringComparison.OrdinalIgnoreCase))
                     {
                         IEdmCollectionExpression collectionExpression = annotation.Value as IEdmCollectionExpression;
                         if (collectionExpression != null)

@@ -13,7 +13,7 @@ using System.Reflection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser.Aggregation;
 
-namespace Microsoft.OData.UriParser.Validation.ValidationEngine
+namespace Microsoft.OData.UriParser.Validation
 {
     /// <summary>
     /// Validation engine for running validation rules
