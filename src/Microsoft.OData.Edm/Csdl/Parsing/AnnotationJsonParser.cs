@@ -451,7 +451,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 }
 
                 // It MAY contain annotations for itself and its members. Annotations for record members are prefixed with the member name.
-                // So far, it's not supported. So report error all the annotations on record, or just skip it?
+                // So far, it's not supported. So report non-fatal error for all the annotations on record.
                 if (propertyName.IndexOf('@') != -1)
                 {
                     context.ReportError(EdmErrorCode.JsonUnsupportedElement, Strings.CsdlJsonParser_UnsupportedJsonMember(context.Path));

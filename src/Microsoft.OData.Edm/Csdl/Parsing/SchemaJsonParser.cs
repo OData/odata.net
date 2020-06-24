@@ -25,6 +25,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         /// Parse the input <see cref="JsonElement"/> to the <see cref="CsdlSchema"/>.
         /// </summary>
         /// <param name="schemaNamespace">The namespace of the schema.</param>
+        /// <param name="version">The CSDL version.</param>
         /// <param name="element">The json element to parse from.</param>
         /// <param name="context">The parser context.</param>
         /// <returns>The parsed <see cref="CsdlSchema"/>.</returns>
@@ -111,10 +112,10 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         ///  }
         ///}
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="element"></param>
-        /// <param name="context"></param>
-        /// <returns></returns>
+        /// <param name="name">The annotation name.</param>
+        /// <param name="element">The json element to parse from.</param>
+        /// <param name="context">The parser context.</param>
+        /// <returns>The collection of CSDL annotation.</returns>
         internal static IList<CsdlAnnotations> ParseCsdlOutOfLineAnnotations(string name, JsonElement element, JsonParserContext context)
         {
             Debug.Assert(name == "$Annotations");
@@ -126,7 +127,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 // The member name is a path identifying the annotation target
                 string target = propertyName;
 
-                string qualifier = null; // It's form the "target" name, or it's not set again in JSON?
+                string qualifier = null; // the qualifier is set on the individual annotations, not on the Annotations annotation.
 
                 // the member value is an object containing annotations for that target.
                 if (propertyValue.ValueKind == JsonValueKind.Object)
@@ -158,8 +159,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         /// Parse the input <see cref="JsonElement"/> to the <see cref="CsdlEntityContainer"/>.
         /// </summary>
         /// <param name="name">The entity container unqualified name.</param>
-        /// <param name="jsonValue">The json value to parse from.</param>
-        /// <param name="jsonPath">The input json value path.</param>
+        /// <param name="containerObject">The json value to parse from.</param>
+        /// <param name="context">The parser context.</param>
         /// <returns>null or the parsed <see cref="CsdlEntityContainer"/>.</returns>
         internal static CsdlEntityContainer ParseCsdlEntityContainer(string name, JsonElement containerObject, JsonParserContext context)
         {
@@ -451,7 +452,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         /// </summary>
         /// <param name="name">the unqualified name of the entity type.</param>
         /// <param name="entityObject">The json value to parse from.</param>
-        /// <param name="jsonPath">The input json value path.</param>
+        /// <param name="context">The parse context.</param>
         /// <returns>null or the parsed <see cref="CsdlEntityType"/>.</returns>
         internal static CsdlEntityType ParseCsdlEntityType(string name, JsonElement entityObject, JsonParserContext context)
         {
@@ -553,7 +554,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 return null;
             }
 
-            // so it's complex property, Property is an object
+            // so it's structured property, Property is an object
             string kind = GetKind(element, context);
             if (kind == "NavigationProperty")
             {
@@ -570,7 +571,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         /// </summary>
         /// <param name="name">the unqualified name of the complex type.</param>
         /// <param name="complexObject">The json value to parse from.</param>
-        /// <param name="jsonPath">The input json value path.</param>
+        /// <param name="context">The parse context.</param>
         /// <returns>null or the parsed <see cref="CsdlComplexType"/>.</returns>
         internal static CsdlComplexType ParseCsdlComplexType(string name, JsonElement complexObject, JsonParserContext context)
         {
@@ -641,8 +642,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         /// Parse the <see cref="JsonElement"/> to <see cref="CsdlKey"/>.
         /// </summary>
         /// <param name="name">The name.</param>
-        /// <param name="jsonValue">The json value to parse from.</param>
-        /// <param name="jsonPath">The json path of this value.</param>
+        /// <param name="keyArray">The json value to parse from.</param>
+        /// <param name="context">The parse context.</param>
         /// <returns>the parsed <see cref="CsdlKey"/>.</returns>
         internal static CsdlKey ParseCsdlKey(string name, JsonElement keyArray, JsonParserContext context)
         {
@@ -675,7 +676,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="propertyObject">The json value to parse from.</param>
-        /// <param name="jsonPath">The json path of this value.</param>
+        /// <param name="context">The parse context.</param>
         /// <returns>the parsed <see cref="CsdlProperty"/>.</returns>
         internal static CsdlProperty ParseCsdlProperty(string name, JsonElement propertyObject, JsonParserContext context)
         {
@@ -732,7 +733,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="navObject">The json value to parse from.</param>
-        /// <param name="jsonPath">The json path of this value.</param>
+        /// <param name="context">The parse context.</param>
         /// <returns>the parsed <see cref="CsdlNavigationProperty"/>.</returns>
         internal static CsdlNavigationProperty ParseCsdlNavigationProperty(string name, JsonElement navObject, JsonParserContext context)
         {
@@ -765,7 +766,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                         break;
 
                     case "$Type":
-                        // Absence of the $Type member means the type is Edm.String. This member SHOULD be omitted for string properties to reduce document size.
+                        // For the type name of the navigation property.
                         typeName = propertyValue.ParseAsString(context);
                         break;
 
@@ -1025,7 +1026,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 CsdlEnumMember member = members.FirstOrDefault(c => c.Name == item.Key);
                 if (member == null)
                 {
-                    context.ReportError(EdmErrorCode.JsonMissingRequiredProperty, "Cannot find enum member that an annotation applys for.");
+                    context.ReportError(EdmErrorCode.JsonUnexpectedElement, "Cannot find enum member that an annotation applys for.");
                     continue;
                 }
 
@@ -1124,6 +1125,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     case "$BaseTerm":
                         // The value of $BaseTerm is the qualified name of the base term.
                         // Skip it because it's not supported
+                        context.ReportError(EdmErrorCode.JsonUnexpectedElement, Strings.CsdlJsonParser_UnexpectedJsonMember(context.Path, element.ValueKind));
                         break;
 
                     case "$DefaultValue":
@@ -1157,8 +1159,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         /// <summary>
         /// Parse the <see cref="JsonElement"/> to <see cref="CsdlTypeDefinition"/>.
         /// </summary>
-        /// <param name="element">The type definition name.</param>
-        /// <param name="jsonValue">The json value to parse from.</param>
+        /// <param name="name">The type definition name.</param>
+        /// <param name="element">The json value to parse from.</param>
         /// <param name="context">The enum type json path.</param>
         /// <returns>the parsed csdl type definition.</returns>
         internal static CsdlTypeDefinition ParseCsdlTypeDefinition(string name, JsonElement element, JsonParserContext context)
@@ -1216,9 +1218,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         /// <summary>
         /// Parse the <see cref="JsonElement"/> to a list of <see cref="CsdlOperation"/>.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="element"></param>
-        /// <param name="jsonPath"></param>
+        /// <param name="name">The operation name.</param>
+        /// <param name="element">The json value to parse from.</param>
+        /// <param name="context">The parse context.</param>
         /// <returns></returns>
         internal static CsdlOperation ParseCsdlOperation(string name, JsonElement element, JsonParserContext context)
         {
@@ -1388,10 +1390,10 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         /// <summary>
         /// The value of $ReturnType is an object.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="jsonValue"></param>
-        /// <param name="jsonPath"></param>
-        /// <returns></returns>
+        /// <param name="name">The operation return name.</param>
+        /// <param name="element">The json value to parse from</param>
+        /// <param name="context">The parse context.</param>
+        /// <returns>The built CSDL operation return.</returns>
         internal static CsdlOperationReturn ParseCsdlOperationReturn(string name, JsonElement element, JsonParserContext context)
         {
             // The value of $ReturnType is an object.
@@ -1439,7 +1441,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         /// </summary>
         /// <param name="name">The name of the schema member.</param>
         /// <param name="element">The schema member json value.</param>
-        /// <param name="jsonPath">The JSON path.</param>
+        /// <param name="context">The parse context.</param>
         /// <returns>Null or the built element.</returns>
         private static CsdlElement TryParseSchemaElement(string name, JsonElement element, JsonParserContext context)
         {

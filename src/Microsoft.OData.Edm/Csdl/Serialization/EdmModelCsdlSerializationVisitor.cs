@@ -16,12 +16,14 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         private readonly EdmModelCsdlSchemaWriter schemaWriter;
         private readonly List<IEdmNavigationProperty> navigationProperties = new List<IEdmNavigationProperty>();
         private readonly VersioningDictionary<string, string> namespaceAliasMappings;
+        private readonly bool isXml;
 
         internal EdmModelCsdlSerializationVisitor(IEdmModel model, EdmModelCsdlSchemaWriter edmWriter)
             : base(model)
         {
             this.schemaWriter = edmWriter;
             this.namespaceAliasMappings = this.schemaWriter.NamespaceAliasMappings;
+            this.isXml = this.schemaWriter is EdmModelCsdlSchemaXmlWriter;
         }
 
         public override void VisitEntityContainerElements(IEnumerable<IEdmEntityContainerElement> elements)
@@ -82,7 +84,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
             VisitSchemaElements(element.SchemaElements);
 
-            // process the funtions/actions seperately
+            // process the functions/actions seperately
             foreach (var operation in element.SchemaOperations)
             {
                 this.schemaWriter.WriteSchemaOperationsHeader(operation);
@@ -102,6 +104,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                     VisitVocabularyAnnotations(annotationsForTarget.Value);
                     this.schemaWriter.WriteEndElement();
                 }
+
                 this.schemaWriter.WriteOutOfLineAnnotationsEnd(element.OutOfLineAnnotations);
             }
 
@@ -196,11 +199,12 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         {
             this.BeginElement(element, this.schemaWriter.WriteNavigationPropertyElementHeader);
 
-            // From 4.0.1 spec says: None, meaning a DELETE request on a source entity with related entities will fail
-            // So, we should fix it.
+            // From 4.0.1 spec says:
+            // "OnDelete" has "None, Cascade, SetNull, SetDefault" values defined in 4.01.
+            // But, ODL now only process "Cascade" and "None".So we should fix it to support the others.
             if (element.OnDelete != EdmOnDeleteAction.None)
             {
-                this.schemaWriter.WriteNavigationOnDelectActionElement(element.OnDelete);
+                this.schemaWriter.WriteNavigationOnDeleteActionElement(element.OnDelete);
             }
 
             this.ProcessReferentialConstraint(element.ReferentialConstraint);
@@ -433,8 +437,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         {
             bool inlineType = IsInlineType(expression.Type);
 
-            bool isXml = this.schemaWriter is EdmModelCsdlSchemaXmlWriter;
-            if (isXml)
+            if (this.isXml)
             {
                 this.BeginElement(expression, (IEdmIsTypeExpression t) => { this.schemaWriter.WriteIsTypeExpressionElementHeader(t, inlineType); }, e => { this.ProcessFacets(e.Type, inlineType); });
                 if (!inlineType)
@@ -528,8 +531,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         {
             bool inlineType = IsInlineType(expression.Type);
 
-            bool isXml = this.schemaWriter is EdmModelCsdlSchemaXmlWriter;
-            if (isXml)
+            if (this.isXml)
             {
                 this.BeginElement(expression, (IEdmCastExpression t) => { this.schemaWriter.WriteCastExpressionElementHeader(t, inlineType); }, e => { this.ProcessFacets(e.Type, inlineType); });
                 if (!inlineType)
@@ -646,6 +648,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 {
                     this.schemaWriter.WriteReferentialConstraintPair(pair);
                 }
+
                 this.schemaWriter.WriteReferentialConstraintEnd(element);
             }
         }

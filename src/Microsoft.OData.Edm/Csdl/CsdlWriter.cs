@@ -138,7 +138,7 @@ namespace Microsoft.OData.Edm.Csdl
             edmxVersion = model.GetEdmxVersion();
 
             errors = model.GetSerializationErrors();
-            if (errors.FirstOrDefault() != null)
+            if (errors.Any())
             {
                 return false;
             }

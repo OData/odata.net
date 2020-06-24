@@ -68,7 +68,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
         internal abstract void WriteNavigationPropertyElementHeader(IEdmNavigationProperty property);
 
-        internal abstract void WriteNavigationOnDelectActionElement(EdmOnDeleteAction operationAction);
+        internal abstract void WriteNavigationOnDeleteActionElement(EdmOnDeleteAction operationAction);
 
         internal abstract void WriteSchemaElementHeader(EdmSchema schema, string alias, IEnumerable<KeyValuePair<string, string>> mappings);
 

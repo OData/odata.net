@@ -54,6 +54,10 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private IEnumerable<IEdmEnumMember> ComputeReferenced()
         {
             IEnumerable<IEdmEnumMember> member;
+
+            // In OData Json CSDL, a enum member expression is a string value. "@self.HasPattern": "Red"
+            // But in OData XML CSDL, a enum member expression is an element like: <EnumMember>org.example.Pattern/Red</EnumMember>
+            // So, in OData JSON CSDL, we have to use the Term type to construct EnumMember.
             if (this.expression.EnumType != null)
             {
                 return EdmEnumValueParser.TryParseJsonEnumMember(this.expression.EnumMemberPath, this.expression.EnumType, this.Location, out member) ? member : null;

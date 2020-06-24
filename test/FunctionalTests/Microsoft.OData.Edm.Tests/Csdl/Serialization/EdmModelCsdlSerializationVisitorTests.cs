@@ -658,7 +658,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
   ""$Kind"": ""Function"",
   ""$IsBound"": true,
   ""$EntitySetPath"": ""Customers/Orders"",
-  ""$IsComposable"": ""true"",
+  ""$IsComposable"": true,
   ""$Parameter"": [
     {
       ""$Name"": ""bindingParameter"",
@@ -705,7 +705,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
   ""$Kind"": ""Function"",
   ""$IsBound"": true,
   ""$EntitySetPath"": ""Customers/Orders"",
-  ""$IsComposable"": ""true"",
+  ""$IsComposable"": true,
   ""$Parameter"": [
     {
       ""$Name"": ""param1"",

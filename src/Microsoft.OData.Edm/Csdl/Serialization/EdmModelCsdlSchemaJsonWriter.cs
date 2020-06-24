@@ -243,7 +243,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.jsonWriter.WriteStringValue(pair.PrincipalProperty.Name); // It should be the path, so far it's not supported.
         }
 
-        internal override void WriteNavigationOnDelectActionElement(EdmOnDeleteAction operationAction)
+        internal override void WriteNavigationOnDeleteActionElement(EdmOnDeleteAction operationAction)
         {
             // $OnDelete
             this.jsonWriter.WritePropertyName("$OnDelete");
@@ -520,7 +520,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
             if (function.IsComposable)
             {
-                this.jsonWriter.WriteRequiredProperty("$IsComposable", function.IsComposable, EdmValueWriter.BooleanAsXml);
+                this.jsonWriter.WriteRequiredProperty("$IsComposable", true);
             }
         }
 
@@ -1266,26 +1266,13 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
         protected string EnumMemberExpressionAsJson(IEnumerable<IEdmEnumMember> members)
         {
-            if (this.settings.EnumMemberExpressionAsNumeric)
+            IList<string> memberList = new List<string>();
+            foreach (var member in members)
             {
-                long result = 0;
-                foreach (var member in members)
-                {
-                    result += member.Value.Value;
-                }
-
-                return result.ToString(CultureInfo.InvariantCulture);
+                memberList.Add(member.Name);
             }
-            else
-            {
-                List<string> memberList = new List<string>();
-                foreach (var member in members)
-                {
-                    memberList.Add(member.Name);
-                }
 
-                return string.Join(",", memberList.ToArray());
-            }
+            return string.Join(",", memberList.ToArray());
         }
     }
 }

@@ -21,13 +21,6 @@ namespace Microsoft.OData.Edm.Csdl
         /// This is in conformance with [RFC7493]. If not specified, or specified as IEEE754Compatible=false, all numbers MUST be serialized as JSON numbers.
         /// </summary>
         public bool IsIeee754Compatible { get; set; }
-
-        /// <summary>
-        /// Serialize enum member expression value as numeric or symblic value.
-        /// true as numeric value as: "17"
-        /// False as symblic value as "Red, Striped"
-        /// </summary>
-        public bool EnumMemberExpressionAsNumeric { get; set; }
     }
 }
 #endif

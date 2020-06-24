@@ -150,7 +150,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         IList<CsdlExpressionBase> newElements = new List<CsdlExpressionBase>();
                         CsdlCollectionExpression collectionExp = (CsdlCollectionExpression)expression;
 
-                        foreach (var exp in collectionExp.ElementValues)
+                        foreach (CsdlExpressionBase exp in collectionExp.ElementValues)
                         {
                             if (exp != null && exp.ExpressionKind == EdmExpressionKind.StringConstant)
                             {

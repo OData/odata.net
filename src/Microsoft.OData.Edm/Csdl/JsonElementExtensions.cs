@@ -43,24 +43,6 @@ namespace Microsoft.OData.Edm.Csdl
             return value;
         }
 
-        public static void ProcessOptionalProperty(this JsonElement element,
-            string propertyName,
-            JsonParserContext context,
-            Action<JsonElement, JsonParserContext> propertyParser)
-        {
-            Debug.Assert(element.ValueKind == JsonValueKind.Object);
-
-            if (element.ValueKind == JsonValueKind.Object &&
-                element.TryGetProperty(propertyName, out JsonElement propertyValue))
-            {
-                context.EnterScope(propertyName);
-
-                propertyParser(propertyValue, context);
-
-                context.LeaveScope(propertyName);
-            }
-        }
-
         public static T ProcessItem<T>(this JsonElement element, int index, JsonParserContext context,
             Func<JsonElement, JsonParserContext, T> parser)
         {

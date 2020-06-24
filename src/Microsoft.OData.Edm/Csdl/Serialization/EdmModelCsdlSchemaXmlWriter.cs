@@ -167,7 +167,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.WriteOptionalAttribute(CsdlConstants.Attribute_ContainsTarget, property.ContainsTarget, CsdlConstants.Default_ContainsTarget, EdmValueWriter.BooleanAsXml);
         }
 
-        internal override void WriteNavigationOnDelectActionElement(EdmOnDeleteAction operationAction)
+        internal override void WriteNavigationOnDeleteActionElement(EdmOnDeleteAction operationAction)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_OnDelete);
             this.WriteRequiredAttribute(CsdlConstants.Attribute_Action, operationAction.ToString(), EdmValueWriter.StringAsXml);
