@@ -6547,13 +6547,12 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using System.Linq;
     using FluentAssertions;
     using Microsoft.OData.Client;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using global::DelayQueryTests.ExchangePlus;
+    using Xunit;
 
-    [TestClass]
     public class DelayQueryTests
     {
-        [TestMethod]
+        [Fact]
         public void DelayQueryUrlTest()
         {
             var context = new EntityContainerPlus(new Uri("http://serviceroot/odata"));
