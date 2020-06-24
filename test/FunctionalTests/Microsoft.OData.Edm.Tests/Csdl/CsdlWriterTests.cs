@@ -105,7 +105,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
             IEnumerable<EdmError> actualErrors = null;
             model.Validate(out actualErrors);
-            Assert.Equal(actualErrors.Count(), 0);
+            Assert.Equal(0, actualErrors.Count());
 
             string actual = GetCsdl(model, CsdlTarget.OData);
 
@@ -272,7 +272,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             var entitySet2 = model.EntityContainer.FindEntitySet("Entities2");
             var containedEntitySet = entitySet1.FindNavigationTarget(containedUnderComplex,
                 new EdmPathExpression("Complex/ContainedUnderComplex"));
-            Assert.Equal(containedEntitySet.Name, "ContainedUnderComplex");
+            Assert.Equal("ContainedUnderComplex", containedEntitySet.Name);
             var entitySetUnderContained = containedEntitySet.FindNavigationTarget(navUnderContained);
             Assert.Equal(entitySetUnderContained, entitySet2);
         }
