@@ -1836,15 +1836,15 @@ namespace EdmLibTests.FunctionalUtilities
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-  <Term Name=""Int64Value"" Type=""Int64"" />
-  <Term Name=""StructuredValue"" Type=""My.NS1.Address"" />
   <ComplexType Name=""Address"">
-    <Property Name=""Id"" Type=""Int32"" Nullable=""false""/>
-  </ComplexType>  
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false""/>
+  </ComplexType>
+  <Term Name=""Int64Value"" Type=""Edm.Int64"" />
+  <Term Name=""StructuredValue"" Type=""Self.Address"" />
   <Annotations Target=""Self.Address"">
-    <Annotation Term=""My.NS1.StructuredValue"" Int=""100"" />
-    <Annotation Term=""My.NS1.Int64Value"" String=""200"" />
-    <Annotation Term=""My.NS1.Int64Value"" Qualifier=""Other"">
+    <Annotation Term=""Self.StructuredValue"" Int=""100"" />
+    <Annotation Term=""Self.Int64Value"" Int=""200"" />
+    <Annotation Term=""Self.Int64Value"" Qualifier=""Other"">
         <Record>
           <PropertyValue Property=""Id"" Int=""99"" />
         </Record>

@@ -20,27 +20,27 @@
   <EnumType Name="Direction0" UnderlyingType="Edm.Byte">
     <Member Name="East" Value="0" />
   </EnumType>
+  <EnumType Name="Direction1" UnderlyingType="Edm.SByte">
+    <Member Name="East" Value="0" />
+  </EnumType>
+  <EnumType Name="Direction2" UnderlyingType="Edm.Int16">
+    <Member Name="East" Value="0" />
+  </EnumType>
+  <EnumType Name="Direction3" UnderlyingType="Edm.Int64">
+    <Member Name="East" Value="0" />
+  </EnumType>
   <Function Name="Function0">
     <Parameter Name="Param0" Type="NS1.Direction0" Nullable="false" />
     <ReturnType Type="NS1.Direction0" Nullable="false" />
   </Function>
-  <EnumType Name="Direction1" UnderlyingType="Edm.SByte">
-    <Member Name="East" Value="0" />
-  </EnumType>
   <Function Name="Function1">
     <Parameter Name="Param1" Type="NS1.Direction1" Nullable="false" />
     <ReturnType Type="NS1.Direction1" Nullable="false" />
   </Function>
-  <EnumType Name="Direction2" UnderlyingType="Edm.Int16">
-    <Member Name="East" Value="0" />
-  </EnumType>
   <Function Name="Function2">
     <Parameter Name="Param2" Type="NS1.Direction2" Nullable="false" />
     <ReturnType Type="NS1.Direction2" Nullable="false" />
   </Function>
-  <EnumType Name="Direction3" UnderlyingType="Edm.Int64">
-    <Member Name="East" Value="0" />
-  </EnumType>
   <Function Name="Function3">
     <Parameter Name="Param3" Type="NS1.Direction3" Nullable="false" />
     <ReturnType Type="NS1.Direction3" Nullable="false" />

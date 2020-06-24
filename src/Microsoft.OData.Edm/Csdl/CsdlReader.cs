@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -23,7 +22,7 @@ namespace Microsoft.OData.Edm.Csdl
     /// <summary>
     /// Provides CSDL parsing services for EDM models.
     /// </summary>
-    public class CsdlReader
+    public partial class CsdlReader
     {
         private static readonly Dictionary<string, Action> EmptyParserLookup = new Dictionary<string, Action>();
         private readonly Dictionary<string, Action> edmxParserLookup;
