@@ -2990,6 +2990,7 @@ public sealed class Microsoft.OData.Edm.Csdl.SerializationExtensionMethods {
 }
 
 public class Microsoft.OData.Edm.Csdl.CsdlLocation : Microsoft.OData.Edm.EdmLocation {
+    string JsonPath  { public get; }
     int LineNumber  { public get; }
     int LinePosition  { public get; }
     string Source  { public get; }
@@ -3012,7 +3013,11 @@ public class Microsoft.OData.Edm.Csdl.CsdlReader {
 }
 
 public class Microsoft.OData.Edm.Csdl.CsdlWriter {
+    protected CsdlWriter (Microsoft.OData.Edm.IEdmModel model, System.Version edmxVersion)
+
+    protected static string GetVersionString (System.Version version)
     public static bool TryWriteCsdl (Microsoft.OData.Edm.IEdmModel model, System.Xml.XmlWriter writer, Microsoft.OData.Edm.Csdl.CsdlTarget target, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
+    protected virtual void WriteCsdl ()
 }
 
 [
@@ -3174,6 +3179,18 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
     InvalidValue = 282
     InvalidVersionNumber = 25
     IsUnboundedCannotBeTrueWhileMaxLengthIsNotNull = 298
+    JsonInvalid = 401
+    JsonInvalidCollectionValue = 410
+    JsonInvalidKeyValue = 411
+    JsonInvalidNumberType = 405
+    JsonInvalidValue = 403
+    JsonInvalidVersionNumber = 402
+    JsonMissingRequiredProperty = 409
+    JsonSchemaCannotHaveMoreThanOneEntityContainer = 412
+    JsonUnexpectedElement = 407
+    JsonUnexpectedValueKind = 408
+    JsonUnknownElementValueKind = 404
+    JsonUnsupportedElement = 406
     KeyMissingOnEntityType = 159
     KeyPropertyMustBelongToEntity = 242
     KeyPropertyTypeCannotBeEdmPrimitiveType = 259
@@ -3258,6 +3275,13 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
     UrlEscapeFunctionMustBeBoundFunction = 155
     UrlEscapeFunctionMustHaveOnlyOneEdmStringParameter = 156
     XmlError = 5
+}
+
+public enum Microsoft.OData.Edm.Validation.Severity : int {
+    Error = 3
+    Info = 1
+    Undefined = 0
+    Warning = 2
 }
 
 public abstract class Microsoft.OData.Edm.Validation.ValidationRule {
@@ -3430,10 +3454,13 @@ public sealed class Microsoft.OData.Edm.Validation.ValidationRules {
 
 public class Microsoft.OData.Edm.Validation.EdmError {
     public EdmError (Microsoft.OData.Edm.EdmLocation errorLocation, Microsoft.OData.Edm.Validation.EdmErrorCode errorCode, string errorMessage)
+    public EdmError (Microsoft.OData.Edm.EdmLocation errorLocation, Microsoft.OData.Edm.Validation.EdmErrorCode errorCode, string errorMessage, Microsoft.OData.Edm.Validation.Severity severity)
 
     Microsoft.OData.Edm.Validation.EdmErrorCode ErrorCode  { public get; }
     Microsoft.OData.Edm.EdmLocation ErrorLocation  { public get; }
     string ErrorMessage  { public get; }
+    System.Collections.Generic.Dictionary`2[[System.String],[System.Object]] ExtendedProperties  { public get; }
+    Microsoft.OData.Edm.Validation.Severity Severity  { public get; }
 
     public virtual string ToString ()
 }
@@ -4724,7 +4751,7 @@ public abstract class Microsoft.OData.ODataWriter {
     public virtual System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataDeletedResource deletedResource)
     public virtual System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataDeltaResourceSet deltaResourceSet)
     public virtual System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataNestedResourceInfo nestedResourceInfo)
-    public virtual System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataProperty primitiveProperty)
+    public virtual System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataPropertyInfo primitiveProperty)
     public virtual System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataResource resource)
     public virtual System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataResourceSet resourceSet)
     public Microsoft.OData.ODataWriter WriteStream (Microsoft.OData.ODataBinaryStreamValue stream)
@@ -5403,7 +5430,7 @@ public sealed class Microsoft.OData.ODataMessageWriter : IDisposable {
     public Microsoft.OData.ODataWriter CreateODataResourceSetWriter (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType resourceType)
     public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataWriter]] CreateODataResourceSetWriterAsync ()
     public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataWriter]] CreateODataResourceSetWriterAsync (Microsoft.OData.Edm.IEdmEntitySetBase entitySet)
-    public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataWriter]] CreateODataResourceSetWriterAsync (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmEntityType entityType)
+    public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataWriter]] CreateODataResourceSetWriterAsync (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType structuredType)
     public Microsoft.OData.ODataWriter CreateODataResourceWriter ()
     public Microsoft.OData.ODataWriter CreateODataResourceWriter (Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
     public Microsoft.OData.ODataWriter CreateODataResourceWriter (Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmStructuredType resourceType)
