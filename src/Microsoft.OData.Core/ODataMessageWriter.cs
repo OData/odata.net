@@ -169,7 +169,7 @@ namespace Microsoft.OData
             }
         }
 
-        /// <summary> Creates an <see cref="Microsoft.OData.ODataAsyncWriter" /> to write an async response. </summary>
+        /// <summary> Creates an <see cref="Microsoft.OData.ODataAsynchronousWriter" /> to write an async response. </summary>
         /// <returns>The created writer.</returns>
         public ODataAsynchronousWriter CreateODataAsynchronousWriter()
         {
@@ -211,7 +211,7 @@ namespace Microsoft.OData
         }
 
 
-        /// <summary> Asynchronously creates an <see cref="Microsoft.OData.ODataAsyncWriter" /> to write an async response. </summary>
+        /// <summary> Asynchronously creates an <see cref="Microsoft.OData.ODataAsynchronousWriter" /> to write an async response. </summary>
         /// <returns>A running task for the created writer.</returns>
         public Task<ODataAsynchronousWriter> CreateODataAsynchronousWriterAsync()
         {

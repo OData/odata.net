@@ -2012,7 +2012,7 @@ namespace Microsoft.OData.Client
 
 #if !PORTABLELIB // Synchronous methods not available
         /// <summary>Saves the changes that the <see cref="Microsoft.OData.Client.DataServiceContext" /> is tracking to storage.</summary>
-        /// <returns>A <see cref="Microsoft.OData.Client.DataServiceResponse" /> that contains status, headers, and errors that result from the call to <see cref="Microsoft.OData.Client.DataServiceContext.SaveChanges.Remarks" />.</returns>
+        /// <returns>A <see cref="Microsoft.OData.Client.DataServiceResponse" /> that contains status, headers, and errors that result from the call to <see cref="Microsoft.OData.Client.DataServiceContext.SaveChanges()" />.</returns>
         public virtual DataServiceResponse SaveChanges()
         {
             return this.SaveChanges(this.SaveChangesDefaultOptions);
