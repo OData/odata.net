@@ -188,7 +188,7 @@ namespace Microsoft.OData
                 int count,
                 CancellationToken cancellationToken)
             {
-                int bytesRead = await this.innerStream.ReadAsync(buffer, offset, count, cancellationToken);
+                int bytesRead = await innerStream.ReadAsync(buffer, offset, count, cancellationToken).ConfigureAwait(false);
                 this.IncreaseTotalBytesRead(bytesRead);
                 return bytesRead;
             }

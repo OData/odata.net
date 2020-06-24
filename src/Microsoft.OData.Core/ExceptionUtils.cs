@@ -181,6 +181,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <remarks>This has been suggested as a workaround in msdn forums by the VS team. Note that even though this is production code
         /// the attribute has no effect on anything else.</remarks>
+        [AttributeUsage(AttributeTargets.Parameter)]
         private sealed class ValidatedNotNullAttribute : Attribute
         {
         }

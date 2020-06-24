@@ -588,13 +588,14 @@ namespace Microsoft.OData.Client
             return new DataServiceTransportException(errorResponseMessage, webException);
         }
 
+        /*
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        //public override IODataResponseMessage GetResponse()
-        //{
-        //    throw new NotImplementedException();
-        //}
+        public override IODataResponseMessage GetResponse()
+        {
+            throw new NotImplementedException();
+        }*/
     }
 }

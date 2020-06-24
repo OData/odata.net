@@ -445,7 +445,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.True(String.IsNullOrEmpty(optionalParam.DefaultValueString));
             IEdmOptionalParameter optionalParamWithDefault = function.Parameters.Where(p => p.Name == "optionalParamWithDefault").FirstOrDefault() as IEdmOptionalParameter;
             Assert.NotNull(optionalParamWithDefault);
-            Assert.Equal(optionalParamWithDefault.DefaultValueString, "Smith");
+            Assert.Equal("Smith", optionalParamWithDefault.DefaultValueString);
         }
 
         [Theory]
@@ -1136,7 +1136,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
             // Read in the CSDL and verify the version
             CsdlReader.TryParse(xmlReader, out edmModel, out edmErrors);
-            Assert.Equal(edmErrors.Count(), 0);
+            Assert.Empty(edmErrors);
             Assert.Equal(edmModel.GetEdmVersion(), odataVersion == "4.0" ? EdmConstants.EdmVersion4 : EdmConstants.EdmVersion401);
         }
     }

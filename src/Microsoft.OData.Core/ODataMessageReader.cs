@@ -123,7 +123,7 @@ namespace Microsoft.OData
             this.edmTypeResolver = new EdmTypeReaderResolver(this.model, this.settings.ClientCustomTypeResolver);
         }
 
-        /// <summary>Creates a new <see cref="System.Data.OData.ODataMessageReader" /> for the given response message.</summary>
+        /// <summary>Creates a new <see cref="Microsoft.OData.ODataMessageReader" /> for the given response message.</summary>
         /// <param name="responseMessage">The response message for which to create the reader.</param>
         public ODataMessageReader(IODataResponseMessage responseMessage)
             : this(responseMessage, null)
@@ -285,7 +285,7 @@ namespace Microsoft.OData
                     });
         }
 
-        /// <summary>Creates an <see cref="Microsoft.OData.ODataAsyncReader" /> to read an async response.</summary>
+        /// <summary>Creates an <see cref="Microsoft.OData.ODataAsynchronousReader" /> to read an async response.</summary>
         /// <returns>The created async reader.</returns>
         public ODataAsynchronousReader CreateODataAsynchronousReader()
         {
@@ -295,7 +295,7 @@ namespace Microsoft.OData
                 ODataPayloadKind.Asynchronous);
         }
 
-        /// <summary>Asynchronously creates an <see cref="Microsoft.OData.ODataAsyncReader" /> to read an async response.</summary>
+        /// <summary>Asynchronously creates an <see cref="Microsoft.OData.ODataAsynchronousReader" /> to read an async response.</summary>
         /// <returns>A running task for the created async reader.</returns>
         public Task<ODataAsynchronousReader> CreateODataAsynchronousReaderAsync()
         {
@@ -497,7 +497,7 @@ namespace Microsoft.OData
                 ODataPayloadKind.Resource);
         }
 
-        /// <summary>Asynchronously creates an <see cref="System.Data.OData.ODataReader" /> to read a resource.</summary>
+        /// <summary>Asynchronously creates an <see cref="Microsoft.OData.ODataReader" /> to read a resource.</summary>
         /// <returns>A running task for the created reader.</returns>
         public Task<ODataReader> CreateODataResourceReaderAsync()
         {

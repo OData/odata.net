@@ -80,12 +80,12 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Gets or sets library compatibility version. Default value is <see cref="ODataLibraryCompatibilityLevel.Latest"/>,
+        /// Gets or sets library compatibility version. Default value is <see cref="Microsoft.OData.ODataLibraryCompatibility.Latest"/>,
         /// </summary>
         public ODataLibraryCompatibility LibraryCompatibility { get; set; }
 
         /// <summary>
-        /// Gets or sets validations to perform. Default value is <see cref="Microsoft.OData.Validations.FullValidation"/>,
+        /// Gets or sets validations to perform. Default value is <see cref="Microsoft.OData.ValidationKinds.All"/>,
         /// </summary>
         public ValidationKinds Validations
         {
