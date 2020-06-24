@@ -12,6 +12,7 @@ namespace Microsoft.OData.UriParser
     using System.Linq;
     using Microsoft.OData.Edm;
     using Microsoft.OData.UriParser.Aggregation;
+    using Microsoft.OData.UriParser.Validation;
     using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
@@ -248,6 +249,18 @@ namespace Microsoft.OData.UriParser
         {
             get { return this.configuration.ParameterAliasValueAccessor; }
             set { this.configuration.ParameterAliasValueAccessor = value; }
+        }
+
+        /// <summary>
+        /// Validate the OData Uri using a specified set of rules.
+        /// </summary>
+        /// <param name="rules">The set of rules to use in validating the OData Uri.</param>
+        /// <param name="validationMessages">The collection of validation messages found during validation.</param>
+        /// <returns>True if validation messages are discovered during validation, otherwise false.</returns>
+        public bool Validate(ODataUrlValidationRuleSet rules, out IEnumerable<ODataUrlValidationMessage> validationMessages)
+        {
+            ODataUrlValidator validator = new ODataUrlValidator(this.Model, rules);
+            return validator.ValidateUrl(this.ParseUri(), out validationMessages);
         }
 
         /// <summary>

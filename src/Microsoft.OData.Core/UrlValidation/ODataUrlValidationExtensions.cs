@@ -12,7 +12,7 @@ using Microsoft.OData.UriParser.Validation.ValidationEngine;
 namespace Microsoft.OData.UriParser.Validation
 {
     /// <summary>
-    /// Extension methods to add validation methods to an ODataUri
+    /// Extension methods to add validation methods to an OData Url
     /// </summary>
     public static class ODataUrlValidationExtensions
     {
@@ -29,8 +29,7 @@ namespace Microsoft.OData.UriParser.Validation
             try
             {
                 ODataUriParser parser = new ODataUriParser(model, uri);
-                ODataUri odataUri = parser.ParseUri();
-                return odataUri.Validate(model, rules, out validationMessages);
+                return parser.Validate(rules, out validationMessages);
             }
 
             catch (ODataException e)
@@ -42,20 +41,6 @@ namespace Microsoft.OData.UriParser.Validation
 
                 return false;
             }
-        }
-
-        /// <summary>
-        /// Validate the ODataUri for a given model using a specified set of rules.
-        /// </summary>
-        /// <param name="odataUri">The <see cref="ODataUri"/> to validate.</param>
-        /// <param name="model">The model to validate the OData Uri against.</param>
-        /// <param name="rules">The set of rules to use in validating the OData Uri.</param>
-        /// <param name="validationMessages">The collection of validation messages found during validation.</param>
-        /// <returns>True if validation messages are discovered during validation, otherwise false.</returns>
-        public static bool Validate(this ODataUri odataUri, IEdmModel model, ODataUrlValidationRuleSet rules, out IEnumerable<ODataUrlValidationMessage> validationMessages)
-        {
-            ODataUrlValidator validator = new ODataUrlValidator(model, rules);
-            return validator.ValidateUrl(odataUri, out validationMessages);
         }
     }
 }

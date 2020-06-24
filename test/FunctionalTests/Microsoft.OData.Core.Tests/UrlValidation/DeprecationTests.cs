@@ -45,7 +45,7 @@ namespace Microsoft.OData.Tests
                 ODataUrlValidationRules.DeprecatedPropertyRule, 
                 ODataUrlValidationRules.DeprecatedTypeRule 
             });
-            uri.Validate(model, rules, out errors);
+            parser.Validate(rules, out errors);
             int errorCount = errors.Count();
             Assert.Equal(expectedErrors.Count(), errorCount);
             int iError = 0;
@@ -70,7 +70,7 @@ namespace Microsoft.OData.Tests
 
             IEnumerable<ODataUrlValidationMessage> errors;
             ODataUrlValidationRuleSet rules = new ODataUrlValidationRuleSet(new ODataUrlValidationRule[] { ODataUrlValidationRules.DeprecatedPropertyRule, ODataUrlValidationRules.DeprecatedTypeRule });
-            uri.Validate(model, rules, out errors);
+            parser.Validate(rules, out errors);
             Assert.Empty(errors);
         }
 
