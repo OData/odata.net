@@ -103,7 +103,7 @@ steps:
   displayName: 'PublicApi Test'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --no-build'
+    arguments: '--configuration $(BuildConfiguration) --no-build -v diag'
     projects: |      
      $(Build.SourcesDirectory)\test\PublicApiTests\Microsoft.OData.PublicApi.Tests.csproj
 
