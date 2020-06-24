@@ -105,7 +105,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
             IEnumerable<EdmError> actualErrors = null;
             model.Validate(out actualErrors);
-            Assert.Equal(0, actualErrors.Count());
+            Assert.Empty(actualErrors);
 
             string actual = GetCsdl(model, CsdlTarget.OData);
 
