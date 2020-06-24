@@ -304,7 +304,7 @@ namespace Microsoft.OData.Client
         /// <summary>Asynchronously loads the collection by executing a <see cref="Microsoft.OData.Client.DataServiceQuery{TElement}" />.Supported only by the WCF Data Services 5.0 client for Silverlight.</summary>
         /// <param name="query">The <see cref="Microsoft.OData.Client.DataServiceQuery{TElement}" /> that, when executed, returns the entities to load into the collection.</param>
         /// <exception cref="System.ArgumentException">When query is null or not a <see cref="Microsoft.OData.Client.DataServiceQuery{TElement}" />.</exception>
-        /// <exception cref="System.InvalidOperationException">When a previous call to <see cref="Microsoft.OData.Client.DataServiceCollection{T}.LoadAsync" /> is not yet complete.</exception>
+        /// <exception cref="System.InvalidOperationException">When a previous call to <see cref="Microsoft.OData.Client.DataServiceCollection{T}.LoadAsync(System.Linq.IQueryable{T})" /> is not yet complete.</exception>
         /// <remarks>This method uses the event-based async pattern.
         /// The method returns immediately without waiting for the query to complete. Then it calls the handler of the
         /// <see cref="LoadCompleted"/> event exactly once on the UI thread. The event will be raised regardless
@@ -380,7 +380,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Asynchronously loads items into the collection, when it represents the navigation property of an entity.Supported only by the WCF Data Services 5.0 client for Silverlight.</summary>
-        /// <exception cref="System.InvalidOperationException">When the collection does not belong to a parent entity.-or-When the parent entity is not tracked by the <see cref="Microsoft.OData.Client.DataServiceContext" />.-or-When a previous call to <see cref="Microsoft.OData.Client.DataServiceCollection{T}.LoadAsync" /> is not yet complete.</exception>
+        /// <exception cref="System.InvalidOperationException">When the collection does not belong to a parent entity.-or-When the parent entity is not tracked by the <see cref="Microsoft.OData.Client.DataServiceContext" />.-or-When a previous call to <see cref="Microsoft.OData.Client.DataServiceCollection{T}.LoadAsync()" /> is not yet complete.</exception>
         /// <remarks>This method loads the content of a property represented by this DataServiceCollection.
         /// If this instance is not associated with any property and entity the method will fail.
         /// This method uses the event-based async pattern.

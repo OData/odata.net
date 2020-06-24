@@ -576,7 +576,7 @@ namespace Microsoft.OData.Client
             }
         }
 
-        /// <summary>Gets or sets the <see cref="Microsoft.OData.Client.SaveChangesOptions" /> values that are used by the <see cref="Microsoft.OData.Client.DataServiceContext.SaveChanges" /> method.</summary>
+        /// <summary>Gets or sets the <see cref="Microsoft.OData.Client.SaveChangesOptions" /> values that are used by the <see cref="Microsoft.OData.Client.DataServiceContext.SaveChanges(SaveChangesOptions)" /> method.</summary>
         /// <returns>The current options for the save changes operation.</returns>
         public virtual SaveChangesOptions SaveChangesDefaultOptions
         {
@@ -1480,7 +1480,7 @@ namespace Microsoft.OData.Client
         /// <summary>Sets a binary data stream that belongs to the specified entity, with the specified Content-Type and Slug headers in the request message.</summary>
         /// <param name="entity">The entity to which the data stream belongs.</param>
         /// <param name="stream">The <see cref="System.IO.Stream" /> from which to read the binary data. </param>
-        /// <param name="closeStream">A <see cref="System.Boolean" /> value that determines whether the data stream is closed when the <see cref="Microsoft.OData.Client.DataServiceContext.SaveChanges" /> method is completed. </param>
+        /// <param name="closeStream">A <see cref="System.Boolean" /> value that determines whether the data stream is closed when the <see cref="Microsoft.OData.Client.DataServiceContext.SaveChanges()" /> method is completed. </param>
         /// <param name="contentType">The Content-Type header value for the request message.</param>
         /// <param name="slug">The Slug header value for the request message.</param>
         /// <exception cref="System.ArgumentNullException">Any of the parameters supplied to the method are null.</exception>
@@ -1501,7 +1501,7 @@ namespace Microsoft.OData.Client
         /// <summary>Sets a binary data stream for the specified entity, with the specified headers in the request message.</summary>
         /// <param name="entity">The entity to which the binary stream belongs.</param>
         /// <param name="stream">The <see cref="System.IO.Stream" /> from which to read the binary data. </param>
-        /// <param name="closeStream">A <see cref="System.Boolean" /> value that determines whether the data stream is closed when the <see cref="Microsoft.OData.Client.DataServiceContext.SaveChanges" /> method is completed. </param>
+        /// <param name="closeStream">A <see cref="System.Boolean" /> value that determines whether the data stream is closed when the <see cref="Microsoft.OData.Client.DataServiceContext.SaveChanges()" /> method is completed. </param>
         /// <param name="args">An instance of the <see cref="Microsoft.OData.Client.DataServiceRequestArgs" /> class that contains settings for the HTTP request message.</param>
         /// <exception cref="System.ArgumentNullException">Any of the parameters supplied to the method are null.</exception>
         /// <exception cref="System.ArgumentException">The <paramref name="entity" /> is not being tracked by this <see cref="Microsoft.OData.Client.DataServiceContext" /> instance. -or-The <paramref name="entity" /> has the <see cref="Microsoft.OData.Client.MediaEntryAttribute" /> applied. </exception>
@@ -1550,7 +1550,7 @@ namespace Microsoft.OData.Client
         /// <param name="entity">The entity to which the binary stream belongs.</param>
         /// <param name="name">The name of the binary stream to save.</param>
         /// <param name="stream">The <see cref="System.IO.Stream" /> from which to read the binary data.</param>
-        /// <param name="closeStream">A <see cref="System.Boolean" /> value that determines whether the data stream is closed when the <see cref="Microsoft.OData.Client.DataServiceContext.SaveChanges" /> method is completed.</param>
+        /// <param name="closeStream">A <see cref="System.Boolean" /> value that determines whether the data stream is closed when the <see cref="Microsoft.OData.Client.DataServiceContext.SaveChanges()" /> method is completed.</param>
         /// <param name="contentType">The Content-Type header value for the request message.</param>
         /// <exception cref="ArgumentException">The entity is not being tracked or name is an empty string.</exception>
         /// <exception cref="ArgumentNullException">Any of the arguments is null.</exception>
@@ -1566,7 +1566,7 @@ namespace Microsoft.OData.Client
         /// <param name="entity">The entity to which the binary stream belongs.</param>
         /// <param name="name">The name of the binary stream to save.</param>
         /// <param name="stream">The <see cref="System.IO.Stream" /> from which to read the binary data.</param>
-        /// <param name="closeStream">A <see cref="System.Boolean" /> value that determines whether the data stream is closed when the <see cref="Microsoft.OData.Client.DataServiceContext.SaveChanges" /> method is completed.</param>
+        /// <param name="closeStream">A <see cref="System.Boolean" /> value that determines whether the data stream is closed when the <see cref="Microsoft.OData.Client.DataServiceContext.SaveChanges()" /> method is completed.</param>
         /// <param name="args">An instance of the <see cref="Microsoft.OData.Client.DataServiceRequestArgs" /> class that contains settings for the HTTP request message.</param>
         /// <remarks>Calling this method marks the entity as media link resource (MLE). It also marks the entity as modified
         /// so that it will participate in the next call to SaveChanges.</remarks>
@@ -2019,7 +2019,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Saves the changes that the <see cref="Microsoft.OData.Client.DataServiceContext" /> is tracking to storage.</summary>
-        /// <returns>A <see cref="Microsoft.OData.Client.DataServiceResponse" /> that contains status, headers, and errors that result from the call to <see cref="Microsoft.OData.Client.DataServiceContext.SaveChanges" />.</returns>
+        /// <returns>A <see cref="Microsoft.OData.Client.DataServiceResponse" /> that contains status, headers, and errors that result from the call to <see cref="Microsoft.OData.Client.DataServiceContext.SaveChanges(SaveChangesOptions)" />.</returns>
         /// <param name="options">A member of the <see cref="Microsoft.OData.Client.SaveChangesOptions" /> enumeration for how the client can save the pending set of changes.</param>
         public virtual DataServiceResponse SaveChanges(SaveChangesOptions options)
         {

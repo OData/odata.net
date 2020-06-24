@@ -206,7 +206,7 @@ namespace Microsoft.OData.Client
             }
         }
 
-        /// <summary>Gets an eTag value that indicates the state of data targeted for update since the last call to <see cref="Microsoft.OData.Client.DataServiceContext.SaveChanges" />.</summary>
+        /// <summary>Gets an eTag value that indicates the state of data targeted for update since the last call to <see cref="Microsoft.OData.Client.DataServiceContext.SaveChanges()" />.</summary>
         /// <returns>The state of data.</returns>
         public string ETag { get; set; }
 
