@@ -15,9 +15,8 @@ namespace Microsoft.Test.OData.Tests.Client.BatchRequestTests
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class BatchRequestWithRelativeUriTests : ODataWCFServiceTestsBase<InMemoryEntities>
     {
         private static string NameSpacePrefix = "Microsoft.Test.OData.Services.ODataWCFService.";
@@ -27,19 +26,19 @@ namespace Microsoft.Test.OData.Tests.Client.BatchRequestTests
         {
         }
 
-        [TestMethod]
+        [Fact]
         public void BatchRequestWithAbsoluteUriTest()
         {
             BatchRequestWithPayloadUriWritingOption(BatchPayloadUriOption.AbsoluteUri);
         }
 
-        [TestMethod]
+        [Fact]
         public void BatchRequestWithAbsoluteResourcePathAndHostTest()
         {
             BatchRequestWithPayloadUriWritingOption(BatchPayloadUriOption.AbsoluteUriUsingHostHeader);
         }
 
-        [TestMethod]
+        [Fact]
         public void BatchRequestWithRelativeResourcePathTest()
         {
             BatchRequestWithPayloadUriWritingOption(BatchPayloadUriOption.RelativeUri);
@@ -109,7 +108,7 @@ namespace Microsoft.Test.OData.Tests.Client.BatchRequestTests
             }
 
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
 
             using (var innerMessageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
             {
@@ -136,7 +135,7 @@ namespace Microsoft.Test.OData.Tests.Client.BatchRequestTests
                                     // the first response message is a feed
                                     var feedReader = operationResponseReader.CreateODataResourceSetReader();
 
-                                    Assert.AreEqual(200, operationResponse.StatusCode);
+                                    Assert.Equal(200, operationResponse.StatusCode);
                                     List<ODataResource> pis = new List<ODataResource>();
                                     while (feedReader.Read())
                                     {
@@ -144,20 +143,20 @@ namespace Microsoft.Test.OData.Tests.Client.BatchRequestTests
                                         {
                                             case ODataReaderState.ResourceEnd:
                                                 ODataResource entry = feedReader.Item as ODataResource;
-                                                Assert.IsNotNull(entry);
+                                                Assert.NotNull(entry);
                                                 pis.Add(entry);
                                                 break;
                                         }
                                     }
-                                    Assert.AreEqual(ODataReaderState.Completed, feedReader.State);
-                                    Assert.AreEqual(3, pis.Count);
+                                    Assert.Equal(ODataReaderState.Completed, feedReader.State);
+                                    Assert.Equal(3, pis.Count);
                                 }
                                 else if (batchOperationId == 1)
                                 {
                                     // the second response message is a creation response
                                     var entryReader = operationResponseReader.CreateODataResourceReader();
 
-                                    Assert.AreEqual(201, operationResponse.StatusCode);
+                                    Assert.Equal(201, operationResponse.StatusCode);
                                     List<ODataResource> pis = new List<ODataResource>();
                                     while (entryReader.Read())
                                     {
@@ -165,21 +164,21 @@ namespace Microsoft.Test.OData.Tests.Client.BatchRequestTests
                                         {
                                             case ODataReaderState.ResourceEnd:
                                                 ODataResource entry = entryReader.Item as ODataResource;
-                                                Assert.IsNotNull(entry);
+                                                Assert.NotNull(entry);
                                                 pis.Add(entry);
                                                 break;
                                         }
                                     }
-                                    Assert.AreEqual(ODataReaderState.Completed, entryReader.State);
-                                    Assert.AreEqual(1, pis.Count);
-                                    Assert.AreEqual(102910, pis[0].Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
+                                    Assert.Equal(ODataReaderState.Completed, entryReader.State);
+                                    Assert.Equal(1, pis.Count);
+                                    Assert.Equal(102910, pis[0].Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
                                 }
                                 else if (batchOperationId == 2)
                                 {
                                     // the third response message is an entry
                                     var entryReader = operationResponseReader.CreateODataResourceReader();
 
-                                    Assert.AreEqual(200, operationResponse.StatusCode);
+                                    Assert.Equal(200, operationResponse.StatusCode);
                                     List<ODataResource> statements = new List<ODataResource>();
                                     while (entryReader.Read())
                                     {
@@ -187,21 +186,21 @@ namespace Microsoft.Test.OData.Tests.Client.BatchRequestTests
                                         {
                                             case ODataReaderState.ResourceEnd:
                                                 ODataResource entry = entryReader.Item as ODataResource;
-                                                Assert.IsNotNull(entry);
+                                                Assert.NotNull(entry);
                                                 statements.Add(entry);
                                                 break;
                                         }
                                     }
-                                    Assert.AreEqual(ODataReaderState.Completed, entryReader.State);
-                                    Assert.AreEqual(1, statements.Count);
-                                    Assert.AreEqual(103901001, statements[0].Properties.Single(p => p.Name == "StatementID").Value);
+                                    Assert.Equal(ODataReaderState.Completed, entryReader.State);
+                                    Assert.Equal(1, statements.Count);
+                                    Assert.Equal(103901001, statements[0].Properties.Single(p => p.Name == "StatementID").Value);
                                 }
                             }
                             batchOperationId++;
                             break;
                     }
                 }
-                Assert.AreEqual(ODataBatchReaderState.Completed, batchReader.State);
+                Assert.Equal(ODataBatchReaderState.Completed, batchReader.State);
             }
         }
     }

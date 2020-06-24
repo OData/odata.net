@@ -18,19 +18,11 @@ namespace Microsoft.Test.OData.Tests.Client
     using Microsoft.Test.OData.Framework.Server;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
     /// <summary>
     /// Base class for tests that use the service implemented using ODataLib and EDMLib.
     /// </summary>
-#if !WIN8 && !WINDOWSPHONE
-    [DeploymentItem(@"EntityFramework.dll")]
-#endif
-#if !PORTABLELIB
-   // [DeploymentItem(@"Microsoft.VisualStudio.QualityTools.Common.dll")]
-    [DeploymentItem(@"Microsoft.VisualStudio.TeamSystem.Licensing.dll")]
-#endif
-    [TestClass]
     public class ODataWCFServiceTestsBase<TClientContext> where TClientContext : Microsoft.OData.Client.DataServiceContext
     {
         private readonly ServiceDescriptor serviceDescriptor;
@@ -47,6 +39,12 @@ namespace Microsoft.Test.OData.Tests.Client
         {
             TestServiceUtil.ServiceUriGenerator = ServiceGeneratorFactory.CreateServiceUriGenerator();
             this.serviceDescriptor = serviceDescriptor;
+
+            TestServiceWrapper = new WCFServiceWrapper(this.serviceDescriptor);
+            TestServiceWrapper.StartService();
+            RetrieveServiceEdmModel();
+            TestClientContext = Activator.CreateInstance(typeof(TClientContext), ServiceBaseUri) as TClientContext;
+            ResetDataSource();
         }
 
         /// <summary>
@@ -65,28 +63,16 @@ namespace Microsoft.Test.OData.Tests.Client
             MimeTypes.ApplicationJson + MimeTypes.ODataParameterNoMetadata,
         };
 
-        [TestInitialize]
-        public void TestInitialize()
-        {
-            TestServiceWrapper = new WCFServiceWrapper(this.serviceDescriptor);
-            TestServiceWrapper.StartService();
-            RetrieveServiceEdmModel();
-            TestClientContext = Activator.CreateInstance(typeof(TClientContext), ServiceBaseUri) as TClientContext;
-            ResetDataSource();
-        }
-
-        [TestCleanup]
-        public void TestCleanup()
-        {
-            TestServiceWrapper.StopService();
-        }
-
         private void ResetDataSource()
         {
             var ar = TestClientContext.BeginExecute(new Uri("ResetDataSource/", UriKind.Relative), null, null, "POST");
             ar.AsyncWaitHandle.WaitOne();
         }
 
+        public void Dispose()
+        {
+            TestServiceWrapper.StopService();
+        }
         private Stream GetStreamFromUrl(string absoluteUri)
         {
             HttpWebRequestMessage message = new HttpWebRequestMessage(new Uri(absoluteUri, UriKind.Absolute));
@@ -109,7 +95,8 @@ namespace Microsoft.Test.OData.Tests.Client
                 };
                 Model = messageReader.ReadMetadataDocument(getReferencedSchemaFunc);
             }
-            Assert.IsNotNull(Model.EntityContainer, "$metadata request failed.");
+            //$metadata request failed
+            Assert.NotNull(Model.EntityContainer);
         }
     }
 }

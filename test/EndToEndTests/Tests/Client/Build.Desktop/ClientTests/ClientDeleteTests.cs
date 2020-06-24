@@ -10,12 +10,11 @@ namespace Microsoft.Test.OData.Tests.Client
     using System.Net.Http;
     using Microsoft.OData.Client;
     using Microsoft.Test.OData.Services.TestServices;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
     /// <summary>
     /// Generic client delete test cases.
     /// </summary>
-    [TestClass]
     public class ClientDeleteTests : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>
     {
         public ClientDeleteTests()
@@ -24,12 +23,12 @@ namespace Microsoft.Test.OData.Tests.Client
         }
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
-        [TestMethod]
+        [Fact]
         public void ExecuteDeleteMethod()
         {
             DataServiceQuery query =  this.TestClientContext.People.Where(p => p.PersonID == 1).Select(p => p.Parent) as DataServiceQuery;
             var response = this.TestClientContext.Execute(query.RequestUri, HttpMethod.Delete.Method);
-            Assert.AreEqual(204, response.StatusCode);
+            Assert.Equal(204, response.StatusCode);
         }
 #endif
     }

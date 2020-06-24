@@ -7,14 +7,13 @@
 using Microsoft.OData.Client;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace AstoriaUnitTests.Tests.Client
 {
-    [TestClass]
     public class DataServiceClientExceptionSerializationTests
     {
-        [TestMethod]
+        [Fact]
         public void When_DataServiceClientException_is_serialized_all_instance_data_is_saved()
         {
             // Arrange
@@ -32,8 +31,8 @@ namespace AstoriaUnitTests.Tests.Client
             var ds = (DataServiceClientException)bf.Deserialize(stream);
 
             // Assert
-            Assert.AreEqual(expectedMessage, ds.Message);
-            Assert.AreEqual(expectedStatusCode, ds.StatusCode);
+            Assert.Equal(expectedMessage, ds.Message);
+            Assert.Equal(expectedStatusCode, ds.StatusCode);
         }
     }
 }

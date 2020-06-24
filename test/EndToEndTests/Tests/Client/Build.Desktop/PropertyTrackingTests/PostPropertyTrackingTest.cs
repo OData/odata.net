@@ -14,9 +14,8 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
     using Microsoft.OData;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class PostPropertyTrackingTest : ODataWCFServiceTestsBase<InMemoryEntitiesPlus>
     {
         public PostPropertyTrackingTest()
@@ -24,7 +23,7 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
         {
         }
 
-        [TestMethod]
+        [Fact]
         public void PostPartialProperties()
         {
             this.TestClientContext.MergeOption = MergeOption.OverwriteChanges;
@@ -46,7 +45,7 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
 
                 if (arg.Entry.TypeName.EndsWith("CustomerPlus"))
                 {
-                    Assert.AreEqual(expectedPropertyCount, arg.Entry.Properties.Count());
+                    Assert.Equal(expectedPropertyCount, arg.Entry.Properties.Count());
                 }
             });
 
@@ -76,7 +75,7 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
             this.TestClientContext.SaveChanges(SaveChangesOptions.PostOnlySetProperties);
 
             //Validate that entire complex type was sent to server side.
-            Assert.AreEqual(4, address.Properties.Count());
+            Assert.Equal(4, address.Properties.Count());
 
             //Post Navigation property to an entitySet
             var people1 = new DataServiceCollection<CustomerPlus>(this.TestClientContext.CustomersPlus.Where(p => p.PersonIDPlus == 10001));
@@ -91,13 +90,13 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
 
             //Validate
             var customer = this.TestClientContext.CustomersPlus.Expand(c => c.OrdersPlus).Where(p => p.PersonIDPlus == 10001).FirstOrDefault();
-            Assert.IsNotNull(customer);
-            Assert.AreEqual("London", ((CustomerPlus)customer).CityPlus);
-            Assert.AreEqual(0, customer.NumbersPlus.Count);
-            Assert.IsNull(((HomeAddressPlus)customer.HomeAddressPlus).FamilyNamePlus);
-            Assert.IsNull(customer.MiddleNamePlus);
+            Assert.NotNull(customer);
+            Assert.Equal("London", ((CustomerPlus)customer).CityPlus);
+            Assert.Equal(0, customer.NumbersPlus.Count);
+            Assert.Null(((HomeAddressPlus)customer.HomeAddressPlus).FamilyNamePlus);
+            Assert.Null(customer.MiddleNamePlus);
             var order1 = customer.OrdersPlus.Where(o => o.OrderIDPlus == 10001).Single();
-            Assert.IsNull(order1.ShelfLifePlus);
+            Assert.Null(order1.ShelfLifePlus);
 
             //Post Entity with open complex type and with contained Navigation
             DataServiceCollection<AccountPlus> accounts =
@@ -117,7 +116,7 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
             expectedPropertyCount = 3;
             this.TestClientContext.SaveChanges(SaveChangesOptions.PostOnlySetProperties);
             //Validate entire open complex type was sent to server side.
-            Assert.AreEqual(4, accountInfo.Properties.Count());
+            Assert.Equal(4, accountInfo.Properties.Count());
 
             //Post Contained Navigation property
             PaymentInstrumentPlus pi = new PaymentInstrumentPlus();
@@ -142,15 +141,15 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
             this.TestClientContext.SaveChanges(SaveChangesOptions.PostOnlySetProperties);
 
             var account1 = this.TestClientContext.AccountsPlus.Expand(a => a.MyPaymentInstrumentsPlus).Expand(a => a.MyGiftCardPlus).Where(a => a.AccountIDPlus == 110).Single();
-            Assert.AreEqual("CN", account1.CountryRegionPlus);
-            Assert.AreEqual(expectedMiddleName, account1.AccountInfoPlus.MiddleNamePlus);
-            Assert.AreEqual("Base", account1.AccountInfoPlus.LastNamePlus);
-            Assert.IsTrue(account1.AccountInfoPlus.IsActivePlus);
+            Assert.Equal("CN", account1.CountryRegionPlus);
+            Assert.Equal(expectedMiddleName, account1.AccountInfoPlus.MiddleNamePlus);
+            Assert.Equal("Base", account1.AccountInfoPlus.LastNamePlus);
+            Assert.True(account1.AccountInfoPlus.IsActivePlus);
             var pi1 = account1.MyPaymentInstrumentsPlus.Where(p => p.PaymentInstrumentIDPlus == 1003).SingleOrDefault();
-            Assert.IsNotNull(pi1);
-            Assert.AreEqual("FriendlyName", pi1.FriendlyNamePlus);
-            Assert.IsNull(account1.MyGiftCardPlus.OwnerNamePlus);
-            Assert.AreEqual(2000, account1.MyGiftCardPlus.AmountPlus);
+            Assert.NotNull(pi1);
+            Assert.Equal("FriendlyName", pi1.FriendlyNamePlus);
+            Assert.Null(account1.MyGiftCardPlus.OwnerNamePlus);
+            Assert.Equal(2000, account1.MyGiftCardPlus.AmountPlus);
 
             //Post Entity with Enum property and collection of Enum property
             DataServiceCollection<ProductPlus> products = new DataServiceCollection<ProductPlus>(this.TestClientContext);
@@ -169,8 +168,8 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
             this.TestClientContext.SaveChanges(SaveChangesOptions.PostOnlySetProperties);
 
             var product2 = this.TestClientContext.ProductsPlus.Where(p => p.ProductIDPlus == 1000000).FirstOrDefault();
-            Assert.IsNotNull(product2);
-            Assert.AreEqual("Apple", product2.NamePlus);
+            Assert.NotNull(product2);
+            Assert.Equal("Apple", product2.NamePlus);
 
             //Post Navigation property under derived singleton
             DataServiceCollection<CompanyPlus> publicCompany = new DataServiceCollection<CompanyPlus>(this.TestClientContext.PublicCompanyPlus);
@@ -184,8 +183,8 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
 
             var pc = this.TestClientContext.PublicCompanyPlus.Expand(p => (p as PublicCompanyPlus).AssetsPlus).GetValue() as PublicCompanyPlus;
             var asset2 = pc.AssetsPlus.Where(a => a.AssetIDPlus == 4).First();
-            Assert.AreEqual(50, asset2.NumberPlus);
-            Assert.IsNull(asset2.NamePlus);
+            Assert.Equal(50, asset2.NumberPlus);
+            Assert.Null(asset2.NamePlus);
 
             //Post Navigation property of Singleton
             DataServiceCollection<CompanyPlus> company = new DataServiceCollection<CompanyPlus>(this.TestClientContext.CompanyPlus);
@@ -199,11 +198,11 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
 
             var company2 = this.TestClientContext.CompanyPlus.Expand(p => p.DepartmentsPlus).GetValue();
             var department2 = company2.DepartmentsPlus.Where(d => d.DepartmentIDPlus == 10001).First();
-            Assert.AreEqual("D1", department.NamePlus);
-            Assert.IsNull(department.DepartmentNOPlus);
+            Assert.Equal("D1", department.NamePlus);
+            Assert.Null(department.DepartmentNOPlus);
         }
 
-        [TestMethod]
+        [Fact]
         public void PostPartialPropertiesInBatch()
         {
             var batchFlags = new SaveChangesOptions[] { SaveChangesOptions.BatchWithSingleChangeset, SaveChangesOptions.BatchWithIndependentOperations };
@@ -261,13 +260,13 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
                 //Post entity into an entity set
                 this.TestClientContext.SaveChanges(SaveChangesOptions.PostOnlySetProperties | batchFlag);
 
-                Assert.AreEqual(7, entries.Where(e => e.TypeName.Contains("CustomerPlus")).First().Properties.Count());
-                Assert.AreEqual(2, entries.Where(e => e.TypeName.Contains("AccountPlus")).First().Properties.Count());
-                Assert.AreEqual(7, entries.Where(e => e.TypeName.Contains("ProductPlus")).First().Properties.Count());
+                Assert.Equal(7, entries.Where(e => e.TypeName.Contains("CustomerPlus")).First().Properties.Count());
+                Assert.Equal(2, entries.Where(e => e.TypeName.Contains("AccountPlus")).First().Properties.Count());
+                Assert.Equal(7, entries.Where(e => e.TypeName.Contains("ProductPlus")).First().Properties.Count());
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void PostFullProperties()
         {
             int expectedPropertyCount = 0;
@@ -278,7 +277,7 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
                     || arg.Entry.TypeName.EndsWith("OrderPlus"))
                 {
                     entry = arg.Entry;
-                    Assert.AreEqual(expectedPropertyCount, entry.Properties.Count());
+                    Assert.Equal(expectedPropertyCount, entry.Properties.Count());
                 }
             });
 
@@ -320,7 +319,7 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
         }
 
         //Related Fixed When an entity's nullable enum property is set to null, Client cannot correctly serializer the entry
-        [TestMethod]
+        [Fact]
         public void PostFullPropertiesInBatch()
         {
             var batchFlags = new SaveChangesOptions[] { SaveChangesOptions.BatchWithSingleChangeset, SaveChangesOptions.BatchWithIndependentOperations };
@@ -372,19 +371,19 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
                 //Post entity into an entity set
                 this.TestClientContext.SaveChanges(batchFlag);
 
-                Assert.AreEqual(10, entries.Where(e => e.TypeName.Contains("CustomerPlus")).First().Properties.Count());
-                Assert.AreEqual(2, entries.Where(e => e.TypeName.Contains("AccountPlus")).First().Properties.Count());
-                Assert.AreEqual(9, entries.Where(e => e.TypeName.Contains("ProductPlus")).First().Properties.Count());
+                Assert.Equal(10, entries.Where(e => e.TypeName.Contains("CustomerPlus")).First().Properties.Count());
+                Assert.Equal(2, entries.Where(e => e.TypeName.Contains("AccountPlus")).First().Properties.Count());
+                Assert.Equal(9, entries.Where(e => e.TypeName.Contains("ProductPlus")).First().Properties.Count());
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void PostFullPropertiesOfEntityParameterToAction()
         {
             PostPropertiesOfEntityParameterToAction(EntityParameterSendOption.SendFullProperties);
         }
 
-        [TestMethod]
+        [Fact]
         public void PostOnlySetPropertiesOfEntityParameterToAction()
         {
             PostPropertiesOfEntityParameterToAction(EntityParameterSendOption.SendOnlySetProperties);
@@ -406,7 +405,7 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
             order.OrderShelfLifesPlus = new ObservableCollection<TimeSpan>();
 
             OrderPlus orderCreated = customer.PlaceOrderPlus(order).GetValue();
-            Assert.AreEqual(orderId, orderCreated.OrderIDPlus);
+            Assert.Equal(orderId, orderCreated.OrderIDPlus);
         }
     }
 }

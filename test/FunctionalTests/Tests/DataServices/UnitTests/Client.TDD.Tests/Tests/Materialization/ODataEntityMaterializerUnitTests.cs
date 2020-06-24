@@ -7,31 +7,27 @@
 namespace AstoriaUnitTests.TDD.Tests.Client
 {
     using System;
-    using System.Collections.Generic;
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Materialization;
-    using System.Xml.Linq;
     using FluentAssertions;
     using Microsoft.OData;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
     /// <summary>
     /// Unit tests for the ODataEntityMaterializerUnitTests class.
     /// </summary>
-    [TestClass]
     public class ODataEntityMaterializerUnitTests
     {
         private ClientEdmModel clientModel;
         private DataServiceContext context;
 
-        [TestInitialize]
-        public void Initialize()
+        public ODataEntityMaterializerUnitTests()
         {
             this.clientModel = new ClientEdmModel(ODataProtocolVersion.V4);
             this.context = new DataServiceContext();
         }
 
-        [TestMethod]
+        [Fact]
         public void AfterEntryMaterializedShouldOccur()
         {
             foreach (ODataFormat format in new ODataFormat[] { ODataFormat.Json })
@@ -42,7 +38,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                 this.context.Configurations.ResponsePipeline.OnEntityMaterialized((MaterializedEntityArgs materializedEntryEventArgs) => found = materializedEntryEventArgs);
 
                 this.context.Configurations.ResponsePipeline.FireEndEntryEvents(MaterializerEntry.GetEntry(odataEntry));
-                Assert.IsNotNull(found);
+                Assert.NotNull(found);
                 found.Entity.Should().Be(entity);
                 found.Entry.Should().Be(odataEntry);
             }

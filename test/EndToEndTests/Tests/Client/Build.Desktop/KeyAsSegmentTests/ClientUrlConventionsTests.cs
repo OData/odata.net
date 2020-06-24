@@ -10,12 +10,16 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
     using Microsoft.OData.Client;
     using System.Linq;
     using Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
+    using Xunit.Abstractions;
 
-    [TestClass]
     public class ClientUrlConventionsTests : KeyAsSegmentTest
     {
-        [TestMethod]
+        public ClientUrlConventionsTests(ITestOutputHelper helper)
+            :base(helper)
+        {
+        }
+        [Fact]
         public void ClientChangesUrlConventionsBetweenQueries()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -26,17 +30,17 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
 
             var queryWithDefaultKeys = contextWrapper.CreateQuery<Customer>("Customer").OrderBy(c => c.CustomerId).ToList();
 
-            CollectionAssert.AreEqual(queryWithAzureKeys, queryWithDefaultKeys, new SimpleCustomerComparer());
+            Assert.Equal(queryWithAzureKeys, queryWithDefaultKeys);
 
             contextWrapper.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
 
             queryWithAzureKeys = contextWrapper.CreateQuery<Customer>("Customer").OrderBy(c => c.CustomerId).ToList();
 
-            CollectionAssert.AreEqual(queryWithAzureKeys, queryWithDefaultKeys, new SimpleCustomerComparer());
+            Assert.Equal(queryWithAzureKeys, queryWithDefaultKeys);
         }
 
         // This is an unsupported scenario and does not currently work.
-        // [TestMethod] // github issuse: #896
+        // [Fact] // github issuse: #896
         public void ClientChangesUrlConventionsBetweenQueryAndUpdate()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -59,16 +63,16 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             {
                 if (x == null)
                 {
-                    Assert.IsNull(y);
+                    Assert.Null(y);
                 }
                 else
                 {
                     Customer c1 = (Customer)x;
                     Customer c2 = (Customer)y;
 
-                    Assert.AreEqual(c1.CustomerId, c2.CustomerId);
-                    Assert.AreEqual(c1.Name, c2.Name);
-                    Assert.AreEqual(c1.BackupContactInfo.Count, c2.BackupContactInfo.Count);
+                    Assert.Equal(c1.CustomerId, c2.CustomerId);
+                    Assert.Equal(c1.Name, c2.Name);
+                    Assert.Equal(c1.BackupContactInfo.Count, c2.BackupContactInfo.Count);
                     this.Compare(c1.Husband, c2.Husband);
                     this.Compare(c1.Wife, c2.Wife);
                 }

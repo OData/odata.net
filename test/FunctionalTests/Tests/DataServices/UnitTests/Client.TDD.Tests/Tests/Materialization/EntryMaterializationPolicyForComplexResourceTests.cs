@@ -16,14 +16,13 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Materialization;
     using Microsoft.OData.Client.Metadata;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
     using DSClient = Microsoft.OData.Client;
 
 
-    [TestClass]
     public class EntryMaterializationPolicyForComplexResourceTests
     {
-        [TestMethod]
+        [Fact]
         public void ComplexWithPrimitiveValueShouldMaterialize()
         {
             ODataResource pointResource = new ODataResource()
@@ -44,11 +43,11 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
                 points.Add(entriesMaterializer.CurrentValue as CollectionValueMaterializationPolicyTests.Point);
             }
 
-            Assert.AreEqual(1, points.Count);
-            Assert.AreEqual(15, points.First().X);
+            Assert.Single(points);
+            Assert.Equal(15, points.First().X);
         }
 
-        [TestMethod]
+        [Fact]
         public void ApplyNonExistantPropertyWithIgnoreMissingPropertiesShouldNotError()
         {
             TestMaterializerContext context = new TestMaterializerContext() { UndeclaredPropertyBehavior = DSClient.UndeclaredPropertyBehavior.Support };
@@ -58,7 +57,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
                 .ApplyDataValue(context.ResolveTypeForMaterialization(typeof(CollectionValueMaterializationPolicyTests.Point), null), property, point);
         }
 
-        [TestMethod]
+        [Fact]
         public void ApplyNullOnCollectionPropertyShouldError()
         {
             TestMaterializerContext context = new TestMaterializerContext();
@@ -69,7 +68,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             test.ShouldThrow<InvalidOperationException>().WithMessage(DSClient.Strings.Collection_NullCollectionNotSupported(property.Name));
         }
 
-        [TestMethod]
+        [Fact]
         public void ApplyStringValueForCollectionPropertyShouldError()
         {
             TestMaterializerContext context = new TestMaterializerContext();
@@ -80,7 +79,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             test.ShouldThrow<InvalidOperationException>().WithMessage(DSClient.Strings.Deserialize_MixedTextWithComment);
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializeDerivedComplexForBaseComplexTypeProperty()
         {
             TestMaterializerContext context = new TestMaterializerContext();
@@ -103,11 +102,11 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             this.CreateEntryMaterializationPolicy(context).Materialize(materializerEntry, typeof(ChildComplexType), false);
 
             var derived = materializerEntry.ResolvedObject as DerivedComplexType;
-            Assert.IsNotNull(derived);
-            Assert.AreEqual(1, derived.DerivedProp);
+            Assert.NotNull(derived);
+            Assert.Equal(1, derived.DerivedProp);
         }
 
-        [TestMethod]
+        [Fact]
         public void ApplyDerivedComplexForBaseComplexTypeProperty()
         {
             TestMaterializerContext context = new TestMaterializerContext();
@@ -135,10 +134,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             };
             this.ApplyInnerProperty(innerResource, complexInstance, context);
 
-            Assert.AreEqual(2, (complexInstance.InnerComplexProperty as DerivedComplexType).DerivedProp);
+            Assert.Equal(2, (complexInstance.InnerComplexProperty as DerivedComplexType).DerivedProp);
         }
 
-        [TestMethod]
+        [Fact]
         public void ApplyODataCollectionValueToNonNullExistingCollectionProperty()
         {
             TestMaterializerContext context = new TestMaterializerContext();
@@ -154,7 +153,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             complexInstance.Strings.Should().HaveCount(0);
         }
 
-        [TestMethod]
+        [Fact]
         public void ApplyODataCollectionValueToNullCollectionProperty()
         {
             TestMaterializerContext context = new TestMaterializerContext();
@@ -167,7 +166,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             complexInstance.Strings[0].Should().Be("foo");
         }
 
-        [TestMethod]
+        [Fact]
         public void ValueShouldBeAppliedRegardlessIfPropertyStartsNullOrNot()
         {
             foreach (var startingPropertyState in new ChildComplexType[] { null, new ChildComplexType() })
@@ -181,7 +180,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void NullValueShouldBeAppliedToSubComplexValueProperty()
         {
             TestMaterializerContext context = new TestMaterializerContext();
@@ -189,7 +188,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             complexInstance.InnerComplexProperty = new ChildComplexType();
 
             this.ApplyInnerProperty(null, complexInstance);
-            Assert.IsNull(complexInstance.InnerComplexProperty);
+            Assert.Null(complexInstance.InnerComplexProperty);
         }
 
         private void ApplyInnerProperty(ODataResource innerResource, ComplexTypeWithChildComplexType parentInstance, TestMaterializerContext context = null)
@@ -238,7 +237,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             return entryPolicy;
         }
 
-        [TestMethod]
+        [Fact]
         public void ShouldMaterializeComplexCollection()
         {
             var pointResources = new List<ODataResource>(new ODataResource[]
@@ -265,7 +264,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             points[2].Y.Should().Be(-201);
         }
 
-        [TestMethod]
+        [Fact]
         public void ShouldMaterializeConcreteComplexCollectionDeclaredAsAbstract()
         {
             var pointResources = new List<ODataResource>(new[]
@@ -295,7 +294,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             ((CollectionValueMaterializationPolicyTests.Circle)outputCollection[1]).Diameter.Should().Be(18);
         }
 
-        [TestMethod]
+        [Fact]
         public void ShouldMaterializeNullableComplexCollection()
         {
             var pointResources = new List<ODataResource>(new[]

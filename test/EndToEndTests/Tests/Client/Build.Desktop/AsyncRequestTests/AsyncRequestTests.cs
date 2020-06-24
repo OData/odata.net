@@ -15,9 +15,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class AsyncRequestTests : ODataWCFServiceTestsBase<InMemoryEntities>
     {
         private static string NameSpacePrefix = "Microsoft.Test.OData.Services.ODataWCFService.";
@@ -28,7 +27,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
 
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncQueryRequestTest()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -39,21 +38,21 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
                 requestMessage.SetHeader("Accept", mimeType);
                 requestMessage.PreferHeader().RespondAsync = true; //Request the service to process asynchronously.
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(202, responseMessage.StatusCode);
+                Assert.Equal(202, responseMessage.StatusCode);
                 string monitorResource = responseMessage.GetHeader("Location");
-                Assert.IsFalse(string.IsNullOrWhiteSpace(monitorResource));
+                Assert.False(string.IsNullOrWhiteSpace(monitorResource));
 
                 var statusCheckRequest1 = new HttpWebRequestMessage(new Uri(monitorResource));
                 var statusCheckResponse1 = statusCheckRequest1.GetResponse();
-                Assert.AreEqual(202, statusCheckResponse1.StatusCode);
+                Assert.Equal(202, statusCheckResponse1.StatusCode);
                 monitorResource = statusCheckResponse1.GetHeader("Location");
-                Assert.IsFalse(string.IsNullOrWhiteSpace(monitorResource));
+                Assert.False(string.IsNullOrWhiteSpace(monitorResource));
 
                 //The request takes 5 seconds to finish in service, so we wait for 6 seconds. 
                 Thread.Sleep(6000); 
                 var statusCheckRequest2 = new HttpWebRequestMessage(new Uri(monitorResource));
                 var statusCheckResponse2 = statusCheckRequest2.GetResponse();
-                Assert.AreEqual(200, statusCheckResponse2.StatusCode);
+                Assert.Equal(200, statusCheckResponse2.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -62,7 +61,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
                         var asyncReader = messageReader.CreateODataAsynchronousReader();
                         var innerMessage = asyncReader.CreateResponseMessage();
 
-                        Assert.AreEqual(200, innerMessage.StatusCode);
+                        Assert.Equal(200, innerMessage.StatusCode);
                         using (var innerMessageReader = new ODataMessageReader(innerMessage, readerSettings, Model))
                         {
                             List<ODataResource> entries = new List<ODataResource>();
@@ -80,15 +79,15 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
                                 }
                                 else if (feedReader.State == ODataReaderState.ResourceSetEnd)
                                 {
-                                    Assert.IsNotNull(feedReader.Item as ODataResourceSet);
+                                    Assert.NotNull(feedReader.Item as ODataResourceSet);
                                 }
                             }
 
-                            Assert.AreEqual(ODataReaderState.Completed, feedReader.State);
-                            Assert.AreEqual(5, entries.Count);
+                            Assert.Equal(ODataReaderState.Completed, feedReader.State);
+                            Assert.Equal(5, entries.Count);
 
-                            Assert.AreEqual("Bob", entries[0].Properties.Single(p => p.Name == "FirstName").Value);
-                            Assert.AreEqual("Peter", entries[4].Properties.Single(p => p.Name == "FirstName").Value);
+                            Assert.Equal("Bob", entries[0].Properties.Single(p => p.Name == "FirstName").Value);
+                            Assert.Equal("Peter", entries[4].Properties.Single(p => p.Name == "FirstName").Value);
                         }
 
                     }
@@ -96,7 +95,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncCreateRequestTest()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -170,21 +169,21 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
 
                 #endregion
 
-                Assert.AreEqual(202, responseMessage.StatusCode);
+                Assert.Equal(202, responseMessage.StatusCode);
                 string monitorResource = responseMessage.GetHeader("Location");
-                Assert.IsFalse(string.IsNullOrWhiteSpace(monitorResource));
+                Assert.False(string.IsNullOrWhiteSpace(monitorResource));
 
                 var statusCheckRequest1 = new HttpWebRequestMessage(new Uri(monitorResource));
                 var statusCheckResponse1 = statusCheckRequest1.GetResponse();
-                Assert.AreEqual(202, statusCheckResponse1.StatusCode);
+                Assert.Equal(202, statusCheckResponse1.StatusCode);
                 monitorResource = statusCheckResponse1.GetHeader("Location");
-                Assert.IsFalse(string.IsNullOrWhiteSpace(monitorResource));
+                Assert.False(string.IsNullOrWhiteSpace(monitorResource));
 
                 //The request takes 5 seconds to finish in service, so we wait for 6 seconds. 
                 Thread.Sleep(6000);
                 var statusCheckRequest2 = new HttpWebRequestMessage(new Uri(monitorResource));
                 var statusCheckResponse2 = statusCheckRequest2.GetResponse();
-                Assert.AreEqual(200, statusCheckResponse2.StatusCode);
+                Assert.Equal(200, statusCheckResponse2.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -193,7 +192,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
                         var asyncReader = messageReader.CreateODataAsynchronousReader();
                         var innerMessage = asyncReader.CreateResponseMessage();
 
-                        Assert.AreEqual(201, innerMessage.StatusCode);
+                        Assert.Equal(201, innerMessage.StatusCode);
                         using (var innerMessageReader = new ODataMessageReader(innerMessage, readerSettings, Model))
                         {
                             List<ODataResource> entries = new List<ODataResource>();
@@ -204,14 +203,14 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
                                 if (entryReader.State == ODataReaderState.ResourceEnd)
                                 {
                                     ODataResource entry = entryReader.Item as ODataResource;
-                                    Assert.IsNotNull(entry);
+                                    Assert.NotNull(entry);
                                     entries.Add(entry);
                                 }
                             }
 
-                            Assert.AreEqual(ODataReaderState.Completed, entryReader.State);
-                            Assert.AreEqual(2, entries.Count);
-                            Assert.AreEqual(110, entries[1].Properties.Single(p => p.Name == "AccountID").Value);
+                            Assert.Equal(ODataReaderState.Completed, entryReader.State);
+                            Assert.Equal(2, entries.Count);
+                            Assert.Equal(110, entries[1].Properties.Single(p => p.Name == "AccountID").Value);
                         }
 
                     }
@@ -219,7 +218,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void AsyncBatchRequestTest()
         {
             var writerSettings = new ODataMessageWriterSettings();
@@ -292,21 +291,21 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
 
             #region request the status monitor resource
 
-            Assert.AreEqual(202, responseMessage.StatusCode);
+            Assert.Equal(202, responseMessage.StatusCode);
             string monitorResource = responseMessage.GetHeader("Location");
-            Assert.IsFalse(string.IsNullOrWhiteSpace(monitorResource));
+            Assert.False(string.IsNullOrWhiteSpace(monitorResource));
 
             var statusCheckRequest1 = new HttpWebRequestMessage(new Uri(monitorResource));
             var statusCheckResponse1 = statusCheckRequest1.GetResponse();
-            Assert.AreEqual(202, statusCheckResponse1.StatusCode);
+            Assert.Equal(202, statusCheckResponse1.StatusCode);
             monitorResource = statusCheckResponse1.GetHeader("Location");
-            Assert.IsFalse(string.IsNullOrWhiteSpace(monitorResource));
+            Assert.False(string.IsNullOrWhiteSpace(monitorResource));
 
             //The request takes 5 seconds to finish in service, so we wait for 6 seconds. 
             Thread.Sleep(6000);
             var statusCheckRequest2 = new HttpWebRequestMessage(new Uri(monitorResource));
             var statusCheckResponse2 = statusCheckRequest2.GetResponse();
-            Assert.AreEqual(200, statusCheckResponse2.StatusCode);
+            Assert.Equal(200, statusCheckResponse2.StatusCode);
 
             #endregion
 
@@ -317,7 +316,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
                 var asyncReader = messageReader.CreateODataAsynchronousReader();
                 var innerMessage = asyncReader.CreateResponseMessage();
 
-                Assert.AreEqual(200, innerMessage.StatusCode);
+                Assert.Equal(200, innerMessage.StatusCode);
                 using (var innerMessageReader = new ODataMessageReader(innerMessage, readerSettings, Model))
                 {
                     var batchReader = innerMessageReader.CreateODataBatchReader();
@@ -343,7 +342,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
                                         // the first response message is a feed
                                         var feedReader = operationResponseReader.CreateODataResourceSetReader();
 
-                                        Assert.AreEqual(200, operationResponse.StatusCode);
+                                        Assert.Equal(200, operationResponse.StatusCode);
                                         List<ODataResource> pis = new List<ODataResource>();
                                         while (feedReader.Read())
                                         {
@@ -351,20 +350,20 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
                                             {
                                                 case ODataReaderState.ResourceEnd:
                                                     ODataResource entry = feedReader.Item as ODataResource;
-                                                    Assert.IsNotNull(entry);
+                                                    Assert.NotNull(entry);
                                                     pis.Add(entry);
                                                     break;
                                             }
                                         }
-                                        Assert.AreEqual(ODataReaderState.Completed, feedReader.State);
-                                        Assert.AreEqual(3, pis.Count);
+                                        Assert.Equal(ODataReaderState.Completed, feedReader.State);
+                                        Assert.Equal(3, pis.Count);
                                     } 
                                     else if (batchOperationId == 1)
                                     {
                                         // the second response message is a creation response
                                         var entryReader = operationResponseReader.CreateODataResourceReader();
 
-                                        Assert.AreEqual(201, operationResponse.StatusCode);
+                                        Assert.Equal(201, operationResponse.StatusCode);
                                         List<ODataResource> pis = new List<ODataResource>();
                                         while (entryReader.Read())
                                         {
@@ -372,21 +371,21 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
                                             {
                                                 case ODataReaderState.ResourceEnd:
                                                     ODataResource entry = entryReader.Item as ODataResource;
-                                                    Assert.IsNotNull(entry);
+                                                    Assert.NotNull(entry);
                                                     pis.Add(entry);
                                                     break;
                                             }
                                         }
-                                        Assert.AreEqual(ODataReaderState.Completed, entryReader.State);
-                                        Assert.AreEqual(1, pis.Count);
-                                        Assert.AreEqual(102910, pis[0].Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
+                                        Assert.Equal(ODataReaderState.Completed, entryReader.State);
+                                        Assert.Single(pis);
+                                        Assert.Equal(102910, pis[0].Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
                                     }
                                     else if (batchOperationId == 2)
                                     {
                                         // the third response message is an entry
                                         var entryReader = operationResponseReader.CreateODataResourceReader();
 
-                                        Assert.AreEqual(200, operationResponse.StatusCode);
+                                        Assert.Equal(200, operationResponse.StatusCode);
                                         List<ODataResource> statements = new List<ODataResource>();
                                         while (entryReader.Read())
                                         {
@@ -394,21 +393,21 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
                                             {
                                                 case ODataReaderState.ResourceEnd:
                                                     ODataResource entry = entryReader.Item as ODataResource;
-                                                    Assert.IsNotNull(entry);
+                                                    Assert.NotNull(entry);
                                                     statements.Add(entry);
                                                     break;
                                             }
                                         }
-                                        Assert.AreEqual(ODataReaderState.Completed, entryReader.State);
-                                        Assert.AreEqual(1, statements.Count);
-                                        Assert.AreEqual(103901001, statements[0].Properties.Single(p => p.Name == "StatementID").Value);
+                                        Assert.Equal(ODataReaderState.Completed, entryReader.State);
+                                        Assert.Single(statements);
+                                        Assert.Equal(103901001, statements[0].Properties.Single(p => p.Name == "StatementID").Value);
                                     }
                                 }
                                 batchOperationId++;
                                 break;
                         }
                     }
-                    Assert.AreEqual(ODataBatchReaderState.Completed, batchReader.State);
+                    Assert.Equal(ODataBatchReaderState.Completed, batchReader.State);
 
                 }
 

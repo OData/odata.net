@@ -13,16 +13,15 @@ namespace AstoriaUnitTests.Tests
     using System.Xml.Linq;
     using FluentAssertions;
     using Microsoft.OData.Edm;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Strings = Microsoft.OData.Client.Strings;
+    using Xunit;
 
     /// <summary>
     /// Tests PrimitiveTypeConverter functionalities
     /// </summary>
-    [TestClass]
     public class ClientPrimitiveTypeConverterTests
     {
-        [TestMethod]
+        [Fact]
         public void TokenizeFromXmlTestHandlesReaderPositionAndReturnsCorrectTokens()
         {
             XElement xel = XElement.Parse("<element>true</element>");
@@ -31,13 +30,13 @@ namespace AstoriaUnitTests.Tests
 
             PrimitiveTypeConverter converter = new BooleanTypeConverter();
             var token = converter.TokenizeFromXml(r);
-            Assert.AreEqual(typeof(TextPrimitiveParserToken), token.GetType());
-            Assert.AreEqual(XmlNodeType.EndElement, r.NodeType);
-            Assert.AreEqual("element", r.LocalName);
-            Assert.AreEqual(true, token.Materialize(typeof(Boolean)));
+            Assert.Equal(typeof(TextPrimitiveParserToken), token.GetType());
+            Assert.Equal(XmlNodeType.EndElement, r.NodeType);
+            Assert.Equal("element", r.LocalName);
+            Assert.Equal(true, token.Materialize(typeof(Boolean)));
         }
 
-        [TestMethod]
+        [Fact]
         public void TokenizeFromXmlTestWithNull()
         {
             XElement xel = XElement.Parse("<element xmlns:m=\"http://docs.oasis-open.org/odata/ns/metadata\" m:null=\"true\" />");
@@ -46,10 +45,10 @@ namespace AstoriaUnitTests.Tests
 
             PrimitiveTypeConverter converter = new StringTypeConverter();
             var token = converter.TokenizeFromXml(r);
-            Assert.IsNull(token, "Expected null token when m:null=true");
+            Assert.Null(token);
         }
 
-        [TestMethod]
+        [Fact]
         public void TokenizeFromXmlHandlesEmptyStringAndIsNullShouldBeFalse()
         {
             XElement xel = XElement.Parse("<element xmlns:m=\"http://docs.oasis-open.org/odata/ns/metadata\" m:null=\"false\" />");
@@ -58,42 +57,42 @@ namespace AstoriaUnitTests.Tests
 
             PrimitiveTypeConverter converter = new StringTypeConverter();
             var token = converter.TokenizeFromXml(r);
-            Assert.AreEqual(String.Empty, token.Materialize(typeof(String)));
+            Assert.Equal(String.Empty, token.Materialize(typeof(String)));
         }
 
-        [TestMethod]
+        [Fact]
         public void BooleanTypeConverterTests()
         {
             PrimitiveTypeConverter converter = new BooleanTypeConverter();
-            Assert.AreEqual(true, converter.Parse("true"));
-            Assert.AreEqual(false, converter.Parse("false"));
-            Assert.AreEqual("true", converter.ToString(true));
-            Assert.AreEqual("false", converter.ToString(false));
+            Assert.Equal(true, converter.Parse("true"));
+            Assert.Equal(false, converter.Parse("false"));
+            Assert.Equal("true", converter.ToString(true));
+            Assert.Equal("false", converter.ToString(false));
         }
 
-        [TestMethod]
+        [Fact]
         public void ByteTypeConverterTests()
         {
             PrimitiveTypeConverter converter = new ByteTypeConverter();
-            Assert.AreEqual((byte)1, converter.Parse("1"));
-            Assert.AreEqual("1", converter.ToString((Byte)1));
+            Assert.Equal((byte)1, converter.Parse("1"));
+            Assert.Equal("1", converter.ToString((Byte)1));
         }
 
-        [TestMethod]
+        [Fact]
         public void ByteArrayTypeConverterTests()
         {
             PrimitiveTypeConverter converter = new ByteArrayTypeConverter();
             Byte[] array = (Byte[])converter.Parse("AAECAw==");
-            Assert.AreEqual(4, array.Length);
+            Assert.Equal(4, array.Length);
             for (int i = 0; i < array.Length; ++i)
             {
-                Assert.AreEqual(i, array[i]);
+                Assert.Equal(i, array[i]);
             }
-            Assert.AreEqual("AAECAw==", converter.ToString(new byte[] { 0, 1, 2, 3 }));
+            Assert.Equal("AAECAw==", converter.ToString(new byte[] { 0, 1, 2, 3 }));
         }
 
 #if !ASTORIA_LIGHT && !(NETCOREAPP1_0 || NETCOREAPP2_0)
-        [TestMethod]
+        [Fact]
         public void BinaryTypeConverterTests()
         {
             PrimitiveTypeConverter converter = new BinaryTypeConverter();
@@ -101,8 +100,8 @@ namespace AstoriaUnitTests.Tests
             BinaryTypeConverter.BinaryType = typeof(System.Data.Linq.Binary);
             try
             {
-                Assert.AreEqual(new System.Data.Linq.Binary(new byte[] { 0, 1, 2, 3 }), (System.Data.Linq.Binary)converter.Parse("AAECAw=="));
-                Assert.AreEqual("\"AAECAw==\"", converter.ToString(new System.Data.Linq.Binary(new byte[] { 0, 1, 2, 3 })));
+                Assert.Equal(new System.Data.Linq.Binary(new byte[] { 0, 1, 2, 3 }), (System.Data.Linq.Binary)converter.Parse("AAECAw=="));
+                Assert.Equal("\"AAECAw==\"", converter.ToString(new System.Data.Linq.Binary(new byte[] { 0, 1, 2, 3 })));
             }
             finally
             {
@@ -111,191 +110,191 @@ namespace AstoriaUnitTests.Tests
         }
 #endif
 
-        [TestMethod]
+        [Fact]
         public void DecimalTypeConverterTests()
         {
             PrimitiveTypeConverter converter = new DecimalTypeConverter();
-            Assert.AreEqual(12.01m, converter.Parse("12.01"));
-            Assert.AreEqual("12.01", converter.ToString(12.01m));
+            Assert.Equal(12.01m, converter.Parse("12.01"));
+            Assert.Equal("12.01", converter.ToString(12.01m));
         }
 
-        [TestMethod]
+        [Fact]
         public void DoubleTypeConverterTests()
         {
             PrimitiveTypeConverter converter = new DoubleTypeConverter();
-            Assert.AreEqual(12.01, converter.Parse("12.01"));
-            Assert.AreEqual("12.01", converter.ToString(12.01));
+            Assert.Equal(12.01, converter.Parse("12.01"));
+            Assert.Equal("12.01", converter.ToString(12.01));
         }
 
-        [TestMethod]
+        [Fact]
         public void GuidTypeConverterTests()
         {
             PrimitiveTypeConverter converter = new GuidTypeConverter();
-            Assert.AreEqual(new Guid("00000000-1000-0000-1000-100000000000"), converter.Parse("00000000-1000-0000-1000-100000000000"));
-            Assert.AreEqual("00000000-1000-0000-1000-100000000000", converter.ToString(new Guid("00000000-1000-0000-1000-100000000000")));
+            Assert.Equal(new Guid("00000000-1000-0000-1000-100000000000"), converter.Parse("00000000-1000-0000-1000-100000000000"));
+            Assert.Equal("00000000-1000-0000-1000-100000000000", converter.ToString(new Guid("00000000-1000-0000-1000-100000000000")));
         }
 
-        [TestMethod]
+        [Fact]
         public void Int16TypeConverterTests()
         {
             PrimitiveTypeConverter converter = new Int16TypeConverter();
-            Assert.AreEqual((Int16)12, converter.Parse("12"));
-            Assert.AreEqual("12", converter.ToString((Int16)12));
+            Assert.Equal((Int16)12, converter.Parse("12"));
+            Assert.Equal("12", converter.ToString((Int16)12));
         }
 
-        [TestMethod]
+        [Fact]
         public void Int32TypeConverterTests()
         {
             PrimitiveTypeConverter converter = new Int32TypeConverter();
-            Assert.AreEqual(12, converter.Parse("12"));
-            Assert.AreEqual("12", converter.ToString(12));
+            Assert.Equal(12, converter.Parse("12"));
+            Assert.Equal("12", converter.ToString(12));
         }
 
-        [TestMethod]
+        [Fact]
         public void Int64TypeConverterTests()
         {
             PrimitiveTypeConverter converter = new Int64TypeConverter();
-            Assert.AreEqual(12L, converter.Parse("12"));
-            Assert.AreEqual("12", converter.ToString(12L));
+            Assert.Equal(12L, converter.Parse("12"));
+            Assert.Equal("12", converter.ToString(12L));
         }
 
-        [TestMethod]
+        [Fact]
         public void SingleTypeConverterTests()
         {
             PrimitiveTypeConverter converter = new SingleTypeConverter();
-            Assert.AreEqual(12.5f, converter.Parse("12.5"));
-            Assert.AreEqual("12.5", converter.ToString(12.5f));
+            Assert.Equal(12.5f, converter.Parse("12.5"));
+            Assert.Equal("12.5", converter.ToString(12.5f));
         }
 
-        [TestMethod]
+        [Fact]
         public void StringTypeConverterTests()
         {
             PrimitiveTypeConverter converter = new StringTypeConverter();
-            Assert.AreEqual("ABC", converter.Parse("ABC"));
-            Assert.AreEqual("ABC", converter.ToString("ABC"));
+            Assert.Equal("ABC", converter.Parse("ABC"));
+            Assert.Equal("ABC", converter.ToString("ABC"));
         }
 
-        [TestMethod]
+        [Fact]
         public void SByteTypeConverterTests()
         {
             PrimitiveTypeConverter converter = new SByteTypeConverter();
-            Assert.AreEqual((SByte)5, converter.Parse("5"));
-            Assert.AreEqual("5", converter.ToString((SByte)5));
+            Assert.Equal((SByte)5, converter.Parse("5"));
+            Assert.Equal("5", converter.ToString((SByte)5));
         }
 
-        [TestMethod]
+        [Fact]
         public void CharTypeConverterTests()
         {
             PrimitiveTypeConverter converter = new CharTypeConverter();
-            Assert.AreEqual('A', converter.Parse("A"));
-            Assert.AreEqual("A", converter.ToString('A'));
+            Assert.Equal('A', converter.Parse("A"));
+            Assert.Equal("A", converter.ToString('A'));
         }
 
-        [TestMethod]
+        [Fact]
         public void CharArrayTypeConverterTests()
         {
             PrimitiveTypeConverter converter = new CharArrayTypeConverter();
             char[] array = (char[])converter.Parse("ABCD");
-            Assert.AreEqual("ABCD", new String(array));
-            Assert.AreEqual("ABCD", converter.ToString("ABCD".ToCharArray()));
+            Assert.Equal("ABCD", new String(array));
+            Assert.Equal("ABCD", converter.ToString("ABCD".ToCharArray()));
         }
 
-        [TestMethod]
+        [Fact]
         public void ClrTypeConverterTests()
         {
             PrimitiveTypeConverter converter = new ClrTypeConverter();
             String typeString = typeof(Double).AssemblyQualifiedName;
-            Assert.AreEqual(typeof(System.Double), converter.Parse(typeString));
-            Assert.AreEqual(typeString, converter.ToString(typeof(System.Double)));
+            Assert.Equal(typeof(System.Double), converter.Parse(typeString));
+            Assert.Equal(typeString, converter.ToString(typeof(System.Double)));
         }
 
-        [TestMethod]
+        [Fact]
         public void UriTypeConverterTests()
         {
             PrimitiveTypeConverter converter = new Microsoft.OData.Client.UriTypeConverter();
-            Assert.AreEqual(new Uri("http://localhost/"), converter.Parse("http://localhost/"));
-            Assert.AreEqual("http://localhost/", converter.ToString(new Uri("http://localhost/")));
+            Assert.Equal(new Uri("http://localhost/"), converter.Parse("http://localhost/"));
+            Assert.Equal("http://localhost/", converter.ToString(new Uri("http://localhost/")));
         }
 
-        [TestMethod]
+        [Fact]
         public void XDocumentTypeConverterTests()
         {
             PrimitiveTypeConverter converter = new XDocumentTypeConverter();
             System.Xml.Linq.XDocument xdoc = (System.Xml.Linq.XDocument)converter.Parse("<?xml version=\"1.0\" encoding=\"iso-8859-1\" standalone=\"yes\"?><feed></feed>");
-            Assert.AreEqual("<feed></feed>", xdoc.ToString());
-            Assert.AreEqual("<feed></feed>", converter.ToString(xdoc));
+            Assert.Equal("<feed></feed>", xdoc.ToString());
+            Assert.Equal("<feed></feed>", converter.ToString(xdoc));
         }
 
-        [TestMethod]
+        [Fact]
         public void XElementTypeConverterTests()
         {
             PrimitiveTypeConverter converter = new XElementTypeConverter();
             System.Xml.Linq.XElement xel = (System.Xml.Linq.XElement)converter.Parse("<feed></feed>");
-            Assert.AreEqual("<feed></feed>", xel.ToString());
-            Assert.AreEqual("<feed></feed>", converter.ToString(xel));
+            Assert.Equal("<feed></feed>", xel.ToString());
+            Assert.Equal("<feed></feed>", converter.ToString(xel));
         }
 
-        [TestMethod]
+        [Fact]
         public void DateTimeOffsetTypeConverterTests()
         {
             PrimitiveTypeConverter converter = new DateTimeOffsetTypeConverter();
             var offset = new DateTimeOffset(2010, 01, 01, 12, 30, 45, TimeSpan.FromMinutes(15));
-            Assert.AreEqual(offset, converter.Parse("2010-01-01T12:30:45+00:15"));
-            Assert.AreEqual("2010-01-01T12:30:45+00:15", converter.ToString(offset));
+            Assert.Equal(offset, converter.Parse("2010-01-01T12:30:45+00:15"));
+            Assert.Equal("2010-01-01T12:30:45+00:15", converter.ToString(offset));
         }
 
-        [TestMethod]
+        [Fact]
         public void TimeSpanTypeConverterTests()
         {
             PrimitiveTypeConverter converter = new TimeSpanTypeConverter();
             var span = TimeSpan.FromMinutes(15);
-            Assert.AreEqual(span, converter.Parse("PT15M"));
-            Assert.AreEqual("PT15M", converter.ToString(span));
+            Assert.Equal(span, converter.Parse("PT15M"));
+            Assert.Equal("PT15M", converter.ToString(span));
         }
 
-        [TestMethod]
+        [Fact]
         public void DateTypeConverterTests()
         {
             PrimitiveTypeConverter converter = new DateTypeConverter();
             var date = new Date(2014, 9, 17);
-            Assert.AreEqual(date, converter.Parse("2014-09-17"));
-            Assert.AreEqual("2014-09-17", converter.ToString(date));
+            Assert.Equal(date, converter.Parse("2014-09-17"));
+            Assert.Equal("2014-09-17", converter.ToString(date));
         }
 
-        [TestMethod]
+        [Fact]
         public void TimeOfDayTypeConverterTests()
         {
             PrimitiveTypeConverter converter = new TimeOfDayConvert();
             var time = new TimeOfDay(12, 5, 10, 9);
-            Assert.AreEqual(time, converter.Parse("12:05:10.0090000"));
-            Assert.AreEqual("12:05:10.0090000", converter.ToString(time));
+            Assert.Equal(time, converter.Parse("12:05:10.0090000"));
+            Assert.Equal("12:05:10.0090000", converter.ToString(time));
         }
 
-        [TestMethod]
+        [Fact]
         public void UInt16TypeConverterTests()
         {
             PrimitiveTypeConverter converter = new UInt16TypeConverter();
-            Assert.AreEqual((UInt16)12, converter.Parse("12"));
-            Assert.AreEqual("12", converter.ToString((UInt16)12));
+            Assert.Equal((UInt16)12, converter.Parse("12"));
+            Assert.Equal("12", converter.ToString((UInt16)12));
         }
 
-        [TestMethod]
+        [Fact]
         public void UInt32TypeConverterTests()
         {
             PrimitiveTypeConverter converter = new UInt32TypeConverter();
-            Assert.AreEqual(12U, converter.Parse("12"));
-            Assert.AreEqual("12", converter.ToString(12U));
+            Assert.Equal(12U, converter.Parse("12"));
+            Assert.Equal("12", converter.ToString(12U));
         }
 
-        [TestMethod]
+        [Fact]
         public void UInt64TypeConverterTests()
         {
             PrimitiveTypeConverter converter = new UInt64TypeConverter();
-            Assert.AreEqual(12UL, converter.Parse("12"));
-            Assert.AreEqual("12", converter.ToString(12UL));
+            Assert.Equal(12UL, converter.Parse("12"));
+            Assert.Equal("12", converter.ToString(12UL));
         }
 
-        [TestMethod]
+        [Fact]
         public void GeographyTypeConverter_TokenizeFromXml_GeoRssParserShouldParse()
         {
             XElement xel = XElement.Parse("<?xml version=\"1.0\" encoding=\"utf-16\"?><Element><gml:Point xmlns:gml=\"http://www.opengis.net/gml\" srsName=\"http://www.opengis.net/def/crs/EPSG/0/4326\"><gml:pos>45.256 -71.92</gml:pos></gml:Point></Element>");
@@ -304,18 +303,17 @@ namespace AstoriaUnitTests.Tests
 
             GeographyTypeConverter converter = new GeographyTypeConverter();
             var token = converter.TokenizeFromXml(r) as InstancePrimitiveParserToken<Geography>;
-            Assert.IsNotNull(token);
-            Assert.IsTrue(token.Instance is GeographyPoint);
+            Assert.NotNull(token);
+            Assert.True(token.Instance is GeographyPoint);
 
-            Assert.AreEqual(XmlNodeType.EndElement, r.NodeType);
-            Assert.AreEqual("Element", r.LocalName);
+            Assert.Equal(XmlNodeType.EndElement, r.NodeType);
+            Assert.Equal("Element", r.LocalName);
         }
     }
 
     /// <summary>
     /// Test behavior of PrimitiveType class
     /// </summary>
-    [TestClass]
     public class ClientPrimitiveTypeTests
     {
         // Clr Type, Edm Type Name, EdmPrimitiveType Converter Type, Has Reverse Mapping
@@ -367,7 +365,7 @@ namespace AstoriaUnitTests.Tests
                 Tuple.Create(typeof(UInt64), (String)null, EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), typeof(UInt64TypeConverter), false),
             };
 
-        [TestMethod]
+        [Fact]
         public void TypeRegistrationTest()
         {
             PrimitiveType.RegisterKnownType(typeof(ClientPrimitiveTypeTests), "MyEdmKey", EdmPrimitiveTypeKind.Int32, new Int32TypeConverter(), true);
@@ -375,39 +373,39 @@ namespace AstoriaUnitTests.Tests
             PrimitiveType ptype;
             try
             {
-                Assert.IsTrue(PrimitiveType.TryGetPrimitiveType(typeof(ClientPrimitiveTypeTests), out ptype));
-                Assert.IsTrue(PrimitiveType.TryGetPrimitiveType("MyEdmKey", out ptype));
+                Assert.True(PrimitiveType.TryGetPrimitiveType(typeof(ClientPrimitiveTypeTests), out ptype));
+                Assert.True(PrimitiveType.TryGetPrimitiveType("MyEdmKey", out ptype));
 
-                Assert.AreEqual(typeof(ClientPrimitiveTypeTests), ptype.ClrType);
-                Assert.AreEqual("MyEdmKey", ptype.EdmTypeName);
-                Assert.AreEqual(true, ptype.HasReverseMapping);
-                Assert.IsTrue(ptype.TypeConverter != null && ptype.TypeConverter is Int32TypeConverter);
+                Assert.Equal(typeof(ClientPrimitiveTypeTests), ptype.ClrType);
+                Assert.Equal("MyEdmKey", ptype.EdmTypeName);
+                Assert.True(ptype.HasReverseMapping);
+                Assert.True(ptype.TypeConverter != null && ptype.TypeConverter is Int32TypeConverter);
             }
             finally
             {
                 PrimitiveType.DeleteKnownType(typeof(ClientPrimitiveTypeTests), "MyEdmKey");
-                Assert.IsFalse(PrimitiveType.TryGetPrimitiveType(typeof(ClientPrimitiveTypeTests), out ptype));
-                Assert.IsFalse(PrimitiveType.TryGetPrimitiveType("MyEdmKey", out ptype));
+                Assert.False(PrimitiveType.TryGetPrimitiveType(typeof(ClientPrimitiveTypeTests), out ptype));
+                Assert.False(PrimitiveType.TryGetPrimitiveType("MyEdmKey", out ptype));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ClrMappingTableTests()
         {
             foreach (var t in primitiveTypes)
             {
-                Assert.IsTrue(PrimitiveType.IsKnownType(t.Item1));
-                Assert.IsTrue(PrimitiveType.IsKnownNullableType(t.Item1));
+                Assert.True(PrimitiveType.IsKnownType(t.Item1));
+                Assert.True(PrimitiveType.IsKnownNullableType(t.Item1));
                 PrimitiveType ptype;
-                Assert.IsTrue(PrimitiveType.TryGetPrimitiveType(t.Item1, out ptype));
-                Assert.AreEqual(t.Item2, ptype.EdmTypeName);
-                Assert.AreEqual(t.Item3.PrimitiveKind, ptype.CreateEdmPrimitiveType().PrimitiveKind);
-                Assert.AreEqual(t.Item4, ptype.TypeConverter.GetType());
-                Assert.AreEqual(t.Item5, ptype.HasReverseMapping);
+                Assert.True(PrimitiveType.TryGetPrimitiveType(t.Item1, out ptype));
+                Assert.Equal(t.Item2, ptype.EdmTypeName);
+                Assert.Equal(t.Item3.PrimitiveKind, ptype.CreateEdmPrimitiveType().PrimitiveKind);
+                Assert.Equal(t.Item4, ptype.TypeConverter.GetType());
+                Assert.Equal(t.Item5, ptype.HasReverseMapping);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void EdmMappingTableTests()
         {
             foreach (var t in primitiveTypes)
@@ -416,16 +414,16 @@ namespace AstoriaUnitTests.Tests
                 if (!String.IsNullOrEmpty(t.Item2))
                 {
                     // type always mapped to some Edm type
-                    Assert.IsTrue(PrimitiveType.TryGetPrimitiveType(t.Item2, out ptype));
+                    Assert.True(PrimitiveType.TryGetPrimitiveType(t.Item2, out ptype));
 
                     if (t.Item5)
                     {
                         // has reverse mapping
-                        Assert.AreEqual(t.Item1, ptype.ClrType);
+                        Assert.Equal(t.Item1, ptype.ClrType);
                     }
                     else
                     {
-                        Assert.AreNotEqual(t.Item4, ptype.ClrType);
+                        Assert.NotEqual(t.Item4, ptype.ClrType);
                     }
                 }
             }
@@ -437,74 +435,71 @@ namespace AstoriaUnitTests.Tests
     /// Test behavior of ClientConvert class
     /// Several APIs within the test framework are not supported in Net Core 1.0 so test only on other platforms.
     /// </summary>
-    [TestClass]
-    public class ClientConvertTests
+    public class ClientConvertTests : IDisposable
     {
         TestTypeConverter converter;
 
-        [TestInitialize]
-        public void TestInit()
+        public ClientConvertTests()
         {
             converter = new TestTypeConverter();
             PrimitiveType.RegisterKnownType(typeof(TestPrimitiveType), "Edm.TestPrimitive", EdmPrimitiveTypeKind.Int32, converter, true);
         }
 
-        [TestCleanup]
-        public void TestClean()
+        public void Dispose()
         {
             PrimitiveType.DeleteKnownType(typeof(TestPrimitiveType), "Edm.TestPrimitive");
         }
 
-        [TestMethod]
+        [Fact]
         public void ChangeTypeTest()
         {
             TestPrimitiveType value = (TestPrimitiveType)ClientConvert.ChangeType("Property_Value", typeof(TestPrimitiveType));
-            Assert.AreEqual("Property_Value", value.Data);
-            Assert.AreEqual(1, converter.ParseCall);
-            Assert.AreEqual(0, converter.ToStringCall);
+            Assert.Equal("Property_Value", value.Data);
+            Assert.Equal(1, converter.ParseCall);
+            Assert.Equal(0, converter.ToStringCall);
         }
 
-        [TestMethod]
+        [Fact]
         public void ToNamedTypeTests()
         {
             Type t;
-            Assert.IsTrue(ClientConvert.ToNamedType(String.Empty, out t));
-            Assert.AreEqual(typeof(String), t);
+            Assert.True(ClientConvert.ToNamedType(String.Empty, out t));
+            Assert.Equal(typeof(String), t);
 
-            Assert.IsTrue(ClientConvert.ToNamedType(null, out t));
-            Assert.AreEqual(typeof(String), t);
+            Assert.True(ClientConvert.ToNamedType(null, out t));
+            Assert.Equal(typeof(String), t);
 
-            Assert.IsTrue(ClientConvert.ToNamedType("Edm.TestPrimitive", out t));
-            Assert.AreEqual(typeof(TestPrimitiveType), t);
+            Assert.True(ClientConvert.ToNamedType("Edm.TestPrimitive", out t));
+            Assert.Equal(typeof(TestPrimitiveType), t);
         }
 
-        [TestMethod]
+        [Fact]
         public void ToStringTests()
         {
             var str = ClientConvert.ToString(new TestPrimitiveType() { Data = "Property_Value" });
-            Assert.AreEqual("Property_Value", str);
-            Assert.AreEqual(0, converter.ParseCall);
-            Assert.AreEqual(1, converter.ToStringCall);
+            Assert.Equal("Property_Value", str);
+            Assert.Equal(0, converter.ParseCall);
+            Assert.Equal(1, converter.ToStringCall);
         }
 
-        [TestMethod]
+        [Fact]
         public void ConvertSpatialPointToLiteralString()
         {
             var value = GeographyFactory.Point(CoordinateSystem.DefaultGeography, 47.5, -127.234).Build();
             TestSpatialLiteral(value, Microsoft.OData.Client.XmlConstants.LiteralPrefixGeography);
         }
 
-        [TestMethod]
+        [Fact]
         public void ConvertGeometryPointToString()
         {
             var value = GeometryFactory.Point(CoordinateSystem.DefaultGeometry, 47.5, -127.234).Build();
             TestSpatialLiteral(value, Microsoft.OData.Client.XmlConstants.LiteralPrefixGeometry);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetEdmTypeTests()
         {
-            Assert.AreEqual("Edm.TestPrimitive", ClientConvert.GetEdmType(typeof(TestPrimitiveType)));
+            Assert.Equal("Edm.TestPrimitive", ClientConvert.GetEdmType(typeof(TestPrimitiveType)));
             foreach (Type t in new Type[] { typeof(UInt16), typeof(UInt32), typeof(UInt64) })
             {
                 Action test = () => ClientConvert.GetEdmType(t);
@@ -516,7 +511,7 @@ namespace AstoriaUnitTests.Tests
         {
             var result = LiteralFormatter.ForConstants.Format(value);
             var wkt = WellKnownTextSqlFormatter.Create().Write(value);
-            Assert.AreEqual(prefix + "'" + Uri.EscapeDataString(wkt) + "'", result);
+            Assert.Equal(prefix + "'" + Uri.EscapeDataString(wkt) + "'", result);
         }
     }
 #endif

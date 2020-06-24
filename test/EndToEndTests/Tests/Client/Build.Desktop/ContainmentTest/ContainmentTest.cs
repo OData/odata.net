@@ -15,13 +15,12 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using HttpWebRequestMessage = Microsoft.Test.OData.Tests.Client.Common.HttpWebRequestMessage;
+    using Xunit;
 
     /// <summary>
     /// Send query and verify the results from the service implemented using ODataLib and EDMLib.
     /// </summary>
-    [TestClass]
     public class ContainmentTest : ODataWCFServiceTestsBase<InMemoryEntities>
     {
         private const string TestModelNameSpace = "Microsoft.Test.OData.Services.ODataWCFService";
@@ -40,7 +39,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
             };
 
         #region Query
-        [TestMethod]
+        [Fact]
         public void QueryContainedEntity()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -50,7 +49,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Accounts(101)/MyGiftCard", UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -63,16 +62,16 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 ODataResource entry = reader.Item as ODataResource;
-                                Assert.AreEqual(301, entry.Properties.Single(p => p.Name == "GiftCardID").Value);
+                                Assert.Equal(301, entry.Properties.Single(p => p.Name == "GiftCardID").Value);
                             }
                         }
-                        Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                        Assert.Equal(ODataReaderState.Completed, reader.State);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CallFunctionBoundedToContainedEntity()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -81,16 +80,16 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                 "Accounts(101)/MyGiftCard/Microsoft.Test.OData.Services.ODataWCFService.GetActualAmount(bonusRate=0.2)", UriKind.Absolute));
             requestMessage.SetHeader("Accept", "*/*");
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
 
             using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
             {
                 var amount = messageReader.ReadProperty().Value;
-                Assert.AreEqual(23.88, amount);
+                Assert.Equal(23.88, amount);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CallFunctionWhichReturnsContainedEntity()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -100,7 +99,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Accounts(101)/Microsoft.Test.OData.Services.ODataWCFService.GetDefaultPI()", UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -114,17 +113,17 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 ODataResource entry = reader.Item as ODataResource;
-                                Assert.IsNotNull(entry);
+                                Assert.NotNull(entry);
                                 entries.Add(entry);
                             }
                         }
-                        Assert.AreEqual(101901, entries.Single().Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
+                        Assert.Equal(101901, entries.Single().Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void InvokeActionReturnsContainedEntity()
         {
             var writerSettings = new ODataMessageWriterSettings();
@@ -150,7 +149,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
 
                 // send the http request
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -167,15 +166,15 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                                 entries.Add(entry);
                             }
                         }
-                        Assert.AreEqual(ODataReaderState.Completed, reader.State);
-                        Assert.AreEqual(101901, entries.Single().Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
-                        Assert.AreEqual(newDate, entries.Single().Properties.Single(p => p.Name == "CreatedDate").Value);
+                        Assert.Equal(ODataReaderState.Completed, reader.State);
+                        Assert.Equal(101901, entries.Single().Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
+                        Assert.Equal(newDate, entries.Single().Properties.Single(p => p.Name == "CreatedDate").Value);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryContainedEntitySet()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -185,7 +184,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Accounts(103)/MyPaymentInstruments", UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -199,26 +198,26 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 ODataResource entry = reader.Item as ODataResource;
-                                Assert.IsNotNull(entry);
+                                Assert.NotNull(entry);
                                 entries.Add(entry);
                             }
                             else if (reader.State == ODataReaderState.ResourceSetEnd)
                             {
-                                Assert.IsNotNull(reader.Item as ODataResourceSet);
+                                Assert.NotNull(reader.Item as ODataResourceSet);
                             }
                         }
 
-                        Assert.AreEqual(ODataReaderState.Completed, reader.State);
-                        Assert.AreEqual(4, entries.Count);
+                        Assert.Equal(ODataReaderState.Completed, reader.State);
+                        Assert.Equal(4, entries.Count);
 
-                        Assert.AreEqual(103905, entries[2].Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
-                        Assert.AreEqual("103 new PI", entries[2].Properties.Single(p => p.Name == "FriendlyName").Value);
+                        Assert.Equal(103905, entries[2].Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
+                        Assert.Equal("103 new PI", entries[2].Properties.Single(p => p.Name == "FriendlyName").Value);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QuerySpecificEntityInContainedEntitySet()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -228,7 +227,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Accounts(103)/MyPaymentInstruments(103902)", UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -241,16 +240,16 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 ODataResource entry = reader.Item as ODataResource;
-                                Assert.AreEqual("103 second PI", entry.Properties.Single(p => p.Name == "FriendlyName").Value);
+                                Assert.Equal("103 second PI", entry.Properties.Single(p => p.Name == "FriendlyName").Value);
                             }
                         }
-                        Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                        Assert.Equal(ODataReaderState.Completed, reader.State);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryLevel2ContainedEntity()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -260,7 +259,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Accounts(103)/MyPaymentInstruments(103901)/BillingStatements(103901001)", UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -273,17 +272,17 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 ODataResource entry = reader.Item as ODataResource;
-                                Assert.AreEqual("Digital goods: App", entry.Properties.Single(p => p.Name == "TransactionDescription").Value);
+                                Assert.Equal("Digital goods: App", entry.Properties.Single(p => p.Name == "TransactionDescription").Value);
                             }
                         }
 
-                        Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                        Assert.Equal(ODataReaderState.Completed, reader.State);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryLevel2ContainedEntitySet()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -293,7 +292,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Accounts(103)/MyPaymentInstruments(103901)/BillingStatements", UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -306,23 +305,23 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 ODataResource entry = reader.Item as ODataResource;
-                                Assert.IsNotNull(entry.Properties.Single(p => p.Name == "StatementID").Value);
-                                Assert.IsNotNull(entry.Properties.Single(p => p.Name == "TransactionType").Value);
-                                Assert.IsNotNull(entry.Properties.Single(p => p.Name == "TransactionDescription").Value);
-                                Assert.IsNotNull(entry.Properties.Single(p => p.Name == "Amount").Value);
+                                Assert.NotNull(entry.Properties.Single(p => p.Name == "StatementID").Value);
+                                Assert.NotNull(entry.Properties.Single(p => p.Name == "TransactionType").Value);
+                                Assert.NotNull(entry.Properties.Single(p => p.Name == "TransactionDescription").Value);
+                                Assert.NotNull(entry.Properties.Single(p => p.Name == "Amount").Value);
                             }
                             else if (reader.State == ODataReaderState.ResourceSetEnd)
                             {
-                                Assert.IsNotNull(reader.Item as ODataResourceSet);
+                                Assert.NotNull(reader.Item as ODataResourceSet);
                             }
                         }
-                        Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                        Assert.Equal(ODataReaderState.Completed, reader.State);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryLeve2NonContainedEntity()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -332,7 +331,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Accounts(103)/MyPaymentInstruments(103901)/TheStoredPI", UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -345,18 +344,18 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 ODataResource entry = reader.Item as ODataResource;
-                                Assert.AreEqual(802, entry.Properties.Single(p => p.Name == "StoredPIID").Value);
-                                Assert.AreEqual("AliPay", entry.Properties.Single(p => p.Name == "PIType").Value);
+                                Assert.Equal(802, entry.Properties.Single(p => p.Name == "StoredPIID").Value);
+                                Assert.Equal("AliPay", entry.Properties.Single(p => p.Name == "PIType").Value);
                             }
                         }
 
-                        Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                        Assert.Equal(ODataReaderState.Completed, reader.State);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryLevel2Singleton()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -366,7 +365,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Accounts(101)/MyPaymentInstruments(101901)/BackupStoredPI", UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -380,22 +379,22 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 ODataResource entry = reader.Item as ODataResource;
-                                Assert.IsNotNull(entry);
+                                Assert.NotNull(entry);
                                 entries.Add(entry);
                             }
                         }
 
-                        Assert.AreEqual(ODataReaderState.Completed, reader.State);
-                        Assert.AreEqual(1, entries.Count);
+                        Assert.Equal(ODataReaderState.Completed, reader.State);
+                        Assert.Single(entries);
 
-                        Assert.AreEqual(800, entries[0].Properties.Single(p => p.Name == "StoredPIID").Value);
-                        Assert.AreEqual("The Default Stored PI", entries[0].Properties.Single(p => p.Name == "PIName").Value);
+                        Assert.Equal(800, entries[0].Properties.Single(p => p.Name == "StoredPIID").Value);
+                        Assert.Equal("The Default Stored PI", entries[0].Properties.Single(p => p.Name == "PIName").Value);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryContainedEntityWithDerivedTypeCast()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -404,7 +403,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + string.Format("Accounts(101)/MyPaymentInstruments(101902)/{0}.CreditCardPI", TestModelNameSpace), UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -417,16 +416,16 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 ODataResource entry = reader.Item as ODataResource;
-                                Assert.AreEqual(101902, entry.Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
+                                Assert.Equal(101902, entry.Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
                             }
                         }
-                        Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                        Assert.Equal(ODataReaderState.Completed, reader.State);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryContainedEntitySetWithDerivedTypeCast()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -435,7 +434,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + string.Format("Accounts(101)/MyPaymentInstruments/{0}.CreditCardPI", TestModelNameSpace), UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -448,21 +447,21 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 ODataResource entry = reader.Item as ODataResource;
-                                Assert.IsNotNull(entry.Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
+                                Assert.NotNull(entry.Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
                             }
                             else if (reader.State == ODataReaderState.ResourceSetEnd)
                             {
-                                Assert.IsNotNull(reader.Item as ODataResourceSet);
+                                Assert.NotNull(reader.Item as ODataResourceSet);
                             }
                         }
 
-                        Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                        Assert.Equal(ODataReaderState.Completed, reader.State);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryContainedEntitiesInDerivedTypeEntity()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -471,7 +470,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + string.Format("Accounts(101)/MyPaymentInstruments(101902)/{0}.CreditCardPI/CreditRecords", TestModelNameSpace), UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -484,21 +483,21 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 ODataResource entry = reader.Item as ODataResource;
-                                Assert.IsNotNull(entry.Properties.Single(p => p.Name == "CreditRecordID").Value);
+                                Assert.NotNull(entry.Properties.Single(p => p.Name == "CreditRecordID").Value);
                             }
                             else if (reader.State == ODataReaderState.ResourceSetEnd)
                             {
-                                Assert.IsNotNull(reader.Item as ODataResourceSet);
+                                Assert.NotNull(reader.Item as ODataResourceSet);
                             }
                         }
 
-                        Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                        Assert.Equal(ODataReaderState.Completed, reader.State);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryEntityContainsContainmentSet()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -507,7 +506,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Accounts(101)", UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -522,14 +521,14 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                                 entry = reader.Item as ODataResource;
                             }
                         }
-                        Assert.AreEqual(101, entry.Properties.Single(p => p.Name == "AccountID").Value);
-                        Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                        Assert.Equal(101, entry.Properties.Single(p => p.Name == "AccountID").Value);
+                        Assert.Equal(ODataReaderState.Completed, reader.State);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryFeedContainsContainmentSet()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -538,7 +537,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Accounts", UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -553,7 +552,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                                 ODataResource entry = reader.Item as ODataResource;
                                 if (entry != null && entry.TypeName.EndsWith("Account"))
                                 {
-                                    Assert.IsNotNull(entry.Properties.Single(p => p.Name == "AccountID").Value);
+                                    Assert.NotNull(entry.Properties.Single(p => p.Name == "AccountID").Value);
                                 }
                             }
                             else if (reader.State == ODataReaderState.ResourceSetEnd)
@@ -561,14 +560,14 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                                 feed = reader.Item as ODataResourceSet;
                             }
                         }
-                        Assert.IsNotNull(feed);
-                        Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                        Assert.NotNull(feed);
+                        Assert.Equal(ODataReaderState.Completed, reader.State);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryIndividualPropertyOfContainedEntity()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -578,7 +577,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Accounts(101)/MyPaymentInstruments(101902)/PaymentInstrumentID", UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -590,7 +589,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryContainedEntitiesWithFilter()
         {
             Dictionary<string, bool> testCases = new Dictionary<string, bool>()
@@ -607,7 +606,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                     var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + testCase.Key, UriKind.Absolute));
                     requestMessage.SetHeader("Accept", mimeType);
                     var responseMessage = requestMessage.GetResponse();
-                    Assert.AreEqual(200, responseMessage.StatusCode);
+                    Assert.Equal(200, responseMessage.StatusCode);
 
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
@@ -621,26 +620,26 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                                 if (reader.State == ODataReaderState.ResourceEnd)
                                 {
                                     ODataResource entry = reader.Item as ODataResource;
-                                    Assert.IsNotNull(entry);
+                                    Assert.NotNull(entry);
                                     entries.Add(entry);
                                 }
                                 else if (reader.State == ODataReaderState.ResourceSetEnd)
                                 {
-                                    Assert.IsNotNull(reader.Item as ODataResourceSet);
+                                    Assert.NotNull(reader.Item as ODataResourceSet);
                                 }
                             }
 
-                            Assert.AreEqual(ODataReaderState.Completed, reader.State);
-                            Assert.AreEqual(2, entries.Count);
-                            Assert.AreEqual(103902, entries[0].Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
-                            Assert.AreEqual(103905, entries[1].Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
+                            Assert.Equal(ODataReaderState.Completed, reader.State);
+                            Assert.Equal(2, entries.Count);
+                            Assert.Equal(103902, entries[0].Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
+                            Assert.Equal(103905, entries[1].Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
                         }
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryContainedEntitiesWithOrderby()
         {
             Dictionary<string, bool> testCases = new Dictionary<string, bool>()
@@ -657,7 +656,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                     var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + testCase.Key, UriKind.Absolute));
                     requestMessage.SetHeader("Accept", mimeType);
                     var responseMessage = requestMessage.GetResponse();
-                    Assert.AreEqual(200, responseMessage.StatusCode);
+                    Assert.Equal(200, responseMessage.StatusCode);
 
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
@@ -671,28 +670,28 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                                 if (reader.State == ODataReaderState.ResourceEnd)
                                 {
                                     ODataResource entry = reader.Item as ODataResource;
-                                    Assert.IsNotNull(entry);
+                                    Assert.NotNull(entry);
                                     entries.Add(entry);
                                 }
                                 else if (reader.State == ODataReaderState.ResourceSetEnd)
                                 {
-                                    Assert.IsNotNull(reader.Item as ODataResourceSet);
+                                    Assert.NotNull(reader.Item as ODataResourceSet);
                                 }
                             }
 
-                            Assert.AreEqual(ODataReaderState.Completed, reader.State);
-                            Assert.AreEqual(4, entries.Count);
-                            Assert.AreEqual(103902, entries[0].Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
-                            Assert.AreEqual(101910, entries[1].Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
-                            Assert.AreEqual(103901, entries[2].Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
-                            Assert.AreEqual(103905, entries[3].Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
+                            Assert.Equal(ODataReaderState.Completed, reader.State);
+                            Assert.Equal(4, entries.Count);
+                            Assert.Equal(103902, entries[0].Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
+                            Assert.Equal(101910, entries[1].Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
+                            Assert.Equal(103901, entries[2].Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
+                            Assert.Equal(103905, entries[3].Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
                         }
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryEntityAndExpandContainedEntity()
         {
             Dictionary<string, int[]> testCases = new Dictionary<string, int[]>()
@@ -719,7 +718,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                     var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + testCase.Key, UriKind.Absolute));
                     requestMessage.SetHeader("Accept", mimeType);
                     var responseMessage = requestMessage.GetResponse();
-                    Assert.AreEqual(200, responseMessage.StatusCode);
+                    Assert.Equal(200, responseMessage.StatusCode);
 
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
@@ -788,17 +787,17 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                                 }
                             }
 
-                            Assert.AreEqual(ODataReaderState.Completed, reader.State);
-                            Assert.AreEqual(testCase.Value[0], entries.Count);
+                            Assert.Equal(ODataReaderState.Completed, reader.State);
+                            Assert.Equal(testCase.Value[0], entries.Count);
 
-                            Assert.AreEqual(testCase.Value[1], navigationLinks.Count);
+                            Assert.Equal(testCase.Value[1], navigationLinks.Count);
                         }
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryContainedEntityWithSelectOption()
         {
             Dictionary<string, int> testCases = new Dictionary<string, int>()
@@ -816,7 +815,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                     var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + testCase.Key, UriKind.Absolute));
                     requestMessage.SetHeader("Accept", mimeType);
                     var responseMessage = requestMessage.GetResponse();
-                    Assert.AreEqual(200, responseMessage.StatusCode);
+                    Assert.Equal(200, responseMessage.StatusCode);
 
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
@@ -838,10 +837,10 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                                 }
                             }
 
-                            Assert.AreEqual(ODataReaderState.Completed, reader.State);
-                            Assert.AreEqual(1, entries.Count);
-                            Assert.AreEqual(0, navigationLinks.Count);
-                            Assert.AreEqual(testCase.Value, entries[0].Properties.Count());
+                            Assert.Equal(ODataReaderState.Completed, reader.State);
+                            Assert.Single(entries);
+                            Assert.Empty(navigationLinks);
+                            Assert.Equal(testCase.Value, entries[0].Properties.Count());
                         }
                     }
                 }
@@ -851,7 +850,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
         #endregion
 
         #region Create/Update/Delete
-        [TestMethod]
+        [Fact]
         public void CreateAndDeleteContainmentEntity()
         {
             // create entry and insert
@@ -888,9 +887,9 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                 var responseMessage = requestMessage.GetResponse();
 
                 // verify the create
-                Assert.AreEqual(201, responseMessage.StatusCode);
+                Assert.Equal(201, responseMessage.StatusCode);
                 ODataResource entry = this.QueryEntityItem("Accounts(101)/MyPaymentInstruments(101904)") as ODataResource;
-                Assert.AreEqual(101904, entry.Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
+                Assert.Equal(101904, entry.Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
 
                 // delete the entry
                 var deleteRequestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri + "Accounts(101)/MyPaymentInstruments(101904)"));
@@ -898,13 +897,13 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                 var deleteResponseMessage = deleteRequestMessage.GetResponse();
 
                 // verify the delete
-                Assert.AreEqual(204, deleteResponseMessage.StatusCode);
+                Assert.Equal(204, deleteResponseMessage.StatusCode);
                 ODataResource deletedEntry = this.QueryEntityItem("Accounts(101)/MyPaymentInstruments(101904)", 204) as ODataResource;
-                Assert.IsNull(deletedEntry);
+                Assert.Null(deletedEntry);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateSingleValuedContainedEntity()
         {
             // create entry and insert
@@ -944,13 +943,13 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
 
                 // verify the create
                 // TODO: [tiano] the response code should be 201
-                Assert.AreEqual(204, responseMessage.StatusCode);
+                Assert.Equal(204, responseMessage.StatusCode);
                 ODataResource entry = this.QueryEntityItem("Accounts(104)/MyGiftCard") as ODataResource;
-                Assert.AreEqual(304, entry.Properties.Single(p => p.Name == "GiftCardID").Value);
+                Assert.Equal(304, entry.Properties.Single(p => p.Name == "GiftCardID").Value);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void UpdateContainmentEntity()
         {
             // create entry and insert
@@ -987,15 +986,15 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                 var responseMessage = requestMessage.GetResponse();
 
                 // verify the create
-                Assert.AreEqual(204, responseMessage.StatusCode);
+                Assert.Equal(204, responseMessage.StatusCode);
                 ODataResource entry = this.QueryEntityItem("Accounts(101)/MyPaymentInstruments(101903)") as ODataResource;
-                Assert.AreEqual(101903, entry.Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
-                Assert.AreEqual(mimeType, entry.Properties.Single(p => p.Name == "FriendlyName").Value);
+                Assert.Equal(101903, entry.Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
+                Assert.Equal(mimeType, entry.Properties.Single(p => p.Name == "FriendlyName").Value);
             }
         }
 
 
-        [TestMethod]
+        [Fact]
         public void UpsertContainmentEntity()
         {
             // create entry and insert
@@ -1035,10 +1034,10 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                 var responseMessage = requestMessage.GetResponse();
 
                 // verify the create
-                Assert.AreEqual(201, responseMessage.StatusCode);
+                Assert.Equal(201, responseMessage.StatusCode);
                 ODataResource entry = this.QueryEntityItem("Accounts(101)/MyPaymentInstruments(" + piid + ")") as ODataResource;
-                Assert.AreEqual(piid, entry.Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
-                Assert.AreEqual(mimeType, entry.Properties.Single(p => p.Name == "FriendlyName").Value);
+                Assert.Equal(piid, entry.Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
+                Assert.Equal(mimeType, entry.Properties.Single(p => p.Name == "FriendlyName").Value);
 
                 count++;
             }
@@ -1048,63 +1047,63 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
 
         #region OData Client test cases
 
-        [TestMethod]
+        [Fact]
         public void QueryContainedEntityFromODataClient()
         {
             TestClientContext.Format.UseJson(Model);
 
             var queryable = TestClientContext.CreateQuery<GiftCard>("Accounts(101)/MyGiftCard");
-            Assert.IsTrue(queryable.RequestUri.OriginalString.EndsWith("Accounts(101)/MyGiftCard", StringComparison.Ordinal));
+            Assert.EndsWith("Accounts(101)/MyGiftCard", queryable.RequestUri.OriginalString, StringComparison.Ordinal);
 
             List<GiftCard> result = queryable.ToList();
-            Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(301, result[0].GiftCardID);
-            Assert.AreEqual("AAA123A", result[0].GiftCardNO);
+            Assert.Single(result);
+            Assert.Equal(301, result[0].GiftCardID);
+            Assert.Equal("AAA123A", result[0].GiftCardNO);
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryContainedEntitySetFromODataClient()
         {
             TestClientContext.Format.UseJson(Model);
 
             var queryable = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments");
-            Assert.IsTrue(queryable.RequestUri.OriginalString.EndsWith("Accounts(103)/MyPaymentInstruments", StringComparison.Ordinal));
+            Assert.EndsWith("Accounts(103)/MyPaymentInstruments", queryable.RequestUri.OriginalString, StringComparison.Ordinal);
 
             List<PaymentInstrument> result = queryable.ToList();
-            Assert.AreEqual(4, result.Count);
-            Assert.AreEqual(103902, result[1].PaymentInstrumentID);
-            Assert.AreEqual("103 second PI", result[1].FriendlyName);
+            Assert.Equal(4, result.Count);
+            Assert.Equal(103902, result[1].PaymentInstrumentID);
+            Assert.Equal("103 second PI", result[1].FriendlyName);
         }
 
-        [TestMethod]
+        [Fact]
         public void QuerySpecificEntityInContainedEntitySetFromODataClient()
         {
             TestClientContext.Format.UseJson(Model);
 
             var queryable = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments(103902)");
-            Assert.IsTrue(queryable.RequestUri.OriginalString.EndsWith("Accounts(103)/MyPaymentInstruments(103902)", StringComparison.Ordinal));
+            Assert.EndsWith("Accounts(103)/MyPaymentInstruments(103902)", queryable.RequestUri.OriginalString, StringComparison.Ordinal);
 
             List<PaymentInstrument> result = queryable.ToList();
-            Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(103902, result[0].PaymentInstrumentID);
-            Assert.AreEqual("103 second PI", result[0].FriendlyName);
+            Assert.Single(result);
+            Assert.Equal(103902, result[0].PaymentInstrumentID);
+            Assert.Equal("103 second PI", result[0].FriendlyName);
 
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryIndividualPropertyOfContainedEntityFromODataClient()
         {
             TestClientContext.Format.UseJson(Model);
             var queryable = TestClientContext.CreateQuery<int>("Accounts(103)/MyPaymentInstruments(103902)/PaymentInstrumentID");
-            Assert.IsTrue(queryable.RequestUri.OriginalString.EndsWith("Accounts(103)/MyPaymentInstruments(103902)/PaymentInstrumentID", StringComparison.Ordinal));
+            Assert.EndsWith("Accounts(103)/MyPaymentInstruments(103902)/PaymentInstrumentID", queryable.RequestUri.OriginalString, StringComparison.Ordinal);
 
             List<int> result = queryable.ToList();
-            Assert.AreEqual(1, result.Count);
-            Assert.AreEqual(103902, result[0]);
+            Assert.Single(result);
+            Assert.Equal(103902, result[0]);
 
         }
 
-        [TestMethod]
+        [Fact]
         public void LinqUriTranslationTest()
         {
             TestClientContext.Format.UseJson(Model);
@@ -1113,26 +1112,26 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
             //translate to key
             var q1 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments").Where(pi => pi.PaymentInstrumentID == 103901);
             PaymentInstrument q1Result = q1.Single();
-            Assert.AreEqual(103901, q1Result.PaymentInstrumentID);
+            Assert.Equal(103901, q1Result.PaymentInstrumentID);
 
             //$filter
             var q2 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments").Where(pi => pi.CreatedDate > new DateTimeOffset(new DateTime(2013, 10, 1)));
             PaymentInstrument q2Result = q2.Single();
-            Assert.AreEqual(103905, q2Result.PaymentInstrumentID);
+            Assert.Equal(103905, q2Result.PaymentInstrumentID);
 
             //$orderby
             var q3 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments").OrderBy(pi => pi.CreatedDate).ThenByDescending(pi => pi.FriendlyName);
             List<PaymentInstrument> q3Result = q3.ToList();
-            Assert.AreEqual(103902, q3Result[0].PaymentInstrumentID);
+            Assert.Equal(103902, q3Result[0].PaymentInstrumentID);
 
             //$expand
             var q4 = TestClientContext.Accounts.Expand(account => account.MyPaymentInstruments).Where(account => account.AccountID == 103);
             Account q4Result = q4.Single();
-            Assert.IsNotNull(q4Result.MyPaymentInstruments);
+            Assert.NotNull(q4Result.MyPaymentInstruments);
 
             var q5 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments").Expand(pi => pi.BillingStatements).Where(pi => pi.PaymentInstrumentID == 103901);
             PaymentInstrument q5Result = q5.Single();
-            Assert.IsNotNull(q5Result.BillingStatements);
+            Assert.NotNull(q5Result.BillingStatements);
 
             //$top
             var q6 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments").Take(1);
@@ -1148,7 +1147,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
             //projection
             var q9 = TestClientContext.Accounts.Where(a => a.AccountID == 103).Select(a => new Account() { AccountID = a.AccountID, MyGiftCard = a.MyGiftCard });
             var q9Result = q9.Single();
-            Assert.IsNotNull(q9Result.MyGiftCard);
+            Assert.NotNull(q9Result.MyGiftCard);
 
             var q10 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(103)/MyPaymentInstruments").Where(pi => pi.PaymentInstrumentID == 103901).Select(p => new PaymentInstrument()
             {
@@ -1158,34 +1157,34 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
             var q10Result = q10.ToList();
         }
 
-        [TestMethod]
+        [Fact]
         public void CallFunctionBoundToContainedEntityFromODataClient()
         {
             double result = TestClientContext.Execute<double>(new Uri(ServiceBaseUri.AbsoluteUri +
                 "Accounts(101)/MyGiftCard/Microsoft.Test.OData.Services.ODataWCFService.GetActualAmount(bonusRate=0.2)", UriKind.Absolute), "GET", true).Single();
 
-            Assert.AreEqual(23.88, result);
+            Assert.Equal(23.88, result);
 
         }
 
-        [TestMethod]
+        [Fact]
         public void CallFunctionFromODataClientWhichReturnsContainedEntity()
         {
             TestClientContext.Format.UseJson(Model);
 
             PaymentInstrument result = TestClientContext.Execute<PaymentInstrument>(new Uri(ServiceBaseUri.AbsoluteUri +
                 "Accounts(101)/Microsoft.Test.OData.Services.ODataWCFService.GetDefaultPI()", UriKind.Absolute), "GET", true).Single();
-            Assert.AreEqual(101901, result.PaymentInstrumentID);
+            Assert.Equal(101901, result.PaymentInstrumentID);
 
             result.FriendlyName = "Random Name";
             TestClientContext.UpdateObject(result);
             TestClientContext.SaveChanges();
 
             result = TestClientContext.Execute<PaymentInstrument>(new Uri(ServiceBaseUri.AbsoluteUri + "Accounts(101)/MyPaymentInstruments(101901)", UriKind.Absolute), "GET", true).Single();
-            Assert.AreEqual("Random Name", result.FriendlyName);
+            Assert.Equal("Random Name", result.FriendlyName);
         }
 
-        [TestMethod]
+        [Fact]
         public void InvokeActionFromODataClientWhichReturnsContainedEntity()
         {
             TestClientContext.Format.UseJson(Model);
@@ -1193,17 +1192,17 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
             PaymentInstrument result = TestClientContext.Execute<PaymentInstrument>(new Uri(ServiceBaseUri.AbsoluteUri +
                 "Accounts(101)/Microsoft.Test.OData.Services.ODataWCFService.RefreshDefaultPI", UriKind.Absolute), "POST", true,
                 new BodyOperationParameter("newDate", new DateTimeOffset(DateTime.Now))).Single();
-            Assert.AreEqual(101901, result.PaymentInstrumentID);
+            Assert.Equal(101901, result.PaymentInstrumentID);
 
             result.FriendlyName = "Random Name";
             TestClientContext.UpdateObject(result);
             TestClientContext.SaveChanges();
 
             result = TestClientContext.Execute<PaymentInstrument>(new Uri(ServiceBaseUri.AbsoluteUri + "Accounts(101)/MyPaymentInstruments(101901)", UriKind.Absolute), "GET").Single();
-            Assert.AreEqual("Random Name", result.FriendlyName);
+            Assert.Equal("Random Name", result.FriendlyName);
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateContainedEntityFromODataClientUsingAddRelatedObject()
         {
 
@@ -1232,14 +1231,14 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
 
                 var queryable0 = TestClientContext.Accounts.Where(account => account.AccountID == 110);
                 Account accountResult = queryable0.Single();
-                Assert.AreEqual("Guy", accountResult.AccountInfo.LastName);
+                Assert.Equal("Guy", accountResult.AccountInfo.LastName);
 
                 var queryable1 = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(110)/MyPaymentInstruments").Where(pi => pi.PaymentInstrumentID == 110901);
                 PaymentInstrument piResult = queryable1.Single();
-                Assert.AreEqual("110's first PI", piResult.FriendlyName);
+                Assert.Equal("110's first PI", piResult.FriendlyName);
         }
 
-        [TestMethod]
+        [Fact]
         public void DeleteContainedEntityFromODataClientUsingDeleteObject()
         {
             TestClientContext.Format.UseJson(Model);
@@ -1267,16 +1266,16 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
 
             var queryable = TestClientContext.CreateQuery<PaymentInstrument>("Accounts(115)/MyPaymentInstruments");
             PaymentInstrument piResult = queryable.Single();
-            Assert.AreEqual("115's first PI", piResult.FriendlyName);
+            Assert.Equal("115's first PI", piResult.FriendlyName);
 
             TestClientContext.DeleteObject(piResult);
             TestClientContext.SaveChanges();
 
             List<PaymentInstrument> piResult2 = queryable.ToList();
-            Assert.AreEqual(0, piResult2.Count);
+            Assert.Empty(piResult2);
         }
 
-        [TestMethod]
+        [Fact]
         public void UpdateContainedEntityFromODataClientUsingUpdateObject()
         {
             TestClientContext.Format.UseJson(Model);
@@ -1290,11 +1289,11 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
             TestClientContext.SaveChanges();
 
             piResult = queryable1.Single();
-            Assert.AreEqual("Michael's first PI", piResult.FriendlyName);
+            Assert.Equal("Michael's first PI", piResult.FriendlyName);
         }
 
-        // [TestMethod] // github issuse: #896
-        public void CreateContainedEntityFromODataClientUsingAddRelatedObjectUsingBatchRequest()
+        // [Fact] // github issuse: #896
+        internal void CreateContainedEntityFromODataClientUsingAddRelatedObjectUsingBatchRequest()
         {
             TestClientContext.Format.UseJson(Model);
 
@@ -1327,7 +1326,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
 
         }
 
-        [TestMethod]
+        [Fact]
         public void CreateContainedNonCollectionEntityFromODataClientUsingUpdateRelatedObject()
         {
             TestClientContext.Format.UseJson(Model);
@@ -1357,8 +1356,8 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
 
             var queryable1 = TestClientContext.CreateQuery<GiftCard>("Accounts(120)/MyGiftCard");
             List<GiftCard> giftCardResult = queryable1.ToList();
-            Assert.AreEqual(1, giftCardResult.Count);
-            Assert.AreEqual(76, giftCardResult[0].Amount);
+            Assert.Single(giftCardResult);
+            Assert.Equal(76, giftCardResult[0].Amount);
         }
 
         #endregion
@@ -1372,7 +1371,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
             var queryRequestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + uri, UriKind.Absolute));
             queryRequestMessage.SetHeader("Accept", MimeTypes.ApplicationJsonLight);
             var queryResponseMessage = queryRequestMessage.GetResponse();
-            Assert.AreEqual(expectedStatusCode, queryResponseMessage.StatusCode);
+            Assert.Equal(expectedStatusCode, queryResponseMessage.StatusCode);
 
             ODataItem item = null;
             if (expectedStatusCode == 200)
@@ -1388,7 +1387,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                         }
                     }
 
-                    Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                    Assert.Equal(ODataReaderState.Completed, reader.State);
                 }
             }
 

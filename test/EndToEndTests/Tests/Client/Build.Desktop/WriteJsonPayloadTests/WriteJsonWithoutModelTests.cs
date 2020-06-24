@@ -14,12 +14,12 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
     using Microsoft.OData;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
+    using Xunit.Abstractions;
 
     /// <summary>
     /// Write various payload with/without EDM model in Atom/VerboseJosn/JsonLight formats.
     /// </summary>
-    [TestClass]
     public class WritePayloadTests : EndToEndTestBase
     {
         protected const string NameSpace = "Microsoft.Test.OData.Services.AstoriaDefaultService.";
@@ -31,8 +31,8 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             MimeTypes.ApplicationJson + MimeTypes.ODataParameterNoMetadata,
         };
 
-        public WritePayloadTests()
-            : base(ServiceDescriptors.AstoriaDefaultService)
+        public WritePayloadTests(ITestOutputHelper helper)
+            : base(ServiceDescriptors.AstoriaDefaultService, helper)
         {
         }
 
@@ -45,7 +45,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         /// <summary>
         /// Write a feed with multiple order entries. The feed/entry contains properties, navigation & association links, next link.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void OrderFeedTest()
         {
             foreach (var mimeType in this.mimeTypes)
@@ -90,7 +90,8 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 }
                 else
                 {
-                    Assert.AreEqual(outputWithModel, outputWithoutModel, "NoMetadata with/out model should result in same output");
+                    //NoMetadata with/out model should result in same output
+                    Assert.Equal(outputWithModel, outputWithoutModel);
                 }
             }
         }
@@ -98,7 +99,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         /// <summary>
         /// Write an expanded customer entry containing primitive, complex, collection of primitive/complex properties.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void ExpandedCustomerEntryTest()
         {
             foreach (var mimeType in this.mimeTypes)
@@ -140,7 +141,8 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 }
                 else
                 {
-                    Assert.AreEqual(outputWithModel, outputWithoutModel, "NoMetadata with/out model should result in same output");
+                    //NoMetadata with/out model should result in same output
+                    Assert.Equal(outputWithModel, outputWithoutModel);
                 }
             }
         }
@@ -148,7 +150,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         /// <summary>
         /// Write an entry containing stream, named stream
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void CarEntryTest()
         {
             foreach (var mimeType in this.mimeTypes)
@@ -184,7 +186,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         /// <summary>
         /// Write a feed containing actions, derived type entry instance
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void PersonFeedTest()
         {
             foreach (var mimeType in this.mimeTypes)
@@ -224,20 +226,21 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 }
                 else
                 {
-                    Assert.AreEqual(outputWithModel, outputWithoutModel, "NoMetadata with/out model should result in same output");
+                    //NoMetadata with/out model should result in same output
+                    Assert.Equal(outputWithModel, outputWithoutModel);
                 }
 
                 if (mimeType.Contains(MimeTypes.ODataParameterMinimalMetadata) || mimeType.Contains(MimeTypes.ODataParameterFullMetadata))
                 {
-                    Assert.IsTrue(outputWithoutModel.Contains(this.ServiceUri + "$metadata#Person\""));
+                    Assert.True(outputWithoutModel.Contains(this.ServiceUri + "$metadata#Person\""));
                 }
 
                 if (mimeType.Contains(MimeTypes.ApplicationJsonLight))
                 {
                     // odata.type is included in json light payload only if entry typename is different than serialization info
-                    Assert.IsFalse(outputWithoutModel.Contains("{\"@odata.type\":\"" + "#" + NameSpace + "Person\","), "odata.type Person");
-                    Assert.IsTrue(outputWithoutModel.Contains("{\"@odata.type\":\"" + "#" + NameSpace + "Employee\","), "odata.type Employee");
-                    Assert.IsTrue(outputWithoutModel.Contains("{\"@odata.type\":\"" + "#" + NameSpace + "SpecialEmployee\","), "odata.type SpecialEmployee");
+                    Assert.False(outputWithoutModel.Contains("{\"@odata.type\":\"" + "#" + NameSpace + "Person\","), "odata.type Person");
+                    Assert.True(outputWithoutModel.Contains("{\"@odata.type\":\"" + "#" + NameSpace + "Employee\","), "odata.type Employee");
+                    Assert.True(outputWithoutModel.Contains("{\"@odata.type\":\"" + "#" + NameSpace + "SpecialEmployee\","), "odata.type SpecialEmployee");
                 }
             }
         }
@@ -245,7 +248,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         /// <summary>
         /// Write an employee entry with/without ExpectedTypeName in serialization info
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void EmployeeEntryTest()
         {
             foreach (var mimeType in this.mimeTypes)
@@ -278,8 +281,8 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 if (mimeType.Contains(MimeTypes.ODataParameterMinimalMetadata) || mimeType.Contains(MimeTypes.ODataParameterFullMetadata))
                 {
                     // expect type cast in odata.metadata if EntitySetElementTypeName != ExpectedTypeName
-                    Assert.IsTrue(outputWithoutTypeCast.Contains(this.ServiceUri + "$metadata#Person/$entity"));
-                    Assert.IsTrue(
+                    Assert.True(outputWithoutTypeCast.Contains(this.ServiceUri + "$metadata#Person/$entity"));
+                    Assert.True(
                         outputWithTypeCast.Contains(this.ServiceUri + "$metadata#Person/" + NameSpace +
                                                     "Employee/$entity"));
                 }
@@ -287,8 +290,8 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 if (mimeType.Contains(MimeTypes.ApplicationJsonLight))
                 {
                     // write odata.type if entry TypeName != ExpectedTypeName
-                    Assert.IsTrue(outputWithoutTypeCast.Contains("odata.type"));
-                    Assert.IsFalse(outputWithTypeCast.Contains("odata.type"));
+                    Assert.True(outputWithoutTypeCast.Contains("odata.type"));
+                    Assert.False(outputWithTypeCast.Contains("odata.type"));
                 }
             }
         }
@@ -296,7 +299,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         /// <summary>
         /// Write complex collection response
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void ComplexCollectionTest()
         {
             foreach (var mimeType in this.mimeTypes)
@@ -326,14 +329,14 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                                                                        testMimeType);
                 }
 
-                Assert.AreEqual(outputWithModel, outputWithoutModel);
+                Assert.Equal(outputWithModel, outputWithoutModel);
             }
         }
 
         /// <summary>
         /// Write $ref response
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void LinksTest()
         {
             foreach (var mimeType in this.mimeTypes)
@@ -355,7 +358,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         /// <summary>
         /// Write $ref response with a single link
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void SingleLinkTest()
         {
             foreach (var mimeType in this.mimeTypes)
@@ -377,7 +380,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         /// <summary>
         /// Write a request message with an entry
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void RequestMessageTest()
         {
             foreach (var mimeType in this.mimeTypes)
@@ -485,24 +488,25 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             bool verifyNavigationCalled = false;
             Action<ODataResourceSet> verifyFeed = (feed) =>
             {
-                Assert.IsNotNull(feed.NextPageLink, "feed.NextPageLink");
+                Assert.NotNull(feed.NextPageLink);
                 verifyFeedCalled = true;
             };
             Action<ODataResource> verifyEntry = (entry) =>
             {
                 if (entry.TypeName.Contains("Order"))
                 {
-                    Assert.AreEqual(2, entry.Properties.Count(), "entry.Properties.Count");
+                    //entry.Properties.Count
+                    Assert.Equal(2, entry.Properties.Count());
                 }
                 else
                 {
-                    Assert.IsTrue(entry.TypeName.Contains("ConcurrencyInfo"), "complex Property Concurrency should be read into ODataResource");
+                    Assert.True(entry.TypeName.Contains("ConcurrencyInfo"), "complex Property Concurrency should be read into ODataResource");
                 }
                 verifyEntryCalled = true;
             };
             Action<ODataNestedResourceInfo> verifyNavigation = (navigation) =>
             {
-                Assert.IsTrue(navigation.Name == "Customer" || navigation.Name == "Login" || navigation.Name == "Concurrency", "navigation.Name");
+                Assert.True(navigation.Name == "Customer" || navigation.Name == "Login" || navigation.Name == "Concurrency", "navigation.Name");
                 verifyNavigationCalled = true;
             };
 
@@ -512,7 +516,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 stream.Seek(0, SeekOrigin.Begin);
                 WritePayloadHelper.ReadAndVerifyFeedEntryMessage(true, responseMessage, WritePayloadHelper.OrderSet, WritePayloadHelper.OrderType, verifyFeed,
                                                    verifyEntry, verifyNavigation);
-                Assert.IsTrue(verifyFeedCalled && verifyEntryCalled && verifyNavigationCalled,
+                Assert.True(verifyFeedCalled && verifyEntryCalled && verifyNavigationCalled,
                               "Verification action not called.");
             }
 
@@ -571,20 +575,20 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             {
                 if (entry.TypeName.Contains("Customer"))
                 {
-                    Assert.AreEqual(4, entry.Properties.Count());
+                    Assert.Equal(4, entry.Properties.Count());
                     verifyEntryCalled++;
                 }
 
                 if (entry.TypeName.Contains("Login"))
                 {
-                    Assert.AreEqual(2, entry.Properties.Count());
+                    Assert.Equal(2, entry.Properties.Count());
                     verifyEntryCalled++;
                 }
             };
 
             Action<ODataNestedResourceInfo> verifyNavigation = (navigation) =>
             {
-                Assert.IsNotNull(navigation.Name);
+                Assert.NotNull(navigation.Name);
                 verifyNavigationCalled = true;
             };
 
@@ -594,7 +598,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 stream.Seek(0, SeekOrigin.Begin);
                 WritePayloadHelper.ReadAndVerifyFeedEntryMessage(false, responseMessage, WritePayloadHelper.CustomerSet, WritePayloadHelper.CustomerType,
                                                    verifyFeed, verifyEntry, verifyNavigation);
-                Assert.IsTrue(verifyFeedCalled && verifyEntryCalled == 2 && verifyNavigationCalled,
+                Assert.True(verifyFeedCalled && verifyEntryCalled == 2 && verifyNavigationCalled,
                               "Verification action not called.");
             }
 
@@ -615,11 +619,11 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             bool verifyEntryCalled = false;
             Action<ODataResource> verifyEntry = (entry) =>
             {
-                Assert.AreEqual(4, entry.Properties.Count(), "entry.Properties.Count");
-                Assert.IsNotNull(entry.MediaResource, "entry.MediaResource");
-                Assert.IsTrue(entry.EditLink.AbsoluteUri.Contains("Car(11)"), "entry.EditLink");
-                Assert.IsTrue(entry.ReadLink == null || entry.ReadLink.AbsoluteUri.Contains("Car(11)"), "entry.ReadLink");
-                Assert.AreEqual(1, entry.InstanceAnnotations.Count, "entry.InstanceAnnotations.Count");
+                Assert.Equal(4, entry.Properties.Count());
+                Assert.NotNull(entry.MediaResource);
+                Assert.True(entry.EditLink.AbsoluteUri.Contains("Car(11)"), "entry.EditLink");
+                Assert.True(entry.ReadLink == null || entry.ReadLink.AbsoluteUri.Contains("Car(11)"), "entry.ReadLink");
+                Assert.Equal(1, entry.InstanceAnnotations.Count);
 
                 verifyEntryCalled = true;
             };
@@ -630,7 +634,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 stream.Seek(0, SeekOrigin.Begin);
                 WritePayloadHelper.ReadAndVerifyFeedEntryMessage(false, responseMessage, WritePayloadHelper.CarSet, WritePayloadHelper.CarType, null, verifyEntry,
                                                    null);
-                Assert.IsTrue(verifyEntryCalled, "Verification action not called.");
+                Assert.True(verifyEntryCalled, "Verification action not called.");
             }
 
             return WritePayloadHelper.ReadStreamContent(stream);
@@ -734,20 +738,20 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             {
                 if (mimeType != MimeTypes.ApplicationAtomXml)
                 {
-                    Assert.IsTrue(feed.DeltaLink.AbsoluteUri.Contains("Person"));
+                    Assert.True(feed.DeltaLink.AbsoluteUri.Contains("Person"));
                 }
                 verifyFeedCalled = true;
             };
             Action<ODataResource> verifyEntry = (entry) =>
             {
-                Assert.IsTrue(entry.EditLink.AbsoluteUri.EndsWith("Person(-5)") ||
+                Assert.True(entry.EditLink.AbsoluteUri.EndsWith("Person(-5)") ||
                               entry.EditLink.AbsoluteUri.EndsWith("Person(-3)/" + NameSpace + "Employee") ||
                               entry.EditLink.AbsoluteUri.EndsWith("Person(-10)/" + NameSpace + "SpecialEmployee"));
                 verifyEntryCalled = true;
             };
             Action<ODataNestedResourceInfo> verifyNavigation = (navigation) =>
             {
-                Assert.IsTrue(navigation.Name == "PersonMetadata" || navigation.Name == "Manager" || navigation.Name == "Car");
+                Assert.True(navigation.Name == "PersonMetadata" || navigation.Name == "Manager" || navigation.Name == "Car");
                 verifyNavigationCalled = true;
             };
 
@@ -757,7 +761,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 stream.Seek(0, SeekOrigin.Begin);
                 WritePayloadHelper.ReadAndVerifyFeedEntryMessage(true, responseMessage, WritePayloadHelper.PersonSet, WritePayloadHelper.PersonType, verifyFeed,
                                                    verifyEntry, verifyNavigation);
-                Assert.IsTrue(verifyFeedCalled && verifyEntryCalled && verifyNavigationCalled,
+                Assert.True(verifyFeedCalled && verifyEntryCalled && verifyNavigationCalled,
                               "Verification action not called.");
             }
 
@@ -810,12 +814,12 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
             Action<ODataResource> verifyEntry = (entry) =>
             {
-                Assert.IsTrue(entry.EditLink.AbsoluteUri.Contains("Person"), "entry.EditLink");
+                Assert.True(entry.EditLink.AbsoluteUri.Contains("Person"), "entry.EditLink");
                 verifyEntryCalled = true;
             };
             Action<ODataNestedResourceInfo> verifyNavigation = (navigation) =>
             {
-                Assert.IsTrue(navigation.Name == "PersonMetadata" || navigation.Name == "Manager", "navigation.Name");
+                Assert.True(navigation.Name == "PersonMetadata" || navigation.Name == "Manager", "navigation.Name");
                 verifyNavigationCalled = true;
             };
 
@@ -825,7 +829,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 stream.Seek(0, SeekOrigin.Begin);
                 WritePayloadHelper.ReadAndVerifyFeedEntryMessage(false, responseMessage, WritePayloadHelper.PersonSet, WritePayloadHelper.PersonType, null,
                                                    verifyEntry, verifyNavigation);
-                Assert.IsTrue(verifyEntryCalled && verifyNavigationCalled,
+                Assert.True(verifyEntryCalled && verifyNavigationCalled,
                               "Verification action not called.");
             }
 
@@ -875,8 +879,8 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     }
                 }
 
-                Assert.IsTrue(collectionRead, "collectionRead");
-                Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                Assert.True(collectionRead, "collectionRead");
+                Assert.Equal(ODataReaderState.Completed, reader.State);
             }
 
             return WritePayloadHelper.ReadStreamContent(stream);
@@ -905,8 +909,8 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 ODataMessageReader messageReader = new ODataMessageReader(responseMessage, settings, WritePayloadHelper.Model);
 
                 ODataEntityReferenceLinks linksRead = messageReader.ReadEntityReferenceLinks();
-                Assert.AreEqual(2, linksRead.Links.Count(), "linksRead.Links.Count");
-                Assert.IsNotNull(linksRead.NextPageLink, "linksRead.NextPageLink");
+                Assert.Equal(2, linksRead.Links.Count());
+                Assert.NotNull(linksRead.NextPageLink);
             }
 
             return WritePayloadHelper.ReadStreamContent(stream);
@@ -926,7 +930,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 ODataMessageReader messageReader = new ODataMessageReader(responseMessage, settings, WritePayloadHelper.Model);
 
                 ODataEntityReferenceLink linkRead = messageReader.ReadEntityReferenceLink();
-                Assert.IsTrue(linkRead.Url.AbsoluteUri.Contains("Order(-10)"), "linkRead.Url");
+                Assert.True(linkRead.Url.AbsoluteUri.Contains("Order(-10)"), "linkRead.Url");
             }
 
             return WritePayloadHelper.ReadStreamContent(stream);
@@ -971,9 +975,9 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     }
                 }
 
-                Assert.IsTrue(entry.Id.ToString().Contains("Order(-10)"), "entry.Id");
-                Assert.AreEqual(2, entry.Properties.Count(), "entry.Properties.Count");
-                Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                Assert.True(entry.Id.ToString().Contains("Order(-10)"), "entry.Id");
+                Assert.Equal(2, entry.Properties.Count());
+                Assert.Equal(ODataReaderState.Completed, reader.State);
             }
 
             return WritePayloadHelper.ReadStreamContent(stream);

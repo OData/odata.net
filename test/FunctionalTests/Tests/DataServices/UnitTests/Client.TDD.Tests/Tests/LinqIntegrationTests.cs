@@ -14,7 +14,7 @@ namespace AstoriaUnitTests.Tests.Client
     using FluentAssertions;
     using Microsoft.OData.Client;
     using Microsoft.OData.Edm;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
     /// <summary>
     /// Test class that contains tests for LINQ generated queries
@@ -22,10 +22,9 @@ namespace AstoriaUnitTests.Tests.Client
     /// <remarks>
     /// LightSwitch:  Cannot navigate relationships belonging to entity with multi-segment key
     /// </remarks>
-    [TestClass]
     public class LinqIntegrationTests
     {
-        [TestMethod]
+        [Fact]
         public void AddQueryOptionForFormatShouldThrow()
         {
             DataServiceContext ctx = new DataServiceContext(new Uri("http://myservice/", UriKind.Absolute));
@@ -40,8 +39,7 @@ namespace AstoriaUnitTests.Tests.Client
         private DateTimeOffset sampleDateTimeOffset;
         private string sampleDate;
 
-        [TestInitialize]
-        public void Init()
+        public LinqIntegrationTests()
         {
             context = new DataServiceContext(new Uri(rootUrl));
 
@@ -67,65 +65,65 @@ namespace AstoriaUnitTests.Tests.Client
             public int AnotherProperty { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void WhereClauseWithEqualShouldReturnUrlForSingleton()
         {
             query = context.CreateQuery<EntityWithOneKey>("Test").Where(p => p.ID == 1).ToString();
 
-            Assert.AreEqual(rootUrl + "Test(1)", query);
+            Assert.Equal(rootUrl + "Test(1)", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void WhereClauseWithNotEqualShouldReturnUrlWithFilter()
         {
             query = context.CreateQuery<EntityWithOneKey>("Test")
                 .Where(p => p.ID != 1)
                 .ToString();
 
-            Assert.AreEqual(rootUrl + "Test?$filter=ID ne 1", query);
+            Assert.Equal(rootUrl + "Test?$filter=ID ne 1", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void WhereClauseWithGreaterThanShouldReturnUrlWithFilter()
         {
             query = context.CreateQuery<EntityWithOneKey>("Test")
                 .Where(p => p.ID > 1)
                 .ToString();
 
-            Assert.AreEqual(rootUrl + "Test?$filter=ID gt 1", query);
+            Assert.Equal(rootUrl + "Test?$filter=ID gt 1", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void WhereClauseWithGreaterThanOrEqualToShouldReturnUrlWithFilter()
         {
             query = context.CreateQuery<EntityWithOneKey>("Test")
                 .Where(p => p.ID >= 1)
                 .ToString();
 
-            Assert.AreEqual(rootUrl + "Test?$filter=ID ge 1", query);
+            Assert.Equal(rootUrl + "Test?$filter=ID ge 1", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void WhereClauseWithLessThanShouldReturnUrlWithFilter()
         {
             query = context.CreateQuery<EntityWithOneKey>("Test")
                 .Where(p => p.ID < 1)
                 .ToString();
 
-            Assert.AreEqual(rootUrl + "Test?$filter=ID lt 1", query);
+            Assert.Equal(rootUrl + "Test?$filter=ID lt 1", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void WhereClauseWithLessThanOrEqualToShouldReturnUrlWithFilter()
         {
             query = context.CreateQuery<EntityWithOneKey>("Test")
                 .Where(p => p.ID <= 1)
                 .ToString();
 
-            Assert.AreEqual(rootUrl + "Test?$filter=ID le 1", query);
+            Assert.Equal(rootUrl + "Test?$filter=ID le 1", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void NonFilterQueryOptionBeforeKeyPredicateShouldReturnUrlWithFilter()
         {
             query = context.CreateQuery<EntityWithOneKey>("Test")
@@ -133,7 +131,7 @@ namespace AstoriaUnitTests.Tests.Client
                 .Where(p => p.ID == 1)
                 .ToString();
 
-            Assert.AreEqual(rootUrl + "Test?$orderby=ID&$filter=ID eq 1", query);
+            Assert.Equal(rootUrl + "Test?$orderby=ID&$filter=ID eq 1", query);
         }
         #endregion Unit tests for enity with 1 key
 
@@ -164,7 +162,7 @@ namespace AstoriaUnitTests.Tests.Client
             public AnotherEntityWithOneKey AnotherEntityWithOneKey { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void TwoWhereClausesForKeysShouldReturnUrlForSingleton()
         {
             // Simple case, only two key properties provided
@@ -172,61 +170,61 @@ namespace AstoriaUnitTests.Tests.Client
                 .Where(p => p.ID1 == 1)
                 .Where(p => p.ID2 == 2)
                 .ToString();
-            Assert.AreEqual(rootUrl + "Test(ID1=1,ID2=2)", query);
+            Assert.Equal(rootUrl + "Test(ID1=1,ID2=2)", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void TwoWhereClausesForKeysInDifferentOrderShouldReturnUrlForSingltonInCorrectOrder()
         {
             // Key properties provided in reverse order
             query = context.CreateQuery<EntityWithTwoKeyProperties>("Test")
                             .Where(p => p.ID2 == 1).Where(p => p.ID1 == 2)
                             .ToString();
-            Assert.AreEqual(rootUrl + "Test(ID2=1,ID1=2)", query);
+            Assert.Equal(rootUrl + "Test(ID2=1,ID1=2)", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void OneWhereClauseForNonKeyShouldReturnUrlForFilter()
         {
             // Provide both key properites in single where clause
             query = context.CreateQuery<EntityWithTwoKeyProperties>("Test")
                            .Where(p => p.Name == "foo")
                            .ToString();
-            Assert.AreEqual(rootUrl + "Test?$filter=Name eq 'foo'", query);
+            Assert.Equal(rootUrl + "Test?$filter=Name eq 'foo'", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void OneWhereClauseForKeysShouldReturnUrlForSingleton()
         {
             // Provide both key properites in single where clause
             query = context.CreateQuery<EntityWithTwoKeyProperties>("Test")
                            .Where(p => p.ID1 == 1 && p.ID2 == 2)
                            .ToString();
-            Assert.AreEqual(rootUrl + "Test(ID1=1,ID2=2)", query);
+            Assert.Equal(rootUrl + "Test(ID1=1,ID2=2)", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void OneWhereClauseForKeysInDerviedClassShouldReturnUrlForSingleton()
         {
             // Provide both key properites in single where clause
             query = context.CreateQuery<DerivedEntityWithTwoKeyProperties>("Test")
                            .Where(p => p.ID1 == 1 && p.ID2 == 2)
                            .ToString();
-            Assert.AreEqual(rootUrl + "Test(ID1=1,ID2=2)", query);
+            Assert.Equal(rootUrl + "Test(ID1=1,ID2=2)", query);
         }
 
 
-        [TestMethod]
+        [Fact]
         public void SameKeyProvidedTwiceInOneWhereClauseShouldReturnError()
         {
             // Provide both key properites in single where clause
             query = context.CreateQuery<DerivedEntityWithTwoKeyProperties>("Test")
                            .Where(p => p.ID1 == 1 && p.ID1 == 2)
                            .ToString();
-            Assert.AreEqual(Strings.ALinq_TranslationError(Strings.ALinq_CanOnlyApplyOneKeyPredicate), query);
+            Assert.Equal(Strings.ALinq_TranslationError(Strings.ALinq_CanOnlyApplyOneKeyPredicate), query);
         }
 
-        [TestMethod]
+        [Fact]
         public void MultiWhereClauseForKeysInDerviedClassShouldReturnUrlForSingleton()
         {
             // Provide both key properites in single where clause
@@ -234,70 +232,70 @@ namespace AstoriaUnitTests.Tests.Client
                            .Where(p => p.ID1 == 1)
                            .Where(p => p.ID2 == 2)
                            .ToString();
-            Assert.AreEqual(rootUrl + "Test(ID1=1,ID2=2)", query);
+            Assert.Equal(rootUrl + "Test(ID1=1,ID2=2)", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void OneWhereClauseForParatialKeyAndNavigationPropertyKeyInDerviedClassShouldReturnUrlForFilter()
         {
             // Provide both key properites in single where clause
             query = context.CreateQuery<DerivedEntityWithTwoKeyProperties>("Test")
                            .Where(p => p.ID1 == 1 && p.NavProperty.Key1 == 3)
                            .ToString();
-            Assert.AreEqual(rootUrl + @"Test?$filter=ID1 eq 1 and NavProperty/Key1 eq 3", query);
+            Assert.Equal(rootUrl + @"Test?$filter=ID1 eq 1 and NavProperty/Key1 eq 3", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void OneWhereClauseForPartialKeyAndNavigationPropertySameKeyNameInDerviedClassShouldReturnUrlForFilter()
         {
             // Provide both key properites in single where clause
             query = context.CreateQuery<DerivedEntityWithTwoKeyProperties>("Test")
                            .Where(p => p.ID2 == 1 && p.AnotherEntityWithOneKey.ID1 == 3)
                            .ToString();
-            Assert.AreEqual(rootUrl + @"Test?$filter=ID2 eq 1 and AnotherEntityWithOneKey/ID1 eq 3", query);
+            Assert.Equal(rootUrl + @"Test?$filter=ID2 eq 1 and AnotherEntityWithOneKey/ID1 eq 3", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void OneWhereClausesForOneKeyShouldReturnUrlWithFilter()
         {
             // Provide only one key proprty
             query = context.CreateQuery<EntityWithTwoKeyProperties>("Test")
                            .Where(p => p.ID2 == 2)
                            .ToString();
-            Assert.AreEqual(rootUrl + "Test?$filter=ID2 eq 2", query);
+            Assert.Equal(rootUrl + "Test?$filter=ID2 eq 2", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void OneWhereClausesForOrOperationShouldReturnUrlWithFilter()
         {
             // Provide only one key proprty
             query = context.CreateQuery<EntityWithTwoKeyProperties>("Test")
                            .Where(p => p.ID1 == 1 || p.ID2 == 2)
                            .ToString();
-            Assert.AreEqual(rootUrl + "Test?$filter=ID1 eq 1 or ID2 eq 2", query);
+            Assert.Equal(rootUrl + "Test?$filter=ID1 eq 1 or ID2 eq 2", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void OneWhereClausesForNotEqualsShouldReturnUrlWithFilter()
         {
             // Provide only one key proprty
             query = context.CreateQuery<EntityWithTwoKeyProperties>("Test")
                            .Where(p => p.ID1 == 1 && p.ID2 != 2)
                            .ToString();
-            Assert.AreEqual(rootUrl + "Test?$filter=ID1 eq 1 and ID2 ne 2", query);
+            Assert.Equal(rootUrl + "Test?$filter=ID1 eq 1 and ID2 ne 2", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void OneKeyAndOneNonKeyShouldReturnUrlWithFilter()
         {
             // Provide one key property and one non-key property
             query = context.CreateQuery<EntityWithTwoKeyProperties>("Test")
                             .Where(p => p.ID1 == 1).Where(p => p.Name == "foo")
                             .ToString();
-            Assert.AreEqual(rootUrl + "Test?$filter=ID1 eq 1 and Name eq 'foo'", query);
+            Assert.Equal(rootUrl + "Test?$filter=ID1 eq 1 and Name eq 'foo'", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void WhereClausesForKeysAndNonKeysShouldReturnUrlWithFilter()
         {
             // provide all key properties and non-key properties
@@ -306,10 +304,10 @@ namespace AstoriaUnitTests.Tests.Client
                             .Where(p => p.Name == "foo")
                             .Where(p => p.ID2 == 2)
                             .ToString();
-            Assert.AreEqual(rootUrl + "Test?$filter=ID1 eq 1 and Name eq 'foo' and ID2 eq 2", query);
+            Assert.Equal(rootUrl + "Test?$filter=ID1 eq 1 and Name eq 'foo' and ID2 eq 2", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void WhereClausesForKeysAndNonKeysShouldReturnUrlWithFilterInCorrecTorder()
         {
             // provide all key properties and non-key properties
@@ -318,10 +316,10 @@ namespace AstoriaUnitTests.Tests.Client
                             .Where(p => p.ID2 == 2)
                             .Where(p => p.Name == "foo")
                             .ToString();
-            Assert.AreEqual(rootUrl + "Test?$filter=ID1 eq 1 and ID2 eq 2 and Name eq 'foo'", query);
+            Assert.Equal(rootUrl + "Test?$filter=ID1 eq 1 and ID2 eq 2 and Name eq 'foo'", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void TwoWhereClausesForKeysAndSelectForNavEntityShouldReturnUrlForNavProperty()
         {
             // Provide all key properties for entity and select a navigational entity
@@ -329,10 +327,10 @@ namespace AstoriaUnitTests.Tests.Client
                                   .Where(p => p.ID1 == 1).Where(p => p.ID2 == 2)
                                   .Select(p => p.NavProperty)
                                   .ToString();
-            Assert.AreEqual(rootUrl + "Test(ID1=1,ID2=2)/NavProperty", query);
+            Assert.Equal(rootUrl + "Test(ID1=1,ID2=2)/NavProperty", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void WhereClausesForKeysAndNonKeysAndSelectForNavPropertyShouldReturnError()
         {
             // Provide all key properties for entity and select a navigational entity
@@ -341,10 +339,10 @@ namespace AstoriaUnitTests.Tests.Client
                                   .Select(p => p.NavProperty)
                                   .ToString();
 
-            Assert.AreEqual(Strings.ALinq_TranslationError(Strings.ALinq_QueryOptionsOnlyAllowedOnLeafNodes), query);
+            Assert.Equal(Strings.ALinq_TranslationError(Strings.ALinq_QueryOptionsOnlyAllowedOnLeafNodes), query);
         }
 
-        [TestMethod]
+        [Fact]
         public void WhereClausesForKeysForEntityAndSelectForNavPropertyWithWhereClauseShouldReturnError()
         {
             // Provide all key properties for entity and select a navigational entity
@@ -354,10 +352,10 @@ namespace AstoriaUnitTests.Tests.Client
                                   .Where(p => p.NonKeyProperty == "bar")
                                   .ToString();
 
-            Assert.AreEqual(Strings.ALinq_TranslationError(Strings.ALinq_QueryOptionsOnlyAllowedOnSingletons), query);
+            Assert.Equal(Strings.ALinq_TranslationError(Strings.ALinq_QueryOptionsOnlyAllowedOnSingletons), query);
         }
 
-        [TestMethod]
+        [Fact]
         public void WhereClausesForKeysOfEntityAndNavPropertyShouldReturnUrlWithNavPropertySingleton()
         {
             // Provide all key properties for entity as well as navigational entity
@@ -366,10 +364,10 @@ namespace AstoriaUnitTests.Tests.Client
                                   .SelectMany(p => p.NavPropertyCollection)
                                   .Where(n => n.Key1 == 3).Where(n => n.Key2 == 4)
                                   .ToString();
-            Assert.AreEqual(rootUrl + "Test(ID1=1,ID2=2)/NavPropertyCollection(Key1=3,Key2=4)", query);
+            Assert.Equal(rootUrl + "Test(ID1=1,ID2=2)/NavPropertyCollection(Key1=3,Key2=4)", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void WhereClausesForKeysOfEntityAndWhereClausesForPartialKeysOfNavPropertyShouldReturnUrlWithFilter()
         {
             // Provide all key properties for entity and partial key property for navigational entity
@@ -378,7 +376,7 @@ namespace AstoriaUnitTests.Tests.Client
                                   .SelectMany(p => p.NavPropertyCollection)
                                   .Where(n => n.Key1 == 3)
                                   .ToString();
-            Assert.AreEqual(rootUrl + "Test(ID1=1,ID2=2)/NavPropertyCollection?$filter=Key1 eq 3", query);
+            Assert.Equal(rootUrl + "Test(ID1=1,ID2=2)/NavPropertyCollection?$filter=Key1 eq 3", query);
         }
 
         #endregion Unit tests for entity with 2 keys
@@ -405,7 +403,7 @@ namespace AstoriaUnitTests.Tests.Client
             public string NonKeyProperty { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void ThreeWhereClausesForKeysShouldReturnUrlForSingleton()
         {
             // Simple case, only two key properties provided
@@ -414,10 +412,10 @@ namespace AstoriaUnitTests.Tests.Client
                 .Where(p => p.ID2 == "foo")
                 .Where(p => p.ID3 == this.sampleDateTimeOffset)
                 .ToString();
-            Assert.AreEqual(rootUrl + "Test(ID1=1,ID2='foo',ID3=" + this.sampleDate + ")", query);
+            Assert.Equal(rootUrl + "Test(ID1=1,ID2='foo',ID3=" + this.sampleDate + ")", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void ThreeWhereClausesForKeysInDifferentOrderShouldReturnUrlForSingltonInCorrectOrder()
         {
             // Key properties provided in reverse order
@@ -426,10 +424,10 @@ namespace AstoriaUnitTests.Tests.Client
                             .Where(p => p.ID1 == 2)
                             .Where(p => p.ID3 == this.sampleDateTimeOffset)
                             .ToString();
-            Assert.AreEqual(rootUrl + "Test(ID2='bar',ID1=2,ID3=" + this.sampleDate + ")", query);
+            Assert.Equal(rootUrl + "Test(ID2='bar',ID1=2,ID3=" + this.sampleDate + ")", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void WhereClausesWithDuplicateKeysShouldReturnError()
         {
             // Add duplicate key property
@@ -439,60 +437,60 @@ namespace AstoriaUnitTests.Tests.Client
                             .Where(p => p.ID3 == this.sampleDateTimeOffset)
                             .Where(p => p.ID1 == 2)
                             .ToString();
-            Assert.AreEqual(Strings.ALinq_TranslationError(Strings.ALinq_CanOnlyApplyOneKeyPredicate), query);
+            Assert.Equal(Strings.ALinq_TranslationError(Strings.ALinq_CanOnlyApplyOneKeyPredicate), query);
         }
 
-        [TestMethod]
+        [Fact]
         public void OneWhereClauseForThreeKeysShouldReturnUrlForSingleton()
         {
             // Provide all key properites in single where clause
             query = context.CreateQuery<EntityWithThreeKeyProperties>("Test")
                            .Where(p => p.ID1 == 1 && p.ID2 == "foo" && p.ID3 == this.sampleDateTimeOffset)
                            .ToString();
-            Assert.AreEqual(rootUrl + "Test(ID1=1,ID2='foo',ID3=" + this.sampleDate + ")", query);
+            Assert.Equal(rootUrl + "Test(ID1=1,ID2='foo',ID3=" + this.sampleDate + ")", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void OneWhereClauseForThreeKeysWithGroupingsShouldReturnUrlForSingleton()
         {
             // Provide all key properites in single where clause, but use parantheses for few of them
             query = context.CreateQuery<EntityWithThreeKeyProperties>("Test")
                            .Where(p => p.ID1 == 1 && (p.ID2 == "foo" && p.ID3 == this.sampleDateTimeOffset))
                            .ToString();
-            Assert.AreEqual(rootUrl + "Test(ID1=1,ID2='foo',ID3=" + this.sampleDate + ")", query);
+            Assert.Equal(rootUrl + "Test(ID1=1,ID2='foo',ID3=" + this.sampleDate + ")", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void OneWhereClauseForThreeKeysWithDifferntGroupingsShouldReturnUrlForSingleton()
         {
             // Provide all key properites in single where clause, but use parantheses for few of them
             query = context.CreateQuery<EntityWithThreeKeyProperties>("Test")
                            .Where(p => (p.ID1 == 1 && p.ID2 == "foo") && p.ID3 == this.sampleDateTimeOffset)
                            .ToString();
-            Assert.AreEqual(rootUrl + "Test(ID1=1,ID2='foo',ID3=" + this.sampleDate + ")", query);
+            Assert.Equal(rootUrl + "Test(ID1=1,ID2='foo',ID3=" + this.sampleDate + ")", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void OneWhereClauseWithOrForThreeKeysShouldReturnUrlWithFilter()
         {
             // Provide all key properites in single where clause, with OR operator
             query = context.CreateQuery<EntityWithThreeKeyProperties>("Test")
                            .Where(p => p.ID1 == 1 || p.ID2 == "foo" || p.ID3 == this.sampleDateTimeOffset)
                            .ToString();
-            Assert.AreEqual(rootUrl + "Test?$filter=ID1 eq 1 or ID2 eq 'foo' or ID3 eq " + this.sampleDate, query);
+            Assert.Equal(rootUrl + "Test?$filter=ID1 eq 1 or ID2 eq 'foo' or ID3 eq " + this.sampleDate, query);
         }
 
-        [TestMethod]
+        [Fact]
         public void OneWhereClauseWithOneAndOneOrForThreeKeysShouldReturnUrlWithFilter()
         {
             // Provide all key properites in single where clause with one AND and one OR operators
             query = context.CreateQuery<EntityWithThreeKeyProperties>("Test")
                            .Where(p => p.ID1 == 1 || p.ID2 == "foo" && p.ID3 == this.sampleDateTimeOffset)
                            .ToString();
-            Assert.AreEqual(rootUrl + "Test?$filter=ID1 eq 1 or ID2 eq 'foo' and ID3 eq " + this.sampleDate, query);
+            Assert.Equal(rootUrl + "Test?$filter=ID1 eq 1 or ID2 eq 'foo' and ID3 eq " + this.sampleDate, query);
         }
 
-        [TestMethod]
+        [Fact]
         public void TwoWhereClausesForOneKeyShouldReturnUrlWithFilter()
         {
             // Provide only partial list of  key proprties
@@ -500,10 +498,10 @@ namespace AstoriaUnitTests.Tests.Client
                            .Where(p => p.ID2 == "foo")
                            .Where(p => p.ID3 == this.sampleDateTimeOffset)
                            .ToString();
-            Assert.AreEqual(rootUrl + "Test?$filter=ID2 eq 'foo' and ID3 eq " + this.sampleDate, query);
+            Assert.Equal(rootUrl + "Test?$filter=ID2 eq 'foo' and ID3 eq " + this.sampleDate, query);
         }
 
-        [TestMethod]
+        [Fact]
         public void ThreeKeys_OneKeyAndOneNonKeyShouldReturnUrlWithFilter()
         {
             // Provide one key property and one non-key property
@@ -511,10 +509,10 @@ namespace AstoriaUnitTests.Tests.Client
                             .Where(p => p.ID1 == 1)
                             .Where(p => p.Name == "foo")
                             .ToString();
-            Assert.AreEqual(rootUrl + "Test?$filter=ID1 eq 1 and Name eq 'foo'", query);
+            Assert.Equal(rootUrl + "Test?$filter=ID1 eq 1 and Name eq 'foo'", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void TwoKeysAndOneNonKeyShouldReturnUrlWithFilter()
         {
             // Provide one key property and one non-key property
@@ -523,10 +521,10 @@ namespace AstoriaUnitTests.Tests.Client
                             .Where(p => p.ID3 == this.sampleDateTimeOffset)
                             .Where(p => p.Name == "foo")
                             .ToString();
-            Assert.AreEqual(rootUrl + "Test?$filter=ID1 eq 1 and ID3 eq " + this.sampleDate + " and Name eq 'foo'", query);
+            Assert.Equal(rootUrl + "Test?$filter=ID1 eq 1 and ID3 eq " + this.sampleDate + " and Name eq 'foo'", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void ThreeKeys_WhereClausesForKeysAndNonKeysShouldReturnUrlWithFilter()
         {
             // provide all key properties and non-key properties
@@ -536,10 +534,10 @@ namespace AstoriaUnitTests.Tests.Client
                             .Where(p => p.ID2 == "foo")
                             .Where(p => p.ID3 == this.sampleDateTimeOffset)
                             .ToString();
-            Assert.AreEqual(rootUrl + "Test?$filter=ID1 eq 1 and Name eq 'foo' and ID2 eq 'foo' and ID3 eq " + this.sampleDate, query);
+            Assert.Equal(rootUrl + "Test?$filter=ID1 eq 1 and Name eq 'foo' and ID2 eq 'foo' and ID3 eq " + this.sampleDate, query);
         }
 
-        [TestMethod]
+        [Fact]
         public void ThreeKeys_WhereClausesForKeysAndNonKeysShouldReturnUrlWithFilterInCorrectOrder()
         {
             // provide all key properties and non-key properties
@@ -549,10 +547,10 @@ namespace AstoriaUnitTests.Tests.Client
                             .Where(p => p.ID3 == this.sampleDateTimeOffset)
                             .Where(p => p.Name == "foo")
                             .ToString();
-            Assert.AreEqual(rootUrl + "Test?$filter=ID1 eq 1 and ID2 eq 'foo' and ID3 eq " + this.sampleDate + " and Name eq 'foo'", query);
+            Assert.Equal(rootUrl + "Test?$filter=ID1 eq 1 and ID2 eq 'foo' and ID3 eq " + this.sampleDate + " and Name eq 'foo'", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void ThreeWhereClausesForKeysAndSelectForNavEntityShouldReturnUrlForNavProperty()
         {
             // Provide all key properties for entity and select a navigational entity
@@ -562,10 +560,10 @@ namespace AstoriaUnitTests.Tests.Client
                                   .Where(p => p.ID3 == this.sampleDateTimeOffset)
                                   .Select(p => p.NavProperty)
                                   .ToString();
-            Assert.AreEqual(rootUrl + "Test(ID1=1,ID2='foo',ID3=" + this.sampleDate + ")/NavProperty", query);
+            Assert.Equal(rootUrl + "Test(ID1=1,ID2='foo',ID3=" + this.sampleDate + ")/NavProperty", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void ThreeKeys_WhereClausesForKeysAndNonKeysAndSelectForNavPropertyShouldReturnError()
         {
             // Provide all key properties for entity and select a navigational entity
@@ -577,10 +575,10 @@ namespace AstoriaUnitTests.Tests.Client
                                   .Select(p => p.NavProperty)
                                   .ToString();
 
-            Assert.AreEqual(Strings.ALinq_TranslationError(Strings.ALinq_QueryOptionsOnlyAllowedOnLeafNodes), query);
+            Assert.Equal(Strings.ALinq_TranslationError(Strings.ALinq_QueryOptionsOnlyAllowedOnLeafNodes), query);
         }
 
-        [TestMethod]
+        [Fact]
         public void ThreeKeys_WhereClausesForKeysForEntityAndSelectForNavPropertyWithWhereClauseShouldReturnError()
         {
             // Provide all key properties for entity and select a navigational entity
@@ -592,10 +590,10 @@ namespace AstoriaUnitTests.Tests.Client
                                   .Where(p => p.NonKeyProperty == "bar")
                                   .ToString();
 
-            Assert.AreEqual(Strings.ALinq_TranslationError(Strings.ALinq_QueryOptionsOnlyAllowedOnSingletons), query);
+            Assert.Equal(Strings.ALinq_TranslationError(Strings.ALinq_QueryOptionsOnlyAllowedOnSingletons), query);
         }
 
-        [TestMethod]
+        [Fact]
         public void ThreeKeys_WhereClausesForKeysOfEntityAndNavPropertyShouldReturnUrlWithNavPropertySingleton()
         {
             // Provide all key properties for entity as well as navigational entity
@@ -608,10 +606,10 @@ namespace AstoriaUnitTests.Tests.Client
                                   .Where(n => n.Key2 == 5)
                                   .Where(n => n.Key3 == 6)
                                   .ToString();
-            Assert.AreEqual(rootUrl + "Test(ID1=1,ID2='foo',ID3=" + this.sampleDate + ")/NavPropertyCollection(Key1=4,Key2=5,Key3=6)", query);
+            Assert.Equal(rootUrl + "Test(ID1=1,ID2='foo',ID3=" + this.sampleDate + ")/NavPropertyCollection(Key1=4,Key2=5,Key3=6)", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void ThreeKeys_WhereClausesForKeysOfEntityAndWhereClausesForPartialKeysOfNavPropertyShouldReturnUrlWithFilter()
         {
             // Provide all key properties for entity and partial key property for navigational entity
@@ -623,9 +621,9 @@ namespace AstoriaUnitTests.Tests.Client
                                   .Where(n => n.Key1 == 3)
                                   .Where(n => n.Key2 == 4)
                                   .ToString();
-            Assert.AreEqual(rootUrl + "Test(ID1=1,ID2='foo',ID3=" + this.sampleDate + ")/NavPropertyCollection?$filter=Key1 eq 3 and Key2 eq 4", query);
+            Assert.Equal(rootUrl + "Test(ID1=1,ID2='foo',ID3=" + this.sampleDate + ")/NavPropertyCollection?$filter=Key1 eq 3 and Key2 eq 4", query);
         }
-        [TestMethod]
+        [Fact]
         public void ThreeKeys_NonFilterQueryOptionBeforeKeyPredicateShouldReturnUrlWithFilter()
         {
             query = context.CreateQuery<EntityWithThreeKeyProperties>("Test")
@@ -635,10 +633,10 @@ namespace AstoriaUnitTests.Tests.Client
                 .Where(p => p.ID3 == this.sampleDateTimeOffset)
                 .ToString();
 
-            Assert.AreEqual(rootUrl + "Test?$orderby=ID1&$filter=ID1 eq 1 and ID2 eq 'foo' and ID3 eq " + this.sampleDate, query);
+            Assert.Equal(rootUrl + "Test?$orderby=ID1&$filter=ID1 eq 1 and ID2 eq 'foo' and ID3 eq " + this.sampleDate, query);
         }
 
-        [TestMethod]
+        [Fact]
         public void ThreeKeys_NonFilterQueryOptionAfterKeyPredicateShouldReturnUrlWithFilter()
         {
             query = context.CreateQuery<EntityWithThreeKeyProperties>("Test")
@@ -648,10 +646,10 @@ namespace AstoriaUnitTests.Tests.Client
                 .OrderBy(p => p.ID2)
                 .ToString();
 
-            Assert.AreEqual(rootUrl + "Test?$filter=ID1 eq 1 and ID2 eq 'foo' and ID3 eq " + this.sampleDate + "&$orderby=ID2", query);
+            Assert.Equal(rootUrl + "Test?$filter=ID1 eq 1 and ID2 eq 'foo' and ID3 eq " + this.sampleDate + "&$orderby=ID2", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void ThreeKeys_NonFilterQueryOptionBetweenKeyPredicateShouldReturnUrlWithFilter()
         {
             query = context.CreateQuery<EntityWithThreeKeyProperties>("Test")
@@ -661,7 +659,7 @@ namespace AstoriaUnitTests.Tests.Client
                 .Where(p => p.ID3 == this.sampleDateTimeOffset)
                 .ToString();
 
-            Assert.AreEqual(rootUrl + "Test?$orderby=ID2&$filter=ID1 eq 1 and ID2 eq 'foo' and ID3 eq " + this.sampleDate, query);
+            Assert.Equal(rootUrl + "Test?$orderby=ID2&$filter=ID1 eq 1 and ID2 eq 'foo' and ID3 eq " + this.sampleDate, query);
         }
 
         [Key("ID1")]
@@ -672,7 +670,7 @@ namespace AstoriaUnitTests.Tests.Client
             public int AnotherProperty { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void ProjectionQueryToCreateNewTypeWithWhereClauseShouldThrowError()
         {
             query = context.CreateQuery<EntityWithThreeKeyProperties>("Test")
@@ -684,10 +682,10 @@ namespace AstoriaUnitTests.Tests.Client
                 .Where(oneKey => oneKey.AnotherProperty > 1)
                 .ToString();
 
-            Assert.AreEqual(Strings.ALinq_TranslationError(Strings.ALinq_QueryOptionOutOfOrder("filter", "select")), query);
+            Assert.Equal(Strings.ALinq_TranslationError(Strings.ALinq_QueryOptionOutOfOrder("filter", "select")), query);
         }
 
-        [TestMethod]
+        [Fact]
         public void ProjectionQueryToAnonymousTypeWithWhereClauseShouldThrowError()
         {
             query = context.CreateQuery<EntityWithThreeKeyProperties>("Test")
@@ -699,10 +697,10 @@ namespace AstoriaUnitTests.Tests.Client
                 .Where(anon => anon.ID1 > 1)
                 .ToString();
 
-            Assert.AreEqual(Strings.ALinq_TranslationError(Strings.ALinq_QueryOptionOutOfOrder("filter", "select")), query);
+            Assert.Equal(Strings.ALinq_TranslationError(Strings.ALinq_QueryOptionOutOfOrder("filter", "select")), query);
         }
 
-        [TestMethod]
+        [Fact]
         public void ProjectionQueryToNewTypeWithOrderByClauseShouldThrowError()
         {
             query = context.CreateQuery<EntityWithThreeKeyProperties>("Test")
@@ -714,10 +712,10 @@ namespace AstoriaUnitTests.Tests.Client
                 .OrderBy(dummy => dummy.Name)
                 .ToString();
 
-            Assert.AreEqual(Strings.ALinq_TranslationError(Strings.ALinq_QueryOptionOutOfOrder("orderby", "select")), query);
+            Assert.Equal(Strings.ALinq_TranslationError(Strings.ALinq_QueryOptionOutOfOrder("orderby", "select")), query);
         }
 
-        [TestMethod]
+        [Fact]
         public void ProjectionQueryToAnonymousTypeWithOrderByClauseShouldThrowError()
         {
             query = context.CreateQuery<EntityWithThreeKeyProperties>("Test")
@@ -729,7 +727,7 @@ namespace AstoriaUnitTests.Tests.Client
                 .OrderBy(dummy => dummy.Name)
                 .ToString();
 
-            Assert.AreEqual(Strings.ALinq_TranslationError(Strings.ALinq_QueryOptionOutOfOrder("orderby", "select")), query);
+            Assert.Equal(Strings.ALinq_TranslationError(Strings.ALinq_QueryOptionOutOfOrder("orderby", "select")), query);
         }
         #endregion
 
@@ -748,7 +746,7 @@ namespace AstoriaUnitTests.Tests.Client
             public List<AnotherEntityWithThreeKeyProperties> NavPropertyCollection { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void FiveKeys_FiveWhereClausesForKeysShouldReturnUrlForSingleton()
         {
             // Simple case, only two key properties provided
@@ -759,27 +757,27 @@ namespace AstoriaUnitTests.Tests.Client
                 .Where(p => p.ID4 == 4)
                 .Where(p => p.ID5 == 5)
                 .ToString();
-            Assert.AreEqual(rootUrl + "Test(ID1=1,ID2=2,ID3=3,ID4=4,ID5=5)", query);
+            Assert.Equal(rootUrl + "Test(ID1=1,ID2=2,ID3=3,ID4=4,ID5=5)", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void OneWhereClausesWithDifferentCombinationsOfOperatorsForKeysShouldReturnUrlWithFilter()
         {
             // Simple case, only two key properties provided
             string query = context.CreateQuery<EntityWithFiveKeyProperties>("Test")
                 .Where(p => p.ID1 == 1 && p.ID2 == 2 || (p.ID3 == 3 && p.ID4 == 4) && p.ID5 != 5)
                 .ToString();
-            Assert.AreEqual(rootUrl + "Test?$filter=ID1 eq 1 and ID2 eq 2 or ID3 eq 3 and ID4 eq 4 and ID5 ne 5", query);
+            Assert.Equal(rootUrl + "Test?$filter=ID1 eq 1 and ID2 eq 2 or ID3 eq 3 and ID4 eq 4 and ID5 ne 5", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void OneWhereClausesWithDifferentCombinationsOfGroupedOperatorsForKeysShouldReturnUrlWithFilter()
         {
             // Simple case, only two key properties provided
             string query = context.CreateQuery<EntityWithFiveKeyProperties>("Test")
                 .Where(p => p.ID1 == 1 && p.ID2 == 2 && (p.ID3 == 3 || p.ID4 == 4) && p.ID5 != 5)
                 .ToString();
-            Assert.AreEqual(rootUrl + "Test?$filter=ID1 eq 1 and ID2 eq 2 and (ID3 eq 3 or ID4 eq 4) and ID5 ne 5", query);
+            Assert.Equal(rootUrl + "Test?$filter=ID1 eq 1 and ID2 eq 2 and (ID3 eq 3 or ID4 eq 4) and ID5 ne 5", query);
         }
 
         #endregion Unit tests for entity with 5 keys
@@ -796,149 +794,149 @@ namespace AstoriaUnitTests.Tests.Client
             public TimeOfDay timeOfDayProperty { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void WhereClauseWithYearOfDateTimeOffsetShouldReturnUrlWithYearFunction()
         {
             query = context.CreateQuery<EntityWithDateAndTime>("Test").Where(p => p.dateTimeOffsetProperty.Year == 2014).ToString();
 
-            Assert.AreEqual(rootUrl + "Test?$filter=year(dateTimeOffsetProperty) eq 2014", query);
+            Assert.Equal(rootUrl + "Test?$filter=year(dateTimeOffsetProperty) eq 2014", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void WhereClauseWithYearOfDateShouldReturnUrlWithYearFunction()
         {
             query = context.CreateQuery<EntityWithDateAndTime>("Test").Where(p => p.dateProperty.Year == 2014).ToString();
 
-            Assert.AreEqual(rootUrl + "Test?$filter=year(dateProperty) eq 2014", query);
+            Assert.Equal(rootUrl + "Test?$filter=year(dateProperty) eq 2014", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void WhereClauseWithMonthOfDateTimeOffsetShouldReturnUrlWithMonthFunction()
         {
             query = context.CreateQuery<EntityWithDateAndTime>("Test").Where(p => p.dateTimeOffsetProperty.Month == 9).ToString();
 
-            Assert.AreEqual(rootUrl + "Test?$filter=month(dateTimeOffsetProperty) eq 9", query);
+            Assert.Equal(rootUrl + "Test?$filter=month(dateTimeOffsetProperty) eq 9", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void WhereClauseWithMonthOfDateShouldReturnUrlWithMonthFunction()
         {
             query = context.CreateQuery<EntityWithDateAndTime>("Test").Where(p => p.dateProperty.Month > 9).ToString();
 
-            Assert.AreEqual(rootUrl + "Test?$filter=month(dateProperty) gt 9", query);
+            Assert.Equal(rootUrl + "Test?$filter=month(dateProperty) gt 9", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void WhereClauseWithDayOfDateTimeOffsetShouldReturnUrlWithDayFunction()
         {
             query = context.CreateQuery<EntityWithDateAndTime>("Test").Where(p => p.dateTimeOffsetProperty.Day == 25).ToString();
 
-            Assert.AreEqual(rootUrl + "Test?$filter=day(dateTimeOffsetProperty) eq 25", query);
+            Assert.Equal(rootUrl + "Test?$filter=day(dateTimeOffsetProperty) eq 25", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void WhereClauseWithDayOfDateShouldReturnUrlWithDayFunction()
         {
             query = context.CreateQuery<EntityWithDateAndTime>("Test").Where(p => p.dateProperty.Day <= 25).ToString();
 
-            Assert.AreEqual(rootUrl + "Test?$filter=day(dateProperty) le 25", query);
+            Assert.Equal(rootUrl + "Test?$filter=day(dateProperty) le 25", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void WhereClauseWithHourOfDateTimeOffsetShouldReturnUrlWithHourFunction()
         {
             query = context.CreateQuery<EntityWithDateAndTime>("Test").Where(p => p.dateTimeOffsetProperty.Hour == 12).ToString();
 
-            Assert.AreEqual(rootUrl + "Test?$filter=hour(dateTimeOffsetProperty) eq 12", query);
+            Assert.Equal(rootUrl + "Test?$filter=hour(dateTimeOffsetProperty) eq 12", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void WhereClauseWithHoursOfDateTimeOffsetShouldReturnUrlWithHourFunction()
         {
             query = context.CreateQuery<EntityWithDateAndTime>("Test").Where(p => p.timeOfDayProperty.Hours < 12).ToString();
 
-            Assert.AreEqual(rootUrl + "Test?$filter=hour(timeOfDayProperty) lt 12", query);
+            Assert.Equal(rootUrl + "Test?$filter=hour(timeOfDayProperty) lt 12", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void WhereClauseWithMintueOfDateTimeOffsetShouldReturnUrlWithMinuteFunction()
         {
             query = context.CreateQuery<EntityWithDateAndTime>("Test").Where(p => p.dateTimeOffsetProperty.Minute == 30).ToString();
 
-            Assert.AreEqual(rootUrl + "Test?$filter=minute(dateTimeOffsetProperty) eq 30", query);
+            Assert.Equal(rootUrl + "Test?$filter=minute(dateTimeOffsetProperty) eq 30", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void WhereClauseWithMinutesOfDateTimeOffsetShouldReturnUrlWithMinuteFunction()
         {
             query = context.CreateQuery<EntityWithDateAndTime>("Test").Where(p => p.timeOfDayProperty.Minutes >= 30).ToString();
 
-            Assert.AreEqual(rootUrl + "Test?$filter=minute(timeOfDayProperty) ge 30", query);
+            Assert.Equal(rootUrl + "Test?$filter=minute(timeOfDayProperty) ge 30", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void WhereClauseWithSecondOfDateTimeOffsetShouldReturnUrlWithSecondFunction()
         {
             query = context.CreateQuery<EntityWithDateAndTime>("Test").Where(p => p.dateTimeOffsetProperty.Second == 30).ToString();
 
-            Assert.AreEqual(rootUrl + "Test?$filter=second(dateTimeOffsetProperty) eq 30", query);
+            Assert.Equal(rootUrl + "Test?$filter=second(dateTimeOffsetProperty) eq 30", query);
         }
 
-        [TestMethod]
+        [Fact]
         public void WhereClauseWithMSecondsOfDateTimeOffsetShouldReturnUrlWithSecondFunction()
         {
             query = context.CreateQuery<EntityWithDateAndTime>("Test").Where(p => p.timeOfDayProperty.Seconds != 59).ToString();
 
-            Assert.AreEqual(rootUrl + "Test?$filter=second(timeOfDayProperty) ne 59", query);
+            Assert.Equal(rootUrl + "Test?$filter=second(timeOfDayProperty) ne 59", query);
         }
-        [TestMethod]
+        [Fact]
         public void WhereClauseWithDateOfDateTimeOffsetShouldReturnUrlWithDateFunction()
         {
             query = context.CreateQuery<EntityWithDateAndTime>("Test").Where(p => p.dateTimeOffsetProperty.Date == (DateTimeOffset.MinValue)).ToString();
 
-            Assert.AreEqual(rootUrl + "Test?$filter=cast(date(dateTimeOffsetProperty),'Edm.DateTimeOffset') eq 0001-01-01T00:00:00Z", query);
+            Assert.Equal(rootUrl + "Test?$filter=cast(date(dateTimeOffsetProperty),'Edm.DateTimeOffset') eq 0001-01-01T00:00:00Z", query);
         }
-        [TestMethod]
+        [Fact]
         public void WhereClauseWithDateAndHourOfDateTimeOffsetShouldReturnUrlWithDateAndHourFunctions()
         {
             query = context.CreateQuery<EntityWithDateAndTime>("Test").Where(p => p.dateTimeOffsetProperty.Date.Hour == 12).ToString();
 
-            Assert.AreEqual(rootUrl + "Test?$filter=hour(date(dateTimeOffsetProperty)) eq 12", query);
+            Assert.Equal(rootUrl + "Test?$filter=hour(date(dateTimeOffsetProperty)) eq 12", query);
         }
-        [TestMethod]
+        [Fact]
         public void WhereClauseWithDateAndMinuteOfDateTimeOffsetShouldReturnUrlWithDateAndMinuteFunctions()
         {
             query = context.CreateQuery<EntityWithDateAndTime>("Test").Where(p => p.dateTimeOffsetProperty.Date.Minute == 30).ToString();
 
-            Assert.AreEqual(rootUrl + "Test?$filter=minute(date(dateTimeOffsetProperty)) eq 30", query);
+            Assert.Equal(rootUrl + "Test?$filter=minute(date(dateTimeOffsetProperty)) eq 30", query);
         }
-        [TestMethod]
+        [Fact]
         public void WhereClauseWithDateAndSecondOfDateTimeOffsetShouldReturnUrlWithDateAndSecondFunctions()
         {
             query = context.CreateQuery<EntityWithDateAndTime>("Test").Where(p => p.dateTimeOffsetProperty.Date.Second == 30).ToString();
 
-            Assert.AreEqual(rootUrl + "Test?$filter=second(date(dateTimeOffsetProperty)) eq 30", query);
+            Assert.Equal(rootUrl + "Test?$filter=second(date(dateTimeOffsetProperty)) eq 30", query);
         }
-        [TestMethod]
+        [Fact]
         public void WhereClauseWithDateAndYearOfDateTimeOffsetShouldReturnUrlWithDateAndYearFunctions()
         {
             query = context.CreateQuery<EntityWithDateAndTime>("Test").Where(p => p.dateTimeOffsetProperty.Date.Year == 2014).ToString();
 
-            Assert.AreEqual(rootUrl + "Test?$filter=year(date(dateTimeOffsetProperty)) eq 2014", query);
+            Assert.Equal(rootUrl + "Test?$filter=year(date(dateTimeOffsetProperty)) eq 2014", query);
         }
-        [TestMethod]
+        [Fact]
         public void WhereClauseWithDateAndMonthOfDateTimeOffsetShouldReturnUrlWithDateAndMonthFunctions()
         {
             query = context.CreateQuery<EntityWithDateAndTime>("Test").Where(p => p.dateTimeOffsetProperty.Date.Month == 9).ToString();
 
-            Assert.AreEqual(rootUrl + "Test?$filter=month(date(dateTimeOffsetProperty)) eq 9", query);
+            Assert.Equal(rootUrl + "Test?$filter=month(date(dateTimeOffsetProperty)) eq 9", query);
         }
-        [TestMethod]
+        [Fact]
         public void WhereClauseWithDateAndDayOfDateTimeOffsetShouldReturnUrlWithDateAndDayFunctions()
         {
             query = context.CreateQuery<EntityWithDateAndTime>("Test").Where(p => p.dateTimeOffsetProperty.Date.Day == 9).ToString();
 
-            Assert.AreEqual(rootUrl + "Test?$filter=day(date(dateTimeOffsetProperty)) eq 9", query);
+            Assert.Equal(rootUrl + "Test?$filter=day(date(dateTimeOffsetProperty)) eq 9", query);
         }
 
         #endregion

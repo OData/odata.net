@@ -15,9 +15,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using System.Linq;
     using AstoriaUnitTests.Tests;
     using Microsoft.OData;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class EntryValueMaterializationPolicyUnitTests
     {
         public class TestCustomer
@@ -37,8 +36,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         private IODataMaterializerContext materializerContext;
         private ClientPropertyAnnotation ordersProperty;
 
-        [TestInitialize]
-        public void Initialize()
+        public EntryValueMaterializationPolicyUnitTests()
         {
             this.clientEdmModel = new ClientEdmModel(ODataProtocolVersion.V4);
             this.clientEdmModel.GetOrCreateEdmType(typeof(TestCustomer));
@@ -47,7 +45,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             this.ordersProperty = this.clientEdmModel.GetClientTypeAnnotation(typeof(TestCustomer)).GetProperty("Orders", UndeclaredPropertyBehavior.ThrowException);
         }
 
-        [TestMethod]
+        [Fact]
         public void InputCollectionElementsShouldBePlacedIntoTargetCollection()
         {
             foreach (MergeOption mo in new[] { MergeOption.NoTracking, MergeOption.AppendOnly, MergeOption.PreserveChanges, MergeOption.OverwriteChanges })
@@ -65,11 +63,11 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                     },
                     false);
 
-                Assert.IsTrue(customer.Orders.Count == 3);
+                Assert.True(customer.Orders.Count == 3);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void NonLinkedTargetCollectionElementsShouldBeRemoved()
         {
             foreach (MergeOption mo in new[] { MergeOption.PreserveChanges, MergeOption.OverwriteChanges })
@@ -93,11 +91,11 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                     false);
 
                 // Unlinked orders do not count.
-                Assert.IsTrue(customer.Orders.Count == 3);
+                Assert.True(customer.Orders.Count == 3);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void OverlappingInputCollectionShouldAddOnlyNewItemsToTargetCollection()
         {
             foreach (MergeOption mo in new[] { MergeOption.NoTracking, MergeOption.AppendOnly })
@@ -121,11 +119,11 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                     false);
 
                 // All new orders get placed.
-                Assert.IsTrue(customer.Orders.Count == 5);
+                Assert.True(customer.Orders.Count == 5);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void NotPresentLinksInInputCollectionShouldBeRemovedFromTargetCollection()
         {
             foreach (MergeOption mo in new[] { MergeOption.PreserveChanges, MergeOption.OverwriteChanges })
@@ -151,11 +149,11 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                     false);
 
                 // Linked orders stay intact but get removed if they were not refreshed, add new item.
-                Assert.IsTrue(customer.Orders.Count == 3);
+                Assert.True(customer.Orders.Count == 3);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void AddedLinksInTargetCollectionNotRemovedFromTargetCollectionForPreserveChanges()
         {
             AddedLinksInTargetCollectionHelper(
@@ -163,18 +161,18 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                 (c) =>
                 {
                     // Added links are not touched for PreserveChanges.
-                    Assert.IsTrue(c.Orders.Count == 5);
+                    Assert.True(c.Orders.Count == 5);
                 });
         }
 
-        [TestMethod]
+        [Fact]
         public void AddedLinksInTargetCollectionRemovedFromTargetCollectionForOverwriteChanges()
         {
             AddedLinksInTargetCollectionHelper(MergeOption.OverwriteChanges,
                 (c) =>
                 {
                     // Added links are overwritten for OverwriteChanges.
-                    Assert.IsTrue(c.Orders.Count == 3);
+                    Assert.True(c.Orders.Count == 3);
                 });
         }
 
@@ -203,7 +201,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             validator(customer);
         }
 
-        [TestMethod]
+        [Fact]
         public void DeletedSourceEntityShouldNotDetachLinks()
         {
             foreach (bool isContinuation in new[] { false, true })
@@ -238,18 +236,18 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                         isContinuation);
 
                     // Deleted source should still attach the new links.
-                    Assert.IsTrue(numLinkAttachments == 3);
+                    Assert.True(numLinkAttachments == 3);
 
                     if (mo == MergeOption.OverwriteChanges && !isContinuation)
                     {
-                        Assert.IsTrue(customer.Orders.Count == 3);
+                        Assert.True(customer.Orders.Count == 3);
                         // Overwrite results in link detachments.
-                        Assert.IsTrue(numLinkDetachments == 2);
+                        Assert.True(numLinkDetachments == 2);
                     }
                     else
                     {
-                        Assert.IsTrue(customer.Orders.Count == 5);
-                        Assert.IsTrue(numLinkDetachments == 0);
+                        Assert.True(customer.Orders.Count == 5);
+                        Assert.True(numLinkDetachments == 0);
                     }
                 }
         }

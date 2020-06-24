@@ -9,11 +9,15 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
     using Microsoft.OData.Client;
     using System.Linq;
     using Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit.Abstractions;
+    using Xunit;
 
-    [TestClass]
     public class ClientEndToEndTests : KeyAsSegmentTest
     {
+        public ClientEndToEndTests(ITestOutputHelper helper)
+            :base(helper)
+        {
+        }
         const int IdOfPerson = -10;
         const int IdOfPersonMetadata = 10;
         const int IdOfEmployee = -6;
@@ -23,24 +27,24 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
         const int IdOfDiscontinuedProductWithRelatedDiscontinuedProductsWithPhotos = -9;
         private int[] IdOfPhotoFromDiscontinuedProductWithRelatedDiscontinuedProductsWithPhotos = { -4, -4 };
 
-        [TestMethod]
+        [Fact]
         public void GetSingleEntity()
         {
             var contextWrapper = this.CreateWrappedContext();
             var query = contextWrapper.CreateQuery<Person>("Person").Where(p => p.PersonId == IdOfPerson) as DataServiceQuery<Person>;
             var folder = query.SingleOrDefault();
-            Assert.IsNotNull(folder);
+            Assert.NotNull(folder);
         }
 
-        [TestMethod]
+        [Fact]
         public void LinqQueryWithKeyUsingMethodSyntax()
         {
             var contextWrapper = this.CreateWrappedContext();
             var person = contextWrapper.Context.Person.Where(p => p.PersonId == IdOfPerson).SingleOrDefault();
-            Assert.IsNotNull(person);
+            Assert.NotNull(person);
         }
 
-        [TestMethod]
+        [Fact]
         public void LinqQueryWithNullStringInKey()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -52,10 +56,10 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
 
             var person = query.SingleOrDefault();
 
-            Assert.IsNull(person);
+            Assert.Null(person);
         }
 
-        [TestMethod]
+        [Fact]
         public void LinqQueryWithKey()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -67,10 +71,10 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
 
             var person = query.SingleOrDefault();
 
-            Assert.IsNotNull(person);
+            Assert.NotNull(person);
         }
 
-        [TestMethod]
+        [Fact]
         public void LinqQueryWithKeyAndOfType()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -82,10 +86,10 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
 
             var employee = query.FirstOrDefault();
 
-            Assert.IsNotNull(employee);
+            Assert.NotNull(employee);
         }
 
-        [TestMethod]
+        [Fact]
         public void MultipleNavigationAndOfTypeInQuery()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -102,10 +106,10 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
 
                 select photo) as IQueryable<ProductPhoto>;
 
-            Assert.IsNotNull(photoQuery.SingleOrDefault());
+            Assert.NotNull(photoQuery.SingleOrDefault());
         }
 
-        [TestMethod]
+        [Fact]
         public void AttachTo()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -113,10 +117,10 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             var person = new Person { PersonId = IdOfPerson };
             contextWrapper.AttachTo("Person", person);
 
-            Assert.IsTrue(contextWrapper.Context.Entities.Count == 1);
+            Assert.True(contextWrapper.Context.Entities.Count == 1);
         }
 
-        [TestMethod]
+        [Fact]
         public void AttachToLoadProperty()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -125,40 +129,47 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             contextWrapper.AttachTo("Person", person);
             contextWrapper.LoadProperty(person, "PersonMetadata");
 
-            Assert.AreEqual(3, person.PersonMetadata.Count, "person.PersonMetadata.Count == 3");
+            //person.PersonMetadata.Count == 3
+            Assert.Equal(3, person.PersonMetadata.Count);
         }
 
         // [Ignore] // Issue: #623: Support DI in OData Client
-        // [TestMethod] // github issuse: #896
+        // [Fact] // github issuse: #896
         public void ContextReferencesTest()
         {
             var contextWrapper = this.CreateWrappedContext();
-            Assert.AreEqual(0, contextWrapper.Context.Entities.Count(), "contextWrapper.Entities.Count() == 0");
+            //contextWrapper.Entities.Count() == 0
+            Assert.Equal(0, contextWrapper.Context.Entities.Count());
 
             var entityFromAttachTo = new SpecialEmployee { PersonId = IdOfPerson };
             contextWrapper.AttachTo("Person", entityFromAttachTo);
-            Assert.AreEqual(1, contextWrapper.Context.Entities.Count(), "contextWrapper.Entities.Count() == 1");
+            //contextWrapper.Entities.Count() == 1
+            Assert.Equal(1, contextWrapper.Context.Entities.Count());
 
             var personMetadata = contextWrapper.Context.PersonMetadata.Where(m => m.Person.PersonId == IdOfPerson).FirstOrDefault();
-            Assert.AreEqual(2, contextWrapper.Context.Entities.Count(), "contextWrapper.Entities.Count() == 2");
+            //contextWrapper.Entities.Count() == 2
+            Assert.Equal(2, contextWrapper.Context.Entities.Count());
 
             contextWrapper.LoadProperty(personMetadata, "Person");
             var entityFromLoadProperty = personMetadata.Person;
             contextWrapper.Detach(personMetadata);
-            Assert.AreEqual(1, contextWrapper.Context.Entities.Count(), "contextWrapper.Entities.Count() == 1");
-            Assert.IsTrue(entityFromAttachTo == entityFromLoadProperty, "Both variables should reference the same object.");
+            //contextWrapper.Entities.Count() == 1
+            Assert.Equal(1, contextWrapper.Context.Entities.Count());
+            Assert.True(entityFromAttachTo == entityFromLoadProperty, "Both variables should reference the same object.");
 
             var entityFromQuery = contextWrapper.Context.Person.Where(p => p.PersonId == IdOfPerson).SingleOrDefault();
-            Assert.AreEqual(1, contextWrapper.Context.Entities.Count(), "contextWrapper.Entities.Count() == 1");
-            Assert.IsTrue(entityFromAttachTo == entityFromQuery, "Both variables should reference the same object.");
+            //contextWrapper.Entities.Count() == 1
+            Assert.Equal(1, contextWrapper.Context.Entities.Count());
+            Assert.True(entityFromAttachTo == entityFromQuery, "Both variables should reference the same object.");
 
             var entityFromQueryWithOfType = contextWrapper.Context.Person.OfType<Employee>().Where(p => p.PersonId == IdOfPerson).SingleOrDefault();
-            Assert.AreEqual(1, contextWrapper.Context.Entities.Count(), "contextWrapper.Entities.Count() == 1");
-            Assert.IsTrue(entityFromAttachTo == entityFromQueryWithOfType, "Both variables should reference the same object.");
+            //contextWrapper.Entities.Count() == 1
+            Assert.Equal(1, contextWrapper.Context.Entities.Count());
+            Assert.True(entityFromAttachTo == entityFromQueryWithOfType, "Both variables should reference the same object.");
         }
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
-        [TestMethod]
+        [Fact]
         public void LoadPropertyWithNextLink()
         {
             var contextWrapper = this.CreateWrappedContext();

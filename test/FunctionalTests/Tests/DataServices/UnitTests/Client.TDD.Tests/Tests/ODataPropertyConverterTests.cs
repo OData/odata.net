@@ -15,13 +15,11 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using Microsoft.OData.Edm;
     using Microsoft.OData;
     using AstoriaUnitTests.TDD.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.OData.Edm.Vocabularies;
+    using Xunit;
 
     /// <summary>
     /// Tests a subset of the serializer functionality in the client. More tests should be added as changes are made.
     /// </summary>
-    [TestClass]
     public class ODataPropertyConverterTests
     {
         private ClientEdmModel clientModel;
@@ -36,8 +34,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         private TestClientEntityType entityWithDerivedComplexInCollection;
         private string serverComplexTypeName;
 
-        [TestInitialize]
-        public void Init()
+        public ODataPropertyConverterTests()
         {
             this.serverModel = new EdmModel();
             this.serverEntityType = new EdmEntityType("Server.NS", "ServerEntityType");
@@ -73,19 +70,19 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             this.context.Format.UseJson(this.serverModel);
             this.context.ResolveName = t =>
-                                       {
-                                           if (t == typeof(TestClientEntityType))
-                                           {
-                                               return this.serverEntityTypeName;
-                                           }
+            {
+                if (t == typeof(TestClientEntityType))
+                {
+                    return this.serverEntityTypeName;
+                }
 
-                                           if (t == typeof(Address))
-                                           {
-                                               return this.serverComplexTypeName;
-                                           }
+                if (t == typeof(Address))
+                {
+                    return this.serverComplexTypeName;
+                }
 
-                                           return null;
-                                       };
+                return null;
+            };
             this.entity = new TestClientEntityType
             {
                 Id = 1,
@@ -119,21 +116,22 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             };
         }
 
-        [TestMethod]
+
+        [Fact]
         public void PrimitivePropertyThatIsNotDefinedOnTheServerShouldHaveTypeAnnotation()
         {
             var value = this.ConvertSinglePropertyValue("Number");
             value.Should().HavePrimitiveValue(this.entity.Number).And.HaveSerializationTypeName("Edm.Single");
         }
 
-        [TestMethod]
+        [Fact]
         public void PrimitivePropertyThatIsDefinedOnTheServerShouldNotHaveTypeAnnotation()
         {
             var value = this.ConvertSinglePropertyValue("Id");
             value.Should().HavePrimitiveValue(this.entity.Id).And.NotHaveSerializationTypeName();
         }
 
-        [TestMethod]
+        [Fact]
         public void PrimitivePropertyThatIsNullAndNotDefinedOnTheServerShouldNotHaveTypeAnnotation()
         {
             this.entity.Number = null;
@@ -141,28 +139,28 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             value.Should().BeODataNullValue().And.NotHaveSerializationTypeName();
         }
 
-        [TestMethod]
+        [Fact]
         public void PrimitivePropertyWithMatchingJsonTypeAndNotDefinedOnTheServerShouldNotHaveTypeAnnotation()
         {
             var value = this.ConvertSinglePropertyValue("Name");
             value.Should().HavePrimitiveValue(this.entity.Name).And.NotHaveSerializationTypeName();
         }
 
-        [TestMethod]
+        [Fact]
         public void ComplexPropertyNotDefinedOnTheServerShouldHaveTypeAnnotation()
         {
             var complex = this.ConvertSingleComplexProperty("OpenAddress");
             complex.Item.Should().BeResource().And.HaveSerializationTypeName(this.serverComplexTypeName);
         }
 
-        [TestMethod]
+        [Fact]
         public void ComplexPropertyDefinedOnTheServerShouldHaveTypeAnnotation()
         {
             var complex = this.ConvertSingleComplexProperty("Address");
             complex.Item.Should().BeResource().And.HaveSerializationTypeName(this.serverComplexTypeName);
         }
 
-        [TestMethod]
+        [Fact]
         public void DerivedComplexPropertyDefinedOnTheServerShouldHaveDerivedTypeAnnotation()
         {
             var property = this.clientTypeAnnotation.GetProperty("Address", UndeclaredPropertyBehavior.ThrowException);
@@ -175,21 +173,21 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             nestedResourceInfo.Name.Should().Be("Address");
         }
 
-        [TestMethod]
+        [Fact]
         public void EnumPropertyWithNonExistingValueShouldThrow()
         {
             Action action = () => this.ConvertSinglePropertyValue("Color");
             action.ShouldThrow<NotSupportedException>().WithMessage("The enum type 'Color' has no member named '0'.");
         }
 
-        [TestMethod]
+        [Fact]
         public void CollectionPropertyDefinedOnTheServerShouldHaveTypeAnnotation()
         {
             var value = this.ConvertSinglePropertyValue("Nicknames");
             value.Should().BeCollection().And.HaveSerializationTypeName("Collection(Edm.String)");
         }
 
-        [TestMethod]
+        [Fact]
         public void ComplexInsideCollectionPropertyShouldHaveTypeAnnotation()
         {
             var collection = this.ConvertSingleComplexProperty("OtherAddresses");
@@ -199,7 +197,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             resourceSet.Resources.Cast<ODataResourceWrapper>().Single().Item.Should().BeResource().And.HaveSerializationTypeName("Server.NS.HomeAddress");
         }
 
-        [TestMethod]
+        [Fact]
         public void DerivedComplexInsideCollectionPropertyShouldNotThrow()
         {
             var property = this.clientTypeAnnotation.GetProperty("OtherAddresses", UndeclaredPropertyBehavior.ThrowException);

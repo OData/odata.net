@@ -9,24 +9,23 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
     using System;
     using System.Collections.Generic;
     using FluentAssertions;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class WeakKeyDictioaryTests
     {
         WeakKeyComparer<KeyObject> comparer = WeakKeyComparer<KeyObject>.Default;
         Random rand = new Random();
 
-        [TestMethod]
+        [Fact]
         public void TestAddItemIntoDict()
         {
             //Used to make sure all keys are alive in current scope
             List<KeyObject> keys;
             var weakDict = CreateDict(out keys);
-            Assert.AreEqual(10, weakDict.Count);
+            Assert.Equal(10, weakDict.Count);
         }
 
-        [TestMethod]
+        [Fact]
         public void TestDictContainsKey()
         {
             List<KeyObject> keys;
@@ -34,11 +33,12 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
 
             foreach (var key in keys)
             {
-                Assert.IsTrue(weakDict.ContainsKey(key), "The dictionary should contains the key {0}", key);
+                //The dictionary should contains the key {0}", key
+                Assert.True(weakDict.ContainsKey(key));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void TestDictIndex()
         {
             List<KeyObject> keys;
@@ -47,7 +47,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             //Get
             for (int i = 0; i < weakDict.Count; i++)
             {
-                Assert.AreEqual(i, weakDict[keys[i]]);
+                Assert.Equal(i, weakDict[keys[i]]);
             }
 
             //Set
@@ -58,11 +58,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
 
             for (int i = 0; i < weakDict.Count; i++)
             {
-                Assert.AreEqual(i + 1, weakDict[keys[i]]);
+                Assert.Equal(i + 1, weakDict[keys[i]]);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void TestDictRemovesKey()
         {
             List<KeyObject> keys;
@@ -72,14 +72,16 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             foreach (var key in keys)
             {
                 weakDict.Remove(key);
-                Assert.AreEqual(--count, weakDict.Count);
-                Assert.IsFalse(weakDict.ContainsKey(key), "The dictionary should contains the key {0}", key);
+                Assert.Equal(--count, weakDict.Count);
+
+                //The dictionary should contains the key {0}", key
+                Assert.False(weakDict.ContainsKey(key));
             }
         }
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         // Net Core 1.0 is missing GC APIs
-        [TestMethod]
+        [Fact]
         public void TestRemoveDeadItem()
         {
             WeakDictionary<KeyObject, int> weakDict = new WeakDictionary<KeyObject, int>(comparer, 5);
@@ -92,15 +94,15 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             GC.Collect();
             if (GC.WaitForFullGCComplete() == GCNotificationStatus.Succeeded)
             {
-                Assert.AreEqual(5, weakDict.Count);
+                Assert.Equal(5, weakDict.Count);
 
                 // Since the referesh interval is 5, so when adding the sixth item, it should clear the 5 dead items first.
                 weakDict.RemoveCollectedEntries();
-                Assert.AreEqual(0, weakDict.Count);
+                Assert.Equal(0, weakDict.Count);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void TestRemoveDeadItemWhenAddMoreThanRefreshIntervalItems()
         {
             WeakDictionary<KeyObject, int> weakDict = new WeakDictionary<KeyObject, int>(this.comparer, 5);
@@ -117,11 +119,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 weakDict.Add(key, 6);
 
                 // The countLimit after the first clean is 6 now.
-                Assert.AreEqual(1, weakDict.Count);
+                Assert.Equal(1, weakDict.Count);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void TestRemoveDeadItemWhenAddMoreThanCurrentRefreshIntervalItems()
         {
             WeakDictionary<KeyObject, int> weakDict = new WeakDictionary<KeyObject, int>(this.comparer, 5);
@@ -143,7 +145,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 // Then the currentRefreshInterval will be 1(still alive)+5=6.
                 weakDict.Add(key2, 12);
 
-                Assert.AreEqual(2, weakDict.Count);
+                Assert.Equal(2, weakDict.Count);
 
                 for (int i = 0; i < 3; i++)
                 {
@@ -159,14 +161,14 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
 
                     // Weak dictionary will not clean dead entities.
                     weakDict.Add(key6, 16);
-                    Assert.AreEqual(6, weakDict.Count);
+                    Assert.Equal(6, weakDict.Count);
 
                     var key14 = new KeyObject(114);
 
                     // Weak dictionary will remove dead items during this adding operation.
                     // Then the currentRefreshInterval will be 3(still alive)+5=8.
                     weakDict.Add(key14, 114);
-                    Assert.AreEqual(4, weakDict.Count);
+                    Assert.Equal(4, weakDict.Count);
                 }
             }
         }
@@ -178,7 +180,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             dict.Add(key, rand.Next());
         }
 
-        [TestMethod]
+        [Fact]
         public void TestAddANullKeyThrowsException()
         {
             WeakDictionary<KeyObject, int> weakDict = new WeakDictionary<KeyObject, int>(this.comparer, 5);
@@ -186,7 +188,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             testAction.ShouldThrow<ArgumentNullException>();
         }
 
-        [TestMethod]
+        [Fact]
         public void TestAddSameKeyThrowsException()
         {
             WeakDictionary<KeyObject, int> weakDict = new WeakDictionary<KeyObject, int>(this.comparer, 5);
@@ -198,7 +200,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         }
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
-        [TestMethod]
+        [Fact]
         public void TestWeakKeyComparerForRef()
         {
             var array = Enum.GetValues(typeof(RefType));
@@ -221,19 +223,19 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
 
             if (leftRefType != RefType.DeadWeak && rightRefType != RefType.DeadWeak)
             {
-                Assert.IsTrue(this.comparer.Equals(left, right));
+                Assert.True(this.comparer.Equals(left, right));
             }
             else
             {
                 GC.Collect();
                 if (GC.WaitForFullGCComplete() == GCNotificationStatus.Succeeded)
                 {
-                    Assert.IsFalse(this.comparer.Equals(left, right));
+                    Assert.False(this.comparer.Equals(left, right));
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void TestWeakKeyComparerForSameRef()
         {
             var array = Enum.GetValues(typeof(RefType));
@@ -245,7 +247,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 GC.Collect();
                 if (GC.WaitForFullGCComplete() == GCNotificationStatus.Succeeded)
                 {
-                    Assert.IsTrue(this.comparer.Equals(obj, obj));
+                    Assert.True(this.comparer.Equals(obj, obj));
                 }
             }
         }

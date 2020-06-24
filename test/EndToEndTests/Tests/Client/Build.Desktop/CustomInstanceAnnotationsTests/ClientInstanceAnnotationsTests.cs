@@ -15,17 +15,17 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference;
     using Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System.IO;
     using System.Text;
+    using Xunit.Abstractions;
+    using Xunit;
 
-    [TestClass]
     public class ClientInstanceAnnotationsTests : EndToEndTestBase
     {
         private IEdmModel model;
 
-        public ClientInstanceAnnotationsTests()
-            : base(ODataWriterServiceUtil.CreateODataWriterServiceDescriptor<CustomInstanceAnnotationsWriter>())
+        public ClientInstanceAnnotationsTests(ITestOutputHelper helper)
+            : base(ODataWriterServiceUtil.CreateODataWriterServiceDescriptor<CustomInstanceAnnotationsWriter>(), helper)
         {
 
         }
@@ -36,7 +36,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
             CustomInstanceAnnotationsGenerator.NextNameIndex = 0;
         }
 
-        [TestMethod]
+        [Fact]
         public void DetectPayloadKind()
         {
             var responseMessage = new Microsoft.Test.OData.Tests.Client.Common.InMemoryMessage();
@@ -74,7 +74,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
 
         }
 
-        [TestMethod]
+        [Fact]
         public void RequestWithSinglePreferHeaderAll()
         {
             var context = this.CreateWrappedContext<DefaultContainer>();
@@ -90,23 +90,23 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
                 .OnEntityMaterialized((args) =>
                 {
                     entityMaterialised = true;
-                    Assert.IsTrue(199 <= args.Entry.InstanceAnnotations.Count, "Unexpected count of entry annotations");
-                    Assert.IsTrue(200 >= args.Entry.InstanceAnnotations.Count, "Unexpected count of entry annotations");
+                    Assert.True(199 <= args.Entry.InstanceAnnotations.Count, "Unexpected count of entry annotations");
+                    Assert.True(200 >= args.Entry.InstanceAnnotations.Count, "Unexpected count of entry annotations");
                 })
                 .OnFeedEnded((args) =>
                 {
                     feedMaterialised = true;
-                    Assert.AreEqual(199, args.Feed.InstanceAnnotations.Count, "Unexpected count of feed annotations");
+                    Assert.Equal(199, args.Feed.InstanceAnnotations.Count);
                 });
 
             context.CreateQuery<Person>("Person").Execute().ToList();
             if (!entityMaterialised || !feedMaterialised)
             {
-                Assert.Fail("Entities({0}) and Feed({1}) should have been materialized.", entityMaterialised, feedMaterialised);
+                Assert.True(false, "Entities({0}) and Feed({1}) should have been materialized.");
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void RequestSingleAnnotation()
         {
             var context = this.CreateWrappedContext<DefaultContainer>();
@@ -121,23 +121,23 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
                 .OnEntityMaterialized((args) =>
                 {
                     entityMaterialised = true;
-                    Assert.IsTrue(args.Entry.InstanceAnnotations.Count() <= 1, "should find the derived type name in @odata.type or none.");
+                    Assert.True(args.Entry.InstanceAnnotations.Count() <= 1, "should find the derived type name in @odata.type or none.");
                 })
                 .OnFeedEnded((args) =>
                 {
                     feedMaterialised = true;
-                    Assert.IsTrue(args.Feed.InstanceAnnotations.Count == 1, "Count was " + args.Feed.InstanceAnnotations.Count);
-                    Assert.IsTrue(args.Feed.InstanceAnnotations.Single().Name == "AnnotationOnFeed.AddedBeforeWriteStart.index.0");
+                    Assert.True(args.Feed.InstanceAnnotations.Count == 1, "Count was " + args.Feed.InstanceAnnotations.Count);
+                    Assert.True(args.Feed.InstanceAnnotations.Single().Name == "AnnotationOnFeed.AddedBeforeWriteStart.index.0");
                 });
 
             context.CreateQuery<Person>("Person").Execute().ToList();
             if (!entityMaterialised || !feedMaterialised)
             {
-                Assert.Fail("Entities({0}) and Feed({1}) should have been materialized.", entityMaterialised, feedMaterialised);
+                Assert.True(false, "Entities({0}) and Feed({1}) should have been materialized.");
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void RequestWithMultipleCompatiblePreferHeaderParts()
         {
             var context = this.CreateWrappedContext<DefaultContainer>();
@@ -153,23 +153,23 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
                 .OnEntityMaterialized((args) =>
                 {
                     entityMaterialised = true;
-                    Assert.IsTrue(args.Entry.InstanceAnnotations.Count() <= 1, "should find the derived type name in @odata.type or none.");
+                    Assert.True(args.Entry.InstanceAnnotations.Count() <= 1, "should find the derived type name in @odata.type or none.");
                 })
                 .OnFeedEnded((args) =>
                 {
                     feedMaterialised = true;
-                    Assert.IsTrue(args.Feed.InstanceAnnotations.Count() == 1);
-                    Assert.IsTrue(args.Feed.InstanceAnnotations.Single().Name == "AnnotationOnFeed.AddedBeforeWriteStart.index.0");
+                    Assert.True(args.Feed.InstanceAnnotations.Count() == 1);
+                    Assert.True(args.Feed.InstanceAnnotations.Single().Name == "AnnotationOnFeed.AddedBeforeWriteStart.index.0");
                 });
 
             context.CreateQuery<Person>("Person").Execute().ToList();
             if (!entityMaterialised || !feedMaterialised)
             {
-                Assert.Fail("Entities({0}) and Feed({1}) should have been materialized.", entityMaterialised, feedMaterialised);
+                Assert.True(false, "Entities({0}) and Feed({1}) should have been materialized.");
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void RequestWithMultipleIncompatiblePreferHeaders()
         {
             var context = this.CreateWrappedContext<DefaultContainer>();
@@ -182,7 +182,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
             };
             context.Configurations.ResponsePipeline.OnEntityMaterialized((args) =>
             {
-                Assert.Fail("Should not return the entity when return content false");
+                Assert.True(false, "Should not return the entity when return content false");
             });
 
             Person newPerson = new Person() { Name = "Bob", PersonId = 5444 };
@@ -190,7 +190,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
             context.SaveChanges();
         }
 
-        [TestMethod]
+        [Fact]
         public void RequestWithMultipleIncludeAnnotationsHeaders()
         {
             var context = this.CreateWrappedContext<DefaultContainer>();
@@ -206,22 +206,22 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
                 .OnEntityMaterialized((args) =>
                 {
                     entityMaterialised = true;
-                    Assert.IsTrue(args.Entry.InstanceAnnotations.Count() <= 1, "should find the derived type name in @odata.type or none.");
+                    Assert.True(args.Entry.InstanceAnnotations.Count() <= 1, "should find the derived type name in @odata.type or none.");
                 })
                 .OnFeedEnded((args) =>
                 {
                     feedMaterialised = true;
-                    Assert.IsTrue(args.Feed.InstanceAnnotations.Count() == 0, "negative filter should result in no annotations");
+                    Assert.True(args.Feed.InstanceAnnotations.Count() == 0, "negative filter should result in no annotations");
                 });
 
             context.CreateQuery<Person>("Person").Execute().ToList();
             if (!entityMaterialised || !feedMaterialised)
             {
-                Assert.Fail("Entities({0}) and Feed({1}) should have been materialized.", entityMaterialised, feedMaterialised);
+                Assert.True(false, "Entities({0}) and Feed({1}) should have been materialized.");
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void RequestWithMultipleIncludeAnnotationsHeadersInvertHeaders()
         {
             var context = this.CreateWrappedContext<DefaultContainer>();
@@ -236,19 +236,19 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
             context.Configurations.ResponsePipeline.OnEntityMaterialized((args) =>
             {
                 entityMaterialised = true;
-                Assert.IsTrue(199 <= args.Entry.InstanceAnnotations.Count, "Unexpected count of entry annotations");
-                Assert.IsTrue(200 >= args.Entry.InstanceAnnotations.Count, "Unexpected count of entry annotations");
+                Assert.True(199 <= args.Entry.InstanceAnnotations.Count, "Unexpected count of entry annotations");
+                Assert.True(200 >= args.Entry.InstanceAnnotations.Count, "Unexpected count of entry annotations");
             });
             context.Configurations.ResponsePipeline.OnFeedEnded((args) =>
             {
                 feedMaterialised = true;
-                Assert.AreEqual(100, args.Feed.InstanceAnnotations.Count, "Unexpected count of feed annotations");
+                Assert.Equal(100, args.Feed.InstanceAnnotations.Count);
             });
 
             context.CreateQuery<Person>("Person").Execute().ToList();
             if (!entityMaterialised || !feedMaterialised)
             {
-                Assert.Fail("Entities({0}) and Feed({1}) should have been materialized.", entityMaterialised, feedMaterialised);
+                Assert.True(false, "Entities({0}) and Feed({1}) should have been materialized.");
             }
         }
     }

@@ -15,11 +15,10 @@ using Microsoft.OData.Client;
 using Microsoft.OData;
 using Microsoft.Test.OData.Services.TestServices;
 using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace Microsoft.Test.OData.Tests.Client.ClientTests
 {
-    [TestClass]
     public class ClientEntityDescripterTests : ODataWCFServiceTestsBase<InMemoryEntities>
     {
         public ClientEntityDescripterTests()
@@ -38,7 +37,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         // NetCore: IQueryable executes a synchronous query and this is currently not implemented in the portable lib version
         // of OData Client. This test throws a System.NotSupportedException. See Microsoft.OData.Client/DataServiceQueryOfT.cs
-        [TestMethod]
+        [Fact]
         public void TestRootQuery()
         {
             foreach (var entitySetKeys in entitySetsList.Keys)
@@ -47,16 +46,19 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
                 foreach (var entity in iqueryableProperty)
                 {
                     EntityDescriptor eDescriptor = TestClientContext.GetEntityDescriptor(entity);
-                    Assert.IsNotNull(eDescriptor.SelfLink, "Self link was not read");
-                    Assert.IsNotNull(eDescriptor.EditLink, "Edit link was not read");
-                    Assert.IsNotNull(eDescriptor.Identity, "Identity was not read");
+                    //Self link was not read
+                    Assert.NotNull(eDescriptor.SelfLink);
+                    //Edit link was not read
+                    Assert.NotNull(eDescriptor.EditLink);
+                    //Identity was not read
+                    Assert.NotNull(eDescriptor.Identity);
                 }
             }
         }
 
         // NetCore: IQueryable executes a synchronous query and this is currently not implemented in the portable lib version
         // of OData Client. This test throws a System.NotSupportedException. See Microsoft.OData.Client/DataServiceQueryOfT.cs
-        [TestMethod]
+        [Fact]
         public void TestTopOption()
         {
             foreach (var entitySetKeys in entitySetsList.Keys)
@@ -68,16 +70,19 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
                 foreach (var entity in takeOneQuery)
                 {
                     EntityDescriptor eDescriptor = TestClientContext.GetEntityDescriptor(entity);
-                    Assert.IsNotNull(eDescriptor.SelfLink, "Self link was not read");
-                    Assert.IsNotNull(eDescriptor.EditLink, "Edit link was not read");
-                    Assert.IsNotNull(eDescriptor.Identity, "Identity was not read");
+                    //Self link was not read
+                    Assert.NotNull(eDescriptor.SelfLink);
+                    //Edit link was not read
+                    Assert.NotNull(eDescriptor.EditLink);
+                    //Identity was not read
+                    Assert.NotNull(eDescriptor.Identity);
                 }
             }
         }
 
         // NetCore: IQueryable executes a synchronous query and this is currently not implemented in the portable lib version
         // of OData Client. This test throws a System.NotSupportedException. See Microsoft.OData.Client/DataServiceQueryOfT.cs
-        [TestMethod]
+        [Fact]
         public void TestSkipOption()
         {
             foreach (var entitySetKeys in entitySetsList.Keys)
@@ -89,16 +94,19 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
                 foreach (var entity in takeOneQuery)
                 {
                     EntityDescriptor eDescriptor = TestClientContext.GetEntityDescriptor(entity);
-                    Assert.IsNotNull(eDescriptor.SelfLink, "Self link was not read");
-                    Assert.IsNotNull(eDescriptor.EditLink, "Edit link was not read");
-                    Assert.IsNotNull(eDescriptor.Identity, "Identity was not read");
+                    //Self link was not read
+                    Assert.NotNull(eDescriptor.SelfLink);
+                    //Edit link was not read
+                    Assert.NotNull(eDescriptor.EditLink);
+                    //Identity was not read"
+                    Assert.NotNull(eDescriptor.Identity);
                 }
             }
         }
 
         // NetCore: IQueryable executes a synchronous query and this is currently not implemented in the portable lib version
         // of OData Client. This test throws a System.NotSupportedException. See Microsoft.OData.Client/DataServiceQueryOfT.cs
-        [TestMethod]
+        [Fact]
         public void TestOrderByOption()
         {
             foreach (var entitySet in entitySetsList)
@@ -112,9 +120,12 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
                     foreach (var entity in orderedResults)
                     {
                         EntityDescriptor eDescriptor = TestClientContext.GetEntityDescriptor(entity);
-                        Assert.IsNotNull(eDescriptor.SelfLink, "Self link was not read");
-                        Assert.IsNotNull(eDescriptor.EditLink, "Edit link was not read");
-                        Assert.IsNotNull(eDescriptor.Identity, "Identity was not read");
+                        //Self link was not read
+                        Assert.NotNull(eDescriptor.SelfLink);
+                        //Edit link was not read
+                        Assert.NotNull(eDescriptor.EditLink);
+                        //Identity was not read
+                        Assert.NotNull(eDescriptor.Identity);
                     }
                 }
             }
@@ -122,7 +133,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
 
         // NetCore: IQueryable executes a synchronous query and this is currently not implemented in the portable lib version
         // of OData Client. This test throws a System.NotSupportedException. See Microsoft.OData.Client/DataServiceQueryOfT.cs
-        [TestMethod]
+        [Fact]
         public void TestOrderByThenByOption()
         {
             foreach (var entitySet in entitySetsList)
@@ -134,16 +145,19 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
                 foreach (var entity in orderedResults)
                 {
                     EntityDescriptor eDescriptor = TestClientContext.GetEntityDescriptor(entity);
-                    Assert.IsNotNull(eDescriptor.SelfLink, "Self link was not read");
-                    Assert.IsNotNull(eDescriptor.EditLink, "Edit link was not read");
-                    Assert.IsNotNull(eDescriptor.Identity, "Identity was not read");
+                    //Self link was not read
+                    Assert.NotNull(eDescriptor.SelfLink);
+                    //Edit link was not read
+                    Assert.NotNull(eDescriptor.EditLink);
+                    //Identity was not read
+                    Assert.NotNull(eDescriptor.Identity);
                 }
             }
         }
 
         // NetCore: IQueryable executes a synchronous query and this is currently not implemented in the portable lib version
         // of OData Client. This test throws a System.NotSupportedException. See Microsoft.OData.Client/DataServiceQueryOfT.cs
-        [TestMethod]
+        [Fact]
         public void TestOrderByDescendingOption()
         {
             foreach (var entitySet in entitySetsList)
@@ -158,15 +172,18 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
                     foreach (var entity in orderedResults)
                     {
                         EntityDescriptor eDescriptor = TestClientContext.GetEntityDescriptor(entity);
-                        Assert.IsNotNull(eDescriptor.SelfLink, "Self link was not read");
-                        Assert.IsNotNull(eDescriptor.EditLink, "Edit link was not read");
-                        Assert.IsNotNull(eDescriptor.Identity, "Identity was not read");
+                        //Self link was not read
+                        Assert.NotNull(eDescriptor.SelfLink);
+                        //Edit link was not read
+                        Assert.NotNull(eDescriptor.EditLink);
+                        //Identity was not read
+                        Assert.NotNull(eDescriptor.Identity);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void GetDiscontinuedProducts()
         {
             var discontinuedProducts = from product in TestClientContext.Products
@@ -177,13 +194,16 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
             foreach (var entity in discontinuedProducts)
             {
                 EntityDescriptor eDescriptor = TestClientContext.GetEntityDescriptor(entity);
-                Assert.IsNotNull(eDescriptor.SelfLink, "Self link was not read");
-                Assert.IsNotNull(eDescriptor.EditLink, "Edit link was not read");
-                Assert.IsNotNull(eDescriptor.Identity, "Identity was not read");
+                //Self link was not read
+                Assert.NotNull(eDescriptor.SelfLink);
+                //Edit link was not read
+                Assert.NotNull(eDescriptor.EditLink);
+                //Identity was not read
+                Assert.NotNull(eDescriptor.Identity);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void GetInCirculationProducts()
         {
             var discontinuedProducts = from product in TestClientContext.Products
@@ -194,13 +214,16 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
             foreach (var entity in discontinuedProducts)
             {
                 EntityDescriptor eDescriptor = TestClientContext.GetEntityDescriptor(entity);
-                Assert.IsNotNull(eDescriptor.SelfLink, "Self link was not read");
-                Assert.IsNotNull(eDescriptor.EditLink, "Edit link was not read");
-                Assert.IsNotNull(eDescriptor.Identity, "Identity was not read");
+                //Self link was not read
+                Assert.NotNull(eDescriptor.SelfLink);
+                //Edit link was not read
+                Assert.NotNull(eDescriptor.EditLink);
+                //Identity was not read
+                Assert.NotNull(eDescriptor.Identity);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void GetOrdersOnMyBirthday()
         {
             var dateTimeType = new DateTime?(DateTime.Now).GetType();
@@ -212,13 +235,16 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
             foreach (var entity in ordersOnMyBirthday)
             {
                 EntityDescriptor eDescriptor = TestClientContext.GetEntityDescriptor(entity);
-                Assert.IsNotNull(eDescriptor.SelfLink, "Self link was not read");
-                Assert.IsNotNull(eDescriptor.EditLink, "Edit link was not read");
-                Assert.IsNotNull(eDescriptor.Identity, "Identity was not read");
+                //Self link was not read
+                Assert.NotNull(eDescriptor.SelfLink);
+                //Edit link was not read
+                Assert.NotNull(eDescriptor.EditLink);
+                //Identity was not read
+                Assert.NotNull(eDescriptor.Identity);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void GetCustomersInLondon()
         {
             var customersInLondon = from customer in TestClientContext.Customers
@@ -229,14 +255,17 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
             foreach (var entity in customersInLondon)
             {
                 EntityDescriptor eDescriptor = TestClientContext.GetEntityDescriptor(entity);
-                Assert.IsNotNull(eDescriptor.SelfLink, "Self link was not read");
-                Assert.IsNotNull(eDescriptor.EditLink, "Edit link was not read");
-                Assert.IsNotNull(eDescriptor.Identity, "Identity was not read");
+                //Self link was not read
+                Assert.NotNull(eDescriptor.SelfLink);
+                //Edit link was not read
+                Assert.NotNull(eDescriptor.EditLink);
+                //Identity was not read
+                Assert.NotNull(eDescriptor.Identity);
             }
         }
 
 
-        [TestMethod]
+        [Fact]
         public void GetCustomersByKey()
         {
             var first5Customers = TestClientContext.Customers.Take(5).ToList();
@@ -247,13 +276,16 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
                 Console.WriteLine(customerByKey.ToString());
                 var entity = customerByKey.Single();
                 EntityDescriptor eDescriptor = TestClientContext.GetEntityDescriptor(entity);
-                Assert.IsNotNull(eDescriptor.SelfLink, "Self link was not read");
-                Assert.IsNotNull(eDescriptor.EditLink, "Edit link was not read");
-                Assert.IsNotNull(eDescriptor.Identity, "Identity was not read");
+                //Self link was not read
+                Assert.NotNull(eDescriptor.SelfLink);
+                //Edit link was not read
+                Assert.NotNull(eDescriptor.EditLink);
+                //Identity was not read
+                Assert.NotNull(eDescriptor.Identity);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void GetOrderDetailsByKey()
         {
             var first5Details = TestClientContext.OrderDetails.Take(5).ToList();
@@ -264,14 +296,17 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
                 Console.WriteLine(orderByKey.ToString());
                 var entity = orderByKey.Single();
                 EntityDescriptor eDescriptor = TestClientContext.GetEntityDescriptor(entity);
-                Assert.IsNotNull(eDescriptor.SelfLink, "Self link was not read");
-                Assert.IsNotNull(eDescriptor.EditLink, "Edit link was not read");
-                Assert.IsNotNull(eDescriptor.Identity, "Identity was not read");
+                //Self link was not read
+                Assert.NotNull(eDescriptor.SelfLink);
+                //Edit link was not read
+                Assert.NotNull(eDescriptor.EditLink);
+                //Identity was not read
+                Assert.NotNull(eDescriptor.Identity);
             }
         }
 #endif
 
-        [TestMethod]
+        [Fact]
         public void ParseServiceDocument()
         {
             var requestMessage = new Microsoft.Test.OData.Tests.Client.Common.HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri, UriKind.Absolute));
@@ -285,7 +320,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
 
                 foreach (var entitySetName in entitySetsList.Keys)
                 {
-                    Assert.IsNotNull(workSpace.EntitySets.Single(c => c.Name == entitySetName));
+                    Assert.NotNull(workSpace.EntitySets.Single(c => c.Name == entitySetName));
                 }
             }
         }

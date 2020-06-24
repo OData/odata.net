@@ -13,9 +13,9 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
     using Microsoft.Test.OData.Framework.Client;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.OpenTypesServiceReference;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit.Abstractions;
+    using Xunit;
 
-    [TestClass]
     public class OpenTypesWithoutTypeResolverTests : EndToEndTestBase
     {
         #region Test Data
@@ -58,8 +58,8 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
         private const int TestRowIndexId = 999;
         private Func<Type, string> typeNameResolver;
 
-        public OpenTypesWithoutTypeResolverTests()
-            : base(ServiceDescriptors.OpenTypesService)
+        public OpenTypesWithoutTypeResolverTests(ITestOutputHelper helper)
+            : base(ServiceDescriptors.OpenTypesService, helper)
         {
         }
 
@@ -87,7 +87,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
         }
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
-        [TestMethod]
+        [Fact]
         public void ExpandQuery()
         {
             var contextWrapper = this.CreateContext();
@@ -97,7 +97,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
         }
 #endif
 
-        [TestMethod]
+        [Fact]
         public void ProjectionQuery()
         {
             var contextWrapper = this.CreateContext();
@@ -106,7 +106,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
             var results = query.ToList();
         }
 
-        [TestMethod]
+        [Fact]
         public void DerivedTypesQuery()
         {
             var contextWrapper = this.CreateContext();
@@ -115,7 +115,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
             var results = query.ToArray();
         }
 
-        [TestMethod]
+        [Fact]
         public void BaseTypeQueryRealizesDerivedTypeObject()
         {
             var contextWrapper = this.CreateContext();
@@ -126,10 +126,10 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
             var baseQuery = contextWrapper.Execute<Row>(new Uri(this.ServiceUri.OriginalString + "/Row(" + indexedRow.Id.ToString() + ")"));
             var row = baseQuery.Single();
 
-            Assert.IsTrue(row is IndexedRow);
+            Assert.True(row is IndexedRow);
         }
 
-        [TestMethod]
+        [Fact]
         public void UpdateOpenProperties()
         {
             var contextWrapper = this.CreateContext();

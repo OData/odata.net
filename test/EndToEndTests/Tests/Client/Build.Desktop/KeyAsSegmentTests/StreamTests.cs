@@ -10,14 +10,18 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
     using System.IO;
     using System.Linq;
     using Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit.Abstractions;
+    using Xunit;
 
-    [TestClass]
     public class StreamTests : KeyAsSegmentTest
     {
+        public StreamTests(ITestOutputHelper helper)
+            :base(helper)
+        {
+        }
         private static readonly byte[] binaryTestData = new byte[] { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
 
-        [TestMethod]
+        [Fact]
         public void GetReadStreamFromMle()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -26,12 +30,12 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             foreach (var customerInfo in customerInfoQuery)
             {
                 var streamResponse = contextWrapper.GetReadStream(customerInfo);
-                Assert.IsNotNull(streamResponse);
+                Assert.NotNull(streamResponse);
                 VerifyStreamReadable(streamResponse.Stream);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void GetReadStreamUriFromMle()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -40,12 +44,12 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             foreach (var customerInfo in customerInfoQuery)
             {
                 var streamResponseUri = contextWrapper.GetReadStreamUri(customerInfo);
-                Assert.IsNotNull(streamResponseUri);
+                Assert.NotNull(streamResponseUri);
                 VerifyUriDoesNotContainParentheses(streamResponseUri);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void GetReadStreamFromNamedStreamProperty()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -55,7 +59,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             VerifyStreamReadable(streamResponse.Stream);
         }
 
-        [TestMethod]
+        [Fact]
         public void SetSaveStreamOnMle()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -67,7 +71,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             contextWrapper.SaveChanges();
         }
 
-        [TestMethod]
+        [Fact]
         public void SetSaveStreamOnNamedStreamProperty()
         {
             var contextWrapper = this.CreateWrappedContext();

@@ -7,43 +7,41 @@
 namespace AstoriaUnitTests.TDD.Tests.Client
 {
     using System;
-    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Net;
     using Microsoft.OData;
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.TDDUnitTests;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class DataServiceRequestTests
     {
-        [TestMethod]
+        [Fact]
         public void NoContentMaterializeTestForEntry()
         {
             this.MaterializeTest(HttpStatusCode.NoContent, ODataPayloadKind.Resource);
         }
 
-        [TestMethod]
+        [Fact]
         public void NoContentMaterializeTestForProperty()
         {
             this.MaterializeTest(HttpStatusCode.NoContent, ODataPayloadKind.Property);
         }
 
-        [TestMethod]
+        [Fact]
         public void NoContentMaterializeTestForIndividualProperty()
         {
             this.MaterializeTest(HttpStatusCode.NoContent, ODataPayloadKind.IndividualProperty);
         }
 
-        [TestMethod]
+        [Fact]
         public void NoContentMaterializeTestForValue()
         {
             this.MaterializeTest(HttpStatusCode.NoContent, ODataPayloadKind.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void NoContentMaterializeTestForBinaryValue()
         {
             this.MaterializeTest(HttpStatusCode.NoContent, ODataPayloadKind.BinaryValue);
@@ -67,10 +65,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                 "application/json",
                 responseMessage,
                 payloadKind);
-            Assert.IsNull(materialize.Context);
-            Assert.IsNull(materialize.Current);
+            Assert.Null(materialize.Context);
+            Assert.Null(materialize.Current);
             var enumerable = materialize.Cast<object>();
-            Assert.AreEqual(0, enumerable.Count());
+            Assert.Empty(enumerable);
         }
 
         private class Product

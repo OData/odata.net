@@ -16,27 +16,23 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
 #endif   
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference;
-#if WIN8 || WINDOWSPHONE
-    using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-#else
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
+    using Xunit.Abstractions;
+    using Xunit;
 
     /// <summary>
     /// Client update tests using asynchronous APIs
     /// </summary>
-    [TestClass]
     public class AsynchronousUpdateTests : EndToEndTestBase
     {
-        public AsynchronousUpdateTests()
-            : base(ServiceDescriptors.AstoriaDefaultService)
+        public AsynchronousUpdateTests(ITestOutputHelper helper)
+            : base(ServiceDescriptors.AstoriaDefaultService, helper)
         {
         }
 
         /// <summary>
         /// refer header for include(notInclude)Content
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void PreferHeader()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -47,21 +43,21 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             context.AddToCustomer(c1);
             var ar0 = context.BeginSaveChanges(null, null).EnqueueWait(this);
             var returnedValue = context.EndSaveChanges(ar0).SingleOrDefault() as ChangeOperationResponse;
-            Assert.AreEqual(201,returnedValue.StatusCode,  "StatusCode == 201");
+            Assert.Equal(201,returnedValue.StatusCode);
 
             context.AddAndUpdateResponsePreference = DataServiceResponsePreference.NoContent;
             c1.CustomerId = 2;
             context.UpdateObject(c1);
             var ar1 = context.BeginSaveChanges(null, null).EnqueueWait(this);
             returnedValue = context.EndSaveChanges(ar1).SingleOrDefault() as ChangeOperationResponse;
-            Assert.AreEqual(204,returnedValue.StatusCode,  "StatusCode == 204");
+            Assert.Equal(204,returnedValue.StatusCode);
 
             context.AddAndUpdateResponsePreference = DataServiceResponsePreference.IncludeContent;
             c1.Name = "changedName2";
             context.UpdateObject(c1);
             var ar2 = context.BeginSaveChanges(null, null).EnqueueWait(this);
             returnedValue = context.EndSaveChanges(ar2).SingleOrDefault() as ChangeOperationResponse;
-            Assert.AreEqual(200,returnedValue.StatusCode,  "StatusCode == 200");
+            Assert.Equal(200,returnedValue.StatusCode);
            
             this.EnqueueTestComplete();
         }
@@ -69,13 +65,13 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// service operations tests only ONE operation being tested (getCustomerCount)
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void ServiceOperationTests()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
             var ar200 = context.BeginExecute<int>(new Uri("GetCustomerCount/", UriKind.Relative), null, null, "GET").EnqueueWait(this);
             var count = context.EndExecute<int>(ar200).SingleOrDefault();
-            Assert.AreEqual(10, count);
+            Assert.Equal(10, count);
 
             this.EnqueueTestComplete();
          }
@@ -84,7 +80,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// Execute actions with parameter ( Primitive, complex, collection, multiple ) Parms
         /// </summary>
         // github issuse: #896
-        // [TestMethod, Asynchronous]
+        // [Fact, Asynchronous]
         public void ActionTestsParams()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -104,7 +100,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             context.EndExecute(ar1);
             var ar11 = context.BeginLoadProperty(e1, "Salary", null, null).EnqueueWait(this);
             context.EndLoadProperty(ar11);
-            Assert.AreEqual(400, e1.Salary);
+            Assert.Equal(400, e1.Salary);
 
             var ar2 = context.BeginExecute(new Uri("ComputerDetail(" + cd1.ComputerDetailId + ")" + "/Microsoft.Test.OData.Services.AstoriaDefaultService.ResetComputerDetailsSpecifications", UriKind.Relative), null, null, "POST", new BodyOperationParameter("specifications", specifications), new BodyOperationParameter("purchaseTime", purchaseTime)).EnqueueWait(this);
             context.EndExecute(ar2);
@@ -112,8 +108,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             context.EndLoadProperty(ar21);
             var ar22 = context.BeginLoadProperty(cd1, "SpecificationsBag", null, null).EnqueueWait(this);
             context.EndLoadProperty(ar22);
-            Assert.AreEqual(purchaseTime, cd1.PurchaseDate);
-            Assert.AreEqual(specifications.Aggregate("", (current, item) => current + item),cd1.SpecificationsBag.Aggregate("", (current, item) => current + item));
+            Assert.Equal(purchaseTime, cd1.PurchaseDate);
+            Assert.Equal(specifications.Aggregate("", (current, item) => current + item),cd1.SpecificationsBag.Aggregate("", (current, item) => current + item));
 
             var ar3 = context.BeginExecute(new Uri("Customer(1007)/Microsoft.Test.OData.Services.AstoriaDefaultService.ChangeCustomerAuditInfo", UriKind.Relative), null, null, "POST", new BodyOperationParameter("auditInfo", a1)).EnqueueWait(this);
             context.EndExecute(ar3);
@@ -121,15 +117,15 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             var ar2222 = query.BeginExecute(null, null).EnqueueWait(this);
             var temp = (query.EndExecute(ar2222) as QueryOperationResponse<AuditInfo>);
             c1.Auditing = temp.SingleOrDefault();
-            Assert.AreEqual(c1.Auditing.ModifiedBy , "some-one");
-            Assert.AreEqual(c1.Auditing.ModifiedDate, DateTimeOffset.MinValue);
+            Assert.Equal(c1.Auditing.ModifiedBy , "some-one");
+            Assert.Equal(c1.Auditing.ModifiedDate, DateTimeOffset.MinValue);
             this.EnqueueTestComplete();
         }
 
         /// <summary>
         /// Execute actions with no parameter  return and no return;
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void ActionTestsNoParams()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -143,11 +139,11 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             context.EndExecute(ar2);
             var ar21 = context.BeginLoadProperty(e1, "Title", null, null).EnqueueWait(this);
             context.EndLoadProperty(ar21);
-            Assert.AreEqual("bill[Sacked]",e1.Title );
+            Assert.Equal("bill[Sacked]",e1.Title );
 
             var ar1 = context.BeginExecute<Computer>(new Uri("Computer(-10)" + "/Microsoft.Test.OData.Services.AstoriaDefaultService.GetComputer", UriKind.Relative), null, null, "POST").EnqueueWait(this);
             var comp = context.EndExecute<Computer>(ar1).SingleOrDefault();
-            Assert.AreEqual(-10, comp.ComputerId);
+            Assert.Equal(-10, comp.ComputerId);
 
             this.EnqueueTestComplete();        
         }
@@ -155,7 +151,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// Test Setlink when only attachTo function is called for derived Type
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void SetDerivedTypeNavigationLinkTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -176,23 +172,23 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             var query = context.CreateQuery<Person>("Person").Expand(p => (p as Employee).Manager).Where(p => p.PersonId == personId) as DataServiceQuery<Person>;
             var ar11 = query.BeginExecute(null, null).EnqueueWait(this);
             Person resultPerson = query.EndExecute(ar11).Single();
-            Assert.AreEqual(person.PersonId, resultPerson.PersonId);
-            Assert.AreEqual(person, resultPerson);
-            Assert.IsNotNull(context.Links.SingleOrDefault(l => l.SourceProperty == "Manager" && l.Source == person && l.Target == employee));
+            Assert.Equal(person.PersonId, resultPerson.PersonId);
+            Assert.Equal(person, resultPerson);
+            Assert.NotNull(context.Links.SingleOrDefault(l => l.SourceProperty == "Manager" && l.Source == person && l.Target == employee));
 
             context.SetLink(person, "Manager", null);
             var ar2 = context.BeginSaveChanges(null, null).EnqueueWait(this);
             context.EndSaveChanges(ar2);
             var ar21 = context.BeginLoadProperty(person, "Manager", null, null).EnqueueWait(this);
             context.EndLoadProperty(ar21);
-            Assert.IsNull((person as Employee).Manager);
+            Assert.Null((person as Employee).Manager);
             this.EnqueueTestComplete();     
         }
 
         /// <summary>
         /// Test Addlink when only attachTo function is called for base Type
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void AddBaseTypeNavigationLinkTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -213,16 +209,16 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             var query = context.CreateQuery<Person>("Person").Where(p => p.PersonId == personId) as DataServiceQuery<Person>;
             var arTemp = query.BeginExecute(null, null).EnqueueWait(this);
             Person resultPerson = query.EndExecute(arTemp).Single();
-            Assert.AreEqual(person.PersonId, resultPerson.PersonId);
-            Assert.AreEqual(person, resultPerson);
-            Assert.IsNotNull(context.Links.SingleOrDefault(l => l.SourceProperty == "PersonMetadata" && l.Source == person && l.Target == personMetadata));
+            Assert.Equal(person.PersonId, resultPerson.PersonId);
+            Assert.Equal(person, resultPerson);
+            Assert.NotNull(context.Links.SingleOrDefault(l => l.SourceProperty == "PersonMetadata" && l.Source == person && l.Target == personMetadata));
             this.EnqueueTestComplete();
         }
 
         /// <summary>
         /// Add update delete a  link
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void AddUpdateDeleteAssociationLinkSetLinkTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -244,8 +240,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             context.EndLoadProperty(ar01);
             var ar02 = context.BeginLoadProperty(o1, "Customer", null, null).EnqueueWait(this);
             context.EndLoadProperty(ar02);
-            Assert.AreEqual(0, c1.Orders.Count, "IsTrue c1.Orders.Count == 0");
-            Assert.IsNull(o1.Customer, "IsNull o1.Customer");
+            Assert.Equal(0, c1.Orders.Count);
+            Assert.Null(o1.Customer);
 
             context.AddLink(c1, "Orders", o1);
             var ar1 = context.BeginSaveChanges(null, null).EnqueueWait(this);
@@ -254,8 +250,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             context.EndLoadProperty(ar11);
             var ar12 = context.BeginLoadProperty(o1, "Customer", null, null).EnqueueWait(this);
             context.EndLoadProperty(ar12);
-            Assert.AreEqual(1, c1.Orders.Count, "IsTrue c1.Orders.Count == 1");
-            Assert.IsNull(o1.Customer, "IsNull o1.Customer");
+            Assert.Equal(1, c1.Orders.Count);
+            Assert.Null(o1.Customer);
 
             context.SetLink(o1, "Customer", c1);
             var ar2 = context.BeginSaveChanges(null, null).EnqueueWait(this);
@@ -264,8 +260,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             context.EndLoadProperty(ar21);
             var ar22 = context.BeginLoadProperty(o1, "Customer", null, null).EnqueueWait(this);
             context.EndLoadProperty(ar22);
-            Assert.AreEqual(1, c1.Orders.Count, "IsTrue c1.Orders.Count == 1");
-            Assert.AreEqual(c1, o1.Customer, "IsTrue o1.Customer == c1");
+            Assert.Equal(1, c1.Orders.Count);
+            Assert.Equal(c1, o1.Customer);
 
             context.SetLink(o1, "Customer", c2);
             var ar3 = context.BeginSaveChanges(null, null).EnqueueWait(this);
@@ -274,8 +270,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             context.EndLoadProperty(ar31);
             var ar32 = context.BeginLoadProperty(o1, "Customer", null, null).EnqueueWait(this);
             context.EndLoadProperty(ar32);
-            Assert.AreEqual(1, c1.Orders.Count, "IsTrue c1.Orders.Count == 1");
-            Assert.AreEqual(c2, o1.Customer, "IsTrue o1.Customer == c2");
+            Assert.Equal(1, c1.Orders.Count);
+            Assert.Equal(c2, o1.Customer);
 
             context.DeleteLink(c1, "Orders", o1);
             var ar4 = context.BeginSaveChanges(null, null).EnqueueWait(this);
@@ -284,8 +280,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             context.EndLoadProperty(ar41);
             var ar42 = context.BeginLoadProperty(o1, "Customer", null, null).EnqueueWait(this);
             context.EndLoadProperty(ar42);
-            Assert.AreEqual(c2, o1.Customer, "IsTrue o1.Customer == c2");
-            Assert.AreEqual(0, c1.Orders.Count, "IsTrue c1.Orders.Count == 0");
+            Assert.Equal(c2, o1.Customer);
+            Assert.Equal(0, c1.Orders.Count);
 
             context.SetLink(o1, "Customer", null);
             var ar5 = context.BeginSaveChanges(null, null).EnqueueWait(this);
@@ -294,13 +290,13 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             context.EndLoadProperty(ar51);
             var ar52 = context.BeginLoadProperty(o1, "Customer", null, null).EnqueueWait(this);
             context.EndLoadProperty(ar52);
-            Assert.IsNull(o1.Customer, "IsNull o1.Customer");
-            Assert.AreEqual(0, c1.Orders.Count, "IsTrue c1.Orders.Count == 0");
+            Assert.Null(o1.Customer);
+            Assert.Equal(0, c1.Orders.Count);
 
             this.EnqueueTestComplete();
         }
 
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void AddUpdateDeleteAssociationLinkAddRelatedObjectTestDerivedTypes()
         {
             //context setup
@@ -322,8 +318,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             context.EndLoadProperty(ar01);
             var ar02 = context.BeginLoadProperty(e2, "Manager", null, null).EnqueueWait(this);
             context.EndLoadProperty(ar02);
-            Assert.IsNotNull(e1.Manager, "IsNotNull e1.Manager");
-            Assert.IsNull(e2.Manager, "IsNull e2.Manager");
+            Assert.NotNull(e1.Manager);
+            Assert.Null(e2.Manager);
            
             context.SetLink(e1, "Manager", null);
             var ar1 = context.BeginSaveChanges(null, null).EnqueueWait(this);
@@ -334,7 +330,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             context.EndLoadProperty(ar12);
             // TODO: LoadProperty does not remove element on client side from one-one link after it is set to null
             // Assert.IsNull(e1.Manager, "IsNull e1.Manager");
-            Assert.IsNull(e2.Manager, "IsNull e2.Manager");
+            Assert.Null(e2.Manager);
 
             this.EnqueueTestComplete();
         }
@@ -342,7 +338,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// Add update delete a relationship link
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void AddUpdateDeleteAssociationLinkAddRelatedObjectTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -361,35 +357,35 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             context.EndSaveChanges(ar0);
             var ar01 = context.BeginLoadProperty(c1, "Orders", null, null).EnqueueWait(this);
             context.EndLoadProperty(ar01);
-            Assert.AreEqual(0, c1.Orders.Count , "IsTrue c1.Orders.Count == 0");
+            Assert.Equal(0, c1.Orders.Count);
 
             context.AddRelatedObject(c1, "Orders", o2);
             var ar1 = context.BeginSaveChanges(null, null).EnqueueWait(this);
             context.EndSaveChanges(ar1);
             var ar11 = context.BeginLoadProperty(c1, "Orders", null, null).EnqueueWait(this);
             context.EndLoadProperty(ar11);
-            Assert.AreEqual(1, c1.Orders.Count , "IsTrue c1.Orders.Count == 1");
+            Assert.Equal(1, c1.Orders.Count);
 
             context.AddRelatedObject(c1, "Orders", o1);
             var ar2 = context.BeginSaveChanges(null, null).EnqueueWait(this);
             context.EndSaveChanges(ar2);
             var ar21 = context.BeginLoadProperty(c1, "Orders", null, null).EnqueueWait(this);
             context.EndLoadProperty(ar21);
-            Assert.AreEqual(2, c1.Orders.Count , "IsTrue c1.Orders.Count == 2");
+            Assert.Equal(2, c1.Orders.Count);
 
             context.DeleteLink(c1, "Orders", o1);
             var ar3 = context.BeginSaveChanges(null, null).EnqueueWait(this);
             context.EndSaveChanges(ar3);
             var ar31 = context.BeginLoadProperty(c1, "Orders", null, null).EnqueueWait(this);
             context.EndLoadProperty(ar31);
-            Assert.AreEqual(1,c1.Orders.Count ,  "IsTrue c1.Orders.Count == 1");
+            Assert.Equal(1,c1.Orders.Count);
 
             context.DeleteLink(c1, "Orders", o2);
             var ar4 = context.BeginSaveChanges(null, null).EnqueueWait(this);
             context.EndSaveChanges(ar4);
             var ar41 = context.BeginLoadProperty(c1, "Orders", null, null).EnqueueWait(this);
             context.EndLoadProperty(ar41);
-            Assert.AreEqual(0,c1.Orders.Count,  "IsTrue c1.Orders.Count == 0");
+            Assert.Equal(0,c1.Orders.Count);
 
             this.EnqueueTestComplete();
         }
@@ -397,7 +393,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// Create, update, delete an entity
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void AddUpdateDeleteTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -408,7 +404,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             var ar1 = peopleQuery.BeginExecute(null, null).EnqueueWait(this);
             var people = peopleQuery.EndExecute(ar1);
             var person = people.Where(p => p.PersonId == 1000).SingleOrDefault();
-            Assert.IsNull(person);
+            Assert.Null(person);
             
             // Add
             person = Person.CreatePerson(1000);
@@ -423,7 +419,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             person = null;
             var ar3 = personQuery.BeginExecute(null, null).EnqueueWait(this);
             person = personQuery.EndExecute(ar3).Single();
-            Assert.IsNotNull(person);
+            Assert.NotNull(person);
             
             // Update
             person.Name = "Name2";
@@ -436,7 +432,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             person = null;
             var ar5 = personQuery.BeginExecute(null, null).EnqueueWait(this);
             person = personQuery.EndExecute(ar5).Single();
-            Assert.AreEqual("Name2", person.Name);
+            Assert.Equal("Name2", person.Name);
             context.Detach(person);
             
             // Delete
@@ -450,7 +446,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             var ar7 = peopleQuery.BeginExecute(null, null).EnqueueWait(this);
             people = peopleQuery.EndExecute(ar7);
             person = people.Where(p => p.PersonId == 1000).SingleOrDefault();
-            Assert.IsNull(person);
+            Assert.Null(person);
 
             this.EnqueueTestComplete();
         }
@@ -458,7 +454,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// Add update delete an entity using Batch SaveChangesOptions
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void AddUpdateDeleteBatchTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -474,7 +470,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             var query = context.Person.Where(p => p.PersonId >= 1000) as DataServiceQuery<Person>;
             var ar2 = query.BeginExecute(null, null).EnqueueWait(this);
             var people = query.EndExecute(ar2).ToList();
-            Assert.AreEqual(numberOfPeople, people.Count());
+            Assert.Equal(numberOfPeople, people.Count());
             
             // Update
             foreach (var person in people)
@@ -496,7 +492,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             people = query.EndExecute(ar4).ToList();
             foreach (var person in people)
             {
-                Assert.AreEqual(person.PersonId.ToString(), person.Name);
+                Assert.Equal(person.PersonId.ToString(), person.Name);
             }
             
             // Delete
@@ -510,7 +506,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
 
             var ar6 = query.BeginExecute(null, null).EnqueueWait(this);
             people = query.EndExecute(ar6).ToList();
-            Assert.IsFalse(people.Any());
+            Assert.False(people.Any());
             
             this.EnqueueTestComplete();
         }
@@ -518,7 +514,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// Add update delete an entity with Media Link
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void AddUpdateDeleteMediaLinkEntryTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -538,7 +534,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             mediaEntry = this.GetStream();
             var sr2 = new StreamReader(receiveStream).ReadToEnd();
             var sr1 = new StreamReader(mediaEntry).ReadToEnd();
-            Assert.AreEqual(sr1, sr2);
+            Assert.Equal(sr1, sr2);
 
             // When we issue a POST request, the ID and edit-media link are not updated on the client, so we need to get the server values. 
             var carDescriptor = changeOperationResponse.Descriptor as EntityDescriptor;
@@ -563,7 +559,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             var ar6 = query.BeginExecute(null, null).EnqueueWait(this);
             var cars = query.EndExecute(ar6);
             car = cars.Where(c => c.VIN == 1000).SingleOrDefault();
-            Assert.IsNull(car);
+            Assert.Null(car);
 
            this.EnqueueTestComplete();
         }
@@ -571,7 +567,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// Add update delete an entity with named streams
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void AddUpdateDeleteNamedStreamTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -615,7 +611,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
 
             // Verify Delete
             car = cars.Where(c => c.VIN == 1000).SingleOrDefault();
-            Assert.IsNull(car);
+            Assert.Null(car);
             this.EnqueueTestComplete();
         }
 

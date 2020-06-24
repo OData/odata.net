@@ -17,15 +17,15 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Tests.Client.Common;
     using Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
+    using Xunit.Abstractions;
 
-    [TestClass]
     public class CustomInstanceAnnotationsResponseTests : EndToEndTestBase
     {
         private IEdmModel model;
 
-        public CustomInstanceAnnotationsResponseTests()
-            : base(ODataWriterServiceUtil.CreateODataWriterServiceDescriptor<CustomInstanceAnnotationsWriter>())
+        public CustomInstanceAnnotationsResponseTests(ITestOutputHelper helper)
+            : base(ODataWriterServiceUtil.CreateODataWriterServiceDescriptor<CustomInstanceAnnotationsWriter>(), helper)
         {
         }
 
@@ -67,42 +67,38 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
             name => false
         };
 
-        [TestMethod, Priority(1)]
-        [Ignore("VSUpgrade19 - DataDriven Test")]
+        [Fact(Skip= "VSUpgrade19 - DataDriven Test")]
         public void ReadFeed()
         {
             this.Invoke(this.ReadFeedTest, CreateData(this.feedQueries), CreateData(this.testMimeTypes), CreateData(false), CreateData(instanceAnnotationFilters), new Constraint[0]);
         }
 
-        [TestMethod, Priority(1)]
-        [Ignore("VSUpgrade19 - DataDriven Test")]
+        [Fact(Skip= "VSUpgrade19 - DataDriven Test")]
         public void ReadEntry()
         {
             this.Invoke(this.ReadEntryTest, CreateData(this.entryQueries), CreateData(this.testMimeTypes), CreateData(false), CreateData(instanceAnnotationFilters), new Constraint[0]);
         }
 
-        [TestMethod, Priority(2)]
-        [Ignore("VSUpgrade19 - DataDriven Test")]
+        [Fact(Skip= "VSUpgrade19 - DataDriven Test")]
         public void ReadFeedVerifyStateOfReader()
         {
             this.Invoke(this.ReadFeedTest, CreateData(this.feedQueries), CreateData(this.testMimeTypes), CreateData(true), CreateData(instanceAnnotationFilters), new Constraint[0]);
         }
 
-        [TestMethod, Priority(2)]
-        [Ignore("VSUpgrade19 - DataDriven Test")]
+        [Fact(Skip= "VSUpgrade19 - DataDriven Test")]
         public void ReadEntryVerifyStateOfReader()
         {
             this.Invoke(this.ReadEntryTest, CreateData(this.entryQueries), CreateData(this.testMimeTypes), CreateData(true), CreateData(instanceAnnotationFilters), new Constraint[0]);
         }
 
-        public void ReadFeedTest(string uri, string contentType, bool verifyAnnotationsOnStart, Func<string, bool> shouldIncludeAnnotation)
+        internal void ReadFeedTest(string uri, string contentType, bool verifyAnnotationsOnStart, Func<string, bool> shouldIncludeAnnotation)
         {
             var odataMessageReaderSettings = CreateODataMessageReaderSettings(shouldIncludeAnnotation);
             var actualAnnotatedItems = CustomInstanceAnnotationsReader.ReadFeed(new Uri(this.ServiceUri + uri), contentType, odataMessageReaderSettings, this.model);
             actualAnnotatedItems.VerifyAnnotatedItems(contentType, HasExpandedNavigationProperties(uri), verifyAnnotationsOnStart, shouldIncludeAnnotation);
         }
 
-        public void ReadEntryTest(string uri, string contentType, bool verifyAnnotationsOnStart, Func<string, bool> shouldIncludeAnnotation)
+        internal void ReadEntryTest(string uri, string contentType, bool verifyAnnotationsOnStart, Func<string, bool> shouldIncludeAnnotation)
         {
             var odataMessageReaderSettings = CreateODataMessageReaderSettings(shouldIncludeAnnotation);
             var actualAnnotatedItems = CustomInstanceAnnotationsReader.ReadEntry(new Uri(this.ServiceUri + uri), contentType, odataMessageReaderSettings, this.model);

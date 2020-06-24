@@ -16,9 +16,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using FluentAssertions;
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Materialization;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Microsoft.OData.Client.TDDUnitTests;
-
+    using Xunit;
     using OData = Microsoft.OData;
 
     public partial class Container : DataServiceContext
@@ -202,26 +201,24 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         Execute
     }
 
-    [TestClass]
     public class ODataT4CamelCaseTests
     {
         public const string ServerNamespace = "namespace.test";
         public Container Context = new Container(new Uri("http://www.odata.org/service.svc"));
 
-        [TestInitialize]
-        public void Init()
+        public ODataT4CamelCaseTests()
         {
             Context.ReConfigureForNetworkLoadingTests();
         }
 
-        [TestMethod]
+        [Fact]
         public void EntitySetUriShouldUseOriginalName()
         {
             var entitySet = Context.EntitySet;
             entitySet.RequestUri.OriginalString.Should().Be("http://www.odata.org/service.svc/entitySet");
         }
 
-        [TestMethod]
+        [Fact]
         public void SingletonUriShouldUseOriginalName()
         {
             var singleton = Context.Singleton;
@@ -231,28 +228,28 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             singletonProp.RequestUri.OriginalString.Should().Be("http://www.odata.org/service.svc/singleton/name");
         }
 
-        [TestMethod]
+        [Fact]
         public void EntityUriShouldUseOriginalName()
         {
             var entity = Context.EntitySet.Where(e => e.KeyProp == 1) as DataServiceQuery;
             entity.RequestUri.OriginalString.Should().Be("http://www.odata.org/service.svc/entitySet(1)");
         }
 
-        [TestMethod]
+        [Fact]
         public void NavigationUriShouldUseOriginalName()
         {
             var navigation = Context.EntitySet.Expand(e => e.NavigationProperty).Where(e => e.KeyProp == 1) as DataServiceQuery;
             navigation.RequestUri.OriginalString.Should().Be("http://www.odata.org/service.svc/entitySet(1)?$expand=navigationProperty");
         }
 
-        [TestMethod]
+        [Fact]
         public void TypeNameUriShouldUseOriginalName()
         {
             var baseEntity = Context.BaseSet.Where(b => b.KeyProp == 1).Select(b => (b as EntityType).ComplexProp) as DataServiceQuery;
             baseEntity.RequestUri.OriginalString.Should().Be("http://www.odata.org/service.svc/baseSet(1)/" + ServerNamespace + ".entityType/complexProp");
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializeEntityShouldWork()
         {
             var odataEntry = new OData.ODataResource() { Id = new Uri("http://www.odata.org/service.svc/entitySet(1)") };
@@ -354,7 +351,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             customersRead[0].EnumCollection.Should().Equals(new List<Color> { Color.White, Color.Blue });
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializeComplexTypeShouldWork()
         {
             OData.ODataResource complexValue = new OData.ODataResource
@@ -394,7 +391,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             complex.Enums.Should().ContainInOrder(Color.White, Color.Blue);
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializeEnumTypeShouldWork()
         {
             OData.ODataEnumValue enumValue = new OData.ODataEnumValue("blue");
@@ -405,7 +402,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             result.Should().Be(Color.Blue);
         }
 
-        [TestMethod]
+        [Fact]
         public void WriteUriOperationParametersShouldUseOriginalName()
         {
             var requestInfo = new RequestInfo(Context);
@@ -431,10 +428,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             string enumsParameterString = Uri.EscapeDataString("[\"white\",\"blue\"]");
             Uri expectedUri = new Uri(string.Format("http://www.odata.org/service.svc/Function(complexArg=%40complexArg,color={0},colors=%40colors)?%40complexArg={1}&%40colors={2}", enumParameterString, complexParameterString, enumsParameterString));
             requestUri = serializer.WriteUriOperationParametersToUri(requestUri, parameters);
-            Assert.AreEqual(expectedUri, requestUri);
+            Assert.Equal(expectedUri, requestUri);
         }
 
-        [TestMethod]
+        [Fact]
         public void WriteBodyOperationParametersShouldUseOriginalName()
         {
             var requestInfo = new RequestInfo(Context);

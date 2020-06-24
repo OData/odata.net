@@ -13,62 +13,66 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
     using Microsoft.Test.OData.Framework.Client;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReference;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit.Abstractions;
+    using Xunit;
 
-    [TestClass]
     public class PrimitiveKeysValuesTests : EndToEndTestBase
     {
-        public PrimitiveKeysValuesTests()
-            : base(ServiceDescriptors.PrimitiveKeysService)
+        public PrimitiveKeysValuesTests(ITestOutputHelper helper)
+            : base(ServiceDescriptors.PrimitiveKeysService, helper)
         {
         }
 
         // github issuse: #896
-        // [TestMethod /*Inconsistent reading and writing of key values*/]
+        // [Fact /*Inconsistent reading and writing of key values*/]
         public void BinaryTest()
         {
             var contextWrapper = this.CreateWrappedContext();
             foreach (var entry in contextWrapper.Context.EdmBinarySet)
             {
                 var queryResult = contextWrapper.CreateQuery<EdmBinary>("EdmBinarySet").Where(e => e.Id.Equals(entry.Id)).ToArray();
-                Assert.AreEqual(1, queryResult.Count(), "Expected a single result for key value '{0}'", entry.Id.ToString());
+                //Expected a single result for key value '{0}', entry.Id.ToString()
+                Assert.Equal(1, queryResult.Count());
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void BooleanTest()
         {
             var contextWrapper = this.CreateWrappedContext();
             foreach (var entry in contextWrapper.Context.EdmBooleanSet)
             {
                 var queryResult = contextWrapper.CreateQuery<EdmBoolean>("EdmBooleanSet").Where(e => e.Id.Equals(entry.Id)).ToArray();
-                Assert.AreEqual(1, queryResult.Count(), "Expected a single result for key value '{0}'", entry.Id.ToString(CultureInfo.InvariantCulture));
+                //Expected a single result for key value '{0}', entry.Id.ToString(CultureInfo.InvariantCulture)
+                Assert.Equal(1, queryResult.Count());
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void DateTimeOffsetTest()
         {
             var contextWrapper = this.CreateWrappedContext();
             foreach (var entry in contextWrapper.Context.EdmDateTimeOffsetSet)
             {
                 var queryResult = contextWrapper.CreateQuery<EdmDateTimeOffset>("EdmDateTimeOffsetSet").Where(e => e.Id.Equals(entry.Id)).ToArray();
-                Assert.AreEqual(1, queryResult.Count(), "Expected a single result for key value {0}", entry.Id.ToString());
+                //Expected a single result for key value {0}, entry.Id.ToString()
+                Assert.Equal(1, queryResult.Count());
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void DecimalTest()
         {
             var contextWrapper = this.CreateWrappedContext();
             foreach (var entry in contextWrapper.Context.EdmDecimalSet)
             {
                 var queryResult = contextWrapper.CreateQuery<EdmDecimal>("EdmDecimalSet").Where(e => e.Id.Equals(entry.Id)).ToArray();
-                Assert.AreEqual(1, queryResult.Count(), "Expected a single result for key value {0}", entry.Id.ToString(CultureInfo.InvariantCulture));
+                //Expected a single result for key value {0}, entry.Id.ToString(CultureInfo.InvariantCulture)
+                Assert.Equal(1, queryResult.Count());
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void DoubleTest()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -80,44 +84,48 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
                 }
 
                 var queryResult = contextWrapper.CreateQuery<EdmDouble>("EdmDoubleSet").Where(e => e.Id.Equals(entry.Id)).ToArray();
-                Assert.AreEqual(1, queryResult.Count(), "Expected a single result for key value {0}", entry.Id.ToString(CultureInfo.InvariantCulture));
+                //Expected a single result for key value {0}, entry.Id.ToString(CultureInfo.InvariantCulture)
+                Assert.Equal(1, queryResult.Count());
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Int16Test()
         {
             var contextWrapper = this.CreateWrappedContext();
             foreach (var entry in contextWrapper.Context.EdmInt16Set)
             {
                 var queryResult = contextWrapper.CreateQuery<EdmInt16>("EdmInt16Set").Where(e => e.Id.Equals(entry.Id)).ToArray();
-                Assert.AreEqual(1, queryResult.Count(), "Expected a single result for key value {0}", entry.Id.ToString(CultureInfo.InvariantCulture));
+                //Expected a single result for key value {0}, entry.Id.ToString(CultureInfo.InvariantCulture)
+                Assert.Equal(1, queryResult.Count());
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Int32Test()
         {
             var contextWrapper = this.CreateWrappedContext();
             foreach (var entry in contextWrapper.Context.EdmInt32Set)
             {
                 var queryResult = contextWrapper.CreateQuery<EdmInt32>("EdmInt32Set").Where(e => e.Id.Equals(entry.Id)).ToArray();
-                Assert.AreEqual(1, queryResult.Count(), "Expected a single result for key value {0}", entry.Id.ToString(CultureInfo.InvariantCulture));
+                //Expected a single result for key value {0}, entry.Id.ToString(CultureInfo.InvariantCulture)
+                Assert.Equal(1, queryResult.Count());
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Int64Test()
         {
             var contextWrapper = this.CreateWrappedContext();
             foreach (var entry in contextWrapper.Context.EdmInt64Set)
             {
                 var queryResult = contextWrapper.CreateQuery<EdmInt64>("EdmInt64Set").Where(e => e.Id.Equals(entry.Id)).ToArray();
-                Assert.AreEqual(1, queryResult.Count(), "Expected a single result for key value {0}", entry.Id.ToString(CultureInfo.InvariantCulture));
+                //Expected a single result for key value {0}", entry.Id.ToString(CultureInfo.InvariantCulture)
+                Assert.Equal(1, queryResult.Count());
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void SingleTest()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -129,23 +137,25 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
                 }
 
                 var queryResult = contextWrapper.CreateQuery<EdmSingle>("EdmSingleSet").Where(e => e.Id.Equals(entry.Id)).ToArray();
-                Assert.AreEqual(1, queryResult.Count(), "Expected a single result for key value {0}", entry.Id.ToString(CultureInfo.InvariantCulture));
+                //Expected a single result for key value {0}, entry.Id.ToString(CultureInfo.InvariantCulture)
+                Assert.Equal(1, queryResult.Count());
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void StringTest()
         {
             var contextWrapper = this.CreateWrappedContext();
             foreach (var entry in contextWrapper.Context.EdmStringSet)
             {
                 var queryResult = contextWrapper.CreateQuery<EdmString>("EdmStringSet").Where(e => e.Id.Equals(entry.Id)).ToArray();
-                Assert.AreEqual(1, queryResult.Count(), "Expected a single result for key value {0}", entry.Id);
+                //Expected a single result for key value {0} entry.Id)
+                Assert.Equal(1, queryResult.Count());
             }
         }
 
         // github issuse: #896
-        // [TestMethod /* Incorrect parsing of url with single quote in key literal with KeyAsSegment url conventions */]
+        // [Fact /* Incorrect parsing of url with single quote in key literal with KeyAsSegment url conventions */]
         public void StringTest_KeyWithSingleQuotes()
         {
             var entitySetName = "EdmStringSet";
@@ -153,17 +163,18 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             var context = this.CreateWrappedContext();
             context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
             var query = context.CreateQuery<EdmString>(entitySetName).Where(e => e.Id == "'Hello'");
-            Assert.AreEqual(this.ServiceUri.AbsoluteUri + entitySetName + "/''Hello''", query.ToString());
+            Assert.Equal(this.ServiceUri.AbsoluteUri + entitySetName + "/''Hello''", query.ToString());
         }
 
-        [TestMethod]
+        [Fact]
         public void TimeTest()
         {
             var contextWrapper = this.CreateWrappedContext();
             foreach (var entry in contextWrapper.Context.EdmTimeSet)
             {
                 var queryResult = contextWrapper.CreateQuery<EdmTime>("EdmTimeSet").Where(e => e.Id.Equals(entry.Id)).ToArray();
-                Assert.AreEqual(1, queryResult.Count(), "Expected a single result for key value {0}", entry.Id.ToString());
+                //Expected a single result for key value {0}, entry.Id.ToString()
+                Assert.Equal(1, queryResult.Count());
             }
         }
 
