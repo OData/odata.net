@@ -3074,7 +3074,6 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
     CollectionExpressionNotValidForNonCollectionType = 315
     ComplexTypeBaseTypeCannotBeEdmComplexType = 383
     ComplexTypeMustHaveComplexBaseType = 238
-    ComplexTypeMustHaveProperties = 264
     ConcurrencyRedefinedOnSubtypeOfEntitySetType = 145
     ConstructibleEntitySetTypeInvalidFromEntityTypeRemoval = 231
     ContainerElementContainerNameIncorrect = 328

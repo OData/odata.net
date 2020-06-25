@@ -717,11 +717,6 @@ namespace Microsoft.OData.Edm.Validation
         UnderlyingTypeIsBadBecauseEnumTypeIsBad = 261,
 
         /// <summary>
-        /// Complex types must contain at least one property.
-        /// </summary>
-        ComplexTypeMustHaveProperties = 264,
-
-        /// <summary>
         /// Unsupported operation import parameter type.
         /// </summary>
         OperationImportParameterIncorrectType = 265,
