@@ -55,12 +55,12 @@ namespace Microsoft.OData.UriParser.Validation
         }
 
         /// <summary>
-        /// Add an <see cref="ODataUrlValidationMessage"/> to the collection of validation errors.
+        /// Add an <see cref="ODataUrlValidationMessage"/> to the collection of validation messages.
         /// </summary>
-        /// <param name="code">The error code of the error.</param>
-        /// <param name="message">The error message.</param>
-        /// <param name="severity">The severity of the error.</param>
-        public void AddError(string code, string message, Severity severity)
+        /// <param name="code">The message code of the message.</param>
+        /// <param name="message">The human readable message.</param>
+        /// <param name="severity">The severity of the message.</param>
+        public void AddMessage(string code, string message, Severity severity)
         {
             this.Messages.Add(new ODataUrlValidationMessage(code, message, severity));
         }

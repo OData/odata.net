@@ -51,7 +51,7 @@ namespace Microsoft.OData.Tests
             int iError = 0;
             foreach(ODataUrlValidationMessage error in errors)
             {
-                Assert.Equal("deprecated", error.MessageCode);
+                Assert.Equal(ODataUrlValidationMessageCodes.DeprecatedElement, error.MessageCode);
                 object elementName;
                 Assert.True(error.ExtendedProperties.TryGetValue("ElementName", out elementName));
                 Assert.Equal(elementName as string, expectedErrors[iError++]);
