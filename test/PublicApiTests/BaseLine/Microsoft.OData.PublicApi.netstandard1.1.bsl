@@ -2990,7 +2990,6 @@ public sealed class Microsoft.OData.Edm.Csdl.SerializationExtensionMethods {
 }
 
 public class Microsoft.OData.Edm.Csdl.CsdlLocation : Microsoft.OData.Edm.EdmLocation {
-    string JsonPath  { public get; }
     int LineNumber  { public get; }
     int LinePosition  { public get; }
     string Source  { public get; }
@@ -3013,11 +3012,7 @@ public class Microsoft.OData.Edm.Csdl.CsdlReader {
 }
 
 public class Microsoft.OData.Edm.Csdl.CsdlWriter {
-    protected CsdlWriter (Microsoft.OData.Edm.IEdmModel model, System.Version edmxVersion)
-
-    protected static string GetVersionString (System.Version version)
     public static bool TryWriteCsdl (Microsoft.OData.Edm.IEdmModel model, System.Xml.XmlWriter writer, Microsoft.OData.Edm.Csdl.CsdlTarget target, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
-    protected virtual void WriteCsdl ()
 }
 
 [
@@ -3179,18 +3174,6 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
     InvalidValue = 282
     InvalidVersionNumber = 25
     IsUnboundedCannotBeTrueWhileMaxLengthIsNotNull = 298
-    JsonInvalid = 401
-    JsonInvalidCollectionValue = 410
-    JsonInvalidKeyValue = 411
-    JsonInvalidNumberType = 405
-    JsonInvalidValue = 403
-    JsonInvalidVersionNumber = 402
-    JsonMissingRequiredProperty = 409
-    JsonSchemaCannotHaveMoreThanOneEntityContainer = 412
-    JsonUnexpectedElement = 407
-    JsonUnexpectedValueKind = 408
-    JsonUnknownElementValueKind = 404
-    JsonUnsupportedElement = 406
     KeyMissingOnEntityType = 159
     KeyPropertyMustBelongToEntity = 242
     KeyPropertyTypeCannotBeEdmPrimitiveType = 259
@@ -3275,13 +3258,6 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
     UrlEscapeFunctionMustBeBoundFunction = 155
     UrlEscapeFunctionMustHaveOnlyOneEdmStringParameter = 156
     XmlError = 5
-}
-
-public enum Microsoft.OData.Edm.Validation.Severity : int {
-    Error = 3
-    Info = 1
-    Undefined = 0
-    Warning = 2
 }
 
 public abstract class Microsoft.OData.Edm.Validation.ValidationRule {
@@ -3454,13 +3430,10 @@ public sealed class Microsoft.OData.Edm.Validation.ValidationRules {
 
 public class Microsoft.OData.Edm.Validation.EdmError {
     public EdmError (Microsoft.OData.Edm.EdmLocation errorLocation, Microsoft.OData.Edm.Validation.EdmErrorCode errorCode, string errorMessage)
-    public EdmError (Microsoft.OData.Edm.EdmLocation errorLocation, Microsoft.OData.Edm.Validation.EdmErrorCode errorCode, string errorMessage, Microsoft.OData.Edm.Validation.Severity severity)
 
     Microsoft.OData.Edm.Validation.EdmErrorCode ErrorCode  { public get; }
     Microsoft.OData.Edm.EdmLocation ErrorLocation  { public get; }
     string ErrorMessage  { public get; }
-    System.Collections.Generic.Dictionary`2[[System.String],[System.Object]] ExtendedProperties  { public get; }
-    Microsoft.OData.Edm.Validation.Severity Severity  { public get; }
 
     public virtual string ToString ()
 }
@@ -4105,7 +4078,6 @@ public sealed class Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants 
     public static string AcceptableMediaTypes = "Org.OData.Core.V1.AcceptableMediaTypes"
     public static string Computed = "Org.OData.Core.V1.Computed"
     public static string ConventionalIDs = "Org.OData.Core.V1.ConventionalIDs"
-    public static string CoreNamespace = "Org.OData.Core.V1"
     public static string DereferenceableIDs = "Org.OData.Core.V1.DereferenceableIDs"
     public static string Description = "Org.OData.Core.V1.Description"
     public static string Immutable = "Org.OData.Core.V1.Immutable"
@@ -4119,7 +4091,6 @@ public sealed class Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants 
     public static string Permissions = "Org.OData.Core.V1.Permissions"
     public static string RequiresType = "Org.OData.Core.V1.RequiresType"
     public static string ResourcePath = "Org.OData.Core.V1.ResourcePath"
-    public static string Revisions = "Org.OData.Core.V1.Revisions"
 }
 
 public sealed class Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyModel {
@@ -4753,7 +4724,7 @@ public abstract class Microsoft.OData.ODataWriter {
     public virtual System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataDeletedResource deletedResource)
     public virtual System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataDeltaResourceSet deltaResourceSet)
     public virtual System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataNestedResourceInfo nestedResourceInfo)
-    public virtual System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataPropertyInfo primitiveProperty)
+    public virtual System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataProperty primitiveProperty)
     public virtual System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataResource resource)
     public virtual System.Threading.Tasks.Task WriteStartAsync (Microsoft.OData.ODataResourceSet resourceSet)
     public Microsoft.OData.ODataWriter WriteStream (Microsoft.OData.ODataBinaryStreamValue stream)
@@ -4910,8 +4881,6 @@ public sealed class Microsoft.OData.ODataUriUtils {
     public static object ConvertFromUriLiteral (string value, Microsoft.OData.ODataVersion version, Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmTypeReference typeReference)
     public static string ConvertToUriLiteral (object value, Microsoft.OData.ODataVersion version)
     public static string ConvertToUriLiteral (object value, Microsoft.OData.ODataVersion version, Microsoft.OData.Edm.IEdmModel model)
-    public static string ConvertToUriLiteral (object value, Microsoft.OData.ODataVersion version, bool isIeee754Compatible)
-    public static string ConvertToUriLiteral (object value, Microsoft.OData.ODataVersion version, Microsoft.OData.Edm.IEdmModel model, bool isIeee754Compatible)
 }
 
 [
@@ -5432,7 +5401,7 @@ public sealed class Microsoft.OData.ODataMessageWriter : IDisposable {
     public Microsoft.OData.ODataWriter CreateODataResourceSetWriter (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType resourceType)
     public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataWriter]] CreateODataResourceSetWriterAsync ()
     public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataWriter]] CreateODataResourceSetWriterAsync (Microsoft.OData.Edm.IEdmEntitySetBase entitySet)
-    public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataWriter]] CreateODataResourceSetWriterAsync (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType structuredType)
+    public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataWriter]] CreateODataResourceSetWriterAsync (Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmEntityType entityType)
     public Microsoft.OData.ODataWriter CreateODataResourceWriter ()
     public Microsoft.OData.ODataWriter CreateODataResourceWriter (Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
     public Microsoft.OData.ODataWriter CreateODataResourceWriter (Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmStructuredType resourceType)
@@ -5705,6 +5674,9 @@ public interface Microsoft.OData.Json.IJsonStreamReader : IJsonReader {
     System.IO.TextReader CreateTextReader ()
 }
 
+[
+CLSCompliantAttribute(),
+]
 public interface Microsoft.OData.Json.IJsonStreamWriter : IJsonWriter {
     void EndStreamValueScope ()
     void EndTextWriterValueScope ()
@@ -5712,6 +5684,9 @@ public interface Microsoft.OData.Json.IJsonStreamWriter : IJsonWriter {
     System.IO.TextWriter StartTextWriterValueScope (string contentType)
 }
 
+[
+CLSCompliantAttribute(),
+]
 public interface Microsoft.OData.Json.IJsonWriter {
     void EndArrayScope ()
     void EndObjectScope ()
@@ -5741,6 +5716,9 @@ public interface Microsoft.OData.Json.IJsonWriter {
     void WriteValue (System.TimeSpan value)
 }
 
+[
+CLSCompliantAttribute(),
+]
 public interface Microsoft.OData.Json.IJsonWriterFactory {
     Microsoft.OData.Json.IJsonWriter CreateJsonWriter (System.IO.TextWriter textWriter, bool isIeee754Compatible)
 }
@@ -5749,6 +5727,9 @@ public sealed class Microsoft.OData.Json.DefaultJsonWriterFactory : IJsonWriterF
     public DefaultJsonWriterFactory ()
     public DefaultJsonWriterFactory (Microsoft.OData.Json.ODataStringEscapeOption stringEscapeOption)
 
+    [
+    CLSCompliantAttribute(),
+    ]
     public virtual Microsoft.OData.Json.IJsonWriter CreateJsonWriter (System.IO.TextWriter textWriter, bool isIeee754Compatible)
 }
 
@@ -6921,7 +6902,6 @@ public sealed class Microsoft.OData.UriParser.ODataUriParser {
     public string ParseSkipToken ()
     public System.Nullable`1[[System.Int64]] ParseTop ()
     public Microsoft.OData.ODataUri ParseUri ()
-    public bool Validate (Microsoft.OData.UriParser.Validation.ODataUrlValidationRuleSet rules, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.Validation.ODataUrlValidationMessage]]& validationMessages)
 }
 
 public sealed class Microsoft.OData.UriParser.ODataUriParserSettings {
@@ -7498,71 +7478,1301 @@ public sealed class Microsoft.OData.UriParser.Aggregation.GroupByTransformationN
     Microsoft.OData.UriParser.CollectionNode Source  { public get; }
 }
 
-public enum Microsoft.OData.UriParser.Validation.Severity : int {
-    Error = 3
-    Info = 1
-    Undefined = 0
-    Warning = 2
+>>>Microsoft.OData.Client
+public enum Microsoft.OData.Client.DataServiceResponsePreference : int {
+    IncludeContent = 1
+    NoContent = 2
+    None = 0
 }
 
-public abstract class Microsoft.OData.UriParser.Validation.ODataUrlValidationRule {
-    protected ODataUrlValidationRule ()
-
-    bool IncludeImpliedProperties  { public get; public set; }
-    string RuleName  { public get; protected set; }
-
-    internal abstract System.Type GetRuleType ()
-    internal abstract void Validate (Microsoft.OData.UriParser.Validation.ODataUrlValidationContext context, object component)
+public enum Microsoft.OData.Client.EntityParameterSendOption : int {
+    SendFullProperties = 0
+    SendOnlySetProperties = 1
 }
 
 [
-ExtensionAttribute(),
+FlagsAttribute(),
 ]
-public sealed class Microsoft.OData.UriParser.Validation.ODataUrlValidationExtensions {
+public enum Microsoft.OData.Client.EntityStates : int {
+    Added = 4
+    Deleted = 8
+    Detached = 1
+    Modified = 16
+    Unchanged = 2
+}
+
+public enum Microsoft.OData.Client.MergeOption : int {
+    AppendOnly = 0
+    NoTracking = 3
+    OverwriteChanges = 1
+    PreserveChanges = 2
+}
+
+public enum Microsoft.OData.Client.ODataProtocolVersion : int {
+    V4 = 0
+    V401 = 1
+}
+
+[
+FlagsAttribute(),
+]
+public enum Microsoft.OData.Client.SaveChangesOptions : int {
+    BatchWithIndependentOperations = 16
+    BatchWithSingleChangeset = 1
+    ContinueOnError = 2
+    None = 0
+    PostOnlySetProperties = 8
+    ReplaceOnUpdate = 4
+}
+
+public enum Microsoft.OData.Client.TrackingMode : int {
+    AutoChangeTracking = 1
+    None = 0
+}
+
+public abstract class Microsoft.OData.Client.DataServiceClientRequestMessage : IODataRequestMessage {
+    public DataServiceClientRequestMessage (string actualMethod)
+
+    string ActualMethod  { protected virtual get; }
+    System.Net.ICredentials Credentials  { public abstract get; public abstract set; }
+    System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] Headers  { public abstract get; }
+    string Method  { public abstract get; public abstract set; }
+    System.Uri Url  { public abstract get; public abstract set; }
+
+    public abstract void Abort ()
+    public abstract System.IAsyncResult BeginGetRequestStream (System.AsyncCallback callback, object state)
+    public abstract System.IAsyncResult BeginGetResponse (System.AsyncCallback callback, object state)
+    public abstract System.IO.Stream EndGetRequestStream (System.IAsyncResult asyncResult)
+    public abstract Microsoft.OData.IODataResponseMessage EndGetResponse (System.IAsyncResult asyncResult)
+    public abstract string GetHeader (string headerName)
+    public abstract System.IO.Stream GetStream ()
+    public abstract void SetHeader (string headerName, string headerValue)
+}
+
+public abstract class Microsoft.OData.Client.DataServiceQuery : Microsoft.OData.Client.DataServiceRequest, IEnumerable, IQueryable {
+    System.Linq.Expressions.Expression Expression  { public abstract get; }
+    System.Linq.IQueryProvider Provider  { public abstract get; }
+
+    public System.IAsyncResult BeginExecute (System.AsyncCallback callback, object state)
+    internal abstract System.IAsyncResult BeginExecuteInternal (System.AsyncCallback callback, object state)
+    public System.Collections.IEnumerable EndExecute (System.IAsyncResult asyncResult)
+    internal abstract System.Collections.IEnumerable EndExecuteInternal (System.IAsyncResult asyncResult)
+    public System.Threading.Tasks.Task`1[[System.Collections.IEnumerable]] ExecuteAsync ()
+    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
+}
+
+[
+DebuggerDisplayAttribute(),
+]
+public abstract class Microsoft.OData.Client.DataServiceQueryContinuation {
+    System.Uri NextLinkUri  { public get; }
+
+    public virtual string ToString ()
+}
+
+public abstract class Microsoft.OData.Client.DataServiceRequest {
+    System.Type ElementType  { public abstract get; }
+    System.Uri RequestUri  { public abstract get; }
+
+    internal abstract Microsoft.OData.Client.QueryComponents QueryComponents (Microsoft.OData.Client.ClientEdmModel model)
+}
+
+public abstract class Microsoft.OData.Client.Descriptor {
+    Microsoft.OData.Client.EntityStates State  { public get; }
+
+    internal abstract void ClearChanges ()
+}
+
+public abstract class Microsoft.OData.Client.EntityTrackerBase {
+    protected EntityTrackerBase ()
+
+    internal abstract void AttachIdentity (Microsoft.OData.Client.EntityDescriptor entityDescriptorFromMaterializer, Microsoft.OData.Client.MergeOption metadataMergeOption)
+    internal abstract void AttachLink (object source, string sourceProperty, object target, Microsoft.OData.Client.MergeOption linkMerge)
+    internal abstract void DetachExistingLink (Microsoft.OData.Client.LinkDescriptor existingLink, bool targetDelete)
+    internal abstract Microsoft.OData.Client.EntityDescriptor GetEntityDescriptor (object resource)
+    internal abstract System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.LinkDescriptor]] GetLinks (object source, string sourceProperty)
+    internal abstract Microsoft.OData.Client.EntityDescriptor InternalAttachEntityDescriptor (Microsoft.OData.Client.EntityDescriptor entityDescriptorFromMaterializer, bool failIfDuplicated)
+    internal abstract object TryGetEntity (System.Uri resourceUri, out Microsoft.OData.Client.EntityStates& state)
+}
+
+public abstract class Microsoft.OData.Client.OperationDescriptor : Microsoft.OData.Client.Descriptor {
+    System.Uri Metadata  { public get; }
+    System.Uri Target  { public get; }
+    string Title  { public get; }
+
+    internal virtual void ClearChanges ()
+}
+
+public abstract class Microsoft.OData.Client.OperationParameter {
+    protected OperationParameter (string name, object value)
+
+    string Name  { public get; }
+    object Value  { public get; }
+}
+
+public abstract class Microsoft.OData.Client.OperationResponse {
+    System.Exception Error  { public get; public set; }
+    System.Collections.Generic.IDictionary`2[[System.String],[System.String]] Headers  { public get; }
+    int StatusCode  { public get; }
+}
+
+public sealed class Microsoft.OData.Client.Utility {
+    public static System.Collections.Generic.IEnumerable`1[[System.Object]] GetCustomAttributes (System.Type type, System.Type attributeType, bool inherit)
+}
+
+public class Microsoft.OData.Client.BaseEntityType {
+    public BaseEntityType ()
+
+    Microsoft.OData.Client.DataServiceContext Context  { protected get; protected set; }
+}
+
+public class Microsoft.OData.Client.BuildingRequestEventArgs : System.EventArgs {
+    Microsoft.OData.Client.Descriptor Descriptor  { public get; }
+    System.Collections.Generic.IDictionary`2[[System.String],[System.String]] Headers  { public get; }
+    string Method  { public get; public set; }
+    System.Uri RequestUri  { public get; public set; }
+}
+
+public class Microsoft.OData.Client.DataServiceActionQuery {
+    public DataServiceActionQuery (Microsoft.OData.Client.DataServiceContext context, string requestUriString, Microsoft.OData.Client.BodyOperationParameter[] parameters)
+
+    System.Uri RequestUri  { public get; }
+
+    public System.IAsyncResult BeginExecute (System.AsyncCallback callback, object state)
+    public Microsoft.OData.Client.OperationResponse EndExecute (System.IAsyncResult asyncResult)
+    public System.Threading.Tasks.Task`1[[Microsoft.OData.Client.OperationResponse]] ExecuteAsync ()
+}
+
+public class Microsoft.OData.Client.DataServiceClientConfigurations {
+    Microsoft.OData.Client.DataServiceClientRequestPipelineConfiguration RequestPipeline  { public get; }
+    Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration ResponsePipeline  { public get; }
+}
+
+public class Microsoft.OData.Client.DataServiceClientRequestMessageArgs {
+    public DataServiceClientRequestMessageArgs (string method, System.Uri requestUri, bool useDefaultCredentials, bool usePostTunneling, System.Collections.Generic.IDictionary`2[[System.String],[System.String]] headers)
+
+    string ActualMethod  { public get; }
+    System.Collections.Generic.IDictionary`2[[System.String],[System.String]] Headers  { public get; }
+    string Method  { public get; }
+    System.Uri RequestUri  { public get; }
+    bool UseDefaultCredentials  { public get; }
+    bool UsePostTunneling  { public get; }
+}
+
+public class Microsoft.OData.Client.DataServiceClientRequestPipelineConfiguration {
+    System.Func`2[[Microsoft.OData.Client.DataServiceClientRequestMessageArgs],[Microsoft.OData.Client.DataServiceClientRequestMessage]] OnMessageCreating  { public get; public set; }
+
+    public Microsoft.OData.Client.DataServiceClientRequestPipelineConfiguration OnEntityReferenceLink (System.Action`1[[Microsoft.OData.Client.WritingEntityReferenceLinkArgs]] action)
+    public Microsoft.OData.Client.DataServiceClientRequestPipelineConfiguration OnEntryEnding (System.Action`1[[Microsoft.OData.Client.WritingEntryArgs]] action)
+    public Microsoft.OData.Client.DataServiceClientRequestPipelineConfiguration OnEntryStarting (System.Action`1[[Microsoft.OData.Client.WritingEntryArgs]] action)
+    public Microsoft.OData.Client.DataServiceClientRequestPipelineConfiguration OnMessageWriterSettingsCreated (System.Action`1[[Microsoft.OData.Client.MessageWriterSettingsArgs]] args)
+    public Microsoft.OData.Client.DataServiceClientRequestPipelineConfiguration OnNestedResourceInfoEnding (System.Action`1[[Microsoft.OData.Client.WritingNestedResourceInfoArgs]] action)
+    public Microsoft.OData.Client.DataServiceClientRequestPipelineConfiguration OnNestedResourceInfoStarting (System.Action`1[[Microsoft.OData.Client.WritingNestedResourceInfoArgs]] action)
+}
+
+public class Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration {
+    public Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration OnEntityMaterialized (System.Action`1[[Microsoft.OData.Client.MaterializedEntityArgs]] action)
+    public Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration OnEntryEnded (System.Action`1[[Microsoft.OData.Client.ReadingEntryArgs]] action)
+    public Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration OnEntryStarted (System.Action`1[[Microsoft.OData.Client.ReadingEntryArgs]] action)
+    public Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration OnFeedEnded (System.Action`1[[Microsoft.OData.Client.ReadingFeedArgs]] action)
+    public Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration OnFeedStarted (System.Action`1[[Microsoft.OData.Client.ReadingFeedArgs]] action)
+    public Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration OnMessageReaderSettingsCreated (System.Action`1[[Microsoft.OData.Client.MessageReaderSettingsArgs]] messageReaderSettingsAction)
+    public Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration OnNestedResourceInfoEnded (System.Action`1[[Microsoft.OData.Client.ReadingNestedResourceInfoArgs]] action)
+    public Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration OnNestedResourceInfoStarted (System.Action`1[[Microsoft.OData.Client.ReadingNestedResourceInfoArgs]] action)
+}
+
+public class Microsoft.OData.Client.DataServiceCollection`1 : ObservableCollection`1, ICollection`1, IEnumerable`1, IList`1, IReadOnlyCollection`1, IReadOnlyList`1, ICollection, IEnumerable, IList, INotifyPropertyChanged, INotifyCollectionChanged {
+    public DataServiceCollection`1 ()
+    public DataServiceCollection`1 (DataServiceQuerySingle`1 item)
+    public DataServiceCollection`1 (IEnumerable`1 items)
+    public DataServiceCollection`1 (Microsoft.OData.Client.DataServiceContext context)
+    public DataServiceCollection`1 (IEnumerable`1 items, Microsoft.OData.Client.TrackingMode trackingMode)
+    public DataServiceCollection`1 (Microsoft.OData.Client.TrackingMode trackingMode, DataServiceQuerySingle`1 item)
+    public DataServiceCollection`1 (Microsoft.OData.Client.DataServiceContext context, string entitySetName, System.Func`2[[Microsoft.OData.Client.EntityChangedParams],[System.Boolean]] entityChangedCallback, System.Func`2[[Microsoft.OData.Client.EntityCollectionChangedParams],[System.Boolean]] collectionChangedCallback)
+    public DataServiceCollection`1 (IEnumerable`1 items, Microsoft.OData.Client.TrackingMode trackingMode, string entitySetName, System.Func`2[[Microsoft.OData.Client.EntityChangedParams],[System.Boolean]] entityChangedCallback, System.Func`2[[Microsoft.OData.Client.EntityCollectionChangedParams],[System.Boolean]] collectionChangedCallback)
+    public DataServiceCollection`1 (Microsoft.OData.Client.DataServiceContext context, IEnumerable`1 items, Microsoft.OData.Client.TrackingMode trackingMode, string entitySetName, System.Func`2[[Microsoft.OData.Client.EntityChangedParams],[System.Boolean]] entityChangedCallback, System.Func`2[[Microsoft.OData.Client.EntityCollectionChangedParams],[System.Boolean]] collectionChangedCallback)
+
+    DataServiceQueryContinuation`1 Continuation  { public get; public set; }
+
+    System.EventHandler`1[[Microsoft.OData.Client.LoadCompletedEventArgs]] LoadCompleted {public add;public remove; }
+
+    public void CancelAsyncLoad ()
+    public void Clear (bool stopTracking)
+    public void Detach ()
+    protected virtual void InsertItem (int index, T item)
+    public void Load (IEnumerable`1 items)
+    public void Load (T item)
+    public void LoadAsync ()
+    public void LoadAsync (IQueryable`1 query)
+    public void LoadAsync (System.Uri requestUri)
+    public bool LoadNextPartialSetAsync ()
+}
+
+public class Microsoft.OData.Client.DataServiceContext {
+    public DataServiceContext ()
+    public DataServiceContext (System.Uri serviceRoot)
+    public DataServiceContext (System.Uri serviceRoot, Microsoft.OData.Client.ODataProtocolVersion maxProtocolVersion)
+
+    Microsoft.OData.Client.DataServiceResponsePreference AddAndUpdateResponsePreference  { public get; public set; }
+    bool ApplyingChanges  { public get; }
+    System.Uri BaseUri  { public get; public set; }
+    Microsoft.OData.Client.DataServiceClientConfigurations Configurations  { public get; }
+    System.Net.ICredentials Credentials  { public get; public set; }
+    bool DisableInstanceAnnotationMaterialization  { public get; public set; }
+    bool EnableWritingODataAnnotationWithoutPrefix  { public get; public set; }
+    System.Collections.ObjectModel.ReadOnlyCollection`1[[Microsoft.OData.Client.EntityDescriptor]] Entities  { public get; }
+    Microsoft.OData.Client.EntityParameterSendOption EntityParameterSendOption  { public get; public set; }
+    Microsoft.OData.Client.EntityTracker EntityTracker  { public get; public set; }
+    Microsoft.OData.Client.DataServiceClientFormat Format  { public get; }
+    bool IgnoreResourceNotFoundException  { public get; public set; }
+    System.Collections.ObjectModel.ReadOnlyCollection`1[[Microsoft.OData.Client.LinkDescriptor]] Links  { public get; }
+    Microsoft.OData.Client.ODataProtocolVersion MaxProtocolVersion  { public get; }
+    Microsoft.OData.Client.MergeOption MergeOption  { public get; public set; }
+    System.Func`2[[System.String],[System.Uri]] ResolveEntitySet  { public get; public set; }
+    System.Func`2[[System.Type],[System.String]] ResolveName  { public get; public set; }
+    System.Func`2[[System.String],[System.Type]] ResolveType  { public get; public set; }
+    Microsoft.OData.Client.SaveChangesOptions SaveChangesDefaultOptions  { public get; public set; }
+    Microsoft.OData.Client.DataServiceUrlKeyDelimiter UrlKeyDelimiter  { public get; public set; }
+    bool UsePostTunneling  { public get; public set; }
+
+    System.EventHandler`1[[Microsoft.OData.Client.BuildingRequestEventArgs]] BuildingRequest {public add;public remove; }
+    System.EventHandler`1[[Microsoft.OData.Client.ReceivingResponseEventArgs]] ReceivingResponse {public add;public remove; }
+    System.EventHandler`1[[Microsoft.OData.Client.SendingRequest2EventArgs]] SendingRequest2 {public add;public remove; }
+
+    public void AddLink (object source, string sourceProperty, object target)
+    public void AddObject (string entitySetName, object entity)
+    public void AddRelatedObject (object source, string sourceProperty, object target)
+    public void AttachLink (object source, string sourceProperty, object target)
+    public void AttachTo (string entitySetName, object entity)
+    public void AttachTo (string entitySetName, object entity, string etag)
+    public System.IAsyncResult BeginExecute (DataServiceQueryContinuation`1 continuation, System.AsyncCallback callback, object state)
+    public System.IAsyncResult BeginExecute (System.Uri requestUri, System.AsyncCallback callback, object state)
+    public System.IAsyncResult BeginExecute (System.Uri requestUri, System.AsyncCallback callback, object state, string httpMethod, Microsoft.OData.Client.OperationParameter[] operationParameters)
+    public System.IAsyncResult BeginExecute (System.Uri requestUri, System.AsyncCallback callback, object state, string httpMethod, Microsoft.OData.Client.OperationParameter[] operationParameters)
+    public System.IAsyncResult BeginExecute (System.Uri requestUri, System.AsyncCallback callback, object state, string httpMethod, bool singleResult, Microsoft.OData.Client.OperationParameter[] operationParameters)
+    public System.IAsyncResult BeginExecuteBatch (System.AsyncCallback callback, object state, Microsoft.OData.Client.DataServiceRequest[] queries)
+    public System.IAsyncResult BeginGetReadStream (object entity, Microsoft.OData.Client.DataServiceRequestArgs args, System.AsyncCallback callback, object state)
+    public System.IAsyncResult BeginGetReadStream (object entity, string name, Microsoft.OData.Client.DataServiceRequestArgs args, System.AsyncCallback callback, object state)
+    public System.IAsyncResult BeginLoadProperty (object entity, string propertyName, System.AsyncCallback callback, object state)
+    public System.IAsyncResult BeginLoadProperty (object entity, string propertyName, Microsoft.OData.Client.DataServiceQueryContinuation continuation, System.AsyncCallback callback, object state)
+    public System.IAsyncResult BeginLoadProperty (object entity, string propertyName, System.Uri nextLinkUri, System.AsyncCallback callback, object state)
+    public System.IAsyncResult BeginSaveChanges (System.AsyncCallback callback, object state)
+    public System.IAsyncResult BeginSaveChanges (Microsoft.OData.Client.SaveChangesOptions options, System.AsyncCallback callback, object state)
+    public void CancelRequest (System.IAsyncResult asyncResult)
+    public void ChangeState (object entity, Microsoft.OData.Client.EntityStates state)
+    public DataServiceQuery`1 CreateFunctionQuery ()
+    public DataServiceQuery`1 CreateFunctionQuery (string path, string functionName, bool isComposable, Microsoft.OData.Client.UriOperationParameter[] parameters)
+    public DataServiceQuerySingle`1 CreateFunctionQuerySingle (string path, string functionName, bool isComposable, Microsoft.OData.Client.UriOperationParameter[] parameters)
+    public DataServiceQuery`1 CreateQuery (string entitySetName)
+    public DataServiceQuery`1 CreateQuery (string resourcePath, bool isComposable)
+    public DataServiceQuery`1 CreateSingletonQuery (string singletonName)
+    protected System.Type DefaultResolveType (string typeName, string fullNamespace, string languageDependentNamespace)
+    public void DeleteLink (object source, string sourceProperty, object target)
+    public void DeleteObject (object entity)
+    public bool Detach (object entity)
+    public bool DetachLink (object source, string sourceProperty, object target)
+    public Microsoft.OData.Client.OperationResponse EndExecute (System.IAsyncResult asyncResult)
+    public IEnumerable`1 EndExecute (System.IAsyncResult asyncResult)
+    public Microsoft.OData.Client.DataServiceResponse EndExecuteBatch (System.IAsyncResult asyncResult)
+    public Microsoft.OData.Client.DataServiceStreamResponse EndGetReadStream (System.IAsyncResult asyncResult)
+    public Microsoft.OData.Client.QueryOperationResponse EndLoadProperty (System.IAsyncResult asyncResult)
+    public Microsoft.OData.Client.DataServiceResponse EndSaveChanges (System.IAsyncResult asyncResult)
+    public Task`1 ExecuteAsync (DataServiceQueryContinuation`1 continuation)
+    public Task`1 ExecuteAsync (System.Uri requestUri)
+    public System.Threading.Tasks.Task`1[[Microsoft.OData.Client.OperationResponse]] ExecuteAsync (System.Uri requestUri, string httpMethod, Microsoft.OData.Client.OperationParameter[] operationParameters)
+    public Task`1 ExecuteAsync (System.Uri requestUri, string httpMethod, Microsoft.OData.Client.OperationParameter[] operationParameters)
+    public Task`1 ExecuteAsync (System.Uri requestUri, string httpMethod, bool singleResult, Microsoft.OData.Client.OperationParameter[] operationParameters)
+    public System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceResponse]] ExecuteBatchAsync (Microsoft.OData.Client.DataServiceRequest[] queries)
+    internal virtual Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable GetEdmOperationOrOperationImport (System.Reflection.MethodInfo methodInfo)
+    public Microsoft.OData.Client.EntityDescriptor GetEntityDescriptor (object entity)
+    internal virtual Microsoft.OData.Client.ODataResourceMetadataBuilder GetEntityMetadataBuilder (string entitySetName, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue entityInstance)
+    public Microsoft.OData.Client.LinkDescriptor GetLinkDescriptor (object source, string sourceProperty, object target)
+    public System.Uri GetMetadataUri ()
+    public System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceStreamResponse]] GetReadStreamAsync (object entity, Microsoft.OData.Client.DataServiceRequestArgs args)
+    public System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceStreamResponse]] GetReadStreamAsync (object entity, string name, Microsoft.OData.Client.DataServiceRequestArgs args)
+    public System.Uri GetReadStreamUri (object entity)
+    public System.Uri GetReadStreamUri (object entity, string name)
+    public System.Threading.Tasks.Task`1[[Microsoft.OData.Client.QueryOperationResponse]] LoadPropertyAsync (object entity, string propertyName)
+    public System.Threading.Tasks.Task`1[[Microsoft.OData.Client.QueryOperationResponse]] LoadPropertyAsync (object entity, string propertyName, Microsoft.OData.Client.DataServiceQueryContinuation continuation)
+    public System.Threading.Tasks.Task`1[[Microsoft.OData.Client.QueryOperationResponse]] LoadPropertyAsync (object entity, string propertyName, System.Uri nextLinkUri)
+    public System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceResponse]] SaveChangesAsync ()
+    public System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceResponse]] SaveChangesAsync (Microsoft.OData.Client.SaveChangesOptions options)
+    public void SetLink (object source, string sourceProperty, object target)
+    public void SetSaveStream (object entity, System.IO.Stream stream, bool closeStream, Microsoft.OData.Client.DataServiceRequestArgs args)
+    public void SetSaveStream (object entity, System.IO.Stream stream, bool closeStream, string contentType, string slug)
+    public void SetSaveStream (object entity, string name, System.IO.Stream stream, bool closeStream, Microsoft.OData.Client.DataServiceRequestArgs args)
+    public void SetSaveStream (object entity, string name, System.IO.Stream stream, bool closeStream, string contentType)
+    public bool TryGetAnnotation (Expression`1 expression, string term, out TResult& annotation)
+    public bool TryGetAnnotation (object source, string term, out TResult& annotation)
+    public bool TryGetAnnotation (Expression`1 expression, string term, string qualifier, out TResult& annotation)
+    public bool TryGetAnnotation (object source, string term, string qualifier, out TResult& annotation)
+    public bool TryGetEntity (System.Uri identity, out TEntity& entity)
+    public bool TryGetUri (object entity, out System.Uri& identity)
+    public void UpdateObject (object entity)
+    public void UpdateRelatedObject (object source, string sourceProperty, object target)
+}
+
+public class Microsoft.OData.Client.DataServiceQuery`1 : Microsoft.OData.Client.DataServiceQuery, IEnumerable`1, IQueryable`1, IEnumerable, IQueryable {
+    public DataServiceQuery`1 (System.Linq.Expressions.Expression expression, Microsoft.OData.Client.DataServiceQueryProvider provider)
+    public DataServiceQuery`1 (System.Linq.Expressions.Expression expression, Microsoft.OData.Client.DataServiceQueryProvider provider, bool isComposable)
+
+    Microsoft.OData.Client.DataServiceContext Context  { public get; }
+    System.Type ElementType  { public virtual get; }
+    System.Linq.Expressions.Expression Expression  { public virtual get; }
+    bool IsComposable  { public get; }
+    System.Linq.IQueryProvider Provider  { public virtual get; }
+    System.Uri RequestUri  { public virtual get; }
+
+    public Microsoft.OData.Client.DataServiceQuery`1 AddQueryOption (string name, object value)
+    public string AppendRequestUri (string nextSegment)
+    public System.IAsyncResult BeginExecute (System.AsyncCallback callback, object state)
+    internal virtual System.IAsyncResult BeginExecuteInternal (System.AsyncCallback callback, object state)
+    public DataServiceQuery`1 CreateFunctionQuery (string functionName, bool isComposable, Microsoft.OData.Client.UriOperationParameter[] parameters)
+    public DataServiceQuerySingle`1 CreateFunctionQuerySingle (string functionName, bool isComposable, Microsoft.OData.Client.UriOperationParameter[] parameters)
+    public IEnumerable`1 EndExecute (System.IAsyncResult asyncResult)
+    internal virtual System.Collections.IEnumerable EndExecuteInternal (System.IAsyncResult asyncResult)
+    public Task`1 ExecuteAsync ()
+    public Microsoft.OData.Client.DataServiceQuery`1 Expand (Expression`1 navigationPropertyAccessor)
+    public Microsoft.OData.Client.DataServiceQuery`1 Expand (string path)
+    public Task`1 GetAllPagesAsync ()
+    public virtual IEnumerator`1 GetEnumerator ()
+    public string GetKeyPath (string keyString)
+    public string GetPath (string nextSegment)
+    public Microsoft.OData.Client.DataServiceQuery`1 IncludeCount ()
+    public Microsoft.OData.Client.DataServiceQuery`1 IncludeCount (bool countQuery)
     [
-    ExtensionAttribute(),
+    ObsoleteAttribute(),
     ]
-    public static bool ValidateODataUrl (System.Uri uri, Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.UriParser.Validation.ODataUrlValidationRuleSet rules, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.Validation.ODataUrlValidationMessage]]& validationMessages)
+    public Microsoft.OData.Client.DataServiceQuery`1 IncludeTotalCount ()
+
+    [
+    ObsoleteAttribute(),
+    ]
+    public Microsoft.OData.Client.DataServiceQuery`1 IncludeTotalCount (bool countQuery)
+
+    internal virtual Microsoft.OData.Client.QueryComponents QueryComponents (Microsoft.OData.Client.ClientEdmModel model)
+    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
+    public virtual string ToString ()
 }
 
-public sealed class Microsoft.OData.UriParser.Validation.ODataUrlValidationMessageCodes {
-    public static string DeprecatedElement = "deprecated"
-    public static string InvalidRule = "invalidRule"
-    public static string MissingSelect = "missingSelect"
-    public static string UnableToParseUri = "unableToParseUrl"
+public class Microsoft.OData.Client.DataServiceQuery`1+DataServiceOrderedQuery : DataServiceQuery`1, IEnumerable`1, IOrderedQueryable`1, IQueryable`1, IEnumerable, IOrderedQueryable, IQueryable {
 }
 
-public sealed class Microsoft.OData.UriParser.Validation.ODataUrlValidationRules {
-    public static Microsoft.OData.UriParser.Validation.ODataUrlValidationRule DeprecatedNavigationSourceRule = Microsoft.OData.UriParser.Validation.ODataUrlValidationRule`1[Microsoft.OData.Edm.IEdmNavigationSource]
-    public static Microsoft.OData.UriParser.Validation.ODataUrlValidationRule DeprecatedPropertyRule = Microsoft.OData.UriParser.Validation.ODataUrlValidationRule`1[Microsoft.OData.Edm.IEdmProperty]
-    public static Microsoft.OData.UriParser.Validation.ODataUrlValidationRule DeprecatedTypeRule = Microsoft.OData.UriParser.Validation.ODataUrlValidationRule`1[Microsoft.OData.Edm.IEdmType]
-    public static Microsoft.OData.UriParser.Validation.ODataUrlValidationRule RequireSelectRule = Microsoft.OData.UriParser.Validation.ODataUrlValidationRule`1[Microsoft.OData.ODataUri]
+public class Microsoft.OData.Client.DataServiceQuerySingle`1 {
+    public DataServiceQuerySingle`1 (Microsoft.OData.Client.DataServiceQuerySingle`1 query)
+    public DataServiceQuerySingle`1 (Microsoft.OData.Client.DataServiceContext context, string path)
+    public DataServiceQuerySingle`1 (Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
+
+    Microsoft.OData.Client.DataServiceContext Context  { public get; }
+    bool IsComposable  { public get; }
+    System.Uri RequestUri  { public get; }
+
+    public string AppendRequestUri (string nextSegment)
+    public System.IAsyncResult BeginGetValue (System.AsyncCallback callback, object state)
+    public DataServiceQuerySingle`1 CastTo ()
+    public DataServiceQuery`1 CreateFunctionQuery (string functionName, bool isComposable, Microsoft.OData.Client.UriOperationParameter[] parameters)
+    public DataServiceQuerySingle`1 CreateFunctionQuerySingle (string functionName, bool isComposable, Microsoft.OData.Client.UriOperationParameter[] parameters)
+    public TElement EndGetValue (System.IAsyncResult asyncResult)
+    public Microsoft.OData.Client.DataServiceQuerySingle`1 Expand (Expression`1 navigationPropertyAccessor)
+    public Microsoft.OData.Client.DataServiceQuerySingle`1 Expand (string path)
+    public string GetPath (string nextSegment)
+    public Task`1 GetValueAsync ()
+    public DataServiceQuerySingle`1 Select (Expression`1 selector)
 }
 
-public class Microsoft.OData.UriParser.Validation.ODataUrlValidationMessage {
-    public ODataUrlValidationMessage (string code, string message, Microsoft.OData.UriParser.Validation.Severity severity)
+public class Microsoft.OData.Client.DataServiceRequestArgs {
+    public DataServiceRequestArgs ()
 
-    System.Collections.Generic.Dictionary`2[[System.String],[System.Object]] ExtendedProperties  { public get; }
-    string Message  { public get; }
-    string MessageCode  { public get; }
-    Microsoft.OData.UriParser.Validation.Severity Severity  { public get; }
+    string AcceptContentType  { public get; public set; }
+    string ContentType  { public get; public set; }
+    System.Collections.Generic.Dictionary`2[[System.String],[System.String]] Headers  { public get; }
+    string Slug  { public get; public set; }
 }
 
-public sealed class Microsoft.OData.UriParser.Validation.ODataUrlValidationContext {
-    System.Collections.Generic.List`1[[Microsoft.OData.UriParser.Validation.ODataUrlValidationMessage]] Messages  { public get; }
-    Microsoft.OData.Edm.IEdmModel Model  { public get; }
+public class Microsoft.OData.Client.DataServiceTransportException : System.InvalidOperationException, ISerializable {
+    public DataServiceTransportException (Microsoft.OData.IODataResponseMessage response, System.Exception innerException)
 
-    public void AddError (string code, string message, Microsoft.OData.UriParser.Validation.Severity severity)
+    Microsoft.OData.IODataResponseMessage Response  { public get; }
 }
 
-public sealed class Microsoft.OData.UriParser.Validation.ODataUrlValidationRule`1 : Microsoft.OData.UriParser.Validation.ODataUrlValidationRule {
-    public ODataUrlValidationRule`1 (string ruleName, Action`2 validateMethod)
-    public ODataUrlValidationRule`1 (string ruleName, Action`2 validateMethod, bool includeImpliedProperties)
+public class Microsoft.OData.Client.EntityTracker : Microsoft.OData.Client.EntityTrackerBase {
+    System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.EntityDescriptor]] Entities  { public get; }
+    System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.LinkDescriptor]] Links  { public get; }
+
+    internal virtual void AttachIdentity (Microsoft.OData.Client.EntityDescriptor entityDescriptorFromMaterializer, Microsoft.OData.Client.MergeOption metadataMergeOption)
+    internal virtual void AttachLink (object source, string sourceProperty, object target, Microsoft.OData.Client.MergeOption linkMerge)
+    internal virtual void DetachExistingLink (Microsoft.OData.Client.LinkDescriptor existingLink, bool targetDelete)
+    internal virtual Microsoft.OData.Client.EntityDescriptor GetEntityDescriptor (object resource)
+    internal virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.LinkDescriptor]] GetLinks (object source, string sourceProperty)
+    internal virtual Microsoft.OData.Client.EntityDescriptor InternalAttachEntityDescriptor (Microsoft.OData.Client.EntityDescriptor entityDescriptorFromMaterializer, bool failIfDuplicated)
+    internal virtual object TryGetEntity (System.Uri resourceUri, out Microsoft.OData.Client.EntityStates& state)
+    public Microsoft.OData.Client.EntityDescriptor TryGetEntityDescriptor (object entity)
 }
 
-public sealed class Microsoft.OData.UriParser.Validation.ODataUrlValidationRuleSet : System.Collections.Generic.List`1[[Microsoft.OData.UriParser.Validation.ODataUrlValidationRule]], ICollection, IEnumerable, IList, ICollection`1, IEnumerable`1, IList`1, IReadOnlyCollection`1, IReadOnlyList`1 {
-    public static Microsoft.OData.UriParser.Validation.ODataUrlValidationRuleSet AllRules = Microsoft.OData.UriParser.Validation.ODataUrlValidationRuleSet
+public class Microsoft.OData.Client.HttpWebRequestMessage : Microsoft.OData.Client.DataServiceClientRequestMessage, IODataRequestMessage {
+    public HttpWebRequestMessage (Microsoft.OData.Client.DataServiceClientRequestMessageArgs args)
 
-    public ODataUrlValidationRuleSet (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.Validation.ODataUrlValidationRule]] rules)
+    System.Net.ICredentials Credentials  { public virtual get; public virtual set; }
+    System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] Headers  { public virtual get; }
+    System.Net.HttpWebRequest HttpWebRequest  { public get; }
+    string Method  { public virtual get; public virtual set; }
+    System.Uri Url  { public virtual get; public virtual set; }
+
+    public virtual void Abort ()
+    public virtual System.IAsyncResult BeginGetRequestStream (System.AsyncCallback callback, object state)
+    public virtual System.IAsyncResult BeginGetResponse (System.AsyncCallback callback, object state)
+    public virtual System.IO.Stream EndGetRequestStream (System.IAsyncResult asyncResult)
+    public virtual Microsoft.OData.IODataResponseMessage EndGetResponse (System.IAsyncResult asyncResult)
+    public virtual string GetHeader (string headerName)
+    public virtual System.IO.Stream GetStream ()
+    public virtual void SetHeader (string headerName, string headerValue)
+}
+
+public class Microsoft.OData.Client.HttpWebResponseMessage : IDisposable, IODataResponseMessage {
+    public HttpWebResponseMessage (System.Net.HttpWebResponse httpResponse)
+    public HttpWebResponseMessage (System.Collections.Generic.IDictionary`2[[System.String],[System.String]] headers, int statusCode, System.Func`1[[System.IO.Stream]] getResponseStream)
+
+    System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] Headers  { public virtual get; }
+    System.Net.HttpWebResponse Response  { public get; }
+    int StatusCode  { public virtual get; public virtual set; }
+
+    public virtual void Dispose ()
+    protected virtual void Dispose (bool disposing)
+    public virtual string GetHeader (string headerName)
+    public virtual System.IO.Stream GetStream ()
+    public virtual void SetHeader (string headerName, string headerValue)
+}
+
+public class Microsoft.OData.Client.InvokeResponse : Microsoft.OData.Client.OperationResponse {
+    public InvokeResponse (System.Collections.Generic.Dictionary`2[[System.String],[System.String]] headers)
+}
+
+public class Microsoft.OData.Client.MessageReaderSettingsArgs {
+    public MessageReaderSettingsArgs (Microsoft.OData.ODataMessageReaderSettings settings)
+
+    Microsoft.OData.ODataMessageReaderSettings Settings  { public get; }
+}
+
+public class Microsoft.OData.Client.MessageWriterSettingsArgs {
+    public MessageWriterSettingsArgs (Microsoft.OData.ODataMessageWriterSettings settings)
+
+    Microsoft.OData.ODataMessageWriterSettings Settings  { public get; }
+}
+
+public class Microsoft.OData.Client.QueryOperationResponse : Microsoft.OData.Client.OperationResponse, IEnumerable {
+    long Count  { public virtual get; }
+    Microsoft.OData.Client.DataServiceRequest Query  { public get; }
+    [
+    ObsoleteAttribute(),
+    ]
+    long TotalCount  { public virtual get; }
+
+    public Microsoft.OData.Client.DataServiceQueryContinuation GetContinuation ()
+    public DataServiceQueryContinuation`1 GetContinuation (IEnumerable`1 collection)
+    public Microsoft.OData.Client.DataServiceQueryContinuation GetContinuation (System.Collections.IEnumerable collection)
+    public virtual System.Collections.IEnumerator GetEnumerator ()
+    protected T GetEnumeratorHelper (Func`1 getEnumerator)
+}
+
+public class Microsoft.OData.Client.ReceivingResponseEventArgs : System.EventArgs {
+    public ReceivingResponseEventArgs (Microsoft.OData.IODataResponseMessage responseMessage, Microsoft.OData.Client.Descriptor descriptor)
+    public ReceivingResponseEventArgs (Microsoft.OData.IODataResponseMessage responseMessage, Microsoft.OData.Client.Descriptor descriptor, bool isBatchPart)
+
+    Microsoft.OData.Client.Descriptor Descriptor  { public get; }
+    bool IsBatchPart  { public get; }
+    Microsoft.OData.IODataResponseMessage ResponseMessage  { public get; }
+}
+
+public class Microsoft.OData.Client.SendingRequest2EventArgs : System.EventArgs {
+    Microsoft.OData.Client.Descriptor Descriptor  { public get; }
+    bool IsBatchPart  { public get; }
+    Microsoft.OData.IODataRequestMessage RequestMessage  { public get; }
+}
+
+public class Microsoft.OData.Client.SendingRequestEventArgs : System.EventArgs {
+    System.Net.WebRequest Request  { public get; public set; }
+    System.Net.WebHeaderCollection RequestHeaders  { public get; }
+}
+
+public class Microsoft.OData.Client.Serializer {
+    public static string GetKeyString (Microsoft.OData.Client.DataServiceContext context, System.Collections.Generic.IDictionary`2[[System.String],[System.Object]] keys)
+    public static string GetParameterString (Microsoft.OData.Client.DataServiceContext context, Microsoft.OData.Client.OperationParameter[] parameters)
+}
+
+public class Microsoft.OData.Client.UriOperationParameter : Microsoft.OData.Client.OperationParameter {
+    public UriOperationParameter (string name, object value)
+}
+
+public sealed class Microsoft.OData.Client.ActionDescriptor : Microsoft.OData.Client.OperationDescriptor {
+    public ActionDescriptor ()
+}
+
+public sealed class Microsoft.OData.Client.BodyOperationParameter : Microsoft.OData.Client.OperationParameter {
+    public BodyOperationParameter (string name, object value)
+}
+
+public sealed class Microsoft.OData.Client.ChangeOperationResponse : Microsoft.OData.Client.OperationResponse {
+    Microsoft.OData.Client.Descriptor Descriptor  { public get; }
+}
+
+public sealed class Microsoft.OData.Client.DataServiceActionQuery`1 {
+    public DataServiceActionQuery`1 (Microsoft.OData.Client.DataServiceContext context, string requestUriString, Microsoft.OData.Client.BodyOperationParameter[] parameters)
+
+    System.Uri RequestUri  { public get; }
+
+    public System.IAsyncResult BeginExecute (System.AsyncCallback callback, object state)
+    public IEnumerable`1 EndExecute (System.IAsyncResult asyncResult)
+    public Task`1 ExecuteAsync ()
+}
+
+public sealed class Microsoft.OData.Client.DataServiceActionQuerySingle`1 {
+    public DataServiceActionQuerySingle`1 (Microsoft.OData.Client.DataServiceContext context, string requestUriString, Microsoft.OData.Client.BodyOperationParameter[] parameters)
+
+    System.Uri RequestUri  { public get; }
+
+    public System.IAsyncResult BeginGetValue (System.AsyncCallback callback, object state)
+    public T EndGetValue (System.IAsyncResult asyncResult)
+    public Task`1 GetValueAsync ()
+}
+
+[
+DebuggerDisplayAttribute(),
+]
+public sealed class Microsoft.OData.Client.DataServiceClientException : System.InvalidOperationException, ISerializable {
+    public DataServiceClientException ()
+    public DataServiceClientException (string message)
+    public DataServiceClientException (string message, System.Exception innerException)
+    public DataServiceClientException (string message, int statusCode)
+    public DataServiceClientException (string message, System.Exception innerException, int statusCode)
+
+    int StatusCode  { public get; }
+}
+
+public sealed class Microsoft.OData.Client.DataServiceClientFormat {
+    System.Func`1[[Microsoft.OData.Edm.IEdmModel]] LoadServiceModel  { public get; public set; }
+    Microsoft.OData.ODataFormat ODataFormat  { public get; }
+
+    public void UseJson ()
+    public void UseJson (Microsoft.OData.Edm.IEdmModel serviceModel)
+}
+
+public sealed class Microsoft.OData.Client.DataServiceQueryContinuation`1 : Microsoft.OData.Client.DataServiceQueryContinuation {
+}
+
+[
+DebuggerDisplayAttribute(),
+]
+public sealed class Microsoft.OData.Client.DataServiceQueryException : System.InvalidOperationException, ISerializable {
+    public DataServiceQueryException ()
+    public DataServiceQueryException (string message)
+    public DataServiceQueryException (string message, System.Exception innerException)
+    public DataServiceQueryException (string message, System.Exception innerException, Microsoft.OData.Client.QueryOperationResponse response)
+
+    Microsoft.OData.Client.QueryOperationResponse Response  { public get; }
+}
+
+public sealed class Microsoft.OData.Client.DataServiceQueryProvider : IQueryProvider {
+    public virtual System.Linq.IQueryable CreateQuery (System.Linq.Expressions.Expression expression)
+    public virtual IQueryable`1 CreateQuery (System.Linq.Expressions.Expression expression)
+    public virtual object Execute (System.Linq.Expressions.Expression expression)
+    public virtual TResult Execute (System.Linq.Expressions.Expression expression)
+}
+
+public sealed class Microsoft.OData.Client.DataServiceRequest`1 : Microsoft.OData.Client.DataServiceRequest {
+    public DataServiceRequest`1 (System.Uri requestUri)
+
+    System.Type ElementType  { public virtual get; }
+    System.Uri RequestUri  { public virtual get; }
+
+    public virtual string ToString ()
+}
+
+[
+DebuggerDisplayAttribute(),
+]
+public sealed class Microsoft.OData.Client.DataServiceRequestException : System.InvalidOperationException, ISerializable {
+    public DataServiceRequestException ()
+    public DataServiceRequestException (string message)
+    public DataServiceRequestException (string message, System.Exception innerException)
+    public DataServiceRequestException (string message, System.Exception innerException, Microsoft.OData.Client.DataServiceResponse response)
+
+    Microsoft.OData.Client.DataServiceResponse Response  { public get; }
+}
+
+public sealed class Microsoft.OData.Client.DataServiceResponse : IEnumerable, IEnumerable`1 {
+    System.Collections.Generic.IDictionary`2[[System.String],[System.String]] BatchHeaders  { public get; }
+    int BatchStatusCode  { public get; }
+    bool IsBatchResponse  { public get; }
+
+    public virtual System.Collections.Generic.IEnumerator`1[[Microsoft.OData.Client.OperationResponse]] GetEnumerator ()
+}
+
+public sealed class Microsoft.OData.Client.DataServiceStreamLink : INotifyPropertyChanged {
+    string ContentType  { public get; }
+    System.Uri EditLink  { public get; }
+    string ETag  { public get; }
+    string Name  { public get; }
+    System.Uri SelfLink  { public get; }
+
+    System.ComponentModel.PropertyChangedEventHandler PropertyChanged {public virtual add;public virtual remove; }
+}
+
+public sealed class Microsoft.OData.Client.DataServiceStreamResponse : IDisposable {
+    string ContentDisposition  { public get; }
+    string ContentType  { public get; }
+    System.Collections.Generic.Dictionary`2[[System.String],[System.String]] Headers  { public get; }
+    System.IO.Stream Stream  { public get; }
+
+    public virtual void Dispose ()
+}
+
+public sealed class Microsoft.OData.Client.DataServiceUrlKeyDelimiter {
+    Microsoft.OData.Client.DataServiceUrlKeyDelimiter Parentheses  { public static get; }
+    Microsoft.OData.Client.DataServiceUrlKeyDelimiter Slash  { public static get; }
+}
+
+public sealed class Microsoft.OData.Client.EntityChangedParams {
+    Microsoft.OData.Client.DataServiceContext Context  { public get; }
+    object Entity  { public get; }
+    string PropertyName  { public get; }
+    object PropertyValue  { public get; }
+    string SourceEntitySet  { public get; }
+    string TargetEntitySet  { public get; }
+}
+
+public sealed class Microsoft.OData.Client.EntityCollectionChangedParams {
+    System.Collections.Specialized.NotifyCollectionChangedAction Action  { public get; }
+    System.Collections.ICollection Collection  { public get; }
+    Microsoft.OData.Client.DataServiceContext Context  { public get; }
+    string PropertyName  { public get; }
+    object SourceEntity  { public get; }
+    string SourceEntitySet  { public get; }
+    object TargetEntity  { public get; }
+    string TargetEntitySet  { public get; }
+}
+
+[
+DebuggerDisplayAttribute(),
+]
+public sealed class Microsoft.OData.Client.EntityDescriptor : Microsoft.OData.Client.Descriptor {
+    System.Uri EditLink  { public get; }
+    System.Uri EditStreamUri  { public get; }
+    object Entity  { public get; }
+    string ETag  { public get; public set; }
+    System.Uri Identity  { public get; }
+    System.Collections.ObjectModel.ReadOnlyCollection`1[[Microsoft.OData.Client.LinkInfo]] LinkInfos  { public get; }
+    System.Collections.ObjectModel.ReadOnlyCollection`1[[Microsoft.OData.Client.OperationDescriptor]] OperationDescriptors  { public get; }
+    Microsoft.OData.Client.EntityDescriptor ParentForInsert  { public get; }
+    Microsoft.OData.Client.EntityDescriptor ParentForUpdate  { public get; }
+    string ParentPropertyForInsert  { public get; }
+    string ParentPropertyForUpdate  { public get; }
+    System.Uri ReadStreamUri  { public get; }
+    System.Uri SelfLink  { public get; }
+    string ServerTypeName  { public get; }
+    System.Collections.ObjectModel.ReadOnlyCollection`1[[Microsoft.OData.Client.StreamDescriptor]] StreamDescriptors  { public get; }
+    string StreamETag  { public get; }
+}
+
+[
+AttributeUsageAttribute(),
+]
+public sealed class Microsoft.OData.Client.EntitySetAttribute : System.Attribute {
+    public EntitySetAttribute (string entitySet)
+
+    string EntitySet  { public get; }
+}
+
+[
+AttributeUsageAttribute(),
+]
+public sealed class Microsoft.OData.Client.EntityTypeAttribute : System.Attribute {
+    public EntityTypeAttribute ()
+}
+
+public sealed class Microsoft.OData.Client.FunctionDescriptor : Microsoft.OData.Client.OperationDescriptor {
+    public FunctionDescriptor ()
+}
+
+[
+AttributeUsageAttribute(),
+]
+public sealed class Microsoft.OData.Client.HasStreamAttribute : System.Attribute {
+    public HasStreamAttribute ()
+}
+
+[
+AttributeUsageAttribute(),
+]
+public sealed class Microsoft.OData.Client.IgnoreClientPropertyAttribute : System.Attribute {
+    public IgnoreClientPropertyAttribute ()
+}
+
+[
+AttributeUsageAttribute(),
+]
+public sealed class Microsoft.OData.Client.KeyAttribute : System.Attribute {
+    public KeyAttribute (string keyName)
+    public KeyAttribute (string[] keyNames)
+
+    System.Collections.ObjectModel.ReadOnlyCollection`1[[System.String]] KeyNames  { public get; }
+}
+
+[
+DebuggerDisplayAttribute(),
+]
+public sealed class Microsoft.OData.Client.LinkDescriptor : Microsoft.OData.Client.Descriptor {
+    object Source  { public get; }
+    string SourceProperty  { public get; }
+    object Target  { public get; }
+}
+
+public sealed class Microsoft.OData.Client.LinkInfo {
+    System.Uri AssociationLink  { public get; }
+    string Name  { public get; }
+    System.Uri NavigationLink  { public get; }
+}
+
+public sealed class Microsoft.OData.Client.LoadCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    Microsoft.OData.Client.QueryOperationResponse QueryOperationResponse  { public get; }
+}
+
+public sealed class Microsoft.OData.Client.MaterializedEntityArgs {
+    public MaterializedEntityArgs (Microsoft.OData.ODataResource entry, object entity)
+
+    object Entity  { public get; }
+    Microsoft.OData.ODataResource Entry  { public get; }
+}
+
+[
+AttributeUsageAttribute(),
+]
+public sealed class Microsoft.OData.Client.MediaEntryAttribute : System.Attribute {
+    public MediaEntryAttribute (string mediaMemberName)
+
+    string MediaMemberName  { public get; }
+}
+
+[
+AttributeUsageAttribute(),
+]
+public sealed class Microsoft.OData.Client.MimeTypePropertyAttribute : System.Attribute {
+    public MimeTypePropertyAttribute (string dataPropertyName, string mimeTypePropertyName)
+
+    string DataPropertyName  { public get; }
+    string MimeTypePropertyName  { public get; }
+}
+
+[
+AttributeUsageAttribute(),
+]
+public sealed class Microsoft.OData.Client.NamedStreamAttribute : System.Attribute {
+    public NamedStreamAttribute (string name)
+
+    string Name  { public get; }
+}
+
+[
+AttributeUsageAttribute(),
+]
+public sealed class Microsoft.OData.Client.OriginalNameAttribute : System.Attribute {
+    public OriginalNameAttribute (string originalName)
+
+    string OriginalName  { public get; }
+}
+
+public sealed class Microsoft.OData.Client.QueryOperationResponse`1 : Microsoft.OData.Client.QueryOperationResponse, IEnumerable`1, IEnumerable {
+    long Count  { public virtual get; }
+    [
+    ObsoleteAttribute(),
+    ]
+    long TotalCount  { public virtual get; }
+
+    public DataServiceQueryContinuation`1 GetContinuation ()
+    public virtual IEnumerator`1 GetEnumerator ()
+}
+
+public sealed class Microsoft.OData.Client.ReadingEntryArgs {
+    public ReadingEntryArgs (Microsoft.OData.ODataResource entry)
+
+    Microsoft.OData.ODataResource Entry  { public get; }
+}
+
+public sealed class Microsoft.OData.Client.ReadingFeedArgs {
+    public ReadingFeedArgs (Microsoft.OData.ODataResourceSet feed)
+
+    Microsoft.OData.ODataResourceSet Feed  { public get; }
+}
+
+public sealed class Microsoft.OData.Client.ReadingNestedResourceInfoArgs {
+    public ReadingNestedResourceInfoArgs (Microsoft.OData.ODataNestedResourceInfo link)
+
+    Microsoft.OData.ODataNestedResourceInfo Link  { public get; }
+}
+
+public sealed class Microsoft.OData.Client.StreamDescriptor : Microsoft.OData.Client.Descriptor {
+    Microsoft.OData.Client.EntityDescriptor EntityDescriptor  { public get; public set; }
+    Microsoft.OData.Client.DataServiceStreamLink StreamLink  { public get; }
+}
+
+public sealed class Microsoft.OData.Client.UriEntityOperationParameter : Microsoft.OData.Client.UriOperationParameter {
+    public UriEntityOperationParameter (string name, object value)
+    public UriEntityOperationParameter (string name, object value, bool useEntityReference)
+}
+
+public sealed class Microsoft.OData.Client.WritingEntityReferenceLinkArgs {
+    public WritingEntityReferenceLinkArgs (Microsoft.OData.ODataEntityReferenceLink entityReferenceLink, object source, object target)
+
+    Microsoft.OData.ODataEntityReferenceLink EntityReferenceLink  { public get; }
+    object Source  { public get; }
+    object Target  { public get; }
+}
+
+public sealed class Microsoft.OData.Client.WritingEntryArgs {
+    public WritingEntryArgs (Microsoft.OData.ODataResource entry, object entity)
+
+    object Entity  { public get; }
+    Microsoft.OData.ODataResource Entry  { public get; }
+}
+
+public sealed class Microsoft.OData.Client.WritingNestedResourceInfoArgs {
+    public WritingNestedResourceInfoArgs (Microsoft.OData.ODataNestedResourceInfo link, object source, object target)
+
+    Microsoft.OData.ODataNestedResourceInfo Link  { public get; }
+    object Source  { public get; }
+    object Target  { public get; }
+}
+
+public sealed class Microsoft.OData.UriParser.Aggregation.EntitySetAggregateExpression : Microsoft.OData.UriParser.Aggregation.AggregateExpressionBase {
+    public EntitySetAggregateExpression (Microsoft.OData.UriParser.CollectionNavigationNode expression, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.Aggregation.AggregateExpressionBase]] children)
+
+    System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.Aggregation.AggregateExpressionBase]] Children  { public get; }
+    Microsoft.OData.UriParser.CollectionNavigationNode Expression  { public get; }
+}
+
+public enum Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind : int {
+    Aggregate = 24
+    AggregateExpression = 25
+    AggregateGroupBy = 26
+    All = 19
+    Any = 15
+    BinaryOperator = 3
+    Compute = 27
+    ComputeExpression = 28
+    CustomQueryOption = 9
+    DottedIdentifier = 17
+    EndPath = 7
+    EntitySetAggregateExpression = 29
+    Expand = 13
+    ExpandTerm = 20
+    FunctionCall = 6
+    FunctionParameter = 21
+    FunctionParameterAlias = 22
+    In = 30
+    InnerPath = 16
+    Literal = 5
+    OrderBy = 8
+    RangeVariable = 18
+    Select = 10
+    SelectTerm = 31
+    Star = 11
+    StringLiteral = 23
+    TypeSegment = 14
+    UnaryOperator = 4
+}
+
+public interface Microsoft.OData.Client.ALinq.UriParser.IPathSegmentTokenVisitor {
+    void Visit (Microsoft.OData.Client.ALinq.UriParser.NonSystemToken tokenIn)
+    void Visit (Microsoft.OData.Client.ALinq.UriParser.SystemToken tokenIn)
+}
+
+public interface Microsoft.OData.Client.ALinq.UriParser.IPathSegmentTokenVisitor`1 {
+    T Visit (Microsoft.OData.Client.ALinq.UriParser.NonSystemToken tokenIn)
+    T Visit (Microsoft.OData.Client.ALinq.UriParser.SystemToken tokenIn)
+}
+
+public interface Microsoft.OData.Client.ALinq.UriParser.ISyntacticTreeVisitor`1 {
+    T Visit (Microsoft.OData.Client.ALinq.UriParser.AggregateExpressionToken tokenIn)
+    T Visit (Microsoft.OData.Client.ALinq.UriParser.AggregateToken tokenIn)
+    T Visit (Microsoft.OData.Client.ALinq.UriParser.AllToken tokenIn)
+    T Visit (Microsoft.OData.Client.ALinq.UriParser.AnyToken tokenIn)
+    T Visit (Microsoft.OData.Client.ALinq.UriParser.BinaryOperatorToken tokenIn)
+    T Visit (Microsoft.OData.Client.ALinq.UriParser.CustomQueryOptionToken tokenIn)
+    T Visit (Microsoft.OData.Client.ALinq.UriParser.DottedIdentifierToken tokenIn)
+    T Visit (Microsoft.OData.Client.ALinq.UriParser.EndPathToken tokenIn)
+    T Visit (Microsoft.OData.Client.ALinq.UriParser.EntitySetAggregateToken tokenIn)
+    T Visit (Microsoft.OData.Client.ALinq.UriParser.ExpandTermToken tokenIn)
+    T Visit (Microsoft.OData.Client.ALinq.UriParser.ExpandToken tokenIn)
+    T Visit (Microsoft.OData.Client.ALinq.UriParser.FunctionCallToken tokenIn)
+    T Visit (Microsoft.OData.Client.ALinq.UriParser.FunctionParameterToken tokenIn)
+    T Visit (Microsoft.OData.Client.ALinq.UriParser.GroupByToken tokenIn)
+    T Visit (Microsoft.OData.Client.ALinq.UriParser.InnerPathToken tokenIn)
+    T Visit (Microsoft.OData.Client.ALinq.UriParser.InToken tokenIn)
+    T Visit (Microsoft.OData.Client.ALinq.UriParser.LambdaToken tokenIn)
+    T Visit (Microsoft.OData.Client.ALinq.UriParser.LiteralToken tokenIn)
+    T Visit (Microsoft.OData.Client.ALinq.UriParser.OrderByToken tokenIn)
+    T Visit (Microsoft.OData.Client.ALinq.UriParser.RangeVariableToken tokenIn)
+    T Visit (Microsoft.OData.Client.ALinq.UriParser.SelectTermToken tokenIn)
+    T Visit (Microsoft.OData.Client.ALinq.UriParser.SelectToken tokenIn)
+    T Visit (Microsoft.OData.Client.ALinq.UriParser.StarToken tokenIn)
+    T Visit (Microsoft.OData.Client.ALinq.UriParser.UnaryOperatorToken tokenIn)
+}
+
+public abstract class Microsoft.OData.Client.ALinq.UriParser.AggregateTokenBase : Microsoft.OData.Client.ALinq.UriParser.ApplyTransformationToken {
+    protected AggregateTokenBase ()
+}
+
+public abstract class Microsoft.OData.Client.ALinq.UriParser.ApplyTransformationToken : Microsoft.OData.Client.ALinq.UriParser.QueryToken {
+    protected ApplyTransformationToken ()
+}
+
+public abstract class Microsoft.OData.Client.ALinq.UriParser.LambdaToken : Microsoft.OData.Client.ALinq.UriParser.QueryToken {
+    protected LambdaToken (Microsoft.OData.Client.ALinq.UriParser.QueryToken expression, string parameter, Microsoft.OData.Client.ALinq.UriParser.QueryToken parent)
+
+    Microsoft.OData.Client.ALinq.UriParser.QueryToken Expression  { public get; }
+    string Parameter  { public get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryToken Parent  { public get; }
+
+    public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
+public abstract class Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken {
+    protected PathSegmentToken (Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken nextToken)
+
+    string Identifier  { public abstract get; }
+    bool IsStructuralProperty  { public get; public set; }
+    Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken NextToken  { public get; }
+
+    public abstract T Accept (IPathSegmentTokenVisitor`1 visitor)
+    public abstract void Accept (Microsoft.OData.Client.ALinq.UriParser.IPathSegmentTokenVisitor visitor)
+    public abstract bool IsNamespaceOrContainerQualified ()
+}
+
+public abstract class Microsoft.OData.Client.ALinq.UriParser.PathToken : Microsoft.OData.Client.ALinq.UriParser.QueryToken {
+    protected PathToken ()
+
+    string Identifier  { public abstract get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryToken NextToken  { public abstract get; public abstract set; }
+
+    public virtual bool Equals (object obj)
+    public virtual int GetHashCode ()
+}
+
+public abstract class Microsoft.OData.Client.ALinq.UriParser.QueryToken {
+    public static readonly Microsoft.OData.Client.ALinq.UriParser.QueryToken[] EmptyTokens = Microsoft.OData.Client.ALinq.UriParser.QueryToken[]
+
+    protected QueryToken ()
+
+    Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public abstract get; }
+
+    public abstract T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
+public abstract class Microsoft.OData.Client.ALinq.UriParser.SelectExpandTermToken : Microsoft.OData.Client.ALinq.UriParser.QueryToken {
+    protected SelectExpandTermToken (Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken pathToProperty, Microsoft.OData.Client.ALinq.UriParser.QueryToken filterOption, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.OrderByToken]] orderByOptions, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countQueryOption, Microsoft.OData.Client.ALinq.UriParser.QueryToken searchOption, Microsoft.OData.Client.ALinq.UriParser.SelectToken selectOption, Microsoft.OData.Client.ALinq.UriParser.ComputeToken computeOption)
+
+    Microsoft.OData.Client.ALinq.UriParser.ComputeToken ComputeOption  { public get; }
+    System.Nullable`1[[System.Boolean]] CountQueryOption  { public get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryToken FilterOption  { public get; }
+    System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.OrderByToken]] OrderByOptions  { public get; }
+    Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken PathToProperty  { public get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryToken SearchOption  { public get; }
+    Microsoft.OData.Client.ALinq.UriParser.SelectToken SelectOption  { public get; }
+    System.Nullable`1[[System.Int64]] SkipOption  { public get; }
+    System.Nullable`1[[System.Int64]] TopOption  { public get; }
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.AggregateExpressionToken : Microsoft.OData.Client.ALinq.UriParser.AggregateTokenBase {
+    public AggregateExpressionToken (Microsoft.OData.Client.ALinq.UriParser.QueryToken expression, Microsoft.OData.UriParser.Aggregation.AggregationMethod method, string alias)
+    public AggregateExpressionToken (Microsoft.OData.Client.ALinq.UriParser.QueryToken expression, Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition methodDefinition, string alias)
+
+    string Alias  { public get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryToken Expression  { public get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
+    Microsoft.OData.UriParser.Aggregation.AggregationMethod Method  { public get; }
+    Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition MethodDefinition  { public get; }
+
+    public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.AggregateToken : Microsoft.OData.Client.ALinq.UriParser.ApplyTransformationToken {
+    public AggregateToken (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.AggregateTokenBase]] expressions)
+
+    System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.AggregateTokenBase]] AggregateExpressions  { public get; }
+    [
+    ObsoleteAttribute(),
+    ]
+    System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.AggregateExpressionToken]] Expressions  { public get; }
+
+    Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
+
+    public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.AllToken : Microsoft.OData.Client.ALinq.UriParser.LambdaToken {
+    public AllToken (Microsoft.OData.Client.ALinq.UriParser.QueryToken expression, string parameter, Microsoft.OData.Client.ALinq.UriParser.QueryToken parent)
+
+    Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
+
+    public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.AnyToken : Microsoft.OData.Client.ALinq.UriParser.LambdaToken {
+    public AnyToken (Microsoft.OData.Client.ALinq.UriParser.QueryToken expression, string parameter, Microsoft.OData.Client.ALinq.UriParser.QueryToken parent)
+
+    Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
+
+    public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.BinaryOperatorToken : Microsoft.OData.Client.ALinq.UriParser.QueryToken {
+    public BinaryOperatorToken (Microsoft.OData.UriParser.BinaryOperatorKind operatorKind, Microsoft.OData.Client.ALinq.UriParser.QueryToken left, Microsoft.OData.Client.ALinq.UriParser.QueryToken right)
+
+    Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryToken Left  { public get; }
+    Microsoft.OData.UriParser.BinaryOperatorKind OperatorKind  { public get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryToken Right  { public get; }
+
+    public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.ComputeExpressionToken : Microsoft.OData.Client.ALinq.UriParser.QueryToken {
+    public ComputeExpressionToken (Microsoft.OData.Client.ALinq.UriParser.QueryToken expression, string alias)
+
+    string Alias  { public get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryToken Expression  { public get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
+
+    public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.ComputeToken : Microsoft.OData.Client.ALinq.UriParser.ApplyTransformationToken {
+    public ComputeToken (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.ComputeExpressionToken]] expressions)
+
+    System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.ComputeExpressionToken]] Expressions  { public get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
+
+    public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.CustomQueryOptionToken : Microsoft.OData.Client.ALinq.UriParser.QueryToken {
+    public CustomQueryOptionToken (string name, string value)
+
+    Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
+    string Name  { public get; }
+    string Value  { public get; }
+
+    public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.DottedIdentifierToken : Microsoft.OData.Client.ALinq.UriParser.PathToken {
+    public DottedIdentifierToken (string identifier, Microsoft.OData.Client.ALinq.UriParser.QueryToken nextToken)
+
+    string Identifier  { public virtual get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryToken NextToken  { public virtual get; public virtual set; }
+
+    public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.EndPathToken : Microsoft.OData.Client.ALinq.UriParser.PathToken {
+    public EndPathToken (string identifier, Microsoft.OData.Client.ALinq.UriParser.QueryToken nextToken)
+
+    string Identifier  { public virtual get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryToken NextToken  { public virtual get; public virtual set; }
+
+    public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.EntitySetAggregateToken : Microsoft.OData.Client.ALinq.UriParser.AggregateTokenBase {
+    public EntitySetAggregateToken (Microsoft.OData.Client.ALinq.UriParser.QueryToken entitySet, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.AggregateTokenBase]] expressions)
+
+    Microsoft.OData.Client.ALinq.UriParser.QueryToken EntitySet  { public get; }
+    System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.AggregateTokenBase]] Expressions  { public get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
+
+    public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+    public static Microsoft.OData.Client.ALinq.UriParser.EntitySetAggregateToken Merge (Microsoft.OData.Client.ALinq.UriParser.EntitySetAggregateToken token1, Microsoft.OData.Client.ALinq.UriParser.EntitySetAggregateToken token2)
+    public string Path ()
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.ExpandTermToken : Microsoft.OData.Client.ALinq.UriParser.SelectExpandTermToken {
+    public ExpandTermToken (Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken pathToNavigationProp)
+    public ExpandTermToken (Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken pathToNavigationProp, Microsoft.OData.Client.ALinq.UriParser.SelectToken selectOption, Microsoft.OData.Client.ALinq.UriParser.ExpandToken expandOption)
+    public ExpandTermToken (Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken pathToNavigationProp, Microsoft.OData.Client.ALinq.UriParser.QueryToken filterOption, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.OrderByToken]] orderByOptions, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countQueryOption, System.Nullable`1[[System.Int64]] levelsOption, Microsoft.OData.Client.ALinq.UriParser.QueryToken searchOption, Microsoft.OData.Client.ALinq.UriParser.SelectToken selectOption, Microsoft.OData.Client.ALinq.UriParser.ExpandToken expandOption)
+    public ExpandTermToken (Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken pathToNavigationProp, Microsoft.OData.Client.ALinq.UriParser.QueryToken filterOption, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.OrderByToken]] orderByOptions, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countQueryOption, System.Nullable`1[[System.Int64]] levelsOption, Microsoft.OData.Client.ALinq.UriParser.QueryToken searchOption, Microsoft.OData.Client.ALinq.UriParser.SelectToken selectOption, Microsoft.OData.Client.ALinq.UriParser.ExpandToken expandOption, Microsoft.OData.Client.ALinq.UriParser.ComputeToken computeOption)
+    public ExpandTermToken (Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken pathToNavigationProp, Microsoft.OData.Client.ALinq.UriParser.QueryToken filterOption, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.OrderByToken]] orderByOptions, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countQueryOption, System.Nullable`1[[System.Int64]] levelsOption, Microsoft.OData.Client.ALinq.UriParser.QueryToken searchOption, Microsoft.OData.Client.ALinq.UriParser.SelectToken selectOption, Microsoft.OData.Client.ALinq.UriParser.ExpandToken expandOption, Microsoft.OData.Client.ALinq.UriParser.ComputeToken computeOption, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.QueryToken]] applyOptions)
+
+    System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.QueryToken]] ApplyOptions  { public get; }
+    Microsoft.OData.Client.ALinq.UriParser.ExpandToken ExpandOption  { public get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
+    System.Nullable`1[[System.Int64]] LevelsOption  { public get; }
+    Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken PathToNavigationProp  { public get; }
+
+    public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.ExpandToken : Microsoft.OData.Client.ALinq.UriParser.QueryToken {
+    public ExpandToken (Microsoft.OData.Client.ALinq.UriParser.ExpandTermToken[] expandTerms)
+    public ExpandToken (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.ExpandTermToken]] expandTerms)
+
+    System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.ExpandTermToken]] ExpandTerms  { public get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
+
+    public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.FunctionCallToken : Microsoft.OData.Client.ALinq.UriParser.QueryToken {
+    public FunctionCallToken (string name, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.QueryToken]] argumentValues)
+    public FunctionCallToken (string name, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.FunctionParameterToken]] arguments, Microsoft.OData.Client.ALinq.UriParser.QueryToken source)
+
+    System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.FunctionParameterToken]] Arguments  { public get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
+    string Name  { public get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryToken Source  { public get; }
+
+    public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.FunctionParameterToken : Microsoft.OData.Client.ALinq.UriParser.QueryToken {
+    public static Microsoft.OData.Client.ALinq.UriParser.FunctionParameterToken[] EmptyParameterList = Microsoft.OData.Client.ALinq.UriParser.FunctionParameterToken[]
+
+    public FunctionParameterToken (string parameterName, Microsoft.OData.Client.ALinq.UriParser.QueryToken valueToken)
+
+    Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
+    string ParameterName  { public get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryToken ValueToken  { public get; }
+
+    public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.GroupByToken : Microsoft.OData.Client.ALinq.UriParser.ApplyTransformationToken {
+    public GroupByToken (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.EndPathToken]] properties, Microsoft.OData.Client.ALinq.UriParser.ApplyTransformationToken child)
+
+    Microsoft.OData.Client.ALinq.UriParser.ApplyTransformationToken Child  { public get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
+    System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.EndPathToken]] Properties  { public get; }
+
+    public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.InnerPathToken : Microsoft.OData.Client.ALinq.UriParser.PathToken {
+    public InnerPathToken (string identifier, Microsoft.OData.Client.ALinq.UriParser.QueryToken nextToken, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.NamedValue]] namedValues)
+
+    string Identifier  { public virtual get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
+    System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.NamedValue]] NamedValues  { public get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryToken NextToken  { public virtual get; public virtual set; }
+
+    public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.InToken : Microsoft.OData.Client.ALinq.UriParser.QueryToken {
+    public InToken (Microsoft.OData.Client.ALinq.UriParser.QueryToken left, Microsoft.OData.Client.ALinq.UriParser.QueryToken right)
+
+    Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryToken Left  { public get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryToken Right  { public get; }
+
+    public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.LiteralToken : Microsoft.OData.Client.ALinq.UriParser.QueryToken {
+    public LiteralToken (object value)
+
+    Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
+    object Value  { public get; }
+
+    public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.NamedValue {
+    public NamedValue (string name, Microsoft.OData.Client.ALinq.UriParser.LiteralToken value)
+
+    string Name  { public get; }
+    Microsoft.OData.Client.ALinq.UriParser.LiteralToken Value  { public get; }
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.NonSystemToken : Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken {
+    public NonSystemToken (string identifier, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.NamedValue]] namedValues, Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken nextToken)
+
+    string Identifier  { public virtual get; }
+    System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.NamedValue]] NamedValues  { public get; }
+
+    public virtual T Accept (IPathSegmentTokenVisitor`1 visitor)
+    public virtual void Accept (Microsoft.OData.Client.ALinq.UriParser.IPathSegmentTokenVisitor visitor)
+    public virtual bool IsNamespaceOrContainerQualified ()
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.OrderByToken : Microsoft.OData.Client.ALinq.UriParser.QueryToken {
+    public OrderByToken (Microsoft.OData.Client.ALinq.UriParser.QueryToken expression, Microsoft.OData.UriParser.OrderByDirection direction)
+
+    Microsoft.OData.UriParser.OrderByDirection Direction  { public get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryToken Expression  { public get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
+
+    public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.RangeVariableToken : Microsoft.OData.Client.ALinq.UriParser.QueryToken {
+    public RangeVariableToken (string name)
+
+    Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
+    string Name  { public get; }
+
+    public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+    public virtual bool Equals (object obj)
+    public virtual int GetHashCode ()
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.SelectTermToken : Microsoft.OData.Client.ALinq.UriParser.SelectExpandTermToken {
+    public SelectTermToken (Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken pathToProperty)
+    public SelectTermToken (Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken pathToProperty, Microsoft.OData.Client.ALinq.UriParser.SelectToken selectOption)
+    public SelectTermToken (Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken pathToProperty, Microsoft.OData.Client.ALinq.UriParser.QueryToken filterOption, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.OrderByToken]] orderByOptions, System.Nullable`1[[System.Int64]] topOption, System.Nullable`1[[System.Int64]] skipOption, System.Nullable`1[[System.Boolean]] countQueryOption, Microsoft.OData.Client.ALinq.UriParser.QueryToken searchOption, Microsoft.OData.Client.ALinq.UriParser.SelectToken selectOption, Microsoft.OData.Client.ALinq.UriParser.ComputeToken computeOption)
+
+    Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
+
+    public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.SelectToken : Microsoft.OData.Client.ALinq.UriParser.QueryToken {
+    public SelectToken (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken]] properties)
+    public SelectToken (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.SelectTermToken]] selectTerms)
+
+    Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
+    System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken]] Properties  { public get; }
+    System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.SelectTermToken]] SelectTerms  { public get; }
+
+    public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.StarToken : Microsoft.OData.Client.ALinq.UriParser.PathToken {
+    public StarToken (Microsoft.OData.Client.ALinq.UriParser.QueryToken nextToken)
+
+    string Identifier  { public virtual get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryToken NextToken  { public virtual get; public virtual set; }
+
+    public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.SystemToken : Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken {
+    public SystemToken (string identifier, Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken nextToken)
+
+    string Identifier  { public virtual get; }
+
+    public virtual T Accept (IPathSegmentTokenVisitor`1 visitor)
+    public virtual void Accept (Microsoft.OData.Client.ALinq.UriParser.IPathSegmentTokenVisitor visitor)
+    public virtual bool IsNamespaceOrContainerQualified ()
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.UnaryOperatorToken : Microsoft.OData.Client.ALinq.UriParser.QueryToken {
+    public UnaryOperatorToken (Microsoft.OData.UriParser.UnaryOperatorKind operatorKind, Microsoft.OData.Client.ALinq.UriParser.QueryToken operand)
+
+    Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
+    Microsoft.OData.Client.ALinq.UriParser.QueryToken Operand  { public get; }
+    Microsoft.OData.UriParser.UnaryOperatorKind OperatorKind  { public get; }
+
+    public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
 }
 
