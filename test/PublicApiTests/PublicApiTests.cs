@@ -83,7 +83,7 @@ namespace Microsoft.OData.PublicApi.Tests
 
             // Assert
             Assert.True(String.Compare(baselineString, outputString, StringComparison.Ordinal) == 0,
-                String.Format("The output file '{0}' and Base line file '{0}' do not match, please check.",
+                String.Format("The output file '{0}' and\n Base line file '{1}' do not match, please check.",
                 outputFile,
                 @"test\PublicApiTests\BaseLine\" + baseLineFileName));
         }
