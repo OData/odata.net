@@ -481,7 +481,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         [Fact]
         public void ParsingInvalidJsonWithNoReferencesShouldThrow()
         {
-            string expectedMessage = "JsonUnexpectedValueKind : An unexpected 'Array' value kind was found when parsing the JSON path '$'. A 'Object' value kind was expected. : $";
+            string expectedMessage = "UnexpectedValueKind : An unexpected 'Array' value kind was found when parsing the JSON path '$'. A 'Object' value kind was expected. : $";
             var csdl = @"[""fake""]";
             Action parseAction = () => Parse(csdl);
 
@@ -812,7 +812,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             var exception = Assert.Throws<EdmParseException>(parseAction);
             Assert.Contains("The schema object at '$.Test' cannot have more than one entity container.", exception.Message);
             EdmError error = Assert.Single(exception.Errors);
-            Assert.Equal(EdmErrorCode.JsonSchemaCannotHaveMoreThanOneEntityContainer, error.ErrorCode);
+            Assert.Equal(EdmErrorCode.SchemaCannotHaveMoreThanOneEntityContainer, error.ErrorCode);
         }
 
         [Fact]

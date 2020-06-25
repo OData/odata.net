@@ -36,7 +36,7 @@ namespace Microsoft.OData.Edm.Csdl
             }
             else
             {
-                context.ReportError(EdmErrorCode.JsonMissingRequiredProperty,
+                context.ReportError(EdmErrorCode.MissingRequiredProperty,
                     Strings.CsdlJsonParser_MissingRequiredPropertyInObject(propertyName, context.Path));
             }
 
@@ -144,7 +144,7 @@ namespace Microsoft.OData.Edm.Csdl
                 return element.GetString();
             }
 
-            context.ReportError(EdmErrorCode.JsonUnexpectedValueKind,
+            context.ReportError(EdmErrorCode.UnexpectedValueKind,
                 Strings.CsdlJsonParser_UnexpectedJsonValueKind(element.ValueKind, context.Path, "String"));
             return null;
         }
@@ -156,7 +156,7 @@ namespace Microsoft.OData.Edm.Csdl
                 return element.GetBoolean();
             }
 
-            context.ReportError(EdmErrorCode.JsonUnexpectedValueKind,
+            context.ReportError(EdmErrorCode.UnexpectedValueKind,
                 Strings.CsdlJsonParser_UnexpectedJsonValueKind(element.ValueKind, context.Path, "Boolean"));
 
             return null;
@@ -179,7 +179,7 @@ namespace Microsoft.OData.Edm.Csdl
                 return element.GetInt32();
             }
 
-            context.ReportError(EdmErrorCode.JsonUnexpectedValueKind,
+            context.ReportError(EdmErrorCode.UnexpectedValueKind,
                 Strings.CsdlJsonParser_UnexpectedJsonValueKind(element.ValueKind, context.Path, "Integer"));
             return default(int?);
         }
@@ -221,7 +221,7 @@ namespace Microsoft.OData.Edm.Csdl
 
             if (element.ValueKind != expectedKind)
             {
-                context.ReportError(EdmErrorCode.JsonUnexpectedValueKind,
+                context.ReportError(EdmErrorCode.UnexpectedValueKind,
                     Strings.CsdlJsonParser_UnexpectedJsonValueKind(element.ValueKind, context.Path, expectedKind));
                 return false;
             }

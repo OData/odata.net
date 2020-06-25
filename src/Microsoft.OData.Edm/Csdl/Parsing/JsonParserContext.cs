@@ -160,7 +160,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         {
             if (Settings.IgnoreUnexpectedJsonElements)
             {
-                return Errors.Any(error => error.ErrorCode != EdmErrorCode.JsonUnexpectedElement && error.ErrorCode != EdmErrorCode.JsonUnsupportedElement);
+                return Errors.Any(error => error.ErrorCode != EdmErrorCode.UnexpectedElement && error.ErrorCode != EdmErrorCode.UnsupportedElement);
             }
 
             return Errors.Count != 0;
