@@ -7552,7 +7552,7 @@ public sealed class Microsoft.OData.UriParser.Validation.ODataUrlValidationConte
     System.Collections.Generic.List`1[[Microsoft.OData.UriParser.Validation.ODataUrlValidationMessage]] Messages  { public get; }
     Microsoft.OData.Edm.IEdmModel Model  { public get; }
 
-    public void AddError (string code, string message, Microsoft.OData.UriParser.Validation.Severity severity)
+    public void AddMessage (string code, string message, Microsoft.OData.UriParser.Validation.Severity severity)
 }
 
 public sealed class Microsoft.OData.UriParser.Validation.ODataUrlValidationRule`1 : Microsoft.OData.UriParser.Validation.ODataUrlValidationRule {

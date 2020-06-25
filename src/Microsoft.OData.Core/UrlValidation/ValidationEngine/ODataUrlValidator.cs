@@ -199,7 +199,7 @@ namespace Microsoft.OData.UriParser.Validation
                         }
                         catch (Exception e)
                         {
-                            validationContext.AddError(ODataUrlValidationMessageCodes.InvalidRule, Strings.ODataUrlValidationError_InvalidRule(rule.RuleName, e.Message), Severity.Warning);
+                            validationContext.AddMessage(ODataUrlValidationMessageCodes.InvalidRule, Strings.ODataUrlValidationError_InvalidRule(rule.RuleName, e.Message), Severity.Warning);
                         }
                     }
                 }
