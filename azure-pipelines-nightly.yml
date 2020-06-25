@@ -399,34 +399,6 @@ steps:
            "parameterValue": "/NPH"
          },
          {
-           "parameterName": "TimeStamp",
-           "parameterValue": "/t \"http://ts4096.gtm.microsoft.com/TSS/AuthenticodeTS\""
-         }
-         ],
-         "toolName": "signtool.exe",
-         "toolVersion": "6.2.9304.0"
-       },
-       {
-         "keyCode": "CP-230012",
-         "operationSetCode": "SigntoolSign",
-         "parameters": [
-         {
-           "parameterName": "OpusName",
-           "parameterValue": "TestSign"
-         },
-         {
-           "parameterName": "OpusInfo",
-           "parameterValue": "http://test"
-         },
-         {
-           "parameterName": "Append",
-           "parameterValue": "/AS"
-         },
-         {
-           "parameterName": "PageHash",
-           "parameterValue": "/NPH"
-         },
-         {
            "parameterName": "FileDigest",
            "parameterValue": "/fd sha256"
          },
