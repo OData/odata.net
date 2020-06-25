@@ -25,7 +25,7 @@ namespace Microsoft.OData
         private readonly ODataOutputContext outputContext;
 
         /// <summary>The batch-specific URL converter that stores the content IDs found in a changeset and supports resolving cross-referencing URLs.</summary>
-        private readonly ODataBatchPayloadUriConverter payloadUriConverter;
+        internal readonly ODataBatchPayloadUriConverter payloadUriConverter;
 
         /// <summary>The dependency injection container to get related services.</summary>
         private readonly IServiceProvider container;
@@ -499,6 +499,13 @@ namespace Microsoft.OData
         protected abstract IEnumerable<string> GetDependsOnRequestIds(IEnumerable<string> dependsOnIds);
 
         /// <summary>
+        /// Validate the dependsOnIds.
+        /// </summary>
+        /// <param name="contentId">The request Id</param>
+        /// <param name="dependsOnIds">The dependsOn ids specifying current request's prerequisites.</param>
+        protected abstract void ValidateDependsOnIds(string contentId, IEnumerable<string> dependsOnIds);
+
+        /// <summary>
         /// Wrapper method to create an operation request message that can be used to write the operation content to, utilizing
         /// private members <see cref="ODataBatchPayloadUriConverter"/> and <see cref="IServiceProvider"/>.
         /// </summary>
@@ -517,14 +524,7 @@ namespace Microsoft.OData
 
             if (dependsOnIds != null)
             {
-                // Validate explicit dependsOnIds cases.
-                foreach (string id in convertedDependsOnIds)
-                {
-                    if (!this.payloadUriConverter.ContainsContentId(id))
-                    {
-                        throw new ODataException(Strings.ODataBatchReader_DependsOnIdNotFound(id, contentId));
-                    }
-                }
+                ValidateDependsOnIds(contentId, convertedDependsOnIds);
             }
 
             // If dependsOnIds is not specified, use the <code>payloadUrlConverter</code>; otherwise use the dependOnIds converted
