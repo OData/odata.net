@@ -1401,11 +1401,6 @@ namespace Microsoft.OData.Edm.Validation
         JsonInvalidVersionNumber,
 
         /// <summary>
-        /// Invalid JSON value
-        /// </summary>
-        JsonInvalidValue,
-
-        /// <summary>
         /// Invalid JSON value kind
         /// </summary>
         JsonUnknownElementValueKind,

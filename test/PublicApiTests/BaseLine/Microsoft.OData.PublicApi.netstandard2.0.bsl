@@ -3006,9 +3006,9 @@ public class Microsoft.OData.Edm.Csdl.CsdlJsonWriterSettings {
 }
 
 public class Microsoft.OData.Edm.Csdl.CsdlLocation : Microsoft.OData.Edm.EdmLocation {
-    string JsonPath  { public get; }
     int LineNumber  { public get; }
     int LinePosition  { public get; }
+    string Path  { public get; }
     string Source  { public get; }
 
     public virtual string ToString ()
@@ -3210,17 +3210,16 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
     InvalidVersionNumber = 25
     IsUnboundedCannotBeTrueWhileMaxLengthIsNotNull = 298
     JsonInvalid = 401
-    JsonInvalidCollectionValue = 410
-    JsonInvalidKeyValue = 411
-    JsonInvalidNumberType = 405
-    JsonInvalidValue = 403
+    JsonInvalidCollectionValue = 409
+    JsonInvalidKeyValue = 410
+    JsonInvalidNumberType = 404
     JsonInvalidVersionNumber = 402
-    JsonMissingRequiredProperty = 409
-    JsonSchemaCannotHaveMoreThanOneEntityContainer = 412
-    JsonUnexpectedElement = 407
-    JsonUnexpectedValueKind = 408
-    JsonUnknownElementValueKind = 404
-    JsonUnsupportedElement = 406
+    JsonMissingRequiredProperty = 408
+    JsonSchemaCannotHaveMoreThanOneEntityContainer = 411
+    JsonUnexpectedElement = 406
+    JsonUnexpectedValueKind = 407
+    JsonUnknownElementValueKind = 403
+    JsonUnsupportedElement = 405
     KeyMissingOnEntityType = 159
     KeyPropertyMustBelongToEntity = 242
     KeyPropertyTypeCannotBeEdmPrimitiveType = 259
