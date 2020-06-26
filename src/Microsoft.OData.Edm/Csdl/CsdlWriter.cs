@@ -117,8 +117,10 @@ namespace Microsoft.OData.Edm.Csdl
             // nothing here
         }
 
-        // Gets the string form of the EdmVersion.
-        // Note that Version 4.01 needs two digits of minor version precision.
+        /// <summary>
+        /// Gets the string form of the EdmVersion.
+        /// Note that Version 4.01 needs two digits of minor version precision.
+        /// </summary>
         protected static string GetVersionString(Version version)
         {
             Debug.Assert(version != null);

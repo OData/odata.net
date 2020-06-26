@@ -179,7 +179,6 @@ namespace Microsoft.OData.Edm.Csdl
                     {
                         // Should we compare the referenced version with the main CSDL version and report error if mismatching?
                         // So far, it's fine to ignore, because there may be scenarios where referenced schemas are at a different version.
-
                         subCsdlModel.AddParentModelReferences(edmReference);
                         referencedAstModels.Add(subCsdlModel);
                     }

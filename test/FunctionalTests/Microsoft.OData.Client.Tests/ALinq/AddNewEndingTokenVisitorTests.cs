@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.Client.ALinq.UriParser;
 using Microsoft.OData;
 using Xunit;
@@ -23,7 +22,9 @@ namespace Microsoft.OData.Client.Tests.ALinq
             AddNewEndingTokenVisitor visitor = new AddNewEndingTokenVisitor(new NonSystemToken("stuff", null, null));
             SystemToken token = new SystemToken(ExpressionConstants.It, null);
             Action visitSystemToken = () => token.Accept(visitor);
-            visitSystemToken.ShouldThrow<NotSupportedException>().WithMessage(Strings.ALinq_IllegalSystemQueryOption(ExpressionConstants.It));
+
+            NotSupportedException exception = Assert.Throws<NotSupportedException>(visitSystemToken);
+            Assert.Equal(Strings.ALinq_IllegalSystemQueryOption(ExpressionConstants.It), exception.Message);
         }
 
         [Fact]
@@ -32,8 +33,8 @@ namespace Microsoft.OData.Client.Tests.ALinq
             AddNewEndingTokenVisitor visitor = new AddNewEndingTokenVisitor(null);
             NonSystemToken token = new NonSystemToken("stuff", null, null);
             token.Accept(visitor);
-            token.Identifier.Should().Be("stuff");
-            token.NextToken.Should().BeNull();
+            Assert.Equal("stuff", token.Identifier);
+            Assert.Null(token.NextToken);
         }
 
         [Fact]
@@ -42,9 +43,10 @@ namespace Microsoft.OData.Client.Tests.ALinq
             AddNewEndingTokenVisitor visitor = new AddNewEndingTokenVisitor(new NonSystemToken("moreStuff", null, null));
             NonSystemToken token = new NonSystemToken("stuff", null, null);
             token.Accept(visitor);
-            token.Identifier.Should().Be("stuff");
-            token.NextToken.Identifier.Should().Be("moreStuff");
-            token.NextToken.NextToken.Should().BeNull();
+
+            Assert.Equal("stuff", token.Identifier);
+            Assert.Equal("moreStuff", token.NextToken.Identifier);
+            Assert.Null(token.NextToken.NextToken);
         }
     }
 }

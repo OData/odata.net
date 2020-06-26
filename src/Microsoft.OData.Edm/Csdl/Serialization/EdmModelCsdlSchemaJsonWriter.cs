@@ -212,7 +212,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 }
             }
 
-            //  it MAY contain the members $Collection, $Nullable, $Partner, $ContainsTarget
+            // It MAY contain the members $Collection, $Nullable, $Partner, $ContainsTarget
             // The value of $ContainsTarget is one of the Boolean literals true or false. Absence of the member means false.
             this.jsonWriter.WriteOptionalProperty("$ContainsTarget", property.ContainsTarget, CsdlConstants.Default_ContainsTarget);
         }
@@ -265,10 +265,10 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             // A schema is represented as a member of the document object whose name is the schema namespace.
             this.jsonWriter.WritePropertyName(schema.Namespace);
 
-            //  Its value is an object
+            // Its value is an object
             this.jsonWriter.WriteStartObject();
 
-            //  It MAY contain the members $Alias
+            // It MAY contain the members $Alias
             this.jsonWriter.WriteOptionalProperty("$Alias", alias);
         }
 
@@ -697,7 +697,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
         }
 
-        private void WriteTypeReference(IEdmTypeReference type, string defaultTypeName = "Edm.String")
+        internal void WriteTypeReference(IEdmTypeReference type, string defaultTypeName = "Edm.String")
         {
             IEdmTypeReference elementType = type;
             if (type.IsCollection())
@@ -802,13 +802,6 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                     Debug.Assert(false, "Attempted to inline an expression that was not one of the expected inlineable types.");
                     break;
             }
-        }
-
-        private static string BinaryToString(IEdmBinaryConstantExpression binary)
-        {
-            // whose value is a string containing the base64url-encoded binary value.
-            // Below is the work around for the base64 Uri safe encoded string.
-            return Convert.ToBase64String(binary.Value).TrimEnd('=').Replace('+', '-').Replace('/', '_');
         }
 
         internal override void WriteVocabularyAnnotationElementHeader(IEdmVocabularyAnnotation annotation, bool isInline)
@@ -1182,7 +1175,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <param name="binding"></param>
         internal override void WriteNavigationPropertyBinding(IEdmNavigationPropertyBinding binding)
         {
-            //  whose name is the navigation property binding path.
+            // whose name is the navigation property binding path.
             this.jsonWriter.WritePropertyName(binding.Path.Path);
 
             // whose value is a string containing the navigation property binding target.
@@ -1221,6 +1214,13 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                     throw new InvalidOperationException(Strings.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid(operationImport.Name));
                 }
             }
+        }
+
+        private static string BinaryToString(IEdmBinaryConstantExpression binary)
+        {
+            // whose value is a string containing the base64url-encoded binary value.
+            // Below is the work around for the base64 Uri safe encoded string.
+            return Convert.ToBase64String(binary.Value).TrimEnd('=').Replace('+', '-').Replace('/', '_');
         }
 
         private string SerializationName(IEdmSchemaElement element)

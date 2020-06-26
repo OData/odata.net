@@ -164,6 +164,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
                         return new CsdlCollectionExpression(collectionExp.Type, newElements, collectionExp.Location as CsdlLocation);
                     }
+
                     break;
 
                 case EdmExpressionKind.StringConstant:
