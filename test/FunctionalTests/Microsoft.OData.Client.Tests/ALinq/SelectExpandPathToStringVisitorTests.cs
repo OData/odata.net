@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.Client.ALinq.UriParser;
 using Microsoft.OData;
 using Xunit;
@@ -23,7 +22,8 @@ namespace Microsoft.OData.Client.Tests.ALinq
             SelectExpandPathToStringVisitor visitor = new SelectExpandPathToStringVisitor();
             SystemToken systemToken = new SystemToken(ExpressionConstants.It, null);
             Action visitSystemToken = () => systemToken.Accept(visitor);
-            visitSystemToken.ShouldThrow<NotSupportedException>().WithMessage(Strings.ALinq_IllegalSystemQueryOption(ExpressionConstants.It));
+            NotSupportedException exception = Assert.Throws<NotSupportedException>(visitSystemToken);
+            Assert.Equal(Strings.ALinq_IllegalSystemQueryOption(ExpressionConstants.It), exception.Message);
         }
 
         [Fact]
@@ -33,7 +33,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
             NonSystemToken path = new NonSystemToken("NavProp", null, new NonSystemToken("NavProp1", null, null));
             path.IsStructuralProperty = false;
             path.NextToken.IsStructuralProperty = false;
-            path.Accept(visitor).Should().Be("NavProp($expand=NavProp1)");
+            Assert.Equal("NavProp($expand=NavProp1)", path.Accept(visitor));
         }
 
         [Fact]
@@ -42,7 +42,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
             SelectExpandPathToStringVisitor visitor = new SelectExpandPathToStringVisitor();
             NonSystemToken path = new NonSystemToken("NavProp", null, null);
             path.IsStructuralProperty = false;
-            path.Accept(visitor).Should().Be("NavProp");
+            Assert.Equal("NavProp", path.Accept(visitor));
         }
 
         [Fact]
@@ -52,7 +52,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
             NonSystemToken path = new NonSystemToken("NavProp", null, new NonSystemToken("StructuralProp", null, null));
             path.IsStructuralProperty = false;
             path.NextToken.IsStructuralProperty = true;
-            path.Accept(visitor).Should().Be("NavProp($select=StructuralProp)");
+            Assert.Equal("NavProp($select=StructuralProp)", path.Accept(visitor));
         }
     }
 }

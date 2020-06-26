@@ -1354,22 +1354,6 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         public void ShouldWriteEdmEntityTypeProperty()
         {
             // Arrange
-            string expected =
-            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
-            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
-              "<edmx:DataServices>" +
-                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
-                  "<EntityType Name=\"Customer\">" +
-                    "<Key>" +
-                      "<PropertyRef Name=\"Id\" />" +
-                    "</Key>" +
-                    "<Property Name=\"Id\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
-                    "<NavigationProperty Name=\"EntityNavigationProperty\" Type=\"Edm.EntityType\" />" +
-                  "</EntityType>" +
-                "</Schema>" +
-              "</edmx:DataServices>" +
-            "</edmx:Edmx>";
-
             EdmModel model = new EdmModel();
             EdmEntityType customer = new EdmEntityType("NS", "Customer");
             customer.AddKeys(customer.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false)));

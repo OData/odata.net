@@ -6,8 +6,6 @@
 
 namespace Microsoft.OData.Client.Tests.Tracking
 {
-    using Edm.Csdl;
-    using FluentAssertions;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -15,6 +13,7 @@ namespace Microsoft.OData.Client.Tests.Tracking
     using System.Text;
     using System.Threading.Tasks;
     using System.Xml;
+    using Edm.Csdl;
     using Xunit;
 
     public class DataServiceContextNoTrackingStreamsTests
@@ -289,7 +288,7 @@ namespace Microsoft.OData.Client.Tests.Tracking
             var customers = await NonTrackingContext.Customers2.ExecuteAsync();
 
             Action action = () => NonTrackingContext.GetReadStreamUri(customers.First(), "ProfilePhoto");
-            action.ShouldThrow<InvalidOperationException>();
+            Assert.Throws<InvalidOperationException>(action);
         }
 
         private async Task SaveContextChangesAsync(DataServiceContext[] dataServiceContexts)

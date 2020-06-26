@@ -44,7 +44,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Gets the namespace alias mapping.
         /// </summary>
-        public VersioningDictionary<string, string> NamespaceAliasMappings { get;}
+        public VersioningDictionary<string, string> NamespaceAliasMappings { get; }
 
         internal abstract void WriteTermElementHeader(IEdmTerm term, bool inlineType);
 

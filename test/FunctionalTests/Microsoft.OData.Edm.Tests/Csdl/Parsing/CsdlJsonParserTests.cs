@@ -6,7 +6,6 @@
 
 #if NETCOREAPP3_1
 using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 using Microsoft.OData.Edm.Csdl.Parsing;
@@ -112,8 +111,6 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Parsing
         }
         #endregion
 
-        
-
         [Fact]
         public void ParseIncludeWorksAsExpected()
         {
@@ -126,7 +123,6 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Parsing
                 JsonElement rootElement = document.RootElement;
                 JsonParserContext context = new JsonParserContext();
 
-                //CsdlJsonParser jsonParser = new CsdlJsonParser();
                 IEdmInclude include = CsdlJsonParser.ParseInclude(rootElement, context);
 
                 Assert.NotNull(include);
@@ -147,7 +143,6 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Parsing
                 JsonElement rootElement = document.RootElement;
                 JsonParserContext context = new JsonParserContext();
 
-            //    CsdlJsonParser jsonParser = new CsdlJsonParser();
                 IEdmInclude include = CsdlJsonParser.ParseInclude(rootElement, context);
 
                 Assert.NotNull(include);
@@ -174,7 +169,6 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Parsing
             {
                 JsonElement rootElement = document.RootElement;
 
-              //  CsdlJsonParser jsonParser = new CsdlJsonParser();
                 JsonParserContext context = new JsonParserContext();
                 IEdmIncludeAnnotations includeAnnotations = CsdlJsonParser.ParseIncludeAnnotations(rootElement, context);
 
@@ -189,15 +183,6 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Parsing
         {
             ReadOnlySpan<byte> jsonReadOnlySpan = Encoding.UTF8.GetBytes(json);
             return new Utf8JsonReader(jsonReadOnlySpan);
-        }
-
-        private JsonElement GetRootElement(string json)
-        {
-            using (JsonDocument document = JsonDocument.Parse(json))
-            {
-                // will throw exception
-                return document.RootElement;
-            }
         }
     }
 }

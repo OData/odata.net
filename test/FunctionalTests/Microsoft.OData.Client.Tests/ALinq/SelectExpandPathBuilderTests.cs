@@ -8,7 +8,6 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using FluentAssertions;
 using Xunit;
 
 namespace Microsoft.OData.Client.Tests.ALinq
@@ -34,7 +33,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
             pathBuilder.PushParamExpression(pe);
             pathBuilder.StartNewPath();
             pathBuilder.AppendPropertyToPath(testProperty1Info, null, this.dsc);
-            pathBuilder.ProjectionPaths.Single().Should().Be("TestProperty1");
+            Assert.Equal("TestProperty1", pathBuilder.ProjectionPaths.Single());
         }
 
         [Fact]
@@ -48,9 +47,10 @@ namespace Microsoft.OData.Client.Tests.ALinq
                 pathBuilder.StartNewPath();
                 pathBuilder.AppendPropertyToPath(propertyInfo, null, this.dsc);
             }
-            pathBuilder.ProjectionPaths.Should().HaveCount(2);
-            pathBuilder.ProjectionPaths.Should().Contain(x => x == "TestProperty1")
-                .And.Contain(x => x == "TestProperty2");
+
+            Assert.Equal(2, pathBuilder.ProjectionPaths.Count());
+            Assert.Contains("TestProperty1", pathBuilder.ProjectionPaths);
+            Assert.Contains("TestProperty2", pathBuilder.ProjectionPaths);
         }
 
         [Fact]
@@ -62,7 +62,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
             PropertyInfo navPropPropertyInfo = typeof(TestEntity).GetProperties().Single(x => x.PropertyType == typeof(SubTestEntity1));
             pathBuilder.StartNewPath();
             pathBuilder.AppendPropertyToPath(navPropPropertyInfo, null, dsc);
-            pathBuilder.ExpandPaths.Single().Should().Be("NavProp1");
+            Assert.Equal("NavProp1", pathBuilder.ExpandPaths.Single());
         }
 
         [Fact]
@@ -76,9 +76,10 @@ namespace Microsoft.OData.Client.Tests.ALinq
                 pathBuilder.StartNewPath();
                 pathBuilder.AppendPropertyToPath(propertyInfo, null, dsc);
             }
-            pathBuilder.ExpandPaths.Should().HaveCount(2);
-            pathBuilder.ExpandPaths.Should().Contain(x => x == "NavProp1")
-                .And.Contain(x => x == "NavProp2");
+
+            Assert.Equal(2, pathBuilder.ExpandPaths.Count());
+            Assert.Contains("NavProp1", pathBuilder.ExpandPaths);
+            Assert.Contains("NavProp2", pathBuilder.ExpandPaths);
         }
 
         [Fact]
@@ -90,7 +91,8 @@ namespace Microsoft.OData.Client.Tests.ALinq
             pathBuilder.PushParamExpression(pe);
             pathBuilder.StartNewPath();
             pathBuilder.AppendPropertyToPath(testProperty1Info, typeof(TestEntity), dsc);
-            pathBuilder.ProjectionPaths.Single().Should().Be("Microsoft.OData.Client.Tests.ALinq.SelectExpandPathBuilderTests+TestEntity/TestProperty1");
+            Assert.Equal("Microsoft.OData.Client.Tests.ALinq.SelectExpandPathBuilderTests+TestEntity/TestProperty1",
+                pathBuilder.ProjectionPaths.Single());
         }
 
         [Fact]
@@ -104,7 +106,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
             pathBuilder.StartNewPath();
             pathBuilder.AppendPropertyToPath(navPropInfo, null, dsc);
             pathBuilder.AppendPropertyToPath(subTestEntityProperty, null, dsc);
-            pathBuilder.ExpandPaths.Single().Should().Be("NavProp1($select=SubTestProperty)");
+            Assert.Equal("NavProp1($select=SubTestProperty)", pathBuilder.ExpandPaths.Single());
         }
 
         [Fact]
@@ -118,7 +120,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
             pathBuilder.StartNewPath();
             pathBuilder.AppendPropertyToPath(navPropInfo, null, dsc);
             pathBuilder.AppendPropertyToPath(subNavPropInfo, null, dsc);
-            pathBuilder.ExpandPaths.Single().Should().Be("NavProp1($expand=NavProp3)");
+            Assert.Equal("NavProp1($expand=NavProp3)", pathBuilder.ExpandPaths.Single());
         }
 
         [Fact]
@@ -134,7 +136,8 @@ namespace Microsoft.OData.Client.Tests.ALinq
             pathBuilder.AppendPropertyToPath(navPropInfo, null, dsc);
             pathBuilder.AppendPropertyToPath(subNavPropInfo, null, dsc);
             pathBuilder.AppendPropertyToPath(subTestProperty, null, dsc);
-            pathBuilder.ExpandPaths.Single().Should().Be("NavProp1($expand=NavProp3($select=SubTestProperty))");
+            Assert.Equal("NavProp1($expand=NavProp3($select=SubTestProperty))", pathBuilder.ExpandPaths.Single());
+
         }
 
         [Fact]
@@ -153,7 +156,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
             pathBuilder.PushParamExpression(pe2);
             pathBuilder.StartNewPath();
             pathBuilder.AppendPropertyToPath(subTestProperty, null, dsc);
-            pathBuilder.ExpandPaths.Single().Should().Be("NavProp1($expand=NavProp3($select=SubTestProperty))");
+            Assert.Equal("NavProp1($expand=NavProp3($select=SubTestProperty))", pathBuilder.ExpandPaths.Single());
         }
 
         [EntityType]

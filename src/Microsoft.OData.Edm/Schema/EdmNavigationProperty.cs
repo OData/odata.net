@@ -270,7 +270,6 @@ namespace Microsoft.OData.Edm
             if (type.IsComplex())
             {
                 return (IEdmComplexType)type.Definition;
- 
             }
             else if (type.IsCollection())
             {

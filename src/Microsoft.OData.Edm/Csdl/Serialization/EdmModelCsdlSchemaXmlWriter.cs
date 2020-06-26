@@ -733,19 +733,19 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.xmlWriter.WriteEndElement();
         }
 
-        internal void WriteOptionalAttribute<T>(string attribute, T value, T defaultValue, Func<T, string> toXml)
+        internal void WriteOptionalAttribute<T>(string attribute, T value, T defaultValue, Func<T, string> getStringFunc)
         {
             if (!value.Equals(defaultValue))
             {
-                this.xmlWriter.WriteAttributeString(attribute, toXml(value));
+                this.xmlWriter.WriteAttributeString(attribute, getStringFunc(value));
             }
         }
 
-        internal void WriteOptionalAttribute<T>(string attribute, T value, Func<T, string> toXml)
+        internal void WriteOptionalAttribute<T>(string attribute, T value, Func<T, string> getStringFunc)
         {
             if (value != null)
             {
-                this.xmlWriter.WriteAttributeString(attribute, toXml(value));
+                this.xmlWriter.WriteAttributeString(attribute, getStringFunc(value));
             }
         }
 

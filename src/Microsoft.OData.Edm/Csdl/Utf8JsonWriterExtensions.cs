@@ -74,16 +74,17 @@ namespace Microsoft.OData.Edm.Csdl
         /// <summary>
         /// Write the optional property (name/value).
         /// </summary>
+        /// <typeparam name="T">The value type.</typeparam>
         /// <param name="writer">The JSON writer.</param>
         /// <param name="name">The property name.</param>
         /// <param name="value">The property value.</param>
-        /// <param name="toString">The value to string Func.</param>
-        public static void WriteRequiredProperty<T>(this Utf8JsonWriter writer, string name, T value, Func<T, string> toString)
+        /// <param name="getStringFunc">The value to string Func.</param>
+        public static void WriteRequiredProperty<T>(this Utf8JsonWriter writer, string name, T value, Func<T, string> getStringFunc)
         {
             EdmUtil.CheckArgumentNull(writer, nameof(writer));
 
             writer.WritePropertyName(name);
-            writer.WriteStringValue(toString(value));
+            writer.WriteStringValue(getStringFunc(value));
         }
 
         /// <summary>
@@ -180,15 +181,15 @@ namespace Microsoft.OData.Edm.Csdl
         /// <param name="writer">The JSON writer.</param>
         /// <param name="name">The property name.</param>
         /// <param name="value">The property value.</param>
-        /// <param name="toString">The value to string func.</param>
-        public static void WriteOptionalProperty<T>(this Utf8JsonWriter writer, string name, T value, Func<T, string> toString)
+        /// <param name="getStringFunc">The value to string func.</param>
+        public static void WriteOptionalProperty<T>(this Utf8JsonWriter writer, string name, T value, Func<T, string> getStringFunc)
         {
             EdmUtil.CheckArgumentNull(writer, nameof(writer));
 
             if (value != null)
             {
                 writer.WritePropertyName(name);
-                writer.WriteStringValue(toString(value));
+                writer.WriteStringValue(getStringFunc(value));
             }
         }
     }

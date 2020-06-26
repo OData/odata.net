@@ -537,7 +537,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             return entityType;
         }
 
-        private static CsdlElement TryParseStructuredTypeElement(string name, JsonElement element, JsonParserContext context)
+        internal static CsdlElement TryParseStructuredTypeElement(string name, JsonElement element, JsonParserContext context)
         {
             // It also MAY contain members representing structural properties and navigation properties as well as annotations.
             Debug.Assert(!string.IsNullOrEmpty(name), "json reader should verify that the property name string is not null or empty.");
@@ -1045,28 +1045,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             return enumType;
         }
 
-        private static string SeperateAnnotationName(string name, out string termName)
-        {
-            termName = null;
-            int index = name.IndexOf('@');
-
-            if (index == -1)
-            {
-                return name;
-            }
-            else if (index == 0)
-            {
-                termName = name;
-                return null;
-            }
-            else
-            {
-                termName = name.Substring(index); // with @
-                return name.Substring(0, index);
-            }
-        }
-
-        public static CsdlEnumMember ParseCsdlEnumMember(string name, JsonElement enumMemberObject, JsonParserContext context)
+        internal static CsdlEnumMember ParseCsdlEnumMember(string name, JsonElement enumMemberObject, JsonParserContext context)
         {
             // Enumeration Member Object
             // Enumeration type members are represented as JSON object members, where the object member name is the enumeration member name and the object member value is the enumeration member value.
@@ -1560,6 +1539,27 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             }
 
             return kind;
+        }
+
+        private static string SeperateAnnotationName(string name, out string termName)
+        {
+            termName = null;
+            int index = name.IndexOf('@');
+
+            if (index == -1)
+            {
+                return name;
+            }
+            else if (index == 0)
+            {
+                termName = name;
+                return null;
+            }
+            else
+            {
+                termName = name.Substring(index); // with @
+                return name.Substring(0, index);
+            }
         }
     }
 }
