@@ -28,7 +28,7 @@ namespace Microsoft.OData.Edm.Csdl
 
         internal CsdlLocation(string jsonPath)
         {
-            JsonPath = jsonPath;
+            Path = jsonPath;
         }
 
         /// <summary>
@@ -52,9 +52,9 @@ namespace Microsoft.OData.Edm.Csdl
         public int LinePosition { get; private set; }
 
         /// <summary>
-        /// Gets the json path path string
+        /// Gets the path string.
         /// </summary>
-        public string JsonPath { get; private set; }
+        public string Path { get; private set; }
 
         /// <summary>
         /// Gets a string representation of the location.
@@ -62,9 +62,9 @@ namespace Microsoft.OData.Edm.Csdl
         /// <returns>A string representation of the location.</returns>
         public override string ToString()
         {
-            if (JsonPath != null)
+            if (Path != null)
             {
-                return JsonPath;
+                return Path;
             }
 
             return "(" + Convert.ToString(this.LineNumber, CultureInfo.InvariantCulture) + ", " + Convert.ToString(this.LinePosition, CultureInfo.InvariantCulture) + ")";

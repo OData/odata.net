@@ -2990,9 +2990,9 @@ public sealed class Microsoft.OData.Edm.Csdl.SerializationExtensionMethods {
 }
 
 public class Microsoft.OData.Edm.Csdl.CsdlLocation : Microsoft.OData.Edm.EdmLocation {
-    string JsonPath  { public get; }
     int LineNumber  { public get; }
     int LinePosition  { public get; }
+    string Path  { public get; }
     string Source  { public get; }
 
     public virtual string ToString ()
@@ -3074,7 +3074,6 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
     CollectionExpressionNotValidForNonCollectionType = 315
     ComplexTypeBaseTypeCannotBeEdmComplexType = 383
     ComplexTypeMustHaveComplexBaseType = 238
-    ComplexTypeMustHaveProperties = 264
     ConcurrencyRedefinedOnSubtypeOfEntitySetType = 145
     ConstructibleEntitySetTypeInvalidFromEntityTypeRemoval = 231
     ContainerElementContainerNameIncorrect = 328
@@ -3132,6 +3131,7 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
     InvalidBinary = 283
     InvalidBoolean = 27
     InvalidCastExpressionIncorrectNumberOfOperands = 303
+    InvalidCollectionValue = 403
     InvalidDate = 375
     InvalidDateTime = 285
     InvalidDateTimeOffset = 286
@@ -3147,7 +3147,9 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
     InvalidIfExpressionIncorrectNumberOfOperands = 290
     InvalidInteger = 278
     InvalidIsTypeExpressionIncorrectNumberOfOperands = 293
+    InvalidJson = 404
     InvalidKey = 75
+    InvalidKeyValue = 401
     InvalidLabeledElementExpressionIncorrectNumberOfOperands = 300
     InvalidLong = 277
     InvalidMaxLength = 276
@@ -3157,6 +3159,7 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
     InvalidName = 17
     InvalidNamespaceName = 163
     InvalidNavigationPropertyType = 258
+    InvalidNumberType = 406
     InvalidOnDelete = 97
     InvalidOperationImportParameterMode = 333
     InvalidParameterMode = 280
@@ -3179,18 +3182,6 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
     InvalidValue = 282
     InvalidVersionNumber = 25
     IsUnboundedCannotBeTrueWhileMaxLengthIsNotNull = 298
-    JsonInvalid = 401
-    JsonInvalidCollectionValue = 410
-    JsonInvalidKeyValue = 411
-    JsonInvalidNumberType = 405
-    JsonInvalidValue = 403
-    JsonInvalidVersionNumber = 402
-    JsonMissingRequiredProperty = 409
-    JsonSchemaCannotHaveMoreThanOneEntityContainer = 412
-    JsonUnexpectedElement = 407
-    JsonUnexpectedValueKind = 408
-    JsonUnknownElementValueKind = 404
-    JsonUnsupportedElement = 406
     KeyMissingOnEntityType = 159
     KeyPropertyMustBelongToEntity = 242
     KeyPropertyTypeCannotBeEdmPrimitiveType = 259
@@ -3198,6 +3189,7 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
     MetadataDocumentCannotHaveMoreThanOneEntityContainer = 365
     MismatchNumberOfPropertiesInRelationshipConstraint = 114
     MissingAttribute = 15
+    MissingRequiredProperty = 410
     MissingType = 18
     NameTooLong = 60
     NavigationMappingMustBeBidirectional = 344
@@ -3248,6 +3240,7 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
     RequiredParametersMustPrecedeOptional = 379
     SameRoleReferredInReferentialConstraint = 119
     ScaleOutOfRange = 52
+    SchemaCannotHaveMoreThanOneEntityContainer = 402
     SchemaElementMustNotHaveKindOfNone = 338
     SimilarRelationshipEnd = 153
     SingleFileExpected = 323
@@ -3264,14 +3257,18 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
     TypeSemanticsCouldNotConvertTypeReference = 230
     UnboundFunctionOverloadHasIncorrectReturnType = 219
     UnderlyingTypeIsBadBecauseEnumTypeIsBad = 261
+    UnexpectedElement = 408
+    UnexpectedValueKind = 409
     UnexpectedXmlAttribute = 9
     UnexpectedXmlElement = 10
     UnexpectedXmlNodeType = 8
     UnknownEdmVersion = 325
     UnknownEdmxVersion = 324
+    UnknownElementValueKind = 405
     UnresolvedNavigationPropertyBindingPath = 378
     UnresolvedNavigationPropertyPartnerPath = 377
     UnresolvedReferenceUriInEdmxReference = 374
+    UnsupportedElement = 407
     UrlEscapeFunctionMustBeBoundFunction = 155
     UrlEscapeFunctionMustHaveOnlyOneEdmStringParameter = 156
     XmlError = 5

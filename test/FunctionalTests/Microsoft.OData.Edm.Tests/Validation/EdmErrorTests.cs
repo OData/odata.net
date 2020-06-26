@@ -41,7 +41,6 @@ namespace Microsoft.OData.Edm.Tests.Validation
         new List<object[]>
         {
             new object[] { new CsdlLocation(3, 2), EdmErrorCode.BadUnresolvedTerm, "Bad Unresolved Term"},
-            new object[] { new CsdlLocation(7, 19), EdmErrorCode.ComplexTypeMustHaveProperties, "Complex Type Must Have Properties" },
             new object[] { new CsdlLocation(11, 2), EdmErrorCode.DeclaringTypeMustBeCorrect, "Declaring Type Must Be Correct"},
         };
 

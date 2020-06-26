@@ -71,7 +71,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Parsing
             Assert.Null(pathExp.Path);
 
             EdmError error = Assert.Single(context.Errors);
-            Assert.Equal(EdmErrorCode.JsonUnexpectedValueKind, error.ErrorCode);
+            Assert.Equal(EdmErrorCode.UnexpectedValueKind, error.ErrorCode);
             Assert.Equal("$.@UI.DisplayName#Tablet.$Path", error.ErrorLocation.ToString());
             Assert.Equal("An unexpected 'Array' value kind was found when parsing the JSON path '$.@UI.DisplayName#Tablet.$Path'. A 'String' value kind was expected.", error.ErrorMessage);
         }

@@ -92,7 +92,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                                 }
                             }
 
-                            context.ReportError(EdmErrorCode.JsonUnexpectedElement, Strings.CsdlJsonParser_UnexpectedJsonMember(context.Path, propertyValue.ValueKind));
+                            context.ReportError(EdmErrorCode.UnexpectedElement, Strings.CsdlJsonParser_UnexpectedJsonMember(context.Path, propertyValue.ValueKind));
                             break;
                     }
                 });
@@ -174,7 +174,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     default:
                         // The reference objects MAY contain annotations.However, EdmReference doesn't support annotation.
                         // So, skip the annotation.
-                        context.ReportError(EdmErrorCode.JsonUnexpectedElement, Strings.CsdlJsonParser_UnexpectedJsonMember(context.Path, propertyValue.ValueKind));
+                        context.ReportError(EdmErrorCode.UnexpectedElement, Strings.CsdlJsonParser_UnexpectedJsonMember(context.Path, propertyValue.ValueKind));
                         break;
                 }
             });
@@ -219,7 +219,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     default:
                         // The item objects MAY contain annotations.
                         // However, EdmInclude does not supported yet. So skip
-                        context.ReportError(EdmErrorCode.JsonUnexpectedElement, Strings.CsdlJsonParser_UnexpectedJsonMember(context.Path, propertyValue.ValueKind));
+                        context.ReportError(EdmErrorCode.UnexpectedElement, Strings.CsdlJsonParser_UnexpectedJsonMember(context.Path, propertyValue.ValueKind));
                         break;
                 }
             });
@@ -266,7 +266,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
                     default:
                         // The item objects MAY contain annotations. However, IEdmIncludeAnnotations doesn't support to have annotations.
-                        context.ReportError(EdmErrorCode.JsonUnexpectedElement,
+                        context.ReportError(EdmErrorCode.UnexpectedElement,
                             Strings.CsdlJsonParser_UnexpectedJsonMember(context.Path, propertyValue.ValueKind));
                         break;
                 }
@@ -299,7 +299,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 sb.Append(" ActualMessage:");
                 sb.Append(jsonEx.Message != null ? jsonEx.Message : "N/A");
 
-                context.ReportError(EdmErrorCode.JsonInvalid, sb.ToString());
+                context.ReportError(EdmErrorCode.InvalidJson, sb.ToString());
                 return null;
             }
         }
@@ -324,7 +324,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 // This document object MUST contain the member $Version.
                 if (version == null)
                 {
-                    context.ReportError(EdmErrorCode.JsonInvalidVersionNumber, Strings.CsdlJsonParser_InvalidCsdlVersion(context.Path));
+                    context.ReportError(EdmErrorCode.InvalidVersionNumber, Strings.CsdlJsonParser_InvalidCsdlVersion(context.Path));
                 }
             }
 

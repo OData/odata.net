@@ -27,7 +27,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Parsing
             JsonParserContext context = new JsonParserContext();
             CsdlJsonParser.ParseCsdlDocument(ref jsonReader, context);
             EdmError error = Assert.Single(context.Errors);
-            Assert.Equal(EdmErrorCode.JsonInvalid, error.ErrorCode);
+            Assert.Equal(EdmErrorCode.InvalidJson, error.ErrorCode);
             Assert.Equal("$ LineNumber:0 BytePositionInLine:22 Path:N/A ActualMessage:Expected depth to be zero at the end of the JSON payload." +
                 " There is an open JSON object or array that should be closed. LineNumber: 0 | BytePositionInLine: 22.", error.ErrorMessage);
         }
@@ -41,7 +41,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Parsing
             JsonParserContext context = new JsonParserContext();
             CsdlJsonParser.ParseCsdlDocument(ref jsonReader, context);
             EdmError error = Assert.Single(context.Errors);
-            Assert.Equal(EdmErrorCode.JsonUnexpectedValueKind, error.ErrorCode);
+            Assert.Equal(EdmErrorCode.UnexpectedValueKind, error.ErrorCode);
             Assert.Equal("An unexpected 'Array' value kind was found when parsing the JSON path '$'. A 'Object' value kind was expected.", error.ErrorMessage);
         }
 
@@ -54,7 +54,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Parsing
             JsonParserContext context = new JsonParserContext();
             CsdlJsonParser.ParseCsdlDocument(ref jsonReader, context);
             EdmError error = Assert.Single(context.Errors);
-            Assert.Equal(EdmErrorCode.JsonUnexpectedElement, error.ErrorCode);
+            Assert.Equal(EdmErrorCode.UnexpectedElement, error.ErrorCode);
             Assert.Equal("A member '$.Anything' with value type 'Number' is unexpected.", error.ErrorMessage);
         }
 
@@ -81,7 +81,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Parsing
             JsonParserContext context = new JsonParserContext();
             CsdlJsonParser.ParseCsdlDocument(ref jsonReader, context);
             EdmError error = Assert.Single(context.Errors);
-            Assert.Equal(EdmErrorCode.JsonMissingRequiredProperty, error.ErrorCode);
+            Assert.Equal(EdmErrorCode.MissingRequiredProperty, error.ErrorCode);
             Assert.Equal("A property '$Version' is missing when parsing the JSON path '$'.", error.ErrorMessage);
         }
 
@@ -94,7 +94,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Parsing
             JsonParserContext context = new JsonParserContext();
             CsdlJsonParser.ParseCsdlDocument(ref jsonReader, context);
             EdmError error = Assert.Single(context.Errors);
-            Assert.Equal(EdmErrorCode.JsonUnexpectedValueKind, error.ErrorCode);
+            Assert.Equal(EdmErrorCode.UnexpectedValueKind, error.ErrorCode);
             Assert.Equal("An unexpected 'Number' value kind was found when parsing the JSON path '$.$Version'. A 'String' value kind was expected.", error.ErrorMessage);
         }
 
@@ -107,7 +107,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Parsing
             JsonParserContext context = new JsonParserContext();
             CsdlJsonParser.ParseCsdlDocument(ref jsonReader, context);
             EdmError error = Assert.Single(context.Errors);
-            Assert.Equal(EdmErrorCode.JsonInvalidVersionNumber, error.ErrorCode);
+            Assert.Equal(EdmErrorCode.InvalidVersionNumber, error.ErrorCode);
             Assert.Equal("The version specified at '$.$Version' is not valid. It should be a string containing either '4.0' or '4.01'.", error.ErrorMessage);
         }
         #endregion
@@ -154,7 +154,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Parsing
                 Assert.Equal("org.example.display", include.Namespace);
 
                 var error = Assert.Single(context.Errors);
-                Assert.Equal(EdmErrorCode.JsonUnexpectedElement, error.ErrorCode);
+                Assert.Equal(EdmErrorCode.UnexpectedElement, error.ErrorCode);
                 Assert.Equal("$.$Unknown", error.ErrorLocation.ToString());
                 Assert.Equal("A member '$.$Unknown' with value type 'String' is unexpected.", error.ErrorMessage);
             }

@@ -717,11 +717,6 @@ namespace Microsoft.OData.Edm.Validation
         UnderlyingTypeIsBadBecauseEnumTypeIsBad = 261,
 
         /// <summary>
-        /// Complex types must contain at least one property.
-        /// </summary>
-        ComplexTypeMustHaveProperties = 264,
-
-        /// <summary>
         /// Unsupported operation import parameter type.
         /// </summary>
         OperationImportParameterIncorrectType = 265,
@@ -1388,67 +1383,54 @@ namespace Microsoft.OData.Edm.Validation
         /// </summary>
         AnnotationApplyToNotAllowedAnnotatable = 400,
 
-        #region JSON
-
-        /// <summary>
-        /// Invalid JSON
-        /// </summary>
-        JsonInvalid,
-
-        /// <summary>
-        /// The specified version number is not valid.
-        /// </summary>
-        JsonInvalidVersionNumber,
-
-        /// <summary>
-        /// Invalid JSON value
-        /// </summary>
-        JsonInvalidValue,
-
-        /// <summary>
-        /// Invalid JSON value kind
-        /// </summary>
-        JsonUnknownElementValueKind,
-
-        /// <summary>
-        /// Invalid JSON number type
-        /// </summary>
-        JsonInvalidNumberType,
-
-        /// <summary>
-        /// Encountered a JSON element that is not supported
-        /// </summary>
-        JsonUnsupportedElement,
-
-        /// <summary>
-        /// Encountered a JSON element that was never used
-        /// </summary>
-        JsonUnexpectedElement,
-
-        /// <summary>
-        /// Excountered a JSON elemnt that was not expected.
-        /// </summary>
-        JsonUnexpectedValueKind,
-
-        /// <summary>
-        /// A JSON property is required in an JSON object
-        /// </summary>
-        JsonMissingRequiredProperty,
-
-        /// <summary>
-        /// Invalid $Collection value.
-        /// </summary>
-        JsonInvalidCollectionValue,
-
         /// <summary>
         /// Invalid $Key value.
         /// </summary>
-        JsonInvalidKeyValue,
+        InvalidKeyValue,
 
         /// <summary>
         /// Invalid mulitple entity container in one schema
         /// </summary>
-        JsonSchemaCannotHaveMoreThanOneEntityContainer
-        #endregion
+        SchemaCannotHaveMoreThanOneEntityContainer,
+
+        /// <summary>
+        /// Invalid $Collection value.
+        /// </summary>
+        InvalidCollectionValue,
+
+        /// <summary>
+        /// Invalid JSON
+        /// </summary>
+        InvalidJson,
+
+        /// <summary>
+        /// Invalid Element value kind
+        /// </summary>
+        UnknownElementValueKind,
+
+        /// <summary>
+        /// Invalid number type
+        /// </summary>
+        InvalidNumberType,
+
+        /// <summary>
+        /// Encountered an element that is not supported
+        /// </summary>
+        UnsupportedElement,
+
+        /// <summary>
+        /// Encountered an  element that was never used
+        /// </summary>
+        UnexpectedElement,
+
+        /// <summary>
+        /// Excountered a JSON elemnt that was not expected.
+        /// </summary>
+        UnexpectedValueKind,
+
+        /// <summary>
+        /// A property is required in an object
+        /// </summary>
+        MissingRequiredProperty,
     }
 }
