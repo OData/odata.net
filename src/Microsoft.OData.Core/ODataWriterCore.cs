@@ -1513,9 +1513,9 @@ namespace Microsoft.OData
         {
             await TaskUtils.GetTaskForSynchronousOperation(() =>
             {
-                this.EnterScope(deltaLink is ODataDeltaLink ? WriterState.DeltaLink : WriterState.DeltaDeletedLink, deltaLink);
-                this.StartDeltaLink(deltaLink);
-            }).FollowOnSuccessWithTask((t) => this.WriteEndAsync());
+                EnterScope(deltaLink is ODataDeltaLink ? WriterState.DeltaLink : WriterState.DeltaDeletedLink, deltaLink);
+                StartDeltaLink(deltaLink);
+            }).FollowOnSuccessWithTask((t) => WriteEndAsync()).ConfigureAwait(false);
         }
         
         /// <summary>
@@ -1587,21 +1587,21 @@ namespace Microsoft.OData
         /// <param name="primitiveValue">Primitive value to write.</param>
         private async Task WritePrimitiveValueAsyncImplementation(ODataPrimitiveValue primitiveValue)
         {
-            await this.InterceptExceptionAsync(async () =>
+            await InterceptExceptionAsync(async () =>
                {
                    await TaskUtils.GetTaskForSynchronousOperation(() =>
                    {
-                       this.EnterScope(WriterState.Primitive, primitiveValue);
-                       if (!(this.CurrentResourceSetValidator == null) && primitiveValue != null)
+                       EnterScope(WriterState.Primitive, primitiveValue);
+                       if (!(CurrentResourceSetValidator == null) && primitiveValue != null)
                        {
                            Debug.Assert(primitiveValue.Value != null, "PrimitiveValue.Value should never be null!");
                            IEdmType itemType = EdmLibraryExtensions.GetPrimitiveTypeReference(primitiveValue.Value.GetType()).Definition;
-                           this.CurrentResourceSetValidator.ValidateResource(itemType);
+                           CurrentResourceSetValidator.ValidateResource(itemType);
                        }
 
-                       this.WritePrimitiveValue(primitiveValue);
-                   }).FollowOnSuccessWithTask((t) => this.WriteEndAsync());
-               });
+                       WritePrimitiveValue(primitiveValue);
+                   }).FollowOnSuccessWithTask((t) => WriteEndAsync()).ConfigureAwait(false);
+               }).ConfigureAwait(false);
         }
         
         /// <summary>
@@ -2113,7 +2113,7 @@ namespace Microsoft.OData
         {
             try
             {
-                await action();
+                await action().ConfigureAwait(false);
             }
             catch
             {

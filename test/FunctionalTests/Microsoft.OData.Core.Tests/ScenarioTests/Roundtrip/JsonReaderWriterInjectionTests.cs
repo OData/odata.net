@@ -48,7 +48,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             "\"Address\":{" +
                 "\"SubAddress\":{\"SubRoad\":\"Redmond\"}}}");
 
-            Assert.Equal(resDict["DefaultNs.SubAddress"].ToList()[0].Value, "Redmond");
+            Assert.Equal("Redmond", resDict["DefaultNs.SubAddress"].ToList()[0].Value);
         }
         
         [Fact]
@@ -61,8 +61,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                 "\"Address\":{" +
                 "\"City\":{\"ZipCode\":98052}}}");
 
-            Assert.Equal(resDict["DefaultNs.PersonCity"].ToList()[0].Value, 10001);
-            Assert.Equal(resDict["DefaultNs.City"].ToList()[0].Value, 98052);
+            Assert.Equal(10001, resDict["DefaultNs.PersonCity"].ToList()[0].Value);
+            Assert.Equal(98052, resDict["DefaultNs.City"].ToList()[0].Value);
         }
 
         [Fact]
@@ -75,8 +75,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                 "\"SubAddress\":{\"SubRoad\":\"Redmond\"},"+
               "\"City\":{\"ZipCode\":98052}}}");
 
-            Assert.Equal(resDict["DefaultNs.SubAddress"].ToList()[0].Value, "Redmond");
-            Assert.Equal(resDict["DefaultNs.City"].ToList()[0].Value, 98052);
+            Assert.Equal("Redmond", resDict["DefaultNs.SubAddress"].ToList()[0].Value);
+            Assert.Equal(98052, resDict["DefaultNs.City"].ToList()[0].Value);
         }
       
         [Fact]
@@ -88,7 +88,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
           "\"Address\":{" +
               "\"SubAddress\":{\"SubRoad\":\"Redmond\"}}}");
 
-            Assert.Equal(resDict["DefaultNs.SubAddress"].ToList()[0].Value, "Redmond");
+            Assert.Equal("Redmond", resDict["DefaultNs.SubAddress"].ToList()[0].Value);
         }
 
         [Fact]

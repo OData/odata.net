@@ -12,20 +12,20 @@ namespace Microsoft.Test.OData.Tests.Client
     using Microsoft.Test.OData.Framework.Client;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit.Abstractions;
+    using Xunit;
 
     /// <summary>
     /// Generic client update test cases.
     /// </summary>
-    [TestClass]
     public class ClientUpdateTests : EndToEndTestBase
     {
-        public ClientUpdateTests()
-            : base(ServiceDescriptors.AstoriaDefaultService)
+        public ClientUpdateTests(ITestOutputHelper helper)
+            : base(ServiceDescriptors.AstoriaDefaultService, helper)
         {
         }
 
-        [TestMethod]
+        [Fact]
         public void BatchTest()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -42,17 +42,17 @@ namespace Microsoft.Test.OData.Tests.Client
             contextWrapper.SaveChanges(SaveChangesOptions.BatchWithIndependentOperations);
         }
 
-        [TestMethod]
+        [Fact]
         public void TrackEntitiesInAllPages()
         {
             var context = this.CreateWrappedContext().Context;
             var customerCount = context.Customer.Count();
 
             var customers = new DataServiceCollection<Customer>(context, context.Customer.GetAllPages(), TrackingMode.AutoChangeTracking, null, null, null);
-            Assert.AreEqual(customerCount, customers.Count());
+            Assert.Equal(customerCount, customers.Count());
             context.Configurations.RequestPipeline.OnEntryEnding((args) =>
             {
-                Assert.AreEqual(1, args.Entry.Properties.Count());
+                Assert.Equal(1, args.Entry.Properties.Count());
             });
             for (int i = 0; i < customers.Count(); i++)
             {
@@ -63,7 +63,7 @@ namespace Microsoft.Test.OData.Tests.Client
             //customers = new DataServiceCollection<Customer>(context.Customer.Take(1));
             //context.Configurations.RequestPipeline.OnEntryEnding((args) =>
             //{
-            //    Assert.AreEqual(1, args.Entry.Properties.Count());
+            //    Assert.Equal(1, args.Entry.Properties.Count());
             //});
             //context.LoadPropertyAllPages(customers[0], "Orders");
             //for (int i = 0; i < customers[0].Orders.Count(); i++)
@@ -81,7 +81,7 @@ namespace Microsoft.Test.OData.Tests.Client
             //context.LoadPropertyAllPages(customers[0], "Orders");
             //for (int i = 0; i < customers[0].Orders.Count(); i++)
             //{
-            //    Assert.AreEqual(customers[0].Orders[i].Concurrency.Token, "Order_ConCurrency_" + i.ToString());
+            //    Assert.Equal(customers[0].Orders[i].Concurrency.Token, "Order_ConCurrency_" + i.ToString());
             //}
         }
 

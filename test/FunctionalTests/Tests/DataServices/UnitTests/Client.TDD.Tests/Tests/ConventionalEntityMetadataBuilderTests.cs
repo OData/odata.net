@@ -16,16 +16,15 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using Microsoft.OData.Edm;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using EdmValueUtils = Microsoft.OData.Client.EdmValueUtils;
+    using Xunit;
 
-    [TestClass]
     public class ConventionalEntityMetadataBuilderTests
     {
         private ConventionalODataEntityMetadataBuilder metadataBuilder;
         private EdmEntitySet entitySet;
         private IEdmStructuredValue structure;
 
-        [TestInitialize]
-        public void Init()
+        public ConventionalEntityMetadataBuilderTests()
         {
             var entityContainer = new EdmEntityContainer("MyNamespace", "MyThing");
 
@@ -38,7 +37,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             this.metadataBuilder = new ConventionalODataEntityMetadataBuilder(new Uri("http://test/"), ((IEdmEntitySet)this.entitySet).Name, this.structure, DataServiceUrlKeyDelimiter.Parentheses);
         }
 
-        [TestMethod]
+        [Fact]
         public void EditLinkShouldMatchConventions()
         {
             var editLink = metadataBuilder.GetEditLink();
@@ -46,7 +45,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             editLink.OriginalString.Should().Be("http://test/EntitySet(1)");
         }
 
-        [TestMethod]
+        [Fact]
         public void IdShouldMatchConventions()
         {
             this.metadataBuilder.GetId()
@@ -54,13 +53,13 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                 .Be("http://test/EntitySet(1)");
         }
 
-        [TestMethod]
+        [Fact]
         public void ReadLinkShouldBeNull()
         {
             this.metadataBuilder.GetReadLink().Should().BeNull();
         }
 
-        [TestMethod]
+        [Fact]
         public void ETagShouldBeNull()
         {
             this.metadataBuilder.GetETag().Should().BeNull();

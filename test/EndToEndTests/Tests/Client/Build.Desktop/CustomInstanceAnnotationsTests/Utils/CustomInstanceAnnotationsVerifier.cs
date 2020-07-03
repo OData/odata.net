@@ -11,7 +11,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
     using System.Linq;
     using Microsoft.OData;
     using Microsoft.Test.OData.Framework.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
     public static class CustomInstanceAnnotationsVerifier
     {
@@ -24,12 +24,14 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
 
         private static void VerifyAnnotatedItems(List<CustomInstanceAnnotationsDescriptor> baselineAnnotatedItems, List<CustomInstanceAnnotationsDescriptor> actualAnnotatedItems, string contentType, bool hasExpandedNavigationProperties, bool verifyAnnotationsOnStart)
         {
-            Assert.AreEqual(baselineAnnotatedItems.Count, actualAnnotatedItems.Count, "Number of annotations do not match");
+            //Number of annotations do not match
+            Assert.Equal(baselineAnnotatedItems.Count, actualAnnotatedItems.Count);
             for (int i = 0; i < actualAnnotatedItems.Count; i++)
             {
                 var actualItem = actualAnnotatedItems[i];
                 var baselineItem = baselineAnnotatedItems[i];
-                Assert.AreEqual(baselineItem.TypeOfAnnotatedItem, actualItem.TypeOfAnnotatedItem, "Type of annotated item does not match at element {0}", i);
+                //Type of annotated item does not match at element {0}, i
+                Assert.Equal(baselineItem.TypeOfAnnotatedItem, actualItem.TypeOfAnnotatedItem);
 
                 if (verifyAnnotationsOnStart)
                 {
@@ -46,16 +48,19 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
 
         private static void VerifyAnnotations(List<ODataInstanceAnnotation> baselineAnnotations, List<ODataInstanceAnnotation> actualAnnotations, string startOrEnd, int indexOfAnnotatedItem, string typeOfAnnotatedItem)
         {
-            Assert.AreEqual(baselineAnnotations.Count, actualAnnotations.Count, "Number of annotations read at {0} of element {1} ({2}) does not match", startOrEnd, indexOfAnnotatedItem, typeOfAnnotatedItem);
+            //Number of annotations read at {0} of element {1} ({2}) does not match", startOrEnd, indexOfAnnotatedItem, typeOfAnnotatedItem
+            Assert.Equal(baselineAnnotations.Count, actualAnnotations.Count);
             for (int i = 0; i < actualAnnotations.Count; i++)
             {
                 var actualAnnotation = actualAnnotations[i];
                 var baselineAnnotation = baselineAnnotations[i];
-                Assert.AreEqual(baselineAnnotation.Name, actualAnnotation.Name, "Name of annotation does not match (annotation [{0},{1}])", indexOfAnnotatedItem, i);
+                //"Name of annotation does not match (annotation [{0},{1}])", indexOfAnnotatedItem, i
+                Assert.Equal(baselineAnnotation.Name, actualAnnotation.Name);
 
                 var actualAnnotationValue = actualAnnotation.Value;
                 var baselineAnnotationValue = baselineAnnotation.Value;
-                Assert.AreEqual(actualAnnotationValue.GetType().FullName, actualAnnotationValue.GetType().FullName, "Type of annotation does not match (annotation [{0},{1}])", indexOfAnnotatedItem, i);
+                //Type of annotation does not match (annotation [{0},{1}])", indexOfAnnotatedItem, i
+                Assert.Equal(actualAnnotationValue.GetType().FullName, actualAnnotationValue.GetType().FullName);
 
                 var baselinePrimitiveValue = baselineAnnotationValue as ODataPrimitiveValue;
                 if (baselinePrimitiveValue != null)
@@ -69,20 +74,23 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
 
         private static void VerifyPrimitiveValue(object baselinePrimitiveValue, object actualPrimitiveValue, int indexOfAnnotatedItem, int indexOfValue)
         {
-            Assert.AreEqual(baselinePrimitiveValue.GetType().FullName, actualPrimitiveValue.GetType().FullName, "Type of value does not match (annotation [{0},{1}])", indexOfAnnotatedItem, indexOfValue);
+            //"Type of value does not match (annotation [{0},{1}])", indexOfAnnotatedItem, indexOfValue
+            Assert.Equal(baselinePrimitiveValue.GetType().FullName, actualPrimitiveValue.GetType().FullName);
 
             var baselineBinaryValue = baselinePrimitiveValue as byte[];
             if (baselineBinaryValue == null)
             {
-                Assert.AreEqual(baselinePrimitiveValue, actualPrimitiveValue, "Value of annotation does not match (annotation [{0},{1}])", indexOfAnnotatedItem, indexOfValue);
+                //Value of annotation does not match (annotation [{0},{1}])", indexOfAnnotatedItem, indexOfValue
+                Assert.Equal(baselinePrimitiveValue, actualPrimitiveValue);
             }
             else
             {
                 var actualBinaryValue = (byte[])actualPrimitiveValue;
-                Assert.AreEqual(baselineBinaryValue.Length, actualBinaryValue.Length, "Size of binary value does not match (annotation [{0},{1}])", indexOfAnnotatedItem, indexOfValue);
+                Assert.Equal(baselineBinaryValue.Length, actualBinaryValue.Length);
                 for (int i = 0; i < baselineBinaryValue.Length; i++)
                 {
-                    Assert.AreEqual(baselineBinaryValue[i], actualBinaryValue[i], "Byte {0} of binary value does not match (annotation [{0},{1}])", indexOfAnnotatedItem, indexOfValue);
+                    //Size of binary value does not match (annotation [{0},{1}])", indexOfAnnotatedItem, indexOfValue
+                    Assert.Equal(baselineBinaryValue[i], actualBinaryValue[i]);
                 }
             }
         }
@@ -119,7 +127,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
             // An entry of a top level feed
             if (annotatedItem.Parent.Parent == null)
             {
-                Assert.IsTrue(annotatedItem.Parent.TypeOfAnnotatedItem == typeof(ODataResourceSet), "Found an entry whose parent is not a feed! Revisit assumptions of top level feed.");
+                Assert.True(annotatedItem.Parent.TypeOfAnnotatedItem == typeof(ODataResourceSet), "Found an entry whose parent is not a feed! Revisit assumptions of top level feed.");
                 return true;
             }
 

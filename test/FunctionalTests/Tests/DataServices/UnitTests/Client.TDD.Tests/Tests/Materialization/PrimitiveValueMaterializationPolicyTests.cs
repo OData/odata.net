@@ -12,51 +12,50 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
     using AstoriaUnitTests.Tests;
     using FluentAssertions;
     using Microsoft.OData.Edm;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using DSClient = Microsoft.OData.Client;
+    using Xunit;
 
-    [TestClass]
     public class PrimitiveValueMaterializationPolicyTests
     {
-        [TestMethod]
+        [Fact]
         public void StringValueShouldMaterializeCorrectly()
         {
             CreatePrimitiveValueMaterializationPolicy().MaterializePrimitiveDataValue(typeof(string), "Edm.String", "foo").Should().Be("foo");
         }
 
-        [TestMethod]
+        [Fact]
         public void NullStringValueShouldNotReturnOnMaterializing()
         {
             CreatePrimitiveValueMaterializationPolicy().MaterializePrimitiveDataValueCollectionElement(typeof(string), "Edm.String", null).Should().Be(null);
         }
 
-        [TestMethod]
+        [Fact]
         public void NullValueShouldReturnErrorNonNullableTypePrimitiveCollectionElement()
         {
             Action test = () => CreatePrimitiveValueMaterializationPolicy().MaterializePrimitiveDataValueCollectionElement(typeof(int), "Edm.Int32", null);
             test.ShouldThrow<InvalidOperationException>().WithMessage(DSClient.Strings.Collection_NullCollectionItemsNotSupported);
         }
 
-        [TestMethod]
+        [Fact]
         public void NullValueShouldReturnErrorNonNullableTypePrimitiveValue()
         {
             Action test = () => CreatePrimitiveValueMaterializationPolicy().MaterializePrimitiveDataValue(typeof(int), "Edm.Int32", null);
             test.ShouldThrow<InvalidOperationException>().WithMessage("TODO: Is this reachable?");
         }
 
-        [TestMethod]
+        [Fact]
         public void UnknownTypeShouldNotErrorOnMaterializingPrimitiveValue()
         {
             CreatePrimitiveValueMaterializationPolicy().MaterializePrimitiveDataValueCollectionElement(typeof(UnknownPoint), "Edm.Int16", null).Should().Be(null);
         }
 
-        [TestMethod]
+        [Fact]
         public void DateValueShouldMaterializeCorrectly()
         {
             CreatePrimitiveValueMaterializationPolicy().MaterializePrimitiveDataValue(typeof(Date), "Edm.Date", "2014-09-28").Should().Be(new Date(2014, 9, 28));
         }
 
-        [TestMethod]
+        [Fact]
         public void TimeOfDayValueShouldMaterializeCorrectly()
         {
             CreatePrimitiveValueMaterializationPolicy().MaterializePrimitiveDataValue(typeof(TimeOfDay), "Edm.TimeOfDay", "19:30:05.1230000").Should().Be(new TimeOfDay(19, 30, 5, 123));

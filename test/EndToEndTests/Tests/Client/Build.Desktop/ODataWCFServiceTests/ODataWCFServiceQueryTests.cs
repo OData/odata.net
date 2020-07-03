@@ -15,12 +15,11 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
     /// <summary>
     /// Send query and verify the results from the service implemented using ODataLib and EDMLib.
     /// </summary>
-    [TestClass]
     public class ODataWCFServiceQueryTests : ODataWCFServiceTestsBase<InMemoryEntities>
     {
         public ODataWCFServiceQueryTests()
@@ -31,7 +30,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
         private static string NameSpacePrefix = "Microsoft.Test.OData.Services.ODataWCFService.";
 
-        [TestMethod]
+        [Fact]
         public void QueryServiceDocument()
         {
             string[] types = new string[]
@@ -49,7 +48,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri, UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -57,15 +56,15 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                     {
                         ODataServiceDocument workSpace = messageReader.ReadServiceDocument();
 
-                        Assert.IsNotNull(workSpace.EntitySets.Single(c => c.Name == "Customers"));
-                        Assert.IsNotNull(workSpace.Singletons.Single(c => c.Name == "VipCustomer"));
-                        Assert.IsNotNull(workSpace.Singletons.Single(c => c.Name == "Company"));
+                        Assert.NotNull(workSpace.EntitySets.Single(c => c.Name == "Customers"));
+                        Assert.NotNull(workSpace.Singletons.Single(c => c.Name == "VipCustomer"));
+                        Assert.NotNull(workSpace.Singletons.Single(c => c.Name == "Company"));
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryEntitySet()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -74,7 +73,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Customers", UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -89,22 +88,22 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                                 ODataResource entry = reader.Item as ODataResource;
                                 if (entry != null && entry.TypeName.EndsWith("Customer"))
                                 {
-                                    Assert.IsNotNull(entry.Properties.Single(p => p.Name == "PersonID").Value);
+                                    Assert.NotNull(entry.Properties.Single(p => p.Name == "PersonID").Value);
                                 }
                             }
                             else if (reader.State == ODataReaderState.ResourceSetEnd)
                             {
-                                Assert.IsNotNull(reader.Item as ODataResourceSet);
+                                Assert.NotNull(reader.Item as ODataResourceSet);
                             }
                         }
 
-                        Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                        Assert.Equal(ODataReaderState.Completed, reader.State);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryEntityInstance()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -113,7 +112,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Customers(1)", UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -128,18 +127,18 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                                 ODataResource entry = reader.Item as ODataResource;
                                 if (entry != null && entry.TypeName.EndsWith("Customer"))
                                 {
-                                    Assert.AreEqual(1, entry.Properties.Single(p => p.Name == "PersonID").Value);
+                                    Assert.Equal(1, entry.Properties.Single(p => p.Name == "PersonID").Value);
                                 }
                             }
                         }
 
-                        Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                        Assert.Equal(ODataReaderState.Completed, reader.State);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryEntityProperty()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -154,7 +153,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 }
 
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -164,29 +163,29 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                         property = messageReader.ReadProperty();
                     }
 
-                    Assert.AreEqual(1, property.Value);
+                    Assert.Equal(1, property.Value);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryDollarValue()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "People(1)/Home/$value", UriKind.Absolute));
 
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
             object property = null;
             using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
             {
                 property = messageReader.ReadValue(new EdmStringTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), true));
             }
 
-            Assert.AreEqual(@"{""type"":""Point"",""coordinates"":[23.1,32.1],""crs"":{""type"":""name"",""properties"":{""name"":""EPSG:4326""}}}", property);
+            Assert.Equal(@"{""type"":""Point"",""coordinates"":[23.1,32.1],""crs"":{""type"":""name"",""properties"":{""name"":""EPSG:4326""}}}", property);
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryEntityNavigation()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -195,7 +194,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Customers(1)/Orders", UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -212,18 +211,18 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                             }
                             else if (reader.State == ODataReaderState.ResourceSetEnd)
                             {
-                                Assert.IsNotNull(reader.Item as ODataResourceSet);
+                                Assert.NotNull(reader.Item as ODataResourceSet);
                             }
                         }
 
-                        Assert.AreEqual(8, entry.Properties.Single(p => p.Name == "OrderID").Value);
-                        Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                        Assert.Equal(8, entry.Properties.Single(p => p.Name == "OrderID").Value);
+                        Assert.Equal(ODataReaderState.Completed, reader.State);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryEntityNavigationWithImplicitKeys()
         {
             // test Uri's
@@ -245,7 +244,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                     var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + testCase, UriKind.Absolute));
                     requestMessage.SetHeader("Accept", mimeType);
                     var responseMessage = requestMessage.GetResponse();
-                    Assert.AreEqual(200, responseMessage.StatusCode);
+                    Assert.Equal(200, responseMessage.StatusCode);
 
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
@@ -262,17 +261,17 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                                 }
                             }
 
-                            Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                            Assert.Equal(ODataReaderState.Completed, reader.State);
                         }
 
-                        Assert.IsTrue(entry.Id.OriginalString.EndsWith("ProductDetails(ProductID=5,ProductDetailID=3)") ||
+                        Assert.True(entry.Id.OriginalString.EndsWith("ProductDetails(ProductID=5,ProductDetailID=3)") ||
                                         entry.Id.OriginalString.EndsWith("ProductReviews(ProductID=5,ProductDetailID=2,ReviewTitle='So%20so',RevisionID=1)"));
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryEntityPropertyValue()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -281,16 +280,16 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             requestMessage.SetHeader("Accept", "*/*");
 
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
 
             using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
             {
                 var propertyValue = messageReader.ReadValue(EdmCoreModel.Instance.GetString(false));
-                Assert.AreEqual("Bob", propertyValue);
+                Assert.Equal("Bob", propertyValue);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryCount()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -299,16 +298,16 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             requestMessage.SetHeader("Accept", "*/*");
 
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
 
             using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
             {
                 var count = messageReader.ReadValue(EdmCoreModel.Instance.GetInt32(false));
-                Assert.AreEqual(2, count);
+                Assert.Equal(2, count);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryWithFilter()
         {
             // test Uri and expected resulting PersonID
@@ -327,7 +326,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             this.SendRequestAndVerifyResponse(testCases);
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryWithParameterAliasInFilter()
         {
             // test Uri and expected resulting PersonID
@@ -353,7 +352,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                     var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + testCase.Key, UriKind.Absolute));
                     requestMessage.SetHeader("Accept", mimeType);
                     var responseMessage = requestMessage.GetResponse();
-                    Assert.AreEqual(200, responseMessage.StatusCode);
+                    Assert.Equal(200, responseMessage.StatusCode);
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
                         ODataResource entry = null;
@@ -369,20 +368,20 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                                 }
                                 else if (reader.State == ODataReaderState.ResourceSetEnd)
                                 {
-                                    Assert.IsNotNull(reader.Item as ODataResourceSet);
+                                    Assert.NotNull(reader.Item as ODataResourceSet);
                                 }
                             }
                         }
 
-                        Assert.IsNotNull(entry);
-                        Assert.AreEqual(testCase.Value, entry.Properties.Single(p => p.Name == "PersonID").Value,
-                            String.Format("Mime:{0},URL:{1}", mimeType, testCase.Key));
+                        Assert.NotNull(entry);
+                        //String.Format("Mime:{0},URL:{1}", mimeType, testCase.Key)
+                        Assert.Equal(testCase.Value, entry.Properties.Single(p => p.Name == "PersonID").Value);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryWithExpand()
         {
             Dictionary<string, bool> testCases = new Dictionary<string, bool>()
@@ -400,7 +399,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                     var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + testCase.Key, UriKind.Absolute));
                     requestMessage.SetHeader("Accept", mimeType);
                     var responseMessage = requestMessage.GetResponse();
-                    Assert.AreEqual(200, responseMessage.StatusCode);
+                    Assert.Equal(200, responseMessage.StatusCode);
 
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
@@ -426,27 +425,27 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                                 }
                             }
 
-                            Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                            Assert.Equal(ODataReaderState.Completed, reader.State);
 
-                            Assert.IsTrue(navigationLinks.Count > 0);
+                            Assert.True(navigationLinks.Count > 0);
 
                             var order = entries.FirstOrDefault(e => e != null && e.Id != null && e.Id.AbsoluteUri.Contains("Orders"));
-                            Assert.IsNotNull(order);
-                            Assert.AreEqual(8, order.Properties.Single(p => p.Name == "OrderID").Value);
+                            Assert.NotNull(order);
+                            Assert.Equal(8, order.Properties.Single(p => p.Name == "OrderID").Value);
 
                             var customer = entries.FirstOrDefault(e => e.Id != null && e.Id.AbsoluteUri.Contains("Customers"));
-                            Assert.IsNotNull(customer);
-                            Assert.AreEqual(1, customer.Properties.Single(p => p.Name == "PersonID").Value);
+                            Assert.NotNull(customer);
+                            Assert.Equal(1, customer.Properties.Single(p => p.Name == "PersonID").Value);
 
                             if (testCase.Value /*single property selected*/)
                             {
-                                Assert.AreEqual(1, order.Properties.Count());
-                                Assert.AreEqual(1, customer.Properties.Count());
+                                Assert.Equal(1, order.Properties.Count());
+                                Assert.Equal(1, customer.Properties.Count());
                             }
                             else
                             {
-                                Assert.IsTrue(order.Properties.Count() > 1);
-                                Assert.IsTrue(customer.Properties.Count() > 1);
+                                Assert.True(order.Properties.Count() > 1);
+                                Assert.True(customer.Properties.Count() > 1);
                             }
                         }
                     }
@@ -454,7 +453,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryWithSelect()
         {
             Dictionary<string, int> testCases = new Dictionary<string, int>()
@@ -471,7 +470,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                     var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + testCase.Key, UriKind.Absolute));
                     requestMessage.SetHeader("Accept", mimeType);
                     var responseMessage = requestMessage.GetResponse();
-                    Assert.AreEqual(200, responseMessage.StatusCode);
+                    Assert.Equal(200, responseMessage.StatusCode);
 
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
@@ -486,27 +485,27 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                                     ODataResource entry = reader.Item as ODataResource;
                                     if (entry != null && entry.TypeName.EndsWith("Customer"))
                                     {
-                                        Assert.IsNotNull(entry.Properties.Single(p => p.Name == "PersonID").Value);
-                                        Assert.IsNotNull(entry.Properties.Single(p => p.Name == "FirstName").Value);
-                                        Assert.AreEqual(testCase.Value, entry.Properties.Count());
+                                        Assert.NotNull(entry.Properties.Single(p => p.Name == "PersonID").Value);
+                                        Assert.NotNull(entry.Properties.Single(p => p.Name == "FirstName").Value);
+                                        Assert.Equal(testCase.Value, entry.Properties.Count());
                                         count++;
                                     }
                                 }
                                 else if (reader.State == ODataReaderState.ResourceSetEnd)
                                 {
-                                    Assert.IsNotNull(reader.Item as ODataResourceSet);
+                                    Assert.NotNull(reader.Item as ODataResourceSet);
                                 }
                             }
 
-                            Assert.AreEqual(ODataReaderState.Completed, reader.State);
-                            Assert.IsTrue(count > 0, "No entry is returned.");
+                            Assert.Equal(ODataReaderState.Completed, reader.State);
+                            Assert.True(count > 0, "No entry is returned.");
                         }
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryWithOrderBy()
         {
             Dictionary<string, int> testCases = new Dictionary<string, int>()
@@ -524,7 +523,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                     var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + testCase.Key, UriKind.Absolute));
                     requestMessage.SetHeader("Accept", mimeType);
                     var responseMessage = requestMessage.GetResponse();
-                    Assert.AreEqual(200, responseMessage.StatusCode);
+                    Assert.Equal(200, responseMessage.StatusCode);
 
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
@@ -575,9 +574,9 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                                 }
                             }
                         }
-                        Assert.IsNotNull(feed);
+                        Assert.NotNull(feed);
 
-                        Assert.AreEqual(testCase.Value,
+                        Assert.Equal(testCase.Value,
                             String.Compare(
                             entry1.Properties.Single(p => p.Name == "PersonID").Value.ToString(),
                             entry2.Properties.Single(p => p.Name == "PersonID").Value.ToString()));
@@ -587,7 +586,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryWithFormat()
         {
 #if (NETCOREAPP1_0 || NETCOREAPP2_0)
@@ -611,10 +610,10 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + testCase.Key, UriKind.Absolute));
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 string contentType = responseMessage.Headers.FirstOrDefault(x => x.Key.Equals("Content-Type")).Value;
-                Assert.IsTrue(contentType.StartsWith(testCase.Value),
+                Assert.True(contentType.StartsWith(testCase.Value),
                     string.Format("contentType is '{0}', when the expected string starts with '{1}'", contentType, testCase.Value));
 
                 using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
@@ -628,28 +627,28 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                             ODataResource entry = reader.Item as ODataResource;
                             if (entry != null && entry.TypeName.EndsWith("Customer"))
                             {
-                                Assert.IsNotNull(entry.Properties.Single(p => p.Name == "PersonID").Value);
+                                Assert.NotNull(entry.Properties.Single(p => p.Name == "PersonID").Value);
                             }
                         }
                     }
 
-                    Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                    Assert.Equal(ODataReaderState.Completed, reader.State);
                 }
             }
         }
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
-        [TestMethod]
+        [Fact]
         public void QueryPropertyWithNullValueFromODataClient()
         {
             TestClientContext.Format.UseJson(Model);
 
             var middleName = TestClientContext.Execute<string>(new Uri(ServiceBaseUri.AbsoluteUri + "/People(5)/MiddleName"));
             List<string> enumResult = middleName.ToList();
-            Assert.AreEqual(0, enumResult.Count);
+            Assert.Equal(0, enumResult.Count);
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryPropertyValueWhichIsNullFromODataClient()
         {
             TestClientContext.Format.UseJson(Model);
@@ -657,11 +656,11 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpWebRequestMessage)eventArgs.RequestMessage).SetHeader("Accept", "text/plain");
             var middleName = TestClientContext.Execute<string>(new Uri(ServiceBaseUri.AbsoluteUri + "/People(5)/MiddleName/$value"));
             List<string> enumResult = middleName.ToList();
-            Assert.AreEqual(0, enumResult.Count);
+            Assert.Equal(0, enumResult.Count);
         }
 #endif
 
-        [TestMethod]
+        [Fact]
         public void QueryDelta()
         {
             Uri deltaLink = null;
@@ -673,7 +672,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             requestMessage.SetHeader("Accept", MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata);
             requestMessage.SetHeader("Prefer", "odata.track-changes");
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
 
             using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
             {
@@ -686,17 +685,17 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                         ODataResource entry = reader.Item as ODataResource;
                         if (entry != null && entry.TypeName.EndsWith("Order"))
                         {
-                            Assert.IsNotNull(entry.Properties.Single(p => p.Name == "OrderID").Value);
+                            Assert.NotNull(entry.Properties.Single(p => p.Name == "OrderID").Value);
                         }
                     }
                     else if (reader.State == ODataReaderState.ResourceSetEnd)
                     {
                         var feed = reader.Item as ODataResourceSet;
-                        Assert.IsNotNull(feed);
+                        Assert.NotNull(feed);
                         deltaLink = feed.DeltaLink;
                     }
                 }
-                Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                Assert.Equal(ODataReaderState.Completed, reader.State);
             }
             #endregion
 
@@ -751,7 +750,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             requestMessage.SetHeader("Accept", MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata);
             requestMessage.SetHeader("Prefer", "odata.track-changes");
             responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
             #endregion
         }
     }

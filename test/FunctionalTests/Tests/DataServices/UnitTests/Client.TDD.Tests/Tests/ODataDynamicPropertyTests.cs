@@ -8,14 +8,13 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 {
     using Microsoft.OData.Client;
     using Microsoft.OData.Edm;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.IO;
     using System.Linq;
+    using Xunit;
 
-    [TestClass]
     public class ODataDynamicPropertyTests
     {
         private EdmModel serviceEdmModel;
@@ -45,8 +44,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         private DataServiceContext context;
         private IDictionary<string, string> typeNameToEntitySetMapping;
 
-        [TestInitialize]
-        public void Init()
+        public ODataDynamicPropertyTests()
         {
             this.serviceEdmModel = new EdmModel();
 
@@ -254,12 +252,12 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             return materializedObject;
         }
 
-        public void VerifyMessageBody(string expected, string actual)
+        internal void VerifyMessageBody(string expected, string actual)
         {
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
-        [TestMethod]
+        [Fact]
         public void SerializationWithNoDynamicProperty()
         {
             var director = new Director { Id = 1, Name = "Director 1" };
@@ -270,7 +268,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             VerifyMessageBody(expectedResult, messageBody);
         }
 
-        [TestMethod]
+        [Fact]
         public void SerializationWithPrimitiveDynamicProperty()
         {
             var director = new Director { Id = 1, Name = "Director 1" };
@@ -285,7 +283,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             VerifyMessageBody(expectedResult, messageBody);
         }
 
-        [TestMethod]
+        [Fact]
         public void SerializationWithPrimitiveCollectionDynamicProperty()
         {
             var director = new Director { Id = 1, Name = "Director 1" };
@@ -300,7 +298,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             VerifyMessageBody(expectedResult, messageBody);
         }
 
-        [TestMethod]
+        [Fact]
         public void SerializationWithEnumDynamicProperty()
         {
             var director = new Director { Id = 1, Name = "Director 1" };
@@ -315,7 +313,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             VerifyMessageBody(expectedResult, messageBody);
         }
 
-        [TestMethod]
+        [Fact]
         public void SerializationWithEnumCollectionDynamicProperty()
         {
             var director = new Director { Id = 1, Name = "Director 1" };
@@ -330,7 +328,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             VerifyMessageBody(expectedResult, messageBody);
         }
 
-        [TestMethod]
+        [Fact]
         public void SerializationWithComplexDynamicProperty()
         {
             var director = new Director { Id = 1, Name = "Director 1" };
@@ -345,7 +343,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             VerifyMessageBody(expectedResult, messageBody);
         }
 
-        [TestMethod]
+        [Fact]
         public void SerializationWithComplexCollectionDynamicProperty()
         {
             var director = new Director { Id = 1, Name = "Director 1" };
@@ -364,7 +362,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             VerifyMessageBody(expectedResult, messageBody);
         }
 
-        [TestMethod]
+        [Fact]
         public void SerializationWithComplexDynamicPropertyWithNestedComplexProperty()
         {
             var director = new Director { Id = 1, Name = "Director 1" };
@@ -379,7 +377,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             VerifyMessageBody(expectedResult, messageBody);
         }
 
-        [TestMethod]
+        [Fact]
         public void SerializationWithDynamicPropertyWithDynamicProperty()
         {
             // Address object with dynamic property
@@ -398,7 +396,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             VerifyMessageBody(expectedResult, messageBody);
         }
 
-        [TestMethod]
+        [Fact]
         public void SerializationWithDiverseDynamicProperties()
         {
             var director = new Director { Id = 1, Name = "Director 1" };
@@ -436,7 +434,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             VerifyMessageBody(expectedResult, messageBody);
         }
 
-        [TestMethod]
+        [Fact]
         public void SerializationIgnoresDynamicPropertyIfNameConflictsWithDeclaredProperty()
         {
             var director = new Director { Id = 1, Name = "Director 1" };
@@ -449,7 +447,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             VerifyMessageBody(expectedResult, messageBody);
         }
 
-        [TestMethod]
+        [Fact]
         public void SerializationIgnoresEntityTypeAsDynamicProperty()
         {
             var director = new Director { Id = 1, Name = "Director 1" };
@@ -462,7 +460,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             VerifyMessageBody(expectedResult, messageBody);
         }
 
-        [TestMethod]
+        [Fact]
         public void SerializationIgnoresDictionaryWithNoContainerPropertyAttribute()
         {
             var editor = new Editor { Id = 1, Name = "Editor 1" };
@@ -475,7 +473,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             VerifyMessageBody(expectedResult, messageBody);
         }
 
-        [TestMethod]
+        [Fact]
         public void SerializationIgnoresContainerPropertyIfEdmTypeIsNotOpen()
         {
             // Producer is not an open type but client type has a dictionary of string and object
@@ -489,7 +487,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             VerifyMessageBody(expectedResult, messageBody);
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializationWithNoDynamicProperty()
         {
             var rawJsonResponse = "{" +
@@ -499,23 +497,23 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             var materializedObject = MaterializeEntity<Director>(rawJsonResponse);
 
-            Assert.IsNotNull(materializedObject);
-            Assert.AreEqual(materializedObject.Id, 1);
-            Assert.AreEqual(materializedObject.Name, "Director 1");
-            Assert.AreEqual(materializedObject.DynamicProperties.Count, 0);
+            Assert.NotNull(materializedObject);
+            Assert.Equal(1, materializedObject.Id);
+            Assert.Equal("Director 1", materializedObject.Name);
+            Assert.Equal(0, materializedObject.DynamicProperties.Count);
         }
 
         private void AssertCommon(Director materializedObject, Type dynamicPropertyType, string dynamicPropertyName)
         {
-            Assert.IsNotNull(materializedObject);
-            Assert.AreEqual(materializedObject.Id, 1);
-            Assert.AreEqual(materializedObject.Name, "Director 1");
-            Assert.AreEqual(materializedObject.DynamicProperties.Count, 1);
-            Assert.IsTrue(materializedObject.DynamicProperties.ContainsKey(dynamicPropertyName));
-            Assert.IsTrue(materializedObject.DynamicProperties[dynamicPropertyName].GetType() == dynamicPropertyType);
+            Assert.NotNull(materializedObject);
+            Assert.Equal(1, materializedObject.Id);
+            Assert.Equal("Director 1", materializedObject.Name);
+            Assert.Equal(1, materializedObject.DynamicProperties.Count);
+            Assert.True(materializedObject.DynamicProperties.ContainsKey(dynamicPropertyName));
+            Assert.True(materializedObject.DynamicProperties[dynamicPropertyName].GetType() == dynamicPropertyType);
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializationWithPrimitiveDynamicProperty()
         {
             var rawJsonResponse = "{" +
@@ -527,10 +525,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             var materializedObject = MaterializeEntity<Director>(rawJsonResponse);
 
             AssertCommon(materializedObject, typeof(string), "Title");
-            Assert.AreEqual(materializedObject.DynamicProperties["Title"], "Prof");
+            Assert.Equal("Prof", materializedObject.DynamicProperties["Title"]);
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializationWithPrimitiveCollectionDynamicProperty()
         {
             var rawJsonResponse = "{" +
@@ -543,13 +541,13 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             AssertCommon(materializedObject, typeof(Collection<string>), "NickNames");
             var primitiveValueCollection = materializedObject.DynamicProperties["NickNames"] as Collection<string>;
-            Assert.IsNotNull(primitiveValueCollection);
-            Assert.AreEqual(primitiveValueCollection.Count, 2);
-            Assert.IsTrue(primitiveValueCollection.Contains("N1", StringComparer.Ordinal));
-            Assert.IsTrue(primitiveValueCollection.Contains("N2", StringComparer.Ordinal));
+            Assert.NotNull(primitiveValueCollection);
+            Assert.Equal(2, primitiveValueCollection.Count);
+            Assert.Contains("N1", primitiveValueCollection, StringComparer.Ordinal);
+            Assert.Contains("N2", primitiveValueCollection, StringComparer.Ordinal);
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializationWithEnumDynamicProperty()
         {
             var rawJsonResponse = "{" +
@@ -561,10 +559,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             var materializedObject = MaterializeEntity<Director>(rawJsonResponse);
 
             AssertCommon(materializedObject, typeof(Genre), "FavoriteGenre");
-            Assert.AreEqual(materializedObject.DynamicProperties["FavoriteGenre"], Genre.SciFi);
+            Assert.Equal(Genre.SciFi, materializedObject.DynamicProperties["FavoriteGenre"]);
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializationWithEnumCollectionDynamicProperty()
         {
             var rawJsonResponse = "{" +
@@ -577,13 +575,13 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             AssertCommon(materializedObject, typeof(Collection<Genre>), "Genres");
             var enumValueCollection = materializedObject.DynamicProperties["Genres"] as Collection<Genre>;
-            Assert.IsNotNull(enumValueCollection);
-            Assert.AreEqual(enumValueCollection.Count, 2);
-            Assert.IsTrue(enumValueCollection.Contains(Genre.Epic));
-            Assert.IsTrue(enumValueCollection.Contains(Genre.Thriller));
+            Assert.NotNull(enumValueCollection);
+            Assert.Equal(2, enumValueCollection.Count);
+            Assert.Contains(Genre.Epic, enumValueCollection);
+            Assert.Contains(Genre.Thriller, enumValueCollection);
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializationWithComplexDynamicProperty()
         {
             var rawJsonResponse = "{" +
@@ -596,13 +594,13 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             AssertCommon(materializedObject, typeof(Address), "WorkAddress");
             var workAddress = materializedObject.DynamicProperties["WorkAddress"] as Address;
-            Assert.IsNotNull(workAddress);
-            Assert.AreEqual(workAddress.AddressLine, "AL1");
-            Assert.AreEqual(workAddress.City, "C1");
-            Assert.AreEqual(workAddress.DynamicProperties.Count, 0);
+            Assert.NotNull(workAddress);
+            Assert.Equal("AL1", workAddress.AddressLine);
+            Assert.Equal("C1", workAddress.City);
+            Assert.Equal(0, workAddress.DynamicProperties.Count);
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializationWithComplexCollectionDynamicProperty()
         {
             var rawJsonResponse = "{" +
@@ -617,21 +615,21 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             AssertCommon(materializedObject, typeof(Collection<Address>), "Addresses");
             var addresses = materializedObject.DynamicProperties["Addresses"] as Collection<Address>;
-            Assert.IsNotNull(addresses);
-            Assert.AreEqual(addresses.Count, 2);
+            Assert.NotNull(addresses);
+            Assert.Equal(2, addresses.Count);
             var address1 = addresses.SingleOrDefault(d => d.AddressLine.Equals("AL2", StringComparison.Ordinal));
             var address2 = addresses.SingleOrDefault(d => d.AddressLine.Equals("AL3", StringComparison.Ordinal));
-            Assert.IsNotNull(address1);
-            Assert.AreEqual(address1.AddressLine, "AL2");
-            Assert.AreEqual(address1.City, "C2");
-            Assert.AreEqual(address1.DynamicProperties.Count, 0);
-            Assert.IsNotNull(address2);
-            Assert.AreEqual(address2.AddressLine, "AL3");
-            Assert.AreEqual(address2.City, "C3");
-            Assert.AreEqual(address2.DynamicProperties.Count, 0);
+            Assert.NotNull(address1);
+            Assert.Equal("AL2", address1.AddressLine);
+            Assert.Equal("C2", address1.City);
+            Assert.Equal(0, address1.DynamicProperties.Count);
+            Assert.NotNull(address2);
+            Assert.Equal("AL3", address2.AddressLine);
+            Assert.Equal("C3", address2.City);
+            Assert.Equal(0, address2.DynamicProperties.Count);
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializationWithComplexDynamicPropertyWithNestedComplexProperty()
         {
             var rawJsonResponse = "{" +
@@ -644,15 +642,15 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             AssertCommon(materializedObject, typeof(NextOfKin), "NextOfKin");
             var nextOfKin = materializedObject.DynamicProperties["NextOfKin"] as NextOfKin;
-            Assert.IsNotNull(nextOfKin);
-            Assert.AreEqual(nextOfKin.Name, "Nok 1");
-            Assert.IsNotNull(nextOfKin.HomeAddress);
-            Assert.AreEqual(nextOfKin.HomeAddress.AddressLine, "AL4");
-            Assert.AreEqual(nextOfKin.HomeAddress.City, "C4");
-            Assert.AreEqual(nextOfKin.HomeAddress.DynamicProperties.Count, 0);
+            Assert.NotNull(nextOfKin);
+            Assert.Equal("Nok 1", nextOfKin.Name);
+            Assert.NotNull(nextOfKin.HomeAddress);
+            Assert.Equal("AL4", nextOfKin.HomeAddress.AddressLine);
+            Assert.Equal("C4", nextOfKin.HomeAddress.City);
+            Assert.Equal(0, nextOfKin.HomeAddress.DynamicProperties.Count);
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializationWithDynamicPropertyWithDynamicProperty()
         {
             var rawJsonResponse = "{" +
@@ -665,16 +663,16 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             AssertCommon(materializedObject, typeof(Address), "WorkAddress");
             var workAddress = materializedObject.DynamicProperties["WorkAddress"] as Address;
-            Assert.IsNotNull(workAddress);
-            Assert.AreEqual(workAddress.AddressLine, "AL5");
-            Assert.AreEqual(workAddress.City, "C5");
-            Assert.AreEqual(workAddress.DynamicProperties.Count, 1);
-            Assert.IsTrue(workAddress.DynamicProperties.ContainsKey("State"));
-            Assert.IsTrue(workAddress.DynamicProperties["State"].GetType() == typeof(string));
-            Assert.AreEqual(workAddress.DynamicProperties["State"], "S5");
+            Assert.NotNull(workAddress);
+            Assert.Equal("AL5", workAddress.AddressLine);
+            Assert.Equal("C5", workAddress.City);
+            Assert.Equal(1, workAddress.DynamicProperties.Count);
+            Assert.True(workAddress.DynamicProperties.ContainsKey("State"));
+            Assert.True(workAddress.DynamicProperties["State"].GetType() == typeof(string));
+            Assert.Equal("S5", workAddress.DynamicProperties["State"]);
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializationWithDiverseDynamicProperties()
         {
             var rawJsonResponse = "{" +
@@ -696,24 +694,24 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             var materializedObject = MaterializeEntity<Director>(rawJsonResponse);
 
-            Assert.IsNotNull(materializedObject);
-            Assert.AreEqual(materializedObject.DynamicProperties.Count, 11);
+            Assert.NotNull(materializedObject);
+            Assert.Equal(11, materializedObject.DynamicProperties.Count);
 
             var dynamicProperties = materializedObject.DynamicProperties;
-            Assert.IsTrue(dynamicProperties.ContainsKey("Title") && dynamicProperties["Title"].GetType() == typeof(string));
-            Assert.IsTrue(dynamicProperties.ContainsKey("YearOfBirth") && dynamicProperties["YearOfBirth"].GetType() == typeof(int));
-            Assert.IsTrue(dynamicProperties.ContainsKey("Salary") && dynamicProperties["Salary"].GetType() == typeof(decimal));
-            Assert.IsTrue(dynamicProperties.ContainsKey("Pi") && dynamicProperties["Pi"].GetType() == typeof(double));
-            Assert.IsTrue(dynamicProperties.ContainsKey("BigInt") && dynamicProperties["BigInt"].GetType() == typeof(long));
-            Assert.IsTrue(dynamicProperties.ContainsKey("NickNames") && dynamicProperties["NickNames"].GetType() == typeof(Collection<string>));
-            Assert.IsTrue(dynamicProperties.ContainsKey("FavoriteGenre") && dynamicProperties["FavoriteGenre"].GetType() == typeof(Genre));
-            Assert.IsTrue(dynamicProperties.ContainsKey("Genres") && dynamicProperties["Genres"].GetType() == typeof(Collection<Genre>));
-            Assert.IsTrue(dynamicProperties.ContainsKey("WorkAddress") && dynamicProperties["WorkAddress"].GetType() == typeof(Address));
-            Assert.IsTrue(dynamicProperties.ContainsKey("Addresses") && dynamicProperties["Addresses"].GetType() == typeof(Collection<Address>));
-            Assert.IsTrue(dynamicProperties.ContainsKey("NextOfKin") && dynamicProperties["NextOfKin"].GetType() == typeof(NextOfKin));
+            Assert.True(dynamicProperties.ContainsKey("Title") && dynamicProperties["Title"].GetType() == typeof(string));
+            Assert.True(dynamicProperties.ContainsKey("YearOfBirth") && dynamicProperties["YearOfBirth"].GetType() == typeof(int));
+            Assert.True(dynamicProperties.ContainsKey("Salary") && dynamicProperties["Salary"].GetType() == typeof(decimal));
+            Assert.True(dynamicProperties.ContainsKey("Pi") && dynamicProperties["Pi"].GetType() == typeof(double));
+            Assert.True(dynamicProperties.ContainsKey("BigInt") && dynamicProperties["BigInt"].GetType() == typeof(long));
+            Assert.True(dynamicProperties.ContainsKey("NickNames") && dynamicProperties["NickNames"].GetType() == typeof(Collection<string>));
+            Assert.True(dynamicProperties.ContainsKey("FavoriteGenre") && dynamicProperties["FavoriteGenre"].GetType() == typeof(Genre));
+            Assert.True(dynamicProperties.ContainsKey("Genres") && dynamicProperties["Genres"].GetType() == typeof(Collection<Genre>));
+            Assert.True(dynamicProperties.ContainsKey("WorkAddress") && dynamicProperties["WorkAddress"].GetType() == typeof(Address));
+            Assert.True(dynamicProperties.ContainsKey("Addresses") && dynamicProperties["Addresses"].GetType() == typeof(Collection<Address>));
+            Assert.True(dynamicProperties.ContainsKey("NextOfKin") && dynamicProperties["NextOfKin"].GetType() == typeof(NextOfKin));
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializationIgnoresEntityTypeAsDynamicProperty()
         {
             // NOTE: Whether entity type as a dynamic property is currently supported is a different matter altogether
@@ -724,10 +722,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                 "}";
 
             var materializedObject = MaterializeEntity<Director>(rawJsonResponse);
-            Assert.AreEqual(materializedObject.DynamicProperties.Count, 0);
+            Assert.Equal(0, materializedObject.DynamicProperties.Count);
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializationIgnoresDictionaryWithNoContainerPropertyAttribute()
         {
             var rawJsonResponse = "{" +
@@ -737,10 +735,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                 "}";
 
             var materializedObject = MaterializeEntity<Editor>(rawJsonResponse);
-            Assert.AreEqual(materializedObject.DynamicProperties.Count, 0);
+            Assert.Equal(0, materializedObject.DynamicProperties.Count);
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializationWithContainerPropertyNotPreInitialized()
         {
             var rawJsonResponse = "{" +
@@ -754,17 +752,17 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             var materializedObject = MaterializeEntity<Actor>(rawJsonResponse);
 
-            Assert.IsNotNull(materializedObject);
+            Assert.NotNull(materializedObject);
             // Dictionary should have been dynamically initialized
-            Assert.IsNotNull(materializedObject.DynamicProperties);
+            Assert.NotNull(materializedObject.DynamicProperties);
             // Total of 5 declared properties on the client type. We should only have 1 dynamic property in the dictionary
-            Assert.AreEqual(materializedObject.DynamicProperties.Count, 1);
-            Assert.IsTrue(materializedObject.DynamicProperties.ContainsKey("FavoriteGenre"));
-            Assert.IsTrue(materializedObject.DynamicProperties["FavoriteGenre"].GetType() == typeof(Genre));
-            Assert.AreEqual(materializedObject.DynamicProperties["FavoriteGenre"], Genre.SciFi);
+            Assert.Equal(1, materializedObject.DynamicProperties.Count);
+            Assert.True(materializedObject.DynamicProperties.ContainsKey("FavoriteGenre"));
+            Assert.True(materializedObject.DynamicProperties["FavoriteGenre"].GetType() == typeof(Genre));
+            Assert.Equal(Genre.SciFi, materializedObject.DynamicProperties["FavoriteGenre"]);
         }
 
-        [TestMethod]
+        [Fact]
         public void MaterializationWithPartDynamicPropertiesMappedToDeclaredPropertiesOnClientType()
         {
             var rawJsonResponse = "{" +
@@ -779,20 +777,20 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             var materializedObject = MaterializeEntity<Actor>(rawJsonResponse);
 
-            Assert.IsNotNull(materializedObject);
+            Assert.NotNull(materializedObject);
             // Declared properties mapped to declared properties on client type
-            Assert.AreEqual(materializedObject.Title, "Mr");
-            Assert.IsTrue(materializedObject.Genres.Contains(Genre.Epic));
-            Assert.IsTrue(materializedObject.Genres.Contains(Genre.Thriller));
-            Assert.AreEqual(materializedObject.WorkAddress.AddressLine, "AL1");
-            Assert.AreEqual(materializedObject.WorkAddress.City, "C1");
+            Assert.Equal("Mr", materializedObject.Title);
+            Assert.Contains(Genre.Epic, materializedObject.Genres);
+            Assert.Contains(Genre.Thriller, materializedObject.Genres);
+            Assert.Equal("AL1", materializedObject.WorkAddress.AddressLine);
+            Assert.Equal("C1", materializedObject.WorkAddress.City);
             // Dictionary should only have 3 dynamic properties
-            Assert.AreEqual(materializedObject.DynamicProperties.Count, 3);
+            Assert.Equal(3, materializedObject.DynamicProperties.Count);
 
             var dynamicProperties = materializedObject.DynamicProperties;
-            Assert.IsTrue(dynamicProperties.ContainsKey("NickNames") && dynamicProperties["NickNames"].GetType() == typeof(Collection<string>));
-            Assert.IsTrue(dynamicProperties.ContainsKey("FavoriteGenre") && dynamicProperties["FavoriteGenre"].GetType() == typeof(Genre));
-            Assert.IsTrue(dynamicProperties.ContainsKey("NextOfKin") && dynamicProperties["NextOfKin"].GetType() == typeof(NextOfKin));
+            Assert.True(dynamicProperties.ContainsKey("NickNames") && dynamicProperties["NickNames"].GetType() == typeof(Collection<string>));
+            Assert.True(dynamicProperties.ContainsKey("FavoriteGenre") && dynamicProperties["FavoriteGenre"].GetType() == typeof(Genre));
+            Assert.True(dynamicProperties.ContainsKey("NextOfKin") && dynamicProperties["NextOfKin"].GetType() == typeof(NextOfKin));
         }
 
         public enum Genre

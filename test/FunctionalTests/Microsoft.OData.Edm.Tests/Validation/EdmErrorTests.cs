@@ -25,7 +25,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
         new List<object[]>
         {
             new object[] { null, EdmErrorCode.AlreadyDefined, "Already Defined", Severity.Error},
-            new object[] { null, EdmErrorCode.BadAmbiguousElementBinding, "Bad Ambiguous Element Binding", Severity.Message},
+            new object[] { null, EdmErrorCode.BadAmbiguousElementBinding, "Bad Ambiguous Element Binding", Severity.Info},
             new object[] { null, EdmErrorCode.BadUnresolvedEntitySet, "Bad Unresolved Entity Set", Severity.Warning},
         };
 
@@ -41,7 +41,6 @@ namespace Microsoft.OData.Edm.Tests.Validation
         new List<object[]>
         {
             new object[] { new CsdlLocation(3, 2), EdmErrorCode.BadUnresolvedTerm, "Bad Unresolved Term"},
-            new object[] { new CsdlLocation(7, 19), EdmErrorCode.ComplexTypeMustHaveProperties, "Complex Type Must Have Properties" },
             new object[] { new CsdlLocation(11, 2), EdmErrorCode.DeclaringTypeMustBeCorrect, "Declaring Type Must Be Correct"},
         };
 
@@ -58,7 +57,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
         {
             new object[] { new CsdlLocation(1, 2), EdmErrorCode.EnumMemberMustHaveValue, "Enum Member Must Have Value", Severity.Error},
             new object[] { new CsdlLocation(3, 2), EdmErrorCode.AllNavigationPropertiesMustBeMapped, "All Navigation Properties Must Be Mapped", Severity.Warning },
-            new object[] { new CsdlLocation(7, 2), EdmErrorCode.BadCyclicComplex, "Bad Cyclic Complex", Severity.Message},
+            new object[] { new CsdlLocation(7, 2), EdmErrorCode.BadCyclicComplex, "Bad Cyclic Complex", Severity.Info},
         };
 
         [Theory]

@@ -11,12 +11,11 @@ namespace Microsoft.Test.OData.Tests.Client.RegressionTests
     using Microsoft.OData.Edm;
     using Microsoft.OData;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class ODataLibRegressionTests
     {
-        [TestMethod]
+        [Fact]
         public void WriterShouldNotIncludeTypeNameForCollectionOfDerivedType()
         {
             // JSON Light: writer doesn't include type name for collection of derived type
@@ -70,7 +69,7 @@ namespace Microsoft.Test.OData.Tests.Client.RegressionTests
 
             message.Stream.Position = 0;
             var output = new StreamReader(message.Stream).ReadToEnd();
-            Assert.IsFalse(output.Contains("Collection(Edm.GeographyPoint)"), @"output.Contains(""Collection(Edm.GeographyPoint)"" == false");
+            Assert.False(output.Contains("Collection(Edm.GeographyPoint)"), @"output.Contains(""Collection(Edm.GeographyPoint)"" == false");
         }
     }
 }

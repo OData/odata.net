@@ -14,11 +14,15 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
     using Microsoft.OData;
     using Microsoft.Test.OData.Framework.Verification;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit.Abstractions;
+    using Xunit;
 
-    [TestClass]
     public class SerializationInfoEdgeTests : WritePayloadTests
     {
+        public SerializationInfoEdgeTests(ITestOutputHelper helper)
+            : base(helper)
+        {
+        }
         protected List<string> testMimeTypes = new List<string>()
             {
                 MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata,
@@ -30,7 +34,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         /// Write payloads without model or serialization info.
         /// Note that ODL will succeed if writing requests or writing nometadata reponses.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void WriteWithoutSerializationInfo()
         {
             foreach (var mimeType in this.testMimeTypes)
@@ -91,7 +95,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
                         Stream stream = responseMessageWithoutModel.GetStream();
-                        Assert.IsTrue(WritePayloadHelper.ReadStreamContent(stream).Contains("$metadata#$ref"));
+                        Assert.True(WritePayloadHelper.ReadStreamContent(stream).Contains("$metadata#$ref"));
                     }
                 }
 
@@ -113,7 +117,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
                         Stream stream = responseMessageWithoutModel.GetStream();
-                        Assert.IsTrue(WritePayloadHelper.ReadStreamContent(stream).Contains("$metadata#Collection($ref)"));
+                        Assert.True(WritePayloadHelper.ReadStreamContent(stream).Contains("$metadata#Collection($ref)"));
                     }
 
                 }
@@ -129,7 +133,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     odataWriter.WriteStart(entry);
                     odataWriter.WriteEnd();
                     Stream stream = requestMessageWithoutModel.GetStream();
-                    Assert.IsTrue(WritePayloadHelper.ReadStreamContent(stream).Contains("Person(-5)\",\"PersonId\":-5,\"Name\":\"xhsdckkeqzvlnprheujeycqrglfehtdocildrequohlffazfgtvmddyqsaxrojqxrsckohrakdxlrghgmzqnyruzu\""));
+                    Assert.Contains("Person(-5)\",\"PersonId\":-5,\"Name\":\"xhsdckkeqzvlnprheujeycqrglfehtdocildrequohlffazfgtvmddyqsaxrojqxrsckohrakdxlrghgmzqnyruzu\"", WritePayloadHelper.ReadStreamContent(stream));
                 }
             }
         }
@@ -137,7 +141,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         /// <summary>
         /// Specify serialization info for both feed and entry should fail.
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void SpecifySerializationInfoForFeedAndEntry()
         {
             foreach (var mimeType in this.testMimeTypes)
@@ -179,12 +183,12 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     string result = WritePayloadHelper.ReadStreamContent(stream);
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
-                        Assert.IsTrue(result.Contains(NameSpace + "Employee"));
-                        Assert.IsTrue(result.Contains("$metadata#Person"));
+                        Assert.True(result.Contains(NameSpace + "Employee"));
+                        Assert.True(result.Contains("$metadata#Person"));
                     }
                     else
                     {
-                        Assert.IsFalse(result.Contains(NameSpace + "Employee"));
+                        Assert.False(result.Contains(NameSpace + "Employee"));
                     }
                 }
             }
@@ -193,7 +197,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         /// <summary>
         /// Write response payload with serialization info containing wrong values
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void WriteEntryWithWrongSerializationInfo()
         {
             foreach (var mimeType in this.testMimeTypes)
@@ -213,16 +217,16 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     odataWriter.WriteStart(entry);
                     odataWriter.WriteEnd();
                     var result = WritePayloadHelper.ReadStreamContent(responseMessageWithoutModel.GetStream());
-                    Assert.IsTrue(result.Contains("\"PersonId\":-5"));
+                    Assert.True(result.Contains("\"PersonId\":-5"));
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
                         // no metadata does not write odata.metadata
-                        Assert.IsTrue(result.Contains("$metadata#Parsen/$entity"));
-                        Assert.IsTrue(result.Contains("Person(-5)\",\"PersonId\":-5"));
+                        Assert.True(result.Contains("$metadata#Parsen/$entity"));
+                        Assert.True(result.Contains("Person(-5)\",\"PersonId\":-5"));
                     }
                     else
                     {
-                        Assert.IsFalse(result.Contains("Person(-5)\",\"PersonId\":-5"));
+                        Assert.False(result.Contains("Person(-5)\",\"PersonId\":-5"));
                     }
                 }
 
@@ -241,16 +245,16 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     odataWriter.WriteEnd();
                     odataWriter.WriteEnd();
                     var result = WritePayloadHelper.ReadStreamContent(responseMessageWithoutModel.GetStream());
-                    Assert.IsTrue(result.Contains("\"PersonId\":-5"));
+                    Assert.Contains("\"PersonId\":-5", result);
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
                         // no metadata does not write odata.metadata
-                        Assert.IsTrue(result.Contains("$metadata#Parsen\""));
-                        Assert.IsTrue(result.Contains("Person(-5)\",\"PersonId\":-5"));
+                        Assert.Contains("$metadata#Parsen\"", result);
+                        Assert.Contains("Person(-5)\",\"PersonId\":-5", result);
                     }
                     else
                     {
-                        Assert.IsFalse(result.Contains("Person(-5)\",\"PersonId\":-5"));
+                        Assert.DoesNotContain("Person(-5)\",\"PersonId\":-5", result);
                     }
                 }
 
@@ -278,14 +282,14 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
                         // [{"@odata.type":"#Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails","EmailBag@odata.type":"#Collection(String)"...
-                        Assert.IsTrue(result.Contains("\"value\":[{\"@odata.type\":\"#Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails\",\"EmailBag"));
+                        Assert.True(result.Contains("\"value\":[{\"@odata.type\":\"#Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails\",\"EmailBag"));
 
                         // no metadata does not write odata.metadata
-                        Assert.IsTrue(result.Contains("$metadata#Collection(" + NameSpace + "ContactDETAIL)"));
+                        Assert.True(result.Contains("$metadata#Collection(" + NameSpace + "ContactDETAIL)"));
                     }
                     else
                     {
-                        Assert.IsFalse(result.Contains("\"@odata.type\":\"#Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails\""));
+                        Assert.False(result.Contains("\"@odata.type\":\"#Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails\""));
                     }
                 }
 
@@ -300,11 +304,11 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     var link = new ODataEntityReferenceLink() { Url = new Uri(this.ServiceUri + "Order(-10)") };
                     messageWriter.WriteEntityReferenceLink(link);
                     var result = WritePayloadHelper.ReadStreamContent(responseMessageWithoutModel.GetStream());
-                    Assert.IsTrue(result.Contains(this.ServiceUri + "Order(-10)"));
+                    Assert.True(result.Contains(this.ServiceUri + "Order(-10)"));
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
                         // no metadata does not write odata.context
-                        Assert.IsTrue(result.Contains("$metadata#$ref"));
+                        Assert.True(result.Contains("$metadata#$ref"));
                     }
                 }
 
@@ -323,11 +327,11 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
                     messageWriter.WriteEntityReferenceLinks(links);
                     var result = WritePayloadHelper.ReadStreamContent(responseMessageWithoutModel.GetStream());
-                    Assert.IsTrue(result.Contains(this.ServiceUri + "Order(-10)"));
+                    Assert.True(result.Contains(this.ServiceUri + "Order(-10)"));
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
                         // no metadata does not write odata.metadata
-                        Assert.IsTrue(result.Contains("$metadata#Collection($ref)"));
+                        Assert.True(result.Contains("$metadata#Collection($ref)"));
                     }
                 }
             }
@@ -336,7 +340,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         /// <summary>
         /// Provide EDM model, and then write an entry with wrong serialization info
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void WriteEntryWithWrongSerializationInfoWithModel()
         {
             bool[] autoComputeMetadataBools = new bool[] { true, false, };
@@ -358,11 +362,11 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                         odataWriter.WriteStart(entry);
                         odataWriter.WriteEnd();
                         var result = WritePayloadHelper.ReadStreamContent(responseMessageWithoutModel.GetStream());
-                        Assert.IsTrue(result.Contains("\"PersonId\":-5"));
+                        Assert.True(result.Contains("\"PersonId\":-5"));
                         if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                         {
                             // no metadata does not write odata.metadata
-                            Assert.IsTrue(result.Contains("$metadata#Parsen/$entity"));
+                            Assert.True(result.Contains("$metadata#Parsen/$entity"));
                         }
                     }
                 }
@@ -372,7 +376,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         /// <summary>
         /// Change serialization info value after WriteStart
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void ChangeSerializationInfoAfterWriteStart()
         {
             foreach (var mimeType in this.testMimeTypes)
@@ -397,7 +401,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     // nometadata option does not write odata.metadata in the payload
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
-                        Assert.IsTrue(WritePayloadHelper.ReadStreamContent(stream).Contains("Person/$entity"));
+                        Assert.True(WritePayloadHelper.ReadStreamContent(stream).Contains("Person/$entity"));
                     }
                 }
             }
@@ -406,7 +410,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         /// <summary>
         /// Do not provide model, but hand craft IEdmEntitySet and IEdmEntityType for writer
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void HandCraftEdmType()
         {
             foreach (var mimeType in this.testMimeTypes)
@@ -442,7 +446,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
-                        Assert.IsTrue(
+                        Assert.True(
                             WritePayloadHelper.ReadStreamContent(responseMessageWithoutModel.GetStream())
                                 .Contains("Person/$entity"));
                     }
@@ -485,11 +489,13 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             try
             {
                 action();
-                Assert.IsNull(expectedError, "Expected exception not thrown");
+                //Expected exception not thrown
+                Assert.Null(expectedError);
             }
             catch (T e)
             {
-                Assert.IsNotNull(expectedError, "Unexpected expection " + e.Message);
+                //Unexpected expection " + e.Message
+                Assert.NotNull(expectedError);
                 StringResourceUtil.VerifyODataLibString(e.Message, expectedError, false /* isExactMatch */);
             }
         }

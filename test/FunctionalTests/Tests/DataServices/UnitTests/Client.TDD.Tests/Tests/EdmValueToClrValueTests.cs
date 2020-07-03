@@ -15,9 +15,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using System.Reflection;
     using FluentAssertions;
     using Microsoft.OData.Edm;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class EdmValueToClrValueTests
     {
         private readonly EdmBooleanConstant booleanValue = new EdmBooleanConstant(EdmCoreModel.Instance.GetBoolean(false), true);
@@ -37,7 +36,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         private readonly EdmDateConstant dateValue = new EdmDateConstant(EdmCoreModel.Instance.GetDate(false), new Date(2014, 8, 14));
         private readonly EdmTimeOfDayConstant timeOfDayValue = new EdmTimeOfDayConstant(EdmCoreModel.Instance.GetTimeOfDay(false), new TimeOfDay(1, 12, 5, 3));
 
-        [TestMethod]
+        [Fact]
         public void AllPrimitiveTypesShouldBeCovered()
         {
             var enumValues = Enum.GetValues(typeof(EdmPrimitiveTypeKind)).Cast<EdmPrimitiveTypeKind>().ToList();
@@ -53,10 +52,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                 enumValues.Remove(value.Type.PrimitiveKind()).Should().BeTrue();
             }
 
-            var testMethods = this.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance)
-                .Where(mi => mi.IsDefined(typeof(TestMethodAttribute), false))
+            var Facts = this.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                .Where(mi => mi.IsDefined(typeof(FactAttribute), false))
                 .Select(m => m.Name);
-            testMethods.Should().Contain(expectedMethods);
+            Facts.Should().Contain(expectedMethods);
 
             enumValues.Select(e => e.ToString())
                 .Should()
@@ -67,103 +66,103 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                     || k == "PrimitiveType");
         }
 
-        [TestMethod]
+        [Fact]
         public void EdmBooleanValueShouldMatch()
         {
             ClrValueShouldMatch(this.booleanValue, this.booleanValue.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void EdmBinaryValueShouldMatch()
         {
             ClrValueShouldMatch(this.binaryValue, this.binaryValue.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void EdmByteValueShouldMatch()
         {
             ClrValueShouldMatch(this.byteValue, (byte)this.byteValue.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void EdmDateTimeOffsetValueShouldMatch()
         {
             ClrValueShouldMatch(this.dateTimeOffsetValue, this.dateTimeOffsetValue.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void EdmDecimalValueShouldMatch()
         {
             ClrValueShouldMatch(this.decimalValue, this.decimalValue.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void EdmDoubleValueShouldMatch()
         {
             ClrValueShouldMatch(this.doubleValue, this.doubleValue.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void EdmGuidValueShouldMatch()
         {
             ClrValueShouldMatch(this.guidValue, this.guidValue.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void EdmInt16ValueShouldMatch()
         {
             ClrValueShouldMatch(this.int16Value, (short)this.int16Value.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void EdmInt32ValueShouldMatch()
         {
             ClrValueShouldMatch(this.int32Value, (int)this.int32Value.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void EdmInt64ValueShouldMatch()
         {
             ClrValueShouldMatch(this.int64Value, this.int64Value.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void EdmSbyteValueShouldMatch()
         {
             ClrValueShouldMatch(this.sbyteValue, (sbyte)this.sbyteValue.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void EdmSingleValueShouldMatch()
         {
             ClrValueShouldMatch(this.singleValue, (float)this.singleValue.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void EdmStringValueShouldMatch()
         {
             ClrValueShouldMatch(this.stringValue, this.stringValue.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void EdmDurationValueShouldMatch()
         {
             ClrValueShouldMatch(this.durationValue, this.durationValue.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void EdmDateValueShouldMatch()
         {
             ClrValueShouldMatch(this.dateValue, this.dateValue.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void EdmTimeOfDayValueShouldMatch()
         {
             ClrValueShouldMatch(this.timeOfDayValue, this.timeOfDayValue.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void UnsupportedTypeShouldThrow()
         {
             var invalidType = new EdmPrimitiveValueSimulator(EdmCoreModel.Instance.GetString(false), EdmValueKind.Structured);

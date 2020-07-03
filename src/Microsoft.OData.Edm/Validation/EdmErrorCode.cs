@@ -717,11 +717,6 @@ namespace Microsoft.OData.Edm.Validation
         UnderlyingTypeIsBadBecauseEnumTypeIsBad = 261,
 
         /// <summary>
-        /// Complex types must contain at least one property.
-        /// </summary>
-        ComplexTypeMustHaveProperties = 264,
-
-        /// <summary>
         /// Unsupported operation import parameter type.
         /// </summary>
         OperationImportParameterIncorrectType = 265,
@@ -1387,5 +1382,55 @@ namespace Microsoft.OData.Edm.Validation
         /// The vocabulary annotation applies to not allowed annotatable element.
         /// </summary>
         AnnotationApplyToNotAllowedAnnotatable = 400,
+
+        /// <summary>
+        /// Invalid $Key value.
+        /// </summary>
+        InvalidKeyValue,
+
+        /// <summary>
+        /// Invalid mulitple entity container in one schema
+        /// </summary>
+        SchemaCannotHaveMoreThanOneEntityContainer,
+
+        /// <summary>
+        /// Invalid $Collection value.
+        /// </summary>
+        InvalidCollectionValue,
+
+        /// <summary>
+        /// Invalid JSON
+        /// </summary>
+        InvalidJson,
+
+        /// <summary>
+        /// Invalid Element value kind
+        /// </summary>
+        UnknownElementValueKind,
+
+        /// <summary>
+        /// Invalid number type
+        /// </summary>
+        InvalidNumberType,
+
+        /// <summary>
+        /// Encountered an element that is not supported
+        /// </summary>
+        UnsupportedElement,
+
+        /// <summary>
+        /// Encountered an  element that was never used
+        /// </summary>
+        UnexpectedElement,
+
+        /// <summary>
+        /// Excountered a JSON elemnt that was not expected.
+        /// </summary>
+        UnexpectedValueKind,
+
+        /// <summary>
+        /// A property is required in an object
+        /// </summary>
+        MissingRequiredProperty,
     }
 }

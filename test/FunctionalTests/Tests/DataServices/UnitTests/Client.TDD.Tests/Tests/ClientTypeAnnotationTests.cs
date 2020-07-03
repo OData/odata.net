@@ -14,59 +14,57 @@ namespace AstoriaUnitTests.Tests.Client
     using Microsoft.Spatial;
     using FluentAssertions;
     using Microsoft.OData.Edm;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class ClientTypeAnnotationTests
     {
         private ClientTypeAnnotation typeWithUnserializableProperties;
         private ClientTypeAnnotation typeWithPropertiesInStrangeOrder;
 
-        [TestInitialize]
-        public void Init()
+        public ClientTypeAnnotationTests()
         {
             var clientEdmModel = new ClientEdmModel(ODataProtocolVersion.V4);
             this.typeWithUnserializableProperties = new ClientTypeAnnotation(new EdmEntityType("NS", "Type1"), typeof(EntityWithUnserializableProperties), "NS.Type1", clientEdmModel);
             this.typeWithPropertiesInStrangeOrder = new ClientTypeAnnotation(new EdmEntityType("NS", "Type2"), typeof(EntityWithPropertiesInStrangeOrder), "NS.Type2", clientEdmModel);
         }
 
-        [TestMethod]
+        [Fact]
         public void EnsureGeographyTypeIsVersion3()
         {
             VerifyIsVersion4(typeof(EntityTypeWithGeographyProperty));
         }
 
-        [TestMethod]
+        [Fact]
         public void EnsureGeometryIsVersion3()
         {
             VerifyIsVersion4(typeof(EntityTypeWithGeometryProperty));
         }
 
-        [TestMethod]
+        [Fact]
         public void ClientTypeAnnotationShouldNotIncludeDictionaryInPropertiesToSerialize()
         {
             this.typeWithUnserializableProperties.PropertiesToSerialize().Should().NotContain(p => p.PropertyName == "Dictionary");
         }
 
-        [TestMethod]
+        [Fact]
         public void ClientTypeAnnotationShouldNotIncludeMediaPropertiesInPropertiesToSerialize()
         {
             this.typeWithUnserializableProperties.PropertiesToSerialize().Should().NotContain(p => p.PropertyName == "Media");
         }
 
-        [TestMethod]
+        [Fact]
         public void ClientTypeAnnotationShouldNotIncludeStreamPropertiesInPropertiesToSerialize()
         {
             this.typeWithUnserializableProperties.PropertiesToSerialize().Should().NotContain(p => p.PropertyName == "Stream");
         }
 
-        [TestMethod]
+        [Fact]
         public void ClientTypeAnnotationShouldNotIncludeMimeTypePropertiesInPropertiesToSerialize()
         {
             this.typeWithUnserializableProperties.PropertiesToSerialize().Should().NotContain(p => p.PropertyName == "MimeType");
         }
 
-        [TestMethod]
+        [Fact]
         public void ClientTypeAnnotationShouldReturnPropertiesToSerializeInOrder()
         {
             List<string> properties = this.typeWithPropertiesInStrangeOrder.PropertiesToSerialize().Select(p => p.PropertyName).ToList();
@@ -80,7 +78,7 @@ namespace AstoriaUnitTests.Tests.Client
             ClientEdmModel model = new ClientEdmModel(ODataProtocolVersion.V4);
             IEdmType edmType = model.GetOrCreateEdmType(type);
             var typeAnnotation = model.GetClientTypeAnnotation(edmType);
-            Assert.AreEqual(typeAnnotation.GetMetadataVersion(), new Version(4, 0), "Type with geography point must have 4.0 version");
+            Assert.Equal(typeAnnotation.GetMetadataVersion(), new Version(4, 0));
         }
 
         public class EntityTypeWithGeographyProperty

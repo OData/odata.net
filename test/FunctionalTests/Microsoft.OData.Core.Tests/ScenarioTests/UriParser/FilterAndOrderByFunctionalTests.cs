@@ -2177,6 +2177,17 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("[1,2,3]", Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
         }
 
+        [Theory]
+        [InlineData("ID in ()")]
+        [InlineData("ID in (  )")]
+        [InlineData("SSN in (  )")]     // Edm.String
+        [InlineData("MyGuid in (  )")]  // Edm.Guid
+        public void FilterWithInOperationWithEmptyCollection(string filterClause)
+        {
+            Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_RightOperandNotCollectionValue);
+        }
+
         [Fact]
         public void FilterWithInOperationWithMismatchedClosureCollection()
         {

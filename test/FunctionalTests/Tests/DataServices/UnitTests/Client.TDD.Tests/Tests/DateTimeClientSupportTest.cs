@@ -11,11 +11,10 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
     using System.IO;
     using System.Linq;
     using Microsoft.OData.Client;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Test.OData.Services.TestServices.DateTimePrimitiveTypeReference;
+    using Xunit;
     using pkr = Microsoft.Test.OData.Services.TestServices.DateTimePrimitiveTypeReference;
 
-    [TestClass]
     public class DateTimeClientSupportTest
     {
         pkr.TestContext dsc_dateTime = new pkr.TestContext(new Uri("http://odataService/"));
@@ -62,82 +61,82 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         private DateTime fixedDateTimeUtc = new DateTime(2016, 11, 30, 02, 07, 16, DateTimeKind.Utc);
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
-        [TestMethod]
+        [Fact]
         public void TestClientLibDateTimeSupport()
         {
             TestDateTime(SingleEntityPayloadWithDateTimeResponse, () =>
             {
                 var queryResult = ((DataServiceQuery<pkr.EdmDateTime>)dsc_dateTime.CreateQuery<pkr.EdmDateTime>("EdmDateTimeSet").Where(e => e.Id.Equals(DateTime.Now)));
                 var result = queryResult.ToArray();
-                Assert.AreEqual(1, result.Count(), "Expected a single result");
-                Assert.AreEqual(result[0].Id, DateTime.MaxValue);
+                Assert.Single(result);
+                Assert.Equal(result[0].Id, DateTime.MaxValue);
             });
 
             TestDateTime(FeedEntityPayloadWithDateTimeResponse, () =>
             {
                 var queryResult = ((DataServiceQuery<pkr.EdmDateTime>)dsc_dateTime.CreateQuery<pkr.EdmDateTime>("EdmDateTimeSet").Where(e => e.Id >= (DateTime.Now)));
                 var result = queryResult.ToArray();
-                Assert.AreEqual(2, result.Count(), "Expected two results");
-                Assert.AreEqual(result[0].Id, DateTime.MinValue);
-                Assert.AreEqual(result[1].Id, this.fixedDateTimeUtc);
+                Assert.Equal(2, result.Count());
+                Assert.Equal(result[0].Id, DateTime.MinValue);
+                Assert.Equal(result[1].Id, this.fixedDateTimeUtc);
             });
 
             TestDateTime(FeedEntityPayloadWithDateTimeResponse, () =>
             {
                 var queryResult = ((DataServiceQuery<pkr.EdmDateTime>)dsc_dateTime.CreateQuery<pkr.EdmDateTime>("EdmDateTimeSet"));
                 var result = queryResult.ToList();
-                Assert.AreEqual(2, result.Count(), "Expected 2 result");
-                Assert.AreEqual(result[0].Id, DateTime.MinValue);
-                Assert.AreEqual(result[1].Id, this.fixedDateTimeUtc);
+                Assert.Equal(2, result.Count());
+                Assert.Equal(result[0].Id, DateTime.MinValue);
+                Assert.Equal(result[1].Id, this.fixedDateTimeUtc);
             });
 
             TestDateTime(ReturnCollectionResponse, () =>
             {
                 var queryResult = dsc_dateTime.EdmDateTimeSet.Where(e => e.Id == (DateTime.MinValue)).Select(e => e.DateTimeCollection).FirstOrDefault();
                 var result = queryResult.ToList();
-                Assert.IsTrue(result.Count == 3);
-                Assert.AreEqual(result[0], DateTime.MinValue);
-                Assert.AreEqual(result[1], this.fixedDateTimeUtc);
-                Assert.AreEqual(result[2], DateTime.MaxValue);
+                Assert.True(result.Count == 3);
+                Assert.Equal(result[0], DateTime.MinValue);
+                Assert.Equal(result[1], this.fixedDateTimeUtc);
+                Assert.Equal(result[2], DateTime.MaxValue);
             });
 
             TestDateTime(ReturnCollectionResponse1, () =>
             {
                 var queryResult = dsc_dateTime.EdmDateTimeSet.Where(e => e.Id == (DateTime.MinValue)).Select(e => e.DateTimeCollection).FirstOrDefault();
                 var result = queryResult.ToList();
-                Assert.IsTrue(result.Count == 3);
-                Assert.AreEqual(result[0], DateTime.MinValue);
-                Assert.AreEqual(result[1], this.fixedDateTimeUtc);
-                Assert.AreEqual(result[2], DateTime.MaxValue);
+                Assert.True(result.Count == 3);
+                Assert.Equal(result[0], DateTime.MinValue);
+                Assert.Equal(result[1], this.fixedDateTimeUtc);
+                Assert.Equal(result[2], DateTime.MaxValue);
             });
 
             TestDateTime(ReturnSingleDateTimeResponse, () =>
             {
                 var queryResult = dsc_dateTime.EdmDateTimeSet.Where(e => e.Id == (DateTime.MinValue)).Select(e => e.Id).FirstOrDefault();
-                Assert.AreEqual(queryResult, this.fixedDateTimeUtc);
+                Assert.Equal(queryResult, this.fixedDateTimeUtc);
             });
 
             TestDateTime(ReturnSingleMaxDateTimeResponse, () =>
             {
                 var queryResult = dsc_dateTime.EdmDateTimeSet.Where(e => e.Id == (DateTime.MinValue)).Select(e => e.Id).FirstOrDefault();
-                Assert.AreEqual(queryResult, DateTime.MaxValue);
+                Assert.Equal(queryResult, DateTime.MaxValue);
             });
 
             TestDateTime(ReturnSingleMinDateTimeResponse, () =>
             {
                 var queryResult = dsc_dateTime.EdmDateTimeSet.Where(e => e.Id == (DateTime.MinValue)).Select(e => e.Id).FirstOrDefault();
-                Assert.AreEqual(queryResult, DateTime.MinValue);
+                Assert.Equal(queryResult, DateTime.MinValue);
             });
 
             TestDateTime(ReturnSingleDateTimeResponse1, () =>
             {
                 var expected_local = fixedDateTimeUtc.ToLocalTime();
                 var queryResult = dsc_dateTime.EdmDateTimeSet.Where(e => e.Id == expected_local).Select(e => e.Id).FirstOrDefault();
-                Assert.AreEqual(queryResult, fixedDateTimeUtc);
+                Assert.Equal(queryResult, fixedDateTimeUtc);
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void TestClientLibDateTimeSupport_Post()
         {
             TestDateTime(SingleEntityPayloadWithDateTimeResponse, () =>
@@ -151,9 +150,9 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 dsc_dateTime.Configurations.RequestPipeline.OnEntryEnding((args) =>
                 {
                     var properties = args.Entry.Properties;
-                    Assert.IsTrue(properties.Count() == 2);
+                    Assert.True(properties.Count() == 2);
                     var dateTimePropertyInEntry = args.Entry.Properties.Where(p => p.Name == "Id").FirstOrDefault().Value;
-                    Assert.IsTrue(dateTimePropertyInEntry is DateTimeOffset);
+                    Assert.True(dateTimePropertyInEntry is DateTimeOffset);
                     payloadChecked = true;
                 });
 
@@ -165,13 +164,13 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 {
                     // The invalid operation exception is expected as there is no real service
                     // We only need to validate the request message.
-                    Assert.IsTrue(payloadChecked);
+                    Assert.True(payloadChecked);
                 }
             });
         }
 #endif
 
-        [TestMethod]
+        [Fact]
         public void WriteEntryAsBodyOperationParameter()
         {
             var requestInfo = new RequestInfo(dsc_dateTime);
@@ -212,7 +211,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             VerifyMessageBody(requestMessage3, parameterString3);
         }
 
-        [TestMethod]
+        [Fact]
         public void WriteEntryAsBodyOperationParameter_MaxValue()
         {
             var requestInfo = new RequestInfo(dsc_dateTime);
@@ -254,7 +253,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         }
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
-        [TestMethod]
+        [Fact]
         public void WriteDateAndTimeUriOperationParametersToUriShouldReturnUri()
         {
             var requestInfo = new RequestInfo(dsc_dateTime);
@@ -277,18 +276,18 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 string parameterString = @"{""@odata.type"":""#Microsoft.Test.OData.Services.PrimitiveKeysService.EdmDateTime"",""DateTimeCollection@odata.type"":""#Collection(DateTimeOffset)"",""DateTimeCollection"":[""2016-11-30T02:07:16Z""],""Id@odata.type"":""#DateTimeOffset"",""Id"":""0001-01-01T00:00:00Z""}";
                 // Validate request Uri
                 Uri expectedUri = new Uri("http://odataservice/GetDateTime(dateTimeEntity=%40dateTimeEntity)?%40dateTimeEntity=" + Uri.EscapeDataString(parameterString));
-                Assert.AreEqual(expectedUri, requestUri);
+                Assert.Equal(expectedUri, requestUri);
 
                 // Validate return 
                 var queryResult = dsc_dateTime.Execute<pkr.EdmDateTime>(requestUri);
                 var result = queryResult.ToArray();
-                Assert.AreEqual(1, result.Count(), "Expected a single result");
+                Assert.Single(result);
                 var expected = new DateTime(2016, 11, 30, 02, 07, 16);
 
                 // kind, value
-                Assert.AreEqual(result[0].Id, expected);
-                Assert.AreEqual(result[0].Id.Kind, DateTimeKind.Utc);
-                Assert.AreEqual(3, result[0].DateTimeCollection.Count);
+                Assert.Equal(result[0].Id, expected);
+                Assert.Equal(DateTimeKind.Utc, result[0].Id.Kind);
+                Assert.Equal(3, result[0].DateTimeCollection.Count);
             });
 
 
@@ -304,18 +303,18 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 // Validate request Uri
                 string parameterString = @"{""@odata.type"":""#Microsoft.Test.OData.Services.PrimitiveKeysService.EdmDateTime"",""DateTimeCollection@odata.type"":""#Collection(DateTimeOffset)"",""DateTimeCollection"":[""2016-11-30T02:07:16Z"",""0001-01-01T00:00:00Z"",""9999-12-31T23:59:59.9999999Z""],""Id@odata.type"":""#DateTimeOffset"",""Id"":""9999-12-31T23:59:59.9999999Z""}";
                 Uri expectedUri = new Uri(@"http://odataservice/GetDateTime(dateTimeEntity=%40dateTimeEntity)?%40dateTimeEntity=" + Uri.EscapeDataString(parameterString));
-                Assert.AreEqual(expectedUri, requestUri);
+                Assert.Equal(expectedUri, requestUri);
 
                 // Validate return 
                 var queryResult = dsc_dateTime.Execute<pkr.EdmDateTime>(requestUri);
                 var result = queryResult.ToArray();
-                Assert.AreEqual(1, result.Count(), "Expected a single result");
+                Assert.Single(result);
                 var expected = new DateTime(2016, 11, 30, 02, 07, 16);
 
                 // kind, value
-                Assert.AreEqual(result[0].Id, expected);
-                Assert.AreEqual(result[0].Id.Kind, DateTimeKind.Utc);
-                Assert.AreEqual(3, result[0].DateTimeCollection.Count);
+                Assert.Equal(result[0].Id, expected);
+                Assert.Equal(DateTimeKind.Utc, result[0].Id.Kind);
+                Assert.Equal(3, result[0].DateTimeCollection.Count);
             });
 
             //return datetime
@@ -329,14 +328,14 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
 
                 // Validate request Uri
                 const string uriString = @"http://odataservice/GetDateTime(dateTimeValue=2016-11-30T02:07:16Z)";
-                Assert.AreEqual(uriString, requestUri.ToString());
+                Assert.Equal(uriString, requestUri.ToString());
 
                 var query = dsc_dateTime.CreateFunctionQuerySingle<DateTime>("", "GetDateTime", false, new UriOperationParameter("dateTimeValue", this.fixedDateTimeUtc));
-                Assert.AreEqual(new Uri(uriString), query.RequestUri);
+                Assert.Equal(new Uri(uriString), query.RequestUri);
 
                 var queryResult = query.GetValue();
                 var expected = new DateTime(2016, 11, 30, 02, 07, 16, DateTimeKind.Utc);
-                Assert.AreEqual(queryResult, expected);
+                Assert.Equal(queryResult, expected);
             });
 
             //return datetime
@@ -350,13 +349,13 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
 
                 // Validate request Uri
                 const string uriString = @"http://odataservice/GetDateTime(dateTimeValue=9999-12-31T23:59:59.9999999Z)";
-                Assert.AreEqual(uriString, requestUri.ToString());
+                Assert.Equal(uriString, requestUri.ToString());
 
                 var query = dsc_dateTime.CreateFunctionQuerySingle<DateTime>("", "GetDateTime", false, new UriOperationParameter("dateTimeValue", DateTime.MaxValue));
-                Assert.AreEqual(new Uri(uriString), query.RequestUri);
+                Assert.Equal(new Uri(uriString), query.RequestUri);
 
                 var queryResult = query.GetValue();
-                Assert.AreEqual(queryResult, DateTime.MaxValue);
+                Assert.Equal(queryResult, DateTime.MaxValue);
             });
 
             //return datetime
@@ -370,13 +369,13 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
 
                 // Validate request Uri
                 const string uriString = @"http://odataservice/GetDateTime(dateTimeValue=0001-01-01T00:00:00Z)";
-                Assert.AreEqual(uriString, requestUri.ToString());
+                Assert.Equal(uriString, requestUri.ToString());
 
                 var query = dsc_dateTime.CreateFunctionQuerySingle<DateTime>("", "GetDateTime", false, new UriOperationParameter("dateTimeValue", DateTime.MinValue));
-                Assert.AreEqual(new Uri(uriString), query.RequestUri);
+                Assert.Equal(new Uri(uriString), query.RequestUri);
 
                 var queryResult = query.GetValue();
-                Assert.AreEqual(queryResult, DateTime.MinValue);
+                Assert.Equal(queryResult, DateTime.MinValue);
             });
 
             // return collection(datetime)
@@ -391,18 +390,18 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 // Validate request Uri
                 string parameterString = @"[""2016-11-30T02:07:16Z""]";
                 Uri expectedUri = new Uri(@"http://odataservice/GetDateTime(dateTimeCollection=%40dateTimeCollection)?%40dateTimeCollection=" + Uri.EscapeDataString(parameterString));
-                Assert.AreEqual(expectedUri, requestUri);
+                Assert.Equal(expectedUri, requestUri);
 
                 // Bug for escape
                 var query = dsc_dateTime.CreateFunctionQuery<DateTime>("", "GetDateTime", false, new UriOperationParameter("dateTimeCollection", dateTimeCollection));
                 expectedUri = new Uri(@"http://odataservice/GetDateTime(dateTimeCollection=@dateTimeCollection)?@dateTimeCollection=" + Uri.EscapeUriString(parameterString));
-                Assert.AreEqual(expectedUri, query.RequestUri);
+                Assert.Equal(expectedUri, query.RequestUri);
 
                 var result = query.ToList();
-                Assert.IsTrue(result.Count == 3);
-                Assert.AreEqual(result[0], DateTime.MinValue);
-                Assert.AreEqual(result[1], this.fixedDateTimeUtc);
-                Assert.AreEqual(result[2], DateTime.MaxValue);
+                Assert.True(result.Count == 3);
+                Assert.Equal(result[0], DateTime.MinValue);
+                Assert.Equal(result[1], this.fixedDateTimeUtc);
+                Assert.Equal(result[2], DateTime.MaxValue);
             });
         }
 #endif
@@ -421,7 +420,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             MemoryStream stream = (MemoryStream)requestMessage.CachedRequestStream.Stream;
             StreamReader streamReader = new StreamReader(stream);
             String body = streamReader.ReadToEnd();
-            Assert.AreEqual(expected, body);
+            Assert.Equal(expected, body);
         }
 
 #region private methods

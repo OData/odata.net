@@ -12,6 +12,7 @@ namespace Microsoft.OData.Tests.ObjectModelTests
     using System.Linq;
     using System.Reflection;
     using Microsoft.OData;
+    using Microsoft.OData.UriParser.Validation;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common.Tests;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -34,7 +35,8 @@ namespace Microsoft.OData.Tests.ObjectModelTests
             typeof(ODataPayloadValueConverter),
             typeof(ODataUntypedValue),
             typeof(ODataPreferenceHeader),
-            typeof(ODataPropertyInfo)
+            typeof(ODataPropertyInfo),
+            typeof(ODataUrlValidationMessage)
         };
 
         // List of types explicitly allowed to be not-sealed.
@@ -42,7 +44,7 @@ namespace Microsoft.OData.Tests.ObjectModelTests
         // Only sealed types can be easily serviced with targetted patching.
         private static string[] UnsealedNonPublicTypeNames = new string[]
         {
-            "Microsoft.OData.UriParser.MetadataBinder",
+            "Microsoft.OData.UriParser.MetadataBinder"
         };
 
         [TestMethod, Variation(Description = "Verifies that all OData public types are sealed as appropriate.")]

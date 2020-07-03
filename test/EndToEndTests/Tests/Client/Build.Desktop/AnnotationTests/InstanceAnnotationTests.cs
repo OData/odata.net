@@ -13,9 +13,8 @@ namespace Microsoft.Test.OData.Tests.Client.AnnotationTests
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class InstanceAnnotationTests : ODataWCFServiceTestsBase<InMemoryEntities>
     {
         private const string TestModelNameSpace = "Microsoft.Test.OData.Services.ODataWCFService";
@@ -34,7 +33,7 @@ namespace Microsoft.Test.OData.Tests.Client.AnnotationTests
         }
 
         #region Non Top Level
-        [TestMethod]
+        [Fact]
         public void EntityInstanceAnnotation()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -44,7 +43,7 @@ namespace Microsoft.Test.OData.Tests.Client.AnnotationTests
                 requestMessage.SetHeader("Accept", mimeType);
                 requestMessage.SetHeader("Prefer", string.Format("{0}={1}", IncludeAnnotation, "*"));
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -60,14 +59,14 @@ namespace Microsoft.Test.OData.Tests.Client.AnnotationTests
                             }
                         }
 
-                        Assert.AreEqual(true, (entries.Last().InstanceAnnotations.First(i => i.Name.Equals(string.Format("{0}.IsBoss", TestModelNameSpace))).Value as ODataPrimitiveValue).Value);
-                        Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                        Assert.Equal(true, (entries.Last().InstanceAnnotations.First(i => i.Name.Equals(string.Format("{0}.IsBoss", TestModelNameSpace))).Value as ODataPrimitiveValue).Value);
+                        Assert.Equal(ODataReaderState.Completed, reader.State);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ComplexTypeInstanceAnnotation()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -77,7 +76,7 @@ namespace Microsoft.Test.OData.Tests.Client.AnnotationTests
                 requestMessage.SetHeader("Accept", mimeType);
                 requestMessage.SetHeader("Prefer", string.Format("{0}={1}", IncludeAnnotation, "*"));
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -113,23 +112,23 @@ namespace Microsoft.Test.OData.Tests.Client.AnnotationTests
                                 {
                                     // Verify Annotation on Complex Type
                                     ODataInstanceAnnotation annotationOnHomeAddress = entry.InstanceAnnotations.Last();
-                                    Assert.AreEqual(string.Format("{0}.AddressType", TestModelNameSpace), annotationOnHomeAddress.Name);
-                                    Assert.AreEqual("Home", (annotationOnHomeAddress.Value as ODataPrimitiveValue).Value);
+                                    Assert.Equal(string.Format("{0}.AddressType", TestModelNameSpace), annotationOnHomeAddress.Name);
+                                    Assert.Equal("Home", (annotationOnHomeAddress.Value as ODataPrimitiveValue).Value);
 
                                     // TODO : Fix #625
 
                                     //// Verify Annotation on Property in Complex Type
                                     //ODataInstanceAnnotation annotationOnCity = entry.Properties.SingleOrDefault(p => p.Name.Equals("City")).InstanceAnnotations.SingleOrDefault();
-                                    //Assert.AreEqual(string.Format("{0}.CityInfo", TestModelNameSpace), annotationOnCity.Name);
-                                    //Assert.AreEqual(2, (annotationOnCity.Value as ODataComplexValue).Properties.Count());
+                                    //Assert.Equal(string.Format("{0}.CityInfo", TestModelNameSpace), annotationOnCity.Name);
+                                    //Assert.Equal(2, (annotationOnCity.Value as ODataComplexValue).Properties.Count());
                                 }
                             }
                         }
                         // Verify Annotation on Property of Entity
                         ODataInstanceAnnotation annotationonEmails = entry.Properties.SingleOrDefault(p => p.Name.Equals("Emails")).InstanceAnnotations.SingleOrDefault();
-                        Assert.AreEqual(string.Format("{0}.DisplayName", TestModelNameSpace), annotationonEmails.Name);
-                        Assert.AreEqual("EmailAddresses", (annotationonEmails.Value as ODataPrimitiveValue).Value);
-                        Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                        Assert.Equal(string.Format("{0}.DisplayName", TestModelNameSpace), annotationonEmails.Name);
+                        Assert.Equal("EmailAddresses", (annotationonEmails.Value as ODataPrimitiveValue).Value);
+                        Assert.Equal(ODataReaderState.Completed, reader.State);
                     }
                 }
             }
@@ -137,7 +136,7 @@ namespace Microsoft.Test.OData.Tests.Client.AnnotationTests
         #endregion
 
         #region Top Level
-        [TestMethod]
+        [Fact]
         public void TopLevelComplexTypeInstanceAnnotation()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -147,7 +146,7 @@ namespace Microsoft.Test.OData.Tests.Client.AnnotationTests
                 requestMessage.SetHeader("Accept", mimeType);
                 requestMessage.SetHeader("Prefer", string.Format("{0}={1}", IncludeAnnotation, "*"));
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -166,19 +165,19 @@ namespace Microsoft.Test.OData.Tests.Client.AnnotationTests
                         // Verify Annotation on Complex Type
                         ODataInstanceAnnotation annotationOnHomeAddress = resource.InstanceAnnotations
                             .SingleOrDefault(annotation=>annotation.Name.Equals(string.Format("{0}.AddressType", TestModelNameSpace)));
-                        Assert.AreEqual("Home", (annotationOnHomeAddress.Value as ODataPrimitiveValue).Value);
+                        Assert.Equal("Home", (annotationOnHomeAddress.Value as ODataPrimitiveValue).Value);
 
                         // TODO : Fix #625
                         //// Verify Annotation on Property in Complex Type
                         //ODataInstanceAnnotation annotationOnCity = complexValue.Properties.SingleOrDefault(p => p.Name.Equals("City")).InstanceAnnotations.SingleOrDefault();
-                        //Assert.AreEqual(string.Format("{0}.CityInfo", TestModelNameSpace), annotationOnCity.Name);
-                        //Assert.AreEqual(2, (annotationOnCity.Value as ODataComplexValue).Properties.Count());
+                        //Assert.Equal(string.Format("{0}.CityInfo", TestModelNameSpace), annotationOnCity.Name);
+                        //Assert.Equal(2, (annotationOnCity.Value as ODataComplexValue).Properties.Count());
                     }
                 }
             }
         }
 
-        // [TestMethod] // github issuse: #896
+        // [Fact] // github issuse: #896
         public void TopLevelPropertyOfComplexTypeInstanceAnnotation()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -188,7 +187,7 @@ namespace Microsoft.Test.OData.Tests.Client.AnnotationTests
                 requestMessage.SetHeader("Accept", mimeType);
                 requestMessage.SetHeader("Prefer", string.Format("{0}={1}", IncludeAnnotation, "*"));
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {

@@ -190,10 +190,10 @@ namespace Microsoft.OData.JsonLight
         {
             if (this.underlyingReader.State != ODataReaderState.DeletedResourceEnd)
             {
-                await this.underlyingReader.ReadAsync().FollowOnSuccessWith(t =>
+                await underlyingReader.ReadAsync().FollowOnSuccessWith(t =>
                 {
-                    this.SkipToDeletedResourceEnd();
-                });
+                    SkipToDeletedResourceEnd();
+                }).ConfigureAwait(false);
             }
         }
 

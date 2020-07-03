@@ -12,30 +12,26 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
     using Microsoft.Test.OData.Framework.Client;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference;
-    #if WIN8 || WINDOWSPHONE
-    using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-#else
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
+    using Xunit.Abstractions;
+    using Xunit;
 
-    [TestClass]
     public class HttpClientTests : EndToEndTestBase
     {
-        public HttpClientTests()
-            : base(ServiceDescriptors.AstoriaDefaultService)
+        public HttpClientTests(ITestOutputHelper helper)
+            : base(ServiceDescriptors.AstoriaDefaultService, helper)
         {
         }
 
 #if !WIN8 && !WINDOWSPHONE && !(NETCOREAPP1_0 || NETCOREAPP2_0)
-        [TestMethod]
+        [Fact]
         public void SimpleQuery()
         {
             var ctx = this.CreateContext();
             var results = ctx.CreateQuery<Product>("Product").ToList();
-            Assert.IsTrue(results.Count > 0, "No results returned");
+            Assert.True(results.Count > 0, "No results returned");
         }
 
-        [TestMethod]
+        [Fact]
         public void InsertNewEntity()
         {
             var ctx = this.CreateContext();
@@ -43,7 +39,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             ctx.SaveChanges();
         }
 
-        [TestMethod]
+        [Fact]
         public void UpdateEntityWithPatch()
         {
             var ctx = this.CreateContext();
@@ -54,7 +50,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             ctx.SaveChanges();
         }
 
-        [TestMethod]
+        [Fact]
         public void UpdateEntityWithReplaceUsingJson()
         {
             var ctx = this.CreateContext();
@@ -67,7 +63,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             ctx.SaveChanges(SaveChangesOptions.ReplaceOnUpdate);
         }
 
-        [TestMethod]
+        [Fact]
         public void DeleteEntity()
         {
             var ctx = this.CreateContext();
@@ -75,7 +71,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             ctx.SaveChanges();
         }
 
-        [TestMethod]
+        [Fact]
         public void MultipleChangesBatch()
         {
             var ctx = this.CreateContext();
@@ -89,7 +85,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             ctx.SaveChanges(SaveChangesOptions.BatchWithSingleChangeset);
         }
 
-        [TestMethod]
+        [Fact]
         public void MultipleChangesNonBatch()
         {
             var ctx = this.CreateContext();
@@ -103,19 +99,19 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             ctx.SaveChanges();
         }
 
-        [TestMethod]
+        [Fact]
         public void LoadProperty()
         {
             var ctx = this.CreateContext();
             var product = ctx.Context.Product.First();
 
             var response = ctx.LoadProperty(product, "Description");
-            Assert.AreEqual(200, response.StatusCode);
-            Assert.IsNull(response.Error, "Unexpected error: " + response.Error);
+            Assert.Equal(200, response.StatusCode);
+            Assert.Null(response.Error);
         }
 #endif
 
-        [TestMethod]
+        [Fact]
         public void SimpleQueryAsync()
         {
             var ctx = this.CreateContext();
@@ -124,7 +120,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
                 (ar) =>
                 {
                     var products = query.EndExecute(ar).ToList();
-                    Assert.IsTrue(products.Count > 0);
+                    Assert.True(products.Count > 0);
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -132,7 +128,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             this.WaitForTestToComplete();
         }
 
-        [TestMethod]
+        [Fact]
         public void UpdateEntityAsync()
         {
             var ctx = this.CreateContext();
@@ -148,7 +144,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
                 (ar) =>
                 {
                     var response = ctx.EndSaveChanges(ar);
-                    Assert.AreEqual(204, response.Single().StatusCode, "Unexpected status code");
+                    Assert.Equal(204, response.Single().StatusCode);
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -156,7 +152,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             this.WaitForTestToComplete();
         }
 
-        [TestMethod]
+        [Fact]
         public void BatchQueriesWithJsonAsync()
         {
             var ctx = this.CreateContext();
@@ -172,8 +168,8 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
                 (ar) =>
                 {
                     var response = ctx.EndExecuteBatch(ar);
-                    Assert.IsTrue(response.IsBatchResponse, "Non-batch response received");
-                    Assert.AreEqual(2, response.Count(), "Unexpected number of operation responses received");
+                    Assert.True(response.IsBatchResponse, "Non-batch response received");
+                    Assert.Equal(2, response.Count());
                     this.EnqueueTestComplete();
                 },
                 null,
@@ -182,7 +178,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             this.WaitForTestToComplete();
         }
 
-        [TestMethod]
+        [Fact]
         public void LoadPropertyAsync()
         {
             var ctx = this.CreateContext();
@@ -197,8 +193,8 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
                 (ar) =>
                 {
                     var propertyResponse = ctx.EndLoadProperty(ar);
-                    Assert.AreEqual(200, propertyResponse.StatusCode, "Unexpected status code");
-                    Assert.IsNull(propertyResponse.Error, "Unexpected error: " + propertyResponse.Error);
+                    Assert.Equal(200, propertyResponse.StatusCode);
+                    Assert.Null(propertyResponse.Error);
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -206,7 +202,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             this.WaitForTestToComplete();
         }
 
-        [TestMethod]
+        [Fact]
         public void BatchUpdatesAsync()
         {
             var ctx = this.CreateContext();
@@ -230,8 +226,8 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
                 (ar) =>
                 { 
                     var response = ctx.EndSaveChanges(ar);
-                    Assert.AreEqual(202, response.BatchStatusCode);
-                    Assert.AreEqual(3, response.Count());
+                    Assert.Equal(202, response.BatchStatusCode);
+                    Assert.Equal(3, response.Count());
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -239,7 +235,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             this.WaitForTestToComplete();
         }
 
-        [TestMethod]
+        [Fact]
         public void MultipleUpdatesWithPostTunnelingAsync()
         {
             var ctx = this.CreateContext();
@@ -267,9 +263,9 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             ctx.BeginSaveChanges((ar) =>
                 {
                     var response = ctx.EndSaveChanges(ar);
-                    Assert.AreEqual(2, response.Count());
-                    Assert.IsTrue(response.All(r => r.Error == null), "No errors expected");
-                    Assert.IsTrue(response.All(r => r.StatusCode == 204), "Unexpected status code");
+                    Assert.Equal(2, response.Count());
+                    Assert.True(response.All(r => r.Error == null), "No errors expected");
+                    Assert.True(response.All(r => r.StatusCode == 204), "Unexpected status code");
                     this.EnqueueTestComplete();
                 }, 
                 null);
@@ -277,7 +273,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             this.WaitForTestToComplete();
         }
 
-        [TestMethod]
+        [Fact]
         //Client should not append () to navigation property query URI
         public void ClientShouldAppendParenthesisToNavigationPropertyQueryUri()
         {
@@ -291,7 +287,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             //Collection
             var loadPropertyResult = ctx.BeginLoadProperty(product, "RelatedProducts", null, null).EnqueueWait(this);
             var response = ctx.EndLoadProperty(loadPropertyResult) as QueryOperationResponse;
-            Assert.IsTrue(response.Query.RequestUri.AbsolutePath.EndsWith("RelatedProducts"));
+            Assert.True(response.Query.RequestUri.AbsolutePath.EndsWith("RelatedProducts"));
         }
 
         private DataServiceContextWrapper<DefaultContainer> CreateContext()

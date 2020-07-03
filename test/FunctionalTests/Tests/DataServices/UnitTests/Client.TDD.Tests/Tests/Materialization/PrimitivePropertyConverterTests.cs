@@ -15,9 +15,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
     using System.Xml.Linq;
     using FluentAssertions;
     using Microsoft.OData;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class PrimitivePropertyConverterTests
     {
         private readonly PrimitivePropertyConverter jsonConverter = new PrimitivePropertyConverter();
@@ -131,7 +130,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             {60.1m, 60.1d},
         };
 
-        [TestMethod]
+        [Fact]
         public void GeometryToGeographyInJson()
         {
             var point = GeometryPoint.Create(1, 2);
@@ -141,7 +140,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             result.As<GeographyPoint>().Longitude.Should().BeInRange(1, 1);
         }
 
-        [TestMethod]
+        [Fact]
         public void GeographyToGeometryInJson()
         {
             var point = GeographyPoint.Create(1, 2);
@@ -151,7 +150,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             result.As<GeometryPoint>().Y.Should().BeInRange(1, 1);
         }
 
-        [TestMethod]
+        [Fact]
         public void GeographyPointToGeographyShouldNotDoAnything()
         {
             var point = GeographyPoint.Create(1, 2);
@@ -159,7 +158,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             result.Should().BeSameAs(point);
         }
 
-        [TestMethod]
+        [Fact]
         public void GeometryPointToGeometryShouldNotDoAnything()
         {
             var point = GeometryPoint.Create(1, 2);
@@ -167,50 +166,50 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             result.Should().BeSameAs(point);
         }
 
-        [TestMethod]
+        [Fact]
         public void FloatShouldConvertToDoubleWithoutLossOfPrecision()
         {
             this.jsonConverter.ConvertPrimitiveValue(45.1f, typeof(double)).Should().Be(45.1d);
         }
 
-        [TestMethod]
+        [Fact]
         public void StringShouldBeSameReferenceAfterConversion()
         {
             const string test = "temp";
             this.jsonConverter.ConvertPrimitiveValue(test, typeof(string)).Should().BeSameAs(test);
         }
 
-        [TestMethod]
+        [Fact]
         public void StringShouldConvertToUri()
         {
             this.jsonConverter.ConvertPrimitiveValue("http://temp.org", typeof(Uri)).Should().Be(new Uri("http://temp.org"));
         }
 
-        [TestMethod]
+        [Fact]
         public void StringShouldConvertToXElement()
         {
             this.jsonConverter.ConvertPrimitiveValue("<Fake/>", typeof(XElement)).As<XElement>().Should().Be(XElement.Parse("<Fake/>"));
         }
 
-        [TestMethod]
+        [Fact]
         public void InfinityShouldConvertFromFloatToDouble()
         {
             this.jsonConverter.ConvertPrimitiveValue(float.PositiveInfinity, typeof(double)).Should().Be(double.PositiveInfinity);
         }
 
-        [TestMethod]
+        [Fact]
         public void NegativeInfinityShouldConvertFromDoubleToFloat()
         {
             this.jsonConverter.ConvertPrimitiveValue(double.NegativeInfinity, typeof(float)).Should().Be(float.NegativeInfinity);
         }
 
-        [TestMethod]
+        [Fact]
         public void NaNShouldConvertFromStringToFloat()
         {
             float.IsNaN(this.jsonConverter.ConvertPrimitiveValue("NaN", typeof(float)).As<float>()).Should().BeTrue();
         }
 
-        [TestMethod]
+        [Fact]
         public void ConversionsForAllBasicPrimitiveTypesShouldWork()
         {
             foreach (var conversion in this.basicConversionsList)
@@ -229,13 +228,13 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void EnumCouldBeConvertedToString()
         {
             this.jsonConverter.ConvertPrimitiveValue(new ODataEnumValue("Yellow"), typeof(string)).Should().Be("Yellow");
         }
 
-        [TestMethod]
+        [Fact]
         public void JsonConversionForDateTimeShouldThrow()
         {
             Type dateTimeType = typeof(DateTime);
@@ -244,8 +243,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             var result = this.jsonConverter.ConvertPrimitiveValue(dateTimeOffset, dateTimeType);
 
             // returned DateTime should be the DateTime UTC
-            Assert.IsTrue(result is DateTime);
-            Assert.AreEqual(result, dateTime.ToUniversalTime());
+            Assert.True(result is DateTime);
+            Assert.Equal(result, dateTime.ToUniversalTime());
         }
     }
 }

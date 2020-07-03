@@ -15,9 +15,8 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class OrderbyQueryTests : ODataWCFServiceTestsBase<InMemoryEntities>
     {
         public OrderbyQueryTests()
@@ -33,7 +32,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void OrderbyQueryTest()
         {
             foreach (var mimeType in mimeTypes)
@@ -48,35 +47,35 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
                 var details = getEntries(resources);
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual("Jill", details.First().Properties.Single(p => p.Name == "FirstName").Value);
+                    Assert.Equal("Jill", details.First().Properties.Single(p => p.Name == "FirstName").Value);
                 }
 
                 // $count collection of primitive type, descending
                 details = getEntries(this.TestsHelper.QueryFeed("People?$orderby=Emails/$count desc", mimeType));
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual("Elmo", details.First().Properties.Single(p => p.Name == "FirstName").Value);
+                    Assert.Equal("Elmo", details.First().Properties.Single(p => p.Name == "FirstName").Value);
                 }
 
                 // $count collection of enum type
                 details = getEntries(this.TestsHelper.QueryFeed("Products?$orderby=CoverColors/$count", mimeType));
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual("Apple", details.First().Properties.Single(p => p.Name == "Name").Value);
+                    Assert.Equal("Apple", details.First().Properties.Single(p => p.Name == "Name").Value);
                 }
 
                 // $count collection of complex type
                 details = getEntries(this.TestsHelper.QueryFeed("People?$orderby=Addresses/$count", mimeType));
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual("Jill", details.First().Properties.Single(p => p.Name == "FirstName").Value);
+                    Assert.Equal("Jill", details.First().Properties.Single(p => p.Name == "FirstName").Value);
                 }
 
                 // $count collection of entity type
                 details = getEntries(this.TestsHelper.QueryFeed("Customers?$orderby=Orders/$count", mimeType));
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual("Bob", details.First().Properties.Single(p => p.Name == "FirstName").Value);
+                    Assert.Equal("Bob", details.First().Properties.Single(p => p.Name == "FirstName").Value);
                 }
             }
         }

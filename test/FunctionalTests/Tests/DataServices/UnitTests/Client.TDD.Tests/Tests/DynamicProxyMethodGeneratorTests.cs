@@ -9,11 +9,10 @@ using Microsoft.OData.Client;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace AstoriaUnitTests.Tests.Client
 {
-    [TestClass]
     public class DynamicProxyMethodGeneratorTests
     {
         private class DynamicProxyMethodGeneratorSimulator : DynamicProxyMethodGenerator
@@ -35,7 +34,7 @@ namespace AstoriaUnitTests.Tests.Client
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Sut_creates_Expression_method_call_bound_to_arguments()
         {
             // Arrange
@@ -60,20 +59,20 @@ namespace AstoriaUnitTests.Tests.Client
             // Assert
             var mce = expr as MethodCallExpression;
 
-            Assert.IsNotNull(mce, "Expected return value to be a MethodCallExpression.");
+            Assert.NotNull(mce);
 
-            Assert.AreEqual(2, mce.Arguments.Count);
-            Assert.AreEqual(first, mce.Arguments[0]);
-            Assert.AreSame(second, mce.Arguments[1]);
+            Assert.Equal(2, mce.Arguments.Count);
+            Assert.Equal(first, mce.Arguments[0]);
+            Assert.Same(second, mce.Arguments[1]);
 
             var sum = Expression.Lambda<Func<int>>(mce).Compile();
             var result = sum();
 
-            Assert.AreEqual(expectedSum, result);
+            Assert.Equal(expectedSum, result);
         }
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
-        [TestMethod]
+        [Fact]
         public void When_client_can_create_DynamicMethod_with_skip_visibility_GetCallWrapper_returns_Expression_which_calls_DynamicMethod()
         {
             // Arrange
@@ -89,12 +88,13 @@ namespace AstoriaUnitTests.Tests.Client
             // Assert
             var mce = expr as MethodCallExpression;
 
-            Assert.IsNotNull(mce, "Expected return value to be a MethodCallExpression.");
-            Assert.IsInstanceOfType(mce.Method, typeof(DynamicMethod));
+            //Expected return value to be a MethodCallExpression.
+            Assert.NotNull(mce);
+            Assert.IsType<DynamicMethod>(mce.Method);
         }
 #endif
 
-        [TestMethod]
+        [Fact]
         public void When_client_cannot_create_DynamicMethod_with_skip_visibility_GetCallWrapper_returns_Expression_which_calls_method_directly()
         {
             // Arrange
@@ -115,11 +115,12 @@ namespace AstoriaUnitTests.Tests.Client
             // Assert
             var mce = expr as MethodCallExpression;
 
-            Assert.IsNotNull(mce, "Expected return value to be a MethodCallExpression.");
-            Assert.AreEqual(target, mce.Method);
+            //Expected return value to be a MethodCallExpression.
+            Assert.NotNull(mce);
+            Assert.Equal(target, mce.Method);
         }
 
-        [TestMethod]
+        [Fact]
         public void When_client_cannot_create_DynamicMethod_with_skip_visibility_GetCallWrapper_returns_Expression_which_calls_constructor_directly()
         {
             // Arrange
@@ -135,11 +136,12 @@ namespace AstoriaUnitTests.Tests.Client
             // Assert
             var nex = expr as NewExpression;
 
-            Assert.IsNotNull(nex, "Expected return value to be a NewExpression.");
-            Assert.AreEqual(target, nex.Constructor);
+            //Expected return value to be a NewExpression.
+            Assert.NotNull(nex);
+            Assert.Equal(target, nex.Constructor);
         }
 
-        [TestMethod]
+        [Fact]
         public void When_client_can_create_DynamicMethods_with_skip_visibility_GetCallWrapper_returns_cached_DynamicMethod_on_multiple_calls()
         {
             // Arrange
@@ -163,7 +165,7 @@ namespace AstoriaUnitTests.Tests.Client
             var expr2 = (MethodCallExpression)sut2.GetCallWrapper(target);
 
             // Assert
-            Assert.AreSame(expr.Method, expr2.Method);
+            Assert.Same(expr.Method, expr2.Method);
         }
 
         private static void Simple()

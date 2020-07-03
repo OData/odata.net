@@ -17,28 +17,24 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
 #endif
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference;
-#if WIN8 || WINDOWSPHONE
-    using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-#else
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
+    using Xunit.Abstractions;
+    using Xunit;
 
     /// <summary>
     /// Client query tests using asynchronous APIs
     /// - AddQueryOption
     /// </summary>
-    [TestClass]
     public class AsynchronousQueryTests : EndToEndTestBase
     {
-        public AsynchronousQueryTests()
-            : base(ServiceDescriptors.AstoriaDefaultService)
+        public AsynchronousQueryTests(ITestOutputHelper helper)
+            : base(ServiceDescriptors.AstoriaDefaultService, helper)
         {
         }
 
         /// <summary>
         /// Add a custom query option
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         //Add timeout attribute to avoid Silverlight test stopping responding here.
         //The timeout attribute makes test failed when run in VS. 
         //So apply the timeout attribute only for silverlight case.
@@ -54,7 +50,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 (ar) =>
                 {
                     var customers = query.EndExecute(ar).ToList();
-                    Assert.AreEqual(2, customers.Count());
+                    Assert.Equal(2, customers.Count());
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -65,7 +61,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// Add $filter query option
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void AddQueryOption_Filter()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -74,7 +70,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 (ar) =>
                 {
                     var customers = query.EndExecute(ar);
-                    Assert.AreEqual(2, customers.Count());
+                    Assert.Equal(2, customers.Count());
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -85,7 +81,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// Add $select query option
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void AddQueryOption_Select()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -94,7 +90,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 (ar) =>
                 {
                     var customers = query.EndExecute(ar);
-                    Assert.AreEqual(2, customers.Count());
+                    Assert.Equal(2, customers.Count());
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -105,7 +101,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// Add $orderby query option
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void AddQueryOption_OrderBy()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -114,7 +110,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 (ar) =>
                 {
                     var customers = query.EndExecute(ar);
-                    Assert.AreEqual(2, customers.Count());
+                    Assert.Equal(2, customers.Count());
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -125,7 +121,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// Add two query options
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void AddQueryOption_TwoQueryOptions()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -137,7 +133,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 (ar) =>
                 {
                     var customers = query.EndExecute(ar);
-                    Assert.AreEqual(2, customers.Count());
+                    Assert.Equal(2, customers.Count());
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -148,7 +144,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// Query Entity Set  With Server Driven Paging
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void QueryEntitySetWithServerDrivenPagingTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -169,11 +165,11 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 continuation = (response2 as QueryOperationResponse<Customer>).GetContinuation();
             }
 
-            Assert.AreEqual(totalCount, count);
+            Assert.Equal(totalCount, count);
             this.EnqueueTestComplete();
         }
 
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void PreferCustomInstanceAnotationTest()
         {
             var value = "";
@@ -186,7 +182,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             var response = (query.EndExecute(ar1) as QueryOperationResponse<Computer>);
             foreach (var comp in response)
             {
-                Assert.AreEqual("MyNamespace.CustomAnnotation1", value);
+                Assert.Equal("MyNamespace.CustomAnnotation1", value);
                 value = "";
             }
 
@@ -196,7 +192,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// ExcuteBatch Requests
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void ExecuteBatchTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -239,15 +235,16 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 }
             }
 
-            Assert.AreEqual(actualValues, ("-8-613"), "actualValues == -8-613");
-            Assert.IsTrue(countOfBatchParts > 0 && (countOfTimesSenderCalled - countOfBatchParts) == 1, "countOfBatchParts > 0 && (countOfTimesSenderCalled - countOfBatchParts ) == 1");
+            //actualValues == -8-613
+            Assert.Equal(actualValues, ("-8-613"));
+            Assert.True(countOfBatchParts > 0 && (countOfTimesSenderCalled - countOfBatchParts) == 1, "countOfBatchParts > 0 && (countOfTimesSenderCalled - countOfBatchParts ) == 1");
             this.EnqueueTestComplete();
         }
 
         /// <summary>
         /// ExcuteBatch Requests
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void ExecuteBatchWithSaveChangesOptionsReturnsCorrectResults()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -291,8 +288,9 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 }
             }
 
-            Assert.AreEqual(actualValues, ("-8-613"), "actualValues == -8-613");
-            Assert.IsTrue(countOfBatchParts > 0 && (countOfTimesSenderCalled - countOfBatchParts) == 1, "countOfBatchParts > 0 && (countOfTimesSenderCalled - countOfBatchParts ) == 1");
+            //actualValues == -8-613
+            Assert.Equal(actualValues, ("-8-613"));
+            Assert.True(countOfBatchParts > 0 && (countOfTimesSenderCalled - countOfBatchParts) == 1, "countOfBatchParts > 0 && (countOfTimesSenderCalled - countOfBatchParts ) == 1");
             this.EnqueueTestComplete();
         }
 
@@ -301,7 +299,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// CancelRequest for Batch Requests
         /// </summary>
         // github issuse: #896
-        // [TestMethod, Asynchronous]
+        // [Fact, Asynchronous]
         public void CancelBatchRequestTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -322,16 +320,16 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                     new DataServiceRequest<Customer>(((from c in context.Customer where c.CustomerId == -8 select c) as DataServiceQuery<Customer>).RequestUri),
                     new DataServiceRequest<Customer>(((from c in context.Customer where c.CustomerId == -6 select c) as DataServiceQuery<Customer>).RequestUri),
                 });
-            Assert.AreEqual(1, servicePoint.CurrentConnections);
+            Assert.Equal(1, servicePoint.CurrentConnections);
             context.CancelRequest(arBatch);
-            Assert.AreEqual(0, servicePoint.CurrentConnections);
+            Assert.Equal(0, servicePoint.CurrentConnections);
         }
 #endif
 
         /// <summary>
         /// Query Entity Set
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void QueryEntitySetTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -340,7 +338,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 ar =>
                 {
                     var customers = query.EndExecute(ar).ToList();
-                    Assert.AreEqual(2, customers.Count());
+                    Assert.Equal(2, customers.Count());
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -351,7 +349,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// IncludeCount Test
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void IncludeCountTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -360,7 +358,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 (ar) =>
                 {
                     var customers = query.EndExecute(ar) as QueryOperationResponse<Computer>;
-                    Assert.AreEqual(10, customers.Count);
+                    Assert.Equal(10, customers.Count);
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -371,7 +369,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// IncludeCount Test
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void IncludeCountTestWithServerDrivenPaging()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -380,7 +378,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 (ar) =>
                 {
                     var customers = query.EndExecute(ar) as QueryOperationResponse<Customer>;
-                    Assert.AreEqual(10, customers.Count);
+                    Assert.Equal(10, customers.Count);
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -391,7 +389,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ query with nested calls to All
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_AllNestedTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -401,7 +399,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 (ar) =>
                 {
                     var customers = query.EndExecute(ar) as QueryOperationResponse<Customer>;
-                    Assert.AreEqual(6, customers.Count);
+                    Assert.Equal(6, customers.Count);
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -412,7 +410,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ query using All()
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_AllTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -422,7 +420,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 (ar) =>
                 {
                     var customers = query.EndExecute(ar) as QueryOperationResponse<Customer>;
-                    Assert.AreEqual(6, customers.Count);
+                    Assert.Equal(6, customers.Count);
                     this.EnqueueTestComplete();
                 },
                     null);
@@ -433,7 +431,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ query using nested calls to Any()
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_AnyNestedTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -443,7 +441,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 (ar) =>
                 {
                     var customers = query.EndExecute(ar) as QueryOperationResponse<Customer>;
-                    Assert.AreEqual(4, customers.Count);
+                    Assert.Equal(4, customers.Count);
                     this.EnqueueTestComplete();
                 },
                     null);
@@ -454,7 +452,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ query using Any()
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_AnyTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -465,7 +463,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 (ar) =>
                 {
                     var customers = query.EndExecute(ar) as QueryOperationResponse<Customer>;
-                    Assert.AreEqual(4, customers.Count);
+                    Assert.Equal(4, customers.Count);
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -476,7 +474,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ query using Expand()
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_ExpandTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -485,7 +483,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 (ar) =>
                 {
                     var customerWithWife = query.EndExecute(ar).Single();
-                    Assert.IsNotNull(customerWithWife.Wife, "customer.Wife");
+                    Assert.NotNull(customerWithWife.Wife);
                     this.EnqueueTestComplete();
                 },
             null);
@@ -496,7 +494,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ query using OrderByDescending()
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_OrderByDescendingTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -505,8 +503,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 (ar) =>
                 {
                     var customers = query.EndExecute(ar).ToList();
-                    Assert.AreEqual("versioningtaskspurgesizesminusdatarfcactivator", customers.First().Name);
-                    Assert.AreEqual("remotingdestructorprinterswitcheschannelssatellitelanguageresolve", customers.Last().Name);
+                    Assert.Equal("versioningtaskspurgesizesminusdatarfcactivator", customers.First().Name);
+                    Assert.Equal("remotingdestructorprinterswitcheschannelssatellitelanguageresolve", customers.Last().Name);
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -517,7 +515,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ query using OrderByDescending() and ThenByDescending()
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_OrderByDescendingThenByDescendingTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -539,16 +537,16 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             },
                 null);
             this.EnqueueConditional(() => this.TestCompleted);
-            this.EnqueueCallback(() => Assert.IsNotNull(customers));
-            this.EnqueueCallback(() => Assert.AreEqual("namedpersonalabsentnegationbelowstructuraldeformattercreatebackupterrestrial", customers.First().Name));
-            this.EnqueueCallback(() => Assert.AreEqual("freezeunauthenticatedparentkey", customers.Last().Name));
+            this.EnqueueCallback(() => Assert.NotNull(customers));
+            this.EnqueueCallback(() => Assert.Equal("namedpersonalabsentnegationbelowstructuraldeformattercreatebackupterrestrial", customers.First().Name));
+            this.EnqueueCallback(() => Assert.Equal("freezeunauthenticatedparentkey", customers.Last().Name));
             this.EnqueueTestComplete();
         }
 
         /// <summary>
         /// LINQ query using OrderByDescending() and ThenBy()
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_OrderByDescendingThenByTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -560,8 +558,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 (ar) =>
                 {
                     var customers = query.EndExecute(ar).ToList();
-                    Assert.AreEqual("forbuiltinencodedchnlsufficientexternal", customers.First().Name);
-                    Assert.AreEqual("allocatedentitiescontentcontainercurrentsynchronously", customers.Last().Name);
+                    Assert.Equal("forbuiltinencodedchnlsufficientexternal", customers.First().Name);
+                    Assert.Equal("allocatedentitiescontentcontainercurrentsynchronously", customers.Last().Name);
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -572,7 +570,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ query using OrderBy()
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_OrderByTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -582,8 +580,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 (ar) =>
                 {
                     var customers = query.EndExecute(ar).ToList();
-                    Assert.AreEqual(null, customers.First().Name);
-                    Assert.AreEqual("allocatedentitiescontentcontainercurrentsynchronously", customers.Last().Name);
+                    Assert.Equal(null, customers.First().Name);
+                    Assert.Equal("allocatedentitiescontentcontainercurrentsynchronously", customers.Last().Name);
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -594,7 +592,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ query using OrderBy() and ThenByDescending()
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_OrderByThenByDescendingTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -607,8 +605,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 (ar) =>
                 {
                     var customers = query.EndExecute(ar).ToList();
-                    Assert.AreEqual("enumeratetrademarkexecutionbrfalsenesteddupoverflowspacebarseekietfbeforeobservedstart", customers.First().Name);
-                    Assert.AreEqual("versioningtaskspurgesizesminusdatarfcactivator", customers.Last().Name);
+                    Assert.Equal("enumeratetrademarkexecutionbrfalsenesteddupoverflowspacebarseekietfbeforeobservedstart", customers.First().Name);
+                    Assert.Equal("versioningtaskspurgesizesminusdatarfcactivator", customers.Last().Name);
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -619,7 +617,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ query using OrderBy() and ThenBy()
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_OrderByThenByTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -631,8 +629,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 (ar) =>
                 {
                     var customers = query.EndExecute(ar).ToList();
-                    Assert.AreEqual(null, customers.First().Name);
-                    Assert.AreEqual("enumeratetrademarkexecutionbrfalsenesteddupoverflowspacebarseekietfbeforeobservedstart", customers.Last().Name);
+                    Assert.Equal(null, customers.First().Name);
+                    Assert.Equal("enumeratetrademarkexecutionbrfalsenesteddupoverflowspacebarseekietfbeforeobservedstart", customers.Last().Name);
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -643,7 +641,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ - project a primitive property from a feed, materialized into a custom entity
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_ProjectIntoCustomEntity_FromSetTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -656,8 +654,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                     var customers = query.EndExecute(ar);
                     foreach (var customer in customers)
                     {
-                        Assert.AreEqual(0, customer.CustomerId);
-                        Assert.IsNotNull(customer.Name);
+                        Assert.Equal(0, customer.CustomerId);
+                        Assert.NotNull(customer.Name);
                     }
                     this.EnqueueTestComplete();
                 },
@@ -669,7 +667,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ - project a primitive property from a feed, materialized into a non entity object using the constructor
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_ProjectIntoNonEntityUsingConstructor_FromSetTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -683,8 +681,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
 
                 foreach (var customer in customers)
                 {
-                    Assert.AreEqual(1000, customer.CustomerId);
-                    Assert.IsNotNull(customer.Name);
+                    Assert.Equal(1000, customer.CustomerId);
+                    Assert.NotNull(customer.Name);
                 }
                 this.EnqueueTestComplete();
             },
@@ -696,7 +694,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ - project a primitive property from a feed, materialized into a non entity object using property initializers
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_ProjectIntoNonEntityUsingInitializers_FromSetTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -710,8 +708,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
 
                     foreach (var customer in customers)
                     {
-                        Assert.AreEqual(1000, customer.CustomerId);
-                        Assert.IsNotNull(customer.Name);
+                        Assert.Equal(1000, customer.CustomerId);
+                        Assert.NotNull(customer.Name);
                     }
                     this.EnqueueTestComplete();
                 },
@@ -723,7 +721,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ - project a primitive property from a feed
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_ProjectOneProperty_FromSetTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -736,8 +734,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                     var customers = query.EndExecute(ar);
                     foreach (var customer in customers)
                     {
-                        Assert.AreEqual(0, customer.CustomerId);
-                        Assert.IsNotNull(customer.Name);
+                        Assert.Equal(0, customer.CustomerId);
+                        Assert.NotNull(customer.Name);
                     }
 
                     this.EnqueueTestComplete();
@@ -750,7 +748,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ - project two primitive property from a feed
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_ProjectTwoProperties_FromSetTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -764,8 +762,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
 
                     foreach (var customer in customers)
                     {
-                        Assert.AreNotEqual(0, customer.CustomerId);
-                        Assert.IsNotNull(customer.Name);
+                        Assert.NotEqual(0, customer.CustomerId);
+                        Assert.NotNull(customer.Name);
                     }
                     this.EnqueueTestComplete();
                 },
@@ -777,7 +775,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ query Project properties from entity and expanded entity
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_ProjectPropertiesFromEntityandExpandedEntity()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -787,8 +785,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                          ) as DataServiceQuery<Computer>;
             var ar = query.BeginExecute(null, null).EnqueueWait(this);
             var c1 = query.EndExecute(ar).Single();
-            Assert.AreEqual(-10, c1.ComputerId);
-            Assert.AreEqual(-10, c1.ComputerDetail.ComputerDetailId);
+            Assert.Equal(-10, c1.ComputerId);
+            Assert.Equal(-10, c1.ComputerDetail.ComputerDetailId);
 
             this.EnqueueTestComplete();
         }
@@ -796,7 +794,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ query Project Name Stream Property
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_ProjectNameStreamProperty()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -807,8 +805,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                    (ar) =>
                    {
                        var c1 = query.EndExecute(ar).SingleOrDefault();
-                       Assert.AreEqual(-10, c1.CustomerId);
-                       Assert.IsNotNull(c1.Video);
+                       Assert.Equal(-10, c1.CustomerId);
+                       Assert.NotNull(c1.Video);
                        this.EnqueueTestComplete();
                    },
                    null);
@@ -819,7 +817,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ query Order By Canonical Fuctions
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_OrderByCanonicalFunctionString()
         {
             var name = "commastartedtotalnormaloffsetsregisteredgroupcelestialexposureconventionsimportcastclass";
@@ -829,7 +827,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                       select new Customer { CustomerId = c.CustomerId, Name = c.Name, }) as DataServiceQuery<Customer>;
             var ar0 = q0.BeginExecute(null, null).EnqueueWait(this);
             var value0 = q0.EndExecute(ar0).ToList();
-            Assert.AreEqual(-8, value0[1].CustomerId);
+            Assert.Equal(-8, value0[1].CustomerId);
 
             this.EnqueueTestComplete();
         }
@@ -838,7 +836,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ query Order By Canonical Fuctions
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_OrderByCanonicalFunctionMath()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -847,14 +845,14 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                       select c) as DataServiceQuery<ComputerDetail>;
             var ar1 = q1.BeginExecute(null, null).EnqueueWait(this);
             var value1 = q1.EndExecute(ar1).ToList();
-            Assert.IsTrue(value1.First().Dimensions.Depth > value1.Last().Dimensions.Depth);
+            Assert.True(value1.First().Dimensions.Depth > value1.Last().Dimensions.Depth);
         }
 #endif
 
         /// <summary>
         /// LINQ query Order By Canonical Fuctions
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_OrderByCanonicalFunctionDateTime()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -863,8 +861,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                       select c) as DataServiceQuery<ComputerDetail>;
             var ar2 = q2.BeginExecute(null, null).EnqueueWait(this);
             var value2 = q2.EndExecute(ar2).ToList();
-            Assert.IsTrue(value2.First().ComputerDetailId == -9);
-            Assert.IsTrue(value2.Last().ComputerDetailId == -10);
+            Assert.True(value2.First().ComputerDetailId == -9);
+            Assert.True(value2.Last().ComputerDetailId == -10);
 
             this.EnqueueTestComplete();
         }
@@ -872,7 +870,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ query Order By Canonical Fuctions
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_OrderByCanonicalFunctionInt()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -881,7 +879,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                       select c) as DataServiceQuery<Employee>;
             var ar = q4.BeginExecute(null, null).EnqueueWait(this);
             var value3 = q4.EndExecute(ar).ToList();
-            Assert.AreEqual(5309, value3.Last().ManagersPersonId);
+            Assert.Equal(5309, value3.Last().ManagersPersonId);
 
             this.EnqueueTestComplete();
         }
@@ -889,7 +887,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ query Filter With Canonical Fuctions
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_FilterWithCanonicalFunctionString()
         {
             var name = "commastartedtotalnormaloffsetsregisteredgroupcelestialexposureconventionsimportcastclass";
@@ -899,7 +897,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                       select new Customer { CustomerId = c.CustomerId, Name = c.Name, }) as DataServiceQuery<Customer>;
             var ar0 = q0.BeginExecute(null, null).EnqueueWait(this);
             var value0 = q0.EndExecute(ar0).Single();
-            Assert.AreEqual(name, value0.Name);
+            Assert.Equal(name, value0.Name);
 
             this.EnqueueTestComplete();
         }
@@ -908,7 +906,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ query Order By Canonical Fuctions
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_FilterCanonicalFunctionMath()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -917,14 +915,14 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                       select c) as DataServiceQuery<ComputerDetail>;
             var ar1 = q1.BeginExecute(null, null).EnqueueWait(this);
             var value1 = q1.EndExecute(ar1).ToList();
-            Assert.AreEqual(4, value1.Count);
+            Assert.Equal(4, value1.Count);
         }
 #endif
 
         /// <summary>
         /// LINQ query Order By Canonical Fuctions
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_FilterCanonicalFunctionDate()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -933,7 +931,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                       select c) as DataServiceQuery<ComputerDetail>;
             var ar2 = q2.BeginExecute(null, null).EnqueueWait(this);
             var value2 = q2.EndExecute(ar2).Single();
-            Assert.AreEqual(-10, value2.ComputerDetailId);
+            Assert.Equal(-10, value2.ComputerDetailId);
 
             this.EnqueueTestComplete();
         }
@@ -941,7 +939,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ query Order By Canonical Fuctions
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_FilterCanonicalFunctionInt()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -950,7 +948,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                       select c) as DataServiceQuery<Employee>;
             var ar = q4.BeginExecute(null, null).EnqueueWait(this);
             var value3 = q4.EndExecute(ar).ToList();
-            Assert.AreEqual(1, value3.Count);
+            Assert.Equal(1, value3.Count);
 
             this.EnqueueTestComplete();
         }
@@ -959,7 +957,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LoadAsync and LoadNextPartialSetAsync Test
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void LoadAsyncTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -978,7 +976,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                         else
                         {
                             this.EnqueueTestComplete();
-                            Assert.AreEqual(10, dataServiceCollection.Count);
+                            Assert.Equal(10, dataServiceCollection.Count);
                         }
                     }
                 };
@@ -991,7 +989,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ - project a primitive property from a single entity into a custom entity
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_ProjectIntoEntity_FromSingleEntityTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -1004,8 +1002,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 {
                     var customer = query.EndExecute(ar).Single();
 
-                    Assert.AreEqual(0, customer.CustomerId);
-                    Assert.AreEqual("commastartedtotalnormaloffsetsregisteredgroupcelestialexposureconventionsimportcastclass", customer.Name);
+                    Assert.Equal(0, customer.CustomerId);
+                    Assert.Equal("commastartedtotalnormaloffsetsregisteredgroupcelestialexposureconventionsimportcastclass", customer.Name);
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -1016,7 +1014,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ - project a primitive property from a single entity, materialized into a non entity object using the constructor
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_ProjectIntoNonEntityUsingConstructor_FromSingleEntityTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -1029,8 +1027,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 {
                     var customer = query.EndExecute(ar).Single();
 
-                    Assert.AreEqual(1000, customer.CustomerId);
-                    Assert.AreEqual("commastartedtotalnormaloffsetsregisteredgroupcelestialexposureconventionsimportcastclass", customer.Name);
+                    Assert.Equal(1000, customer.CustomerId);
+                    Assert.Equal("commastartedtotalnormaloffsetsregisteredgroupcelestialexposureconventionsimportcastclass", customer.Name);
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -1041,7 +1039,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ - project a primitive property from a single entity, materialized into a non entity object using property initializers
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_ProjectIntoNonEntityUsingInitializers_FromSingleEntityTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -1054,8 +1052,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 {
                     var customer = query.EndExecute(ar).Single();
 
-                    Assert.AreEqual(1000, customer.CustomerId);
-                    Assert.AreEqual("commastartedtotalnormaloffsetsregisteredgroupcelestialexposureconventionsimportcastclass", customer.Name);
+                    Assert.Equal(1000, customer.CustomerId);
+                    Assert.Equal("commastartedtotalnormaloffsetsregisteredgroupcelestialexposureconventionsimportcastclass", customer.Name);
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -1066,7 +1064,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ - project an EPM property from a feed
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_ProjectMappedProperties_FromSetTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -1080,8 +1078,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
 
                     foreach (var customer in customers)
                     {
-                        Assert.AreNotEqual(0, customer.CustomerId);
-                        Assert.IsNull(customer.Name);
+                        Assert.NotEqual(0, customer.CustomerId);
+                        Assert.Null(customer.Name);
                     }
                     this.EnqueueTestComplete();
                 },
@@ -1093,7 +1091,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ - project an EPM property from a single entity
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_ProjectMappedProperties_FromSingleEntityTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -1106,8 +1104,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 {
                     var customer = query.EndExecute(ar).Single();
 
-                    Assert.AreEqual(-10, customer.CustomerId);
-                    Assert.AreEqual(null, customer.Name);
+                    Assert.Equal(-10, customer.CustomerId);
+                    Assert.Equal(null, customer.Name);
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -1118,7 +1116,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ - project a navigation property from a feed
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_ProjectNavigationProperty_FromSetTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -1132,7 +1130,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
 
                     foreach (var customer in customers)
                     {
-                        Assert.IsNotNull(customer.Wife);
+                        Assert.NotNull(customer.Wife);
                     }
                     this.EnqueueTestComplete();
                 },
@@ -1144,7 +1142,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ - project a navigation property from a single entity
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_ProjectNavigationProperty_FromSingleEntityTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -1157,7 +1155,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 {
                     var customer = query.EndExecute(ar).Single();
 
-                    Assert.IsNotNull(customer.Wife);
+                    Assert.NotNull(customer.Wife);
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -1168,7 +1166,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ - project a primitive property from a single entity
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_ProjectProperty_FromSingleEntityTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -1181,8 +1179,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 {
                     var customer = query.EndExecute(ar).Single();
 
-                    Assert.AreEqual(0, customer.CustomerId);
-                    Assert.AreEqual("commastartedtotalnormaloffsetsregisteredgroupcelestialexposureconventionsimportcastclass", customer.Name);
+                    Assert.Equal(0, customer.CustomerId);
+                    Assert.Equal("commastartedtotalnormaloffsetsregisteredgroupcelestialexposureconventionsimportcastclass", customer.Name);
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -1190,7 +1188,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             this.WaitForTestToComplete();
         }
 
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_ProjectTwoProperties_FromSingleEntityTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -1203,8 +1201,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 {
                     var customer = query.EndExecute(ar).Single();
 
-                    Assert.AreEqual(-10, customer.CustomerId);
-                    Assert.AreEqual("commastartedtotalnormaloffsetsregisteredgroupcelestialexposureconventionsimportcastclass", customer.Name);
+                    Assert.Equal(-10, customer.CustomerId);
+                    Assert.Equal("commastartedtotalnormaloffsetsregisteredgroupcelestialexposureconventionsimportcastclass", customer.Name);
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -1215,7 +1213,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ query using Skip() an Take()
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_SkipTakeTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -1225,8 +1223,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 (ar) =>
                 {
                     var computers = query.EndExecute(ar).ToList();
-                    Assert.AreEqual(-9, computers.First().ComputerId);
-                    Assert.AreEqual(-7, computers.Last().ComputerId);
+                    Assert.Equal(-9, computers.First().ComputerId);
+                    Assert.Equal(-7, computers.Last().ComputerId);
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -1237,7 +1235,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ query using Skip()
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_SkipTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -1247,8 +1245,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 (ar) =>
                 {
                     var computers = query.EndExecute(ar).ToList();
-                    Assert.AreEqual(-9, computers.First().ComputerId);
-                    Assert.AreEqual(-1, computers.Last().ComputerId);
+                    Assert.Equal(-9, computers.First().ComputerId);
+                    Assert.Equal(-1, computers.Last().ComputerId);
 
                     this.EnqueueTestComplete();
                 },
@@ -1260,7 +1258,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ query using Take()
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_TakeTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -1270,8 +1268,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 (ar) =>
                 {
                     var computers = query.EndExecute(ar).ToList();
-                    Assert.AreEqual(-10, computers.First().ComputerId);
-                    Assert.AreEqual(-9, computers.Last().ComputerId);
+                    Assert.Equal(-10, computers.First().ComputerId);
+                    Assert.Equal(-9, computers.Last().ComputerId);
                     this.EnqueueTestComplete();
                 },
                 null);
@@ -1282,7 +1280,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// LINQ - project two primitive property from a single entity
         /// </summary>
-        [TestMethod, Asynchronous]
+        [Fact, Asynchronous]
         public void Linq_Where_GreaterThan()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -1295,7 +1293,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
 
                     foreach (var customer in customers)
                     {
-                        Assert.IsTrue(customer.CustomerId > 0);
+                        Assert.True(customer.CustomerId > 0);
                     }
 
                     this.EnqueueTestComplete();

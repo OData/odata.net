@@ -141,7 +141,6 @@ namespace EdmLibTests.FunctionalTests
             var expectedErrors = new EdmLibTestErrors()
             {
                 {9,  6,  EdmErrorCode.PrimitiveConstantExpressionNotValidForNonPrimitiveType},
-                {10, 6,  EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType},
                 {12, 10, EdmErrorCode.RecordExpressionNotValidForNonStructuredType},
             };
 

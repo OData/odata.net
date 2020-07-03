@@ -11,9 +11,8 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
     using System.Collections.ObjectModel;
     using System.Linq;
     using Microsoft.OData.Client;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class ClientAnnotationTests
     {
         DefaultContainerPlus dsc = new DefaultContainerPlus(new Uri("http://odataService/"));
@@ -110,7 +109,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
     ]
 }";
 
-        [TestMethod]
+        [Fact]
         public void TestGetAnnotationOnFeed()
         {
             foreach (var mergeOption in mergeOptions)
@@ -125,15 +124,15 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                     // Get Enum instance annotation on feed
                     PersonGenderPlus annotation;
                     bool result = dsc.TryGetAnnotation<PersonGenderPlus>(peopleQueryResponse1, "Microsoft.OData.SampleService.Models.TripPin.Gender", out annotation);
-                    Assert.IsTrue(result);
-                    Assert.AreEqual(PersonGenderPlus.MalePlus, annotation); ;
+                    Assert.True(result);
+                    Assert.Equal(PersonGenderPlus.MalePlus, annotation); ;
 
                     // Get collection instance annotation on one of the entities in the returned collection
                     ICollection<string> annotation2 = null;
                     result = dsc.TryGetAnnotation<ICollection<string>>(people1[0], "Microsoft.OData.SampleService.Models.TripPin.SeoTerms", out annotation2);
-                    Assert.IsTrue(result);
-                    Assert.IsNotNull(annotation2);
-                    Assert.AreEqual("Bob1", annotation2.First());
+                    Assert.True(result);
+                    Assert.NotNull(annotation2);
+                    Assert.Equal("Bob1", annotation2.First());
 
                     // Set the response to a new value
                     response = response.Replace(
@@ -148,38 +147,38 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
 
                     // Verify the instance annotation for this feed has been changed
                     result = dsc.TryGetAnnotation<PersonGenderPlus>(peopleQueryResponse2, "Microsoft.OData.SampleService.Models.TripPin.Gender", out annotation);
-                    Assert.IsTrue(result);
-                    Assert.AreEqual(PersonGenderPlus.FemalePlus, annotation);
+                    Assert.True(result);
+                    Assert.Equal(PersonGenderPlus.FemalePlus, annotation);
 
                     // Verify the instance annotation that is being tracked according to the merge option.
                     result = dsc.TryGetAnnotation<ICollection<string>>(people1[0], "Microsoft.OData.SampleService.Models.TripPin.SeoTerms", out annotation2);
-                    Assert.IsTrue(result);
-                    Assert.IsNotNull(annotation2);
+                    Assert.True(result);
+                    Assert.NotNull(annotation2);
                     if (mergeOption == MergeOption.OverwriteChanges || mergeOption == MergeOption.PreserveChanges)
                     {
-                        Assert.AreEqual("Bob2", annotation2.First());
+                        Assert.Equal("Bob2", annotation2.First());
                     }
                     else
                     {
-                        Assert.AreEqual("Bob1", annotation2.First());
+                        Assert.Equal("Bob1", annotation2.First());
                     }
 
                     result = dsc.TryGetAnnotation<ICollection<string>>(people2[0], "Microsoft.OData.SampleService.Models.TripPin.SeoTerms", out annotation2);
-                    Assert.IsTrue(result);
-                    Assert.IsNotNull(annotation2);
+                    Assert.True(result);
+                    Assert.NotNull(annotation2);
                     if (mergeOption == MergeOption.AppendOnly)
                     {
-                        Assert.AreEqual("Bob1", annotation2.First());
+                        Assert.Equal("Bob1", annotation2.First());
                     }
                     else
                     {
-                        Assert.AreEqual("Bob2", annotation2.First());
+                        Assert.Equal("Bob2", annotation2.First());
                     }
                 });
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void TestGetAnnotationOnFeedWithFilter()
         {
             TestAnnotation(FeedPayloadWithInstanceAnnotationOnFeedandEntry, () =>
@@ -189,19 +188,19 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
 
                 ICollection<string> annotation2 = null;
                 bool result = dsc.TryGetAnnotation<ICollection<string>>(people[0], "Microsoft.OData.SampleService.Models.TripPin.SeoTerms", out annotation2);
-                Assert.IsTrue(result);
-                Assert.IsNotNull(annotation2);
-                Assert.AreEqual("Bob1", annotation2.First());
+                Assert.True(result);
+                Assert.NotNull(annotation2);
+                Assert.Equal("Bob1", annotation2.First());
 
                 // Verify the instance annotation for the colletion of entity
                 PersonGenderPlus annotation;
                 result = dsc.TryGetAnnotation<PersonGenderPlus>(peopleQueryResponse, "Microsoft.OData.SampleService.Models.TripPin.Gender", out annotation);
-                Assert.IsTrue(result);
-                Assert.AreEqual(PersonGenderPlus.MalePlus, annotation);
+                Assert.True(result);
+                Assert.Equal(PersonGenderPlus.MalePlus, annotation);
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void TestGetAnnotationOnFeedWithProjection()
         {
             var response = @"{
@@ -267,34 +266,34 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
 
                 // Verify the instance annotation for the collection of entity
                 bool result = dsc.TryGetAnnotation(peopleQueryResponse, "Microsoft.OData.SampleService.Models.TripPin.Gender", out annotation);
-                Assert.IsTrue(result);
-                Assert.AreEqual(PersonGenderPlus.FemalePlus, annotation);
+                Assert.True(result);
+                Assert.Equal(PersonGenderPlus.FemalePlus, annotation);
 
                 // Verify the instance annotation for one of the entities in the returned collection.
                 bool searchAnnotation;
                 result = dsc.TryGetAnnotation((object)people[0], "Microsoft.OData.SampleService.Models.TripPin.SearchRestrictions2", out searchAnnotation);
-                Assert.IsTrue(result);
-                Assert.IsTrue(searchAnnotation);
+                Assert.True(result);
+                Assert.True(searchAnnotation);
 
                 // Verify the instance annotation for the property in one entity
                 ICollection<string> seoAnnotation = null;
                 result = dsc.TryGetAnnotation<Func<ICollection<string>>, ICollection<string>>(() => people[0].EmailsPlus, "Microsoft.OData.SampleService.Models.TripPin.SeoTerms", out seoAnnotation);
-                Assert.IsTrue(result);
-                Assert.AreEqual("test", seoAnnotation.First());
+                Assert.True(result);
+                Assert.Equal("test", seoAnnotation.First());
 
                 string cityNameAnnotation = null;
                 result = dsc.TryGetAnnotation<Func<LocationPlus>, string>(() => people.First().LocationPlus, "Microsoft.OData.SampleService.Models.TripPin.CityName", out cityNameAnnotation);
-                Assert.IsTrue(result);
-                Assert.AreEqual("MyCity", cityNameAnnotation);
+                Assert.True(result);
+                Assert.Equal("MyCity", cityNameAnnotation);
 
                 bool computedAnnotation;
                 result = dsc.TryGetAnnotation<Func<long>, bool>(() => people.First().ConcurrencyPlus, "Org.OData.Core.V1.Computed", out computedAnnotation);
-                Assert.IsTrue(result);
-                Assert.AreEqual(false, computedAnnotation);
+                Assert.True(result);
+                Assert.False(computedAnnotation);
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void TestGetAnnotationOnNavigationPropertyWithProjection()
         {
             var response = @"{
@@ -390,34 +389,34 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
 
                 // Verify the instance annotation for the collection of entity
                 bool result = dsc.TryGetAnnotation(peopleQueryResponse, "Microsoft.OData.SampleService.Models.TripPin.Gender", out annotation);
-                Assert.IsTrue(result);
-                Assert.AreEqual(PersonGenderPlus.FemalePlus, annotation);
+                Assert.True(result);
+                Assert.Equal(PersonGenderPlus.FemalePlus, annotation);
 
                 // Verify the instance annotation for the entity in the returned collection.
                 bool searchAnnotation;
                 result = dsc.TryGetAnnotation<Func<PersonPlus>, bool>(() => people[1].PartnerPlus, "Microsoft.OData.SampleService.Models.TripPin.SearchRestrictions2", out searchAnnotation);
-                Assert.IsTrue(result);
-                Assert.IsTrue(searchAnnotation);
+                Assert.True(result);
+                Assert.True(searchAnnotation);
 
                 // Verify the instance annotation for the property in one entity
                 ICollection<string> seoAnnotation = null;
                 result = dsc.TryGetAnnotation<Func<ICollection<string>>, ICollection<string>>(() => people[1].PartnerPlus.EmailsPlus, "Microsoft.OData.SampleService.Models.TripPin.SeoTerms", out seoAnnotation);
-                Assert.IsTrue(result);
-                Assert.AreEqual("test", seoAnnotation.First());
+                Assert.True(result);
+                Assert.Equal("test", seoAnnotation.First());
 
                 string cityNameAnnotation = null;
                 result = dsc.TryGetAnnotation<Func<LocationPlus>, string>(() => people[1].PartnerPlus.LocationPlus, "Microsoft.OData.SampleService.Models.TripPin.CityName", out cityNameAnnotation);
-                Assert.IsTrue(result);
-                Assert.AreEqual("MyCity", cityNameAnnotation);
+                Assert.True(result);
+                Assert.Equal("MyCity", cityNameAnnotation);
 
                 bool computedAnnotation;
                 result = dsc.TryGetAnnotation<Func<long>, bool>(() => people[1].PartnerPlus.ConcurrencyPlus, "Org.OData.Core.V1.Computed", out computedAnnotation);
-                Assert.IsTrue(result);
-                Assert.AreEqual(false, computedAnnotation);
+                Assert.True(result);
+                Assert.False(computedAnnotation);
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void TestGetAnnotationOnSingleton()
         {
             foreach (var mergeOption in mergeOptions)
@@ -432,8 +431,8 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
 
                     // Get complex type instance annotation on entity returned by querying Singleton
                     bool result = dsc.TryGetAnnotation(me, "Microsoft.OData.SampleService.Models.TripPin.SearchRestrictions2", out annotation);
-                    Assert.IsTrue(result);
-                    Assert.IsFalse(annotation);
+                    Assert.True(result);
+                    Assert.False(annotation);
 
                     // Set the response to a new value
                     response = response.Replace(
@@ -445,14 +444,14 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                     var me2 = dsc.MePlus.GetValue();
 
                     result = dsc.TryGetAnnotation(me2, "Microsoft.OData.SampleService.Models.TripPin.SearchRestrictions2", out annotation);
-                    Assert.IsTrue(result);
+                    Assert.True(result);
                     if (mergeOption == MergeOption.AppendOnly)
                     {
-                        Assert.IsFalse(annotation);
+                        Assert.False(annotation);
                     }
                     else
                     {
-                        Assert.IsTrue(annotation);
+                        Assert.True(annotation);
                     }
 
                     // TODO : #625
@@ -470,32 +469,32 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
 //                    // Get complex type instance annotation on entity according to the merge option
 //                    annotation = null;
 //                    result = dsc.TryGetAnnotation(me, "Microsoft.OData.SampleService.Models.TripPin.SearchRestrictions", out annotation);
-//                    Assert.IsTrue(result);
+//                    Assert.True(result);
 //                    if (mergeOption == MergeOption.OverwriteChanges || mergeOption == MergeOption.PreserveChanges)
 //                    {
-//                        Assert.AreEqual(SearchExpressionsPlus.ORPlus, annotation.UnsupportedExpressionsPlus);
+//                        Assert.Equal(SearchExpressionsPlus.ORPlus, annotation.UnsupportedExpressionsPlus);
 //                    }
 //                    else
 //                    {
-//                        Assert.AreEqual(SearchExpressionsPlus.NOTPlus | SearchExpressionsPlus.ORPlus, annotation.UnsupportedExpressionsPlus);
+//                        Assert.Equal(SearchExpressionsPlus.NOTPlus | SearchExpressionsPlus.ORPlus, annotation.UnsupportedExpressionsPlus);
 //                    }
 
 //                    // Get the new annotation on this entity
 //                    result = dsc.TryGetAnnotation(me2, "Microsoft.OData.SampleService.Models.TripPin.SearchRestrictions", out annotation);
-//                    Assert.IsTrue(result);
+//                    Assert.True(result);
 //                    if (mergeOption == MergeOption.AppendOnly)
 //                    {
-//                        Assert.AreEqual(SearchExpressionsPlus.NOTPlus | SearchExpressionsPlus.ORPlus, annotation.UnsupportedExpressionsPlus);
+//                        Assert.Equal(SearchExpressionsPlus.NOTPlus | SearchExpressionsPlus.ORPlus, annotation.UnsupportedExpressionsPlus);
 //                    }
 //                    else
 //                    {
-//                        Assert.AreEqual(SearchExpressionsPlus.ORPlus, annotation.UnsupportedExpressionsPlus);
+//                        Assert.Equal(SearchExpressionsPlus.ORPlus, annotation.UnsupportedExpressionsPlus);
 //                    }
                 });
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void TestGetCollectionInstanceAnnotationOnODataEntryWhenPayloadisODataEntryButNotSingleton()
         {
             foreach (var mergeOption in mergeOptions)
@@ -533,9 +532,9 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
 
                     // Get instance annotation on a single entity
                     bool result = dsc.TryGetAnnotation<ICollection<string>>(person, "Microsoft.OData.SampleService.Models.TripPin.SeoTerms", out annotation);
-                    Assert.IsTrue(result);
-                    Assert.IsNotNull(annotation);
-                    Assert.AreEqual("Russell1", annotation.ElementAt(0));
+                    Assert.True(result);
+                    Assert.NotNull(annotation);
+                    Assert.Equal("Russell1", annotation.ElementAt(0));
 
                     response = response.Replace("Russell1", "Russell2");
                     SetResponse(response);
@@ -545,27 +544,27 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
 
                     // Get instance annotation on a single entity, should be changed according to the merge options
                     result = dsc.TryGetAnnotation<ICollection<string>>(person, "Microsoft.OData.SampleService.Models.TripPin.SeoTerms", out annotation);
-                    Assert.IsTrue(result);
-                    Assert.IsNotNull(annotation);
+                    Assert.True(result);
+                    Assert.NotNull(annotation);
                     if (mergeOption == MergeOption.OverwriteChanges || mergeOption == MergeOption.PreserveChanges)
                     {
-                        Assert.AreEqual("Russell2", annotation.ElementAt(0));
+                        Assert.Equal("Russell2", annotation.ElementAt(0));
                     }
                     else
                     {
-                        Assert.AreEqual("Russell1", annotation.ElementAt(0));
+                        Assert.Equal("Russell1", annotation.ElementAt(0));
                     }
 
                     result = dsc.TryGetAnnotation<ICollection<string>>(person2, "Microsoft.OData.SampleService.Models.TripPin.SeoTerms", out annotation);
-                    Assert.IsTrue(result);
-                    Assert.IsNotNull(annotation);
+                    Assert.True(result);
+                    Assert.NotNull(annotation);
                     if (mergeOption == MergeOption.AppendOnly)
                     {
-                        Assert.AreEqual("Russell1", annotation.ElementAt(0));
+                        Assert.Equal("Russell1", annotation.ElementAt(0));
                     }
                     else
                     {
-                        Assert.AreEqual("Russell2", annotation.ElementAt(0));
+                        Assert.Equal("Russell2", annotation.ElementAt(0));
                     }
 
                     response = response.Replace("Russell2", "Russell3");
@@ -576,26 +575,26 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
 
                     // Get instance annotation on a single entity, it is not effected by the entity stored on client side.
                     result = dsc.TryGetAnnotation<ICollection<string>>(person2, "Microsoft.OData.SampleService.Models.TripPin.SeoTerms", out annotation);
-                    Assert.IsTrue(result);
-                    Assert.IsNotNull(annotation);
+                    Assert.True(result);
+                    Assert.NotNull(annotation);
                     if (mergeOption == MergeOption.AppendOnly)
                     {
-                        Assert.AreEqual("Russell1", annotation.ElementAt(0));
+                        Assert.Equal("Russell1", annotation.ElementAt(0));
                     }
                     else
                     {
-                        Assert.AreEqual("Russell2", annotation.ElementAt(0));
+                        Assert.Equal("Russell2", annotation.ElementAt(0));
                     }
 
                     // Get instance annotation on the projected single entity.
                     result = dsc.TryGetAnnotation<ICollection<string>>(person3, "Microsoft.OData.SampleService.Models.TripPin.SeoTerms", out annotation);
-                    Assert.IsNotNull(annotation);
-                    Assert.AreEqual("Russell3", annotation.ElementAt(0));
+                    Assert.NotNull(annotation);
+                    Assert.Equal("Russell3", annotation.ElementAt(0));
                 });
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void TestGetAnnotationOnDerivedEntity()
         {
             string response = @"{
@@ -631,13 +630,13 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
 
                 // Get instance annotation on a single entity
                 bool result = dsc.TryGetAnnotation<ICollection<string>>(person, "Microsoft.OData.SampleService.Models.TripPin.SeoTerms", out annotation);
-                Assert.IsTrue(result);
-                Assert.IsNotNull(annotation);
-                Assert.AreEqual("Russell1", annotation.ElementAt(0));
+                Assert.True(result);
+                Assert.NotNull(annotation);
+                Assert.Equal("Russell1", annotation.ElementAt(0));
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void TestGetInstanceAnnotationOnEntityWhichIsReturnedByFunction()
         {
             TestAnnotation(EntryPayloadWithInstanceAnnotationOnEntry, () =>
@@ -647,12 +646,12 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
 
                 bool annotation;
                 var result = dsc.TryGetAnnotation(partner, "Microsoft.OData.SampleService.Models.TripPin.SearchRestrictions2", out annotation);
-                Assert.IsTrue(result);
-                Assert.IsFalse(annotation);
+                Assert.True(result);
+                Assert.False(annotation);
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void TestGetInstanceAnnotationOnCollectionOfEntityWhichIsReturnedByFunction()
         {
             TestAnnotation(FeedPayloadWithInstanceAnnotationOnFeedandEntry, () =>
@@ -663,21 +662,21 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 // Get complex type instance annotation on returned feed
                 PersonGenderPlus annotation;
                 bool result = dsc.TryGetAnnotation(friendsQueryResponse, "Microsoft.OData.SampleService.Models.TripPin.Gender", out annotation);
-                Assert.IsTrue(result);
-                Assert.AreEqual(PersonGenderPlus.MalePlus, annotation);
+                Assert.True(result);
+                Assert.Equal(PersonGenderPlus.MalePlus, annotation);
 
                 // Get collection type instance annotation on one of the returned items
                 ICollection<string> annotation1 = null;
                 result = dsc.TryGetAnnotation(friends[0], "Microsoft.OData.SampleService.Models.TripPin.SeoTerms", out annotation1);
-                Assert.IsTrue(result);
-                Assert.IsNotNull(annotation1);
-                Assert.AreEqual("Bob1", annotation1.ElementAt(0));
+                Assert.True(result);
+                Assert.NotNull(annotation1);
+                Assert.Equal("Bob1", annotation1.ElementAt(0));
 
                 // Get collection type instance annotation on one of the returned derived items
                 bool annotation2;
                 result = dsc.TryGetAnnotation(friends[1], "Microsoft.OData.SampleService.Models.TripPin.SearchRestrictions2", out annotation2);
-                Assert.IsTrue(result);
-                Assert.IsTrue(annotation2);
+                Assert.True(result);
+                Assert.True(annotation2);
             });
         }
 
@@ -691,7 +690,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
         ""CountryRegion"":""China""
     }
 }";
-        [TestMethod]
+        [Fact]
         public void TestGetInstanceAnnotationOnODataComplexValueWhichIsReturnedByFunction()
         {
             TestAnnotation(ComplexValuePayloadWithInstanceAnnotationOnComplexValue, () =>
@@ -701,12 +700,12 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
 
                 string annotation = null;
                 bool result = dsc.TryGetAnnotation<string>(location, "Microsoft.OData.SampleService.Models.TripPin.CityName", out annotation);
-                Assert.IsTrue(result);
-                Assert.AreEqual("MyCity", annotation);
+                Assert.True(result);
+                Assert.Equal("MyCity", annotation);
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void TestGetInstanceAnnotationOnEntityWhichIsReturnedByAction()
         {
             TestAnnotation(EntryPayloadWithInstanceAnnotationOnEntry, () =>
@@ -717,12 +716,12 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 // Get complex type instance annotation on returned entity
                 bool annotation;
                 var result = dsc.TryGetAnnotation(partner, "Microsoft.OData.SampleService.Models.TripPin.SearchRestrictions2", out annotation);
-                Assert.IsTrue(result);
-                Assert.IsFalse(annotation);
+                Assert.True(result);
+                Assert.False(annotation);
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void TestGetInstanceAnnotationOnCollectionOfEntityWhichIsReturnedByAction()
         {
             TestAnnotation(FeedPayloadWithInstanceAnnotationOnFeedandEntry, () =>
@@ -734,25 +733,25 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 // Get complex type instance annotation on returned feed
                 PersonGenderPlus annotation;
                 bool result = dsc.TryGetAnnotation(friendsResponse, "Microsoft.OData.SampleService.Models.TripPin.Gender", out annotation);
-                Assert.IsTrue(result);
-                Assert.AreEqual(PersonGenderPlus.MalePlus, annotation);
+                Assert.True(result);
+                Assert.Equal(PersonGenderPlus.MalePlus, annotation);
 
                 // Get collection type instance annotation on one of the returned items
                 ICollection<string> annotation1 = null;
                 result = dsc.TryGetAnnotation(friends[0], "Microsoft.OData.SampleService.Models.TripPin.SeoTerms", out annotation1);
-                Assert.IsTrue(result);
-                Assert.IsNotNull(annotation1);
-                Assert.AreEqual("Bob1", annotation1.ElementAt(0));
+                Assert.True(result);
+                Assert.NotNull(annotation1);
+                Assert.Equal("Bob1", annotation1.ElementAt(0));
 
                 // Get collection type instance annotation on one of the returned derived items
                 bool annotation2;
                 result = dsc.TryGetAnnotation(friends[1], "Microsoft.OData.SampleService.Models.TripPin.SearchRestrictions2", out annotation2);
-                Assert.IsTrue(result);
-                Assert.IsTrue(annotation2);
+                Assert.True(result);
+                Assert.True(annotation2);
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void TestGetInstanceAnnotationOnODataComplexValueWhichIsReturnedByAction()
         {
             TestAnnotation(ComplexValuePayloadWithInstanceAnnotationOnComplexValue, () =>
@@ -762,12 +761,12 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
 
                 string annotation = null;
                 bool result = dsc.TryGetAnnotation<string>(location, "Microsoft.OData.SampleService.Models.TripPin.CityName", out annotation);
-                Assert.IsTrue(result);
-                Assert.AreEqual("MyCity", annotation);
+                Assert.True(result);
+                Assert.Equal("MyCity", annotation);
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void TestGetInstanceAnnotationOnEntityWhichIsReturnedByFunctionImport()
         {
             TestAnnotation(EntryPayloadWithInstanceAnnotationOnEntry, () =>
@@ -778,12 +777,12 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 // Get complex type instance annotation on returned entity
                 bool annotation;
                 var result = dsc.TryGetAnnotation(person, "Microsoft.OData.SampleService.Models.TripPin.SearchRestrictions2", out annotation);
-                Assert.IsTrue(result);
-                Assert.IsFalse(annotation);
+                Assert.True(result);
+                Assert.False(annotation);
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void TestGetInstanceAnnotationOnCollectionOfEntityWhichIsReturnedByFunctionImport()
         {
             TestAnnotation(FeedPayloadWithInstanceAnnotationOnFeedandEntry, () =>
@@ -794,25 +793,25 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 // Get complex type instance annotation on returned feed
                 PersonGenderPlus annotation;
                 bool result = dsc.TryGetAnnotation(getFriendsQueryResponse, "Microsoft.OData.SampleService.Models.TripPin.Gender", out annotation);
-                Assert.IsTrue(result);
-                Assert.AreEqual(PersonGenderPlus.MalePlus, annotation);
+                Assert.True(result);
+                Assert.Equal(PersonGenderPlus.MalePlus, annotation);
 
                 // Get collection type instance annotation on one of the returned items
                 ICollection<string> annotation1 = null;
                 result = dsc.TryGetAnnotation(friends[0], "Microsoft.OData.SampleService.Models.TripPin.SeoTerms", out annotation1);
-                Assert.IsTrue(result);
-                Assert.IsNotNull(annotation1);
-                Assert.AreEqual("Bob1", annotation1.ElementAt(0));
+                Assert.True(result);
+                Assert.NotNull(annotation1);
+                Assert.Equal("Bob1", annotation1.ElementAt(0));
 
                 // Get collection type instance annotation on one of the returned derived items
                 bool annotation2;
                 result = dsc.TryGetAnnotation(friends[1], "Microsoft.OData.SampleService.Models.TripPin.SearchRestrictions2", out annotation2);
-                Assert.IsTrue(result);
-                Assert.IsTrue(annotation2);
+                Assert.True(result);
+                Assert.True(annotation2);
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void TestGetInstanceAnnotationOnComplexTypePropertyInAnEntity()
         {
             foreach (var mergeOption in mergeOptions)
@@ -827,8 +826,8 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                     // Get instance annotation on ComplexProperty
                     string annotation = null;
                     bool result = dsc.TryGetAnnotation<Func<LocationPlus>, string>(() => person1.LocationPlus, "Microsoft.OData.SampleService.Models.TripPin.CityName", out annotation);
-                    Assert.IsTrue(result);
-                    Assert.AreEqual("MyCity", annotation);
+                    Assert.True(result);
+                    Assert.Equal("MyCity", annotation);
 
                     response = response.Replace("MyCity", "MyCity1");
                     SetResponse(response);
@@ -838,44 +837,44 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                     string annotationOnComplexInstance = null;
                     // Get instance annotation on ComplexProperty of the old entity by using propertyAccess
                     result = dsc.TryGetAnnotation<Func<LocationPlus>, string>(() => person1.LocationPlus, "Microsoft.OData.SampleService.Models.TripPin.CityName", out annotation);
-                    Assert.IsTrue(result);
+                    Assert.True(result);
 
                     // Get instance annotation on ComplexProperty of the old entity by using property instance
                     result = dsc.TryGetAnnotation(person1.LocationPlus, "Microsoft.OData.SampleService.Models.TripPin.CityName", out annotationOnComplexInstance);
-                    Assert.IsTrue(result);
+                    Assert.True(result);
                     if (mergeOption == MergeOption.OverwriteChanges || mergeOption == MergeOption.PreserveChanges)
                     {
-                        Assert.AreEqual("MyCity1", annotation);
-                        Assert.AreEqual("MyCity1", annotationOnComplexInstance);
+                        Assert.Equal("MyCity1", annotation);
+                        Assert.Equal("MyCity1", annotationOnComplexInstance);
                     }
                     else
                     {
-                        Assert.AreEqual("MyCity", annotation);
-                        Assert.AreEqual("MyCity", annotationOnComplexInstance);
+                        Assert.Equal("MyCity", annotation);
+                        Assert.Equal("MyCity", annotationOnComplexInstance);
                     }
 
                     // Get instance annotation on ComplexProperty of the new entity by using propertyAccess
                     result = dsc.TryGetAnnotation<Func<LocationPlus>, string>(() => person2.LocationPlus, "Microsoft.OData.SampleService.Models.TripPin.CityName", out annotation);
-                    Assert.IsTrue(result);
+                    Assert.True(result);
 
                     // Get instance annotation on ComplexProperty of the new entity by using property instance
                     result = dsc.TryGetAnnotation(person2.LocationPlus, "Microsoft.OData.SampleService.Models.TripPin.CityName", out annotationOnComplexInstance);
-                    Assert.IsTrue(result);
+                    Assert.True(result);
                     if (mergeOption == MergeOption.AppendOnly)
                     {
-                        Assert.AreEqual("MyCity", annotation);
-                        Assert.AreEqual("MyCity", annotationOnComplexInstance);
+                        Assert.Equal("MyCity", annotation);
+                        Assert.Equal("MyCity", annotationOnComplexInstance);
                     }
                     else
                     {
-                        Assert.AreEqual("MyCity1", annotation);
-                        Assert.AreEqual("MyCity1", annotationOnComplexInstance);
+                        Assert.Equal("MyCity1", annotation);
+                        Assert.Equal("MyCity1", annotationOnComplexInstance);
                     }
                 });
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void TestGetAnnotationOnPrimitivePropertyInAnEntity()
         {
             TestAnnotation(EntryPayloadWithInstanceAnnotationOnEntry, () =>
@@ -885,12 +884,12 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 bool annotation;
                 // Get instance annotation on primitive property
                 bool result = dsc.TryGetAnnotation<Func<long>, bool>(() => person.ConcurrencyPlus, "Org.OData.Core.V1.Computed", out annotation);
-                Assert.IsTrue(result);
-                Assert.AreEqual(false, annotation);
+                Assert.True(result);
+                Assert.False(annotation);
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void TestGetAnnotationOnCollectionPropertyInAnEntity()
         {
             TestAnnotation(EntryPayloadWithInstanceAnnotationOnEntry, () =>
@@ -900,21 +899,21 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 // Get instance annotation on collection property
                 ICollection<string> annotation;
                 bool result = dsc.TryGetAnnotation<Func<ObservableCollection<string>>, ICollection<string>>(() => person.EmailsPlus, "Microsoft.OData.SampleService.Models.TripPin.SeoTerms", out annotation);
-                Assert.IsTrue(result);
-                Assert.IsNotNull(annotation);
-                Assert.AreEqual("test", annotation.FirstOrDefault());
+                Assert.True(result);
+                Assert.NotNull(annotation);
+                Assert.Equal("test", annotation.FirstOrDefault());
 
                 // Get instance annotation on the same collection property
                 bool annotation1;
                 result = dsc.TryGetAnnotation<Func<ObservableCollection<string>>, bool>(() => person.EmailsPlus, "Org.OData.Core.V1.Computed", out annotation1);
-                Assert.IsTrue(result);
-                Assert.AreEqual(false, annotation1);
+                Assert.True(result);
+                Assert.False(annotation1);
             });
         }
 
         // github: https://github.com/OData/odata.net/issues/879: Need to support instance annotations on feed or nestedResourceInfo.
-        // [TestMethod]
-        public void TestGetAnnotationOnCollectionOfComplexTypePropertyInAnEntity()
+        //  [Fact]
+        internal void TestGetAnnotationOnCollectionOfComplexTypePropertyInAnEntity()
         {
             TestAnnotation(EntryPayloadWithInstanceAnnotationOnEntry, () =>
             {
@@ -923,32 +922,32 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 // Get instance annotation on collection property
                 string annotation;
                 bool result = dsc.TryGetAnnotation<Func<ObservableCollection<AssetPlus>>, string>(() => person.AssetsPlus, "Org.OData.Core.V1.Description", out annotation);
-                Assert.IsTrue(result);
-                Assert.AreEqual("All assets", annotation);
+                Assert.True(result);
+                Assert.Equal("All assets", annotation);
 
                 ICollection<string> annotation1;
                 // Get instance annotation on one item
                 result = dsc.TryGetAnnotation(person.AssetsPlus[0], "Microsoft.OData.SampleService.Models.TripPin.SeoTerms", out annotation1);
-                Assert.IsTrue(result);
-                Assert.IsNotNull(annotation1);
-                Assert.AreEqual("PC1", annotation1.FirstOrDefault());
+                Assert.True(result);
+                Assert.NotNull(annotation1);
+                Assert.Equal("PC1", annotation1.FirstOrDefault());
 
                 // Get null instance annotation on one item
                 result = dsc.TryGetAnnotation(person.AssetsPlus[1], "Org.OData.Core.V1.Description", out annotation);
-                Assert.IsTrue(result);
-                Assert.IsNull(annotation);
+                Assert.True(result);
+                Assert.Null(annotation);
 
                 // Get instance annotation on the collection in the complex property
                 result = dsc.TryGetAnnotation<Func<ObservableCollection<AssetTypePlus>>, ICollection<string>>(
                     () => person.AssetsPlus[1].KindPlus, "Microsoft.OData.SampleService.Models.TripPin.SeoTerms",
                     out annotation1);
-                Assert.IsTrue(result);
-                Assert.IsNotNull(annotation1);
-                Assert.AreEqual("PersonalAsset", annotation1.FirstOrDefault());
+                Assert.True(result);
+                Assert.NotNull(annotation1);
+                Assert.Equal("PersonalAsset", annotation1.FirstOrDefault());
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void TestGetAnnotationOnPropertyInDerivedEntity()
         {
             string response = @"{
@@ -996,16 +995,16 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
 
                 // Get instance annotation on a single entity
                 bool result = dsc.TryGetAnnotation<Func<LocationPlus>, string>(() => person.LocationPlus, "Microsoft.OData.SampleService.Models.TripPin.CityName", out annotation);
-                Assert.IsTrue(result);
-                Assert.AreEqual("Test1", annotation);
+                Assert.True(result);
+                Assert.Equal("Test1", annotation);
 
                 result = dsc.TryGetAnnotation<Func<LocationPlus>, string>(() => person.CompanyLocationPlus, "Microsoft.OData.SampleService.Models.TripPin.CityName", out annotation);
-                Assert.IsTrue(result);
-                Assert.AreEqual("Test2", annotation);
+                Assert.True(result);
+                Assert.Equal("Test2", annotation);
             });
         }
         
-        [TestMethod]
+        [Fact]
         public void TestGetInstanceAnnotationsOnEntityAndPropertiesWithSameName()
         {
             string response = @"{
@@ -1031,20 +1030,20 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 bool result = false;
 
                 result = dsc.TryGetAnnotation<string>(location, "Org.OData.Core.V1.Description", out annotation);
-                Assert.IsTrue(result);
-                Assert.AreEqual("My Company", annotation);
+                Assert.True(result);
+                Assert.Equal("My Company", annotation);
 
                 result = dsc.TryGetAnnotation<Func<string>, string>(() => location.CompanyNamePlus, "Org.OData.Core.V1.Description", out annotation);
-                Assert.IsTrue(result);
-                Assert.AreEqual("My Company Name", annotation);
+                Assert.True(result);
+                Assert.Equal("My Company Name", annotation);
 
                 result = dsc.TryGetAnnotation<Func<string>, string>(() => location.AddressPlus, "Org.OData.Core.V1.Description", out annotation);
-                Assert.IsTrue(result);
-                Assert.AreEqual("My Company Address", annotation);
+                Assert.True(result);
+                Assert.Equal("My Company Address", annotation);
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void TesDuplicateAnnotationsOnEntityThrows()
         {
             string response = @"{
@@ -1071,15 +1070,15 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 }
                 catch (ArgumentException ex)
                 {
-                    Assert.AreEqual("An item with the same key has already been added.", ex.Message);
+                    Assert.Equal("An item with the same key has already been added.", ex.Message);
                     exception = ex;
                 }
 
-                Assert.IsNotNull(exception);
+                Assert.NotNull(exception);
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void TestDuplicateAnnotationsOnPropertyThrows()
         {
             string response = @"{
@@ -1106,15 +1105,15 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 }
                 catch (ArgumentException ex)
                 {
-                    Assert.AreEqual("An item with the same key has already been added.", ex.Message);
+                    Assert.Equal("An item with the same key has already been added.", ex.Message);
                     exception = ex;
                 }
 
-                Assert.IsNotNull(exception);
+                Assert.NotNull(exception);
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void TestGetInstanceAnnotationOnSingleNavigationProperty()
         {
             string response = @"{
@@ -1147,21 +1146,21 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 var person = dsc.PeoplePlus.ByKey("russellwhyte").Expand(p => p.PartnerPlus).GetValue();
                 ICollection<string> annotation = null;
                 bool result = dsc.TryGetAnnotation<Func<PersonPlus>, ICollection<string>>(() => person.PartnerPlus, "Microsoft.OData.SampleService.Models.TripPin.SeoTerms", out annotation);
-                Assert.IsTrue(result);
-                Assert.IsNotNull(annotation);
-                Assert.AreEqual("Bob1", annotation.ElementAt(0));
-                Assert.AreEqual("Cat1", annotation.ElementAt(1));
+                Assert.True(result);
+                Assert.NotNull(annotation);
+                Assert.Equal("Bob1", annotation.ElementAt(0));
+                Assert.Equal("Cat1", annotation.ElementAt(1));
 
                 annotation = null;
                 result = dsc.TryGetAnnotation(person.PartnerPlus, "Microsoft.OData.SampleService.Models.TripPin.SeoTerms", out annotation);
-                Assert.IsTrue(result);
-                Assert.IsNotNull(annotation);
-                Assert.AreEqual("Bob1", annotation.ElementAt(0));
-                Assert.AreEqual("Cat1", annotation.ElementAt(1));
+                Assert.True(result);
+                Assert.NotNull(annotation);
+                Assert.Equal("Bob1", annotation.ElementAt(0));
+                Assert.Equal("Cat1", annotation.ElementAt(1));
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void TestGetInstanceAnnotationOnODataComplexValueWhenPayloadisODataComplexValue()
         {
             string response = @"{
@@ -1181,12 +1180,12 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 var location = dsc.PeoplePlus.ByKey("Jason").Select(p => p.LocationPlus).GetValue();
                 string annotation = null;
                 bool result = dsc.TryGetAnnotation<string>(location, "Microsoft.OData.SampleService.Models.TripPin.CityName", out annotation);
-                Assert.IsTrue(result);
-                Assert.AreEqual("MyCity", annotation);
+                Assert.True(result);
+                Assert.Equal("MyCity", annotation);
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void TestGetStringInstanceAnnotationOnODataComplexValueWhenPayloadisODataComplexValueofDerivedType()
         {
             string response = @"{
@@ -1207,17 +1206,17 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 var location = dsc.PeoplePlus.ByKey("Jason").Select(p => p.LocationPlus).GetValue() as CompanyLocationPlus;
                 string annotation = null;
                 bool result = dsc.TryGetAnnotation<string>(location, "Microsoft.OData.SampleService.Models.TripPin.CityName", out annotation);
-                Assert.IsTrue(result);
-                Assert.AreEqual("MyCity", annotation);
+                Assert.True(result);
+                Assert.Equal("MyCity", annotation);
 
                 // Verify the instance annotaiton on property in derived type
                 result = dsc.TryGetAnnotation<Func<string>, string>(() => location.CompanyNamePlus, "Org.OData.Core.V1.Description", out annotation);
-                Assert.IsTrue(result);
-                Assert.AreEqual("My Company", annotation);
+                Assert.True(result);
+                Assert.Equal("My Company", annotation);
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void TestGetNullableIntegerInstanceAnnotationOnODataEntry()
         {
             string response = @"{
@@ -1246,17 +1245,17 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 var person = dsc.PeoplePlus.ByKey("aprilcline").GetValue();
                 string annotation = null;
                 bool result = dsc.TryGetAnnotation<string>(person.LocationPlus, "Microsoft.OData.SampleService.Models.TripPin.CityName", out annotation);
-                Assert.IsTrue(result);
-                Assert.IsNull(annotation);
+                Assert.True(result);
+                Assert.Null(annotation);
 
                 Nullable<int> ageAnnotation = null;
                 result = dsc.TryGetAnnotation<Nullable<int>>(person, "Microsoft.OData.SampleService.Models.TripPin.Age", out ageAnnotation);
-                Assert.IsTrue(result);
-                Assert.IsNull(ageAnnotation);
+                Assert.True(result);
+                Assert.Null(ageAnnotation);
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void TestGetCollectionInstanceAnnotationWithOneNullItemOnEntity()
         {
             string response = @"{
@@ -1284,18 +1283,18 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
 
                 bool result = dsc.TryGetAnnotation<ICollection<string>>(person, "Microsoft.OData.SampleService.Models.TripPin.SeoTerms", out annotation);
 
-                Assert.IsTrue(result);
-                Assert.IsNotNull(annotation);
-                Assert.AreEqual(3, annotation.Count);
-                Assert.AreEqual("Russell1", annotation.ElementAt(0));
-                Assert.IsNull(annotation.ElementAt(1));
-                Assert.AreEqual("Whyte1", annotation.ElementAt(2));
+                Assert.True(result);
+                Assert.NotNull(annotation);
+                Assert.Equal(3, annotation.Count);
+                Assert.Equal("Russell1", annotation.ElementAt(0));
+                Assert.Null(annotation.ElementAt(1));
+                Assert.Equal("Whyte1", annotation.ElementAt(2));
             });
         }
 
         // github: https://github.com/OData/odata.net/issues/879: Need to support instance annotations on feed or nestedResourceInfo.
-        // [TestMethod]
-        public void TestGetDerivedInstanceWhileTheTermIsInBaseTypeAnnotationOnODataEntry()
+        //  [Fact]
+        internal void TestGetDerivedInstanceWhileTheTermIsInBaseTypeAnnotationOnODataEntry()
         {
             string response = @"{
     ""@odata.context"":""http://odataService/$metadata#People/$entity"",
@@ -1320,34 +1319,34 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 var person = dsc.PeoplePlus.ByKey("Jason").GetValue();
                 SearchRestrictionsTypePlus annotation = null;
                 bool result = dsc.TryGetAnnotation(person, unsupportExpressionTerm, out annotation);
-                Assert.IsTrue(result);
-                Assert.IsFalse(annotation.SearchablePlus.Value);
-                Assert.AreEqual(SearchExpressionsPlus.NOTPlus | SearchExpressionsPlus.ORPlus, annotation.UnsupportedExpressionsPlus);
+                Assert.True(result);
+                Assert.False(annotation.SearchablePlus.Value);
+                Assert.Equal(SearchExpressionsPlus.NOTPlus | SearchExpressionsPlus.ORPlus, annotation.UnsupportedExpressionsPlus);
 
                 SearchRestrictionsTypePlus unsupportExpressionAnnotation = null;
                 result = dsc.TryGetAnnotation(person, unsupportExpressionTerm, out unsupportExpressionAnnotation);
-                Assert.IsTrue(result);
+                Assert.True(result);
                 var typeCastedAnnotation = unsupportExpressionAnnotation as SearchRestrictionsTypePlus;
-                Assert.IsNotNull(typeCastedAnnotation);
-                Assert.IsFalse(typeCastedAnnotation.SearchablePlus.Value);
+                Assert.NotNull(typeCastedAnnotation);
+                Assert.False(typeCastedAnnotation.SearchablePlus.Value);
 
                 SetResponse(response.Replace(@"""Searchable"":false,", @"""Searchable"":null,"));
 
                 person = dsc.PeoplePlus.ByKey("Jason").GetValue();
                 result = dsc.TryGetAnnotation(person, unsupportExpressionTerm, out annotation);
-                Assert.IsTrue(result);
-                Assert.IsNull(annotation.SearchablePlus);
-                Assert.AreEqual(SearchExpressionsPlus.NOTPlus | SearchExpressionsPlus.ORPlus, annotation.UnsupportedExpressionsPlus);
+                Assert.True(result);
+                Assert.Null(annotation.SearchablePlus);
+                Assert.Equal(SearchExpressionsPlus.NOTPlus | SearchExpressionsPlus.ORPlus, annotation.UnsupportedExpressionsPlus);
 
                 result = dsc.TryGetAnnotation(person, unsupportExpressionTerm, out unsupportExpressionAnnotation);
-                Assert.IsTrue(result);
+                Assert.True(result);
                 typeCastedAnnotation = unsupportExpressionAnnotation as SearchRestrictionsTypePlus;
-                Assert.IsNotNull(typeCastedAnnotation);
-                Assert.IsNull(typeCastedAnnotation.SearchablePlus);
+                Assert.NotNull(typeCastedAnnotation);
+                Assert.Null(typeCastedAnnotation.SearchablePlus);
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void TestDisableInstanceAnnotationMaterializationOnODataFeed()
         {
             string response = FeedPayloadWithInstanceAnnotationOnFeedandEntry;
@@ -1360,19 +1359,19 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 // Get Enum annotation on feed, no instance annotation. 
                 PersonGenderPlus annotation;
                 bool result = dsc.TryGetAnnotation<PersonGenderPlus>(peopleQueryResponse, "Microsoft.OData.SampleService.Models.TripPin.Gender", out annotation);
-                Assert.IsFalse(result);
-                Assert.AreEqual(PersonGenderPlus.UnknownPlus, annotation);
+                Assert.False(result);
+                Assert.Equal(PersonGenderPlus.UnknownPlus, annotation);
 
                 // Get annotaion on entry, no instance annotation, return metadata annotation.
                 ICollection<string> annotation2 = null;
                 result = dsc.TryGetAnnotation<ICollection<string>>(people[0], "Microsoft.OData.SampleService.Models.TripPin.SeoTerms", out annotation2);
-                Assert.IsTrue(result);
-                Assert.AreEqual("Bob", annotation2.First());
-                Assert.AreEqual("BobCat", annotation2.ElementAt(1));
+                Assert.True(result);
+                Assert.Equal("Bob", annotation2.First());
+                Assert.Equal("BobCat", annotation2.ElementAt(1));
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void TestDisableInstanceAnnotationMaterializationOnOnODataComplexValue()
         {
             TestAnnotation(ComplexValuePayloadWithInstanceAnnotationOnComplexValue, () =>
@@ -1383,12 +1382,12 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
 
                 string annotation = null;
                 bool result = dsc.TryGetAnnotation<string>(location, "Microsoft.OData.SampleService.Models.TripPin.CityName", out annotation);
-                Assert.IsTrue(result);
-                Assert.AreEqual("Nanjing", annotation);
+                Assert.True(result);
+                Assert.Equal("Nanjing", annotation);
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void TestDisableInstanceAnnotationMaterializationOnCollectionPropertyInAnEntity()
         {
             TestAnnotation(EntryPayloadWithInstanceAnnotationOnEntry, () =>
@@ -1399,18 +1398,18 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 // Get instance annotation on collection property
                 ICollection<string> annotation;
                 bool result = dsc.TryGetAnnotation<Func<ObservableCollection<string>>, ICollection<string>>(() => person.EmailsPlus, "Microsoft.OData.SampleService.Models.TripPin.SeoTerms", out annotation);
-                Assert.IsFalse(result);
-                Assert.IsNull(annotation);
+                Assert.False(result);
+                Assert.Null(annotation);
 
                 // Get instance annotation on the same collection property
                 bool annotation1;
                 result = dsc.TryGetAnnotation<Func<ObservableCollection<string>>, bool>(() => person.EmailsPlus, "Org.OData.Core.V1.Computed", out annotation1);
-                Assert.IsFalse(result);
-                Assert.AreEqual(false, annotation1);
+                Assert.False(result);
+                Assert.False(annotation1);
             });
         }
 
-        [TestMethod]
+        [Fact]
         public void TestInstanceAnnotationsShouldBeEmptyIfNoInstanceAnnotationReturned()
         {
             const string FeedPayloadWithoutInstanceAnnotation = @"{
@@ -1446,7 +1445,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 var getFriendsQueryResponse = dsc.GetFriendsPlus("Russell").Execute() as QueryOperationResponse<PersonPlus>;
                 var friends = getFriendsQueryResponse.ToList();
 
-                Assert.AreEqual(0, dsc.InstanceAnnotations.Count);
+                Assert.Equal(0, dsc.InstanceAnnotations.Count);
             });
         }
 

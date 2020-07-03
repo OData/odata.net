@@ -13,12 +13,11 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using System.Linq;
     using FluentAssertions;
     using Microsoft.OData;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class ReceivingResponseEventArgsTests
     {
-        [TestMethod]
+        [Fact]
         public void ConstructorShouldGetHeadersFromParameter()
         {
             var originalHeaders = new List<KeyValuePair<string, string>> {new KeyValuePair<string, string>("first-header", "first_value"), new KeyValuePair<string, string>("second header", "second value")};
@@ -27,7 +26,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             originalHeaders.ForEach((h) => eventArgs.ResponseMessage.Headers.Should().Contain(h));
         }
 
-        [TestMethod]
+        [Fact]
         public void IsBatchOperationIsSetInConstructor()
         {
             var eventArgs = new ReceivingResponseEventArgs(new ResponseMessageSimulator(null), null, true);
@@ -36,7 +35,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             eventArgs.IsBatchPart.Should().BeFalse();
         }
 
-        [TestMethod]
+        [Fact]
         public void DescriptorIsFromConstructor()
         {
             var descriptor = new FunctionDescriptor();

@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="EdmModelReferenceElementsVisitor.cs" company="Microsoft">
+// <copyright file="EdmModelReferenceElementsXmlVisitor.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -13,13 +13,13 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
     /// <summary>
     /// The visitor for outputting &lt;edmx:referenced&gt; elements for referenced model.
     /// </summary>
-    internal class EdmModelReferenceElementsVisitor
+    internal class EdmModelReferenceElementsXmlVisitor
     {
-        private readonly EdmModelCsdlSchemaWriter schemaWriter;
+        private readonly EdmModelCsdlSchemaXmlWriter schemaWriter;
 
-        internal EdmModelReferenceElementsVisitor(IEdmModel model, XmlWriter xmlWriter, Version edmxVersion)
+        internal EdmModelReferenceElementsXmlVisitor(IEdmModel model, XmlWriter xmlWriter, Version edmxVersion)
         {
-            this.schemaWriter = new EdmModelCsdlSchemaWriter(model, model.GetNamespaceAliases(), xmlWriter, edmxVersion);
+            this.schemaWriter = new EdmModelCsdlSchemaXmlWriter(model, xmlWriter, edmxVersion);
         }
 
         #region write IEdmModel.References for referenced models.

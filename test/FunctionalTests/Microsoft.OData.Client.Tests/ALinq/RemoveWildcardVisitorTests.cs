@@ -5,9 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
-using FluentAssertions;
 using Microsoft.OData.Client.ALinq.UriParser;
-using Microsoft.OData;
 using Xunit;
 
 namespace Microsoft.OData.Client.Tests.ALinq
@@ -23,7 +21,8 @@ namespace Microsoft.OData.Client.Tests.ALinq
             RemoveWildcardVisitor visitor = new RemoveWildcardVisitor();
             SystemToken token = new SystemToken(ExpressionConstants.It, null);
             Action visitSystemToken = () => token.Accept(visitor);
-            visitSystemToken.ShouldThrow<NotSupportedException>().WithMessage(Strings.ALinq_IllegalSystemQueryOption(ExpressionConstants.It));
+            NotSupportedException exception = Assert.Throws<NotSupportedException>(visitSystemToken);
+            Assert.Equal(Strings.ALinq_IllegalSystemQueryOption(ExpressionConstants.It), exception.Message);
         }
 
         [Fact]
@@ -32,8 +31,8 @@ namespace Microsoft.OData.Client.Tests.ALinq
             RemoveWildcardVisitor visitor = new RemoveWildcardVisitor();
             NonSystemToken token = new NonSystemToken("stuff", null, new NonSystemToken("*", null, null));
             token.Accept(visitor);
-            token.Identifier.Should().Be("stuff");
-            token.NextToken.Should().BeNull();
+            Assert.Equal("stuff", token.Identifier);
+            Assert.Null(token.NextToken);
         }
 
         [Fact]
@@ -42,8 +41,9 @@ namespace Microsoft.OData.Client.Tests.ALinq
             RemoveWildcardVisitor visitor = new RemoveWildcardVisitor();
             NonSystemToken token = new NonSystemToken("stuff", null, null);
             token.Accept(visitor);
-            token.Identifier.Should().Be("stuff");
-            token.NextToken.Should().BeNull();
+
+            Assert.Equal("stuff", token.Identifier);
+            Assert.Null(token.NextToken);
         }
     }
 }

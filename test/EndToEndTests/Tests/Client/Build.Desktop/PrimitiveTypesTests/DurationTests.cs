@@ -15,14 +15,13 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
     using ODataClient = Microsoft.OData.Client;
 
     /// <summary>
     /// Tests for Edm.Duration primitive type
     /// Send query and verify the results from the service implemented using ODataLib and EDMLib.
     /// </summary>
-    [TestClass]
     public class DurationTests : ODataWCFServiceTestsBase<InMemoryEntities>
     {
         public DurationTests() : base(ServiceDescriptors.ODataWCFServiceDescriptor)
@@ -30,7 +29,7 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
 
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryEntitySet()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -40,7 +39,7 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
                 requestMessage.SetHeader("Accept", mimeType);
 
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -55,7 +54,7 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
                                 ODataResource entry = reader.Item as ODataResource;
                                 if (entry != null && entry.TypeName.EndsWith("Customer"))
                                 {
-                                    Assert.IsNotNull(entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders").Value);
+                                    Assert.NotNull(entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders").Value);
                                 }
                             }
                         }
@@ -64,7 +63,7 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryEntityInstance()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -74,7 +73,7 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
                 requestMessage.SetHeader("Accept", mimeType);
 
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -89,7 +88,7 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
                                 ODataResource entry = reader.Item as ODataResource;
                                 if (entry != null && entry.TypeName.EndsWith("Customer"))
                                 {
-                                    Assert.AreEqual(new TimeSpan(1), entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders").Value);
+                                    Assert.Equal(new TimeSpan(1), entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders").Value);
                                 }
                             }
                         }
@@ -98,7 +97,7 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryEntityProperty()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -113,7 +112,7 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
                 }
 
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -123,12 +122,12 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
                         property = messageReader.ReadProperty();
                     }
 
-                    Assert.AreEqual(new TimeSpan(1), property.Value);
+                    Assert.Equal(new TimeSpan(1), property.Value);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryEntityNavigation()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -138,7 +137,7 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
                 requestMessage.SetHeader("Accept", mimeType);
 
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -153,7 +152,7 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
                                 ODataResource entry = reader.Item as ODataResource;
                                 if (entry != null && entry.TypeName.EndsWith("Customer"))
                                 {
-                                    Assert.AreEqual(new TimeSpan(2), entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders").Value);
+                                    Assert.Equal(new TimeSpan(2), entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders").Value);
                                 }
                             }
                         }
@@ -162,7 +161,7 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryEntityPropertyValue()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -171,25 +170,25 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
             requestMessage.SetHeader("Accept", "*/*");
 
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
 
             using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
             {
                 var propertyValue = messageReader.ReadValue(EdmCoreModel.Instance.GetString(false));
-                Assert.AreEqual("PT0.0000001S", propertyValue);
+                Assert.Equal("PT0.0000001S", propertyValue);
             }
         }
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
-        [TestMethod]
+        [Fact]
         public void InsertAndUpdatePropertyValueUsingLinq()
         {
             TimeSpan timespan = new TimeSpan((new Random()).Next());
             var queryable = TestClientContext.Orders.Where(c => c.ShelfLife == timespan) as ODataClient.DataServiceQuery<Order>;
-            Assert.IsTrue(queryable.RequestUri.OriginalString.EndsWith("/Orders?$filter=ShelfLife eq duration'" + XmlConvert.ToString(timespan) + "'", StringComparison.Ordinal));
+            Assert.True(queryable.RequestUri.OriginalString.EndsWith("/Orders?$filter=ShelfLife eq duration'" + XmlConvert.ToString(timespan) + "'", StringComparison.Ordinal));
 
             var result1 = queryable.ToList();
-            Assert.IsTrue(result1.Count == 0);
+            Assert.True(result1.Count == 0);
 
             int orderID = (new Random()).Next();
 
@@ -206,8 +205,8 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
 
             // query and verify
             var result2 = queryable.ToList();
-            Assert.AreEqual(1, result2.Count);
-            Assert.AreEqual(orderID, result2[0].OrderID);
+            Assert.Equal(1, result2.Count);
+            Assert.Equal(orderID, result2[0].OrderID);
 
             // update the Duration properties
             timespan = new TimeSpan((new Random()).Next());
@@ -218,22 +217,22 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
 
             // query Duration property
             var queryable2 = TestClientContext.Orders.Where(c => c.OrderID == orderID).Select(c => c.ShelfLife).FirstOrDefault();
-            Assert.IsTrue(queryable2 != null);
-            Assert.AreEqual(timespan, queryable2);
+            Assert.True(queryable2 != null);
+            Assert.Equal(timespan, queryable2);
 
             // query collection of Duration property
             var queryable3 = (from c in TestClientContext.Orders
                               where c.OrderID == orderID
                               select c.OrderShelfLifes).FirstOrDefault();
 
-            Assert.IsTrue(queryable3.Count == 1);
-            Assert.AreEqual(timespan, queryable3[0]);
+            Assert.True(queryable3.Count == 1);
+            Assert.Equal(timespan, queryable3[0]);
 
             // delete entity and validate
             TestClientContext.DeleteObject(order);
             TestClientContext.SaveChanges(ODataClient.SaveChangesOptions.ReplaceOnUpdate);
             var queryable4 = TestClientContext.Execute<Order>(new Uri("Orders()?$filter=ShelfLife eq duration'" + XmlConvert.ToString(timespan) + "'", UriKind.Relative));
-            Assert.IsTrue(queryable4.Count() == 0);
+            Assert.True(queryable4.Count() == 0);
         }
 #endif
     }

@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 
 namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
@@ -42,6 +43,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         {
             this.schemata.Add(schema);
         }
+
+        public Version CsdlVersion { get; set; }
 
         /// <summary>
         /// Adds from current model.

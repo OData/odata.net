@@ -9,29 +9,26 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Text.RegularExpressions;
     using Microsoft.OData.Client;
     using System.Threading.Tasks;
     using Microsoft.OData;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using FluentAssertions;
     using Microsoft.OData.Client.TDDUnitTests;
+    using Xunit;
 
     /// <summary>
     /// Unit tests for the ODataWriterWrapperUnitTests class.
     /// </summary>
-    [TestClass]
     public class ODataWriterWrapperUnitTests
     {
         private DataServiceContext context;
 
-        [TestInitialize]
-        public void Init()
+        public ODataWriterWrapperUnitTests()
         {
-             context = new DataServiceContext(new Uri("http://www.odata.org/service.svc")).ReConfigureForNetworkLoadingTests();
-
+            context = new DataServiceContext(new Uri("http://www.odata.org/service.svc")).ReConfigureForNetworkLoadingTests();
         }
-        [TestMethod]
+
+        [Fact]
         public void EndToEndShortIntegrationWriteEntryEventTest()
         {
             List<KeyValuePair<string, object>> eventArgsCalled = new List<KeyValuePair<string, object>>();
@@ -95,7 +92,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             return person;
         }
 
-        [TestMethod]
+        [Fact]
         public void EntityPropertiesShouldBePopulatedBeforeCallingWriteStart()
         {
             context.Configurations.RequestPipeline.OnEntryStarting(args =>
@@ -106,7 +103,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             Person person = SetupSerializerAndCallWriteEntry(context);
         }
 
-        [TestMethod]
+        [Fact]
         public void OnEntryStartShouldBeFired()
         {
             ODataResource entry = new ODataResource();
@@ -124,7 +121,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             entry.Id.Should().Be(new Uri("http://foo.org"));
         }
 
-        [TestMethod]
+        [Fact]
         public void OnEntryEndShouldBeFired()
         {
             ODataResource entry = new ODataResource();
@@ -142,7 +139,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             entry.Id.Should().Be(new Uri("http://foo.org"));
         }
 
-        [TestMethod]
+        [Fact]
         public void OnNavLinkStartShouldBeFired()
         {
             Person p = new Person();
@@ -162,7 +159,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             link.Name.Should().Be("HomeAddress");
         }
 
-        [TestMethod]
+        [Fact]
         public void OnNavLinkEndShouldBeFired()
         {
             Person p = new Person();
@@ -182,7 +179,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             link.Name.Should().Be("foo");
         }
 
-        [TestMethod]
+        [Fact]
         public void OnEntityReferenceLink()
         {
             Person p = new Person();
@@ -203,7 +200,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             refLink.Url.Should().BeSameAs(testUrl);
         }
 
-        [TestMethod]
+        [Fact]
         public void SerializeEnity_TwoNavigationLinksInJsonFormat()
         {
             var person = new Person
@@ -317,7 +314,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             public override Task WriteStartAsync(ODataResourceSet feed)
             {
-                throw new InternalTestFailureException("Should not hit this code");
+                throw new Exception("Should not hit this code");
             }
 
             public override void WriteStart(ODataResource entry)
@@ -326,7 +323,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             public override Task WriteStartAsync(ODataResource entry)
             {
-                throw new InternalTestFailureException("Should not hit this code");
+                throw new Exception("Should not hit this code");
             }
 
             public override void WriteStart(ODataNestedResourceInfo navigationLink)
@@ -335,7 +332,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             public override Task WriteStartAsync(ODataNestedResourceInfo navigationLink)
             {
-                throw new InternalTestFailureException("Should not hit this code");
+                throw new Exception("Should not hit this code");
             }
 
             public override void WriteEnd()
@@ -344,7 +341,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             public override Task WriteEndAsync()
             {
-                throw new InternalTestFailureException("Should not hit this code");
+                throw new Exception("Should not hit this code");
             }
 
             public override void WriteEntityReferenceLink(ODataEntityReferenceLink entityReferenceLink)
@@ -353,17 +350,17 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             public override Task WriteEntityReferenceLinkAsync(ODataEntityReferenceLink entityReferenceLink)
             {
-                throw new InternalTestFailureException("Should not hit this code");
+                throw new Exception("Should not hit this code");
             }
 
             public override void Flush()
             {
-                throw new InternalTestFailureException("Should not hit this code");
+                throw new Exception("Should not hit this code");
             }
 
             public override Task FlushAsync()
             {
-                throw new InternalTestFailureException("Should not hit this code");
+                throw new Exception("Should not hit this code");
             }
         }
     }

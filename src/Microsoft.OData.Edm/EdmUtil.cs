@@ -650,6 +650,7 @@ namespace Microsoft.OData.Edm
         }
 
         // Hack to alert FXCop that we do check for null.
+        [AttributeUsage(AttributeTargets.Parameter)]
         private sealed class ValidatedNotNullAttribute : Attribute
         {
         }

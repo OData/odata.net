@@ -14,18 +14,14 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
     using Microsoft.Test.OData.Framework.Verification;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference;
-#if WIN8 || WINDOWSPHONE
-    using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-#else
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-#endif
+    using Xunit.Abstractions;
+    using Xunit;
 
-    [TestClass]
     public class RequestMessageArgsTests : EndToEndTestBase
     {
         private IODataRequestMessage lastRequestMessage = null;
 
-        public RequestMessageArgsTests() : base(ServiceDescriptors.AstoriaDefaultService)
+        public RequestMessageArgsTests(ITestOutputHelper helper) : base(ServiceDescriptors.AstoriaDefaultService, helper)
         {
         }
 
@@ -35,7 +31,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             base.CustomTestInitialize();
         }
 
-        [TestMethod]
+        [Fact]
         public void AddCustomHeader()
         {
             string headerName = "MyNewHeader";
@@ -53,13 +49,13 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             var ar = query.BeginExecute(null, null).EnqueueWait(this);
             query.EndExecute(ar);
 
-            Assert.IsNotNull(this.lastRequestMessage, "No request sent");
+            Assert.NotNull(this.lastRequestMessage);
             var header = this.lastRequestMessage.Headers.SingleOrDefault(h => h.Key == headerName);
-            Assert.IsNotNull(header, "Custom header not sent");
-            Assert.AreEqual(headerValue, header.Value, "Header value incorrect");
+            Assert.NotNull(header);
+            Assert.Equal(headerValue, header.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void ChangeMergeToPatch()
         {
             Func<DataServiceClientRequestMessageArgs, DataServiceClientRequestMessage> addHeader = 
@@ -94,11 +90,11 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             var ar2 = ctx.BeginSaveChanges(null, null).EnqueueWait(this);
             ctx.EndSaveChanges(ar2);
 
-            Assert.IsNotNull(this.lastRequestMessage, "No request sent");
-            Assert.AreEqual("PATCH", this.lastRequestMessage.Method);
+            Assert.NotNull(this.lastRequestMessage);
+            Assert.Equal("PATCH", this.lastRequestMessage.Method);
         }
 
-        [TestMethod]
+        [Fact]
         public void HttpMergeIsNoLongerSupported()
         {
             Func<DataServiceClientRequestMessageArgs, DataServiceClientRequestMessage> addHeader =
@@ -130,14 +126,14 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             {
                 var ar2 = ctx.BeginSaveChanges(null, null).EnqueueWait(this);
                 ctx.EndSaveChanges(ar2);
-                Assert.Fail("Expected error not thrown");
+                Assert.True(false, "Expected error not thrown");
             }
             catch (DataServiceRequestException e)
             {
 #if !PORTABLELIB && !SILVERLIGHT
                 StringResourceUtil.VerifyDataServicesClientString(e.Message, "DataServiceException_GeneralError");
 #else
-                Assert.IsNotNull(e);
+                Assert.NotNull(e);
 #endif
             }
         }

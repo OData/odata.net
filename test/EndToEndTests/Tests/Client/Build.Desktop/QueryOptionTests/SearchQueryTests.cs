@@ -14,9 +14,8 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
     using Microsoft.OData;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class SearchQueryTests : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>
     {
         public SearchQueryTests()
@@ -33,7 +32,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
         }
 
         #region test method
-        [TestMethod]
+        [Fact]
         public void SearchTest()
         {
             foreach (var mimeType in mimeTypes)
@@ -41,39 +40,39 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
                 List<ODataResource> details = this.TestsHelper.QueryFeed("ProductDetails?$search=(drink OR snack) AND (suger OR sweet) AND NOT \"0\"", mimeType);
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(2, details.Count);
+                    Assert.Equal(2, details.Count);
                 }
 
                 details = this.TestsHelper.QueryFeed("ProductDetails?$search=NOT (drink OR snack)", mimeType);
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(0, details.Count);
+                    Assert.Equal(0, details.Count);
                 }
 
                 //Implicit AND
                 details = this.TestsHelper.QueryFeed("ProductDetails?$search=snack sweet", mimeType);
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(1, details.Count);
-                    Assert.AreEqual("sweet snack", details.First().Properties.Single(p => p.Name == "Description").Value);
+                    Assert.Equal(1, details.Count);
+                    Assert.Equal("sweet snack", details.First().Properties.Single(p => p.Name == "Description").Value);
                 }
 
                 details = this.TestsHelper.QueryFeed("ProductDetails?$search=snack NOT sweet", mimeType);
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(2, details.Count);
+                    Assert.Equal(2, details.Count);
                 }
 
                 //Priority of AND NOT OR
                 details = this.TestsHelper.QueryFeed("ProductDetails?$search=snack OR drink AND soft AND NOT \"0\"", mimeType);
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(4, details.Count);
+                    Assert.Equal(4, details.Count);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void SearchCombinedWithQueryOptionTest()
         {
             foreach (var mimeType in mimeTypes)
@@ -81,23 +80,23 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
                 List<ODataResource> details = this.TestsHelper.QueryFeed("ProductDetails?$filter=contains(Description,'drink')&$search=suger OR spicy NOT \"0\"&$select=Description", mimeType);
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(2, details.Count);
+                    Assert.Equal(2, details.Count);
                     foreach (var detail in details)
                     {
-                        Assert.AreEqual(1, detail.Properties.Count());
+                        Assert.Equal(1, detail.Properties.Count());
                         var description = detail.Properties.Single(p => p.Name == "Description").Value as string;
-                        Assert.IsTrue(description.Contains("drink"));
+                        Assert.True(description.Contains("drink"));
                     }
                 }
 
                 List<ODataResource> entries = this.TestsHelper.QueryFeed("ProductDetails?$search=suger OR sweet&$orderby=ProductName&$expand=Reviews", mimeType);
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(7, entries.Count);
+                    Assert.Equal(7, entries.Count);
                     var productDetails = entries.FindAll(e => e.Id.AbsoluteUri.Contains("ProductDetails"));
-                    Assert.AreEqual("Candy", productDetails.First().Properties.Single(p=>p.Name == "ProductName").Value);
+                    Assert.Equal("Candy", productDetails.First().Properties.Single(p=>p.Name == "ProductName").Value);
                     var reviews = entries.FindAll(e => e.Id.AbsoluteUri.Contains("ProductReviews"));
-                    Assert.AreEqual(4, reviews.Count);
+                    Assert.Equal(4, reviews.Count);
                 }
             }
         }

@@ -89,6 +89,10 @@ namespace Microsoft.OData.UriParser
                 {
                     Debug.Assert(bracketLiteralText[bracketLiteralText.Length - 1] == ')',
                         "Collection with opening '(' should have corresponding ')'");
+                    if (bracketLiteralText.Replace(" ", String.Empty) == "()")
+                    {
+                        throw new ODataException(ODataErrorStrings.MetadataBinder_RightOperandNotCollectionValue);
+                    }
 
                     StringBuilder replacedText = new StringBuilder(bracketLiteralText);
                     replacedText[0] = '[';

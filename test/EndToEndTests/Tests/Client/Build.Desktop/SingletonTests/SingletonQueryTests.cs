@@ -13,9 +13,8 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class SingletonQueryTests : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>
     {
         public SingletonQueryTests()
@@ -26,7 +25,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
 
         #region Query singleton entity
 
-        [TestMethod]
+        [Fact]
         public void QuerySingleton()
         {
             foreach (var mimeType in mimeTypes)
@@ -34,12 +33,12 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 ODataResource entry = this.QueryEntry("VipCustomer", mimeType, "Customer");
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(1, entry.Properties.Single(p => p.Name == "PersonID").Value);
+                    Assert.Equal(1, entry.Properties.Single(p => p.Name == "PersonID").Value);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QuerySingletonWhichIsOpenType()
         {
             foreach (var mimeType in mimeTypes)
@@ -47,12 +46,12 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 ODataResource entry = this.QueryEntry("Company", mimeType, "Company");
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(0, entry.Properties.Single(p => p.Name == "CompanyID").Value);
+                    Assert.Equal(0, entry.Properties.Single(p => p.Name == "CompanyID").Value);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryDerivedSingletonWithTypeCast()
         {
             foreach (var mimeType in mimeTypes)
@@ -60,12 +59,12 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 ODataResource entry = this.QueryEntry("Boss/Microsoft.Test.OData.Services.ODataWCFService.Customer", mimeType, "Customer");
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual("Sydney", entry.Properties.Single(p => p.Name == "City").Value);
+                    Assert.Equal("Sydney", entry.Properties.Single(p => p.Name == "City").Value);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryDerivedSingletonWithoutTypeCast()
         {
             foreach (var mimeType in mimeTypes)
@@ -73,12 +72,12 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 ODataResource entry = this.QueryEntry("Boss", mimeType, "Customer");
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual("Sydney", entry.Properties.Single(p => p.Name == "City").Value);
+                    Assert.Equal("Sydney", entry.Properties.Single(p => p.Name == "City").Value);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QuerySingletonWithExpand()
         {
             foreach (var mimeType in mimeTypes)
@@ -88,16 +87,16 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     var orders = entries.FindAll(e => e.Id.AbsoluteUri.Contains("Orders"));
-                    Assert.AreEqual(2, orders.Count);
+                    Assert.Equal(2, orders.Count);
 
                     var customer = entries.SingleOrDefault(e => e.Id.AbsoluteUri.Contains("VipCustomer"));
-                    Assert.IsNotNull(customer);
-                    Assert.AreEqual(1, customer.Properties.Single(p => p.Name == "PersonID").Value);
+                    Assert.NotNull(customer);
+                    Assert.Equal(1, customer.Properties.Single(p => p.Name == "PersonID").Value);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QuerySingletonWithSelect()
         {
             foreach (var mimeType in mimeTypes)
@@ -105,13 +104,13 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 var customer = this.QueryEntry("VipCustomer?$select=PersonID,FirstName", mimeType, "Customer");
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.IsNotNull(customer);
-                    Assert.AreEqual(2, customer.Properties.Count());
+                    Assert.NotNull(customer);
+                    Assert.Equal(2, customer.Properties.Count());
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryDerivedSingletonWithTypeCastAndSelect()
         {
             foreach (var mimeType in mimeTypes)
@@ -119,13 +118,13 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 var customer = this.QueryEntry("Boss/Microsoft.Test.OData.Services.ODataWCFService.Customer?$select=City", mimeType, "Customer");
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(1, customer.Properties.Count());
-                    Assert.AreEqual("Sydney", customer.Properties.Single(p => p.Name == "City").Value);
+                    Assert.Single(customer.Properties);
+                    Assert.Equal("Sydney", customer.Properties.Single(p => p.Name == "City").Value);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QuerySingletonWithSelectUnderExpand()
         {
             foreach (var mimeType in mimeTypes)
@@ -135,21 +134,21 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     var orders = entries.FindAll(e => e!= null && e.Id.AbsoluteUri.Contains("Orders"));
-                    Assert.AreEqual(2, orders.Count);
+                    Assert.Equal(2, orders.Count);
 
                     foreach (var order in orders)
                     {
-                        Assert.AreEqual(2, order.Properties.Count());
+                        Assert.Equal(2, order.Properties.Count());
                     }
 
                     var customer = entries.SingleOrDefault(e => e != null && e.Id.AbsoluteUri.Contains("VipCustomer"));
-                    Assert.IsNotNull(customer);
-                    Assert.AreEqual(1, customer.Properties.Single(p => p.Name == "PersonID").Value);
+                    Assert.NotNull(customer);
+                    Assert.Equal(1, customer.Properties.Single(p => p.Name == "PersonID").Value);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QuerySingletonWithMiscQueryOptions()
         {
             foreach (var mimeType in mimeTypes)
@@ -159,18 +158,19 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     var orders = entries.FindAll(e => e.Id.AbsoluteUri.Contains("Orders"));
-                    Assert.AreEqual(2, orders.Count);
+                    Assert.Equal(2, orders.Count);
 
                     var customer = entries.SingleOrDefault(e => e.Id.AbsoluteUri.Contains("VipCustomer"));
-                    Assert.AreEqual(1, customer.Properties.Count());
+                    Assert.Single(customer.Properties);
 
                     var homeAddress = resources.SingleOrDefault(r => r != null && r.TypeName.EndsWith("Address"));
-                    Assert.IsNotNull(homeAddress, "HomeAddress is not null");
+                    //HomeAddress is not null
+                    Assert.NotNull(homeAddress);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void SelectDerivedPropertyWithoutTypeCastShouldFail()
         {
             this.BadRequest("Boss?$select=City", /*errorCode*/400);
@@ -180,7 +180,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
 
         #region Query singleton property
 
-        [TestMethod]
+        [Fact]
         public void QuerySingletonProperty()
         {
             foreach (var mimeType in mimeTypes)
@@ -188,12 +188,12 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 ODataProperty property = this.QueryProperty("VipCustomer/PersonID", mimeType);
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(1, property.Value);
+                    Assert.Equal(1, property.Value);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QuerySingletonPropertyUnderComplexProperty()
         {
             foreach (var mimeType in mimeTypes)
@@ -201,12 +201,12 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 ODataProperty property = this.QueryProperty("VipCustomer/HomeAddress/City", mimeType);
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual("London", property.Value);
+                    Assert.Equal("London", property.Value);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QuerySingletonEnumProperty()
         {
             foreach (var mimeType in mimeTypes)
@@ -215,12 +215,12 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     ODataEnumValue enumValue = (ODataEnumValue)property.Value;
-                    Assert.AreEqual("IT", enumValue.Value);
+                    Assert.Equal("IT", enumValue.Value);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QuerySingletonNavigationProperty()
         {
             foreach (var mimeType in mimeTypes)
@@ -228,12 +228,12 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 List<ODataResource> entries = this.QueryFeed("VipCustomer/Orders", mimeType);
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(7, entries.FirstOrDefault().Properties.Single(p => p.Name == "OrderID").Value);
+                    Assert.Equal(7, entries.FirstOrDefault().Properties.Single(p => p.Name == "OrderID").Value);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QuerySingletonPropertyUnderNavigationProperty()
         {
             foreach (var mimeType in mimeTypes)
@@ -241,12 +241,12 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 ODataProperty property = this.QueryProperty("VipCustomer/Orders(8)/OrderDate", mimeType);
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(new DateTimeOffset(2011, 3, 4, 16, 3, 57, TimeSpan.FromHours(-8)), property.Value);
+                    Assert.Equal(new DateTimeOffset(2011, 3, 4, 16, 3, 57, TimeSpan.FromHours(-8)), property.Value);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryDerivedSingletonPropertyWithTypeCast()
         {
             foreach (var mimeType in mimeTypes)
@@ -254,12 +254,12 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 ODataProperty property = this.QueryProperty("Boss/Microsoft.Test.OData.Services.ODataWCFService.Customer/City", mimeType);
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual("Sydney", property.Value);
+                    Assert.Equal("Sydney", property.Value);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QuerySingletonNavigationPropertyWithFilter()
         {
             foreach (var mimeType in mimeTypes)
@@ -267,12 +267,12 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 List<ODataResource> entries = this.QueryFeed("VipCustomer/Orders?$filter=OrderID eq 8", mimeType);
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(new DateTimeOffset(2011, 3, 4, 16, 3, 57, TimeSpan.FromHours(-8)), entries.FirstOrDefault().Properties.Single(p => p.Name == "OrderDate").Value);
+                    Assert.Equal(new DateTimeOffset(2011, 3, 4, 16, 3, 57, TimeSpan.FromHours(-8)), entries.FirstOrDefault().Properties.Single(p => p.Name == "OrderDate").Value);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryDerivedPropertyWithoutTypeCastShouldFail()
         {
             this.BadRequest("Boss/City", /*errorCode*/404);
@@ -283,7 +283,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
         #region Navigation tests
 
         //Company(singleton)<->Employees(EntitySet)
-        [TestMethod]
+        [Fact]
         public void QueryCollectionOfEntitiesFromSingletonNavigation()
         {
             foreach (var mimeType in mimeTypes)
@@ -292,16 +292,16 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     var entries = resources.Where(r => r != null && r.Id != null).ToList();
-                    Assert.AreEqual(2, entries.Count);
+                    Assert.Equal(2, entries.Count);
                     foreach (var entry in entries)
                     {
-                        Assert.IsTrue(entry.Id.AbsoluteUri.Contains("Employees"));
+                        Assert.Contains("Employees", entry.Id.AbsoluteUri);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QuerySingletonWithExpandedCollectionOfEntities()
         {
             foreach (var mimeType in mimeTypes)
@@ -310,14 +310,14 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 var entries = resources.Where(r => r != null && r.Id != null).ToList();
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(3, entries.Count);
-                    Assert.AreEqual(1, entries.FindAll(e => e.Id.AbsoluteUri.Contains("Company")).Count);
-                    Assert.AreEqual(2, entries.FindAll(e => e.Id.AbsoluteUri.Contains("Employees")).Count);
+                    Assert.Equal(3, entries.Count);
+                    Assert.Single(entries.FindAll(e => e.Id.AbsoluteUri.Contains("Company")));
+                    Assert.Equal(2, entries.FindAll(e => e.Id.AbsoluteUri.Contains("Employees")).Count);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QuerySingletonFromEntitySetNavigation()
         {
             foreach (var mimeType in mimeTypes)
@@ -325,12 +325,12 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 var entry = this.QueryEntry("Employees(3)/Company", mimeType, "Company");
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(0, entry.Properties.Single(p => p.Name == "CompanyID").Value);
+                    Assert.Equal(0, entry.Properties.Single(p => p.Name == "CompanyID").Value);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QueryEntityWithExpandedSingleton()
         {
             foreach (var mimeType in mimeTypes)
@@ -339,15 +339,15 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 var entries = resources.Where(r => r != null && r.Id != null).ToList();
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(2, entries.Count);
-                    Assert.AreEqual(1, entries.FindAll(e => e.Id.AbsoluteUri.Contains("Company")).Count);
-                    Assert.AreEqual(1, entries.FindAll(e => e.Id.AbsoluteUri.Contains("Employees")).Count);
+                    Assert.Equal(2, entries.Count);
+                    Assert.Single(entries.FindAll(e => e.Id.AbsoluteUri.Contains("Company")));
+                    Assert.Single(entries.FindAll(e => e.Id.AbsoluteUri.Contains("Employees")));
                 }
             }
         }
 
         //Company(singleton)<->VipCustomer(singleton)
-        [TestMethod]
+        [Fact]
         public void QuerySingletonFromSingletonNavigation()
         {
             foreach (var mimeType in mimeTypes)
@@ -356,12 +356,12 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 var entry1 = this.QueryEntry("VipCustomer", mimeType, "Customer");
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    ODataValueAssertEqualHelper.AssertODataPropertiesAreEqual(entry.Properties, entry1.Properties);
+                    ODataValueAssertEqualHelper.AssertODataPropertiesEqual(entry.Properties, entry1.Properties);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QuerySingletonFromSingletonNavigation2()
         {
             foreach (var mimeType in mimeTypes)
@@ -370,12 +370,12 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 var entry1 = this.QueryEntry("Company", mimeType, "Company");
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    ODataValueAssertEqualHelper.AssertODataPropertiesAreEqual(entry.Properties, entry1.Properties);
+                    ODataValueAssertEqualHelper.AssertODataPropertiesEqual(entry.Properties, entry1.Properties);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void QuerySingletonWithExpandedSingleton()
         {
             foreach (var mimeType in mimeTypes)
@@ -384,15 +384,15 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 var entries = resources.Where(r => r != null && r.Id != null).ToList();
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual(2, entries.Count);
-                    Assert.AreEqual(1, entries.FindAll(e => e.Id.AbsoluteUri.Contains("Company")).Count);
-                    Assert.AreEqual(1, entries.FindAll(e => e.Id.AbsoluteUri.Contains("VipCustomer")).Count);
+                    Assert.Equal(2, entries.Count);
+                    Assert.Single(entries.FindAll(e => e.Id.AbsoluteUri.Contains("Company")));
+                    Assert.Single(entries.FindAll(e => e.Id.AbsoluteUri.Contains("VipCustomer")));
                 }
             }
         }
 
         //Deep navigation test
-        [TestMethod]
+        [Fact]
         public void QueryCollectionOfEntitiesFromDeepLevelNavigation()
         {
             foreach (var mimeType in mimeTypes)
@@ -401,7 +401,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 var entry1 = this.QueryEntry("VipCustomer", mimeType, "Customer");
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    ODataValueAssertEqualHelper.AssertODataPropertiesAreEqual(entry.Properties, entry1.Properties);
+                    ODataValueAssertEqualHelper.AssertODataPropertiesEqual(entry.Properties, entry1.Properties);
                 }
             }
         }
@@ -410,7 +410,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
 
         #region Action/Function
 
-         [TestMethod]
+         [Fact]
         public void InvokeFunctionBoundedToSingleton()
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
@@ -418,16 +418,16 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Company/Microsoft.Test.OData.Services.ODataWCFService.GetEmployeesCount()", UriKind.Absolute));
             requestMessage.SetHeader("Accept", "*/*");
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
 
             using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
             {
                 var amount = messageReader.ReadProperty().Value;
-                Assert.AreEqual(2, amount);
+                Assert.Equal(2, amount);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void InvokeActionBoundedToSingleton()
         {
             foreach (var mimeType in mimeTypes)
@@ -450,10 +450,10 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                         odataWriter.WriteEnd();
                     }
                     var responseMessage = requestMessage.GetResponse();
-                    Assert.AreEqual(200, responseMessage.StatusCode);
+                    Assert.Equal(200, responseMessage.StatusCode);
 
                     ODataProperty property = this.QueryProperty("Company/Revenue", mimeType);
-                    Assert.AreEqual((Int64)(oldValue + 20000), property.Value);
+                    Assert.Equal((Int64)(oldValue + 20000), property.Value);
                 }
             }
         }
@@ -470,7 +470,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + requestUri, UriKind.Absolute));
             requestMessage.SetHeader("Accept", mimeType);
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
 
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
             {
@@ -490,11 +490,11 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                         }
                         else if (reader.State == ODataReaderState.ResourceSetEnd)
                         {
-                            Assert.IsNotNull(reader.Item as ODataResourceSet);
+                            Assert.NotNull(reader.Item as ODataResourceSet);
                         }
                     }
 
-                    Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                    Assert.Equal(ODataReaderState.Completed, reader.State);
                 }
             }
             return entries;
@@ -519,7 +519,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + requestUri, UriKind.Absolute));
             requestMessage.SetHeader("Accept", mimeType);
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
 
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
             {
@@ -534,7 +534,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                             entries.Add(reader.Item as ODataResource);
                         }
                     }
-                    Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                    Assert.Equal(ODataReaderState.Completed, reader.State);
                 }
             }
             return entries;
@@ -554,7 +554,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
             }
 
             var responseMessage = requestMessage.GetResponse();
-            Assert.AreEqual(200, responseMessage.StatusCode);
+            Assert.Equal(200, responseMessage.StatusCode);
 
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
             {
@@ -579,7 +579,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 }
 
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(errorCode, responseMessage.StatusCode);
+                Assert.Equal(errorCode, responseMessage.StatusCode);
             }
         }
 

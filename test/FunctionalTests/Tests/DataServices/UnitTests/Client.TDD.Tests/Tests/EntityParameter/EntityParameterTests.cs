@@ -5,8 +5,6 @@
 //---------------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
-using System.Linq;
 using FluentAssertions;
 
 namespace Microsoft.OData.Client.TDDUnitTests.Tests.EntityParameter
@@ -14,9 +12,8 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.EntityParameter
     using System;
     using System.Text;
     using Microsoft.OData.Client;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class EntityParameterTests
     {
         private readonly byte[] payloadBuffer = new byte[1024];
@@ -31,67 +28,67 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.EntityParameter
 
         private const string ExpectedPayloadOfEntityCollectionWithOnlySetProperties = "{\"orders\":[{\"@odata.type\":\"#Microsoft.Test.OData.Services.ODataWCFService.Order\",\"OrderID\":100},{\"@odata.type\":\"#Microsoft.Test.OData.Services.ODataWCFService.Order\",\"OrderID\":101}]}";
 
-        [TestMethod]
+        [Fact]
         public void PostFullPropertiesOfEntityParameterToActionUsingContext()
         {
             InitializeDataServiceContext(EntityParameterSendOption.SendFullProperties);
 
             CallPlaceOrderFromContext(GetTrackedOrder());
 
-            Assert.AreEqual(ExpectedPayloadOfEntityWithFullProperties, GetPayload());
+            Assert.Equal(ExpectedPayloadOfEntityWithFullProperties, GetPayload());
         }
 
-        [TestMethod]
+        [Fact]
         public void TestDefaultSendOptionToPostPropertiesOfEntityParameterToActionUsingContext()
         {
             InitializeDataServiceContext();
 
             CallPlaceOrderFromContext(GetTrackedOrder());
 
-            Assert.AreEqual(ExpectedPayloadOfEntityWithFullProperties, GetPayload());
+            Assert.Equal(ExpectedPayloadOfEntityWithFullProperties, GetPayload());
         }
 
-        [TestMethod]
+        [Fact]
         public void PostOnlySetPropertiesOfEntityParameterToActionUsingContext()
         {
             InitializeDataServiceContext(EntityParameterSendOption.SendOnlySetProperties);
 
             CallPlaceOrderFromContext(GetTrackedOrder());
 
-            Assert.AreEqual(ExpectedPayloadOfEntityWithOnlySetProperties, GetPayload());
+            Assert.Equal(ExpectedPayloadOfEntityWithOnlySetProperties, GetPayload());
         }
 
-        [TestMethod]
+        [Fact]
         public void PostFullPropertiesOfEntityParameterToActionUsingActionQuery()
         {
             InitializeDataServiceContext(EntityParameterSendOption.SendFullProperties);
 
             CallPlaceOrderFromActionQuery(GetTrackedOrder());
 
-            Assert.AreEqual(ExpectedPayloadOfEntityWithFullProperties, GetPayload());
+            Assert.Equal(ExpectedPayloadOfEntityWithFullProperties, GetPayload());
         }
 
-        [TestMethod]
+        [Fact]
         public void TestDefaultSendOptionToPostPropertiesOfEntityParameterToActionUsingActionQuery()
         {
             InitializeDataServiceContext();
 
             CallPlaceOrderFromActionQuery(GetTrackedOrder());
 
-            Assert.AreEqual(ExpectedPayloadOfEntityWithFullProperties, GetPayload());
+            Assert.Equal(ExpectedPayloadOfEntityWithFullProperties, GetPayload());
         }
 
-        [TestMethod]
+        [Fact]
         public void PostOnlySetPropertiesOfEntityParameterToActionUsingActionQuery()
         {
             InitializeDataServiceContext(EntityParameterSendOption.SendOnlySetProperties);
 
             CallPlaceOrderFromActionQuery(GetTrackedOrder());
 
-            Assert.AreEqual(ExpectedPayloadOfEntityWithOnlySetProperties, GetPayload());
+            Assert.Equal(ExpectedPayloadOfEntityWithOnlySetProperties, GetPayload());
         }
 
-        [TestMethod]
+        [Fact]
         public void ShouldThrowExceptionWhenSendOnlySetPropertiesUsingContextIfEntityIsNotAddedToDataServiceCollection()
         {
             InitializeDataServiceContext(EntityParameterSendOption.SendOnlySetProperties);
@@ -101,7 +98,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.EntityParameter
             exec.ShouldThrow<InvalidOperationException>().WithMessage(Strings.Context_MustBeUsedWith("EntityParameterSendOption.SendOnlySetProperties", "DataServiceCollection"));
         }
 
-        [TestMethod]
+        [Fact]
         public void ShouldNotThrowExceptionWhenSendFullPropertiesUsingContextIfEntityIsNotAddedToDataServiceCollection()
         {
             InitializeDataServiceContext(EntityParameterSendOption.SendFullProperties);
@@ -111,7 +108,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.EntityParameter
             exec.ShouldNotThrow();
         }
 
-        [TestMethod]
+        [Fact]
         public void ShouldThrowExceptionWhenSendOnlySetPropertiesUsingActionQueryIfEntityIsNotAddedToDataServiceCollection()
         {
             InitializeDataServiceContext(EntityParameterSendOption.SendOnlySetProperties);
@@ -121,7 +118,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.EntityParameter
             exec.ShouldThrow<InvalidOperationException>().WithMessage(Strings.Context_MustBeUsedWith("EntityParameterSendOption.SendOnlySetProperties", "DataServiceCollection"));
         }
 
-        [TestMethod]
+        [Fact]
         public void ShouldNotThrowExceptionWhenSendFullPropertiesUsingActionQueryIfEntityIsNotAddedToDataServiceCollection()
         {
             InitializeDataServiceContext(EntityParameterSendOption.SendFullProperties);
@@ -131,37 +128,37 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.EntityParameter
             exec.ShouldNotThrow();
         }
 
-        [TestMethod]
+        [Fact]
         public void PostFullPropertiesOfEntityCollectionParameterToActionUsingContext()
         {
             InitializeDataServiceContext(EntityParameterSendOption.SendFullProperties);
 
             CallPlaceOrdersFromContext(GetTrackedOrders());
 
-            Assert.AreEqual(ExpectedPayloadOfEntityCollectionWithFullProperties, GetPayload());
+            Assert.Equal(ExpectedPayloadOfEntityCollectionWithFullProperties, GetPayload());
         }
 
-        [TestMethod]
+        [Fact]
         public void TestDefaultSendOptionToPostPropertiesOfEntityCollectionParameterToActionUsingContext()
         {
             InitializeDataServiceContext();
 
             CallPlaceOrdersFromContext(GetTrackedOrders());
 
-            Assert.AreEqual(ExpectedPayloadOfEntityCollectionWithFullProperties, GetPayload());
+            Assert.Equal(ExpectedPayloadOfEntityCollectionWithFullProperties, GetPayload());
         }
 
-        [TestMethod]
+        [Fact]
         public void PostOnlySetPropertiesOfEntityCollectionParameterToActionUsingContext()
         {
             InitializeDataServiceContext(EntityParameterSendOption.SendOnlySetProperties);
 
             CallPlaceOrdersFromContext(GetTrackedOrders());
 
-            Assert.AreEqual(ExpectedPayloadOfEntityCollectionWithOnlySetProperties, GetPayload());
+            Assert.Equal(ExpectedPayloadOfEntityCollectionWithOnlySetProperties, GetPayload());
         }
 
-        [TestMethod]
+        [Fact]
         public void ShouldThrowExceptionWhenSendOnlySetPropertiesUsingContextIfAnyEntityInCollectionIsNotAddedToDataServiceCollection()
         {
             InitializeDataServiceContext(EntityParameterSendOption.SendOnlySetProperties);
@@ -171,7 +168,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.EntityParameter
             exec.ShouldThrow<InvalidOperationException>().WithMessage(Strings.Context_MustBeUsedWith("EntityParameterSendOption.SendOnlySetProperties", "DataServiceCollection"));
         }
 
-        [TestMethod]
+        [Fact]
         public void ShouldNotThrowExceptionWhenSendFullPropertiesUsingContextIfAnyEntityInCollectionIsNotAddedToDataServiceCollection()
         {
             InitializeDataServiceContext(EntityParameterSendOption.SendFullProperties);
@@ -181,37 +178,37 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.EntityParameter
             exec.ShouldNotThrow();
         }
 
-        [TestMethod]
+        [Fact]
         public void PostFullPropertiesOfEntityCollectionParameterToActionUsingActionQuery()
         {
             InitializeDataServiceContext(EntityParameterSendOption.SendFullProperties);
 
             CallPlaceOrdersFromActionQuery(GetTrackedOrders());
 
-            Assert.AreEqual(ExpectedPayloadOfEntityCollectionWithFullProperties, GetPayload());
+            Assert.Equal(ExpectedPayloadOfEntityCollectionWithFullProperties, GetPayload());
         }
 
-        [TestMethod]
+        [Fact]
         public void TestDefaultSendOptionToPostPropertiesOfEntityCollectionParameterToActionUsingActionQuery()
         {
             InitializeDataServiceContext();
 
             CallPlaceOrdersFromActionQuery(GetTrackedOrders());
 
-            Assert.AreEqual(ExpectedPayloadOfEntityCollectionWithFullProperties, GetPayload());
+            Assert.Equal(ExpectedPayloadOfEntityCollectionWithFullProperties, GetPayload());
         }
 
-        [TestMethod]
+        [Fact]
         public void PostOnlySetPropertiesOfEntityCollectionParameterToActionUsingActionQuery()
         {
             InitializeDataServiceContext(EntityParameterSendOption.SendOnlySetProperties);
 
             CallPlaceOrdersFromActionQuery(GetTrackedOrders());
 
-            Assert.AreEqual(ExpectedPayloadOfEntityCollectionWithOnlySetProperties, GetPayload());
+            Assert.Equal(ExpectedPayloadOfEntityCollectionWithOnlySetProperties, GetPayload());
         }
 
-        [TestMethod]
+        [Fact]
         public void ShouldThrowExceptionWhenSendOnlySetPropertiesUsingActionQueryIfAnyEntityInCollectionIsNotAddedToDataServiceCollection()
         {
             InitializeDataServiceContext(EntityParameterSendOption.SendOnlySetProperties);
@@ -221,7 +218,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.EntityParameter
             exec.ShouldThrow<InvalidOperationException>().WithMessage(Strings.Context_MustBeUsedWith("EntityParameterSendOption.SendOnlySetProperties", "DataServiceCollection"));
         }
 
-        [TestMethod]
+        [Fact]
         public void ShouldNotThrowExceptionWhenSendFullPropertiesUsingActionQueryIfAnyEntityInCollectionIsNotAddedToDataServiceCollection()
         {
             InitializeDataServiceContext(EntityParameterSendOption.SendFullProperties);
@@ -324,7 +321,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.EntityParameter
             InitializeDataServiceContext();
 
             dsc.EntityParameterSendOption = option;
-            Assert.AreEqual(option, dsc.EntityParameterSendOption);
+            Assert.Equal(option, dsc.EntityParameterSendOption);
         }
 
         /// <summary>

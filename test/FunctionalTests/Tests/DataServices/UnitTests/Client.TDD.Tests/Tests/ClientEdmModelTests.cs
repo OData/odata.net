@@ -19,12 +19,11 @@ namespace AstoriaUnitTests.Tests
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Metadata;
     using Microsoft.OData.Edm;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
     /// <summary>
     /// Tests ClientEdmModel functionalities
     /// </summary>
-    [TestClass]
     public class ClientEdmModelTests
     {
         private IDictionary<string, Type> clrTypeToEdmTypeMapping =
@@ -45,17 +44,17 @@ namespace AstoriaUnitTests.Tests
                 {"Edm.TimeOfDay", typeof(TimeOfDay)},
             };
 
-        [TestMethod()]
+        [Fact]
         public void AssertEmptyVocabularyAnnotations()
         {
             foreach (var dataServiceProtocolVersion in new[] { ODataProtocolVersion.V4 })
             {
                 ClientEdmModel clientEdmModel = new ClientEdmModel(dataServiceProtocolVersion);
-                Assert.IsFalse(clientEdmModel.VocabularyAnnotations.Any(), "No vocabulary annotations should be defined in the client edm model for Protocol Version : {0}", dataServiceProtocolVersion.ToString());
+                Assert.False(clientEdmModel.VocabularyAnnotations.Any());
             }
         }
 
-        [TestMethod()]
+        [Fact]
         public void AssertNullablePrimitiveTypeReferencesAreNullable()
         {
             bool makeNullable = true;
@@ -63,7 +62,7 @@ namespace AstoriaUnitTests.Tests
             AssertPrimitiveTypeReferenceGeneration(makeNullable, errorMessage);
         }
 
-        [TestMethod()]
+        [Fact]
         public void AssertNonNullablePrimitiveTypeReferencesAreNonNullable()
         {
             bool makeNullable = false;
@@ -71,7 +70,7 @@ namespace AstoriaUnitTests.Tests
             AssertPrimitiveTypeReferenceGeneration(makeNullable, errorMessage);
         }
 
-        [TestMethod]
+        [Fact]
         public void GenericEntityTypesShouldHaveUniqueEdmTypeNames()
         {
             // Regression test: [Client-ODataLib-Integration] In Client, while generating edmType for generic types, we do not take generic arguments in account
@@ -81,11 +80,11 @@ namespace AstoriaUnitTests.Tests
                 IEdmEntityType stringPropertyGenericArgType = (IEdmEntityType)clientEdmModel.GetOrCreateEdmType(typeof(GenericEntityType<string>));
                 IEdmEntityType integerPropertyGenericArgType = (IEdmEntityType)clientEdmModel.GetOrCreateEdmType(typeof(GenericEntityType<int>));
 
-                Assert.AreNotEqual(GetFullName(stringPropertyGenericArgType), GetFullName(integerPropertyGenericArgType), "generic types should have unique names based on generic args");
+                Assert.NotEqual(GetFullName(stringPropertyGenericArgType), GetFullName(integerPropertyGenericArgType));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void GenericEntityTypesShouldHaveUniqueEdmTypeNames_2()
         {
             // Regression test: [Client-ODataLib-Integration] In Client, while generating edmType for generic types, we do not take generic arguments in account
@@ -95,11 +94,11 @@ namespace AstoriaUnitTests.Tests
                 IEdmEntityType stringPropertyGenericArgType = (IEdmEntityType)clientEdmModel.GetOrCreateEdmType(typeof(GenericEntityType<GenericEntityType<string>>));
                 IEdmEntityType integerPropertyGenericArgType = (IEdmEntityType)clientEdmModel.GetOrCreateEdmType(typeof(GenericEntityType<GenericEntityType<int>>));
 
-                Assert.AreNotEqual(GetFullName(stringPropertyGenericArgType), GetFullName(integerPropertyGenericArgType), "generic types should have unique names based on generic args");
+                Assert.NotEqual(GetFullName(stringPropertyGenericArgType), GetFullName(integerPropertyGenericArgType));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void GenericComplexTypesShouldHaveUniqueEdmTypeNames()
         {
             // Regression test: [Client-ODataLib-Integration] In Client, while generating edmType for generic types, we do not take generic arguments in account
@@ -109,12 +108,12 @@ namespace AstoriaUnitTests.Tests
                 IEdmComplexType stringPropertyGenericArgType = (IEdmComplexType)clientEdmModel.GetOrCreateEdmType(typeof(GenericComplexType<string, int>));
                 IEdmComplexType integerPropertyGenericArgType = (IEdmComplexType)clientEdmModel.GetOrCreateEdmType(typeof(GenericComplexType<int, string>));
 
-                Assert.AreNotEqual(GetFullName(stringPropertyGenericArgType), GetFullName(integerPropertyGenericArgType), "generic types should have unique names based on generic args");
+                Assert.NotEqual(GetFullName(stringPropertyGenericArgType), GetFullName(integerPropertyGenericArgType));
             }
         }
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
-        [TestMethod]
+        [Fact]
         public void ClientEdmModel_GetOrCreateEdmType_SupportsTypesWithTheSameNamesFromDifferentAssemblies()
         {
             var provider = new CSharpCodeProvider();
@@ -134,11 +133,11 @@ namespace AstoriaUnitTests.Tests
             var complexType2 = compilerResults2.CompiledAssembly.GetType("Namespace1.ComplexType", true);
             var complexType3 = compilerResults3.CompiledAssembly.GetType("Namespace1.ComplexType", true);
 
-            Assert.AreNotSame(entityType1, entityType2);
-            Assert.AreNotSame(entityType2, entityType3);
-            Assert.AreEqual(entityType1.ToString(), entityType2.ToString());
-            Assert.AreNotEqual(entityType1.AssemblyQualifiedName, entityType2.AssemblyQualifiedName);
-            Assert.AreEqual(entityType2.AssemblyQualifiedName, entityType3.AssemblyQualifiedName);
+            Assert.NotSame(entityType1, entityType2);
+            Assert.NotSame(entityType2, entityType3);
+            Assert.Equal(entityType1.ToString(), entityType2.ToString());
+            Assert.NotEqual(entityType1.AssemblyQualifiedName, entityType2.AssemblyQualifiedName);
+            Assert.Equal(entityType2.AssemblyQualifiedName, entityType3.AssemblyQualifiedName);
 
             var clientModel = new ClientEdmModel(ODataProtocolVersion.V4);
 
@@ -148,8 +147,8 @@ namespace AstoriaUnitTests.Tests
             Action test = () => clientModel.GetOrCreateEdmType(entityType3);
             test.ShouldThrow<InvalidOperationException>().WithMessage(Strings.ClientType_MultipleTypesWithSameName(entityType3.AssemblyQualifiedName));
 
-            Assert.AreSame(edmEntityType1, clientModel.FindDeclaredType(entityType1.ToString()));
-            Assert.AreSame(edmEntityType2, clientModel.FindDeclaredType(entityType2.AssemblyQualifiedName));
+            Assert.Same(edmEntityType1, clientModel.FindDeclaredType(entityType1.ToString()));
+            Assert.Same(edmEntityType2, clientModel.FindDeclaredType(entityType2.AssemblyQualifiedName));
 
             var edmComplexType1 = clientModel.GetOrCreateEdmType(complexType1);
             var edmComplexType2 = clientModel.GetOrCreateEdmType(complexType2);
@@ -157,12 +156,12 @@ namespace AstoriaUnitTests.Tests
             test = () => clientModel.GetOrCreateEdmType(complexType3);
             test.ShouldThrow<InvalidOperationException>().WithMessage(Strings.ClientType_MultipleTypesWithSameName(complexType3.AssemblyQualifiedName));
 
-            Assert.AreSame(edmComplexType1, clientModel.FindDeclaredType(complexType1.ToString()));
-            Assert.AreSame(edmComplexType2, clientModel.FindDeclaredType(complexType2.AssemblyQualifiedName));
+            Assert.Same(edmComplexType1, clientModel.FindDeclaredType(complexType1.ToString()));
+            Assert.Same(edmComplexType2, clientModel.FindDeclaredType(complexType2.AssemblyQualifiedName));
         }
 #endif
 
-        [TestMethod]
+        [Fact]
         public void GetOrCreateEdmTypeShouldThrowIfTypeIsObject()
         {
             var clientModel = new ClientEdmModel(ODataProtocolVersion.V4);
@@ -170,7 +169,7 @@ namespace AstoriaUnitTests.Tests
             test.ShouldThrow<InvalidOperationException>().WithMessage(Strings.ClientType_NoSettableFields("System.Object"));
         }
 
-        [TestMethod]
+        [Fact]
         public void GetOrCreateEdmTypeShouldThrowIfTypeIsIEnumerableOfT()
         {
             var clientModel = new ClientEdmModel(ODataProtocolVersion.V4);
@@ -183,7 +182,7 @@ namespace AstoriaUnitTests.Tests
             public object Obj { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void GetOrCreateEdmTypeShouldThrowIfTypeHasObjectProperty()
         {
             var clientModel = new ClientEdmModel(ODataProtocolVersion.V4);
@@ -192,13 +191,13 @@ namespace AstoriaUnitTests.Tests
             test.ShouldThrow<InvalidOperationException>().WithMessage(Strings.ClientType_NoSettableFields("System.Object"));
         }
 
-        [TestMethod]
+        [Fact]
         public void GetOrCreateEdmTypeShouldWorkForEnumTypes()
         {
             var clientModel = new ClientEdmModel(ODataProtocolVersion.V4);
             var enumType = clientModel.GetOrCreateEdmType(typeof(EdmEnumType));
-            Assert.IsNotNull(enumType);
-            Assert.IsNotNull(enumType.FullName());
+            Assert.NotNull(enumType);
+            Assert.NotNull(enumType.FullName());
         }
 
         private class TypeWithCollectionOfObjectProperty
@@ -206,7 +205,7 @@ namespace AstoriaUnitTests.Tests
             public ICollection<object> Objects { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void GetOrCreateEdmTypeShouldThrowIfTypeContainsAPropertyOfCollectionOfObjects()
         {
             var clientModel = new ClientEdmModel(ODataProtocolVersion.V4);
@@ -220,7 +219,7 @@ namespace AstoriaUnitTests.Tests
             public IEnumerable<int> IE { get; set; }
         }
 
-        [TestMethod]
+        [Fact]
         public void GetOrCreateEdmTypeShouldThrowIfTypeContainsAPropertyOfIEnumerableType()
         {
             var clientModel = new ClientEdmModel(ODataProtocolVersion.V4);
@@ -243,12 +242,12 @@ namespace AstoriaUnitTests.Tests
                     }
 
                     var primitiveEdmType = clientEdmModel.GetOrCreateEdmType(nullableType) as IEdmPrimitiveType;
-                    Assert.AreEqual(primitiveEdmType.Namespace, "Edm", "Namespace was incorrect for clr type :{0}", nullableType.FullName);
-                    Assert.AreEqual(GetFullName(primitiveEdmType), primitivePropertyType.Key, "FullName was incorrect for clr type :{0}", nullableType.FullName);
-                    Assert.AreEqual(primitiveEdmType.TypeKind, EdmTypeKind.Primitive, "Type kind was incorrect for clr type :{0}", nullableType.FullName);
+                    Assert.Equal("Edm", primitiveEdmType.Namespace);
+                    Assert.Equal(GetFullName(primitiveEdmType), primitivePropertyType.Key);
+                    Assert.Equal(EdmTypeKind.Primitive, primitiveEdmType.TypeKind);
 
                     IEdmTypeReference primitiveTypeReference = primitiveEdmType.ToEdmTypeReference(makeNullable);
-                    Assert.AreEqual(primitiveTypeReference.IsNullable, makeNullable, errorMessage);
+                    Assert.Equal(primitiveTypeReference.IsNullable, makeNullable);
                 }
             }
         }

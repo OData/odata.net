@@ -9,11 +9,10 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Microsoft.OData.Client;
 using Microsoft.Test.OData.Services.TestServices.OperationServiceReference;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace Microsoft.Test.OData.Tests.Client.OperationTests
 {
-    [TestClass]
     public class OperationClientTests : ODataWCFServiceTestsBase<OperationService>
     {
 
@@ -29,7 +28,7 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         // TODO : Reactive this test cases after merging entity and complex for writer
-        [TestMethod]
+        [Fact]
         public void FunctionOfEntitiesTakeComplexsReturnEntities()
         {
             var customerQuery = this.TestClientContext.CreateQuery<Customer>("Customers");
@@ -51,10 +50,10 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
 
             var functionQuery = customerQuery.CreateFunctionQuery<Customer>("Microsoft.Test.OData.Services.ODataOperationService.GetCustomersForAddresses", true, new UriOperationParameter("addresses", addresses));
             var customers = functionQuery.Execute();
-            Assert.AreEqual(2, customers.Count());
+            Assert.Equal(2, customers.Count());
         }
 
-        [TestMethod]
+        [Fact]
         public void FunctionOfEntitiesTakeComplexReturnEntity()
         {
             var customerQuery = this.TestClientContext.CreateQuery<Customer>("Customers");
@@ -66,29 +65,29 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
             };
             var functionQuery = customerQuery.CreateFunctionQuerySingle<Customer>("Microsoft.Test.OData.Services.ODataOperationService.GetCustomerForAddress", true, new UriOperationParameter("address", address));
             var customer = functionQuery.GetValue();
-            Assert.IsNotNull(customer);
+            Assert.NotNull(customer);
         }
 
-        [TestMethod]
+        [Fact]
         public void FunctionOfEntityTakeCollectionReturnEntities()
         {
             var customerQuery = new DataServiceQuerySingle<Customer>(this.TestClientContext, "Customers(3)");
 
             var functionQuery = customerQuery.CreateFunctionQuery<Order>("Microsoft.Test.OData.Services.ODataOperationService.GetOrdersFromCustomerByNotes", true, new UriOperationParameter("notes", new Collection<string> { "1111", "2222" }));
             var orders = functionQuery.Execute();
-            Assert.AreEqual(1, orders.Count());
+            Assert.Equal(1, orders.Count());
         }
 
-        [TestMethod]
+        [Fact]
         public void FunctionOfEntitiesTakeStringReturnEntities()
         {
             var orderQuery = this.TestClientContext.CreateQuery<Order>("Orders");
             var functionQuery = orderQuery.CreateFunctionQuery<Order>("Microsoft.Test.OData.Services.ODataOperationService.GetOrdersByNote", true, new UriOperationParameter("note", "1111"));
             var orders = functionQuery.Execute();
-            Assert.AreEqual(2, orders.Count());
+            Assert.Equal(2, orders.Count());
         }
 
-        [TestMethod]
+        [Fact]
         public void FunctionOfEntitiesTakeEntitiesReturnEntities()
         {
             var orders = new[]
@@ -112,10 +111,10 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
             var customerQuery = this.TestClientContext.CreateQuery<Customer>("Customers");
             var functionQuery = customerQuery.CreateFunctionQuery<Customer>("Microsoft.Test.OData.Services.ODataOperationService.GetCustomersByOrders", true, new UriOperationParameter("orders", orders));
             var customers = functionQuery.Execute();
-            Assert.AreEqual(1, customers.Count());
+            Assert.Equal(1, customers.Count());
         }
 
-        [TestMethod]
+        [Fact]
         public void FunctionOfEntitiesTakeEntityReferenceReturnEntity()
         {
             var order = new Order()
@@ -127,10 +126,10 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
             var customerQuery = this.TestClientContext.CreateQuery<Customer>("Customers");
             var functionQuery = customerQuery.CreateFunctionQuery<Customer>("Microsoft.Test.OData.Services.ODataOperationService.GetCustomerByOrder", true, new UriEntityOperationParameter("order", order, true));
             var customers = functionQuery.Execute();
-            Assert.AreEqual(1, customers.Count());
+            Assert.Equal(1, customers.Count());
         }
 
-        [TestMethod]
+        [Fact]
         public void FunctionOfEntitiesTakeEntityReturnEntities()
         {
             var order = new Order()
@@ -143,10 +142,10 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
             var customerQuery = this.TestClientContext.CreateQuery<Customer>("Customers");
             var functionQuery = customerQuery.CreateFunctionQuery<Customer>("Microsoft.Test.OData.Services.ODataOperationService.GetCustomerByOrder", true, new UriOperationParameter("order", order));
             var customers = functionQuery.Execute();
-            Assert.AreEqual(1, customers.Count());
+            Assert.Equal(1, customers.Count());
         }
 
-        [TestMethod]
+        [Fact]
         public void FunctionOfEntitiesTakeEntityReferencesReturnEntities()
         {
             var orders = new[]
@@ -166,40 +165,40 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
             var customerQuery = this.TestClientContext.CreateQuery<Customer>("Customers");
             var functionQuery = customerQuery.CreateFunctionQuery<Customer>("Microsoft.Test.OData.Services.ODataOperationService.GetCustomersByOrders", true, new UriEntityOperationParameter("orders", orders, true));
             var customers = functionQuery.Execute();
-            Assert.AreEqual(1, customers.Count());
+            Assert.Equal(1, customers.Count());
         }
 
-        [TestMethod]
+        [Fact]
         public void FunctionOfEntitiesReturnEntityExpandNavigation()
         {
             var order = this.TestClientContext.Orders.GetOrderByNote(new string[] { "1111", "parent" }).Expand(o => o.Customer).GetValue();
-            Assert.IsNotNull(order.Customer);
+            Assert.NotNull(order.Customer);
         }
 
-        [TestMethod]
+        [Fact]
         public void FunctionOfEntitiesReturnEntitySelect()
         {
             var order = this.TestClientContext.Orders.GetOrderByNote(new string[] { "1111", "parent" }).Select(o => new Order() { ID = o.ID, Notes = o.Notes }).GetValue();
-            Assert.AreEqual(2, order.Notes.Count);
-            Assert.AreEqual<DateTimeOffset>(default(DateTimeOffset), order.OrderDate);
+            Assert.Equal(2, order.Notes.Count);
+            Assert.Equal<DateTimeOffset>(default(DateTimeOffset), order.OrderDate);
         }
 #endif
 
-        [TestMethod]
+        [Fact]
         public void FunctionOfEntitiesReturnEntitiesExpandNavigation()
         {
             var orders = this.TestClientContext.Orders.GetOrdersByNote("1111").Expand(o => o.Customer).ToList();
-            Assert.AreEqual(2, orders.Count);
-            Assert.IsNull(orders[0].Customer);
-            Assert.IsNotNull(orders[1].Customer);
+            Assert.Equal(2, orders.Count);
+            Assert.Null(orders[0].Customer);
+            Assert.NotNull(orders[1].Customer);
         }
 
-        [TestMethod]
+        [Fact]
         public void FunctionOfEntitiesReturnEntitiesFilter()
         {
             var orders = this.TestClientContext.Orders.GetOrdersByNote("1111").Where(o => o.ID < 1).ToList();
-            Assert.AreEqual(1, orders.Count);
-            Assert.IsNull(orders[0].Customer);
+            Assert.Equal(1, orders.Count);
+            Assert.Null(orders[0].Customer);
         }
     }
 }

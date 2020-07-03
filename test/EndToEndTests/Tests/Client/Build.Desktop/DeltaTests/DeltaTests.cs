@@ -12,9 +12,8 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
-    [TestClass]
     public class DeltaTests : ODataWCFServiceTestsBase<InMemoryEntities>
     {
         public DeltaTests()
@@ -30,7 +29,7 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
                 MimeTypes.ApplicationJson + MimeTypes.ODataParameterNoMetadata,
             };
 
-        [TestMethod]
+        [Fact]
         public void RequestDeltaLink()
         {
             var customersSet = Model.FindDeclaredEntitySet("Customers");
@@ -43,7 +42,7 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "$delta", UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -62,13 +61,13 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
                                 ODataDeltaResourceSet feed = deltaReader.Item as ODataDeltaResourceSet;
                             }
                         }
-                        Assert.AreEqual(ODataDeltaReaderState.Completed, deltaReader.State);
+                        Assert.Equal(ODataDeltaReaderState.Completed, deltaReader.State);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void RequestDeltaLink_Containment()
         {
             var accountsSet = this.Model.FindDeclaredEntitySet("Accounts");
@@ -84,7 +83,7 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "$delta?$token=containment", UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -100,13 +99,13 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
 
                             }
                         }
-                        Assert.AreEqual(ODataDeltaReaderState.Completed, deltaReader.State);
+                        Assert.Equal(ODataDeltaReaderState.Completed, deltaReader.State);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void RequestDeltaLink_Derived()
         {
             var peopleSet = Model.FindDeclaredEntitySet("People");
@@ -119,7 +118,7 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "$delta?$token=derived", UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -135,13 +134,13 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
 
                             }
                         }
-                        Assert.AreEqual(ODataDeltaReaderState.Completed, deltaReader.State);
+                        Assert.Equal(ODataDeltaReaderState.Completed, deltaReader.State);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void RequestDeltaLink_Expanded()
         {
             var customersSet = Model.FindDeclaredEntitySet("Customers");
@@ -154,7 +153,7 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "$delta?$token=expanded", UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 // Currently don't test full metadata because the delta reader doesn't support reading
                 // annotations on expanded navigation properties, metadata reference properties and paging.
@@ -168,42 +167,42 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
                         {
                             if (deltaReader.State == ODataDeltaReaderState.DeltaResourceSetEnd)
                             {
-                                Assert.IsNotNull(deltaReader.Item as ODataDeltaResourceSet);
+                                Assert.NotNull(deltaReader.Item as ODataDeltaResourceSet);
                             }
                             else if (deltaReader.State == ODataDeltaReaderState.DeltaResourceEnd)
                             {
-                                Assert.IsNotNull(deltaReader.Item as ODataResource);
+                                Assert.NotNull(deltaReader.Item as ODataResource);
                             }
                             else if (deltaReader.State == ODataDeltaReaderState.NestedResource)
                             {
                                 switch (deltaReader.SubState)
                                 {
                                     case ODataReaderState.Start:
-                                        Assert.IsNotNull(deltaReader.Item as ODataNestedResourceInfo);
+                                        Assert.NotNull(deltaReader.Item as ODataNestedResourceInfo);
                                         break;
                                     case ODataReaderState.ResourceSetEnd:
-                                        Assert.IsNotNull(deltaReader.Item as ODataResourceSet);
+                                        Assert.NotNull(deltaReader.Item as ODataResourceSet);
                                         break;
                                     case ODataReaderState.ResourceEnd:
-                                        Assert.IsNotNull(deltaReader.Item as ODataResource);
+                                        Assert.NotNull(deltaReader.Item as ODataResource);
                                         break;
                                     case ODataReaderState.NestedResourceInfoEnd:
-                                        Assert.IsNotNull(deltaReader.Item as ODataNestedResourceInfo);
+                                        Assert.NotNull(deltaReader.Item as ODataNestedResourceInfo);
                                         break;
                                     case ODataReaderState.Completed:
-                                        Assert.IsNotNull(deltaReader.Item);
+                                        Assert.NotNull(deltaReader.Item);
                                         break;
                                 }
                             }
                         }
 
-                        Assert.AreEqual(ODataDeltaReaderState.Completed, deltaReader.State);
+                        Assert.Equal(ODataDeltaReaderState.Completed, deltaReader.State);
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void RequestDeltaLink_Projection()
         {
             var customersSet = Model.FindDeclaredEntitySet("Customers");
@@ -216,7 +215,7 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "$delta?$token=projection", UriKind.Absolute));
                 requestMessage.SetHeader("Accept", mimeType);
                 var responseMessage = requestMessage.GetResponse();
-                Assert.AreEqual(200, responseMessage.StatusCode);
+                Assert.Equal(200, responseMessage.StatusCode);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
@@ -232,7 +231,7 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
 
                             }
                         }
-                        Assert.AreEqual(ODataDeltaReaderState.Completed, deltaReader.State);
+                        Assert.Equal(ODataDeltaReaderState.Completed, deltaReader.State);
                     }
                 }
             }

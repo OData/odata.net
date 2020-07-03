@@ -9,63 +9,62 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using System;
     using Microsoft.OData.Client;
     using FluentAssertions;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
     /// <summary>
     /// Unit tests for the QueryComponents class.
     /// </summary>
-    [TestClass]
     public class QueryComponentsTests
     {
-        [TestMethod]
+        [Fact]
         public void UriWithSelectInMiddleOfQueryString()
         {
             CreateQueryOptions("?$filter=City eq 'Paris'&$select=Name,OrderDate").HasSelectQueryOption.Should().BeTrue();
         }
 
-        [TestMethod]
+        [Fact]
         public void UriWithSelectAtBeginningOfQueryString()
         {
             CreateQueryOptions("?$select=Name,OrderDate").HasSelectQueryOption.Should().BeTrue();
         }
 
-        [TestMethod]
+        [Fact]
         public void UriWithNoQueryString()
         {
             CreateQueryOptions("").HasSelectQueryOption.Should().BeFalse();
         }
 
-        [TestMethod]
+        [Fact]
         public void UriWithEmptyQueryString()
         {
             CreateQueryOptions("?").HasSelectQueryOption.Should().BeFalse();
         }
 
-        [TestMethod]
+        [Fact]
         public void UriWithQueryStringOtherThanSelect()
         {
             CreateQueryOptions("?$orderby=State").HasSelectQueryOption.Should().BeFalse();
         }
 
-        [TestMethod]
+        [Fact]
         public void UriWithSelectAtBeginningAndOtherOptions()
         {
             CreateQueryOptions("?$select=Name,OrderDate&$&$filter=City eq 'Redmond'").HasSelectQueryOption.Should().BeTrue();
         }
 
-        [TestMethod]
+        [Fact]
         public void UriWithSelectInMiddleAndOtherOptions()
         {
             CreateQueryOptions("?$filter=City eq 'Redmond'&$select=Name,OrderDate&$orderby=State").HasSelectQueryOption.Should().BeTrue();
         }
 
-        [TestMethod]
+        [Fact]
         public void UriWithSelectNotFollowedByEquals()
         {
             CreateQueryOptions("?$selectExtra=SomeOtherKindOfValue").HasSelectQueryOption.Should().BeFalse();
         }
 
-        [TestMethod]
+        [Fact]
         public void UriWithSelectInDataString()
         {
             // $select is part of data not a query option

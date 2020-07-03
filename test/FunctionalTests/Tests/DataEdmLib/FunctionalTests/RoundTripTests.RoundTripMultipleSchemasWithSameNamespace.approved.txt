@@ -15,17 +15,6 @@
   <ComplexType Name="ValidNameComplexType1">
     <Property Name="aPropertyOne" Type="FindMethodsTestModelBuilder.MultipleSchemasWithSameNamespace.ValidNameComplexType1" Nullable="false" />
   </ComplexType>
-  <Function Name="ValidFunction1">
-    <ReturnType Type="Edm.Single" Nullable="false" />
-  </Function>
-  <Function Name="ValidFunction1">
-    <Parameter Name="param1" Type="FindMethodsTestModelBuilder.MultipleSchemasWithSameNamespace.validEntityType1" />
-    <ReturnType Type="Edm.Single" Nullable="false" />
-  </Function>
-  <Function Name="ValidFunction1">
-    <Parameter Name="param1" Type="Edm.Single" Nullable="false" />
-    <ReturnType Type="Edm.Single" Nullable="false" />
-  </Function>
   <EntityType Name="validEntityTypeA">
     <Key>
       <PropertyRef Name="Id" />
@@ -42,6 +31,17 @@
   <ComplexType Name="ValidNameComplexTypeA">
     <Property Name="aPropertyOne" Type="FindMethodsTestModelBuilder.MultipleSchemasWithSameNamespace.ValidNameComplexTypeA" Nullable="false" />
   </ComplexType>
+  <Function Name="ValidFunction1">
+    <ReturnType Type="Edm.Single" Nullable="false" />
+  </Function>
+  <Function Name="ValidFunction1">
+    <Parameter Name="param1" Type="FindMethodsTestModelBuilder.MultipleSchemasWithSameNamespace.validEntityType1" />
+    <ReturnType Type="Edm.Single" Nullable="false" />
+  </Function>
+  <Function Name="ValidFunction1">
+    <Parameter Name="param1" Type="Edm.Single" Nullable="false" />
+    <ReturnType Type="Edm.Single" Nullable="false" />
+  </Function>
   <Function Name="ValidFunctionA">
     <ReturnType Type="Edm.Single" Nullable="false" />
   </Function>

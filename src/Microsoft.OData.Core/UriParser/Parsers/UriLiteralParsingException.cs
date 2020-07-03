@@ -20,7 +20,7 @@ namespace Microsoft.OData.UriParser
     [DebuggerDisplay("{Message}")]
     public sealed class UriLiteralParsingException : ODataException
     {
-        /// <summary>Creates a new instance of the <see cref="Microsoft.OData.UriTypeParsingException" /> class with default values.</summary>
+        /// <summary>Creates a new instance of the <see cref="Microsoft.OData.UriParser.UriLiteralParsingException" /> class with default values.</summary>
         /// <remarks>
         /// The Message property is initialized to a system-supplied message
         /// that describes the error. This message takes into account the
@@ -31,14 +31,14 @@ namespace Microsoft.OData.UriParser
         {
         }
 
-        /// <summary>Creates a new instance of the <see cref="Microsoft.OData.UriTypeParsingException" /> class with an error message.</summary>
+        /// <summary>Creates a new instance of the <see cref="Microsoft.OData.UriParser.UriLiteralParsingException" /> class with an error message.</summary>
         /// <param name="message">The plain text error message for this exception.</param>
         public UriLiteralParsingException(string message)
             : base(message)
         {
         }
 
-        /// <summary>Creates a new instance of the <see cref="Microsoft.OData.UriTypeParsingException" /> class with an error message and an inner exception.</summary>
+        /// <summary>Creates a new instance of the <see cref="Microsoft.OData.UriParser.UriLiteralParsingException" /> class with an error message and an inner exception.</summary>
         /// <param name="message">The plain text error message for this exception.</param>
         /// <param name="innerException">The inner exception that is the cause of this exception to be thrown.</param>
         public UriLiteralParsingException(string message, Exception innerException)

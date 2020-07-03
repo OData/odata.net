@@ -71,14 +71,18 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
         public void ValidateEntitySetAtttributeCorrectlyWritesOutEntitySet()
         {
             EdmActionImport actionImport = new EdmActionImport(defaultContainer, "Checkout", defaultCheckoutAction, new EdmPathExpression("Customers"));
-            TestWriteActionImportElementHeaderMethod(actionImport, @"<ActionImport Name=""Checkout"" Action=""Default.NameSpace2.CheckOut"" EntitySet=""Customers""");
+
+            this.EdmModelCsdlSchemaWriterTest(writer => writer.WriteActionImportElementHeader(actionImport),
+                @"<ActionImport Name=""Checkout"" Action=""Default.NameSpace2.CheckOut"" EntitySet=""Customers""");
         }
 
         [Fact]
         public void ValidateEntitySetAtttributeCorrectlyWritesEntitySetPath()
         {
             EdmFunctionImport functionImport = new EdmFunctionImport(defaultContainer, "GetStuff", defaultGetStuffFunction, new EdmPathExpression("Customers", "Orders"), false);
-            TestWriteFunctionImportElementHeaderMethod(functionImport, @"<FunctionImport Name=""GetStuff"" Function=""Default.NameSpace2.GetStuff"" EntitySet=""Customers/Orders""");
+
+            this.EdmModelCsdlSchemaWriterTest(writer => writer.WriteFunctionImportElementHeader(functionImport),
+                @"<FunctionImport Name=""GetStuff"" Function=""Default.NameSpace2.GetStuff"" EntitySet=""Customers/Orders""");
         }
 
         [Fact]
@@ -92,15 +96,6 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             Assert.Equal(Strings.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid(actionImport.Name), exception.Message);
         }
 
-        private void TestWriteActionImportElementHeaderMethod(IEdmActionImport actionImport, string expected)
-        {
-            this.EdmModelCsdlSchemaWriterTest(writer => writer.WriteActionImportElementHeader(actionImport), expected);
-        }
-
-        private void TestWriteFunctionImportElementHeaderMethod(IEdmFunctionImport functionImport, string expected)
-        {
-            this.EdmModelCsdlSchemaWriterTest(writer => writer.WriteFunctionImportElementHeader(functionImport), expected);
-        }
         #endregion
 
         #region ActionImport tests.
@@ -108,22 +103,30 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
         public void ValidateCorrectActionImportNameAndActionAttributeValueWrittenCorrectly()
         {
             EdmActionImport actionImport = new EdmActionImport(defaultContainer, "Checkout", defaultCheckoutAction, null);
-            TestWriteActionImportElementHeaderMethod(actionImport, @"<ActionImport Name=""Checkout"" Action=""Default.NameSpace2.CheckOut""");
+
+            this.EdmModelCsdlSchemaWriterTest(writer => writer.WriteActionImportElementHeader(actionImport),
+                @"<ActionImport Name=""Checkout"" Action=""Default.NameSpace2.CheckOut""");
         }
 
         #endregion
 
         #region FunctionImport tests.
+        [Fact]
         public void ValidateCorrectFunctionNameAndFunctionAttributeValueWrittenCorrectly()
         {
             EdmFunctionImport functionImport = new EdmFunctionImport(defaultContainer, "GetStuff", defaultGetStuffFunction, new EdmPathExpression("Customers", "Orders"), false);
-            TestWriteFunctionImportElementHeaderMethod(functionImport, @"<FunctionImport Name=""GetStuff"" Action=""Default.NameSpace2.GetStuff"" EntitySet=""Customers/Orders""");
+
+            this.EdmModelCsdlSchemaWriterTest(writer => writer.WriteFunctionImportElementHeader(functionImport),
+                @"<FunctionImport Name=""GetStuff"" Function=""Default.NameSpace2.GetStuff"" EntitySet=""Customers/Orders""");
         }
 
+        [Fact]
         public void ValidateFunctionIncludeInServiceDocumentWrittenAsTrue()
         {
             EdmFunctionImport functionImport = new EdmFunctionImport(defaultContainer, "GetStuff", defaultGetStuffFunction, new EdmPathExpression("Customers", "Orders"), true);
-            TestWriteFunctionImportElementHeaderMethod(functionImport, @"<FunctionImport Name=""GetStuff"" Action=""Default.NameSpace2.GetStuff"" EntitySet=""Customers/Orders"" IncludeInServiceDocument=""true""");
+
+            this.EdmModelCsdlSchemaWriterTest(writer => writer.WriteFunctionImportElementHeader(functionImport),
+                @"<FunctionImport Name=""GetStuff"" Function=""Default.NameSpace2.GetStuff"" EntitySet=""Customers/Orders"" IncludeInServiceDocument=""true""");
         }
         #endregion
 
@@ -174,7 +177,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             var namespaceAliasMappings = model.GetNamespaceAliases();
             Version edmxVersion = model.GetEdmxVersion();
             xmlWriter = XmlWriter.Create(memoryStream);
-            return new EdmModelCsdlSchemaWriter(model, namespaceAliasMappings, xmlWriter, edmxVersion);
+            return new EdmModelCsdlSchemaXmlWriter(model, xmlWriter, edmxVersion);
         }
     }
 }

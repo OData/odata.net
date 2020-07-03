@@ -128,7 +128,160 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         private IEdmExpression ComputeValue()
         {
-            return CsdlSemanticsModel.WrapExpression((this.Annotation).Expression, TargetBindingContext, this.Schema);
+            IEdmTypeReference termType = Term is UnresolvedVocabularyTerm ? null : Term.Type;
+            CsdlExpressionBase adjustedExpression = AdjustStringConstantUsingTermType((this.Annotation).Expression, termType);
+
+            return CsdlSemanticsModel.WrapExpression(adjustedExpression, TargetBindingContext, this.Schema);
+        }
+
+        private static CsdlExpressionBase AdjustStringConstantUsingTermType(CsdlExpressionBase expression, IEdmTypeReference termType)
+        {
+            if (expression == null || termType == null)
+            {
+                return expression;
+            }
+
+            switch (expression.ExpressionKind)
+            {
+                case EdmExpressionKind.Collection:
+                    if (termType.IsCollection())
+                    {
+                        IEdmTypeReference elementType = termType.AsCollection().ElementType();
+                        IList<CsdlExpressionBase> newElements = new List<CsdlExpressionBase>();
+                        CsdlCollectionExpression collectionExp = (CsdlCollectionExpression)expression;
+
+                        foreach (CsdlExpressionBase exp in collectionExp.ElementValues)
+                        {
+                            if (exp != null && exp.ExpressionKind == EdmExpressionKind.StringConstant)
+                            {
+                                newElements.Add(AdjustStringConstantUsingTermType(exp, elementType));
+                            }
+                            else
+                            {
+                                newElements.Add(exp);
+                            }
+                        }
+
+                        return new CsdlCollectionExpression(collectionExp.Type, newElements, collectionExp.Location as CsdlLocation);
+                    }
+
+                    break;
+
+                case EdmExpressionKind.StringConstant:
+                    CsdlConstantExpression constantExp = (CsdlConstantExpression)expression;
+                    switch (termType.TypeKind())
+                    {
+                        case EdmTypeKind.Primitive:
+                            IEdmPrimitiveTypeReference primitiveTypeReference = (IEdmPrimitiveTypeReference)termType;
+                            return BuildPrimitiveExpression(primitiveTypeReference, constantExp);
+
+                        case EdmTypeKind.Path:
+                            IEdmPathType pathType = (IEdmPathType)termType.Definition;
+                            return BuildPathExpression(pathType, constantExp);
+
+                        case EdmTypeKind.Enum:
+                            IEdmEnumType enumType = (IEdmEnumType)termType.Definition;
+                            return BuildEnumExpression(enumType, constantExp);
+                    }
+
+                    break;
+            }
+
+            return expression;
+        }
+
+        private static CsdlExpressionBase BuildEnumExpression(IEdmEnumType enumType, CsdlConstantExpression expression)
+        {
+            return new CsdlEnumMemberExpression(expression.Value, enumType, expression.Location as CsdlLocation);
+        }
+
+        private static CsdlConstantExpression BuildPrimitiveExpression(IEdmPrimitiveTypeReference primitiveTypeReference, CsdlConstantExpression expression)
+        {
+            Debug.Assert(expression.ExpressionKind == EdmExpressionKind.StringConstant);
+            CsdlLocation location = expression.Location as CsdlLocation;
+
+            switch (primitiveTypeReference.PrimitiveKind())
+            {
+                case EdmPrimitiveTypeKind.Binary:
+                    return new CsdlConstantExpression(EdmValueKind.Binary, expression.Value, location);
+
+                case EdmPrimitiveTypeKind.Date:
+                    return new CsdlConstantExpression(EdmValueKind.Date, expression.Value, location);
+
+                case EdmPrimitiveTypeKind.DateTimeOffset:
+                    return new CsdlConstantExpression(EdmValueKind.DateTimeOffset, expression.Value, location);
+
+                case EdmPrimitiveTypeKind.Decimal:
+                    // it maybe use the string for decimal
+                    // The IEEE754Compatible=true parameter indicates that the service MUST serialize Edm.Decimal numbers as strings.
+                    // The special values INF, -INF, or NaN are represented as strings.
+                    return new CsdlConstantExpression(EdmValueKind.Decimal, expression.Value, location);
+
+                case EdmPrimitiveTypeKind.Int64:
+                    // The IEEE754Compatible=true parameter indicates that the service MUST serialize Edm.Int64 numbers as strings.
+                    return new CsdlConstantExpression(EdmValueKind.Integer, expression.Value, location);
+
+                case EdmPrimitiveTypeKind.Duration:
+                    return new CsdlConstantExpression(EdmValueKind.Duration, expression.Value, location);
+
+                case EdmPrimitiveTypeKind.Single:
+                case EdmPrimitiveTypeKind.Double:
+                    // may have a string containing one of the special values INF, -INF, or NaN.
+                    return new CsdlConstantExpression(EdmValueKind.Floating, expression.Value, location);
+
+                case EdmPrimitiveTypeKind.Guid:
+                    return new CsdlConstantExpression(EdmValueKind.Guid, expression.Value, location);
+
+                case EdmPrimitiveTypeKind.TimeOfDay:
+                    return new CsdlConstantExpression(EdmValueKind.TimeOfDay, expression.Value, location);
+
+                case EdmPrimitiveTypeKind.String:
+                case EdmPrimitiveTypeKind.Byte:
+                case EdmPrimitiveTypeKind.SByte:
+                case EdmPrimitiveTypeKind.Stream:
+                case EdmPrimitiveTypeKind.PrimitiveType:
+                case EdmPrimitiveTypeKind.Geography:
+                case EdmPrimitiveTypeKind.GeographyPoint:
+                case EdmPrimitiveTypeKind.GeographyLineString:
+                case EdmPrimitiveTypeKind.GeographyPolygon:
+                case EdmPrimitiveTypeKind.GeographyCollection:
+                case EdmPrimitiveTypeKind.GeographyMultiPolygon:
+                case EdmPrimitiveTypeKind.GeographyMultiLineString:
+                case EdmPrimitiveTypeKind.GeographyMultiPoint:
+                case EdmPrimitiveTypeKind.Geometry:
+                case EdmPrimitiveTypeKind.GeometryPoint:
+                case EdmPrimitiveTypeKind.GeometryLineString:
+                case EdmPrimitiveTypeKind.GeometryPolygon:
+                case EdmPrimitiveTypeKind.GeometryCollection:
+                case EdmPrimitiveTypeKind.GeometryMultiPolygon:
+                case EdmPrimitiveTypeKind.GeometryMultiLineString:
+                case EdmPrimitiveTypeKind.GeometryMultiPoint:
+                case EdmPrimitiveTypeKind.None:
+                default:
+                    return expression;
+            }
+        }
+
+        private static CsdlExpressionBase BuildPathExpression(IEdmPathType pathType, CsdlConstantExpression expression)
+        {
+            Debug.Assert(expression.ExpressionKind == EdmExpressionKind.StringConstant);
+            CsdlLocation location = expression.Location as CsdlLocation;
+
+            switch (pathType.PathKind)
+            {
+                case EdmPathTypeKind.AnnotationPath:
+                    return new CsdlAnnotationPathExpression(expression.Value, location);
+
+                case EdmPathTypeKind.PropertyPath:
+                    return new CsdlPropertyPathExpression(expression.Value, location);
+
+                case EdmPathTypeKind.NavigationPropertyPath:
+                    return new CsdlNavigationPropertyPathExpression(expression.Value, location);
+
+                case EdmPathTypeKind.None:
+                default:
+                    return expression;
+            }
         }
 
         private IEdmVocabularyAnnotatable ComputeTarget()

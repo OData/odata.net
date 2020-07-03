@@ -13,7 +13,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
     using System.IO;
     using System.Linq;
     using FluentAssertions;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Xunit;
 
     [Key("ID")]
     public class EntityType : INotifyPropertyChanged
@@ -191,18 +191,16 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         public int ID { get; set; }
     }
 
-    [TestClass]
     public class ClientPropertyTrackingTests
     {
         private DataServiceContext context;
 
-        [TestInitialize]
-        public void Init()
+        public ClientPropertyTrackingTests()
         {
             this.context = new DataServiceContext(new Uri("http://www.odata.org/service.svc")).ReConfigureForNetworkLoadingTests();
         }
 
-        [TestMethod]
+        [Fact]
         public void UpdatePrimitivePropertyShouldOnlySerializeChangedProperties()
         {
             EntityType entity = new EntityType
@@ -220,11 +218,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
 
             context.Entities.FirstOrDefault().State = EntityStates.Unchanged;
             entity.ID = 2;
-            Assert.AreEqual(EntityStates.Modified, context.Entities.FirstOrDefault().State);
+            Assert.Equal(EntityStates.Modified, context.Entities.FirstOrDefault().State);
             ValidateBodyContent(context, "{\"ID\":2}");
         }
 
-        [TestMethod]
+        [Fact]
         public void UpdateCollectionPropertyShouldOnlySerializeChangedProperties()
         {
             EntityType entity = new EntityType
@@ -242,11 +240,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
 
             context.Entities.FirstOrDefault().State = EntityStates.Unchanged;
             entity.StringCollection.Add("third");
-            Assert.AreEqual(EntityStates.Modified, context.Entities.FirstOrDefault().State);
+            Assert.Equal(EntityStates.Modified, context.Entities.FirstOrDefault().State);
             ValidateBodyContent(context, "{\"StringCollection@odata.type\":\"#Collection(String)\",\"StringCollection\":[\"first\",\"second\",\"third\"]}");
         }
 
-        [TestMethod]
+        [Fact]
         public void UpdateComplexPropertyShouldOnlySerializeChangedProperties()
         {
             EntityType entity = new EntityType
@@ -268,11 +266,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 Name = "July",
                 Home = new Address("Jiaotong", 16)
             };
-            Assert.AreEqual(EntityStates.Modified, context.Entities.FirstOrDefault().State);
+            Assert.Equal(EntityStates.Modified, context.Entities.FirstOrDefault().State);
             ValidateBodyContent(context, "{\"Complex\":{\"Name\":\"July\",\"Home\":{\"Code\":16,\"Street\":\"Jiaotong\"}}}");
         }
 
-        [TestMethod]
+        [Fact]
         public void UpdatePropertyInComplexPropertyShouldOnlySerializeChangedProperties()
         {
             EntityType entity = new EntityType
@@ -290,11 +288,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
 
             context.Entities.FirstOrDefault().State = EntityStates.Unchanged;
             entity.Complex.Name = "July";
-            Assert.AreEqual(EntityStates.Modified, context.Entities.FirstOrDefault().State);
+            Assert.Equal(EntityStates.Modified, context.Entities.FirstOrDefault().State);
             ValidateBodyContent(context, "{\"Complex\":{\"Name\":\"July\",\"Home\":{\"Code\":200,\"Street\":\"Dongchuan\"}}}");
         }
 
-        [TestMethod]
+        [Fact]
         public void UpdateComplexPropertyInComplexPropertyShouldOnlySerializeChangedProperties()
         {
             EntityType entity = new EntityType
@@ -312,11 +310,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
 
             context.Entities.FirstOrDefault().State = EntityStates.Unchanged;
             entity.Complex.Home.Code = 17;
-            Assert.AreEqual(EntityStates.Modified, context.Entities.FirstOrDefault().State);
+            Assert.Equal(EntityStates.Modified, context.Entities.FirstOrDefault().State);
             ValidateBodyContent(context, "{\"Complex\":{\"Name\":\"June\",\"Home\":{\"Code\":17,\"Street\":\"Dongchuan\"}}}");
         }
 
-        [TestMethod]
+        [Fact]
         public void UpdateMultiplePropertiesShouldOnlySerializeChangedProperties()
         {
             EntityType entity = new EntityType
@@ -335,11 +333,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             context.Entities.FirstOrDefault().State = EntityStates.Unchanged;
             entity.ID = 71;
             entity.Complex.Home.Code = 17;
-            Assert.AreEqual(EntityStates.Modified, context.Entities.FirstOrDefault().State);
+            Assert.Equal(EntityStates.Modified, context.Entities.FirstOrDefault().State);
             ValidateBodyContent(context, "{\"ID\":71,\"Complex\":{\"Name\":\"June\",\"Home\":{\"Code\":17,\"Street\":\"Dongchuan\"}}}");
         }
 
-        [TestMethod]
+        [Fact]
         public void UpdateDerivedEntityTypeShouldOnlySerializeChangedProperties()
         {
             DerivedEntityType entity = new DerivedEntityType
@@ -360,11 +358,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             entity.ID = 71;
             entity.Complex.Home.Code = 17;
             entity.Name = "Aug";
-            Assert.AreEqual(EntityStates.Modified, context.Entities.FirstOrDefault().State);
+            Assert.Equal(EntityStates.Modified, context.Entities.FirstOrDefault().State);
             ValidateBodyContent(context, "{\"ID\":71,\"Name\":\"Aug\",\"Complex\":{\"Name\":\"June\",\"Home\":{\"Code\":17,\"Street\":\"Xiadu\"}}}");
         }
 
-        [TestMethod]
+        [Fact]
         public void UpdateDerivedComplexTypeShouldOnlySerializeChangedProperties()
         {
             DerivedEntityType entity = new DerivedEntityType
@@ -386,11 +384,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             entity.ID = 71;
             entity.Complex.Home.Code = 17;
             entity.Home.City = "Guangzhou";
-            Assert.AreEqual(EntityStates.Modified, context.Entities.FirstOrDefault().State);
+            Assert.Equal(EntityStates.Modified, context.Entities.FirstOrDefault().State);
             ValidateBodyContent(context, "{\"ID\":71,\"Complex\":{\"Name\":\"June\",\"Home\":{\"Code\":17,\"Street\":\"Xiadu\"}},\"Home\":{\"City\":\"Guangzhou\",\"Code\":17,\"Street\":\"Xingang\"}}");
         }
 
-        [TestMethod]
+        [Fact]
         public void DerivedEntityTypeShouldOnlySerializeChangedProperties()
         {
             EntityType entity = new DerivedEntityType
@@ -412,11 +410,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             entity.ID = 71;
             entity.Complex.Home.Code = 17;
             ((DerivedEntityType)entity).Home.City = "Guangzhou";
-            Assert.AreEqual(EntityStates.Modified, context.Entities.FirstOrDefault().State);
+            Assert.Equal(EntityStates.Modified, context.Entities.FirstOrDefault().State);
             ValidateBodyContent(context, "{\"ID\":71,\"Complex\":{\"Name\":\"June\",\"Home\":{\"Code\":17,\"Street\":\"Xiadu\"}},\"Home\":{\"City\":\"Guangzhou\",\"Code\":17,\"Street\":\"Xingang\"}}");
         }
 
-        [TestMethod]
+        [Fact]
         public void DerivedComplexTypeShouldOnlySerializeChangedProperties()
         {
             EntityType entity = new EntityType
@@ -436,33 +434,33 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             entity.ID = 71;
             entity.Complex.Home.Code = 17;
             ((HomeAddress)entity.Complex.Home).City = "Guangzhou";
-            Assert.AreEqual(EntityStates.Modified, context.Entities.FirstOrDefault().State);
+            Assert.Equal(EntityStates.Modified, context.Entities.FirstOrDefault().State);
             ValidateBodyContent(context, "{\"ID\":71,\"Complex\":{\"Name\":\"June\",\"Home\":{\"City\":\"Guangzhou\",\"Code\":17,\"Street\":\"Xiadu\"}}}");
         }
 
-        [TestMethod]
+        [Fact]
         public void OnlySetPropertiesShouldBeSentOnPost()
         {
             DataServiceCollection<EntityType> collection = new DataServiceCollection<EntityType>(context, "EntitySet", null, null);
             EntityType entity = new EntityType();
             collection.Add(entity);
             entity.ID = 71;
-            Assert.AreEqual(EntityStates.Added, context.Entities.FirstOrDefault().State);
+            Assert.Equal(EntityStates.Added, context.Entities.FirstOrDefault().State);
             ValidateBodyContent(context, "{\"ID\":71}", SaveChangesOptions.PostOnlySetProperties);
         }
 
-        [TestMethod]
+        [Fact]
         public void OnlyChangedCollectionPropertiesShouldBeSentOnPost()
         {
             DataServiceCollection<EntityType> collection = new DataServiceCollection<EntityType>(context, "EntitySet", null, null);
             EntityType entity = new EntityType();
             collection.Add(entity);
             entity.StringCollection.Add("first");
-            Assert.AreEqual(EntityStates.Added, context.Entities.FirstOrDefault().State);
+            Assert.Equal(EntityStates.Added, context.Entities.FirstOrDefault().State);
             ValidateBodyContent(context, "{\"StringCollection@odata.type\":\"#Collection(String)\",\"StringCollection\":[\"first\"]}", SaveChangesOptions.PostOnlySetProperties);
         }
 
-        [TestMethod]
+        [Fact]
         public void OnlySetComplexPropertiesShouldBeSentOnPost()
         {
             DataServiceCollection<EntityType> collection = new DataServiceCollection<EntityType>(context, "EntitySet", null, null);
@@ -473,22 +471,22 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 Name = "July",
                 Home = new Address("Jiaotong", 16)
             };
-            Assert.AreEqual(EntityStates.Added, context.Entities.FirstOrDefault().State);
+            Assert.Equal(EntityStates.Added, context.Entities.FirstOrDefault().State);
             ValidateBodyContent(context, "{\"Complex\":{\"Name\":\"July\",\"Home\":{\"Code\":16,\"Street\":\"Jiaotong\"}}}", SaveChangesOptions.PostOnlySetProperties);
         }
 
-        [TestMethod]
+        [Fact]
         public void OnlyChangedDerivedComplexTypePropertiesShouldBeSentOnPost()
         {
             DataServiceCollection<DerivedEntityType> collection = new DataServiceCollection<DerivedEntityType>(context, "EntitySet", null, null);
             DerivedEntityType entity = new DerivedEntityType();
             collection.Add(entity);
             entity.Home = new HomeAddress("Xiadu", 71, "Guangzhou");
-            Assert.AreEqual(EntityStates.Added, context.Entities.FirstOrDefault().State);
+            Assert.Equal(EntityStates.Added, context.Entities.FirstOrDefault().State);
             ValidateBodyContent(context, "{\"Home\":{\"City\":\"Guangzhou\",\"Code\":71,\"Street\":\"Xiadu\"}}", SaveChangesOptions.PostOnlySetProperties);
         }
 
-        [TestMethod]
+        [Fact]
         public void OnlyChangedPropertiesInDerivedEntityTypeShouldBeSentOnPost()
         {
             EntityType entity = new DerivedEntityType();
@@ -501,11 +499,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 Home = new Address("Xiadu", 17)
             };
             ((DerivedEntityType)entity).Home = new HomeAddress("Xingang", 17, "Guangzhou");
-            Assert.AreEqual(EntityStates.Added, context.Entities.FirstOrDefault().State);
+            Assert.Equal(EntityStates.Added, context.Entities.FirstOrDefault().State);
             ValidateBodyContent(context, "{\"ID\":71,\"Complex\":{\"Name\":\"June\",\"Home\":{\"Code\":17,\"Street\":\"Xiadu\"}},\"Home\":{\"City\":\"Guangzhou\",\"Code\":17,\"Street\":\"Xingang\"}}", SaveChangesOptions.PostOnlySetProperties);
         }
 
-        [TestMethod]
+        [Fact]
         public void OnlyChangedPropertiesInEntityTypeAddedToDataServiceCollectionInitailizationShouldBeSentOnPost()
         {
             EntityType entity = new EntityType();
@@ -516,11 +514,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 Name = "June",
                 Home = new Address("Xiadu", 17)
             };
-            Assert.AreEqual(EntityStates.Added, context.Entities.FirstOrDefault().State);
+            Assert.Equal(EntityStates.Added, context.Entities.FirstOrDefault().State);
             ValidateBodyContent(context, "{\"ID\":71,\"Complex\":{\"Name\":\"June\",\"Home\":{\"Code\":17,\"Street\":\"Xiadu\"}}}", SaveChangesOptions.PostOnlySetProperties);
         }
 
-        [TestMethod]
+        [Fact]
         public void OnlyChangedPropertiesInEntityTypeInitializedInDataServiceCollectionShouldBeSentOnPost()
         {
             DataServiceCollection<EntityType> collection = new DataServiceCollection<EntityType>(context, "EntitySet", null, null) { new EntityType() };
@@ -530,12 +528,12 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 Name = "June",
                 Home = new Address("Xiadu", 17)
             };
-            Assert.AreEqual(EntityStates.Added, context.Entities.FirstOrDefault().State);
+            Assert.Equal(EntityStates.Added, context.Entities.FirstOrDefault().State);
             ValidateBodyContent(context, "{\"ID\":71,\"Complex\":{\"Name\":\"June\",\"Home\":{\"Code\":17,\"Street\":\"Xiadu\"}}}", SaveChangesOptions.PostOnlySetProperties);
         }
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
-        [TestMethod]
+        [Fact]
         public void OnlyPostExplicitPropertiesUsedWithoutDataServiceCollectionShouldThrow()
         {
             EntityType entity = new EntityType { ID = 1 };
@@ -545,25 +543,25 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         }
 #endif
 
-        [TestMethod]
+        [Fact]
         public void TrackedEntityPayLoadShouldKeepEmptyIfNoPropertyHasBeenSetOnPost()
         {
             EntityType entity = new EntityType();
             DataServiceCollection<EntityType> collection = new DataServiceCollection<EntityType>(context, "EntitySet", null, null) { entity };
-            Assert.AreEqual(EntityStates.Added, context.Entities.FirstOrDefault().State);
+            Assert.Equal(EntityStates.Added, context.Entities.FirstOrDefault().State);
             ValidateBodyContent(context, "{}", SaveChangesOptions.PostOnlySetProperties);
         }
 
-        [TestMethod]
+        [Fact]
         public void TrackedEntityPayLoadShouldKeepEmptyIfNoPropertyHasBeenTrackedOnPost()
         {
             EntityType entity = new EntityType() { ID = 1 };
             DataServiceCollection<EntityType> collection = new DataServiceCollection<EntityType>(context, "EntitySet", null, null) { entity };
-            Assert.AreEqual(EntityStates.Added, context.Entities.FirstOrDefault().State);
+            Assert.Equal(EntityStates.Added, context.Entities.FirstOrDefault().State);
             ValidateBodyContent(context, "{}", SaveChangesOptions.PostOnlySetProperties);
         }
 
-        [TestMethod]
+        [Fact]
         public void UnTrackedEntityPayLoadShouldBeFullPayLoadOnPost()
         {
             EntityType entity = new EntityType() { ID = 1 };
@@ -572,11 +570,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         }
 
         // [OData Client] Enable DataServiceCollection to handle entities which derives from a generic type in custom partial class
-        [TestMethod]
+        [Fact]
         public void DataServiceCollectionCtorShouldNotThrowExceptionWhenParameterTDerivedFromAGenericTypeOfT()
         {
             var dsc = new DataServiceCollection<Asset>(context, null, TrackingMode.AutoChangeTracking, "EntitySet", null, null);
-            Assert.IsNotNull(dsc);
+            Assert.NotNull(dsc);
         }
 
         private static void ValidateBodyContent(DataServiceContext ctx, string expectedContent, SaveChangesOptions options = SaveChangesOptions.None)

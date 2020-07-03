@@ -10,13 +10,11 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using Microsoft.OData.Client;
     using FluentAssertions;
     using Microsoft.OData.Edm;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using System.Collections.Generic;
+    using Xunit;
 
     /// <summary>
     /// TODO: test the rest of RequestInfo
     /// </summary>
-    [TestClass]
     public class RequestInfoTests
     {
         private ClientEdmModel clientEdmModel;
@@ -26,8 +24,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         private EdmEntitySet serverEntitySet;
         private string serverTypeName;
 
-        [TestInitialize]
-        public void Init()
+        public RequestInfoTests()
         {
             this.clientEdmModel = new ClientEdmModel(ODataProtocolVersion.V4);
             this.entityDescriptor = new EntityDescriptor(this.clientEdmModel) { Entity = new Customer() };
@@ -47,7 +44,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             this.testSubject = new RequestInfo(ctx);
         }
 
-        [TestMethod]
+        [Fact]
         public void RequestInfoShouldFindServerTypeNameFromSet()
         {
             this.entityDescriptor.ServerTypeName.Should().BeNull();
@@ -55,7 +52,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             testSubject.InferServerTypeNameFromServerModel(this.entityDescriptor).Should().Be(this.serverTypeName);
         }
 
-        [TestMethod]
+        [Fact]
         public void RequestInfoShouldNotBeAbleToInferServerTypeNameIfNoSetOrParentIsPresent()
         {
             this.entityDescriptor.ServerTypeName.Should().BeNull();
@@ -63,7 +60,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             testSubject.InferServerTypeNameFromServerModel(this.entityDescriptor).Should().Be(null);
         }
 
-        [TestMethod]
+        [Fact]
         public void RequestInfoShouldNotBeAbleToInferServerTypeNameIfSetDoesNotExist()
         {
             this.entityDescriptor.ServerTypeName.Should().BeNull();
@@ -71,7 +68,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             testSubject.InferServerTypeNameFromServerModel(this.entityDescriptor).Should().Be(null);
         }
 
-        [TestMethod]
+        [Fact]
         public void RequestInfoShouldBeAbleToInferServerTypeNameFromContainingNavigation()
         {
             this.entityDescriptor.ServerTypeName.Should().BeNull();
@@ -80,7 +77,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             testSubject.InferServerTypeNameFromServerModel(this.entityDescriptor).Should().Be(this.serverTypeName);
         }
 
-        [TestMethod]
+        [Fact]
         public void RequestInfoShouldNotBeAbleToInferServerTypeNameFromContainingNavigationIfParentHasNoType()
         {
             this.entityDescriptor.ServerTypeName.Should().BeNull();
@@ -89,7 +86,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             testSubject.InferServerTypeNameFromServerModel(this.entityDescriptor).Should().Be(null);
         }
 
-        [TestMethod]
+        [Fact]
         public void RequestInfoShouldNotBeAbleToInferServerTypeNameFromContainingNavigationIfParentTypeIsntFound()
         {
             this.entityDescriptor.ServerTypeName.Should().BeNull();
@@ -98,7 +95,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             testSubject.InferServerTypeNameFromServerModel(this.entityDescriptor).Should().Be(null);
         }
 
-        [TestMethod]
+        [Fact]
         public void RequestInfoShouldNotBeAbleToInferServerTypeNameFromContainingNavigationIfPropertyDoesNotExist()
         {
             this.entityDescriptor.ServerTypeName.Should().BeNull();
@@ -107,7 +104,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             testSubject.InferServerTypeNameFromServerModel(this.entityDescriptor).Should().Be(null);
         }
 
-        [TestMethod]
+        [Fact]
         public void RequestInfoShouldCreateTunneledDeleteRequestMessageDeleteMethodAndDeleteInHttpXMethodHeader()
         {
             bool previousPostTunnelingValue = ctx.UsePostTunneling;
@@ -128,7 +125,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             ctx.UsePostTunneling = previousPostTunnelingValue;
         }
 
-        [TestMethod]
+        [Fact]
         public void RequestInfoShouldCreateTunneledPatchRequestMessagePostMethodAndPatchInHttpXMethodHeader()
         {
             bool previousPostTunnelingValue = ctx.UsePostTunneling;
@@ -147,7 +144,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             ctx.UsePostTunneling = previousPostTunnelingValue;
         }
 
-        [TestMethod]
+        [Fact]
         public void PostTunnelingDeleteRequestShouldNotHaveContentTypeHeader()
         {
             bool previousPostTunnelingValue = ctx.UsePostTunneling;

@@ -12,12 +12,12 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.Test.OData.Services.TestServices;
 using Microsoft.Test.OData.Tests.Client.Common;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-    
+    using Xunit;
+
+
     /// <summary>
     /// Tests for collection property nullable facet
     /// </summary>
-    [TestClass]
     public class CollectionNullableFacetTest : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>
     {
         private static string NameSpacePrefix = "Microsoft.Test.OData.Services.ODataWCFService.";
@@ -31,7 +31,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
         /// Verify collection structrual property with nullable facet specified false cannot have null element
         /// And collection can be empty
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void CollectionNullableFalseInStructrualProperty()
         {
             var personToAdd = new ODataResource
@@ -50,7 +50,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
         /// Verify collection in structrual property with nullable facet specified false can have null element
         /// And collection can be empty
         /// </summary>
-        [TestMethod]
+        [Fact]
         public void CollectionNullableTrueInStructrualProperty()
         {
             var personToAdd = new ODataResource
@@ -85,7 +85,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
                 if (property.Name.Equals(testProperty))
                 {
                     IEdmCollectionTypeReference typeRef = property.Type as IEdmCollectionTypeReference;
-                    Assert.IsNotNull(typeRef);
+                    Assert.NotNull(typeRef);
                     isNullable = typeRef.IsNullable;
                 }
             }
@@ -111,7 +111,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
                     var responseMessage = requestMessage.GetResponse();
 
                     // verify the update
-                    Assert.AreEqual(204, responseMessage.StatusCode);
+                    Assert.Equal(204, responseMessage.StatusCode);
                     ODataResource updatedProduct = this.QueryEntityItem("Customers(1)") as ODataResource;
                     ODataCollectionValue testCollection = updatedProduct.Properties.Single(p => p.Name == testProperty).Value as ODataCollectionValue;
                     ODataCollectionValue expectValue = personToAdd.Properties.Single(p => p.Name == testProperty).Value as ODataCollectionValue;
@@ -119,14 +119,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
                     var expIter = expectValue.Items.GetEnumerator();
                     while ((actIter.MoveNext()) && (expIter.MoveNext()))
                     {
-                        Assert.AreEqual(actIter.Current, expIter.Current);
+                        Assert.Equal(actIter.Current, expIter.Current);
                     }
                 }
                 catch (Exception exception)
                 {
                     if (!isNullable)
                     {
-                        Assert.AreEqual(exception.Message, "A null value was detected in the items of a collection property value; non-nullable instances of collection types do not support null values as items.");
+                        Assert.Equal(exception.Message, "A null value was detected in the items of a collection property value; non-nullable instances of collection types do not support null values as items.");
                     }
                     else
                     {
@@ -143,7 +143,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
             var queryRequestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + uri, UriKind.Absolute));
             queryRequestMessage.SetHeader("Accept", MimeTypes.ApplicationJsonLight);
             var queryResponseMessage = queryRequestMessage.GetResponse();
-            Assert.AreEqual(expectedStatusCode, queryResponseMessage.StatusCode);
+            Assert.Equal(expectedStatusCode, queryResponseMessage.StatusCode);
 
             ODataItem item = null;
             if (expectedStatusCode == 200)
@@ -159,7 +159,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
                         }
                     }
 
-                    Assert.AreEqual(ODataReaderState.Completed, reader.State);
+                    Assert.Equal(ODataReaderState.Completed, reader.State);
                 }
             }
 
