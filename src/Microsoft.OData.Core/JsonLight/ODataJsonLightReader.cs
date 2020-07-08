@@ -1658,8 +1658,7 @@ namespace Microsoft.OData.JsonLight
             IJsonReader jsonReader = this.jsonLightResourceDeserializer.JsonReader;
             if (jsonReader.NodeType != JsonNodeType.EndArray
                 && jsonReader.NodeType != JsonNodeType.StartObject
-                && jsonReader.NodeType != JsonNodeType.PrimitiveValue
-                && jsonReader.NodeType != JsonNodeType.StartArray)
+                && !(jsonReader.NodeType == JsonNodeType.PrimitiveValue && jsonReader.Value == null))
             {
                 throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_InvalidNodeTypeForItemsInResourceSet(jsonReader.NodeType));
             }
@@ -1973,7 +1972,8 @@ namespace Microsoft.OData.JsonLight
 
             this.jsonLightResourceDeserializer.ReadResourceSetContentStart();
             IJsonReader jsonReader = this.jsonLightResourceDeserializer.JsonReader;
-            if (jsonReader.NodeType != JsonNodeType.EndArray && jsonReader.NodeType != JsonNodeType.StartObject)
+            if (jsonReader.NodeType != JsonNodeType.EndArray && jsonReader.NodeType != JsonNodeType.StartObject
+                && !(jsonReader.NodeType == JsonNodeType.PrimitiveValue && jsonReader.Value == null))
             {
                 throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_InvalidNodeTypeForItemsInResourceSet(jsonReader.NodeType));
             }
