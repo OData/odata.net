@@ -18,6 +18,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
     /// </summary>
     // [Ignore] // Issues: #623
     // [TestClass] // github issuse: #896
+    //The whole of this class was ignored in MsTest tests that is why am skipping all the tests in this class. 
     public class ODataSimplifiedServiceQueryTests : ODataWCFServiceTestsBase<ODataSimplifiedService>
     {
         public ODataSimplifiedServiceQueryTests()
@@ -25,7 +26,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         {
         }
 
-        [Fact]
+        [Fact(Skip ="Ignore")]
         public void TestODataSimplifiedServiceQueryEntities()
         {
             TestClientContext.EnableWritingODataAnnotationWithoutPrefix = true;
@@ -35,7 +36,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             Assert.Equal(5, TestClientContext.Products.ToList().Count);
         }
 
-        [Fact]
+        [Fact(Skip ="Ignore")]
         public void TestODataSimplifiedServiceQueryNavigationProperty()
         {
             TestClientContext.EnableWritingODataAnnotationWithoutPrefix = true;
@@ -44,7 +45,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             Assert.Equal(2, TestClientContext.People.ByKey(new Dictionary<string, object> { { "PersonId", 1 } }).Products.ToList().Count);
         }
 
-        [Fact]
+        [Fact(Skip ="Ignore")]
         public void TestODataSimplifiedServiceQueryExpandedEntities()
         {
             TestClientContext.EnableWritingODataAnnotationWithoutPrefix = true;
@@ -54,7 +55,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             Assert.Equal(2, person[0].Products.ToList().Count);
         }
 
-        [Fact]
+        [Fact(Skip ="Ignore")]
         public void TestODataSimplifiedServiceCreateEntity()
         {
             TestClientContext.EnableWritingODataAnnotationWithoutPrefix = true;

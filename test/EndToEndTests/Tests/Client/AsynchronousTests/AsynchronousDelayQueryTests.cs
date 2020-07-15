@@ -43,13 +43,13 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
 
             //Action Bound on EntitySet and return an EntitySet
             var discountAction = TestClientContext.Products.Discount(50);
-            Assert.True(discountAction.RequestUri.OriginalString.EndsWith("/Products/Microsoft.Test.OData.Services.ODataWCFService.Discount"));
+            Assert.EndsWith("/Products/Microsoft.Test.OData.Services.ODataWCFService.Discount", discountAction.RequestUri.OriginalString);
             var ar = discountAction.BeginExecute(null, null).EnqueueWait(this);
             discountAction.EndExecute(ar);
 
             //Query an Entity
             var queryProduct = TestClientContext.Products.ByKey(new Dictionary<string, object> { { "ProductID", 10001 } });
-            Assert.True(queryProduct.RequestUri.OriginalString.EndsWith("/Products(10001)"));
+            Assert.EndsWith("/Products(10001)", queryProduct.RequestUri.OriginalString);
             queryProduct.BeginGetValue(
                 (ar1) =>
                 {
@@ -60,7 +60,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             //Action Bound on Entity and return an Enum
             var expectedAccessLevel = AccessLevel.ReadWrite | AccessLevel.Execute;
             var accessLevelAction = TestClientContext.Products.ByKey(new Dictionary<string, object> { { "ProductID", 10001 } }).AddAccessRight(expectedAccessLevel);
-            Assert.True(accessLevelAction.RequestUri.OriginalString.EndsWith("/Products(10001)/Microsoft.Test.OData.Services.ODataWCFService.AddAccessRight"));
+            Assert.EndsWith("/Products(10001)/Microsoft.Test.OData.Services.ODataWCFService.AddAccessRight", accessLevelAction.RequestUri.OriginalString);
             var ar2 = accessLevelAction.BeginGetValue(null, null).EnqueueWait(this);
             var accessLevel = accessLevelAction.EndGetValue(ar2);
             Assert.True(accessLevel.Value.HasFlag(expectedAccessLevel));
@@ -69,8 +69,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             //Won't execute since ODL doesn't support it now.
             var getProductDetailsFunction = TestClientContext.Products.ByKey(new Dictionary<string, object> { { "ProductID", 10001 } }).GetProductDetails(1);
             var getRelatedProductAction = getProductDetailsFunction.ByKey(new Dictionary<string, object> { { "ProductID", 10001 }, { "ProductDetailID", 10001 } }).GetRelatedProduct();
-            Assert.True(getProductDetailsFunction.RequestUri.OriginalString.EndsWith("/Products(10001)/Microsoft.Test.OData.Services.ODataWCFService.GetProductDetails(count=1)"));
-            Assert.True(getRelatedProductAction.RequestUri.OriginalString.EndsWith("/Products(10001)/Microsoft.Test.OData.Services.ODataWCFService.GetProductDetails(count=1)(ProductID=10001,ProductDetailID=10001)/Microsoft.Test.OData.Services.ODataWCFService.GetRelatedProduct()"));
+            Assert.EndsWith("/Products(10001)/Microsoft.Test.OData.Services.ODataWCFService.GetProductDetails(count=1)", getProductDetailsFunction.RequestUri.OriginalString);
+            Assert.EndsWith("/Products(10001)/Microsoft.Test.OData.Services.ODataWCFService.GetProductDetails(count=1)(ProductID=10001,ProductDetailID=10001)/Microsoft.Test.OData.Services.ODataWCFService.GetRelatedProduct()", getRelatedProductAction.RequestUri.OriginalString);
 
             var ar3 = getProductDetailsFunction.BeginExecute(null, null).EnqueueWait(this);
             var productDetails = getProductDetailsFunction.EndExecute(ar3);
@@ -94,19 +94,19 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
 
             //Action Bound on EntitySet
             var discountAction = TestClientContext.Products.Discount(50);
-            Assert.True(discountAction.RequestUri.OriginalString.EndsWith("/Products/Microsoft.Test.OData.Services.ODataWCFService.Discount"));
+            Assert.EndsWith("/Products/Microsoft.Test.OData.Services.ODataWCFService.Discount", discountAction.RequestUri.OriginalString);
             await discountAction.ExecuteAsync();
 
             //ByKey
             var queryProduct = TestClientContext.Products.ByKey(new Dictionary<string, object> { { "ProductID", 10001 } });
-            Assert.True(queryProduct.RequestUri.OriginalString.EndsWith("/Products(10001)"));
+            Assert.EndsWith("/Products(10001)", queryProduct.RequestUri.OriginalString);
             product = await queryProduct.GetValueAsync();
             Assert.Equal(1, product.UnitPrice);
 
             //Action Bound on Entity
             var expectedAccessLevel = AccessLevel.ReadWrite | AccessLevel.Execute;
             var accessLevelAction = TestClientContext.Products.ByKey(new Dictionary<string, object> { { "ProductID", 10001 } }).AddAccessRight(expectedAccessLevel);
-            Assert.True(accessLevelAction.RequestUri.OriginalString.EndsWith("/Products(10001)/Microsoft.Test.OData.Services.ODataWCFService.AddAccessRight"));
+            Assert.EndsWith("/Products(10001)/Microsoft.Test.OData.Services.ODataWCFService.AddAccessRight", accessLevelAction.RequestUri.OriginalString);
             var accessLevel = await accessLevelAction.GetValueAsync();
             Assert.True(accessLevel.Value.HasFlag(expectedAccessLevel));
 
@@ -114,8 +114,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             //Won't execute since ODL doesn't support it now.
             var getProductDetailsAction = TestClientContext.Products.ByKey(new Dictionary<string, object> { { "ProductID", 10001 } }).GetProductDetails(1);
             var getRelatedProductAction = getProductDetailsAction.ByKey(new Dictionary<string, object> { { "ProductID", 10001 }, { "ProductDetailID", 10001 } }).GetRelatedProduct();
-            Assert.True(getProductDetailsAction.RequestUri.OriginalString.EndsWith("/Products(10001)/Microsoft.Test.OData.Services.ODataWCFService.GetProductDetails(count=1)"));
-            Assert.True(getRelatedProductAction.RequestUri.OriginalString.EndsWith("/Products(10001)/Microsoft.Test.OData.Services.ODataWCFService.GetProductDetails(count=1)(ProductID=10001,ProductDetailID=10001)/Microsoft.Test.OData.Services.ODataWCFService.GetRelatedProduct()"));
+            Assert.EndsWith("/Products(10001)/Microsoft.Test.OData.Services.ODataWCFService.GetProductDetails(count=1)", getProductDetailsAction.RequestUri.OriginalString);
+            Assert.EndsWith("/Products(10001)/Microsoft.Test.OData.Services.ODataWCFService.GetProductDetails(count=1)(ProductID=10001,ProductDetailID=10001)/Microsoft.Test.OData.Services.ODataWCFService.GetRelatedProduct()", getRelatedProductAction.RequestUri.OriginalString);
 
             foreach (var pd in await getProductDetailsAction.ExecuteAsync())
             {
@@ -152,56 +152,56 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             var companyQuery = TestClientContext.Company.Select(c => new Company() { Name = c.Name, Address = c.Address });
             var ar4 = companyQuery.BeginGetValue(null, null).EnqueueWait(this);
             var company2 = companyQuery.EndGetValue(ar4);
-            Assert.True(companyQuery.RequestUri.OriginalString.EndsWith("/Company?$select=Name,Address"));
+            Assert.EndsWith("/Company?$select=Name,Address", companyQuery.RequestUri.OriginalString);
             Assert.NotNull(company2.Address);
 
             //Expand
             companyQuery = TestClientContext.Company.Expand(c => c.VipCustomer.Company);
             var ar5 = companyQuery.BeginGetValue(null, null).EnqueueWait(this);
             var company3 = companyQuery.EndGetValue(ar5);
-            Assert.True(companyQuery.RequestUri.OriginalString.EndsWith("/Company?$expand=VipCustomer($expand=Company)"));
+            Assert.EndsWith("/Company?$expand=VipCustomer($expand=Company)", companyQuery.RequestUri.OriginalString);
             Assert.NotNull(company);
 
             //Projection with Navigation
             companyQuery = TestClientContext.Company.Select(c => new Company() { Name = c.Name, Address = c.Address, Departments = c.Departments });
             var ar6 = companyQuery.BeginGetValue(null, null).EnqueueWait(this);
             var company4 = companyQuery.EndGetValue(ar6);
-            Assert.True(companyQuery.RequestUri.OriginalString.EndsWith("/Company?$expand=Departments&$select=Name,Address"));
+            Assert.EndsWith("/Company?$expand=Departments&$select=Name,Address", companyQuery.RequestUri.OriginalString);
             Assert.NotNull(company4.Address);
 
             //Query navigation property which is an collection
             var employeesQuery = TestClientContext.Company.Employees;
             var ar7 = employeesQuery.BeginExecute(null, null).EnqueueWait(this);
             var employees = employeesQuery.EndExecute(ar7);
-            Assert.True(employeesQuery.RequestUri.OriginalString.EndsWith("/Company/Employees"));
+            Assert.EndsWith("/Company/Employees", employeesQuery.RequestUri.OriginalString);
             Assert.NotNull(employees);
 
             //Query Navigation Property which is an single entity
             companyQuery = TestClientContext.Company.VipCustomer.Company;
             var ar8 = companyQuery.BeginGetValue(null, null).EnqueueWait(this);
             var company5 = companyQuery.EndGetValue(ar8);
-            Assert.True(companyQuery.RequestUri.OriginalString.EndsWith("/Company/VipCustomer/Company"));
+            Assert.EndsWith("/Company/VipCustomer/Company", companyQuery.RequestUri.OriginalString);
             Assert.NotNull(company5);
 
             //Query navigation property which is from a singleton
             var coreDepartmentQuery = TestClientContext.Company.CoreDepartment;
             var ar9 = coreDepartmentQuery.BeginGetValue(null, null).EnqueueWait(this);
             var coreDepartment = coreDepartmentQuery.EndGetValue(ar9);
-            Assert.True(coreDepartmentQuery.RequestUri.OriginalString.EndsWith("/Company/CoreDepartment"));
+            Assert.EndsWith("/Company/CoreDepartment", coreDepartmentQuery.RequestUri.OriginalString);
             Assert.NotNull(coreDepartment);
 
             //QueryOption on navigation property
             employeesQuery = TestClientContext.Company.Employees.Where(e => e.PersonID > 0) as DataServiceQuery<Employee>;
             var ar10 = employeesQuery.BeginExecute(null, null).EnqueueWait(this);
             employees = employeesQuery.EndExecute(ar10);
-            Assert.True(employeesQuery.RequestUri.OriginalString.EndsWith("/Company/Employees?$filter=PersonID gt 0"));
+            Assert.EndsWith("/Company/Employees?$filter=PersonID gt 0", employeesQuery.RequestUri.OriginalString);
             Assert.NotNull(employees);
 
             //Function Bound on Singleton
             var getEmployeesCountQuery = TestClientContext.Company.GetEmployeesCount();
             var ar11 = getEmployeesCountQuery.BeginGetValue(null, null).EnqueueWait(this);
             var count = getEmployeesCountQuery.EndGetValue(ar11);
-            Assert.True(getEmployeesCountQuery.RequestUri.OriginalString.EndsWith("/Company/Microsoft.Test.OData.Services.ODataWCFService.GetEmployeesCount()"));
+            Assert.EndsWith("/Company/Microsoft.Test.OData.Services.ODataWCFService.GetEmployeesCount()", getEmployeesCountQuery.RequestUri.OriginalString);
             Assert.True(count > 0);
 
             //Function Bound on Singleton
@@ -212,14 +212,14 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             getEmployeesCountQuery = company.GetEmployeesCount();
             var ar13 = getEmployeesCountQuery.BeginGetValue(null, null).EnqueueWait(this);
             count = getEmployeesCountQuery.EndGetValue(ar13);
-            Assert.True(getEmployeesCountQuery.RequestUri.OriginalString.EndsWith("/Company/Microsoft.Test.OData.Services.ODataWCFService.GetEmployeesCount()"));
+            Assert.EndsWith("/Company/Microsoft.Test.OData.Services.ODataWCFService.GetEmployeesCount()", getEmployeesCountQuery.RequestUri.OriginalString);
             Assert.True(count > 0);
 
             //Query Action bound on Navigation Property
             var getHomeAddressQuery = TestClientContext.Company.VipCustomer.GetHomeAddress();
             var ar14 = getHomeAddressQuery.BeginGetValue(null, null).EnqueueWait(this);
             getHomeAddressQuery.EndGetValue(ar14);
-            Assert.True(getHomeAddressQuery.RequestUri.OriginalString.EndsWith("/Company/VipCustomer/Microsoft.Test.OData.Services.ODataWCFService.GetHomeAddress()"));
+            Assert.EndsWith("/Company/VipCustomer/Microsoft.Test.OData.Services.ODataWCFService.GetHomeAddress()", getHomeAddressQuery.RequestUri.OriginalString);
         }
 
         [Fact, Asynchronous]
@@ -242,62 +242,62 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             //Projection
             var companyQuery = TestClientContext.Company.Select(c => new Company() { Name = c.Name, Address = c.Address });
             var company2 = await companyQuery.GetValueAsync();
-            Assert.True(companyQuery.RequestUri.OriginalString.EndsWith("/Company?$select=Name,Address"));
+            Assert.EndsWith("/Company?$select=Name,Address", companyQuery.RequestUri.OriginalString);
             Assert.NotNull(company2.Address);
 
             //Expand
             companyQuery = TestClientContext.Company.Expand(c => c.VipCustomer.Company);
             var company3 = await companyQuery.GetValueAsync();
-            Assert.True(companyQuery.RequestUri.OriginalString.EndsWith("/Company?$expand=VipCustomer($expand=Company)"));
+            Assert.EndsWith("/Company?$expand=VipCustomer($expand=Company)", companyQuery.RequestUri.OriginalString);
             Assert.NotNull(company);
 
             //Projection with Navigation
             companyQuery = TestClientContext.Company.Select(c => new Company() { Name = c.Name, Address = c.Address, Departments = c.Departments });
             await companyQuery.GetValueAsync();
-            Assert.True(companyQuery.RequestUri.OriginalString.EndsWith("/Company?$expand=Departments&$select=Name,Address"));
+            Assert.EndsWith("/Company?$expand=Departments&$select=Name,Address", companyQuery.RequestUri.OriginalString);
             Assert.NotNull(company2.Address);
 
             //Query navigation property which is an collection
             var employeesQuery = TestClientContext.Company.Employees;
             var employees = await employeesQuery.ExecuteAsync();
-            Assert.True(employeesQuery.RequestUri.OriginalString.EndsWith("/Company/Employees"));
+            Assert.EndsWith("/Company/Employees", employeesQuery.RequestUri.OriginalString);
             Assert.NotNull(employees);
 
             //Query Navigation Property which is an single entity
             var company4Query = TestClientContext.Company.VipCustomer.Company;
             var company4 = await company4Query.GetValueAsync();
-            Assert.True(company4Query.RequestUri.OriginalString.EndsWith("/Company/VipCustomer/Company"));
+            Assert.EndsWith("/Company/VipCustomer/Company", company4Query.RequestUri.OriginalString);
             Assert.NotNull(company4Query);
 
             //Query navigation property which is from a singleton
             var coreDepartmentQuery = TestClientContext.Company.CoreDepartment;
             var coreDepartment = await coreDepartmentQuery.GetValueAsync();
-            Assert.True(coreDepartmentQuery.RequestUri.OriginalString.EndsWith("/Company/CoreDepartment"));
+            Assert.EndsWith("/Company/CoreDepartment", coreDepartmentQuery.RequestUri.OriginalString);
             Assert.NotNull(coreDepartment);
 
             //QueryOption on navigation property
             employeesQuery = TestClientContext.Company.Employees.Where(e => e.PersonID > 0) as DataServiceQuery<Employee>;
             employees = await employeesQuery.ExecuteAsync();
-            Assert.True(employeesQuery.RequestUri.OriginalString.EndsWith("/Company/Employees?$filter=PersonID gt 0"));
+            Assert.EndsWith("/Company/Employees?$filter=PersonID gt 0", employeesQuery.RequestUri.OriginalString);
             Assert.NotNull(employees);
 
             //Function Bound on Singleton
             var getEmployeesCountQuery = TestClientContext.Company.GetEmployeesCount();
             var count = await getEmployeesCountQuery.GetValueAsync();
-            Assert.True(getEmployeesCountQuery.RequestUri.OriginalString.EndsWith("/Company/Microsoft.Test.OData.Services.ODataWCFService.GetEmployeesCount()"));
+            Assert.EndsWith("/Company/Microsoft.Test.OData.Services.ODataWCFService.GetEmployeesCount()", getEmployeesCountQuery.RequestUri.OriginalString);
             Assert.True(count > 0);
 
             //Function Bound on Singleton
             var company5 = await TestClientContext.Company.GetValueAsync();
             getEmployeesCountQuery = company5.GetEmployeesCount();
             count = await getEmployeesCountQuery.GetValueAsync();
-            Assert.True(getEmployeesCountQuery.RequestUri.OriginalString.EndsWith("/Company/Microsoft.Test.OData.Services.ODataWCFService.GetEmployeesCount()"));
+            Assert.EndsWith("/Company/Microsoft.Test.OData.Services.ODataWCFService.GetEmployeesCount()", getEmployeesCountQuery.RequestUri.OriginalString);
             Assert.True(count > 0);
 
             //Query Action bound on Navigation Property, also on baseType
             var getHomeAddressQuery = TestClientContext.Company.VipCustomer.GetHomeAddress();
             var homeAddress = await getHomeAddressQuery.GetValueAsync();
-            Assert.True(getHomeAddressQuery.RequestUri.OriginalString.EndsWith("/Company/VipCustomer/Microsoft.Test.OData.Services.ODataWCFService.GetHomeAddress()"));
+            Assert.EndsWith("/Company/VipCustomer/Microsoft.Test.OData.Services.ODataWCFService.GetHomeAddress()", getHomeAddressQuery.RequestUri.OriginalString);
             Assert.NotNull(homeAddress);
         }
 
@@ -307,7 +307,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             TestClientContext = this.CreateWrappedContext<InMemoryEntities>().Context;
             var getActualAmountFunction = TestClientContext.Accounts.ByKey(new Dictionary<string, object> { { "AccountID", 101 } }).MyGiftCard.GetActualAmount(1);
             var amount = await getActualAmountFunction.GetValueAsync();
-            Assert.True(getActualAmountFunction.RequestUri.OriginalString.EndsWith("/Accounts(101)/MyGiftCard/Microsoft.Test.OData.Services.ODataWCFService.GetActualAmount(bonusRate=1.0)"));
+            Assert.EndsWith("/Accounts(101)/MyGiftCard/Microsoft.Test.OData.Services.ODataWCFService.GetActualAmount(bonusRate=1.0)", getActualAmountFunction.RequestUri.OriginalString);
         }
     }
 
@@ -329,25 +329,25 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             //Query Singleton
             var publicCompanyQuery = TestClientContext.PublicCompanyPlus;
             var publicCompany = await publicCompanyQuery.GetValueAsync();
-            Assert.True(publicCompanyQuery.RequestUri.OriginalString.EndsWith("/PublicCompany"));
+            Assert.EndsWith("/PublicCompany", publicCompanyQuery.RequestUri.OriginalString);
             Assert.NotNull(publicCompany);
 
             //Query Property On Derived Singleton
             var stockExchangeQuery = TestClientContext.PublicCompanyPlus.Select(p => (p as PublicCompanyPlus).StockExchangePlus);
             var stockExchange = await stockExchangeQuery.GetValueAsync();
-            Assert.True(stockExchangeQuery.RequestUri.OriginalString.EndsWith("/PublicCompany/Microsoft.Test.OData.Services.ODataWCFService.PublicCompany/StockExchange"));
+            Assert.EndsWith("/PublicCompany/Microsoft.Test.OData.Services.ODataWCFService.PublicCompany/StockExchange", stockExchangeQuery.RequestUri.OriginalString);
             Assert.NotNull(stockExchange);
 
             //Query Navigation Property on Dervied Singleton
             var assetsQuery = TestClientContext.PublicCompanyPlus.CastToPublicCompanyPlus().AssetsPlus;
             var assets = await assetsQuery.ExecuteAsync();
-            Assert.True(assetsQuery.RequestUri.OriginalString.EndsWith("/PublicCompany/Microsoft.Test.OData.Services.ODataWCFService.PublicCompany/Assets"));
+            Assert.EndsWith("/PublicCompany/Microsoft.Test.OData.Services.ODataWCFService.PublicCompany/Assets", assetsQuery.RequestUri.OriginalString);
             Assert.NotNull(assets);
 
             //Filter Navigation Property on Dervied Singleton
             assetsQuery = TestClientContext.PublicCompanyPlus.CastToPublicCompanyPlus().AssetsPlus.Where(a => a.NamePlus != "Temp") as DataServiceQuery<AssetPlus>;
             assets = await assetsQuery.ExecuteAsync();
-            Assert.True(assetsQuery.RequestUri.OriginalString.EndsWith("/PublicCompany/Microsoft.Test.OData.Services.ODataWCFService.PublicCompany/Assets?$filter=Name ne 'Temp'"));
+            Assert.EndsWith("/PublicCompany/Microsoft.Test.OData.Services.ODataWCFService.PublicCompany/Assets?$filter=Name ne 'Temp'", assetsQuery.RequestUri.OriginalString);
             Assert.NotNull(assets);
 
             //Projection
@@ -360,8 +360,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                         StockExchangePlus = (p as PublicCompanyPlus).StockExchangePlus
                     });
             var publicCompany2 = await publicCompany2Query.GetValueAsync();
-            Assert.True(publicCompany2Query.RequestUri.OriginalString.EndsWith(
-                "/PublicCompany?$expand=Microsoft.Test.OData.Services.ODataWCFService.PublicCompany/LabourUnion&$select=Address,Microsoft.Test.OData.Services.ODataWCFService.PublicCompany/StockExchange"));
+            Assert.EndsWith("/PublicCompany?$expand=Microsoft.Test.OData.Services.ODataWCFService.PublicCompany/LabourUnion&$select=Address,Microsoft.Test.OData.Services.ODataWCFService.PublicCompany/StockExchange", publicCompany2Query.RequestUri.OriginalString);
             Assert.NotNull(publicCompany2.AddressPlus);
             Assert.NotNull(publicCompany2.LabourUnionPlus);
             Assert.NotNull(publicCompany2.StockExchangePlus);
@@ -369,13 +368,13 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             //Expand Navigation Property on Derived Singleton
             var publicCompany3Query = TestClientContext.PublicCompanyPlus.Expand(p => (p as PublicCompanyPlus).LabourUnionPlus);
             publicCompany = await publicCompany3Query.GetValueAsync();
-            Assert.True(publicCompany3Query.RequestUri.OriginalString.EndsWith("/PublicCompany?$expand=Microsoft.Test.OData.Services.ODataWCFService.PublicCompany/LabourUnion"));
+            Assert.EndsWith("/PublicCompany?$expand=Microsoft.Test.OData.Services.ODataWCFService.PublicCompany/LabourUnion", publicCompany3Query.RequestUri.OriginalString);
             Assert.NotNull((publicCompany as PublicCompanyPlus).LabourUnionPlus);
 
             //Action Bound on Navigation Property on Derived Singleton, return void
             DataServiceActionQuery changeLabourUnionAction = TestClientContext.PublicCompanyPlus.CastToPublicCompanyPlus().LabourUnionPlus.ChangeLabourUnionNamePlus("changedLabourUnion");
             await changeLabourUnionAction.ExecuteAsync();
-            Assert.True(changeLabourUnionAction.RequestUri.OriginalString.EndsWith("/PublicCompany/Microsoft.Test.OData.Services.ODataWCFService.PublicCompany/LabourUnion/Microsoft.Test.OData.Services.ODataWCFService.ChangeLabourUnionName"));
+            Assert.EndsWith("/PublicCompany/Microsoft.Test.OData.Services.ODataWCFService.PublicCompany/LabourUnion/Microsoft.Test.OData.Services.ODataWCFService.ChangeLabourUnionName", changeLabourUnionAction.RequestUri.OriginalString);
             var labourUnion = (await TestClientContext.PublicCompanyPlus.Select(p => (p as PublicCompanyPlus).LabourUnionPlus).GetValueAsync()).NamePlus;
             Assert.Equal("changedLabourUnion", labourUnion);
         }
@@ -397,7 +396,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             var getAllProductsFunction = TestClientContext.GetAllProductsPlus();
             var products = (await getAllProductsFunction.ExecuteAsync()).ToList();
             Assert.True(products.Count() > 0);
-            Assert.True(getAllProductsFunction.RequestUri.OriginalString.EndsWith("/GetAllProducts()"));
+            Assert.EndsWith("/GetAllProducts()", getAllProductsFunction.RequestUri.OriginalString);
             double unitPrice = products.First().UnitPricePlus;
 
             //GetEnumerator
@@ -407,7 +406,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 Assert.Equal(unitPrice * 50 / 100, p.UnitPricePlus);
                 break;
             }
-            Assert.True(discountAction.RequestUri.OriginalString.EndsWith("/GetAllProducts()/Microsoft.Test.OData.Services.ODataWCFService.Discount"));
+            Assert.EndsWith("/GetAllProducts()/Microsoft.Test.OData.Services.ODataWCFService.Discount", discountAction.RequestUri.OriginalString);
 
             //Filter after Bound FunctionImport
             var filterAllProducts = getAllProductsFunction.Where(p => p.SkinColorPlus == ColorPlus.RedPlus) as DataServiceQuery<ProductPlus>;
@@ -415,19 +414,19 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             {
                 Assert.Equal(ColorPlus.RedPlus, p.SkinColorPlus);
             }
-            Assert.True(filterAllProducts.RequestUri.OriginalString.EndsWith("/GetAllProducts()?$filter=SkinColor eq Microsoft.Test.OData.Services.ODataWCFService.Color'Red'"));
+            Assert.EndsWith("/GetAllProducts()?$filter=SkinColor eq Microsoft.Test.OData.Services.ODataWCFService.Color'Red'", filterAllProducts.RequestUri.OriginalString);
 
             //FunctionImport, return collection of primitivetype
             var getBossEmailsFunction = TestClientContext.GetBossEmailsPlus(0, 10);
             var emails = await getBossEmailsFunction.ExecuteAsync();
-            Assert.True(getBossEmailsFunction.RequestUri.OriginalString.EndsWith("/GetBossEmails(start=0,count=10)"));
+            Assert.EndsWith("/GetBossEmails(start=0,count=10)", getBossEmailsFunction.RequestUri.OriginalString);
 
             //FunctionImport, return Collection of primitivetype with enum parameter
             //Fail now
             var productsNameQuery = TestClientContext.GetProductsByAccessLevelPlus(AccessLevelPlus.ReadPlus | AccessLevelPlus.ExecutePlus);
             var productsName = await productsNameQuery.ExecuteAsync();
 
-            Assert.True(Uri.UnescapeDataString(productsNameQuery.RequestUri.OriginalString).EndsWith("/GetProductsByAccessLevel(accessLevel=Microsoft.Test.OData.Services.ODataWCFService.AccessLevel'Read,Execute')"));
+            Assert.EndsWith("/GetProductsByAccessLevel(accessLevel=Microsoft.Test.OData.Services.ODataWCFService.AccessLevel'Read,Execute')", Uri.UnescapeDataString(productsNameQuery.RequestUri.OriginalString));
             Assert.True(productsName.Count() > 0);
         }
 
@@ -446,7 +445,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             var discountAction = TestClientContext.DiscountPlus(50);
             var ar2 = discountAction.BeginExecute(null, null).EnqueueWait(this);
             discountAction.EndExecute(ar2);
-            Assert.True(discountAction.RequestUri.OriginalString.EndsWith("/Discount"));
+            Assert.EndsWith("/Discount", discountAction.RequestUri.OriginalString);
 
             var ar3 = queryProduct.BeginExecute(null, null).EnqueueWait(this);
             product = queryProduct.EndExecute(ar3).Single();
@@ -465,7 +464,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             //ActionImport return void
             var discountAction = TestClientContext.DiscountPlus(50);
             await discountAction.ExecuteAsync();
-            Assert.True(discountAction.RequestUri.OriginalString.EndsWith("/Discount"));
+            Assert.EndsWith("/Discount", discountAction.RequestUri.OriginalString);
 
             product = (await (TestClientContext.ProductsPlus.Take(1) as DataServiceQuery<ProductPlus>).ExecuteAsync()).Single();
             Assert.Equal(originalPrice * 50 / 100, product.UnitPricePlus);
@@ -479,43 +478,43 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
 
             //FunctionImport in query option
             var queryAccount = TestClientContext.AccountsPlus.Where(a => a.MyGiftCardPlus.GetActualAmountPlus(0.5).GetValueAsync().Result > 1) as DataServiceQuery<AccountPlus>;
-            Assert.True(queryAccount.RequestUri.OriginalString.EndsWith("/Accounts?$filter=MyGiftCard/Microsoft.Test.OData.Services.ODataWCFService.GetActualAmount(bonusRate=0.5) gt 1.0"));
+            Assert.EndsWith("/Accounts?$filter=MyGiftCard/Microsoft.Test.OData.Services.ODataWCFService.GetActualAmount(bonusRate=0.5) gt 1.0", queryAccount.RequestUri.OriginalString);
             //queryAccount.Execute();
 
             queryAccount = TestClientContext.AccountsPlus.Where(a => 1 != a.MyGiftCardPlus.GetActualAmountPlus(0.5).GetValueAsync().Result) as DataServiceQuery<AccountPlus>;
-            Assert.True(queryAccount.RequestUri.OriginalString.EndsWith("/Accounts?$filter=1.0 ne MyGiftCard/Microsoft.Test.OData.Services.ODataWCFService.GetActualAmount(bonusRate=0.5)"));
+            Assert.EndsWith("/Accounts?$filter=1.0 ne MyGiftCard/Microsoft.Test.OData.Services.ODataWCFService.GetActualAmount(bonusRate=0.5)", queryAccount.RequestUri.OriginalString);
             //queryAccount.Execute();
 
             var queryPeople = TestClientContext.PeoplePlus.Where(p => p.GetHomeAddressPlus().GetValueAsync().Result.FamilyNamePlus != "name") as DataServiceQuery<PersonPlus>;
-            Assert.True(queryPeople.RequestUri.OriginalString.EndsWith("/People?$filter=$it/Microsoft.Test.OData.Services.ODataWCFService.GetHomeAddress()/FamilyName ne 'name'"));
+            Assert.EndsWith("/People?$filter=$it/Microsoft.Test.OData.Services.ODataWCFService.GetHomeAddress()/FamilyName ne 'name'", queryPeople.RequestUri.OriginalString);
             //queryPeople.Execute();
 
             queryPeople = TestClientContext.PeoplePlus.Where(p => "name" != p.GetHomeAddressPlus().GetValueAsync().Result.FamilyNamePlus) as DataServiceQuery<PersonPlus>;
-            Assert.True(queryPeople.RequestUri.OriginalString.EndsWith("/People?$filter='name' ne $it/Microsoft.Test.OData.Services.ODataWCFService.GetHomeAddress()/FamilyName"));
+            Assert.EndsWith("/People?$filter='name' ne $it/Microsoft.Test.OData.Services.ODataWCFService.GetHomeAddress()/FamilyName", queryPeople.RequestUri.OriginalString);
             //queryPeople.Execute();
 
             var queryProducts = TestClientContext.ProductsPlus.Where(p => p.GetProductDetailsPlus(2).Count() > 1) as DataServiceQuery<ProductPlus>;
-            Assert.True(queryProducts.RequestUri.OriginalString.EndsWith("/Products?$filter=$it/Microsoft.Test.OData.Services.ODataWCFService.GetProductDetails(count=2)/$count gt 1"));
+            Assert.EndsWith("/Products?$filter=$it/Microsoft.Test.OData.Services.ODataWCFService.GetProductDetails(count=2)/$count gt 1", queryProducts.RequestUri.OriginalString);
             //queryProducts.Execute();
 
             queryProducts = TestClientContext.ProductsPlus.Where(p => 1 <= p.GetProductDetailsPlus(2).Count()) as DataServiceQuery<ProductPlus>;
-            Assert.True(queryProducts.RequestUri.OriginalString.EndsWith("/Products?$filter=1 le $it/Microsoft.Test.OData.Services.ODataWCFService.GetProductDetails(count=2)/$count"));
+            Assert.EndsWith("/Products?$filter=1 le $it/Microsoft.Test.OData.Services.ODataWCFService.GetProductDetails(count=2)/$count", queryProducts.RequestUri.OriginalString);
             //queryAccount.Execute();
 
             queryAccount = TestClientContext.AccountsPlus.OrderBy(a => a.MyGiftCardPlus.GetActualAmountPlus(0.5).GetValueAsync().Result) as DataServiceQuery<AccountPlus>;
-            Assert.True(queryAccount.RequestUri.OriginalString.EndsWith("/Accounts?$orderby=MyGiftCard/Microsoft.Test.OData.Services.ODataWCFService.GetActualAmount(bonusRate=0.5)"));
+            Assert.EndsWith("/Accounts?$orderby=MyGiftCard/Microsoft.Test.OData.Services.ODataWCFService.GetActualAmount(bonusRate=0.5)", queryAccount.RequestUri.OriginalString);
             //queryAccount.Execute();
 
             queryAccount = TestClientContext.AccountsPlus.OrderByDescending(a => a.MyGiftCardPlus.GetActualAmountPlus(0.5).GetValueAsync().Result) as DataServiceQuery<AccountPlus>;
-            Assert.True(queryAccount.RequestUri.OriginalString.EndsWith("/Accounts?$orderby=MyGiftCard/Microsoft.Test.OData.Services.ODataWCFService.GetActualAmount(bonusRate=0.5) desc"));
+            Assert.EndsWith("/Accounts?$orderby=MyGiftCard/Microsoft.Test.OData.Services.ODataWCFService.GetActualAmount(bonusRate=0.5) desc", queryAccount.RequestUri.OriginalString);
             //queryAccount.Execute();
 
             queryPeople = TestClientContext.PeoplePlus.OrderBy(p => p.GetHomeAddressPlus().GetValueAsync().Result.FamilyNamePlus) as DataServiceQuery<PersonPlus>;
-            Assert.True(queryPeople.RequestUri.OriginalString.EndsWith("/People?$orderby=$it/Microsoft.Test.OData.Services.ODataWCFService.GetHomeAddress()/FamilyName"));
+            Assert.EndsWith("/People?$orderby=$it/Microsoft.Test.OData.Services.ODataWCFService.GetHomeAddress()/FamilyName", queryPeople.RequestUri.OriginalString);
             //queryPeople.Execute();
 
             queryPeople = TestClientContext.PeoplePlus.OrderByDescending(p => p.GetHomeAddressPlus().GetValueAsync().Result.FamilyNamePlus) as DataServiceQuery<PersonPlus>;
-            Assert.True(queryPeople.RequestUri.OriginalString.EndsWith("/People?$orderby=$it/Microsoft.Test.OData.Services.ODataWCFService.GetHomeAddress()/FamilyName desc"));
+            Assert.EndsWith("/People?$orderby=$it/Microsoft.Test.OData.Services.ODataWCFService.GetHomeAddress()/FamilyName desc", queryPeople.RequestUri.OriginalString);
             //queryPeople.Execute();
         }
     }

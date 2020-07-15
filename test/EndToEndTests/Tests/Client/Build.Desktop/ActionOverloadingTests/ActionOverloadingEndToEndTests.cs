@@ -16,6 +16,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
     using Xunit;
     using Xunit.Abstractions;
 
+    [TestCaseOrderer("Microsoft.Test.OData.Tests.Client.PriorityOrderer", "Microsoft.Test.OData.Tests.Client")]
     public class ActionOverloadingEndToEndTests : EndToEndTestBase
     {
         public ActionOverloadingEndToEndTests(ITestOutputHelper helper)
@@ -23,7 +24,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
         {
         }
 
-        [Fact]
+        [Fact, TestPriority(7)]
         public void ExecuteOverloadedOperations()
         {
             string actionName = "RetrieveProduct";
@@ -49,7 +50,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
             int orderLineActionResult = contextWrapper.Execute<int>(orderLineOperationDescriptor.Target, "POST", true).Single();
         }
 
-        [Fact]
+        [Fact, TestPriority(4)]
         public void ExecuteOverloadedActionNotBound()
         {
             for (int i = 0; i < 2; i++)
@@ -66,7 +67,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
         }
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
-        [Fact]
+        [Fact, TestPriority(2)]
         public void ExecuteActionImport()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -76,7 +77,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
         }
 #endif
 
-        [Fact]
+        [Fact, TestPriority(1)]
         public void ExcuteBoundAction()
         {
             var contextWrapper = this.CreateWrappedContext();
@@ -98,7 +99,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
 #endif
         }
 
-        [Fact] 
+        [Fact, TestPriority(5)] 
         public void ExecuteOverloadedActionsOnBaseAndDerivedTypes()
         {
             string actionName = "UpdatePersonInfo";
@@ -150,7 +151,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
             this.ExecuteActions(contextWrapper, contractorDescriptors);
         }
 
-        [Fact]
+        [Fact, TestPriority(3)]
         public void ExecuteEntitySetBoundOverloadedOperations()
         {
             for (int i = 1; i < 2; i++)
@@ -175,7 +176,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
             }
         }
 
-        [Fact]
+        [Fact, TestPriority(6)]
         public void ExecuteOverloadedActionsWithDifferentParameter()
         {
             string actionName = "IncreaseEmployeeSalary";
@@ -208,7 +209,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
             contextWrapper.Execute<int>(specialEmployeeDescriptors.Where(d => d.Target.AbsoluteUri.Contains(".SpecialEmployee")).Single().Target, "POST", true).Single();
         }
 
-        [Fact]
+        [Fact, TestPriority(8)]
         public void OverloadedActionsProjection()
         {
             for (int i = 1; i < 2; i++)
@@ -225,13 +226,13 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
                 Assert.Equal(this.ServiceUri + "Product(-10)/Microsoft.Test.OData.Services.AstoriaDefaultService.RetrieveProduct", productOperationDescriptor.Target.AbsoluteUri, true);
                 
                 OrderLine orderLine = contextWrapper.Execute<OrderLine>(new Uri(this.ServiceUri + "OrderLine(OrderId=-10,ProductId=-10)?$select=*")).Single();
-                Assert.Equal(0, contextWrapper.GetEntityDescriptor(orderLine).OperationDescriptors.Count);
+                Assert.Empty(contextWrapper.GetEntityDescriptor(orderLine).OperationDescriptors);
             }
         }
 
         // Inconsistent behavior when selecting namespace.* and action name
         // [Fact] // github issuse: #896
-        public void BaseDerivedTypeOverloadedActionsProjection()
+        internal void BaseDerivedTypeOverloadedActionsProjection()
         {
             string actionName = "UpdatePersonInfo";
             for (int i = 0; i < 2; i++)
@@ -251,7 +252,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
                 // base type instance, $select=DerivedType/ActionName
                 contextWrapper.Detach(person);
                 person = contextWrapper.Execute<Person>(new Uri(this.ServiceUri + "Person(-1)?$select=PersonId," + ActionOverloadingQueryTests.EmployeeTypeName + "/" + actionName, UriKind.Absolute)).Single();
-                Assert.Equal(0, contextWrapper.GetEntityDescriptor(person).OperationDescriptors.Count);
+                Assert.Empty(contextWrapper.GetEntityDescriptor(person).OperationDescriptors);
 
                 // derived type instance, $select=ActionName
                 Employee employee = contextWrapper.Execute<Employee>(new Uri(this.ServiceUri + "Person(0)?$select=PersonId," + actionName, UriKind.Absolute)).Single();
