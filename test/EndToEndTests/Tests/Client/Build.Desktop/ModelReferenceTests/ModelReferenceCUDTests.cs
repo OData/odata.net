@@ -16,7 +16,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
     using Microsoft.Test.OData.Tests.Client.Common;
     using Xunit;
 
-    public class ModelReferenceCUDTests : ODataWCFServiceTestsBase<InMemoryEntities>, IDisposable
+    public class ModelReferenceCUDTests : ODataWCFServiceTestsBase<InMemoryEntities>
     {
         private const string TestModelNameSpace = "Microsoft.OData.SampleService.Models.ModelRefDemo";
 
@@ -24,11 +24,6 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             : base(ServiceDescriptors.ModelRefServiceDescriptor)
         {
 
-        }
-
-        public void Dispose()
-        {
-            TestServiceWrapper.StopService();
         }
 
         #region CUD Testing

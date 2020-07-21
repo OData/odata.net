@@ -19,7 +19,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
     /// <summary>
     /// CUD tests for the ODL service.
     /// </summary>
-    public class ODataWCFServiceUpdateTests : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>, IDisposable
+    public class ODataWCFServiceUpdateTests : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>
     {
         private static string NameSpacePrefix = "Microsoft.Test.OData.Services.ODataWCFService.";
 
@@ -201,11 +201,6 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             }
 
             return item;
-        }
-
-        public void Dispose()
-        {
-            TestServiceWrapper.StopService();
         }
     }
 }

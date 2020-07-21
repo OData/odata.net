@@ -17,7 +17,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
     using Microsoft.Test.OData.Services.TestServices.TrippinServiceReference;
     using Xunit;
 
-    public class TripPinServiceTests : ODataWCFServiceTestsBase<DefaultContainer>, IDisposable
+    public class TripPinServiceTests : ODataWCFServiceTestsBase<DefaultContainer>
     {
         private const string NameSpacePrefix = "Microsoft.OData.SampleService.Models.TripPin.";
         private int lastResponseStatusCode;
@@ -3113,11 +3113,6 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             Assert.NotNull(context);
 
             return context;
-        }
-
-        public void Dispose()
-        {
-            TestServiceWrapper.StopService();
         }
     }
 }

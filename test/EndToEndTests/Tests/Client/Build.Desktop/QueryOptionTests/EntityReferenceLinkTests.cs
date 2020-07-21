@@ -19,7 +19,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
     using HttpWebRequestMessage = Microsoft.Test.OData.Tests.Client.Common.HttpWebRequestMessage;
     using Xunit;
 
-    public class EntityReferenceLinkTests : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>, IDisposable
+    public class EntityReferenceLinkTests : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>
     {
         public EntityReferenceLinkTests()
             : base(ServiceDescriptors.ODataWCFServiceDescriptor)
@@ -110,11 +110,6 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
             Assert.NotNull(primitiveValue1);
             Assert.NotNull(primitiveValue2);
             Assert.Equal(primitiveValue1.Value, primitiveValue2.Value);
-        }
-
-        public void Dispose()
-        {
-            TestServiceWrapper.StopService();
         }
     }
 }

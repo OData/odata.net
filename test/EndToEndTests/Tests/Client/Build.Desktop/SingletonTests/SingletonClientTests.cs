@@ -15,7 +15,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Xunit;
 
-    public class SingletonClientTests : ODataWCFServiceTestsBase<InMemoryEntities>, IDisposable
+    public class SingletonClientTests : ODataWCFServiceTestsBase<InMemoryEntities>
     {
         public SingletonClientTests() : base(ServiceDescriptors.ODataWCFServiceDescriptor)
         {
@@ -299,11 +299,6 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
             OperationDescriptor descriptor = TestClientContext.GetEntityDescriptor(company).OperationDescriptors.Single(e => e.Title == "Microsoft.Test.OData.Services.ODataWCFService.IncreaseRevenue");
             newValue = TestClientContext.Execute<Int64>(descriptor.Target, "POST", new BodyOperationParameter("IncreaseValue", 40000));
             Assert.Equal(newValue.Single(), company.Revenue + 60000);
-        }
-
-        public void Dispose()
-        {
-            TestServiceWrapper.StopService();
         }
 
         #endregion

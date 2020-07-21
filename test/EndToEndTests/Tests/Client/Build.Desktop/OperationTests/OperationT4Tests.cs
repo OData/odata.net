@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Microsoft.Test.OData.Services.TestServices.OperationServiceReference;
@@ -12,7 +11,7 @@ using Xunit;
 
 namespace Microsoft.Test.OData.Tests.Client.OperationTests
 {
-    public class OperationT4Tests : ODataWCFServiceTestsBase<OperationService>, IDisposable
+    public class OperationT4Tests : ODataWCFServiceTestsBase<OperationService>
     {
         public OperationT4Tests()
             : base(Microsoft.Test.OData.Services.TestServices.ServiceDescriptors.OperationServiceDescriptor)
@@ -193,9 +192,5 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
             Assert.Equal(2, customer.ID);
         }
 
-        public void Dispose()
-        {
-            TestServiceWrapper.StopService();
-        }
     }
 }

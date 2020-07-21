@@ -13,9 +13,8 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;
     using Xunit;
-    using System;
 
-    public class QueryOptionOnCollectionTypePropertyTests : ODataWCFServiceTestsBase<InMemoryEntities>, IDisposable
+    public class QueryOptionOnCollectionTypePropertyTests : ODataWCFServiceTestsBase<InMemoryEntities>
     {
 
         public QueryOptionOnCollectionTypePropertyTests()
@@ -142,11 +141,6 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
 
             var custoemers = TestClientContext.Customers.OrderBy(p => p.Orders.Count) as DataServiceQuery<Customer>;
             Assert.True(custoemers.RequestUri.OriginalString.EndsWith("/Customers?$orderby=Orders/$count"));
-        }
-
-        public void Dispose()
-        {
-            TestServiceWrapper.StopService();
         }
 
         #endregion

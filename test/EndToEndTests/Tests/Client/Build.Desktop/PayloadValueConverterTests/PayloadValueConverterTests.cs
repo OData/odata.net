@@ -16,16 +16,11 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
     /// <summary>
     /// Tests for pluggable format service
     /// </summary>
-    public class PayloadValueConverterTests : ODataWCFServiceTestsBase<PluggableFormatService>, IDisposable
+    public class PayloadValueConverterTests : ODataWCFServiceTestsBase<PluggableFormatService>
     {
         public PayloadValueConverterTests()
             : base(ServiceDescriptors.PayloadValueConverterServiceDescriptor)
         {
-        }
-
-        public void Dispose()
-        {
-            TestServiceWrapper.StopService();
         }
 
         [Fact]

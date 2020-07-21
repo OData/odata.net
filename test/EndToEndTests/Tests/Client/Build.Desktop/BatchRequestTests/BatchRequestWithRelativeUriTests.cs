@@ -17,7 +17,7 @@ namespace Microsoft.Test.OData.Tests.Client.BatchRequestTests
     using Microsoft.Test.OData.Tests.Client.Common;
     using Xunit;
 
-    public class BatchRequestWithRelativeUriTests : ODataWCFServiceTestsBase<InMemoryEntities>, IDisposable
+    public class BatchRequestWithRelativeUriTests : ODataWCFServiceTestsBase<InMemoryEntities>
     {
         private static string NameSpacePrefix = "Microsoft.Test.OData.Services.ODataWCFService.";
 
@@ -202,11 +202,6 @@ namespace Microsoft.Test.OData.Tests.Client.BatchRequestTests
                 }
                 Assert.Equal(ODataBatchReaderState.Completed, batchReader.State);
             }
-        }
-
-        public void Dispose()
-        {
-            TestServiceWrapper.StopService();
         }
     }
 }

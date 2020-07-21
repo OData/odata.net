@@ -6,23 +6,17 @@
 
 namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 {
-    using System;
     using System.Linq;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Xunit;
 
-    public class AbstractEntityTypeTests : ODataWCFServiceTestsBase<InMemoryEntities>, IDisposable
+    public class AbstractEntityTypeTests : ODataWCFServiceTestsBase<InMemoryEntities>
     {
         public AbstractEntityTypeTests()
             : base(ServiceDescriptors.ODataWCFServiceDescriptor)
         {
 
-        }
-
-        public void Dispose()
-        {
-            TestServiceWrapper.StopService();
         }
 
         [Fact]
