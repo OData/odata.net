@@ -19,7 +19,7 @@ namespace Microsoft.Test.OData.Tests.Client
     /// <summary>
     /// Base class for tests that use the service implemented using ODataLib and EDMLib.
     /// </summary>
-    public class ODataWCFServiceTestsBase<TClientContext> where TClientContext : Microsoft.OData.Client.DataServiceContext
+    public class ODataWCFServiceTestsBase<TClientContext> : IDisposable where TClientContext : Microsoft.OData.Client.DataServiceContext
     {
         private readonly ServiceDescriptor serviceDescriptor;
         protected IServiceWrapper TestServiceWrapper;
@@ -41,10 +41,9 @@ namespace Microsoft.Test.OData.Tests.Client
             RetrieveServiceEdmModel();
             TestClientContext = Activator.CreateInstance(typeof(TClientContext), ServiceBaseUri) as TClientContext;
             ResetDataSource();
-            StopService();
         }
 
-        public void StopService()
+        public void Dispose()
         {
             TestServiceWrapper.StopService();
         }
@@ -96,5 +95,7 @@ namespace Microsoft.Test.OData.Tests.Client
             //$metadata request failed
             Assert.NotNull(Model.EntityContainer);
         }
+
+
     }
 }
