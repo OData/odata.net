@@ -22,7 +22,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
     /// Send query and verify the results from the service implemented using ODataLib and EDMLib.
     /// </summary>
 
-    public class EnumerationTypeUpdateTests : ODataWCFServiceTestsBase<InMemoryEntities>
+    public class EnumerationTypeUpdateTests : ODataWCFServiceTestsBase<InMemoryEntities>, IDisposable
     {
         private static string NameSpacePrefix = "Microsoft.Test.OData.Services.ODataWCFService.";
 
@@ -255,6 +255,11 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
             }
 
             return item;
+        }
+
+        public void Dispose()
+        {
+            TestServiceWrapper.StopService();
         }
 
         #endregion

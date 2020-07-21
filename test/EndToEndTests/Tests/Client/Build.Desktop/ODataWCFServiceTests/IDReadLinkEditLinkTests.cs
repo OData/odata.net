@@ -14,7 +14,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
     using Microsoft.Test.OData.Tests.Client.Common;
     using Xunit;
 
-    public class IdReadLinkEditLinkTests : ODataWCFServiceTestsBase<InMemoryEntities>
+    public class IdReadLinkEditLinkTests : ODataWCFServiceTestsBase<InMemoryEntities>, IDisposable
     {
         private const string TestHeader = "Test_ODataEntryFieldToModify";
 
@@ -227,6 +227,11 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             var intOrderCountAfterDeleteLink = detailsInAProdct.Count();
             //The added link is deleted
             Assert.Equal(intOriginalOrderCount, intOrderCountAfterDeleteLink);
+        }
+
+        public void Dispose()
+        {
+            TestServiceWrapper.StopService();
         }
     }
 }

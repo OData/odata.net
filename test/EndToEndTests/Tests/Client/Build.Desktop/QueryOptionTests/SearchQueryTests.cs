@@ -16,7 +16,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
     using Microsoft.Test.OData.Tests.Client.Common;
     using Xunit;
 
-    public class SearchQueryTests : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>
+    public class SearchQueryTests : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>, IDisposable
     {
         public SearchQueryTests()
             : base(ServiceDescriptors.ODataWCFServiceDescriptor)
@@ -99,6 +99,11 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
                     Assert.Equal(4, reviews.Count);
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            TestServiceWrapper.StopService();
         }
 
         #endregion

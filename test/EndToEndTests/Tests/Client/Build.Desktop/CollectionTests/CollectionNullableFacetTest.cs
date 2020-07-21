@@ -18,7 +18,7 @@ using Microsoft.Test.OData.Tests.Client.Common;
     /// <summary>
     /// Tests for collection property nullable facet
     /// </summary>
-    public class CollectionNullableFacetTest : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>
+    public class CollectionNullableFacetTest : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>, IDisposable
     {
         private static string NameSpacePrefix = "Microsoft.Test.OData.Services.ODataWCFService.";
 
@@ -164,6 +164,11 @@ using Microsoft.Test.OData.Tests.Client.Common;
             }
 
             return item;
+        }
+
+        public void Dispose()
+        {
+            TestServiceWrapper.StopService();
         }
 
         #endregion

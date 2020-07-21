@@ -25,7 +25,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
     /// <summary>
     /// Tests for pluggable format service
     /// </summary>
-    public class PluggableFormatQueryTests : ODataWCFServiceTestsBase<PluggableFormatService>
+    public class PluggableFormatQueryTests : ODataWCFServiceTestsBase<PluggableFormatService>, IDisposable
     {
         public PluggableFormatQueryTests()
             : base(ServiceDescriptors.PluggableFormatServiceDescriptor)
@@ -311,6 +311,11 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
             settings.SetContentType(AvroFormat.Avro);
             return settings;
+        }
+
+        public void Dispose()
+        {
+            TestServiceWrapper.StopService();
         }
 #endif
     }

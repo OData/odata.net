@@ -18,7 +18,7 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
     using Xunit;
     using ODataClient = Microsoft.OData.Client;
 
-    public class ComplexTypeTests : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>
+    public class ComplexTypeTests : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>, IDisposable
     {
         private const string NameSpacePrefix = "Microsoft.Test.OData.Services.ODataWCFService.";
 
@@ -1371,6 +1371,11 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
                 properties.Add(undeclaredOdataProperty);
                 ea.Entry.Properties = properties;
             }
+        }
+
+        public void Dispose()
+        {
+            TestServiceWrapper.StopService();
         }
 
         #endregion

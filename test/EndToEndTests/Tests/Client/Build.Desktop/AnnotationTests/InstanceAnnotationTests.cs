@@ -15,7 +15,7 @@ namespace Microsoft.Test.OData.Tests.Client.AnnotationTests
     using Microsoft.Test.OData.Tests.Client.Common;
     using Xunit;
 
-    public class InstanceAnnotationTests : ODataWCFServiceTestsBase<InMemoryEntities>
+    public class InstanceAnnotationTests : ODataWCFServiceTestsBase<InMemoryEntities>, IDisposable
     {
         private const string TestModelNameSpace = "Microsoft.Test.OData.Services.ODataWCFService";
         private const string IncludeAnnotation = "odata.include-annotations";
@@ -199,6 +199,11 @@ namespace Microsoft.Test.OData.Tests.Client.AnnotationTests
                     }
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            TestServiceWrapper.StopService();
         }
         #endregion
     }

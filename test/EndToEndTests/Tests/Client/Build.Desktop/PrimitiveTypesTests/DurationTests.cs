@@ -22,7 +22,7 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
     /// Tests for Edm.Duration primitive type
     /// Send query and verify the results from the service implemented using ODataLib and EDMLib.
     /// </summary>
-    public class DurationTests : ODataWCFServiceTestsBase<InMemoryEntities>
+    public class DurationTests : ODataWCFServiceTestsBase<InMemoryEntities>, IDisposable
     {
         public DurationTests() : base(ServiceDescriptors.ODataWCFServiceDescriptor)
         {
@@ -233,6 +233,11 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
             TestClientContext.SaveChanges(ODataClient.SaveChangesOptions.ReplaceOnUpdate);
             var queryable4 = TestClientContext.Execute<Order>(new Uri("Orders()?$filter=ShelfLife eq duration'" + XmlConvert.ToString(timespan) + "'", UriKind.Relative));
             Assert.True(queryable4.Count() == 0);
+        }
+
+        public void Dispose()
+        {
+            TestServiceWrapper.StopService();
         }
 #endif
     }

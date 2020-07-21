@@ -17,7 +17,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
     using Microsoft.Test.OData.Tests.Client.Common;
     using Xunit;
 
-    public class OrderbyQueryTests : ODataWCFServiceTestsBase<InMemoryEntities>
+    public class OrderbyQueryTests : ODataWCFServiceTestsBase<InMemoryEntities>, IDisposable
     {
         public OrderbyQueryTests()
             : base(ServiceDescriptors.ODataWCFServiceDescriptor)
@@ -30,6 +30,11 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
             {
                 return new QueryOptionTestsHelper(ServiceBaseUri, Model);
             }
+        }
+
+        public void Dispose()
+        {
+            TestServiceWrapper.StopService();
         }
 
         [Fact]

@@ -6,6 +6,7 @@
 
 namespace Microsoft.Test.OData.Tests.Client
 {
+    using System;
     using System.Linq;
     using System.Net.Http;
     using Microsoft.OData.Client;
@@ -15,11 +16,16 @@ namespace Microsoft.Test.OData.Tests.Client
     /// <summary>
     /// Generic client delete test cases.
     /// </summary>
-    public class ClientDeleteTests : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>
+    public class ClientDeleteTests : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>, IDisposable
     {
         public ClientDeleteTests()
             : base(ServiceDescriptors.ODataWCFServiceDescriptor)
         {
+        }
+
+        public void Dispose()
+        {
+            TestServiceWrapper.StopService();
         }
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)

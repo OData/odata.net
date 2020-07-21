@@ -12,13 +12,14 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
     using Microsoft.Test.OData.Services.TestServices.ODataSimplifiedServiceReference;
     using Microsoft.Test.OData.Services.TestServices;
     using Xunit;
+    using System;
 
     /// <summary>
     /// Tests for ODataSimplified service
     /// </summary>
     // [Ignore] // Issues: #623
     // [TestClass] // github issuse: #896
-    public class ODataSimplifiedServiceQueryTests : ODataWCFServiceTestsBase<ODataSimplifiedService>
+    public class ODataSimplifiedServiceQueryTests : ODataWCFServiceTestsBase<ODataSimplifiedService>, IDisposable
     {
         public ODataSimplifiedServiceQueryTests()
             : base(ServiceDescriptors.ODataSimplifiedServiceDescriptor)
@@ -78,6 +79,11 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             TestClientContext.Detach(person);
             var personReturned = TestClientContext.People.ByKey(new Dictionary<string, object> { { "PersonId", person.PersonId } }).GetValue();
             Assert.Equal(person.PersonId, personReturned.PersonId);
+        }
+
+        public void Dispose()
+        {
+            TestServiceWrapper.StopService();
         }
     }
 }

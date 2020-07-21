@@ -16,7 +16,7 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
     using Microsoft.Test.OData.Tests.Client.Common;
     using Xunit;
 
-    public class DateAndTimeOfDayCRUDTestings : ODataWCFServiceTestsBase<InMemoryEntities>
+    public class DateAndTimeOfDayCRUDTestings : ODataWCFServiceTestsBase<InMemoryEntities>, IDisposable
     {
         public DateAndTimeOfDayCRUDTestings()
             : base(ServiceDescriptors.ODataWCFServiceDescriptor)
@@ -487,9 +487,14 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
             Assert.Equal(Date.MaxValue, updatedOrder.ShipDate);
             Assert.Equal(TimeOfDay.MaxValue, updatedOrder.ShipTime);
         }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
 #endif
 
-    #endregion
+        #endregion
     }
 }
 

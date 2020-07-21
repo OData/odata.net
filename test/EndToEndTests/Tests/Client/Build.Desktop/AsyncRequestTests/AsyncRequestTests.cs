@@ -17,7 +17,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
     using Microsoft.Test.OData.Tests.Client.Common;
     using Xunit;
 
-    public class AsyncRequestTests : ODataWCFServiceTestsBase<InMemoryEntities>
+    public class AsyncRequestTests : ODataWCFServiceTestsBase<InMemoryEntities>, IDisposable
     {
         private static string NameSpacePrefix = "Microsoft.Test.OData.Services.ODataWCFService.";
 
@@ -414,6 +414,11 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
             }
 
             #endregion
+        }
+
+        public void Dispose()
+        {
+            TestServiceWrapper.StopService();
         }
     }
 }

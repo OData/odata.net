@@ -17,7 +17,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
     using System.Linq;
     using Xunit;
 
-    public class TypeDefinitionTests : ODataWCFServiceTestsBase<InMemoryEntities>
+    public class TypeDefinitionTests : ODataWCFServiceTestsBase<InMemoryEntities>, IDisposable
     {
         private const string NameSpacePrefix = "microsoft.odata.sampleService.models.typedefinition.";
 
@@ -648,6 +648,11 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
             }
 
             return complex;
+        }
+
+        public void Dispose()
+        {
+            TestServiceWrapper.StopService();
         }
 
         #endregion

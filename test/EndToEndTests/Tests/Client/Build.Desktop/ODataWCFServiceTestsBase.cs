@@ -41,12 +41,6 @@ namespace Microsoft.Test.OData.Tests.Client
             RetrieveServiceEdmModel();
             TestClientContext = Activator.CreateInstance(typeof(TClientContext), ServiceBaseUri) as TClientContext;
             ResetDataSource();
-            StopService();
-        }
-
-        public void StopService()
-        {
-            TestServiceWrapper.StopService();
         }
 
         /// <summary>
