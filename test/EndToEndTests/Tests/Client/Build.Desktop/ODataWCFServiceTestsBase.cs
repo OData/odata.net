@@ -7,14 +7,10 @@
 namespace Microsoft.Test.OData.Tests.Client
 {
     using System;
-    using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Xml;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Validation;
     using Microsoft.Test.OData.Framework.Server;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Tests.Client.Common;
@@ -45,6 +41,12 @@ namespace Microsoft.Test.OData.Tests.Client
             RetrieveServiceEdmModel();
             TestClientContext = Activator.CreateInstance(typeof(TClientContext), ServiceBaseUri) as TClientContext;
             ResetDataSource();
+            StopService();
+        }
+
+        public void StopService()
+        {
+            TestServiceWrapper.StopService();
         }
 
         /// <summary>
@@ -69,10 +71,6 @@ namespace Microsoft.Test.OData.Tests.Client
             ar.AsyncWaitHandle.WaitOne();
         }
 
-        public void Dispose()
-        {
-            TestServiceWrapper.StopService();
-        }
         private Stream GetStreamFromUrl(string absoluteUri)
         {
             HttpWebRequestMessage message = new HttpWebRequestMessage(new Uri(absoluteUri, UriKind.Absolute));
