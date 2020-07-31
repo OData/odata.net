@@ -173,8 +173,8 @@ namespace Microsoft.OData
             {
                 nonDisposingStream = MessageStreamWrapper.CreateNonDisposingStream(this.stream);
             }
-
-            this.textWriter = new StreamWriter(nonDisposingStream, this.encoding);
+            
+            this.textWriter = new StreamWriter(nonDisposingStream, this.encoding) { NewLine = this.settings.MultipartNewLine };
             this.jsonWriter = new JsonWriter(this.textWriter, isIeee754Compatible: false);
         }
     }
