@@ -9,25 +9,17 @@ namespace Microsoft.OData.Client
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
+    using System.Security.Permissions;
     using Microsoft.OData;
 
     /// <summary>
     /// Class to describe errors thrown by transport layer.
     /// </summary>
-#if !PORTABLELIB
     [Serializable]
-#endif
     [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "No longer relevant after .NET 4 introduction of SerializeObjectState event and ISafeSerializationData interface.")]
     public class DataServiceTransportException : InvalidOperationException
     {
-        /// <summary>
-        /// Contains the state for this exception.
-        /// </summary>
-#if !PORTABLELIB
-        [NonSerialized]
-#endif
-        private DataServiceWebExceptionSerializationState state;
-
+        private readonly IODataResponseMessage ResponseMessage;
         /// <summary>
         /// Constructs a new instance of DataServiceTransportException.
         /// </summary>
@@ -38,11 +30,15 @@ namespace Microsoft.OData.Client
         {
             Util.CheckArgumentNull(innerException, "innerException");
 
-            this.state.ResponseMessage = response;
+            this.ResponseMessage = response;
 
-#if !PORTABLELIB
-            this.SerializeObjectState += (sender, e) => e.AddSerializedState(this.state);
-#endif
+        }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        protected DataServiceTransportException(SerializationInfo info, StreamingContext context)
+   : base(info, context)
+        {
+            this.ResponseMessage = (IODataResponseMessage)info.GetValue("ResponseMessage", typeof(IODataResponseMessage));
         }
 
         /// <summary>
@@ -50,36 +46,21 @@ namespace Microsoft.OData.Client
         /// </summary>
         public IODataResponseMessage Response
         {
-            get { return this.state.ResponseMessage; }
+            get { return this.ResponseMessage; }
         }
 
-        /// <summary>
-        /// Contains the state of the exception, used for serialization in security transparent code.
-        /// </summary>
-#if !PORTABLELIB
-        [Serializable]
-#endif
-        private struct DataServiceWebExceptionSerializationState
-#if !PORTABLELIB
-            : ISafeSerializationData
-#endif
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            /// <summary>
-            /// Gets or sets the response message for this exception.
-            /// </summary>
-            public IODataResponseMessage ResponseMessage { get; set; }
-
-#if !PORTABLELIB
-            /// <summary>
-            /// Called when deserialization of the exception is complete.
-            /// </summary>
-            /// <param name="deserialized">The deserialized exception.</param>
-            void ISafeSerializationData.CompleteDeserialization(object deserialized)
+            if (info == null)
             {
-                var exception = (DataServiceTransportException)deserialized;
-                exception.state = this;
+                throw new ArgumentNullException(nameof(info));
             }
-#endif
+            info.AddValue("ResponseMessage", this.ResponseMessage, typeof(IODataResponseMessage));
+            // MUST call through to the base class to let it save its own state
+            base.GetObjectData(info, context);
         }
+
+
     }
 }
