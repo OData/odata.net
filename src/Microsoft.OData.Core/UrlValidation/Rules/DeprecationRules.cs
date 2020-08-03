@@ -23,6 +23,7 @@ namespace Microsoft.OData.UriParser.Validation.Rules
         private const string RevisionVersionProperty = "Version";
         private const string RevisionKindProperty = "Kind";
         private const string RevisionDateProperty = "Date";
+        private const string RevisionRemovalDateProperty = "RemovalDate";
         private const string RevisionElementNameProperty = "ElementName";
         private const string RevisionDescriptionProperty = "Description";
         private const string RevisionKindDeprecated = "deprecated";
@@ -61,9 +62,10 @@ namespace Microsoft.OData.UriParser.Validation.Rules
             string message;
             string version;
             Date? date;
-            if (IsDeprecated(context.Model, edmType, out message, out version, out date))
+            Date? removalDate;
+            if (IsDeprecated(context.Model, edmType, out message, out version, out date, out removalDate))
             {
-                context.Messages.Add(CreateUrlValidationMessage(edmType.FullTypeName(), message, version, date));
+                context.Messages.Add(CreateUrlValidationMessage(edmType.FullTypeName(), message, version, date, removalDate));
             }
         },
         /*includeImpliedProperties*/ true
@@ -76,13 +78,19 @@ namespace Microsoft.OData.UriParser.Validation.Rules
         /// <param name="message">The deprecation message.</param>
         /// <param name="version">The deprecation version, if specified.</param>
         /// <param name="date">The deprecation date, if specified.</param>
+        /// <param name="removalDate">The removal date, if specified.</param>
         /// <returns>An ODataUrlValidationMessage representing the deprecated element.</returns>
-        private static ODataUrlValidationMessage CreateUrlValidationMessage(string elementName, string message, string version, Date? date)
+        private static ODataUrlValidationMessage CreateUrlValidationMessage(string elementName, string message, string version, Date? date, Date? removalDate)
         {
             ODataUrlValidationMessage error = new ODataUrlValidationMessage(ODataUrlValidationMessageCodes.DeprecatedElement, message, Severity.Warning);
             if (date != null)
             {
                 error.ExtendedProperties.Add(RevisionDateProperty, date);
+            }
+
+            if (removalDate != null)
+            {
+                error.ExtendedProperties.Add(RevisionRemovalDateProperty, removalDate);
             }
 
             if (!String.IsNullOrEmpty(version))
@@ -109,13 +117,14 @@ namespace Microsoft.OData.UriParser.Validation.Rules
             string message;
             string version;
             Date? date;
-            if (IsDeprecated(context.Model, element, out message, out version, out date))
+            Date? removalDate;
+            if (IsDeprecated(context.Model, element, out message, out version, out date, out removalDate))
             {
-                context.Messages.Add(CreateUrlValidationMessage(element.Name, message, version, date));
+                context.Messages.Add(CreateUrlValidationMessage(element.Name, message, version, date, removalDate));
             }
-            else if (IsDeprecated(context.Model, elementType, out message, out version, out date))
+            else if (IsDeprecated(context.Model, elementType, out message, out version, out date, out removalDate))
             {
-                context.Messages.Add(CreateUrlValidationMessage(element.Name, message, version, date));
+                context.Messages.Add(CreateUrlValidationMessage(element.Name, message, version, date, removalDate));
             }
         }
 
@@ -127,8 +136,9 @@ namespace Microsoft.OData.UriParser.Validation.Rules
         /// <param name="message">The returned deprecation message if the element is deprecated.</param>
         /// <param name="version">The returned version if the element is deprecated, if specified.</param>
         /// <param name="date">The returned date if the element is deprecated, if specified.</param>
+        /// <param name="removalDate">The returned removal date if the element is deprecated, if specified.</param>
         /// <returns>True if the element is marked as deprecated, otherwise false.</returns>
-        private static bool IsDeprecated(IEdmModel model, IEdmElement element, out string message, out string version, out Date? date)
+        private static bool IsDeprecated(IEdmModel model, IEdmElement element, out string message, out string version, out Date? date, out Date? removalDate)
         {
             IEdmVocabularyAnnotatable annotatedElement = element as IEdmVocabularyAnnotatable;
             if (annotatedElement != null)
@@ -147,6 +157,7 @@ namespace Microsoft.OData.UriParser.Validation.Rules
                                 message = string.Empty;
                                 version = string.Empty;
                                 date = null;
+                                removalDate = null;
                                 IEdmRecordExpression record = versionRecord as IEdmRecordExpression;
                                 if (record != null)
                                 {
@@ -189,6 +200,13 @@ namespace Microsoft.OData.UriParser.Validation.Rules
                                                     date = dateValue.Value;
                                                 }
                                                 break;
+                                            case RevisionRemovalDateProperty:
+                                                IEdmDateConstantExpression removalDateValue = property.Value as IEdmDateConstantExpression;
+                                                if (removalDateValue != null)
+                                                {
+                                                    removalDate = removalDateValue.Value;
+                                                }
+                                                break;
                                             default:
                                                 break;
                                         }
@@ -206,7 +224,7 @@ namespace Microsoft.OData.UriParser.Validation.Rules
             }
 
             message = version = string.Empty;
-            date = null;
+            date = removalDate = null;
             return false;
         }
     }
