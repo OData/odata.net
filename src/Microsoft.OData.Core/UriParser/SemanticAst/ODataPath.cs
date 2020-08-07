@@ -20,26 +20,29 @@ namespace Microsoft.OData.UriParser
     /// A representation of the path portion of an OData URI which is made up of <see cref="ODataPathSegment"/>s.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Justification = "ODataPathCollection just doesn't sound right")]
-    public class ODataPath : IEnumerable<ODataPathSegment>
+    public class ODataPath : List<ODataPathSegment>, IEnumerable<ODataPathSegment>
     {
-        /// <summary>
-        /// The segments that make up this path.
-        /// </summary>
-        private readonly IList<ODataPathSegment> segments;
+       
 
         /// <summary>
         /// Creates a new instance of <see cref="ODataPath"/> containing the given segments.
         /// </summary>
         /// <param name="segments">The segments that make up the path.</param>
         /// <exception cref="ArgumentNullException">Throws if input segments is null.</exception>
-        public ODataPath(IEnumerable<ODataPathSegment> segments)
+        public ODataPath(IEnumerable<ODataPathSegment> segments):
+            base(ValidateSegments(segments))
         {
-            ExceptionUtils.CheckArgumentNotNull(segments, "segments");
-            this.segments = segments.ToList();
-            if (this.segments.Any(s => s == null))
+            if (this.Contains(null))
             {
                 throw Error.ArgumentNull(nameof(segments));
             }
+        }
+
+        private static IEnumerable<ODataPathSegment> ValidateSegments(IEnumerable<ODataPathSegment> segments)
+        {
+            ExceptionUtils.CheckArgumentNotNull(segments, "segments");
+            
+            return segments;
         }
 
         /// <summary>
@@ -59,7 +62,7 @@ namespace Microsoft.OData.UriParser
         {
             get
             {
-                return this.segments.Count == 0 ? null : this.segments[0];
+                return this.FirstOrDefault();
             }
         }
 
@@ -70,34 +73,19 @@ namespace Microsoft.OData.UriParser
         {
             get
             {
-                return this.segments.Count == 0 ? null : this.segments[this.segments.Count - 1];
+                return this.LastOrDefault();
             }
         }
 
-        /// <summary>
-        /// Get the number of segments in this path.
-        /// </summary>
-        public int Count
-        {
-            get { return this.segments.Count; }
-        }
 
         /// <summary>
         /// Get the List of ODataPathSegments.
         /// </summary>
         internal IList<ODataPathSegment> Segments
         {
-            get { return this.segments; }
+            get { return this; }
         }
 
-        /// <summary>
-        /// Get the segments enumerator
-        /// </summary>
-        /// <returns>The segments enumerator</returns>
-        public IEnumerator<ODataPathSegment> GetEnumerator()
-        {
-            return this.segments.GetEnumerator();
-        }
 
         /// <summary>
         /// get the segments enumerator
@@ -117,7 +105,7 @@ namespace Microsoft.OData.UriParser
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "We would rather ship the PathSegmentTranslator so that its more extensible later")]
         public IEnumerable<T> WalkWith<T>(PathSegmentTranslator<T> translator)
         {
-            return this.segments.Select(segment => segment.TranslateWith(translator));
+            return this.Select(segment => segment.TranslateWith(translator));
         }
 
         /// <summary>
@@ -127,7 +115,7 @@ namespace Microsoft.OData.UriParser
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "We would rather ship the PathSegmentHandler so that its more extensible later")]
         public void WalkWith(PathSegmentHandler handler)
         {
-            foreach (ODataPathSegment segment in this.segments)
+            foreach (ODataPathSegment segment in this)
             {
                 segment.HandleWith(handler);
             }
@@ -142,12 +130,12 @@ namespace Microsoft.OData.UriParser
         internal bool Equals(ODataPath other)
         {
             ExceptionUtils.CheckArgumentNotNull(other, "other");
-            if (this.segments.Count != other.segments.Count)
+            if (this.Count != other.Count)
             {
                 return false;
             }
 
-            return !this.segments.Where((t, i) => !t.Equals(other.segments[i])).Any();
+            return !this.Where((t, i) => !t.Equals(other[i])).Any();
         }
 
         /// <summary>
@@ -155,10 +143,10 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="newSegment">the segment to add</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input newSegment is null.</exception>
-        internal void Add(ODataPathSegment newSegment)
+        internal new void Add(ODataPathSegment newSegment)
         {
             ExceptionUtils.CheckArgumentNotNull(newSegment, "newSegment");
-            this.segments.Add(newSegment);
+            base.Add(newSegment);
         }
     }
 }

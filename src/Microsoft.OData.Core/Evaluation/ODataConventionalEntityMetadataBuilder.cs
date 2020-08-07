@@ -644,12 +644,15 @@ namespace Microsoft.OData.Evaluation
         private Uri GetContainingEntitySetUri(Uri baseUri, ODataUri odataUri)
         {
             ODataPath path = odataUri.Path;
+            // List<ODataPathSegment> segments = path.ToList();
             List<ODataPathSegment> segments = path.ToList();
-            ODataPathSegment lastSegment = segments.Last();
+            // Reversing list so we can have better performance since List.Remove uses list.IndexOf internally which is faster if items are in-front of the list
+            segments.Reverse();
+            ODataPathSegment lastSegment = segments.First();
             while (!(lastSegment is NavigationPropertySegment) && !(lastSegment is OperationSegment))
             {
                 segments.Remove(lastSegment);
-                lastSegment = segments.Last();
+                lastSegment = segments.First();
             }
 
             // also removed the last navigation property segment
@@ -657,14 +660,15 @@ namespace Microsoft.OData.Evaluation
 
             // Remove the unnecessary type cast segment.
             ODataPathSegment nextToLastSegment = segments.Last();
+
             while (nextToLastSegment is TypeSegment)
             {
-                ODataPathSegment previousSegment = segments[segments.Count - 2];
+                ODataPathSegment previousSegment = segments[1];
                 IEdmStructuredType owningType = previousSegment.TargetEdmType as IEdmStructuredType;
-                if (owningType != null && owningType.FindProperty(lastSegment.Identifier) != null)
+                if (owningType?.FindProperty(lastSegment.Identifier) != null)
                 {
                     segments.Remove(nextToLastSegment);
-                    nextToLastSegment = segments.Last();
+                    nextToLastSegment = segments.First();
                 }
                 else
                 {
@@ -672,9 +676,10 @@ namespace Microsoft.OData.Evaluation
                 }
             }
 
+            segments.Reverse();
             // append each segment to base uri
             Uri uri = baseUri;
-            foreach (ODataPathSegment segment in segments)
+            foreach (var segment in segments)
             {
                 var keySegment = segment as KeySegment;
                 if (keySegment == null)
