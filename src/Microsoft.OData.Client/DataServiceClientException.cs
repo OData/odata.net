@@ -61,10 +61,7 @@ namespace Microsoft.OData.Client
             this.statusCode = statusCode;
         }
 
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-#pragma warning disable CS0628 // New protected member declared in sealed class
-        protected DataServiceClientException(SerializationInfo info, StreamingContext context)
-#pragma warning restore CS0628 // New protected member declared in sealed class
+        private DataServiceClientException(SerializationInfo info, StreamingContext context)
 : base(info, context)
         {
             this.statusCode = info.GetInt32("StatusCode");
