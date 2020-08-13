@@ -413,14 +413,20 @@ namespace Microsoft.OData.UriParser.Validation
         // Validate all structured properties of a type, recursing through nested complex typed properties
         private void ValidateProperties(IEdmType edmType, ODataUrlValidationContext context)
         {
-            IEdmStructuredType structuredType = edmType as IEdmStructuredType;
-            if (structuredType != null)
+            // true if the element is added to the set; false if the element is already in the set.
+            if (context.ValidatedTypes.Add(edmType))
             {
-                foreach (IEdmProperty property in structuredType.StructuralProperties())
+                IEdmStructuredType structuredType = edmType as IEdmStructuredType;
+                if (structuredType != null)
                 {
-                    ValidateItem(property, context, /* impliedProperty */ true);
-                    ValidateItem(property.Type.Definition.AsElementType(), context, /* impliedProperty */ true);
-                    ValidateProperties(property.Type.Definition.AsElementType(), context);
+                    foreach (IEdmProperty property in structuredType.StructuralProperties())
+                    {
+                        IEdmType elementType = property.Type.Definition.AsElementType();
+
+                        ValidateItem(property, context, /* impliedProperty */ true);
+                        ValidateItem(elementType, context, /* impliedProperty */ true);
+                        ValidateProperties(elementType, context);
+                    }
                 }
             }
         }

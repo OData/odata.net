@@ -23,7 +23,7 @@ namespace Microsoft.OData.Tests
         private static IEdmModel model;
 
         [Theory]
-        [InlineData(@"company", "name","state")]
+        [InlineData(@"company", "name", "state")]
         [InlineData(@"company/employees", "employees")]
         [InlineData(@"competitors", "competitors", "name", "state")]
         [InlineData(@"company/address", "state")]
@@ -31,7 +31,7 @@ namespace Microsoft.OData.Tests
         [InlineData(@"company/address?$select=state", "state")]
         [InlineData(@"company?$expand=employees", "name", "state", "employees")]
         [InlineData(@"company?$select=name", "name")]
-        [InlineData(@"competitors?$filter=contains(name,'sprocket')", "competitors", "name","state","name")]
+        [InlineData(@"competitors?$filter=contains(name,'sprocket')", "competitors", "name", "state", "name")]
         public static void WithDeprecatedElementsGeneratesErrors(String request, params string[] expectedErrors)
         {
             string expectedDateAsString = "2020-03-30";
@@ -108,6 +108,7 @@ namespace Microsoft.OData.Tests
     <Schema xmlns = ""http://docs.oasis-open.org/odata/ns/edm"" Namespace=""Jetsons.Models"">
       <ComplexType Name = ""address"" >
         <Property Name=""city"" Type=""Edm.String""/>
+        <Property Name=""subAddress"" Type=""Jetsons.Models.address""/>
         <Property Name = ""state"" Type=""Edm.String"">
           <Annotation Term = ""Core.Revisions"" >
             <Collection>
