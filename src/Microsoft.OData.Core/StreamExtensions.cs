@@ -14,6 +14,5 @@ namespace Microsoft.OData
     /// </summary>
     internal static class StreamExtensions
     {
-
     }
 }

@@ -764,7 +764,6 @@ namespace Microsoft.OData
         {
             var containerProvider = message as IContainerProvider;
             return containerProvider == null ? null : containerProvider.Container;
-
         }
 
         private static IEdmModel GetModel(IServiceProvider container)

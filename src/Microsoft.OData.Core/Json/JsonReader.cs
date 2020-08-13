@@ -1235,8 +1235,8 @@ namespace Microsoft.OData.Json
         /// Consumes the <paramref name="characterCount"/> characters starting at the start of the token
         /// and append the token string to the <paramref name="builder"/>.
         /// </summary>
-        /// <param name="characterCount">The number of characters after the token start to consume.</param>
         /// <param name="builder">The StringBuilder instance to append the token to.</param>
+        /// <param name="characterCount">The number of characters after the token start to consume.</param>
         private void ConsumeTokenAppendToBuilder(StringBuilder builder, int characterCount)
         {
             Debug.Assert(characterCount >= 0, "characterCount >= 0");

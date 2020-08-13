@@ -663,7 +663,6 @@ namespace Microsoft.OData
             }
             else
             {
-
                 if (this.outputContext.Synchronous)
                 {
                     throw new ODataException(Strings.ODataParameterWriterCore_AsyncCallOnSyncWriter);

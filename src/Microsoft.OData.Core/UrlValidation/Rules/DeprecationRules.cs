@@ -7,7 +7,6 @@
 using System;
 using System.Linq;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
 
@@ -37,8 +36,7 @@ namespace Microsoft.OData.UriParser.Validation.Rules
         {
             Validate(segment, segment.Type.Definition.AsElementType(), context);
         },
-        /*includeImpliedProperties*/ true
-        );
+        /*includeImpliedProperties*/ true);
 
         /// <summary>
         /// Validates that a navigation source is not deprecated
@@ -49,8 +47,7 @@ namespace Microsoft.OData.UriParser.Validation.Rules
         {
             Validate(source, source.EntityType(), context);
         },
-        /*includeImpliedProperties*/ true
-        );
+        /*includeImpliedProperties*/ true);
 
         /// <summary>
         /// Validates that a type is not deprecated
@@ -68,8 +65,7 @@ namespace Microsoft.OData.UriParser.Validation.Rules
                 context.Messages.Add(CreateUrlValidationMessage(edmType.FullTypeName(), message, version, date, removalDate));
             }
         },
-        /*includeImpliedProperties*/ true
-        );
+        /*includeImpliedProperties*/ true);
 
         /// <summary>
         /// Helper function to create an ODataUrlValidationMessage
@@ -145,8 +141,8 @@ namespace Microsoft.OData.UriParser.Validation.Rules
             {
                 foreach (IEdmVocabularyAnnotation annotation in annotatedElement.VocabularyAnnotations(model))
                 {
-                    if (String.Equals(annotation.Term.FullName(), CoreVocabularyConstants.Revisions, StringComparison.OrdinalIgnoreCase) ||
-                        String.Equals(annotation.Term.FullName(), DefaultCoreAlias + "." + RevisionTerm, StringComparison.OrdinalIgnoreCase))
+                    if (string.Equals(annotation.Term.FullName(), CoreVocabularyConstants.Revisions, StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(annotation.Term.FullName(), DefaultCoreAlias + "." + RevisionTerm, StringComparison.OrdinalIgnoreCase))
                     {
                         IEdmCollectionExpression collectionExpression = annotation.Value as IEdmCollectionExpression;
                         if (collectionExpression != null)
@@ -178,35 +174,45 @@ namespace Microsoft.OData.UriParser.Validation.Rules
                                                         continue;
                                                     }
                                                 }
+
                                                 break;
+
                                             case RevisionVersionProperty:
                                                 IEdmStringConstantExpression versionValue = property.Value as IEdmStringConstantExpression;
                                                 if (versionValue != null)
                                                 {
                                                     version = versionValue.Value;
                                                 }
+
                                                 break;
+
                                             case RevisionDescriptionProperty:
                                                 IEdmStringConstantExpression descriptionValue = property.Value as IEdmStringConstantExpression;
                                                 if (descriptionValue != null)
                                                 {
                                                     message = descriptionValue.Value;
                                                 }
+
                                                 break;
+
                                             case RevisionDateProperty:
                                                 IEdmDateConstantExpression dateValue = property.Value as IEdmDateConstantExpression;
                                                 if (dateValue != null)
                                                 {
                                                     date = dateValue.Value;
                                                 }
+
                                                 break;
+
                                             case RevisionRemovalDateProperty:
                                                 IEdmDateConstantExpression removalDateValue = property.Value as IEdmDateConstantExpression;
                                                 if (removalDateValue != null)
                                                 {
                                                     removalDate = removalDateValue.Value;
                                                 }
+
                                                 break;
+
                                             default:
                                                 break;
                                         }

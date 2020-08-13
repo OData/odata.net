@@ -24,9 +24,6 @@ namespace Microsoft.OData
         /// <summary>The output context to write to.</summary>
         private readonly ODataOutputContext outputContext;
 
-        /// <summary>The batch-specific URL converter that stores the content IDs found in a changeset and supports resolving cross-referencing URLs.</summary>
-        internal readonly ODataBatchPayloadUriConverter payloadUriConverter;
-
         /// <summary>The dependency injection container to get related services.</summary>
         private readonly IServiceProvider container;
 
@@ -60,6 +57,9 @@ namespace Microsoft.OData
         /// Whether the writer is currently processing inside a changeset or atomic group.
         /// </summary>
         private bool isInChangset;
+
+        /// <summary>The batch-specific URL converter that stores the content IDs found in a changeset and supports resolving cross-referencing URLs.</summary>
+        internal readonly ODataBatchPayloadUriConverter payloadUriConverter;
 
         /// <summary>
         /// Constructor.

@@ -26,8 +26,8 @@ namespace Microsoft.OData.UriParser.Validation
         /// <summary>
         /// Internal API called by the validation engine to validate the item of the specified type
         /// </summary>
-        /// <param name="context"></param>
-        /// <param name="component"></param>
+        /// <param name="context">The validatation context.</param>
+        /// <param name="component">The component.</param>
         internal abstract void Validate(ODataUrlValidationContext context, object component);
 
         /// <summary>
@@ -51,12 +51,13 @@ namespace Microsoft.OData.UriParser.Validation
         /// <summary>
         /// The type of the Url element that the rule targets
         /// </summary>
-        internal Type ruleType = typeof(T);
+        private Type ruleType = typeof(T);
 
         /// <summary>
         /// Constructs an instance of an ODataValdiationRule of a particular type.
         /// </summary>
-        /// <param name="validateMethod">The Action that validates an instance of the specified type.></param>
+        /// <param name="ruleName">The rule name.</param>
+        /// <param name="validateMethod">The Action that validates an instance of the specified type.</param>
         public ODataUrlValidationRule(string ruleName, Action<ODataUrlValidationContext, T> validateMethod) :
             this (ruleName, validateMethod, /*includeImpliedProperties*/ false)
         {
@@ -65,7 +66,8 @@ namespace Microsoft.OData.UriParser.Validation
         /// <summary>
         /// Constructs an instance of an ODataValdiationRule of a particular type.
         /// </summary>
-        /// <param name="validateMethod">The Action that validates an instance of the specified type.></param>
+        /// <param name="ruleName">The rule name.</param>
+        /// <param name="validateMethod">The Action that validates an instance of the specified type.</param>
         /// <param name="includeImpliedProperties">Whether the rule should include implicitly selected properties.</param>
         public ODataUrlValidationRule(string ruleName, Action<ODataUrlValidationContext, T> validateMethod, bool includeImpliedProperties)
         {
@@ -78,8 +80,8 @@ namespace Microsoft.OData.UriParser.Validation
         /// <summary>
         /// Internal API called by the validation engine to validate the item of the specified type
         /// </summary>
-        /// <param name="context"></param>
-        /// <param name="component"></param>
+        /// <param name="context">The validation context.</param>
+        /// <param name="component">The component.</param>
         internal override void Validate(ODataUrlValidationContext context, object component)
         {
             validateMethod(context, component as T);

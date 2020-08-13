@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ODataUrlValidationExtension.cs" company="Microsoft">
+// <copyright file="ODataUrlValidationExtensions.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.OData.Edm;
-using Microsoft.OData.UriParser.Validation.ValidationEngine;
 
 namespace Microsoft.OData.UriParser.Validation
 {
@@ -31,7 +30,6 @@ namespace Microsoft.OData.UriParser.Validation
                 ODataUriParser parser = new ODataUriParser(model, uri);
                 return parser.Validate(rules, out validationMessages);
             }
-
             catch (ODataException e)
             {
                 validationMessages = new ODataUrlValidationMessage[]

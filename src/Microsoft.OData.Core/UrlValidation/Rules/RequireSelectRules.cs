@@ -26,8 +26,7 @@ namespace Microsoft.OData.UriParser.Validation.Rules
                 {
                     CheckAllSelected(lastSegment.Identifier, path.SelectAndExpand, context);
                 }
-            }
-        );
+            });
 
         /// <summary>
         /// Walk through an ODataUrl checking to see if all included structured properties/expands have a $select.

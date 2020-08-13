@@ -129,18 +129,6 @@ namespace Microsoft.OData.UriParser
             return masterSelectList;
         }
 
-        private static string GetPreviousSegments(string item)
-        {
-            int index = item.LastIndexOf('/');
-
-            if (index > 0)
-            {
-                return item.Substring(0, index);
-            }
-
-            return string.Empty;
-        }
-
         /// <summary>
         /// Traverse a SelectExpandClause using given functions.
         /// </summary>
@@ -162,7 +150,7 @@ namespace Microsoft.OData.UriParser
 
                 if (expandSelectItem != null)
                 {
-                    string currentExpandClause = String.Join("/", expandSelectItem.PathToNavigationProperty.WalkWith(PathSegmentToStringTranslator.Instance).ToArray());
+                    string currentExpandClause = string.Join("/", expandSelectItem.PathToNavigationProperty.WalkWith(PathSegmentToStringTranslator.Instance).ToArray());
                     T subResult = default(T);
                     if (expandSelectItem.SelectAndExpand.SelectedItems.Any())
                     {
@@ -201,6 +189,18 @@ namespace Microsoft.OData.UriParser
             result = combineSelectAndExpand(selectList, expandList);
         }
 
+        private static string GetPreviousSegments(string item)
+        {
+            int index = item.LastIndexOf('/');
+
+            if (index > 0)
+            {
+                return item.Substring(0, index);
+            }
+
+            return string.Empty;
+        }
+
         /// <summary>
         /// Build the top level select clause as a string.
         /// </summary>
@@ -223,7 +223,7 @@ namespace Microsoft.OData.UriParser
         {
             IList<string> nextLevelSelectList = null;
 
-            //Recursively call next level to get all the nested select items
+            // Recursively call next level to get all the nested select items
             if (pathSelectItem.SelectAndExpand != null)
             {
                 nextLevelSelectList = GetCurrentLevelSelectList(pathSelectItem.SelectAndExpand);

@@ -51,7 +51,7 @@ namespace Microsoft.OData.UriParser.Validation
         /// <summary>
         /// Validate the given <see cref="ODataUri"/>.
         /// </summary>
-        /// <param name="odataUri">The <see cref="ODataUri"/ to validate.></param>
+        /// <param name="odataUri">The <see cref="ODataUri"/> to validate.</param>
         /// <param name="validationMessages">An output parameter to return any validation messages associated with the oDataUri</param>
         /// <returns>True, if any errors are found, otherwise false.</returns>
         public bool ValidateUrl(ODataUri odataUri, out IEnumerable<ODataUrlValidationMessage> validationMessages)
@@ -94,7 +94,6 @@ namespace Microsoft.OData.UriParser.Validation
             // -Skip
             // -SkipToken
             // -Delta
-
             validationMessages = validationContext.Messages;
             return !validationMessages.Any();
         }
@@ -124,7 +123,7 @@ namespace Microsoft.OData.UriParser.Validation
         /// <param name="validationContext">Validation Context.</param>
         /// <param name="validatedTypes">HashSet of types already validated for this item.</param>
         /// <param name="impliedProperty">Whether the item being validated is an implied property.</param>
-        /// <returns></returns>
+        /// <returns>True/False.</returns>
         private bool ValidateTypeHierarchy(object item, Type itemType, ODataUrlValidationContext validationContext, HashSet<Type> validatedTypes, bool impliedProperty)
         {
             bool foundRule = false;
@@ -211,7 +210,8 @@ namespace Microsoft.OData.UriParser.Validation
         }
 
         #region Validate Url Components
-        private void ValidatePathSegment(ODataPathSegment segment, ODataUrlValidationContext validationContext)
+
+        private static void ValidatePathSegment(ODataPathSegment segment, ODataUrlValidationContext validationContext)
         {
             validationContext.PathValidator.ValidatePath(segment);
         }
@@ -353,6 +353,7 @@ namespace Microsoft.OData.UriParser.Validation
             ValidateFilterClause(expandItem.FilterOption, validationContext);
             ValidateOrderByClause(expandItem.OrderByOption, validationContext);
             ValidateSearchClause(expandItem.SearchOption, validationContext);
+
             // todo: apply and compute are also defined on ExpandReferenceItem, but should only be valid on ExpandItem
             // add rule to fail if these are found on ExpandReferenceItem that is not ExpandItem?
         }
@@ -369,6 +370,7 @@ namespace Microsoft.OData.UriParser.Validation
             else
             {
                 bool propertySelected = false;
+
                 // Check each property in the SelectAndExpand to see if they terminate in a structured type with no select
                 foreach (SelectItem selectItem in selectExpand.SelectedItems)
                 {
@@ -400,7 +402,7 @@ namespace Microsoft.OData.UriParser.Validation
                     }
 
                     // If we didn't find any non-expand properties, and didn't already validate due to a WildCard, then validate type now
-                    if(!propertySelected)
+                    if (!propertySelected)
                     {
                         ValidateProperties(segmentType, validationContext);
                     }
@@ -482,6 +484,5 @@ namespace Microsoft.OData.UriParser.Validation
         }
 
         #endregion
-
     }
 }
