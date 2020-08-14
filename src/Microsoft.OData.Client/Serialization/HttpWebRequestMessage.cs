@@ -13,40 +13,14 @@ namespace Microsoft.OData.Client
     using System.IO;
     using System.Globalization;
     using System.Net;
-#if PORTABLELIB
-    using System.Reflection;
-    using System.Xml;
-#endif
     using Microsoft.OData;
 
     /// <summary> IODataRequestMessage interface implementation. </summary>
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "Returning MemoryStream which doesn't require disposal")]
-    public class HttpWebRequestMessage : DataServiceClientRequestMessage
+    [Obsolete("Migrate from the use of HttpWebRequestMessage to HttpClientRequestMessage")]
+    public class HttpWebRequestMessage : DataServiceClientRequestMessage, ISendingRequest2
     {
         #region Private Fields
-
-#if PORTABLELIB
-        /// <summary> Running on silverlight </summary>
-        internal static bool IsRunningOnSilverlight = false;
-
-        /// <summary>Cached method info that will be used to call to set the userAgent property if its not null. </summary>
-        private static MethodInfo UserAgentMethodSetter;
-
-        /// <summary>Cached method info that will be used to call to set the ContentLength property if its not null. </summary>
-        private static MethodInfo ContentLengthMethodSetter;
-
-        /// <summary> Indicates the current platform the portablelib is running on can't set the user agent property </summary>
-        private static bool SettingUserAgentPropertyValidOnCurrentPlatform = true;
-
-        /// <summary> Indicates that the current platform doesn't support setting the header useragent property </summary>
-        private static bool SettingUserAgentOnHeadersCollectionValidOnCurrentPlatform = true;
-
-        /// <summary> Indicates the current platform the portablelib is running on can't set the user agent property </summary>
-        private static bool SettingContentLengthPropertyValidOnCurrentPlatform = true;
-
-        /// <summary> Indicates that the current platform doesn't support setting the header useragent property </summary>
-        private static bool SettingContentLengthOnHeadersCollectionValidOnCurrentPlatform = true;
-#endif
         /// <summary>Request Url.</summary>
         private readonly Uri requestUrl;
 
@@ -64,29 +38,6 @@ namespace Microsoft.OData.Client
 #endif
 
         #endregion // Private Fields
-
-#if PORTABLELIB
-        /// <summary>
-        /// Initializes the <see cref="HttpWebRequestMessage"/> class.
-        /// </summary>
-        static HttpWebRequestMessage()
-        {
-            IsRunningOnSilverlight = typeof(System.Windows.Input.ICommand).GetAssembly().GetType("System.Net.Browser.WebRequestCreator", false) != null;
-
-            PropertyInfo pi = typeof(HttpWebRequest).GetProperty("ContentLength");
-            if (pi != null)
-            {
-                ContentLengthMethodSetter = pi.GetSetMethod();
-            }
-
-            pi = typeof(HttpWebRequest).GetProperty("UserAgent");
-            if (pi != null)
-            {
-                UserAgentMethodSetter = pi.GetSetMethod();
-            }
-        }
-#endif
-
         /// <summary>
         /// Creates a new instance of HttpWebRequestMessage.
         /// </summary>
@@ -239,17 +190,12 @@ namespace Microsoft.OData.Client
         /// <returns>Stream to which the request payload needs to be written.</returns>
         public override Stream GetStream()
         {
-#if PORTABLELIB
-            // not supported in async environments. Another IODataRequestMessage which buffers the request should be used.
-            throw new NotSupportedException(Strings.ODataRequestMessage_GetStreamMethodNotSupported);
-#else
             if (this.inSendingRequest2Event)
             {
                 throw new NotSupportedException(Strings.ODataRequestMessage_GetStreamMethodNotSupported);
             }
 
             return this.httpRequest.GetRequestStream();
-#endif
         }
 
         /// <summary>
@@ -311,12 +257,6 @@ namespace Microsoft.OData.Client
             try
             {
                 HttpWebResponse httpResponse = (HttpWebResponse)this.httpRequest.EndGetResponse(asyncResult);
-#if PORTABLELIB
-                if (!httpResponse.SupportsHeaders)
-                {
-                    throw new NotSupportedException(Strings.Silverlight_BrowserHttp_NotSupported);
-                }
-#endif
                 return new HttpWebResponseMessage(httpResponse);
             }
             catch (WebException webException)
@@ -325,7 +265,6 @@ namespace Microsoft.OData.Client
             }
         }
 
-#if !PORTABLELIB
         /// <summary>
         /// Returns a response from an Internet resource.
         /// </summary>
@@ -345,7 +284,6 @@ namespace Microsoft.OData.Client
                 throw ConvertToDataServiceWebException(webException);
             }
         }
-#endif
 
         /// <summary>
         /// Sets the Content length of the Http web request
@@ -354,38 +292,7 @@ namespace Microsoft.OData.Client
         /// <param name="contentLength">Length to set</param>
         internal static void SetHttpWebRequestContentLength(HttpWebRequest httpWebRequest, long contentLength)
         {
-#if PORTABLELIB
-            // TODO: May need to add a special case for when the content length is zero
-            bool headerSet = false;
-            if (ContentLengthMethodSetter != null && SettingContentLengthPropertyValidOnCurrentPlatform)
-            {
-                try
-                {
-                    ContentLengthMethodSetter.Invoke(httpWebRequest, new object[] { contentLength });
-                    headerSet = true;
-                }
-                catch (InvalidOperationException)
-                {
-                    SettingContentLengthPropertyValidOnCurrentPlatform = false;
-                }
-            }
-
-            if (!headerSet && SettingContentLengthOnHeadersCollectionValidOnCurrentPlatform)
-            {
-                // Attempting to set the header but may just not work
-                try
-                {
-                    // Need this code to set the user agent on silverlight when the property doesn't exist
-                    httpWebRequest.Headers[XmlConstants.HttpContentLength] = XmlConvert.ToString(contentLength);
-                }
-                catch (ArgumentException)
-                {
-                    SettingContentLengthOnHeadersCollectionValidOnCurrentPlatform = false;
-                }
-            }
-#else
             httpWebRequest.ContentLength = contentLength;
-#endif
         }
 
         /// <summary>
@@ -395,15 +302,7 @@ namespace Microsoft.OData.Client
         /// <param name="headerValue">The header value.</param>
         internal static void SetAcceptCharset(HttpWebRequest httpWebRequest, string headerValue)
         {
-#if !PORTABLELIB
             httpWebRequest.Headers[XmlConstants.HttpAcceptCharset] = headerValue;
-#endif
-#if PORTABLELIB
-            if (!IsRunningOnSilverlight)
-            {
-                httpWebRequest.Headers[XmlConstants.HttpAcceptCharset] = headerValue;
-            }
-#endif
         }
 
         /// <summary>
@@ -413,71 +312,7 @@ namespace Microsoft.OData.Client
         /// <param name="headerValue">The value of the user agent.</param>
         internal static void SetUserAgentHeader(HttpWebRequest httpWebRequest, string headerValue)
         {
-#if !PORTABLELIB
             httpWebRequest.UserAgent = headerValue;
-#endif
-#if PORTABLELIB
-            if (IsRunningOnSilverlight || !SettingUserAgentPropertyValidOnCurrentPlatform)
-            {
-                return;
-            }
-
-            bool headerSet = false;
-
-            // Weird behavior, looks like this won't work in silverlight on the .net portable libaries.
-            // http://social.msdn.microsoft.com/Forums/en-US/netfxbcl/thread/7440fc9d-3490-4823-ac93-73706b535c6a/
-            // http://connect.microsoft.com/VisualStudio/feedback/details/770104/cannot-set-useragent-of-a-httpwebrequest-in-portable-class-and-winrt-libraries
-            // On Windows 8 store throws InvalidOperationException when setting the UserAgent
-            if (UserAgentMethodSetter != null)
-            {
-                try
-                {
-                    UserAgentMethodSetter.Invoke(httpWebRequest, new object[] { headerValue });
-                    headerSet = true;
-                }
-                catch (InvalidOperationException)
-                {
-                    SettingUserAgentPropertyValidOnCurrentPlatform = false;
-                }
-                catch (TargetInvocationException)
-                {
-                    SettingUserAgentPropertyValidOnCurrentPlatform = false;
-                }
-            }
-
-            if (!headerSet || SettingUserAgentOnHeadersCollectionValidOnCurrentPlatform)
-            {
-                // Attempting to set the header but may just not work
-                try
-                {
-                    // Need this code to set the user agent on silverlight when the property doesn't exist
-                    httpWebRequest.Headers[XmlConstants.HttpUserAgent] = headerValue;
-                }
-                catch (ArgumentException)
-                {
-                    SettingUserAgentOnHeadersCollectionValidOnCurrentPlatform = false;
-                }
-            }
-#endif
-        }
-
-        /// <summary>
-        /// This method is called just before firing SendingRequest2 event.
-        /// </summary>
-        internal void BeforeSendingRequest2Event()
-        {
-            this.inSendingRequest2Event = true;
-        }
-
-        /// <summary>
-        /// This method is called immd. after SendingRequest2 event has been fired.
-        /// </summary>
-        internal void AfterSendingRequest2Event()
-        {
-            this.inSendingRequest2Event = false;
-#if DEBUG
-            this.sendingRequest2Fired = true;
-#endif
         }
 
         /// <summary>
@@ -492,16 +327,8 @@ namespace Microsoft.OData.Client
         private static HttpWebRequest CreateRequest(string method, Uri requestUrl, DataServiceClientRequestMessageArgs args)
         {
             HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(requestUrl);
-#if PORTABLELIB
-            // Set same default as Silverlight when running silverlight in .Net Portable
-            if (IsRunningOnSilverlight)
-            {
-                httpRequest.UseDefaultCredentials = args.UseDefaultCredentials;
-            }
-#else
             // KeepAlive not available
             httpRequest.KeepAlive = true;
-#endif
             httpRequest.Method = method;
             return httpRequest;
         }
@@ -559,12 +386,10 @@ namespace Microsoft.OData.Client
             {
                 return request.ContentType;
             }
-#if !PORTABLELIB
             else if (string.Equals(headerName, XmlConstants.HttpContentLength, StringComparison.OrdinalIgnoreCase))
             {
                 return request.ContentLength.ToString(CultureInfo.InvariantCulture);
             }
-#endif
             else
             {
                 return request.Headers[headerName];
@@ -586,6 +411,25 @@ namespace Microsoft.OData.Client
             }
 
             return new DataServiceTransportException(errorResponseMessage, webException);
+        }
+
+        /// <summary>
+        /// This method is called just before firing SendingRequest2 event.
+        /// </summary>
+        void ISendingRequest2.BeforeSendingRequest2Event()
+        {
+            this.inSendingRequest2Event = true;
+        }
+
+        /// <summary>
+        /// This method is called immd. after SendingRequest2 event has been fired.
+        /// </summary>
+        void ISendingRequest2.AfterSendingRequest2Event()
+        {
+            this.inSendingRequest2Event = false;
+#if DEBUG
+            this.sendingRequest2Fired = true;
+#endif
         }
 
         /*

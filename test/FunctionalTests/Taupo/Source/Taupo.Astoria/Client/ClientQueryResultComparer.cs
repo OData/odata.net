@@ -13,9 +13,8 @@ namespace Microsoft.Test.Taupo.Astoria.Client
     using System.IO;
     using System.Linq;
     using System.Net;
-#if SILVERLIGHT
-    using System.Windows;
-#endif
+    using System.Net.Http;
+    using System.Net.Http.Headers;
     using Microsoft.OData.Client;
     using Microsoft.Test.Taupo.Astoria.Common;
     using Microsoft.Test.Taupo.Astoria.Contracts;
@@ -26,6 +25,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts;
     using Microsoft.Test.Taupo.Query.Contracts;
+    using HttpHeaders = Contracts.Http.HttpHeaders;
 
     /// <summary>
     /// Compares results of LINQ to Astoria expression evaluation to a baseline also compares exceptions thrown during query evaluation (if any).
@@ -57,13 +57,13 @@ namespace Microsoft.Test.Taupo.Astoria.Client
             this.expressionQueue = new Queue<QueryExpression>();
             this.SkipStreamDescriptorValuesVerification = false;
         }
-#if !WINDOWS_PHONE
+
         /// <summary>
         /// Gets or sets the http tracker.
         /// </summary>
         [InjectDependency(IsRequired = true)]
         public IDataServiceContextHttpTracker HttpTracker { get; set; }
-#endif
+
         /// <summary>
         /// Gets or sets the base line query value builder.
         /// </summary>
@@ -129,7 +129,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
         {
             this.expressionQueue.Enqueue(expression);
         }
-#if !WINDOWS_PHONE
+
         /// <summary>
         /// Executes an action
         /// </summary>
@@ -158,18 +158,15 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                         () =>
                         {
                             this.Logger.WriteLine(LogLevel.Verbose, "Executing Invoke Action, async:{0}, Uri:{1}:", isAsync, dataContext.BaseUri + "/" + uriString);
-
                             Uri builtUri = new Uri(dataContext.BaseUri + "/" + uriString);
-#if !SILVERLIGHT
                             EventHandler<SendingRequest2EventArgs> sendingRequest = delegate(object sender, SendingRequest2EventArgs args)
                             {
-                                HttpWebRequest request = ((HttpWebRequestMessage)args.RequestMessage).HttpWebRequest;
+                                HttpRequestMessage request = ((HttpClientRequestMessage)args.RequestMessage).HttpRequestMessage;
                                 this.VerifyActionExecuteHeaders(verb, request.Headers, inputParameters);
                                 this.VerifyCommonExecuteHeaders(request.Headers);
                             };
 
                             dataContext.SendingRequest2 += sendingRequest;
-#endif
                             dataContext.ExecuteUri(
                                 continuation2,
                                 isAsync,
@@ -220,7 +217,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
 #if !SILVERLIGHT
                             EventHandler<SendingRequest2EventArgs> sendingRequest = delegate(object sender, SendingRequest2EventArgs args)
                             {
-                                HttpWebRequest request = ((HttpWebRequestMessage)args.RequestMessage).HttpWebRequest;
+                                HttpRequestMessage request = ((HttpClientRequestMessage)args.RequestMessage).HttpRequestMessage;
                                 this.VerifyActionExecuteHeaders(verb, request.Headers, inputParameters);
                                 this.VerifyCommonExecuteHeaders(request.Headers);
                             };
@@ -247,15 +244,15 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                                         // With singleResult=false, we expected multiple result items. Compare() will calculate and update the expected QueryValue to be non-NullValue.
                                         this.Compare(this.expressionQueue.Peek().ExpressionType.NullValue, () => savedRes, dataContext);
                                     }
-#if !SILVERLIGHT
+
                                     dataContext.SendingRequest2 -= sendingRequest;
-#endif
+
                                     continuation2.Continue();
                                 });
                         });
                 });
         }
-#endif
+
         /// <summary>
         /// Executes the given expression asynchronously and compares the result to a given expected value.
         /// </summary>
@@ -333,15 +330,15 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                             this.Logger.WriteLine(LogLevel.Verbose, "Executing query, async:{0}, Uri:{1}:", isAsync, dataContext.BaseUri + "/" + uriString);
 
                             Uri builtUri = new Uri(dataContext.BaseUri + "/" + uriString);
-#if !SILVERLIGHT
+
                             EventHandler<SendingRequest2EventArgs> sendingRequest = delegate(object sender, SendingRequest2EventArgs args)
                             {
-                                HttpWebRequest request = ((HttpWebRequestMessage)args.RequestMessage).HttpWebRequest;
+                                HttpRequestMessage request = ((HttpClientRequestMessage)args.RequestMessage).HttpRequestMessage;
                                 this.VerifyCommonExecuteHeaders(request.Headers);
                             };
 
                             dataContext.SendingRequest2 += sendingRequest;
-#endif
+
                             dataContext.Execute(
                                 continuation2,
                                 isAsync,
@@ -356,9 +353,9 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                                     }
                                     else
                                     {
-#if !SILVERLIGHT
+
                                         dataContext.SendingRequest2 -= sendingRequest;
-#endif
+
                                         continuation2.Continue();
                                     }
                                 });
@@ -366,28 +363,28 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                 });
         }
 
-#if !SILVERLIGHT
-        internal void VerifyActionExecuteHeaders(HttpVerb verb, WebHeaderCollection headers, OperationParameter[] inputParameters)
+
+        internal void VerifyActionExecuteHeaders(HttpVerb verb, HttpRequestHeaders headers, OperationParameter[] inputParameters)
         {
             if (verb == HttpVerb.Post && inputParameters.OfType<BodyOperationParameter>().Any())
             {
-                this.Assert.IsTrue(headers[HttpHeaders.ContentType].Contains(MimeTypes.ApplicationJsonLight), string.Format("Unexpected Content-Type header value:{0}", headers[HttpHeaders.ContentType]));
+                this.Assert.IsTrue(headers.GetValues(HttpHeaders.ContentType).Contains(MimeTypes.ApplicationJsonLight), string.Format("Unexpected Content-Type header value:{0}", headers.GetValues(HttpHeaders.ContentType)));
             }
             else
             {
-                this.Assert.IsNull(headers[HttpHeaders.ContentType], "Unexpected Content-Type header.");
+                this.Assert.IsNull(headers.GetValues(HttpHeaders.ContentType), "Unexpected Content-Type header.");
             }
 
-            this.Assert.IsNull(headers[HttpHeaders.ContentLength], "Unexpected Content-Length header.");
-            this.Assert.AreEqual("3.0;NetFx", headers[HttpHeaders.MaxDataServiceVersion], "Unexpected MaxDataServiceVersion header value.");
-            this.Assert.AreEqual(MimeTypes.ApplicationAtomXml + "," + MimeTypes.ApplicationXml, headers[HttpHeaders.Accept], "Unexpected Accept header value.");
+            this.Assert.IsNull(headers.GetValues(HttpHeaders.ContentLength), "Unexpected Content-Length header.");
+            this.Assert.AreEqual("3.0;NetFx", headers.GetValues(HttpHeaders.MaxDataServiceVersion), "Unexpected MaxDataServiceVersion header value.");
+            this.Assert.AreEqual(MimeTypes.ApplicationAtomXml + "," + MimeTypes.ApplicationXml, headers.GetValues(HttpHeaders.Accept), "Unexpected Accept header value.");
         }
-#endif
-        internal void VerifyCommonExecuteHeaders(WebHeaderCollection headers)
+
+        internal void VerifyCommonExecuteHeaders(HttpRequestHeaders headers)
         {
-            this.Assert.IsNull(headers[HttpHeaders.IfMatch], "Unexpected IfMatch.");
-            this.Assert.IsNull(headers[HttpHeaders.IfNoneMatch], "Unexpected IfNoneMatch.");
-            this.Assert.IsNull(headers[HttpHeaders.ETag], "Unexpected ETag.");
+            this.Assert.IsNull(headers.GetValues(HttpHeaders.IfMatch), "Unexpected IfMatch.");
+            this.Assert.IsNull(headers.GetValues(HttpHeaders.IfNoneMatch), "Unexpected IfNoneMatch.");
+            this.Assert.IsNull(headers.GetValues(HttpHeaders.ETag), "Unexpected ETag.");
         }
 
         /// <summary>
@@ -402,9 +399,9 @@ namespace Microsoft.Test.Taupo.Astoria.Client
         {
             if (this.DataProviderSettings.UsePayloadDrivenVerification && path == "result")
             {
-#if !WINDOWS_PHONE
+
                 this.HttpTracker.TryCompleteCurrentRequest(this.currentContext);
-#endif
+
                 expected = this.baselineQueryValue;
             }
 
@@ -461,9 +458,6 @@ namespace Microsoft.Test.Taupo.Astoria.Client
 
             if (expectedPropertyType is AstoriaQueryStreamType)
             {
-#if WINDOWS_PHONE
-                return ComparisonResult.Success;
-#else
                 DataServiceStreamLink actualStreamLink = (DataServiceStreamLink)actualValue;
                 AstoriaQueryStreamValue expectedStreamValue = (AstoriaQueryStreamValue)structuralValue.GetStreamValue(expectedName);
 
@@ -490,7 +484,6 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                     this.ThrowOrLogError(shouldThrow, e.ToString());
                     return ComparisonResult.Failure;
                 }
-#endif
             }
             else
             {
@@ -631,9 +624,6 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                                      }
                                      else
                                      {
-#if WINDOWS_PHONE
-                                         entityContinuation.Continue(); 
-#else
                                          EntityDescriptor ed = dataContext.GetEntityDescriptor(entity);
                                          var streamProperties = queryEntityType.Properties.Where(p => p.IsStream()).ToList(); // intentionally include the default stream
                                          int expectedStreamDescriptorCount = streamProperties.Count(p => p.Name != AstoriaQueryStreamType.DefaultStreamPropertyName);
@@ -653,7 +643,6 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                                                      this.VerifyNamedStreams(dataContext, element, streamProperty, ed, streamDescriptorContinuation);
                                                  }
                                              });
-#endif
                                      }
                                  }
                              });
@@ -761,13 +750,12 @@ namespace Microsoft.Test.Taupo.Astoria.Client
 
                     if (this.DataProviderSettings.UsePayloadDrivenVerification && clientExpectedError == null)
                     {
-#if !WINDOWS_PHONE
-                        this.HttpTracker.RegisterHandler(dataContext, this.BuildBaselineValueFromResponse);
 
+                        this.HttpTracker.RegisterHandler(dataContext, this.BuildBaselineValueFromResponse);
                         exceptionHandlerContinuation = AsyncHelpers.OnContinueOrFail(
                             exceptionHandlerContinuation,
                             () => this.HttpTracker.UnregisterHandler(dataContext, this.BuildBaselineValueFromResponse, !this.clientExceptionVerified));
-#endif
+
                         if (dataContext != this.currentContext)
                         {
                             this.currentContext = dataContext;
@@ -801,7 +789,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                 });
         }
 
-#if !WINDOWS_PHONE
+
         /// <summary>
         /// Verifies the named streams.
         /// </summary>
@@ -831,9 +819,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                     response =>
                     {
                         UpdateStreamValueFromHeaders(expectedStreamValue, response);
-
                         this.VerifyStreamLink(expectedStreamValue, streamDescriptor.StreamLink);
-
                         // skip this verification when using payload driven verification since we don't have the expected content for streams
                         if (!this.DataProviderSettings.UsePayloadDrivenVerification)
                         {
@@ -843,7 +829,6 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                         continuation.Continue();
                     });
         }
-#endif
 
         /// <summary>
         /// Verifies the default stream.
@@ -884,12 +869,10 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                     });
         }
 
-#if !WINDOWS_PHONE
         private void VerifyStreamLink(AstoriaQueryStreamValue expected, DataServiceStreamLink actual)
         {
             this.VerifyStreamDescriptorValues(expected, actual.Name, actual.ContentType, actual.ETag, actual.EditLink, actual.SelfLink);
         }
-#endif
 
         private void VerifyStreamDescriptorValues(AstoriaQueryStreamValue expected, string name, string contentType, string etag, Uri editLink, Uri selfLink)
         {

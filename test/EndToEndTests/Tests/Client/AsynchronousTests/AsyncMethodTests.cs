@@ -125,7 +125,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             {
                 if (!eventArgs.IsBatchPart) // Check top level headers only
                 {
-                    Assert.Equal("application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8", eventArgs.ResponseMessage.GetHeader("Content-Type"));
+                    Assert.Equal("application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8", eventArgs.ResponseMessage.GetHeader("Content-Type").Replace(" ", string.Empty));
                 }
             };
 

@@ -27,7 +27,7 @@ namespace Microsoft.OData.Client.Tests
                 false,
                 requestEventArgs.Headers);
 
-            HttpWebRequestMessage request = new HttpWebRequestMessage(args);
+            HttpClientRequestMessage request = new HttpClientRequestMessage(args);
             const int maxPageSize = 10;
             ODataPreferenceHeader preferHeader = new ODataPreferenceHeader(request);
             preferHeader.MaxPageSize = maxPageSize;

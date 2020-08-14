@@ -11,11 +11,13 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
     using System.Collections.ObjectModel;
     using System.Linq;
     using Microsoft.OData;
+    using Microsoft.OData.Client;
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;
     using Xunit;
+    using HttpWebRequestMessage = Common.HttpWebRequestMessage;
 
     /// <summary>
     /// Send query and verify the results from the service implemented using ODataLib and EDMLib.

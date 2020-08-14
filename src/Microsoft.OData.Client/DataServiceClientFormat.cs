@@ -8,6 +8,7 @@ namespace Microsoft.OData.Client
 {
     #region namespaces
     using System;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
@@ -100,7 +101,7 @@ namespace Microsoft.OData.Client
         /// Invoked during test cases to fake out network calls to get the metadata
         /// returns a string that is passed to the csdl parser and is used to bypass the network call while testing
         /// </summary>
-        internal Func<HttpWebRequestMessage> InjectMetadataHttpNetworkRequest { get; set; }
+        internal Func<DataServiceClientRequestMessage> InjectMetadataHttpNetworkRequest { get; set; }
 
         /// <summary>
         /// Indicates that the client should use the efficient JSON format.
@@ -232,7 +233,7 @@ namespace Microsoft.OData.Client
         /// <returns>A service model to be used in format tracking</returns>
         internal IEdmModel LoadServiceModelFromNetwork()
         {
-            HttpWebRequestMessage httpRequest;
+            DataServiceClientRequestMessage httpRequest;
             BuildingRequestEventArgs requestEventArgs = null;
 
             // test hook for injecting a network request to use instead of the default
@@ -267,7 +268,7 @@ namespace Microsoft.OData.Client
                     context.UsePostTunneling,
                     requestEventArgs.Headers);
 
-                httpRequest = new HttpWebRequestMessage(args);
+                httpRequest = new HttpClientRequestMessage(args);
             }
 
             Descriptor descriptor = requestEventArgs != null ? requestEventArgs.Descriptor : null;

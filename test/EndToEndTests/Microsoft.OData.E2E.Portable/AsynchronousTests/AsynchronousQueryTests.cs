@@ -162,7 +162,7 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
         {
             var value = "";
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
-            context.SendingRequest2 += (sender, eventArgs) => ((HttpWebRequestMessage)eventArgs.RequestMessage).SetHeader("Prefer", "odata.include-annotations=*");
+            context.SendingRequest2 += (sender, eventArgs) => ((HttpClientRequestMessage)eventArgs.RequestMessage).SetHeader("Prefer", "odata.include-annotations=*");
             context.Configurations.ResponsePipeline.OnEntryEnded(readingEntryArgs => value = (readingEntryArgs.Entry.InstanceAnnotations).SingleOrDefault().Name);           
            
             var query = context.Computer.OrderBy(c => c.ComputerId) as DataServiceQuery<Computer>;

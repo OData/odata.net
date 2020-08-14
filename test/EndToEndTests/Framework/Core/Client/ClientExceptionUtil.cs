@@ -25,8 +25,7 @@ namespace Microsoft.Test.OData.Framework.Client
         /// <returns>The server error message.</returns>
         public static string ExtractServerErrorMessage(DataServiceQueryException exception)
         {
-            string contentType = exception.Response.Headers[HttpHeaders.ContentType];
-
+            string contentType = exception.Response.Headers[HttpHeaders.ContentType]?.Replace(" ", string.Empty);
             var innerException = exception.InnerException as DataServiceClientException;
             ExceptionUtilities.Assert(innerException != null, "No inner exception on query exception");
 

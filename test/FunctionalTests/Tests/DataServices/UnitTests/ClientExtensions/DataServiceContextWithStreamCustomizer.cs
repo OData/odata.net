@@ -22,7 +22,7 @@ namespace AstoriaUnitTests.ClientExtensions
             };
         }
 
-        private class TestHttpRequestMessage : HttpWebRequestMessage
+        private class TestHttpRequestMessage : HttpClientRequestMessage
         {
             private readonly Func<Stream, Stream> requestStreamInterceptor;
             private readonly Func<Stream, Stream> responseStreamInterceptor;

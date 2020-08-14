@@ -73,7 +73,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [Fact]
         public void RequestMessageShouldBeCaseInsensitiveForAccept()
         {
-            TestRequestHeaderRoundTrip("accept", "ACCEPT", "some value");
+            TestRequestHeaderRoundTrip("accept", "ACCEPT", "some/value");
         }
 
         [Fact]
@@ -154,7 +154,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             requestMessage.GetHeader(headerToGet).Should().Be(value);
         }
 
-        private static HttpWebRequestMessage CreateRequestMessage()
+        private static HttpClientRequestMessage CreateRequestMessage()
         {
             return new ExtendedHttpWebRequestMessage(new DataServiceClientRequestMessageArgs("GET", new Uri("http://temp.org"), false, false, new Dictionary<string, string>()));
         }
@@ -184,7 +184,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             return char.IsUpper(c) ? char.ToLower(c) : char.ToUpper(c);
         }
 
-        public class ExtendedHttpWebRequestMessage : HttpWebRequestMessage
+        public class ExtendedHttpWebRequestMessage : HttpClientRequestMessage
         {
             public ExtendedHttpWebRequestMessage(DataServiceClientRequestMessageArgs args) : base(args)
             {

@@ -392,7 +392,7 @@ namespace Microsoft.OData.Client.Tests.Tracking
         public DataServiceStreamLink VideoThumbnail { get; set; }
     }
 
-    public class CustomizedRequestMessage : HttpWebRequestMessage
+    public class CustomizedRequestMessage : HttpClientRequestMessage
     {
         public string Response { get; set; }
         public Dictionary<string, string> CustomizedHeaders { get; set; }

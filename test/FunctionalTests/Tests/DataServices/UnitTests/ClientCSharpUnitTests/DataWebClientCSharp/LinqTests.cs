@@ -8842,7 +8842,7 @@ namespace AstoriaUnitTests.Tests
 
     }
 
-    class CustomReqMsg : HttpWebRequestMessage
+    class CustomReqMsg : HttpClientRequestMessage
     {
         public CustomReqMsg(DataServiceClientRequestMessageArgs args) : base(args) { }
 

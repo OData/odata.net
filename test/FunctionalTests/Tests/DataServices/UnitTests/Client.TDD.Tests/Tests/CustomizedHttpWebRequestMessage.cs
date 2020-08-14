@@ -13,9 +13,9 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
     using System.Threading.Tasks;
     using Microsoft.OData;
     using Microsoft.OData.Client;
-   
 
-    public class CustomizedHttpWebRequestMessage : HttpWebRequestMessage
+
+    public class CustomizedHttpWebRequestMessage : HttpClientRequestMessage
     {
         public string Response { get; set; }
         public Dictionary<string, string> CutomizedHeaders { get; set; }

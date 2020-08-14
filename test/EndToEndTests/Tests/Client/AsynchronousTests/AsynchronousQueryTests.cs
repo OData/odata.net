@@ -306,9 +306,9 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             ServicePoint servicePoint = null;
             context.SendingRequest2 += ((sender, args) =>
             {
-                if (args.RequestMessage is HttpWebRequestMessage)
+                if (args.RequestMessage is HttpClientRequestMessage)
                 {
-                    servicePoint = ((HttpWebRequestMessage)args.RequestMessage).HttpWebRequest.ServicePoint;
+                   
                 }
             });
 

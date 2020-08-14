@@ -1295,8 +1295,8 @@ namespace AstoriaUnitTests
                 Assert.IsNotNull(e.RequestMessage, "requestMessage is not null");
                 Assert.IsFalse(e.IsBatchPart, "Since SaveChanges is called with no parameters, IsBatchPart should always be false");
 
-                HttpWebRequestMessage requestMessage = (HttpWebRequestMessage)e.RequestMessage;
-                Assert.IsNotNull(requestMessage.HttpWebRequest, "HttpWebRequest cannot be null");
+                HttpClientRequestMessage requestMessage = (HttpClientRequestMessage)e.RequestMessage;
+                Assert.IsNotNull(requestMessage.HttpRequestMessage, "HttpRequestMessage cannot be null");
 
                 EntityDescriptor entityDescriptor = e.Descriptor as EntityDescriptor;
                 if (entityDescriptor != null)
@@ -1306,13 +1306,13 @@ namespace AstoriaUnitTests
                     {
                         e.RequestMessage.SetHeader("CustomRequestHeader_ItemType", typeof(Photo).FullName);
                         e.RequestMessage.SetHeader("Slug", photoMLE.ID.ToString());
-                        Assert.AreEqual(requestMessage.HttpWebRequest.Headers["CustomRequestHeader_ItemType"], typeof(Photo).FullName, "HttpWebRequest should have CustomRequestHeader_ItemType");
-                        Assert.AreEqual(requestMessage.HttpWebRequest.Headers["Slug"], photoMLE.ID.ToString(), "HttpWebRequest should have Slug header");
+                        Assert.AreEqual(requestMessage.HttpRequestMessage.Headers.GetValues("CustomRequestHeader_ItemType"), typeof(Photo).FullName, "HttpWebRequest should have CustomRequestHeader_ItemType");
+                        Assert.AreEqual(requestMessage.HttpRequestMessage.Headers.GetValues("Slug"), photoMLE.ID.ToString(), "HttpWebRequest should have Slug header");
                     }
                     else if (entityDescriptor.Entity is Item)
                     {
                         e.RequestMessage.SetHeader("CustomRequestHeader_ItemType", typeof(Item).FullName);
-                        Assert.AreEqual(requestMessage.HttpWebRequest.Headers["CustomRequestHeader_ItemType"], typeof(Item).FullName, "HttpWebRequest should have CustomRequestHeader_ItemType");
+                        Assert.AreEqual(requestMessage.HttpRequestMessage.Headers.GetValues("CustomRequestHeader_ItemType"), typeof(Item).FullName, "HttpWebRequest should have CustomRequestHeader_ItemType");
                     }
                 }
 
@@ -2737,8 +2737,8 @@ namespace AstoriaUnitTests
                         ctx.SendingRequest2 += new EventHandler<SendingRequest2EventArgs>((sender, e) =>
                         {
                             Assert.AreEqual(e.RequestMessage.Method, "GET", "Method must be GET");
-                            Assert.IsTrue(e.RequestMessage != null && e.RequestMessage is HttpWebRequestMessage, "RequestMessage must be ODataRequestMessage");
-                            Assert.IsNotNull(((HttpWebRequestMessage)e.RequestMessage).HttpWebRequest != null, "HttpWebRequest should not be null");
+                            Assert.IsTrue(e.RequestMessage != null && e.RequestMessage is HttpClientRequestMessage, "RequestMessage must be ODataRequestMessage");
+                            Assert.IsNotNull(((HttpClientRequestMessage)e.RequestMessage).HttpRequestMessage != null, "HttpWebRequest should not be null");
                             Assert.IsFalse(e.IsBatchPart, "Since SaveChanges is called with no parameters, IsBatchPart should always be false");
 
                             Assert.AreEqual(testCase.QueryString, baseUri.MakeRelativeUri(e.RequestMessage.Url).OriginalString);
