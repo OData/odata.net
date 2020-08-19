@@ -1198,33 +1198,6 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
         }
 
         /// <summary>
-        /// When DataServiceContext.KeyComparisonGeneratesFilterQuery=true, An expression that compares only the key property, will generate a $filter query option.
-        /// </summary>
-        [Fact]
-        public void Linq_Where_Generates_Filter_When_KeyComparisonGeneratesFilterQuery_Is_True()
-        {
-            var context = this.CreateWrappedContext<DefaultContainer>().Context;
-            context.KeyComparisonGeneratesFilterQuery = true;
-            var query = context.Customer.Where(c => c.CustomerId == -10);
-            var uri = query.ToString();
-            Assert.Equal("$filter=CustomerId eq -10", uri);
-        }
-
-        /// <summary>
-        /// When DataServiceContext.KeyComparisonGeneratesFilterQuery=false, An expression that compares only the key property, should create a ByKey Uri.
-        /// </summary>
-        [Fact]
-        public void Linq_Where_Generates_ByKey_When_KeyComparisonGeneratesFilterQuery_Is_False()
-        {
-            var context = this.CreateWrappedContext<DefaultContainer>().Context;
-            // By default context.KeyComparisonGeneratesFilterQuery = false; 
-            // So we don't need to set it
-            var query = context.Customer.Where(c => c.CustomerId == -10);
-            var uri = query.ToString();
-            Assert.Equal("Customer(-10)", uri);
-        }
-
-        /// <summary>
         /// Custom Data Service Entity
         /// </summary>
         [KeyAttribute("CustomerId")]
