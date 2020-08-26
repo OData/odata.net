@@ -260,6 +260,30 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void ParseFilterWithEnumValuesCompatibleWithString()
+        {         
+            var filterQueryNode = ParseFilter(
+                "ColorFlags has 'Red'",
+                this.userModel,
+                this.entityType,
+                this.entitySet);
+
+            var binaryNode = filterQueryNode
+                .Expression
+                .ShouldBeBinaryOperatorNode(BinaryOperatorKind.Has);
+
+            binaryNode
+                .Left
+                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetColorFlagsProp(this.userModel));
+         
+            binaryNode
+                 .Right
+                 .ShouldBeEnumNode(
+                 this.GetColorFlagsType(this.userModel),
+                 "Red");
+        }
+
+        [Fact]
         public void ParseFilterWithEnumDefinedConbinedValues()
         {
             var filterQueryNode = ParseFilter(

@@ -78,6 +78,14 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             bin.Right.ShouldBeEnumNode(enumtypeRef.EnumDefinition(), "2");
         }
 
+        private static void VerifyEnumVsStringFilterExpressionforHas(FilterClause filter)
+        {
+            var enumtypeRef = new EdmEnumTypeReference(UriEdmHelpers.FindEnumTypeFromModel(HardCodedTestModel.TestModel, "Fully.Qualified.Namespace.ColorPattern"), true);
+            var bin = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Has);
+            bin.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPet2PetColorPatternProperty());
+            bin.Right.ShouldBeStringCompatibleEnumNode(enumtypeRef.EnumDefinition(), "2");
+        }
+
         private static void VerifyEnumVsStringFilterExpressionReverse(FilterClause filter)
         {
             var enumtypeRef = new EdmEnumTypeReference(UriEdmHelpers.FindEnumTypeFromModel(HardCodedTestModel.TestModel, "Fully.Qualified.Namespace.ColorPattern"), true);
@@ -89,12 +97,13 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
         [Fact]
         public void TestEnumAsStringHas()
         {
-            this.TestStringAsEnum(
-               "MoonSet?$filter=color has TestNS.Color'Blue'",
-               "MoonSet?$filter=color has 'Blue'",
-               parser => parser.ParseFilter(),
-               clause => clause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Has),
-               Strings.MetadataBinder_IncompatibleOperandsError("TestNS.Color", "Edm.String", "Has"));
+            Uri unqualifiedEnumUri = new Uri("http://host/Pet2Set?$filter=PetColorPattern has 'Blue'");
+
+            var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, unqualifiedEnumUri)
+            {
+                Resolver = new StringAsEnumResolver()
+            };
+            VerifyEnumVsStringFilterExpressionforHas(uriParser.ParseFilter());
         }
 
         [Fact]
