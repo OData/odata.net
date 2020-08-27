@@ -260,7 +260,7 @@ namespace Microsoft.OData.UriParser
                 return true;
             }
 
-            if (operatorKind == BinaryOperatorKind.NotEqual || operatorKind == BinaryOperatorKind.Equal)
+            if (operatorKind == BinaryOperatorKind.NotEqual || operatorKind == BinaryOperatorKind.Equal || operatorKind == BinaryOperatorKind.Has)
             {
                 if (TryHandleEqualityOperatorForEntityOrComplexTypes(ref left, ref right))
                 {

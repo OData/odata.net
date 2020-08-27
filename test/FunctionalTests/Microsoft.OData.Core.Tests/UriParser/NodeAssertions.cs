@@ -359,6 +359,17 @@ namespace Microsoft.OData.Tests.UriParser
             return enumNode;
         }
 
+        public static ConstantNode ShouldBeStringCompatibleEnumNode(this QueryNode node, IEdmEnumType enumType, string value)
+        {
+            Assert.NotNull(node);
+            var enumNode = Assert.IsType<ConstantNode>(node);
+
+            Assert.Equal(enumType.FullTypeName(), enumNode.TypeReference.FullName());
+            Assert.Equal(value, ((ODataEnumValue)enumNode.Value).Value);
+      
+            return enumNode;
+        }
+
         public static BinaryOperatorNode ShouldBeBinaryOperatorNode(this QueryNode node, BinaryOperatorKind expectedOperatorKind)
         {
             Assert.NotNull(node);
