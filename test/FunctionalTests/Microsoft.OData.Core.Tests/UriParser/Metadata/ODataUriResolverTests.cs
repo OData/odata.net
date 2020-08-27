@@ -78,14 +78,6 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             bin.Right.ShouldBeEnumNode(enumtypeRef.EnumDefinition(), "2");
         }
 
-        private static void VerifyEnumVsStringFilterExpressionforHas(FilterClause filter)
-        {
-            var enumtypeRef = new EdmEnumTypeReference(UriEdmHelpers.FindEnumTypeFromModel(HardCodedTestModel.TestModel, "Fully.Qualified.Namespace.ColorPattern"), true);
-            var bin = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Has);
-            bin.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPet2PetColorPatternProperty());
-            bin.Right.ShouldBeStringCompatibleEnumNode(enumtypeRef.EnumDefinition(), "2");
-        }
-
         private static void VerifyEnumVsStringFilterExpressionReverse(FilterClause filter)
         {
             var enumtypeRef = new EdmEnumTypeReference(UriEdmHelpers.FindEnumTypeFromModel(HardCodedTestModel.TestModel, "Fully.Qualified.Namespace.ColorPattern"), true);
@@ -103,7 +95,13 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             {
                 Resolver = new StringAsEnumResolver()
             };
-            VerifyEnumVsStringFilterExpressionforHas(uriParser.ParseFilter());
+          
+            var filter = uriParser.ParseFilter();
+
+            var enumtypeRef = new EdmEnumTypeReference(UriEdmHelpers.FindEnumTypeFromModel(HardCodedTestModel.TestModel, "Fully.Qualified.Namespace.ColorPattern"), true);
+            var bin = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Has);
+            bin.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPet2PetColorPatternProperty());
+            bin.Right.ShouldBeStringCompatibleEnumNode(enumtypeRef.EnumDefinition(), "2");
         }
 
         [Fact]
