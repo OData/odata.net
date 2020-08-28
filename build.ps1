@@ -55,12 +55,12 @@ $env:ENLISTMENT_ROOT = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $ENLISTMENT_ROOT = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $LOGDIR = $ENLISTMENT_ROOT + "\bin"
 
-# Default to use Visual Studio 2015
-$VS14MSBUILD=$PROGRAMFILESX86 + "\MSBuild\14.0\Bin\MSBuild.exe"
-$VSTEST = $PROGRAMFILESX86 + "\Microsoft Visual Studio 14.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe"
+# Default to use Visual Studio 2019 C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin
+$VS14MSBUILD=$PROGRAMFILESX86 + "\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\MSBuild.exe"
+$VSTEST = $PROGRAMFILESX86 + "\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe"
 $FXCOPDIR = $PROGRAMFILESX86 + "\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\FxCop"
-$SN = $PROGRAMFILESX86 + "\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools\sn.exe"
-$SNx64 = $PROGRAMFILESX86 + "\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools\x64\sn.exe"
+$SN = $PROGRAMFILESX86 + "\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.6.1 Tools\sn.exe"
+$SNx64 = $PROGRAMFILESX86 + "\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.6.1 Tools\x64\sn.exe"
 
 # Use Visual Studio 2017 compiler for .NET Core and .NET Standard. Because VS2017 has different paths for different
 # versions, we have to check for each version. Meanwhile, the dotnet CLI is required to run the .NET Core unit tests in this script.
@@ -88,14 +88,14 @@ if ([System.IO.File]::Exists($DOTNETDIR + "dotnet.exe"))
 $FXCOP = $FXCOPDIR + "\FxCopCmd.exe"
 $BUILDLOG = $LOGDIR + "\msbuild.log"
 $TESTLOG = $LOGDIR + "\mstest.log"
-$TESTDIR = $ENLISTMENT_ROOT + "\bin\AnyCPU\$Configuration\Test\Desktop"
-$NETCORETESTDIR = $ENLISTMENT_ROOT + "\bin\AnyCPU\$Configuration\Test\.NETPortable\netcoreapp1.0"
-$PRODUCTDIR = $ENLISTMENT_ROOT + "\bin\AnyCPU\$Configuration\Product\Desktop"
+$TESTDIR = $ENLISTMENT_ROOT + "\bin\AnyCPU\$Configuration\Test\Desktop\net452"
+$TESTDIRE2E = $ENLISTMENT_ROOT + "\bin\AnyCPU\$Configuration\Test\Desktop\net45"
+$NETCORETESTDIR = $ENLISTMENT_ROOT + "\bin\AnyCPU\$Configuration\Test\netcoreapp3.1"
+$PRODUCTDIR = $ENLISTMENT_ROOT + "\bin\AnyCPU\$Configuration\Product\net45"
 $NUGETEXE = $ENLISTMENT_ROOT + "\sln\.nuget\NuGet.exe"
 $NUGETPACK = $ENLISTMENT_ROOT + "\sln\packages"
 $XUNITADAPTER = "/TestAdapterPath:" + $NUGETPACK + "\xunit.runner.visualstudio.2.1.0\build\_common"
 
-$NugetRestoreSolutions = "OData.NetStandard.sln"
 
 $ProductDlls = "Microsoft.OData.Client.dll",
     "Microsoft.OData.Core.dll",
@@ -116,33 +116,51 @@ $TestSupportDlls = "Microsoft.OData.Service.Design.T4.dll",
     "Microsoft.OData.Service.dll",
     "Microsoft.OData.Service.Test.Common.dll"
 
-$NightlyTestDlls = "Microsoft.Test.Data.Services.DDBasics.dll",
-    "Microsoft.OData.Client.Design.T4.UnitTests.dll",
-    "AstoriaUnitTests.TDDUnitTests.dll",
-    "EdmLibTests.dll",
-    "Microsoft.OData.Client.TDDUnitTests.dll",
-    "Microsoft.Test.Taupo.OData.Common.Tests.dll",
-    "Microsoft.Test.Taupo.OData.Query.Tests.dll",
-    "Microsoft.Test.Taupo.OData.Reader.Tests.dll",
-    "Microsoft.Test.Taupo.OData.Writer.Tests.dll",
-    "Microsoft.Test.Taupo.OData.Scenario.Tests.dll",
-    "AstoriaUnitTests.ClientCSharp.dll",
-    "Microsoft.Data.NamedStream.UnitTests.dll",
-    "Microsoft.Data.ServerUnitTests1.UnitTests.dll",
-    "Microsoft.Data.ServerUnitTests2.UnitTests.dll",
-    "RegressionUnitTests.dll",
-    "Microsoft.Test.OData.PluggableFormat.Tests.dll",
-    "Microsoft.Data.MetadataObjectModel.UnitTests.dll",
-    "AstoriaUnitTests.dll",
-    "AstoriaClientUnitTests.dll"
+$NightlyTestDlls = "microsoft.test.data.services.ddbasics.dll",
+       "microsoft.odata.client.design.t4.unittests.dll",
+       "astoriaunittests.tddunittests.dll",
+       "edmlibtests.dll",
+       "microsoft.odata.client.tddunittests.dll",
+       "microsoft.test.taupo.odata.common.tests.dll",
+       "microsoft.test.taupo.odata.query.tests.dll",
+       "microsoft.test.taupo.odata.reader.tests.dll",
+       "microsoft.test.taupo.odata.writer.tests.dll",
+       "microsoft.test.taupo.odata.scenario.tests.dll",
+       "astoriaunittests.clientcsharp.dll",
+       "microsoft.data.namedstream.unittests.dll",
+       "microsoft.data.serverunittests1.unittests.dll",
+       "microsoft.data.serverunittests2.unittests.dll",
+       "regressionunittests.dll",
+       "microsoft.test.odata.pluggableformat.tests.dll",
+       "microsoft.data.metadataobjectmodel.unittests.dll",
+       "astoriaunittests.dll",
+       "astoriaclientunittests.dll"
 
 # .NET Core tests are different and require the dotnet tool. The tool references the .csproj (VS2017) files instead of dlls
-$NetCoreXUnitTestProjs = "\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.NetCore.csproj",
-    "\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.NetCore.csproj",
-    "\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.NetCore.csproj",
-    "\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.NetCore.csproj",
-    "\test\FunctionalTests\Tests\DataServices\UnitTests\Client.TDD.Tests\Microsoft.OData.Client.TDDUnitTests.NetCore.csproj"
-
+$NetCoreXUnitTestProjs = "\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj",
+    "\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj",
+    "\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj",
+    "\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj"
+	
+$NetCoreE2ETestProjs = "\test\FunctionalTests\Tests\DataServices\ddbasics\Microsoft.Test.Data.Services.DDBasics.csproj",
+     "\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj",
+     "\test\FunctionalTests\Tests\DataEdmLib\EdmLibTests.csproj",
+     "\test\FunctionalTests\Tests\DataOData\Tests\OData.Common.Tests\Microsoft.Test.Taupo.OData.Common.Tests.csproj",
+     "\test\FunctionalTests\Tests\DataOData\Tests\OData.Query.Tests\Microsoft.Test.Taupo.OData.Query.Tests.csproj",
+     "\test\FunctionalTests\Tests\DataOData\Tests\OData.Reader.Tests\Microsoft.Test.Taupo.OData.Reader.Tests.csproj",
+     "\test\FunctionalTests\Tests\DataOData\Tests\OData.Writer.Tests\Microsoft.Test.Taupo.OData.Writer.Tests.csproj",
+     "\test\FunctionalTests\Tests\DataOData\Tests\OData.Scenario.Tests\Microsoft.Test.Taupo.OData.Scenario.Tests.csproj",
+     "\test\FunctionalTests\Tests\DataServices\UnitTests\NamedStreamTests\Microsoft.Data.NamedStream.UnitTests.csproj",
+     "\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat.Tests\Microsoft.Test.OData.PluggableFormat.Tests.csproj",
+     "\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests1\Microsoft.Data.ServerUnitTests1.UnitTests.csproj",     
+     "\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests2\Microsoft.Data.ServerUnitTests2.UnitTests.csproj",  
+     "\test\FunctionalTests\Tests\DataServices\UnitTests\RegressionUnitTests\Microsoft.Data.Web.RegressionUnitTests.csproj",
+     "\test\FunctionalTests\Tests\DataServices\UnitTests\MetadataObjectModelTests\Microsoft.Data.MetadataObjectModel.UnitTests.csproj",
+     "\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj",
+     "\test\FunctionalTests\Tests\DataServices\UnitTests\ClientCSharpUnitTests\Microsoft.Data.WebClientCSharp.UnitTests.csproj",
+     "\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests\Microsoft.Data.Web.UnitTests.csproj"
+	
+	
 $QuickTestSuite = @()
 $NightlyTestSuite = @()
 ForEach($dll in $XUnitTestDlls)
@@ -153,13 +171,13 @@ ForEach($dll in $XUnitTestDlls)
 
 ForEach($dll in $NightlyTestDlls)
 {
-    $NightlyTestSuite += $TESTDIR + "\" + $dll
+    $NightlyTestSuite += $TESTDIRE2E + "\" + $dll
 }
 
 $E2eTestDlls = @("Microsoft.Test.OData.Tests.Client.dll")
 ForEach ($dll in $E2eTestDlls)
 {
-    $NightlyTestSuite += $TESTDIR + "\" + $dll
+    $NightlyTestSuite += $TESTDIRE2E + "\" + $dll
 }
 
 $FxCopRulesOptions = "/rule:$FxCopDir\Rules\DesignRules.dll",
@@ -340,7 +358,7 @@ Function FailedTestLog ($playlist , $reruncmd , $failedtest1 ,$failedtest2)
     }
     else
     {
-        foreach ($dll in $QuickTestSuite) 
+		foreach ($dll in $QuickTestSuite) 
         {
             $rerun += " $dll" 
         }
@@ -494,8 +512,9 @@ Function RunTest($title, $testdir, $framework)
     if ($framework -eq 'dotnet')
     {
         foreach($testProj in $testdir)
-        {
+        { 	
             Write-Host "Launching $testProj..."
+		
             & $DOTNETTEST "test" ($ENLISTMENT_ROOT + $testProj) "--no-build" >> $TESTLOG
         }
     }
@@ -510,14 +529,6 @@ Function RunTest($title, $testdir, $framework)
     }
 }
 
-Function NugetRestoreSolution
-{
-    Write-Host '**********Pull NuGet Packages*********'
-    foreach($solution in $NugetRestoreSolutions)
-    {
-        & $NUGETEXE "restore" ($ENLISTMENT_ROOT + "\sln\" + $solution)
-    }
-}
 
 Function BuildProcess
 {
@@ -529,27 +540,15 @@ Function BuildProcess
         rm $BUILDLOG
     }
 
-    RunBuild ('OData.Net45.sln')
+    RunBuild ('OData.sln')
 
     if ($TestType -ne 'Quick')
     {
-        # OData.Tests.E2E.sln contains the product code for Net45 framework and a comprehensive list of test projects
-        RunBuild ('OData.Tests.E2E.sln')
-        RunBuild ('OData.Net35.sln')
+        # OData.E2E.sln contains the product code for Net45 framework and a comprehensive list of test projects
+        RunBuild ('OData.E2E.sln')
+        
         # Solutions that contain .NET Core projects require VS2017 for full support. VS2015 supports only .NET Standard.
-        if($VS15MSBUILD)
-        {
-            Write-Host "Found VS2017 version: $VS15MSBUILD"
-            RunBuild ('OData.Tests.E2E.NetCore.VS2017.sln') -vsToolVersion '15.0'
-            RunBuild ('OData.CodeGen.sln') -vsToolVersion '15.0'
-        }
-        else
-        {
-            Write-Host ('Warning! Skipping build for .NET Core tests because no versions of VS2017 found. ' + `
-            'Building only product in .NET Standard.') -ForegroundColor $Warning
-            RunBuild ('OData.NetStandard.sln')
-        }
-        RunBuild ('OData.Tests.WindowsApps.sln')
+        
     }
 
     Write-Host "Build Done" -ForegroundColor $Success
@@ -567,11 +566,13 @@ Function TestProcess
     cd $TESTDIR
     if ($TestType -eq 'Nightly')
     {
-        RunTest -title 'NightlyTests' -testdir $NightlyTestSuite
+        RunTest -title 'NetCoreUnitTests' -testdir $NetCoreXUnitTestProjs -framework 'dotnet'
+		RunTest -title 'NetCoreE2ETests' -testdir $NetCoreE2ETestProjs -framework 'dotnet'
     }
     elseif ($TestType -eq 'Quick')
-    {
-        RunTest -title 'XUnitTests' -testdir $QuickTestSuite
+    {	
+		Write-Output "==Running Quick Test =="
+        RunTest -title 'NetCoreUnitTests' -testdir $NetCoreXUnitTestProjs -framework 'dotnet'
     }
     else
     {
@@ -582,7 +583,9 @@ Function TestProcess
 
     if ($DOTNETTEST)
     {
-        RunTest -title 'NetCoreTests' -testdir $NetCoreXUnitTestProjs -framework 'dotnet'
+		Write-Output "==Running Quick Test =="
+		RunTest -title 'NetCoreUnitTests' -testdir $NetCoreXUnitTestProjs -framework 'dotnet'
+		RunTest -title 'NetCoreE2ETests' -testdir $NetCoreE2ETestProjs -framework 'dotnet'		
     }
     else
     {
@@ -622,7 +625,6 @@ if (! (Test-Path $LOGDIR))
 if ($TestType -eq 'EnableSkipStrongName')
 {
     CleanBeforeScorch
-    NugetRestoreSolution
     BuildProcess
     SkipStrongName
     Exit
@@ -630,18 +632,15 @@ if ($TestType -eq 'EnableSkipStrongName')
 elseif ($TestType -eq 'DisableSkipStrongName')
 {
     CleanBeforeScorch
-    NugetRestoreSolution
     BuildProcess
     DisableSkipStrongName
     Exit
 }
 
 CleanBeforeScorch
-NugetRestoreSolution
 BuildProcess
 SkipStrongName
 TestProcess
-FxCopProcess
 Cleanup
 
 $buildTime = New-TimeSpan $script:BUILD_START_TIME -end $script:BUILD_END_TIME
