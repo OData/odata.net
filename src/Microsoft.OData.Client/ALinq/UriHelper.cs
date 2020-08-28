@@ -116,6 +116,9 @@ namespace Microsoft.OData.Client
         /// <summary>ge</summary>
         internal const string GE = "ge";
 
+        /// <summary>in</summary>
+        internal const string IN = "in";
+
         /// <summary>add</summary>
         internal const string ADD = "add";
 
