@@ -269,13 +269,12 @@ namespace Microsoft.OData.Client
                     currentPredicates = currentPredicates.Union(inputPredicates).ToList();
                 }
 
-                if (!input.UseFilterAsPredicate)
+                if (!input.UseFilterAsPredicate && !context.KeyComparisonGeneratesFilterQuery)
                 {
                     keyPredicates = ExtractKeyPredicate(input, currentPredicates, model, out nonKeyPredicates);
                 }
 
-                // A key predicate should only be applied if keyComparisonGeneratesFilterQuery=false
-                if (keyPredicates != null && !context.KeyComparisonGeneratesFilterQuery)
+                if (keyPredicates != null)
                 {
                     input.SetKeyPredicate(keyPredicates);
                     input.RemoveFilterExpression();
@@ -288,7 +287,7 @@ namespace Microsoft.OData.Client
                     input.ConvertKeyToFilterExpression();
                 }
 
-                if (keyPredicates == null || context.KeyComparisonGeneratesFilterQuery)
+                if (keyPredicates == null)
                 {
                     input.ConvertKeyToFilterExpression();
                     input.AddFilter(inputPredicates);
