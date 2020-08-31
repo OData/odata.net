@@ -53,7 +53,6 @@ namespace Microsoft.OData.Client.Tests
     [
     
         {
-            ""@odata.type"":""#odata.tests.nested.Level3"",
             ""Id"":""8679ff75-bbdf-4470-bb36-212e9199e9f8""
         }
     ]
