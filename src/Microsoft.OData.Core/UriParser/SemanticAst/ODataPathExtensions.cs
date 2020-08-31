@@ -125,7 +125,7 @@ namespace Microsoft.OData.UriParser
             path.WalkWith(typeHandler);
             typeHandler.FirstPart.WalkWith(keyHandler);
             ODataPath newPath = keyHandler.FirstPart;
-            AppendLastSegment(typeHandler,newPath);
+            AppendLastSegment(typeHandler, newPath);
             return newPath;
         }
 
