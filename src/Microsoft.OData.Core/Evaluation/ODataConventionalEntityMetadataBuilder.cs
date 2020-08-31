@@ -649,17 +649,16 @@ namespace Microsoft.OData.Evaluation
             ODataPathSegment lastSegment = segments[lastIndex];
             while (!(lastSegment is NavigationPropertySegment) && !(lastSegment is OperationSegment))
             {
-                lastSegment = segments[lastIndex--];
+                lastSegment = segments[--lastIndex];
             }
 
-            lastSegment = segments[lastIndex];
             while (lastSegment is TypeSegment)
             {
                 ODataPathSegment previousSegment = segments[lastIndex - 1];
                 IEdmStructuredType owningType = previousSegment.TargetEdmType as IEdmStructuredType;
                 if (owningType != null && owningType.FindProperty(lastSegment.Identifier) != null)
                 {
-                    lastSegment = segments[lastIndex--];
+                    lastSegment = segments[--lastIndex];
                 }
                 else
                 {
