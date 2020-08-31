@@ -44,11 +44,6 @@ namespace Microsoft.OData.Client
         /// </summary>
         private readonly DataServiceContext context;
 
-        /// <summary>
-        /// If true, a Where clause that compares only the key property, will generate a $filter query option.
-        /// </summary>
-        private static bool keyComparisonGeneratesFilterQuery;
-
         /// <summary>Convenience property: model.</summary>
         private ClientEdmModel Model
         {
@@ -62,7 +57,6 @@ namespace Microsoft.OData.Client
         private ResourceBinder(DataServiceContext context)
         {
             this.context = context;
-            keyComparisonGeneratesFilterQuery = context.KeyComparisonGeneratesFilterQuery;
         }
 
         /// <summary>Analyzes and binds the specified expression.</summary>
@@ -163,7 +157,7 @@ namespace Microsoft.OData.Client
         /// <returns>
         /// An equivalent expression to <paramref name="mce"/>, possibly a different one with additional annotations.
         /// </returns>
-        private static Expression AnalyzePredicate(MethodCallExpression mce, ClientEdmModel model)
+        private static Expression AnalyzePredicate(MethodCallExpression mce, ClientEdmModel model, DataServiceContext context)
         {
             Debug.Assert(mce != null, "mce != null -- caller couldn't have know the expression kind otherwise");
             Debug.Assert(mce.Method.Name == "Where", "mce.Method.Name == 'Where' -- otherwise this isn't a predicate");
@@ -281,7 +275,7 @@ namespace Microsoft.OData.Client
                 }
 
                 // A key predicate should only be applied if keyComparisonGeneratesFilterQuery=false
-                if (keyPredicates != null && !keyComparisonGeneratesFilterQuery)
+                if (keyPredicates != null && !context.KeyComparisonGeneratesFilterQuery)
                 {
                     input.SetKeyPredicate(keyPredicates);
                     input.RemoveFilterExpression();
@@ -294,7 +288,7 @@ namespace Microsoft.OData.Client
                     input.ConvertKeyToFilterExpression();
                 }
 
-                if (keyPredicates == null || keyComparisonGeneratesFilterQuery)
+                if (keyPredicates == null || context.KeyComparisonGeneratesFilterQuery)
                 {
                     input.ConvertKeyToFilterExpression();
                     input.AddFilter(inputPredicates);
@@ -1452,7 +1446,7 @@ namespace Microsoft.OData.Client
                     switch (sequenceMethod)
                     {
                         case SequenceMethod.Where:
-                            return AnalyzePredicate(mce, this.Model);
+                            return AnalyzePredicate(mce, this.Model, this.context);
                         case SequenceMethod.Select:
                             return AnalyzeNavigation(mce, this.context);
                         case SequenceMethod.SelectMany:
