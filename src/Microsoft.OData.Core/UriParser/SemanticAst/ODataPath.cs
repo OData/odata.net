@@ -91,6 +91,7 @@ namespace Microsoft.OData.UriParser
             get { return this.segments; }
         }
 
+        /// <summary>
         /// Get the segments enumerator
         /// </summary>
         /// <returns>The segments enumerator</returns>
