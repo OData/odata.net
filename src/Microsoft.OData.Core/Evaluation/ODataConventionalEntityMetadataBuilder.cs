@@ -657,17 +657,17 @@ namespace Microsoft.OData.Evaluation
             segments = segments.GetRange(0, segmentsCount);
 
             // Remove the unnecessary type cast segment.
-            ODataPathSegment nextToLastSegment = segments.Last();
             int lastIndex = segments.Count - 1;
+            ODataPathSegment nextToLastSegment = segments[lastIndex];
             while (nextToLastSegment is TypeSegment)
             {
-                ODataPathSegment previousSegment = segments[segments.Count - 2];
+                ODataPathSegment previousSegment = segments[lastIndex - 1];
                 IEdmStructuredType owningType = previousSegment.TargetEdmType as IEdmStructuredType;
                 if (owningType != null && owningType.FindProperty(lastSegment.Identifier) != null)
                 {
                     segments.RemoveAt(lastIndex);
-                    nextToLastSegment = segments.Last();
-                    lastIndex = segments.Count - 1;
+                    --lastIndex;
+                    nextToLastSegment = segments[lastIndex];
                 }
                 else
                 {

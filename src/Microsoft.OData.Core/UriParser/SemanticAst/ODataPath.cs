@@ -27,7 +27,6 @@ namespace Microsoft.OData.UriParser
         /// </summary>	
         private readonly List<ODataPathSegment> segments;
 
-
         /// <summary>
         /// Creates a new instance of <see cref="ODataPath"/> containing the given segments.
         /// </summary>
@@ -35,7 +34,8 @@ namespace Microsoft.OData.UriParser
         /// <exception cref="ArgumentNullException">Throws if input segments is null.</exception>
         public ODataPath(IEnumerable<ODataPathSegment> segments)
         {
-            this.segments= new List<ODataPathSegment>(segments);
+            ExceptionUtils.CheckArgumentNotNull(segments, "segments");
+            this.segments = new List<ODataPathSegment>(segments);
             if (this.segments.Contains(null))
             {
                 throw Error.ArgumentNull(nameof(segments));
@@ -102,7 +102,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>The segments enumerator.</returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.segments.GetEnumerator();
+            return this.GetEnumerator();
         }
 
         /// <summary>
@@ -124,8 +124,9 @@ namespace Microsoft.OData.UriParser
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "We would rather ship the PathSegmentHandler so that its more extensible later")]
         public void WalkWith(PathSegmentHandler handler)
         {
-            foreach (ODataPathSegment segment in this)
+            for (var index = 0; index < this.segments.Count; index++)
             {
+                ODataPathSegment segment = this.segments[index];
                 segment.HandleWith(handler);
             }
         }
