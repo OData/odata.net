@@ -16,13 +16,11 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
-    using Microsoft.OData.Client.ALinq.UriParser;
-    using Microsoft.OData.Client.Metadata;
     using Microsoft.OData;
-    using Microsoft.OData.UriParser;
+    using Microsoft.OData.Client.Metadata;
     using Microsoft.OData.Edm;
-    using PathSegmentToken = Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken;
     using NonSystemToken = Microsoft.OData.Client.ALinq.UriParser.NonSystemToken;
+    using PathSegmentToken = Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken;
     #endregion Namespaces
 
     /// <summary>
@@ -159,7 +157,7 @@ namespace Microsoft.OData.Client
         /// <returns>
         /// An equivalent expression to <paramref name="mce"/>, possibly a different one with additional annotations.
         /// </returns>
-        private static Expression AnalyzePredicate(MethodCallExpression mce, ClientEdmModel model)
+        private static Expression AnalyzePredicate(MethodCallExpression mce, ClientEdmModel model, DataServiceContext context)
         {
             Debug.Assert(mce != null, "mce != null -- caller couldn't have know the expression kind otherwise");
             Debug.Assert(mce.Method.Name == "Where", "mce.Method.Name == 'Where' -- otherwise this isn't a predicate");
@@ -271,7 +269,7 @@ namespace Microsoft.OData.Client
                     currentPredicates = currentPredicates.Union(inputPredicates).ToList();
                 }
 
-                if (!input.UseFilterAsPredicate)
+                if (!input.UseFilterAsPredicate && !context.KeyComparisonGeneratesFilterQuery)
                 {
                     keyPredicates = ExtractKeyPredicate(input, currentPredicates, model, out nonKeyPredicates);
                 }
@@ -1447,7 +1445,7 @@ namespace Microsoft.OData.Client
                     switch (sequenceMethod)
                     {
                         case SequenceMethod.Where:
-                            return AnalyzePredicate(mce, this.Model);
+                            return AnalyzePredicate(mce, this.Model, this.context);
                         case SequenceMethod.Select:
                             return AnalyzeNavigation(mce, this.context);
                         case SequenceMethod.SelectMany:

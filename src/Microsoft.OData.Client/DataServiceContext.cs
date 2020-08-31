@@ -142,6 +142,9 @@ namespace Microsoft.OData.Client
         /// <summary>The HTTP stack to use for requests.</summary>
         private HttpStack httpStack;
 
+        /// <summary>Whether a Where clause that compares only the key property, will generate a $filter query option.</summary>
+        private bool keyComparisonGeneratesFilterQuery;
+
         #region Test hooks for header and payload verification
 
 #pragma warning disable 0169, 0649
@@ -253,6 +256,7 @@ namespace Microsoft.OData.Client
             this.httpStack = HttpStack.Auto;
             this.UsingDataServiceCollection = false;
             this.UsePostTunneling = false;
+            this.keyComparisonGeneratesFilterQuery = false;
 
             // Need to use the same defaults when running sl in portable lib as when running in SL normally.
 #if PORTABLELIB
@@ -658,6 +662,14 @@ namespace Microsoft.OData.Client
         /// </summary>
         public virtual bool EnableWritingODataAnnotationWithoutPrefix { get; set; }
 
+        /// <summary>
+        /// Indicates whether a Where clause that just compares the key property generates a $filter query option.
+        /// </summary>
+        public virtual bool KeyComparisonGeneratesFilterQuery
+        {
+            get { return this.keyComparisonGeneratesFilterQuery; }
+            set { this.keyComparisonGeneratesFilterQuery = value; }
+        }
         /// <summary>Gets or sets whether to support undeclared properties.</summary>
         /// <returns>UndeclaredPropertyBehavior.</returns>
         internal UndeclaredPropertyBehavior UndeclaredPropertyBehavior
