@@ -42,7 +42,6 @@ namespace Microsoft.OData.UriParser
             }
         }
 
-
         /// <summary>
         /// Creates a new instance of <see cref="ODataPath"/> containing the given segments.
         /// </summary>
@@ -128,7 +127,8 @@ namespace Microsoft.OData.UriParser
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "We would rather ship the PathSegmentHandler so that its more extensible later")]
         public void WalkWith(PathSegmentHandler handler)
         {
-            for (var index = 0; index < this.segments.Count; index++)
+            int segmentsCount = this.segments.Count;
+            for (var index = 0; index < segmentsCount; index++)
             {
                 ODataPathSegment segment = this.segments[index];
                 segment.HandleWith(handler);
@@ -164,10 +164,10 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Adds a range of segements to the current path
+        /// Adds a range of segments to the current path
         /// </summary>
         /// <param name="oDataPath"></param>
-        public void AddRange(ODataPath oDataPath)
+        internal void AddRange(ODataPath oDataPath)
         {
             this.segments.AddRange(oDataPath.segments);
         }

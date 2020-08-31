@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.OData.Client.Tests.Tracking;
-using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
-using Microsoft.OData.Edm.Validation;
 using Xunit;
 
 namespace Microsoft.OData.Client.Tests
