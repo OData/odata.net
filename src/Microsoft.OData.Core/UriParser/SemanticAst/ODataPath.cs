@@ -118,7 +118,7 @@ namespace Microsoft.OData.UriParser
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "We would rather ship the PathSegmentTranslator so that its more extensible later")]
         public IEnumerable<T> WalkWith<T>(PathSegmentTranslator<T> translator)
         {
-            return this.Select(segment => segment.TranslateWith(translator));
+            return this.segments.Select(segment => segment.TranslateWith(translator));
         }
 
         /// <summary>

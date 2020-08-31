@@ -666,7 +666,7 @@ namespace Microsoft.OData.Evaluation
                 if (owningType != null && owningType.FindProperty(lastSegment.Identifier) != null)
                 {
                     segments.RemoveAt(lastIndex);
-                    --lastIndex;
+                    lastIndex--;
                     lastSegment = segments[lastIndex];
                 }
                 else
