@@ -22,9 +22,9 @@ namespace Microsoft.OData.UriParser
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Justification = "ODataPathCollection just doesn't sound right")]
     public class ODataPath : IEnumerable<ODataPathSegment>
     {
-        /// <summary>	
-        /// The segments that make up this path.	
-        /// </summary>	
+        /// <summary>
+        /// The segments that make up this path.
+        /// </summary>
         private readonly List<ODataPathSegment> segments;
 
         /// <summary>
@@ -75,13 +75,14 @@ namespace Microsoft.OData.UriParser
             }
         }
 
-        /// <summary>	
-        /// Get the number of segments in this path.	
-        /// </summary>	
+        /// <summary>
+        /// Get the number of segments in this path.
+        /// </summary>
         public int Count
         {
             get { return this.segments.Count; }
         }
+
         /// <summary>
         /// Get the List of ODataPathSegments.
         /// </summary>
@@ -90,7 +91,9 @@ namespace Microsoft.OData.UriParser
             get { return this.segments; }
         }
 
-
+        /// Get the segments enumerator
+        /// </summary>
+        /// <returns>The segments enumerator</returns>
         public IEnumerator<ODataPathSegment> GetEnumerator()
         {
             return this.segments.GetEnumerator();

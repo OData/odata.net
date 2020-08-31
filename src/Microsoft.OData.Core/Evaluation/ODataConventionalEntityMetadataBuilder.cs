@@ -645,21 +645,21 @@ namespace Microsoft.OData.Evaluation
         {
             ODataPath path = odataUri.Path;
             List<ODataPathSegment> segments = path.ToList();
-            int segmentsCount = segments.Count - 1;
+            int lastIndex = segments.Count - 1;
             ODataPathSegment lastSegment = segments.Last();
             while (!(lastSegment is NavigationPropertySegment) && !(lastSegment is OperationSegment))
             {
-                segmentsCount--;
-                lastSegment = segments[segmentsCount];
+                lastIndex--;
+                lastSegment = segments[lastIndex];
             }
 
             // also removed the last navigation property segment
-            segments = segments.GetRange(0, segmentsCount);
+            segments = segments.GetRange(0, lastIndex);
 
             // Remove the unnecessary type cast segment.
-            int lastIndex = segments.Count - 1;
-            ODataPathSegment nextToLastSegment = segments[lastIndex];
-            while (nextToLastSegment is TypeSegment)
+            lastIndex = segments.Count - 1;
+            lastSegment = segments[lastIndex];
+            while (lastSegment is TypeSegment)
             {
                 ODataPathSegment previousSegment = segments[lastIndex - 1];
                 IEdmStructuredType owningType = previousSegment.TargetEdmType as IEdmStructuredType;
@@ -667,7 +667,7 @@ namespace Microsoft.OData.Evaluation
                 {
                     segments.RemoveAt(lastIndex);
                     --lastIndex;
-                    nextToLastSegment = segments[lastIndex];
+                    lastSegment = segments[lastIndex];
                 }
                 else
                 {
