@@ -25,7 +25,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// The segments that make up this path.
         /// </summary>
-        private readonly IList<ODataPathSegment> segments;
+        private readonly List<ODataPathSegment> segments;
 
         /// <summary>
         /// Creates a new instance of <see cref="ODataPath"/> containing the given segments.
@@ -35,8 +35,8 @@ namespace Microsoft.OData.UriParser
         public ODataPath(IEnumerable<ODataPathSegment> segments)
         {
             ExceptionUtils.CheckArgumentNotNull(segments, "segments");
-            this.segments = segments.ToList();
-            if (this.segments.Any(s => s == null))
+            this.segments = new List<ODataPathSegment>(segments);
+            if (this.segments.Contains(null))
             {
                 throw Error.ArgumentNull(nameof(segments));
             }
@@ -59,7 +59,7 @@ namespace Microsoft.OData.UriParser
         {
             get
             {
-                return this.segments.Count == 0 ? null : this.segments[0];
+                return this.segments.FirstOrDefault();
             }
         }
 
@@ -70,7 +70,7 @@ namespace Microsoft.OData.UriParser
         {
             get
             {
-                return this.segments.Count == 0 ? null : this.segments[this.segments.Count - 1];
+                return this.segments.LastOrDefault();
             }
         }
 
@@ -127,8 +127,10 @@ namespace Microsoft.OData.UriParser
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters", Justification = "We would rather ship the PathSegmentHandler so that its more extensible later")]
         public void WalkWith(PathSegmentHandler handler)
         {
-            foreach (ODataPathSegment segment in this.segments)
+            int segmentsCount = this.segments.Count;
+            for (var index = 0; index < segmentsCount; index++)
             {
+                ODataPathSegment segment = this.segments[index];
                 segment.HandleWith(handler);
             }
         }
@@ -159,6 +161,15 @@ namespace Microsoft.OData.UriParser
         {
             ExceptionUtils.CheckArgumentNotNull(newSegment, "newSegment");
             this.segments.Add(newSegment);
+        }
+
+        /// <summary>
+        /// Adds a range of segments to the current path
+        /// </summary>
+        /// <param name="oDataPath"></param>
+        internal void AddRange(ODataPath oDataPath)
+        {
+            this.segments.AddRange(oDataPath.segments);
         }
     }
 }

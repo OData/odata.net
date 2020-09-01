@@ -101,12 +101,14 @@ namespace Microsoft.OData.UriParser
             KeySegment keySegment = new KeySegment(keys, edmType, navigationSource);
             ODataPath newPath = handler.FirstPart;
             newPath.Add(keySegment);
-            foreach (var segment in handler.LastPart)
-            {
-                newPath.Add(segment);
-            }
-
+            AppendLastSegment(handler, newPath);
+            
             return newPath;
+        }
+
+        private static void AppendLastSegment(SplitEndingSegmentOfTypeHandler<TypeSegment> handler, ODataPath newPath)
+        {
+           newPath.AddRange(handler.LastPart);
         }
 
         /// <summary>
@@ -123,11 +125,7 @@ namespace Microsoft.OData.UriParser
             path.WalkWith(typeHandler);
             typeHandler.FirstPart.WalkWith(keyHandler);
             ODataPath newPath = keyHandler.FirstPart;
-            foreach (var segment in typeHandler.LastPart)
-            {
-                newPath.Add(segment);
-            }
-
+            AppendLastSegment(typeHandler, newPath);
             return newPath;
         }
 
