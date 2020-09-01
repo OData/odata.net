@@ -2148,11 +2148,25 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "A null value was found for a collection of type '{0}[Nullable=True]. Collection-valued properties with Nullable=True can contain null values, but collection-valued properties cannot themselves be null."
+        /// </summary>
+        internal static string ReaderValidationUtils_NullValueForNullableType(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ReaderValidationUtils_NullValueForNullableType, p0);
+        }
+
+        /// <summary>
         /// A string like "A null value was found for the property named '{0}', which has the expected type '{1}[Nullable=False]'. The expected type '{1}[Nullable=False]' does not allow null values."
         /// </summary>
         internal static string ReaderValidationUtils_NullNamedValueForNonNullableType(object p0, object p1)
         {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ReaderValidationUtils_NullNamedValueForNonNullableType, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "A null value was found for the property named '{0}', which has the expected type '{1}[Nullable=True]'. The expected type '{1}[Nullable=True]' cannot be null but it can have null values."
+        /// </summary>
+        internal static string ReaderValidationUtils_NullNamedValueForNullableType(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ReaderValidationUtils_NullNamedValueForNullableType, p0, p1);
         }
 
         /// <summary>

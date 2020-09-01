@@ -251,7 +251,9 @@ namespace Microsoft.OData
         internal const string ODataUtils_ModelDoesNotHaveContainer = "ODataUtils_ModelDoesNotHaveContainer";
         internal const string ReaderUtils_EnumerableModified = "ReaderUtils_EnumerableModified";
         internal const string ReaderValidationUtils_NullValueForNonNullableType = "ReaderValidationUtils_NullValueForNonNullableType";
+        internal const string ReaderValidationUtils_NullValueForNullableType = "ReaderValidationUtils_NullValueForNullableType";
         internal const string ReaderValidationUtils_NullNamedValueForNonNullableType = "ReaderValidationUtils_NullNamedValueForNonNullableType";
+        internal const string ReaderValidationUtils_NullNamedValueForNullableType = "ReaderValidationUtils_NullNamedValueForNullableType";
         internal const string ReaderValidationUtils_EntityReferenceLinkMissingUri = "ReaderValidationUtils_EntityReferenceLinkMissingUri";
         internal const string ReaderValidationUtils_ValueWithoutType = "ReaderValidationUtils_ValueWithoutType";
         internal const string ReaderValidationUtils_ResourceWithoutType = "ReaderValidationUtils_ResourceWithoutType";

@@ -1115,7 +1115,11 @@ namespace Microsoft.OData
                 {
                     if (isDynamicProperty != true)
                     {
-                        ThrowNullValueForNonNullableTypeException(expectedValueTypeReference, propertyName);
+                        if (!expectedValueTypeReference.IsNullable)
+                        {
+                            ThrowNullValueForNonNullableTypeException(expectedValueTypeReference, propertyName);
+                        }
+                        ThrowNullValueForNullableTypeException(expectedValueTypeReference, propertyName);
                     }
                 }
                 else if (expectedValueTypeReference.IsODataComplexTypeKind())
@@ -1149,6 +1153,21 @@ namespace Microsoft.OData
             }
 
             throw new ODataException(Strings.ReaderValidationUtils_NullNamedValueForNonNullableType(propertyName, expectedValueTypeReference.FullName()));
+        }
+
+        /// <summary>
+        /// Create and throw exception that a null value was found when the expected type is non-nullable.
+        /// </summary>
+        /// <param name="expectedValueTypeReference">The expected type for this value.</param>
+        /// <param name="propertyName">The name of the property whose value is being read, if applicable.</param>
+        private static void ThrowNullValueForNullableTypeException(IEdmTypeReference expectedValueTypeReference, string propertyName)
+        {
+            if (string.IsNullOrEmpty(propertyName))
+            {
+                throw new ODataException(Strings.ReaderValidationUtils_NullValueForNullableType(expectedValueTypeReference.FullName()));
+            }
+
+            throw new ODataException(Strings.ReaderValidationUtils_NullNamedValueForNullableType(propertyName, expectedValueTypeReference.FullName()));
         }
 
 
