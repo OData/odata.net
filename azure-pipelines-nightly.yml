@@ -488,7 +488,7 @@ steps:
   inputs:
     command: custom
     feedsToUse: config
-    arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.Spatial\Build.NuGet\Microsoft.Spatial.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\Nuget -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath3)\**;SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols'
+    arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.Spatial\Build.NuGet\Microsoft.Spatial.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\Nuget -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath3)\**;SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols -Symbols -SymbolPackageFormat snupkg'
 
 - task: NuGetCommand@2
   displayName: 'NuGet - pack Microsoft.OData.Edm.Nightly.Release'
@@ -531,7 +531,7 @@ steps:
   inputs:
     command: custom
     feedsToUse: config
-    arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.OData.Client\Build.NuGet\Microsoft.OData.Client.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\Nuget -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath4)\**;SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols'
+    arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.OData.Client\Build.NuGet\Microsoft.OData.Client.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\Nuget -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath4)\**;SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols' 
 
 - task: EsrpCodeSigning@1
   displayName: 'ESRP CodeSigning Nuget Packages'
