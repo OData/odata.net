@@ -70,153 +70,6 @@ steps:
      $(Build.SourcesDirectory)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj
      $(Build.SourcesDirectory)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj
 
-- task: UseDotNet@2
-  inputs:
-    version: '2.1.x'
-
-- task: UseDotNet@2
-  inputs:
-    version: '3.1.x'
-
-
-- task: DotNetCoreCLI@2
-  displayName: 'Build Unit Test - DI'  
-  inputs:
-    command: 'build'
-    arguments: '--configuration $(BuildConfiguration) --no-incremental'
-    projects: |
-     $(Build.SourcesDirectory)\test\Common\Microsoft.Test.OData.DependencyInjection\Microsoft.Test.OData.DependencyInjection.csproj
-
-- task: DotNetCoreCLI@2
-  displayName: 'Build Unit Test - Common'  
-  inputs:
-    command: 'build'
-    arguments: '--configuration $(BuildConfiguration) --no-incremental'
-    projects: |
-     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.TestCommon\Microsoft.OData.TestCommon.csproj
-     
-- task: DotNetCoreCLI@2
-  displayName: 'Build Unit Test - EDM'  
-  inputs:
-    command: 'build'
-    arguments: '--configuration $(BuildConfiguration) --no-incremental'
-    projects: |
-     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj
-      
-     
-- task: DotNetCoreCLI@2
-  displayName: 'Build Unit Test - Spatial'  
-  inputs:
-    command: 'build'
-    arguments: '--configuration $(BuildConfiguration) --no-incremental'
-    projects: |
-     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
-       
-     
-- task: DotNetCoreCLI@2
-  displayName: 'Build Unit Test - Core'  
-  inputs:
-    command: 'build'
-    arguments: '--configuration $(BuildConfiguration) --no-incremental'
-    projects: |
-     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
-     
-     
-- task: DotNetCoreCLI@2
-  displayName: 'Build Unit Test - Client'  
-  inputs:
-    command: 'build'
-    arguments: '--configuration $(BuildConfiguration) --no-incremental'
-    projects: |
-     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj          
-          
-    
-
-- task: DotNetCoreCLI@2
-  displayName: 'Build E2E Test'  
-  inputs:
-    command: 'build'
-    arguments: '--configuration $(BuildConfiguration) --no-incremental'
-    projects: |
-      $(Build.SourcesDirectory)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj
-      $(Build.SourcesDirectory)\test\EndToEndTests\Services\Astoria\Microsoft.Test.OData.Services.Astoria.csproj
-      $(Build.SourcesDirectory)\test\EndToEndTests\Services\CSDSCReferences\Microsoft.Test.OData.Services.CSDSCReferences.csproj
-      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataCamelCaseService\Microsoft.Test.OData.Services.ODataCamelCaseService.csproj
-      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataDefaultService\Microsoft.Test.OData.Services.ODataDefaultService.csproj
-      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataModelRefService\Microsoft.Test.OData.Services.ODataModelRefService.csproj
-      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataOperationService\Microsoft.Test.OData.Services.ODataOperationService.csproj
-      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataPluggableFormatService\Microsoft.Test.OData.Services.ODataPluggableFormatService.csproj
-      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataSimplifiedService\Microsoft.Test.OData.Services.ODataSimplifiedService.csproj
-      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataTypeDefinitionService\Microsoft.Test.OData.Services.ODataTypeDefinitionService.csproj
-      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataWCFService\Microsoft.Test.OData.Services.ODataWCFService.csproj
-      $(Build.SourcesDirectory)\test\EndToEndTests\Services\TestServices\Microsoft.Test.OData.Services.TestServices.csproj
-      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataWCFLibrary\ODataSamples.Services.Core.csproj
-      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataTripPinService\ODataSamples.Services.TripPin.csproj
-      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ServiceWrapperApp\ServiceWrapperApp.csproj
-      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataEdmLib\EdmLibTests.csproj
-      $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
-
-- task: DotNetCoreCLI@2
-  displayName: 'Build Regression Test'  
-  inputs:
-    command: 'build'
-    arguments: '--configuration $(BuildConfiguration) --no-incremental'
-    projects: |     
-     $(Build.SourcesDirectory)\test\FunctionalTests\Framework\AstoriaTestFramework.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\RegressionUnitTests\Microsoft.Data.Web.RegressionUnitTests.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\MetadataObjectModelTests\Microsoft.Data.MetadataObjectModel.UnitTests.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ClientCSharpUnitTests\Microsoft.Data.WebClientCSharp.UnitTests.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests\Microsoft.Data.Web.UnitTests.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\ddbasics\Microsoft.Test.Data.Services.DDBasics.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\DesignT4UnitTests\Microsoft.OData.Service.Design.T4.UnitTests.csproj
-     $(Build.SourcesDirectory)\src\CodeGen\Microsoft.Data.Web.Design.T4.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Common.Tests\Microsoft.Test.Taupo.OData.Common.Tests.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataEdmLib\EdmLibTests.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Query.Tests\Microsoft.Test.Taupo.OData.Query.Tests.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Reader.Tests\Microsoft.Test.Taupo.OData.Reader.Tests.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Writer.Tests\Microsoft.Test.Taupo.OData.Writer.Tests.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Scenario.Tests\Microsoft.Test.Taupo.OData.Scenario.Tests.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\NamedStreamTests\Microsoft.Data.NamedStream.UnitTests.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat.Tests\Microsoft.Test.OData.PluggableFormat.Tests.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests1\Microsoft.Data.ServerUnitTests1.UnitTests.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests2\Microsoft.Data.ServerUnitTests2.UnitTests.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\RegressionUnitTests\Microsoft.Data.Web.RegressionUnitTests.csproj
-               
-  enabled: true
-
-- task: Powershell@2
-  displayName: 'Skip strong name validation'
-  inputs:
-    targetType: 'inline'
-    script: |
-      & "$(snExe)" /Vr $(ProductBinPath4)\net45\$(mainDll4)
-      & "$(snExe64)" /Vr $(ProductBinPath4)\net45\$(mainDll4)
-      & "$(snExe)" /Vr $(ProductBinPath1)\net45\$(mainDll1)
-      & "$(snExe64)" /Vr $(ProductBinPath1)\net45\$(mainDll1)
-      & "$(snExe)" /Vr $(ProductBinPath2)\net45\$(mainDll2)
-      & "$(snExe64)" /Vr $(ProductBinPath2)\net45\$(mainDll2)
-      & "$(snExe)" /Vr $(ProductBinPath3)\net45\$(mainDll3)
-      & "$(snExe64)" /Vr $(ProductBinPath3)\net45\$(mainDll3)
-      & "$(snExe)" /Vr $(ProductBinPath5)\net45\$(mainDll5)
-      & "$(snExe64)" /Vr $(ProductBinPath5)\net45\$(mainDll5)
-      & "$(snExe)" /Vr $(ProductBinPath4)\netstandard1.1\$(mainDll4)
-      & "$(snExe64)" /Vr $(ProductBinPath4)\netstandard1.1\$(mainDll4)
-      & "$(snExe)" /Vr $(ProductBinPath1)\netstandard1.1\$(mainDll1)
-      & "$(snExe64)" /Vr $(ProductBinPath1)\netstandard1.1\$(mainDll1)
-      & "$(snExe)" /Vr $(ProductBinPath2)\netstandard1.1\$(mainDll2)
-      & "$(snExe64)" /Vr $(ProductBinPath2)\netstandard1.1\$(mainDll2)
-      & "$(snExe)" /Vr $(ProductBinPath3)\netstandard1.1\$(mainDll3)
-      & "$(snExe64)" /Vr $(ProductBinPath3)\netstandard1.1\$(mainDll3)  
-      & "$(snExe)" /Vr $(ProductBinPath4)\netstandard2.0\$(mainDll4)
-      & "$(snExe64)" /Vr $(ProductBinPath4)\netstandard2.0\$(mainDll4)
-      & "$(snExe)" /Vr $(ProductBinPath1)\netstandard2.0\$(mainDll1)
-      & "$(snExe64)" /Vr $(ProductBinPath1)\netstandard2.0\$(mainDll1)
-      & "$(snExe)" /Vr $(ProductBinPath2)\netstandard2.0\$(mainDll2)
-      & "$(snExe64)" /Vr $(ProductBinPath2)\netstandard2.0\$(mainDll2)
-      & "$(snExe)" /Vr $(ProductBinPath3)\netstandard2.0\$(mainDll3)
-      & "$(snExe64)" /Vr $(ProductBinPath3)\netstandard2.0\$(mainDll3)      
-  enabled: true
 
 
 # CodeSign
@@ -394,6 +247,154 @@ steps:
     packagesToPush: '$(Build.ArtifactStagingDirectory)\Nuget\*Nightly*.nupkg'
     nuGetFeedType: external
     publishFeedCredentials: 'MyGet.org - OData.net Nightly Feed'
+  enabled: true
+
+- task: UseDotNet@2
+  inputs:
+    version: '2.1.x'
+
+- task: UseDotNet@2
+  inputs:
+    version: '3.1.x'
+
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build Unit Test - DI'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    projects: |
+     $(Build.SourcesDirectory)\test\Common\Microsoft.Test.OData.DependencyInjection\Microsoft.Test.OData.DependencyInjection.csproj
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build Unit Test - Common'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    projects: |
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.TestCommon\Microsoft.OData.TestCommon.csproj
+     
+- task: DotNetCoreCLI@2
+  displayName: 'Build Unit Test - EDM'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    projects: |
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj
+      
+     
+- task: DotNetCoreCLI@2
+  displayName: 'Build Unit Test - Spatial'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    projects: |
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
+       
+     
+- task: DotNetCoreCLI@2
+  displayName: 'Build Unit Test - Core'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    projects: |
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
+     
+     
+- task: DotNetCoreCLI@2
+  displayName: 'Build Unit Test - Client'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    projects: |
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj          
+          
+    
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build E2E Test'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    projects: |
+      $(Build.SourcesDirectory)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\Astoria\Microsoft.Test.OData.Services.Astoria.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\CSDSCReferences\Microsoft.Test.OData.Services.CSDSCReferences.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataCamelCaseService\Microsoft.Test.OData.Services.ODataCamelCaseService.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataDefaultService\Microsoft.Test.OData.Services.ODataDefaultService.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataModelRefService\Microsoft.Test.OData.Services.ODataModelRefService.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataOperationService\Microsoft.Test.OData.Services.ODataOperationService.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataPluggableFormatService\Microsoft.Test.OData.Services.ODataPluggableFormatService.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataSimplifiedService\Microsoft.Test.OData.Services.ODataSimplifiedService.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataTypeDefinitionService\Microsoft.Test.OData.Services.ODataTypeDefinitionService.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataWCFService\Microsoft.Test.OData.Services.ODataWCFService.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\TestServices\Microsoft.Test.OData.Services.TestServices.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataWCFLibrary\ODataSamples.Services.Core.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataTripPinService\ODataSamples.Services.TripPin.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Services\ServiceWrapperApp\ServiceWrapperApp.csproj
+      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataEdmLib\EdmLibTests.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build Regression Test'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    projects: |     
+     $(Build.SourcesDirectory)\test\FunctionalTests\Framework\AstoriaTestFramework.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\RegressionUnitTests\Microsoft.Data.Web.RegressionUnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\MetadataObjectModelTests\Microsoft.Data.MetadataObjectModel.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ClientCSharpUnitTests\Microsoft.Data.WebClientCSharp.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests\Microsoft.Data.Web.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\ddbasics\Microsoft.Test.Data.Services.DDBasics.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\DesignT4UnitTests\Microsoft.OData.Service.Design.T4.UnitTests.csproj
+     $(Build.SourcesDirectory)\src\CodeGen\Microsoft.Data.Web.Design.T4.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Common.Tests\Microsoft.Test.Taupo.OData.Common.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataEdmLib\EdmLibTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Query.Tests\Microsoft.Test.Taupo.OData.Query.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Reader.Tests\Microsoft.Test.Taupo.OData.Reader.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Writer.Tests\Microsoft.Test.Taupo.OData.Writer.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Scenario.Tests\Microsoft.Test.Taupo.OData.Scenario.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\NamedStreamTests\Microsoft.Data.NamedStream.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat.Tests\Microsoft.Test.OData.PluggableFormat.Tests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests1\Microsoft.Data.ServerUnitTests1.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests2\Microsoft.Data.ServerUnitTests2.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\RegressionUnitTests\Microsoft.Data.Web.RegressionUnitTests.csproj
+               
+  enabled: true
+
+- task: Powershell@2
+  displayName: 'Skip strong name validation'
+  inputs:
+    targetType: 'inline'
+    script: |
+      & "$(snExe)" /Vr $(ProductBinPath4)\net45\$(mainDll4)
+      & "$(snExe64)" /Vr $(ProductBinPath4)\net45\$(mainDll4)
+      & "$(snExe)" /Vr $(ProductBinPath1)\net45\$(mainDll1)
+      & "$(snExe64)" /Vr $(ProductBinPath1)\net45\$(mainDll1)
+      & "$(snExe)" /Vr $(ProductBinPath2)\net45\$(mainDll2)
+      & "$(snExe64)" /Vr $(ProductBinPath2)\net45\$(mainDll2)
+      & "$(snExe)" /Vr $(ProductBinPath3)\net45\$(mainDll3)
+      & "$(snExe64)" /Vr $(ProductBinPath3)\net45\$(mainDll3)
+      & "$(snExe)" /Vr $(ProductBinPath5)\net45\$(mainDll5)
+      & "$(snExe64)" /Vr $(ProductBinPath5)\net45\$(mainDll5)
+      & "$(snExe)" /Vr $(ProductBinPath4)\netstandard1.1\$(mainDll4)
+      & "$(snExe64)" /Vr $(ProductBinPath4)\netstandard1.1\$(mainDll4)
+      & "$(snExe)" /Vr $(ProductBinPath1)\netstandard1.1\$(mainDll1)
+      & "$(snExe64)" /Vr $(ProductBinPath1)\netstandard1.1\$(mainDll1)
+      & "$(snExe)" /Vr $(ProductBinPath2)\netstandard1.1\$(mainDll2)
+      & "$(snExe64)" /Vr $(ProductBinPath2)\netstandard1.1\$(mainDll2)
+      & "$(snExe)" /Vr $(ProductBinPath3)\netstandard1.1\$(mainDll3)
+      & "$(snExe64)" /Vr $(ProductBinPath3)\netstandard1.1\$(mainDll3)  
+      & "$(snExe)" /Vr $(ProductBinPath4)\netstandard2.0\$(mainDll4)
+      & "$(snExe64)" /Vr $(ProductBinPath4)\netstandard2.0\$(mainDll4)
+      & "$(snExe)" /Vr $(ProductBinPath1)\netstandard2.0\$(mainDll1)
+      & "$(snExe64)" /Vr $(ProductBinPath1)\netstandard2.0\$(mainDll1)
+      & "$(snExe)" /Vr $(ProductBinPath2)\netstandard2.0\$(mainDll2)
+      & "$(snExe64)" /Vr $(ProductBinPath2)\netstandard2.0\$(mainDll2)
+      & "$(snExe)" /Vr $(ProductBinPath3)\netstandard2.0\$(mainDll3)
+      & "$(snExe64)" /Vr $(ProductBinPath3)\netstandard2.0\$(mainDll3)      
   enabled: true
 
 
