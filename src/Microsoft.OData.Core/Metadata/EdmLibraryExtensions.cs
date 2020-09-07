@@ -601,6 +601,11 @@ namespace Microsoft.OData.Metadata
                 return true;
             }
 
+            if (clrType == typeof(DateTime))
+            {
+                return PrimitiveTypeReferenceMap.ContainsKey(typeof(Date));
+            }
+
             return PrimitiveTypeReferenceMap.ContainsKey(clrType) || typeof(ISpatial).IsAssignableFrom(clrType);
         }
 
@@ -1469,6 +1474,12 @@ namespace Microsoft.OData.Metadata
             IEdmPrimitiveTypeReference primitiveTypeReference;
             if (PrimitiveTypeReferenceMap.TryGetValue(clrType, out primitiveTypeReference))
             {
+                return primitiveTypeReference;
+            }
+
+            if (clrType == typeof(DateTime))
+            { 
+                primitiveTypeReference = ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Date), false);
                 return primitiveTypeReference;
             }
 

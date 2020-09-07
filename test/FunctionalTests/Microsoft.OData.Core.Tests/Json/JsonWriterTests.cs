@@ -137,6 +137,12 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
+        public void WriteUnSupportedPrimitiveValueDateTime()
+        {
+            this.VerifyWritePrimitiveValue(new DateTime(2020, 5, 1), "\"2020-05-01\"");
+        }
+
+        [Fact]
         public void WritePrimitiveValueGuid()
         {
             this.VerifyWritePrimitiveValue(new Guid("00000012-0000-0000-0000-012345678900"), "\"00000012-0000-0000-0000-012345678900\"");
