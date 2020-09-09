@@ -525,11 +525,11 @@ namespace Microsoft.OData.Client
                 ODataEnumValue enumValue = new ODataEnumValue(memberValue, typeNameInEdm ?? typeAnnotation.ElementTypeName);
                 result = ODataUriUtils.ConvertToUriLiteral(enumValue, CommonUtil.ConvertToODataVersion(this.uriVersion), null);
             }
-            else if (m != null && m.Method.Name == "Contains" && c.Value is IEnumerable collection)
+            else if (m != null && ReflectionUtil.IsSequenceMethod(m.Method, SequenceMethod.Contains))
             {
                 var csvBuilder = new StringBuilder();
                 var version = CommonUtil.ConvertToODataVersion(this.uriVersion);
-                foreach (var item in collection)
+                foreach (var item in (IEnumerable)c.Value)
                 {
                     if (csvBuilder.Length != 0)
                     {

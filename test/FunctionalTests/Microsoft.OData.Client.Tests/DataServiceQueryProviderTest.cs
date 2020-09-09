@@ -23,6 +23,23 @@ namespace Microsoft.OData.Client.Tests
         }
 
         [Fact]
+        public void StringContainsTranslatesToContainsFunction()
+        {
+            // Arrange
+            var sut = new DataServiceQueryProvider(dsc);
+            var search = "Strawberry";
+            var products = dsc.CreateQuery<Product>("Products")
+                .Where(product => product.Name.Contains(search));
+
+            // Act
+            var queryComponents = sut.Translate(products.Expression);
+
+            // Assert
+            Assert.Equal(@"http://root/Products?$filter=contains(Name,'Strawberry')", queryComponents.Uri.ToString());
+        }
+
+
+        [Fact]
         public void EnumerableContainsTranslatesToInOperator()
         {
             // Arrange
