@@ -10,13 +10,7 @@
     <IsPackable>true</IsPackable>
     <IsShipping>true</IsShipping>
   </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <DebugType>portable</DebugType>
-    <Optimize>true</Optimize>    
-  </PropertyGroup>
-  
+   
   <!-- References -->
    <Import Project="..\Build.props" />
   <!-- Generated files -->
