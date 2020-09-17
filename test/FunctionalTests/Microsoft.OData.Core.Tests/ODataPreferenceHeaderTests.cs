@@ -339,7 +339,7 @@ namespace Microsoft.OData.Tests
             const int MaxPageSize = 10;
             this.preferHeader.MaxPageSize = MaxPageSize;
             Assert.Equal(MaxPageSize, this.preferHeader.MaxPageSize);
-            string expected = string.Format("{0}={1}", MaxPageSizePreference, MaxPageSize);
+            string expected = $"{MaxPageSizePreference}={MaxPageSize}";
             Assert.Equal(expected, this.requestMessage.GetHeader(PreferHeaderName.ToLower()));
             Assert.Equal(expected, this.requestMessage.GetHeader(PreferHeaderName.ToUpper()));
             Assert.Equal(expected, this.requestMessage.GetHeader("pReFer"));
