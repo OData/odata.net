@@ -137,7 +137,7 @@ namespace Microsoft.OData
             {
                 if (this.headers == null)
                 {
-                    this.headers = new Dictionary<string, string>(StringComparer.Ordinal);
+                    this.headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
                 }
 
                 this.headers[headerName] = headerValue;
