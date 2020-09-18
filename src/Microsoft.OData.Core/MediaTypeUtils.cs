@@ -414,6 +414,15 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Internal method for testing membership of the cache
+        /// </summary>
+        /// <returns>The ContentTypes in the cache in the MediaInfoCache</returns>
+        internal static IEnumerable<string> GetCacheKeys()
+        {
+            return MatchInfoCache.GetKeys();
+        }
+
+        /// <summary>
         /// Parses the specified content type header into a media type instance.
         /// </summary>
         /// <param name="contentTypeHeader">The content type header to parse.</param>
@@ -924,7 +933,7 @@ namespace Microsoft.OData
             /// <summary>
             /// Name of content type.
             /// </summary>
-            private string ContentTypeName { get; set; }
+            internal string ContentTypeName { get; set; }
 
             /// <summary>
             /// Returns a value indicating whether this instance is equal to a specified object.
@@ -1038,6 +1047,15 @@ namespace Microsoft.OData
                     this.dict.Clear();
                     this.dict.TryAdd(key, value);
                 }
+            }
+
+            /// <summary>
+            /// Internal method for validating expected elements in the cache
+            /// </summary>
+            /// <returns>ContentType of items in the cache</returns>
+            internal IEnumerable<string> GetKeys()
+            {
+                return this.dict.Keys.Select(k => k.ContentTypeName);
             }
         }
     }
