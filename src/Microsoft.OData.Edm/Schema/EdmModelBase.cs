@@ -26,7 +26,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Cache of operations that are bindable to entity types.
         /// </summary>
-        private readonly Dictionary<IEdmType, IList<IEdmOperation>> bindableOperationsCache;
+        private readonly Dictionary<string, IList<IEdmOperation>> bindableOperationsCache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmModelBase"/> class.
@@ -51,7 +51,7 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(referencedModels, "referencedModels");
             EdmUtil.CheckArgumentNull(annotationsManager, "annotationsManager");
 
-            this.bindableOperationsCache = new Dictionary<IEdmType, IList<IEdmOperation>>(ReferenceEqualityComparer<IEdmType>.Instance);
+            this.bindableOperationsCache = new Dictionary<string, IList<IEdmOperation>>(ReferenceEqualityComparer<string>.Instance);
             this.referencedEdmModels = new List<IEdmModel>(referencedModels);
 
             // EdmCoreModel is always embedded.
@@ -162,7 +162,7 @@ namespace Microsoft.OData.Edm
         {
             IList<IEdmOperation> bindableOperations;
 
-            if (!this.bindableOperationsCache.TryGetValue(bindingType, out bindableOperations))
+            if (!this.bindableOperationsCache.TryGetValue(bindingType.FullTypeName(), out bindableOperations))
             {
                 HashSet<IEdmOperation> operationList = new HashSet<IEdmOperation>();
                 bindableOperations = new List<IEdmOperation>();
@@ -179,7 +179,7 @@ namespace Microsoft.OData.Edm
                     }
                 }
 
-                this.bindableOperationsCache.Add(bindingType, bindableOperations);
+                this.bindableOperationsCache.Add(bindingType.FullTypeName(), bindableOperations);
             }
 
             return bindableOperations;
