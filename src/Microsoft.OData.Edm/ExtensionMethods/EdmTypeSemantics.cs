@@ -1277,12 +1277,12 @@ namespace Microsoft.OData.Edm
                 result = ((IEdmStructuredType)thisType).InheritsFrom((IEdmStructuredType)otherType);
             }
 
-            if(typeDict == null)
+            if(!typeDictionaryCache.TryGetValue(thisType, out typeDict))
             {
-                //typeDictionaryCache.Add(thisType, new Dictionary<IEdmType, bool>());
+                typeDict = new Dictionary<IEdmType, bool>();              
             }
 
-            //typeDictionaryCache[thisType][otherType] = result;
+            typeDict.Add(otherType, result);
 
             return result;
         }
