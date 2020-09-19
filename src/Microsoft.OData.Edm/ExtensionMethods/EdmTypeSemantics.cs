@@ -15,6 +15,15 @@ namespace Microsoft.OData.Edm
     /// </summary>
     public static class EdmTypeSemantics
     {
+
+        private static IDictionary<IEdmType, IDictionary<IEdmType, bool>> typeDictionaryCache;
+
+#pragma warning disable CA1810 // Initialize reference type static fields inline
+        static EdmTypeSemantics()
+        {
+            typeDictionaryCache = new Dictionary<IEdmType, IDictionary<IEdmType, bool>>();
+        }
+
         #region IsCollection, IsEntity, IsComplex, IsPath...
 
         /// <summary>
@@ -1243,18 +1252,39 @@ namespace Microsoft.OData.Edm
                 return false;
             }
 
+            IDictionary<IEdmType, bool> typeDict;
+            EdmTypeKind thisKind = thisType.TypeKind;            
+            bool result;
+
+            if (typeDictionaryCache.TryGetValue(thisType, out typeDict))
+            {                
+                if (typeDict.TryGetValue(otherType, out result))
+                {
+                    return result;
+                }
+            }            
+            
             if (thisType.IsEquivalentTo(otherType))
             {
-                return true;
+                result = true;
             }
-
-            EdmTypeKind thisKind = thisType.TypeKind;
-            if (thisKind != otherType.TypeKind || !(thisKind == EdmTypeKind.Entity || thisKind == EdmTypeKind.Complex))
+            else if (thisKind != otherType.TypeKind || !(thisKind == EdmTypeKind.Entity || thisKind == EdmTypeKind.Complex))
             {
-                return false;
+                result = false;
+            }
+            else
+            {
+                result = ((IEdmStructuredType)thisType).InheritsFrom((IEdmStructuredType)otherType);
             }
 
-            return ((IEdmStructuredType)thisType).InheritsFrom((IEdmStructuredType)otherType);
+            if(typeDict == null)
+            {
+                //typeDictionaryCache.Add(thisType, new Dictionary<IEdmType, bool>());
+            }
+
+            //typeDictionaryCache[thisType][otherType] = result;
+
+            return result;
         }
 
         /// <summary>

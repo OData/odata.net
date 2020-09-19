@@ -24,6 +24,11 @@ namespace Microsoft.OData.Edm
         private readonly Dictionary<string, IList<IEdmOperation>> functionDictionary = new Dictionary<string, IList<IEdmOperation>>();
 
         /// <summary>
+        /// Cache of operations that are bindable to entity types.
+        /// </summary>
+        private readonly Dictionary<IEdmType, IList<IEdmOperation>> bindableOperationsCache;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="EdmModelBase"/> class.
         /// </summary>
         /// <param name="referencedModels">Models to which this model refers.</param>
@@ -46,6 +51,7 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(referencedModels, "referencedModels");
             EdmUtil.CheckArgumentNull(annotationsManager, "annotationsManager");
 
+            this.bindableOperationsCache = new Dictionary<IEdmType, IList<IEdmOperation>>(ReferenceEqualityComparer<IEdmType>.Instance);
             this.referencedEdmModels = new List<IEdmModel>(referencedModels);
 
             // EdmCoreModel is always embedded.
@@ -154,13 +160,29 @@ namespace Microsoft.OData.Edm
         /// <returns> A set of operations that share the binding type or empty enumerable if no such operation exists. </returns>
         public virtual IEnumerable<IEdmOperation> FindDeclaredBoundOperations(IEdmType bindingType)
         {
-            foreach (IEnumerable<IEdmOperation> operations in this.functionDictionary.Values.Distinct())
+            IList<IEdmOperation> bindableOperations;
+
+            if (!this.bindableOperationsCache.TryGetValue(bindingType, out bindableOperations))
             {
-                foreach (IEdmOperation operation in operations.Where(o => o.HasEquivalentBindingType(bindingType)))
+                HashSet<IEdmOperation> operationList = new HashSet<IEdmOperation>();
+                bindableOperations = new List<IEdmOperation>();
+
+                foreach (IList<IEdmOperation> operations in this.functionDictionary.Values)
                 {
-                    yield return operation;
+                    for (int i = 0; i < operations.Count; i++)
+                    {
+                        if (!operationList.Contains(operations[i]) && operations[i].HasEquivalentBindingType(bindingType))
+                        {
+                            bindableOperations.Add(operations[i]);
+                            operationList.Add(operations[i]);
+                        }
+                    }
                 }
+
+                this.bindableOperationsCache.Add(bindingType, bindableOperations);
             }
+
+            return bindableOperations;
         }
 
         /// <summary>
@@ -175,23 +197,27 @@ namespace Microsoft.OData.Edm
         {
             IEnumerable<IEdmOperation> enumerable = this.FindDeclaredOperations(qualifiedName);
             IList<IEdmOperation> operations = enumerable as IList<IEdmOperation>;
+            IList<IEdmOperation> matchedOperation = new List<IEdmOperation>();
+
             if (operations != null)
-            {
-                IList<IEdmOperation> matchedOperation = new List<IEdmOperation>();
+            {                
                 for (int i = 0; i < operations.Count; i++)
                 {
                     if (operations[i].HasEquivalentBindingType(bindingType))
                     {
                         matchedOperation.Add(operations[i]);
                     }
-                }
-
-                return matchedOperation;
+                }                
             }
             else
             {
-                return enumerable.Where(o => o.HasEquivalentBindingType(bindingType));
+                foreach (IEdmOperation operation in enumerable)
+                {
+                    matchedOperation.Add(operation);
+                }
             }
+
+            return matchedOperation;
         }
 
         /// <summary>

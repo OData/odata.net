@@ -309,14 +309,7 @@ namespace Microsoft.OData.Evaluation
             Debug.Assert(this.bindableOperationsCache != null, "this.bindableOperationsCache != null");
             Debug.Assert(this.isResponse, "this.readingResponse");
 
-            IList<IEdmOperation> bindableOperations;
-            if (!this.bindableOperationsCache.TryGetValue(bindingType, out bindableOperations))
-            {
-                bindableOperations = MetadataUtils.CalculateBindableOperationsForType(bindingType, this.model, this.edmTypeResolver);
-                this.bindableOperationsCache.Add(bindingType, bindableOperations);
-            }
-
-            return bindableOperations;
+            return MetadataUtils.CalculateBindableOperationsForType(bindingType, this.model, this.edmTypeResolver);
         }
 
         /// <summary>

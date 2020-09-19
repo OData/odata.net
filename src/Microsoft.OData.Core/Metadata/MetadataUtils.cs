@@ -174,22 +174,7 @@ namespace Microsoft.OData.Metadata
             List<IEdmOperation> operationsFound = new List<IEdmOperation>();
             foreach (IEdmOperation operation in operations)
             {
-                if (!operation.IsBound)
-                {
-                    throw new ODataException(Strings.EdmLibraryExtensions_UnBoundOperationsFoundFromIEdmModelFindMethodIsInvalid(operation.Name));
-                }
-
-                if (operation.Parameters.FirstOrDefault() == null)
-                {
-                    throw new ODataException(Strings.EdmLibraryExtensions_NoParameterBoundOperationsFoundFromIEdmModelFindMethodIsInvalid(operation.Name));
-                }
-
-                IEdmOperationParameter bindingParameter = operation.Parameters.FirstOrDefault();
-                IEdmType resolvedBindingType = edmTypeResolver.GetParameterType(bindingParameter).Definition;
-                if (resolvedBindingType.IsAssignableFrom(bindingType))
-                {
-                    operationsFound.Add(operation);
-                }
+                operationsFound.Add(operation);
             }
 
             return operationsFound;
