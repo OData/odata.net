@@ -271,7 +271,7 @@ namespace Microsoft.OData.UriParser.Validation.ValidationEngine
             IEdmCollectionType collectionType = segment.EdmType as IEdmCollectionType;
             if (collectionType != null)
             {
-                ValidateItem(collectionType.ElementType);
+                ValidateItem(collectionType.ElementType.Definition);
             }
         }
     }

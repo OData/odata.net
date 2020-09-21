@@ -118,10 +118,6 @@ namespace Microsoft.OData.UriParser.Validation.Rules
             {
                 context.Messages.Add(CreateUrlValidationMessage(element.Name, message, version, date, removalDate));
             }
-            else if (IsDeprecated(context.Model, elementType, out message, out version, out date, out removalDate))
-            {
-                context.Messages.Add(CreateUrlValidationMessage(element.Name, message, version, date, removalDate));
-            }
         }
 
         /// <summary>

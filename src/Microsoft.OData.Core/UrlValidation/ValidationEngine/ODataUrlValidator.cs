@@ -128,47 +128,44 @@ namespace Microsoft.OData.UriParser.Validation
         {
             bool foundRule = false;
 
-            if (!this.unusedTypes.ContainsKey(itemType))
+            // if we are at the base type or already know there are no rules in the remaining hierarchy, return
+            if (itemType == typeof(object) || unusedTypes.ContainsKey(itemType))
             {
-                // if we are at the base type or already know there are no rules in the remaining hierarchy, return
-                if (itemType == typeof(object) || unusedTypes.ContainsKey(itemType))
-                {
-                    return false;
-                }
+                return false;
+            }
 
-                // find any rules defined on the type of the item
-                if (ValidateByType(item, itemType, validationContext, impliedProperty))
-                {
-                    foundRule = true;
-                }
+            // find any rules defined on the type of the item
+            if (ValidateByType(item, itemType, validationContext, impliedProperty))
+            {
+                foundRule = true;
+            }
 
-                // make sure we only validate the item only once per type/interface
-                validatedTypes.Add(itemType);
+            // make sure we only validate the item only once per type/interface
+            validatedTypes.Add(itemType);
 
-                // find any rules defined on an interface defined on the type of the item
-                foreach (Type interfaceType in itemType.GetInterfaces())
+            // find any rules defined on an interface defined on the type of the item
+            foreach (Type interfaceType in itemType.GetInterfaces())
+            {
+                if (validatedTypes.Add(interfaceType) && !this.unusedTypes.ContainsKey(interfaceType))
                 {
-                    if (validatedTypes.Add(interfaceType) && !this.unusedTypes.ContainsKey(interfaceType))
+                    if (ValidateByType(item, interfaceType, validationContext, impliedProperty))
                     {
-                        if (ValidateByType(item, interfaceType, validationContext, impliedProperty))
-                        {
-                            foundRule = true;
-                        }
-                        else
-                        {
-                            // there were no rules for this interface, so don't try it again
-                            this.unusedTypes.GetOrAdd(interfaceType, 0);
-                        }
+                        foundRule = true;
+                    }
+                    else
+                    {
+                        // there were no rules for this interface, so don't try it again
+                        this.unusedTypes.GetOrAdd(interfaceType, 0);
                     }
                 }
+            }
 
-                // repeat for any base type
-                foundRule = foundRule | ValidateTypeHierarchy(item, itemType.GetTypeInfo().BaseType, validationContext, validatedTypes, impliedProperty);
+            // repeat for any base type
+            foundRule = foundRule | ValidateTypeHierarchy(item, itemType.GetTypeInfo().BaseType, validationContext, validatedTypes, impliedProperty);
 
-                if (!foundRule)
-                {
-                    this.unusedTypes.GetOrAdd(itemType, 0);
-                }
+            if (!foundRule)
+            {
+                this.unusedTypes.GetOrAdd(itemType, 0);
             }
 
             return foundRule;
