@@ -148,7 +148,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                     {
                         string v;
                         this.Assert.IsTrue(headers.TryGetValue("abc", out v), "TryGetValue should work for 'abc'.");
-                        this.Assert.AreEqual("abc", v, "Header values don't match.");
+                        this.Assert.AreEqual("ABC", v, "Header values don't match.");
                     },
                     ExpectedHeaders = validInitialHeaders
                 },
@@ -182,7 +182,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                     CustomizationFunc = headers => 
                     {
                         string v = headers["abc"];
-                        this.Assert.AreEqual("abc", v, "Header values don't match.");
+                        this.Assert.AreEqual("ABC", v, "Header values don't match.");
                     },
                     ExpectedHeaders = validInitialHeaders
                 },

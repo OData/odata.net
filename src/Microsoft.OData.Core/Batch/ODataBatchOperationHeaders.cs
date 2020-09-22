@@ -38,8 +38,7 @@ namespace Microsoft.OData
         {
             get
             {
-                string value;
-                if (this.TryGetValue(key, out value))
+                if (this.TryGetValue(key, out var value))
                 {
                     return value;
                 }
@@ -64,11 +63,11 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Determines whether the dictionary contains an element with the specified key using case-sensitive comparison.
+        /// Determines whether the dictionary contains an element with the specified key using case-insensitive comparison.
         /// </summary>
         /// <param name="key">The key to locate in the dictionary.</param>
         /// <returns>true if the dictionary contains an element with the <paramref name="key"/>; otherwise, false.</returns>
-        /// <remarks>This method will only try to match the key using case-sensitive comparison.</remarks>
+        /// <remarks>This method will only try to match the key using case-insensitive comparison.</remarks>
         public bool ContainsKeyOrdinal(string key)
         {
             return this.headersDictionary.ContainsKey(key);
@@ -81,12 +80,7 @@ namespace Microsoft.OData
         /// <returns>true if the item with the specified <paramref name="key"/> was removed; otherwise false.</returns>
         public bool Remove(string key)
         {
-            if (this.headersDictionary.Remove(key))
-            {
-                return true;
-            }
-
-            return false;
+            return this.headersDictionary.Remove(key);
         }
 
         /// <summary>
@@ -98,13 +92,7 @@ namespace Microsoft.OData
         /// <returns>true if the dictionary contains an element with the specified key; otherwise, false.</returns>
         public bool TryGetValue(string key, out string value)
         {
-            if (this.headersDictionary.TryGetValue(key, out value))
-            {
-                return true;
-            }
-
-            value = null;
-            return false; 
+            return this.headersDictionary.TryGetValue(key, out value);
         }
 
         /// <summary>
