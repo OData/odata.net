@@ -25,6 +25,7 @@ namespace Microsoft.OData.Tests
         [Theory]
         [InlineData(@"company", "name", "state")]
         [InlineData(@"company/employees", "employees")]
+        [InlineData(@"company/employees(1)/vehicles", "employees", "vehicle")]
         [InlineData(@"competitors", "competitors", "name", "state")]
         [InlineData(@"company/address", "state")]
         [InlineData(@"company/address/state", "state")]
@@ -63,6 +64,9 @@ namespace Microsoft.OData.Tests
                 Assert.True(error.ExtendedProperties.TryGetValue("RemovalDate", out removalDate)); 
                 object version;
                 Assert.True(error.ExtendedProperties.TryGetValue("Version", out version));
+
+                string elementNameAsString = elementName as string;
+                elementName =elementNameAsString.Substring(elementNameAsString.LastIndexOf('.') + 1);
 
                 Assert.Contains(elementName as string, expectedErrors);
                 Assert.Equal(date as Date?, expectedDate);
@@ -168,6 +172,25 @@ namespace Microsoft.OData.Tests
         <Property Name = ""firstName"" Type=""Edm.String""/>
         <Property Name = ""lastName"" Type=""Edm.String""/>
         <Property Name = ""title"" Type=""Edm.String""/>
+        <NavigationProperty Name = ""vehicles"" Type=""Collection(Jetsons.Models.vehicle)"" ContainsTarget=""true""/>
+     </EntityType>
+      <EntityType Name = ""vehicle"" >
+        <Key>
+          <PropertyRef Name=""license""/>
+        </Key>
+        <Property Name = ""license"" Type=""Edm.String"" Nullable=""false""/>
+        <Property Name = ""model"" Type=""Edm.String""/>
+        <Annotation Term = ""Core.Revisions"" >
+            <Collection>
+                <Record>
+                <PropertyValue Property=""Date"" Date=""2020-03-30""/>
+                <PropertyValue Property=""RemovalDate"" Date=""2022-03-30""/>
+                <PropertyValue Property=""Version"" String=""2020-03-30""/>
+                <PropertyValue Property = ""Kind"" EnumMember=""RevisionKind/Deprecated""/>
+                <PropertyValue Property = ""Description"" String=""'vehicle' is deprecated and will be retired on 2022-03-30.""/>
+                </Record>
+            </Collection>
+        </Annotation>
       </EntityType>
       <Action Name = ""ResetDataSource"" />
       <EntityContainer Name=""Container"">
@@ -192,4 +215,3 @@ namespace Microsoft.OData.Tests
 </edmx:Edmx>";
     }
 }
-
