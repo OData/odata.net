@@ -18,7 +18,7 @@ namespace Microsoft.OData.Edm
     public static class EdmTypeSemantics
     {
 
-        private static ConcurrentDictionary<string, HashSet<string>> baseTypeCache = new ConcurrentDictionary<string, HashSet<string>>();
+        private static ConcurrentDictionary<IEdmStructuredType, HashSet<IEdmStructuredType>> baseTypeCache = new ConcurrentDictionary<IEdmStructuredType, HashSet<IEdmStructuredType>>();
  
         #region IsCollection, IsEntity, IsComplex, IsPath...
 
@@ -1223,33 +1223,32 @@ namespace Microsoft.OData.Edm
         public static bool InheritsFrom(this IEdmStructuredType type, IEdmStructuredType potentialBaseType)
         {            
             string fullName = type.FullTypeName();
-            HashSet<string> baseTypes = GetBaseTypes(type, fullName);
+            HashSet<IEdmStructuredType> baseTypes = GetBaseTypes(type, fullName);
 
-            return baseTypes.Contains(potentialBaseType.FullTypeName());
+            return baseTypes.Contains(potentialBaseType);
         }
 
-        private static HashSet<string> GetBaseTypes(IEdmStructuredType type, string fullName)
+        private static HashSet<IEdmStructuredType> GetBaseTypes(IEdmStructuredType type, string fullName)
         {
-            HashSet<string> baseTypes;
+            HashSet<IEdmStructuredType> baseTypes;
 
-            if (baseTypeCache.TryGetValue(fullName, out baseTypes))
+            if (baseTypeCache.TryGetValue(type, out baseTypes))
             {
                 return baseTypes;
             }
 
-            baseTypes = new HashSet<string>();
+            baseTypes = new HashSet<IEdmStructuredType>();
+            baseTypeCache.TryAdd(type, baseTypes);
 
             do
             {
                 type = type.BaseType;
                 if (type != null)
                 {
-                    baseTypes.Add(type.FullTypeName());
+                    baseTypes.Add(type);
                 }
             }
-            while (type != null);
-
-            baseTypeCache.TryAdd(fullName, baseTypes);
+            while (type != null);        
 
             return baseTypes;
         }
