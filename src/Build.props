@@ -14,8 +14,7 @@
     <SigningType Condition="'$(SigningType)' == ''">Product</SigningType>
   </PropertyGroup>
     
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">    
     <DebugType>portable</DebugType>
     <Optimize>true</Optimize>
   </PropertyGroup>
