@@ -1223,12 +1223,12 @@ namespace Microsoft.OData.Edm
         public static bool InheritsFrom(this IEdmStructuredType type, IEdmStructuredType potentialBaseType)
         {            
             string fullName = type.FullTypeName();
-            HashSet<IEdmStructuredType> baseTypes = GetBaseTypes(type, fullName);
+            HashSet<IEdmStructuredType> baseTypes = GetBaseTypes(type);
 
             return baseTypes.Contains(potentialBaseType);
         }
 
-        private static HashSet<IEdmStructuredType> GetBaseTypes(IEdmStructuredType type, string fullName)
+        private static HashSet<IEdmStructuredType> GetBaseTypes(IEdmStructuredType type)
         {
             HashSet<IEdmStructuredType> baseTypes;
 
@@ -1240,15 +1240,15 @@ namespace Microsoft.OData.Edm
             baseTypes = new HashSet<IEdmStructuredType>();
             baseTypeCache.TryAdd(type, baseTypes);
 
-            do
+            type = type.BaseType;
+            if (type != null)
             {
-                type = type.BaseType;
-                if (type != null)
+                baseTypes.Add(type);
+                foreach(IEdmStructuredType baseType in GetBaseTypes(type))
                 {
-                    baseTypes.Add(type);
+                    baseTypes.Add(baseType);
                 }
-            }
-            while (type != null);        
+            }                 
 
             return baseTypes;
         }
