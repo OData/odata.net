@@ -1238,7 +1238,8 @@ namespace Microsoft.OData.Edm
             }
 
             baseTypes = new HashSet<IEdmStructuredType>();
-            baseTypeCache.TryAdd(type, baseTypes);
+
+            IEdmStructuredType currType = type;
 
             type = type.BaseType;
             if (type != null)
@@ -1248,7 +1249,9 @@ namespace Microsoft.OData.Edm
                 {
                     baseTypes.Add(baseType);
                 }
-            }                 
+            }
+
+            baseTypeCache.TryAdd(currType, baseTypes);
 
             return baseTypes;
         }

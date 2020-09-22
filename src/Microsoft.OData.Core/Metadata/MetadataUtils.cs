@@ -178,12 +178,8 @@ namespace Microsoft.OData.Metadata
                 return operationsFound;
             }
 
-            operationsFound = new List<IEdmOperation>();
-            foreach (IEdmOperation operation in operations)
-            {
-                operationsFound.Add(operation);
-            }
-
+            operationsFound = new List<IEdmOperation>(operations);
+            
             return operationsFound;
         }
 
