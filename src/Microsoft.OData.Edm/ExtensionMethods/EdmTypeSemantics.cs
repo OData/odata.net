@@ -1221,22 +1221,24 @@ namespace Microsoft.OData.Edm
         /// <param name="potentialBaseType">The potential base type of the type being tested.</param>
         /// <returns>True if and only if the type inherits from the potential base type.</returns>
         public static bool InheritsFrom(this IEdmStructuredType type, IEdmStructuredType potentialBaseType)
-        {
-            HashSet<string> baseTypes;
+        {            
             string fullName = type.FullTypeName();
-
-            if (!baseTypeCache.TryGetValue(fullName, out baseTypes))
-            {
-                baseTypes = new HashSet<string>();
-
-                GetBaseTypes(type, baseTypes, fullName);
-            }
+            HashSet<string> baseTypes = GetBaseTypes(type, fullName);
 
             return baseTypes.Contains(potentialBaseType.FullTypeName());
         }
 
-        private static void GetBaseTypes(IEdmStructuredType type, HashSet<string> baseTypes, string fullName)
+        private static HashSet<string> GetBaseTypes(IEdmStructuredType type, string fullName)
         {
+            HashSet<string> baseTypes;
+
+            if (baseTypeCache.TryGetValue(fullName, out baseTypes))
+            {
+                return baseTypes;
+            }
+
+            baseTypes = new HashSet<string>();
+
             do
             {
                 type = type.BaseType;
@@ -1247,7 +1249,9 @@ namespace Microsoft.OData.Edm
             }
             while (type != null);
 
-            baseTypeCache.TryAdd(fullName, baseTypes);           
+            baseTypeCache.TryAdd(fullName, baseTypes);
+
+            return baseTypes;
         }
 
         /// <summary>

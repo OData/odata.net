@@ -199,16 +199,16 @@ namespace Microsoft.OData.Edm
         /// </returns>
         public virtual IEnumerable<IEdmOperation> FindDeclaredBoundOperations(string qualifiedName, IEdmType bindingType)
         {
-            IEnumerable<IEdmOperation> enumarable = this.FindDeclaredBoundOperations(bindingType);  
+            IEnumerable<IEdmOperation> enumerable = this.FindDeclaredBoundOperations(bindingType);  
             
-            if(enumarable == null || !enumarable.Any())
+            if(enumerable == null)
             {
                 return new IEdmOperation[] { };
             }
 
             IList<IEdmOperation> matchedOperations = new List<IEdmOperation>();
 
-            IList<IEdmOperation> operations = enumarable as IList<IEdmOperation>;
+            IList<IEdmOperation> operations = enumerable as IList<IEdmOperation>;
 
             if (operations != null)
             {                
@@ -222,7 +222,7 @@ namespace Microsoft.OData.Edm
             }
             else
             {
-                foreach(IEdmOperation operation in enumarable)
+                foreach(IEdmOperation operation in enumerable)
                 {
                     if (string.Equals(operation.FullName(), qualifiedName, System.StringComparison.Ordinal))
                     {
