@@ -5,7 +5,9 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Edm
@@ -16,14 +18,8 @@ namespace Microsoft.OData.Edm
     public static class EdmTypeSemantics
     {
 
-        private static IDictionary<IEdmType, IDictionary<IEdmType, bool>> typeDictionaryCache;
-
-#pragma warning disable CA1810 // Initialize reference type static fields inline
-        static EdmTypeSemantics()
-        {
-            typeDictionaryCache = new Dictionary<IEdmType, IDictionary<IEdmType, bool>>();
-        }
-
+        private static ConcurrentDictionary<string, HashSet<string>> typeDictionaryCache = new ConcurrentDictionary<string, HashSet<string>>();
+ 
         #region IsCollection, IsEntity, IsComplex, IsPath...
 
         /// <summary>
@@ -1226,17 +1222,29 @@ namespace Microsoft.OData.Edm
         /// <returns>True if and only if the type inherits from the potential base type.</returns>
         public static bool InheritsFrom(this IEdmStructuredType type, IEdmStructuredType potentialBaseType)
         {
+            HashSet<string> lstTypes;
+            string fullName = type.FullTypeName();
+
+            if (typeDictionaryCache.TryGetValue(fullName, out lstTypes))
+            {
+                return lstTypes.Contains(potentialBaseType.FullTypeName());
+            }
+
+            lstTypes = new HashSet<string>();           
+
             do
             {
                 type = type.BaseType;
-                if (type != null && type.IsEquivalentTo(potentialBaseType))
+                if (type != null)
                 {
-                    return true;
+                    lstTypes.Add(type.FullTypeName());
                 }
             }
             while (type != null);
 
-            return false;
+            typeDictionaryCache.TryAdd(fullName, lstTypes);
+
+            return lstTypes.Contains(potentialBaseType.FullTypeName());
         }
 
         /// <summary>
@@ -1252,39 +1260,18 @@ namespace Microsoft.OData.Edm
                 return false;
             }
 
-            IDictionary<IEdmType, bool> typeDict;
-            EdmTypeKind thisKind = thisType.TypeKind;            
-            bool result;
-
-            if (typeDictionaryCache.TryGetValue(thisType, out typeDict))
-            {                
-                if (typeDict.TryGetValue(otherType, out result))
-                {
-                    return result;
-                }
-            }            
-            
             if (thisType.IsEquivalentTo(otherType))
             {
-                result = true;
-            }
-            else if (thisKind != otherType.TypeKind || !(thisKind == EdmTypeKind.Entity || thisKind == EdmTypeKind.Complex))
-            {
-                result = false;
-            }
-            else
-            {
-                result = ((IEdmStructuredType)thisType).InheritsFrom((IEdmStructuredType)otherType);
+                return true;
             }
 
-            if(!typeDictionaryCache.TryGetValue(thisType, out typeDict))
+            EdmTypeKind thisKind = thisType.TypeKind;
+            if (thisKind != otherType.TypeKind || !(thisKind == EdmTypeKind.Entity || thisKind == EdmTypeKind.Complex))
             {
-                typeDict = new Dictionary<IEdmType, bool>();              
+                return false;
             }
 
-            typeDict.Add(otherType, result);
-
-            return result;
+            return ((IEdmStructuredType)thisType).InheritsFrom((IEdmStructuredType)otherType);
         }
 
         /// <summary>

@@ -171,7 +171,14 @@ namespace Microsoft.OData.Metadata
                 throw new ODataException(Strings.MetadataUtils_CalculateBindableOperationsForType(bindingType.FullTypeName()), exc);
             }
 
-            List<IEdmOperation> operationsFound = new List<IEdmOperation>();
+            IList<IEdmOperation> operationsFound = operations as IList<IEdmOperation>;
+
+            if(operationsFound != null)
+            {
+                return operationsFound;
+            }
+
+            operationsFound = new List<IEdmOperation>();
             foreach (IEdmOperation operation in operations)
             {
                 operationsFound.Add(operation);

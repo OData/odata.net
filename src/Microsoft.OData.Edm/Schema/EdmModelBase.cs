@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Edm.Vocabularies;
@@ -26,7 +27,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Cache of operations that are bindable to entity types.
         /// </summary>
-        private readonly Dictionary<string, IList<IEdmOperation>> bindableOperationsCache;
+        private readonly ConcurrentDictionary<string, IList<IEdmOperation>> bindableOperationsCache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmModelBase"/> class.
@@ -51,7 +52,7 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(referencedModels, "referencedModels");
             EdmUtil.CheckArgumentNull(annotationsManager, "annotationsManager");
 
-            this.bindableOperationsCache = new Dictionary<string, IList<IEdmOperation>>(ReferenceEqualityComparer<string>.Instance);
+            this.bindableOperationsCache = new ConcurrentDictionary<string, IList<IEdmOperation>>();
             this.referencedEdmModels = new List<IEdmModel>(referencedModels);
 
             // EdmCoreModel is always embedded.
@@ -164,22 +165,24 @@ namespace Microsoft.OData.Edm
 
             if (!this.bindableOperationsCache.TryGetValue(bindingType.FullTypeName(), out bindableOperations))
             {
-                HashSet<IEdmOperation> operationList = new HashSet<IEdmOperation>();
+                HashSet<IList<IEdmOperation>> operationList = new HashSet<IList<IEdmOperation>>();
                 bindableOperations = new List<IEdmOperation>();
 
                 foreach (IList<IEdmOperation> operations in this.functionDictionary.Values)
                 {
-                    for (int i = 0; i < operations.Count; i++)
+                    if (operationList.Add(operations))
                     {
-                        if (!operationList.Contains(operations[i]) && operations[i].HasEquivalentBindingType(bindingType))
+                        for (int i = 0; i < operations.Count; i++)
                         {
-                            bindableOperations.Add(operations[i]);
-                            operationList.Add(operations[i]);
+                            if (operations[i].HasEquivalentBindingType(bindingType))
+                            {
+                                bindableOperations.Add(operations[i]);
+                            }
                         }
                     }
                 }
 
-                this.bindableOperationsCache.Add(bindingType.FullTypeName(), bindableOperations);
+                this.bindableOperationsCache.TryAdd(bindingType.FullTypeName(), bindableOperations);
             }
 
             return bindableOperations;
@@ -195,28 +198,20 @@ namespace Microsoft.OData.Edm
         /// </returns>
         public virtual IEnumerable<IEdmOperation> FindDeclaredBoundOperations(string qualifiedName, IEdmType bindingType)
         {
-            IEnumerable<IEdmOperation> enumerable = this.FindDeclaredOperations(qualifiedName);
-            IList<IEdmOperation> operations = enumerable as IList<IEdmOperation>;
+            IList<IEdmOperation> operations = this.FindDeclaredBoundOperations(bindingType) as IList<IEdmOperation>;
             IList<IEdmOperation> matchedOperation = new List<IEdmOperation>();
 
             if (operations != null)
             {                
                 for (int i = 0; i < operations.Count; i++)
                 {
-                    if (operations[i].HasEquivalentBindingType(bindingType))
+                    if ( string.Equals(operations[i].FullName(),qualifiedName,System.StringComparison.Ordinal) )
                     {
                         matchedOperation.Add(operations[i]);
                     }
                 }                
             }
-            else
-            {
-                foreach (IEdmOperation operation in enumerable)
-                {
-                    matchedOperation.Add(operation);
-                }
-            }
-
+            
             return matchedOperation;
         }
 

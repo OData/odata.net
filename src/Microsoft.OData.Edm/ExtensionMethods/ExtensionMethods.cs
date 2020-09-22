@@ -1618,9 +1618,8 @@ namespace Microsoft.OData.Edm
         /// <param name="type">Reference to the calling object.</param>
         /// <returns>The element type of this references definition.</returns>
         public static IEdmType AsElementType(this IEdmType type)
-        {
-            IEdmCollectionType collectionType = type as IEdmCollectionType;
-            return (collectionType != null) ? collectionType.ElementType.Definition : type;
+        {   
+            return (type.TypeKind == EdmTypeKind.Collection) ? (type as IEdmCollectionType).ElementType.Definition : type;
         }
 
         #endregion
