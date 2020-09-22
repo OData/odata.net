@@ -63,7 +63,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Determines whether the dictionary contains an element with the specified key using case-insensitive comparison.
+        /// Determines whether the dictionary contains an element with the specified key.
         /// </summary>
         /// <param name="key">The key to locate in the dictionary.</param>
         /// <returns>true if the dictionary contains an element with the <paramref name="key"/>; otherwise, false.</returns>
