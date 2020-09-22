@@ -373,9 +373,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                 },
                 new PartHeaderTestCase
                 {
-                    DebugDescription = "Two headers with different cases; one case-sensitive match.",
+                    DebugDescription = "Headers case-sensitive match.",
                     PayloadFunc = builder => builder
-                        .Header("ab", "b1")
                         .Header("Ab", "b2")
                         .Header("content-type", "application/http")
                         .Header("content-transfer-encoding", "binary")
@@ -408,7 +407,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                         { "Content-Transfer-Encoding", "binary" },
                         { "AB", "b3" },
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataBatchOperationHeaderDictionary_DuplicateCaseInsensitiveKeys", "AB")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataBatchReaderStream_DuplicateHeaderFound", "Ab")
                 },
                 new PartHeaderTestCase
                 {
@@ -429,6 +428,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                         { "Content-Transfer-Encoding", "binary" },
                         { "AB", "b3" },
                     },
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataBatchReaderStream_DuplicateHeaderFound", "Ab")
                 },
             };
 
