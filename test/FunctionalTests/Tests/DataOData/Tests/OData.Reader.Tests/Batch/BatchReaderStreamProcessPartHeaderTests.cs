@@ -428,7 +428,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                         { "Content-Transfer-Encoding", "binary" },
                         { "AB", "b3" },
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataBatchOperationHeaderDictionary_DuplicateCaseInsensitiveKeys", "AB")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataBatchReaderStream_DuplicateHeaderFound", "Ab")
                 },
             };
 
