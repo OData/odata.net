@@ -170,6 +170,7 @@ namespace Microsoft.OData.Edm
 
                 foreach (IList<IEdmOperation> operations in this.functionDictionary.Values)
                 {
+                    //To ensure the Listof operations is distinct, as the same list of operations could be there for another qualified name in dictionary
                     if (operationList.Add(operations))
                     {
                         for (int i = 0; i < operations.Count; i++)
@@ -198,21 +199,39 @@ namespace Microsoft.OData.Edm
         /// </returns>
         public virtual IEnumerable<IEdmOperation> FindDeclaredBoundOperations(string qualifiedName, IEdmType bindingType)
         {
-            IList<IEdmOperation> operations = this.FindDeclaredBoundOperations(bindingType) as IList<IEdmOperation>;
-            IList<IEdmOperation> matchedOperation = new List<IEdmOperation>();
+            IEnumerable<IEdmOperation> enumarable = this.FindDeclaredBoundOperations(bindingType);  
+            
+            if(enumarable == null || !enumarable.Any())
+            {
+                return new IEdmOperation[] { };
+            }
+
+            IList<IEdmOperation> matchedOperations = new List<IEdmOperation>();
+
+            IList<IEdmOperation> operations = enumarable as IList<IEdmOperation>;
 
             if (operations != null)
             {                
                 for (int i = 0; i < operations.Count; i++)
                 {
-                    if ( string.Equals(operations[i].FullName(),qualifiedName,System.StringComparison.Ordinal) )
+                    if (string.Equals(operations[i].FullName(), qualifiedName, System.StringComparison.Ordinal))
                     {
-                        matchedOperation.Add(operations[i]);
+                        matchedOperations.Add(operations[i]);
                     }
                 }                
             }
+            else
+            {
+                foreach(IEdmOperation operation in enumarable)
+                {
+                    if (string.Equals(operation.FullName(), qualifiedName, System.StringComparison.Ordinal))
+                    {
+                        matchedOperations.Add(operation);
+                    }
+                }
+            }
             
-            return matchedOperation;
+            return matchedOperations;
         }
 
         /// <summary>

@@ -1599,17 +1599,18 @@ namespace Microsoft.OData.Edm
                 return primitiveType.FullName;
             }
 
-            var namedDefinition = type as IEdmSchemaElement;
-            var collectionType = type as IEdmCollectionType;
-            if (collectionType == null)
+            IEdmSchemaElement namedDefinition;
+            if (type.TypeKind != EdmTypeKind.Collection)
             {
+                namedDefinition = type as IEdmSchemaElement;
                 return namedDefinition != null ? namedDefinition.FullName() : null;
             }
-
-            // Handle collection case.
-            namedDefinition = collectionType.ElementType.Definition as IEdmSchemaElement;
-
-            return namedDefinition != null ? string.Format(CultureInfo.InvariantCulture, CollectionTypeFormat, namedDefinition.FullName()) : null;
+            else
+            {
+                // Handle collection case.
+                namedDefinition = (type as IEdmCollectionType).ElementType.Definition as IEdmSchemaElement;
+                return namedDefinition != null ? string.Format(CultureInfo.InvariantCulture, CollectionTypeFormat, namedDefinition.FullName()) : null;
+            }
         }
 
         /// <summary>

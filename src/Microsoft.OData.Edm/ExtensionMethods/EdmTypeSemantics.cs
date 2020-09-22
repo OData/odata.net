@@ -18,7 +18,7 @@ namespace Microsoft.OData.Edm
     public static class EdmTypeSemantics
     {
 
-        private static ConcurrentDictionary<string, HashSet<string>> typeDictionaryCache = new ConcurrentDictionary<string, HashSet<string>>();
+        private static ConcurrentDictionary<string, HashSet<string>> baseTypeCache = new ConcurrentDictionary<string, HashSet<string>>();
  
         #region IsCollection, IsEntity, IsComplex, IsPath...
 
@@ -1222,29 +1222,32 @@ namespace Microsoft.OData.Edm
         /// <returns>True if and only if the type inherits from the potential base type.</returns>
         public static bool InheritsFrom(this IEdmStructuredType type, IEdmStructuredType potentialBaseType)
         {
-            HashSet<string> lstTypes;
+            HashSet<string> baseTypes;
             string fullName = type.FullTypeName();
 
-            if (typeDictionaryCache.TryGetValue(fullName, out lstTypes))
+            if (!baseTypeCache.TryGetValue(fullName, out baseTypes))
             {
-                return lstTypes.Contains(potentialBaseType.FullTypeName());
+                baseTypes = new HashSet<string>();
+
+                GetBaseTypes(type, baseTypes, fullName);
             }
 
-            lstTypes = new HashSet<string>();           
+            return baseTypes.Contains(potentialBaseType.FullTypeName());
+        }
 
+        private static void GetBaseTypes(IEdmStructuredType type, HashSet<string> baseTypes, string fullName)
+        {
             do
             {
                 type = type.BaseType;
                 if (type != null)
                 {
-                    lstTypes.Add(type.FullTypeName());
+                    baseTypes.Add(type.FullTypeName());
                 }
             }
             while (type != null);
 
-            typeDictionaryCache.TryAdd(fullName, lstTypes);
-
-            return lstTypes.Contains(potentialBaseType.FullTypeName());
+            baseTypeCache.TryAdd(fullName, baseTypes);           
         }
 
         /// <summary>
