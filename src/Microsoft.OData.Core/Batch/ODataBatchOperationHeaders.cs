@@ -67,7 +67,8 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="key">The key to locate in the dictionary.</param>
         /// <returns>true if the dictionary contains an element with the <paramref name="key"/>; otherwise, false.</returns>
-        /// <remarks>This method will only try to match the key using case-insensitive comparison.</remarks>
+        /// <remarks>This method will match the key using case-insensitive comparison.</remarks>
+
         public bool ContainsKeyOrdinal(string key)
         {
             return this.headersDictionary.ContainsKey(key);
