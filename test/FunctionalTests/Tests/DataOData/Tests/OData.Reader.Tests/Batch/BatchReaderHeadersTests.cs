@@ -48,13 +48,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                 new KeyValuePair<string, string>("ABC", "ABC"),
             };
 
-            Dictionary<string, string> validInitialHeaders = new Dictionary<string, string>
+            Dictionary<string, string> validInitialHeaders = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
                 { "ABC", "ABC"},
-                { "Abc", "Abc"},
-                { "abc", "abc"},
                 { "DEF", "DEF"},
-                { "def", "def"},
                 { "GHI", "GHI"},
             };
 
@@ -91,7 +88,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                     {
                         headers.Add("ABc", "ABc");
                     },
-                    ExpectedHeaders = new Dictionary<string, string>(validInitialHeaders).With("ABc", "ABc")
+                    ExpectedException = new ExpectedException(typeof(ArgumentException))
                 },
                 // Adding the same item should fail
                 new BatchHeadersTestCase(this.Settings)
@@ -111,7 +108,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                     {
                         headers.Remove("ABC");
                     },
-                    ExpectedHeaders = new Dictionary<string, string>(validInitialHeaders).Without("ABC")
+                    ExpectedHeaders = new Dictionary<string, string>(validInitialHeaders,StringComparer.OrdinalIgnoreCase).Without("ABC")
                 },
                 // Removing an item (case-insensitive match) should work
                 new BatchHeadersTestCase(this.Settings)
@@ -121,17 +118,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                     {
                         headers.Remove("ghi");
                     },
-                    ExpectedHeaders = new Dictionary<string, string>(validInitialHeaders).Without("GHI")
-                },
-                // Removing an item (multiple case-insensitive matches) should fail
-                new BatchHeadersTestCase(this.Settings)
-                {
-                    InitialHeaders = validInitialHeaders,
-                    CustomizationFunc = headers => 
-                    {
-                        headers.Remove("ABc");
-                    },
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataBatchOperationHeaderDictionary_DuplicateCaseInsensitiveKeys", "ABc")
+                    ExpectedHeaders = new Dictionary<string, string>(validInitialHeaders,StringComparer.OrdinalIgnoreCase).Without("GHI")
                 },
                 // Removing a non-existing item should work
                 new BatchHeadersTestCase(this.Settings)
@@ -150,16 +137,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                     CustomizationFunc = headers => 
                     {
                         this.Settings.Assert.IsTrue(headers.ContainsKeyOrdinal("abc"), "Expected to find 'abc' in the headers.");
-                    },
-                    ExpectedHeaders = validInitialHeaders
-                },
-                // ContainsKeyOrdinal should fail for non-existing key
-                new BatchHeadersTestCase(this.Settings)
-                {
-                    InitialHeaders = validInitialHeaders,
-                    CustomizationFunc = headers => 
-                    {
-                        this.Settings.Assert.IsFalse(headers.ContainsKeyOrdinal("ABc"), "Expected to not find 'ABc' in the headers.");
                     },
                     ExpectedHeaders = validInitialHeaders
                 },
@@ -186,27 +163,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                         this.Assert.AreEqual("GHI", v, "Header values don't match.");
                     },
                     ExpectedHeaders = validInitialHeaders
-                },
-                // TryGetValue should fail for existing key (multiple case-insensitive matches)
-                new BatchHeadersTestCase(this.Settings)
-                {
-                    InitialHeaders = validInitialHeaders,
-                    CustomizationFunc = headers => 
-                    {
-                        string v;
-                        headers.TryGetValue("ABc", out v);
-                    },
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataBatchOperationHeaderDictionary_DuplicateCaseInsensitiveKeys", "ABc")
-                },
-                new BatchHeadersTestCase(this.Settings)
-                {
-                    InitialHeaders = validInitialHeaders,
-                    CustomizationFunc = headers => 
-                    {
-                        string v;
-                        headers.TryGetValue("DEf", out v);
-                    },
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataBatchOperationHeaderDictionary_DuplicateCaseInsensitiveKeys", "DEf")
                 },
                 // TryGetValue should work for non-existing key
                 new BatchHeadersTestCase(this.Settings)
@@ -240,25 +196,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                         this.Assert.AreEqual("GHI", v, "Header values don't match.");
                     },
                     ExpectedHeaders = validInitialHeaders
-                },
-                // Indexer should fail for existing key (multiple case-insensitive matches)
-                new BatchHeadersTestCase(this.Settings)
-                {
-                    InitialHeaders = validInitialHeaders,
-                    CustomizationFunc = headers => 
-                    {
-                        string v = headers["ABc"];
-                    },
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataBatchOperationHeaderDictionary_DuplicateCaseInsensitiveKeys", "ABc")
-                },
-                new BatchHeadersTestCase(this.Settings)
-                {
-                    InitialHeaders = validInitialHeaders,
-                    CustomizationFunc = headers => 
-                    {
-                        string v = headers["DEf"];
-                    },
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataBatchOperationHeaderDictionary_DuplicateCaseInsensitiveKeys", "DEf")
                 },
                 // Indexer should fail for non-existing key
                 new BatchHeadersTestCase(this.Settings)
