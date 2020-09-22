@@ -1623,6 +1623,11 @@ namespace Microsoft.OData.Edm
         /// <returns>The element type of this references definition.</returns>
         public static IEdmType AsElementType(this IEdmType type)
         {   
+            if(type == null)
+            {
+                return type;
+            }
+
             return (type.TypeKind == EdmTypeKind.Collection) ? (type as IEdmCollectionType).ElementType.Definition : type;
         }
 

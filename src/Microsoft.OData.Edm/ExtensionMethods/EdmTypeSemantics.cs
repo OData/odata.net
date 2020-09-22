@@ -1221,39 +1221,47 @@ namespace Microsoft.OData.Edm
         /// <param name="potentialBaseType">The potential base type of the type being tested.</param>
         /// <returns>True if and only if the type inherits from the potential base type.</returns>
         public static bool InheritsFrom(this IEdmStructuredType type, IEdmStructuredType potentialBaseType)
-        {            
-            string fullName = type.FullTypeName();
-            HashSet<IEdmStructuredType> baseTypes = GetBaseTypes(type);
-
-            return baseTypes.Contains(potentialBaseType);
-        }
-
-        private static HashSet<IEdmStructuredType> GetBaseTypes(IEdmStructuredType type)
         {
             HashSet<IEdmStructuredType> baseTypes;
+            
+            if(TryGetBaseTypes(type, out baseTypes))
+            {
+                return baseTypes.Contains(potentialBaseType);
+            }
 
+            return false;
+        }
+
+        private static bool TryGetBaseTypes(IEdmStructuredType type, out HashSet<IEdmStructuredType> baseTypes)
+        {
             if (baseTypeCache.TryGetValue(type, out baseTypes))
             {
-                return baseTypes;
+                return true;
             }
 
-            baseTypes = new HashSet<IEdmStructuredType>();
-
-            IEdmStructuredType currType = type;
-
-            type = type.BaseType;
-            if (type != null)
+            IEdmStructuredType baseType = type.BaseType;
+            
+            if (baseType != null)
             {
-                baseTypes.Add(type);
-                foreach(IEdmStructuredType baseType in GetBaseTypes(type))
+                baseTypes = new HashSet<IEdmStructuredType>();
+                baseTypes.Add(baseType);
+
+                HashSet<IEdmStructuredType> nestedBaseTypes;
+
+                if (TryGetBaseTypes(baseType, out nestedBaseTypes))
                 {
-                    baseTypes.Add(baseType);
+                    foreach (IEdmStructuredType nestedBaseType in nestedBaseTypes)
+                    {
+                        baseTypes.Add(nestedBaseType);
+                    }
                 }
+
+                baseTypeCache.TryAdd(type, baseTypes);
+
+                return true;
             }
 
-            baseTypeCache.TryAdd(currType, baseTypes);
-
-            return baseTypes;
+            return false;
         }
 
         /// <summary>

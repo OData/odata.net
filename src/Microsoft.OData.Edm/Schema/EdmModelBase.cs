@@ -25,7 +25,7 @@ namespace Microsoft.OData.Edm
         private readonly Dictionary<string, IList<IEdmOperation>> functionDictionary = new Dictionary<string, IList<IEdmOperation>>();
 
         /// <summary>
-        /// Cache of operations that are bindable to entity types.
+        /// Cache of operations that are bindable to entity types, its a cache of all bindable functions, indexed by binding type.
         /// </summary>
         private readonly ConcurrentDictionary<string, IList<IEdmOperation>> bindableOperationsCache;
 
