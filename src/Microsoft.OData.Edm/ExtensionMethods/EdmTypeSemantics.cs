@@ -5,7 +5,9 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Edm
@@ -15,6 +17,9 @@ namespace Microsoft.OData.Edm
     /// </summary>
     public static class EdmTypeSemantics
     {
+
+        private static ConcurrentDictionary<IEdmStructuredType, HashSet<IEdmStructuredType>> baseTypeCache = new ConcurrentDictionary<IEdmStructuredType, HashSet<IEdmStructuredType>>();
+ 
         #region IsCollection, IsEntity, IsComplex, IsPath...
 
         /// <summary>
@@ -1217,15 +1222,44 @@ namespace Microsoft.OData.Edm
         /// <returns>True if and only if the type inherits from the potential base type.</returns>
         public static bool InheritsFrom(this IEdmStructuredType type, IEdmStructuredType potentialBaseType)
         {
-            do
+            HashSet<IEdmStructuredType> baseTypes;
+            
+            if(TryGetBaseTypes(type, out baseTypes))
             {
-                type = type.BaseType;
-                if (type != null && type.IsEquivalentTo(potentialBaseType))
-                {
-                    return true;
-                }
+                return baseTypes.Contains(potentialBaseType);
             }
-            while (type != null);
+
+            return false;
+        }
+
+        private static bool TryGetBaseTypes(IEdmStructuredType type, out HashSet<IEdmStructuredType> baseTypes)
+        {
+            if (baseTypeCache.TryGetValue(type, out baseTypes))
+            {
+                return true;
+            }
+
+            IEdmStructuredType baseType = type.BaseType;
+            
+            if (baseType != null)
+            {
+                baseTypes = new HashSet<IEdmStructuredType>();
+                baseTypes.Add(baseType);
+
+                HashSet<IEdmStructuredType> nestedBaseTypes;
+
+                if (TryGetBaseTypes(baseType, out nestedBaseTypes))
+                {
+                    foreach (IEdmStructuredType nestedBaseType in nestedBaseTypes)
+                    {
+                        baseTypes.Add(nestedBaseType);
+                    }
+                }
+
+                baseTypeCache.TryAdd(type, baseTypes);
+
+                return true;
+            }
 
             return false;
         }
