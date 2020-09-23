@@ -263,7 +263,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="link">The link.</param>
         public void AddNestedResourceInfo(ODataNestedResourceInfo link)
         {
-            if (this.IsTracking)
+            if (this.IsTracking && !this.Entry.IsTransient)
             {
                 this.EntityDescriptor.AddNestedResourceInfo(link.Name, link.Url);
                 Uri associationLinkUrl = link.AssociationLinkUrl;

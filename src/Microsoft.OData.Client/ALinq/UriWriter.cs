@@ -589,11 +589,12 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// ApplyQueryOptionExpression visit method.
         /// </summary>
-        /// <param name="aqoe">ApplyQueryOptionExpression expression to visit</param>
-        internal void VisitQueryOptionExpression(ApplyQueryOptionExpression aqoe)
+        /// <param name="aqoExpr">ApplyQueryOptionExpression expression to visit</param>
+        internal void VisitQueryOptionExpression(ApplyQueryOptionExpression aqoExpr)
         {
             // No reason to proceed if there are no aggregations
-            if (aqoe.Aggregations.Count == 0)
+            // TODO: Support grouping with no aggregations => /Customers?$apply=groupby((Name))
+            if (aqoExpr.Aggregations.Count == 0)
             {
                 return;
             }
@@ -605,7 +606,7 @@ namespace Microsoft.OData.Client
 
             while (true)
             {
-                ApplyQueryOptionExpression.Aggregation aggregation = aqoe.Aggregations[aggIdx];
+                ApplyQueryOptionExpression.Aggregation aggregation = aqoExpr.Aggregations[aggIdx];
                 AggregationMethod aggregationMethod = aggregation.AggregationMethod;
                 string aggregationAlias = aggregation.AggregationAlias;
 
@@ -644,7 +645,7 @@ namespace Microsoft.OData.Client
                 }
                 aggBuilder.Append(aggregationAlias);
 
-                if (++aggIdx == aqoe.Aggregations.Count)
+                if (++aggIdx == aqoExpr.Aggregations.Count)
                 {
                     break;
                 }
@@ -653,7 +654,7 @@ namespace Microsoft.OData.Client
             }
             aggBuilder.Append(UriHelper.RIGHTPAREN);
 
-            if (aqoe.GroupingExpressions.Count == 0)
+            if (aqoExpr.GroupingExpressions.Count == 0)
             {
                 // e.g. $apply=aggregate(Prop with sum as SumProp, Prop with average as AverageProp)
                 this.AddAsCachedQueryOption(UriHelper.DOLLARSIGN + UriHelper.OPTIONAPPLY, aggBuilder.ToString());
@@ -668,10 +669,10 @@ namespace Microsoft.OData.Client
 
                 while (true)
                 {
-                    Expression groupingExpression = aqoe.GroupingExpressions[grpIdx];
+                    Expression groupingExpression = aqoExpr.GroupingExpressions[grpIdx];
                     grpBuilder.Append(this.ExpressionToString(groupingExpression, /*inPath*/ false));
 
-                    if (++grpIdx == aqoe.GroupingExpressions.Count)
+                    if (++grpIdx == aqoExpr.GroupingExpressions.Count)
                     {
                         break;
                     }

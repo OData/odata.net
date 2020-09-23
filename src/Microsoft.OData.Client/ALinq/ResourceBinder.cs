@@ -897,11 +897,11 @@ namespace Microsoft.OData.Client
             // Analyze result selector expression
             GroupByProjectionAnalyzer.Analyze(source, resultSelector);
             // Rewrite the GroupBy result selector to a form usable by the projection plan compiler.
-            LambdaExpression projectionSelector = GroupByProjectionRewriter.TryRewrite(resultSelector);
+            LambdaExpression projectionSelector = GroupByProjectionRewriter.Rewrite(source, resultSelector);
 
             ResourceExpression resourceExpr = source.CreateCloneWithNewType(methodCallExpr.Method.ReturnType);
 
-            resourceExpr.Projection = new ProjectionQueryOptionExpression(projectionSelector.Body.Type, projectionSelector, new List<string>());
+            resourceExpr.Projection = new ProjectionQueryOptionExpression(projectionSelector.Parameters[0].Type, projectionSelector, new List<string>());
 
             expr = resourceExpr;
 
@@ -928,7 +928,6 @@ namespace Microsoft.OData.Client
             SequenceMethod sequenceMethod;
             if (!ReflectionUtil.TryIdentifySequenceMethod(methodCallExpr.Method, out sequenceMethod) || 
                 sequenceMethod != SequenceMethod.Select)
-            // TODO: SelectManyResultSelector would be applicable in $apply expressions in navigation property scenarios - separate task
             {
                 return false;
             }
@@ -961,7 +960,7 @@ namespace Microsoft.OData.Client
 
             GroupByProjectionAnalyzer.Analyze(source, resultSelector);
             // Rewrite the GroupBy result selector to a form usable by the projection plan compiler.
-            LambdaExpression projectionSelector = GroupByProjectionRewriter.TryRewrite(resultSelector);
+            LambdaExpression projectionSelector = GroupByProjectionRewriter.Rewrite(source, resultSelector);
 
             ResourceExpression resourceExpr = source.CreateCloneWithNewType(methodCallExpr.Method.ReturnType);
 
@@ -1847,11 +1846,19 @@ namespace Microsoft.OData.Client
         /// <returns></returns>
         private static bool AnalyzeGroupBySelector(QueryableResourceExpression input, LambdaExpression lambdaExpr)
         {
+            Debug.Assert(input != null, "input != null");
+            Debug.Assert(lambdaExpr != null, "lambdaExpr != null");
+
+            EnsureApplyInitialized(input);
+            Debug.Assert(input.Apply != null, "input.Apply != null");
+
             // Scenario 1: GroupBy(g => [Constant])
             ConstantExpression constExpr = lambdaExpr.Body as ConstantExpression;
             if (constExpr != null)
             {
                 // Handle GroupBy(g => [Constant]) scenario
+                input.Apply.GroupingExpressionsMap.Add(constExpr.Value.ToString(), constExpr);
+
                 return true;
             }
 
@@ -1864,10 +1871,10 @@ namespace Microsoft.OData.Client
                     return false;
                 }
 
-                EnsureApplyInitialized(input);
-                Debug.Assert(input.Apply != null, "input.Apply != null");
-
                 input.Apply.GroupingExpressions.Add(boundExpression);
+
+                MemberExpression memberExpr = (MemberExpression)lambdaExpr.Body;
+                input.Apply.GroupingExpressionsMap.Add(memberExpr.Member.Name, memberExpr);
 
                 return true;
             }
@@ -3507,18 +3514,50 @@ namespace Microsoft.OData.Client
                 }
             }
 
+            internal override NewExpression VisitNew(NewExpression nex)
+            {
+                EnsureApplyInitialized(this.input);
+
+                for (int i = 0; i < nex.Arguments.Count; i++)
+                {
+                    this.input.Apply.GroupingExpressionsMap.Add(nex.Members[i].Name, nex.Arguments[i]);
+                }
+
+                return base.VisitNew(nex);
+            }
+
+            internal override MemberAssignment VisitMemberAssignment(MemberAssignment assignment)
+            {
+                EnsureApplyInitialized(this.input);
+                this.input.Apply.GroupingExpressionsMap.Add(assignment.Member.Name, assignment.Expression);
+
+                return base.VisitMemberAssignment(assignment);
+            }
+
             /// <inheritdoc/>
             internal override Expression VisitMemberAccess(MemberExpression m)
             {
-                Expression expr = base.VisitMemberAccess(m);
+                MemberExpression memberExpr = StripTo<MemberExpression>(m);
 
-                MemberExpression mExpr = StripTo<MemberExpression>(expr);
+                MemberExpression mExpr = memberExpr;
+                while (true)
+                {
+                    if (mExpr.Expression.NodeType == ExpressionType.MemberAccess)
+                    {
+                        mExpr = (MemberExpression)mExpr.Expression;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                
                 ParameterExpression parameterExpr = mExpr.Expression as ParameterExpression;
 
                 if (parameterExpr != null)
                 {
                     List<ResourceExpression> referencedInputs = new List<ResourceExpression>();
-                    Expression boundExpression = InputBinder.Bind(mExpr, this.input, parameterExpr, referencedInputs);
+                    Expression boundExpression = InputBinder.Bind(memberExpr, this.input, parameterExpr, referencedInputs);
 
                     if (referencedInputs.Count == 1 && referencedInputs[0] == this.input)
                     {
@@ -3529,7 +3568,7 @@ namespace Microsoft.OData.Client
                     }
                 }
 
-                return expr;
+                return m;
             }
         }
 
@@ -3542,7 +3581,7 @@ namespace Microsoft.OData.Client
             private readonly QueryableResourceExpression input;
 
             /// <summary>Expression to member mapping.</summary>
-            private readonly IDictionary<Expression, MemberInfo> expressionMapping;
+            private readonly IDictionary<Expression, MemberInfo> expressionMap;
 
             /// <summary>
             /// Creates an <see cref="GroupByProjectionAnalyzer"/> expression.
@@ -3551,7 +3590,7 @@ namespace Microsoft.OData.Client
             private GroupByProjectionAnalyzer(QueryableResourceExpression input)
             {
                 this.input = input;
-                this.expressionMapping = new Dictionary<Expression, MemberInfo>(ReferenceEqualityComparer<Expression>.Instance);
+                this.expressionMap = new Dictionary<Expression, MemberInfo>(ReferenceEqualityComparer<Expression>.Instance);
             }
 
             /// <summary>
@@ -3581,7 +3620,15 @@ namespace Microsoft.OData.Client
             /// <inheritdoc/>
             internal override NewExpression VisitNew(NewExpression nex)
             {
-                PopulateExpressionMapping(nex);
+                // TODO: Confirm behaviour if a property of the property type is applied
+                // e.g., .GroupBy(d1 => d1.Prop).Select(d2 => new { d1.Key.Length, ... })
+                // Where Prop is of type string and Length is a property of string
+
+                // Map assignment expressions to their respective member
+                for (int i = 0; i < nex.Arguments.Count; i++)
+                {
+                    this.expressionMap.Add(nex.Arguments[i], nex.Members[i]);
+                }
 
                 return base.VisitNew(nex);
             }
@@ -3589,7 +3636,7 @@ namespace Microsoft.OData.Client
             /// <inheritdoc/>
             internal override MemberAssignment VisitMemberAssignment(MemberAssignment assignment)
             {
-                this.expressionMapping.Add(assignment.Expression, assignment.Member);
+                this.expressionMap.Add(assignment.Expression, assignment.Member);
 
                 return base.VisitMemberAssignment(assignment);
             }
@@ -3730,198 +3777,14 @@ namespace Microsoft.OData.Client
             private void AddAggregation(MethodCallExpression methodCallExpr, Expression selector, AggregationMethod aggregationMethod)
             {
                 MemberInfo memberInfo;
-                if (expressionMapping.TryGetValue(methodCallExpr, out memberInfo))
+                if (expressionMap.TryGetValue(methodCallExpr, out memberInfo))
                 {
                     EnsureApplyInitialized(input);
                     Debug.Assert(input.Apply != null, "input.Apply != null");
 
-                    expressionMapping.TryGetValue(methodCallExpr, out memberInfo);
+                    expressionMap.TryGetValue(methodCallExpr, out memberInfo);
 
                     this.input.Apply.Aggregations.Add(new ApplyQueryOptionExpression.Aggregation(selector, aggregationMethod, memberInfo.Name));
-                }
-            }
-
-
-
-            /// <summary>
-            /// Populates a dictionary mapping arguments to the contructor to their respective members.
-            /// </summary>
-            /// <param name="newExpr">A <see cref="NewExpression"/> expression.</param>
-            private void PopulateExpressionMapping(NewExpression newExpr)
-            {
-                for (int i = 0; i < newExpr.Arguments.Count; i++)
-                {
-                    this.expressionMapping.Add(newExpr.Arguments[i], newExpr.Members[i]);
-                }
-            }
-        }
-        private sealed class GroupByProjectionRewriter : ALinqExpressionVisitor
-        {
-            /// <summary>Mapping between expressions and their corresponding members.</summary>
-            private readonly IDictionary<Expression, MemberInfo> expressionMapping;
-
-            /// <summary>Parameter for the rewritten lambda expression.</summary>
-            private readonly ParameterExpression lambdaParameter;
-
-            /// <summary>Lambda parameter type.</summary>
-            private readonly Type lambdaParameterType;
-
-            /// <summary>
-            /// Creates an <see cref="GroupByProjectionRewriter"/> expression.
-            /// </summary>
-            /// <param name="lambdaParameterType">The lambda parameter type.</param>
-            private GroupByProjectionRewriter(Type lambdaParameterType)
-            {
-                Debug.Assert(lambdaParameterType != null, "lambdaParameterType != null");
-
-                this.lambdaParameterType = lambdaParameterType;
-                this.lambdaParameter = Expression.Parameter(lambdaParameterType, "d");
-                this.expressionMapping = new Dictionary<Expression, MemberInfo>(ReferenceEqualityComparer<Expression>.Instance);
-            }
-
-            /// <summary>
-            /// Rewrites the GroupBy result selector to a form usable by the projection plan compiler.
-            /// </summary>
-            /// <param name="resultSelector">The result selector lambda expression to rewrite.</param>
-            /// <returns>Rewritten GroupBy result selector.</returns>
-            internal static LambdaExpression TryRewrite(LambdaExpression resultSelector)
-            {
-                Debug.Assert(resultSelector != null, "resultSelector != null");
-
-                GroupByProjectionRewriter instance = new GroupByProjectionRewriter(resultSelector.Body.Type);
-
-                MemberInitExpression memberInitExpr = resultSelector.Body as MemberInitExpression;
-
-                if (memberInitExpr != null)
-                {
-                    MemberInitExpression miExpr = instance.Visit(memberInitExpr) as MemberInitExpression;
-
-                    return Expression.Lambda(Expression.MemberInit(Expression.New(resultSelector.Body.Type), miExpr.Bindings), instance.lambdaParameter);
-                }
-                else
-                {
-                    NewExpression newExpr = instance.Visit(resultSelector.Body) as NewExpression;
-
-                    // Only a single parameter is expected on the anonymous type
-                    ConstructorInfo constructorInfo = instance.lambdaParameterType.GetConstructors().LastOrDefault();
-                    return Expression.Lambda(Expression.New(constructorInfo, newExpr.Arguments, newExpr.Members), instance.lambdaParameter);
-                }
-            }
-
-            /// <inheritdoc/>
-            internal override NewExpression VisitNew(NewExpression nex)
-            {
-                this.PopulateExpressionMapping(nex);
-
-                return base.VisitNew(nex);
-            }
-
-            /// <inheritdoc/>
-            internal override Expression VisitParameter(ParameterExpression p)
-            {
-                MemberInfo memberInfo;
-                // Parameter may be assigned to a member in some scenario
-                if (this.expressionMapping.TryGetValue(p, out memberInfo))
-                {
-                    return Expression.PropertyOrField(this.lambdaParameter, memberInfo.Name);
-                }
-                else
-                {
-                    return base.VisitParameter(p);
-                }
-            }
-
-            /// <inheritdoc/>
-            internal override Expression VisitMemberAccess(MemberExpression m)
-            {
-                MemberInfo memberInfo;
-                if (this.expressionMapping.TryGetValue(m, out memberInfo))
-                {
-                    return Expression.PropertyOrField(this.lambdaParameter, memberInfo.Name);
-                }
-                // Something would have to be wrong for us to find ourselves here
-                throw Error.NotSupported();
-            }
-
-            /// <inheritdoc/>
-            internal override MemberAssignment VisitMemberAssignment(MemberAssignment assignment)
-            {
-                this.expressionMapping.Add(assignment.Expression, assignment.Member);
-
-                return base.VisitMemberAssignment(assignment);
-            }
-
-            /// <inheritdoc/>
-            internal override Expression VisitMethodCall(MethodCallExpression m)
-            {
-                SequenceMethod sequenceMethod;
-                ReflectionUtil.TryIdentifySequenceMethod(m.Method, out sequenceMethod);
-
-                switch (sequenceMethod)
-                {
-                    case SequenceMethod.SumIntSelector:
-                    case SequenceMethod.SumDoubleSelector:
-                    case SequenceMethod.SumDecimalSelector:
-                    case SequenceMethod.SumLongSelector:
-                    case SequenceMethod.SumSingleSelector:
-                    case SequenceMethod.SumNullableIntSelector:
-                    case SequenceMethod.SumNullableDoubleSelector:
-                    case SequenceMethod.SumNullableDecimalSelector:
-                    case SequenceMethod.SumNullableLongSelector:
-                    case SequenceMethod.SumNullableSingleSelector:
-                    case SequenceMethod.AverageIntSelector:
-                    case SequenceMethod.AverageDoubleSelector:
-                    case SequenceMethod.AverageDecimalSelector:
-                    case SequenceMethod.AverageLongSelector:
-                    case SequenceMethod.AverageSingleSelector:
-                    case SequenceMethod.AverageNullableIntSelector:
-                    case SequenceMethod.AverageNullableDoubleSelector:
-                    case SequenceMethod.AverageNullableDecimalSelector:
-                    case SequenceMethod.AverageNullableLongSelector:
-                    case SequenceMethod.AverageNullableSingleSelector:
-                    case SequenceMethod.MinIntSelector:
-                    case SequenceMethod.MinDoubleSelector:
-                    case SequenceMethod.MinDecimalSelector:
-                    case SequenceMethod.MinLongSelector:
-                    case SequenceMethod.MinSingleSelector:
-                    case SequenceMethod.MinNullableIntSelector:
-                    case SequenceMethod.MinNullableDoubleSelector:
-                    case SequenceMethod.MinNullableDecimalSelector:
-                    case SequenceMethod.MinNullableLongSelector:
-                    case SequenceMethod.MinNullableSingleSelector:
-                    case SequenceMethod.MaxIntSelector:
-                    case SequenceMethod.MaxDoubleSelector:
-                    case SequenceMethod.MaxDecimalSelector:
-                    case SequenceMethod.MaxLongSelector:
-                    case SequenceMethod.MaxSingleSelector:
-                    case SequenceMethod.MaxNullableIntSelector:
-                    case SequenceMethod.MaxNullableDoubleSelector:
-                    case SequenceMethod.MaxNullableDecimalSelector:
-                    case SequenceMethod.MaxNullableLongSelector:
-                    case SequenceMethod.MaxNullableSingleSelector:
-                    case SequenceMethod.Count:
-                    case SequenceMethod.LongCount:
-                        MemberInfo memberInfo;
-                        if (expressionMapping.TryGetValue(m, out memberInfo))
-                        {
-                            return Expression.PropertyOrField(this.lambdaParameter, memberInfo.Name);
-                        }
-                        // Something would have to be wrong for us to find ourselves here
-                        throw Error.NotSupported();
-                    default:
-                        throw Error.MethodNotSupported(m);
-                };
-            }
-
-            /// <summary>
-            /// Populates a dictionary mapping arguments to the contructor to their respective members.
-            /// </summary>
-            /// <param name="newExpr">A <see cref="NewExpression"/> expression.</param>
-            private void PopulateExpressionMapping(NewExpression newExpr)
-            {
-                for (int i = 0; i < newExpr.Arguments.Count; i++)
-                {
-                    this.expressionMapping.Add(newExpr.Arguments[i], newExpr.Members[i]);
                 }
             }
         }
