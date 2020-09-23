@@ -10,7 +10,7 @@
     <IsPackable>true</IsPackable>
     <IsShipping>true</IsShipping>
   </PropertyGroup>
-
+   
   <!-- References -->
    <Import Project="..\Build.props" />
   <!-- Generated files -->
