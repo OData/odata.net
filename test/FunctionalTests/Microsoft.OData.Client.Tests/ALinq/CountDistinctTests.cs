@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
-using FluentAssertions;
 using Microsoft.OData.Client.Tests.Tracking;
 using Microsoft.OData.Edm.Csdl;
 using Xunit;
@@ -91,7 +90,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
             var queryable = context.CreateQuery<Document>("Documents");
             InterceptRequestAndMockResponse(context, "CountDistinctName", aggregateValue);
             Action act = () => queryable.Distinct().Count();
-            act.Should().Throw<NotSupportedException>("The method 'Distinct' is not supported.");
+            Assert.Throws<NotSupportedException>(act);
         }
 
     }
