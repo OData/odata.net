@@ -6,50 +6,43 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
-using Microsoft.OData.Edm;
 using Xunit;
+using Microsoft.OData.Edm;
 
 namespace Microsoft.OData.Client.Tests.ALinq
 {
-    public class Number
-    {
-        public int RowId { get; set; }
-        public string RowParity { get; set; }
-        public string RowCategory { get; set; }
-        public int IntProp { get; set; }
-        public int? NullableIntProp { get; set; }
-        public double DoubleProp { get; set; }
-        public double? NullableDoubleProp { get; set; }
-        public decimal DecimalProp { get; set; }
-        public decimal? NullableDecimalProp { get; set; }
-        public long LongProp { get; set; }
-        public long? NullableLongProp { get; set; }
-        public float SingleProp { get; set; }
-        public float? NullableSingleProp { get; set; }
-    }
-
     public class DollarApplyTests
     {
         private Random rand = new Random();
         private readonly DataServiceContext dsContext;
         private const string serviceUri = "http://tempuri.org";
         private const string numbersEntitySetName = "Numbers";
+        private const string salesEntitySetName = "Sales";
         private static string aggregationExprTemplate = "{0} with {1} as {2}";
         private static string aggregateTemplate = "aggregate({0})";
-        
+
+        public DollarApplyTests()
+        {
+            EdmModel model = BuildEdmModel();
+
+            dsContext = new DataServiceContext(new Uri(serviceUri));
+            dsContext.Format.UseJson(model);
+        }
+
         public static IEnumerable<object[]> GetAggregationData()
         {
             var testData = new List<object[]>();
 
-            foreach(var aggregationMethod in new[] { "Sum", "Average", "Min", "Max" })
+            foreach (var aggregationMethod in new[] { "Sum", "Average", "Min", "Max" })
             {
-                foreach(var type in new[] { "Int", "Double", "Decimal", "Long", "Single"})
+                foreach (var type in new[] { "Int", "Double", "Decimal", "Long", "Single" })
                 {
                     var aggregationMethodToLower = aggregationMethod.ToLower(); // e.g. sum
                     var propertyName = type + "Prop";  // e.g. IntProp
@@ -65,7 +58,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
                         string.Format(aggregateTemplate, string.Format(aggregationExprTemplate, propertyName, aggregationMethodToLower, aggregationAlias))
                     });
                     testData.Add(new object[]
-                    { 
+                    {
                         aggregationMethod,
                         nullableAggregationAlias,
                         nullablePropertyName,
@@ -79,35 +72,6 @@ namespace Microsoft.OData.Client.Tests.ALinq
 
             foreach (var item in testData)
                 yield return item;
-        }
-
-        public DollarApplyTests()
-        {
-            var model = new EdmModel();
-            var entity = new EdmEntityType("NS", "Number");
-            entity.AddKeys(entity.AddStructuralProperty("RowId", EdmCoreModel.Instance.GetInt32(false)));
-            entity.AddStructuralProperty("RowParity", EdmCoreModel.Instance.GetString(false));
-            entity.AddStructuralProperty("RowCategory", EdmCoreModel.Instance.GetString(false));
-            entity.AddStructuralProperty("IntProp", EdmCoreModel.Instance.GetInt32(false));
-            entity.AddStructuralProperty("NullableIntProp", EdmCoreModel.Instance.GetInt32(true));
-            entity.AddStructuralProperty("DoubleProp", EdmCoreModel.Instance.GetDouble(false));
-            entity.AddStructuralProperty("NullableDoubleProp", EdmCoreModel.Instance.GetDouble(true));
-            entity.AddStructuralProperty("DecimalProp", EdmCoreModel.Instance.GetDecimal(false));
-            entity.AddStructuralProperty("NullableDecimalProp", EdmCoreModel.Instance.GetDecimal(true));
-            entity.AddStructuralProperty("LongProp", EdmCoreModel.Instance.GetInt64(false));
-            entity.AddStructuralProperty("NullableLongProp", EdmCoreModel.Instance.GetInt64(true));
-            entity.AddStructuralProperty("SingleProp", EdmCoreModel.Instance.GetSingle(false));
-            entity.AddStructuralProperty("NullableSingleProp", EdmCoreModel.Instance.GetSingle(true));
-
-            var container = new EdmEntityContainer("NS", "Container");
-
-            model.AddElement(entity);
-            model.AddElement(container);
-
-            container.AddEntitySet(numbersEntitySetName, entity);
-
-            dsContext = new DataServiceContext(new Uri(serviceUri));
-            dsContext.Format.UseJson(model);
         }
 
         [Theory]
@@ -205,7 +169,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
             var aggregateResult = aggregateQuery.ToArray();
 
             Assert.Single(aggregateResult);
-            
+
             var singleResult = aggregateResult.First();
 
             Assert.Equal(506, singleResult.SumIntProp);
@@ -1453,7 +1417,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
         {
             DataServiceQuery<Number> queryable = this.dsContext.CreateQuery<Number>(numbersEntitySetName);
 
-            var aggregateQuery = queryable.GroupBy(d1 => d1.RowParity, (d2, d3) => new GroupedResult
+            var aggregateQuery = queryable.GroupBy(d1 => d1.RowParity, (d2, d3) => new NumbersGroupedResult
             {
                 RowParity = d2,
                 SumIntProp = d3.Sum(d4 => d4.IntProp),
@@ -1486,7 +1450,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
         {
             DataServiceQuery<Number> queryable = this.dsContext.CreateQuery<Number>(numbersEntitySetName);
 
-            var aggregateQuery = queryable.GroupBy(d1 => d1.RowParity).Select(d2 => new GroupedResult
+            var aggregateQuery = queryable.GroupBy(d1 => d1.RowParity).Select(d2 => new NumbersGroupedResult
             {
                 RowParity = d2.Key,
                 SumIntProp = d2.Sum(d3 => d3.IntProp),
@@ -1514,18 +1478,679 @@ namespace Microsoft.OData.Client.Tests.ALinq
             Assert.Equal("Odd", aggregateResult[1].RowParity);
         }
 
-        class GroupedResult
+        [Fact]
+        public void GroupByWithResultSelector_BySingleNavProperty()
         {
-            public string RowParity { get; set; }
-            public int SumIntProp { get; set; }
-            public double AverageDoubleProp { get; set; }
-            public decimal MinDecimalProp { get; set; }
-            public long MaxLongProp { get; set; }
-            public int Count { get; set; }
-            public int CountDistinct { get; set; }
+            DataServiceQuery<Sale> queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            var aggregateQuery = queryable.GroupBy(d1 => d1.Product.Color,
+                (d1, d2) => new
+                {
+                    Color = d1,
+                    SumAmount = d2.Sum(d3 => d3.Amount),
+                    AvgAmount = d2.Average(d3 => d3.Amount),
+                    MinAmount = d2.Min(d3 => d3.Amount),
+                    MaxAmount = d2.Max(d3 => d3.Amount)
+                });
+
+            Assert.Equal(
+                string.Format("{0}/Sales?$apply=groupby((Product/Color),aggregate(" +
+                "Amount with sum as SumAmount,Amount with average as AvgAmount," +
+                "Amount with min as MinAmount,Amount with max as MaxAmount))", serviceUri),
+                aggregateQuery.ToString());
+
+            MockGroupBySingleNavProperty();
+
+            var aggregateResult = aggregateQuery.ToArray();
+
+            Assert.Equal(2, aggregateResult.Length);
         }
 
-        #region Aggregation Responses Mocking
+        [Fact]
+        public void GroupByWithProjection_BySingleNavProperty()
+        {
+            DataServiceQuery<Sale> queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            var aggregateQuery = queryable.GroupBy(d1 => d1.Product.Color)
+                .Select(d2 => new
+                {
+                    Color = d2.Key,
+                    SumAmount = d2.Sum(d3 => d3.Amount),
+                    AvgAmount = d2.Average(d3 => d3.Amount),
+                    MinAmount = d2.Min(d3 => d3.Amount),
+                    MaxAmount = d2.Max(d3 => d3.Amount)
+                });
+
+            Assert.Equal(
+                string.Format("{0}/Sales?$apply=groupby((Product/Color),aggregate(" +
+                "Amount with sum as SumAmount,Amount with average as AvgAmount," +
+                "Amount with min as MinAmount,Amount with max as MaxAmount))", serviceUri),
+                aggregateQuery.ToString());
+
+            MockGroupBySingleNavProperty();
+
+            var aggregateResult = aggregateQuery.ToArray();
+
+            Assert.Equal(2, aggregateResult.Length);
+        }
+
+        [Fact]
+        public void GroupByWithResultSelector_ByMultipleNavProperties()
+        {
+            DataServiceQuery<Sale> queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            var aggregateQuery = queryable.GroupBy(d1 => new { d1.Product.Color, d1.Customer.Country },
+                (d1, d2) => new
+                {
+                    d1.Color,
+                    d1.Country,
+                    SumAmount = d2.Sum(d3 => d3.Amount),
+                    AvgAmount = d2.Average(d3 => d3.Amount),
+                    MinAmount = d2.Min(d3 => d3.Amount),
+                    MaxAmount = d2.Max(d3 => d3.Amount)
+                });
+
+            Assert.Equal(
+                string.Format("{0}/Sales?$apply=groupby((Product/Color,Customer/Country),aggregate(" +
+                "Amount with sum as SumAmount,Amount with average as AvgAmount," +
+                "Amount with min as MinAmount,Amount with max as MaxAmount))", serviceUri),
+                aggregateQuery.ToString());
+
+            MockGroupByMultipleNavProperties();
+
+            var aggregateResult = aggregateQuery.ToArray();
+
+            Assert.Equal(2, aggregateResult.Length);
+        }
+
+        [Fact]
+        public void GroupByWithProjection_ByMultipleNavProperties()
+        {
+            DataServiceQuery<Sale> queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            var aggregateQuery = queryable.GroupBy(d1 => new { d1.Product.Color, d1.Customer.Country })
+                .Select(d2 => new
+                {
+                    d2.Key.Color,
+                    d2.Key.Country,
+                    SumAmount = d2.Sum(d3 => d3.Amount),
+                    AvgAmount = d2.Average(d3 => d3.Amount),
+                    MinAmount = d2.Min(d3 => d3.Amount),
+                    MaxAmount = d2.Max(d3 => d3.Amount)
+                });
+
+            Assert.Equal(
+                string.Format("{0}/Sales?$apply=groupby((Product/Color,Customer/Country),aggregate(" +
+                "Amount with sum as SumAmount,Amount with average as AvgAmount," +
+                "Amount with min as MinAmount,Amount with max as MaxAmount))", serviceUri),
+                aggregateQuery.ToString());
+
+            MockGroupByMultipleNavProperties();
+
+            var aggregateResult = aggregateQuery.ToArray();
+
+            Assert.Equal(2, aggregateResult.Length);
+        }
+
+        [Fact]
+        public void GroupByWithResultSelector_BySingleNavProperty_AggregationsTargetingNavProperty()
+        {
+            DataServiceQuery<Sale> queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            var aggregateQuery = queryable.GroupBy(d1 => d1.Currency.Code,
+                (d1, d2) => new
+                {
+                    Currency = d1,
+                    SumTaxRate = d2.Sum(d3 => d3.Product.TaxRate),
+                    AvgTaxRate = d2.Average(d3 => d3.Product.TaxRate),
+                    MinTaxRate = d2.Min(d3 => d3.Product.TaxRate),
+                    MaxTaxRate = d2.Max(d3 => d3.Product.TaxRate)
+                });
+
+            Assert.Equal(
+                string.Format("{0}/Sales?$apply=groupby((Currency/Code),aggregate(" +
+                "Product/TaxRate with sum as SumTaxRate,Product/TaxRate with average as AvgTaxRate," +
+                "Product/TaxRate with min as MinTaxRate,Product/TaxRate with max as MaxTaxRate))", serviceUri),
+                aggregateQuery.ToString());
+
+            MockGroupBySingleNavProperty_AggregationsTargetingNavProperty();
+
+            var aggregateResult = aggregateQuery.ToArray();
+
+            Assert.Equal(2, aggregateResult.Length);
+        }
+
+        [Fact]
+        public void GroupByWithProjection_BySingleNavProperty_AggregationsTargetingNavProperty()
+        {
+            DataServiceQuery<Sale> queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            var aggregateQuery = queryable.GroupBy(d1 => d1.Currency.Code)
+                .Select(d2 => new
+                {
+                    Currency = d2.Key,
+                    SumTaxRate = d2.Sum(d3 => d3.Product.TaxRate),
+                    AvgTaxRate = d2.Average(d3 => d3.Product.TaxRate),
+                    MinTaxRate = d2.Min(d3 => d3.Product.TaxRate),
+                    MaxTaxRate = d2.Max(d3 => d3.Product.TaxRate)
+                });
+
+            Assert.Equal(
+                string.Format("{0}/Sales?$apply=groupby((Currency/Code),aggregate(" +
+                "Product/TaxRate with sum as SumTaxRate,Product/TaxRate with average as AvgTaxRate," +
+                "Product/TaxRate with min as MinTaxRate,Product/TaxRate with max as MaxTaxRate))", serviceUri),
+                aggregateQuery.ToString());
+
+            MockGroupBySingleNavProperty_AggregationsTargetingNavProperty();
+
+            var aggregateResult = aggregateQuery.ToArray();
+
+            Assert.Equal(2, aggregateResult.Length);
+        }
+
+        [Fact]
+        public void GroupByWithResultSelector_ByMultipleNavProperties_AggregationsTargetingNavProperty()
+        {
+            DataServiceQuery<Sale> queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            var aggregateQuery = queryable.GroupBy(d1 => new { d1.Product.Color, d1.Customer.Country },
+                (d1, d2) => new
+                {
+                    d1.Color,
+                    d1.Country,
+                    SumTaxRate = d2.Sum(d3 => d3.Product.TaxRate),
+                    AvgTaxRate = d2.Average(d3 => d3.Product.TaxRate),
+                    MinTaxRate = d2.Min(d3 => d3.Product.TaxRate),
+                    MaxTaxRate = d2.Max(d3 => d3.Product.TaxRate)
+                });
+
+            Assert.Equal(
+                string.Format("{0}/Sales?$apply=groupby((Product/Color,Customer/Country),aggregate(" +
+                "Product/TaxRate with sum as SumTaxRate,Product/TaxRate with average as AvgTaxRate," +
+                "Product/TaxRate with min as MinTaxRate,Product/TaxRate with max as MaxTaxRate))", serviceUri),
+                aggregateQuery.ToString());
+
+            MockGroupByMultipleNavProperties_AggregationsTargetingNavProperty();
+
+            var aggregateResult = aggregateQuery.ToArray();
+
+            Assert.Equal(2, aggregateResult.Length);
+        }
+
+        [Fact]
+        public void GroupByWithProjection_ByMultipleNavProperties_AggregationsTargetingNavProperty()
+        {
+            DataServiceQuery<Sale> queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            var aggregateQuery = queryable.GroupBy(d1 => new { d1.Product.Color, d1.Customer.Country })
+                .Select(d2 => new
+                {
+                    d2.Key.Color,
+                    d2.Key.Country,
+                    SumTaxRate = d2.Sum(d3 => d3.Product.TaxRate),
+                    AvgTaxRate = d2.Average(d3 => d3.Product.TaxRate),
+                    MinTaxRate = d2.Min(d3 => d3.Product.TaxRate),
+                    MaxTaxRate = d2.Max(d3 => d3.Product.TaxRate)
+                });
+
+            Assert.Equal(
+                string.Format("{0}/Sales?$apply=groupby((Product/Color,Customer/Country),aggregate(" +
+                "Product/TaxRate with sum as SumTaxRate,Product/TaxRate with average as AvgTaxRate," +
+                "Product/TaxRate with min as MinTaxRate,Product/TaxRate with max as MaxTaxRate))", serviceUri),
+                aggregateQuery.ToString());
+
+            MockGroupByMultipleNavProperties_AggregationsTargetingNavProperty();
+
+            var aggregateResult = aggregateQuery.ToArray();
+
+            Assert.Equal(2, aggregateResult.Length);
+        }
+
+        [Fact]
+        public void GroupByWithResultSelector_ByConstant_AggregationsTargetingNavProperty()
+        {
+            DataServiceQuery<Sale> queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            var aggregateQuery = queryable.GroupBy(d1 => 1,
+                (d1, d2) => new
+                {
+                    SumTaxRate = d2.Sum(d3 => d3.Product.TaxRate),
+                    AvgTaxRate = d2.Average(d3 => d3.Product.TaxRate),
+                    MinTaxRate = d2.Min(d3 => d3.Product.TaxRate),
+                    MaxTaxRate = d2.Max(d3 => d3.Product.TaxRate)
+                });
+
+            Assert.Equal(
+                string.Format("{0}/Sales?$apply=aggregate(" +
+                "Product/TaxRate with sum as SumTaxRate,Product/TaxRate with average as AvgTaxRate," +
+                "Product/TaxRate with min as MinTaxRate,Product/TaxRate with max as MaxTaxRate)", serviceUri),
+                aggregateQuery.ToString());
+
+            MockGroupByConstant_AggregationsTargetingNavProperty();
+
+            var aggregateResult = aggregateQuery.ToArray();
+
+            Assert.Single(aggregateResult);
+        }
+
+        [Fact]
+        public void GroupByWithProjection_ByConstant_AggregationsTargetingNavProperty()
+        {
+            DataServiceQuery<Sale> queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            var aggregateQuery = queryable.GroupBy(d1 => 1)
+                .Select(d2 => new
+                {
+                    SumTaxRate = d2.Sum(d3 => d3.Product.TaxRate),
+                    AvgTaxRate = d2.Average(d3 => d3.Product.TaxRate),
+                    MinTaxRate = d2.Min(d3 => d3.Product.TaxRate),
+                    MaxTaxRate = d2.Max(d3 => d3.Product.TaxRate)
+                });
+
+            Assert.Equal(
+                string.Format("{0}/Sales?$apply=aggregate(" +
+                "Product/TaxRate with sum as SumTaxRate,Product/TaxRate with average as AvgTaxRate," +
+                "Product/TaxRate with min as MinTaxRate,Product/TaxRate with max as MaxTaxRate)", serviceUri),
+                aggregateQuery.ToString());
+
+            MockGroupByConstant_AggregationsTargetingNavProperty();
+
+            var aggregateResult = aggregateQuery.ToArray();
+
+            Assert.Single(aggregateResult);
+        }
+
+        [Fact]
+        public void GroupByWithResultSelector_ByConstant_MixedScenarios()
+        {
+            DataServiceQuery<Sale> queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            var aggregateQuery = queryable.GroupBy(d1 => 1,
+                (d1, d2) => new
+                {
+                    GroupingConstant = d1,
+                    GibberishConstant = "dfksjfl",
+                    SumTaxRate = d2.Sum(d3 => d3.Product.TaxRate),
+                    AvgAmount = d2.Average(d3 => d3.Amount),
+                    MinTaxRate = d2.Min(d3 => d3.Product.TaxRate),
+                    MaxAmount = d2.Max(d3 => d3.Amount),
+                    GroupCount = d2.Count(),
+                    DistinctCurrency = d2.Select(d3 => d3.Currency.Code).Distinct().Count()
+                });
+
+            Assert.Equal(
+                string.Format("{0}/Sales?$apply=aggregate(" +
+                "Product/TaxRate with sum as SumTaxRate,Amount with average as AvgAmount," +
+                "Product/TaxRate with min as MinTaxRate,Amount with max as MaxAmount," +
+                "$count as GroupCount,Currency/Code with countdistinct as DistinctCurrency)", serviceUri),
+                aggregateQuery.ToString());
+
+            MockGroupByConstant_MixedScenarios();
+
+            var aggregateResult = aggregateQuery.ToArray();
+
+            Assert.Single(aggregateResult);
+        }
+
+        [Fact]
+        public void GroupByWithProjection_ByConstant_MixedScenarios()
+        {
+            DataServiceQuery<Sale> queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            var aggregateQuery = queryable.GroupBy(d1 => 1)
+                .Select(d2 => new
+                {
+                    GroupingConstant = d2.Key,
+                    GibberishConstant = "dfksjfl",
+                    SumTaxRate = d2.Sum(d3 => d3.Product.TaxRate),
+                    AvgAmount = d2.Average(d3 => d3.Amount),
+                    MinTaxRate = d2.Min(d3 => d3.Product.TaxRate),
+                    MaxAmount = d2.Max(d3 => d3.Amount),
+                    GroupCount = d2.Count(),
+                    DistinctCurrency = d2.Select(d3 => d3.Currency.Code).Distinct().Count()
+                });
+
+            Assert.Equal(
+                string.Format("{0}/Sales?$apply=aggregate(" +
+                "Product/TaxRate with sum as SumTaxRate,Amount with average as AvgAmount," +
+                "Product/TaxRate with min as MinTaxRate,Amount with max as MaxAmount," +
+                "$count as GroupCount,Currency/Code with countdistinct as DistinctCurrency)", serviceUri),
+                aggregateQuery.ToString());
+
+            MockGroupByConstant_MixedScenarios();
+
+            var aggregateResult = aggregateQuery.ToArray();
+
+            Assert.Single(aggregateResult);
+        }
+
+
+        [Fact]
+        public void GroupByWithResultSelector_BySingleNavProperty_MixedScenarios()
+        {
+            DataServiceQuery<Sale> queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            var aggregateQuery = queryable.GroupBy(d1 => d1.Product.Category.Id,
+                (d1, d2) => new
+                {
+                    GibberishConstant = "dfksjfl",
+                    CategoryId = d1,
+                    SumTaxRate = d2.Sum(d3 => d3.Product.TaxRate),
+                    AvgAmount = d2.Average(d3 => d3.Amount),
+                    MinTaxRate = d2.Min(d3 => d3.Product.TaxRate),
+                    MaxAmount = d2.Max(d3 => d3.Amount),
+                    GroupCount = d2.Count(),
+                    DistinctCurrency = d2.Select(d3 => d3.Currency.Code).Distinct().Count()
+                });
+
+            Assert.Equal(
+                string.Format("{0}/Sales?$apply=groupby((Product/Category/Id),aggregate(" +
+                "Product/TaxRate with sum as SumTaxRate,Amount with average as AvgAmount," +
+                "Product/TaxRate with min as MinTaxRate,Amount with max as MaxAmount," +
+                "$count as GroupCount,Currency/Code with countdistinct as DistinctCurrency))", serviceUri),
+                aggregateQuery.ToString());
+
+            MockGroupBySingleNavProperty_MixedScenarios();
+
+            var aggregateResult = aggregateQuery.ToArray();
+
+            Assert.Equal(2, aggregateResult.Length);
+        }
+
+        [Fact]
+        public void GroupByWithProjection_BySingleNavProperty_MixedScenarios()
+        {
+            DataServiceQuery<Sale> queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            var aggregateQuery = queryable.GroupBy(d1 => d1.Product.Category.Id)
+                .Select(d2 => new
+                {
+                    GibberishConstant = "dfksjfl",
+                    CategoryId = d2.Key,
+                    SumTaxRate = d2.Sum(d3 => d3.Product.TaxRate),
+                    AvgAmount = d2.Average(d3 => d3.Amount),
+                    MinTaxRate = d2.Min(d3 => d3.Product.TaxRate),
+                    MaxAmount = d2.Max(d3 => d3.Amount),
+                    GroupCount = d2.Count(),
+                    DistinctCurrency = d2.Select(d3 => d3.Currency.Code).Distinct().Count()
+                });
+
+            Assert.Equal(
+                string.Format("{0}/Sales?$apply=groupby((Product/Category/Id),aggregate(" +
+                "Product/TaxRate with sum as SumTaxRate,Amount with average as AvgAmount," +
+                "Product/TaxRate with min as MinTaxRate,Amount with max as MaxAmount," +
+                "$count as GroupCount,Currency/Code with countdistinct as DistinctCurrency))", serviceUri),
+                aggregateQuery.ToString());
+
+            MockGroupBySingleNavProperty_MixedScenarios();
+
+            var aggregateResult = aggregateQuery.ToArray();
+
+            Assert.Equal(2, aggregateResult.Length);
+        }
+
+        [Fact]
+        public void GroupByWithResultSelector_ByMultipleNavProperties_MixedScenarios()
+        {
+            DataServiceQuery<Sale> queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            var aggregateQuery = queryable.GroupBy(d1 => new { d1.Product.Category.Id, d1.Customer.Country },
+                (d1, d2) => new
+                {
+                    GibberishConstant = "dfksjfl",
+                    CategoryId = d1.Id,
+                    d1.Country,
+                    SumTaxRate = d2.Sum(d3 => d3.Product.TaxRate),
+                    AvgAmount = d2.Average(d3 => d3.Amount),
+                    MinTaxRate = d2.Min(d3 => d3.Product.TaxRate),
+                    MaxAmount = d2.Max(d3 => d3.Amount),
+                    GroupCount = d2.Count(),
+                    DistinctCurrency = d2.Select(d3 => d3.Currency.Code).Distinct().Count()
+                });
+
+            Assert.Equal(
+                string.Format("{0}/Sales?$apply=groupby((Product/Category/Id,Customer/Country),aggregate(" +
+                "Product/TaxRate with sum as SumTaxRate,Amount with average as AvgAmount," +
+                "Product/TaxRate with min as MinTaxRate,Amount with max as MaxAmount," +
+                "$count as GroupCount,Currency/Code with countdistinct as DistinctCurrency))", serviceUri),
+                aggregateQuery.ToString());
+
+            MockGroupByMultipleNavProperties_MixedScenarios();
+
+            var aggregateResult = aggregateQuery.ToArray();
+
+            Assert.Equal(2, aggregateResult.Length);
+        }
+
+        [Fact]
+        public void GroupByWithProjection_ByMultipleNavProperties_MixedScenarios()
+        {
+            DataServiceQuery<Sale> queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            var aggregateQuery = queryable.GroupBy(d1 => new { d1.Product.Category.Id, d1.Customer.Country })
+                .Select(d2 => new
+                {
+                    GibberishConstant = "dfksjfl",
+                    CategoryId = d2.Key.Id,
+                    d2.Key.Country,
+                    SumTaxRate = d2.Sum(d3 => d3.Product.TaxRate),
+                    AvgAmount = d2.Average(d3 => d3.Amount),
+                    MinTaxRate = d2.Min(d3 => d3.Product.TaxRate),
+                    MaxAmount = d2.Max(d3 => d3.Amount),
+                    GroupCount = d2.Count(),
+                    DistinctCurrency = d2.Select(d3 => d3.Currency.Code).Distinct().Count()
+                });
+
+            Assert.Equal(
+                string.Format("{0}/Sales?$apply=groupby((Product/Category/Id,Customer/Country),aggregate(" +
+                "Product/TaxRate with sum as SumTaxRate,Amount with average as AvgAmount," +
+                "Product/TaxRate with min as MinTaxRate,Amount with max as MaxAmount," +
+                "$count as GroupCount,Currency/Code with countdistinct as DistinctCurrency))", serviceUri),
+                aggregateQuery.ToString());
+
+            MockGroupByMultipleNavProperties_MixedScenarios();
+
+            var aggregateResult = aggregateQuery.ToArray();
+
+            Assert.Equal(2, aggregateResult.Length);
+        }
+
+        [Fact]
+        public void GroupByWithResultSelector_ByConstant_UsingMemberInitialization()
+        {
+            DataServiceQuery<Sale> queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            var aggregateQuery = queryable.GroupBy(d1 => 1,
+                (d1, d2) => new SalesGroupedResult01
+                {
+                    GroupingConstant = d1,
+                    GibberishConstant = "dfksjfl",
+                    SumTaxRate = d2.Sum(d3 => d3.Product.TaxRate),
+                    AvgAmount = d2.Average(d3 => d3.Amount),
+                    MinTaxRate = d2.Min(d3 => d3.Product.TaxRate),
+                    MaxAmount = d2.Max(d3 => d3.Amount),
+                    GroupCount = d2.Count(),
+                    DistinctCurrency = d2.Select(d3 => d3.Currency.Code).Distinct().Count()
+                });
+
+            Assert.Equal(
+                string.Format("{0}/Sales?$apply=aggregate(" +
+                "Product/TaxRate with sum as SumTaxRate,Amount with average as AvgAmount," +
+                "Product/TaxRate with min as MinTaxRate,Amount with max as MaxAmount," +
+                "$count as GroupCount,Currency/Code with countdistinct as DistinctCurrency)", serviceUri),
+                aggregateQuery.ToString());
+
+            MockGroupByConstant_MixedScenarios();
+
+            var aggregateResult = aggregateQuery.ToArray();
+
+            Assert.Single(aggregateResult);
+        }
+
+        [Fact]
+        public void GroupByWithProjection_ByConstant_UsingMemberInitialization()
+        {
+            DataServiceQuery<Sale> queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            var aggregateQuery = queryable.GroupBy(d1 => 1)
+                .Select(d2 => new SalesGroupedResult01
+                {
+                    GroupingConstant = d2.Key,
+                    GibberishConstant = "dfksjfl",
+                    SumTaxRate = d2.Sum(d3 => d3.Product.TaxRate),
+                    AvgAmount = d2.Average(d3 => d3.Amount),
+                    MinTaxRate = d2.Min(d3 => d3.Product.TaxRate),
+                    MaxAmount = d2.Max(d3 => d3.Amount),
+                    GroupCount = d2.Count(),
+                    DistinctCurrency = d2.Select(d3 => d3.Currency.Code).Distinct().Count()
+                });
+
+            Assert.Equal(
+                string.Format("{0}/Sales?$apply=aggregate(" +
+                "Product/TaxRate with sum as SumTaxRate,Amount with average as AvgAmount," +
+                "Product/TaxRate with min as MinTaxRate,Amount with max as MaxAmount," +
+                "$count as GroupCount,Currency/Code with countdistinct as DistinctCurrency)", serviceUri),
+                aggregateQuery.ToString());
+
+            MockGroupByConstant_MixedScenarios();
+
+            var aggregateResult = aggregateQuery.ToArray();
+
+            Assert.Single(aggregateResult);
+        }
+
+
+        [Fact]
+        public void GroupByWithResultSelector_BySingleNavProperty_UsingMemberInitialization()
+        {
+            DataServiceQuery<Sale> queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            var aggregateQuery = queryable.GroupBy(d1 => d1.Product.Category.Id,
+                (d1, d2) => new SalesGroupedResult02
+                {
+                    GibberishConstant = "dfksjfl",
+                    CategoryId = d1,
+                    SumTaxRate = d2.Sum(d3 => d3.Product.TaxRate),
+                    AvgAmount = d2.Average(d3 => d3.Amount),
+                    MinTaxRate = d2.Min(d3 => d3.Product.TaxRate),
+                    MaxAmount = d2.Max(d3 => d3.Amount),
+                    GroupCount = d2.Count(),
+                    DistinctCurrency = d2.Select(d3 => d3.Currency.Code).Distinct().Count()
+                });
+
+            Assert.Equal(
+                string.Format("{0}/Sales?$apply=groupby((Product/Category/Id),aggregate(" +
+                "Product/TaxRate with sum as SumTaxRate,Amount with average as AvgAmount," +
+                "Product/TaxRate with min as MinTaxRate,Amount with max as MaxAmount," +
+                "$count as GroupCount,Currency/Code with countdistinct as DistinctCurrency))", serviceUri),
+                aggregateQuery.ToString());
+
+            MockGroupBySingleNavProperty_MixedScenarios();
+
+            var aggregateResult = aggregateQuery.ToArray();
+
+            Assert.Equal(2, aggregateResult.Length);
+        }
+
+        [Fact]
+        public void GroupByWithProjection_BySingleNavProperty_UsingMemberInitialization()
+        {
+            DataServiceQuery<Sale> queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            var aggregateQuery = queryable.GroupBy(d1 => d1.Product.Category.Id)
+                .Select(d2 => new SalesGroupedResult02
+                {
+                    GibberishConstant = "dfksjfl",
+                    CategoryId = d2.Key,
+                    SumTaxRate = d2.Sum(d3 => d3.Product.TaxRate),
+                    AvgAmount = d2.Average(d3 => d3.Amount),
+                    MinTaxRate = d2.Min(d3 => d3.Product.TaxRate),
+                    MaxAmount = d2.Max(d3 => d3.Amount),
+                    GroupCount = d2.Count(),
+                    DistinctCurrency = d2.Select(d3 => d3.Currency.Code).Distinct().Count()
+                });
+
+            Assert.Equal(
+                string.Format("{0}/Sales?$apply=groupby((Product/Category/Id),aggregate(" +
+                "Product/TaxRate with sum as SumTaxRate,Amount with average as AvgAmount," +
+                "Product/TaxRate with min as MinTaxRate,Amount with max as MaxAmount," +
+                "$count as GroupCount,Currency/Code with countdistinct as DistinctCurrency))", serviceUri),
+                aggregateQuery.ToString());
+
+            MockGroupBySingleNavProperty_MixedScenarios();
+
+            var aggregateResult = aggregateQuery.ToArray();
+
+            Assert.Equal(2, aggregateResult.Length);
+        }
+
+        [Fact]
+        public void GroupByWithResultSelector_ByMultipleNavProperties_UsingMemberInitialization()
+        {
+            DataServiceQuery<Sale> queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            var aggregateQuery = queryable.GroupBy(d1 => new { d1.Product.Category.Id, d1.Customer.Country },
+                (d1, d2) => new SalesGroupedResult03
+                {
+                    GibberishConstant = "dfksjfl",
+                    CategoryId = d1.Id,
+                    Country = d1.Country,
+                    SumTaxRate = d2.Sum(d3 => d3.Product.TaxRate),
+                    AvgAmount = d2.Average(d3 => d3.Amount),
+                    MinTaxRate = d2.Min(d3 => d3.Product.TaxRate),
+                    MaxAmount = d2.Max(d3 => d3.Amount),
+                    GroupCount = d2.Count(),
+                    DistinctCurrency = d2.Select(d3 => d3.Currency.Code).Distinct().Count()
+                });
+
+            Assert.Equal(
+                string.Format("{0}/Sales?$apply=groupby((Product/Category/Id,Customer/Country),aggregate(" +
+                "Product/TaxRate with sum as SumTaxRate,Amount with average as AvgAmount," +
+                "Product/TaxRate with min as MinTaxRate,Amount with max as MaxAmount," +
+                "$count as GroupCount,Currency/Code with countdistinct as DistinctCurrency))", serviceUri),
+                aggregateQuery.ToString());
+
+            MockGroupByMultipleNavProperties_MixedScenarios();
+
+            var aggregateResult = aggregateQuery.ToArray();
+
+            Assert.Equal(2, aggregateResult.Length);
+        }
+
+        [Fact]
+        public void GroupByWithProjection_ByMultipleNavProperties_UsingMemberInitialization()
+        {
+            DataServiceQuery<Sale> queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            var aggregateQuery = queryable.GroupBy(d1 => new { d1.Product.Category.Id, d1.Customer.Country })
+                .Select(d2 => new SalesGroupedResult03
+                {
+                    GibberishConstant = "dfksjfl",
+                    CategoryId = d2.Key.Id,
+                    Country = d2.Key.Country,
+                    SumTaxRate = d2.Sum(d3 => d3.Product.TaxRate),
+                    AvgAmount = d2.Average(d3 => d3.Amount),
+                    MinTaxRate = d2.Min(d3 => d3.Product.TaxRate),
+                    MaxAmount = d2.Max(d3 => d3.Amount),
+                    GroupCount = d2.Count(),
+                    DistinctCurrency = d2.Select(d3 => d3.Currency.Code).Distinct().Count()
+                });
+
+            Assert.Equal(
+                string.Format("{0}/Sales?$apply=groupby((Product/Category/Id,Customer/Country),aggregate(" +
+                "Product/TaxRate with sum as SumTaxRate,Amount with average as AvgAmount," +
+                "Product/TaxRate with min as MinTaxRate,Amount with max as MaxAmount," +
+                "$count as GroupCount,Currency/Code with countdistinct as DistinctCurrency))", serviceUri),
+                aggregateQuery.ToString());
+
+            MockGroupByMultipleNavProperties_MixedScenarios();
+
+            var aggregateResult = aggregateQuery.ToArray();
+
+            Assert.Equal(2, aggregateResult.Length);
+        }
+
+        #region Mock Aggregation Responses
 
         private void MockGroupBy_Sum_ByConstant()
         {
@@ -1935,9 +2560,219 @@ namespace Microsoft.OData.Client.Tests.ALinq
             InterceptRequestAndMockResponse(mockResponse);
         }
 
-        #endregion Aggregation Mocks
+        private void MockGroupBySingleNavProperty()
+        {
+            {
+                string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Sales" +
+                    "(Product(Color),SumAmount,AvgAmount,MinAmount,MaxAmount)\"," +
+                    "\"value\":[" +
+                    "{{\"@odata.id\":null,\"MaxAmount\":8.00,\"MinAmount\":4.00,\"AvgAmount\":6.000000,\"SumAmount\":12.00," +
+                    "\"Product\":{{\"@odata.id\":null,\"Color\":\"Brown\"}}}}," +
+                    "{{\"@odata.id\":null,\"MaxAmount\":4.00,\"MinAmount\":1.00,\"AvgAmount\":2.000000,\"SumAmount\":12.00," +
+                    "\"Product\":{{\"@odata.id\":null,\"Color\":\"White\"}}}}" +
+                    "]}}", serviceUri);
+
+                InterceptRequestAndMockResponse(mockResponse);
+            }
+        }
+
+        private void MockGroupByMultipleNavProperties()
+        {
+            {
+                string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Sales" +
+                    "(Product(Color),Customer(Country),SumAmount,AvgAmount,MinAmount,MaxAmount)\"," +
+                    "\"value\":[" +
+                    "{{\"@odata.id\":null,\"MaxAmount\":8.00,\"MinAmount\":4.00,\"AvgAmount\":6.000000,\"SumAmount\":12.00," +
+                    "\"Customer\":{{\"@odata.id\":null,\"Country\":\"USA\"}}," +
+                    "\"Product\":{{\"@odata.id\":null,\"Color\":\"Brown\"}}}}," +
+                    "{{\"@odata.id\":null,\"MaxAmount\":2.00,\"MinAmount\":1.00,\"AvgAmount\":1.666666,\"SumAmount\":5.00," +
+                    "\"Customer\":{{\"@odata.id\":null,\"Country\":\"Netherlands\"}}," +
+                    "\"Product\":{{\"@odata.id\":null,\"Color\":\"White\"}}}}" +
+                    "]}}", serviceUri);
+
+                InterceptRequestAndMockResponse(mockResponse);
+            }
+        }
+
+        private void MockGroupBySingleNavProperty_AggregationsTargetingNavProperty()
+        {
+            {
+                string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Sales" +
+                    "(Currency(Code),SumTaxRate,AvgTaxRate,MinTaxRate,MaxTaxRate)\"," +
+                    "\"value\":[" +
+                    "{{\"@odata.id\":null,\"MaxTaxRate\":0.14,\"MinTaxRate\":0.06,\"AvgTaxRate\":0.113333,\"SumTaxRate\":0.34," +
+                    "\"Currency\":{{\"@odata.id\":null,\"Code\":\"EUR\"}}}}," +
+                    "{{\"@odata.id\":null,\"MaxTaxRate\":0.14,\"MinTaxRate\":0.06,\"AvgTaxRate\":0.092000,\"SumTaxRate\":0.46," +
+                    "\"Currency\":{{\"@odata.id\":null,\"Code\":\"USD\"}}}}" +
+                    "]}}", serviceUri);
+
+                InterceptRequestAndMockResponse(mockResponse);
+            }
+        }
+
+        private void MockGroupByMultipleNavProperties_AggregationsTargetingNavProperty()
+        {
+            {
+                string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Sales" +
+                    "(Product(Color),Customer(Country),SumTaxRate,AvgTaxRate,MinTaxRate,MaxTaxRate)\"," +
+                    "\"value\":[" +
+                    "{{\"@odata.id\":null,\"MaxTaxRate\":0.14,\"MinTaxRate\":0.06,\"AvgTaxRate\":0.113333,\"SumTaxRate\":0.34," +
+                    "\"Customer\":{{\"@odata.id\":null,\"Country\":\"Netherlands\"}}," +
+                    "\"Product\":{{\"@odata.id\":null,\"Color\":\"White\"}}}}," +
+                    "{{\"@odata.id\":null,\"MaxTaxRate\":0.06,\"MinTaxRate\":0.06,\"AvgTaxRate\":0.060000,\"SumTaxRate\":0.12," +
+                    "\"Customer\":{{\"@odata.id\":null,\"Country\":\"USA\"}}," +
+                    "\"Product\":{{\"@odata.id\":null,\"Color\":\"Brown\"}}}}" +
+                    "]}}", serviceUri);
+
+                InterceptRequestAndMockResponse(mockResponse);
+            }
+        }
+
+        private void MockGroupByConstant_AggregationsTargetingNavProperty()
+        {
+            {
+                string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Sales" +
+                    "(SumTaxRate,AvgTaxRate,MinTaxRate,MaxTaxRate)\"," +
+                    "\"value\":[" +
+                    "{{\"@odata.id\":null,\"MaxTaxRate\":0.14,\"MinTaxRate\":0.06,\"AvgTaxRate\":0.100000,\"SumTaxRate\":0.80}}" +
+                    "]}}", serviceUri);
+
+                InterceptRequestAndMockResponse(mockResponse);
+            }
+        }
+
+        private void MockGroupByConstant_MixedScenarios()
+        {
+            {
+                string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Sales" +
+                    "(SumTaxRate,AvgAmount,MinTaxRate,MaxAmount,GroupCount,DistinctCurrency)\"," +
+                    "\"value\":[" +
+                    "{{\"@odata.id\":null,\"DistinctCurrency\":2,\"GroupCount\":8," +
+                    "\"MaxAmount\":8.00,\"MinTaxRate\":0.06,\"AvgAmount\":3.000000,\"SumTaxRate\":0.80}}" +
+                    "]}}", serviceUri);
+
+                InterceptRequestAndMockResponse(mockResponse);
+            }
+        }
+
+        private void MockGroupBySingleNavProperty_MixedScenarios()
+        {
+            {
+                string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Sales" +
+                    "(Product(Category(Id)),SumTaxRate,AvgAmount,MinTaxRate,MaxAmount,GroupCount,DistinctCurrency)\"," +
+                    "\"value\":[" +
+                    "{{\"@odata.id\":null,\"DistinctCurrency\":2,\"GroupCount\":4," +
+                    "\"MaxAmount\":8.00,\"MinTaxRate\":0.06,\"AvgAmount\":4.000000,\"SumTaxRate\":0.24," +
+                    "\"Product\":{{\"@odata.id\":null,\"Category\":{{\"@odata.id\":null,\"Id\":\"PG1\"}}}}}}," +
+                    "{{\"@odata.id\":null,\"DistinctCurrency\":2,\"GroupCount\":4," +
+                    "\"MaxAmount\":4.00,\"MinTaxRate\":0.14,\"AvgAmount\":2.000000,\"SumTaxRate\":0.56," +
+                    "\"Product\":{{\"@odata.id\":null,\"Category\":{{\"@odata.id\":null,\"Id\":\"PG2\"}}}}}}" +
+                    "]}}", serviceUri);
+
+                InterceptRequestAndMockResponse(mockResponse);
+            }
+        }
+
+        private void MockGroupByMultipleNavProperties_MixedScenarios()
+        {
+            {
+                string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Sales" +
+                    "(Product(Category(Id)),Customer(Country),SumTaxRate,AvgAmount,MinTaxRate,MaxAmount,GroupCount,DistinctCurrency)\"," +
+                    "\"value\":[" +
+                    "{{\"@odata.id\":null,\"DistinctCurrency\":1,\"GroupCount\":1," +
+                    "\"MaxAmount\":2.00,\"MinTaxRate\":0.06,\"AvgAmount\":2.000000,\"SumTaxRate\":0.06," +
+                    "\"Customer\":{{\"@odata.id\":null,\"Country\":\"Netherlands\"}}," +
+                    "\"Product\":{{\"@odata.id\":null,\"Category\":{{\"@odata.id\":null,\"Id\":\"PG1\"}}}}}}," +
+                    "{{\"@odata.id\":null,\"DistinctCurrency\":1,\"GroupCount\":2," +
+                    "\"MaxAmount\":2.00,\"MinTaxRate\":0.14,\"AvgAmount\":1.500000,\"SumTaxRate\":0.28," +
+                    "\"Customer\":{{\"@odata.id\":null,\"Country\":\"Netherlands\"}}," +
+                    "\"Product\":{{\"@odata.id\":null,\"Category\":{{\"@odata.id\":null,\"Id\":\"PG2\"}}}}}}" +
+                    "]}}", serviceUri);
+
+                InterceptRequestAndMockResponse(mockResponse);
+            }
+        }
+
+        #endregion Mock Aggregation Responses
 
         #region Helper Methods
+
+        private static EdmModel BuildEdmModel()
+        {
+            var model = new EdmModel();
+
+            var numberEntity = new EdmEntityType("NS", "Number");
+            numberEntity.AddKeys(numberEntity.AddStructuralProperty("RowId", EdmCoreModel.Instance.GetInt32(false)));
+            numberEntity.AddStructuralProperty("RowParity", EdmCoreModel.Instance.GetString(false));
+            numberEntity.AddStructuralProperty("RowCategory", EdmCoreModel.Instance.GetString(false));
+            numberEntity.AddStructuralProperty("IntProp", EdmCoreModel.Instance.GetInt32(false));
+            numberEntity.AddStructuralProperty("NullableIntProp", EdmCoreModel.Instance.GetInt32(true));
+            numberEntity.AddStructuralProperty("DoubleProp", EdmCoreModel.Instance.GetDouble(false));
+            numberEntity.AddStructuralProperty("NullableDoubleProp", EdmCoreModel.Instance.GetDouble(true));
+            numberEntity.AddStructuralProperty("DecimalProp", EdmCoreModel.Instance.GetDecimal(false));
+            numberEntity.AddStructuralProperty("NullableDecimalProp", EdmCoreModel.Instance.GetDecimal(true));
+            numberEntity.AddStructuralProperty("LongProp", EdmCoreModel.Instance.GetInt64(false));
+            numberEntity.AddStructuralProperty("NullableLongProp", EdmCoreModel.Instance.GetInt64(true));
+            numberEntity.AddStructuralProperty("SingleProp", EdmCoreModel.Instance.GetSingle(false));
+            numberEntity.AddStructuralProperty("NullableSingleProp", EdmCoreModel.Instance.GetSingle(true));
+
+            var saleEntity = new EdmEntityType("NS", "Sale");
+            saleEntity.AddKeys(saleEntity.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false)));
+            saleEntity.AddStructuralProperty("CustomerId", EdmCoreModel.Instance.GetString(false));
+            saleEntity.AddStructuralProperty("Date", EdmCoreModel.Instance.GetString(false));
+            saleEntity.AddStructuralProperty("ProductId", EdmCoreModel.Instance.GetString(false));
+            saleEntity.AddStructuralProperty("CurrencyCode", EdmCoreModel.Instance.GetString(false));
+            saleEntity.AddStructuralProperty("Amount", EdmCoreModel.Instance.GetDecimal(false));
+
+            var productEntity = new EdmEntityType("NS", "Product");
+            productEntity.AddKeys(productEntity.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false)));
+            productEntity.AddStructuralProperty("CategoryId", EdmCoreModel.Instance.GetString(false));
+            productEntity.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false));
+            productEntity.AddStructuralProperty("Color", EdmCoreModel.Instance.GetString(false));
+            productEntity.AddStructuralProperty("TaxRate", EdmCoreModel.Instance.GetDecimal(false));
+
+            var customerEntity = new EdmEntityType("NS", "Customer");
+            customerEntity.AddKeys(customerEntity.AddStructuralProperty("Id", EdmCoreModel.Instance.GetString(false)));
+            customerEntity.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false));
+            customerEntity.AddStructuralProperty("Country", EdmCoreModel.Instance.GetString(false));
+
+            var categoryEntity = new EdmEntityType("NS", "Category");
+            categoryEntity.AddKeys(categoryEntity.AddStructuralProperty("Id", EdmCoreModel.Instance.GetString(false)));
+            categoryEntity.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false));
+
+            var currencyEntity = new EdmEntityType("NS", "Currency");
+            currencyEntity.AddKeys(currencyEntity.AddStructuralProperty("Code", EdmCoreModel.Instance.GetString(false)));
+            currencyEntity.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false));
+
+            // Associations
+            saleEntity.AddBidirectionalNavigation(
+                new EdmNavigationPropertyInfo { Name = "Customer", Target = customerEntity, TargetMultiplicity = EdmMultiplicity.One },
+                new EdmNavigationPropertyInfo { Name = "Sales", Target = saleEntity, TargetMultiplicity = EdmMultiplicity.Many });
+            saleEntity.AddBidirectionalNavigation(
+                new EdmNavigationPropertyInfo { Name = "Product", Target = productEntity, TargetMultiplicity = EdmMultiplicity.One },
+                new EdmNavigationPropertyInfo { Name = "Sales", Target = saleEntity, TargetMultiplicity = EdmMultiplicity.Many });
+            saleEntity.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo { Name = "Currency", Target = currencyEntity, TargetMultiplicity = EdmMultiplicity.One });
+
+            productEntity.AddBidirectionalNavigation(
+                new EdmNavigationPropertyInfo { Name = "Category", Target = categoryEntity, TargetMultiplicity = EdmMultiplicity.One },
+                new EdmNavigationPropertyInfo { Name = "Products", Target = productEntity, TargetMultiplicity = EdmMultiplicity.Many });
+
+            var entityContainer = new EdmEntityContainer("NS", "Container");
+
+            model.AddElement(numberEntity);
+            model.AddElement(saleEntity);
+            model.AddElement(productEntity);
+            model.AddElement(customerEntity);
+            model.AddElement(categoryEntity);
+            model.AddElement(currencyEntity);
+            model.AddElement(entityContainer);
+
+            entityContainer.AddEntitySet(numbersEntitySetName, numberEntity);
+            entityContainer.AddEntitySet(salesEntitySetName, saleEntity);
+
+            return model;
+        }
 
         // To find matching aggregation method - using reflection
         private static MethodInfo GetAggregationMethod(string aggregationMethod, Type genericArgumentType)
@@ -2028,5 +2863,115 @@ namespace Microsoft.OData.Client.Tests.ALinq
         }
 
         #endregion
+
+        #region Types
+
+        public class Number
+        {
+            public int RowId { get; set; }
+            public string RowParity { get; set; }
+            public string RowCategory { get; set; }
+            public int IntProp { get; set; }
+            public int? NullableIntProp { get; set; }
+            public double DoubleProp { get; set; }
+            public double? NullableDoubleProp { get; set; }
+            public decimal DecimalProp { get; set; }
+            public decimal? NullableDecimalProp { get; set; }
+            public long LongProp { get; set; }
+            public long? NullableLongProp { get; set; }
+            public float SingleProp { get; set; }
+            public float? NullableSingleProp { get; set; }
+        }
+
+        public class Sale
+        {
+            public int Id { get; set; }
+            public string CustomerId { get; set; }
+            public Customer Customer { get; set; }
+            public string Date { get; set; }
+            public string ProductId { get; set; }
+            public Product Product { get; set; }
+            public string CurrencyCode { get; set; }
+            public Currency Currency { get; set; }
+            public decimal Amount { get; set; }
+        }
+
+        public class Product
+        {
+            public string Id { get; set; }
+            public string CategoryId { get; set; }
+            public Category Category { get; set; }
+            public string Name { get; set; }
+            public string Color { get; set; }
+            public decimal TaxRate { get; set; }
+            public Collection<Sale> Sales { get; set; }
+        }
+
+        public class Customer
+        {
+            public string Id { get; set; }
+            public string Name { get; set; }
+            public string Country { get; set; }
+            public Collection<Sale> Sales { get; set; }
+        }
+
+        public class Category
+        {
+            public string Id { get; set; }
+            public string Name { get; set; }
+            public Collection<Product> Products { get; set; }
+        }
+
+        public class Currency
+        {
+            public string Code { get; set; }
+            public string Name { get; set; }
+        }
+
+        #endregion
+
+        #region Helper Classes
+
+        class NumbersGroupedResult
+        {
+            public string RowParity { get; set; }
+            public int SumIntProp { get; set; }
+            public double AverageDoubleProp { get; set; }
+            public decimal MinDecimalProp { get; set; }
+            public long MaxLongProp { get; set; }
+            public int Count { get; set; }
+            public int CountDistinct { get; set; }
+        }
+
+        class SalesGroupedResult
+        {
+            public decimal SumTaxRate { get; set; }
+            public decimal AvgAmount { get; set; }
+            public decimal MinTaxRate { get; set; }
+            public decimal MaxAmount { get; set; }
+            public int GroupCount { get; set; }
+            public int DistinctCurrency { get; set; }
+        }
+
+        class SalesGroupedResult01 : SalesGroupedResult
+        {
+            public int GroupingConstant { get; set; }
+            public string GibberishConstant { get; set; }
+        }
+
+        class SalesGroupedResult02 : SalesGroupedResult
+        {
+            public string GibberishConstant { get; set; }
+            public string CategoryId { get; set; }
+        }
+
+        class SalesGroupedResult03 : SalesGroupedResult
+        {
+            public string GibberishConstant { get; set; }
+            public string CategoryId { get; set; }
+            public string Country { get; set; }
+        }
+
+        #endregion Helper Classes
     }
 }
