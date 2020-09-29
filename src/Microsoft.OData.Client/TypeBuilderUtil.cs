@@ -42,8 +42,9 @@ namespace Microsoft.OData.Client
         {
             string assembyName = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 16);
 
+            // Parameterize AssemblyBuilderAccess value if that ever becomes necessary
             AssemblyBuilder assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(
-                new AssemblyName(assembyName), AssemblyBuilderAccess.Run);
+                new AssemblyName(assembyName), AssemblyBuilderAccess.RunAndCollect);
             ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("MainModule");
             TypeBuilder typeBuilder = moduleBuilder.DefineType(
                 name: typeName,

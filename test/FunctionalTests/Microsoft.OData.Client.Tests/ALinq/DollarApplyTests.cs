@@ -87,18 +87,18 @@ namespace Microsoft.OData.Client.Tests.ALinq
             Type propertyType = propertyInfo.PropertyType;
 
             // Find matching aggregation method - using reflection
-            MethodInfo aggregationMethodInfo = GetAggregationMethod(aggregationMethod, propertyType);
+            MethodInfo methodInfo = GetAggregationMethod(aggregationMethod, propertyType);
 
             List<Type> genericArguments = new List<Type>();
             genericArguments.Add(queryable.ElementType);
-            if (aggregationMethodInfo.GetGenericArguments().Length > 1)
+            if (methodInfo.GetGenericArguments().Length > 1)
             {
                 genericArguments.Add(propertyType);
             }
 
             MethodCallExpression methodCallExpr = Expression.Call(
                 null,
-                aggregationMethodInfo.MakeGenericMethod(genericArguments.ToArray()),
+                methodInfo.MakeGenericMethod(genericArguments.ToArray()),
                 new[] { queryable.Expression, Expression.Quote(selectorExpr) });
 
             // Call factory method for creating DataServiceOrderedQuery based on Linq expression
@@ -111,11 +111,11 @@ namespace Microsoft.OData.Client.Tests.ALinq
             if ((propertyType.Equals(typeof(int)) || propertyType.Equals(typeof(long)))
                 && aggregationMethod.Equals("Average", StringComparison.OrdinalIgnoreCase))
             {
-                returnType = aggregationMethodInfo.ReturnType;
+                returnType = methodInfo.ReturnType;
             }
 
             // Execute expression and verify result
-            var randomAggregateValue = GenerateRandomAggregateValue(aggregationMethod, returnType);
+            var randomAggregateValue = GenerateRandomValue(aggregationMethod, returnType);
             InterceptRequestAndMockResponse(aggregationAlias, randomAggregateValue);
 
             // Use reflection to get Execute method - should make it easy to apply different return types
@@ -1190,7 +1190,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
             var aggregateQuery = queryable.GroupBy(d1 => 1, (d2, d3) => new
             {
                 Count = d3.Count(),
-                CountDistinct = d3.Select(d4 => d4.RowCategory).Distinct().Count()
+                CountDistinct = d3.CountDistinct(d4 => d4.RowCategory)
             });
 
             Assert.Equal(
@@ -1216,7 +1216,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
             var aggregateQuery = queryable.GroupBy(d1 => 1).Select(d2 => new
             {
                 Count = d2.Count(),
-                CountDistinct = d2.Select(d3 => d3.RowCategory).Distinct().Count()
+                CountDistinct = d2.CountDistinct(d3 => d3.RowCategory)
             });
 
             Assert.Equal(
@@ -1243,7 +1243,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
             {
                 RowParity = d2,
                 Count = d3.Count(),
-                CountDistinct = d3.Select(d4 => d4.RowCategory).Distinct().Count()
+                CountDistinct = d3.CountDistinct(d4 => d4.RowCategory)
             });
 
             Assert.Equal(
@@ -1270,7 +1270,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
             {
                 RowParity = d2.Key,
                 Count = d2.Count(),
-                CountDistinct = d2.Select(d3 => d3.RowCategory).Distinct().Count()
+                CountDistinct = d2.CountDistinct(d3 => d3.RowCategory)
             });
 
             Assert.Equal(
@@ -1298,7 +1298,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
                 d2.RowParity,
                 d2.RowCategory,
                 Count = d3.Count(),
-                CountDistinct = d3.Select(d4 => d4.RowCategory).Distinct().Count()
+                CountDistinct = d3.CountDistinct(d4 => d4.RowCategory)
             });
 
             Assert.Equal(
@@ -1327,7 +1327,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
                 d2.Key.RowParity,
                 d2.Key.RowCategory,
                 Count = d2.Count(),
-                CountDistinct = d2.Select(d3 => d3.RowCategory).Distinct().Count()
+                CountDistinct = d2.CountDistinct(d3 => d3.RowCategory)
             });
 
             Assert.Equal(
@@ -1359,7 +1359,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
                 MinDecimalProp = d3.Min(d4 => d4.DecimalProp),
                 MaxLongProp = d3.Max(d4 => d4.LongProp),
                 Count = d3.Count(),
-                CountDistinct = d3.Select(d4 => d4.RowCategory).Distinct().Count()
+                CountDistinct = d3.CountDistinct(d4 => d4.RowCategory)
             });
 
             Assert.Equal(
@@ -1392,7 +1392,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
                 MinDecimalProp = d2.Min(d3 => d3.DecimalProp),
                 MaxLongProp = d2.Max(d3 => d3.LongProp),
                 Count = d2.Count(),
-                CountDistinct = d2.Select(d3 => d3.RowCategory).Distinct().Count()
+                CountDistinct = d2.CountDistinct(d3 => d3.RowCategory)
             });
 
             Assert.Equal(
@@ -1425,7 +1425,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
                 MinDecimalProp = d3.Min(d4 => d4.DecimalProp),
                 MaxLongProp = d3.Max(d4 => d4.LongProp),
                 Count = d3.Count(),
-                CountDistinct = d3.Select(d4 => d4.RowCategory).Distinct().Count()
+                CountDistinct = d3.CountDistinct(d4 => d4.RowCategory)
             });
 
             Assert.Equal(
@@ -1458,7 +1458,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
                 MinDecimalProp = d2.Min(d3 => d3.DecimalProp),
                 MaxLongProp = d2.Max(d3 => d3.LongProp),
                 Count = d2.Count(),
-                CountDistinct = d2.Select(d3 => d3.RowCategory).Distinct().Count()
+                CountDistinct = d2.CountDistinct(d3 => d3.RowCategory)
             });
 
             Assert.Equal(
@@ -1476,6 +1476,42 @@ namespace Microsoft.OData.Client.Tests.ALinq
             Assert.Equal(2, aggregateResult.Length);
             Assert.Equal("Even", aggregateResult[0].RowParity);
             Assert.Equal("Odd", aggregateResult[1].RowParity);
+        }
+
+        [Fact]
+        public void CountDistinct_ExpressionTranslatedToExpectedUri()
+        {
+            DataServiceQuery<Number> queryable = this.dsContext.CreateQuery<Number>(numbersEntitySetName);
+
+            MethodInfo countDistinctMethod = GetCountDistinctMethod();
+
+            PropertyInfo propertyInfo = queryable.ElementType.GetProperty("RowParity");
+            ParameterExpression parameterExpr = Expression.Parameter(queryable.ElementType, "d1");
+            LambdaExpression selector = Expression.Lambda(Expression.MakeMemberAccess(parameterExpr, propertyInfo), parameterExpr);
+
+            MethodCallExpression methodCallExpr = Expression.Call(
+                            null,
+                            countDistinctMethod.MakeGenericMethod(new Type[] { queryable.ElementType, propertyInfo.PropertyType }),
+                            new[] { queryable.Expression, Expression.Quote(selector) });
+
+            // Call factory method for creating DataServiceOrderedQuery based on Linq expression
+            var query = new DataServiceQueryProvider(dsContext).CreateQuery(methodCallExpr);
+
+            // Verify expected aggregate Uri
+            string expectedAggregateUri = serviceUri + '/' + numbersEntitySetName + "?$apply=aggregate(RowParity with countdistinct as CountDistinctRowParity)";
+            Assert.Equal(expectedAggregateUri, query.ToString());
+        }
+
+        [Fact]
+        public void CountDistinct_ReturnsExpectedResult()
+        {
+            DataServiceQuery<Number> queryable = this.dsContext.CreateQuery<Number>(numbersEntitySetName);
+
+            MockCountDistinct();
+
+            int countDistinct = queryable.CountDistinct(d1 => d1.RowParity);
+
+            Assert.Equal(3, countDistinct);
         }
 
         [Fact]
@@ -1775,7 +1811,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
                     MinTaxRate = d2.Min(d3 => d3.Product.TaxRate),
                     MaxAmount = d2.Max(d3 => d3.Amount),
                     GroupCount = d2.Count(),
-                    DistinctCurrency = d2.Select(d3 => d3.Currency.Code).Distinct().Count()
+                    DistinctCurrency = d2.CountDistinct(d3 => d3.Currency.Code)
                 });
 
             Assert.Equal(
@@ -1807,7 +1843,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
                     MinTaxRate = d2.Min(d3 => d3.Product.TaxRate),
                     MaxAmount = d2.Max(d3 => d3.Amount),
                     GroupCount = d2.Count(),
-                    DistinctCurrency = d2.Select(d3 => d3.Currency.Code).Distinct().Count()
+                    DistinctCurrency = d2.CountDistinct(d3 => d3.Currency.Code)
                 });
 
             Assert.Equal(
@@ -1840,7 +1876,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
                     MinTaxRate = d2.Min(d3 => d3.Product.TaxRate),
                     MaxAmount = d2.Max(d3 => d3.Amount),
                     GroupCount = d2.Count(),
-                    DistinctCurrency = d2.Select(d3 => d3.Currency.Code).Distinct().Count()
+                    DistinctCurrency = d2.CountDistinct(d3 => d3.Currency.Code)
                 });
 
             Assert.Equal(
@@ -1872,7 +1908,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
                     MinTaxRate = d2.Min(d3 => d3.Product.TaxRate),
                     MaxAmount = d2.Max(d3 => d3.Amount),
                     GroupCount = d2.Count(),
-                    DistinctCurrency = d2.Select(d3 => d3.Currency.Code).Distinct().Count()
+                    DistinctCurrency = d2.CountDistinct(d3 => d3.Currency.Code)
                 });
 
             Assert.Equal(
@@ -1905,7 +1941,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
                     MinTaxRate = d2.Min(d3 => d3.Product.TaxRate),
                     MaxAmount = d2.Max(d3 => d3.Amount),
                     GroupCount = d2.Count(),
-                    DistinctCurrency = d2.Select(d3 => d3.Currency.Code).Distinct().Count()
+                    DistinctCurrency = d2.CountDistinct(d3 => d3.Currency.Code)
                 });
 
             Assert.Equal(
@@ -1938,7 +1974,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
                     MinTaxRate = d2.Min(d3 => d3.Product.TaxRate),
                     MaxAmount = d2.Max(d3 => d3.Amount),
                     GroupCount = d2.Count(),
-                    DistinctCurrency = d2.Select(d3 => d3.Currency.Code).Distinct().Count()
+                    DistinctCurrency = d2.CountDistinct(d3 => d3.Currency.Code)
                 });
 
             Assert.Equal(
@@ -1970,7 +2006,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
                     MinTaxRate = d2.Min(d3 => d3.Product.TaxRate),
                     MaxAmount = d2.Max(d3 => d3.Amount),
                     GroupCount = d2.Count(),
-                    DistinctCurrency = d2.Select(d3 => d3.Currency.Code).Distinct().Count()
+                    DistinctCurrency = d2.CountDistinct(d3 => d3.Currency.Code)
                 });
 
             Assert.Equal(
@@ -2002,7 +2038,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
                     MinTaxRate = d2.Min(d3 => d3.Product.TaxRate),
                     MaxAmount = d2.Max(d3 => d3.Amount),
                     GroupCount = d2.Count(),
-                    DistinctCurrency = d2.Select(d3 => d3.Currency.Code).Distinct().Count()
+                    DistinctCurrency = d2.CountDistinct(d3 => d3.Currency.Code)
                 });
 
             Assert.Equal(
@@ -2035,7 +2071,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
                     MinTaxRate = d2.Min(d3 => d3.Product.TaxRate),
                     MaxAmount = d2.Max(d3 => d3.Amount),
                     GroupCount = d2.Count(),
-                    DistinctCurrency = d2.Select(d3 => d3.Currency.Code).Distinct().Count()
+                    DistinctCurrency = d2.CountDistinct(d3 => d3.Currency.Code)
                 });
 
             Assert.Equal(
@@ -2067,7 +2103,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
                     MinTaxRate = d2.Min(d3 => d3.Product.TaxRate),
                     MaxAmount = d2.Max(d3 => d3.Amount),
                     GroupCount = d2.Count(),
-                    DistinctCurrency = d2.Select(d3 => d3.Currency.Code).Distinct().Count()
+                    DistinctCurrency = d2.CountDistinct(d3 => d3.Currency.Code)
                 });
 
             Assert.Equal(
@@ -2100,7 +2136,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
                     MinTaxRate = d2.Min(d3 => d3.Product.TaxRate),
                     MaxAmount = d2.Max(d3 => d3.Amount),
                     GroupCount = d2.Count(),
-                    DistinctCurrency = d2.Select(d3 => d3.Currency.Code).Distinct().Count()
+                    DistinctCurrency = d2.CountDistinct(d3 => d3.Currency.Code)
                 });
 
             Assert.Equal(
@@ -2133,7 +2169,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
                     MinTaxRate = d2.Min(d3 => d3.Product.TaxRate),
                     MaxAmount = d2.Max(d3 => d3.Amount),
                     GroupCount = d2.Count(),
-                    DistinctCurrency = d2.Select(d3 => d3.Currency.Code).Distinct().Count()
+                    DistinctCurrency = d2.CountDistinct(d3 => d3.Currency.Code)
                 });
 
             Assert.Equal(
@@ -2560,10 +2596,18 @@ namespace Microsoft.OData.Client.Tests.ALinq
             InterceptRequestAndMockResponse(mockResponse);
         }
 
+        private void MockCountDistinct()
+        {
+            string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Numbers(" +
+                "CountDistinctRowParity)\"," +
+                "\"value\":[{{\"@odata.id\":null,\"CountDistinctRowParity\":3}}]}}", serviceUri);
+
+            InterceptRequestAndMockResponse(mockResponse);
+        }
+
         private void MockGroupBySingleNavProperty()
         {
-            {
-                string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Sales" +
+            string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Sales" +
                     "(Product(Color),SumAmount,AvgAmount,MinAmount,MaxAmount)\"," +
                     "\"value\":[" +
                     "{{\"@odata.id\":null,\"MaxAmount\":8.00,\"MinAmount\":4.00,\"AvgAmount\":6.000000,\"SumAmount\":12.00," +
@@ -2572,14 +2616,12 @@ namespace Microsoft.OData.Client.Tests.ALinq
                     "\"Product\":{{\"@odata.id\":null,\"Color\":\"White\"}}}}" +
                     "]}}", serviceUri);
 
-                InterceptRequestAndMockResponse(mockResponse);
-            }
+            InterceptRequestAndMockResponse(mockResponse);
         }
 
         private void MockGroupByMultipleNavProperties()
         {
-            {
-                string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Sales" +
+            string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Sales" +
                     "(Product(Color),Customer(Country),SumAmount,AvgAmount,MinAmount,MaxAmount)\"," +
                     "\"value\":[" +
                     "{{\"@odata.id\":null,\"MaxAmount\":8.00,\"MinAmount\":4.00,\"AvgAmount\":6.000000,\"SumAmount\":12.00," +
@@ -2590,14 +2632,12 @@ namespace Microsoft.OData.Client.Tests.ALinq
                     "\"Product\":{{\"@odata.id\":null,\"Color\":\"White\"}}}}" +
                     "]}}", serviceUri);
 
-                InterceptRequestAndMockResponse(mockResponse);
-            }
+            InterceptRequestAndMockResponse(mockResponse);
         }
 
         private void MockGroupBySingleNavProperty_AggregationsTargetingNavProperty()
         {
-            {
-                string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Sales" +
+            string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Sales" +
                     "(Currency(Code),SumTaxRate,AvgTaxRate,MinTaxRate,MaxTaxRate)\"," +
                     "\"value\":[" +
                     "{{\"@odata.id\":null,\"MaxTaxRate\":0.14,\"MinTaxRate\":0.06,\"AvgTaxRate\":0.113333,\"SumTaxRate\":0.34," +
@@ -2606,14 +2646,12 @@ namespace Microsoft.OData.Client.Tests.ALinq
                     "\"Currency\":{{\"@odata.id\":null,\"Code\":\"USD\"}}}}" +
                     "]}}", serviceUri);
 
-                InterceptRequestAndMockResponse(mockResponse);
-            }
+            InterceptRequestAndMockResponse(mockResponse);
         }
 
         private void MockGroupByMultipleNavProperties_AggregationsTargetingNavProperty()
         {
-            {
-                string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Sales" +
+            string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Sales" +
                     "(Product(Color),Customer(Country),SumTaxRate,AvgTaxRate,MinTaxRate,MaxTaxRate)\"," +
                     "\"value\":[" +
                     "{{\"@odata.id\":null,\"MaxTaxRate\":0.14,\"MinTaxRate\":0.06,\"AvgTaxRate\":0.113333,\"SumTaxRate\":0.34," +
@@ -2624,41 +2662,35 @@ namespace Microsoft.OData.Client.Tests.ALinq
                     "\"Product\":{{\"@odata.id\":null,\"Color\":\"Brown\"}}}}" +
                     "]}}", serviceUri);
 
-                InterceptRequestAndMockResponse(mockResponse);
-            }
+            InterceptRequestAndMockResponse(mockResponse);
         }
 
         private void MockGroupByConstant_AggregationsTargetingNavProperty()
         {
-            {
-                string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Sales" +
+            string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Sales" +
                     "(SumTaxRate,AvgTaxRate,MinTaxRate,MaxTaxRate)\"," +
                     "\"value\":[" +
                     "{{\"@odata.id\":null,\"MaxTaxRate\":0.14,\"MinTaxRate\":0.06,\"AvgTaxRate\":0.100000,\"SumTaxRate\":0.80}}" +
                     "]}}", serviceUri);
 
-                InterceptRequestAndMockResponse(mockResponse);
-            }
+            InterceptRequestAndMockResponse(mockResponse);
         }
 
         private void MockGroupByConstant_MixedScenarios()
         {
-            {
-                string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Sales" +
+            string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Sales" +
                     "(SumTaxRate,AvgAmount,MinTaxRate,MaxAmount,GroupCount,DistinctCurrency)\"," +
                     "\"value\":[" +
                     "{{\"@odata.id\":null,\"DistinctCurrency\":2,\"GroupCount\":8," +
                     "\"MaxAmount\":8.00,\"MinTaxRate\":0.06,\"AvgAmount\":3.000000,\"SumTaxRate\":0.80}}" +
                     "]}}", serviceUri);
 
-                InterceptRequestAndMockResponse(mockResponse);
-            }
+            InterceptRequestAndMockResponse(mockResponse);
         }
 
         private void MockGroupBySingleNavProperty_MixedScenarios()
         {
-            {
-                string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Sales" +
+            string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Sales" +
                     "(Product(Category(Id)),SumTaxRate,AvgAmount,MinTaxRate,MaxAmount,GroupCount,DistinctCurrency)\"," +
                     "\"value\":[" +
                     "{{\"@odata.id\":null,\"DistinctCurrency\":2,\"GroupCount\":4," +
@@ -2669,14 +2701,12 @@ namespace Microsoft.OData.Client.Tests.ALinq
                     "\"Product\":{{\"@odata.id\":null,\"Category\":{{\"@odata.id\":null,\"Id\":\"PG2\"}}}}}}" +
                     "]}}", serviceUri);
 
-                InterceptRequestAndMockResponse(mockResponse);
-            }
+            InterceptRequestAndMockResponse(mockResponse);
         }
 
         private void MockGroupByMultipleNavProperties_MixedScenarios()
         {
-            {
-                string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Sales" +
+            string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Sales" +
                     "(Product(Category(Id)),Customer(Country),SumTaxRate,AvgAmount,MinTaxRate,MaxAmount,GroupCount,DistinctCurrency)\"," +
                     "\"value\":[" +
                     "{{\"@odata.id\":null,\"DistinctCurrency\":1,\"GroupCount\":1," +
@@ -2689,8 +2719,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
                     "\"Product\":{{\"@odata.id\":null,\"Category\":{{\"@odata.id\":null,\"Id\":\"PG2\"}}}}}}" +
                     "]}}", serviceUri);
 
-                InterceptRequestAndMockResponse(mockResponse);
-            }
+            InterceptRequestAndMockResponse(mockResponse);
         }
 
         #endregion Mock Aggregation Responses
@@ -2777,7 +2806,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
         // To find matching aggregation method - using reflection
         private static MethodInfo GetAggregationMethod(string aggregationMethod, Type genericArgumentType)
         {
-            return typeof(Queryable).GetMethods()
+            return typeof(Queryable).GetMethods(BindingFlags.Static | BindingFlags.Public)
                             .Where(d1 => d1.Name.Equals(aggregationMethod))
                             .Select(d2 => new { Method = d2, Parameters = d2.GetParameters() })
                             .Where(d3 => d3.Parameters.Length.Equals(2)
@@ -2797,8 +2826,25 @@ namespace Microsoft.OData.Client.Tests.ALinq
                             .FirstOrDefault();
         }
 
+        private static MethodInfo GetCountDistinctMethod()
+        {
+            return typeof(DataServiceExtensions).GetMethods(BindingFlags.Static | BindingFlags.Public)
+                    .Where(d1 => d1.Name.Equals("CountDistinct", StringComparison.Ordinal))
+                    .Select(d2 => new { Method = d2, Parameters = d2.GetParameters() })
+                    .Where(d3 => d3.Parameters.Length.Equals(2)
+                        && d3.Parameters[0].ParameterType.IsGenericType
+                        && d3.Parameters[0].ParameterType.GetGenericTypeDefinition().Equals(typeof(IQueryable<>))
+                        && d3.Parameters[1].ParameterType.IsGenericType
+                        && d3.Parameters[1].ParameterType.GetGenericTypeDefinition().Equals(typeof(Expression<>)))
+                    .Select(d4 => new { d4.Method, SelectorArguments = d4.Parameters[1].ParameterType.GetGenericArguments() })
+                    .Where(d5 => d5.SelectorArguments.Length.Equals(1)
+                        && d5.SelectorArguments[0].IsGenericType
+                        && d5.SelectorArguments[0].GetGenericTypeDefinition().Equals(typeof(Func<,>)))
+                    .Select(d6 => d6.Method).Single();
+        }
+
         // To generate a relevant aggregate value to be returned in the mock response
-        private object GenerateRandomAggregateValue(string aggregationMethod, Type returnType)
+        private object GenerateRandomValue(string aggregationMethod, Type returnType)
         {
             int lowerBound = 100;
             int upperBound = 1000;

@@ -113,14 +113,7 @@ namespace Microsoft.OData.Client
                         return query.AsEnumerable().FirstOrDefault();
                     case SequenceMethod.LongCount:
                     case SequenceMethod.Count:
-                        if (ResourceBinder.PatternRules.MatchCountDistinct(mce, out _, out _))
-                        {
-                            return ((DataServiceQuery<TElement>)query).GetValue(this.Context, this.ParseAggregateSingletonResult<TElement>);
-                        }
-                        else
-                        {
-                            return ((DataServiceQuery<TElement>)query).GetValue(this.Context, ParseQuerySetCount<TElement>);
-                        }
+                        return ((DataServiceQuery<TElement>)query).GetValue(this.Context, ParseQuerySetCount<TElement>);
                     case SequenceMethod.SumIntSelector:
                     case SequenceMethod.SumDoubleSelector:
                     case SequenceMethod.SumDecimalSelector:
@@ -143,7 +136,8 @@ namespace Microsoft.OData.Client
                     case SequenceMethod.AverageNullableSingleSelector:
                     case SequenceMethod.MinSelector: // Mapped to a generic expression - Min(IQueryable`1<T0>, Expression`1<Func`2<T0, T1>>)->T1
                     case SequenceMethod.MaxSelector: // Mapped to a generic expression - Max(IQueryable`1<T0>, Expression`1<Func`2<T0, T1>>)->T1
-                            return ((DataServiceQuery<TElement>)query).GetValue<TElement>(this.Context, this.ParseAggregateSingletonResult<TElement>);
+                    case SequenceMethod.CountDistinctSelector: // Mapped to a generic expression - Max(IQueryable`1<T0>, Expression`1<Func`2<T0, T1>>)->Int32
+                        return ((DataServiceQuery<TElement>)query).GetValue(this.Context, this.ParseAggregateSingletonResult<TElement>);
                     default:
                         throw Error.MethodNotSupported(mce);
                 }
