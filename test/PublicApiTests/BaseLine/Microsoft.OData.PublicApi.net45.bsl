@@ -7723,6 +7723,21 @@ public abstract class Microsoft.OData.Client.OperationResponse {
     int StatusCode  { public get; }
 }
 
+[
+ExtensionAttribute(),
+]
+public sealed class Microsoft.OData.Client.DataServiceExtensions {
+    [
+    ExtensionAttribute(),
+    ]
+    public static int CountDistinct (IEnumerable`1 source, Func`2 selector)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static int CountDistinct (IQueryable`1 source, Expression`1 selector)
+}
+
 public sealed class Microsoft.OData.Client.Utility {
     public static System.Collections.Generic.IEnumerable`1[[System.Object]] GetCustomAttributes (System.Type type, System.Type attributeType, bool inherit)
 }
