@@ -3700,7 +3700,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Rewrites the GroupBy result selector to a form usable by the project plan compiler during materialization.
         /// </summary>
-        internal class GroupByProjectionRewriter : ALinqExpressionVisitor
+        private class GroupByProjectionRewriter : ALinqExpressionVisitor
         {
             #region Fields
 
