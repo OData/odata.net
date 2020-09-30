@@ -1515,6 +1515,18 @@ namespace Microsoft.OData.Client.Tests.ALinq
         }
 
         [Fact]
+        public void CountDistinct_TargetingNavProperty()
+        {
+            DataServiceQuery<Sale> queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            MockCountDistinct_TargetingNavProperty();
+
+            int countDistinct = queryable.CountDistinct(d1 => d1.Customer.Country);
+
+            Assert.Equal(2, countDistinct);
+        }
+
+        [Fact]
         public void GroupByWithResultSelector_BySingleNavProperty()
         {
             DataServiceQuery<Sale> queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
@@ -2601,6 +2613,15 @@ namespace Microsoft.OData.Client.Tests.ALinq
             string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Numbers(" +
                 "CountDistinctRowParity)\"," +
                 "\"value\":[{{\"@odata.id\":null,\"CountDistinctRowParity\":3}}]}}", serviceUri);
+
+            InterceptRequestAndMockResponse(mockResponse);
+        }
+
+        private void MockCountDistinct_TargetingNavProperty()
+        {
+            string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Numbers(" +
+                "CountDistinctCustomerCountry)\"," +
+                "\"value\":[{{\"@odata.id\":null,\"CountDistinctCustomerCountry\":2}}]}}", serviceUri);
 
             InterceptRequestAndMockResponse(mockResponse);
         }
