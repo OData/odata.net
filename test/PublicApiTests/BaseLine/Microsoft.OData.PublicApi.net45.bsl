@@ -4381,6 +4381,7 @@ public abstract class Microsoft.OData.ODataBatchReader : IODataStreamListener {
     protected abstract Microsoft.OData.ODataBatchReaderState ReadAtOperationImplementation ()
     protected abstract Microsoft.OData.ODataBatchReaderState ReadAtStartImplementation ()
     protected void ThrowODataException (string errorMessage)
+    protected abstract void ValidateDependsOnIds (string contentId, System.Collections.Generic.IEnumerable`1[[System.String]] dependsOnIds)
 }
 
 public abstract class Microsoft.OData.ODataBatchWriter : IODataOutputInStreamErrorListener, IODataStreamListener {
@@ -4410,6 +4411,7 @@ public abstract class Microsoft.OData.ODataBatchWriter : IODataOutputInStreamErr
     public abstract void StreamDisposed ()
     public abstract void StreamRequested ()
     public abstract System.Threading.Tasks.Task StreamRequestedAsync ()
+    protected abstract void ValidateDependsOnIds (string contentId, System.Collections.Generic.IEnumerable`1[[System.String]] dependsOnIds)
     protected abstract void VerifyNotDisposed ()
     public void WriteEndBatch ()
     public System.Threading.Tasks.Task WriteEndBatchAsync ()
@@ -5702,6 +5704,9 @@ public interface Microsoft.OData.Json.IJsonStreamReader : IJsonReader {
     System.IO.TextReader CreateTextReader ()
 }
 
+[
+CLSCompliantAttribute(),
+]
 public interface Microsoft.OData.Json.IJsonStreamWriter : IJsonWriter {
     void EndStreamValueScope ()
     void EndTextWriterValueScope ()
@@ -5709,6 +5714,9 @@ public interface Microsoft.OData.Json.IJsonStreamWriter : IJsonWriter {
     System.IO.TextWriter StartTextWriterValueScope (string contentType)
 }
 
+[
+CLSCompliantAttribute(),
+]
 public interface Microsoft.OData.Json.IJsonWriter {
     void EndArrayScope ()
     void EndObjectScope ()
@@ -5738,10 +5746,16 @@ public interface Microsoft.OData.Json.IJsonWriter {
     void WriteValue (System.TimeSpan value)
 }
 
+[
+CLSCompliantAttribute(),
+]
 public interface Microsoft.OData.Json.IJsonWriterFactory {
     Microsoft.OData.Json.IJsonWriter CreateJsonWriter (System.IO.TextWriter textWriter, bool isIeee754Compatible)
 }
 
+[
+CLSCompliantAttribute(),
+]
 public sealed class Microsoft.OData.Json.DefaultJsonWriterFactory : IJsonWriterFactory {
     public DefaultJsonWriterFactory ()
     public DefaultJsonWriterFactory (Microsoft.OData.Json.ODataStringEscapeOption stringEscapeOption)
@@ -7820,6 +7834,7 @@ public class Microsoft.OData.Client.DataServiceContext {
     Microsoft.OData.Client.EntityTracker EntityTracker  { public virtual get; public virtual set; }
     Microsoft.OData.Client.DataServiceClientFormat Format  { public virtual get; }
     bool IgnoreResourceNotFoundException  { public virtual get; public virtual set; }
+    bool KeyComparisonGeneratesFilterQuery  { public virtual get; public virtual set; }
     System.Collections.ObjectModel.ReadOnlyCollection`1[[Microsoft.OData.Client.LinkDescriptor]] Links  { public virtual get; }
     Microsoft.OData.Client.ODataProtocolVersion MaxProtocolVersion  { public virtual get; }
     Microsoft.OData.Client.MergeOption MergeOption  { public virtual get; public virtual set; }
@@ -8014,8 +8029,11 @@ SerializableAttribute(),
 ]
 public class Microsoft.OData.Client.DataServiceTransportException : System.InvalidOperationException, ISerializable {
     public DataServiceTransportException (Microsoft.OData.IODataResponseMessage response, System.Exception innerException)
+    protected DataServiceTransportException (System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 
     Microsoft.OData.IODataResponseMessage Response  { public get; }
+
+    public virtual void GetObjectData (System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 }
 
 public class Microsoft.OData.Client.EntityTracker : Microsoft.OData.Client.EntityTrackerBase {
@@ -8184,6 +8202,8 @@ public sealed class Microsoft.OData.Client.DataServiceClientException : System.I
     public DataServiceClientException (string message, System.Exception innerException, int statusCode)
 
     int StatusCode  { public get; }
+
+    public virtual void GetObjectData (System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 }
 
 public sealed class Microsoft.OData.Client.DataServiceClientFormat {
