@@ -81,6 +81,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ODataT4CodeGenerator.tt</DependentUpon>
     </Compile>
+    <Compile Include="CancellationTokenTests.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="ODataItemWrapper.cs" />
     <Compile Include="ODataNestedResourceInfoWrapper.cs" />
