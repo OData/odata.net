@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="DataServiceQueryProviderTest.cs" company="Microsoft">
+// <copyright file="DataServiceQueryProviderTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -13,11 +13,11 @@ namespace Microsoft.OData.Client.Tests
     /// <summary>
     /// Tests to verify that LINQ expressions can be translated to URIs.
     /// </summary>
-    public class DataServiceQueryProviderTest
+    public class DataServiceQueryProviderTests
     {
         private readonly DataServiceContext dsc;
  
-        public DataServiceQueryProviderTest()
+        public DataServiceQueryProviderTests()
         {
             dsc = new DataServiceContext(new Uri("http://root"), ODataProtocolVersion.V4);
         }
