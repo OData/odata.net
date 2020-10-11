@@ -15,15 +15,17 @@ namespace Microsoft.OData.Client.Tests
     /// </summary>
     public class DataServiceQueryProviderTest
     {
-        private DataServiceContext dsc;
+        private readonly DataServiceContext dsc;
  
         public DataServiceQueryProviderTest()
         {
             dsc = new DataServiceContext(new Uri("http://root"), ODataProtocolVersion.V4);
         }
 
+        #region String.Contains tests
+
         [Fact]
-        public void StringContainsTranslatesToContainsFunction()
+        public void TranslatesStringContainsToContainsFunction()
         {
             // Arrange
             var sut = new DataServiceQueryProvider(dsc);
@@ -38,9 +40,12 @@ namespace Microsoft.OData.Client.Tests
             Assert.Equal(@"http://root/Products?$filter=contains(Name,'Strawberry')", queryComponents.Uri.ToString());
         }
 
+        #endregion
+
+        #region Enumerable.Contains tests
 
         [Fact]
-        public void EnumerableContainsTranslatesToInOperator()
+        public void TranslatesEnumerableContainsToInOperator()
         {
             // Arrange
             var sut = new DataServiceQueryProvider(dsc);
@@ -55,6 +60,53 @@ namespace Microsoft.OData.Client.Tests
             Assert.Equal(@"http://root/Products?$filter=Name in ('Milk','Cheese','Donut')", queryComponents.Uri.ToString());
         }
 
+        [Fact]
+        public void TranslatesEnumerableContainsWithEmptyCollection()
+        {
+            // Arrange
+            var sut = new DataServiceQueryProvider(dsc);
+            var products = dsc.CreateQuery<Product>("Products")
+                .Where(product => Enumerable.Empty<string>().Contains(product.Name));
+
+            // Act
+            var queryComponents = sut.Translate(products.Expression);
+
+            // Assert
+            Assert.Equal(@"http://root/Products?$filter=Name in ()", queryComponents.Uri.ToString());
+        }
+
+        [Fact]
+        public void TranslatesEnumerableContainsWithSingleItem()
+        {
+            // Arrange
+            var sut = new DataServiceQueryProvider(dsc);
+            var products = dsc.CreateQuery<Product>("Products")
+                .Where(product => new[] { "Pancake mix" }.Contains(product.Name));
+
+            // Act
+            var queryComponents = sut.Translate(products.Expression);
+
+            // Assert
+            Assert.Equal(@"http://root/Products?$filter=Name in ('Pancake mix')", queryComponents.Uri.ToString());
+        }
+
+        [Fact]
+        public void TranslatesEnumerableContainsWithOtherClauses()
+        {
+            // Arrange
+            var sut = new DataServiceQueryProvider(dsc);
+            var products = dsc.CreateQuery<Product>("Products")
+                .Where(product => new[] { "Milk", "Flour" }.Contains(product.Name) && product.Price < 5);
+
+            // Act
+            var queryComponents = sut.Translate(products.Expression);
+
+            // Assert
+            Assert.Equal(@"http://root/Products?$filter=Name in ('Milk','Flour') and Price lt 5", queryComponents.Uri.ToString());
+        }
+
+        #endregion
+
         [EntityType]
         [Key(nameof(Id))]
         private class Product
@@ -62,6 +114,8 @@ namespace Microsoft.OData.Client.Tests
             public int Id { get; set; }
 
             public string Name { get; set; }
+
+            public decimal Price { get; set; }
         }
     }
 }
