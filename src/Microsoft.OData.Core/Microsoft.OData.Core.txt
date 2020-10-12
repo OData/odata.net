@@ -788,6 +788,7 @@ ExpandItemBinder_PropertyIsNotANavigationPropertyOrComplexProperty=Property '{0}
 ExpandItemBinder_TypeSegmentNotFollowedByPath=Found a path within a select or expand query option that isn't ended by a non-type segment.
 ExpandItemBinder_PathTooDeep=Trying to parse a type segment path that is too long.
 ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath=Found a path traversing multiple navigation properties. Please rephrase the query such that each expand path contains only type segments and navigation properties.
+NavigationSource_ShouldBeDefinedASAnEntitySet=The navigation source should be set as an entity set.
 ExpandItemBinder_LevelsNotAllowedOnIncompatibleRelatedType=The $level option on navigation property '{0}' is not allowed, because the related entity type '{1}' could not be cast to source entity type '{2}'.
 ExpandItemBinder_InvaidSegmentInExpand=Segment '{0}' is not valid in expand path. Before navigation property, only type segment or entity or complex property can exist.
 

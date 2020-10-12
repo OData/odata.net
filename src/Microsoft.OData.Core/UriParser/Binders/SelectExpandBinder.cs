@@ -371,6 +371,10 @@ namespace Microsoft.OData.UriParser
                 IEdmPathExpression bindingPath;
                 targetNavigationSource = this.NavigationSource.FindNavigationTarget(currentNavProp, BindingPathHelper.MatchBindingPath, parsedPath, out bindingPath);
             }
+            else 
+            {
+                throw new ODataException(ODataErrorStrings.NavigationSource_ShouldBeDefinedASAnEntitySet);
+            }
 
             NavigationPropertySegment navSegment = new NavigationPropertySegment(currentNavProp, targetNavigationSource);
             pathSoFar.Add(navSegment);

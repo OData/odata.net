@@ -5936,6 +5936,17 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The navigation source should be set as an entity set."
+        /// </summary>
+        internal static string NavigationSource_ShouldBeDefinedASAnEntitySet
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.NavigationSource_ShouldBeDefinedASAnEntitySet);
+            }
+        }
+
+        /// <summary>
         /// A string like "The $level option on navigation property '{0}' is not allowed, because the related entity type '{1}' could not be cast to source entity type '{2}'."
         /// </summary>
         internal static string ExpandItemBinder_LevelsNotAllowedOnIncompatibleRelatedType(object p0, object p1, object p2)
