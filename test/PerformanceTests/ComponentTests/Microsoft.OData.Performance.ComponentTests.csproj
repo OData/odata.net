@@ -13,10 +13,14 @@
     <AssemblyName>Microsoft.OData.Performance.Component.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <RelativeOutputPath>$(RelativeOutputPath)\Performance\bin</RelativeOutputPath>
+    <OutputPath>bin\Latest</OutputPath>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\sln\</SolutionDir>
     <RestorePackages>true</RestorePackages>
     <NuGetPackageImportStamp>2304cbc7</NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <OutputPath>bin\Debug\</OutputPath>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
   <ItemGroup>

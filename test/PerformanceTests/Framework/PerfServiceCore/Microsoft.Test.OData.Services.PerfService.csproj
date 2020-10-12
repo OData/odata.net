@@ -8,6 +8,7 @@
     <OdlVersion Condition=" '$(OdlVersion)' == '' ">6.14</OdlVersion>
     <ProjectGuid>{6DA1260D-FE35-424B-ADFA-158368AD02DC}</ProjectGuid>
     <OutputType>Library</OutputType>
+    <OutputPath>bin\Latest</OutputPath>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.Test.OData.Services.PerfService</RootNamespace>
     <AssemblyName>Microsoft.Test.OData.Services.PerfService</AssemblyName>

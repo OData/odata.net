@@ -13,7 +13,7 @@ If("Debug","Release" -notcontains $Config)
 $ProgramFilesX86 = [Environment]::GetFolderPath("ProgramFilesX86")
 $EnlistmentRoot = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $LogDir = $EnlistmentRoot + "\bin"
-$Msbuild= $ProgramFilesX86 + "\MSBuild\12.0\Bin\MSBuild.exe"
+$Msbuild= $ProgramFilesX86 + "\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\MSBuild.exe"
 $TestDir = $EnlistmentRoot  + "\bin\AnyCPU\$Config\Test\Desktop\Performance\bin"
 $PackagesPath = $EnlistmentRoot  + "\sln\packages\"
 

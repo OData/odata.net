@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TestType Condition=" '$(TestType)' == '' ">Private</TestType>
-    <OutputPath>bin\Latest\</OutputPath>
+    <OutputPath>bin\Latest</OutputPath>
     <AssemblyName>ODataSamples.Services.Core</AssemblyName>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
