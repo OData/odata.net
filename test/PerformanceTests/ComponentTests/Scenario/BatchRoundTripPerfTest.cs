@@ -101,7 +101,8 @@ namespace Microsoft.OData.Performance
                 // Repeat N times.
                 const int N = 1 << 10;for (int i = 0; i < N; i++)
                 {
-                    PrintProgress(i);
+                    // TODO: does printing progress affect results?
+                    //PrintProgress(i);
                     this.CreateBatchRequest(this.currentBatchContentType, NumOfUnitsPerBatch);
                 }
             }
@@ -124,7 +125,7 @@ namespace Microsoft.OData.Performance
                 // Memory usage should stay relatively flat.
                 for (int i = 0; i < N; i++)
                 {
-                    PrintProgress(i);
+                    //PrintProgress(i);
                     DoOneRoundTrip();
                 }
             }
