@@ -58,7 +58,7 @@ namespace Microsoft.OData.Performance
         public void SetupForReadFeedDataSize()
         {
             numberOfEntries = 0;
-            int dataSizeKb = 4 * 1024;
+            int dataSizeKb = dataSizeMb * 1024;
 
             WriteStream.SetLength(0);
 
