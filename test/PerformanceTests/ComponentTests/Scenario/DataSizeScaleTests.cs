@@ -9,11 +9,10 @@ namespace Microsoft.OData.Performance
     using System;
     using System.IO;
     using System.Linq;
-    using global::Xunit;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Spatial;
-    using Microsoft.Xunit.Performance;
+    using BenchmarkDotNet.Attributes;
 
     public class DataSizeScaleTests : WriteReadFeedTestBase
     {
@@ -24,12 +23,15 @@ namespace Microsoft.OData.Performance
         private const int MaxStreamSize = 8 * 1024;
         private static Stream WriteStream = new MemoryStream(MaxStreamSize);
 
-        [Benchmark]
-        [MeasureGCAllocations]
-        public void WriteFeedDataSize_4MB()
+        [Params(4, 8)]
+        public int dataSizeMb;
+        public long numberOfEntries;
+
+        [GlobalSetup(Target = nameof(WriteFeedDataSize))]
+        public void SetupForWriteFeedDataSize()
         {
-            long numberOfEntries = 0;
-            int dataSizeKb = 4 * 1024;
+            numberOfEntries = 0;
+            int dataSizeKb = dataSizeMb * 1024;
 
             WriteStream.SetLength(0);
 
@@ -38,47 +40,24 @@ namespace Microsoft.OData.Performance
                 long basePayLoadLength = WriteFeed(WriteStream, AdventureWorksModel, BaseNumberOfEntries, WriteEntry, TestEntitySet);
                 numberOfEntries = (dataSizeKb * 1024) * BaseNumberOfEntries / basePayLoadLength;
             }
-
-            foreach (var iteration in Benchmark.Iterations)
-            {
-                WriteStream.SetLength(0);
-                using (iteration.StartMeasurement())
-                {
-                    WriteFeed(WriteStream, AdventureWorksModel, numberOfEntries, WriteEntry, TestEntitySet);
-                }
-            }
         }
 
-        [Benchmark]
-        [MeasureGCAllocations]
-        public void WriteFeedDataSize_8MB()
+        [IterationSetup(Target = nameof(WriteFeedDataSize))]
+        public void ResetStreamLengthForWriteFeedDataSize()
         {
-            long numberOfEntries = 0;
-            int dataSizeKb = 8 * 1024;
-
             WriteStream.SetLength(0);
-
-            if (dataSizeKb != 0)
-            {
-                long basePayLoadLength = WriteFeed(WriteStream, AdventureWorksModel, BaseNumberOfEntries, WriteEntry, TestEntitySet);
-                numberOfEntries = (dataSizeKb * 1024) * BaseNumberOfEntries / basePayLoadLength;
-            }
-
-            foreach (var iteration in Benchmark.Iterations)
-            {
-                WriteStream.SetLength(0);
-                using (iteration.StartMeasurement())
-                {
-                    WriteFeed(WriteStream, AdventureWorksModel, numberOfEntries, WriteEntry, TestEntitySet);
-                }
-            }
         }
 
         [Benchmark]
-        [MeasureGCAllocations]
-        public void ReadFeedDataSize_4MB()
+        public void WriteFeedDataSize()
         {
-            long numberOfEntries = 0;
+            WriteFeed(WriteStream, AdventureWorksModel, numberOfEntries, WriteEntry, TestEntitySet);
+        }
+
+        [GlobalSetup(Target = nameof(ReadFeedDataSize))]
+        public void SetupForReadFeedDataSize()
+        {
+            numberOfEntries = 0;
             int dataSizeKb = 4 * 1024;
 
             WriteStream.SetLength(0);
@@ -91,41 +70,12 @@ namespace Microsoft.OData.Performance
 
             WriteStream.SetLength(0);
             WriteFeed(WriteStream, AdventureWorksModel, numberOfEntries, WriteEntry, TestEntitySet);
-
-            foreach (var iteration in Benchmark.Iterations)
-            {
-                using (iteration.StartMeasurement())
-                {
-                    ReadFeed(WriteStream, AdventureWorksModel, TestEntitySet, TestEntityType);
-                }
-            }
         }
 
         [Benchmark]
-        [MeasureGCAllocations]
-        public void ReadFeedDataSize_8MB()
+        public void ReadFeedDataSize()
         {
-            long numberOfEntries = 0;
-            int dataSizeKb = 8 * 1024;
-
-            WriteStream.SetLength(0);
-
-            if (dataSizeKb != 0)
-            {
-                long basePayLoadLength = WriteFeed(WriteStream, AdventureWorksModel, BaseNumberOfEntries, WriteEntry, TestEntitySet);
-                numberOfEntries = (dataSizeKb * 1024) * BaseNumberOfEntries / basePayLoadLength;
-            }
-
-            WriteStream.SetLength(0);
-            WriteFeed(WriteStream, AdventureWorksModel, numberOfEntries, WriteEntry, TestEntitySet);
-
-            foreach (var iteration in Benchmark.Iterations)
-            {
-                using (iteration.StartMeasurement())
-                {
-                    ReadFeed(WriteStream, AdventureWorksModel, TestEntitySet, TestEntityType);
-                }
-            }
+            ReadFeed(WriteStream, AdventureWorksModel, TestEntitySet, TestEntityType);
         }
 
         private void WriteEntry(ODataWriter odataWriter)
