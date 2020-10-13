@@ -23,13 +23,13 @@ namespace Microsoft.OData.Performance
 
         public Stream _stream;
 
-        [GlobalCleanup]
+        [IterationCleanup]
         public void Cleanup()
         {
             _stream.Dispose();
         }
 
-        [GlobalSetup(Target = nameof(ReadFeed))]
+        [IterationSetup(Target = nameof(ReadFeed))]
         public void SetupForReadFeed()
         {
             SetupDataStream("Entry.json", 1000);
@@ -41,7 +41,7 @@ namespace Microsoft.OData.Performance
             RunReadTest(_isFullValidation);
         }
 
-        [GlobalSetup(Target = nameof(ReadFeedIncludeSpatial))]
+        [IterationSetup(Target = nameof(ReadFeedIncludeSpatial))]
         public void SetupForReadFeedIncludeSpatial()
         {
             SetupDataStream("EntryIncludeSpatial.json", 1000);
@@ -53,7 +53,7 @@ namespace Microsoft.OData.Performance
             RunReadTest(_isFullValidation);
         }
 
-        [GlobalSetup(Target = nameof(ReadFeedWithExpansions))]
+        [IterationSetup(Target = nameof(ReadFeedWithExpansions))]
         public void SetupForReadFeedWithExpansions()
         {
             SetupDataStream("EntryWithExpansions.json", 100);
@@ -65,7 +65,7 @@ namespace Microsoft.OData.Performance
             RunReadTest(_isFullValidation);
         }
 
-        [GlobalSetup(Target = nameof(ReadFeedIncludeSpatialWithExpansions))]
+        [IterationSetup(Target = nameof(ReadFeedIncludeSpatialWithExpansions))]
         public void SetupForReadFeedIncludeSpatialWithExpansions()
         {
             SetupDataStream("EntryIncludeSpatialWithExpansions.json", 100);
