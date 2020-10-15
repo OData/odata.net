@@ -24,7 +24,22 @@ namespace Microsoft.OData.UriParser
         {
             ExceptionUtils.CheckArgumentNotNull(rangeVariableToken, "rangeVariableToken");
 
-            RangeVariable rangeVariable = state.RangeVariables.SingleOrDefault(p => p.Name == rangeVariableToken.Name);
+            RangeVariable rangeVariable;
+
+            if (rangeVariableToken.Name == ExpressionConstants.It)
+            {
+                RangeVariable implicitRangeVariable = state.ImplicitRangeVariable;
+                RangeVariable topRangeVariable = state.RangeVariables.Where(p => p.Name == rangeVariableToken.Name).FirstOrDefault();
+
+                // If we added another $it rangeVariable to the Stack (when binding the expandToken),
+                // We create the RangeVariableReferenceNode using the added $it rangeVariable.
+                // ASSUMPTION: Max 2 $it rangeVariables can be added to the Stack.
+                rangeVariable = topRangeVariable != implicitRangeVariable ? topRangeVariable : implicitRangeVariable;
+            }
+            else
+            {
+                rangeVariable = state.RangeVariables.FirstOrDefault(p => p.Name == rangeVariableToken.Name);
+            }
 
             if (rangeVariable == null)
             {

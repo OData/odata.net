@@ -1274,6 +1274,19 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void DollarItinFilterInsideExpandShouldReferenceQueriedEntity()
+        {
+            IEdmStructuredType expectedRight = (IEdmStructuredType) HardCodedTestModel.GetPersonType();
+            IEdmStructuredType expectedLeft = (IEdmStructuredType) HardCodedTestModel.GetDogType();
+            var clause = RunParseSelectExpand("", "MyDog($filter=ID eq $it/ID)", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            var right = (((clause.SelectedItems.First() as ExpandedNavigationSelectItem).FilterOption.Expression as BinaryOperatorNode).Right as SingleValuePropertyAccessNode).Property.DeclaringType;
+            var left = (((clause.SelectedItems.First() as ExpandedNavigationSelectItem).FilterOption.Expression as BinaryOperatorNode).Left as SingleValuePropertyAccessNode).Property.DeclaringType;
+            Assert.Equal(expectedRight, right);
+            Assert.Equal(expectedLeft, left);
+        }
+
+        [Fact]
         public void SelectAndExpandShouldFailOnSelectWrongComplexProperties()
         {
             Action parse = () => RunParseSelectExpand("Name,MyAddress/City/Street,MyDog", "MyDog($select=Color)", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
