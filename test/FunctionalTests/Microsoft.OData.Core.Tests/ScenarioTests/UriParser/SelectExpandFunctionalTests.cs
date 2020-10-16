@@ -1278,10 +1278,36 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             IEdmStructuredType expectedRight = (IEdmStructuredType) HardCodedTestModel.GetPersonType();
             IEdmStructuredType expectedLeft = (IEdmStructuredType) HardCodedTestModel.GetDogType();
-            var clause = RunParseSelectExpand("", "MyDog($filter=ID eq $it/ID)", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            SelectExpandClause clause = RunParseSelectExpand("", "MyDog($filter=ID eq $it/ID)", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
-            var right = (((clause.SelectedItems.First() as ExpandedNavigationSelectItem).FilterOption.Expression as BinaryOperatorNode).Right as SingleValuePropertyAccessNode).Property.DeclaringType;
-            var left = (((clause.SelectedItems.First() as ExpandedNavigationSelectItem).FilterOption.Expression as BinaryOperatorNode).Left as SingleValuePropertyAccessNode).Property.DeclaringType;
+            IEdmStructuredType right = (((clause.SelectedItems.First() as ExpandedNavigationSelectItem).FilterOption.Expression as BinaryOperatorNode).Right as SingleValuePropertyAccessNode).Property.DeclaringType;
+            IEdmStructuredType left = (((clause.SelectedItems.First() as ExpandedNavigationSelectItem).FilterOption.Expression as BinaryOperatorNode).Left as SingleValuePropertyAccessNode).Property.DeclaringType;
+            Assert.Equal(expectedRight, right);
+            Assert.Equal(expectedLeft, left);
+        }
+
+        [Fact]
+        public void DollarItinFilterInsideNestedExpandShouldReferenceOuterExpandedEntity()
+        {
+            IEdmStructuredType expectedRight = (IEdmStructuredType)HardCodedTestModel.GetDogType();
+            IEdmStructuredType expectedLeft = (IEdmStructuredType)HardCodedTestModel.GetPersonType();
+            SelectExpandClause clause = RunParseSelectExpand("", "MyDog($select=Color;$expand=MyPeople($filter=ID eq $it/ID))", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            IEdmStructuredType right = ((((clause.SelectedItems.First() as ExpandedNavigationSelectItem).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem).FilterOption.Expression as BinaryOperatorNode).Right as SingleValuePropertyAccessNode).Property.DeclaringType;
+            IEdmStructuredType left = ((((clause.SelectedItems.First() as ExpandedNavigationSelectItem).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem).FilterOption.Expression as BinaryOperatorNode).Left as SingleValuePropertyAccessNode).Property.DeclaringType;
+            Assert.Equal(expectedRight, right);
+            Assert.Equal(expectedLeft, left);
+        }
+
+        [Fact]
+        public void DollarItinFilterInsideMultiNestedExpandShouldReferenceOuterExpandedEntity()
+        {
+            IEdmStructuredType expectedRight = (IEdmStructuredType)HardCodedTestModel.GetPersonType();
+            IEdmStructuredType expectedLeft = (IEdmStructuredType)HardCodedTestModel.GetPaintingType();
+            SelectExpandClause clause = RunParseSelectExpand("", "MyDog($select=Color;$expand=MyPeople($expand=MyPaintings($filter=ID eq $it/ID)))", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            IEdmStructuredType right = (((((clause.SelectedItems.First() as ExpandedNavigationSelectItem).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem).FilterOption.Expression as BinaryOperatorNode).Right as SingleValuePropertyAccessNode).Property.DeclaringType;
+            IEdmStructuredType left = (((((clause.SelectedItems.First() as ExpandedNavigationSelectItem).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem).FilterOption.Expression as BinaryOperatorNode).Left as SingleValuePropertyAccessNode).Property.DeclaringType;
             Assert.Equal(expectedRight, right);
             Assert.Equal(expectedLeft, left);
         }
