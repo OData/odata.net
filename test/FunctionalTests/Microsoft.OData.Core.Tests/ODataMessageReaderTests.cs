@@ -228,6 +228,62 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
+        public void ReadMetadataDocument_WorksForJsonCSDL()
+        {
+            Stream stream = new MemoryStream(Encoding.UTF8.GetBytes(@"{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""NS.Container"",
+  ""NS"": {
+    ""Customer"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {
+        ""$Type"": ""Edm.Int32""
+      },
+      ""Name"": {}
+    },
+    ""Container"": {
+      ""$Kind"": ""EntityContainer"",
+      ""Customers"": {
+        ""$Collection"": true,
+        ""$Type"": ""NS.Customer""
+      }
+    }
+  }
+}"));
+
+            IODataResponseMessage responseMessage = new InMemoryMessage() { StatusCode = 200, Stream = stream };
+            responseMessage.SetHeader("Content-Type", "application/json");
+            ODataMessageReader reader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), new EdmModel());
+
+#if NETCOREAPP3_1 || NETCOREAPP2_1
+            IEdmModel model = reader.ReadMetadataDocument();
+
+            IEdmEntityType customerType = model.FindDeclaredType("NS.Customer") as IEdmEntityType;
+            Assert.NotNull(customerType);
+
+            IEdmProperty idProperty = customerType.FindProperty("Id");
+            Assert.NotNull(idProperty);
+            Assert.Equal("Edm.Int32", idProperty.Type.FullName());
+
+            IEdmProperty nameProperty = customerType.FindProperty("Name");
+            Assert.NotNull(nameProperty);
+            Assert.Equal("Edm.String", nameProperty.Type.FullName());
+
+            IEdmEntitySet customers = Assert.Single(model.EntityContainer.EntitySets());
+            Assert.Equal("Customers", customers.Name);
+            Assert.Same(customerType, customers.EntityType());
+#else
+            Action test = () => reader.ReadMetadataDocument();
+
+            ODataException exception = Assert.Throws<ODataException>(test);
+            Assert.Equal("The JSON metadata is not supported at this platform. It's only supported at platform implementing .NETStardard 2.0.", exception.Message);
+#endif
+        }
+
+        [Fact]
         public void ReadTopLevelPropertyWithTypeDefinitionShouldWork()
         {
             Stream stream = new MemoryStream(Encoding.UTF8.GetBytes("{value:123}"));

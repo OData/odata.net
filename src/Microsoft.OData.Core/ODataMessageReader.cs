@@ -856,13 +856,13 @@ namespace Microsoft.OData
                 supportedPayloadKinds);
         }
 
-        /// <summary>Reads the message body as metadata document.</summary>
+        /// <summary>Reads the message body as metadata document. It can read JSON/XML CSDL based on the content type.</summary>
         /// <returns>Returns <see cref="Microsoft.OData.Edm.IEdmModel" />.</returns>
         public IEdmModel ReadMetadataDocument()
         {
             this.VerifyCanReadMetadataDocument();
             return this.ReadFromInput(
-                (context) => context.ReadMetadataDocument(null),
+                (context) => context.ReadMetadataDocument(),
                 ODataPayloadKind.MetadataDocument);
         }
 

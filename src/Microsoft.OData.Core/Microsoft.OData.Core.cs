@@ -78,8 +78,8 @@ namespace Microsoft.OData
         internal const string ODataException_GeneralError = "ODataException_GeneralError";
         internal const string ODataErrorException_GeneralError = "ODataErrorException_GeneralError";
         internal const string ODataUriParserException_GeneralError = "ODataUriParserException_GeneralError";
-        internal const string ODataUrlValidationError_SelectRequired = "ODataUrlValidationError_SelectRequired";
-        internal const string ODataUrlValidationError_InvalidRule = "ODataUrlValidationError_InvalidRule";
+        internal const string ODataUrlValidationError_SelectRequired  = "ODataUrlValidationError_SelectRequired ";
+        internal const string ODataUrlValidationError_InvalidRule  = "ODataUrlValidationError_InvalidRule ";
         internal const string ODataMessageWriter_WriterAlreadyUsed = "ODataMessageWriter_WriterAlreadyUsed";
         internal const string ODataMessageWriter_EntityReferenceLinksInRequestNotAllowed = "ODataMessageWriter_EntityReferenceLinksInRequestNotAllowed";
         internal const string ODataMessageWriter_ErrorPayloadInRequest = "ODataMessageWriter_ErrorPayloadInRequest";
@@ -400,6 +400,7 @@ namespace Microsoft.OData
         internal const string XmlReaderExtension_InvalidRootNode = "XmlReaderExtension_InvalidRootNode";
         internal const string ODataMetadataInputContext_ErrorReadingMetadata = "ODataMetadataInputContext_ErrorReadingMetadata";
         internal const string ODataMetadataOutputContext_ErrorWritingMetadata = "ODataMetadataOutputContext_ErrorWritingMetadata";
+        internal const string ODataMetadataOutputContext_NotSupportJsonMetadata = "ODataMetadataOutputContext_NotSupportJsonMetadata";
         internal const string ODataAtomDeserializer_RelativeUriUsedWithoutBaseUriSpecified = "ODataAtomDeserializer_RelativeUriUsedWithoutBaseUriSpecified";
         internal const string ODataAtomPropertyAndValueDeserializer_InvalidCollectionElement = "ODataAtomPropertyAndValueDeserializer_InvalidCollectionElement";
         internal const string ODataAtomPropertyAndValueDeserializer_NavigationPropertyInProperties = "ODataAtomPropertyAndValueDeserializer_NavigationPropertyInProperties";

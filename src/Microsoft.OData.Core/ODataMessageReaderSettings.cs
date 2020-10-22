@@ -9,6 +9,7 @@ namespace Microsoft.OData
     using System;
     using Microsoft.OData.Buffers;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.Edm.Csdl;
 
     /// <summary>
     /// Configuration settings for OData message readers.
@@ -203,6 +204,12 @@ namespace Microsoft.OData
         /// </summary>
         public Func<string, bool> ShouldIncludeAnnotation { get; set; }
 
+#if NETSTANDARD2_0
+        /// <summary>
+        /// Gets/sets the JSON-CSDL reader settings.
+        /// </summary>
+        public CsdlJsonReaderSettings JsonCsdlReaderSettings { get; set; }
+#endif
         /// <summary>
         /// Gets the bound validator.
         /// </summary>

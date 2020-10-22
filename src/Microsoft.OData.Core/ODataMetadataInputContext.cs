@@ -68,6 +68,17 @@ namespace Microsoft.OData
         /// This method reads the metadata document from the input and returns
         /// an <see cref="IEdmModel"/> that represents the read metadata document.
         /// </summary>
+        /// <returns>An <see cref="IEdmModel"/> representing the read metadata document.</returns>
+        internal override IEdmModel ReadMetadataDocument()
+        {
+            return this.ReadMetadataDocument(null);
+        }
+
+        /// <summary>
+        /// Read a metadata document.
+        /// This method reads the metadata document from the input and returns
+        /// an <see cref="IEdmModel"/> that represents the read metadata document.
+        /// </summary>
         /// <param name="getReferencedModelReaderFunc">The function to load referenced model xml. If null, will stop loading the referenced models. Normally it should throw no exception.</param>
         /// <returns>An <see cref="IEdmModel"/> representing the read metadata document.</returns>
         internal override IEdmModel ReadMetadataDocument(Func<Uri, XmlReader> getReferencedModelReaderFunc)
