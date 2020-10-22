@@ -410,7 +410,7 @@ namespace Microsoft.OData.Client.Metadata
                     Debug.Assert(!propertyType.ContainsGenericParameters(), "remove when test case is found that encounters this");
 
                     if (propertyInfo.CanRead &&
-                        //(!propertyType.IsValueType() || propertyInfo.CanWrite) &&
+                        (!propertyType.IsValueType() || propertyInfo.CanWrite) &&
                         !propertyType.ContainsGenericParameters() &&
                         propertyInfo.GetIndexParameters().Length == 0)
                     {
