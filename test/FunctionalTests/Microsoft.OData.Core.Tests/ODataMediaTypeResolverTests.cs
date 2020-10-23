@@ -56,6 +56,7 @@ namespace Microsoft.OData.Tests
             new ODataMediaTypeFormat[]
             {
                 new ODataMediaTypeFormat ( new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeXmlSubType), ODataFormat.Metadata),
+                new ODataMediaTypeFormat ( new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType), ODataFormat.Metadata),
             },
             // error
             JsonMediaTypes,

@@ -75,8 +75,8 @@ ODataException_GeneralError=An error occurred while processing the OData message
 ODataErrorException_GeneralError=An error was read from the payload. See the 'Error' property for more details.
 ODataUriParserException_GeneralError=An error occurred while parsing part of the URI.
 
-ODataUrlValidationError_SelectRequired = '{0}' is missing a $select clause. All property paths, expands, and selects of complex types should include a $select statement.
-ODataUrlValidationError_InvalidRule = Exception thrown by invalid rule {0}. {1}
+ODataUrlValidationError_SelectRequired='{0}' is missing a $select clause. All property paths, expands, and selects of complex types should include a $select statement.
+ODataUrlValidationError_InvalidRule=Exception thrown by invalid rule {0}. {1}
 
 ODataMessageWriter_WriterAlreadyUsed=The ODataMessageWriter has already been used to write a message payload. An ODataMessageWriter can only be used once to write a payload for a given message.
 ODataMessageWriter_EntityReferenceLinksInRequestNotAllowed=Top-level entity reference link collection payloads are not allowed in requests.

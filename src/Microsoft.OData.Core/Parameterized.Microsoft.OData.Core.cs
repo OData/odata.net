@@ -548,19 +548,19 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like " '{0}' is missing a $select clause. All property paths, expands, and selects of complex types should include a $select statement."
+        /// A string like "'{0}' is missing a $select clause. All property paths, expands, and selects of complex types should include a $select statement."
         /// </summary>
-        internal static string ODataUrlValidationError_SelectRequired (object p0)
+        internal static string ODataUrlValidationError_SelectRequired(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataUrlValidationError_SelectRequired , p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataUrlValidationError_SelectRequired, p0);
         }
 
         /// <summary>
-        /// A string like " Exception thrown by invalid rule {0}. {1}"
+        /// A string like "Exception thrown by invalid rule {0}. {1}"
         /// </summary>
-        internal static string ODataUrlValidationError_InvalidRule (object p0, object p1)
+        internal static string ODataUrlValidationError_InvalidRule(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataUrlValidationError_InvalidRule , p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataUrlValidationError_InvalidRule, p0, p1);
         }
 
         /// <summary>

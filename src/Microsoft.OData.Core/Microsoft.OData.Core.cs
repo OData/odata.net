@@ -78,8 +78,8 @@ namespace Microsoft.OData
         internal const string ODataException_GeneralError = "ODataException_GeneralError";
         internal const string ODataErrorException_GeneralError = "ODataErrorException_GeneralError";
         internal const string ODataUriParserException_GeneralError = "ODataUriParserException_GeneralError";
-        internal const string ODataUrlValidationError_SelectRequired  = "ODataUrlValidationError_SelectRequired ";
-        internal const string ODataUrlValidationError_InvalidRule  = "ODataUrlValidationError_InvalidRule ";
+        internal const string ODataUrlValidationError_SelectRequired = "ODataUrlValidationError_SelectRequired";
+        internal const string ODataUrlValidationError_InvalidRule = "ODataUrlValidationError_InvalidRule";
         internal const string ODataMessageWriter_WriterAlreadyUsed = "ODataMessageWriter_WriterAlreadyUsed";
         internal const string ODataMessageWriter_EntityReferenceLinksInRequestNotAllowed = "ODataMessageWriter_EntityReferenceLinksInRequestNotAllowed";
         internal const string ODataMessageWriter_ErrorPayloadInRequest = "ODataMessageWriter_ErrorPayloadInRequest";
