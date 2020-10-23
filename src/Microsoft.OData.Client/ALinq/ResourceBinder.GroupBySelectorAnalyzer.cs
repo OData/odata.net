@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="GroupBySelectorAnalyzer.cs" company="Microsoft">
+// <copyright file="ResourceBinder.GroupBySelectorAnalyzer.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client
     internal partial class ResourceBinder
     {
         /// <summary>
-        /// Analyzes a group by key selector for property or properties that the input sequence is grouped by.
+        /// Analyzes a GroupBy key selector for property or properties that the input sequence is grouped by.
         /// </summary>
         private sealed class GroupBySelectorAnalyzer : DataServiceALinqExpressionVisitor
         {
@@ -34,7 +34,7 @@ namespace Microsoft.OData.Client
             }
 
             /// <summary>
-            /// Analyzes a group by key selector for property or properties that the input sequence is grouped by. 
+            /// Analyzes a GroupBy key selector for property or properties that the input sequence is grouped by. 
             /// </summary>
             /// <param name="input">The input resource expression.</param>
             /// <param name="lambdaExpr">Lambda expression to analyze.</param>
@@ -57,6 +57,9 @@ namespace Microsoft.OData.Client
             /// <inheritdoc/>
             internal override NewExpression VisitNew(NewExpression nex)
             {
+                // Maintain a mapping of grouping expression and respective member
+                // The mapping is cross-referenced if any of the grouping expression 
+                // is referenced in result selector
                 for (int i = 0; i < nex.Arguments.Count; i++)
                 {
                     this.input.Apply.GroupingExpressionsMap.Add(nex.Members[i].Name, nex.Arguments[i]);
@@ -68,6 +71,9 @@ namespace Microsoft.OData.Client
             /// <inheritdoc/>
             internal override MemberAssignment VisitMemberAssignment(MemberAssignment assignment)
             {
+                // Maintain a mapping of grouping expression and respective member
+                // The mapping is cross-referenced if any of the grouping expression 
+                // is referenced in result selector
                 this.input.Apply.GroupingExpressionsMap.Add(assignment.Member.Name, assignment.Expression);
 
                 return base.VisitMemberAssignment(assignment);
@@ -79,6 +85,7 @@ namespace Microsoft.OData.Client
                 MemberExpression memberExpr = StripTo<MemberExpression>(m);
 
                 MemberExpression mExpr = memberExpr;
+                
                 while (true)
                 {
                     if (mExpr.Expression.NodeType == ExpressionType.MemberAccess)

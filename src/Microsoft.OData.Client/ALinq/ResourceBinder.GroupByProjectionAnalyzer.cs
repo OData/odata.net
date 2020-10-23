@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="GroupByProjectionAnalyzer.cs" company="Microsoft">
+// <copyright file="ResourceBinder.GroupByProjectionAnalyzer.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -66,11 +66,7 @@ namespace Microsoft.OData.Client
             /// <inheritdoc/>
             internal override NewExpression VisitNew(NewExpression nex)
             {
-                // TODO: Confirm behaviour if a property of the property type is applied
-                // e.g., .GroupBy(d1 => d1.Prop).Select(d2 => new { d1.Key.Length, ... })
-                // Where Prop is of type string and Length is a property of string
-
-                // Map assignment expressions to their respective member
+                // Maintain a mapping of expression argument and respective member
                 for (int i = 0; i < nex.Arguments.Count; i++)
                 {
                     this.expressionMap.Add(nex.Arguments[i], nex.Members[i]);
@@ -82,6 +78,7 @@ namespace Microsoft.OData.Client
             /// <inheritdoc/>
             internal override MemberAssignment VisitMemberAssignment(MemberAssignment assignment)
             {
+                // Maintain a mapping of expression argument and respective member
                 this.expressionMap.Add(assignment.Expression, assignment.Member);
 
                 return base.VisitMemberAssignment(assignment);
@@ -207,13 +204,12 @@ namespace Microsoft.OData.Client
             /// <param name="aggregationMethod">The aggregation method.</param>
             private void AddAggregation(MethodCallExpression methodCallExpr, Expression selector, AggregationMethod aggregationMethod)
             {
-                if (expressionMap.TryGetValue(methodCallExpr, out _))
+                MemberInfo memberInfo;
+
+                if (expressionMap.TryGetValue(methodCallExpr, out memberInfo))
                 {
                     EnsureApplyInitialized(input);
                     Debug.Assert(input.Apply != null, "input.Apply != null");
-
-                    MemberInfo memberInfo;
-                    expressionMap.TryGetValue(methodCallExpr, out memberInfo);
 
                     this.input.Apply.Aggregations.Add(new ApplyQueryOptionExpression.Aggregation(selector, aggregationMethod, memberInfo.Name));
                 }
