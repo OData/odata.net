@@ -857,7 +857,7 @@ namespace Microsoft.OData.UriParser
                 // This $it rangeVariable will be added the Stack.
                 // We are adding a rangeVariable whose navigationSource is the queried entity set instead of the expanded entity set.
                 // ODATA spec: Example 106 http://docs.oasis-open.org/odata/odata/v4.01/csprd05/part2-url-conventions/odata-v4.01-csprd05-part2-url-conventions.html#sec_it
-                var parentItVariable = NodeFactory.CreateImplicitRangeVariable(elementType != null ? elementType :
+                RangeVariable parentItVariable = NodeFactory.CreateImplicitRangeVariable(elementType != null ? elementType :
                         navigationSource.EntityType().ToTypeReference(), navigationSource);
                 state.RangeVariables.Push(parentItVariable);
             }
