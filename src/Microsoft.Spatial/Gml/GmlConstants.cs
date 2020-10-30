@@ -82,6 +82,11 @@ namespace Microsoft.Spatial
         internal const string PositionList = "posList";
 
         /// <summary>
+        /// Gml representation of srsDimension
+        /// </summary>
+        internal const string SrsDimension = "srsDimension";
+
+        /// <summary>
         /// Gml Point
         /// </summary>
         internal const string Point = "Point";
