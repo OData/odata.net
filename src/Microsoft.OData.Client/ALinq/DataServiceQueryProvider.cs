@@ -136,7 +136,7 @@ namespace Microsoft.OData.Client
                     case SequenceMethod.AverageNullableSingleSelector:
                     case SequenceMethod.MinSelector: // Mapped to a generic expression - Min(IQueryable`1<T0>, Expression`1<Func`2<T0, T1>>)->T1
                     case SequenceMethod.MaxSelector: // Mapped to a generic expression - Max(IQueryable`1<T0>, Expression`1<Func`2<T0, T1>>)->T1
-                    case SequenceMethod.CountDistinctSelector: // Mapped to a generic expression - Max(IQueryable`1<T0>, Expression`1<Func`2<T0, T1>>)->Int32
+                    case SequenceMethod.CountDistinctSelector: // Mapped to a generic expression - CountDistinct(IQueryable`1<T0>, Expression`1<Func`2<T0, T1>>)->Int32
                         return ((DataServiceQuery<TElement>)query).GetValue(this.Context, this.ParseAggregateSingletonResult<TElement>);
                     default:
                         throw Error.MethodNotSupported(mce);
