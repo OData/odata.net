@@ -17,11 +17,11 @@ namespace Microsoft.OData.Client
 	internal class ApplyQueryOptionExpression : QueryOptionExpression
 	{
 
-        /// <summary>
-        /// Creates an <see cref="ApplyQueryOptionExpression"/> expression.
-        /// </summary>
-        /// <param name="type">the return type of the expression.</param>
-        internal ApplyQueryOptionExpression(Type type)
+		/// <summary>
+		/// Creates an <see cref="ApplyQueryOptionExpression"/> expression.
+		/// </summary>
+		/// <param name="type">the return type of the expression.</param>
+		internal ApplyQueryOptionExpression(Type type)
 			: base(type)
 		{
 			this.Aggregations = new List<Aggregation>();
@@ -36,20 +36,20 @@ namespace Microsoft.OData.Client
 			get { return (ExpressionType)ResourceExpressionType.ApplyQueryOption; }
 		}
 
-        /// <summary>
-        /// Aggregations in the $apply expression
-        /// </summary>
-        internal List<Aggregation> Aggregations { get; private set; }
+		/// <summary>
+		/// Aggregations in the $apply expression
+		/// </summary>
+		internal List<Aggregation> Aggregations { get; private set; }
 
-        /// <summary>
-        /// The individual expressions that make up the GroupBy selector.
-        /// </summary>
-        internal List<Expression> GroupingExpressions { get; private set; }
+		/// <summary>
+		/// The individual expressions that make up the GroupBy selector.
+		/// </summary>
+		internal List<Expression> GroupingExpressions { get; private set; }
 
 		/// <summary>
 		/// Mapping of grouping expression and member name
 		/// </summary>
-        internal IDictionary<string, Expression> GroupingExpressionsMap { get; private set; }
+		internal IDictionary<string, Expression> GroupingExpressionsMap { get; private set; }
 
 		/// <summary>
 		/// Structure for an aggregation. Holds lambda expression plus enum indicating aggregation method

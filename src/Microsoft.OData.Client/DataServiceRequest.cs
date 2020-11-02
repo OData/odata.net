@@ -187,7 +187,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Synchronously executes the query.
+        /// Synchronously executes the query and returns the value.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <param name="parseQueryResultFunc">A function to process the query result.</param>
