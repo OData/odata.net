@@ -1813,6 +1813,14 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
+        /// A string like "The expression '{0}' is not a valid expression for grouping. The grouping expression must evaluate to a single-valued property path, i.e., a path ending in a single-valued primitive."
+        /// </summary>
+        internal static string ALinq_InvalidGroupingExpression(object p0)
+        {
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ALinq_InvalidGroupingExpression, p0);
+        }
+
+        /// <summary>
         /// A string like "DataServiceKey attribute must specify at least one property name."
         /// </summary>
         internal static string DSKAttribute_MustSpecifyAtleastOnePropertyName

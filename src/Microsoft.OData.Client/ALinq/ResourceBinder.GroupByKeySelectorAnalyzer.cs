@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ResourceBinder.GroupBySelectorAnalyzer.cs" company="Microsoft">
+// <copyright file="ResourceBinder.GroupByKeySelectorAnalyzer.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -11,6 +11,7 @@ namespace Microsoft.OData.Client
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq.Expressions;
+    using System.Runtime.CompilerServices;
 
     #endregion Namespaces
 
@@ -19,30 +20,38 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Analyzes a GroupBy key selector for property or properties that the input sequence is grouped by.
         /// </summary>
-        private sealed class GroupBySelectorAnalyzer : DataServiceALinqExpressionVisitor
+        private sealed class GroupByKeySelectorAnalyzer : DataServiceALinqExpressionVisitor
         {
-            /// <summary>The input resource, as a queryable resource</summary>
+            /// <summary>The input resource, as a queryable resource.</summary>
             private readonly QueryableResourceExpression input;
 
+            /// <summary>The key selector lambda parameter.</summary>
+            private readonly ParameterExpression lambdaParameter;
+
             /// <summary>
-            /// Creates an <see cref="GroupBySelectorAnalyzer"/> expression.
+            /// Creates an <see cref="GroupByKeySelectorAnalyzer"/> expression.
             /// </summary>
             /// <param name="source">The source expression.</param>
-            private GroupBySelectorAnalyzer(QueryableResourceExpression source)
+            /// <param name="paramExpr">The parameter expression.</param>
+            private GroupByKeySelectorAnalyzer(QueryableResourceExpression source, ParameterExpression paramExpr)
             {
                 this.input = source;
+                this.lambdaParameter = paramExpr;
             }
 
             /// <summary>
             /// Analyzes a GroupBy key selector for property or properties that the input sequence is grouped by. 
             /// </summary>
             /// <param name="input">The input resource expression.</param>
-            /// <param name="lambdaExpr">Lambda expression to analyze.</param>
-            internal static void Analyze(QueryableResourceExpression input, LambdaExpression lambdaExpr)
+            /// <param name="keySelector">Key selector expression to analyze.</param>
+            internal static void Analyze(QueryableResourceExpression input, LambdaExpression keySelector)
             {
-                GroupBySelectorAnalyzer analyzer = new GroupBySelectorAnalyzer(input);
+                Debug.Assert(input != null, "input != null");
+                Debug.Assert(keySelector != null, "keySelector != null");
 
-                MemberInitExpression memberInitExpr = lambdaExpr.Body as MemberInitExpression;
+                GroupByKeySelectorAnalyzer analyzer = new GroupByKeySelectorAnalyzer(input, keySelector.Parameters[0]);
+
+                MemberInitExpression memberInitExpr = keySelector.Body as MemberInitExpression;
 
                 if (memberInitExpr != null)
                 {
@@ -50,7 +59,7 @@ namespace Microsoft.OData.Client
                 }
                 else
                 {
-                    analyzer.Visit(lambdaExpr.Body);
+                    analyzer.Visit(keySelector.Body);
                 }
             }
 
@@ -84,34 +93,18 @@ namespace Microsoft.OData.Client
             {
                 MemberExpression memberExpr = StripTo<MemberExpression>(m);
 
-                MemberExpression mExpr = memberExpr;
-                
-                while (true)
+                // Validate the grouping expression
+                ValidationRules.ValidateGroupingExpression(memberExpr);
+
+                List<ResourceExpression> referencedInputs = new List<ResourceExpression>();
+                Expression boundExpression = InputBinder.Bind(memberExpr, this.input, this.lambdaParameter, referencedInputs);
+
+                if (referencedInputs.Count == 1 && referencedInputs[0] == this.input)
                 {
-                    if (mExpr.Expression.NodeType == ExpressionType.MemberAccess)
-                    {
-                        mExpr = StripTo<MemberExpression>(mExpr.Expression);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
+                    EnsureApplyInitialized(this.input);
+                    Debug.Assert(input.Apply != null, "input.Apply != null");
 
-                ParameterExpression parameterExpr = StripTo<ParameterExpression>(mExpr.Expression);
-
-                if (parameterExpr != null)
-                {
-                    List<ResourceExpression> referencedInputs = new List<ResourceExpression>();
-                    Expression boundExpression = InputBinder.Bind(memberExpr, this.input, parameterExpr, referencedInputs);
-
-                    if (referencedInputs.Count == 1 && referencedInputs[0] == this.input)
-                    {
-                        EnsureApplyInitialized(this.input);
-                        Debug.Assert(input.Apply != null, "input.Apply != null");
-
-                        this.input.Apply.GroupingExpressions.Add(boundExpression);
-                    }
+                    this.input.Apply.GroupingExpressions.Add(boundExpression);
                 }
 
                 return m;

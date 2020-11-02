@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ResourceBinder.GroupByProjectionAnalyzer.cs" company="Microsoft">
+// <copyright file="ResourceBinder.GroupByResultSelectorAnalyzer.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -21,7 +21,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Analyzes expression for aggregate expresssions in the GroupBy result selector.
         /// </summary>
-        private sealed class GroupByProjectionAnalyzer : DataServiceALinqExpressionVisitor
+        private sealed class GroupByResultSelectorAnalyzer : DataServiceALinqExpressionVisitor
         {
             /// <summary>The input resource, as a queryable resource</summary>
             private readonly QueryableResourceExpression input;
@@ -30,10 +30,10 @@ namespace Microsoft.OData.Client
             private readonly IDictionary<Expression, MemberInfo> expressionMap;
 
             /// <summary>
-            /// Creates an <see cref="GroupByProjectionAnalyzer"/> expression.
+            /// Creates an <see cref="GroupByResultSelectorAnalyzer"/> expression.
             /// </summary>
             /// <param name="input">The input resource expression.</param>
-            private GroupByProjectionAnalyzer(QueryableResourceExpression input)
+            private GroupByResultSelectorAnalyzer(QueryableResourceExpression input)
             {
                 this.input = input;
                 this.expressionMap = new Dictionary<Expression, MemberInfo>(ReferenceEqualityComparer<Expression>.Instance);
@@ -43,15 +43,15 @@ namespace Microsoft.OData.Client
             /// Analyzes expression for aggregate expressions in the GroupBy result selector.
             /// </summary>
             /// <param name="input">The input resource expression.</param>
-            /// <param name="lambdaExpr">Lambda expression to analyze.</param>
-            internal static void Analyze(QueryableResourceExpression input, LambdaExpression lambdaExpr)
+            /// <param name="resultSelector">Result selector expression to analyze.</param>
+            internal static void Analyze(QueryableResourceExpression input, LambdaExpression resultSelector)
             {
                 Debug.Assert(input != null, "input != null");
-                Debug.Assert(lambdaExpr != null, "lambdaExpr != null");
+                Debug.Assert(resultSelector != null, "resultSelector != null");
 
-                GroupByProjectionAnalyzer analyzer = new GroupByProjectionAnalyzer(input);
+                GroupByResultSelectorAnalyzer analyzer = new GroupByResultSelectorAnalyzer(input);
 
-                MemberInitExpression memberInitExpr = lambdaExpr.Body as MemberInitExpression;
+                MemberInitExpression memberInitExpr = resultSelector.Body as MemberInitExpression;
 
                 if (memberInitExpr != null)
                 {
@@ -59,7 +59,7 @@ namespace Microsoft.OData.Client
                 }
                 else
                 {
-                    analyzer.Visit(lambdaExpr.Body);
+                    analyzer.Visit(resultSelector.Body);
                 }
             }
 
@@ -182,7 +182,7 @@ namespace Microsoft.OData.Client
             }
 
             /// <summary>
-            /// Analyzes count expression within a GroupBy projection.
+            /// Analyzes count expression within a GroupBy result selector.
             /// </summary>
             /// <param name="methodCallExpr">Expression to analyze.</param>
             /// <returns>The analyzed count expression.</returns>

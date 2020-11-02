@@ -208,6 +208,7 @@ ALinq_IllegalSystemQueryOption=Found the following illegal system token while bu
 ALinq_IllegalPathStructure=Found a projection as a non-leaf segment in an expand path. Please rephrase your query. The projected property was : '{0}'
 ALinq_TypeTokenWithNoTrailingNavProp=Found an illegal type token '{0}' without a trailing navigation property.
 ALinq_AggregationMethodNotSupported=The aggregation method '{0}' is not supported.
+ALinq_InvalidGroupingExpression=The expression '{0}' is not a valid expression for grouping. The grouping expression must evaluate to a single-valued property path, i.e., a path ending in a single-valued primitive.
 
 DSKAttribute_MustSpecifyAtleastOnePropertyName=DataServiceKey attribute must specify at least one property name.
 

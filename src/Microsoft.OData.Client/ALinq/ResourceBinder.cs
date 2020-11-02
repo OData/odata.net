@@ -894,9 +894,9 @@ namespace Microsoft.OData.Client
             }
 
             // Analyze result selector expression
-            GroupByProjectionAnalyzer.Analyze(source, resultSelector);
+            GroupByResultSelectorAnalyzer.Analyze(source, resultSelector);
             // Rewrite the GroupBy result selector to a form usable by the projection plan compiler.
-            LambdaExpression projectionSelector = GroupByProjectionRewriter.Rewrite(source, resultSelector);
+            LambdaExpression projectionSelector = GroupByResultSelectorRewriter.Rewrite(source, resultSelector);
 
             ResourceExpression resourceExpr = source.CreateCloneWithNewType(methodCallExpr.Method.ReturnType);
 
@@ -957,9 +957,9 @@ namespace Microsoft.OData.Client
                 return false;
             }
 
-            GroupByProjectionAnalyzer.Analyze(source, resultSelector);
+            GroupByResultSelectorAnalyzer.Analyze(source, resultSelector);
             // Rewrite the GroupBy result selector to a form usable by the projection plan compiler.
-            LambdaExpression projectionSelector = GroupByProjectionRewriter.Rewrite(source, resultSelector);
+            LambdaExpression projectionSelector = GroupByResultSelectorRewriter.Rewrite(source, resultSelector);
 
             ResourceExpression resourceExpr = source.CreateCloneWithNewType(methodCallExpr.Method.ReturnType);
 
@@ -1857,30 +1857,13 @@ namespace Microsoft.OData.Client
             {
                 MemberExpression memberExpr = (MemberExpression)keySelector.Body;
 
+                // Validate grouping expression
+                ValidationRules.ValidateGroupingExpression(memberExpr);
+
                 Expression boundExpression;
                 if (!TryBindToInput(input, keySelector, out boundExpression))
                 {
                     return false;
-                }
-
-                // Disallow non-supported scenarios like the following:
-                // - GroupBy(d1 => d1.Property.Length)
-                // - GroupBy(d1 => d1.CollectionProperty.Count)
-                MemberExpression parentExpr = StripTo<MemberExpression>(memberExpr.Expression);
-                if (parentExpr != null)
-                {
-                    if (PrimitiveType.IsKnownNullableType(parentExpr.Type))
-                    {
-                        // TODO: Throw exception?
-                        return false;
-                    }
-
-                    Type collectionType = ClientTypeUtil.GetImplementationType(parentExpr.Type, typeof(ICollection<>));
-                    if (collectionType != null)
-                    {
-                        // TODO: Throw exception?
-                        return false;
-                    }
                 }
 
                 input.Apply.GroupingExpressions.Add(boundExpression);
@@ -1897,7 +1880,7 @@ namespace Microsoft.OData.Client
 
             // Scenario 2: GroupBy(d1 => new { d1.Property1, ..., d1.PropertyN })
             // Scenario 3: GroupBy(d1 => new Cls { ClsProperty1 = d1.Property1, ..., ClsPropertyN = d1.PropertyN }) - not common but possible
-            GroupBySelectorAnalyzer.Analyze(input, keySelector);
+            GroupByKeySelectorAnalyzer.Analyze(input, keySelector);
 
             return true;
         }
@@ -3287,6 +3270,46 @@ namespace Microsoft.OData.Client
                 }
 
                 throw new NotSupportedException(Strings.ALinq_InvalidExpressionInNavigationPath(input));
+            }
+
+            /// <summary>
+            /// Checks whether the specified <paramref name="expr"/> is a valid grouping expression.
+            /// </summary>
+            /// <param name="expr">The grouping expression</param>
+            internal static void ValidateGroupingExpression(Expression expr)
+            {
+                MemberExpression memberExpr = StripTo<MemberExpression>(expr);
+                Debug.Assert(memberExpr != null, "memberExpr != null");
+
+                // NOTE: Based on the spec, if the property path leads to a single-valued navigation 
+                // property, this means grouping by the entity-id of the related entities.
+                // However, that support is not implemented in OData WebApi. At the moment, grouping 
+                // expression must evaluate to a single-valued primitive property
+
+                // Disallow unsupported scenarios like the following:
+                // - GroupBy(d1 => d1.Property.Length)
+                // - GroupBy(d1 => d1.CollectionProperty.Count)
+                MemberExpression parentExpr = StripTo<MemberExpression>(memberExpr.Expression);
+                if (parentExpr != null)
+                {
+                    if (PrimitiveType.IsKnownNullableType(parentExpr.Type))
+                    {
+                        throw new NotSupportedException(Strings.ALinq_InvalidGroupingExpression(memberExpr));
+                    }
+
+                    Type collectionType = ClientTypeUtil.GetImplementationType(parentExpr.Type, typeof(ICollection<>));
+                    if (collectionType != null)
+                    {
+                        throw new NotSupportedException(Strings.ALinq_InvalidGroupingExpression(memberExpr));
+                    }
+                }
+
+                // Disallow grouping expressions that evaluate to a single-valued complex or navigation property
+                // Due to feature gap in OData WebApi
+                if (!PrimitiveType.IsKnownNullableType(memberExpr.Type))
+                {
+                    throw new NotSupportedException(Strings.ALinq_InvalidGroupingExpression(memberExpr));
+                }
             }
         }
 

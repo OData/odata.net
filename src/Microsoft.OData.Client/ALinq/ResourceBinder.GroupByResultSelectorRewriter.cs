@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ResourceBinder.GroupByProjectionRewriter.cs" company="Microsoft">
+// <copyright file="ResourceBinder.GroupByResultSelectorRewriter.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -22,7 +22,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Rewrites the GroupBy result selector to a form usable by the project plan compiler during materialization.
         /// </summary>
-        private class GroupByProjectionRewriter : ALinqExpressionVisitor
+        private class GroupByResultSelectorRewriter : ALinqExpressionVisitor
         {
             // The result of an aggregation especially when grouping 
             // by navigation property will be heavily nested 
@@ -73,11 +73,11 @@ namespace Microsoft.OData.Client
             #endregion Fields
 
             /// <summary>
-            /// Creates an <see cref="GroupByProjectionRewriter"/> instance.
+            /// Creates an <see cref="GroupByResultSelectorRewriter"/> instance.
             /// </summary>
             /// <param name="input">The input resource expression.</param>
             /// <param name="lambdaParameterType">The lambda parameter type.</param>
-            private GroupByProjectionRewriter(QueryableResourceExpression input, Type lambdaParameterType)
+            private GroupByResultSelectorRewriter(QueryableResourceExpression input, Type lambdaParameterType)
             {
                 this.input = input;
                 this.lambdaParameterType = lambdaParameterType;
@@ -88,7 +88,7 @@ namespace Microsoft.OData.Client
             /// Rewrites the GroupBy result selector to a form usable by the project plan compiler during materialization.
             /// </summary>
             /// <param name="input">The input resource expression.</param>
-            /// <param name="resultSelector">The result selector lambda expression to rewrite.</param>
+            /// <param name="resultSelector">The result selector expression to rewrite.</param>
             /// <returns>Rewritten GroupBy result selector.</returns>
             internal static LambdaExpression Rewrite(QueryableResourceExpression input, LambdaExpression resultSelector)
             {
@@ -103,7 +103,7 @@ namespace Microsoft.OData.Client
                 Type materializationType;
                 MaterializationTypeBuilder.BuildMaterializationType(input, resultSelector, out materializationType, out expressionMap);
 
-                GroupByProjectionRewriter rewriterInstance = new GroupByProjectionRewriter(input, materializationType);
+                GroupByResultSelectorRewriter rewriterInstance = new GroupByResultSelectorRewriter(input, materializationType);
                 rewriterInstance.expressionsMap = expressionMap;
 
                 MemberInitExpression memberInitExpr = resultSelector.Body as MemberInitExpression;
@@ -166,7 +166,7 @@ namespace Microsoft.OData.Client
                     // In scenarios like GroupBy(d1 => new { d1.Prop }, (d1, d2) => new { d1.Prop.[KnownPrimitiveTypeProperty], ... })
                     // where Prop is an Edm property, the [KnownPrimitiveTypeProperty] (e.g. Length) will be evaluated on the client side
                     // We strip the non-translated member expressions.
-                    // We later take care of the stripped expressions when rewriting the projection expression
+                    // We later take care of the stripped expressions when rewriting the result selector
                     Stack<MemberExpression> strippedExpressions;
                     Expression translatedExpr = StripToTranslatedExpression(m, out strippedExpressions);
 
@@ -189,7 +189,7 @@ namespace Microsoft.OData.Client
                     {
                         Debug.Assert(translatedExpr.NodeType == ExpressionType.MemberAccess,
                             "translatedExpr.NodeType == ExpressionType.MemberAccess");
-                        
+
                         this.input.Apply.GroupingExpressionsMap.TryGetValue(((MemberExpression)translatedExpr).Member.Name, out expr);
                     }
 
@@ -341,7 +341,7 @@ namespace Microsoft.OData.Client
                 }
 
                 // Expression representing the containing object is a parameter expression (e.g. d1.Length)
-                if (PrimitiveType.IsKnownNullableType(targetExpr.Expression.Type) 
+                if (PrimitiveType.IsKnownNullableType(targetExpr.Expression.Type)
                     && StripTo<ParameterExpression>(targetExpr.Expression) != null)
                 {
                     strippedExpressions.Push(targetExpr);
@@ -397,7 +397,7 @@ namespace Microsoft.OData.Client
                     && ((MemberExpression)targetExpr).Member.Name.Equals(IGroupingKey, StringComparison.Ordinal)))
                 {
                     // We expect a single item in the grouping expressions mapping
-                    Debug.Assert(input.Apply.GroupingExpressionsMap.Count == 1, 
+                    Debug.Assert(input.Apply.GroupingExpressionsMap.Count == 1,
                         "this.input.Apply.GroupingExpressionsMap.Count == 1");
 
                     // Using .Single() here is deliberate.
@@ -535,7 +535,7 @@ namespace Microsoft.OData.Client
                     {
                         Debug.Assert(translatedExpr.NodeType == ExpressionType.MemberAccess,
                             "translatedExpr.NodeType == ExpressionType.MemberAccess");
-                        
+
                         this.input.Apply.GroupingExpressionsMap.TryGetValue(((MemberExpression)translatedExpr).Member.Name, out expr);
                     }
 
@@ -640,9 +640,9 @@ namespace Microsoft.OData.Client
                 private void AnalyzeParameterAssignment(Expression expression)
                 {
                     Debug.Assert(expression != null, "expression != null");
-                    Debug.Assert(expression.NodeType == ExpressionType.Parameter, 
+                    Debug.Assert(expression.NodeType == ExpressionType.Parameter,
                         "expression.NodeType == ExpressionType.Parameter");
-                    Debug.Assert(this.input.Apply.GroupingExpressionsMap.Count != 0, 
+                    Debug.Assert(this.input.Apply.GroupingExpressionsMap.Count != 0,
                         "this.input.Apply.GroupingExpressionsMap.Count != 0");
 
                     foreach (KeyValuePair<string, Expression> pair in this.input.Apply.GroupingExpressionsMap)
