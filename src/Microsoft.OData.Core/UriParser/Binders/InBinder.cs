@@ -283,6 +283,10 @@ namespace Microsoft.OData.UriParser
                     sb.Append('\\');
                     sb.Append('"');
                 }
+                else if (next == '\\')
+                {
+                    sb.Append("\\\\");
+                }
                 else
                 {
                     sb.Append(next);
