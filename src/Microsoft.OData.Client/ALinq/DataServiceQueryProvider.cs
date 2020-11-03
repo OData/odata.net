@@ -238,7 +238,10 @@ namespace Microsoft.OData.Client
                                     underlyingType = typeof(TElement);
                                 }
 
-                                return (TElement)Convert.ChangeType(untypedValue.RawValue, underlyingType, System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                                return (TElement)Convert.ChangeType(
+                                    untypedValue.RawValue,
+                                    underlyingType,
+                                    System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
                             }
                             break;
                         default:
