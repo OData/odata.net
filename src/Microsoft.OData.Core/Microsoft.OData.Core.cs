@@ -722,6 +722,7 @@ namespace Microsoft.OData
         internal const string UriParserMetadata_MultipleMatchingTypesFound = "UriParserMetadata_MultipleMatchingTypesFound";
         internal const string UriParserMetadata_MultipleMatchingKeysFound = "UriParserMetadata_MultipleMatchingKeysFound";
         internal const string UriParserMetadata_MultipleMatchingParametersFound = "UriParserMetadata_MultipleMatchingParametersFound";
+        internal const string UriValidator_ValidatorMustUseSameModelAsParser = "UriValidator_ValidatorMustUseSameModelAsParser";
         internal const string PathParser_EntityReferenceNotSupported = "PathParser_EntityReferenceNotSupported";
         internal const string PathParser_CannotUseValueOnCollection = "PathParser_CannotUseValueOnCollection";
         internal const string PathParser_TypeMustBeRelatedToSet = "PathParser_TypeMustBeRelatedToSet";

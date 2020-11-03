@@ -18,11 +18,12 @@ namespace Microsoft.OData.UriParser.Validation
     /// <summary>
     /// Validation engine for running validation rules
     /// </summary>
-    internal class ODataUrlValidator
+    public sealed class ODataUrlValidator
     {
         private Dictionary<Type, List<ODataUrlValidationRule>> ruleDictionary = new Dictionary<Type, List<ODataUrlValidationRule>>();
         private ConcurrentDictionary<Type, byte> unusedTypes = new ConcurrentDictionary<Type, byte>();
-        private IEdmModel model;
+        private ConcurrentDictionary<Type, Type[]> implementedInterfaces = new ConcurrentDictionary<Type, Type[]>();
+        internal IEdmModel Model { get; }
 
         /// <summary>
         /// Validates urls based on a provided model and collection of rules
@@ -31,7 +32,7 @@ namespace Microsoft.OData.UriParser.Validation
         /// <param name="rules">The rules to use in validating a URL</param>
         public ODataUrlValidator(IEdmModel model, ODataUrlValidationRuleSet rules)
         {
-            this.model = model;
+            this.Model = model;
 
             // Collect rules for each type
             List<ODataUrlValidationRule> ruleList;
@@ -56,7 +57,7 @@ namespace Microsoft.OData.UriParser.Validation
         /// <returns>True, if any errors are found, otherwise false.</returns>
         public bool ValidateUrl(ODataUri odataUri, out IEnumerable<ODataUrlValidationMessage> validationMessages)
         {
-            ODataUrlValidationContext validationContext = new ODataUrlValidationContext(model, this);
+            ODataUrlValidationContext validationContext = new ODataUrlValidationContext(Model, this);
 
             // Validate ODataUri
             ValidateItem(odataUri, validationContext);
@@ -112,7 +113,7 @@ namespace Microsoft.OData.UriParser.Validation
                 return;
             }
 
-            ValidateTypeHierarchy(item, item.GetType(), validationContext, new HashSet<Type>(), impliedProperty);
+            ValidateTypeHierarchy(item, item.GetType(), validationContext, new HashSet<Type>(), impliedProperty, true);
         }
 
         /// <summary>
@@ -124,7 +125,7 @@ namespace Microsoft.OData.UriParser.Validation
         /// <param name="validatedTypes">HashSet of types already validated for this item.</param>
         /// <param name="impliedProperty">Whether the item being validated is an implied property.</param>
         /// <returns>True/False.</returns>
-        private bool ValidateTypeHierarchy(object item, Type itemType, ODataUrlValidationContext validationContext, HashSet<Type> validatedTypes, bool impliedProperty)
+        private bool ValidateTypeHierarchy(object item, Type itemType, ODataUrlValidationContext validationContext, HashSet<Type> validatedTypes, bool impliedProperty, bool includeInterfaces)
         {
             bool foundRule = false;
 
@@ -144,31 +145,57 @@ namespace Microsoft.OData.UriParser.Validation
             validatedTypes.Add(itemType);
 
             // find any rules defined on an interface defined on the type of the item
-            foreach (Type interfaceType in itemType.GetInterfaces())
+            // GetInterfaces() returns derived interfaces, so only do this at the top level
+            if (includeInterfaces)
             {
-                if (validatedTypes.Add(interfaceType) && !this.unusedTypes.ContainsKey(interfaceType))
+                foreach (Type interfaceType in GetInterfaces(itemType))
                 {
-                    if (ValidateByType(item, interfaceType, validationContext, impliedProperty))
+                    if (validatedTypes.Add(interfaceType) && !this.unusedTypes.ContainsKey(interfaceType))
                     {
-                        foundRule = true;
-                    }
-                    else
-                    {
-                        // there were no rules for this interface, so don't try it again
-                        this.unusedTypes.GetOrAdd(interfaceType, 0);
+                        if (ValidateByType(item, interfaceType, validationContext, impliedProperty))
+                        {
+                            foundRule = true;
+                        }
+                        else
+                        {
+                            // there were no rules for this interface, so don't try it again
+                            this.unusedTypes.TryAdd(interfaceType, 0);
+                        }
                     }
                 }
             }
 
             // repeat for any base type
-            foundRule = foundRule | ValidateTypeHierarchy(item, itemType.GetTypeInfo().BaseType, validationContext, validatedTypes, impliedProperty);
+            foundRule = foundRule | ValidateTypeHierarchy(item, itemType.GetTypeInfo().BaseType, validationContext, validatedTypes, impliedProperty, false);
 
             if (!foundRule)
             {
-                this.unusedTypes.GetOrAdd(itemType, 0);
+                this.unusedTypes.TryAdd(itemType, 0);
             }
 
             return foundRule;
+        }
+
+        /// <summary>
+        /// Given a type, returns the interfaces implemented by that type
+        /// </summary>
+        /// <param name="type">The type on which to check for interfaces.</param>
+        /// <returns>The interfaces implemented on the type.</returns>
+        private Type[] GetInterfaces(Type type)
+        {
+            Type[] interfaces;
+            if(!implementedInterfaces.TryGetValue(type, out interfaces))
+            {
+
+#if NETSTANDARD1_1
+                interfaces = type.GetInterfaces().ToArray();
+#else
+                interfaces = type.GetInterfaces();
+#endif
+                implementedInterfaces.TryAdd(type, interfaces);
+            }
+
+            return interfaces;
         }
 
         /// <summary>
@@ -206,7 +233,7 @@ namespace Microsoft.OData.UriParser.Validation
             return false;
         }
 
-        #region Validate Url Components
+#region Validate Url Components
 
         private static void ValidatePathSegment(ODataPathSegment segment, ODataUrlValidationContext validationContext)
         {
@@ -411,26 +438,29 @@ namespace Microsoft.OData.UriParser.Validation
         private void ValidateProperties(IEdmType edmType, ODataUrlValidationContext context)
         {
             // true if the element is added to the set; false if the element is already in the set.
-            if (context.ValidatedTypes.Add(edmType))
+            if (edmType.TypeKind != EdmTypeKind.Primitive && context.ValidatedTypes.Add(edmType))
             {
                 IEdmStructuredType structuredType = edmType as IEdmStructuredType;
                 if (structuredType != null)
                 {
                     foreach (IEdmProperty property in structuredType.StructuralProperties())
                     {
-                        IEdmType elementType = property.Type.Definition.AsElementType();
-
                         ValidateItem(property, context, /* impliedProperty */ true);
-                        ValidateItem(elementType, context, /* impliedProperty */ true);
-                        ValidateProperties(elementType, context);
+
+                        IEdmType elementType = property.Type.Definition.AsElementType();
+                        if (elementType.TypeKind != EdmTypeKind.Primitive && !context.ValidatedTypes.Contains(elementType))
+                        {
+                            ValidateItem(elementType, context, /* impliedProperty */ true);
+                            ValidateProperties(elementType, context);
+                        }
                     }
                 }
             }
         }
 
-        #endregion
+#endregion
 
-        #region Validate Aggregation Transformations
+#region Validate Aggregation Transformations
         private void ValidateTransformation(TransformationNode transformation, ODataUrlValidationContext validationContext)
         {
             ValidateItem(transformation, validationContext);
@@ -486,6 +516,6 @@ namespace Microsoft.OData.UriParser.Validation
             }
         }
 
-        #endregion
+#endregion
     }
 }
