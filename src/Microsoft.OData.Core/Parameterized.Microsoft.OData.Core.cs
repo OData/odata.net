@@ -283,7 +283,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "No Id or key properties were found. A resource in a delta response requires an ID or key properties be specified."
+        /// A string like "No Id or key properties were found. A resource in a delta payload requires an ID or key properties be specified."
         /// </summary>
         internal static string ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties
         {
