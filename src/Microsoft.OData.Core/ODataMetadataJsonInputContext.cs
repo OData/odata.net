@@ -45,7 +45,7 @@ namespace Microsoft.OData
         /// <returns>An <see cref="IEdmModel"/> representing the read metadata document.</returns>
         internal override IEdmModel ReadMetadataDocument()
         {
-            return ReadMetadataDocument(jsonCsdlReaderSettings: null);
+            return ReadMetadataDocument(csdlReaderSettings: null);
         }
 
         /// <summary>
@@ -53,18 +53,20 @@ namespace Microsoft.OData
         /// This method reads the metadata document from the input and returns
         /// an <see cref="IEdmModel"/> that represents the read metadata document.
         /// </summary>
-        /// <param name="jsonCsdlReaderSettings">The given reader settings.</param>
+        /// <param name="csdlReaderSettings">The given CSDL reader settings.</param>
         /// <returns>An <see cref="IEdmModel"/> representing the read metadata document.</returns>
-        internal override IEdmModel ReadMetadataDocument(CsdlJsonReaderSettings jsonCsdlReaderSettings)
+        internal override IEdmModel ReadMetadataDocument(CsdlReaderSettingsBase csdlReaderSettings)
         {
+            // Be noted: If the input setting is not JSON CSDL setting, let's use the default setting.
+            CsdlJsonReaderSettings settings = csdlReaderSettings as CsdlJsonReaderSettings;
+            CsdlJsonReaderSettings setting = settings ?? CsdlJsonReaderSettings.Default;
+
             // We can't use stream.Read(Span<byte> buffer), this method is introduced since .NET Core 2.1. :(
             byte[] bytes = this.messageStream.ReadAllBytes();
 
             ReadOnlySpan<byte> jsonReadOnlySpan = new ReadOnlySpan<byte>(bytes);
 
             Utf8JsonReader jsonReader = new Utf8JsonReader(jsonReadOnlySpan);
-
-            CsdlJsonReaderSettings setting = jsonCsdlReaderSettings ?? new CsdlJsonReaderSettings();
 
             IEdmModel model;
             IEnumerable<EdmError> errors;

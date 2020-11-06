@@ -12,9 +12,9 @@ namespace Microsoft.OData.Edm.Csdl
     /// <summary>
     /// Settings used when parsing CSDL-JSON document.
     /// </summary>
-    public class CsdlJsonReaderSettings
+    public class CsdlJsonReaderSettings : CsdlReaderSettingsBase
     {
-        internal static CsdlJsonReaderSettings Default = new CsdlJsonReaderSettings();
+        public static CsdlJsonReaderSettings Default = new CsdlJsonReaderSettings();
 
         /// <summary>
         /// Initializes a new instance of <see cref="CsdlJsonReaderSettings"/> class.

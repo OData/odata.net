@@ -10,9 +10,17 @@ namespace Microsoft.OData.Edm.Csdl
     using System.Xml;
 
     /// <summary>
+    /// The base setting for CSDL reader
+    /// </summary>
+    public abstract class CsdlReaderSettingsBase
+    {
+        // Empty now
+    }
+
+    /// <summary>
     /// Settings used when parsing CSDL document.
     /// </summary>
-    public sealed class CsdlReaderSettings
+    public sealed class CsdlReaderSettings : CsdlReaderSettingsBase
     {
         /// <summary>
         /// Default constructor.

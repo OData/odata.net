@@ -9,7 +9,6 @@ namespace Microsoft.OData
     using System;
     using Microsoft.OData.Buffers;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Csdl;
 
     /// <summary>
     /// Configuration settings for OData message readers.

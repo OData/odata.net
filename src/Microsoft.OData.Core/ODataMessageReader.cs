@@ -866,20 +866,19 @@ namespace Microsoft.OData
                 ODataPayloadKind.MetadataDocument);
         }
 
-#if NETSTANDARD2_0
         /// <summary>
-        /// Reads the message body as metadata document. It can read JSON CSDL based on the content type using the given settings.
+        /// Reads the message body as metadata document. It can read CSDL based on the content type using the given settings.
+        /// Be NOTED: If the setting is not related to the metadata format, it will be ignored.
         /// </summary>
-        /// <param name="jsonCsdlReaderSettings">The given reader settings.</param>
+        /// <param name="csdlReaderSettings">The given CSDL reader settings.</param>
         /// <returns>Returns <see cref="IEdmModel" />.</returns>
-        public IEdmModel ReadMetadataDocument(Edm.Csdl.CsdlJsonReaderSettings jsonCsdlReaderSettings)
+        public IEdmModel ReadMetadataDocument(Edm.Csdl.CsdlReaderSettingsBase csdlReaderSettings)
         {
             this.VerifyCanReadMetadataDocument();
             return this.ReadFromInput(
-                (context) => context.ReadMetadataDocument(jsonCsdlReaderSettings),
+                (context) => context.ReadMetadataDocument(csdlReaderSettings),
                 ODataPayloadKind.MetadataDocument);
         }
-#endif
 
         /// <summary>Reads the message body as metadata document.</summary>
         /// <param name="getReferencedModelReaderFunc">The function to load referenced model xml. If null, will stop loading the referenced models. Normally it should throw no exception.</param>
