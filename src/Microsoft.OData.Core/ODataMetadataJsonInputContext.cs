@@ -45,6 +45,18 @@ namespace Microsoft.OData
         /// <returns>An <see cref="IEdmModel"/> representing the read metadata document.</returns>
         internal override IEdmModel ReadMetadataDocument()
         {
+            return ReadMetadataDocument(jsonCsdlReaderSettings: null);
+        }
+
+        /// <summary>
+        /// Read a metadata document.
+        /// This method reads the metadata document from the input and returns
+        /// an <see cref="IEdmModel"/> that represents the read metadata document.
+        /// </summary>
+        /// <param name="jsonCsdlReaderSettings">The given reader settings.</param>
+        /// <returns>An <see cref="IEdmModel"/> representing the read metadata document.</returns>
+        internal override IEdmModel ReadMetadataDocument(CsdlJsonReaderSettings jsonCsdlReaderSettings)
+        {
             // We can't use stream.Read(Span<byte> buffer), this method is introduced since .NET Core 2.1. :(
             byte[] bytes = this.messageStream.ReadAllBytes();
 
@@ -52,7 +64,7 @@ namespace Microsoft.OData
 
             Utf8JsonReader jsonReader = new Utf8JsonReader(jsonReadOnlySpan);
 
-            CsdlJsonReaderSettings setting = MessageReaderSettings.JsonCsdlReaderSettings ?? new CsdlJsonReaderSettings();
+            CsdlJsonReaderSettings setting = jsonCsdlReaderSettings ?? new CsdlJsonReaderSettings();
 
             IEdmModel model;
             IEnumerable<EdmError> errors;

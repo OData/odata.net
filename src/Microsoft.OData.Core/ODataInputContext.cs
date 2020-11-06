@@ -482,6 +482,20 @@ namespace Microsoft.OData
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.MetadataDocument);
         }
 
+#if NETSTANDARD2_0
+        /// <summary>
+        /// Read a metadata document.
+        /// This method reads the metadata document from the input and returns
+        /// an <see cref="IEdmModel"/> that represents the read metadata document.
+        /// </summary>
+        /// <param name="jsonCsdlReaderSettings">The given reader settings.</param>
+        /// <returns>An <see cref="IEdmModel"/> representing the read metadata document.</returns>
+        internal virtual IEdmModel ReadMetadataDocument(Edm.Csdl.CsdlJsonReaderSettings jsonCsdlReaderSettings)
+        {
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.MetadataDocument);
+        }
+#endif
+
         /// <summary>
         /// Read a metadata document.
         /// This method reads the metadata document from the input and returns

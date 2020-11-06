@@ -204,12 +204,6 @@ namespace Microsoft.OData
         /// </summary>
         public Func<string, bool> ShouldIncludeAnnotation { get; set; }
 
-#if NETSTANDARD2_0
-        /// <summary>
-        /// Gets/sets the JSON-CSDL reader settings.
-        /// </summary>
-        public CsdlJsonReaderSettings JsonCsdlReaderSettings { get; set; }
-#endif
         /// <summary>
         /// Gets the bound validator.
         /// </summary>

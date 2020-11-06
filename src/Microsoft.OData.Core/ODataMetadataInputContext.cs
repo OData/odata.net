@@ -71,7 +71,7 @@ namespace Microsoft.OData
         /// <returns>An <see cref="IEdmModel"/> representing the read metadata document.</returns>
         internal override IEdmModel ReadMetadataDocument()
         {
-            return this.ReadMetadataDocument(null);
+            return this.ReadMetadataDocument(getReferencedModelReaderFunc: null);
         }
 
         /// <summary>
