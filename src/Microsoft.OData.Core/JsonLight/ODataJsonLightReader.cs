@@ -1091,7 +1091,7 @@ namespace Microsoft.OData.JsonLight
                     ODataConventionalResourceMetadataBuilder conventionalResourceMetadataBuilder =
                         builder as ODataConventionalResourceMetadataBuilder;
 
-                    // If it's ODataConventionalResourceMetadataBuilder, then it means we need to build nested relation ship for it in containment case
+                    // If it's ODataConventionalResourceMetadataBuilder, then it means we need to build nested relationship for it in containment case
                     if (conventionalResourceMetadataBuilder != null)
                     {
                         if (parentNestInfo != null)

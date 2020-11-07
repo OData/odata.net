@@ -238,7 +238,7 @@ namespace Microsoft.OData.Evaluation
             if (resourceState.MetadataBuilder == null)
             {
                 ODataResourceBase resource = resourceState.Resource;
-                if (this.isResponse && !isDelta)
+                if (this.isResponse || (isDelta && this.metadataDocumentUri != null))
                 {
                     ODataTypeAnnotation typeAnnotation = resource.TypeAnnotation;
 
@@ -276,7 +276,9 @@ namespace Microsoft.OData.Evaluation
 
                     if (structuredType.IsODataEntityTypeKind())
                     {
-                        resourceState.MetadataBuilder = new ODataConventionalEntityMetadataBuilder(resourceMetadataContext, this, uriBuilder);
+                        resourceState.MetadataBuilder = isDelta ?
+                            new ODataConventionalIdMetadataBuilder(resourceMetadataContext, this, uriBuilder) :
+                            new ODataConventionalEntityMetadataBuilder(resourceMetadataContext, this, uriBuilder);
                     }
                     else
                     {

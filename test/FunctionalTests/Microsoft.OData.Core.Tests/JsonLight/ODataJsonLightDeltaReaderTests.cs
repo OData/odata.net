@@ -562,6 +562,32 @@ namespace Microsoft.OData.Tests.JsonLight
         [InlineData(/*isResponse*/true)]
         [InlineData(/*isResponse*/false)]
         [Theory]
+        public void Read41DeletedEntryWithKeyPropertiesSetsOnlyId(bool isResponse)
+        {
+            string payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@removed\":{\"reason\":\"changed\"},\"Id\":1}]}";
+            ODataReader reader = GetODataReader(payload, this.Model, customers, customer, isResponse);
+            ODataDeletedResource deletedResource = null;
+            while (reader.Read())
+            {
+                switch (reader.State)
+                {
+                    case ODataReaderState.DeletedResourceEnd:
+                        deletedResource = reader.Item as ODataDeletedResource;
+                        break;
+                    case ODataReaderState.Stream:
+                    case ODataReaderState.NestedResourceInfoStart:
+                        Assert.True(false, "Should not add stream or navigation properties to delta payload");
+                        break;
+                }
+            }
+
+            Assert.NotNull(deletedResource);
+            Assert.Equal(new Uri("http://host/service/Customers/1", UriKind.Absolute), deletedResource.Id);
+        }
+
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
         public void Read41DeletedEntryRemovedAtEnd(bool isResponse)
         {
             string payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"Id\":1,\"@removed\":{\"reason\":\"changed\"}}]}";
@@ -1455,6 +1481,7 @@ namespace Microsoft.OData.Tests.JsonLight
                     customer = new EdmEntityType("MyNS", "Customer");
                     customer.AddKeys(customer.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
                     customer.AddStructuralProperty("ContactName", EdmPrimitiveTypeKind.String);
+                    customer.AddStructuralProperty("StreamProperty", EdmPrimitiveTypeKind.Stream);
                     EdmNavigationPropertyInfo orderLinks = new EdmNavigationPropertyInfo
                     {
                         Name = "Orders",
