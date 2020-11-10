@@ -2477,7 +2477,10 @@ namespace Microsoft.OData.JsonLight
                 }
             }
 
-            this.jsonLightResourceDeserializer.ValidateMediaEntity(resourceState);
+            if (!this.ReadingDelta)
+            {
+                this.jsonLightResourceDeserializer.ValidateMediaEntity(resourceState);
+            }
 
             // In non-delta responses, ensure that all projected properties get created.
             // Also ignore cases where the resource is 'null' which happens for expanded null entries.

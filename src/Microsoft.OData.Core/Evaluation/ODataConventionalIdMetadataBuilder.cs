@@ -18,10 +18,10 @@ namespace Microsoft.OData.Evaluation
 
     /// <summary>
     /// Implementation of OData metadata builder that generates ids based on OData protocol conventions.
+    /// This specifically does NOT generate navigation links/stream properties as it is used for deltas.
     /// </summary>
     internal class ODataConventionalIdMetadataBuilder : ODataConventionalResourceMetadataBuilder
     {
-
         /// <summary>The computed ID of this entity instance.</summary>
         /// <remarks>
         /// This is always built from the key properties, and never comes from the resource.
@@ -43,6 +43,15 @@ namespace Microsoft.OData.Evaluation
         }
 
         /// <summary>
+        /// Gets canonical url of current resource.
+        /// </summary>
+        /// <returns>The canonical url of current resource.</returns>
+        public override Uri GetCanonicalUrl()
+        {
+            return this.GetId();
+        }
+
+        /// <summary>
         /// Lazy evaluated computed entity Id. This is always a computed value and never comes from the resource.
         /// </summary>
         protected Uri ComputedId
@@ -53,7 +62,7 @@ namespace Microsoft.OData.Evaluation
                 return this.computedId;
             }
         }
-        
+
         /// <summary>
         /// The computed key property name and value pairs of the resource.
         /// If a value is unsigned integer, it will be automatically converted to its underlying type.
@@ -91,6 +100,19 @@ namespace Microsoft.OData.Evaluation
             // If the resource was transient resource, return null for Id
             // Otherwise compute it based on the key values.
             return this.ResourceMetadataContext.Resource.HasNonComputedId ? this.ResourceMetadataContext.Resource.NonComputedId : (this.ResourceMetadataContext.Resource.IsTransient ? null : this.ComputedId);
+        }
+
+        /// <summary>
+        /// Get the id that need to be written into wire
+        /// </summary>
+        /// <param name="id">The id return to the caller</param>
+        /// <returns>
+        /// If writer should write odata.id property into wire
+        /// </returns>
+        internal override bool TryGetIdForSerialization(out Uri id)
+        {
+            id = this.ResourceMetadataContext.Resource.IsTransient ? null : this.GetId();
+            return true;
         }
 
         /// <summary>

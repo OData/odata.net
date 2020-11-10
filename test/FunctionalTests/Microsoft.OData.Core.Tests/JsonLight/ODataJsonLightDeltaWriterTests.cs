@@ -389,7 +389,6 @@ namespace Microsoft.OData.Tests.JsonLight
             {
                 Properties = new List<ODataProperty>
                 {
-
                     new ODataProperty { Name = "City", Value = "Shanghai" },
                 }
             };

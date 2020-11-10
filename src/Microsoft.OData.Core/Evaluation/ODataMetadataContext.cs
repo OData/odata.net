@@ -282,7 +282,9 @@ namespace Microsoft.OData.Evaluation
                     }
                     else
                     {
-                        resourceState.MetadataBuilder = new ODataConventionalResourceMetadataBuilder(resourceMetadataContext, this, uriBuilder);
+                        resourceState.MetadataBuilder = isDelta ?
+                            resourceState.MetadataBuilder = new NoOpResourceMetadataBuilder(resource) :
+                            new ODataConventionalResourceMetadataBuilder(resourceMetadataContext, this, uriBuilder);
                     }
                 }
                 else
