@@ -2113,6 +2113,29 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Theory]
+        [InlineData(@"\abc")]
+        [InlineData(@"\\abc")]
+        [InlineData(@"\\\abc")]
+        [InlineData(@"\\\\abc")]
+        public void BackslashTests(string constantString)
+        {
+            string query = String.Format(@"SSN in ('{0}')", constantString);
+
+            FilterClause inFilter = ParseFilter(query, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(inFilter.Expression);
+            Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+            Assert.Equal(1, collectionNode.Collection.Count);
+
+            Assert.Equal(constantString, collectionNode.Collection.ElementAt(0).Value);
+
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(String.Format(@"People?$filter={0}",query), UriKind.Relative));
+            var uri = parser.ParseUri().BuildUri(ODataUrlKeyDelimiter.Slash);
+            var uriString = Uri.UnescapeDataString(uri.OriginalString);
+        }
+
+        [Theory]
         [InlineData("SSN in (null, 'abc')")]
         [InlineData("SSN in (    null  , 'abc')")]
         [InlineData("SSN in ( null , \"abc\")")]
