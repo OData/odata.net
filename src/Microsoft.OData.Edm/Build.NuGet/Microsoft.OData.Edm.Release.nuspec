@@ -15,6 +15,11 @@
 OData .NET library is open source at http://github.com/OData/odata.net. Documentation for the library can be found at https://odata.github.io/odata.net.</description>
     <releaseNotes>http://odata.github.io/odata.net/v7/#ODL-$VersionFullSemantic$</releaseNotes>
     <copyright>© Microsoft Corporation. All rights reserved.</copyright>
+    <dependencies>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="System.Text.Json" version="4.6.0" />
+      </group>
+    </dependencies>
   </metadata>
   <files>
     <file src="$ProductRoot$\Microsoft.OData.Edm.dll" target="lib" />
