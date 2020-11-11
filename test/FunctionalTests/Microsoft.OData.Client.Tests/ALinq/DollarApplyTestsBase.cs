@@ -37,6 +37,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
             EdmModel model = BuildEdmModel();
 
             dsContext = new DataServiceContext(new Uri(serviceUri));
+            dsContext.ResolveName = (type) => $"NS.{type.Name}";
             dsContext.Format.UseJson(model);
         }
 
@@ -70,7 +71,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
             saleEntity.AddStructuralProperty("Amount", EdmCoreModel.Instance.GetDecimal(false));
 
             var productEntity = new EdmEntityType("NS", "Product");
-            productEntity.AddKeys(productEntity.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false)));
+            productEntity.AddKeys(productEntity.AddStructuralProperty("Id", EdmCoreModel.Instance.GetString(false)));
             productEntity.AddStructuralProperty("CategoryId", EdmCoreModel.Instance.GetString(false));
             productEntity.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false));
             productEntity.AddStructuralProperty("Color", EdmCoreModel.Instance.GetString(false));

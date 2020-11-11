@@ -32,6 +32,8 @@ namespace Microsoft.OData.Client
         {
             this.Aggregations = new List<Aggregation>();
             this.filterExpressions = new List<Expression>();
+            this.GroupingExpressions = new List<Expression>();
+            this.KeySelectorMap = new Dictionary<string, Expression>(StringComparer.Ordinal);
         }
 
         /// <summary>
@@ -71,6 +73,16 @@ namespace Microsoft.OData.Client
         {
             return this.filterExpressions.Aggregate((leftExpr, rightExpr) => Expression.And(leftExpr, rightExpr));
         }
+
+        /// <summary>
+        /// The individual expressions that make up the GroupBy selector.
+        /// </summary>
+        internal List<Expression> GroupingExpressions { get; private set; }
+
+        /// <summary>
+        /// Mapping of grouping expression and member name
+        /// </summary>
+        internal Dictionary<string, Expression> KeySelectorMap { get; private set; }
 
         /// <summary>
         /// Structure for an aggregation. Holds lambda expression plus enum indicating aggregation method

@@ -212,6 +212,7 @@ ALinq_TypeTokenWithNoTrailingNavProp=Found an illegal type token '{0}' without a
 ALinq_ContainsNotValidOnEmptyCollection=The Contains method cannot be used with an empty collection.
 ALinq_AggregationMethodNotSupported=The aggregation method '{0}' is not supported.
 ALinq_InvalidAggregateExpression=The expression '{0}' is not a valid aggregate expression. The aggregate expression must evaluate to a single-valued property path to an aggregatable property.
+ALinq_InvalidGroupingExpression=The expression '{0}' is not a valid expression for grouping. The grouping expression must evaluate to a single-valued property path, i.e., a path ending in a single-valued primitive.
 
 DSKAttribute_MustSpecifyAtleastOnePropertyName=DataServiceKey attribute must specify at least one property name.
 

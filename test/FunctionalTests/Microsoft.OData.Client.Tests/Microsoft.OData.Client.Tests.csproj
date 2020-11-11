@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <AssemblyName>Microsoft.OData.Client.Tests</AssemblyName>
     <TargetFrameworks>net452;netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\sln\</SolutionDir>

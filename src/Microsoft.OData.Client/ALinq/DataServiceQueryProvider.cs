@@ -172,9 +172,23 @@ namespace Microsoft.OData.Client
 
             UriWriter.Translate(this.Context, addTrailingParens, e, out uri, out version);
             ResourceExpression re = e as ResourceExpression;
-            Type lastSegmentType = re.Projection == null ? re.ResourceType : re.Projection.Selector.Parameters[0].Type;
+            QueryableResourceExpression qre = e as QueryableResourceExpression;
+            Type lastSegmentType;
+
+            if (qre?.Apply != null && qre?.Apply.KeySelectorMap.Count > 0)
+            {
+                lastSegmentType = re.Projection.Selector.Parameters[1].Type.GetGenericArguments()[0];
+            }
+            else
+            {
+                lastSegmentType = re.Projection == null ? re.ResourceType : re.Projection.Selector.Parameters[0].Type;
+            }
+
             LambdaExpression selector = re.Projection == null ? null : re.Projection.Selector;
-            return new QueryComponents(uri, version, lastSegmentType, selector, normalizerRewrites);
+            QueryComponents queryComponents = new QueryComponents(uri, version, lastSegmentType, selector, normalizerRewrites);
+            queryComponents.GroupByKeySelectorMap = qre?.Apply?.KeySelectorMap;
+
+            return queryComponents;
         }
 
         /// <summary>

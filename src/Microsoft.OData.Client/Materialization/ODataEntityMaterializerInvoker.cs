@@ -137,6 +137,24 @@ namespace Microsoft.OData.Client.Materialization
             return ((ODataEntityMaterializer)materializer).ProjectionValueForPath(MaterializerEntry.GetEntry((ODataResource)entry), expectedType, (ProjectionPath)path);
         }
 
+        /// <summary>Projects a simple dynamic value from the specified <paramref name="path"/>.</summary>
+        /// <param name="materializer">Materializer under which projection is taking place.</param>
+        /// <param name="entry">Root entry for paths.</param>
+        /// <param name="expectedType">Expected type for dynamic value.</param>
+        /// <param name="path">Path to pull value for.</param>
+        /// <returns>The value for the specified <paramref name="path"/>.</returns>
+        /// <remarks>
+        /// This method will not instantiate entity types, except to satisfy requests
+        /// for payload-driven feeds or leaf entities.
+        /// </remarks>
+        internal static object ProjectionDynamicValueForPath(object materializer, object entry, Type expectedPropertyType, object path)
+        {
+            Debug.Assert(typeof(ODataEntityMaterializer).IsAssignableFrom(materializer.GetType()), "typeof(ODataEntityMaterializer).IsAssignableFrom(materializer.GetType())");
+            Debug.Assert(entry.GetType() == typeof(ODataResource), "entry.GetType() == typeof(ODataResource)");
+            Debug.Assert(path.GetType() == typeof(ProjectionPath), "path.GetType() == typeof(ProjectionPath)");
+            return ((ODataEntityMaterializer)materializer).ProjectionDynamicValueForPath(MaterializerEntry.GetEntry((ODataResource)entry), expectedPropertyType, (ProjectionPath)path);
+        }
+
         /// <summary>Materializes an entry with no special selection.</summary>
         /// <param name="materializer">Materializer under which materialization should take place.</param>
         /// <param name="entry">Entry with object to materialize.</param>

@@ -224,6 +224,16 @@ namespace Microsoft.OData.Client
         internal Uri Uri { get; set; }
 
         /// <summary>
+        /// Gets or sets a mapping of members in the projection to the corresponding grouping expression
+        /// from the key selector in aggregation scenarios.
+        /// </summary>
+        /// <remarks>
+        /// This property will map the member {ProductId} to the expression {d1 => d1.ProductId} given the following GroupBy expression:
+        /// dsc.CreateQuery&lt;Sale&gt;("Sales").GroupBy(d1 => d1.ProductId, (d1, d2) => new { ProductId = d1, AverageAmount = d2.Average(d3 => d3.Amount) })
+        /// </remarks>
+        internal Dictionary<string, Expression> GroupByKeySelectorMap { get; set; }
+
+        /// <summary>
         /// Determines whether or not the specified query string contains the $select query option.
         /// </summary>
         /// <param name="queryString">String that may contain $select.</param>

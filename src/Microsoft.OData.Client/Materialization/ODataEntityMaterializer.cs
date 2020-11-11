@@ -803,6 +803,56 @@ namespace Microsoft.OData.Client.Materialization
             return result;
         }
 
+        /// <summary>Projects a simple dynamic value from the specified <paramref name="path"/>.</summary>
+        /// <param name="entry">Root entry for paths.</param>
+        /// <param name="expectedPropertyType">Expected type for the dynamic property value.</param>
+        /// <param name="path">Path to pull value for.</param>
+        /// <returns>The value for the specified <paramref name="path"/>.</returns>
+        /// <remarks>
+        /// This method will not instantiate entity types, except to satisfy requests
+        /// for payload-driven feeds or leaf entities.
+        /// </remarks>
+        internal object ProjectionDynamicValueForPath(MaterializerEntry entry, Type expectedPropertyType, ProjectionPath path)
+        {
+            Debug.Assert(entry != null, "entry != null");
+            Debug.Assert(entry.Entry != null, "entry.Entry != null");
+            Debug.Assert(path != null, "path != null");
+            Debug.Assert(expectedPropertyType != null, "expectedPropertyType != null");
+
+            object result = null;
+            ODataProperty odataProperty = null;
+            IEnumerable<ODataProperty> properties = entry.Entry.Properties;
+
+            for (int i = 0; i < path.Count; i++)
+            {
+                var segment = path[i];
+                if (segment.Member == null)
+                {
+                    continue;
+                }
+
+                string propertyName = segment.Member;
+
+                odataProperty = properties.Where(p => p.Name == propertyName).FirstOrDefault();
+
+                if (odataProperty == null)
+                {
+                    throw new InvalidOperationException(DSClient.Strings.AtomMaterializer_PropertyMissing(propertyName));
+                }
+
+                if (odataProperty.Value == null && !ClientTypeUtil.CanAssignNull(expectedPropertyType))
+                {
+                    throw new InvalidOperationException(DSClient.Strings.AtomMaterializer_CannotAssignNull(odataProperty.Name, expectedPropertyType));
+                }
+
+                this.entryValueMaterializationPolicy.MaterializePrimitiveDataValue(expectedPropertyType, odataProperty);
+
+                return odataProperty.GetMaterializedValue();
+            }
+
+            return result;
+        }
+
         #endregion Projection support.
 
         /// <summary>Clears the materialization log of activity.</summary>
@@ -919,7 +969,15 @@ namespace Microsoft.OData.Client.Materialization
             }
             else
             {
-                result = ProjectionPlanCompiler.CompilePlan(projection, queryComponents.NormalizerRewrites);
+                // GroupBy projection
+                if (queryComponents.GroupByKeySelectorMap != null && queryComponents.GroupByKeySelectorMap.Count > 0)
+                {
+                    result = GroupByProjectionPlanCompiler.CompilePlan(projection, queryComponents.NormalizerRewrites, queryComponents.GroupByKeySelectorMap);
+                }
+                else
+                {
+                    result = ProjectionPlanCompiler.CompilePlan(projection, queryComponents.NormalizerRewrites);
+                }
                 result.LastSegmentType = queryComponents.LastSegmentType;
             }
 
