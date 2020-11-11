@@ -55,17 +55,121 @@ namespace Microsoft.OData.Tests
             Assert.Contains(request, error.Message);
         }
 
+        [Fact]
+        public static void MustUseSameModel()
+        {
+            const string request = @"company";
+
+            IEdmModel model = CreateModel();
+            IEdmModel model2 = CreateModel();
+
+            ODataUrlValidator validator = new ODataUrlValidator(model2, ODataUrlValidationRuleSet.AllRules);
+            ODataUriParser parser = new ODataUriParser(model, new Uri(request, UriKind.Relative));
+
+            Action validate = () =>
+                 {
+                     IEnumerable<ODataUrlValidationMessage> errors;
+                     parser.Validate(validator, out errors);
+                 };
+
+            validate.Throws<ODataException>(Strings.UriValidator_ValidatorMustUseSameModelAsParser);
+        }
+
+        [Fact]
+        public static void PassingRulesSucceeds()
+        {
+            const string request = @"company";
+
+            IEdmModel model = CreateModel();
+            ODataUriParser parser = new ODataUriParser(model, new Uri(request, UriKind.Relative));
+
+            IEnumerable<ODataUrlValidationMessage> errors;
+            parser.Validate(dummyRuleset, out errors);
+            Assert.Collection<ODataUrlValidationMessage>(errors, (error) =>
+            {
+                Assert.Equal("dummyCode", error.MessageCode);
+                Assert.Equal("dummyMessage", error.Message);
+                Assert.Equal(OData.UriParser.Validation.Severity.Warning, error.Severity);
+            });
+        }
+
+        [Fact]
+        public static void PassingValidatorSucceeds()
+        {
+            const string request = @"company";
+
+            IEdmModel model = CreateModel();
+
+            ODataUrlValidator validator = new ODataUrlValidator(model, dummyRuleset);
+            ODataUriParser parser = new ODataUriParser(model, new Uri(request, UriKind.Relative));
+            IEnumerable<ODataUrlValidationMessage> errors;
+            parser.Validate(validator, out errors);
+            Assert.Collection<ODataUrlValidationMessage>(errors, (error) =>
+            {
+                Assert.Equal("dummyCode", error.MessageCode);
+                Assert.Equal("dummyMessage", error.Message);
+                Assert.Equal(OData.UriParser.Validation.Severity.Warning, error.Severity);
+            });
+        }
+
+        [Fact]
+        public static void CallingOnValdiatorSucceeds()
+        {
+            const string request = @"company";
+
+            IEdmModel model = CreateModel();
+
+            ODataUrlValidator validator = new ODataUrlValidator(model, dummyRuleset);
+            ODataUriParser parser = new ODataUriParser(model, new Uri(request, UriKind.Relative));
+            ODataUri odataUri = parser.ParseUri();
+
+            IEnumerable<ODataUrlValidationMessage> errors;
+            validator.ValidateUrl(odataUri, out errors);
+            Assert.Collection<ODataUrlValidationMessage>(errors, (error) =>
+            {
+                Assert.Equal("dummyCode", error.MessageCode);
+                Assert.Equal("dummyMessage", error.Message);
+                Assert.Equal(OData.UriParser.Validation.Severity.Warning, error.Severity);
+            });
+        }
+
+        [Fact]
+        public static void CallingOnUriSucceeds()
+        {
+            const string request = @"company";
+
+            IEdmModel model = CreateModel();
+
+            Uri uri = new Uri(request, UriKind.Relative);
+
+            IEnumerable<ODataUrlValidationMessage> errors;
+            uri.ValidateODataUrl(model, dummyRuleset, out errors);
+            Assert.Collection<ODataUrlValidationMessage>(errors, (error) =>
+            {
+                Assert.Equal("dummyCode", error.MessageCode);
+                Assert.Equal("dummyMessage", error.Message);
+                Assert.Equal(OData.UriParser.Validation.Severity.Warning, error.Severity);
+            });
+        }
+
         private static IEdmModel GetModel()
         {
             if (model == null)
             {
-                // Attempt to load the CSDL into an EdmModel 
-                XmlReader reader = XmlReader.Create(new StringReader(JetsonsModel));
-                IEnumerable<EdmError> errors;
-                if (!CsdlReader.TryParse(reader, out model, out errors))
-                {
-                    throw new Exception("Unable to parse Model");
-                }
+                CreateModel();
+            }
+
+            return model;
+        }
+
+        private static IEdmModel CreateModel()
+        {
+            // Attempt to load the CSDL into an EdmModel 
+            XmlReader reader = XmlReader.Create(new StringReader(JetsonsModel));
+            IEnumerable<EdmError> errors;
+            if (!CsdlReader.TryParse(reader, out model, out errors))
+            {
+                throw new Exception("Unable to parse Model");
             }
 
             return model;
@@ -78,6 +182,15 @@ namespace Microsoft.OData.Tests
                 throw new Exception(invalidRuleText);
             }
             );
+
+        private static ODataUrlValidationRule dummyRule = new ODataUrlValidationRule<ODataPathSegment>(
+            "dummyRule",
+            (context, segment) =>
+        {
+            context.AddMessage("dummyCode", "dummyMessage", OData.UriParser.Validation.Severity.Warning);
+        });
+
+        private static ODataUrlValidationRuleSet dummyRuleset = new ODataUrlValidationRuleSet(new ODataUrlValidationRule[]{dummyRule});
 
         private static string JetsonsModel = @"
 <edmx:Edmx xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" Version=""4.0"">

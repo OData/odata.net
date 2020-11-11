@@ -31,8 +31,8 @@ namespace Microsoft.OData.Edm
         private const int ContainerExtendsMaxDepth = 100;
         private const string CollectionTypeFormat = EdmConstants.Type_Collection + "({0})";
 
-        private static readonly IEnumerable<IEdmStructuralProperty> EmptyStructuralProperties = new Collection<IEdmStructuralProperty>();
-        private static readonly IEnumerable<IEdmNavigationProperty> EmptyNavigationProperties = new Collection<IEdmNavigationProperty>();
+        private static readonly IEnumerable<IEdmStructuralProperty> EmptyStructuralProperties = Enumerable.Empty<IEdmStructuralProperty>();
+        private static readonly IEnumerable<IEdmNavigationProperty> EmptyNavigationProperties = Enumerable.Empty<IEdmNavigationProperty>();
 
         #region IEdmModel
 
@@ -1692,7 +1692,13 @@ namespace Microsoft.OData.Edm
         public static IEnumerable<IEdmStructuralProperty> DeclaredStructuralProperties(this IEdmStructuredType type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
-            return type.DeclaredProperties.OfType<IEdmStructuralProperty>();
+            foreach (IEdmProperty property in type.DeclaredProperties)
+            {
+                if (property.PropertyKind == EdmPropertyKind.Structural)
+                {
+                    yield return property as IEdmStructuralProperty;
+                }
+            }
         }
 
         /// <summary>
@@ -1703,7 +1709,13 @@ namespace Microsoft.OData.Edm
         public static IEnumerable<IEdmStructuralProperty> StructuralProperties(this IEdmStructuredType type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
-            return type.Properties().OfType<IEdmStructuralProperty>();
+            foreach(IEdmProperty property in type.Properties())
+            {
+                if(property.PropertyKind == EdmPropertyKind.Structural)
+                {
+                    yield return property as IEdmStructuralProperty;
+                }
+            }
         }
         #endregion
 

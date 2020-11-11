@@ -6208,6 +6208,17 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The UriValidator used to validate an ODataUri must use the same Model as the ODataUriParser."
+        /// </summary>
+        internal static string UriValidator_ValidatorMustUseSameModelAsParser
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriValidator_ValidatorMustUseSameModelAsParser);
+            }
+        }
+
+        /// <summary>
         /// A string like "The URI '{0}' must be an absolute URI."
         /// </summary>
         internal static string UriParser_UriMustBeAbsolute(object p0)

@@ -5,6 +5,7 @@
 //--------
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
@@ -132,13 +133,12 @@ namespace Microsoft.OData.UriParser.Validation.Rules
         /// <returns>True if the element is marked as deprecated, otherwise false.</returns>
         private static bool IsDeprecated(IEdmModel model, IEdmElement element, out string message, out string version, out Date? date, out Date? removalDate)
         {
-            IEdmVocabularyAnnotatable annotatedElement = element as IEdmVocabularyAnnotatable;
-            if (annotatedElement != null)
+            if (!(element is IEdmPrimitiveType))
             {
-                foreach (IEdmVocabularyAnnotation annotation in annotatedElement.VocabularyAnnotations(model))
+                IEdmVocabularyAnnotatable annotatedElement = element as IEdmVocabularyAnnotatable;
+                if (annotatedElement != null)
                 {
-                    if (string.Equals(annotation.Term.FullName(), CoreVocabularyConstants.Revisions, StringComparison.OrdinalIgnoreCase) ||
-                        string.Equals(annotation.Term.FullName(), DefaultCoreAlias + "." + RevisionTerm, StringComparison.OrdinalIgnoreCase))
+                    foreach (IEdmVocabularyAnnotation annotation in GetRevisionAnnotations(model, annotatedElement))
                     {
                         IEdmCollectionExpression collectionExpression = annotation.Value as IEdmCollectionExpression;
                         if (collectionExpression != null)
@@ -228,6 +228,50 @@ namespace Microsoft.OData.UriParser.Validation.Rules
             message = version = string.Empty;
             date = removalDate = null;
             return false;
+        }
+
+        /// <summary>
+        /// Get Revision annotations directly applied to a model element (not including inherited annotations)
+        /// </summary>
+        /// <param name="model">The root model to search for annotations (including referenced models).</param>
+        /// <param name="annotatedElement">The element to search for annotations on.</param>
+        /// <returns>An IEnumerable of all annotations defined on the annotatedElement.</returns>
+        private static IEnumerable<IEdmVocabularyAnnotation> GetRevisionAnnotations(IEdmModel model, IEdmVocabularyAnnotatable annotatedElement)
+        {
+            foreach(IEdmVocabularyAnnotation annotation in model.FindDeclaredVocabularyAnnotations(annotatedElement))
+            {
+                if (isRevisionsAnnotation(annotation))
+                {
+                    yield return annotation;
+                }
+            }
+
+            // look in referenced models
+            foreach (IEdmModel referencedModel in model.ReferencedModels)
+            {
+                // Omit the default models
+                if (referencedModel != EdmCoreModel.Instance && referencedModel != CoreVocabularyModel.Instance && referencedModel != CapabilitiesVocabularyModel.Instance)
+                {
+                    foreach(IEdmVocabularyAnnotation annotation in referencedModel.FindDeclaredVocabularyAnnotations(annotatedElement))
+                    {
+                        if (isRevisionsAnnotation(annotation))
+                        {
+                            yield return annotation;
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns true if the annotation is the Revisions annotation, otherwise false
+        /// </summary>
+        /// <param name="annotation">The annotation.</param>
+        /// <returns>True if the annotation is the Revisions annotation, otherwise false.</returns>
+        private static bool isRevisionsAnnotation(IEdmVocabularyAnnotation annotation)
+        {
+            return string.Equals(annotation.Term.FullName(), CoreVocabularyConstants.Revisions, StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(annotation.Term.FullName(), DefaultCoreAlias + "." + RevisionTerm, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

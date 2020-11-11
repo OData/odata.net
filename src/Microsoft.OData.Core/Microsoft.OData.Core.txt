@@ -831,6 +831,7 @@ UriParserMetadata_MultipleMatchingNavigationSourcesFound=More than one navigatio
 UriParserMetadata_MultipleMatchingTypesFound=More than one types match the name '{0}' were found in model.
 UriParserMetadata_MultipleMatchingKeysFound=More than one keys match the name '{0}' were found.
 UriParserMetadata_MultipleMatchingParametersFound=More than one parameters match the name '{0}' were found.
+UriValidator_ValidatorMustUseSameModelAsParser=The UrlValidator used to validate an ODataUri must use the same Model as the ODataUriParser.
 
 PathParser_EntityReferenceNotSupported=The request URI is not valid. $ref cannot be applied to the segment '{0}' since $ref can only follow an entity segment or entity collection segment.
 PathParser_CannotUseValueOnCollection=$value cannot be applied to a collection.
