@@ -94,7 +94,7 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public static void PassingValdiatorSucceeds()
+        public static void PassingValidatorSucceeds()
         {
             const string request = @"company";
 

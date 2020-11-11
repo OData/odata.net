@@ -148,8 +148,11 @@ namespace Microsoft.OData.UriParser.Validation
             // GetInterfaces() returns derived interfaces, so only do this at the top level
             if (includeInterfaces)
             {
-                foreach (Type interfaceType in GetInterfaces(itemType))
+                Type[] interfaces = GetInterfaces(itemType);
+                int length = interfaces.Length;
+                for (int i=0; i < length; i++)
                 {
+                    Type interfaceType = interfaces[i];
                     if (validatedTypes.Add(interfaceType) && !this.unusedTypes.ContainsKey(interfaceType))
                     {
                         if (ValidateByType(item, interfaceType, validationContext, impliedProperty))
