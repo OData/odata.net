@@ -269,7 +269,17 @@ namespace Microsoft.OData.Evaluation
                         ODataResourceTypeContext.Create( /*serializationInfo*/
                             null, navigationSource, navigationSourceElementType, resourceState.ResourceTypeFromMetadata ?? resourceState.ResourceType,
                             /*throwIfMissingTypeInfo*/ true);
-                    IODataResourceMetadataContext resourceMetadataContext = ODataResourceMetadataContext.Create(resource, typeContext, /*serializationInfo*/null, structuredType, this, resourceState.SelectedProperties, null);
+
+                    IODataResourceMetadataContext resourceMetadataContext = ODataResourceMetadataContext.Create(
+                        resource,
+                        typeContext,
+                        /*serializationInfo*/null,
+                        structuredType,
+                        this,
+                        resourceState.SelectedProperties,
+                        null,
+                        /*requiresId*/ (this.isResponse || !isDelta || resource is ODataDeletedResource) // id is required except for non-deleted resource in delta request
+                        );
 
                     ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(this.ServiceBaseUri,
                         useKeyAsSegment ? ODataUrlKeyDelimiter.Slash : ODataUrlKeyDelimiter.Parentheses);

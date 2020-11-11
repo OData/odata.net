@@ -152,10 +152,15 @@ namespace Microsoft.OData.Evaluation
         /// </returns>
         private Uri ComputeId()
         {
-            Uri uri = this.UriBuilder.BuildBaseUri();
-            uri = this.UriBuilder.BuildEntitySetUri(uri, this.ResourceMetadataContext.TypeContext.NavigationSourceName);
-            uri = this.UriBuilder.BuildEntityInstanceUri(uri, this.ComputedKeyProperties, this.ResourceMetadataContext.ActualResourceTypeName);
-            return uri;
+            if (this.ResourceMetadataContext.KeyProperties.Any())
+            {
+                Uri uri = this.UriBuilder.BuildBaseUri();
+                uri = this.UriBuilder.BuildEntitySetUri(uri, this.ResourceMetadataContext.TypeContext.NavigationSourceName);
+                uri = this.UriBuilder.BuildEntityInstanceUri(uri, this.ComputedKeyProperties, this.ResourceMetadataContext.ActualResourceTypeName);
+                return uri;
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -187,10 +192,17 @@ namespace Microsoft.OData.Evaluation
 
             if (this.ResourceMetadataContext.TypeContext.IsFromCollection)
             {
-                uri = this.UriBuilder.BuildEntityInstanceUri(
-                    uri,
-                    this.ComputedKeyProperties,
-                    this.ResourceMetadataContext.ActualResourceTypeName);
+                if (this.ResourceMetadataContext.KeyProperties.Any())
+                {
+                    uri = this.UriBuilder.BuildEntityInstanceUri(
+                        uri,
+                        this.ComputedKeyProperties,
+                        this.ResourceMetadataContext.ActualResourceTypeName);
+                }
+                else
+                {
+                    uri = null;
+                }
             }
 
             return uri;

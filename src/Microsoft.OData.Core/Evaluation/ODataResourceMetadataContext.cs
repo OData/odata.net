@@ -129,6 +129,7 @@ namespace Microsoft.OData.Evaluation
         /// <param name="metadataContext">The metadata context to use.</param>
         /// <param name="selectedProperties">The selected properties.</param>
         /// <param name="metadataSelector">Informs the metadata builder which properties, functions, actions, links to omit.</param>
+        /// <param name="requiresId">True if the resource requires an id, false if it is a non-deleted resource in a delta request payload.</param>
         /// <returns>A new instance of <see cref="ODataResourceMetadataContext"/>.</returns>
         internal static ODataResourceMetadataContext Create(
             ODataResourceBase resource,
@@ -137,14 +138,15 @@ namespace Microsoft.OData.Evaluation
             IEdmStructuredType actualResourceType,
             IODataMetadataContext metadataContext,
             SelectedPropertiesNode selectedProperties,
-            ODataMetadataSelector metadataSelector)
+            ODataMetadataSelector metadataSelector,
+            bool requiresId = true)
         {
             if (serializationInfo != null)
             {
-                return new ODataResourceMetadataContextWithoutModel(resource, typeContext, serializationInfo);
+                return new ODataResourceMetadataContextWithoutModel(resource, typeContext, serializationInfo, requiresId);
             }
 
-            return new ODataResourceMetadataContextWithModel(resource, typeContext, actualResourceType, metadataContext, selectedProperties, metadataSelector);
+            return new ODataResourceMetadataContextWithModel(resource, typeContext, actualResourceType, metadataContext, selectedProperties, metadataSelector, requiresId);
         }
 
         /// <summary>
@@ -174,17 +176,24 @@ namespace Microsoft.OData.Evaluation
             }
             else
             {
-                actualEntityTypeName = actualEntityType.FullName();
-
-                IEnumerable<IEdmStructuralProperty> edmKeyProperties = actualEntityType.Key();
-                if (edmKeyProperties != null)
-                {
-                    keyProperties = edmKeyProperties.Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitiveOrEnumPropertyValue(resource, p.Name, actualEntityTypeName, /*isKeyProperty*/false))).ToArray();
-                }
+                keyProperties = GetPropertyValues(actualEntityType.Key(), resource, actualEntityType, /*isKeyProperty*/ true, /*isRequired*/ true).ToArray();
             }
 
             ValidateEntityTypeHasKeyProperties(keyProperties, actualEntityTypeName);
             return keyProperties;
+        }
+
+        private static IEnumerable<KeyValuePair<string, object>> GetPropertyValues(IEnumerable<IEdmStructuralProperty> properties, ODataResourceBase resource, IEdmEntityType actualEntityType, bool isKeyProperty, bool isRequired)
+        {
+            string actualEntityTypeName = actualEntityType.FullName();
+            object primitiveValue;
+            foreach (IEdmStructuralProperty property in properties)
+            {
+                if (TryGetPrimitiveOrEnumPropertyValue(resource, property.Name, actualEntityTypeName, isKeyProperty, isRequired, out primitiveValue))
+                {
+                    yield return new KeyValuePair<string, object>(property.Name, primitiveValue);
+                }
+            }
         }
 
         /// <summary>
@@ -194,18 +203,29 @@ namespace Microsoft.OData.Evaluation
         /// <param name="propertyName">Name of the property.</param>
         /// <param name="entityTypeName">The name of the entity type to get the property value.</param>
         /// <param name="isKeyProperty">true if the property is a key property, false otherwise.</param>
-        /// <returns>The value of the property.</returns>
-        private static object GetPrimitiveOrEnumPropertyValue(ODataResourceBase resource, string propertyName, string entityTypeName, bool isKeyProperty)
+        /// <param name="value">returned value, or null if no value is found.</param>
+        /// <param name="isRequired">true, if the property value is required.</param>
+        /// <returns>true, if the primitive value is found, otherwise false.</returns>
+        private static bool TryGetPrimitiveOrEnumPropertyValue(ODataResourceBase resource, string propertyName, string entityTypeName, bool isKeyProperty, bool isRequired, out object value)
         {
             Debug.Assert(resource != null, "resource != null");
 
             ODataProperty property = resource.NonComputedProperties == null ? null : resource.NonComputedProperties.SingleOrDefault(p => p.Name == propertyName);
             if (property == null)
             {
-                throw new ODataException(Strings.EdmValueUtils_PropertyDoesntExist(entityTypeName, propertyName));
+                if (isRequired)
+                {
+                    throw new ODataException(Strings.EdmValueUtils_PropertyDoesntExist(entityTypeName, propertyName));
+                }
+                else
+                {
+                    value = null;
+                    return false;
+                }
             }
 
-            return GetPrimitiveOrEnumPropertyValue(entityTypeName, property, isKeyProperty);
+            value = GetPrimitiveOrEnumPropertyValue(entityTypeName, property, isKeyProperty);
+            return true;
         }
 
         /// <summary>
@@ -287,6 +307,11 @@ namespace Microsoft.OData.Evaluation
             private static readonly IEdmOperation[] EmptyOperations = new IEdmOperation[0];
 
             /// <summary>
+            /// True if the resource requires an id, false if it is a non-deleted resource in a delta request payload.
+            /// </summary>
+            private bool requiresId;
+
+            /// <summary>
             /// The serialization info of the resource for writing without model.
             /// </summary>
             private readonly ODataResourceSerializationInfo serializationInfo;
@@ -297,11 +322,13 @@ namespace Microsoft.OData.Evaluation
             /// <param name="resource">The resource instance.</param>
             /// <param name="typeContext">The context object to answer basic questions regarding the type of the resource.</param>
             /// <param name="serializationInfo">The serialization info of the resource for writing without model.</param>
-            internal ODataResourceMetadataContextWithoutModel(ODataResourceBase resource, IODataResourceTypeContext typeContext, ODataResourceSerializationInfo serializationInfo)
+            /// <param name="requiresId">True if the resource requires an id, false if it is a non-deleted resource in a delta request payload.</param>
+            internal ODataResourceMetadataContextWithoutModel(ODataResourceBase resource, IODataResourceTypeContext typeContext, ODataResourceSerializationInfo serializationInfo, bool requiresId)
                 : base(resource, typeContext)
             {
                 Debug.Assert(serializationInfo != null, "serializationInfo != null");
                 this.serializationInfo = serializationInfo;
+                this.requiresId = requiresId;
             }
 
             /// <summary>
@@ -314,7 +341,10 @@ namespace Microsoft.OData.Evaluation
                     if (this.keyProperties == null)
                     {
                         this.keyProperties = GetPropertiesBySerializationInfoPropertyKind(this.resource, ODataPropertyKind.Key, this.ActualResourceTypeName);
-                        ValidateEntityTypeHasKeyProperties(this.keyProperties, this.ActualResourceTypeName);
+                        if (this.requiresId)
+                        {
+                            ValidateEntityTypeHasKeyProperties(this.keyProperties, this.ActualResourceTypeName);
+                        }
                     }
 
                     return this.keyProperties;
@@ -396,6 +426,11 @@ namespace Microsoft.OData.Evaluation
             private readonly ODataMetadataSelector metadataSelector;
 
             /// <summary>
+            /// True if the resource requires an id, false if it is a non-deleted resource in a delta request payload.
+            /// </summary>
+            private bool requiresId;
+
+            /// <summary>
             /// Constructs an instance of <see cref="ODataResourceMetadataContextWithModel"/>.
             /// </summary>
             /// <param name="resource">The resource instance.</param>
@@ -404,7 +439,8 @@ namespace Microsoft.OData.Evaluation
             /// <param name="metadataContext">The metadata context to use.</param>
             /// <param name="selectedProperties">The selected properties.</param>
             /// <param name="metadataSelector">The metadata selector to use when writing metadata.</param>
-            internal ODataResourceMetadataContextWithModel(ODataResourceBase resource, IODataResourceTypeContext typeContext, IEdmStructuredType actualResourceType, IODataMetadataContext metadataContext, SelectedPropertiesNode selectedProperties, ODataMetadataSelector metadataSelector)
+            /// <param name="requiresId">True if the resource requires an id, false if it is a non-deleted resource in a delta request payload.</param>
+            internal ODataResourceMetadataContextWithModel(ODataResourceBase resource, IODataResourceTypeContext typeContext, IEdmStructuredType actualResourceType, IODataMetadataContext metadataContext, SelectedPropertiesNode selectedProperties, ODataMetadataSelector metadataSelector, bool requiresId)
                 : base(resource, typeContext)
             {
                 Debug.Assert(actualResourceType != null, "actualResourceType != null");
@@ -415,6 +451,7 @@ namespace Microsoft.OData.Evaluation
                 this.metadataContext = metadataContext;
                 this.selectedProperties = selectedProperties;
                 this.metadataSelector = metadataSelector;
+                this.requiresId = requiresId;
             }
 
             /// <summary>
@@ -426,16 +463,15 @@ namespace Microsoft.OData.Evaluation
                 {
                     if (this.keyProperties == null)
                     {
-                        var entityType = this.actualResourceType as IEdmEntityType;
+                        IEdmEntityType entityType = this.actualResourceType as IEdmEntityType;
                         if (entityType != null)
                         {
-                            IEnumerable<IEdmStructuralProperty> edmKeyProperties = entityType.Key();
-                            if (edmKeyProperties != null)
-                            {
-                                this.keyProperties = edmKeyProperties.Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitiveOrEnumPropertyValue(this.resource, p.Name, this.ActualResourceTypeName, /*isKeyProperty*/true))).ToArray();
-                            }
+                            this.keyProperties = keyProperties = GetPropertyValues(entityType.Key(), resource, entityType, /*isKeyProperty*/ true, this.requiresId).ToArray();
 
-                            ValidateEntityTypeHasKeyProperties(this.keyProperties, this.ActualResourceTypeName);
+                            if (this.requiresId)
+                            {
+                                ValidateEntityTypeHasKeyProperties(this.keyProperties, this.ActualResourceTypeName);
+                            }
                         }
                         else
                         {
@@ -456,9 +492,10 @@ namespace Microsoft.OData.Evaluation
                 {
                     if (this.etagProperties == null)
                     {
+                        IEdmEntityType actualEntityType = this.actualResourceType as IEdmEntityType;
                         IEnumerable<IEdmStructuralProperty> properties = this.ComputeETagPropertiesFromAnnotation();
                         this.etagProperties = properties.Any()
-                            ? properties.Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitiveOrEnumPropertyValue(this.resource, p.Name, this.ActualResourceTypeName, /*isKeyProperty*/false))).ToArray()
+                            ? GetPropertyValues(properties, resource, actualEntityType, /*isKeyProperty*/false, /*isRequired*/ true)
                             : EmptyProperties;
                     }
 
