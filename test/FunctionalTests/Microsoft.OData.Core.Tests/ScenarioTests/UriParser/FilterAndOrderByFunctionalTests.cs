@@ -2085,9 +2085,54 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
             Assert.Equal("('a\\b\\\\bc', 'd\\ff''\\t','xy/z''')", collectionNode.LiteralText);
             Assert.Equal(3, collectionNode.Collection.Count);
-            collectionNode.Collection.ElementAt(0).ShouldBeConstantQueryNode("a\b\\bc");
-            collectionNode.Collection.ElementAt(1).ShouldBeConstantQueryNode("d\ff'\t");
+            collectionNode.Collection.ElementAt(0).ShouldBeConstantQueryNode("a\\b\\\\bc");
+            collectionNode.Collection.ElementAt(1).ShouldBeConstantQueryNode("d\\ff'\\t");
             collectionNode.Collection.ElementAt(2).ShouldBeConstantQueryNode("xy/z'");
+        }
+
+
+        [Theory]
+        [InlineData(@"'a\b\\bc'")]
+        [InlineData(@"'a''b''''bc'")]
+        [InlineData(@"'a,b,bc'")]
+        public void FilterWithInOperationShouldMatchEquals_SlashesInSingleQuotedStringLiterals(string constantString)
+        {
+            FilterClause inFilter = ParseFilter(String.Format(@"SSN in ({0})", constantString), HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            FilterClause eqFilter = ParseFilter(String.Format(@"SSN eq {0}", constantString), HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(inFilter.Expression);
+            Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+            Assert.Equal(1, collectionNode.Collection.Count);
+
+            var eqNode = Assert.IsType<BinaryOperatorNode>(eqFilter.Expression);
+            Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(eqNode.Left).Property.Name);
+            ConstantNode constantNode = Assert.IsType<ConstantNode>(eqNode.Right);
+
+            Assert.Equal(collectionNode.Collection.ElementAt(0).Value, constantNode.Value);
+        }
+
+        [Theory]
+        [InlineData(@"\abc")]
+        [InlineData(@"\\abc")]
+        [InlineData(@"\\\abc")]
+        [InlineData(@"\\\\abc")]
+        public void BackslashTests(string constantString)
+        {
+            string query = String.Format(@"SSN in ('{0}')", constantString);
+
+            FilterClause inFilter = ParseFilter(query, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(inFilter.Expression);
+            Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+            Assert.Equal(1, collectionNode.Collection.Count);
+
+            Assert.Equal(constantString, collectionNode.Collection.ElementAt(0).Value);
+
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(String.Format(@"People?$filter={0}",query), UriKind.Relative));
+            var uri = parser.ParseUri().BuildUri(ODataUrlKeyDelimiter.Slash);
+            var uriString = Uri.UnescapeDataString(uri.OriginalString);
         }
 
         [Theory]
