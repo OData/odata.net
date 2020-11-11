@@ -75,8 +75,8 @@ ODataException_GeneralError=An error occurred while processing the OData message
 ODataErrorException_GeneralError=An error was read from the payload. See the 'Error' property for more details.
 ODataUriParserException_GeneralError=An error occurred while parsing part of the URI.
 
-ODataUrlValidationError_SelectRequired = '{0}' is missing a $select clause. All property paths, expands, and selects of complex types should include a $select statement.
-ODataUrlValidationError_InvalidRule = Exception thrown by invalid rule {0}. {1}
+ODataUrlValidationError_SelectRequired='{0}' is missing a $select clause. All property paths, expands, and selects of complex types should include a $select statement.
+ODataUrlValidationError_InvalidRule=Exception thrown by invalid rule {0}. {1}
 
 ODataMessageWriter_WriterAlreadyUsed=The ODataMessageWriter has already been used to write a message payload. An ODataMessageWriter can only be used once to write a payload for a given message.
 ODataMessageWriter_EntityReferenceLinksInRequestNotAllowed=Top-level entity reference link collection payloads are not allowed in requests.
@@ -439,10 +439,10 @@ WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint=The value type 
 XmlReaderExtension_InvalidNodeInStringValue=An XML node of type '{0}' was found in a string value. An element with a string value can only contain Text, CDATA, SignificantWhitespace, Whitespace or Comment nodes.
 XmlReaderExtension_InvalidRootNode=An XML node of type '{0}' was found at the root level. The root level of an OData payload must contain a single XML element and no text nodes.
 
-
 ODataMetadataInputContext_ErrorReadingMetadata=The metadata document could not be read from the message content.\r\n{0}
 
 ODataMetadataOutputContext_ErrorWritingMetadata=The metadata document could not be written as specified.\r\n{0}
+ODataMetadataOutputContext_NotSupportJsonMetadata=The JSON metadata is not supported at this platform. It's only supported at platform implementing .NETStardard 2.0.
 
 ODataAtomDeserializer_RelativeUriUsedWithoutBaseUriSpecified=A relative URI value '{0}' was specified in the payload, but no base URI for it was found. When the payload contains a relative URI, there must be an xml:base in the payload or else a base URI must specified in the reader settings.
 

@@ -1,38 +1,39 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ODataMetadataOutputContext.cs" company="Microsoft">
+// <copyright file="ODataMetadataJsonOutputContext.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
+#if NETSTANDARD2_0
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using System.Xml;
-using Microsoft.OData.Metadata;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData
 {
     /// <summary>
-    /// RAW format output context.
+    /// JSON Metadata format output context.
     /// </summary>
-    internal sealed class ODataMetadataOutputContext : ODataOutputContext
+    internal sealed class ODataMetadataJsonOutputContext : ODataOutputContext
     {
         /// <summary>The message output stream.</summary>
         private Stream messageOutputStream;
 
-        /// <summary>The XmlWriter to write to.</summary>
-        private XmlWriter xmlWriter;
+        /// <summary>The jsonWriter to write to.</summary>
+        private Utf8JsonWriter jsonWriter;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
-        internal ODataMetadataOutputContext(
+        internal ODataMetadataJsonOutputContext(
             ODataMessageInfo messageInfo,
             ODataMessageWriterSettings messageWriterSettings)
             : base(ODataFormat.Metadata, messageInfo, messageWriterSettings)
@@ -43,7 +44,7 @@ namespace Microsoft.OData
             try
             {
                 this.messageOutputStream = messageInfo.MessageStream;
-                this.xmlWriter = ODataMetadataWriterUtils.CreateXmlWriter(this.messageOutputStream, messageWriterSettings, messageInfo.Encoding);
+                this.jsonWriter = CreateJsonWriter(this.messageOutputStream, messageWriterSettings);
             }
             catch (Exception e)
             {
@@ -64,9 +65,7 @@ namespace Microsoft.OData
         {
             this.AssertSynchronous();
 
-            // XmlWriter.Flush will call the underlying Stream.Flush.
-            // In the synchronous case the underlying stream is the message stream itself, which will then Flush as well.
-            this.xmlWriter.Flush();
+            this.jsonWriter.Flush();
         }
 
         /// <summary>
@@ -88,7 +87,8 @@ namespace Microsoft.OData
         {
             this.AssertSynchronous();
 
-            ODataMetadataWriterUtils.WriteError(this.xmlWriter, error, includeDebugInformation, this.MessageWriterSettings.MessageQuotas.MaxNestingDepth);
+            // What error should we write here?
+
             this.Flush();
         }
 
@@ -101,7 +101,13 @@ namespace Microsoft.OData
             this.AssertSynchronous();
 
             IEnumerable<EdmError> errors;
-            if (!CsdlWriter.TryWriteCsdl(this.Model, this.xmlWriter, CsdlTarget.OData, out errors))
+
+            CsdlJsonWriterSettings writerSettings = new CsdlJsonWriterSettings
+            {
+                IsIeee754Compatible = MessageWriterSettings.IsIeee754Compatible
+            };
+
+            if (!CsdlWriter.TryWriteCsdl(this.Model, this.jsonWriter, writerSettings, out errors))
             {
                 Debug.Assert(errors != null, "errors != null");
 
@@ -118,6 +124,29 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Creates a JSON writer over the specified stream, with the provided settings and encoding.
+        /// </summary>
+        /// <param name="stream">The stream to create the XmlWriter over.</param>
+        /// <param name="messageWriterSettings">The OData message writer settings used to control the settings of the Xml writer.</param>
+        /// <param name="encoding">The encoding used for writing.</param>
+        /// <returns>An <see cref="Utf8JsonWriter"/> instance configured with the provided settings and encoding.</returns>
+        internal static Utf8JsonWriter CreateJsonWriter(Stream stream, ODataMessageWriterSettings messageWriterSettings)
+        {
+            Debug.Assert(stream != null, "stream != null");
+            Debug.Assert(messageWriterSettings != null, "messageWriterSettings != null");
+
+            JsonWriterOptions options = new JsonWriterOptions
+            {
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                Indented = true, // TODO, do we need a setting in ODataMessageWriterSettings?
+                SkipValidation = false // skip the validation
+            };
+
+            Utf8JsonWriter jsonWriter = new Utf8JsonWriter(stream, options);
+            return jsonWriter;
+        }
+
+        /// <summary>
         /// Perform the actual cleanup work.
         /// </summary>
         /// <param name="disposing">If 'true' this method is called from user code; if 'false' it is called by the runtime.</param>
@@ -125,28 +154,21 @@ namespace Microsoft.OData
         {
             try
             {
-                if (this.xmlWriter != null)
+                if (this.jsonWriter != null)
                 {
-                    // XmlWriter.Flush will call the underlying Stream.Flush.
-                    this.xmlWriter.Flush();
-
-                    // XmlWriter.Dispose calls XmlWriter.Close which writes missing end elements.
-                    // Thus we can't dispose the XmlWriter since that might end up writing more data into the stream right here
-                    // and thus callers would have no way to prevent us from writing synchronously into the underlying stream.
-                    // Also in case of in-stream error we intentionally want to not write the end elements to keep the payload invalid.
-                    // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitly.
-
-                    // Dispose the message stream (note that we OWN this stream, so we always dispose it).
+                    this.jsonWriter.Flush();
+                    this.jsonWriter.Dispose();
                     this.messageOutputStream.Dispose();
                 }
             }
             finally
             {
                 this.messageOutputStream = null;
-                this.xmlWriter = null;
+                this.jsonWriter = null;
             }
 
             base.Dispose(disposing);
         }
     }
 }
+#endif

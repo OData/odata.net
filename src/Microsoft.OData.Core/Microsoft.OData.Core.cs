@@ -400,6 +400,7 @@ namespace Microsoft.OData
         internal const string XmlReaderExtension_InvalidRootNode = "XmlReaderExtension_InvalidRootNode";
         internal const string ODataMetadataInputContext_ErrorReadingMetadata = "ODataMetadataInputContext_ErrorReadingMetadata";
         internal const string ODataMetadataOutputContext_ErrorWritingMetadata = "ODataMetadataOutputContext_ErrorWritingMetadata";
+        internal const string ODataMetadataOutputContext_NotSupportJsonMetadata = "ODataMetadataOutputContext_NotSupportJsonMetadata";
         internal const string ODataAtomDeserializer_RelativeUriUsedWithoutBaseUriSpecified = "ODataAtomDeserializer_RelativeUriUsedWithoutBaseUriSpecified";
         internal const string ODataAtomPropertyAndValueDeserializer_InvalidCollectionElement = "ODataAtomPropertyAndValueDeserializer_InvalidCollectionElement";
         internal const string ODataAtomPropertyAndValueDeserializer_NavigationPropertyInProperties = "ODataAtomPropertyAndValueDeserializer_NavigationPropertyInProperties";
