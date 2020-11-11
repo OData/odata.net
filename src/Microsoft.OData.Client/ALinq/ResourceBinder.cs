@@ -19,8 +19,10 @@ namespace Microsoft.OData.Client
     using Microsoft.OData;
     using Microsoft.OData.Client.Metadata;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.UriParser.Aggregation;
     using NonSystemToken = Microsoft.OData.Client.ALinq.UriParser.NonSystemToken;
     using PathSegmentToken = Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken;
+
     #endregion Namespaces
 
     /// <summary>
@@ -797,6 +799,40 @@ namespace Microsoft.OData.Client
             return input;
         }
 
+        private static Expression AnalyzeAggregation(MethodCallExpression methodCallExpr, AggregationMethod aggregationMethod)
+        {
+            Debug.Assert(methodCallExpr != null, "methodCallExpr != null");
+            if (methodCallExpr.Arguments.Count != 2)
+            {
+                return methodCallExpr;
+            }
+
+            QueryableResourceExpression input;
+            LambdaExpression lambdaExpr;
+            if (!TryGetResourceSetMethodArguments(methodCallExpr, out input, out lambdaExpr))
+            {
+                // UNSUPPORTED: Expected LambdaExpression as second argument to sequence method
+                return methodCallExpr;
+            }
+
+            ValidationRules.DisallowExpressionEndWithTypeAs(lambdaExpr.Body, methodCallExpr.Method.Name);
+            ValidationRules.ValidateAggregateExpression(lambdaExpr.Body);
+
+            Expression selector;
+            if (!TryBindToInput(input, lambdaExpr, out selector))
+            {
+                // UNSUPPORTED: Lambda should reference the input, and only the input
+                return methodCallExpr;
+            }
+
+            EnsureApplyInitialized(input);
+            Debug.Assert(input.Apply != null, "input.Apply != null");
+
+            input.Apply.Aggregations.Add(new ApplyQueryOptionExpression.Aggregation(selector, aggregationMethod));
+
+            return input;
+        }
+
         /// <summary>Ensures that there's a limit on the cardinality of a query.</summary>
         /// <param name="mce"><see cref="MethodCallExpression"/> for the method to limit First/Single(OrDefault).</param>
         /// <param name="maxCardinality">Maximum cardinality to allow.</param>
@@ -1450,11 +1486,7 @@ namespace Microsoft.OData.Client
                             return AnalyzeNavigation(mce, this.context);
                         case SequenceMethod.SelectMany:
                         case SequenceMethod.SelectManyResultSelector:
-                            {
-                                Expression result = AnalyzeSelectMany(mce, this.context);
-                                return result;
-                            }
-
+                            return AnalyzeSelectMany(mce, this.context);
                         case SequenceMethod.Take:
                             return AnalyzeResourceSetConstantMethod(mce, (callExp, resource, takeCount) => { AddSequenceQueryOption(resource, new TakeQueryOptionExpression(callExp.Type, takeCount)); return resource; });
                         case SequenceMethod.Skip:
@@ -1484,6 +1516,34 @@ namespace Microsoft.OData.Client
                         case SequenceMethod.LongCount:
                         case SequenceMethod.Count:
                             return AnalyzeCountMethod(mce);
+                        case SequenceMethod.CountDistinctSelector:
+                            return AnalyzeCountDistinct(mce);
+                        case SequenceMethod.SumIntSelector:
+                        case SequenceMethod.SumDoubleSelector:
+                        case SequenceMethod.SumDecimalSelector:
+                        case SequenceMethod.SumLongSelector:
+                        case SequenceMethod.SumSingleSelector:
+                        case SequenceMethod.SumNullableIntSelector:
+                        case SequenceMethod.SumNullableDoubleSelector:
+                        case SequenceMethod.SumNullableDecimalSelector:
+                        case SequenceMethod.SumNullableLongSelector:
+                        case SequenceMethod.SumNullableSingleSelector:
+                            return AnalyzeAggregation(mce, AggregationMethod.Sum);
+                        case SequenceMethod.AverageIntSelector:
+                        case SequenceMethod.AverageDoubleSelector:
+                        case SequenceMethod.AverageDecimalSelector:
+                        case SequenceMethod.AverageLongSelector:
+                        case SequenceMethod.AverageSingleSelector:
+                        case SequenceMethod.AverageNullableIntSelector:
+                        case SequenceMethod.AverageNullableDoubleSelector:
+                        case SequenceMethod.AverageNullableDecimalSelector:
+                        case SequenceMethod.AverageNullableLongSelector:
+                        case SequenceMethod.AverageNullableSingleSelector:
+                            return AnalyzeAggregation(mce, AggregationMethod.Average);
+                        case SequenceMethod.MinSelector:
+                            return AnalyzeAggregation(mce, AggregationMethod.Min);
+                        case SequenceMethod.MaxSelector:
+                            return AnalyzeAggregation(mce, AggregationMethod.Max);
                         default:
                             throw Error.MethodNotSupported(mce);
                     }
@@ -1537,6 +1597,40 @@ namespace Microsoft.OData.Client
             return e;
         }
 
+        private static Expression AnalyzeCountDistinct(MethodCallExpression methodCallExpr)
+        {
+            Debug.Assert(methodCallExpr != null, "methodCallExpr != null");
+            if (methodCallExpr.Arguments.Count != 2)
+            {
+                return methodCallExpr;
+            }
+
+            QueryableResourceExpression input;
+            LambdaExpression lambdaExpr;
+            if (!TryGetResourceSetMethodArguments(methodCallExpr, out input, out lambdaExpr))
+            {
+                // UNSUPPORTED: Expected LambdaExpression as second argument to sequence method
+                return methodCallExpr;
+            }
+
+            ValidationRules.DisallowExpressionEndWithTypeAs(lambdaExpr.Body, methodCallExpr.Method.Name);
+            ValidationRules.ValidateAggregateExpression(lambdaExpr.Body);
+
+            Expression selector;
+            if (!TryBindToInput(input, lambdaExpr, out selector))
+            {
+                // UNSUPPORTED: Lambda should reference the input, and only the input
+                return methodCallExpr;
+            }
+
+            EnsureApplyInitialized(input);
+            Debug.Assert(input.Apply != null, "input.Apply != null");
+
+            input.Apply.Aggregations.Add(new ApplyQueryOptionExpression.Aggregation(selector, AggregationMethod.CountDistinct));
+
+            return input;
+        }
+
         /// <summary>Strips calls to .Cast() methods, returning the underlying expression.</summary>
         /// <param name="expression">Expression to strip calls from.</param>
         /// <returns>The underlying expression.</returns>
@@ -1557,6 +1651,20 @@ namespace Microsoft.OData.Client
             }
 
             return expression;
+        }
+
+        /// <summary>
+        /// Ensure apply query option for the resource set is initialized
+        /// </summary>
+        /// <param name="input">The resource expression</param>
+        private static void EnsureApplyInitialized(QueryableResourceExpression input)
+        {
+            Debug.Assert(input != null, "input != null");
+
+            if (input.Apply == null)
+            {
+                AddSequenceQueryOption(input, new ApplyQueryOptionExpression(input.Type));
+            }
         }
 
         /// <summary>Use this class to perform pattern-matching over expression trees.</summary>
@@ -2701,6 +2809,10 @@ namespace Microsoft.OData.Client
                             case UriHelper.OPTIONFORMAT:
                                 ThrowNotSupportedExceptionForTheFormatOption();
                                 break;
+                            case UriHelper.OPTIONAPPLY:
+                                if (rse.Apply != null)
+                                    throw new NotSupportedException(Strings.ALinq_CantAddAstoriaQueryOption(name));
+                                break;
                             default:
                                 throw new NotSupportedException(Strings.ALinq_QueryOptionNotSupported(name));
                         }
@@ -2909,6 +3021,46 @@ namespace Microsoft.OData.Client
                 }
 
                 throw new NotSupportedException(Strings.ALinq_InvalidExpressionInNavigationPath(input));
+            }
+
+            /// <summary>
+            /// Checks whether the specified <paramref name="expr"/> is a valid aggregate expression.
+            /// </summary>
+            /// <param name="expr">The aggregate expression</param>
+            internal static void ValidateAggregateExpression(Expression expr)
+            {
+                MemberExpression memberExpr = StripTo<MemberExpression>(expr);
+                
+                // Disallow unsupported scenarios like d1.Prop.get_PropertyName() - e.g. d1.Prop.get_Length()
+                if (memberExpr == null)
+                {
+                    throw new NotSupportedException(Strings.ALinq_InvalidAggregateExpression(expr));
+                }
+
+                // Validate that property is aggregatable. Applies to CountDistinct() since Queryable 
+                // aggregation methods (Average, Sum, Min, Max) validate that the property is aggregatable
+                if (!PrimitiveType.IsKnownNullableType(memberExpr.Type))
+                {
+                    throw new NotSupportedException(Strings.ALinq_InvalidAggregateExpression(expr));
+                }
+
+                // Disallow unsupported scenarios like the following:
+                // - Average(d1 => d1.Prop.Length)
+                // - Average(d1 => d1.CollectionProp.Count)
+                MemberExpression parentExpr = StripTo<MemberExpression>(memberExpr.Expression);
+                if (parentExpr != null)
+                {
+                    if (PrimitiveType.IsKnownNullableType(parentExpr.Type))
+                    {
+                        throw new NotSupportedException(Strings.ALinq_InvalidAggregateExpression(expr));
+                    }
+
+                    Type collectionType = ClientTypeUtil.GetImplementationType(parentExpr.Type, typeof(ICollection<>));
+                    if (collectionType != null)
+                    {
+                        throw new NotSupportedException(Strings.ALinq_InvalidAggregateExpression(expr));
+                    }
+                }
             }
         }
 

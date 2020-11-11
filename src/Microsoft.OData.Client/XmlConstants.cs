@@ -320,6 +320,22 @@ namespace Microsoft.OData.Service
 
         #endregion URI constants.
 
+        #region OData constants
+
+        /// <summary>The context URL for a collection, entity, primitive value, or service document.</summary>
+        internal const string ODataContext = "@odata.context";
+
+        /// <summary>The ID of th entity.</summary>
+        internal const string ODataID = "@odata.id";
+
+        /// <summary>The total count of a collection of entities or collection of entity references, if requested.</summary>
+        internal const string ODataCount = "@odata.count";
+
+        /// <summary>the type of the containing object or targeted property if the type of the object or targeted property cannot be heuristically determined.</summary>
+        internal const string ODataType = "@odata.type";
+
+        #endregion OData constants
+
         #region WCF constants.
 
         /// <summary>"Binary" - WCF element name for binary content in XML-wrapping streams.</summary>

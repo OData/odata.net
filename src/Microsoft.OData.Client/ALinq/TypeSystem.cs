@@ -11,6 +11,7 @@ namespace Microsoft.OData.Client
     using System.Diagnostics;
     using System.Reflection;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.UriParser.Aggregation;
     using Microsoft.Spatial;
 
     /// <summary>Utility functions for processing Expression trees</summary>
@@ -35,6 +36,9 @@ namespace Microsoft.OData.Client
         /// Entity       - null
         /// </summary>
         private static readonly Dictionary<Type, Type> ienumerableElementTypeCache = new Dictionary<Type, Type>(EqualityComparer<Type>.Default);
+
+        /// <summary> Aggregation method map to the URI equivalent</summary>
+        private static Dictionary<AggregationMethod, string> aggregationMethodMap = new Dictionary<AggregationMethod, string>(EqualityComparer<AggregationMethod>.Default);
 
         /// <summary> VB Assembly name</summary>
         private const string VisualBasicAssemblyName = "Microsoft.VisualBasic,";
@@ -223,6 +227,13 @@ namespace Microsoft.OData.Client
                 typeof(Date).GetProperty("Day", typeof(int)).GetGetMethod());
 
             Debug.Assert(propertiesAsMethodsMap.Count == 24, "propertiesAsMethodsMap.Count == 24");
+
+            aggregationMethodMap.Add(AggregationMethod.Sum, "sum");
+            aggregationMethodMap.Add(AggregationMethod.Average, "average");
+            aggregationMethodMap.Add(AggregationMethod.Min, "min");
+            aggregationMethodMap.Add(AggregationMethod.Max, "max");
+            aggregationMethodMap.Add(AggregationMethod.CountDistinct, "countdistinct");
+            aggregationMethodMap.Add(AggregationMethod.VirtualPropertyCount, "$count");
         }
 
         /// <summary>
@@ -306,6 +317,17 @@ namespace Microsoft.OData.Client
             }
 
             return resultType;
+        }
+
+        /// <summary>
+        /// See if aggregation method has URI equivalent
+        /// </summary>
+        /// <param name="aggregationMethod">The aggregation method.</param>
+        /// <param name="uriEquivalent">The URI equivalent.</param>
+        /// <returns>true if the aggregation method is mapped to its URI equivalent</returns>
+        internal static bool TryGetUriEquivalent(AggregationMethod aggregationMethod, out string uriEquivalent)
+        {
+            return aggregationMethodMap.TryGetValue(aggregationMethod, out uriEquivalent);
         }
 
         /// <summary>Finds whether a non-primitive implements IEnumerable and returns element type if it does.</summary>
