@@ -1517,7 +1517,7 @@ namespace Microsoft.OData.Client
                         case SequenceMethod.Count:
                             return AnalyzeCountMethod(mce);
                         case SequenceMethod.CountDistinctSelector:
-                            return AnalyzeCountDistinct(mce);
+                            return AnalyzeAggregation(mce, AggregationMethod.CountDistinct);
                         case SequenceMethod.SumIntSelector:
                         case SequenceMethod.SumDoubleSelector:
                         case SequenceMethod.SumDecimalSelector:
@@ -1595,40 +1595,6 @@ namespace Microsoft.OData.Client
             }
 
             return e;
-        }
-
-        private static Expression AnalyzeCountDistinct(MethodCallExpression methodCallExpr)
-        {
-            Debug.Assert(methodCallExpr != null, "methodCallExpr != null");
-            if (methodCallExpr.Arguments.Count != 2)
-            {
-                return methodCallExpr;
-            }
-
-            QueryableResourceExpression input;
-            LambdaExpression lambdaExpr;
-            if (!TryGetResourceSetMethodArguments(methodCallExpr, out input, out lambdaExpr))
-            {
-                // UNSUPPORTED: Expected LambdaExpression as second argument to sequence method
-                return methodCallExpr;
-            }
-
-            ValidationRules.DisallowExpressionEndWithTypeAs(lambdaExpr.Body, methodCallExpr.Method.Name);
-            ValidationRules.ValidateAggregateExpression(lambdaExpr.Body);
-
-            Expression selector;
-            if (!TryBindToInput(input, lambdaExpr, out selector))
-            {
-                // UNSUPPORTED: Lambda should reference the input, and only the input
-                return methodCallExpr;
-            }
-
-            EnsureApplyInitialized(input);
-            Debug.Assert(input.Apply != null, "input.Apply != null");
-
-            input.Apply.Aggregations.Add(new ApplyQueryOptionExpression.Aggregation(selector, AggregationMethod.CountDistinct));
-
-            return input;
         }
 
         /// <summary>Strips calls to .Cast() methods, returning the underlying expression.</summary>
