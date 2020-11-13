@@ -588,10 +588,10 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// ApplyQueryOptionExpression visit method.
         /// </summary>
-        /// <param name="aqoExpr">ApplyQueryOptionExpression expression to visit</param>
-        internal void VisitQueryOptionExpression(ApplyQueryOptionExpression aqoExpr)
+        /// <param name="applyQueryOptionExpr">ApplyQueryOptionExpression expression to visit</param>
+        internal void VisitQueryOptionExpression(ApplyQueryOptionExpression applyQueryOptionExpr)
         {
-            if (aqoExpr.Aggregations.Count == 0)
+            if (applyQueryOptionExpr.Aggregations.Count == 0)
             {
                 return;
             }
@@ -600,11 +600,11 @@ namespace Microsoft.OData.Client
 
             aggregateBuilder.Append(UriHelper.AGGREGATE);
             aggregateBuilder.Append(UriHelper.LEFTPAREN);
-            int aggIdx = 0;
+            int i = 0;
 
             while (true)
             {
-                ApplyQueryOptionExpression.Aggregation aggregation = aqoExpr.Aggregations[aggIdx];
+                ApplyQueryOptionExpression.Aggregation aggregation = applyQueryOptionExpr.Aggregations[i];
                 AggregationMethod aggregationMethod = aggregation.AggregationMethod;
                 string aggregationAlias = aggregation.AggregationAlias;
 
@@ -643,7 +643,7 @@ namespace Microsoft.OData.Client
                 }
                 aggregateBuilder.Append(aggregationAlias);
 
-                if (++aggIdx == aqoExpr.Aggregations.Count)
+                if (++i == applyQueryOptionExpr.Aggregations.Count)
                 {
                     break;
                 }

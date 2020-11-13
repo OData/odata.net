@@ -35,7 +35,7 @@ namespace Microsoft.OData.Client
 		}
 
 		/// <summary>
-		/// Aggregations in the $apply expression
+		/// Gets the aggregations in the $apply expression
 		/// </summary>
 		internal List<Aggregation> Aggregations { get; private set; }
 
