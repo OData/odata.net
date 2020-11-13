@@ -42,7 +42,8 @@ namespace Microsoft.OData.Client
             else
             {
                 // Provide a default implementation...
-                // To handle scenarios like: new List<int> { 1, 2, 1 }.AsQueryable().CountDistinct(d => d)
+                // In the event that a developer who adds a reference to the library invokes CountDistinct() as follows:
+                // - new List<int> { 1, 2, 1 }.AsQueryable().CountDistinct(d => d)
 
                 // Method: Select<TSource,TResult>(IQueryable<TSource>, Expression<Func<TSource,TResult>>)
                 MethodInfo selectMethod = GetSelectMethod();
@@ -81,9 +82,10 @@ namespace Microsoft.OData.Client
         public static int CountDistinct<TSource, TTarget>(this IEnumerable<TSource> source, Func<TSource, TTarget> selector)
         {
             // Provide a default implementation...
-            // To handle scenarios like: new List<int> { 1, 2, 1 }.CountDistinct(d => d)
+            // In the event that a developer who adds a reference to the library invokes CountDistinct() as follows:
+            // - new List<int> { 1, 2, 1 }.CountDistinct(d => d)
 
-            // Extract method: Select<TSource,TResult>(IEnumerable<TSource>, Func<TSource,TResult>)
+            // Method: Select<TSource,TResult>(IEnumerable<TSource>, Func<TSource,TResult>)
             MethodInfo selectMethod = typeof(Enumerable).GetMethods(BindingFlags.Static | BindingFlags.Public)
                 .Where(d1 => d1.Name.Equals("Select", StringComparison.Ordinal))
                 .Select(d2 => new { Method = d2, Parameters = d2.GetParameters() })
@@ -129,9 +131,9 @@ namespace Microsoft.OData.Client
                 .Select(d6 => d6.Method).Single();
         }
 
-        private static MethodInfo GetDistinctMethod(Type targetType, Type sourceType)
+        private static MethodInfo GetDistinctMethod(Type declaringType, Type sourceType)
         {
-            return targetType.GetMethods(BindingFlags.Static | BindingFlags.Public)
+            return declaringType.GetMethods(BindingFlags.Static | BindingFlags.Public)
                 .Where(d1 => d1.Name.Equals("Distinct", StringComparison.Ordinal))
                 .Select(d2 => new { Method = d2, Parameters = d2.GetParameters() })
                 .Where(d3 => d3.Parameters.Length.Equals(1)
@@ -140,9 +142,9 @@ namespace Microsoft.OData.Client
                 .Select(d6 => d6.Method).Single();
         }
 
-        private static MethodInfo GetCountMethod(Type targetType, Type sourceType)
+        private static MethodInfo GetCountMethod(Type declaringType, Type sourceType)
         {
-            return targetType.GetMethods(BindingFlags.Static | BindingFlags.Public)
+            return declaringType.GetMethods(BindingFlags.Static | BindingFlags.Public)
                 .Where(d1 => d1.Name.Equals("Count", StringComparison.Ordinal))
                 .Select(d2 => new { Method = d2, Parameters = d2.GetParameters() })
                 .Where(d3 => d3.Parameters.Length.Equals(1)
