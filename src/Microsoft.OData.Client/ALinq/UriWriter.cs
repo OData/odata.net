@@ -445,8 +445,8 @@ namespace Microsoft.OData.Client
                 }
 
                 this.AppendCachedQueryOptionsToUriBuilder();
-                }
             }
+        }
 
         /// <summary>
         /// SkipQueryOptionExpression visit method.
