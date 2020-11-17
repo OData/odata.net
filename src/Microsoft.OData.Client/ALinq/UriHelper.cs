@@ -173,6 +173,24 @@ namespace Microsoft.OData.Client
         /// <summary>The encoded { sign</summary>
         internal const string ENCODEDBRACESIGN = "%7B";
 
+        /// <summary>average</summary>
+        internal const string AVERAGE = "average";
+
+        /// <summary>sum</summary>
+        internal const string SUM = "sum";
+
+        /// <summary>min</summary>
+        internal const string MIN = "min";
+
+        /// <summary>max</summary>
+        internal const string MAX = "max";
+
+        /// <summary>countdistinct</summary>
+        internal const string COUNTDISTINCT = "countdistinct";
+
+        /// <summary>$count</summary>
+        internal const string VIRTUALPROPERTYCOUNT = "$count";
+
         /// <summary>Gets the type name to be used in the URI for the given <paramref name="type"/>.</summary>
         /// <param name="type">Type to get name for.</param>
         /// <param name="context">Data context used to generate type names for types.</param>

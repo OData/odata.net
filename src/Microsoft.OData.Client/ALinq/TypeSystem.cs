@@ -228,12 +228,12 @@ namespace Microsoft.OData.Client
 
             Debug.Assert(propertiesAsMethodsMap.Count == 24, "propertiesAsMethodsMap.Count == 24");
 
-            aggregationMethodMap.Add(AggregationMethod.Sum, "sum");
-            aggregationMethodMap.Add(AggregationMethod.Average, "average");
-            aggregationMethodMap.Add(AggregationMethod.Min, "min");
-            aggregationMethodMap.Add(AggregationMethod.Max, "max");
-            aggregationMethodMap.Add(AggregationMethod.CountDistinct, "countdistinct");
-            aggregationMethodMap.Add(AggregationMethod.VirtualPropertyCount, "$count");
+            aggregationMethodMap.Add(AggregationMethod.Sum, UriHelper.SUM);
+            aggregationMethodMap.Add(AggregationMethod.Average, UriHelper.AVERAGE);
+            aggregationMethodMap.Add(AggregationMethod.Min, UriHelper.MIN);
+            aggregationMethodMap.Add(AggregationMethod.Max, UriHelper.MAX);
+            aggregationMethodMap.Add(AggregationMethod.CountDistinct, UriHelper.COUNTDISTINCT);
+            aggregationMethodMap.Add(AggregationMethod.VirtualPropertyCount, UriHelper.VIRTUALPROPERTYCOUNT);
         }
 
         /// <summary>

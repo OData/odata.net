@@ -210,7 +210,8 @@ namespace Microsoft.OData.Client
         {
             IDictionary<string, string> responseHeaders = new Dictionary<string, string>();
             responseHeaders.Add(ODataConstants.ContentTypeHeader, "application/json");
-            HttpWebResponseMessage httpWebResponseMessage = new HttpWebResponseMessage(responseHeaders, (int)queryResult.StatusCode, queryResult.GetResponseStream);
+            HttpWebResponseMessage httpWebResponseMessage = new HttpWebResponseMessage(
+                responseHeaders, (int)queryResult.StatusCode, queryResult.GetResponseStream);
 
             ODataMessageReaderSettings messageReaderSettings = new ODataMessageReaderSettings
             {
@@ -218,9 +219,10 @@ namespace Microsoft.OData.Client
             };
 
             ODataResource entry = default(ODataResource);
-            using (var messageReader = new ODataMessageReader(httpWebResponseMessage, messageReaderSettings, this.Context.Format.ServiceModel))
+            using (ODataMessageReader messageReader = new ODataMessageReader(
+                httpWebResponseMessage, messageReaderSettings, this.Context.Format.ServiceModel))
             {
-                var reader = messageReader.CreateODataResourceSetReader();
+                ODataReader reader = messageReader.CreateODataResourceSetReader();
                 while (reader.Read())
                 {
                     switch (reader.State)

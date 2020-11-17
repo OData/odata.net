@@ -46,7 +46,7 @@ namespace Microsoft.OData.Client
                 // - new List<int> { 1, 2, 1 }.AsQueryable().CountDistinct(d => d)
 
                 // Method: Select<TSource,TResult>(IQueryable<TSource>, Expression<Func<TSource,TResult>>)
-                MethodInfo selectMethod = GetSelectMethod();
+                MethodInfo selectMethod = GetQueryableSelectMethod();
                 // Method: Distinct<TSource>(IQueryable<TSource>)
                 MethodInfo distinctMethod = GetDistinctMethod(typeof(Queryable), typeof(IQueryable<>));
                 // Method: Count<TSource>(IQueryable<TSource>)
@@ -77,7 +77,7 @@ namespace Microsoft.OData.Client
         /// <typeparam name="TSource">The type of the elements of <paramref name="source"/></typeparam>
         /// <typeparam name="TTarget">The type returned by the projection function represented in <paramref name="selector"/>.</typeparam>
         /// <param name="source">A sequence of values of type <typeparamref name="TSource"/>.</param>
-        /// <param name="selector">A projection function to apply to each element.</param>
+        /// <param name="selector">A transform function to apply to each element.</param>
         /// <returns>Distinct count of elements in a sequence after applying the projection function to each element.</returns>
         public static int CountDistinct<TSource, TTarget>(this IEnumerable<TSource> source, Func<TSource, TTarget> selector)
         {
@@ -86,15 +86,7 @@ namespace Microsoft.OData.Client
             // - new List<int> { 1, 2, 1 }.CountDistinct(d => d)
 
             // Method: Select<TSource,TResult>(IEnumerable<TSource>, Func<TSource,TResult>)
-            MethodInfo selectMethod = typeof(Enumerable).GetMethods(BindingFlags.Static | BindingFlags.Public)
-                .Where(d1 => d1.Name.Equals("Select", StringComparison.Ordinal))
-                .Select(d2 => new { Method = d2, Parameters = d2.GetParameters() })
-                .Where(d3 => d3.Parameters.Length.Equals(2)
-                    && d3.Parameters[0].ParameterType.IsGenericType
-                    && d3.Parameters[0].ParameterType.GetGenericTypeDefinition().Equals(typeof(IEnumerable<>))
-                    && d3.Parameters[1].ParameterType.IsGenericType
-                    && d3.Parameters[1].ParameterType.GetGenericTypeDefinition().Equals(typeof(Func<,>)))
-                .Select(d6 => d6.Method).Single();
+            MethodInfo selectMethod = GetEnumerableSelectMethod();
 
             IEnumerable<TTarget> transientResult;
 
@@ -114,7 +106,10 @@ namespace Microsoft.OData.Client
                 typeof(TTarget)).Invoke(null, new object[] { transientResult });
         }
 
-        private static MethodInfo GetSelectMethod()
+        /// <summary>
+        /// Returns Select method defined in Queryable type.
+        /// </summary>
+        private static MethodInfo GetQueryableSelectMethod()
         {
             return typeof(Queryable).GetMethods(BindingFlags.Static | BindingFlags.Public)
                 .Where(d1 => d1.Name.Equals("Select", StringComparison.Ordinal))
@@ -131,6 +126,25 @@ namespace Microsoft.OData.Client
                 .Select(d6 => d6.Method).Single();
         }
 
+        /// <summary>
+        /// Returns Select method defined in Enumerable type.
+        /// </summary>
+        private static MethodInfo GetEnumerableSelectMethod()
+        {
+            return typeof(Enumerable).GetMethods(BindingFlags.Static | BindingFlags.Public)
+                .Where(d1 => d1.Name.Equals("Select", StringComparison.Ordinal))
+                .Select(d2 => new { Method = d2, Parameters = d2.GetParameters() })
+                .Where(d3 => d3.Parameters.Length.Equals(2)
+                    && d3.Parameters[0].ParameterType.IsGenericType
+                    && d3.Parameters[0].ParameterType.GetGenericTypeDefinition().Equals(typeof(IEnumerable<>))
+                    && d3.Parameters[1].ParameterType.IsGenericType
+                    && d3.Parameters[1].ParameterType.GetGenericTypeDefinition().Equals(typeof(Func<,>)))
+                .Select(d6 => d6.Method).Single();
+        }
+
+        /// <summary>
+        /// Returns Distinct method defined in <paramref name="declaringType"/>.
+        /// </summary>
         private static MethodInfo GetDistinctMethod(Type declaringType, Type sourceType)
         {
             return declaringType.GetMethods(BindingFlags.Static | BindingFlags.Public)
@@ -142,6 +156,9 @@ namespace Microsoft.OData.Client
                 .Select(d6 => d6.Method).Single();
         }
 
+        /// <summary>
+        /// Returns Count method defined in <paramref name="declaringType"/>.
+        /// </summary>
         private static MethodInfo GetCountMethod(Type declaringType, Type sourceType)
         {
             return declaringType.GetMethods(BindingFlags.Static | BindingFlags.Public)

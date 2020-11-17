@@ -641,6 +641,7 @@ namespace Microsoft.OData.Client
                 {
                     aggregationAlias = aggregationMethod.ToString() + aggregationProperty.Replace('/', '_');
                 }
+
                 aggregateBuilder.Append(aggregationAlias);
 
                 if (++i == applyQueryOptionExpr.Aggregations.Count)
@@ -650,6 +651,7 @@ namespace Microsoft.OData.Client
 
                 aggregateBuilder.Append(UriHelper.COMMA);
             }
+
             aggregateBuilder.Append(UriHelper.RIGHTPAREN);
 
             // e.g. $apply=aggregate(Prop with sum as SumProp, Prop with average as AverageProp)

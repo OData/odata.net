@@ -2991,13 +2991,18 @@ namespace Microsoft.OData.Client
 
             /// <summary>
             /// Checks whether the specified <paramref name="expr"/> is a valid aggregate expression.
+            /// A valid aggregate expression must be translatable into a path to an aggregatable property.
             /// </summary>
             /// <param name="expr">The aggregate expression</param>
             internal static void ValidateAggregateExpression(Expression expr)
             {
                 MemberExpression memberExpr = StripTo<MemberExpression>(expr);
-                
-                // Disallow unsupported scenarios like d1.Prop.get_PropertyName() - e.g. d1.Prop.get_Length()
+
+                // ResourceBinder's VisitMemberAccess override transforms member access expressions 
+                // involving properties of known primitive types into their method method equivalent
+                // E.g. Length into get_Length()
+                // Disallow expressions of the form d1.Prop.get_PropertyName() - e.g. d1.Prop.get_Length()
+                // memberExpr will be null in such a scenario
                 if (memberExpr == null)
                 {
                     throw new NotSupportedException(Strings.ALinq_InvalidAggregateExpression(expr));
@@ -3010,7 +3015,11 @@ namespace Microsoft.OData.Client
                     throw new NotSupportedException(Strings.ALinq_InvalidAggregateExpression(expr));
                 }
 
-                // Disallow unsupported scenarios like the following:
+                // Member access expressions involving properties of known primitive types 
+                // e.g. Length property of type string, 
+                // or Count on a collection property 
+                // are not supported since they'd yield invalid aggregate expressions
+                // Examples:
                 // - Average(d1 => d1.Prop.Length)
                 // - Average(d1 => d1.CollectionProp.Count)
                 MemberExpression parentExpr = StripTo<MemberExpression>(memberExpr.Expression);
