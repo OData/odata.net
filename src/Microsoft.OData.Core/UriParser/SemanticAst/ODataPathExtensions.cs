@@ -56,6 +56,19 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Creates a new ODataPath with the specified segment appended
+        /// </summary>
+        /// <param name="path">The path against which the segment should be applied.</param>
+        /// <param name="segment">The segment applied to the path.</param>
+        /// <returns>A new ODataPath with the segment appended.</returns>
+        public static ODataPath AppendSegment(this ODataPath path, ODataPathSegment segment)
+        {
+            var newPath = new ODataPath(path);
+            newPath.Add(segment);
+            return newPath;
+        }
+
+        /// <summary>
         /// Build a segment representing a navigation property.
         /// </summary>
         /// <param name="path">Path to perform the computation on.</param>
@@ -64,10 +77,8 @@ namespace Microsoft.OData.UriParser
         /// <returns>The ODataPath with navigation property segment appended in the end.</returns>
         public static ODataPath AppendNavigationPropertySegment(this ODataPath path, IEdmNavigationProperty navigationProperty, IEdmNavigationSource navigationSource)
         {
-            var newPath = new ODataPath(path);
-            NavigationPropertySegment np = new NavigationPropertySegment(navigationProperty, navigationSource);
-            newPath.Add(np);
-            return newPath;
+            NavigationPropertySegment navigationSegment = new NavigationPropertySegment(navigationProperty, navigationSource);
+            return path.AppendSegment(navigationSegment);
         }
 
         /// <summary>
@@ -78,10 +89,8 @@ namespace Microsoft.OData.UriParser
         /// <returns>>The ODataPath with property segment appended in the end.</returns>
         public static ODataPath AppendPropertySegment(this ODataPath path, IEdmStructuralProperty property)
         {
-            var newPath = new ODataPath(path);
             PropertySegment propertySegment = new PropertySegment(property);
-            newPath.Add(propertySegment);
-            return newPath;
+            return path.AppendSegment(propertySegment);
         }
 
         /// <summary>

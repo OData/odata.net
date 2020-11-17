@@ -2339,7 +2339,7 @@ namespace Microsoft.OData
 
                             if (resourceTypeCast != null)
                             {
-                                odataPath.Add(resourceTypeCast);
+                                odataPath = odataPath.AppendSegment(resourceTypeCast);
                             }
 
                             odataPath = odataPath.AppendPropertySegment(structuredProperty);
@@ -2369,7 +2369,7 @@ namespace Microsoft.OData
 
                                 if (resourceTypeCast != null)
                                 {
-                                    odataPath.Add(resourceTypeCast);
+                                    odataPath = odataPath.AppendSegment(resourceTypeCast);
                                 }
 
                                 navigationSource = currentNavigationSource == null
@@ -2389,7 +2389,7 @@ namespace Microsoft.OData
                                 {
                                     case EdmNavigationSourceKind.ContainedEntitySet:
                                         // Containment cannot be written alone without odata uri.
-                                        if (odataPath.Count == 0)
+                                        if (!odataPath.Any())
                                         {
                                             throw new ODataException(Strings.ODataWriterCore_PathInODataUriMustBeSetWhenWritingContainedElement);
                                         }
@@ -2398,7 +2398,7 @@ namespace Microsoft.OData
 
                                         if (odataPath != null && typeCastFromExpand != null)
                                         {
-                                            odataPath.Add(typeCastFromExpand);
+                                            odataPath = odataPath.AppendSegment(typeCastFromExpand);
                                         }
 
                                         Debug.Assert(navigationSource is IEdmContainedEntitySet, "If the NavigationSourceKind is ContainedEntitySet, the navigationSource must be IEdmContainedEntitySet.");
