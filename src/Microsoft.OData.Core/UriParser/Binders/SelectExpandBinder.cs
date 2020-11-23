@@ -61,11 +61,7 @@ namespace Microsoft.OData.UriParser
             this.parsedSegments = odataPathInfo.Segments.ToList();
             this.state = state;
 
-            if(odataPathInfo.Segments.ToList().Count == 0)
-            {
-                this.resourcePathNavigationSource = odataPathInfo.TargetNavigationSource;
-            }
-            else if(odataPathInfo.Segments.ToList().Count >0 && this.state != null)
+            if(this.state != null)
             {
                 this.resourcePathNavigationSource = this.state.ResourcePathNavigationSource;
             }
@@ -73,7 +69,6 @@ namespace Microsoft.OData.UriParser
             {
                 this.resourcePathNavigationSource = odataPathInfo.TargetNavigationSource;
             }
-
         }
 
         /// <summary>

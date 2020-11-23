@@ -483,6 +483,7 @@ namespace Microsoft.OData.UriParser
             BindingState state = new BindingState(configuration, odataPathInfo.Segments.ToList());
             state.ImplicitRangeVariable = NodeFactory.CreateImplicitRangeVariable(odataPathInfo.TargetEdmType.ToTypeReference(), odataPathInfo.TargetNavigationSource);
             state.RangeVariables.Push(state.ImplicitRangeVariable);
+            state.ResourcePathNavigationSource = odataPathInfo.TargetNavigationSource;
             if (applyClause != null)
             {
                 state.AggregatedPropertyNames = applyClause.GetLastAggregatedPropertyNames();
