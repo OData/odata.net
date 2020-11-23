@@ -1276,7 +1276,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void DollarItinFilterInsideExpandShouldReferenceQueriedEntity()
         {
+            // $it/ID references PersonType since the resource is a People EntitySet.
             IEdmStructuredType expectedRight = (IEdmStructuredType) HardCodedTestModel.GetPersonType();
+
+            // $filter=ID references MyDog whose type is DogType.
             IEdmStructuredType expectedLeft = (IEdmStructuredType) HardCodedTestModel.GetDogType();
             SelectExpandClause clause = RunParseSelectExpand("", "MyDog($filter=ID eq $it/ID)", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
@@ -1289,9 +1292,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void DollarItinFilterInsideNestedExpandShouldReferenceOuterExpandedEntity()
         {
-            IEdmStructuredType expectedRight = (IEdmStructuredType)HardCodedTestModel.GetDogType();
-            IEdmStructuredType expectedLeft = (IEdmStructuredType)HardCodedTestModel.GetPersonType();
-            SelectExpandClause clause = RunParseSelectExpand("", "MyDog($select=Color;$expand=MyPeople($filter=ID eq $it/ID))", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            // $it/ID references PersonType since the resource is a People EntitySet.
+            IEdmStructuredType expectedRight = (IEdmStructuredType)HardCodedTestModel.GetPersonType();
+
+            // $filter=ID1 references LionsISaw whose type in LionType.
+            IEdmStructuredType expectedLeft = (IEdmStructuredType)HardCodedTestModel.GetLionType();
+            SelectExpandClause clause = RunParseSelectExpand("", "MyDog($select=Color;$expand=LionsISaw($filter=ID1 eq $it/ID))", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
             IEdmStructuredType right = ((((clause.SelectedItems.First() as ExpandedNavigationSelectItem).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem).FilterOption.Expression as BinaryOperatorNode).Right as SingleValuePropertyAccessNode).Property.DeclaringType;
             IEdmStructuredType left = ((((clause.SelectedItems.First() as ExpandedNavigationSelectItem).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem).FilterOption.Expression as BinaryOperatorNode).Left as SingleValuePropertyAccessNode).Property.DeclaringType;
@@ -1302,7 +1308,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void DollarItinFilterInsideMultiNestedExpandShouldReferenceOuterExpandedEntity()
         {
+            // $it/ID references PersonType since the resource is a People EntitySet
             IEdmStructuredType expectedRight = (IEdmStructuredType)HardCodedTestModel.GetPersonType();
+
+            // $filter=ID references MyPaintings whose type in PaintingType.
             IEdmStructuredType expectedLeft = (IEdmStructuredType)HardCodedTestModel.GetPaintingType();
             SelectExpandClause clause = RunParseSelectExpand("", "MyDog($select=Color;$expand=MyPeople($expand=MyPaintings($filter=ID eq $it/ID)))", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
@@ -1645,9 +1654,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
         #region Test Running Helpers
 
-        private static SelectExpandClause RunParseSelectExpand(string select, string expand, IEdmStructuredType type, IEdmEntitySet enitytSet)
+        private static SelectExpandClause RunParseSelectExpand(string select, string expand, IEdmStructuredType type, IEdmEntitySet entitySet)
         {
-            return new ODataQueryOptionParser(HardCodedTestModel.TestModel, type, enitytSet, new Dictionary<string, string> {{"$expand", expand}, {"$select", select}}).ParseSelectAndExpand();
+            return new ODataQueryOptionParser(HardCodedTestModel.TestModel, type, entitySet, new Dictionary<string, string> {{"$expand", expand}, {"$select", select}}).ParseSelectAndExpand();
         }
 
         private static SelectExpandClause RunParseSelectExpandAndAssertPaths(string select, string expand, string expectedSelect, string expectedExpand, IEdmEntityType type, IEdmEntitySet enitytSet)

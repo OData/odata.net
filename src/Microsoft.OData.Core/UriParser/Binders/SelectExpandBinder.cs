@@ -14,7 +14,6 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser.Aggregation;
 using ODataErrorStrings = Microsoft.OData.Strings;
 
-
 namespace Microsoft.OData.UriParser
 {
     /// <summary>
@@ -33,6 +32,11 @@ namespace Microsoft.OData.UriParser
         /// The navigation source at the current level expand.
         /// </summary>
         private readonly IEdmNavigationSource navigationSource;
+
+        /// <summary>
+        /// The navigation source at the root.
+        /// </summary>
+        private readonly IEdmNavigationSource resourcePathNavigationSource;
 
         /// <summary>
         /// The entity type at the current level expand.
@@ -56,6 +60,20 @@ namespace Microsoft.OData.UriParser
             this.navigationSource = odataPathInfo.TargetNavigationSource;
             this.parsedSegments = odataPathInfo.Segments.ToList();
             this.state = state;
+
+            if(odataPathInfo.Segments.ToList().Count == 0)
+            {
+                this.resourcePathNavigationSource = odataPathInfo.TargetNavigationSource;
+            }
+            else if(odataPathInfo.Segments.ToList().Count >0 && this.state != null)
+            {
+                this.resourcePathNavigationSource = this.state.ResourcePathNavigationSource;
+            }
+            else
+            {
+                this.resourcePathNavigationSource = odataPathInfo.TargetNavigationSource;
+            }
+
         }
 
         /// <summary>
@@ -80,6 +98,14 @@ namespace Microsoft.OData.UriParser
         public IEdmNavigationSource NavigationSource
         {
             get { return this.navigationSource; }
+        }
+
+        /// <summary>
+        /// The top level navigation source at the root.
+        /// </summary>
+        public IEdmNavigationSource ResourcePathNavigationSource
+        {
+            get { return this.resourcePathNavigationSource; }
         }
 
         /// <summary>
@@ -387,13 +413,13 @@ namespace Microsoft.OData.UriParser
             bool collapsed = applyOption?.Transformations.Any(t => t.Kind == TransformationNodeKind.Aggregate || t.Kind == TransformationNodeKind.GroupBy) ?? false;
 
             // $filter
-            FilterClause filterOption = BindFilter(tokenIn.FilterOption, this.NavigationSource, targetNavigationSource, null, generatedProperties, collapsed);
+            FilterClause filterOption = BindFilter(tokenIn.FilterOption, this.ResourcePathNavigationSource, targetNavigationSource, null, generatedProperties, collapsed);
 
             // $orderby
-            OrderByClause orderbyOption = BindOrderby(tokenIn.OrderByOptions, this.NavigationSource, targetNavigationSource, null, generatedProperties, collapsed);
+            OrderByClause orderbyOption = BindOrderby(tokenIn.OrderByOptions, this.ResourcePathNavigationSource, targetNavigationSource, null, generatedProperties, collapsed);
 
             // $search
-            SearchClause searchOption = BindSearch(tokenIn.SearchOption, this.NavigationSource, targetNavigationSource, null);
+            SearchClause searchOption = BindSearch(tokenIn.SearchOption, this.ResourcePathNavigationSource, targetNavigationSource, null);
 
             if (isRef)
             {
@@ -401,7 +427,7 @@ namespace Microsoft.OData.UriParser
             }
 
             // $select & $expand
-            SelectExpandClause subSelectExpand = BindSelectExpand(tokenIn.ExpandOption, tokenIn.SelectOption, parsedPath, this.NavigationSource, targetNavigationSource, null, generatedProperties, collapsed);
+            SelectExpandClause subSelectExpand = BindSelectExpand(tokenIn.ExpandOption, tokenIn.SelectOption, parsedPath, this.ResourcePathNavigationSource, targetNavigationSource, null, generatedProperties, collapsed);
 
             // $levels
             LevelsClause levelsOption = ParseLevels(tokenIn.LevelsOption, currentLevelEntityType, currentNavProp);
@@ -850,6 +876,7 @@ namespace Microsoft.OData.UriParser
             state.RangeVariables.Push(state.ImplicitRangeVariable);
             state.AggregatedPropertyNames = generatedProperties;
             state.IsCollapsed = collapsed;
+            state.ResourcePathNavigationSource = navigationSource;
 
             // navigationSource != null when we are binding the expandToken.
             if (navigationSource != null)
