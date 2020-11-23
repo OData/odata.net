@@ -8,7 +8,8 @@ namespace Microsoft.OData.Client
 {
 	using System;
 	using System.Collections.Generic;
-	using System.Linq.Expressions;
+    using System.Collections.ObjectModel;
+    using System.Linq.Expressions;
 	using Microsoft.OData.UriParser.Aggregation;
 
 	/// <summary>
@@ -16,6 +17,10 @@ namespace Microsoft.OData.Client
 	/// </summary>
 	internal class ApplyQueryOptionExpression : QueryOptionExpression
 	{
+		/// <summary>
+		/// The filter expressions that make the filter predicate
+		/// </summary>
+		private readonly List<Expression> filterExpressions;
 
 		/// <summary>
 		/// Creates an <see cref="ApplyQueryOptionExpression"/> expression.
@@ -25,6 +30,7 @@ namespace Microsoft.OData.Client
 			: base(type)
 		{
 			this.Aggregations = new List<Aggregation>();
+			this.filterExpressions = new List<Expression>();
 		}
 
 		/// <summary>
@@ -38,6 +44,47 @@ namespace Microsoft.OData.Client
 		/// Gets the aggregations in the $apply expression
 		/// </summary>
 		internal List<Aggregation> Aggregations { get; private set; }
+
+		/// <summary>
+		/// Adds the conjuncts to the filter expressions
+		/// </summary>
+		internal void AddPredicateConjuncts(IEnumerable<Expression> predicates)
+		{
+			this.filterExpressions.AddRange(predicates);
+		}
+
+		internal ReadOnlyCollection<Expression> PredicateConjuncts
+		{
+			get
+			{
+				return new ReadOnlyCollection<Expression>(this.filterExpressions);
+			}
+		}
+
+		/// <summary>
+		/// Gets filter transformation predicate.
+		/// </summary>
+		/// <returns>A predicate with all conjuncts AND'd</returns>
+		internal Expression GetPredicate()
+		{
+			Expression combinedPredicate = null;
+			bool isFirst = true;
+
+			foreach (Expression expr in this.filterExpressions)
+			{
+				if (isFirst)
+				{
+					combinedPredicate = expr;
+					isFirst = false;
+				}
+				else
+				{
+					combinedPredicate = Expression.And(combinedPredicate, expr);
+				}
+			}
+
+			return combinedPredicate;
+		}
 
 		/// <summary>
 		/// Structure for an aggregation. Holds lambda expression plus enum indicating aggregation method

@@ -596,6 +596,41 @@ namespace Microsoft.OData.Client
                 return;
             }
 
+            // E.g. filter(Amount gt 1)
+            string filterTransformation = ConstructFilterTransformation(applyQueryOptionExpr);
+            // E.g. aggregate(Prop with sum as SumProp, Prop with average as AverageProp)
+            string aggregateTransformation = ConstructAggregateTransformation(applyQueryOptionExpr.Aggregations);
+
+            string applyExpression = string.IsNullOrWhiteSpace(filterTransformation) ? string.Empty : filterTransformation + "/";
+            applyExpression += aggregateTransformation;
+
+            this.AddAsCachedQueryOption(UriHelper.DOLLARSIGN + UriHelper.OPTIONAPPLY, applyExpression);
+        }
+
+        /// <summary>
+        /// Constructs a $apply filter transformation.
+        /// E.g. $apply=filter(Amount gt 1)
+        /// </summary>
+        /// <param name="applyQueryOptionExpr">ApplyQueryOptionExpression expression</param>
+        /// <returns>A filter transformation</returns>
+        private string ConstructFilterTransformation(ApplyQueryOptionExpression applyQueryOptionExpr)
+        {
+            if (applyQueryOptionExpr.PredicateConjuncts.Count == 0)
+            {
+                return string.Empty;
+            }
+
+            return "filter(" + this.ExpressionToString(applyQueryOptionExpr.GetPredicate(), /*inPath*/ false) + ")"; ;
+        }
+
+        /// <summary>
+        /// Constructs a $apply aggregate transformation.
+        /// E.g. $apply=aggregate(Prop with sum as SumProp, Prop with average as AverageProp)
+        /// </summary>
+        /// <param name="aggregations">List of aggregations.</param>
+        /// <returns>The aggregate tranformation.</returns>
+        private string ConstructAggregateTransformation(IList<ApplyQueryOptionExpression.Aggregation> aggregations)
+        {
             StringBuilder aggregateBuilder = new StringBuilder();
 
             aggregateBuilder.Append(UriHelper.AGGREGATE);
@@ -604,7 +639,7 @@ namespace Microsoft.OData.Client
 
             while (true)
             {
-                ApplyQueryOptionExpression.Aggregation aggregation = applyQueryOptionExpr.Aggregations[i];
+                ApplyQueryOptionExpression.Aggregation aggregation = aggregations[i];
                 AggregationMethod aggregationMethod = aggregation.AggregationMethod;
                 string aggregationAlias = aggregation.AggregationAlias;
 
@@ -644,7 +679,7 @@ namespace Microsoft.OData.Client
 
                 aggregateBuilder.Append(aggregationAlias);
 
-                if (++i == applyQueryOptionExpr.Aggregations.Count)
+                if (++i == aggregations.Count)
                 {
                     break;
                 }
@@ -654,8 +689,7 @@ namespace Microsoft.OData.Client
 
             aggregateBuilder.Append(UriHelper.RIGHTPAREN);
 
-            // e.g. $apply=aggregate(Prop with sum as SumProp, Prop with average as AverageProp)
-            this.AddAsCachedQueryOption(UriHelper.DOLLARSIGN + UriHelper.OPTIONAPPLY, aggregateBuilder.ToString());
+            return aggregateBuilder.ToString();
         }
 
         /// <summary>

@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Xunit;
@@ -338,6 +339,97 @@ namespace Microsoft.OData.Client.Tests.ALinq
 
             // Act & Assert
             Assert.Throws<NotSupportedException>(() => queryable.CountDistinct(d => d.Sales));
+        }
+
+        [Theory]
+        [InlineData("Average")]
+        [InlineData("Sum")]
+        [InlineData("Min")]
+        [InlineData("Max")]
+        public void Aggregation_OnFilteredInputSet(string aggregationMethodName)
+        {
+            // Arrange
+            var queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            PropertyInfo propertyInfo = queryable.ElementType.GetProperty("Amount");
+            var parameter1Expr = Expression.Parameter(queryable.ElementType, "d1");
+            // d1.Amount
+            var memberExpr = Expression.MakeMemberAccess(parameter1Expr, propertyInfo);
+            // d1.Amount > 1
+            var greaterThanExpr = Expression.GreaterThan(memberExpr, Expression.Constant((decimal)1));
+
+            // Get Where method
+            var whereMethod = GetWhereMethod();
+            // .Where(d1 => d1.Amount > 1)
+            var whereExpr = Expression.Call(
+                null,
+                whereMethod.MakeGenericMethod(new Type[] { queryable.ElementType }),
+                new[] {
+                    queryable.Expression,
+                    Expression.Lambda<Func<Sale, bool>>(greaterThanExpr, parameter1Expr)
+                });
+
+            var parameter2Expr = Expression.Parameter(queryable.ElementType, "d2");
+            // d2 => d2.Amount
+            var selectorExpr = Expression.Lambda(
+                Expression.MakeMemberAccess(parameter2Expr, propertyInfo),
+                parameter2Expr);
+
+            var propertyType = ((MemberExpression)selectorExpr.Body).Type;
+            // Get aggregation method
+            var aggregationMethod = GetAggregationMethod(aggregationMethodName, propertyType);
+
+            List<Type> genericArguments = new List<Type>();
+            genericArguments.Add(queryable.ElementType);
+            if (aggregationMethod.GetGenericArguments().Length > 1)
+            {
+                genericArguments.Add(propertyType);
+            }
+
+            // E.g .Where(d1 => d1.Amount > 1).Average(d2 => d2.Amount)
+            var aggregationMethodExpr = Expression.Call(
+                null,
+                aggregationMethod.MakeGenericMethod(genericArguments.ToArray()),
+                new Expression[] { whereExpr, Expression.Quote(selectorExpr) });
+
+            // Act
+            // Call factory method for creating DataServiceOrderedQuery based on expression
+            var query = new DataServiceQueryProvider(dsContext).CreateQuery(aggregationMethodExpr);
+
+            // Assert
+            var expectedAggregateUri = $"{serviceUri}/{salesEntitySetName}?$apply=filter(Amount gt 1)" +
+                $"/aggregate(Amount with {aggregationMethodName.ToLower()} as {aggregationMethodName}Amount)";
+            Assert.Equal(expectedAggregateUri, query.ToString());
+        }
+
+        [Fact]
+        public void Aggregation_PrecededByOrderBy_Throws_NotSupportedException()
+        {
+            // Arrange
+            var queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            // Act & Assert
+            Assert.Throws<NotSupportedException>(() => queryable.OrderBy(d => d.Id).Average(d => d.Amount));
+        }
+
+        [Fact]
+        public void Aggregation_PrecededBySkip_Throws_NotSupportedException()
+        {
+            // Arrange
+            var queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            // Act & Assert
+            Assert.Throws<NotSupportedException>(() => queryable.Skip(1).Sum(d => d.Amount));
+        }
+
+        [Fact]
+        public void Aggregation_PrecededByTake_Throws_NotSupportedException()
+        {
+            // Arrange
+            var queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            // Act & Assert
+            Assert.Throws<NotSupportedException>(() => queryable.Take(1).Min(d => d.Amount));
         }
 
         #region Mock Aggregation Responses

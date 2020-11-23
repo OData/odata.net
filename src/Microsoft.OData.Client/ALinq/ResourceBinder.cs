@@ -825,10 +825,7 @@ namespace Microsoft.OData.Client
                 return methodCallExpr;
             }
 
-            EnsureApplyInitialized(input);
-            Debug.Assert(input.Apply != null, "input.Apply != null");
-
-            input.Apply.Aggregations.Add(new ApplyQueryOptionExpression.Aggregation(selector, aggregationMethod));
+            input.AddApply(selector, aggregationMethod);
 
             return input;
         }
@@ -1617,20 +1614,6 @@ namespace Microsoft.OData.Client
             }
 
             return expression;
-        }
-
-        /// <summary>
-        /// Ensure apply query option for the resource set is initialized
-        /// </summary>
-        /// <param name="input">The resource expression</param>
-        private static void EnsureApplyInitialized(QueryableResourceExpression input)
-        {
-            Debug.Assert(input != null, "input != null");
-
-            if (input.Apply == null)
-            {
-                AddSequenceQueryOption(input, new ApplyQueryOptionExpression(input.Type));
-            }
         }
 
         /// <summary>Use this class to perform pattern-matching over expression trees.</summary>
@@ -2991,7 +2974,7 @@ namespace Microsoft.OData.Client
 
             /// <summary>
             /// Checks whether the specified <paramref name="expr"/> is a valid aggregate expression.
-            /// A valid aggregate expression must be translatable into a path to an aggregatable property.
+            /// An aggregate expression must evaluate to a single-valued property path to an aggregatable property.
             /// </summary>
             /// <param name="expr">The aggregate expression</param>
             internal static void ValidateAggregateExpression(Expression expr)

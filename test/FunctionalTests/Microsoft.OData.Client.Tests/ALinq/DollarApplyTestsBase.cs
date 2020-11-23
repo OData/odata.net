@@ -166,6 +166,26 @@ namespace Microsoft.OData.Client.Tests.ALinq
         }
 
         /// <summary>
+        /// Uses reflection to find the Where method
+        /// </summary>
+        protected static MethodInfo GetWhereMethod()
+        {
+            return typeof(Queryable).GetMethods(BindingFlags.Static | BindingFlags.Public)
+                    .Where(d1 => d1.Name.Equals("Where", StringComparison.Ordinal))
+                    .Select(d2 => new { Method = d2, Parameters = d2.GetParameters() })
+                    .Where(d3 => d3.Parameters.Length.Equals(2)
+                        && d3.Parameters[0].ParameterType.IsGenericType
+                        && d3.Parameters[0].ParameterType.GetGenericTypeDefinition().Equals(typeof(IQueryable<>))
+                        && d3.Parameters[1].ParameterType.IsGenericType
+                        && d3.Parameters[1].ParameterType.GetGenericTypeDefinition().Equals(typeof(Expression<>)))
+                    .Select(d4 => new { d4.Method, SelectorArguments = d4.Parameters[1].ParameterType.GetGenericArguments() })
+                    .Where(d5 => d5.SelectorArguments.Length.Equals(1)
+                        && d5.SelectorArguments[0].IsGenericType
+                        && d5.SelectorArguments[0].GetGenericTypeDefinition().Equals(typeof(Func<,>))) // Func<TSource, Boolean>
+                    .Select(d6 => d6.Method).Single();
+        }
+
+        /// <summary>
         /// Builds a method call expression dynamically.
         /// </summary>
         protected static MethodCallExpression BuildMethodCallExpression<T>(DataServiceQuery<T> queryable, MethodInfo methodInfo, PropertyInfo propertyInfo)
