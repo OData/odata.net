@@ -873,14 +873,13 @@ namespace Microsoft.OData.UriParser
             state.IsCollapsed = collapsed;
             state.ResourcePathNavigationSource = navigationSource;
 
-            // navigationSource != null when we are binding the expandToken.
             if (navigationSource != null)
             {
                 // This $it rangeVariable will be added the Stack.
-                // We are adding a rangeVariable whose navigationSource is the queried entity set instead of the expanded entity set.
+                // We are adding a rangeVariable whose navigationSource is the resource path entity set.
                 // ODATA spec: Example 106 http://docs.oasis-open.org/odata/odata/v4.01/csprd05/part2-url-conventions/odata-v4.01-csprd05-part2-url-conventions.html#sec_it
-                RangeVariable parentItVariable = NodeFactory.CreateImplicitRangeVariable(elementType != null ? elementType :
-                        navigationSource.EntityType().ToTypeReference(), navigationSource);
+                RangeVariable parentItVariable = NodeFactory.CreateImplicitRangeVariable(
+                    navigationSource.EntityType().ToTypeReference(), navigationSource);
                 state.RangeVariables.Push(parentItVariable);
             }
 

@@ -1330,20 +1330,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             // $filter=Street references PreviousAddresses whose type in AddressType.
             IEdmStructuredType expectedLeft = (IEdmStructuredType)HardCodedTestModel.GetAddressType();
 
-            /*SelectExpandClause clause = RunParseSelectExpand("PreviousAddresses($filter=Street eq $it/Name)", "", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());*/
-            // Arrange
-            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
-                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
-                new Dictionary<string, string>()
-                {
-                    {"$select", "PreviousAddresses($filter=Street eq $it/Name)"}
-                });
+            SelectExpandClause clause = RunParseSelectExpand("PreviousAddresses($filter=Street eq $it/Name)", "", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
-            // Act
-            var clause = odataQueryOptionParser.ParseSelectAndExpand();
-
-            IEdmStructuredType right = (((((clause.SelectedItems.First() as ExpandedNavigationSelectItem).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem).FilterOption.Expression as BinaryOperatorNode).Right as SingleValuePropertyAccessNode).Property.DeclaringType;
-            IEdmStructuredType left = (((((clause.SelectedItems.First() as ExpandedNavigationSelectItem).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem).FilterOption.Expression as BinaryOperatorNode).Left as SingleValuePropertyAccessNode).Property.DeclaringType;
+            IEdmStructuredType right = (((clause.SelectedItems.First() as PathSelectItem).FilterOption.Expression as BinaryOperatorNode).Right as SingleValuePropertyAccessNode).Property.DeclaringType;
+            IEdmStructuredType left = (((clause.SelectedItems.First() as PathSelectItem).FilterOption.Expression as BinaryOperatorNode).Left as SingleValuePropertyAccessNode).Property.DeclaringType;
             Assert.Equal(expectedRight, right);
             Assert.Equal(expectedLeft, left);
         }
