@@ -295,22 +295,22 @@ namespace Microsoft.OData.UriParser
             IEdmTypeReference elementTypeReference = targetElementType.ToTypeReference();
 
             // $compute
-            ComputeClause compute = BindCompute(tokenIn.ComputeOption, null, targetNavigationSource, elementTypeReference);
+            ComputeClause compute = BindCompute(tokenIn.ComputeOption, this.ResourcePathNavigationSource, targetNavigationSource, elementTypeReference);
             HashSet<EndPathToken> generatedProperties = GetGeneratedProperties(compute, null);
 
             // $filter
-            FilterClause filter = BindFilter(tokenIn.FilterOption, null, targetNavigationSource, elementTypeReference, generatedProperties);
+            FilterClause filter = BindFilter(tokenIn.FilterOption, this.ResourcePathNavigationSource, targetNavigationSource, elementTypeReference, generatedProperties);
 
             // $orderby
-            OrderByClause orderBy = BindOrderby(tokenIn.OrderByOptions, null, targetNavigationSource, elementTypeReference, generatedProperties);
+            OrderByClause orderBy = BindOrderby(tokenIn.OrderByOptions, this.ResourcePathNavigationSource, targetNavigationSource, elementTypeReference, generatedProperties);
 
             // $search
-            SearchClause search = BindSearch(tokenIn.SearchOption, null, targetNavigationSource, elementTypeReference);
+            SearchClause search = BindSearch(tokenIn.SearchOption, this.ResourcePathNavigationSource, targetNavigationSource, elementTypeReference);
 
             // $select
             List<ODataPathSegment> parsedPath = new List<ODataPathSegment>(this.parsedSegments);
             parsedPath.AddRange(selectedPath);
-            SelectExpandClause selectExpand = BindSelectExpand(null, tokenIn.SelectOption, parsedPath, null, targetNavigationSource, elementTypeReference, generatedProperties);
+            SelectExpandClause selectExpand = BindSelectExpand(null, tokenIn.SelectOption, parsedPath, this.ResourcePathNavigationSource, targetNavigationSource, elementTypeReference, generatedProperties);
 
             return new PathSelectItem(new ODataSelectPath(selectedPath),
                 targetNavigationSource,

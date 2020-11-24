@@ -1290,7 +1290,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void DollarItinFilterInsideNestedExpandShouldReferenceOuterExpandedEntity()
+        public void DollarItinFilterInsideNestedExpandShouldReferenceResourcePathEntity()
         {
             // $it/ID references PersonType since the resource is a People EntitySet.
             IEdmStructuredType expectedRight = (IEdmStructuredType)HardCodedTestModel.GetPersonType();
@@ -1306,7 +1306,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void DollarItinFilterInsideMultiNestedExpandShouldReferenceOuterExpandedEntity()
+        public void DollarItinFilterInsideMultiNestedExpandShouldReferenceResourcePathEntity()
         {
             // $it/ID references PersonType since the resource is a People EntitySet
             IEdmStructuredType expectedRight = (IEdmStructuredType)HardCodedTestModel.GetPersonType();
@@ -1314,6 +1314,33 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             // $filter=ID references MyPaintings whose type in PaintingType.
             IEdmStructuredType expectedLeft = (IEdmStructuredType)HardCodedTestModel.GetPaintingType();
             SelectExpandClause clause = RunParseSelectExpand("", "MyDog($select=Color;$expand=MyPeople($expand=MyPaintings($filter=ID eq $it/ID)))", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            IEdmStructuredType right = (((((clause.SelectedItems.First() as ExpandedNavigationSelectItem).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem).FilterOption.Expression as BinaryOperatorNode).Right as SingleValuePropertyAccessNode).Property.DeclaringType;
+            IEdmStructuredType left = (((((clause.SelectedItems.First() as ExpandedNavigationSelectItem).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem).FilterOption.Expression as BinaryOperatorNode).Left as SingleValuePropertyAccessNode).Property.DeclaringType;
+            Assert.Equal(expectedRight, right);
+            Assert.Equal(expectedLeft, left);
+        }
+
+        [Fact]
+        public void DollarItinFilterInsideSelectShouldReferenceResourcePathEntity()
+        {
+            // $it/ID references PersonType since the resource is a People EntitySet
+            IEdmStructuredType expectedRight = (IEdmStructuredType)HardCodedTestModel.GetPersonType();
+
+            // $filter=Street references PreviousAddresses whose type in AddressType.
+            IEdmStructuredType expectedLeft = (IEdmStructuredType)HardCodedTestModel.GetAddressType();
+
+            /*SelectExpandClause clause = RunParseSelectExpand("PreviousAddresses($filter=Street eq $it/Name)", "", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());*/
+            // Arrange
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$select", "PreviousAddresses($filter=Street eq $it/Name)"}
+                });
+
+            // Act
+            var clause = odataQueryOptionParser.ParseSelectAndExpand();
 
             IEdmStructuredType right = (((((clause.SelectedItems.First() as ExpandedNavigationSelectItem).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem).FilterOption.Expression as BinaryOperatorNode).Right as SingleValuePropertyAccessNode).Property.DeclaringType;
             IEdmStructuredType left = (((((clause.SelectedItems.First() as ExpandedNavigationSelectItem).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem).FilterOption.Expression as BinaryOperatorNode).Left as SingleValuePropertyAccessNode).Property.DeclaringType;
