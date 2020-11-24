@@ -1,6 +1,0 @@
-C:\Users\Kemunga\source\repos\odata.net\test\FunctionalTests\Taupo\External\TestShell\InputSpaceModeling\bin\Debug\net45\Microsoft.SqlServer.TestShell.InputSpaceModeling.dll
-C:\Users\Kemunga\source\repos\odata.net\test\FunctionalTests\Taupo\External\TestShell\InputSpaceModeling\bin\Debug\net45\Microsoft.SqlServer.TestShell.InputSpaceModeling.pdb
-C:\Users\Kemunga\source\repos\odata.net\test\FunctionalTests\Taupo\External\TestShell\Temp\Desktop\net45\Microsoft.SqlServer.TestShell.InputSpaceModeling.csprojAssemblyReference.cache
-C:\Users\Kemunga\source\repos\odata.net\test\FunctionalTests\Taupo\External\TestShell\Temp\Desktop\net45\Microsoft.SqlServer.TestShell.InputSpaceModeling.csproj.CoreCompileInputs.cache
-C:\Users\Kemunga\source\repos\odata.net\test\FunctionalTests\Taupo\External\TestShell\Temp\Desktop\net45\Microsoft.SqlServer.TestShell.InputSpaceModeling.dll
-C:\Users\Kemunga\source\repos\odata.net\test\FunctionalTests\Taupo\External\TestShell\Temp\Desktop\net45\Microsoft.SqlServer.TestShell.InputSpaceModeling.pdb
