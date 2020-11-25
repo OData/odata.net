@@ -146,6 +146,55 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             this.VerifyPrimitiveValuesDoNotRoundtripWithoutTypeInformation(values);
         }
 
+        [Theory]
+        [InlineData("7.5e3", 7500)]
+        [InlineData("7.5e-3", 0.0075)]
+        public void DecimalAsDoubleJsonLightTest(string payload, decimal expectedValue)
+        {
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            // Writing the value directly into the stream as a string so 
+            // it retain its untyped-ness. This will cause it to read as a double
+            writer.Write(payload);
+            writer.Flush();
+            stream.Position = 0;
+
+            var typeReference = new EdmPrimitiveTypeReference((IEdmPrimitiveType)this.model.FindType("Edm.Decimal"), true);
+            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
+            settings.SetServiceDocumentUri(new Uri("http://tempuri.org/"));
+
+            var messageInfoForReader = new ODataMessageInfo
+            {
+                Encoding = Encoding.UTF8,
+                IsResponse = true,
+                MediaType = new ODataMediaType("application", "json"),
+                IsAsync = false,
+                Model = this.model,
+                MessageStream = stream,
+                Container = this.container
+            };
+
+            object actualValue;
+            using (var inputContext = new ODataJsonLightInputContext(
+                messageInfoForReader, new ODataMessageReaderSettings()))
+            {
+                var deserializer = new ODataJsonLightPropertyAndValueDeserializer(inputContext);
+                deserializer.JsonReader.Read();
+                actualValue = deserializer.ReadNonEntityValue(
+                    /*payloadTypeName*/ null,
+                    typeReference,
+                    /*propertyAndAnnotationCollector*/ null,
+                    /*collectionValidator*/ null,
+                    /*validateNullValue*/ true,
+                    /*isTopLevel*/ true,
+                    /*insideResourceValue*/ false,
+                    /*propertyName*/ null);
+            }
+
+            Assert.True(actualValue.GetType().Equals(typeof(decimal)));
+            Assert.Equal(expectedValue, actualValue);
+        }
+
         [Fact]
         public void DecimalRoundTripJsonLightTestWithIeee754CompatibleFalse()
         {
