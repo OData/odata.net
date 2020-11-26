@@ -36,11 +36,7 @@ namespace Microsoft.OData.Client.Tests
 		this.getResponseStream = getResponseStream;
 	}
 
-#if (NETCOREAPP1_0 || NETCOREAPP2_0)
-	public IODataResponseMessage GetResponse()
-#else
 	public override IODataResponseMessage GetResponse()
-#endif
 	{
 		return new HttpWebResponseMessage(this.headers, this.statusCode, this.getResponseStream);
 	}
