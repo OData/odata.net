@@ -620,7 +620,7 @@ namespace Microsoft.OData.Client
                 return string.Empty;
             }
 
-            return "filter(" + this.ExpressionToString(applyQueryOptionExpr.GetPredicate(), /*inPath*/ false) + ")"; ;
+            return "filter(" + this.ExpressionToString(applyQueryOptionExpr.GetPredicate(), /*inPath*/ false) + ")";
         }
 
         /// <summary>

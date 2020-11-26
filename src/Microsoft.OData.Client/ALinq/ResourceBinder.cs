@@ -2982,7 +2982,7 @@ namespace Microsoft.OData.Client
                 MemberExpression memberExpr = StripTo<MemberExpression>(expr);
 
                 // ResourceBinder's VisitMemberAccess override transforms member access expressions 
-                // involving properties of known primitive types into their method method equivalent
+                // involving properties of known primitive types into their method equivalent
                 // E.g. Length into get_Length()
                 // Disallow expressions of the form d1.Prop.get_PropertyName() - e.g. d1.Prop.get_Length()
                 // memberExpr will be null in such a scenario
