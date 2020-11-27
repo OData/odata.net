@@ -399,10 +399,10 @@ namespace Microsoft.OData.UriParser
             ODataExpandPath pathToNavProp = new ODataExpandPath(pathSoFar);
 
             // $apply
-            ApplyClause applyOption = BindApply(tokenIn.ApplyOptions, this.NavigationSource, targetNavigationSource);
+            ApplyClause applyOption = BindApply(tokenIn.ApplyOptions, this.ResourcePathNavigationSource, targetNavigationSource);
 
             // $compute
-            ComputeClause computeOption = BindCompute(tokenIn.ComputeOption, this.NavigationSource, targetNavigationSource);
+            ComputeClause computeOption = BindCompute(tokenIn.ComputeOption, this.ResourcePathNavigationSource, targetNavigationSource);
 
             var generatedProperties = GetGeneratedProperties(computeOption, applyOption);
             bool collapsed = applyOption?.Transformations.Any(t => t.Kind == TransformationNodeKind.Aggregate || t.Kind == TransformationNodeKind.GroupBy) ?? false;
@@ -856,7 +856,7 @@ namespace Microsoft.OData.UriParser
             IEdmTypeReference elementType, HashSet<EndPathToken> generatedProperties = null,
             bool collapsed = false)
         {
-            if (navigationSource == null && targetNavigationSource == null && elementType == null)
+            if (targetNavigationSource == null && elementType == null)
             {
                 return null;
             }
