@@ -34,7 +34,7 @@ namespace Microsoft.OData.UriParser
         private readonly IEdmNavigationSource navigationSource;
 
         /// <summary>
-        /// The navigation source at the root.
+        /// The navigation source at the resource path.
         /// </summary>
         private readonly IEdmNavigationSource resourcePathNavigationSource;
 
@@ -435,13 +435,14 @@ namespace Microsoft.OData.UriParser
         /// Bind the apply clause <see cref="ApplyClause"/> at this level.
         /// </summary>
         /// <param name="applyToken">The apply tokens to visit.</param>
-        /// <param name="navigationSource">The navigation source.</param>
+        /// <param name="resourcePathNavigationSource">The navigation source at the resource path.</param>
+        /// <param name="targetNavigationSource">The target navigation source at the current level.</param>
         /// <returns>The null or the built apply clause.</returns>
-        private ApplyClause BindApply(IEnumerable<QueryToken> applyToken, IEdmNavigationSource navigationSource, IEdmNavigationSource targetNavigationSource)
+        private ApplyClause BindApply(IEnumerable<QueryToken> applyToken, IEdmNavigationSource resourcePathNavigationSource, IEdmNavigationSource targetNavigationSource)
         {
             if (applyToken != null && applyToken.Any())
             {
-                MetadataBinder binder = BuildNewMetadataBinder(this.Configuration, navigationSource, targetNavigationSource, null);
+                MetadataBinder binder = BuildNewMetadataBinder(this.Configuration, resourcePathNavigationSource, targetNavigationSource, null);
                 ApplyBinder applyBinder = new ApplyBinder(binder.Bind, binder.BindingState);
                 return applyBinder.BindApply(applyToken);
             }
@@ -453,14 +454,15 @@ namespace Microsoft.OData.UriParser
         /// Bind the compute clause <see cref="ComputeToken"/> at this level.
         /// </summary>
         /// <param name="computeToken">The compute token to visit.</param>
-        /// <param name="navigationSource">The target navigation source.</param>
+        /// <param name="resourcePathNavigationSource">The navigation source at the resource path.</param>
+        /// <param name="targetNavigationSource">The target navigation source at the current level.</param>
         /// <param name="elementType">The target element type.</param>
         /// <returns>The null or the built compute clause.</returns>
-        private ComputeClause BindCompute(ComputeToken computeToken, IEdmNavigationSource navigationSource, IEdmNavigationSource targetNavigationSource, IEdmTypeReference elementType = null)
+        private ComputeClause BindCompute(ComputeToken computeToken, IEdmNavigationSource resourcePathNavigationSource, IEdmNavigationSource targetNavigationSource, IEdmTypeReference elementType = null)
         {
             if (computeToken != null)
             {
-                MetadataBinder binder = BuildNewMetadataBinder(this.Configuration, navigationSource, targetNavigationSource, elementType);
+                MetadataBinder binder = BuildNewMetadataBinder(this.Configuration, resourcePathNavigationSource, targetNavigationSource, elementType);
                 ComputeBinder computeBinder = new ComputeBinder(binder.Bind);
                 return computeBinder.BindCompute(computeToken);
             }
@@ -472,17 +474,18 @@ namespace Microsoft.OData.UriParser
         /// Bind the filter clause <see cref="FilterClause"/> at this level.
         /// </summary>
         /// <param name="filterToken">The filter token to visit.</param>
-        /// <param name="navigationSource">The navigation source.</param>
+        /// <param name="resourcePathNavigationSource">The navigation source at the resource path.</param>
+        /// <param name="targetNavigationSource">The target navigation source at the current level.</param>
         /// <param name="elementType">The Edm element type.</param>
         /// <param name="generatedProperties">The generated properties.</param>
         /// <param name="collapsed">The collapsed boolean value.</param>
         /// <returns>The null or the built filter clause.</returns>
-        private FilterClause BindFilter(QueryToken filterToken, IEdmNavigationSource navigationSource, IEdmNavigationSource targetNavigationSource,
+        private FilterClause BindFilter(QueryToken filterToken, IEdmNavigationSource resourcePathNavigationSource, IEdmNavigationSource targetNavigationSource,
             IEdmTypeReference elementType, HashSet<EndPathToken> generatedProperties, bool collapsed = false)
         {
             if (filterToken != null)
             {
-                MetadataBinder binder = BuildNewMetadataBinder(this.Configuration, navigationSource, targetNavigationSource, elementType, generatedProperties, collapsed);
+                MetadataBinder binder = BuildNewMetadataBinder(this.Configuration, resourcePathNavigationSource, targetNavigationSource, elementType, generatedProperties, collapsed);
                 FilterBinder filterBinder = new FilterBinder(binder.Bind, binder.BindingState);
                 return filterBinder.BindFilter(filterToken);
             }
@@ -494,13 +497,14 @@ namespace Microsoft.OData.UriParser
         /// Bind the orderby clause <see cref="OrderByClause"/> at this level.
         /// </summary>
         /// <param name="orderByToken">The orderby token to visit.</param>
-        /// <param name="navigationSource">The navigation source.</param>
+        /// <param name="resourcePathNavigationSource">The navigation source at the resource path.</param>
+        /// <param name="targetNavigationSource">The target navigation source at the current level.</param>
         /// <param name="elementType">The Edm element type.</param>
         /// <param name="generatedProperties">The generated properties.</param>
         /// <param name="collapsed">The collapsed boolean value.</param>
         /// <returns>The null or the built filter clause.</returns>
         /// <returns>The null or the built orderby clause.</returns>
-        private OrderByClause BindOrderby(IEnumerable<OrderByToken> orderByToken, IEdmNavigationSource navigationSource, IEdmNavigationSource targetNavigationSource,
+        private OrderByClause BindOrderby(IEnumerable<OrderByToken> orderByToken, IEdmNavigationSource resourcePathNavigationSource, IEdmNavigationSource targetNavigationSource,
             IEdmTypeReference elementType, HashSet<EndPathToken> generatedProperties, bool collapsed = false)
         {
             if (orderByToken != null && orderByToken.Any())
@@ -517,14 +521,15 @@ namespace Microsoft.OData.UriParser
         /// Bind the search clause <see cref="SearchClause"/> at this level.
         /// </summary>
         /// <param name="searchToken">The search token to visit.</param>
-        /// <param name="navigationSource">The navigation source.</param>
+        /// <param name="resourcePathNavigationSource">The navigation source at the resource path.</param>
+        /// <param name="targetNavigationSource">The target navigation source at the current level.</param>
         /// <param name="elementType">The Edm element type.</param>
         /// <returns>The null or the built search clause.</returns>
-        private SearchClause BindSearch(QueryToken searchToken, IEdmNavigationSource navigationSource, IEdmNavigationSource targetNavigationSource, IEdmTypeReference elementType)
+        private SearchClause BindSearch(QueryToken searchToken, IEdmNavigationSource resourcePathNavigationSource, IEdmNavigationSource targetNavigationSource, IEdmTypeReference elementType)
         {
             if (searchToken != null)
             {
-                MetadataBinder binder = BuildNewMetadataBinder(this.Configuration, navigationSource, targetNavigationSource, elementType);
+                MetadataBinder binder = BuildNewMetadataBinder(this.Configuration, resourcePathNavigationSource, targetNavigationSource, elementType);
                 SearchBinder searchBinder = new SearchBinder(binder.Bind);
                 return searchBinder.BindSearch(searchToken);
             }
@@ -538,18 +543,19 @@ namespace Microsoft.OData.UriParser
         /// <param name="expandToken">The expand token to visit.</param>
         /// <param name="selectToken">The select token to visit.</param>
         /// <param name="segments">The parsed segments to visit.</param>
-        /// <param name="navigationSource">The navigation source.</param>
+        /// <param name="resourcePathNavigationSource">The navigation source at the resource path.</param>
+        /// <param name="targetNavigationSource">The target navigation source at the current level.</param>
         /// <param name="elementType">The Edm element type.</param>
         /// <param name="generatedProperties">The generated properties.</param>
         /// <param name="collapsed">The collapsed boolean value.</param>
         /// <returns>The null or the built select and expand clause.</returns>
         private SelectExpandClause BindSelectExpand(ExpandToken expandToken, SelectToken selectToken,
-            IList<ODataPathSegment> segments, IEdmNavigationSource navigationSource, IEdmNavigationSource targetNavigationSource, IEdmTypeReference elementType,
+            IList<ODataPathSegment> segments, IEdmNavigationSource resourcePathNavigationSource, IEdmNavigationSource targetNavigationSource, IEdmTypeReference elementType,
             HashSet<EndPathToken> generatedProperties = null, bool collapsed = false)
         {
             if (expandToken != null || selectToken != null)
             {
-                BindingState binding = CreateBindingState(this.Configuration, navigationSource, targetNavigationSource, elementType, generatedProperties, collapsed);
+                BindingState binding = CreateBindingState(this.Configuration, resourcePathNavigationSource, targetNavigationSource, elementType, generatedProperties, collapsed);
 
                 SelectExpandBinder selectExpandBinder = new SelectExpandBinder(this.Configuration,
                 new ODataPathInfo(new ODataPath(segments)), binding);
@@ -852,7 +858,7 @@ namespace Microsoft.OData.UriParser
         }
 
         private static BindingState CreateBindingState(ODataUriParserConfiguration config,
-            IEdmNavigationSource navigationSource, IEdmNavigationSource targetNavigationSource,
+            IEdmNavigationSource resourcePathNavigationSource, IEdmNavigationSource targetNavigationSource,
             IEdmTypeReference elementType, HashSet<EndPathToken> generatedProperties = null,
             bool collapsed = false)
         {
@@ -871,15 +877,15 @@ namespace Microsoft.OData.UriParser
             state.RangeVariables.Push(state.ImplicitRangeVariable);
             state.AggregatedPropertyNames = generatedProperties;
             state.IsCollapsed = collapsed;
-            state.ResourcePathNavigationSource = navigationSource;
+            state.ResourcePathNavigationSource = resourcePathNavigationSource;
 
-            if (navigationSource != null)
+            if (resourcePathNavigationSource != null)
             {
                 // This $it rangeVariable will be added the Stack.
                 // We are adding a rangeVariable whose navigationSource is the resource path entity set.
                 // ODATA spec: Example 106 http://docs.oasis-open.org/odata/odata/v4.01/csprd05/part2-url-conventions/odata-v4.01-csprd05-part2-url-conventions.html#sec_it
                 RangeVariable parentItVariable = NodeFactory.CreateImplicitRangeVariable(
-                    navigationSource.EntityType().ToTypeReference(), navigationSource);
+                    resourcePathNavigationSource.EntityType().ToTypeReference(), resourcePathNavigationSource);
                 state.RangeVariables.Push(parentItVariable);
             }
 
