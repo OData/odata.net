@@ -88,16 +88,7 @@ namespace Microsoft.OData
                 }
                 else if (value is Double)
                 {
-                    Double doubleValue = (Double)value;
-                    if (targetType == typeof(Single))
-                    {
-                        return Convert.ToSingle(doubleValue);
-                    }
-
-                    if (targetType != typeof(Double))
-                    {
-                        throw new ODataException(ODataErrorStrings.ODataJsonReaderUtils_CannotConvertDouble(primitiveTypeReference.FullName()));
-                    }
+                    return ConvertDoubleValue((Double)value, targetType, primitiveTypeReference);
                 }
                 else if (value is bool)
                 {
@@ -257,6 +248,35 @@ namespace Microsoft.OData
             }
 
             return intValue;
+        }
+
+        private static object ConvertDoubleValue(double doubleValue, Type targetType, IEdmPrimitiveTypeReference primitiveTypeReference)
+        {
+            if (targetType == typeof(Single))
+            {
+                return Convert.ToSingle(doubleValue);
+            }
+
+            if (targetType == typeof(Decimal))
+            {
+                decimal doubleToDecimalR;
+
+                // To keep the full precision of the current value, which if necessary is all 17 digits of precision supported by the Double type.
+                if (decimal.TryParse(doubleValue.ToString("R", CultureInfo.InvariantCulture),
+                    out doubleToDecimalR))
+                {
+                    return doubleToDecimalR;
+                }
+
+                return Convert.ToDecimal(doubleValue);
+            }
+
+            if (targetType != typeof(Double))
+            {
+                throw new ODataException(ODataErrorStrings.ODataJsonReaderUtils_CannotConvertDouble(primitiveTypeReference.FullName()));
+            }
+
+            return doubleValue;
         }
     }
 }
