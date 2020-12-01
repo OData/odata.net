@@ -581,8 +581,8 @@ namespace Microsoft.OData.Client
                         else if (descriptor.State == EntityStates.Added ||
                                  this.streamRequestKind == StreamRequestKind.PostMediaResource)
                         {
-                             // For POST scenarios, location header must be specified.
-                             // Except for preflight requests
+                              // For POST scenarios, location header must be specified.
+                              // Except for preflight requests
                              if (headers.HasHeader("Content-Type") && statusCode != HttpStatusCode.Created)
                              {
                                 throw Error.NotSupported(Strings.Deserialize_NoLocationHeader);
