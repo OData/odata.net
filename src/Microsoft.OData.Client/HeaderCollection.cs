@@ -91,7 +91,6 @@ namespace Microsoft.OData.Client
             get { return this.headers.Keys; }
         }
 
-#if DEBUG
         /// <summary>
         /// Gets the number of headers in the collection.
         /// </summary>
@@ -99,7 +98,7 @@ namespace Microsoft.OData.Client
         {
             get { return this.headers.Count; }
         }
-#endif
+
         /// <summary>
         /// Adds default system headers
         /// Currently it sets User-Agent header as default system header
@@ -148,7 +147,6 @@ namespace Microsoft.OData.Client
             }
         }
 
-#if DEBUG
         /// <summary>
         /// Returns whether or not the collection contains the given header.
         /// </summary>
@@ -158,7 +156,6 @@ namespace Microsoft.OData.Client
         {
             return this.headers.ContainsKey(headerName);
         }
-#endif
 
         /// <summary>
         /// Sets multiple header values at once.
