@@ -247,17 +247,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     },
                     new
                     {
-                        Description = "Invalid type information for top-level null - we don't allow null collections - should fail.",
-                        Json = "{ " +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Collection(Edm.Int32)\", " +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\": \"Collection(Edm.Int32)\"," +
-                            "\"" + JsonLightConstants.ODataValuePropertyName + "\": null" +
-                        "}",
-                        ReaderMetadata = collectionReaderMetadata,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_NullNamedValueForNonNullableType", "value", "Collection(Edm.Int32)")
-                    },
-                    new
-                    {
                         Description = "Type information for top-level spatial - should work.",
                         Json = "{ " +
                             "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Edm.GeographyPoint\", " +

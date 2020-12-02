@@ -13,6 +13,7 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
+    using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -219,7 +220,15 @@ namespace Microsoft.OData.Client
         /// <returns>A task that represents an <see cref="System.Collections.Generic.IEnumerable{T}" />  that contains the results of the query operation.</returns>
         public virtual new Task<IEnumerable<TElement>> ExecuteAsync()
         {
-            return Task<IEnumerable<TElement>>.Factory.FromAsync(this.BeginExecute, this.EndExecute, null);
+            return ExecuteAsync(CancellationToken.None);
+        }
+
+        /// <summary>Starts an asynchronous network operation that executes the query represented by this object instance.</summary>
+        /// <returns>A task that represents an <see cref="System.Collections.Generic.IEnumerable{T}" />  that contains the results of the query operation.</returns>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        public virtual new Task<IEnumerable<TElement>> ExecuteAsync(CancellationToken cancellationToken)
+        {
+            return this.Context.FromAsync(this.BeginExecute, this.EndExecute, cancellationToken);
         }
 
         /// <summary>Ends an asynchronous query request to a data service.</summary>
@@ -244,8 +253,18 @@ namespace Microsoft.OData.Client
         /// <returns>A task that represents an <see cref="System.Collections.Generic.IEnumerable{T}" /> that contains the results of the query operation.</returns>
         public virtual Task<IEnumerable<TElement>> GetAllPagesAsync()
         {
-            var currentTask = Task<IEnumerable<TElement>>.Factory.FromAsync(this.BeginExecute, this.EndExecute, null);
-            var nextTask = currentTask.ContinueWith(t => this.ContinuePage(t.Result));
+            return GetAllPagesAsync(CancellationToken.None);
+        }
+
+        /// <summary>
+        /// Asynchronously sends a request to get all items by auto iterating all pages
+        /// </summary>
+        /// <returns>A task that represents an <see cref="System.Collections.Generic.IEnumerable{T}" /> that contains the results of the query operation.</returns>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        public virtual Task<IEnumerable<TElement>> GetAllPagesAsync(CancellationToken cancellationToken)
+        {
+            var currentTask = this.Context.FromAsync(this.BeginExecute, this.EndExecute, cancellationToken);
+            var nextTask = currentTask.ContinueWith(t => this.ContinuePage(t.Result, cancellationToken), cancellationToken);
             return nextTask;
         }
 
@@ -466,7 +485,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="response">The response of the previous page</param>
         /// <returns>The items retrieved</returns>
-        private IEnumerable<TElement> ContinuePage(IEnumerable<TElement> response)
+        private IEnumerable<TElement> ContinuePage(IEnumerable<TElement> response, CancellationToken cancellationToken)
         {
             foreach (var element in response)
             {
@@ -476,9 +495,11 @@ namespace Microsoft.OData.Client
             var continuation = (response as QueryOperationResponse).GetContinuation() as DataServiceQueryContinuation<TElement>;
             if (continuation != null)
             {
-                var currentTask = Task<IEnumerable<TElement>>.Factory.FromAsync(this.Context.BeginExecute(continuation, null, null), this.Context.EndExecute<TElement>);
-                var nextTask = currentTask.ContinueWith(t => this.ContinuePage(t.Result));
-                nextTask.Wait();
+                var asyncResult = this.Context.BeginExecute(continuation, null, null);
+                cancellationToken.Register(() => this.Context.CancelRequest(asyncResult));
+                var currentTask = Task<IEnumerable<TElement>>.Factory.FromAsync(asyncResult, this.Context.EndExecute<TElement>);
+                var nextTask = currentTask.ContinueWith(t => ContinuePage(t.Result, cancellationToken), cancellationToken);
+                nextTask.Wait(cancellationToken);
                 foreach (var element in nextTask.Result)
                 {
                     yield return element;

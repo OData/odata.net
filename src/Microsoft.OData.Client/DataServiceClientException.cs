@@ -9,25 +9,17 @@ namespace Microsoft.OData.Client
     using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
+    using System.Security.Permissions;
 
     /// <summary>
     /// The exception that is thrown when the server returns an error.
     /// </summary>
-#if !PORTABLELIB
     [Serializable]
-#endif
     [System.Diagnostics.DebuggerDisplay("{Message}")]
     [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "No longer relevant after .NET 4 introduction of SerializeObjectState event and ISafeSerializationData interface.")]
     public sealed class DataServiceClientException : InvalidOperationException
     {
-        /// <summary>
-        /// Contains the state for this exception.
-        /// </summary>
-#if !PORTABLELIB
-        [NonSerialized]
-#endif
-        private DataServiceClientExceptionSerializationState state;
-
+        private readonly int statusCode;
         #region Constructors
 
         /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceClientException" /> class with a system-supplied message that describes the error. </summary>
@@ -66,14 +58,17 @@ namespace Microsoft.OData.Client
         public DataServiceClientException(string message, Exception innerException, int statusCode)
             : base(message, innerException)
         {
-            this.state.StatusCode = statusCode;
+            this.statusCode = statusCode;
+        }
 
-#if !PORTABLELIB
-            this.SerializeObjectState += (sender, e) => e.AddSerializedState(this.state);
-#endif
+        private DataServiceClientException(SerializationInfo info, StreamingContext context)
+: base(info, context)
+        {
+            this.statusCode = info.GetInt32("StatusCode");
         }
 
         #endregion Constructors
+
 
         #region Public properties
 
@@ -81,38 +76,24 @@ namespace Microsoft.OData.Client
         /// <returns>An integer value that represents the exception.</returns>
         public int StatusCode
         {
-            get { return this.state.StatusCode; }
+            get { return this.statusCode; }
         }
 
         #endregion Public properties
 
-        /// <summary>
-        /// Contains the state of the exception, used for serialization in security transparent code.
-        /// </summary>
-#if !PORTABLELIB
-        [Serializable]
-#endif
-        private struct DataServiceClientExceptionSerializationState
-#if !PORTABLELIB
-            : ISafeSerializationData
-#endif
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            /// <summary>
-            /// Gets or sets the status code as returned by the server.
-            /// </summary>
-            public int StatusCode { get; set; }
-
-#if !PORTABLELIB
-            /// <summary>
-            /// Called when deserialization of the exception is complete.
-            /// </summary>
-            /// <param name="deserialized">The deserialized exception.</param>
-            void ISafeSerializationData.CompleteDeserialization(object deserialized)
+            if (info == null)
             {
-                var exception = (DataServiceClientException)deserialized;
-                exception.state = this;
+                throw new ArgumentNullException(nameof(info));
             }
-#endif
+
+            info.AddValue("StatusCode", this.statusCode);
+
+            // MUST call through to the base class to let it save its own state
+            base.GetObjectData(info, context);
         }
+
     }
 }

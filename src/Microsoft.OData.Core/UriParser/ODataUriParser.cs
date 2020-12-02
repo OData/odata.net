@@ -264,6 +264,22 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Validate the OData Uri using an ODataUrlValidator.
+        /// </summary>
+        /// <param name="validator">The ODataUrlValidator used to validate the OData Uri.</param>
+        /// <param name="validationMessages">The collection of validation messages found during validation.</param>
+        /// <returns>True if validation messages are discovered during validation, otherwise false.</returns>
+        public bool Validate(ODataUrlValidator validator, out IEnumerable<ODataUrlValidationMessage> validationMessages)
+        {
+            if (this.Model != validator.Model)
+            {
+                throw new ODataException(Strings.UriValidator_ValidatorMustUseSameModelAsParser);
+            }
+
+            return validator.ValidateUrl(this.ParseUri(), out validationMessages);
+        }
+
+        /// <summary>
         /// Parses the odata path on the given full Uri
         /// </summary>
         /// <returns>An <see cref="ODataPath"/> representing OData path.</returns>

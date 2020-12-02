@@ -441,7 +441,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         // Move to another service, instead of trippin service.
         // [Fact] // github issuse: #896
-        public void TestNullableCollection()
+        internal void TestNullableCollection()
         {
             var people = TestClientContext.People.First();
             Assert.Equal(2, people.AddressInfo.Count());
@@ -1422,8 +1422,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 {
                     exceptions[idx] = ex;
                 }
-                //Expected exception but none was thrown
-                Assert.Null(exceptions[idx]);
+
+                Assert.NotNull(exceptions[idx]);
                 statusCodes[idx] = this.lastResponseStatusCode;
                 ++idx;
             }
@@ -1615,8 +1615,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 if (isFullMetadata)
                 {
                     var expectedUrls = photoIds.Select(photoId => string.Format("Photos({0})/$value", photoId));
-                    Assert.True(expectedUrls.Any(url => entry.MediaResource.ReadLink.AbsolutePath.EndsWith(url)));
-                    Assert.True(expectedUrls.Any(url => entry.MediaResource.EditLink.AbsolutePath.EndsWith(url)));
+                    Assert.Contains(expectedUrls, url => entry.MediaResource.ReadLink.AbsolutePath.EndsWith(url));
+                    Assert.Contains(expectedUrls, url => entry.MediaResource.EditLink.AbsolutePath.EndsWith(url));
                 }
             });
 

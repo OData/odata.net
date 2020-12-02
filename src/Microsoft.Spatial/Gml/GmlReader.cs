@@ -615,6 +615,9 @@ namespace Microsoft.Spatial
             /// <param name="allowEmpty">Allow empty posList</param>
             private void ParseGmlPosListElement(bool allowEmpty)
             {
+                int dimension = ReadSrsDimension();
+                Debug.Assert(dimension == 2 || dimension == 3, "dimension is not 2D or 3D");
+
                 // GmlPosListElement :=
                 //     <posList>
                 //         {Double}*
@@ -627,21 +630,28 @@ namespace Microsoft.Spatial
                         double[] doubleList = this.ReadContentAsDoubleArray();
                         if (doubleList.Length != 0)
                         {
-                            if (doubleList.Length % 2 != 0)
+                            if (doubleList.Length % dimension != 0)
                             {
                                 // Odd number of doubles
                                 throw new FormatException(Strings.GmlReader_PosListNeedsEvenCount);
                             }
 
                             // posList supports only 2D points
-                            for (int i = 0; i < doubleList.Length; i += 2)
+                            for (int i = 0; i < doubleList.Length; i += dimension)
                             {
-                                this.AddPoint(doubleList[i], doubleList[i + 1], null, null);
+                                if (dimension == 2)
+                                {
+                                    this.AddPoint(doubleList[i], doubleList[i + 1], null, null);
+                                }
+                                else
+                                {
+                                    this.AddPoint(doubleList[i], doubleList[i + 1], doubleList[i + 2], null);
+                                }
                             }
                         }
                         else
                         {
-                            // Read a posList with 0 elements.
+                            // Read a ParseGmlPosListElement with 0 elements.
                             throw new FormatException(Strings.GmlReader_PosListNeedsEvenCount);
                         }
                     }
@@ -658,6 +668,27 @@ namespace Microsoft.Spatial
                     // Read an empty posList.
                     throw new FormatException(Strings.GmlReader_PosListNeedsEvenCount);
                 }
+            }
+
+            /// <summary>
+            /// Read SrsDimension integer value from SrsDimension attribute if presented.
+            /// </summary>
+            /// <returns>The SrsDimension value.</returns>
+            private int ReadSrsDimension()
+            {
+                int dimension = 2; // by default
+                string srsDimension = this.reader.GetAttribute(GmlConstants.SrsDimension);
+                if (srsDimension != null)
+                {
+                    dimension = XmlConvert.ToInt32(srsDimension);
+                }
+
+                if (dimension != 2 && dimension != 3)
+                {
+                    throw new FormatException(Strings.GmlReader_InvalidSrsDimension);
+                }
+
+                return dimension;
             }
 
             /// <summary>

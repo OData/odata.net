@@ -548,6 +548,58 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             }
         }
 
+        [Theory]
+        [MemberData(nameof(DecimalInExponentialFormTestData))]
+        public void DecimalInExponentialFormJsonLightTest(string untypedValue, decimal expectedValue)
+        {
+            var typeReference = new EdmPrimitiveTypeReference((IEdmPrimitiveType)this.model.FindType("Edm.Decimal"), true);
+
+            object actualValue = WriteAsUntypedThenReadValue(untypedValue, typeReference, ODataVersion.V4);
+
+            Assert.True(actualValue.GetType().Equals(typeof(decimal)));
+            Assert.Equal(expectedValue, actualValue);
+        }
+
+        [Theory]
+        [MemberData(nameof(DecimalInExponentialFormOutOfRangeTestData))]
+        public void DecimalInExponentialFormJsonLightTest_ExceptionThrownForValueOutOfRange(string untypedValue)
+        {
+            var typeReference = new EdmPrimitiveTypeReference((IEdmPrimitiveType)this.model.FindType("Edm.Decimal"), true);
+
+            // Consistent with the behaviour in ASP.NET/ASP.NET Core, exception should be thrown is value is out of range
+            Assert.Throws<ODataException>(() => WriteAsUntypedThenReadValue(untypedValue, typeReference, ODataVersion.V4));
+        }
+
+        public static IEnumerable<object[]> DecimalInExponentialFormTestData()
+        {
+            foreach (var item in new object[][]
+            {
+                new object[] { "7.5e3", 7500 },
+                new object[] { "7500", 7500 },
+                new object[] { "7500.0", 7500 },
+                new object[] { "7.5e-3", 0.0075 },
+                new object[]
+                {
+                    // NOTE: The choice of precision specifier here is deliberate to prevent rounding up. 
+                    // That would push the value out of decimals range
+                    decimal.MaxValue.ToString("E14"), // 7.92281625142643E+028
+                    // To ensure exactness
+                    decimal.Parse(decimal.MaxValue.ToString("E14"), System.Globalization.NumberStyles.Float)
+                },
+                new object[] {
+                    decimal.MinValue.ToString("E14"), // -7.92281625142643E+028
+                    decimal.Parse(decimal.MinValue.ToString("E14"), System.Globalization.NumberStyles.Float)
+                }
+            })
+                yield return item;
+        }
+
+        public static IEnumerable<object[]> DecimalInExponentialFormOutOfRangeTestData()
+        {
+            yield return new object[] { double.MaxValue.ToString("E16") };
+            yield return new object[] { double.MinValue.ToString("E16") };
+        }
+
         private void VerifyUIntValuesRoundtripWithTypeInformation(IEnumerable clrValues, string edmTypeDefinitionName)
         {
             var typeReference = new EdmTypeDefinitionReference((IEdmTypeDefinition)this.model.FindType(edmTypeDefinitionName), true);
@@ -735,6 +787,66 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                     /*insideResourceValue*/ false,
                     /*propertyName*/ null);
 
+            }
+
+            return actualValue;
+        }
+
+        private object WriteAsUntypedThenReadValue(string value, IEdmTypeReference typeReference, ODataVersion version)
+        {
+            var stream = new MemoryStream();
+
+            var settings = new ODataMessageWriterSettings { Version = version };
+            settings.SetServiceDocumentUri(new Uri("http://tempuri.org/"));
+
+            var mediaType = new ODataMediaType("application", "json");
+
+            var messageInfoForWriter = new ODataMessageInfo
+            {
+                MessageStream = new NonDisposingStream(stream),
+                MediaType = mediaType,
+                Encoding = Encoding.UTF8,
+                IsResponse = true,
+                IsAsync = false,
+                Model = this.model,
+                Container = this.container
+            };
+
+            using (var outputContext = new ODataJsonLightOutputContext(messageInfoForWriter, settings))
+            {
+                var serializer = new ODataJsonLightValueSerializer(outputContext);
+                // Writing the value as untyped it remains in its original form
+                serializer.WriteUntypedValue(new ODataUntypedValue { RawValue = value });
+            }
+
+            stream.Position = 0;
+
+            var messageInfoForReader = new ODataMessageInfo
+            {
+                Encoding = Encoding.UTF8,
+                IsResponse = true,
+                MediaType = mediaType,
+                IsAsync = false,
+                Model = this.model,
+                MessageStream = stream,
+                Container = this.container
+            };
+
+            object actualValue;
+            using (var inputContext = new ODataJsonLightInputContext(
+                messageInfoForReader, new ODataMessageReaderSettings()))
+            {
+                var deserializer = new ODataJsonLightPropertyAndValueDeserializer(inputContext);
+                deserializer.JsonReader.Read();
+                actualValue = deserializer.ReadNonEntityValue(
+                    /*payloadTypeName*/ null,
+                    typeReference,
+                    /*propertyAndAnnotationCollector*/ null,
+                    /*collectionValidator*/ null,
+                    /*validateNullValue*/ true,
+                    /*isTopLevel*/ true,
+                    /*insideResourceValue*/ false,
+                    /*propertyName*/ null);
             }
 
             return actualValue;

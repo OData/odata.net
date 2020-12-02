@@ -197,6 +197,23 @@ namespace Microsoft.OData.MultipartMixed
         }
 
         /// <summary>
+        /// Validate if the dependsOnIds are in the ContentIdCache.
+        /// </summary>
+        /// <param name="contentId">The content Id.</param>
+        /// <param name="dependsOnIds">The dependsOn ids specifying current request's prerequisites.</param>
+        protected override void ValidateDependsOnIds(string contentId, IEnumerable<string> dependsOnIds)
+        {
+            // Validate explicit dependsOnIds cases.
+            foreach (string id in dependsOnIds)
+            {
+                if (!this.PayloadUriConverter.ContainsContentId(id))
+                {
+                    throw new ODataException(Strings.ODataBatchReader_DependsOnIdNotFound(id, contentId));
+                }
+            }
+        }
+
+        /// <summary>
         /// Returns the next state of the batch reader after an end boundary has been found.
         /// </summary>
         /// <returns>The next state of the batch reader.</returns>

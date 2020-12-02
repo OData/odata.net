@@ -69,6 +69,13 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             Action createWithNull = () => new ODataPath((ODataPathSegment)null);
             Assert.Throws<ArgumentNullException>("segments", createWithNull);
+
+            List<ODataPathSegment> segments = new List<ODataPathSegment>(){
+                null
+            };
+
+            createWithNull = () => new ODataPath(segments);
+            Assert.Throws<ArgumentNullException>("segments", createWithNull);
         }
 
         [Fact]

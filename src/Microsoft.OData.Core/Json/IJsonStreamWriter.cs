@@ -12,7 +12,7 @@ namespace Microsoft.OData.Json
     /// <summary>
     /// Interface for writing JSON including streaming binary values.
     /// </summary>
-   // [CLSCompliant(false)]
+    [CLSCompliant(false)]
     public interface IJsonStreamWriter : IJsonWriter
     {
         /// <summary>

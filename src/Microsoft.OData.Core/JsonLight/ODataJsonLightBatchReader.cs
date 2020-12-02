@@ -54,6 +54,11 @@ namespace Microsoft.OData.JsonLight
         private ODataJsonLightBatchPayloadItemPropertiesCache messagePropertiesCache = null;
 
         /// <summary>
+        /// Collection for keeping track of unique atomic group ids and member request ids.
+        /// </summary>
+        private HashSet<string> requestIds = new HashSet<string>();
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="inputContext">The input context to read the content from.</param>
@@ -123,6 +128,16 @@ namespace Microsoft.OData.JsonLight
             // atomicityGroup
             string atomicityGroupId = (string)this.messagePropertiesCache.GetPropertyValue(
                 ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameAtomicityGroup);
+
+            if (id != null)
+            {
+                this.requestIds.Add(id);
+            }
+
+            if (atomicityGroupId != null)
+            {
+                this.requestIds.Add(atomicityGroupId);
+            }
 
             // dependsOn
             // Flatten the dependsOn list by converting every groupId into request Ids, so that the caller
@@ -330,6 +345,26 @@ namespace Microsoft.OData.JsonLight
             //// NOTE: Content-IDs for cross referencing are only supported in request messages; in responses
             //// we allow a Content-ID header but don't process it (i.e., don't add the content ID to the URL resolver).
             return responseMessage;
+        }
+
+        /// <summary>
+        /// Validate the dependsOnIds.
+        /// </summary>
+        /// <param name="contentId">The context Id.</param>
+        /// <param name="dependsOnIds">The dependsOn ids specifying current request's prerequisites.</param>
+        protected override void ValidateDependsOnIds(string contentId, IEnumerable<string> dependsOnIds)
+        {
+            foreach (var id in dependsOnIds)
+            {
+                // Content-ID cannot be part of dependsOnIds. This is to avoid self referencing.
+                // The dependsOnId must be an existing request ID or atomicityGroup
+                if (id == contentId ||
+                    (!this.requestIds.Contains(id) &&
+                    !this.requestIds.Contains(id)))
+                {
+                    throw new ODataException(Strings.ODataBatchReader_DependsOnIdNotFound(id, contentId));
+                }
+            }
         }
 
         /// <summary>

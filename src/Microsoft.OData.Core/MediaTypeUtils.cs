@@ -56,12 +56,12 @@ namespace Microsoft.OData
         /// <summary>
         /// Max size to cache match info.
         /// </summary>
-        private const int MatchInfoCacheMaxSize = 256;
+        private const int MatchInfoCacheInitialSize = 256;
 
         /// <summary>
         /// Concurrent cache to cache match info.
         /// </summary>
-        private static MatchInfoConcurrentCache MatchInfoCache = new MatchInfoConcurrentCache(MatchInfoCacheMaxSize);
+        private static MatchInfoConcurrentCache MatchInfoCache = new MatchInfoConcurrentCache(MatchInfoCacheInitialSize);
 
         /// <summary>UTF-8 encoding, without the BOM preamble.</summary>
         /// <remarks>
@@ -411,6 +411,15 @@ namespace Microsoft.OData
             var str = String.Join(", ", mediaTypeResolver.GetMediaTypeFormats(supportedPayloadKinds[0]).ToList().Select(x => x.MediaType));
             string supportedTypesAsString = String.Join(", ", supportedPayloadKinds.SelectMany(pk => mediaTypeResolver.GetMediaTypeFormats(pk).Select(mt => mt.MediaType.ToText())).ToArray());
             throw new ODataContentTypeException(Strings.MediaTypeUtils_CannotDetermineFormatFromContentType(str, contentTypeName));
+        }
+
+        /// <summary>
+        /// Internal method for testing membership of the cache
+        /// </summary>
+        /// <returns>The ContentTypes in the cache in the MediaInfoCache</returns>
+        internal static IEnumerable<string> GetCacheKeys()
+        {
+            return MatchInfoCache.GetKeys();
         }
 
         /// <summary>
@@ -908,7 +917,7 @@ namespace Microsoft.OData
             {
                 this.MediaTypeResolver = resolver;
                 this.PayloadKind = payloadKind;
-                this.ContentTypeName = contentTypeName;
+                this.ContentTypeName = RemoveBoundary(contentTypeName);
             }
 
             /// <summary>
@@ -924,7 +933,7 @@ namespace Microsoft.OData
             /// <summary>
             /// Name of content type.
             /// </summary>
-            private string ContentTypeName { get; set; }
+            internal string ContentTypeName { get; set; }
 
             /// <summary>
             /// Returns a value indicating whether this instance is equal to a specified object.
@@ -967,6 +976,27 @@ namespace Microsoft.OData
                 int result = this.MediaTypeResolver.GetHashCode() ^ this.PayloadKind.GetHashCode();
                 return this.ContentTypeName != null ? result ^ this.ContentTypeName.GetHashCode() : result;
             }
+
+            /// <summary>
+            /// Multipart/mixed content types have a boundary that varies by request.
+            /// It should not be used as part of the format key.
+            /// </summary>
+            /// <param name="contentTypeName"></param>
+            /// <returns></returns>
+            private static string RemoveBoundary(string contentTypeName)
+            {
+                if (contentTypeName.StartsWith("multipart", StringComparison.OrdinalIgnoreCase))
+                {
+                    // our formatters don't care about parameters for multipart, so just strip them all out for simplicity
+                    int parameter = contentTypeName.IndexOf(';');
+                    if (parameter > 0)
+                    {
+                        return contentTypeName.Substring(0, parameter);
+                    }
+                }
+
+                return contentTypeName;
+            }
         }
 
         /// <summary>
@@ -982,10 +1012,10 @@ namespace Microsoft.OData
             /// <summary>
             /// Constructor.
             /// </summary>
-            /// <param name="maxSize">Max size of the elements that the cache can contain.</param>
-            public MatchInfoConcurrentCache(int maxSize)
+            /// <param name="initialSize">Initial size of the cache.</param>
+            public MatchInfoConcurrentCache(int initialSize)
             {
-                this.dict = new ConcurrentDictionary<MatchInfoCacheKey, MediaTypeMatchInfo>(4, maxSize);
+                this.dict = new ConcurrentDictionary<MatchInfoCacheKey, MediaTypeMatchInfo>(4, initialSize);
             }
 
             /// <summary>
@@ -1017,6 +1047,15 @@ namespace Microsoft.OData
                     this.dict.Clear();
                     this.dict.TryAdd(key, value);
                 }
+            }
+
+            /// <summary>
+            /// Internal method for validating expected elements in the cache
+            /// </summary>
+            /// <returns>ContentType of items in the cache</returns>
+            internal IEnumerable<string> GetKeys()
+            {
+                return this.dict.Keys.Select(k => k.ContentTypeName);
             }
         }
     }

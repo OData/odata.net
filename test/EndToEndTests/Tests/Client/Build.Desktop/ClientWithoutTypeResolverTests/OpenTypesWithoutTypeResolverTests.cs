@@ -16,6 +16,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
     using Xunit.Abstractions;
     using Xunit;
 
+    [TestCaseOrderer("Microsoft.Test.OData.Tests.Client.PriorityOrderer", "Microsoft.Test.OData.Tests.Client")]
     public class OpenTypesWithoutTypeResolverTests : EndToEndTestBase
     {
         #region Test Data
@@ -87,7 +88,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
         }
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
-        [Fact]
+        [Fact, TestPriority(3)]
         public void ExpandQuery()
         {
             var contextWrapper = this.CreateContext();
@@ -97,7 +98,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
         }
 #endif
 
-        [Fact]
+        [Fact, TestPriority(4)]
         public void ProjectionQuery()
         {
             var contextWrapper = this.CreateContext();
@@ -106,7 +107,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
             var results = query.ToList();
         }
 
-        [Fact]
+        [Fact, TestPriority(2)]
         public void DerivedTypesQuery()
         {
             var contextWrapper = this.CreateContext();
@@ -115,7 +116,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
             var results = query.ToArray();
         }
 
-        [Fact]
+        [Fact,TestPriority(1)]
         public void BaseTypeQueryRealizesDerivedTypeObject()
         {
             var contextWrapper = this.CreateContext();
@@ -129,7 +130,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
             Assert.True(row is IndexedRow);
         }
 
-        [Fact]
+        [Fact, TestPriority(5)]
         public void UpdateOpenProperties()
         {
             var contextWrapper = this.CreateContext();

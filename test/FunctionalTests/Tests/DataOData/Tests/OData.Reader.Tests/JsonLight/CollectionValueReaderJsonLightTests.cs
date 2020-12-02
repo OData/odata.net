@@ -67,13 +67,13 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadElement = PayloadBuilder.Property("PrimitiveCollection",
                         PayloadBuilder.PrimitiveMultiValue("Collection(Edm.Int32)"))
                         .JsonRepresentation(
-                            "{" + 
+                            "{" +
                             "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Collection(Edm.Int32)\"," +
                             "\"value\":null" +
                             "}")
                         .ExpectedProperty(owningType, "PrimitiveCollection"),
                     SkipTestConfiguration = tc => tc.IsRequest,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_NullNamedValueForNonNullableType", "value", "Collection(Edm.Int32)")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_NullNamedValueForNullableType", "value", "Collection(Edm.Int32)")
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {

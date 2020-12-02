@@ -75,8 +75,8 @@ ODataException_GeneralError=An error occurred while processing the OData message
 ODataErrorException_GeneralError=An error was read from the payload. See the 'Error' property for more details.
 ODataUriParserException_GeneralError=An error occurred while parsing part of the URI.
 
-ODataUrlValidationError_SelectRequired = '{0}' is missing a $select clause. All property paths, expands, and selects of complex types should include a $select statement.
-ODataUrlValidationError_InvalidRule = Exception thrown by invalid rule {0}. {1}
+ODataUrlValidationError_SelectRequired='{0}' is missing a $select clause. All property paths, expands, and selects of complex types should include a $select statement.
+ODataUrlValidationError_InvalidRule=Exception thrown by invalid rule {0}. {1}
 
 ODataMessageWriter_WriterAlreadyUsed=The ODataMessageWriter has already been used to write a message payload. An ODataMessageWriter can only be used once to write a payload for a given message.
 ODataMessageWriter_EntityReferenceLinksInRequestNotAllowed=Top-level entity reference link collection payloads are not allowed in requests.
@@ -275,7 +275,9 @@ ODataUtils_ModelDoesNotHaveContainer=The provided model does not contain an enti
 ReaderUtils_EnumerableModified=The value returned by the '{0}' property cannot be modified until the end of the owning resource is reported by the reader.
 
 ReaderValidationUtils_NullValueForNonNullableType=A null value was found with the expected type '{0}[Nullable=False]'. The expected type '{0}[Nullable=False]' does not allow null values.
+ReaderValidationUtils_NullValueForNullableType=A null value was found for a collection of type '{0}[Nullable=True]. Collection-valued properties with Nullable=True can contain null values, but collection-valued properties cannot themselves be null.
 ReaderValidationUtils_NullNamedValueForNonNullableType=A null value was found for the property named '{0}', which has the expected type '{1}[Nullable=False]'. The expected type '{1}[Nullable=False]' does not allow null values.
+ReaderValidationUtils_NullNamedValueForNullableType=A null value was found for the property named '{0}', which has the expected type '{1}[Nullable=True]'. The expected type '{1}[Nullable=True]' cannot be null but it can have null values.
 ReaderValidationUtils_EntityReferenceLinkMissingUri=No URI value was found for an entity reference link. A single URI value was expected.
 ReaderValidationUtils_ValueWithoutType=A value without a type name was found and no expected type is available. When the model is specified, each value in the payload must have a type which can be either specified in the payload, explicitly by the caller or implicitly inferred from the parent value.
 ReaderValidationUtils_ResourceWithoutType=A resource without a type name was found, but no expected type was specified. To allow entries without type information, the expected type must also be specified when the model is specified.
@@ -437,10 +439,10 @@ WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint=The value type 
 XmlReaderExtension_InvalidNodeInStringValue=An XML node of type '{0}' was found in a string value. An element with a string value can only contain Text, CDATA, SignificantWhitespace, Whitespace or Comment nodes.
 XmlReaderExtension_InvalidRootNode=An XML node of type '{0}' was found at the root level. The root level of an OData payload must contain a single XML element and no text nodes.
 
-
 ODataMetadataInputContext_ErrorReadingMetadata=The metadata document could not be read from the message content.\r\n{0}
 
 ODataMetadataOutputContext_ErrorWritingMetadata=The metadata document could not be written as specified.\r\n{0}
+ODataMetadataOutputContext_NotSupportJsonMetadata=The JSON metadata is not supported at this platform. It's only supported at platform implementing .NETStardard 2.0.
 
 ODataAtomDeserializer_RelativeUriUsedWithoutBaseUriSpecified=A relative URI value '{0}' was specified in the payload, but no base URI for it was found. When the payload contains a relative URI, there must be an xml:base in the payload or else a base URI must specified in the reader settings.
 
@@ -829,6 +831,7 @@ UriParserMetadata_MultipleMatchingNavigationSourcesFound=More than one navigatio
 UriParserMetadata_MultipleMatchingTypesFound=More than one types match the name '{0}' were found in model.
 UriParserMetadata_MultipleMatchingKeysFound=More than one keys match the name '{0}' were found.
 UriParserMetadata_MultipleMatchingParametersFound=More than one parameters match the name '{0}' were found.
+UriValidator_ValidatorMustUseSameModelAsParser=The UrlValidator used to validate an ODataUri must use the same Model as the ODataUriParser.
 
 PathParser_EntityReferenceNotSupported=The request URI is not valid. $ref cannot be applied to the segment '{0}' since $ref can only follow an entity segment or entity collection segment.
 PathParser_CannotUseValueOnCollection=$value cannot be applied to a collection.

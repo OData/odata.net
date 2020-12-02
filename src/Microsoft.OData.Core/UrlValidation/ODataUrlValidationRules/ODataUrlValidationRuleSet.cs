@@ -5,12 +5,14 @@
 //--------
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.OData.UriParser.Validation
 {
     /// <summary>
-    /// A collection of <see cref="ODataUrlValidationRule"s/>
+    /// A collection of <see cref="ODataUrlValidationRule" />
     /// </summary>
+    [SuppressMessage("Naming", "CA1710:Identifiers should have correct suffix", Justification = "Set is more meaning than collection.")]
     public sealed class ODataUrlValidationRuleSet : List<ODataUrlValidationRule>
     {
         /// <summary>
@@ -29,7 +31,7 @@ namespace Microsoft.OData.UriParser.Validation
         });
 
         /// <summary>
-        /// Constructs an ODataUrlValidationRuleSet given a list of <see cref="ODataUrlValidationRule">s 
+        /// Constructs an ODataUrlValidationRuleSet given a list of <see cref="ODataUrlValidationRule" />.
         /// </summary>
         /// <param name="rules">The rules to include in the ODataUrlValidationRuleSet.</param>
         public ODataUrlValidationRuleSet(IEnumerable<ODataUrlValidationRule> rules) : base(rules)

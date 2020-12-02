@@ -9,6 +9,7 @@ namespace Microsoft.OData.Client
     using System;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -160,7 +161,15 @@ namespace Microsoft.OData.Client
         /// <returns>A task that represents the result of the query operation.</returns>
         public virtual Task<TElement> GetValueAsync()
         {
-            return Task<TElement>.Factory.FromAsync(this.BeginGetValue, this.EndGetValue, null);
+            return GetValueAsync(CancellationToken.None);
+        }
+
+        /// <summary>Starts an asynchronous network operation that executes the query represented by this object instance.</summary>
+        /// <returns>A task that represents the result of the query operation.</returns>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        public virtual Task<TElement> GetValueAsync(CancellationToken cancellationToken)
+        {
+            return this.Context.FromAsync(this.BeginGetValue, this.EndGetValue, cancellationToken);
         }
 
         /// <summary>Ends an asynchronous query request to a data service.</summary>

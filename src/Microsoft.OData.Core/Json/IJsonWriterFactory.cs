@@ -12,7 +12,7 @@ namespace Microsoft.OData.Json
     /// <summary>
     /// Interface of the factory to create JSON writers.
     /// </summary>
-    //[CLSCompliant(false)]
+    [CLSCompliant(false)]
     public interface IJsonWriterFactory
     {
         /// <summary>

@@ -5,9 +5,9 @@
 //--------
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
 
@@ -23,6 +23,7 @@ namespace Microsoft.OData.UriParser.Validation.Rules
         private const string RevisionVersionProperty = "Version";
         private const string RevisionKindProperty = "Kind";
         private const string RevisionDateProperty = "Date";
+        private const string RevisionRemovalDateProperty = "RemovalDate";
         private const string RevisionElementNameProperty = "ElementName";
         private const string RevisionDescriptionProperty = "Description";
         private const string RevisionKindDeprecated = "deprecated";
@@ -36,8 +37,7 @@ namespace Microsoft.OData.UriParser.Validation.Rules
         {
             Validate(segment, segment.Type.Definition.AsElementType(), context);
         },
-        /*includeImpliedProperties*/ true
-        );
+        /*includeImpliedProperties*/ true);
 
         /// <summary>
         /// Validates that a navigation source is not deprecated
@@ -48,8 +48,7 @@ namespace Microsoft.OData.UriParser.Validation.Rules
         {
             Validate(source, source.EntityType(), context);
         },
-        /*includeImpliedProperties*/ true
-        );
+        /*includeImpliedProperties*/ true);
 
         /// <summary>
         /// Validates that a type is not deprecated
@@ -61,13 +60,13 @@ namespace Microsoft.OData.UriParser.Validation.Rules
             string message;
             string version;
             Date? date;
-            if (IsDeprecated(context.Model, edmType, out message, out version, out date))
+            Date? removalDate;
+            if (IsDeprecated(context.Model, edmType, out message, out version, out date, out removalDate))
             {
-                context.Messages.Add(CreateUrlValidationMessage(edmType.FullTypeName(), message, version, date));
+                context.Messages.Add(CreateUrlValidationMessage(edmType.FullTypeName(), message, version, date, removalDate));
             }
         },
-        /*includeImpliedProperties*/ true
-        );
+        /*includeImpliedProperties*/ true);
 
         /// <summary>
         /// Helper function to create an ODataUrlValidationMessage
@@ -76,13 +75,19 @@ namespace Microsoft.OData.UriParser.Validation.Rules
         /// <param name="message">The deprecation message.</param>
         /// <param name="version">The deprecation version, if specified.</param>
         /// <param name="date">The deprecation date, if specified.</param>
+        /// <param name="removalDate">The removal date, if specified.</param>
         /// <returns>An ODataUrlValidationMessage representing the deprecated element.</returns>
-        private static ODataUrlValidationMessage CreateUrlValidationMessage(string elementName, string message, string version, Date? date)
+        private static ODataUrlValidationMessage CreateUrlValidationMessage(string elementName, string message, string version, Date? date, Date? removalDate)
         {
             ODataUrlValidationMessage error = new ODataUrlValidationMessage(ODataUrlValidationMessageCodes.DeprecatedElement, message, Severity.Warning);
             if (date != null)
             {
                 error.ExtendedProperties.Add(RevisionDateProperty, date);
+            }
+
+            if (removalDate != null)
+            {
+                error.ExtendedProperties.Add(RevisionRemovalDateProperty, removalDate);
             }
 
             if (!String.IsNullOrEmpty(version))
@@ -109,13 +114,10 @@ namespace Microsoft.OData.UriParser.Validation.Rules
             string message;
             string version;
             Date? date;
-            if (IsDeprecated(context.Model, element, out message, out version, out date))
+            Date? removalDate;
+            if (IsDeprecated(context.Model, element, out message, out version, out date, out removalDate))
             {
-                context.Messages.Add(CreateUrlValidationMessage(element.Name, message, version, date));
-            }
-            else if (IsDeprecated(context.Model, elementType, out message, out version, out date))
-            {
-                context.Messages.Add(CreateUrlValidationMessage(element.Name, message, version, date));
+                context.Messages.Add(CreateUrlValidationMessage(element.Name, message, version, date, removalDate));
             }
         }
 
@@ -127,16 +129,16 @@ namespace Microsoft.OData.UriParser.Validation.Rules
         /// <param name="message">The returned deprecation message if the element is deprecated.</param>
         /// <param name="version">The returned version if the element is deprecated, if specified.</param>
         /// <param name="date">The returned date if the element is deprecated, if specified.</param>
+        /// <param name="removalDate">The returned removal date if the element is deprecated, if specified.</param>
         /// <returns>True if the element is marked as deprecated, otherwise false.</returns>
-        private static bool IsDeprecated(IEdmModel model, IEdmElement element, out string message, out string version, out Date? date)
+        private static bool IsDeprecated(IEdmModel model, IEdmElement element, out string message, out string version, out Date? date, out Date? removalDate)
         {
-            IEdmVocabularyAnnotatable annotatedElement = element as IEdmVocabularyAnnotatable;
-            if (annotatedElement != null)
+            if (!(element is IEdmPrimitiveType))
             {
-                foreach (IEdmVocabularyAnnotation annotation in annotatedElement.VocabularyAnnotations(model))
+                IEdmVocabularyAnnotatable annotatedElement = element as IEdmVocabularyAnnotatable;
+                if (annotatedElement != null)
                 {
-                    if (String.Equals(annotation.Term.FullName(), CoreVocabularyConstants.Revisions, StringComparison.OrdinalIgnoreCase) ||
-                        String.Equals(annotation.Term.FullName(), DefaultCoreAlias + "." + RevisionTerm, StringComparison.OrdinalIgnoreCase))
+                    foreach (IEdmVocabularyAnnotation annotation in GetRevisionAnnotations(model, annotatedElement))
                     {
                         IEdmCollectionExpression collectionExpression = annotation.Value as IEdmCollectionExpression;
                         if (collectionExpression != null)
@@ -147,6 +149,7 @@ namespace Microsoft.OData.UriParser.Validation.Rules
                                 message = string.Empty;
                                 version = string.Empty;
                                 date = null;
+                                removalDate = null;
                                 IEdmRecordExpression record = versionRecord as IEdmRecordExpression;
                                 if (record != null)
                                 {
@@ -167,28 +170,45 @@ namespace Microsoft.OData.UriParser.Validation.Rules
                                                         continue;
                                                     }
                                                 }
+
                                                 break;
+
                                             case RevisionVersionProperty:
                                                 IEdmStringConstantExpression versionValue = property.Value as IEdmStringConstantExpression;
                                                 if (versionValue != null)
                                                 {
                                                     version = versionValue.Value;
                                                 }
+
                                                 break;
+
                                             case RevisionDescriptionProperty:
                                                 IEdmStringConstantExpression descriptionValue = property.Value as IEdmStringConstantExpression;
                                                 if (descriptionValue != null)
                                                 {
                                                     message = descriptionValue.Value;
                                                 }
+
                                                 break;
+
                                             case RevisionDateProperty:
                                                 IEdmDateConstantExpression dateValue = property.Value as IEdmDateConstantExpression;
                                                 if (dateValue != null)
                                                 {
                                                     date = dateValue.Value;
                                                 }
+
                                                 break;
+
+                                            case RevisionRemovalDateProperty:
+                                                IEdmDateConstantExpression removalDateValue = property.Value as IEdmDateConstantExpression;
+                                                if (removalDateValue != null)
+                                                {
+                                                    removalDate = removalDateValue.Value;
+                                                }
+
+                                                break;
+
                                             default:
                                                 break;
                                         }
@@ -206,8 +226,52 @@ namespace Microsoft.OData.UriParser.Validation.Rules
             }
 
             message = version = string.Empty;
-            date = null;
+            date = removalDate = null;
             return false;
+        }
+
+        /// <summary>
+        /// Get Revision annotations directly applied to a model element (not including inherited annotations)
+        /// </summary>
+        /// <param name="model">The root model to search for annotations (including referenced models).</param>
+        /// <param name="annotatedElement">The element to search for annotations on.</param>
+        /// <returns>An IEnumerable of all annotations defined on the annotatedElement.</returns>
+        private static IEnumerable<IEdmVocabularyAnnotation> GetRevisionAnnotations(IEdmModel model, IEdmVocabularyAnnotatable annotatedElement)
+        {
+            foreach(IEdmVocabularyAnnotation annotation in model.FindDeclaredVocabularyAnnotations(annotatedElement))
+            {
+                if (isRevisionsAnnotation(annotation))
+                {
+                    yield return annotation;
+                }
+            }
+
+            // look in referenced models
+            foreach (IEdmModel referencedModel in model.ReferencedModels)
+            {
+                // Omit the default models
+                if (referencedModel != EdmCoreModel.Instance && referencedModel != CoreVocabularyModel.Instance && referencedModel != CapabilitiesVocabularyModel.Instance)
+                {
+                    foreach(IEdmVocabularyAnnotation annotation in referencedModel.FindDeclaredVocabularyAnnotations(annotatedElement))
+                    {
+                        if (isRevisionsAnnotation(annotation))
+                        {
+                            yield return annotation;
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns true if the annotation is the Revisions annotation, otherwise false
+        /// </summary>
+        /// <param name="annotation">The annotation.</param>
+        /// <returns>True if the annotation is the Revisions annotation, otherwise false.</returns>
+        private static bool isRevisionsAnnotation(IEdmVocabularyAnnotation annotation)
+        {
+            return string.Equals(annotation.Term.FullName(), CoreVocabularyConstants.Revisions, StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(annotation.Term.FullName(), DefaultCoreAlias + "." + RevisionTerm, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

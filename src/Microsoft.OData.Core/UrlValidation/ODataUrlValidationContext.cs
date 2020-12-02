@@ -26,6 +26,11 @@ namespace Microsoft.OData.UriParser.Validation
         public IEdmModel Model { get; private set; }
 
         /// <summary>
+        /// The validated types associated with this validation context.
+        /// </summary>
+        internal ISet<IEdmType> ValidatedTypes { get; }
+
+        /// <summary>
         /// The ODataUrlValidator associated with this validation context.
         /// </summary>
         internal ODataUrlValidator UrlValidator { get; private set; }
@@ -52,6 +57,7 @@ namespace Microsoft.OData.UriParser.Validation
             this.UrlValidator = urlValidator;
             this.ExpressionValidator = new ExpressionValidator((item) => urlValidator.ValidateItem(item, this));
             this.PathValidator = new PathSegmentValidator(this);
+            this.ValidatedTypes = new HashSet<IEdmType>();
         }
 
         /// <summary>

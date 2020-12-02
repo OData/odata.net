@@ -720,7 +720,7 @@ namespace Microsoft.OData.Json
                     }
 
                     // Append everything up to the \ character to the value.
-                    valueBuilder.Append(this.ConsumeTokenToString(currentCharacterTokenRelativeIndex));
+                    this.ConsumeTokenAppendToBuilder(valueBuilder, currentCharacterTokenRelativeIndex);
                     currentCharacterTokenRelativeIndex = 0;
                     Debug.Assert(this.characterBuffer[this.tokenStartIndex] == '\\', "We should have consumed everything up to the escape character.");
 
@@ -782,18 +782,21 @@ namespace Microsoft.OData.Json
                 else if (character == openingQuoteCharacter)
                 {
                     // Consume everything up to the quote character
-                    string result = this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+                    string result;
+                    if (valueBuilder != null)
+                    {
+                        this.ConsumeTokenAppendToBuilder(valueBuilder, currentCharacterTokenRelativeIndex);
+                        result = valueBuilder.ToString();
+                    }
+                    else
+                    {
+                        result = this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+                    }
+
                     Debug.Assert(this.characterBuffer[this.tokenStartIndex] == openingQuoteCharacter, "We should have consumed everything up to the quote character.");
 
                     // Consume the quote character as well.
                     this.tokenStartIndex++;
-
-                    if (valueBuilder != null)
-                    {
-                        valueBuilder.Append(result);
-                        result = valueBuilder.ToString();
-                    }
-
                     return result;
                 }
                 else
@@ -1226,6 +1229,21 @@ namespace Microsoft.OData.Json
             this.tokenStartIndex += characterCount;
 
             return result;
+        }
+
+        /// <summary>
+        /// Consumes the <paramref name="characterCount"/> characters starting at the start of the token
+        /// and append the token string to the <paramref name="builder"/>.
+        /// </summary>
+        /// <param name="builder">The StringBuilder instance to append the token to.</param>
+        /// <param name="characterCount">The number of characters after the token start to consume.</param>
+        private void ConsumeTokenAppendToBuilder(StringBuilder builder, int characterCount)
+        {
+            Debug.Assert(characterCount >= 0, "characterCount >= 0");
+            Debug.Assert(this.tokenStartIndex + characterCount <= this.storedCharacterCount, "characterCount specified characters outside of the available range.");
+
+            builder.Append(this.characterBuffer, this.tokenStartIndex, characterCount);
+            this.tokenStartIndex += characterCount;
         }
 
         /// <summary>

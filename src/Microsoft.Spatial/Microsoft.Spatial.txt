@@ -19,6 +19,7 @@ GmlReader_PosNeedTwoNumbers=Incorrect GML Format: a pos element must contain at 
 GmlReader_PosListNeedsEvenCount=Incorrect GML Format: a posList element must contain an even number of coordinates.
 GmlReader_InvalidSrsName=Incorrect GML Format: a srsName attribute must begin with the namespace "{0}".
 GmlReader_InvalidAttribute=The attribute '{0}' on element '{1}' is not supported.
+GmlReader_InvalidSrsDimension=Incorrect GML Format: a srsDimension attribute must be either "2" or "3".
 
 WellKnownText_UnexpectedToken=Expecting token type "{0}" with text "{1}" but found "{2}".
 WellKnownText_UnexpectedCharacter=Unexpected character '{0}' found in text.

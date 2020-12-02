@@ -14,6 +14,7 @@ pr:
 
 pool:
   vmImage: 'windows-latest'
+  
 
 variables:
   buildPlatform: 'Any CPU'
@@ -77,17 +78,56 @@ steps:
     version: '3.1.x'
 
 - task: DotNetCoreCLI@2
-  displayName: 'Build Unit Test'  
+  displayName: 'Build Unit Test - DI'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    projects: |
+     $(Build.SourcesDirectory)\test\Common\Microsoft.Test.OData.DependencyInjection\Microsoft.Test.OData.DependencyInjection.csproj
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build Unit Test - Common'  
   inputs:
     command: 'build'
     arguments: '--configuration $(BuildConfiguration) --no-incremental'
     projects: |
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.TestCommon\Microsoft.OData.TestCommon.csproj
-     $(Build.SourcesDirectory)\test\Common\Microsoft.Test.OData.DependencyInjection\Microsoft.Test.OData.DependencyInjection.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
+     
+- task: DotNetCoreCLI@2
+  displayName: 'Build Unit Test - EDM'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    projects: |
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj
+      
+     
+- task: DotNetCoreCLI@2
+  displayName: 'Build Unit Test - Spatial'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    projects: |
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
+       
+     
+- task: DotNetCoreCLI@2
+  displayName: 'Build Unit Test - Core'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    projects: |
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj
+
+     
+- task: DotNetCoreCLI@2
+  displayName: 'Build Unit Test - Client'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    projects: |
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj          
+          
 
 - task: DotNetCoreCLI@2
   displayName: 'Build E2E Test'  
@@ -203,11 +243,12 @@ steps:
      popd
     preferredAzurePowerShellVersion: 5.1.1
 
+
 - task: DotNetCoreCLI@2
   displayName: 'Spatial Test'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --no-build'
+    arguments: '--configuration $(BuildConfiguration) --no-build --collect "Code coverage"'
     projects: |      
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
 
@@ -215,7 +256,7 @@ steps:
   displayName: 'EDM Test'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --no-build'
+    arguments: '--configuration $(BuildConfiguration) --no-build --collect "Code coverage"'
     projects: |      
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj
 
@@ -223,7 +264,7 @@ steps:
   displayName: 'Core Test'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --no-build'
+    arguments: '--configuration $(BuildConfiguration) --no-build --collect "Code coverage"'
     projects: |      
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
 
@@ -231,7 +272,7 @@ steps:
   displayName: 'Client Test'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --no-build'
+    arguments: '--configuration $(BuildConfiguration) --no-build --collect "Code coverage"'
     projects: |      
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj
 
@@ -239,13 +280,13 @@ steps:
   displayName: 'Test - E2E Test Suite'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --no-build'
+    arguments: '--configuration $(BuildConfiguration) --no-build --collect "Code coverage"'
     projects: |      
      $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
 
 - task: DotNetCoreCLI@2
   timeoutInMinutes: 100
-  displayName: 'Test - Regression Test Suite'
+  displayName: 'Test - Regression Test Suite --collect "Code coverage"'
   inputs:
     command: 'test'
     arguments: '--configuration $(BuildConfiguration) --no-build'
@@ -268,6 +309,8 @@ steps:
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ClientCSharpUnitTests\Microsoft.Data.WebClientCSharp.UnitTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests\Microsoft.Data.Web.UnitTests.csproj
   enabled: true
+
+
 
 # CredScan
 - task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@2

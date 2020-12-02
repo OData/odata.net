@@ -856,13 +856,27 @@ namespace Microsoft.OData
                 supportedPayloadKinds);
         }
 
-        /// <summary>Reads the message body as metadata document.</summary>
+        /// <summary>Reads the message body as metadata document. It can read JSON/XML CSDL based on the content type.</summary>
         /// <returns>Returns <see cref="Microsoft.OData.Edm.IEdmModel" />.</returns>
         public IEdmModel ReadMetadataDocument()
         {
             this.VerifyCanReadMetadataDocument();
             return this.ReadFromInput(
-                (context) => context.ReadMetadataDocument(null),
+                (context) => context.ReadMetadataDocument(),
+                ODataPayloadKind.MetadataDocument);
+        }
+
+        /// <summary>
+        /// Reads the message body as metadata document. It can read CSDL based on the content type using the given settings.
+        /// Be NOTED: If the setting is not related to the metadata format, it will be ignored.
+        /// </summary>
+        /// <param name="csdlReaderSettings">The given CSDL reader settings.</param>
+        /// <returns>Returns <see cref="IEdmModel" />.</returns>
+        public IEdmModel ReadMetadataDocument(Edm.Csdl.CsdlReaderSettingsBase csdlReaderSettings)
+        {
+            this.VerifyCanReadMetadataDocument();
+            return this.ReadFromInput(
+                (context) => context.ReadMetadataDocument(csdlReaderSettings),
                 ODataPayloadKind.MetadataDocument);
         }
 
@@ -908,10 +922,8 @@ namespace Microsoft.OData
         private static IServiceProvider GetContainer<T>(T message)
             where T : class
         {
-
             var containerProvider = message as IContainerProvider;
             return containerProvider == null ? null : containerProvider.Container;
- 
         }
 
         private static IEdmModel GetModel(IServiceProvider container)

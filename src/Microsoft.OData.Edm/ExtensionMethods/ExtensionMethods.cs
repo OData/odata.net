@@ -31,8 +31,8 @@ namespace Microsoft.OData.Edm
         private const int ContainerExtendsMaxDepth = 100;
         private const string CollectionTypeFormat = EdmConstants.Type_Collection + "({0})";
 
-        private static readonly IEnumerable<IEdmStructuralProperty> EmptyStructuralProperties = new Collection<IEdmStructuralProperty>();
-        private static readonly IEnumerable<IEdmNavigationProperty> EmptyNavigationProperties = new Collection<IEdmNavigationProperty>();
+        private static readonly IEnumerable<IEdmStructuralProperty> EmptyStructuralProperties = Enumerable.Empty<IEdmStructuralProperty>();
+        private static readonly IEnumerable<IEdmNavigationProperty> EmptyNavigationProperties = Enumerable.Empty<IEdmNavigationProperty>();
 
         #region IEdmModel
 
@@ -1593,23 +1593,27 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(type, "type");
 
-            var primitiveType = type as EdmCoreModelPrimitiveType;
-            if (primitiveType != null)
+            if (type.TypeKind == EdmTypeKind.Primitive)
             {
-                return primitiveType.FullName;
+                EdmCoreModelPrimitiveType primitiveType = type as EdmCoreModelPrimitiveType;
+                if (primitiveType != null)
+                {
+                    return primitiveType.FullName;
+                }
             }
 
-            var namedDefinition = type as IEdmSchemaElement;
-            var collectionType = type as IEdmCollectionType;
-            if (collectionType == null)
+            IEdmSchemaElement namedDefinition;
+            if (type.TypeKind != EdmTypeKind.Collection)
             {
+                namedDefinition = type as IEdmSchemaElement;
                 return namedDefinition != null ? namedDefinition.FullName() : null;
             }
-
-            // Handle collection case.
-            namedDefinition = collectionType.ElementType.Definition as IEdmSchemaElement;
-
-            return namedDefinition != null ? string.Format(CultureInfo.InvariantCulture, CollectionTypeFormat, namedDefinition.FullName()) : null;
+            else
+            {
+                // Handle collection case.
+                namedDefinition = (type as IEdmCollectionType).ElementType.Definition as IEdmSchemaElement;
+                return namedDefinition != null ? string.Format(CultureInfo.InvariantCulture, CollectionTypeFormat, namedDefinition.FullName()) : null;
+            }
         }
 
         /// <summary>
@@ -1618,9 +1622,13 @@ namespace Microsoft.OData.Edm
         /// <param name="type">Reference to the calling object.</param>
         /// <returns>The element type of this references definition.</returns>
         public static IEdmType AsElementType(this IEdmType type)
-        {
-            IEdmCollectionType collectionType = type as IEdmCollectionType;
-            return (collectionType != null) ? collectionType.ElementType.Definition : type;
+        {   
+            if(type == null)
+            {
+                return type;
+            }
+
+            return (type.TypeKind == EdmTypeKind.Collection) ? (type as IEdmCollectionType).ElementType.Definition : type;
         }
 
         #endregion
@@ -1684,7 +1692,13 @@ namespace Microsoft.OData.Edm
         public static IEnumerable<IEdmStructuralProperty> DeclaredStructuralProperties(this IEdmStructuredType type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
-            return type.DeclaredProperties.OfType<IEdmStructuralProperty>();
+            foreach (IEdmProperty property in type.DeclaredProperties)
+            {
+                if (property.PropertyKind == EdmPropertyKind.Structural)
+                {
+                    yield return property as IEdmStructuralProperty;
+                }
+            }
         }
 
         /// <summary>
@@ -1695,7 +1709,13 @@ namespace Microsoft.OData.Edm
         public static IEnumerable<IEdmStructuralProperty> StructuralProperties(this IEdmStructuredType type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
-            return type.Properties().OfType<IEdmStructuralProperty>();
+            foreach(IEdmProperty property in type.Properties())
+            {
+                if(property.PropertyKind == EdmPropertyKind.Structural)
+                {
+                    yield return property as IEdmStructuralProperty;
+                }
+            }
         }
         #endregion
 

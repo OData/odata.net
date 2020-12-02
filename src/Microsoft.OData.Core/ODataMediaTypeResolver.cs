@@ -59,7 +59,11 @@ namespace Microsoft.OData
             },
             {
                 ODataPayloadKind.MetadataDocument,
-                new[] { new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeXmlSubType), ODataFormat.Metadata) }
+                new[]
+                {
+                    new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeXmlSubType), ODataFormat.Metadata),
+                    new ODataMediaTypeFormat(new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType), ODataFormat.Metadata)
+                }
             },
             {
                 ODataPayloadKind.Asynchronous,

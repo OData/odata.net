@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Xml;
 using Microsoft.OData.Metadata;
@@ -61,6 +62,54 @@ namespace Microsoft.OData
 
                 throw;
             }
+        }
+
+        /// <summary>
+        /// Read a metadata document.
+        /// This method reads the metadata document from the input and returns
+        /// an <see cref="IEdmModel"/> that represents the read metadata document.
+        /// </summary>
+        /// <param name="csdlReaderSettings">The given CSDL reader settings.</param>
+        /// <returns>An <see cref="IEdmModel"/> representing the read metadata document.</returns>
+        internal override IEdmModel ReadMetadataDocument(CsdlReaderSettingsBase csdlReaderSettings)
+        {
+            // Be noted: If the input setting is not XML CSDL setting, let's use the default setting.
+            CsdlReaderSettings settings = csdlReaderSettings as CsdlReaderSettings;
+            if (settings == null)
+            {
+                settings = new CsdlReaderSettings();
+            }
+
+            // Use the setting to reader XML JSON
+            IEdmModel model;
+            IEnumerable<EdmError> errors;
+            if (!CsdlReader.TryParse(this.xmlReader, Enumerable.Empty<IEdmModel>(), settings, out model, out errors))
+            {
+                Debug.Assert(errors != null, "errors != null");
+
+                StringBuilder builder = new StringBuilder();
+                foreach (EdmError error in errors)
+                {
+                    builder.AppendLine(error.ToString());
+                }
+
+                throw new ODataException(Strings.ODataMetadataInputContext_ErrorReadingMetadata(builder.ToString()));
+            }
+
+            Debug.Assert(model != null, "model != null");
+
+            return model;
+        }
+
+        /// <summary>
+        /// Read a metadata document.
+        /// This method reads the metadata document from the input and returns
+        /// an <see cref="IEdmModel"/> that represents the read metadata document.
+        /// </summary>
+        /// <returns>An <see cref="IEdmModel"/> representing the read metadata document.</returns>
+        internal override IEdmModel ReadMetadataDocument()
+        {
+            return this.ReadMetadataDocument(getReferencedModelReaderFunc: null);
         }
 
         /// <summary>

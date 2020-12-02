@@ -16,7 +16,7 @@ namespace Microsoft.OData.Tests
 
         public InMemoryMessage()
         {
-            headers = new Dictionary<string, string>();
+            headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         }
 
         public IEnumerable<KeyValuePair<string, string>> Headers

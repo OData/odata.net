@@ -96,6 +96,7 @@ namespace Microsoft.OData.UriParser.Validation.ValidationEngine
         {
             validate(nodeIn);
             validate(nodeIn.NavigationProperty);
+
             // don't validate TypeReferences, only types, as nullability is only meaningful in context of model element
             validate(nodeIn.CollectionType.CollectionDefinition());
             validate(nodeIn.ItemType.Definition);
@@ -111,6 +112,7 @@ namespace Microsoft.OData.UriParser.Validation.ValidationEngine
         {
             validate(nodeIn);
             validate(nodeIn.Property);
+
             // don't validate TypeReferences, only types, as nullability is only meaningful in context of model element
             validate(nodeIn.CollectionType.CollectionDefinition());
             validate(nodeIn.ItemType.Definition);
@@ -125,6 +127,7 @@ namespace Microsoft.OData.UriParser.Validation.ValidationEngine
         public override bool Visit(CollectionOpenPropertyAccessNode nodeIn)
         {
             validate(nodeIn);
+
             // don't validate TypeReferences, only types, as nullability is only meaningful in context of model element
             validate(nodeIn.CollectionType.CollectionDefinition());
             validate(nodeIn.ItemType.Definition);
@@ -166,6 +169,7 @@ namespace Microsoft.OData.UriParser.Validation.ValidationEngine
             {
                 validate(nodeIn.TypeReference.Definition.AsElementType());
             }
+
             return true;
         }
 
@@ -244,10 +248,12 @@ namespace Microsoft.OData.UriParser.Validation.ValidationEngine
             {
                 validate(function);
             }
+
             foreach (QueryNode param in nodeIn.Parameters)
             {
                 ValidateNode(param);
             }
+
             return true;
         }
 
@@ -264,10 +270,12 @@ namespace Microsoft.OData.UriParser.Validation.ValidationEngine
             {
                 validate(function);
             }
+
             foreach (QueryNode param in nodeIn.Parameters)
             {
                 ValidateNode(param);
             }
+
             return true;
         }
 
@@ -285,10 +293,12 @@ namespace Microsoft.OData.UriParser.Validation.ValidationEngine
             {
                 validate(function);
             }
+
             foreach (QueryNode param in nodeIn.Parameters)
             {
                 ValidateNode(param);
             }
+
             return true;
         }
 
@@ -306,10 +316,12 @@ namespace Microsoft.OData.UriParser.Validation.ValidationEngine
             {
                 validate(function);
             }
+
             foreach (QueryNode param in nodeIn.Parameters)
             {
                 ValidateNode(param);
             }
+
             return true;
         }
 

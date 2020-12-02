@@ -262,6 +262,24 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
+        /// Validate the dependsOnIds.
+        /// </summary>
+        /// <param name="contentId">The content Id.</param>
+        /// <param name="dependsOnIds">The dependsOn ids specifying current request's prerequisites.</param>
+        protected override void ValidateDependsOnIds(string contentId, IEnumerable<string> dependsOnIds)
+        {
+           foreach (var id in dependsOnIds)
+            {
+                // Content-ID cannot be part of dependsOnIds. This is to avoid self referencing.
+                // The dependsOnId must be an existing request ID.
+                if (id == contentId || !this.requestIdToAtomicGroupId.ContainsKey(id))
+                {
+                    throw new ODataException(Strings.ODataBatchReader_DependsOnIdNotFound(id, contentId));
+                }
+            }
+        }
+
+        /// <summary>
         /// Ends a batch - implementation of the actual functionality.
         /// </summary>
         protected override void WriteEndBatchImplementation()

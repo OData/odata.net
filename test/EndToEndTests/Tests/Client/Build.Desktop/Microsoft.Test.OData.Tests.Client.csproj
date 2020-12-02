@@ -4,7 +4,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <AssemblyName>Microsoft.Test.OData.Tests.Client</AssemblyName>
     <RestorePackages>true</RestorePackages>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net452</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
@@ -12,7 +12,7 @@
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
     <NoWarn>$(NoWarn);NU1605</NoWarn>
-   <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
+    <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
   </PropertyGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
@@ -31,17 +31,19 @@
     <EmbeddedResource Remove="ServiceWrapper\**" />
     <None Remove="LegacyReferences\**" />
     <None Remove="ServiceWrapper\**" />
-  </ItemGroup>  
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.0" />
     <PackageReference Include="FluentAssertions" Version="4.1.0" />
     <PackageReference Include="EntityFramework" Version="5.0.0" />
+    <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="11.0.0" />
     <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="System.ServiceModel.Web" Version="1.0.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
-   </ItemGroup> 
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
+  </ItemGroup>
 
   <ItemGroup>
     <Reference Include="..\..\..\..\CommonAssemblies\Microsoft.MadMan.3.1.112712.0\lib\net40\Microsoft.Test.DataDriven.dll">
@@ -79,12 +81,16 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ODataT4CodeGenerator.tt</DependentUpon>
     </Compile>
+    <Compile Include="CancellationTokenTests.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="ODataItemWrapper.cs" />
     <Compile Include="ODataNestedResourceInfoWrapper.cs" />
     <Compile Include="ODataResourceSetWrapper.cs" />
     <Compile Include="ODataResourceWrapper.cs" />
     <Compile Include="ODataWriterHelper.cs" />
+    <Compile Include="PriorityOrderer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestPriorityAttribute.cs" />
     <None Include="..\..\..\..\..\src\CodeGen\ODataT4CodeGenerator.tt">
       <Link>ODataT4CodeGenerator.tt</Link>
       <Generator>TextTemplatingFilePreprocessor</Generator>
@@ -283,5 +289,5 @@
     <Copy SourceFiles="@(VBDSCReferences)" DestinationFiles="@(VBReferences->'$(OutDir)VBDSCReferences\%(Filename)%(Extension)')" />
     <Copy SourceFiles="@(VBReferences)" DestinationFiles="@(VBReferences->'$(OutDir)VBReferences\%(Filename)%(Extension)')" />
   </Target>
-  
+
 </Project>

@@ -71,6 +71,7 @@ namespace Microsoft.OData.UriParser
         /// Add a select item to the current list of selection items
         /// </summary>
         /// <param name="itemToAdd">The item to add</param>
+        /// <param name="getOnlySubset">A boolean value indicating whether to get subset only</param>
         internal void AddToSelectedItems(SelectItem itemToAdd, bool getOnlySubset = false)
         {
             ExceptionUtils.CheckArgumentNotNull(itemToAdd, "itemToAdd");

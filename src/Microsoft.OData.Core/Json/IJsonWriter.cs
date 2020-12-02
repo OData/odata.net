@@ -12,7 +12,7 @@ namespace Microsoft.OData.Json
     /// <summary>
     /// Interface for a class that can write arbitrary JSON.
     /// </summary>
-    //[CLSCompliant(false)]
+    [CLSCompliant(false)]
     public interface IJsonWriter
     {
         /// <summary>

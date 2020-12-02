@@ -6,7 +6,7 @@
     <RootNamespace>ServiceWrapperApp</RootNamespace>
     <AssemblyName>ServiceWrapperApp</AssemblyName>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net452</TargetFrameworks>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
     <RestorePackages>true</RestorePackages>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -20,7 +20,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>$(EnlistmentRoot)\bin\AnyCPU\Debug\Test\Desktop\</OutputPath>
+    <OutputPath>$(EnlistmentRoot)\bin\AnyCPU\Debug\Test\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -29,7 +29,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>$(EnlistmentRoot)\bin\AnyCPU\Release\Test\Desktop\</OutputPath>
+    <OutputPath>$(EnlistmentRoot)\bin\AnyCPU\Release\Test\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>

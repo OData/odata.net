@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using Xunit;
 
@@ -330,6 +331,18 @@ namespace Microsoft.OData.Tests
             this.preferHeader.TrackChanges = false;
             Assert.False(this.preferHeader.TrackChanges);
             Assert.Null(this.requestMessage.GetHeader(PreferHeaderName));
+        }
+
+        [Fact]
+        public void PreferHeaderShouldBeCaseInsensitive()
+        {
+            const int MaxPageSize = 10;
+            this.preferHeader.MaxPageSize = MaxPageSize;
+            Assert.Equal(MaxPageSize, this.preferHeader.MaxPageSize);
+            string expected = $"{MaxPageSizePreference}={MaxPageSize}";
+            Assert.Equal(expected, this.requestMessage.GetHeader(PreferHeaderName.ToLower()));
+            Assert.Equal(expected, this.requestMessage.GetHeader(PreferHeaderName.ToUpper()));
+            Assert.Equal(expected, this.requestMessage.GetHeader("pReFer"));
         }
     }
 }

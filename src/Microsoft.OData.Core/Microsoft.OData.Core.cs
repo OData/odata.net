@@ -251,7 +251,9 @@ namespace Microsoft.OData
         internal const string ODataUtils_ModelDoesNotHaveContainer = "ODataUtils_ModelDoesNotHaveContainer";
         internal const string ReaderUtils_EnumerableModified = "ReaderUtils_EnumerableModified";
         internal const string ReaderValidationUtils_NullValueForNonNullableType = "ReaderValidationUtils_NullValueForNonNullableType";
+        internal const string ReaderValidationUtils_NullValueForNullableType = "ReaderValidationUtils_NullValueForNullableType";
         internal const string ReaderValidationUtils_NullNamedValueForNonNullableType = "ReaderValidationUtils_NullNamedValueForNonNullableType";
+        internal const string ReaderValidationUtils_NullNamedValueForNullableType = "ReaderValidationUtils_NullNamedValueForNullableType";
         internal const string ReaderValidationUtils_EntityReferenceLinkMissingUri = "ReaderValidationUtils_EntityReferenceLinkMissingUri";
         internal const string ReaderValidationUtils_ValueWithoutType = "ReaderValidationUtils_ValueWithoutType";
         internal const string ReaderValidationUtils_ResourceWithoutType = "ReaderValidationUtils_ResourceWithoutType";
@@ -398,6 +400,7 @@ namespace Microsoft.OData
         internal const string XmlReaderExtension_InvalidRootNode = "XmlReaderExtension_InvalidRootNode";
         internal const string ODataMetadataInputContext_ErrorReadingMetadata = "ODataMetadataInputContext_ErrorReadingMetadata";
         internal const string ODataMetadataOutputContext_ErrorWritingMetadata = "ODataMetadataOutputContext_ErrorWritingMetadata";
+        internal const string ODataMetadataOutputContext_NotSupportJsonMetadata = "ODataMetadataOutputContext_NotSupportJsonMetadata";
         internal const string ODataAtomDeserializer_RelativeUriUsedWithoutBaseUriSpecified = "ODataAtomDeserializer_RelativeUriUsedWithoutBaseUriSpecified";
         internal const string ODataAtomPropertyAndValueDeserializer_InvalidCollectionElement = "ODataAtomPropertyAndValueDeserializer_InvalidCollectionElement";
         internal const string ODataAtomPropertyAndValueDeserializer_NavigationPropertyInProperties = "ODataAtomPropertyAndValueDeserializer_NavigationPropertyInProperties";
@@ -720,6 +723,7 @@ namespace Microsoft.OData
         internal const string UriParserMetadata_MultipleMatchingTypesFound = "UriParserMetadata_MultipleMatchingTypesFound";
         internal const string UriParserMetadata_MultipleMatchingKeysFound = "UriParserMetadata_MultipleMatchingKeysFound";
         internal const string UriParserMetadata_MultipleMatchingParametersFound = "UriParserMetadata_MultipleMatchingParametersFound";
+        internal const string UriValidator_ValidatorMustUseSameModelAsParser = "UriValidator_ValidatorMustUseSameModelAsParser";
         internal const string PathParser_EntityReferenceNotSupported = "PathParser_EntityReferenceNotSupported";
         internal const string PathParser_CannotUseValueOnCollection = "PathParser_CannotUseValueOnCollection";
         internal const string PathParser_TypeMustBeRelatedToSet = "PathParser_TypeMustBeRelatedToSet";

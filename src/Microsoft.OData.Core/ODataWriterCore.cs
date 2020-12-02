@@ -1509,6 +1509,7 @@ namespace Microsoft.OData
         /// Start writing a delta link or delta deleted link - implementation of the actual functionality.
         /// </summary>
         /// <param name="deltaLink">Delta (deleted) link to write.</param>
+        /// <returns>The task.</returns>
         private async Task WriteDeltaLinkAsyncImplementation(ODataDeltaLinkBase deltaLink)
         {
             await TaskUtils.GetTaskForSynchronousOperation(() =>
@@ -1585,6 +1586,7 @@ namespace Microsoft.OData
         /// Write primitive value asynchronously - implementation of the actual functionality.
         /// </summary>
         /// <param name="primitiveValue">Primitive value to write.</param>
+        /// <returns>The task.</returns>
         private async Task WritePrimitiveValueAsyncImplementation(ODataPrimitiveValue primitiveValue)
         {
             await InterceptExceptionAsync(async () =>
@@ -1858,7 +1860,6 @@ namespace Microsoft.OData
             }
             else
             {
-
                 if (this.outputContext.Synchronous)
                 {
                     throw new ODataException(Strings.ODataWriterCore_AsyncCallOnSyncWriter);
@@ -2109,6 +2110,7 @@ namespace Microsoft.OData
         /// state ExceptionThrown and then rethrow the exception.
         /// </summary>
         /// <param name="action">The action to execute.</param>
+        /// <returns>The task.</returns>
         private async Task InterceptExceptionAsync(Func<Task> action)
         {
             try

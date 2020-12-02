@@ -139,11 +139,12 @@ namespace Microsoft.OData.UriParser.Validation.ValidationEngine
         {
             ValidateItemAndType(segment);
             ValidateItem(segment.EntitySet);
-            foreach(OperationSegmentParameter parameter in segment.Parameters)
+            foreach (OperationSegmentParameter parameter in segment.Parameters)
             {
                 ValidateItem(parameter);
             }
-            foreach(IEdmOperation operation in segment.Operations)
+
+            foreach (IEdmOperation operation in segment.Operations)
             {
                 ValidateItem(operation);
                 ValidateItem(operation.ReturnType);
@@ -162,6 +163,7 @@ namespace Microsoft.OData.UriParser.Validation.ValidationEngine
             {
                 ValidateItem(parameter);
             }
+
             foreach (IEdmOperation operation in segment.OperationImports)
             {
                 ValidateItem(operation);
@@ -269,7 +271,7 @@ namespace Microsoft.OData.UriParser.Validation.ValidationEngine
             IEdmCollectionType collectionType = segment.EdmType as IEdmCollectionType;
             if (collectionType != null)
             {
-                ValidateItem(collectionType.ElementType);
+                ValidateItem(collectionType.ElementType.Definition);
             }
         }
     }

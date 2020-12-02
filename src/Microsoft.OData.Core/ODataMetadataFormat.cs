@@ -60,7 +60,25 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
 
+            bool isJson = IsJsonMetadata(messageInfo.MediaType);
+
+#if NETSTANDARD2_0
+            if (isJson)
+            {
+                return new ODataMetadataJsonInputContext(messageInfo, messageReaderSettings);
+            }
+            else
+            {
+                return new ODataMetadataInputContext(messageInfo, messageReaderSettings);
+            }
+#else
+            if (isJson)
+            {
+                throw new ODataException(Strings.ODataMetadataOutputContext_NotSupportJsonMetadata);
+            }
+
             return new ODataMetadataInputContext(messageInfo, messageReaderSettings);
+#endif
         }
 
         /// <summary>
@@ -76,7 +94,25 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageWriterSettings, "messageWriterSettings");
 
+            bool isJson = IsJsonMetadata(messageInfo.MediaType);
+
+#if NETSTANDARD2_0
+            if (isJson)
+            {
+                return new ODataMetadataJsonOutputContext(messageInfo, messageWriterSettings);
+            }
+            else
+            {
+                return new ODataMetadataOutputContext(messageInfo, messageWriterSettings);
+            }
+#else
+            if (isJson)
+            {
+                throw new ODataException(Strings.ODataMetadataOutputContext_NotSupportJsonMetadata);
+            }
+
             return new ODataMetadataOutputContext(messageInfo, messageWriterSettings);
+#endif
         }
 
         /// <summary>
@@ -126,6 +162,23 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(messageWriterSettings, "messageWriterSettings");
 
             throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataMetadataFormat_CreateOutputContextAsync));
+        }
+
+        private static bool IsJsonMetadata(ODataMediaType contentType)
+        {
+            // by default, it's XML metadata
+            if (contentType == null)
+            {
+                return false;
+            }
+
+            if (HttpUtils.CompareMediaTypeNames(MimeConstants.MimeApplicationType, contentType.Type) &&
+                HttpUtils.CompareMediaTypeNames(MimeConstants.MimeJsonSubType, contentType.SubType))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>

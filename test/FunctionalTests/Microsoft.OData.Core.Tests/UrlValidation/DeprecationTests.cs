@@ -23,20 +23,25 @@ namespace Microsoft.OData.Tests
         private static IEdmModel model;
 
         [Theory]
-        [InlineData(@"company", "name","state")]
+        [InlineData(@"company", "name", "state")]
         [InlineData(@"company/employees", "employees")]
+        [InlineData(@"company/employees(1)/vehicles", "employees", "vehicle")]
         [InlineData(@"competitors", "competitors", "name", "state")]
         [InlineData(@"company/address", "state")]
         [InlineData(@"company/address/state", "state")]
         [InlineData(@"company/address?$select=state", "state")]
         [InlineData(@"company?$expand=employees", "name", "state", "employees")]
         [InlineData(@"company?$select=name", "name")]
-        [InlineData(@"competitors?$filter=contains(name,'sprocket')", "competitors", "name","state","name")]
+        [InlineData(@"competitors?$filter=contains(name,'sprocket')", "competitors", "name", "state", "name")]
         public static void WithDeprecatedElementsGeneratesErrors(String request, params string[] expectedErrors)
         {
+            string expectedDateAsString = "2020-03-30";
+            Date expectedDate = Date.Parse(expectedDateAsString);
+            string expectedRemovalDateAsString = "2022-03-30";
+            Date expectedRemovalDate = Date.Parse(expectedRemovalDateAsString);
+
             IEdmModel model = GetModel();
             ODataUriParser parser = new ODataUriParser(model, new Uri(request, UriKind.Relative));
-            ODataUri uri = parser.ParseUri();
             
             IEnumerable<ODataUrlValidationMessage> errors;
             ODataUrlValidationRuleSet rules = new ODataUrlValidationRuleSet(new ODataUrlValidationRule[] 
@@ -46,15 +51,29 @@ namespace Microsoft.OData.Tests
                 ODataUrlValidationRules.DeprecatedTypeRule 
             });
             parser.Validate(rules, out errors);
-            int errorCount = errors.Count();
-            Assert.Equal(expectedErrors.Count(), errorCount);
-            int iError = 0;
+
+            Assert.Equal(expectedErrors.Count(), errors.Count());
             foreach(ODataUrlValidationMessage error in errors)
             {
                 Assert.Equal(ODataUrlValidationMessageCodes.DeprecatedElement, error.MessageCode);
                 object elementName;
                 Assert.True(error.ExtendedProperties.TryGetValue("ElementName", out elementName));
-                Assert.Equal(elementName as string, expectedErrors[iError++]);
+                object date;
+                Assert.True(error.ExtendedProperties.TryGetValue("Date", out date));
+                object removalDate;
+                Assert.True(error.ExtendedProperties.TryGetValue("RemovalDate", out removalDate)); 
+                object version;
+                Assert.True(error.ExtendedProperties.TryGetValue("Version", out version));
+
+                string elementNameAsString = elementName as string;
+                elementName =elementNameAsString.Substring(elementNameAsString.LastIndexOf('.') + 1);
+
+                Assert.Contains(elementName as string, expectedErrors);
+                Assert.Equal(date as Date?, expectedDate);
+                Assert.Equal(version as string, expectedDateAsString);
+                Assert.Equal(removalDate as Date?, expectedRemovalDate);
+                Assert.Contains(elementName as string, error.Message);
+                Assert.Contains(expectedRemovalDateAsString, error.Message);
             }
         }
 
@@ -93,13 +112,16 @@ namespace Microsoft.OData.Tests
     <Schema xmlns = ""http://docs.oasis-open.org/odata/ns/edm"" Namespace=""Jetsons.Models"">
       <ComplexType Name = ""address"" >
         <Property Name=""city"" Type=""Edm.String""/>
+        <Property Name=""subAddress"" Type=""Jetsons.Models.address""/>
         <Property Name = ""state"" Type=""Edm.String"">
           <Annotation Term = ""Core.Revisions"" >
             <Collection>
               <Record>
-                <PropertyValue Property=""Version"" String=""2022-03-30""/>
+                <PropertyValue Property=""Version"" String=""2020-03-30""/>
                 <PropertyValue Property = ""Kind"" EnumMember=""RevisionKind/Deprecated""/>
-                <PropertyValue Property = ""Description"" String=""'state' is deprecated and will be retired on Jun 30, 2022. Please use 'region'.""/>
+                <PropertyValue Property = ""Description"" String=""'state' is deprecated and will be retired on 2022-03-30. Please use 'region'.""/>
+                <PropertyValue Property=""Date"" Date=""2020-03-30""/>
+                <PropertyValue Property=""RemovalDate"" Date=""2022-03-30""/>
               </Record>
             </Collection>
           </Annotation>
@@ -116,9 +138,11 @@ namespace Microsoft.OData.Tests
           <Annotation Term = ""Core.Revisions"" >
             <Collection>
               <Record>
-                <PropertyValue Property=""Date"" Date=""2022-03-30""/>
+                <PropertyValue Property=""Date"" Date=""2020-03-30""/>
+                <PropertyValue Property=""RemovalDate"" Date=""2022-03-30""/>
+                <PropertyValue Property=""Version"" String=""2020-03-30""/>
                 <PropertyValue Property = ""Kind"" EnumMember=""RevisionKind/Deprecated""/>
-                <PropertyValue Property = ""Description"" String=""'name' is deprecated and will be retired on Jun 30, 2022. Please use 'name2'.""/>
+                <PropertyValue Property = ""Description"" String=""'name' is deprecated and will be retired on 2022-03-30. Please use 'name2'.""/>
               </Record>
             </Collection>
           </Annotation>
@@ -129,9 +153,11 @@ namespace Microsoft.OData.Tests
           <Annotation Term = ""Core.Revisions"" >
             <Collection>
               <Record>
-                <PropertyValue Property=""Version"" String=""2022-03-30""/>
+                <PropertyValue Property=""Date"" Date=""2020-03-30""/>
+                <PropertyValue Property=""RemovalDate"" Date=""2022-03-30""/>
+                <PropertyValue Property=""Version"" String=""2020-03-30""/>
                 <PropertyValue Property = ""Kind"" EnumMember=""RevisionKind/Deprecated""/>
-                <PropertyValue Property = ""Description"" String=""'employees' is deprecated and will be retired on Jun 30, 2022. Please use 'directs'.""/>
+                <PropertyValue Property = ""Description"" String=""'employees' is deprecated and will be retired on 2022-03-30. Please use 'directs'.""/>
               </Record>
             </Collection>
           </Annotation>
@@ -146,6 +172,25 @@ namespace Microsoft.OData.Tests
         <Property Name = ""firstName"" Type=""Edm.String""/>
         <Property Name = ""lastName"" Type=""Edm.String""/>
         <Property Name = ""title"" Type=""Edm.String""/>
+        <NavigationProperty Name = ""vehicles"" Type=""Collection(Jetsons.Models.vehicle)"" ContainsTarget=""true""/>
+     </EntityType>
+      <EntityType Name = ""vehicle"" >
+        <Key>
+          <PropertyRef Name=""license""/>
+        </Key>
+        <Property Name = ""license"" Type=""Edm.String"" Nullable=""false""/>
+        <Property Name = ""model"" Type=""Edm.String""/>
+        <Annotation Term = ""Core.Revisions"" >
+            <Collection>
+                <Record>
+                <PropertyValue Property=""Date"" Date=""2020-03-30""/>
+                <PropertyValue Property=""RemovalDate"" Date=""2022-03-30""/>
+                <PropertyValue Property=""Version"" String=""2020-03-30""/>
+                <PropertyValue Property = ""Kind"" EnumMember=""RevisionKind/Deprecated""/>
+                <PropertyValue Property = ""Description"" String=""'vehicle' is deprecated and will be retired on 2022-03-30.""/>
+                </Record>
+            </Collection>
+        </Annotation>
       </EntityType>
       <Action Name = ""ResetDataSource"" />
       <EntityContainer Name=""Container"">
@@ -153,9 +198,11 @@ namespace Microsoft.OData.Tests
           <Annotation Term = ""Core.Revisions"" >
             <Collection>
               <Record>
-                <PropertyValue Property=""Date"" Date=""2022-03-30""/>
+                <PropertyValue Property=""Date"" Date=""2020-03-30""/>
+                <PropertyValue Property=""RemovalDate"" Date=""2022-03-30""/>
+                <PropertyValue Property=""Version"" String=""2020-03-30""/>
                 <PropertyValue Property = ""Kind"" EnumMember=""RevisionKind/Deprecated""/>
-                <PropertyValue Property = ""Description"" String=""'competitors' is deprecated and will be retired on Jun 30, 2022.""/>
+                <PropertyValue Property = ""Description"" String=""'competitors' is deprecated and will be retired on 2022-03-30.""/>
               </Record>
             </Collection>
           </Annotation>
@@ -168,4 +215,3 @@ namespace Microsoft.OData.Tests
 </edmx:Edmx>";
     }
 }
-

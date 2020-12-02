@@ -6,14 +6,28 @@
 
 namespace Microsoft.OData
 {
-    using System;
+    using System.Diagnostics;
     using System.IO;
 
     /// <summary>
-    /// Extension methods to Stream for .NET35.
+    /// Extension methods to Stream
     /// </summary>
     internal static class StreamExtensions
     {
+        public static byte[] ReadAllBytes(this Stream instream)
+        {
+            Debug.Assert(instream != null, "instream != null");
 
+            if (instream is MemoryStream)
+            {
+                return ((MemoryStream)instream).ToArray();
+            }
+
+            using (var memoryStream = new MemoryStream())
+            {
+                instream.CopyTo(memoryStream);
+                return memoryStream.ToArray();
+            }
+        }
     }
 }

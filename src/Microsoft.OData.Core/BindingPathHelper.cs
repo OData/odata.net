@@ -32,9 +32,9 @@ namespace Microsoft.OData
             }
 
             int pathIndex = paths.Count - 2; // Skip the last segment which is navigation property name.
-
+            int segmentIndex = parsedSegments.Count - 1;
             // Match from tail to head.
-            for (int segmentIndex = parsedSegments.Count - 1; segmentIndex >= 0; segmentIndex--)
+            for (; segmentIndex >= 0; segmentIndex--)
             {
                 ODataPathSegment segment = parsedSegments[segmentIndex];
 
