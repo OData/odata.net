@@ -9,7 +9,7 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
     /// <summary>
     /// Representing Capabilities Vocabulary Model.
     /// </summary>
-    internal class CapabilitiesVocabularyModel
+    public static class CapabilitiesVocabularyModel
     {
         /// <summary>
         /// The EDM model with capabilities vocabularies.
