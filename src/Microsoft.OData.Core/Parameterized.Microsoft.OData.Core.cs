@@ -2054,6 +2054,14 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The overflow exception caught for expected type '{0}'. '{1}'."
+        /// </summary>
+        internal static string ODataUriUtils_ConvertFromUriLiteralOverflowNumber(object p0, object p1)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataUriUtils_ConvertFromUriLiteralOverflowNumber, p0, p1);
+        }
+
+        /// <summary>
         /// A string like "Type verification failed. Expected type '{0}' but received the value '{1}'."
         /// </summary>
         internal static string ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure(object p0, object p1)
@@ -6208,17 +6216,6 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The UriValidator used to validate an ODataUri must use the same Model as the ODataUriParser."
-        /// </summary>
-        internal static string UriValidator_ValidatorMustUseSameModelAsParser
-        {
-            get
-            {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriValidator_ValidatorMustUseSameModelAsParser);
-            }
-        }
-
-        /// <summary>
         /// A string like "The URI '{0}' must be an absolute URI."
         /// </summary>
         internal static string UriParser_UriMustBeAbsolute(object p0)
@@ -6307,6 +6304,17 @@ namespace Microsoft.OData {
         internal static string UriParserMetadata_MultipleMatchingParametersFound(object p0)
         {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriParserMetadata_MultipleMatchingParametersFound, p0);
+        }
+
+        /// <summary>
+        /// A string like "The UrlValidator used to validate an ODataUri must use the same Model as the ODataUriParser."
+        /// </summary>
+        internal static string UriValidator_ValidatorMustUseSameModelAsParser
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriValidator_ValidatorMustUseSameModelAsParser);
+            }
         }
 
         /// <summary>

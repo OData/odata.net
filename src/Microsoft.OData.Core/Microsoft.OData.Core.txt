@@ -261,6 +261,7 @@ ExpressionLexer_ExpectedLiteralToken=Expected literal type token but found token
 
 ODataUriUtils_ConvertToUriLiteralUnsupportedType=The type '{0}' is not supported when converting to a URI literal.
 ODataUriUtils_ConvertFromUriLiteralTypeRefWithoutModel=An IEdmTypeReference must be provided with a matching IEdmModel. No model was provided.
+ODataUriUtils_ConvertFromUriLiteralOverflowNumber=The overflow exception caught for expected type '{0}'. '{1}'.
 ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure=Type verification failed. Expected type '{0}' but received the value '{1}'.
 ODataUriUtils_ConvertFromUriLiteralNullTypeVerificationFailure=Type verification failed. Expected type '{0}' but received non-matching null value with associated type '{1}'.
 ODataUriUtils_ConvertFromUriLiteralNullOnNonNullableType=Type verification failed. Expected non-nullable type '{0}' but received a null value.

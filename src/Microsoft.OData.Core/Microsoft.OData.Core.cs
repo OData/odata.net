@@ -240,6 +240,7 @@ namespace Microsoft.OData
         internal const string ExpressionLexer_ExpectedLiteralToken = "ExpressionLexer_ExpectedLiteralToken";
         internal const string ODataUriUtils_ConvertToUriLiteralUnsupportedType = "ODataUriUtils_ConvertToUriLiteralUnsupportedType";
         internal const string ODataUriUtils_ConvertFromUriLiteralTypeRefWithoutModel = "ODataUriUtils_ConvertFromUriLiteralTypeRefWithoutModel";
+        internal const string ODataUriUtils_ConvertFromUriLiteralOverflowNumber = "ODataUriUtils_ConvertFromUriLiteralOverflowNumber";
         internal const string ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure = "ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure";
         internal const string ODataUriUtils_ConvertFromUriLiteralNullTypeVerificationFailure = "ODataUriUtils_ConvertFromUriLiteralNullTypeVerificationFailure";
         internal const string ODataUriUtils_ConvertFromUriLiteralNullOnNonNullableType = "ODataUriUtils_ConvertFromUriLiteralNullOnNonNullableType";

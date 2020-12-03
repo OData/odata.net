@@ -14,6 +14,35 @@ namespace Microsoft.OData.Tests.Query
 {
     public class ODataUriUtilsTests
     {
+        [Theory]
+        [InlineData(EdmPrimitiveTypeKind.SByte, (sbyte)2)]
+        [InlineData(EdmPrimitiveTypeKind.Byte, (byte)2)]
+        [InlineData(EdmPrimitiveTypeKind.Int16, (short)2)]
+        [InlineData(EdmPrimitiveTypeKind.Int32, (int)2)]
+        [InlineData(EdmPrimitiveTypeKind.Int64, (long)2)]
+        public void TestIntegerConvertFromUriLiteral(EdmPrimitiveTypeKind kind, object expected)
+        {
+            Type expectedType = expected.GetType();
+            var numberType = EdmCoreModel.Instance.GetPrimitive(kind, true);
+
+            object primitiveValue = ODataUriUtils.ConvertFromUriLiteral("2", ODataVersion.V4, EdmCoreModel.Instance, numberType);
+
+            Assert.IsType(expectedType, primitiveValue);
+            Assert.Equal(expected, primitiveValue);
+        }
+
+        [Theory]
+        [InlineData("42767")]
+        [InlineData("-42767")]
+        public void TestIntegerConvertFromUriLiteralThrowOverflow(string value)
+        {
+            var numberType = EdmCoreModel.Instance.GetInt16(true);
+
+            Action test = () => ODataUriUtils.ConvertFromUriLiteral(value, ODataVersion.V4, EdmCoreModel.Instance, numberType);
+
+            test.Throws<ODataException>(Strings.ODataUriUtils_ConvertFromUriLiteralOverflowNumber("Edm.Int16", "Value was either too large or too small for an Int16."));
+        }
+
         [Fact]
         public void TestDecimalConvertToUriLiteral()
         {
@@ -26,7 +55,6 @@ namespace Microsoft.OData.Tests.Query
             decimalString = ODataUriUtils.ConvertToUriLiteral(112M, ODataVersion.V4);
             Assert.Equal("112", decimalString);
         }
-
 
         [Theory]
         [InlineData("79228162514264337593543950335")]
@@ -41,7 +69,6 @@ namespace Microsoft.OData.Tests.Query
             Assert.True(dec is decimal);
 #endif
         }
-
 
         [Fact]
         public void TestLongConvertToUriLiteral()
