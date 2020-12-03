@@ -95,6 +95,13 @@ namespace Microsoft.OData.Client
                 {
                     string dynamicPropertyName = kvPair.Key;
                     object dynamicPropertyValue = kvPair.Value;
+
+                    // Based on the spec, a missing dynamic property is defined to be the same as a dynamic property with value null
+                    if (dynamicPropertyValue == null)
+                    {
+                        continue;
+                    }
+
                     Type dynamicPropertyType = dynamicPropertyValue.GetType();
                     Type dynamicPropertyItemType = !(dynamicPropertyValue is ICollection) ? dynamicPropertyType : dynamicPropertyType.GetGenericArguments().Single();
 
@@ -237,6 +244,13 @@ namespace Microsoft.OData.Client
                 {
                     string dynamicPropertyName = kvPair.Key;
                     object dynamicPropertyValue = kvPair.Value;
+
+                    // Based on the spec, a missing dynamic property is defined to be the same as a dynamic property with value null
+                    if (dynamicPropertyValue == null)
+                    {
+                        continue;
+                    }
+
                     Type dynamicPropertyType = dynamicPropertyValue.GetType();
                     bool isCollection = dynamicPropertyValue is ICollection;
                     Type dynamicPropertyItemType = !isCollection ? dynamicPropertyType : dynamicPropertyType.GetGenericArguments().Single();
@@ -730,9 +744,10 @@ namespace Microsoft.OData.Client
                 odataValue = CreateODataPrimitiveValue(clientType, value);
                 
                 PrimitiveType primitiveType;
-                PrimitiveType.TryGetPrimitiveType(value.GetType(), out primitiveType);
-                
-                if (shouldWriteClientType && !JsonSharedUtils.ValueTypeMatchesJsonType((ODataPrimitiveValue)odataValue, primitiveType.PrimitiveKind))
+                if (value != null 
+                    && PrimitiveType.TryGetPrimitiveType(value.GetType(), out primitiveType)
+                    && shouldWriteClientType
+                    && !JsonSharedUtils.ValueTypeMatchesJsonType((ODataPrimitiveValue)odataValue, primitiveType.PrimitiveKind))
                 {
                     odataValue.TypeAnnotation = new ODataTypeAnnotation(primitiveType.EdmTypeName);
                 }
