@@ -2054,7 +2054,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The overflow exception caught for expected type '{0}'.'{1}'."
+        /// A string like "The overflow exception caught for expected type '{0}'. '{1}'."
         /// </summary>
         internal static string ODataUriUtils_ConvertFromUriLiteralOverflowNumber(object p0, object p1)
         {
