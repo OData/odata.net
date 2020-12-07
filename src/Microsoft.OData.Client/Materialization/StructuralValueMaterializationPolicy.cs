@@ -334,9 +334,11 @@ namespace Microsoft.OData.Client.Materialization
             // Stop if owning type is not an open type
             // Or container property is not found
             // Or key with matching name already exists in the dictionary
+            // Or value is null - based on the spec, a missing dynamic property is defined to be the same as a dynamic property with value null
             if (!ClientTypeUtil.IsInstanceOfOpenType(instance, this.MaterializerContext.Model)
                 || !ClientTypeUtil.TryGetContainerProperty(instance, out containerProperty) 
-                || containerProperty.ContainsKey(property.Name))
+                || containerProperty.ContainsKey(property.Name)
+                || property.Value == null)
             {
                 return;
             }
@@ -355,6 +357,11 @@ namespace Microsoft.OData.Client.Materialization
             if (untypedVal != null)
             {
                 value = CommonUtil.ParseJsonToPrimitiveValue(untypedVal.RawValue);
+                if (value == null)
+                {
+                    return;
+                }
+
                 containerProperty.Add(property.Name, value);
                 return;
             }
