@@ -18,6 +18,21 @@ namespace Microsoft.OData.Client
 
     public static class DataServiceExtensions
     {
+        private readonly static SimpleLazy<MethodInfo> EnumerableSelectMethod = new SimpleLazy<MethodInfo>(() =>
+        {
+            return GetEnumerableSelectMethod();
+        });
+
+        private readonly static SimpleLazy<MethodInfo> EnumerableDistinctMethod = new SimpleLazy<MethodInfo>(() =>
+        {
+            return GetDistinctMethod(typeof(Enumerable), typeof(IEnumerable<>));
+        });
+
+        private readonly static SimpleLazy<MethodInfo> EnumerableCountMethod = new SimpleLazy<MethodInfo>(() =>
+        {
+            return GetCountMethod(typeof(Enumerable), typeof(IEnumerable<>));
+        });
+
         /// <summary>
         /// Returns the distinct count of elements in a sequence after applying the projection function to each element.
         /// </summary>
@@ -28,47 +43,16 @@ namespace Microsoft.OData.Client
         /// <returns>Distinct count of elements in a sequence after applying the projection function to each element.</returns>
         public static int CountDistinct<TSource, TTarget>(this IQueryable<TSource> source, Expression<Func<TSource, TTarget>> selector)
         {
-            MethodCallExpression countMethodExpr;
+            Util.CheckArgumentNull(source, "source");
+            Util.CheckArgumentNull(selector, "selector");
 
-            if (source.Provider.GetType().Equals(typeof(DataServiceQueryProvider)))
-            {
-                var currentMethod = (MethodInfo)MethodBase.GetCurrentMethod();
-                MethodInfo methodInfo = currentMethod.MakeGenericMethod(typeof(TSource), typeof(TTarget));
+            MethodInfo currentMethod = (MethodInfo)MethodBase.GetCurrentMethod();
+            MethodInfo methodInfo = currentMethod.MakeGenericMethod(typeof(TSource), typeof(TTarget));
 
-                countMethodExpr = Expression.Call(null,
+            return source.Provider.Execute<int>(
+                Expression.Call(null,
                     methodInfo,
-                    new Expression[] { source.Expression, selector });
-            }
-            else
-            {
-                // Provide a default implementation...
-                // In the event that a developer who adds a reference to the library invokes CountDistinct() as follows:
-                // - new List<int> { 1, 2, 1 }.AsQueryable().CountDistinct(d => d)
-
-                // Method: Select<TSource,TResult>(IQueryable<TSource>, Expression<Func<TSource,TResult>>)
-                MethodInfo selectMethod = GetQueryableSelectMethod();
-                // Method: Distinct<TSource>(IQueryable<TSource>)
-                MethodInfo distinctMethod = GetDistinctMethod(typeof(Queryable), typeof(IQueryable<>));
-                // Method: Count<TSource>(IQueryable<TSource>)
-                MethodInfo countMethod = GetCountMethod(typeof(Queryable), typeof(IQueryable<>));
-
-                // Select(d => d.Prop)
-                MethodCallExpression selectMethodExpr = Expression.Call(null,
-                    selectMethod.MakeGenericMethod(new Type[] { source.ElementType, selector.Body.Type }),
-                    new[] { source.Expression, Expression.Quote(selector) });
-
-                // Select(d => d.Prop).Distinct()
-                MethodCallExpression distinctMethodExpr = Expression.Call(null,
-                    distinctMethod.MakeGenericMethod(new Type[] { selector.Body.Type }),
-                    new[] { selectMethodExpr });
-
-                // Select(d => d.Prop).Distinct().Count()
-                countMethodExpr = Expression.Call(null,
-                    countMethod.MakeGenericMethod(new Type[] { selector.Body.Type }),
-                    new[] { distinctMethodExpr });
-            }
-
-            return source.Provider.Execute<int>(countMethodExpr);
+                    new Expression[] { source.Expression, selector }));
         }
 
         /// <summary>
@@ -81,12 +65,15 @@ namespace Microsoft.OData.Client
         /// <returns>Distinct count of elements in a sequence after applying the projection function to each element.</returns>
         public static int CountDistinct<TSource, TTarget>(this IEnumerable<TSource> source, Func<TSource, TTarget> selector)
         {
+            Util.CheckArgumentNull(source, "source");
+            Util.CheckArgumentNull(selector, "selector");
+
             // Provide a default implementation...
             // In the event that a developer who adds a reference to the library invokes CountDistinct() as follows:
             // - new List<int> { 1, 2, 1 }.CountDistinct(d => d)
 
             // Method: Select<TSource,TResult>(IEnumerable<TSource>, Func<TSource,TResult>)
-            MethodInfo selectMethod = GetEnumerableSelectMethod();
+            MethodInfo selectMethod = EnumerableSelectMethod.Value;
 
             IEnumerable<TTarget> transientResult;
 
@@ -94,36 +81,16 @@ namespace Microsoft.OData.Client
                 typeof(TSource), typeof(TTarget)).Invoke(null, new object[] { source, selector });
 
             // Method: Distinct<TSource>(IEnumerable<TSource>)
-            MethodInfo distinctMethod = GetDistinctMethod(typeof(Enumerable), typeof(IEnumerable<>));
+            MethodInfo distinctMethod = EnumerableDistinctMethod.Value;
 
             transientResult = (IEnumerable<TTarget>)distinctMethod.MakeGenericMethod(
                 typeof(TTarget)).Invoke(null, new object[] { transientResult });
 
             // Method: Count<TSource>(IEnumerable<TSource>)
-            MethodInfo countMethod = GetCountMethod(typeof(Enumerable), typeof(IEnumerable<>));
+            MethodInfo countMethod = EnumerableCountMethod.Value;
 
             return (int)countMethod.MakeGenericMethod(
                 typeof(TTarget)).Invoke(null, new object[] { transientResult });
-        }
-
-        /// <summary>
-        /// Returns Select method defined in Queryable type.
-        /// </summary>
-        private static MethodInfo GetQueryableSelectMethod()
-        {
-            return typeof(Queryable).GetMethods(BindingFlags.Static | BindingFlags.Public)
-                .Where(d1 => d1.Name.Equals("Select", StringComparison.Ordinal))
-                .Select(d2 => new { Method = d2, Parameters = d2.GetParameters() })
-                .Where(d3 => d3.Parameters.Length.Equals(2)
-                    && d3.Parameters[0].ParameterType.IsGenericType
-                    && d3.Parameters[0].ParameterType.GetGenericTypeDefinition().Equals(typeof(IQueryable<>))
-                    && d3.Parameters[1].ParameterType.IsGenericType
-                    && d3.Parameters[1].ParameterType.GetGenericTypeDefinition().Equals(typeof(Expression<>)))
-                .Select(d4 => new { d4.Method, SelectorArguments = d4.Parameters[1].ParameterType.GetGenericArguments() })
-                .Where(d5 => d5.SelectorArguments.Length.Equals(1)
-                    && d5.SelectorArguments[0].IsGenericType
-                    && d5.SelectorArguments[0].GetGenericTypeDefinition().Equals(typeof(Func<,>)))
-                .Select(d6 => d6.Method).Single();
         }
 
         /// <summary>

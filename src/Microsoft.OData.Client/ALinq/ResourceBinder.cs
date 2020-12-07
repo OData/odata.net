@@ -807,9 +807,9 @@ namespace Microsoft.OData.Client
                 return methodCallExpr;
             }
 
-            QueryableResourceExpression input;
+            QueryableResourceExpression resourceExpr;
             LambdaExpression lambdaExpr;
-            if (!TryGetResourceSetMethodArguments(methodCallExpr, out input, out lambdaExpr))
+            if (!TryGetResourceSetMethodArguments(methodCallExpr, out resourceExpr, out lambdaExpr))
             {
                 // UNSUPPORTED: Expected LambdaExpression as second argument to sequence method
                 return methodCallExpr;
@@ -819,15 +819,15 @@ namespace Microsoft.OData.Client
             ValidationRules.ValidateAggregateExpression(lambdaExpr.Body);
 
             Expression selector;
-            if (!TryBindToInput(input, lambdaExpr, out selector))
+            if (!TryBindToInput(resourceExpr, lambdaExpr, out selector))
             {
-                // UNSUPPORTED: Lambda should reference the input, and only the input
+                // UNSUPPORTED: Lambda should reference the resource expression
                 return methodCallExpr;
             }
 
-            input.AddApply(selector, aggregationMethod);
+            resourceExpr.AddApply(selector, aggregationMethod);
 
-            return input;
+            return resourceExpr;
         }
 
         /// <summary>Ensures that there's a limit on the cardinality of a query.</summary>
@@ -2973,8 +2973,12 @@ namespace Microsoft.OData.Client
             }
 
             /// <summary>
-            /// Checks whether the specified <paramref name="expr"/> is a valid aggregate expression.
+            /// Checks whether the specified expression is a valid aggregate expression.
             /// An aggregate expression must evaluate to a single-valued property path to an aggregatable property.
+            /// In the case of aggregation methods like average, sum, min and max, the property needs 
+            /// to be of numeric type. Properties of known primitive types are not supported. For instance,
+            /// for a property `Name` of type string, `Name.Length` is not a valid aggregate expression. 
+            /// Neither is `Sales.Count` where `Sales` is a collection property. 
             /// </summary>
             /// <param name="expr">The aggregate expression</param>
             internal static void ValidateAggregateExpression(Expression expr)
@@ -2985,7 +2989,8 @@ namespace Microsoft.OData.Client
                 // involving properties of known primitive types into their method equivalent
                 // E.g. Length into get_Length()
                 // Disallow expressions of the form d1.Prop.get_PropertyName() - e.g. d1.Prop.get_Length()
-                // memberExpr will be null in such a scenario
+                // In such a scenario, calling StripTo with an expression that is not a 
+                // member expression will result into `memberExpr` being assigned a value of null.
                 if (memberExpr == null)
                 {
                     throw new NotSupportedException(Strings.ALinq_InvalidAggregateExpression(expr));

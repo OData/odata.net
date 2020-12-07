@@ -92,10 +92,10 @@ namespace Microsoft.OData.Client
         /// <summary>aggregate</summary>
         internal const string AGGREGATE = "aggregate";
 
-        /// <summary>aggregate</summary>
+        /// <summary>with</summary>
         internal const string WITH = "with";
 
-        /// <summary>aggregate</summary>
+        /// <summary>as</summary>
         internal const string AS = "as";
 
         /// <summary>true</summary>
