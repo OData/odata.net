@@ -83,6 +83,21 @@ namespace Microsoft.OData.Client
         /// <summary>The $format query option.</summary>
         internal const string OPTIONFORMAT = "format";
 
+        /// <summary>apply</summary>
+        internal const string OPTIONAPPLY = "apply";
+
+        /// <summary>groupby</summary>
+        internal const string GROUPBY = "groupby";
+
+        /// <summary>aggregate</summary>
+        internal const string AGGREGATE = "aggregate";
+
+        /// <summary>with</summary>
+        internal const string WITH = "with";
+
+        /// <summary>as</summary>
+        internal const string AS = "as";
+
         /// <summary>true</summary>
         internal const string COUNTTRUE = "true";
 
@@ -157,6 +172,24 @@ namespace Microsoft.OData.Client
 
         /// <summary>The encoded { sign</summary>
         internal const string ENCODEDBRACESIGN = "%7B";
+
+        /// <summary>average</summary>
+        internal const string AVERAGE = "average";
+
+        /// <summary>sum</summary>
+        internal const string SUM = "sum";
+
+        /// <summary>min</summary>
+        internal const string MIN = "min";
+
+        /// <summary>max</summary>
+        internal const string MAX = "max";
+
+        /// <summary>countdistinct</summary>
+        internal const string COUNTDISTINCT = "countdistinct";
+
+        /// <summary>$count</summary>
+        internal const string VIRTUALPROPERTYCOUNT = "$count";
 
         /// <summary>Gets the type name to be used in the URI for the given <paramref name="type"/>.</summary>
         /// <param name="type">Type to get name for.</param>

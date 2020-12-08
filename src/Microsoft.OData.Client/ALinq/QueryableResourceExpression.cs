@@ -196,6 +196,14 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Apply query option for ResourceSet
+        /// </summary>
+        internal ApplyQueryOptionExpression Apply
+        {
+            get { return this.sequenceQueryOptions.OfType<ApplyQueryOptionExpression>().SingleOrDefault(); }
+        }
+
+        /// <summary>
         /// Gets sequence query options for ResourceSet
         /// </summary>
         internal IEnumerable<QueryOptionExpression> SequenceQueryOptions
@@ -361,6 +369,56 @@ namespace Microsoft.OData.Client
             this.Filter.AddPredicateConjuncts(predicateConjuncts);
 
             this.keyPredicateConjuncts.Clear();
+        }
+
+        internal void AddApply(Expression aggregateExpr, OData.UriParser.Aggregation.AggregationMethod aggregationMethod)
+        {
+            if (this.OrderBy != null)
+            {
+                throw new NotSupportedException(Strings.ALinq_QueryOptionOutOfOrder("apply", "orderby"));
+            }
+            else if (this.Skip != null)
+            {
+                // $skip and $top may be used together with rollup. 
+                // However, support for rollup is currently not implemented in OData WebApi
+                // If $skip and/or $top appears before $apply, its currently ignored. 
+                // Makes sense to throw an exception to avoid giving a false impression.
+                throw new NotSupportedException(Strings.ALinq_QueryOptionOutOfOrder("apply", "skip"));
+            }
+            else if (this.Take != null)
+            {
+                throw new NotSupportedException(Strings.ALinq_QueryOptionOutOfOrder("apply", "top"));
+            }
+
+            if (this.Apply == null)
+            {
+                AddSequenceQueryOption(new ApplyQueryOptionExpression(this.Type));
+            }
+
+            if (this.Filter != null && this.Filter.PredicateConjuncts.Count > 0)
+            {
+                // The $apply query option is evaluated first, then other query options ($filter, $orderby, $select) are evaluated, 
+                // if applicable, on the result of $apply in their normal order.
+                // http://docs.oasis-open.org/odata/odata-data-aggregation-ext/v4.0/cs02/odata-data-aggregation-ext-v4.0-cs02.html#_Toc435016590
+                
+                // If a Where appears before an aggregation method (e.g. Average, Sum, etc) or GroupBy, 
+                // the conjuncts of the filter expression will be used to restrict the set of data to be aggregated. 
+                // They will not appear on the $filter query option. Instead, we use them to construct a filter transformation.
+                // E.g. /Sales?$apply=filter(Amount gt 1)/aggregate(Amount with average as AverageAmount)
+                
+                // If a Where appears after an aggregation method or GroupBy, the conjuncts should appear
+                // on a $filter query option after the $apply.
+                // E.g. /Sales?$apply=groupby((Product/Color),aggregate(Amount with average as AverageAmount))&$filter=Product/Color eq 'Brown'
+
+                // To separate the two sets of possible conjuncts, we store those that appear in the Where 
+                // before aggregate method in the Apply query option object.
+                // We also don't concern ourselves with whether there's a key predicate or not since a ByKey query is not applicable
+                this.Apply.AddPredicateConjuncts(this.Filter.PredicateConjuncts);
+                this.keyPredicateConjuncts.Clear();
+                this.RemoveFilterExpression();
+            }
+
+            this.Apply.Aggregations.Add(new ApplyQueryOptionExpression.Aggregation(aggregateExpr, aggregationMethod));
         }
 
         /// <summary>
