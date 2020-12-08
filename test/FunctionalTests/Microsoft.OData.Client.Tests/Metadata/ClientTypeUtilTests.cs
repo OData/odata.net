@@ -15,7 +15,6 @@ namespace Microsoft.OData.Client.Tests.Metadata
     /// </summary>
     public class ClientTypeUtilTests
     {
-#if !PORTABLELIB
         [Fact]
         public void IFTypeProperty_HasKeyAttribute_TypeIsEntity()
         {
@@ -38,6 +37,19 @@ namespace Microsoft.OData.Client.Tests.Metadata
             Assert.False(actualResult);
         }
 
+        [Fact]
+        public void IFTypeProperty_HasKeyAttributeAndOneProperty_TypeIsEntityAndDoesNotThrowException()
+        {
+            //Arrange
+            Type car = typeof(Car);
+
+            //Act
+            bool actualResult = ClientTypeUtil.TypeOrElementTypeIsEntity(car);
+
+            //Assert
+            Assert.True(actualResult);
+        }
+
         public class Person
         {
             [System.ComponentModel.DataAnnotations.Key]
@@ -50,6 +62,12 @@ namespace Microsoft.OData.Client.Tests.Metadata
             public int SId { get; set; }
             public string Name { get; set; }
         }
-#endif
+
+        public class Car
+        {
+            [System.ComponentModel.DataAnnotations.Key]
+            public int NonStandardId { get; set; }
+        }
+
     }
 }
