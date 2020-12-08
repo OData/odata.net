@@ -867,6 +867,12 @@ namespace Microsoft.OData.UriParser
                 return null;
             }
 
+            // For example if we have https://url/Books?$expand=Authors($filter=Name eq $it/Name)
+            // $filter=Name will reference Authors(the expanded entity).
+            // $it/Name will reference Books(the resource identified by the path).
+            // The BindingState ImplicitRangeVariable property will store the $it that references the expanded/selected item (The Implicit Range Variable).
+            // We the add to the Stack, the $it that references the resource identified by the path (The Explicit Range Variable).
+
             BindingState state = new BindingState(config)
             {
                 ImplicitRangeVariable =
@@ -874,7 +880,6 @@ namespace Microsoft.OData.UriParser
                         targetNavigationSource.EntityType().ToTypeReference(), targetNavigationSource)
             };
 
-            state.RangeVariables.Push(state.ImplicitRangeVariable);
             state.AggregatedPropertyNames = generatedProperties;
             state.IsCollapsed = collapsed;
             state.ResourcePathNavigationSource = resourcePathNavigationSource;
@@ -884,9 +889,9 @@ namespace Microsoft.OData.UriParser
                 // This $it rangeVariable will be added the Stack.
                 // We are adding a rangeVariable whose navigationSource is the resource path entity set.
                 // ODATA spec: Example 106 http://docs.oasis-open.org/odata/odata/v4.01/csprd05/part2-url-conventions/odata-v4.01-csprd05-part2-url-conventions.html#sec_it
-                RangeVariable parentItVariable = NodeFactory.CreateImplicitRangeVariable(
+                RangeVariable explicitRangeVariable = NodeFactory.CreateImplicitRangeVariable(
                     resourcePathNavigationSource.EntityType().ToTypeReference(), resourcePathNavigationSource);
-                state.RangeVariables.Push(parentItVariable);
+                state.RangeVariables.Push(explicitRangeVariable);
             }
 
             return state;
