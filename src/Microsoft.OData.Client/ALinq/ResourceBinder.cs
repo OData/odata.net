@@ -799,30 +799,36 @@ namespace Microsoft.OData.Client
             return input;
         }
 
-        private static Expression AnalyzeAggregation(MethodCallExpression methodCallExpr, AggregationMethod aggregationMethod)
+        /// <summary>
+        /// Analyzes an aggregation expression - Average, Sum, Min, Max and CountDistinct
+        /// </summary>
+        /// <param name="aggregationExpr">The aggregation expression.</param>
+        /// <param name="aggregationMethod">The aggregation method.</param>
+        /// <returns>The resource expression if successful; aggregation expression otherwise</returns>
+        private static Expression AnalyzeAggregation(MethodCallExpression aggregationExpr, AggregationMethod aggregationMethod)
         {
-            Debug.Assert(methodCallExpr != null, "methodCallExpr != null");
-            if (methodCallExpr.Arguments.Count != 2)
+            Debug.Assert(aggregationExpr != null, "methodCallExpr != null");
+            if (aggregationExpr.Arguments.Count != 2)
             {
-                return methodCallExpr;
+                return aggregationExpr;
             }
 
             QueryableResourceExpression resourceExpr;
             LambdaExpression lambdaExpr;
-            if (!TryGetResourceSetMethodArguments(methodCallExpr, out resourceExpr, out lambdaExpr))
+            if (!TryGetResourceSetMethodArguments(aggregationExpr, out resourceExpr, out lambdaExpr))
             {
                 // UNSUPPORTED: Expected LambdaExpression as second argument to sequence method
-                return methodCallExpr;
+                return aggregationExpr;
             }
 
-            ValidationRules.DisallowExpressionEndWithTypeAs(lambdaExpr.Body, methodCallExpr.Method.Name);
+            ValidationRules.DisallowExpressionEndWithTypeAs(lambdaExpr.Body, aggregationExpr.Method.Name);
             ValidationRules.ValidateAggregateExpression(lambdaExpr.Body);
 
             Expression selector;
             if (!TryBindToInput(resourceExpr, lambdaExpr, out selector))
             {
                 // UNSUPPORTED: Lambda should reference the resource expression
-                return methodCallExpr;
+                return aggregationExpr;
             }
 
             resourceExpr.AddApply(selector, aggregationMethod);

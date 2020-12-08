@@ -18,20 +18,29 @@ namespace Microsoft.OData.Client
 
     public static class DataServiceExtensions
     {
+        /// <summary>
+        /// The single MethodInfo instance of Enumerable.Distinct
+        /// </summary>
         private readonly static SimpleLazy<MethodInfo> EnumerableSelectMethod = new SimpleLazy<MethodInfo>(() =>
         {
             return GetEnumerableSelectMethod();
-        });
+        }, /*isThreadSafe*/ true);
 
+        /// <summary>
+        /// The single MethodInfo instance of Enumerable.Distinct
+        /// </summary>
         private readonly static SimpleLazy<MethodInfo> EnumerableDistinctMethod = new SimpleLazy<MethodInfo>(() =>
         {
             return GetDistinctMethod(typeof(Enumerable), typeof(IEnumerable<>));
-        });
+        }, /*isThreadSafe*/ true);
 
+        /// <summary>
+        /// The single MethodInfo instance of Enumerable.Count
+        /// </summary>
         private readonly static SimpleLazy<MethodInfo> EnumerableCountMethod = new SimpleLazy<MethodInfo>(() =>
         {
             return GetCountMethod(typeof(Enumerable), typeof(IEnumerable<>));
-        });
+        }, /*isThreadSafe*/ true);
 
         /// <summary>
         /// Returns the distinct count of elements in a sequence after applying the projection function to each element.
