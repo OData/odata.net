@@ -97,7 +97,7 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
             // Measures
             string measuresVocabularies = allResources.Where(x => x.Contains("MeasuresVocabularies.xml")).FirstOrDefault();
             Debug.Assert(communityVocabularies != null, "MeasuresVocabularies.xml: not found.");
-            MeasuresModel = LoadCsdlEdmModel(assembly, communityVocabularies, new[] { CoreModel, ValidationModel }); // measures relies on core and validation
+            MeasuresModel = LoadCsdlEdmModel(assembly, measuresVocabularies, new[] { CoreModel, ValidationModel }); // measures relies on core and validation
 
             VocabularyModels = new List<IEdmModel>
             {
