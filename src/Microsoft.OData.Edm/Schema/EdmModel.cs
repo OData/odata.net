@@ -119,7 +119,7 @@ namespace Microsoft.OData.Edm
         /// Adds a vocabulary annotation to this model.
         /// </summary>
         /// <param name="annotation">The annotation to be added.</param>
-        public void AddVocabularyAnnotation(IEdmVocabularyAnnotation annotation, Csdl.EdmVocabularyAnnotationSerializationLocation location = Csdl.EdmVocabularyAnnotationSerializationLocation.OutOfLine)
+        public void AddVocabularyAnnotation(IEdmVocabularyAnnotation annotation)
         {
             EdmUtil.CheckArgumentNull(annotation, "annotation");
             if (annotation.Target == null)
@@ -135,7 +135,6 @@ namespace Microsoft.OData.Edm
             }
 
             elementAnnotations.Add(annotation);
-            Csdl.SerializationExtensionMethods.SetSerializationLocation(annotation, this, location);
         }
 
         /// <summary>
