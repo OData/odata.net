@@ -26,6 +26,14 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Constructs a new <see cref="JsonNoMetadataLevel"/>.
         /// </summary>
+        public JsonNoMetadataLevel()
+            : this(/*alwaysAddTypeAnnotationsForDerivedTypes*/ false)
+        {
+        }
+
+        /// <summary>
+        /// Constructs a new <see cref="JsonNoMetadataLevel"/>.
+        /// </summary>
         /// <param name="alwaysAddTypeAnnotationsForDerivedTypes">When set, type annotations will be added for derived types, even when the metadata level is set to "None".</param>
         public JsonNoMetadataLevel(bool alwaysAddTypeAnnotationsForDerivedTypes)
         {

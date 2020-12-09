@@ -24,8 +24,8 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void NoMetadataLevelShouldReturnMinimalMetadataTypeOracleWhenKnobIsSet()
         {
-            JsonNoMetadataLevel testSubjectWithTypeAnnotations = new JsonNoMetadataLevel(/* alwaysAddTypeAnnotationsForDerivedTypes */ true);
-            Assert.IsType<JsonMinimalMetadataTypeNameOracle>(testSubject.GetTypeNameOracle());
+            JsonNoMetadataLevel testSubjectWithTypeAnnotations = new JsonNoMetadataLevel(/*alwaysAddTypeAnnotationsForDerivedTypes*/ true);
+            Assert.IsType<JsonMinimalMetadataTypeNameOracle>(testSubjectWithTypeAnnotations.GetTypeNameOracle());
         }
         
         [Fact]
