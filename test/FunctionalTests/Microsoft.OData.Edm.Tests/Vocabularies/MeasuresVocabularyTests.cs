@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="AlternateKeysVocabularyTests.cs" company="Microsoft">
+// <copyright file="MeasuresVocabularyTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -19,9 +19,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
 {
     public class MeasuresVocabularyModelTests
     {
-
         private readonly IEdmModel model = MeasuresVocabularyModel.Instance;
-
 
         [Theory]
         [InlineData("ISOCurrency", EdmTypeKind.Primitive, "Edm.String")]
