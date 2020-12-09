@@ -2027,20 +2027,25 @@ namespace Microsoft.OData.Edm
             model.SetVocabularyAnnotation(annotation);
         }
 
+        /// <summary>
+        /// Adds a vocabulary annotation to this model.
+        /// </summary>
+        /// <param name="model">The model the annotation is added to.</param>
+        /// <param name="annotation">The annotation to be added.</param>
+        /// <param name="location">The location to add the allocation</param>
         public static void AddVocabularyAnnotation(this EdmModel model, IEdmVocabularyAnnotation annotation, Csdl.EdmVocabularyAnnotationSerializationLocation location)
         {
             model.AddVocabularyAnnotation(annotation);
             annotation.SetSerializationLocation(model, location);
         }
 
-
-            /// <summary>
-            /// Checks whether the given entity type has the <paramref name="property"/> as one of the key properties.
-            /// </summary>
-            /// <param name="entityType">Given entity type.</param>
-            /// <param name="property">Property to be searched for.</param>
-            /// <returns><c>true</c> if the type or base types has given property declared as key. <c>false</c> otherwise.</returns>
-            public static bool HasDeclaredKeyProperty(this IEdmEntityType entityType, IEdmProperty property)
+        /// <summary>
+        /// Checks whether the given entity type has the <paramref name="property"/> as one of the key properties.
+        /// </summary>
+        /// <param name="entityType">Given entity type.</param>
+        /// <param name="property">Property to be searched for.</param>
+        /// <returns><c>true</c> if the type or base types has given property declared as key. <c>false</c> otherwise.</returns>
+        public static bool HasDeclaredKeyProperty(this IEdmEntityType entityType, IEdmProperty property)
         {
             EdmUtil.CheckArgumentNull(entityType, "entityType");
             EdmUtil.CheckArgumentNull(property, "property");
