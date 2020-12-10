@@ -2078,6 +2078,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
             IEnumerable<EdmError> errors;
             Assert.True(model.Validate(out errors));
+
+            // Act & Assert for XML
             WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
               "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
                 "<edmx:DataServices>" +
@@ -2160,7 +2162,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             IEnumerable<EdmError> errors;
             Assert.True(model.Validate(out errors));
 
-            // Act & Assert for JSON
+            // Act & Assert for XML
             WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
              "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
                "<edmx:DataServices>" +
@@ -2191,6 +2193,162 @@ namespace Microsoft.OData.Edm.Tests.Csdl
     ""MyNavigationPathTerm"": {
       ""$Kind"": ""Term"",
       ""$Type"": ""Edm.NavigationPropertyPath""
+    }
+  }
+}");
+        }
+
+        [Fact]
+        public void CanWriteNavigationPropertyBindingTargetOnContainmentNavigationProperty()
+        {
+            EdmModel model = new EdmModel();
+
+            var areaEntityType = new EdmEntityType("NS", "Area");
+            var key = areaEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.String);
+            areaEntityType.AddKeys(key);
+
+            var plantEntityType = new EdmEntityType("NS", "Plant");
+            key = plantEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.String);
+            plantEntityType.AddKeys(key);
+
+            var siteEntityType = new EdmEntityType("NS", "Site");
+            key = siteEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.String);
+            siteEntityType.AddKeys(key);
+
+            // Contained entity sets
+            plantEntityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo()
+            {
+                ContainsTarget = true,
+                Name = "Areas",
+                Target = areaEntityType,
+                TargetMultiplicity = EdmMultiplicity.Many
+            });
+
+            var sitePlantsNavigationProperty = siteEntityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo()
+            {
+                ContainsTarget = true,
+                Name = "Plants",
+                Target = plantEntityType,
+                TargetMultiplicity = EdmMultiplicity.Many
+            });
+
+            // Non-contained navigation property back to plant
+            var areaPlantNavigationProperty = areaEntityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo()
+            {
+                ContainsTarget = false,
+                Name = "Plant",
+                Target = plantEntityType,
+                TargetMultiplicity = EdmMultiplicity.One
+            });
+
+            model.AddElement(areaEntityType);
+            model.AddElement(plantEntityType);
+            model.AddElement(siteEntityType);
+
+            var entityContainer = new EdmEntityContainer("NS", "MyApi");
+            var sitesEntitySet = entityContainer.AddEntitySet("Sites", siteEntityType);
+            var areasEntitySet = entityContainer.AddEntitySet("Areas", areaEntityType);
+            model.AddElement(entityContainer);
+            var plantsContainedEntitySet = sitesEntitySet.FindNavigationTarget(sitePlantsNavigationProperty);
+            areasEntitySet.AddNavigationTarget(areaPlantNavigationProperty, plantsContainedEntitySet);
+
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+              "<edmx:DataServices>" +
+                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                  "<EntityType Name=\"Area\">" +
+                    "<Key>" +
+                      "<PropertyRef Name=\"Id\" />" +
+                    "</Key>" +
+                    "<Property Name=\"Id\" Type=\"Edm.String\" />" +
+                    "<NavigationProperty Name=\"Plant\" Type=\"NS.Plant\" Nullable=\"false\" />" +
+                  "</EntityType>" +
+                  "<EntityType Name=\"Plant\">" +
+                    "<Key>" +
+                      "<PropertyRef Name=\"Id\" />" +
+                    "</Key>" +
+                    "<Property Name=\"Id\" Type=\"Edm.String\" />" +
+                    "<NavigationProperty Name=\"Areas\" Type=\"Collection(NS.Area)\" ContainsTarget=\"true\" />" +
+                  "</EntityType>" +
+                  "<EntityType Name=\"Site\">" +
+                    "<Key>" +
+                      "<PropertyRef Name=\"Id\" />" +
+                    "</Key>" +
+                    "<Property Name=\"Id\" Type=\"Edm.String\" />" +
+                    "<NavigationProperty Name=\"Plants\" Type=\"Collection(NS.Plant)\" ContainsTarget=\"true\" />" +
+                  "</EntityType>" +
+                  "<EntityContainer Name=\"MyApi\">" +
+                      "<EntitySet Name=\"Sites\" EntityType=\"NS.Site\" />" +
+                      "<EntitySet Name=\"Areas\" EntityType=\"NS.Area\">" +
+                        "<NavigationPropertyBinding Path=\"Plant\" Target=\"NS.MyApi/Sites/Plants\" />" +
+                      "</EntitySet>" +
+                    "</EntityContainer>" +
+                  "</Schema>" +
+                "</edmx:DataServices>" +
+              "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""NS.MyApi"",
+  ""NS"": {
+    ""Area"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {
+        ""$Nullable"": true
+      },
+      ""Plant"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Type"": ""NS.Plant""
+      }
+    },
+    ""Plant"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {
+        ""$Nullable"": true
+      },
+      ""Areas"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Collection"": true,
+        ""$Type"": ""NS.Area"",
+        ""$ContainsTarget"": true
+      }
+    },
+    ""Site"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {
+        ""$Nullable"": true
+      },
+      ""Plants"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Collection"": true,
+        ""$Type"": ""NS.Plant"",
+        ""$ContainsTarget"": true
+      }
+    },
+    ""MyApi"": {
+      ""$Kind"": ""EntityContainer"",
+      ""Sites"": {
+        ""$Collection"": true,
+        ""$Type"": ""NS.Site""
+      },
+      ""Areas"": {
+        ""$Collection"": true,
+        ""$Type"": ""NS.Area"",
+        ""$NavigationPropertyBinding"": {
+          ""Plant"": ""NS.MyApi/Sites/Plants""
+        }
+      }
     }
   }
 }");

@@ -3055,19 +3055,53 @@ namespace Microsoft.OData.Edm
         /// <returns>The navigation source found or empty if none found.</returns>
         internal static IEdmNavigationSource FindNavigationSource(this IEdmEntityContainer container, string path)
         {
-            string[] pathSegments = path.Split('.').Last().Split('/');
+            EdmUtil.CheckArgumentNull(container, "container");
+            EdmUtil.CheckArgumentNull(path, "path");
+
+            // the path could be:
+            // NS.Default.Customers/ContainedOrders  --> for back-compatible
+            // NS.Default/Customers/ContainedOrders
+            // Customers
+            // Customers/ContainedOrders
+            string[] pathSegments = path.Split('/');
+
+            string firstElementName = pathSegments[0];
+            int nextIndex = 1;
+            if (pathSegments[0].Contains("."))
+            {
+                if (pathSegments[0] == container.FullName())
+                {
+                    if (pathSegments.Length > 1)
+                    {
+                        // NS.Default/Customers/ContainedOrders
+                        firstElementName = pathSegments[1];
+                        nextIndex = 2;
+                    }
+                    else
+                    {
+                        // if path only includes the namespace, for example "NS.Default", just return null;
+                        return null;
+                    }
+                }
+                else
+                {
+                    // NS.Default.Customers/ContainedOrders
+                    // Split the first item using "." and fetch the last segment.
+                    firstElementName = pathSegments[0].Split('.').Last();
+                }
+            }
 
             // Starting segment must be a singleton or entity set
-            IEdmNavigationSource navigationSource = container.FindEntitySet(pathSegments[0]);
+            IEdmNavigationSource navigationSource = container.FindEntitySet(firstElementName);
 
             if (navigationSource == null)
             {
-                navigationSource = container.FindSingleton(pathSegments[0]);
+                navigationSource = container.FindSingleton(firstElementName);
             }
 
             // Subsequent segments may be single-valued complex or containment nav props
             List<string> subPathSegments = new List<string>();
-            for (int i = 1; i < pathSegments.Length && navigationSource != null; i++)
+            for (int i = nextIndex; i < pathSegments.Length && navigationSource != null; i++)
             {
                 subPathSegments.Add(pathSegments[i]);
                 IEdmNavigationProperty navProp = navigationSource.EntityType().FindProperty(pathSegments[i]) as IEdmNavigationProperty;

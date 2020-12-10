@@ -202,6 +202,60 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Equal("EntityAToB", pathSegments[1]);
         }
 
+        [Theory]
+        [InlineData("Sites/Plants", "Sites")]
+        [InlineData("NS.MyApi.Sites/Plants", "Sites")]
+        [InlineData("NS.MyApi/Sites/Plants", "Sites")]
+        public void ValidateNavigationPropertyBindingTargetOnContainmentNavigationProperty(string target, string setName)
+        {
+            var csdl = string.Format(@"<?xml version=""1.0"" encoding=""UTF-8""?>
+<edmx:Edmx xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" Version=""4.0"">
+   <edmx:DataServices>
+      <Schema xmlns=""http://docs.oasis-open.org/odata/ns/edm"" Namespace=""NS"">
+         <EntityType Name=""Area"">
+            <Key>
+               <PropertyRef Name=""Id"" />
+            </Key>
+            <Property Name=""Id"" Type=""Edm.String"" />
+            <NavigationProperty Name=""Plant"" Type=""NS.Plant"" Nullable=""false"" />
+         </EntityType>
+         <EntityType Name=""Plant"">
+            <Key>
+               <PropertyRef Name=""Id"" />
+            </Key>
+            <Property Name=""Id"" Type=""Edm.String"" />
+            <NavigationProperty Name=""Areas"" Type=""Collection(NS.Area)"" ContainsTarget=""true"" />
+         </EntityType>
+         <EntityType Name=""Site"">
+            <Key>
+               <PropertyRef Name=""Id"" />
+            </Key>
+            <Property Name=""Id"" Type=""Edm.String"" />
+            <NavigationProperty Name=""Plants"" Type=""Collection(NS.Plant)"" ContainsTarget=""true"" />
+         </EntityType>
+         <EntityContainer Name=""MyApi"" Extends=""NS.OtherApi"" >
+            <EntitySet Name=""Sites"" EntityType=""NS.Site"" />
+            <EntitySet Name=""Areas"" EntityType=""NS.Area"">
+               <NavigationPropertyBinding Target=""{0}"" Path=""Plant""/>
+            </EntitySet>
+         </EntityContainer>
+      </Schema>
+   </edmx:DataServices>
+</edmx:Edmx>", target);
+
+            var model = CsdlReader.Parse(XElement.Parse(csdl).CreateReader());
+            var setAreas = model.FindDeclaredNavigationSource("Areas");
+            var navBinding = Assert.Single(setAreas.NavigationPropertyBindings);
+
+            // Path
+            Assert.Equal("Plant", navBinding.NavigationProperty.Name);
+
+            // Target
+            EdmContainedEntitySet containedEntitySet = Assert.IsType<EdmContainedEntitySet>(navBinding.Target);
+            Assert.Equal(setName, containedEntitySet.ParentNavigationSource.Name);
+            Assert.Equal("Plants", containedEntitySet.NavigationProperty.Name);
+        }
+
         [Fact]
         public void ValidateEducationModel()
         {

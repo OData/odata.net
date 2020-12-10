@@ -29,7 +29,7 @@ namespace Microsoft.OData.Edm
 
             this.container = container;
             this.entityType = entityType;
-            this.path = new EdmPathExpression(name);
+            this.path = new EdmPathExpression(this.container.FullName() + "/" + name);
         }
 
         /// <summary>
