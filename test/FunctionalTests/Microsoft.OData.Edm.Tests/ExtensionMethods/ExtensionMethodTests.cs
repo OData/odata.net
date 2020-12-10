@@ -14,7 +14,6 @@ using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Tests.Validation;
 using Microsoft.OData.Edm.Validation;
 using Xunit;
-using System.Xml.Linq;
 
 namespace Microsoft.OData.Edm.Tests.ExtensionMethods
 {
@@ -993,41 +992,6 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         [Fact]
         public void GetNamespaceAliasForNamespaceWithAlias()
         {
-            Assert.Equal(TestModel.TestModelAlias, TestModel.Instance.Model.GetNamespaceAlias(TestModel.TestModelNameSpace));
-            Assert.Equal(TestModel.TestModelAlias2, TestModel.Instance.Model.GetNamespaceAlias(TestModel.TestModelNameSpace2));
-        }
-
-        [Fact]
-        public void FindNavigationSourceExtendedWithAlias()
-        {
-            EdmEntityContainer entityContainer = new EdmEntityContainer("NS", "Default");
-
-            var csdl
-                = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
-                    "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
-                      "<edmx:DataServices>" +
-                        "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
-                          "<EntityType Name=\"RootEntity\">" +
-                            "<NavigationProperty Name=\"SetA\" Type=\"Collection(NS.EntityA)\" ContainsTarget=\"true\" />" +
-                            "<NavigationProperty Name=\"SetB\" Type=\"Collection(NS.EntityB)\" ContainsTarget=\"true\" />" +
-                          "</EntityType>" +
-                          "<EntityType Name=\"EntityA\">" +
-                            "<NavigationProperty Name=\"EntityAToB\" Type=\"Collection(NS.EntityB)\" />" +
-                          "</EntityType>" +
-                          "<EntityType Name=\"EntityB\"/>" +
-                          "<EntityContainer Name=\"Container\">" +
-                            "<Singleton Name=\"Root\" Type=\"NS.RootEntity\">" +
-                              "<NavigationPropertyBinding Path=\"EntityA/EntityAToB\" Target=\"Root/SetB\" />" +
-                            "</Singleton>" +
-                          "</EntityContainer>" +
-                        "</Schema>" +
-                      "</edmx:DataServices>" +
-                    "</edmx:Edmx>";
-
-            var model = CsdlReader.Parse(XElement.Parse(csdl).CreateReader());
-
-            entityContainer.FindNavigationSourceExtended("");
-
             Assert.Equal(TestModel.TestModelAlias, TestModel.Instance.Model.GetNamespaceAlias(TestModel.TestModelNameSpace));
             Assert.Equal(TestModel.TestModelAlias2, TestModel.Instance.Model.GetNamespaceAlias(TestModel.TestModelNameSpace2));
         }
