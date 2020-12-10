@@ -1986,7 +1986,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "<EntityContainer Name=\"Default\">" +
                        "<Singleton Name=\"Me\" Type=\"NS.Customer\" />" +
                        "<EntitySet Name=\"Customers\" EntityType=\"NS.Customer\">" +
-                         "<NavigationPropertyBinding Path=\"ContainedOrders/OrderLines\" Target=\"Me/ContainedOrderLines\" />" +
+                         "<NavigationPropertyBinding Path=\"ContainedOrders/OrderLines\" Target=\"NS.Default/Me/ContainedOrderLines\" />" +
                        "</EntitySet>" +
                     "</EntityContainer>" +
                   "</Schema>" +
@@ -2054,7 +2054,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         ""$Collection"": true,
         ""$Type"": ""NS.Customer"",
         ""$NavigationPropertyBinding"": {
-          ""ContainedOrders/OrderLines"": ""Me/ContainedOrderLines""
+          ""ContainedOrders/OrderLines"": ""NS.Default/Me/ContainedOrderLines""
         }
       }
     }
