@@ -8,6 +8,7 @@ namespace Microsoft.OData.Json
 {
     #region Namespaces
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -51,7 +52,8 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Map of special characters to strings.
         /// </summary>
-        private static readonly string[] SpecialCharToEscapedStringMap = JsonValueUtils.CreateSpecialCharToEscapedStringMap();
+        private static Dictionary<char, string> SpecialCharToEscapedStringMap = new Dictionary<char, string>() { { '\r', "\\r" }, { '\t', "\\t" }, { '\n', "\\n" }, 
+            { '\b', "\\b" }, { '\f', "\\f" },{ '\"', "\\\"" }, { '\\', "\\\\" } };
 
         /// <summary>
         /// Write a char value.
@@ -65,7 +67,7 @@ namespace Microsoft.OData.Json
 
             if (stringEscapeOption == ODataStringEscapeOption.EscapeNonAscii || value <= 0x7F)
             {
-                string escapedString = JsonValueUtils.SpecialCharToEscapedStringMap[value];
+                string escapedString = GetEscapedJsonChar(value);
                 if (escapedString != null)
                 {
                     writer.Write(escapedString);
@@ -74,6 +76,27 @@ namespace Microsoft.OData.Json
             }
 
             writer.Write(value);
+        }
+
+        private static string GetEscapedJsonChar(char c)
+        {
+            string result;
+            if (!SpecialCharToEscapedStringMap.TryGetValue(c, out result))
+            {
+                if ((c < ' ') || (c > 0x7F))
+                {
+                    // We only need to consider for characters < ' ' and > 0x7F.
+                    result = string.Format(CultureInfo.InvariantCulture, "\\u{0:x4}",(int) c);             
+                }
+                else
+                {
+                    result = null;
+                }
+
+                SpecialCharToEscapedStringMap[c] = result;
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -536,7 +559,7 @@ namespace Microsoft.OData.Json
 
                 // Append the un-handled characters (that do not require special treatment)
                 // to the string builder when special characters are detected.
-                if (JsonValueUtils.SpecialCharToEscapedStringMap[c] == null)
+                if (JsonValueUtils.GetEscapedJsonChar(c) == null)
                 {
                     continue;
                 }
@@ -548,7 +571,7 @@ namespace Microsoft.OData.Json
                     builder.Append(inputString.Substring(startIndex, subStrLength));
                 }
 
-                builder.Append(JsonValueUtils.SpecialCharToEscapedStringMap[c]);
+                builder.Append(JsonValueUtils.GetEscapedJsonChar(c));
                 startIndex = currentIndex + 1;
             }
 
@@ -581,7 +604,7 @@ namespace Microsoft.OData.Json
 
             if (stringEscapeOption == ODataStringEscapeOption.EscapeNonAscii || character <= 0x7F)
             {
-                escapedString = JsonValueUtils.SpecialCharToEscapedStringMap[character];
+                escapedString = JsonValueUtils.GetEscapedJsonChar(character);
             }
 
             // Append the unhandled characters (that do not require special treatment)
@@ -646,7 +669,7 @@ namespace Microsoft.OData.Json
 
                 // Append the un-handled characters (that do not require special treatment)
                 // to the string builder when special characters are detected.
-                if (JsonValueUtils.SpecialCharToEscapedStringMap[c] != null)
+                if (JsonValueUtils.GetEscapedJsonChar(c) != null)
                 {
                     firstIndex = currentIndex;
                     return true;
@@ -692,35 +715,5 @@ namespace Microsoft.OData.Json
             return (ticks - JsonValueUtils.JsonDateTimeMinTimeTicks) / 10000;
         }
 
-        /// <summary>
-        /// Creates the special character to escaped string map.
-        /// </summary>
-        /// <returns>The map of special characters to the corresponding escaped strings.</returns>
-        private static string[] CreateSpecialCharToEscapedStringMap()
-        {
-            string[] specialCharToEscapedStringMap = new string[char.MaxValue + 1];
-            for (int c = char.MinValue; c <= char.MaxValue; ++c)
-            {
-                if ((c < ' ') || (c > 0x7F))
-                {
-                    // We only need to populate for characters < ' ' and > 0x7F.
-                    specialCharToEscapedStringMap[c] = string.Format(CultureInfo.InvariantCulture, "\\u{0:x4}", c);
-                }
-                else
-                {
-                    specialCharToEscapedStringMap[c] = null;
-                }
-            }
-
-            specialCharToEscapedStringMap['\r'] = "\\r";
-            specialCharToEscapedStringMap['\t'] = "\\t";
-            specialCharToEscapedStringMap['\"'] = "\\\"";
-            specialCharToEscapedStringMap['\\'] = "\\\\";
-            specialCharToEscapedStringMap['\n'] = "\\n";
-            specialCharToEscapedStringMap['\b'] = "\\b";
-            specialCharToEscapedStringMap['\f'] = "\\f";
-
-            return specialCharToEscapedStringMap;
-        }
     }
 }

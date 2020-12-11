@@ -127,7 +127,7 @@ namespace Microsoft.OData.Evaluation
                     }
 
                     // editUrl = parentEditUrl/propertyName
-                    this.editUrl = new Uri(parent.GetEditUrl() + "/" + this.NameAsProperty, UriKind.RelativeOrAbsolute);
+                    this.editUrl = new Uri(string.Concat(parent.GetEditUrl(), "/", this.NameAsProperty), UriKind.RelativeOrAbsolute);
                 }
             }
 
@@ -184,7 +184,7 @@ namespace Microsoft.OData.Evaluation
                 }
 
                 // readUrl = parentReadUrl/propertyName
-                this.readUrl = new Uri(parent.GetReadUrl() + "/" + this.NameAsProperty, UriKind.RelativeOrAbsolute);
+                this.readUrl = new Uri(string.Concat(parent.GetReadUrl(), "/", this.NameAsProperty), UriKind.RelativeOrAbsolute);
 
                 // Append possible type cast
                 if (this.ResourceMetadataContext.ActualResourceTypeName !=
@@ -247,7 +247,7 @@ namespace Microsoft.OData.Evaluation
                     }
                 }
 
-                this.canonicalUrl = new Uri(this.canonicalUrl + "/" + this.NameAsProperty, UriKind.RelativeOrAbsolute);
+                this.canonicalUrl = new Uri(string.Concat(this.canonicalUrl, "/", this.NameAsProperty), UriKind.RelativeOrAbsolute);
             }
             else
             {

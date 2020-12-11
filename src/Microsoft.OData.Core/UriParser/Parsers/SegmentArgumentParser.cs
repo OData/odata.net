@@ -275,7 +275,7 @@ namespace Microsoft.OData.UriParser
             List<string> positionalValues = null;
 
             // parse keys just like function parameters
-            ExpressionLexer lexer = new ExpressionLexer("(" + text + ")", true, false);
+            ExpressionLexer lexer = new ExpressionLexer(string.Concat("(", text, ")"), true, false);
             UriQueryExpressionParser exprParser = new UriQueryExpressionParser(ODataUriParserSettings.DefaultFilterLimit /* default limit for parsing key value */, lexer);
             var tmp = (new FunctionCallParser(lexer, exprParser)).ParseArgumentListOrEntityKeyList();
             if (lexer.CurrentToken.Kind != ExpressionTokenKind.End)

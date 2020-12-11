@@ -1451,7 +1451,7 @@ namespace Microsoft.OData.Metadata
         {
             Debug.Assert(containerElement != null, "containerElement != null");
 
-            return containerElement.Container.Name + "." + containerElement.Name;
+            return string.Concat(containerElement.Container.Name, ".", containerElement.Name);
         }
 
 #if !ODATA_CLIENT

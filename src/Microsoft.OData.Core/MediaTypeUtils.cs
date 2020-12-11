@@ -196,7 +196,7 @@ namespace Microsoft.OData
                 string acceptableCharsets = settings.AcceptableCharsets;
                 if (specifiedCharset != null)
                 {
-                    acceptableCharsets = acceptableCharsets == null ? specifiedCharset : specifiedCharset + "," + acceptableCharsets;
+                    acceptableCharsets = acceptableCharsets == null ? specifiedCharset : string.Concat(specifiedCharset, ",", acceptableCharsets);
                 }
 
                 encoding = GetEncoding(acceptableCharsets, payloadKind, mediaType, /*useDefaultEncoding*/ true);

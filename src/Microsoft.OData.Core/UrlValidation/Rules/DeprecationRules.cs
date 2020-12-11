@@ -271,7 +271,7 @@ namespace Microsoft.OData.UriParser.Validation.Rules
         private static bool isRevisionsAnnotation(IEdmVocabularyAnnotation annotation)
         {
             return string.Equals(annotation.Term.FullName(), CoreVocabularyConstants.Revisions, StringComparison.OrdinalIgnoreCase) ||
-                            string.Equals(annotation.Term.FullName(), DefaultCoreAlias + "." + RevisionTerm, StringComparison.OrdinalIgnoreCase);
+                            string.Equals(annotation.Term.FullName(), string.Concat(DefaultCoreAlias, ".", RevisionTerm), StringComparison.OrdinalIgnoreCase);
         }
     }
 }

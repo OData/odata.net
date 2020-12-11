@@ -112,7 +112,7 @@ namespace Microsoft.OData.Json
             {
                 if (primitiveValue.FromODataValue() is string)
                 {
-                    sb.Append("\"" + JsonValueUtils.GetEscapedJsonString(value.FromODataValue()?.ToString()) + "\"");
+                    sb.Append(string.Concat("\"", JsonValueUtils.GetEscapedJsonString(value.FromODataValue()?.ToString()), "\""));
                 }
                 else
                 {
