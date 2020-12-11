@@ -56,6 +56,12 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         public static readonly IEdmTerm ResourcePathTerm = VocabularyModelProvider.CoreModel.FindDeclaredTerm(CoreVocabularyConstants.ResourcePath);
 
         /// <summary>
+        /// The Revisions term.
+        /// </summary>
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
+        public static readonly IEdmTerm RevisionsTerm = VocabularyModelProvider.CoreModel.FindDeclaredTerm(CoreVocabularyConstants.Revisions);
+
+        /// <summary>
         /// The DereferenceableIDs term.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
