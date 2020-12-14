@@ -937,7 +937,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         {
             // Arrange - create the EdmModel with all vacabulary models
             EdmModel model = new EdmModel();
-            Assert.Equal(7, model.ReferencedModels.Count()); // core model + 6 vocabulary models
+            Assert.Equal(8, model.ReferencedModels.Count()); // core model + 7 vocabulary models
 
             // Act
             var unknownType = model.FindType("NS.UnKnownType");
