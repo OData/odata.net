@@ -13,8 +13,8 @@ using Xunit;
 namespace Microsoft.OData.Tests.ScenarioTests.Writer
 {
     /// <summary>
-    /// These tests baseline the end-to-end behavior of when type names are written on the wire, 
-    /// based on the format and metadata level along with whether the AutoComputePayloadMetadata 
+    /// These tests baseline the end-to-end behavior of when type names are written on the wire,
+    /// based on the format and metadata level along with whether the AlwaysAddTypeAnnotationsForDerivedTypes 
     /// flag is set on the message writer settings. These tests are not meant to be exhaustive, but
     /// should catch major end-to-end problems. The unit tests for the individual components are more extensive.
     /// </summary>
@@ -100,9 +100,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
         }
 
         [Fact]
-        public void TypeNameShouldBeWrittenCorrectlyInMinimalMetadataWhenKnobIsOff()
+        public void TypeNameShouldBeWrittenCorrectlyInMinimalMetadataWhenAlwaysAddTypeAnnotationsForDerivedTypesIsOff()
         {
             this.settings.SetContentType(jsonLightMinimalMetadata, null);
+            this.settings.AlwaysAddTypeAnnotationsForDerivedTypes = false;
+
             Assert.DoesNotContain("DeclaredInt16@odata.type", this.writerOutput.Value);
             Assert.Contains("UndeclaredDecimal@odata.type\":\"#Decimal\"", this.writerOutput.Value);
             Assert.Contains("DerivedPrimitive@odata.type\":\"#GeographyPoint\"", this.writerOutput.Value);
@@ -110,9 +112,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
         }
 
         [Fact]
-        public void TypeNameShouldBeWrittenCorrectlyInFullMetadataWhenKnobIsOff()
+        public void TypeNameShouldBeWrittenCorrectlyInFullMetadataWhenAlwaysAddTypeAnnotationsForDerivedTypesIsOff()
         {
             this.settings.SetContentType(jsonLightFullMetadata, null);
+            this.settings.AlwaysAddTypeAnnotationsForDerivedTypes = false;
 
             Assert.Contains("DeclaredInt16@odata.type", this.writerOutput.Value);
             Assert.Contains("UndeclaredDecimal@odata.type\":\"#Decimal\"", this.writerOutput.Value);
@@ -121,9 +124,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
         }
 
         [Fact]
-        public void TypeNameShouldBeWrittenCorrectlyInNoMetadataWhenKnobIsOff()
+        public void TypeNameShouldBeWrittenCorrectlyInNoMetadataWhenAlwaysAddTypeAnnotationsForDerivedTypesIsOff()
         {
             this.settings.SetContentType(jsonLightNoMetadata, null);
+            this.settings.AlwaysAddTypeAnnotationsForDerivedTypes = false;
 
             Assert.DoesNotContain("DeclaredInt16@odata.type", this.writerOutput.Value);
             Assert.DoesNotContain("UndeclaredDecimal@odata.type\":\"#Decimal\"", this.writerOutput.Value);
@@ -132,9 +136,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
         }
 
         [Fact]
-        public void TypeNameShouldBeWrittenCorrectlyInMinimalMetadataWhenKnobIsSet()
+        public void TypeNameShouldBeWrittenCorrectlyInMinimalMetadataWhenAlwaysAddTypeAnnotationsForDerivedTypesIsSet()
         {
             this.settings.SetContentType(jsonLightMinimalMetadata, null);
+            this.settings.AlwaysAddTypeAnnotationsForDerivedTypes = true;
 
             Assert.DoesNotContain("DeclaredInt16@odata.type", this.writerOutput.Value);
             Assert.Contains("UndeclaredDecimal@odata.type\":\"#Decimal\"", this.writerOutput.Value);
@@ -143,32 +148,35 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
         }
 
         [Fact]
-        public void TypeNameShouldBeWrittenCorrectlyInNoMetadataWhenKnobIsSet()
+        public void TypeNameShouldBeWrittenCorrectlyInNoMetadataWhenAlwaysAddTypeAnnotationsForDerivedTypesIsSet()
         {
             this.settings.SetContentType(jsonLightNoMetadata, null);
+            this.settings.AlwaysAddTypeAnnotationsForDerivedTypes = true;
 
             Assert.DoesNotContain("DeclaredInt16@odata.type", this.writerOutput.Value);
-            Assert.DoesNotContain("UndeclaredDecimal@odata.type", this.writerOutput.Value);
-            Assert.DoesNotContain("DerivedPrimitive@odata.type", this.writerOutput.Value);
-            Assert.DoesNotContain("PropertyWithSTNA@odata.type\":\"#TypeNameFromSTNA\"", this.writerOutput.Value);
+            Assert.Contains("UndeclaredDecimal@odata.type\":\"#Decimal\"", this.writerOutput.Value);
+            Assert.Contains("DerivedPrimitive@odata.type\":\"#GeographyPoint\"", this.writerOutput.Value);
+            Assert.Contains("PropertyWithSTNA@odata.type\":\"#TypeNameFromSTNA\"", this.writerOutput.Value);
         }
 
         [Fact]
-        public void TypeNameShouldBeWrittenCorrectlyInNoMetadataWhenKnobIsSetWithJsonP()
+        public void TypeNameShouldBeWrittenCorrectlyInNoMetadataWhenAlwaysAddTypeAnnotationsForDerivedTypesIsSetWithJsonP()
         {
             this.settings.SetContentType(jsonLightNoMetadata, null);
             this.settings.JsonPCallback = "callback";
+            this.settings.AlwaysAddTypeAnnotationsForDerivedTypes = true;
 
             Assert.DoesNotContain("DeclaredInt16@odata.type", this.writerOutput.Value);
-            Assert.DoesNotContain("UndeclaredDecimal@odata.type", this.writerOutput.Value);
-            Assert.DoesNotContain("DerivedPrimitive@odata.type", this.writerOutput.Value);
-            Assert.DoesNotContain("PropertyWithSTNA@odata.type\":\"#TypeNameFromSTNA\"", this.writerOutput.Value);
+            Assert.Contains("UndeclaredDecimal@odata.type\":\"#Decimal\"", this.writerOutput.Value);
+            Assert.Contains("DerivedPrimitive@odata.type\":\"#GeographyPoint\"", this.writerOutput.Value);
+            Assert.Contains("PropertyWithSTNA@odata.type\":\"#TypeNameFromSTNA\"", this.writerOutput.Value);
         }
 
         [Fact]
-        public void TypeNameShouldBeWrittenCorrectlyInFullMetadataWhenKnobIsSet()
+        public void TypeNameShouldBeWrittenCorrectlyInFullMetadataWhenAlwaysAddTypeAnnotationsForDerivedTypesIsSet()
         {
             this.settings.SetContentType(jsonLightFullMetadata, null);
+            this.settings.AlwaysAddTypeAnnotationsForDerivedTypes = true;
 
             Assert.Contains("DeclaredInt16@odata.type", this.writerOutput.Value);
             Assert.Contains("UndeclaredDecimal@odata.type\":\"#Decimal\"", this.writerOutput.Value);
