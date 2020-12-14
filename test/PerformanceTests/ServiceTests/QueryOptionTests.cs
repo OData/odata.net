@@ -7,6 +7,7 @@
 namespace Microsoft.OData.Performance
 {
     using System;
+    using System.IO;
     using global::Xunit;
     using Microsoft.OData;
     using Microsoft.Xunit.Performance;
@@ -73,6 +74,9 @@ namespace Microsoft.OData.Performance
                 requestMessage.SetHeader("Prefer", preferHeader);
             }
             var responseMessage = requestMessage.GetResponse();
+            var reader = new StreamReader(responseMessage.GetStream());
+            var result = reader.ReadToEnd();
+            Console.WriteLine("Query result {0}", result);
             Assert.Equal(200, responseMessage.StatusCode);
         }
     }

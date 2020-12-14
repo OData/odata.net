@@ -54,25 +54,51 @@ Function ExecuteTests
         [string]$xunitConsoleRunnerPath
     )
 
-    $location = Get-Location
-    Set-Location $testFolder
-    $testDlls = Get-ChildItem -Filter Microsoft.OData.Performance.*.Tests.dll
+    # $location = Get-Location
+    # Set-Location $testFolder
+    # $testDlls = Get-ChildItem -Filter Microsoft.OData.Performance.*.Tests.dll
     $time = Get-Date -Format yyyyMMdd.hhmmss
 
-    foreach ($dll in $testDlls)
-    {
-        $dllName = $dll.Name; 
-        Write-Host "*** Run test for $dllName ***"
-        $rawName = $dllName.Replace("Microsoft.OData.Performance.","")
-        $rawName = $rawName.Replace(".Tests.dll", "")
-        $runid = $rawName + "." + $time
-        $result = $runid + ".xml"
-        $analysisResult = $runid + ".analysisResult.xml"
-        $resultPath = $testfolder + "\" + $analysisResult
-        &$perfRunPath $dll.Name -runner $xunitConsoleRunnerPath -runnerargs "-parallel none" -runid $runid
-        &$perfAnalysisPath $result -xml $analysisResult
-        Write-Host "See result for $dllName in $resultPath"
-    }
+    $location = Get-Location
+    Write-Host "Location: $location"
+    # $time = Get-Date -Format yyyyMMdd.hhmmss
+
+    # Set-Location "test\PerformanceTests\ComponentTests\bin\$Config"
+    # $testAssembly = Get-ChildItem -Filter Microsoft.OData.Performance.*.Tests.exe
+    # &".\$testAssembly" --filter *
+
+    Set-Location "test\PerformanceTests\ServiceTests\bin\$Config"
+    $dllName = "Microsoft.OData.Performance.Service.Tests.dll"
+    Write-Host "*** Run test for $dllName ***"
+    $rawName = $dllName.Replace("Microsoft.OData.Performance.","")
+    $rawName = $rawName.Replace(".Tests.dll", "")
+    # $rawName = $rawName.Replace(".Tests.exe", "")
+    $runid = $rawName + "." + $time
+    $result = $runid + ".xml"
+    $analysisResult = $runid + ".analysisResult.xml"
+    $resultPath = $testfolder + "\" + $analysisResult
+    &$perfRunPath $dllName -runner $xunitConsoleRunnerPath -runnerargs "-parallel none" -runid $runid
+    &$perfAnalysisPath $result -xml $analysisResult
+    Write-Host "See result for $dllName in $resultPath"
+    
+    
+    # foreach ($dll in $testDlls)
+    # {
+    #     $dllName = $dll.Name; 
+    #     Write-Host "*** Run test for $dllName ***"
+    #     $rawName = $dllName.Replace("Microsoft.OData.Performance.","")
+    #     $rawName = $rawName.Replace(".Tests.dll", "")
+    #     $rawName = $rawName.Replace(".Tests.exe", "")
+    #     $runid = $rawName + "." + $time
+    #     $result = $runid + ".xml"
+    #     $analysisResult = $runid + ".analysisResult.xml"
+    #     $resultPath = $testfolder + "\" + $analysisResult
+    #     &$perfRunPath $dll.Name -runner $xunitConsoleRunnerPath -runnerargs "-parallel none" -runid $runid
+    #     &$perfAnalysisPath $result -xml $analysisResult
+    #     Write-Host "See result for $dllName in $resultPath"
+    # }
+
+    
 
     Set-Location $location
 }
