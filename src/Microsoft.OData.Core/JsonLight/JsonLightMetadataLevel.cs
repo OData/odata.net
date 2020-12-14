@@ -24,7 +24,6 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="mediaType">The full media type being written. This media type must have a type/subtype of "application/json".</param>
         /// <param name="metadataDocumentUri">The metadata document uri from the writer settings.</param>
-        /// <param name="alwaysAddTypeAnnotationsForDerivedTypes">When set, type annotations will be added for derived types, even when the metadata level is set to "None".</param>
         /// <param name="model">The edm model.</param>
         /// <param name="writingResponse">true if we are writing a response, false otherwise.</param>
         /// <returns>The JSON Light metadata level being written.</returns>
