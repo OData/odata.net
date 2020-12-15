@@ -527,16 +527,16 @@ namespace Microsoft.OData.Client
             }
             else if (m != null && ReflectionUtil.IsSequenceMethod(m.Method, SequenceMethod.Contains))
             {
-                var csvBuilder = new StringBuilder();
-                var version = CommonUtil.ConvertToODataVersion(this.uriVersion);
-                foreach (var item in (IEnumerable)c.Value)
+                StringBuilder csvBuilder = new StringBuilder();
+                ODataVersion version = CommonUtil.ConvertToODataVersion(this.uriVersion);
+                foreach (object item in (IEnumerable)c.Value)
                 {
                     if (csvBuilder.Length != 0)
                     {
                         csvBuilder.Append(UriHelper.COMMA);
                     }
 
-                    var uriLiteral = ODataUriUtils.ConvertToUriLiteral(item, version);
+                    string uriLiteral = ODataUriUtils.ConvertToUriLiteral(item, version);
                     csvBuilder.Append(uriLiteral);
                 }
 
