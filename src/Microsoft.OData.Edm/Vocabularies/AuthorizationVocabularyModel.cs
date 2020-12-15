@@ -9,7 +9,7 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
     /// <summary>
     /// Representing Org.OData.Authorization.V1 Vocabulary Model.
     /// </summary>
-    internal class AuthorizationVocabularyModel
+    public static class AuthorizationVocabularyModel
     {
         /// <summary>
         /// The EDM model with authorization vocabularies.

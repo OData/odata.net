@@ -84,6 +84,10 @@
       <LogicalName>ValidationVocabularies.xml</LogicalName>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Vocabularies\MeasuresVocabularies.xml">
+      <LogicalName>MeasuresVocabularies.xml</LogicalName>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

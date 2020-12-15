@@ -41,3 +41,4 @@ D:\GitHubMaster\odata.net\test\EndToEndTests\Services\Temp\Desktop\net45\Microso
 D:\GitHubMaster\odata.net\test\EndToEndTests\Services\Temp\Desktop\net45\Microsoft.Test.OData.Services.ODataPluggableFormatService.csproj.CopyComplete
 D:\GitHubMaster\odata.net\test\EndToEndTests\Services\Temp\Desktop\net45\Microsoft.Test.OData.Services.ODataPluggableFormatService.dll
 D:\GitHubMaster\odata.net\test\EndToEndTests\Services\Temp\Desktop\net45\Microsoft.Test.OData.Services.ODataPluggableFormatService.pdb
+C:\Users\chrispre\github\odata.net\test\EndToEndTests\Services\Temp\Desktop\net45\Microsoft.Test.OData.Services.ODataPluggableFormatService.dll

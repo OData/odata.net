@@ -20,3 +20,4 @@ D:\GitHubMaster\odata.net\test\EndToEndTests\Services\TestServices\Temp\Desktop\
 D:\GitHubMaster\odata.net\test\EndToEndTests\Services\TestServices\Temp\Desktop\net45\Microsoft.Test.OData.Services.TestServices.Portable.csproj.CopyComplete
 D:\GitHubMaster\odata.net\test\EndToEndTests\Services\TestServices\Temp\Desktop\net45\Microsoft.Test.OData.Services.TestServices.Portable.dll
 D:\GitHubMaster\odata.net\test\EndToEndTests\Services\TestServices\Temp\Desktop\net45\Microsoft.Test.OData.Services.TestServices.Portable.pdb
+C:\Users\chrispre\github\odata.net\test\EndToEndTests\Services\TestServices\Temp\Desktop\net45\Microsoft.Test.OData.Services.TestServices.Portable.dll

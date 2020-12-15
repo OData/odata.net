@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1" />
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml">
+    <edmx:Include Alias="Validation" Namespace="Org.OData.Validation.V1" />
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Org.OData.Measures.V1" Alias="Measures">
+      <Annotation Term="Core.Description">
+        <String>Terms describing monetary amounts and measured quantities</String>
+      </Annotation>
+      <Annotation Term="Core.Links">
+        <Collection>
+          <Record>
+            <PropertyValue Property="rel" String="latest-version" />
+            <PropertyValue Property="href"
+              String="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Measures.V1.xml" />
+          </Record>
+          <Record>
+            <PropertyValue Property="rel" String="alternate" />
+            <PropertyValue Property="href"
+              String="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Measures.V1.json" />
+          </Record>
+          <Record>
+            <PropertyValue Property="rel" String="describedby" />
+            <PropertyValue Property="href"
+              String="https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Measures.V1.md" />
+          </Record>
+        </Collection>
+      </Annotation>
+
+      <Term Name="ISOCurrency" Type="Edm.String" Nullable="false" AppliesTo="Property">
+        <Annotation Term="Core.Description" String="The currency for this monetary amount as an ISO 4217 currency code" />
+      </Term>
+
+      <Term Name="Scale" Type="Edm.Byte" Nullable="false" AppliesTo="Property">
+        <Annotation Term="Core.Description"
+          String="The number of significant decimal places in the scale part (less than or equal to the number declared in the Scale facet)" />
+        <Annotation Term="Core.RequiresType" String="Edm.Decimal" />
+      </Term>
+
+      <Term Name="Unit" Type="Edm.String" Nullable="false" AppliesTo="Property">
+        <Annotation Term="Core.Description"
+          String="The unit of measure for this measured quantity, e.g. cm for centimeters or % for percentages" />
+      </Term>
+
+      <Term Name="DurationGranularity" Type="Measures.DurationGranularityType" Nullable="false" AppliesTo="Property">
+        <Annotation Term="Core.Description" String="The minimum granularity of duration values." />
+        <Annotation Term="Core.LongDescription"
+          String="Absence of this annotation means a granularity of seconds with sub-seconds according to the Precision facet." />
+        <Annotation Term="Core.RequiresType" String="Edm.Duration" />
+      </Term>
+      <TypeDefinition Name="DurationGranularityType" UnderlyingType="Edm.String">
+        <Annotation Term="Validation.AllowedValues">
+          <Collection>
+            <Record>
+              <PropertyValue Property="Value" String="days" />
+              <Annotation Term="Core.Description" String="Duration in days, e.g. `P1D`" />
+            </Record>
+            <Record>
+              <PropertyValue Property="Value" String="hours" />
+              <Annotation Term="Core.Description" String="Duration in days and hours, e.g. `P1DT23H`" />
+            </Record>
+            <Record>
+              <PropertyValue Property="Value" String="minutes" />
+              <Annotation Term="Core.Description" String="Duration in days, hours, and minutes, e.g. `P1DT23H59M`" />
+            </Record>
+          </Collection>
+        </Annotation>
+      </TypeDefinition>
+
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
