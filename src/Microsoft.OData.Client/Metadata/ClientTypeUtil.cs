@@ -489,14 +489,17 @@ namespace Microsoft.OData.Client.Metadata
                 }
             }
 
-            if (newKeyKind == KeyKind.AttributedKey && keyProperties.Count != dataServiceKeyAttribute?.KeyNames.Count)
+            if (dataServiceKeyAttribute != null)
             {
-                var m = (from string a in dataServiceKeyAttribute.KeyNames
-                         where (from b in properties
-                                where b.Name == a
-                                select b).FirstOrDefault() == null
-                         select a).First<string>();
-                throw c.Error.InvalidOperation(c.Strings.ClientType_MissingProperty(typeName, m));
+                if (newKeyKind == KeyKind.AttributedKey && keyProperties.Count != dataServiceKeyAttribute?.KeyNames.Count)
+                {
+                    var m = (from string a in dataServiceKeyAttribute.KeyNames
+                             where (from b in properties
+                                    where b.Name == a
+                                    select b).FirstOrDefault() == null
+                             select a).First<string>();
+                    throw c.Error.InvalidOperation(c.Strings.ClientType_MissingProperty(typeName, m));
+                }
             }
 
             return keyProperties.Count > 0 ? keyProperties.ToArray() : (isEntity ? ClientTypeUtil.EmptyPropertyInfoArray : null);
