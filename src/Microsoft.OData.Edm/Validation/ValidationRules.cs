@@ -627,7 +627,7 @@ namespace Microsoft.OData.Edm.Validation
                     IEdmSchemaType schemaType = structuredType as IEdmSchemaType;
                     if (schemaType != null)
                     {
-                        foreach (var property in structuredType.Properties())
+                        foreach (IEdmProperty property in structuredType.Properties())
                         {
                             if (property != null)
                             {

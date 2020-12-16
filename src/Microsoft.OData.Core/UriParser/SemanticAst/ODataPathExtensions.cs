@@ -56,12 +56,12 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Creates a new ODataPath with the specified segment appended
+        /// Creates a new ODataPath with the specified segment added.
         /// </summary>
         /// <param name="path">The path against which the segment should be applied.</param>
         /// <param name="segment">The segment applied to the path.</param>
         /// <returns>A new ODataPath with the segment appended.</returns>
-        public static ODataPath AppendSegment(this ODataPath path, ODataPathSegment segment)
+        public static ODataPath AddSegment(this ODataPath path, ODataPathSegment segment)
         {
             var newPath = new ODataPath(path);
             newPath.Add(segment);
@@ -74,11 +74,11 @@ namespace Microsoft.OData.UriParser
         /// <param name="path">Path to perform the computation on.</param>
         /// <param name="navigationProperty">The navigation property this segment represents.</param>
         /// <param name="navigationSource">The navigation source of the entities targeted by this navigation property. This can be null.</param>
-        /// <returns>The ODataPath with navigation property segment appended in the end.</returns>
-        public static ODataPath AppendNavigationPropertySegment(this ODataPath path, IEdmNavigationProperty navigationProperty, IEdmNavigationSource navigationSource)
+        /// <returns>A new ODataPath with navigation property segment appended to the end.</returns>
+        public static ODataPath AddNavigationPropertySegment(this ODataPath path, IEdmNavigationProperty navigationProperty, IEdmNavigationSource navigationSource)
         {
             NavigationPropertySegment navigationSegment = new NavigationPropertySegment(navigationProperty, navigationSource);
-            return path.AppendSegment(navigationSegment);
+            return path.AddSegment(navigationSegment);
         }
 
         /// <summary>
@@ -86,15 +86,15 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="path">Path to perform the computation on.</param>
         /// <param name="property">The property this segment represents.</param>
-        /// <returns>>The ODataPath with property segment appended in the end.</returns>
-        public static ODataPath AppendPropertySegment(this ODataPath path, IEdmStructuralProperty property)
+        /// <returns>>A new ODataPath with property segment appended to the end.</returns>
+        public static ODataPath AddPropertySegment(this ODataPath path, IEdmStructuralProperty property)
         {
             PropertySegment propertySegment = new PropertySegment(property);
-            return path.AppendSegment(propertySegment);
+            return path.AddSegment(propertySegment);
         }
 
         /// <summary>
-        /// Append the key segment in the end of ODataPath, the method does not modify current ODataPath instance,
+        /// Add the key segment in the ODataPath, the method does not modify current ODataPath instance,
         /// it returns a new ODataPath without ending type segment.
         /// If last segment is type cast, the key would be appended before type cast segment.
         /// </summary>
@@ -102,8 +102,8 @@ namespace Microsoft.OData.UriParser
         /// <param name="keys">The set of key property names and the values to be used in searching for the given item.</param>
         /// <param name="edmType">The type of the item this key returns.</param>
         /// <param name="navigationSource">The navigation source that this key is used to search.</param>
-        /// <returns>The ODataPath with key segment appended</returns>
-        public static ODataPath AppendKeySegment(this ODataPath path, IEnumerable<KeyValuePair<string, object>> keys, IEdmEntityType edmType, IEdmNavigationSource navigationSource)
+        /// <returns>A new ODataPath with key segment added</returns>
+        public static ODataPath AddKeySegment(this ODataPath path, IEnumerable<KeyValuePair<string, object>> keys, IEdmEntityType edmType, IEdmNavigationSource navigationSource)
         {
             var handler = new SplitEndingSegmentOfTypeHandler<TypeSegment>();
             path.WalkWith(handler);

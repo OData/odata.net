@@ -2355,7 +2355,7 @@ namespace Microsoft.OData.JsonLight
                 {
                     if (TryAppendEntitySetKeySegment(ref odataPath))
                     {
-                        odataPath = odataPath.AppendNavigationPropertySegment(navigationProperty, navigationSource);
+                        odataPath = odataPath.AddNavigationPropertySegment(navigationProperty, navigationSource);
                     }
                 }
                 else if (navigationSource != null && !(navigationSource is IEdmUnknownEntitySet))
@@ -2372,7 +2372,7 @@ namespace Microsoft.OData.JsonLight
             }
             else if (nestedProperty != null)
             {
-                odataPath = odataPath.AppendPropertySegment(nestedProperty as IEdmStructuralProperty);
+                odataPath = odataPath.AddPropertySegment(nestedProperty as IEdmStructuralProperty);
             }
 
             odataUri.Path = odataPath;
@@ -2429,7 +2429,7 @@ namespace Microsoft.OData.JsonLight
                     IEdmEntityType currentEntityType = this.CurrentScope.ResourceType as IEdmEntityType;
                     ODataResourceBase resource = this.CurrentScope.Item as ODataResourceBase;
                     KeyValuePair<string, object>[] keys = ODataResourceMetadataContext.GetKeyProperties(resource, null, currentEntityType);
-                    odataPath = odataPath.AppendKeySegment(keys, currentEntityType, this.CurrentScope.NavigationSource);
+                    odataPath = odataPath.AddKeySegment(keys, currentEntityType, this.CurrentScope.NavigationSource);
                 }
             }
             catch (ODataException)
