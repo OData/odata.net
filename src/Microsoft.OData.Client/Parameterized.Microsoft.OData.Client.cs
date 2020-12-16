@@ -1815,6 +1815,7 @@ namespace Microsoft.OData.Client {
             }
         }
 
+        /// <summary>
         /// A string like "The aggregation method '{0}' is not supported."
         /// </summary>
         internal static string ALinq_AggregationMethodNotSupported(object p0)
