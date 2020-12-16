@@ -23,16 +23,15 @@ namespace Microsoft.OData
         /// <returns>True if the path of navigation property in current scope is matching the <paramref name="bindingPath"/>.</returns>
         public static bool MatchBindingPath(IEdmPathExpression bindingPath, IList<ODataPathSegment> parsedSegments)
         {
-            IEnumerable<string> paths = bindingPath.PathSegments;
-            int count = paths.Count();
+            List<string> paths = bindingPath.PathSegments.ToList();
 
             // If binding path only includes navigation property name, it matches.
-            if (count == 1)
+            if (paths.Count == 1)
             {
                 return true;
             }
 
-            int pathIndex = count - 2; // Skip the last segment which is navigation property name.
+            int pathIndex = paths.Count - 2; // Skip the last segment which is navigation property name.
             int segmentIndex = parsedSegments.Count - 1;
             // Match from tail to head.
             for (; segmentIndex >= 0; segmentIndex--)
@@ -41,11 +40,11 @@ namespace Microsoft.OData
 
                 // Cache the cast result to avoid CA1800:DoNotCastUnnecessarily.
                 bool segmentIsNavigationPropertySegment = segment is NavigationPropertySegment;
-                
+
                 // Containment navigation property or complex property in binding path.
                 if (segment is PropertySegment || (segmentIsNavigationPropertySegment && segment.TargetEdmNavigationSource is IEdmContainedEntitySet))
                 {
-                    if (pathIndex < 0 || string.CompareOrdinal(paths.ElementAt(pathIndex), segment.Identifier) != 0)
+                    if (pathIndex < 0 || string.CompareOrdinal(paths[pathIndex], segment.Identifier) != 0)
                     {
                         return false;
                     }
@@ -55,9 +54,9 @@ namespace Microsoft.OData
                 else if (segment is TypeSegment)
                 {
                     // May need match type if the binding path contains type cast.
-                    if (pathIndex >= 0 && paths.ElementAt(pathIndex).IndexOf('.') >= 0)
+                    if (pathIndex >= 0 && paths[pathIndex].IndexOf('.') >= 0)
                     {
-                        if (string.CompareOrdinal(paths.ElementAt(pathIndex), segment.EdmType.AsElementType().FullTypeName()) != 0)
+                        if (string.CompareOrdinal(paths[pathIndex], segment.EdmType.AsElementType().FullTypeName()) != 0)
                         {
                             return false;
                         }

@@ -133,7 +133,10 @@ namespace Microsoft.OData
         internal const string EntityReferenceSegmentName = "$ref";
 
         /// <summary>The 'Collection' segment name for constructing collection of association links.</summary>
-        internal const string CollectionPrefix = "Collection";
+        internal const string CollectionPrefix = "Collection(";
+
+        /// <summary>The 'Collection($ref)' segment name for constructing collection of association links.</summary>
+        internal const string CollectionPrefixwithEntityReference = "Collection($ref)";
 
         /// <summary>The '$value' segment name for the default stream value.</summary>
         internal const string DefaultStreamSegmentName = "$value";

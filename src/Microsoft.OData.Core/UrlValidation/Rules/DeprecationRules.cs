@@ -18,8 +18,7 @@ namespace Microsoft.OData.UriParser.Validation.Rules
     /// </summary>
     internal class DeprecationRules
     {
-        private const string DefaultCoreAlias = "Core";
-        private const string RevisionTerm = "Revisions";
+        private const string DefaultCoreAliasWithRevisionTerm = "Core.Revisions";
         private const string RevisionVersionProperty = "Version";
         private const string RevisionKindProperty = "Kind";
         private const string RevisionDateProperty = "Date";
@@ -271,7 +270,7 @@ namespace Microsoft.OData.UriParser.Validation.Rules
         private static bool isRevisionsAnnotation(IEdmVocabularyAnnotation annotation)
         {
             return string.Equals(annotation.Term.FullName(), CoreVocabularyConstants.Revisions, StringComparison.OrdinalIgnoreCase) ||
-                            string.Equals(annotation.Term.FullName(), string.Concat(DefaultCoreAlias, ".", RevisionTerm), StringComparison.OrdinalIgnoreCase);
+                            string.Equals(annotation.Term.FullName(), DefaultCoreAliasWithRevisionTerm, StringComparison.OrdinalIgnoreCase);
         }
     }
 }
