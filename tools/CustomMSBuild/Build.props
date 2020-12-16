@@ -136,7 +136,6 @@
     <!-- Code Analysis Settings -->
     <RunCodeAnalysis Condition=" '$(RunCodeAnalysis)' == '' ">false</RunCodeAnalysis>
     <EnableCodeAnalysis Condition=" '$(EnableCodeAnalysis)' == '' ">true</EnableCodeAnalysis>
-    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)ODataRuleSets.ruleset</CodeAnalysisRuleSet>
     <EnableCodeAnalysisSilentErrorHandling Condition="'$(EnableCodeAnalysisSilentErrorHandling)' == ''">true</EnableCodeAnalysisSilentErrorHandling>
 
     <!-- Stylecop Settings -->
