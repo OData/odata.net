@@ -61,7 +61,7 @@ namespace Microsoft.OData.Client.Tests
         }
 
         [Fact]
-        public void TranslatesEnumerableContainsWithEmptyCollection()
+        public void ThrowsForEnumerableContainsWithEmptyCollection()
         {
             // Arrange
             var sut = new DataServiceQueryProvider(dsc);
@@ -69,10 +69,10 @@ namespace Microsoft.OData.Client.Tests
                 .Where(product => Enumerable.Empty<string>().Contains(product.Name));
 
             // Act
-            var queryComponents = sut.Translate(products.Expression);
+            var exception = Assert.ThrowsAny<InvalidOperationException>(() => sut.Translate(products.Expression));
 
             // Assert
-            Assert.Equal(@"http://root/Products?$filter=Name in ()", queryComponents.Uri.ToString());
+            Assert.Equal(Strings.ALinq_ContainsNotValidOnEmptyCollection, exception.Message);
         }
 
         [Fact]

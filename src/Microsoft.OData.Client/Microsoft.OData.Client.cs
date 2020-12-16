@@ -207,6 +207,7 @@ namespace Microsoft.OData.Client
         internal const string ALinq_IllegalSystemQueryOption = "ALinq_IllegalSystemQueryOption";
         internal const string ALinq_IllegalPathStructure = "ALinq_IllegalPathStructure";
         internal const string ALinq_TypeTokenWithNoTrailingNavProp = "ALinq_TypeTokenWithNoTrailingNavProp";
+        internal const string ALinq_ContainsNotValidOnEmptyCollection = "ALinq_ContainsNotValidOnEmptyCollection";
         internal const string DSKAttribute_MustSpecifyAtleastOnePropertyName = "DSKAttribute_MustSpecifyAtleastOnePropertyName";
         internal const string DataServiceCollection_LoadRequiresTargetCollectionObserved = "DataServiceCollection_LoadRequiresTargetCollectionObserved";
         internal const string DataServiceCollection_CannotStopTrackingChildCollection = "DataServiceCollection_CannotStopTrackingChildCollection";

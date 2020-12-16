@@ -1805,6 +1805,17 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
+        /// A string like "The Contains method cannot be used with an empty collection."
+        /// </summary>
+        internal static string ALinq_ContainsNotValidOnEmptyCollection
+        {
+            get
+            {
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ALinq_ContainsNotValidOnEmptyCollection);
+            }
+        }
+
+        /// <summary>
         /// A string like "DataServiceKey attribute must specify at least one property name."
         /// </summary>
         internal static string DSKAttribute_MustSpecifyAtleastOnePropertyName

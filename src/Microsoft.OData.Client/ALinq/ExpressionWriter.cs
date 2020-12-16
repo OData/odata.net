@@ -527,20 +527,26 @@ namespace Microsoft.OData.Client
             }
             else if (m != null && ReflectionUtil.IsSequenceMethod(m.Method, SequenceMethod.Contains))
             {
-                StringBuilder csvBuilder = new StringBuilder();
+                StringBuilder listExpr = new StringBuilder();
                 ODataVersion version = CommonUtil.ConvertToODataVersion(this.uriVersion);
                 foreach (object item in (IEnumerable)c.Value)
                 {
-                    if (csvBuilder.Length != 0)
+                    if (listExpr.Length != 0)
                     {
-                        csvBuilder.Append(UriHelper.COMMA);
+                        listExpr.Append(UriHelper.COMMA);
                     }
 
                     string uriLiteral = ODataUriUtils.ConvertToUriLiteral(item, version);
-                    csvBuilder.Append(uriLiteral);
+                    listExpr.Append(uriLiteral);
                 }
 
-                result = csvBuilder.ToString();
+                // Contains cannot be used with an empty static collection
+                if (listExpr.Length == 0)
+                {
+                    throw new InvalidOperationException(Strings.ALinq_ContainsNotValidOnEmptyCollection);
+                }
+
+                result = listExpr.ToString();
             }
             else
             {
