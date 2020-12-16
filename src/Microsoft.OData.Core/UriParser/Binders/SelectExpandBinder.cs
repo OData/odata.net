@@ -61,7 +61,7 @@ namespace Microsoft.OData.UriParser
             this.parsedSegments = odataPathInfo.Segments.ToList();
             this.state = state;
 
-            if(this.state != null)
+            if (this.state != null)
             {
                 this.resourcePathNavigationSource = this.state.ResourcePathNavigationSource;
             }
@@ -96,7 +96,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// The top level navigation source at the root.
+        /// The navigation source at the resource path.
         /// </summary>
         public IEdmNavigationSource ResourcePathNavigationSource
         {
@@ -248,7 +248,7 @@ namespace Microsoft.OData.UriParser
 
             bool completed;
             while ((completed = first.MoveNext()) && second.MoveNext() && first.Current.Identifier == second.Current.Identifier)
-            { 
+            {
             }
 
             return !completed;
@@ -509,7 +509,7 @@ namespace Microsoft.OData.UriParser
         {
             if (orderByToken != null && orderByToken.Any())
             {
-                MetadataBinder binder = BuildNewMetadataBinder(this.Configuration, navigationSource, targetNavigationSource, elementType, generatedProperties, collapsed);
+                MetadataBinder binder = BuildNewMetadataBinder(this.Configuration, resourcePathNavigationSource, targetNavigationSource, elementType, generatedProperties, collapsed);
                 OrderByBinder orderByBinder = new OrderByBinder(binder.Bind);
                 return orderByBinder.BindOrderBy(binder.BindingState, orderByToken);
             }
@@ -847,13 +847,13 @@ namespace Microsoft.OData.UriParser
         }
 
         private static MetadataBinder BuildNewMetadataBinder(ODataUriParserConfiguration config,
-            IEdmNavigationSource navigationSource,
+            IEdmNavigationSource resourcePathNavigationSource,
             IEdmNavigationSource targetNavigationSource,
             IEdmTypeReference elementType,
             HashSet<EndPathToken> generatedProperties = null,
             bool collapsed = false)
         {
-            BindingState state = CreateBindingState(config, navigationSource, targetNavigationSource, elementType, generatedProperties, collapsed);
+            BindingState state = CreateBindingState(config, resourcePathNavigationSource, targetNavigationSource, elementType, generatedProperties, collapsed);
             return new MetadataBinder(state);
         }
 
@@ -871,7 +871,7 @@ namespace Microsoft.OData.UriParser
             // $filter=Name will reference Authors(the expanded entity).
             // $it/Name will reference Books(the resource identified by the path).
             // The BindingState ImplicitRangeVariable property will store the $it that references the expanded/selected item (The Implicit Range Variable).
-            // We the add to the Stack, the $it that references the resource identified by the path (The Explicit Range Variable).
+            // We add to the Stack, the $it that references the resource identified by the path (The Explicit Range Variable).
 
             BindingState state = new BindingState(config)
             {

@@ -111,7 +111,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void SelectComplexPropertyWithCast()
         {
             var selectItem = ParseSingleSelectForPerson("MyAddress/Fully.Qualified.Namespace.HomeAddress");
-            ODataPathSegment[] segments =new ODataPathSegment[2];
+            ODataPathSegment[] segments = new ODataPathSegment[2];
             segments[0] = new PropertySegment(HardCodedTestModel.GetPersonAddressProp());
             segments[1] = new TypeSegment(HardCodedTestModel.GetHomeAddressType(), null);
             selectItem.ShouldBePathSelectionItem(new ODataPath(segments));
@@ -1277,14 +1277,30 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void DollarItinFilterInsideExpandShouldReferenceQueriedEntity()
         {
             // $it/ID references PersonType since the resource is a People EntitySet.
-            IEdmStructuredType expectedRight = (IEdmStructuredType) HardCodedTestModel.GetPersonType();
+            IEdmStructuredType expectedRight = (IEdmStructuredType)HardCodedTestModel.GetPersonType();
 
             // $filter=ID references MyDog whose type is DogType.
-            IEdmStructuredType expectedLeft = (IEdmStructuredType) HardCodedTestModel.GetDogType();
+            IEdmStructuredType expectedLeft = (IEdmStructuredType)HardCodedTestModel.GetDogType();
             SelectExpandClause clause = RunParseSelectExpand("", "MyDog($filter=ID eq $it/ID)", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
-            IEdmStructuredType right = (((clause.SelectedItems.First() as ExpandedNavigationSelectItem).FilterOption.Expression as BinaryOperatorNode).Right as SingleValuePropertyAccessNode).Property.DeclaringType;
-            IEdmStructuredType left = (((clause.SelectedItems.First() as ExpandedNavigationSelectItem).FilterOption.Expression as BinaryOperatorNode).Left as SingleValuePropertyAccessNode).Property.DeclaringType;
+            IEdmStructuredType right =
+                (
+                    (
+                        (
+                            clause.SelectedItems.First() as ExpandedNavigationSelectItem // $expand=MyDog(...)
+                        ).FilterOption.Expression as BinaryOperatorNode // $filter=ID eq $it/ID
+                    ).Right as SingleValuePropertyAccessNode // $it/ID
+                ).Property.DeclaringType;
+
+            IEdmStructuredType left =
+                (
+                    (
+                        (
+                            clause.SelectedItems.First() as ExpandedNavigationSelectItem // $expand=MyDog(...)
+                        ).FilterOption.Expression as BinaryOperatorNode // $filter=ID eq $it/ID
+                    ).Left as SingleValuePropertyAccessNode // $filter=ID
+                ).Property.DeclaringType;
+
             Assert.Equal(expectedRight, right);
             Assert.Equal(expectedLeft, left);
         }
@@ -1299,8 +1315,28 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             IEdmStructuredType expectedLeft = (IEdmStructuredType)HardCodedTestModel.GetLionType();
             SelectExpandClause clause = RunParseSelectExpand("", "MyDog($select=Color;$expand=LionsISaw($filter=ID1 eq $it/ID))", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
-            IEdmStructuredType right = ((((clause.SelectedItems.First() as ExpandedNavigationSelectItem).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem).FilterOption.Expression as BinaryOperatorNode).Right as SingleValuePropertyAccessNode).Property.DeclaringType;
-            IEdmStructuredType left = ((((clause.SelectedItems.First() as ExpandedNavigationSelectItem).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem).FilterOption.Expression as BinaryOperatorNode).Left as SingleValuePropertyAccessNode).Property.DeclaringType;
+            IEdmStructuredType right =
+                (
+                    (
+                        (
+                            (
+                                clause.SelectedItems.First() as ExpandedNavigationSelectItem // $expand=MyDog(...)
+                            ).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem // $Select=Color;$expand=LionISaw(...)
+                        ).FilterOption.Expression as BinaryOperatorNode // $filter=ID1 eq $it/ID
+                    ).Right as SingleValuePropertyAccessNode // $it/ID
+                ).Property.DeclaringType;
+
+            IEdmStructuredType left =
+                (
+                    (
+                        (
+                            (
+                                clause.SelectedItems.First() as ExpandedNavigationSelectItem // $expand=MyDog(...)
+                            ).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem // $Select=Color;$expand=LionISaw(...)
+                        ).FilterOption.Expression as BinaryOperatorNode // $filter=ID1 eq $it/ID
+                    ).Left as SingleValuePropertyAccessNode // $filter=ID1
+                ).Property.DeclaringType;
+
             Assert.Equal(expectedRight, right);
             Assert.Equal(expectedLeft, left);
         }
@@ -1315,8 +1351,32 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             IEdmStructuredType expectedLeft = (IEdmStructuredType)HardCodedTestModel.GetPaintingType();
             SelectExpandClause clause = RunParseSelectExpand("", "MyDog($select=Color;$expand=MyPeople($expand=MyPaintings($filter=ID eq $it/ID)))", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
-            IEdmStructuredType right = (((((clause.SelectedItems.First() as ExpandedNavigationSelectItem).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem).FilterOption.Expression as BinaryOperatorNode).Right as SingleValuePropertyAccessNode).Property.DeclaringType;
-            IEdmStructuredType left = (((((clause.SelectedItems.First() as ExpandedNavigationSelectItem).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem).FilterOption.Expression as BinaryOperatorNode).Left as SingleValuePropertyAccessNode).Property.DeclaringType;
+            IEdmStructuredType right =
+                (
+                    (
+                        (
+                            (
+                                (
+                                clause.SelectedItems.First() as ExpandedNavigationSelectItem // $expand=MyDog(...)
+                                ).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem // $select=Color;$expand=MyPeople(...)
+                            ).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem // $expand=MyPaintings(...)
+                        ).FilterOption.Expression as BinaryOperatorNode // $filter=ID eq $it/ID
+                    ).Right as SingleValuePropertyAccessNode // $it/ID
+                ).Property.DeclaringType;
+
+            IEdmStructuredType left =
+                (
+                    (
+                        (
+                            (
+                                (
+                                clause.SelectedItems.First() as ExpandedNavigationSelectItem // $expand=MyDog(...)
+                                ).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem // $select=Color;$expand=MyPeople(...)
+                            ).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem // $expand=MyPaintings(...)
+                        ).FilterOption.Expression as BinaryOperatorNode // $filter=ID eq $it/ID
+                    ).Left as SingleValuePropertyAccessNode // $filter=ID
+                ).Property.DeclaringType;
+
             Assert.Equal(expectedRight, right);
             Assert.Equal(expectedLeft, left);
         }
@@ -1332,8 +1392,24 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             SelectExpandClause clause = RunParseSelectExpand("PreviousAddresses($filter=Street eq $it/Name)", "", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
-            IEdmStructuredType right = (((clause.SelectedItems.First() as PathSelectItem).FilterOption.Expression as BinaryOperatorNode).Right as SingleValuePropertyAccessNode).Property.DeclaringType;
-            IEdmStructuredType left = (((clause.SelectedItems.First() as PathSelectItem).FilterOption.Expression as BinaryOperatorNode).Left as SingleValuePropertyAccessNode).Property.DeclaringType;
+            IEdmStructuredType right =
+                (
+                    (
+                        (
+                            clause.SelectedItems.First() as PathSelectItem // $select=PreviousAddresses(...)
+                        ).FilterOption.Expression as BinaryOperatorNode // $filter=Street eq $it/Name
+                    ).Right as SingleValuePropertyAccessNode // $it/Name
+                ).Property.DeclaringType;
+
+            IEdmStructuredType left =
+                (
+                    (
+                        (
+                            clause.SelectedItems.First() as PathSelectItem // $select=PreviousAddresses(...)
+                        ).FilterOption.Expression as BinaryOperatorNode // $filter=Street eq $it/Name
+                    ).Left as SingleValuePropertyAccessNode // $filter=Street
+                ).Property.DeclaringType;
+
             Assert.Equal(expectedRight, right);
             Assert.Equal(expectedLeft, left);
         }
@@ -1673,7 +1749,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
         private static SelectExpandClause RunParseSelectExpand(string select, string expand, IEdmStructuredType type, IEdmEntitySet entitySet)
         {
-            return new ODataQueryOptionParser(HardCodedTestModel.TestModel, type, entitySet, new Dictionary<string, string> {{"$expand", expand}, {"$select", select}}).ParseSelectAndExpand();
+            return new ODataQueryOptionParser(HardCodedTestModel.TestModel, type, entitySet, new Dictionary<string, string> { { "$expand", expand }, { "$select", select } }).ParseSelectAndExpand();
         }
 
         private static SelectExpandClause RunParseSelectExpandAndAssertPaths(string select, string expand, string expectedSelect, string expectedExpand, IEdmEntityType type, IEdmEntitySet enitytSet)
