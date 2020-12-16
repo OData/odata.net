@@ -9,6 +9,7 @@ namespace Microsoft.OData.Client
     #region Namespaces
 
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -372,6 +373,20 @@ namespace Microsoft.OData.Client
                         this.builder.Append(UriHelper.FORWARDSLASH).Append(UriHelper.DOLLARSIGN).Append(UriHelper.COUNT);
                         return m;
                     }
+                    else if (sequenceMethod == SequenceMethod.Contains)
+                    {
+                        // First argument is the collection expression
+                        // Second argument is the value expression
+                        // Note that arguments must be reordered for the IN operator
+                        // e.g. ctx.CreateQuery<Product>("Products").Where(p => (new [] { "Milk", "Cheese", "Donut"}).Contains(p.Name))
+                        //      which translates to /Products()?$filter=Name in ('Milk', 'Cheese', 'Donut')
+                        this.Visit(m.Arguments[1]);
+                        this.builder.Append(UriHelper.SPACE)
+                            .Append(UriHelper.IN)
+                            .Append(UriHelper.SPACE);
+                        this.Visit(m.Arguments[0]);
+                        return m;
+                    }
                 }
                 else
                 {
@@ -507,6 +522,32 @@ namespace Microsoft.OData.Client
                 string memberValue = ClientTypeUtil.GetServerDefinedName(member);
                 ODataEnumValue enumValue = new ODataEnumValue(memberValue, typeNameInEdm ?? typeAnnotation.ElementTypeName);
                 result = ODataUriUtils.ConvertToUriLiteral(enumValue, CommonUtil.ConvertToODataVersion(this.uriVersion), null);
+            }
+            else if (m != null && ReflectionUtil.IsSequenceMethod(m.Method, SequenceMethod.Contains))
+            {
+                StringBuilder listExpr = new StringBuilder();
+                ODataVersion version = CommonUtil.ConvertToODataVersion(this.uriVersion);
+                foreach (object item in (IEnumerable)c.Value)
+                {
+                    if (listExpr.Length != 0)
+                    {
+                        listExpr.Append(UriHelper.COMMA);
+                    }
+
+                    string uriLiteral = ODataUriUtils.ConvertToUriLiteral(item, version);
+                    listExpr.Append(uriLiteral);
+                }
+
+                // Contains cannot be used with an empty static collection
+                if (listExpr.Length == 0)
+                {
+                    throw new InvalidOperationException(Strings.ALinq_ContainsNotValidOnEmptyCollection);
+                }
+
+                listExpr.Insert(0, UriHelper.LEFTPAREN);
+                listExpr.Append(UriHelper.RIGHTPAREN);
+
+                result = listExpr.ToString();
             }
             else
             {

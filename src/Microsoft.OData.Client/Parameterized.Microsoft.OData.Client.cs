@@ -1805,6 +1805,17 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
+        /// A string like "The Contains method cannot be used with an empty collection."
+        /// </summary>
+        internal static string ALinq_ContainsNotValidOnEmptyCollection
+        {
+            get
+            {
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ALinq_ContainsNotValidOnEmptyCollection);
+            }
+        }
+
+        /// <summary>
         /// A string like "The aggregation method '{0}' is not supported."
         /// </summary>
         internal static string ALinq_AggregationMethodNotSupported(object p0)
