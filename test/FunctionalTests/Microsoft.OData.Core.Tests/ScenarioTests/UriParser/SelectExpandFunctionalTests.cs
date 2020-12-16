@@ -111,7 +111,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void SelectComplexPropertyWithCast()
         {
             var selectItem = ParseSingleSelectForPerson("MyAddress/Fully.Qualified.Namespace.HomeAddress");
-            ODataPathSegment[] segments =new ODataPathSegment[2];
+            ODataPathSegment[] segments = new ODataPathSegment[2];
             segments[0] = new PropertySegment(HardCodedTestModel.GetPersonAddressProp());
             segments[1] = new TypeSegment(HardCodedTestModel.GetHomeAddressType(), null);
             selectItem.ShouldBePathSelectionItem(new ODataPath(segments));
@@ -1274,6 +1274,147 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void DollarItinFilterInsideExpandShouldReferenceQueriedEntity()
+        {
+            // $it/ID references PersonType since the resource is a People EntitySet.
+            IEdmStructuredType expectedRight = (IEdmStructuredType)HardCodedTestModel.GetPersonType();
+
+            // $filter=ID references MyDog whose type is DogType.
+            IEdmStructuredType expectedLeft = (IEdmStructuredType)HardCodedTestModel.GetDogType();
+            SelectExpandClause clause = RunParseSelectExpand("", "MyDog($filter=ID eq $it/ID)", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            IEdmStructuredType right =
+                (
+                    (
+                        (
+                            clause.SelectedItems.First() as ExpandedNavigationSelectItem // $expand=MyDog(...)
+                        ).FilterOption.Expression as BinaryOperatorNode // $filter=ID eq $it/ID
+                    ).Right as SingleValuePropertyAccessNode // $it/ID
+                ).Property.DeclaringType;
+
+            IEdmStructuredType left =
+                (
+                    (
+                        (
+                            clause.SelectedItems.First() as ExpandedNavigationSelectItem // $expand=MyDog(...)
+                        ).FilterOption.Expression as BinaryOperatorNode // $filter=ID eq $it/ID
+                    ).Left as SingleValuePropertyAccessNode // $filter=ID
+                ).Property.DeclaringType;
+
+            Assert.Equal(expectedRight, right);
+            Assert.Equal(expectedLeft, left);
+        }
+
+        [Fact]
+        public void DollarItinFilterInsideNestedExpandShouldReferenceResourcePathEntity()
+        {
+            // $it/ID references PersonType since the resource is a People EntitySet.
+            IEdmStructuredType expectedRight = (IEdmStructuredType)HardCodedTestModel.GetPersonType();
+
+            // $filter=ID1 references LionsISaw whose type in LionType.
+            IEdmStructuredType expectedLeft = (IEdmStructuredType)HardCodedTestModel.GetLionType();
+            SelectExpandClause clause = RunParseSelectExpand("", "MyDog($select=Color;$expand=LionsISaw($filter=ID1 eq $it/ID))", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            IEdmStructuredType right =
+                (
+                    (
+                        (
+                            (
+                                clause.SelectedItems.First() as ExpandedNavigationSelectItem // $expand=MyDog(...)
+                            ).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem // $Select=Color;$expand=LionISaw(...)
+                        ).FilterOption.Expression as BinaryOperatorNode // $filter=ID1 eq $it/ID
+                    ).Right as SingleValuePropertyAccessNode // $it/ID
+                ).Property.DeclaringType;
+
+            IEdmStructuredType left =
+                (
+                    (
+                        (
+                            (
+                                clause.SelectedItems.First() as ExpandedNavigationSelectItem // $expand=MyDog(...)
+                            ).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem // $Select=Color;$expand=LionISaw(...)
+                        ).FilterOption.Expression as BinaryOperatorNode // $filter=ID1 eq $it/ID
+                    ).Left as SingleValuePropertyAccessNode // $filter=ID1
+                ).Property.DeclaringType;
+
+            Assert.Equal(expectedRight, right);
+            Assert.Equal(expectedLeft, left);
+        }
+
+        [Fact]
+        public void DollarItinFilterInsideMultiNestedExpandShouldReferenceResourcePathEntity()
+        {
+            // $it/ID references PersonType since the resource is a People EntitySet
+            IEdmStructuredType expectedRight = (IEdmStructuredType)HardCodedTestModel.GetPersonType();
+
+            // $filter=ID references MyPaintings whose type in PaintingType.
+            IEdmStructuredType expectedLeft = (IEdmStructuredType)HardCodedTestModel.GetPaintingType();
+            SelectExpandClause clause = RunParseSelectExpand("", "MyDog($select=Color;$expand=MyPeople($expand=MyPaintings($filter=ID eq $it/ID)))", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            IEdmStructuredType right =
+                (
+                    (
+                        (
+                            (
+                                (
+                                clause.SelectedItems.First() as ExpandedNavigationSelectItem // $expand=MyDog(...)
+                                ).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem // $select=Color;$expand=MyPeople(...)
+                            ).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem // $expand=MyPaintings(...)
+                        ).FilterOption.Expression as BinaryOperatorNode // $filter=ID eq $it/ID
+                    ).Right as SingleValuePropertyAccessNode // $it/ID
+                ).Property.DeclaringType;
+
+            IEdmStructuredType left =
+                (
+                    (
+                        (
+                            (
+                                (
+                                clause.SelectedItems.First() as ExpandedNavigationSelectItem // $expand=MyDog(...)
+                                ).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem // $select=Color;$expand=MyPeople(...)
+                            ).SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem // $expand=MyPaintings(...)
+                        ).FilterOption.Expression as BinaryOperatorNode // $filter=ID eq $it/ID
+                    ).Left as SingleValuePropertyAccessNode // $filter=ID
+                ).Property.DeclaringType;
+
+            Assert.Equal(expectedRight, right);
+            Assert.Equal(expectedLeft, left);
+        }
+
+        [Fact]
+        public void DollarItinFilterInsideSelectShouldReferenceResourcePathEntity()
+        {
+            // $it/ID references PersonType since the resource is a People EntitySet
+            IEdmStructuredType expectedRight = (IEdmStructuredType)HardCodedTestModel.GetPersonType();
+
+            // $filter=Street references PreviousAddresses whose type in AddressType.
+            IEdmStructuredType expectedLeft = (IEdmStructuredType)HardCodedTestModel.GetAddressType();
+
+            SelectExpandClause clause = RunParseSelectExpand("PreviousAddresses($filter=Street eq $it/Name)", "", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            IEdmStructuredType right =
+                (
+                    (
+                        (
+                            clause.SelectedItems.First() as PathSelectItem // $select=PreviousAddresses(...)
+                        ).FilterOption.Expression as BinaryOperatorNode // $filter=Street eq $it/Name
+                    ).Right as SingleValuePropertyAccessNode // $it/Name
+                ).Property.DeclaringType;
+
+            IEdmStructuredType left =
+                (
+                    (
+                        (
+                            clause.SelectedItems.First() as PathSelectItem // $select=PreviousAddresses(...)
+                        ).FilterOption.Expression as BinaryOperatorNode // $filter=Street eq $it/Name
+                    ).Left as SingleValuePropertyAccessNode // $filter=Street
+                ).Property.DeclaringType;
+
+            Assert.Equal(expectedRight, right);
+            Assert.Equal(expectedLeft, left);
+        }
+
+        [Fact]
         public void SelectAndExpandShouldFailOnSelectWrongComplexProperties()
         {
             Action parse = () => RunParseSelectExpand("Name,MyAddress/City/Street,MyDog", "MyDog($select=Color)", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
@@ -1606,9 +1747,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
         #region Test Running Helpers
 
-        private static SelectExpandClause RunParseSelectExpand(string select, string expand, IEdmStructuredType type, IEdmEntitySet enitytSet)
+        private static SelectExpandClause RunParseSelectExpand(string select, string expand, IEdmStructuredType type, IEdmEntitySet entitySet)
         {
-            return new ODataQueryOptionParser(HardCodedTestModel.TestModel, type, enitytSet, new Dictionary<string, string> {{"$expand", expand}, {"$select", select}}).ParseSelectAndExpand();
+            return new ODataQueryOptionParser(HardCodedTestModel.TestModel, type, entitySet, new Dictionary<string, string> { { "$expand", expand }, { "$select", select } }).ParseSelectAndExpand();
         }
 
         private static SelectExpandClause RunParseSelectExpandAndAssertPaths(string select, string expand, string expectedSelect, string expectedExpand, IEdmEntityType type, IEdmEntitySet enitytSet)

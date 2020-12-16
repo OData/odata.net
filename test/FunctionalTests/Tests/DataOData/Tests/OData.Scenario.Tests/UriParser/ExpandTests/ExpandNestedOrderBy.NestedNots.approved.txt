@@ -95,8 +95,8 @@ SelectExpandQueryOption
 						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
 					ResourceRangeVariable
 						Name = $it
-						NavigationSource = Orders
-						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
+						NavigationSource = OrderDetails
+						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=False]
 				Then By = 
 			SelectExpandQueryOption
 				AllSelected = True
