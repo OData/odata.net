@@ -1438,7 +1438,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 }
             };
 
-            readAction.Throws<ODataException>(Strings.ReaderValidationUtils_ContextUriValidationInvalidExpectedEntitySet("http://host/service/$metadata#Customers/$deletedEntity","MyNS.Example30.Customers", "MyNS.Example30.Customers.Orders"));
+            readAction.Throws<ODataException>(Strings.ReaderValidationUtils_ContextUriValidationInvalidExpectedEntitySet("http://host/service/$metadata#Customers/$deletedEntity","Customers", "Customers.Orders"));
         }
 
         #endregion

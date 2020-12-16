@@ -493,8 +493,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     ExpectedException = ODataExpectedExceptions.ODataException(
                         "ReaderValidationUtils_ContextUriValidationInvalidExpectedEntitySet",
                         "http://odata.org/test/$metadata#Offices/$entity",
-                        "TestModel.DefaultContainer.Offices",
-                        "TestModel.DefaultContainer.Cities")
+                        "Offices",
+                        "Cities")
                 },
                 /* TODO: Enable this case after updating SelectedPropertiesNode class to adapt to V4
                 new PayloadReaderTestDescriptor(this.Settings)

@@ -134,9 +134,9 @@ namespace Microsoft.OData.Edm.Tests.Library
             Assert.Same(entitySetIncludeInServiceDocumentTrue.Type.AsElementType(), entityType);
             Assert.Same(entitySetIncludeInServiceDocumentFalse.Type.AsElementType(), entityType);
 
-            Assert.Equal("NS.Container.DefaultEntities", entitySetDefault.Path.Path);
-            Assert.Equal("NS.Container.IncludeInServiceDocumentTrueEntities", entitySetIncludeInServiceDocumentTrue.Path.Path);
-            Assert.Equal("NS.Container.IncludeInServiceDocumentFalseEntities", entitySetIncludeInServiceDocumentFalse.Path.Path);
+            Assert.Equal("DefaultEntities", entitySetDefault.Path.Path);
+            Assert.Equal("IncludeInServiceDocumentTrueEntities", entitySetIncludeInServiceDocumentTrue.Path.Path);
+            Assert.Equal("IncludeInServiceDocumentFalseEntities", entitySetIncludeInServiceDocumentFalse.Path.Path);
 
             Assert.True(entitySetDefault.IncludeInServiceDocument);
             Assert.True(entitySetIncludeInServiceDocumentTrue.IncludeInServiceDocument);

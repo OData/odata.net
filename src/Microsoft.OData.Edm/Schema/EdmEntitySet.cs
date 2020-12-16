@@ -41,7 +41,7 @@ namespace Microsoft.OData.Edm
 
             this.container = container;
             this.type = new EdmCollectionType(new EdmEntityTypeReference(elementType, false));
-            this.path = new EdmPathExpression(this.container.FullName() + "." + this.Name);
+            this.path = new EdmPathExpression(name);
             this.includeInServiceDocument = includeInServiceDocument;
         }
 
