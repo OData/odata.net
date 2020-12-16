@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Text;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.UriParser;
@@ -371,6 +370,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
             ODataResource orderEntry = new ODataResource()
             {
+                Id = new Uri("Orders(1)", UriKind.Relative),
                 SerializationInfo = new ODataResourceSerializationInfo
                 {
                     NavigationSourceEntityTypeName = "MyNS.Order",
@@ -413,7 +413,7 @@ namespace Microsoft.OData.Tests.JsonLight
             writer.WriteEnd();
             writer.Flush();
 
-            Assert.Equal("{\"@odata.context\":\"http://host/service/$metadata#Products(ContactName,Orders(ShippingAddress))/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Orders/$entity\",\"ShippingAddress\":{\"City\":\"Shanghai\"}}]}", this.TestPayload());
+            Assert.Equal("{\"@odata.context\":\"http://host/service/$metadata#Products(ContactName,Orders(ShippingAddress))/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Orders/$entity\",\"@odata.id\":\"Orders(1)\",\"ShippingAddress\":{\"City\":\"Shanghai\"}}]}", this.TestPayload());
         }
 
         [InlineData(/*isResponse*/true)]
@@ -565,6 +565,100 @@ namespace Microsoft.OData.Tests.JsonLight
             writer.Flush();
 
             Assert.Equal("{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Products/$entity\",\"@odata.type\":\"#MyNS.PhysicalProduct\",\"Id\":1,\"Name\":\"car\",\"Material\":\"gold\"}]}", this.TestPayload());
+        }
+
+        [InlineData(/*isResponse*/true, /*keyAsSegment*/false)]
+        [InlineData(/*isResponse*/false, /*keyAsSegment*/false)]
+        [InlineData(/*isResponse*/true, /*keyAsSegment*/true)]
+        [InlineData(/*isResponse*/false, /*keyAsSegment*/true)]
+        [Theory]
+        public void Write40DeletedEntryWithKeyValues(bool isResponse, bool keyAsSegment)
+        {
+            ODataDeletedResource deletedCustomerWithContent = new ODataDeletedResource()
+            {
+                Properties = new ODataProperty[]
+                {
+                    new ODataProperty() {Name="Id", Value = 1},
+                    new ODataProperty() {Name="ContactName", Value="Samantha Stones" }
+                },
+                Reason = DeltaDeletedEntryReason.Changed
+            };
+
+            string payload = WriteDeletedResource(deletedCustomerWithContent, isResponse, keyAsSegment, ODataVersion.V4);
+
+            string id = keyAsSegment ? "http://host/service/Customers/1" : "http://host/service/Customers(1)";
+            Assert.Equal(payload, isResponse ?
+                "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\",\"@odata.count\":5,\"@odata.deltaLink\":\"Customers?$expand=Orders&$deltatoken=8015\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Customers/$deletedEntity\",\"id\":\"" + id + "\",\"reason\":\"changed\"}]}" :
+                "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Customers/$deletedEntity\",\"id\":\"" + id + "\",\"reason\":\"changed\"}]}"
+                );
+        }
+
+        [InlineData(/*isResponse*/true, /*keyAsSegment*/false)]
+        [InlineData(/*isResponse*/false, /*keyAsSegment*/false)]
+        [InlineData(/*isResponse*/true, /*keyAsSegment*/true)]
+        [InlineData(/*isResponse*/false, /*keyAsSegment*/true)]
+        [Theory]
+        public void Write40DeletedEntryWithKeyValuesMatchesId(bool isResponse, bool keyAsSegment)
+        {
+            ODataDeletedResource deletedCustomerWithKeys = new ODataDeletedResource()
+            {
+                Properties = new ODataProperty[]
+                {
+                    new ODataProperty() {Name="Id", Value = 1},
+                    new ODataProperty() {Name="ContactName", Value="Samantha Stones" }
+                },
+                Reason = DeltaDeletedEntryReason.Changed
+            };
+
+            string id = keyAsSegment ? "http://host/service/Customers/1" : "http://host/service/Customers(1)";
+            ODataDeletedResource deletedCustomerWithId = new ODataDeletedResource(new Uri(id, UriKind.Absolute), DeltaDeletedEntryReason.Changed);
+
+            string deletedCustomerWithKeysPayload = WriteDeletedResource(deletedCustomerWithKeys, isResponse, keyAsSegment, ODataVersion.V4);
+            string deletedCustomerWithIdPayload = WriteDeletedResource(deletedCustomerWithId, isResponse, keyAsSegment, ODataVersion.V4);
+
+            Assert.Equal(deletedCustomerWithIdPayload, deletedCustomerWithKeysPayload);
+        }
+
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void Write40DeletedEntryWithKeyAndIdUsesId(bool isResponse)
+        {
+            ODataDeletedResource deletedCustomerWithId = new ODataDeletedResource(new Uri("Customers(2)", UriKind.Relative), DeltaDeletedEntryReason.Changed)
+            {
+                Properties = new ODataProperty[]
+                {
+                    new ODataProperty() {Name="Id", Value = 1},
+                    new ODataProperty() {Name="ContactName", Value="Samantha Stones" }
+                },
+                Reason = DeltaDeletedEntryReason.Changed
+            };
+
+            string deletedCustomerWithKeysPayload = WriteDeletedResource(deletedCustomerWithId, isResponse, /*keyAsSegment*/false, ODataVersion.V4);
+
+            Assert.Equal(deletedCustomerWithKeysPayload, isResponse ?
+                "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\",\"@odata.count\":5,\"@odata.deltaLink\":\"Customers?$expand=Orders&$deltatoken=8015\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Customers/$deletedEntity\",\"id\":\"Customers(2)\",\"reason\":\"changed\"}]}" :
+                "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Customers/$deletedEntity\",\"id\":\"Customers(2)\",\"reason\":\"changed\"}]}"
+                );
+        }
+
+        private string WriteDeletedResource(ODataDeletedResource deletedResource, bool isResponse, bool keyAsSegment, ODataVersion version)
+        {
+            MemoryStream stream = new MemoryStream();
+            ODataJsonLightOutputContext outputContext = CreateJsonLightOutputContext(stream, this.GetModel(), false, null, version, isResponse);
+            outputContext.ODataSimplifiedOptions.EnableWritingKeyAsSegment = keyAsSegment;
+
+            ODataJsonLightWriter writer = new ODataJsonLightWriter(outputContext, this.GetCustomers(), this.GetCustomerType(), true, false, true);
+            writer.WriteStart(isResponse ? feed : requestFeed);
+            writer.WriteStart(deletedResource);
+            writer.WriteEnd(); // customer
+            writer.WriteEnd(); // delta resource set
+            writer.Flush();
+
+            stream.Seek(0, SeekOrigin.Begin);
+            string result = new StreamReader(stream).ReadToEnd();
+            stream.Dispose();
+            return result;
         }
 
         #region Expanded Feeds
@@ -1382,7 +1476,7 @@ namespace Microsoft.OData.Tests.JsonLight
         [InlineData(/*isResponse*/true)]
         [InlineData(/*isResponse*/false)]
         [Theory]
-        public void WriteResourceInDeltaSetWithoutKeyOrIdShouldFail(bool isResponse)
+        public void WriteResourceInDeltaSetResponseWithoutKeyOrIdShouldFail(bool isResponse)
         {
             this.TestInit(this.GetModel());
 
@@ -1393,7 +1487,14 @@ namespace Microsoft.OData.Tests.JsonLight
                 writer.WriteStart(new ODataResource());
             };
 
-            writeAction.Throws<ODataException>(Strings.ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties);
+            if (isResponse)
+            {
+                writeAction.Throws<ODataException>(Strings.ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties);
+            }
+            else
+            {
+                writeAction.DoesNotThrow();
+            }
         }
 
         [InlineData(/*isResponse*/true)]

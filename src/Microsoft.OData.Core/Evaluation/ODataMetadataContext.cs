@@ -238,7 +238,7 @@ namespace Microsoft.OData.Evaluation
             if (resourceState.MetadataBuilder == null)
             {
                 ODataResourceBase resource = resourceState.Resource;
-                if (this.isResponse && !isDelta)
+                if (this.isResponse || (isDelta && this.metadataDocumentUri != null))
                 {
                     ODataTypeAnnotation typeAnnotation = resource.TypeAnnotation;
 
@@ -269,18 +269,32 @@ namespace Microsoft.OData.Evaluation
                         ODataResourceTypeContext.Create( /*serializationInfo*/
                             null, navigationSource, navigationSourceElementType, resourceState.ResourceTypeFromMetadata ?? resourceState.ResourceType,
                             /*throwIfMissingTypeInfo*/ true);
-                    IODataResourceMetadataContext resourceMetadataContext = ODataResourceMetadataContext.Create(resource, typeContext, /*serializationInfo*/null, structuredType, this, resourceState.SelectedProperties, null);
+
+                    IODataResourceMetadataContext resourceMetadataContext = ODataResourceMetadataContext.Create(
+                        resource,
+                        typeContext,
+                        /*serializationInfo*/null,
+                        structuredType,
+                        this,
+                        resourceState.SelectedProperties,
+                        null,
+                        /*requiresId*/ (this.isResponse || !isDelta || resource is ODataDeletedResource) // id is required except for non-deleted resource in delta request
+                        );
 
                     ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(this.ServiceBaseUri,
                         useKeyAsSegment ? ODataUrlKeyDelimiter.Slash : ODataUrlKeyDelimiter.Parentheses);
 
                     if (structuredType.IsODataEntityTypeKind())
                     {
-                        resourceState.MetadataBuilder = new ODataConventionalEntityMetadataBuilder(resourceMetadataContext, this, uriBuilder);
+                        resourceState.MetadataBuilder = isDelta ?
+                            new ODataConventionalIdMetadataBuilder(resourceMetadataContext, this, uriBuilder) :
+                            new ODataConventionalEntityMetadataBuilder(resourceMetadataContext, this, uriBuilder);
                     }
                     else
                     {
-                        resourceState.MetadataBuilder = new ODataConventionalResourceMetadataBuilder(resourceMetadataContext, this, uriBuilder);
+                        resourceState.MetadataBuilder = isDelta ?
+                            resourceState.MetadataBuilder = new NoOpResourceMetadataBuilder(resource) :
+                            new ODataConventionalResourceMetadataBuilder(resourceMetadataContext, this, uriBuilder);
                     }
                 }
                 else

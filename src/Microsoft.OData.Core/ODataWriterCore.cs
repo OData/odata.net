@@ -2057,7 +2057,7 @@ namespace Microsoft.OData
                 IEdmEntityType entityType = resourceType as IEdmEntityType;
                 if (resource.Id == null &&
                     entityType != null &&
-                    (resource is ODataDeletedResource || this.outputContext.MessageWriterSettings.Version > ODataVersion.V4) &&
+                    (this.outputContext.WritingResponse || resource is ODataDeletedResource) &&
                     !HasKeyProperties(entityType, resource.Properties))
                 {
                     throw new ODataException(Strings.ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties);

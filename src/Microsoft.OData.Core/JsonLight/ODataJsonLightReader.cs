@@ -1091,7 +1091,7 @@ namespace Microsoft.OData.JsonLight
                     ODataConventionalResourceMetadataBuilder conventionalResourceMetadataBuilder =
                         builder as ODataConventionalResourceMetadataBuilder;
 
-                    // If it's ODataConventionalResourceMetadataBuilder, then it means we need to build nested relation ship for it in containment case
+                    // If it's ODataConventionalResourceMetadataBuilder, then it means we need to build nested relationship for it in containment case
                     if (conventionalResourceMetadataBuilder != null)
                     {
                         if (parentNestInfo != null)
@@ -2477,7 +2477,10 @@ namespace Microsoft.OData.JsonLight
                 }
             }
 
-            this.jsonLightResourceDeserializer.ValidateMediaEntity(resourceState);
+            if (!this.ReadingDelta)
+            {
+                this.jsonLightResourceDeserializer.ValidateMediaEntity(resourceState);
+            }
 
             // In non-delta responses, ensure that all projected properties get created.
             // Also ignore cases where the resource is 'null' which happens for expanded null entries.
