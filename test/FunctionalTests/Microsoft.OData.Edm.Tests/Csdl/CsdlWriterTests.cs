@@ -1986,7 +1986,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "<EntityContainer Name=\"Default\">" +
                        "<Singleton Name=\"Me\" Type=\"NS.Customer\" />" +
                        "<EntitySet Name=\"Customers\" EntityType=\"NS.Customer\">" +
-                         "<NavigationPropertyBinding Path=\"ContainedOrders/OrderLines\" Target=\"NS.Default/Me/ContainedOrderLines\" />" +
+                         "<NavigationPropertyBinding Path=\"ContainedOrders/OrderLines\" Target=\"Me/ContainedOrderLines\" />" +
                        "</EntitySet>" +
                     "</EntityContainer>" +
                   "</Schema>" +
@@ -2054,7 +2054,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         ""$Collection"": true,
         ""$Type"": ""NS.Customer"",
         ""$NavigationPropertyBinding"": {
-          ""ContainedOrders/OrderLines"": ""NS.Default/Me/ContainedOrderLines""
+          ""ContainedOrders/OrderLines"": ""Me/ContainedOrderLines""
         }
       }
     }
@@ -2281,7 +2281,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                   "<EntityContainer Name=\"MyApi\">" +
                       "<EntitySet Name=\"Sites\" EntityType=\"NS.Site\" />" +
                       "<EntitySet Name=\"Areas\" EntityType=\"NS.Area\">" +
-                        "<NavigationPropertyBinding Path=\"Plant\" Target=\"NS.MyApi/Sites/Plants\" />" +
+                        "<NavigationPropertyBinding Path=\"Plant\" Target=\"Sites/Plants\" />" +
                       "</EntitySet>" +
                     "</EntityContainer>" +
                   "</Schema>" +
@@ -2346,7 +2346,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         ""$Collection"": true,
         ""$Type"": ""NS.Area"",
         ""$NavigationPropertyBinding"": {
-          ""Plant"": ""NS.MyApi/Sites/Plants""
+          ""Plant"": ""Sites/Plants""
         }
       }
     }

@@ -3059,17 +3059,17 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(path, "path");
 
             // the path could be:
-            // NS.Default.Customers/ContainedOrders  --> for back-compatible
-            // NS.Default/Customers/ContainedOrders
-            // Customers
-            // Customers/ContainedOrders
+            // "NS.Default.Customers/ContainedOrders"(for backward-compatibility) or
+            // "NS.Default/Customers/ContainedOrders" (for top-level entity set in the Default entity container) or
+            // "Customers" (unqualified)
+            // "Customers/ContainedOrders" (unqualified)
             string[] pathSegments = path.Split('/');
 
             string firstElementName = pathSegments[0];
             int nextIndex = 1;
-            if (pathSegments[0].Contains("."))
+            if (firstElementName.Contains("."))
             {
-                if (pathSegments[0] == container.FullName())
+                if (string.Equals(firstElementName, container.FullName(), StringComparison.OrdinalIgnoreCase))
                 {
                     if (pathSegments.Length > 1)
                     {
