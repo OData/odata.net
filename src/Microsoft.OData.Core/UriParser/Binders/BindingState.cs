@@ -152,7 +152,7 @@ namespace Microsoft.OData.UriParser
         internal bool InEntitySetAggregation { get; set; }
 
         /// <summary>
-        /// The navigation source at the root.
+        /// The navigation source at the resource path.
         /// </summary>
         internal IEdmNavigationSource ResourcePathNavigationSource { get; set; }
 
