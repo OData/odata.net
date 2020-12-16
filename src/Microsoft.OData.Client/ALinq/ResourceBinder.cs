@@ -1515,7 +1515,7 @@ namespace Microsoft.OData.Client
                         case SequenceMethod.Any:
                         case SequenceMethod.All:
                         case SequenceMethod.AnyPredicate:
-                        case SequenceMethod.Contains:
+                        case SequenceMethod.Contains when mce.Arguments[0] is ConstantExpression:
                             return mce;
                         case SequenceMethod.LongCount:
                         case SequenceMethod.Count:

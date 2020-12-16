@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -105,6 +106,36 @@ namespace Microsoft.OData.Client.Tests
             Assert.Equal(@"http://root/Products?$filter=Name in ('Milk','Flour') and Price lt 5", queryComponents.Uri.ToString());
         }
 
+        [Fact]
+        public void EnumerableContainsOnCollectionValuedPropertiesWithConstantIsNotSupported()
+        {
+            // Arrange
+            var sut = new DataServiceQueryProvider(dsc);
+            var products = dsc.CreateQuery<Product>("Products")
+                .Where(product => product.Comments.Contains("buy"));
+
+            // Act
+            var exception = Assert.ThrowsAny<NotSupportedException>(() => sut.Translate(products.Expression));
+
+            // Assert
+            Assert.Equal("The method 'Contains' is not supported.", exception.Message);
+        }
+
+        [Fact]
+        public void EnumerableContainsOnCollectionValuedPropertiesWithMemberAccessIsNotSupported()
+        {
+            // Arrange
+            var sut = new DataServiceQueryProvider(dsc);
+            var products = dsc.CreateQuery<Product>("Products")
+                .Where(product => product.Comments.Contains(product.Name));
+
+            // Act
+            var exception = Assert.ThrowsAny<NotSupportedException>(() => sut.Translate(products.Expression));
+
+            // Assert
+            Assert.Equal("The method 'Contains' is not supported.", exception.Message);
+        }
+
         #endregion
 
         [EntityType]
@@ -116,6 +147,8 @@ namespace Microsoft.OData.Client.Tests
             public string Name { get; set; }
 
             public decimal Price { get; set; }
+
+            public IEnumerable<string> Comments { get; set; }
         }
     }
 }
