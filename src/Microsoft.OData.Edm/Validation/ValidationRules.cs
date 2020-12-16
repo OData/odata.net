@@ -627,20 +627,16 @@ namespace Microsoft.OData.Edm.Validation
                     IEdmSchemaType schemaType = structuredType as IEdmSchemaType;
                     if (schemaType != null)
                     {
-                        var properties = structuredType.Properties().ToList();
-                        if (properties.Count > 0)
+                        foreach (IEdmProperty property in structuredType.Properties())
                         {
-                            foreach (var property in properties)
+                            if (property != null)
                             {
-                                if (property != null)
+                                if (property.Name.EqualsOrdinal(schemaType.Name))
                                 {
-                                    if (property.Name.EqualsOrdinal(schemaType.Name))
-                                    {
-                                        context.AddError(
-                                        property.Location(),
-                                        EdmErrorCode.BadProperty,
-                                        Strings.EdmModel_Validator_Semantic_InvalidMemberNameMatchesTypeName(property.Name));
-                                    }
+                                    context.AddError(
+                                    property.Location(),
+                                    EdmErrorCode.BadProperty,
+                                    Strings.EdmModel_Validator_Semantic_InvalidMemberNameMatchesTypeName(property.Name));
                                 }
                             }
                         }

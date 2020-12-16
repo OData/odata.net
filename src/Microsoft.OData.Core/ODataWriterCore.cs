@@ -2339,10 +2339,10 @@ namespace Microsoft.OData
 
                             if (resourceTypeCast != null)
                             {
-                                odataPath.Add(resourceTypeCast);
+                                odataPath = odataPath.AddSegment(resourceTypeCast);
                             }
 
-                            odataPath = odataPath.AppendPropertySegment(structuredProperty);
+                            odataPath = odataPath.AddPropertySegment(structuredProperty);
 
                             derivedTypeConstraints = this.outputContext.Model.GetDerivedTypeConstraints(structuredProperty);
                         }
@@ -2369,7 +2369,7 @@ namespace Microsoft.OData
 
                                 if (resourceTypeCast != null)
                                 {
-                                    odataPath.Add(resourceTypeCast);
+                                    odataPath = odataPath.AddSegment(resourceTypeCast);
                                 }
 
                                 navigationSource = currentNavigationSource == null
@@ -2389,7 +2389,7 @@ namespace Microsoft.OData
                                 {
                                     case EdmNavigationSourceKind.ContainedEntitySet:
                                         // Containment cannot be written alone without odata uri.
-                                        if (odataPath.Count == 0)
+                                        if (!odataPath.Any())
                                         {
                                             throw new ODataException(Strings.ODataWriterCore_PathInODataUriMustBeSetWhenWritingContainedElement);
                                         }
@@ -2398,12 +2398,12 @@ namespace Microsoft.OData
 
                                         if (odataPath != null && typeCastFromExpand != null)
                                         {
-                                            odataPath.Add(typeCastFromExpand);
+                                            odataPath = odataPath.AddSegment(typeCastFromExpand);
                                         }
 
                                         Debug.Assert(navigationSource is IEdmContainedEntitySet, "If the NavigationSourceKind is ContainedEntitySet, the navigationSource must be IEdmContainedEntitySet.");
                                         IEdmContainedEntitySet containedEntitySet = (IEdmContainedEntitySet)navigationSource;
-                                        odataPath = odataPath.AppendNavigationPropertySegment(containedEntitySet.NavigationProperty, containedEntitySet);
+                                        odataPath = odataPath.AddNavigationPropertySegment(containedEntitySet.NavigationProperty, containedEntitySet);
                                         break;
                                     case EdmNavigationSourceKind.EntitySet:
                                         odataPath = new ODataPath(new EntitySetSegment(navigationSource as IEdmEntitySet));
@@ -2461,7 +2461,7 @@ namespace Microsoft.OData
                         "If the current state is Resource the current item must be an ODataResource as well (and not null either).");
                     KeyValuePair<string, object>[] keys = ODataResourceMetadataContext.GetKeyProperties(resource,
                         this.GetResourceSerializationInfo(resource), currentEntityType);
-                    path = path.AppendKeySegment(keys, currentEntityType, this.CurrentScope.NavigationSource);
+                    path = path.AddKeySegment(keys, currentEntityType, this.CurrentScope.NavigationSource);
                 }
             }
             catch (ODataException)
