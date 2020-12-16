@@ -68,7 +68,7 @@ namespace Microsoft.OData
                 return typeName;
             }
 
-            Debug.Assert(!typeName.StartsWith(ODataConstants.TypeNamePrefix, StringComparison.Ordinal), "The type name not start with " + ODataConstants.TypeNamePrefix + "before prefix");
+            Debug.Assert(!typeName.StartsWith(ODataConstants.TypeNamePrefix, StringComparison.Ordinal), string.Concat("The type name not start with ", ODataConstants.TypeNamePrefix, "before prefix"));
 
             return ODataConstants.TypeNamePrefix + typeName;
         }

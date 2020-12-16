@@ -100,7 +100,7 @@ namespace Microsoft.OData.UriParser
                 NamespaceQualifiedWildcardSelectItem namespaceQualifiedWildcard = selectItem as NamespaceQualifiedWildcardSelectItem;
                 if (namespaceQualifiedWildcard != null)
                 {
-                    levelSelectList.Add(namespaceQualifiedWildcard.Namespace + ".*");
+                    levelSelectList.Add(string.Concat(namespaceQualifiedWildcard.Namespace, ".*"));
                     continue;
                 }
 
@@ -237,7 +237,7 @@ namespace Microsoft.OData.UriParser
 
                 foreach (var listItem in nextLevelSelectList)
                 {
-                    selectList.Add(selectListItem + "/" + listItem);
+                    selectList.Add(string.Concat(selectListItem, "/", listItem));
                 }
 
                 return selectList;
@@ -285,7 +285,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>The generated expand string.</returns>
         private static string ProcessSubExpand(string expandNode, string subExpand)
         {
-            return string.IsNullOrEmpty(subExpand) ? expandNode : expandNode + "(" + subExpand + ")";
+            return string.IsNullOrEmpty(subExpand) ? expandNode : string.Concat(expandNode, "(", subExpand, ")");
         }
 
         /// <summary>Create combined result string using selected items list and expand items list.</summary>

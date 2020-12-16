@@ -161,13 +161,14 @@ namespace Microsoft.OData.Edm.Csdl
             {
                 // in symbolic value
                 // "@self.HasPattern": "Red,Striped"
-                var enumValues = value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] enumValues = value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
                 if (enumValues.Length > 1 && (!enumType.IsFlags || !EdmEnumValueParser.IsEnumIntegerType(enumType)))
                 {
                     return false;
                 }
 
-                foreach (var enumValue in enumValues)
+                foreach (string enumValue in enumValues)
                 {
                     IEdmEnumMember member = enumType.Members.SingleOrDefault(m => m.Name == enumValue.Trim());
                     if (member == null)

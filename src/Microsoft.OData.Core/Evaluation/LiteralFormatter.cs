@@ -353,7 +353,7 @@ namespace Microsoft.OData.Evaluation
                 // a whole number should be all digits.
                 if (characters.All(char.IsDigit))
                 {
-                    return input + ".0";
+                    return string.Concat(input, ".0");
                 }
 
 #endif
@@ -472,34 +472,34 @@ namespace Microsoft.OData.Evaluation
                         throw new ODataException("Type name should not be null or empty when serializing an Enum value for URI key.");
                     }
 
-                    return enumValue.TypeName + "'" + this.FormatAndEscapeLiteral(enumValue.Value) + "'";
+                    return string.Concat(enumValue.TypeName, "'", this.FormatAndEscapeLiteral(enumValue.Value), "'");
                 }
 
                 string result = this.FormatAndEscapeLiteral(value);
 
                 if (value is byte[])
                 {
-                    return ExpressionConstants.LiteralPrefixBinary + "'" + result + "'";
+                    return string.Concat(ExpressionConstants.LiteralPrefixBinary, "'", result, "'");
                 }
 
                 if (value is Geography)
                 {
-                    return ExpressionConstants.LiteralPrefixGeography + "'" + result + "'";
+                    return string.Concat(ExpressionConstants.LiteralPrefixGeography, "'", result, "'");
                 }
 
                 if (value is Geometry)
                 {
-                    return ExpressionConstants.LiteralPrefixGeometry + "'" + result + "'";
+                    return string.Concat(ExpressionConstants.LiteralPrefixGeometry, "'", result, "'");
                 }
 
                 if (value is TimeSpan)
                 {
-                    return ExpressionConstants.LiteralPrefixDuration + "'" + result + "'";
+                    return string.Concat(ExpressionConstants.LiteralPrefixDuration, "'", result, "'");
                 }
 
                 if (value is string)
                 {
-                    return "'" + result + "'";
+                    return string.Concat("'", result, "'");
                 }
 
                 // for int32,int64,float,double, decimal, Infinity/NaN, just output them without prefix or suffix such as L/M/D/F.
