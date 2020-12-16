@@ -383,10 +383,8 @@ namespace Microsoft.OData.Client
                         this.Visit(m.Arguments[1]);
                         this.builder.Append(UriHelper.SPACE)
                             .Append(UriHelper.IN)
-                            .Append(UriHelper.SPACE)
-                            .Append(UriHelper.LEFTPAREN);
+                            .Append(UriHelper.SPACE);
                         this.Visit(m.Arguments[0]);
-                        this.builder.Append(UriHelper.RIGHTPAREN);
                         return m;
                     }
                 }
@@ -545,6 +543,9 @@ namespace Microsoft.OData.Client
                 {
                     throw new InvalidOperationException(Strings.ALinq_ContainsNotValidOnEmptyCollection);
                 }
+
+                listExpr.Insert(0, UriHelper.LEFTPAREN);
+                listExpr.Append(UriHelper.RIGHTPAREN);
 
                 result = listExpr.ToString();
             }
