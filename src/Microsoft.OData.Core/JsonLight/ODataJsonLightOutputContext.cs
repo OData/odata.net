@@ -109,7 +109,8 @@ namespace Microsoft.OData.JsonLight
             }
 
             Uri metadataDocumentUri = messageWriterSettings.MetadataDocumentUri;
-            this.metadataLevel = JsonLightMetadataLevel.Create(messageInfo.MediaType, metadataDocumentUri, this.Model, this.WritingResponse);
+            bool alwaysAddTypeAnnotationsForDerivedTypes = messageWriterSettings.AlwaysAddTypeAnnotationsForDerivedTypes;
+            this.metadataLevel = JsonLightMetadataLevel.Create(messageInfo.MediaType, metadataDocumentUri, alwaysAddTypeAnnotationsForDerivedTypes, this.Model, this.WritingResponse);
             this.propertyCacheHandler = new PropertyCacheHandler();
         }
 

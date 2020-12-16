@@ -11,7 +11,6 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using Microsoft.OData.Metadata;
-using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 

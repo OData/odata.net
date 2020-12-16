@@ -14,12 +14,17 @@
     <description>Classes to represent, construct, parse, serialize and validate entity data models. Supports OData v4. Targets .NET Platform Standard 1.1.
 OData .NET library is open source at http://github.com/OData/odata.net. Documentation for the library can be found at https://odata.github.io/odata.net.</description>
     <copyright>© Microsoft Corporation. All rights reserved.</copyright>
+    <dependencies>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="System.Text.Json" version="4.6.0" />
+      </group>
+    </dependencies>
   </metadata>
   <files>
     <file src="$ProductRoot$\Microsoft.OData.Edm.dll" target="lib" />
     <file src="$ProductRoot$\Microsoft.OData.Edm.pdb" target="lib" />
     <file src="$ProductRoot$\Microsoft.OData.Edm.xml" target="lib" />
-	<file src="$SourcesRoot$\src\Microsoft.OData.Edm\**\*.cs" target="src\Microsoft.OData.Edm\" />
+    <file src="$SourcesRoot$\src\Microsoft.OData.Edm\**\*.cs" target="src\Microsoft.OData.Edm\" />
     <file src="$SourcesRoot$\src\PlatformHelper.cs" target="src\PlatformHelper.cs" />
     <file src="$SourcesRoot$\src\AssemblyInfo\AssemblyMetadataAttribute.cs" target="src\AssemblyMetadataAttribute.cs" />
   </files>

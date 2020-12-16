@@ -1789,8 +1789,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Equal(2, errors.Count());
             Assert.NotNull(model);
 
-            // 7 built-in + 1 referenced outside
-            Assert.Equal(8, model.ReferencedModels.Count());
+            // 8 built-in + 1 referenced outside
+            Assert.Equal(9, model.ReferencedModels.Count());
             IEdmTerm isoCurrencyTerm = model.FindTerm("Org.OData.Measures.V1.ISOCurrency");
             Assert.NotNull(isoCurrencyTerm);
 

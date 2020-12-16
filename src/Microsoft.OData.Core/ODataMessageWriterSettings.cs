@@ -77,6 +77,8 @@ namespace Microsoft.OData
             this.Validations = ValidationKinds.All;
             this.Validator = new WriterValidator(this);
             this.LibraryCompatibility = ODataLibraryCompatibility.Latest;
+            this.MultipartNewLine = "\r\n";
+            this.AlwaysAddTypeAnnotationsForDerivedTypes = false;
         }
 
         /// <summary>
@@ -180,6 +182,18 @@ namespace Microsoft.OData
         /// Informs the metadata builder which properties, functions, actions, links to omit.
         /// </summary>
         public ODataMetadataSelector MetadataSelector { get; set; }
+
+        /// <summary>
+        /// Gets or sets the new line character sequence used when writing multipart messages
+        /// see https://tools.ietf.org/html/rfc2046#section-5.1.1
+        /// A TextWriter uses OS specific newline but rfc2046 requires it to be CRLF.
+        /// </summary>
+        public string MultipartNewLine { get; set; }
+
+        /// <summary>
+        /// When set, type annotations will be added for derived types, even when the metadata level is set to "None".
+        /// </summary>
+        public bool AlwaysAddTypeAnnotationsForDerivedTypes { get; set; }
 
         /// <summary>
         /// Gets the validator corresponding to the validation settings.
@@ -424,6 +438,7 @@ namespace Microsoft.OData
             this.useFormat = other.useFormat;
             this.Version = other.Version;
             this.LibraryCompatibility = other.LibraryCompatibility;
+            this.AlwaysAddTypeAnnotationsForDerivedTypes = other.AlwaysAddTypeAnnotationsForDerivedTypes;
             this.MetadataSelector = other.MetadataSelector;
             this.IsIeee754Compatible = other.IsIeee754Compatible;
 

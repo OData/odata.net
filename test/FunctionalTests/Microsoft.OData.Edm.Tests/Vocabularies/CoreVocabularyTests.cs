@@ -525,5 +525,14 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             IEdmTypeDefinition typeDefinition = (IEdmTypeDefinition)declaredType;
             Assert.Equal(underlyingTypeName, typeDefinition.UnderlyingType.FullName());
         }
+
+        [Fact]
+        public void TestRevisionsTerm()
+        {
+            var revisionsTerm = CoreVocabularyModel.RevisionsTerm;
+            Assert.NotNull(revisionsTerm);
+            Assert.Equal("Org.OData.Core.V1.Revisions", revisionsTerm.FullName());
+            Assert.Equal("Collection(Org.OData.Core.V1.RevisionType)", revisionsTerm.Type.FullName());
+        }
     }
 }

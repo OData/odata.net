@@ -352,6 +352,48 @@ namespace Microsoft.Spatial.Tests
         }
 
         [Fact]
+        public void ReaderPosListWithSrsDimension()
+        {
+            var gml =
+@"<gml:Polygon srsName=""http://www.opengis.net/def/crs/EPSG/0/28992"" xmlns:gml=""http://www.opengis.net/gml"">
+  <gml:exterior>
+    <gml:LinearRing>
+      <gml:posList srsDimension=""3"" count=""6"">9.1 1.8 0.0 9.3 4.7 0.0 9.7 4.5 0.0 9.7 4.4 0.0 9.6 4.9 0.0 9.1 1.8 0.0</gml:posList>
+    </gml:LinearRing>
+  </gml:exterior>
+</gml:Polygon>";
+            var xmlReader = XmlReader.Create(new StringReader(gml));
+
+            var gmlFormatter = GmlFormatter.Create();
+            GeometryPolygon polygon = gmlFormatter.Read<GeometryPolygon>(xmlReader);
+
+            Assert.NotNull(polygon);
+            GeometryLineString lineString = Assert.Single(polygon.Rings);
+            Assert.Equal(6, lineString.Points.Count);
+        }
+
+        [Fact]
+        public void ReaderPosListWithoutSrsDimension()
+        {
+            var gml =
+@"<gml:Polygon srsName=""http://www.opengis.net/def/crs/EPSG/0/28992"" xmlns:gml=""http://www.opengis.net/gml"">
+  <gml:exterior>
+    <gml:LinearRing>
+      <gml:posList>9.1 1.8 0.0 9.3 4.7 0.0 9.7 4.5 0.0 9.7 4.4 0.0 9.6 4.9 0.0 9.3 9.1 1.8</gml:posList>
+    </gml:LinearRing>
+  </gml:exterior>
+</gml:Polygon>";
+            var xmlReader = XmlReader.Create(new StringReader(gml));
+
+            var gmlFormatter = GmlFormatter.Create();
+            GeometryPolygon polygon = gmlFormatter.Read<GeometryPolygon>(xmlReader);
+
+            Assert.NotNull(polygon);
+            GeometryLineString lineString = Assert.Single(polygon.Rings);
+            Assert.Equal(9, lineString.Points.Count);
+        }
+
+        [Fact]
         public void ReadGeographyPoint2D()
         {
             ReadPointTest(new PositionData(0, 0), CoordinateSystem.Geography(0));

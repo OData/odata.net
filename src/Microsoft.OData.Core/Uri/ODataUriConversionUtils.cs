@@ -405,6 +405,12 @@ namespace Microsoft.OData
             {
                 switch (targetPrimitiveKind)
                 {
+                    case EdmPrimitiveTypeKind.Byte: // Int32 -> byte
+                        return ConvertToTargetType(targetEdmType, () => Convert.ToByte((Int32)primitiveValue));
+                    case EdmPrimitiveTypeKind.SByte: // Int32 -> sbyte
+                        return ConvertToTargetType(targetEdmType, () => Convert.ToSByte((Int32)primitiveValue));
+                    case EdmPrimitiveTypeKind.Int16: // Int32 -> short
+                        return ConvertToTargetType(targetEdmType, () => Convert.ToInt16((Int32)primitiveValue));
                     case EdmPrimitiveTypeKind.Int32:
                         return primitiveValue;
                     case EdmPrimitiveTypeKind.Int64:
@@ -652,6 +658,18 @@ namespace Microsoft.OData
 
                     return rawResult;
                 }
+            }
+        }
+
+        private static object ConvertToTargetType(IEdmPrimitiveType targetEdmType, Func<object> converter)
+        {
+            try
+            {
+                return converter();
+            }
+            catch (OverflowException ex)
+            {
+                throw new ODataException(ODataErrorStrings.ODataUriUtils_ConvertFromUriLiteralOverflowNumber(targetEdmType.FullName(), ex.Message));
             }
         }
     }

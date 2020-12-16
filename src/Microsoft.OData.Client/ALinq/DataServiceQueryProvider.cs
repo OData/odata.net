@@ -11,9 +11,11 @@ namespace Microsoft.OData.Client
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.IO;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
+    using System.Xml;
 
     #endregion Namespaces
 
@@ -109,11 +111,33 @@ namespace Microsoft.OData.Client
                         return query.AsEnumerable().First();
                     case SequenceMethod.FirstOrDefault:
                         return query.AsEnumerable().FirstOrDefault();
-#if !PORTABLELIB
                     case SequenceMethod.LongCount:
                     case SequenceMethod.Count:
-                        return (TElement)Convert.ChangeType(((DataServiceQuery<TElement>)query).GetQuerySetCount(this.Context), typeof(TElement), System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
-#endif
+                        return ((DataServiceQuery<TElement>)query).GetValue(this.Context, ParseQuerySetCount<TElement>);
+                    case SequenceMethod.SumIntSelector:
+                    case SequenceMethod.SumDoubleSelector:
+                    case SequenceMethod.SumDecimalSelector:
+                    case SequenceMethod.SumLongSelector:
+                    case SequenceMethod.SumSingleSelector:
+                    case SequenceMethod.SumNullableIntSelector:
+                    case SequenceMethod.SumNullableDoubleSelector:
+                    case SequenceMethod.SumNullableDecimalSelector:
+                    case SequenceMethod.SumNullableLongSelector:
+                    case SequenceMethod.SumNullableSingleSelector:
+                    case SequenceMethod.AverageIntSelector:
+                    case SequenceMethod.AverageDoubleSelector:
+                    case SequenceMethod.AverageDecimalSelector:
+                    case SequenceMethod.AverageLongSelector:
+                    case SequenceMethod.AverageSingleSelector:
+                    case SequenceMethod.AverageNullableIntSelector:
+                    case SequenceMethod.AverageNullableDoubleSelector:
+                    case SequenceMethod.AverageNullableDecimalSelector:
+                    case SequenceMethod.AverageNullableLongSelector:
+                    case SequenceMethod.AverageNullableSingleSelector:
+                    case SequenceMethod.MinSelector: // Mapped to a generic expression - Min(IQueryable`1<T0>, Expression`1<Func`2<T0, T1>>)->T1
+                    case SequenceMethod.MaxSelector: // Mapped to a generic expression - Max(IQueryable`1<T0>, Expression`1<Func`2<T0, T1>>)->T1
+                    case SequenceMethod.CountDistinctSelector: // Mapped to a generic expression - CountDistinct(IQueryable`1<T0>, Expression`1<Func`2<T0, T1>>)->Int32
+                        return ((DataServiceQuery<TElement>)query).GetValue(this.Context, this.ParseAggregateSingletonResult<TElement>);
                     default:
                         throw Error.MethodNotSupported(mce);
                 }
@@ -151,6 +175,85 @@ namespace Microsoft.OData.Client
             Type lastSegmentType = re.Projection == null ? re.ResourceType : re.Projection.Selector.Parameters[0].Type;
             LambdaExpression selector = re.Projection == null ? null : re.Projection.Selector;
             return new QueryComponents(uri, version, lastSegmentType, selector, normalizerRewrites);
+        }
+
+        /// <summary>
+        /// Parses the result of a query set count request.
+        /// </summary>
+        /// <typeparam name="TElement">The return type.</typeparam>
+        /// <param name="queryResult">The query result.</param>
+        /// <returns></returns>
+        private static TElement ParseQuerySetCount<TElement>(QueryResult queryResult)
+        {
+            StreamReader reader = new StreamReader(queryResult.GetResponseStream());
+            long querySetCount = -1;
+
+            try
+            {
+                querySetCount = XmlConvert.ToInt64(reader.ReadToEnd());
+            }
+            finally
+            {
+                reader.Close();
+            }
+
+            return (TElement)Convert.ChangeType(querySetCount, typeof(TElement), System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+        }
+
+        /// <summary>
+        /// Parses the scalar result of an aggegrate request.
+        /// </summary>
+        /// <typeparam name="TElement">The return type.</typeparam>
+        /// <param name="queryResult">The query result.</param>
+        /// <returns></returns>
+        private TElement ParseAggregateSingletonResult<TElement>(QueryResult queryResult)
+        {
+            IDictionary<string, string> responseHeaders = new Dictionary<string, string>();
+            responseHeaders.Add(ODataConstants.ContentTypeHeader, "application/json");
+            HttpWebResponseMessage httpWebResponseMessage = new HttpWebResponseMessage(
+                responseHeaders, (int)queryResult.StatusCode, queryResult.GetResponseStream);
+
+            ODataMessageReaderSettings messageReaderSettings = new ODataMessageReaderSettings
+            {
+                Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType
+            };
+
+            ODataResource entry = default(ODataResource);
+            using (ODataMessageReader messageReader = new ODataMessageReader(
+                httpWebResponseMessage, messageReaderSettings, this.Context.Format.ServiceModel))
+            {
+                ODataReader reader = messageReader.CreateODataResourceSetReader();
+                while (reader.Read())
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceEnd:
+                            entry = reader.Item as ODataResource;
+                            if (entry != null && entry.Properties.Any())
+                            {
+                                ODataProperty aggregationProperty = entry.Properties.First();
+                                ODataUntypedValue untypedValue = aggregationProperty.Value as ODataUntypedValue;
+
+                                Type underlyingType = Nullable.GetUnderlyingType(typeof(TElement));
+                                if (underlyingType == null) // Not a nullable type
+                                {
+                                    underlyingType = typeof(TElement);
+                                }
+
+                                return (TElement)Convert.ChangeType(
+                                    untypedValue.RawValue,
+                                    underlyingType,
+                                    System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+            // Failed to retrieve the aggregate result for whatever reason
+            throw new DataServiceQueryException(Strings.DataServiceRequest_FailGetValue);
         }
     }
 }

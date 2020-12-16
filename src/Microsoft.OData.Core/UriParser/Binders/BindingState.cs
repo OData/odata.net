@@ -152,6 +152,11 @@ namespace Microsoft.OData.UriParser
         internal bool InEntitySetAggregation { get; set; }
 
         /// <summary>
+        /// The navigation source at the resource path.
+        /// </summary>
+        internal IEdmNavigationSource ResourcePathNavigationSource { get; set; }
+
+        /// <summary>
         /// The parsed segments in path and query option.
         /// </summary>
         internal List<ODataPathSegment> ParsedSegments

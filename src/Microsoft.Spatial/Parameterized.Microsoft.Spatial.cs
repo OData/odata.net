@@ -135,6 +135,17 @@ namespace Microsoft.Spatial {
         }
 
         /// <summary>
+        /// A string like "Incorrect GML Format: a srsDimension attribute must be either "2" or "3"."
+        /// </summary>
+        internal static string GmlReader_InvalidSrsDimension
+        {
+            get
+            {
+                return Microsoft.Spatial.TextRes.GetString(Microsoft.Spatial.TextRes.GmlReader_InvalidSrsDimension);
+            }
+        }
+
+        /// <summary>
         /// A string like "Expecting token type "{0}" with text "{1}" but found "{2}"."
         /// </summary>
         internal static string WellKnownText_UnexpectedToken(object p0, object p1, object p2)

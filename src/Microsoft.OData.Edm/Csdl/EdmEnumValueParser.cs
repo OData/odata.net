@@ -162,7 +162,7 @@ namespace Microsoft.OData.Edm.Csdl
                 // in symbolic value
                 // "@self.HasPattern": "Red,Striped"
                 var enumValues = value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                if (enumValues.Count() > 1 && (!enumType.IsFlags || !EdmEnumValueParser.IsEnumIntegerType(enumType)))
+                if (enumValues.Length > 1 && (!enumType.IsFlags || !EdmEnumValueParser.IsEnumIntegerType(enumType)))
                 {
                     return false;
                 }

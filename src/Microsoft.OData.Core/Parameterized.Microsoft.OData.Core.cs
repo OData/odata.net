@@ -283,7 +283,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "No Id or key properties were found. A resource in a delta response requires an ID or key properties be specified."
+        /// A string like "No Id or key properties were found. A resource in a delta payload requires an ID or key properties be specified."
         /// </summary>
         internal static string ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties
         {
@@ -548,7 +548,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "{0} is missing a $select clause. All property paths, expands, and selects of complex types must include a SELECT statement."
+        /// A string like "'{0}' is missing a $select clause. All property paths, expands, and selects of complex types should include a $select statement."
         /// </summary>
         internal static string ODataUrlValidationError_SelectRequired(object p0)
         {
@@ -556,7 +556,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Exception thrown by invalid rule {0}. {1}."
+        /// A string like "Exception thrown by invalid rule {0}. {1}"
         /// </summary>
         internal static string ODataUrlValidationError_InvalidRule(object p0, object p1)
         {
@@ -2054,6 +2054,14 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The overflow exception caught for expected type '{0}'. '{1}'."
+        /// </summary>
+        internal static string ODataUriUtils_ConvertFromUriLiteralOverflowNumber(object p0, object p1)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataUriUtils_ConvertFromUriLiteralOverflowNumber, p0, p1);
+        }
+
+        /// <summary>
         /// A string like "Type verification failed. Expected type '{0}' but received the value '{1}'."
         /// </summary>
         internal static string ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure(object p0, object p1)
@@ -2150,7 +2158,8 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "A null value was found for a collection of type '{0}[Nullable=True]. Collection-valued properties with Nullable=True can contain null values, but collection-valued properties cannot themselves be null."
         /// </summary>
-        internal static string ReaderValidationUtils_NullValueForNullableType(object p0) {
+        internal static string ReaderValidationUtils_NullValueForNullableType(object p0)
+        {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ReaderValidationUtils_NullValueForNullableType, p0);
         }
 
@@ -2165,7 +2174,8 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "A null value was found for the property named '{0}', which has the expected type '{1}[Nullable=True]'. The expected type '{1}[Nullable=True]' cannot be null but it can have null values."
         /// </summary>
-        internal static string ReaderValidationUtils_NullNamedValueForNullableType(object p0, object p1) {
+        internal static string ReaderValidationUtils_NullNamedValueForNullableType(object p0, object p1)
+        {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ReaderValidationUtils_NullNamedValueForNullableType, p0, p1);
         }
 
@@ -3491,6 +3501,17 @@ namespace Microsoft.OData {
         internal static string ODataMetadataOutputContext_ErrorWritingMetadata(object p0)
         {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataMetadataOutputContext_ErrorWritingMetadata, p0);
+        }
+
+        /// <summary>
+        /// A string like "The JSON metadata is not supported at this platform. It's only supported at platform implementing .NETStardard 2.0."
+        /// </summary>
+        internal static string ODataMetadataOutputContext_NotSupportJsonMetadata
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataMetadataOutputContext_NotSupportJsonMetadata);
+            }
         }
 
         /// <summary>
@@ -6283,6 +6304,17 @@ namespace Microsoft.OData {
         internal static string UriParserMetadata_MultipleMatchingParametersFound(object p0)
         {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriParserMetadata_MultipleMatchingParametersFound, p0);
+        }
+
+        /// <summary>
+        /// A string like "The UrlValidator used to validate an ODataUri must use the same Model as the ODataUriParser."
+        /// </summary>
+        internal static string UriValidator_ValidatorMustUseSameModelAsParser
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriValidator_ValidatorMustUseSameModelAsParser);
+            }
         }
 
         /// <summary>

@@ -15,9 +15,9 @@ namespace Microsoft.OData.Client
     using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
-    using System.Reflection;
     using System.Text;
     using Microsoft.OData.Client.Metadata;
+    using Microsoft.OData.UriParser.Aggregation;
 
     #endregion Namespaces
 
@@ -409,6 +409,9 @@ namespace Microsoft.OData.Client
                             case ResourceExpressionType.FilterQueryOption:
                                 this.VisitQueryOptionExpression((FilterQueryOptionExpression)e);
                                 break;
+                            case ResourceExpressionType.ApplyQueryOption:
+                                this.VisitQueryOptionExpression((ApplyQueryOptionExpression)e);
+                                break;
                             default:
                                 Debug.Assert(false, "Unexpected expression type " + ((int)et).ToString(CultureInfo.InvariantCulture));
                                 break;
@@ -439,11 +442,11 @@ namespace Microsoft.OData.Client
                 if (re.CustomQueryOptions.Count > 0)
                 {
                     this.VisitCustomQueryOptions(re.CustomQueryOptions);
-                    }
+                }
 
                 this.AppendCachedQueryOptionsToUriBuilder();
-                }
             }
+        }
 
         /// <summary>
         /// SkipQueryOptionExpression visit method.
@@ -583,13 +586,120 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// ApplyQueryOptionExpression visit method.
+        /// </summary>
+        /// <param name="applyQueryOptionExpr">ApplyQueryOptionExpression expression to visit</param>
+        internal void VisitQueryOptionExpression(ApplyQueryOptionExpression applyQueryOptionExpr)
+        {
+            if (applyQueryOptionExpr.Aggregations.Count == 0)
+            {
+                return;
+            }
+
+            // E.g. filter(Amount gt 1)
+            string filterTransformation = ConstructFilterTransformation(applyQueryOptionExpr);
+            // E.g. aggregate(Prop with sum as SumProp, Prop with average as AverageProp)
+            string aggregateTransformation = ConstructAggregateTransformation(applyQueryOptionExpr.Aggregations);
+
+            string applyExpression = string.IsNullOrWhiteSpace(filterTransformation) ? string.Empty : filterTransformation + "/";
+            applyExpression += aggregateTransformation;
+
+            this.AddAsCachedQueryOption(UriHelper.DOLLARSIGN + UriHelper.OPTIONAPPLY, applyExpression);
+        }
+
+        /// <summary>
+        /// Constructs a $apply filter transformation.
+        /// E.g. $apply=filter(Amount gt 1)
+        /// </summary>
+        /// <param name="applyQueryOptionExpr">ApplyQueryOptionExpression expression</param>
+        /// <returns>A filter transformation</returns>
+        private string ConstructFilterTransformation(ApplyQueryOptionExpression applyQueryOptionExpr)
+        {
+            if (applyQueryOptionExpr.PredicateConjuncts.Count == 0)
+            {
+                return string.Empty;
+            }
+
+            return "filter(" + this.ExpressionToString(applyQueryOptionExpr.GetPredicate(), /*inPath*/ false) + ")";
+        }
+
+        /// <summary>
+        /// Constructs a $apply aggregate transformation.
+        /// E.g. $apply=aggregate(Prop with sum as SumProp, Prop with average as AverageProp)
+        /// </summary>
+        /// <param name="aggregations">List of aggregations.</param>
+        /// <returns>The aggregate tranformation.</returns>
+        private string ConstructAggregateTransformation(IList<ApplyQueryOptionExpression.Aggregation> aggregations)
+        {
+            StringBuilder aggregateBuilder = new StringBuilder();
+
+            aggregateBuilder.Append(UriHelper.AGGREGATE);
+            aggregateBuilder.Append(UriHelper.LEFTPAREN);
+            int i = 0;
+
+            while (true)
+            {
+                ApplyQueryOptionExpression.Aggregation aggregation = aggregations[i];
+                AggregationMethod aggregationMethod = aggregation.AggregationMethod;
+                string aggregationAlias = aggregation.AggregationAlias;
+
+                string aggregationUriEquivalent;
+                if (!TypeSystem.TryGetUriEquivalent(aggregationMethod, out aggregationUriEquivalent))
+                {
+                    // This would happen if an aggregation method was added to the enum with no
+                    // relevant update to map it to the URI equivalent 
+                    throw new NotSupportedException(Strings.ALinq_AggregationMethodNotSupported(aggregationMethod.ToString()));
+                }
+
+                string aggregationProperty = string.Empty;
+
+                // E.g. Amount with sum as SumAmount (For $count aggregation: $count as Count)
+                if (aggregationMethod != AggregationMethod.VirtualPropertyCount)
+                {
+                    aggregationProperty = this.ExpressionToString(aggregation.Expression, /*inPath*/ false);
+
+                    aggregateBuilder.Append(aggregationProperty);
+                    aggregateBuilder.Append(UriHelper.SPACE);
+                    aggregateBuilder.Append(UriHelper.WITH);
+                    aggregateBuilder.Append(UriHelper.SPACE);
+                }
+
+                aggregateBuilder.Append(aggregationUriEquivalent);
+                aggregateBuilder.Append(UriHelper.SPACE);
+                aggregateBuilder.Append(UriHelper.AS);
+                aggregateBuilder.Append(UriHelper.SPACE);
+                // MUST define an alias for the resulting aggregate value
+                // Concatenate aggregation method with aggregation property to generate a simple identifier/alias
+                // OASIS Standard: The alias MUST NOT collide with names of declared properties, custom aggregates, or other aliases in that type
+                // TODO: Strategy to avoid name collision - Append a Guid?
+                if (string.IsNullOrEmpty(aggregationAlias))
+                {
+                    aggregationAlias = aggregationMethod.ToString() + aggregationProperty.Replace('/', '_');
+                }
+
+                aggregateBuilder.Append(aggregationAlias);
+
+                if (++i == aggregations.Count)
+                {
+                    break;
+                }
+
+                aggregateBuilder.Append(UriHelper.COMMA);
+            }
+
+            aggregateBuilder.Append(UriHelper.RIGHTPAREN);
+
+            return aggregateBuilder.ToString();
+        }
+
+        /// <summary>
         /// Caches query option to be grouped
         /// </summary>
         /// <param name="optionKey">The key.</param>
         /// <param name="optionValue">The value</param>
         private void AddAsCachedQueryOption(string optionKey, string optionValue)
         {
-            List<string> tmp = null;
+            List<string> tmp;
             if (!this.cachedQueryOptions.TryGetValue(optionKey, out tmp))
             {
                 tmp = new List<string>();

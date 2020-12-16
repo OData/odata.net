@@ -10,7 +10,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Evaluation;
@@ -243,23 +242,64 @@ namespace Microsoft.OData.JsonLight
         {
             if (this.jsonLightOutputContext.MessageWriterSettings.Version > ODataVersion.V4)
             {
-                var typeContext = resourceScope.GetOrCreateTypeContext(writingResponse);
-                if (this.jsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel)
+                // If:
+                //      1. Minimal/Full Metadata level: Use ODataConventionalEntityMetadataBuilder for entity, ODataConventionalResourceMetadataBuilder for other cases.
+                //      2. NoMetadata level: always enable its NullResourceMetadataBuilder
+                // otherwise:
+                //      3. Fallback to the default NoOpResourceMetadataBuilder, when model and serializationInfo are both null.
+                if (this.jsonLightOutputContext.Model.IsUserModel() || resourceScope.SerializationInfo != null || this.jsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel)
                 {
-                    // 1. NoMetadata level: always enable its NullResourceMetadataBuilder
+                    var typeContext = resourceScope.GetOrCreateTypeContext(writingResponse);
                     InnerPrepareResourceForWriteStart(deletedResource, typeContext, selectedProperties);
                 }
-                else
+            }
+            else if (deletedResource.Id == null && this.jsonLightOutputContext.Model.IsUserModel())
+            {
+                // Create an instance of the conventional UriBuilder and build id from key values
+                IEdmEntityType entityType = resourceScope.ResourceType as IEdmEntityType;
+                if (deletedResource.SerializationInfo != null)
                 {
-                    // 2. Minimal/Full Metadata level: Use ODataConventionalEntityMetadataBuilder for entity, ODataConventionalResourceMetadataBuilder for other cases.
-                    if (this.jsonLightOutputContext.Model.IsUserModel() || resourceScope.SerializationInfo != null)
+                    string entityTypeName = deletedResource.SerializationInfo.ExpectedTypeName;
+                    if (!String.IsNullOrEmpty(entityTypeName))
                     {
-                        InnerPrepareResourceForWriteStart(deletedResource, typeContext, selectedProperties);
+                        entityType = this.jsonLightOutputContext.Model.FindType(entityTypeName) as IEdmEntityType ?? entityType;
                     }
+                }
 
-                    // 3. Here fallback to the default NoOpResourceMetadataBuilder, when model and serializationInfo are both null.
+                Debug.Assert(entityType != null, "No entity type specified in resourceScope or serializationInfo.");
+
+                ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(
+                    new Uri(this.jsonLightOutputContext.MessageWriterSettings.MetadataDocumentUri, "./"),
+                    this.jsonLightOutputContext.ODataSimplifiedOptions.EnableWritingKeyAsSegment ? ODataUrlKeyDelimiter.Slash : ODataUrlKeyDelimiter.Parentheses
+                    );
+
+                Uri uri = uriBuilder.BuildBaseUri();
+                uri = uriBuilder.BuildEntitySetUri(uri, resourceScope.NavigationSource.Name);
+                uri = uriBuilder.BuildEntityInstanceUri(uri, ComputeKeyProperties(deletedResource, entityType, this.jsonLightOutputContext.Model), entityType.FullTypeName());
+
+                deletedResource.Id = uri;
+            }
+        }
+
+        internal static ICollection<KeyValuePair<string, object>> ComputeKeyProperties(ODataDeletedResource resource, IEdmEntityType entityType, IEdmModel model)
+        {
+            Debug.Assert(entityType.Key().Any(), "actual entity type has no keys defined");
+
+            ICollection<KeyValuePair<string, object>> computedKeyProperties = new List<KeyValuePair<string, object>>();
+            foreach (IEdmStructuralProperty edmKeyProperty in entityType.Key())
+            {
+                foreach(ODataProperty property in resource.NonComputedProperties)
+                {
+                    if (property.Name == edmKeyProperty.Name)
+                    {
+                        object newValue = model.ConvertToUnderlyingTypeIfUIntValue(property.Value);
+                        computedKeyProperties.Add(new KeyValuePair<string, object>(edmKeyProperty.Name, newValue));
+                        break;
+                    }
                 }
             }
+
+            return computedKeyProperties;
         }
 
         /// <summary>

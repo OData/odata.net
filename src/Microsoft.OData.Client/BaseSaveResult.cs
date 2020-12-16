@@ -244,10 +244,21 @@ namespace Microsoft.OData.Client
 
             IDictionary<string, string> headers = new Dictionary<string, string>();
 
-            using (Stream stream = getResponseStream())
+            using (Stream responseStream = getResponseStream())
             {
-                if ((stream != null) && stream.CanRead && stream.CanSeek)
+                var stream = responseStream;
+                if ((stream != null) && stream.CanRead)
                 {
+                    if (!stream.CanSeek)
+                    {
+                        // We have to read the response twice, as a message text and as a potential OData error json.
+                        // To do this the stream needs to be buffered.
+                        var seekStream = new MemoryStream();
+                        stream.CopyTo(seekStream);
+                        stream = seekStream;
+                        stream.Position = 0;
+                        getResponseStream = () => stream;
+                    }
                     // This StreamReader can go out of scope without dispose because the underlying stream is disposed of.
                     message = new StreamReader(stream).ReadToEnd();
                     stream.Position = 0;
@@ -581,8 +592,12 @@ namespace Microsoft.OData.Client
                         else if (descriptor.State == EntityStates.Added ||
                                  this.streamRequestKind == StreamRequestKind.PostMediaResource)
                         {
-                            // For POST scenarios, location header must be specified.
-                            throw Error.NotSupported(Strings.Deserialize_NoLocationHeader);
+                              // For POST scenarios, location header must be specified.
+                              // Except for preflight requests
+                             if (headers.HasHeader("Content-Type") && statusCode != HttpStatusCode.Created)
+                             {
+                                throw Error.NotSupported(Strings.Deserialize_NoLocationHeader);
+                             }                      
                         }
 
                         // Verify the id value if present. Otherwise we should use the location header

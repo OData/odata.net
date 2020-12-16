@@ -488,6 +488,18 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
         [Fact]
+        public void SerializationWithNullValueAsDynamicProperty()
+        {
+            var director = new Director { Id = 1, Name = "Director 1" };
+            director.DynamicProperties.Add("Title", null);
+
+            var messageBody = SerializeEntity(this.directorEntitySetName, director);
+            var expectedResult = "{\"@odata.type\":\"#ServiceNS.Director\",\"Id\":1,\"Name\":\"Director 1\"}";
+
+            VerifyMessageBody(expectedResult, messageBody);
+        }
+
+        [Fact]
         public void MaterializationWithNoDynamicProperty()
         {
             var rawJsonResponse = "{" +
@@ -791,6 +803,22 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             Assert.True(dynamicProperties.ContainsKey("NickNames") && dynamicProperties["NickNames"].GetType() == typeof(Collection<string>));
             Assert.True(dynamicProperties.ContainsKey("FavoriteGenre") && dynamicProperties["FavoriteGenre"].GetType() == typeof(Genre));
             Assert.True(dynamicProperties.ContainsKey("NextOfKin") && dynamicProperties["NextOfKin"].GetType() == typeof(NextOfKin));
+        }
+
+        [Theory]
+        [InlineData("\"Title\":null")]
+        [InlineData("\"Title@odata.type\":\"Edm.String\",\"Title\":null")]
+        public void MaterializationIgnoresDynamicPropertyWithNullValue(string dynamicProperty)
+        {
+            var rawJsonResponse = "{" +
+                "\"@odata.context\":\"http://tempuri.org/$metadata#Directors/$entity\"," +
+                "\"Id\":1,\"Name\":\"Director 1\"," +
+                dynamicProperty +
+                "}";
+
+            var materializedObject = MaterializeEntity<Director>(rawJsonResponse);
+
+            Assert.Equal(0, materializedObject.DynamicProperties.Count);
         }
 
         public enum Genre

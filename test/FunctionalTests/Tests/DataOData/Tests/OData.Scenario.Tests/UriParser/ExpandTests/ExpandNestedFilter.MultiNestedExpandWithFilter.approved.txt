@@ -67,8 +67,8 @@ SelectExpandQueryOption
 										TypeReference = [Edm.String Nullable=True Unicode=True]
 									ResourceRangeVariable
 										Name = $it
-										NavigationSource = LoggedInEmployee
-										TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
+										NavigationSource = OrderDetails
+										TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=False]
 							And
 								ConvertNode
 									TypeReference = [Edm.Boolean Nullable=True]

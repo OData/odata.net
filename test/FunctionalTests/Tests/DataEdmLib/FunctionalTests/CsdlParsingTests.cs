@@ -1217,7 +1217,7 @@ namespace EdmLibTests.FunctionalTests
             bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), Enumerable.Empty<IEdmModel>(), settings, out model, out errors);
             Assert.AreEqual(true, parsed);
             Assert.AreEqual(0, errors.Count());
-            Assert.AreEqual(7, model.ReferencedModels.Count());
+            Assert.AreEqual(8, model.ReferencedModels.Count());
         }
 
         [TestMethod]

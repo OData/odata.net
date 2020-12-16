@@ -48,6 +48,11 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         public static readonly IEdmModel AuthorizationModel;
 
         /// <summary>
+        /// Measures Vocabulary Model.
+        /// </summary>
+        public static readonly IEdmModel MeasuresModel;
+
+        /// <summary>
         /// All Vocabulary Models.
         /// </summary>
         public static readonly IEnumerable<IEdmModel> VocabularyModels;
@@ -89,9 +94,14 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
             Debug.Assert(communityVocabularies != null, "CommunityVocabularies.xml: not found.");
             CommunityModel = LoadCsdlEdmModel(assembly, communityVocabularies, new[] { CoreModel }); // community relies on core
 
+            // Measures
+            string measuresVocabularies = allResources.Where(x => x.Contains("MeasuresVocabularies.xml")).FirstOrDefault();
+            Debug.Assert(communityVocabularies != null, "MeasuresVocabularies.xml: not found.");
+            MeasuresModel = LoadCsdlEdmModel(assembly, measuresVocabularies, new[] { CoreModel, ValidationModel }); // measures relies on core and validation
+
             VocabularyModels = new List<IEdmModel>
             {
-                CoreModel, CapabilitiesModel, AlternateKeyModel, CommunityModel, ValidationModel, AuthorizationModel
+                CoreModel, CapabilitiesModel, AlternateKeyModel, CommunityModel, ValidationModel, AuthorizationModel, MeasuresModel
             };
         }
 

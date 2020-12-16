@@ -19,12 +19,41 @@ namespace Microsoft.OData.JsonLight
     internal sealed class JsonNoMetadataLevel : JsonLightMetadataLevel
     {
         /// <summary>
+        /// When set, type annotations will be added for derived types, even when the metadata level is set to "None".
+        /// </summary>
+        private readonly bool alwaysAddTypeAnnotationsForDerivedTypes;
+
+        /// <summary>
+        /// Constructs a new <see cref="JsonNoMetadataLevel"/>.
+        /// </summary>
+        public JsonNoMetadataLevel()
+            : this(/*alwaysAddTypeAnnotationsForDerivedTypes*/ false)
+        {
+        }
+
+        /// <summary>
+        /// Constructs a new <see cref="JsonNoMetadataLevel"/>.
+        /// </summary>
+        /// <param name="alwaysAddTypeAnnotationsForDerivedTypes">When set, type annotations will be added for derived types, even when the metadata level is set to "None".</param>
+        public JsonNoMetadataLevel(bool alwaysAddTypeAnnotationsForDerivedTypes)
+        {
+            this.alwaysAddTypeAnnotationsForDerivedTypes = alwaysAddTypeAnnotationsForDerivedTypes;
+        }
+
+        /// <summary>
         /// Returns the oracle to use when determining the type name to write for entries and values.
         /// </summary>
         /// <returns>An oracle that can be queried to determine the type name to write.</returns>
         internal override JsonLightTypeNameOracle GetTypeNameOracle()
         {
-            return new JsonNoMetadataTypeNameOracle();
+            if (this.alwaysAddTypeAnnotationsForDerivedTypes)
+            {
+                return new JsonMinimalMetadataTypeNameOracle();
+            }
+            else
+            {
+                return new JsonNoMetadataTypeNameOracle();
+            }
         }
 
         /// <summary>

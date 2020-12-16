@@ -9,7 +9,7 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
     /// <summary>
     /// Representing Capabilities Vocabulary Model.
     /// </summary>
-    internal class CapabilitiesVocabularyModel
+    public static class CapabilitiesVocabularyModel
     {
         /// <summary>
         /// The EDM model with capabilities vocabularies.
@@ -19,6 +19,6 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         /// <summary>
         /// The change tracking term.
         /// </summary>
-        public static readonly IEdmTerm ChangeTrackingTerm = VocabularyModelProvider.CapabilitiesModel.FindDeclaredTerm(CapabilitiesVocabularyConstants.ChangeTracking);
+        internal static readonly IEdmTerm ChangeTrackingTerm = VocabularyModelProvider.CapabilitiesModel.FindDeclaredTerm(CapabilitiesVocabularyConstants.ChangeTracking);
     }
 }

@@ -386,7 +386,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
                     {
                         this.Assert.IsNotNull(observed.Id, "Conventional template evaluation should compute the Id.");
                     }
-                    else
+                    else if (expected.Id != null)
                     {
                         this.Assert.AreEqual(expected.Id, observed.Id, "ID did not match expectation");
                     }

@@ -184,5 +184,93 @@ namespace Microsoft.OData.Tests
             Action write = () => writer.WriteValue((UInt16)123);
             write.Throws<ODataException>("The value of type 'System.UInt16' could not be converted to a raw string.");
         }
+
+        [Fact]
+        public void WriteMetadataDocument_WorksForJsonCsdl()
+        {
+            // Arrange
+            EdmModel edmModel = new EdmModel();
+
+            EdmEntityContainer container = new EdmEntityContainer("NS", "Container");
+            edmModel.AddElement(container);
+
+            EdmEntityType customerType = new EdmEntityType("NS", "Customer");
+            var idProperty = new EdmStructuralProperty(customerType, "Id", EdmCoreModel.Instance.GetInt32(false));
+            customerType.AddProperty(idProperty);
+            customerType.AddKeys(new IEdmStructuralProperty[] { idProperty });
+            customerType.AddProperty(new EdmStructuralProperty(customerType, "Name", EdmCoreModel.Instance.GetString(false)));
+            edmModel.AddElement(customerType);
+            container.AddEntitySet("Customers", customerType);
+
+            string contentType = "application/json";
+
+#if NETCOREAPP3_1 || NETCOREAPP2_1
+            // Act
+            string payload = this.WriteAndGetPayload(edmModel, contentType, omWriter =>
+            {
+                omWriter.WriteMetadataDocument();
+            });
+
+            // Assert
+            Assert.Equal(@"{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""NS.Container"",
+  ""NS"": {
+    ""Customer"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {
+        ""$Type"": ""Edm.Int32""
+      },
+      ""Name"": {}
+    },
+    ""Container"": {
+      ""$Kind"": ""EntityContainer"",
+      ""Customers"": {
+        ""$Collection"": true,
+        ""$Type"": ""NS.Customer""
+      }
+    }
+  }
+}", payload);
+#else
+            Action test = () => this.WriteAndGetPayload(edmModel, contentType, omWriter =>
+            {
+                omWriter.WriteMetadataDocument();
+            });
+
+            ODataException exception = Assert.Throws<ODataException>(test);
+            Assert.Equal("The JSON metadata is not supported at this platform. It's only supported at platform implementing .NETStardard 2.0.", exception.Message);
+#endif
+        }
+
+        private string WriteAndGetPayload(EdmModel edmModel, string contentType, Action<ODataMessageWriter> test)
+        {
+            var message = new InMemoryMessage() { Stream = new MemoryStream() };
+            if (contentType != null)
+            {
+                message.SetHeader("Content-Type", contentType);
+            }
+
+            ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings();
+            writerSettings.EnableMessageStreamDisposal = false;
+            writerSettings.BaseUri = new Uri("http://www.example.com/");
+            writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
+
+            using (var msgWriter = new ODataMessageWriter((IODataResponseMessage)message, writerSettings, edmModel))
+            {
+                test(msgWriter);
+            }
+
+            message.Stream.Seek(0, SeekOrigin.Begin);
+            using (StreamReader reader = new StreamReader(message.Stream))
+            {
+                contentType = message.GetHeader("Content-Type");
+                return reader.ReadToEnd();
+            }
+        }
+
     }
 }

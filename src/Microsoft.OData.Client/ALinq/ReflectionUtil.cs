@@ -333,6 +333,8 @@ namespace Microsoft.OData.Client
             map.Add(@"Average(IEnumerable`1<Nullable`1<Double>>)->Nullable`1<Double>", SequenceMethod.AverageNullableDouble);
             map.Add(@"Average(IEnumerable`1<Decimal>)->Decimal", SequenceMethod.AverageDecimal);
             map.Add(@"Average(IEnumerable`1<Nullable`1<Decimal>>)->Nullable`1<Decimal>", SequenceMethod.AverageNullableDecimal);
+            map.Add(@"CountDistinct(IQueryable`1<T0>, Expression`1<Func`2<T0, T1>>)->Int32", SequenceMethod.CountDistinctSelector);
+            map.Add(@"CountDistinct(IEnumerable`1<T0>, Func`2<T0, T1>)->Int32", SequenceMethod.CountDistinctSelector);
 
             // by redirection through canonical method names, determine sequence enum value
             // for all know LINQ operators
@@ -543,7 +545,8 @@ namespace Microsoft.OData.Client
         internal static IEnumerable<MethodInfo> GetAllLinqOperators()
         {
             return typeof(Queryable).GetPublicStaticMethods().Concat(
-                typeof(Enumerable).GetPublicStaticMethods());
+                typeof(Enumerable).GetPublicStaticMethods()).Concat(
+                typeof(DataServiceExtensions).GetPublicStaticMethods());
         }
     }
 
@@ -727,6 +730,8 @@ namespace Microsoft.OData.Client
         AsEnumerable,
 
         ToList,
+
+        CountDistinctSelector,
 
         NotSupported,
     }

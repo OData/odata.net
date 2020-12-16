@@ -13,14 +13,17 @@ namespace Microsoft.OData.Tests.JsonLight
 {
     public class JsonNoMetadataLevelTests
     {
-        private readonly JsonNoMetadataLevel testSubject = new JsonNoMetadataLevel();
+        private readonly JsonNoMetadataLevel testSubject = new JsonNoMetadataLevel(/* alwaysAddTypeAnnotationsForDerivedTypes */ false);
 
-        [Fact]
-        public void NoMetadataLevelShouldReturnNoMetadataTypeOracleWhenKnobIsSet()
+        [Theory]
+        [InlineData(false, typeof(JsonNoMetadataTypeNameOracle))]
+        [InlineData(true, typeof(JsonMinimalMetadataTypeNameOracle))]
+        public void NoMetadataLevelShouldReturnExpectedMetadataTypeOracleWhenKnobIsSet(bool alwaysAddTypeAnnotationsForDerivedTypes, Type expectedType)
         {
-            Assert.IsType<JsonNoMetadataTypeNameOracle>(testSubject.GetTypeNameOracle());
+            JsonNoMetadataLevel testSubjectWithTypeAnnotations = new JsonNoMetadataLevel(alwaysAddTypeAnnotationsForDerivedTypes);
+            Assert.IsType(expectedType, testSubjectWithTypeAnnotations.GetTypeNameOracle());
         }
-
+        
         [Fact]
         public void NoMetadataLevelShouldReturnNullMetadataBuilder()
         {

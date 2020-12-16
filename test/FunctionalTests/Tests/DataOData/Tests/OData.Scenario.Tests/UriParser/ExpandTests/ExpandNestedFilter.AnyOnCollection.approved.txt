@@ -43,8 +43,8 @@ SelectExpandQueryOption
 						TypeReference = [Edm.String Nullable=True Unicode=True]
 					ResourceRangeVariable
 						Name = $it
-						NavigationSource = CustomerForOrder
-						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
+						NavigationSource = Orders
+						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
 			SelectExpandQueryOption
 				AllSelected = True
 				SelectedItems(Empty List)

@@ -112,7 +112,7 @@ namespace Microsoft.OData.JsonLight
             // don't know how to get MetadataDocumentUri uri here, messageReaderSettings do not have one
             // Uri metadataDocumentUri = messageReaderSettings..MetadataDocumentUri == null ? null : messageReaderSettings.MetadataDocumentUri.BaseUri;
             // the uri here is used here to create the FullMetadataLevel can pass null in
-            this.metadataLevel = JsonLightMetadataLevel.Create(messageInfo.MediaType, null, this.Model, this.ReadingResponse);
+            this.metadataLevel = JsonLightMetadataLevel.Create(messageInfo.MediaType, null, false, this.Model, this.ReadingResponse);
         }
 
         /// <summary>

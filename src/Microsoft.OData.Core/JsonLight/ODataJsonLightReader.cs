@@ -1091,7 +1091,7 @@ namespace Microsoft.OData.JsonLight
                     ODataConventionalResourceMetadataBuilder conventionalResourceMetadataBuilder =
                         builder as ODataConventionalResourceMetadataBuilder;
 
-                    // If it's ODataConventionalResourceMetadataBuilder, then it means we need to build nested relation ship for it in containment case
+                    // If it's ODataConventionalResourceMetadataBuilder, then it means we need to build nested relationship for it in containment case
                     if (conventionalResourceMetadataBuilder != null)
                     {
                         if (parentNestInfo != null)
@@ -2355,7 +2355,7 @@ namespace Microsoft.OData.JsonLight
                 {
                     if (TryAppendEntitySetKeySegment(ref odataPath))
                     {
-                        odataPath = odataPath.AppendNavigationPropertySegment(navigationProperty, navigationSource);
+                        odataPath = odataPath.AddNavigationPropertySegment(navigationProperty, navigationSource);
                     }
                 }
                 else if (navigationSource != null && !(navigationSource is IEdmUnknownEntitySet))
@@ -2372,7 +2372,7 @@ namespace Microsoft.OData.JsonLight
             }
             else if (nestedProperty != null)
             {
-                odataPath = odataPath.AppendPropertySegment(nestedProperty as IEdmStructuralProperty);
+                odataPath = odataPath.AddPropertySegment(nestedProperty as IEdmStructuralProperty);
             }
 
             odataUri.Path = odataPath;
@@ -2429,7 +2429,7 @@ namespace Microsoft.OData.JsonLight
                     IEdmEntityType currentEntityType = this.CurrentScope.ResourceType as IEdmEntityType;
                     ODataResourceBase resource = this.CurrentScope.Item as ODataResourceBase;
                     KeyValuePair<string, object>[] keys = ODataResourceMetadataContext.GetKeyProperties(resource, null, currentEntityType);
-                    odataPath = odataPath.AppendKeySegment(keys, currentEntityType, this.CurrentScope.NavigationSource);
+                    odataPath = odataPath.AddKeySegment(keys, currentEntityType, this.CurrentScope.NavigationSource);
                 }
             }
             catch (ODataException)
@@ -2477,7 +2477,10 @@ namespace Microsoft.OData.JsonLight
                 }
             }
 
-            this.jsonLightResourceDeserializer.ValidateMediaEntity(resourceState);
+            if (!this.ReadingDelta)
+            {
+                this.jsonLightResourceDeserializer.ValidateMediaEntity(resourceState);
+            }
 
             // In non-delta responses, ensure that all projected properties get created.
             // Also ignore cases where the resource is 'null' which happens for expanded null entries.
