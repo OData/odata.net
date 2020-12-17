@@ -469,9 +469,8 @@ namespace Microsoft.OData.Client
             }
             else
             {
-                clientRequestMessage = new HttpWebRequestMessage(clientRequestMessageArgs);
+                clientRequestMessage = this.Context.RequestMessageFactory.CreateRequestMessage(clientRequestMessageArgs, this.Context);       
             }
-
             return clientRequestMessage;
         }
 

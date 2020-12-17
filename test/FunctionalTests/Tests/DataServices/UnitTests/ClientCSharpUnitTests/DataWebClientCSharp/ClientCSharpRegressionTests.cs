@@ -110,7 +110,7 @@ namespace AstoriaUnitTests.Tests
                 DataServiceContext ctx = new DataServiceContext(request.ServiceRoot);
                 //ctx.EnableAtom = true;
                 //ctx.Format.UseAtom();
-                ctx.Configurations.RequestPipeline.OnMessageCreating = (args) => new HttpWebRequestMessage(args);
+                ctx.Configurations.RequestPipeline.OnMessageCreating = (args) => new HttpClientRequestMessage(args);
 
                 ctx.UsePostTunneling = true;
                 var q = from c in ctx.CreateQuery<Product>("Products")

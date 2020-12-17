@@ -10,6 +10,9 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using System.Net;
     using FluentAssertions;
     using Xunit;
+    using System.Net.Http;
+    using System.Collections.Generic;
+    using System.Globalization;
 
     /// <summary>
     /// Unit tests for the HttpWebRequest class. Primarily used for testing differences accoss all the platforms
@@ -31,41 +34,31 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [Fact]
         public void SetUserAgentShouldSucceed()
         {
-            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create("http://www.svc");
-            HttpWebRequestMessage.SetUserAgentHeader(request, "MyUserAgent");
-#if WIN8
-            request.Headers["UserAgent"].Should().BeNull();
-#else
-// For portable on silverlight UserAgent just throws NotImplemented, setting the user agent skips it as it will throw.
-#if !(SILVERLIGHT && PORTABLELIB) && !(NETCOREAPP1_0 || NETCOREAPP2_0)
-            request.UserAgent.Should().Be("MyUserAgent");
-#endif
-#endif
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://www.svc");
+            IDictionary<string, string> Headers = new Dictionary<string, string>();
+            DataServiceClientRequestMessageArgs args = new DataServiceClientRequestMessageArgs(request.Method.ToString(), request.RequestUri, true, false, Headers);
+            new HttpClientRequestMessage(args).SetHeader(XmlConstants.HttpUserAgent, "MyUserAgent");
+            new HttpWebRequestMessage(args).SetHeader(XmlConstants.HttpUserAgent, "MyUserAgent");
         }
 
         [Fact]
         public void SetAcceptCharsetShouldNotBeSetOnSilverlightAndSetOnOtherPlatforms()
         {
-            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create("http://www.svc");
-            HttpWebRequestMessage.SetAcceptCharset(request, "utf8");
-
-            // For portable on silverlight UserAgent just throws NotImplemented, setting the user agent skips it as it will throw.
-#if !(SILVERLIGHT && PORTABLELIB)
-            request.Headers["Accept-Charset"].Should().Be("utf8");
-#endif
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://www.svc");
+            IDictionary<string, string> Headers = new Dictionary<string, string>();
+            DataServiceClientRequestMessageArgs args = new DataServiceClientRequestMessageArgs(request.Method.ToString(), request.RequestUri, true, false, Headers);
+            new HttpClientRequestMessage(args).SetHeader(XmlConstants.HttpAcceptCharset, "utf8");
+            new HttpWebRequestMessage(args).SetHeader(XmlConstants.HttpAcceptCharset, "utf8");
         }
 
         [Fact]
         public void SetContentLengthShouldSucceed()
         {
-            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create("http://www.svc");
-            HttpWebRequestMessage.SetHttpWebRequestContentLength(request, 1);
-
-#if WIN8
-            request.Headers["Content-Length"].Should().Be("0");
-#elif !(NETCOREAPP1_0 || NETCOREAPP2_0)
-            request.ContentLength.Should().Be(1);
-#endif
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "http://www.svc");
+            IDictionary<string, string> Headers = new Dictionary<string, string>();
+            DataServiceClientRequestMessageArgs args = new DataServiceClientRequestMessageArgs(request.Method.ToString(), request.RequestUri, true, false, Headers);
+            new HttpClientRequestMessage(args).SetHeader(XmlConstants.HttpContentLength, 1.ToString(CultureInfo.InvariantCulture.NumberFormat));
+            new HttpWebRequestMessage(args).SetHeader(XmlConstants.HttpContentLength, 1.ToString(CultureInfo.InvariantCulture.NumberFormat));
         }
     }
 }

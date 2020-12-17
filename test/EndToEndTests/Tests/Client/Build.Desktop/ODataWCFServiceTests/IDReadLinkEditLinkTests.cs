@@ -39,7 +39,6 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         private void UpdateObject(string mimeType)
         {
             TestClientContext.MergeOption = MergeOption.OverwriteChanges;
-
             TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpWebRequestMessage)eventArgs.RequestMessage).SetHeader(TestHeader, "EditLink");
 
             TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpWebRequestMessage)eventArgs.RequestMessage).SetHeader("Accept", mimeType);

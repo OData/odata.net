@@ -11,7 +11,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.EntityParameter
     using System.Text;
     using Microsoft.OData;
 
-    public class EntityParameterRequestMessage : HttpWebRequestMessage
+    public class EntityParameterRequestMessage : HttpClientRequestMessage
     {
         private readonly Stream stream;
         private readonly HeaderCollection headers;

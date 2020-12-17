@@ -41,7 +41,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
                 (args) =>
                 {
                     args.Headers.Add(headerName, headerValue);
-                    return new HttpWebRequestMessage(args);
+                    return new Microsoft.OData.Client.HttpClientRequestMessage(args);
                 };
 
             var ctx = this.CreateContext(addHeader);
@@ -69,10 +69,10 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
                         newArgs.Headers.Remove("DataServiceVersion");
                         newArgs.Headers.Add("DataServiceVersion", "3.0");
 
-                        return new HttpWebRequestMessage(newArgs);
+                        return new Microsoft.OData.Client.HttpClientRequestMessage(newArgs);
                     }
 
-                    return new HttpWebRequestMessage(args);
+                    return new Microsoft.OData.Client.HttpClientRequestMessage(args);
                 };
 
             var ctx = this.CreateContext(addHeader);
@@ -107,9 +107,9 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
                         // use V4 since Merge is removed only in V4
                         newArgs.Headers["DataServiceVersion"] = "4.0";
 
-                        return new HttpWebRequestMessage(newArgs);
+                        return new Microsoft.OData.Client.HttpClientRequestMessage(newArgs);
                     }
-                    return new HttpWebRequestMessage(args);
+                    return new Microsoft.OData.Client.HttpClientRequestMessage(args);
                 };
 
             var ctx = this.CreateContext(addHeader);

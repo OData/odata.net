@@ -346,9 +346,9 @@ namespace System.Data.Test.Astoria
                 args = new DataServiceClientRequestMessageArgs("GET", new Uri(_workaroundDateTimeQuery), false, false, new Dictionary<string, string>());
                 _workaroundDateTimeQuery = null;
             }
-            HttpWebRequestMessage webRequestMessage = new HttpWebRequestMessage(args);
-            webRequestMessage.HttpWebRequest.UseDefaultCredentials = true;
-            return webRequestMessage;
+            HttpClientRequestMessage clientRequestMessage = new HttpClientRequestMessage(args);
+            clientRequestMessage.Credentials = CredentialCache.DefaultCredentials;
+            return clientRequestMessage;
         }
 
         protected override ResourceContainer DetermineResourceContainerFromProviderObject(object o)

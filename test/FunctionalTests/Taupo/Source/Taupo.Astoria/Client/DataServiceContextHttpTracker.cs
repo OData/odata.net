@@ -18,6 +18,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
     using Microsoft.Test.Taupo.Astoria.Contracts.Client;
     using Microsoft.Test.Taupo.Astoria.Contracts.Http;
     using Microsoft.Test.Taupo.Common;
+    using ReferenceEqualityComparer = Taupo.Common.ReferenceEqualityComparer;
 
 #if !WINDOWS_PHONE
     /// <summary>
@@ -193,8 +194,23 @@ namespace Microsoft.Test.Taupo.Astoria.Client
             /// </summary>
             internal void RegisterCallbacks()
             {
-                this.context.Configurations.RequestPipeline.OnMessageCreating =
-                (requestMessageArgs) =>
+                if (context.HttpRequestTransportMode == HttpRequestTransportMode.HttpClient)
+                {
+                    this.context.Configurations.RequestPipeline.OnMessageCreating =
+                    (requestMessageArgs) =>
+                        {
+                            TestHttpWebRequestMessage requestMessage = new TestHttpWebRequestMessage(requestMessageArgs);
+                            requestMessage.InternalGetRequestWrappingStream = this.getRequestWrappingStream;
+                            requestMessage.InternalGetResponseWrappingStream = this.getResponseWrappingStream;
+                            requestMessage.InternalSendRequest = this.sendRequest;
+                            requestMessage.InternalSendResponse = this.sendResponse;
+                            return requestMessage;
+                        };
+                }
+                else
+                {
+                    this.context.Configurations.RequestPipeline.OnMessageCreating =
+                    (requestMessageArgs) =>
                     {
                         TestHttpWebRequestMessage requestMessage = new TestHttpWebRequestMessage(requestMessageArgs);
                         requestMessage.InternalGetRequestWrappingStream = this.getRequestWrappingStream;
@@ -203,6 +219,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                         requestMessage.InternalSendResponse = this.sendResponse;
                         return requestMessage;
                     };
+                }
             }
 
             /// <summary>
@@ -417,6 +434,101 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                     this.CurrentResponse = null;
                     this.CurrentResponseStream = null;
                     throw;
+                }
+            }
+
+            private class TestHttpClientRequestMessage : HttpClientRequestMessage
+            {
+                private bool requestHeadersSent;
+
+                public TestHttpClientRequestMessage(DataServiceClientRequestMessageArgs requestMessageArgs) :
+                    base(requestMessageArgs)
+                {
+                }
+
+                internal Func<Stream, Stream> InternalGetRequestWrappingStream { get; set; }
+
+                internal Func<Stream, Stream> InternalGetResponseWrappingStream { get; set; }
+
+                internal Action<object> InternalSendRequest { get; set; }
+
+                internal Action<object> InternalSendResponse { get; set; }
+
+                public override Stream GetStream()
+                {
+                    ExceptionUtilities.Assert(!this.requestHeadersSent, "requestHeaders must not be set yet");
+                    this.InternalSendRequest(this.HttpRequestMessage);
+                    this.requestHeadersSent = true;
+                    var stream = base.GetStream();
+                    return this.InternalGetRequestWrappingStream(stream);
+                }
+
+                public override IAsyncResult BeginGetRequestStream(AsyncCallback callback, object state)
+                {
+                    ExceptionUtilities.Assert(!this.requestHeadersSent, "requestHeaders must not be set yet");
+                    this.InternalSendRequest(this.HttpRequestMessage);
+                    this.requestHeadersSent = true;
+
+                    return base.BeginGetRequestStream(callback, state);
+                }
+
+                public override Stream EndGetRequestStream(IAsyncResult asyncResult)
+                {
+                    var stream = base.EndGetRequestStream(asyncResult);
+                    return this.InternalGetRequestWrappingStream(stream);
+                }
+
+                public override IAsyncResult BeginGetResponse(AsyncCallback callback, object state)
+                {
+                    if (!this.requestHeadersSent)
+                    {
+                        this.InternalSendRequest(this.HttpRequestMessage);
+                        this.requestHeadersSent = true;
+                    }
+
+                    return base.BeginGetResponse(callback, state);
+                }
+
+                [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "HttpWebResponse is passed to TestHttpWebResponseMessage, which will get disposed by DataServiceContext.")]
+                public override IODataResponseMessage EndGetResponse(IAsyncResult asyncResult)
+                {
+                    return BuildResponse(() => ((HttpWebResponseMessage)base.EndGetResponse(asyncResult)));
+                }
+
+#if !SILVERLIGHT
+                [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "HttpWebResponse is passed to TestHttpWebResponseMessage, which will get disposed by DataServiceContext.")]
+                public override IODataResponseMessage GetResponse()
+                {
+                    return BuildResponse(() => ((HttpWebResponseMessage)base.GetResponse()));
+                }
+#endif
+                [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "HttpWebResponse is passed to TestHttpWebResponseMessage, which will get disposed by DataServiceContext.")]
+                private IODataResponseMessage BuildResponse(Func<HttpWebResponseMessage> getWebResponse)
+                {
+                    if (!this.requestHeadersSent)
+                    {
+                        this.InternalSendRequest(this.HttpRequestMessage);
+                        this.requestHeadersSent = true;
+                    }
+
+                    HttpWebResponseMessage responseMessage = null;
+
+                    try
+                    {
+                        responseMessage = (HttpWebResponseMessage)getWebResponse();
+                        responseMessage = new TestHttpWebResponseMessage(responseMessage.Response, this.InternalGetResponseWrappingStream);
+                        return responseMessage;
+                    }
+                    catch (DataServiceTransportException e)
+                    {
+                        var httpWebResponse = ((HttpWebResponseMessage)e.Response).Response;
+                        responseMessage = new TestHttpWebResponseMessage(httpWebResponse, this.InternalGetResponseWrappingStream);
+                        throw new DataServiceTransportException(responseMessage, e);
+                    }
+                    finally
+                    {
+                        this.InternalSendResponse(responseMessage);
+                    }
                 }
             }
 

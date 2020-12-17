@@ -1394,7 +1394,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             httpClientContext.Configurations.RequestPipeline.OnMessageCreating =
                 (args) =>
                 {
-                    var message = new Microsoft.OData.Client.HttpWebRequestMessage(args);
+                    var message = new Microsoft.OData.Client.HttpClientRequestMessage(args);
                     foreach (var header in args.Headers)
                     {
                         message.SetHeader(header.Key, header.Value);

@@ -22,7 +22,7 @@ namespace Microsoft.OData.Client.TDDUnitTests
             context.Format.InjectMetadataHttpNetworkRequest = InjectFakeEdmxRequest;
             return context;
         }
-        internal static HttpWebRequestMessage InjectFakeEdmxRequest()
+        internal static HttpClientRequestMessage InjectFakeEdmxRequest()
         {
             return new CustomizedHttpWebRequestMessage(
                 new DataServiceClientRequestMessageArgs(
