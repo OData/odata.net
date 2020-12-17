@@ -307,6 +307,7 @@ Bad_CyclicEntity=The entity '{0}' is invalid because its base type is cyclic.
 Bad_CyclicComplex=The complex type '{0}' is invalid because its base type is cyclic.
 Bad_CyclicEntityContainer=The entity container '{0}' is invalid because its extends hierarchy is cyclic.
 Bad_UnresolvedNavigationPropertyPath=A navigation property could not be found for the path '{0}' starting from the type '{1}'.
+Bad_CyclicTerm=The term '{0}' is invalid because its base type is cyclic.
 
 ; Error messages for validation rulesets
 RuleSet_DuplicateRulesExistInRuleSet=The same rule cannot be in the same rule set twice.

@@ -1384,6 +1384,11 @@ namespace Microsoft.OData.Edm.Validation
         AnnotationApplyToNotAllowedAnnotatable = 400,
 
         /// <summary>
+        /// This ter, type is part of a cycle.
+        /// </summary>
+        BadCyclicTerm,
+
+        /// <summary>
         /// Invalid $Key value.
         /// </summary>
         InvalidKeyValue,

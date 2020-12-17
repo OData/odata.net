@@ -816,6 +816,34 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
         }
 
         [Fact]
+        public void VerifyTermWithBaseTermWrittenCorrectly()
+        {
+            // Arrange
+            IEdmPrimitiveTypeReference stringType = EdmCoreModel.Instance.GetString(true);
+            EdmTerm baseTerm = new EdmTerm("NS", "BaseTerm", stringType);
+            EdmTerm term = new EdmTerm("NS", "MyAnnotation", stringType, baseTerm, "Function,Action,EntitySet", null);
+
+            // Act & Assert for XML
+            VisitAndVerifyXml(v => v.VisitSchemaElement(term),
+                @"<Term Name=""MyAnnotation"" Type=""Edm.String"" BaseTerm=""NS.BaseTerm"" AppliesTo=""Function,Action,EntitySet"" />");
+
+            // Act & Assert for JSON
+            VisitAndVerifyJson(v => v.VisitSchemaElement(term), @"{
+  ""MyAnnotation"": {
+    ""$Kind"": ""Term"",
+    ""$Type"": ""Edm.String"",
+    ""$BaseTerm: ""NS.BaseTerm"",
+    ""$AppliesTo"": [
+      ""Function"",
+      ""Action"",
+      ""EntitySet""
+    ],
+    ""$Nullable"": true
+  }
+}");
+        }
+
+        [Fact]
         public void VerifyTermWithAnnotationsWrittenCorrectly()
         {
             // Arrange

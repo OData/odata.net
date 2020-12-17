@@ -1084,6 +1084,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
             IList<string> appliesTo = null;
             string defaultValue = null;
+            string baseTerm = null;
             IList<CsdlAnnotation> termAnnotations = new List<CsdlAnnotation>();
             element.ParseAsObject(context, (propertyName, propertyValue) =>
             {
@@ -1103,8 +1104,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
                     case "$BaseTerm":
                         // The value of $BaseTerm is the qualified name of the base term.
-                        // Skip it because it's not supported
-                        context.ReportError(EdmErrorCode.UnexpectedElement, Strings.CsdlJsonParser_UnexpectedJsonMember(context.Path, element.ValueKind));
+                        baseTerm = propertyValue.ParseAsString(context);
                         break;
 
                     case "$DefaultValue":
@@ -1126,7 +1126,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             });
 
             string appliesToStr = appliesTo != null ? string.Join(" ", appliesTo) : null;
-            CsdlTerm termType = new CsdlTerm(name, typeReference, appliesToStr, defaultValue, context.Location());
+            CsdlTerm termType = new CsdlTerm(name, typeReference, baseTerm, appliesToStr, defaultValue, context.Location());
             termAnnotations.ForEach(a => termType.AddAnnotation(a));
 
             return termType;

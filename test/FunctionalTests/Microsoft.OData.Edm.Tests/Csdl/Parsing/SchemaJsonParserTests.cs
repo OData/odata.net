@@ -286,13 +286,15 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Parsing
         #endregion
 
         #region Term
+
         [Fact]
-        public void ParseCsdlTermWithMembersWorksAsExpected()
+        public void ParseCsdlTermWithBaseTermAndMembersWorksAsExpected()
         {
             string json =  @"""ConformanceLevel"": {
   ""$Kind"": ""Term"",
   ""$Type"": ""Capabilities.ConformanceLevelType"",
   ""$Nullable"": true,
+  ""$BaseTerm"": ""NS.BaseTerm"",
   ""$AppliesTo"": [
     ""EntityContainer""
   ],
@@ -307,6 +309,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Parsing
             Assert.Equal("EntityContainer", term.AppliesTo);
             Assert.Null(term.DefaultValue);
             Assert.True(term.HasVocabularyAnnotations);
+
+            Assert.Equal("NS.BaseTerm", term.BaseTermName);
 
             CsdlNamedTypeReference namedType = Assert.IsType<CsdlNamedTypeReference>(term.Type);
             Assert.Equal("Capabilities.ConformanceLevelType", namedType.FullName);

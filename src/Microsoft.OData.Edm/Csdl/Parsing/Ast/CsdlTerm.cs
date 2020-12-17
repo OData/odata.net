@@ -14,11 +14,13 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         private readonly CsdlTypeReference type;
         private readonly string appliesTo;
         private readonly string defaultValue;
+        private readonly string baseTermName;
 
-        public CsdlTerm(string name, CsdlTypeReference type, string appliesTo, string defaultValue, CsdlLocation location)
+        public CsdlTerm(string name, CsdlTypeReference type, string baseTermName, string appliesTo, string defaultValue, CsdlLocation location)
             : base(name, location)
         {
             this.type = type;
+            this.baseTermName = baseTermName;
             this.appliesTo = appliesTo;
             this.defaultValue = defaultValue;
         }
@@ -26,6 +28,11 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         public CsdlTypeReference Type
         {
             get { return this.type; }
+        }
+
+        public string BaseTermName
+        {
+            get { return this.baseTermName; }
         }
 
         public string AppliesTo

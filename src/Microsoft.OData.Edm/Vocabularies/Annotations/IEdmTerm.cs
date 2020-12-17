@@ -25,5 +25,10 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// Gets the DefaultValue of this term.
         /// </summary>
         string DefaultValue { get; }
+
+        /// <summary>
+        /// Gets the base term of this term.
+        /// </summary>
+        IEdmTerm BaseTerm { get; }
     }
 }

@@ -3080,6 +3080,7 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
     BadCyclicComplex = 227
     BadCyclicEntity = 229
     BadCyclicEntityContainer = 228
+    BadCyclicTerm = 401
     BadNavigationProperty = 74
     BadNonComputableAssociationEnd = 235
     BadPrincipalPropertiesInReferentialConstraint = 353
@@ -3167,7 +3168,7 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
     InvalidBinary = 283
     InvalidBoolean = 27
     InvalidCastExpressionIncorrectNumberOfOperands = 303
-    InvalidCollectionValue = 403
+    InvalidCollectionValue = 404
     InvalidDate = 375
     InvalidDateTime = 285
     InvalidDateTimeOffset = 286
@@ -3183,9 +3184,9 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
     InvalidIfExpressionIncorrectNumberOfOperands = 290
     InvalidInteger = 278
     InvalidIsTypeExpressionIncorrectNumberOfOperands = 293
-    InvalidJson = 404
+    InvalidJson = 405
     InvalidKey = 75
-    InvalidKeyValue = 401
+    InvalidKeyValue = 402
     InvalidLabeledElementExpressionIncorrectNumberOfOperands = 300
     InvalidLong = 277
     InvalidMaxLength = 276
@@ -3195,7 +3196,7 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
     InvalidName = 17
     InvalidNamespaceName = 163
     InvalidNavigationPropertyType = 258
-    InvalidNumberType = 406
+    InvalidNumberType = 407
     InvalidOnDelete = 97
     InvalidOperationImportParameterMode = 333
     InvalidParameterMode = 280
@@ -3225,7 +3226,7 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
     MetadataDocumentCannotHaveMoreThanOneEntityContainer = 365
     MismatchNumberOfPropertiesInRelationshipConstraint = 114
     MissingAttribute = 15
-    MissingRequiredProperty = 410
+    MissingRequiredProperty = 411
     MissingType = 18
     NameTooLong = 60
     NavigationMappingMustBeBidirectional = 344
@@ -3276,7 +3277,7 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
     RequiredParametersMustPrecedeOptional = 379
     SameRoleReferredInReferentialConstraint = 119
     ScaleOutOfRange = 52
-    SchemaCannotHaveMoreThanOneEntityContainer = 402
+    SchemaCannotHaveMoreThanOneEntityContainer = 403
     SchemaElementMustNotHaveKindOfNone = 338
     SimilarRelationshipEnd = 153
     SingleFileExpected = 323
@@ -3293,18 +3294,18 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
     TypeSemanticsCouldNotConvertTypeReference = 230
     UnboundFunctionOverloadHasIncorrectReturnType = 219
     UnderlyingTypeIsBadBecauseEnumTypeIsBad = 261
-    UnexpectedElement = 408
-    UnexpectedValueKind = 409
+    UnexpectedElement = 409
+    UnexpectedValueKind = 410
     UnexpectedXmlAttribute = 9
     UnexpectedXmlElement = 10
     UnexpectedXmlNodeType = 8
     UnknownEdmVersion = 325
     UnknownEdmxVersion = 324
-    UnknownElementValueKind = 405
+    UnknownElementValueKind = 406
     UnresolvedNavigationPropertyBindingPath = 378
     UnresolvedNavigationPropertyPartnerPath = 377
     UnresolvedReferenceUriInEdmxReference = 374
-    UnsupportedElement = 407
+    UnsupportedElement = 408
     UrlEscapeFunctionMustBeBoundFunction = 155
     UrlEscapeFunctionMustHaveOnlyOneEdmStringParameter = 156
     XmlError = 5
@@ -3719,6 +3720,7 @@ public interface Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue : IEdmElem
 
 public interface Microsoft.OData.Edm.Vocabularies.IEdmTerm : IEdmElement, IEdmNamedElement, IEdmSchemaElement, IEdmVocabularyAnnotatable {
     string AppliesTo  { public abstract get; }
+    Microsoft.OData.Edm.Vocabularies.IEdmTerm BaseTerm  { public abstract get; }
     string DefaultValue  { public abstract get; }
     Microsoft.OData.Edm.IEdmTypeReference Type  { public abstract get; }
 }
@@ -4043,10 +4045,13 @@ public class Microsoft.OData.Edm.Vocabularies.EdmTerm : Microsoft.OData.Edm.EdmN
     public EdmTerm (string namespaceName, string name, Microsoft.OData.Edm.EdmPrimitiveTypeKind type)
     public EdmTerm (string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference type)
     public EdmTerm (string namespaceName, string name, Microsoft.OData.Edm.EdmPrimitiveTypeKind type, string appliesTo)
+    public EdmTerm (string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference type, Microsoft.OData.Edm.Vocabularies.IEdmTerm baseTerm)
     public EdmTerm (string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference type, string appliesTo)
     public EdmTerm (string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference type, string appliesTo, string defaultValue)
+    public EdmTerm (string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference type, Microsoft.OData.Edm.Vocabularies.IEdmTerm baseTerm, string appliesTo, string defaultValue)
 
     string AppliesTo  { public virtual get; }
+    Microsoft.OData.Edm.Vocabularies.IEdmTerm BaseTerm  { public virtual get; }
     string DefaultValue  { public virtual get; }
     string FullName  { public virtual get; }
     string Namespace  { public virtual get; }
@@ -4127,6 +4132,10 @@ public sealed class Microsoft.OData.Edm.Vocabularies.TryGetClrTypeName : System.
     public virtual bool Invoke (Microsoft.OData.Edm.IEdmModel edmModel, string edmTypeName, out System.String& clrTypeName)
 }
 
+public sealed class Microsoft.OData.Edm.Vocabularies.V1.AuthorizationVocabularyModel {
+    public static readonly Microsoft.OData.Edm.IEdmModel Instance = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsModel
+}
+
 public sealed class Microsoft.OData.Edm.Vocabularies.V1.CapabilitiesVocabularyConstants {
     public static string ChangeTracking = "Org.OData.Capabilities.V1.ChangeTracking"
     public static string ChangeTrackingExpandableProperties = "ExpandableProperties"
@@ -4177,6 +4186,7 @@ public sealed class Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyModel {
     public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm PermissionsTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
     public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm RequiresTypeTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
     public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm ResourcePathTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
+    public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm RevisionsTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
 }
 
 public sealed class Microsoft.OData.Edm.Vocabularies.V1.ValidationVocabularyModel {
@@ -4197,6 +4207,10 @@ public sealed class Microsoft.OData.Edm.Vocabularies.Community.V1.AlternateKeysV
 public sealed class Microsoft.OData.Edm.Vocabularies.Community.V1.CommunityVocabularyModel {
     public static readonly Microsoft.OData.Edm.IEdmModel Instance = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsModel
     public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm UrlEscapeFunctionTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
+}
+
+public sealed class Microsoft.OData.Edm.Vocabularies.Measures.V1.MeasuresVocabularyModel {
+    public static readonly Microsoft.OData.Edm.IEdmModel Instance = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsModel
 }
 
 >>>Microsoft.OData.Core
@@ -7772,21 +7786,6 @@ public abstract class Microsoft.OData.Client.OperationResponse {
     System.Exception Error  { public get; public set; }
     System.Collections.Generic.IDictionary`2[[System.String],[System.String]] Headers  { public get; }
     int StatusCode  { public get; }
-}
-
-[
-ExtensionAttribute(),
-]
-public sealed class Microsoft.OData.Client.DataServiceExtensions {
-    [
-    ExtensionAttribute(),
-    ]
-    public static int CountDistinct (IEnumerable`1 source, Func`2 selector)
-
-    [
-    ExtensionAttribute(),
-    ]
-    public static int CountDistinct (IQueryable`1 source, Expression`1 selector)
 }
 
 public sealed class Microsoft.OData.Client.Utility {
