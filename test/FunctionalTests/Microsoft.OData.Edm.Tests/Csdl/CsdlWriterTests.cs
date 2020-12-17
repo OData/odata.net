@@ -1851,6 +1851,130 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 
         [Fact]
+        public void ShouldWriteAnnotationUsingTermWithBaseTerm()
+        {
+            // Arrange
+            IEdmTypeReference propertyPathType = EdmCoreModel.Instance.GetPropertyPath(false);
+
+            EdmModel model = new EdmModel();
+
+            // Complex types
+            EdmComplexType aggreRecursiveHierarchyType = new EdmComplexType("Aggregation", "RecursiveHierarchyType");
+            aggreRecursiveHierarchyType.AddStructuralProperty("NodeProperty", propertyPathType);
+            aggreRecursiveHierarchyType.AddStructuralProperty("ParentNavigationProperty", EdmCoreModel.Instance.GetNavigationPropertyPath(false));
+            model.AddElement(aggreRecursiveHierarchyType);
+
+            EdmComplexType commonRecursiveHierarchyType = new EdmComplexType("Common", "RecursiveHierarchyType");
+            commonRecursiveHierarchyType.AddStructuralProperty("ExternalNodeKeyProperty", propertyPathType);
+            commonRecursiveHierarchyType.AddStructuralProperty("NodeDrillStateProperty", propertyPathType);
+            model.AddElement(commonRecursiveHierarchyType);
+
+            // Terms
+            EdmTerm baseTerm = new EdmTerm("Aggregation", "RecursiveHierarchy", new EdmComplexTypeReference(aggreRecursiveHierarchyType, true));
+            model.AddElement(baseTerm);
+            EdmTerm subTerm = new EdmTerm("Common", "RecursiveHierarchy", new EdmComplexTypeReference(commonRecursiveHierarchyType, true), baseTerm);
+            model.AddElement(subTerm);
+
+            // Enum
+            EdmEnumType appliance = new EdmEnumType("NS", "Appliance", EdmPrimitiveTypeKind.Int64, isFlags: true);
+            model.AddElement(appliance);
+
+            // Annotation
+            EdmRecordExpression record = new EdmRecordExpression(
+                new EdmPropertyConstructor("NodeProperty", new EdmPropertyPathExpression("a/b/c")),
+                new EdmPropertyConstructor("ParentNavigationProperty", new EdmNavigationPropertyPathExpression("e/f/g")),
+                new EdmPropertyConstructor("ExternalNodeKeyProperty", new EdmPropertyPathExpression("opq")),
+                new EdmPropertyConstructor("NodeDrillStateProperty", new EdmPropertyPathExpression("x/y/z")));
+
+            EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(appliance, subTerm, record);
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
+
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+              "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                "<edmx:DataServices>" +
+                  "<Schema Namespace=\"Aggregation\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                    "<ComplexType Name=\"RecursiveHierarchyType\">" +
+                      "<Property Name=\"NodeProperty\" Type=\"Edm.PropertyPath\" Nullable=\"false\" />" +
+                      "<Property Name=\"ParentNavigationProperty\" Type=\"Edm.NavigationPropertyPath\" Nullable=\"false\" />" +
+                    "</ComplexType>" +
+                    "<Term Name=\"RecursiveHierarchy\" Type=\"Aggregation.RecursiveHierarchyType\" />" +
+                    "</Schema>" +
+                  "<Schema Namespace=\"Common\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                    "<ComplexType Name=\"RecursiveHierarchyType\">" +
+                      "<Property Name=\"ExternalNodeKeyProperty\" Type=\"Edm.PropertyPath\" Nullable=\"false\" />" +
+                      "<Property Name=\"NodeDrillStateProperty\" Type=\"Edm.PropertyPath\" Nullable=\"false\" />" +
+                    "</ComplexType>" +
+                    "<Term Name=\"RecursiveHierarchy\" Type=\"Common.RecursiveHierarchyType\" BaseTerm=\"Aggregation.RecursiveHierarchy\" />" +
+                  "</Schema>" +
+                  "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                    "<EnumType Name=\"Appliance\" UnderlyingType=\"Edm.Int64\" IsFlags=\"true\">" +
+                      "<Annotation Term=\"Common.RecursiveHierarchy\">" +
+                        "<Record>" +
+                          "<PropertyValue Property=\"NodeProperty\" PropertyPath=\"a/b/c\" />" +
+                          "<PropertyValue Property=\"ParentNavigationProperty\" NavigationPropertyPath=\"e/f/g\" />" +
+                          "<PropertyValue Property=\"ExternalNodeKeyProperty\" PropertyPath=\"opq\" />" +
+                          "<PropertyValue Property=\"NodeDrillStateProperty\" PropertyPath=\"x/y/z\" />" +
+                        "</Record>" +
+                      "</Annotation>" +
+                    "</EnumType>" +
+                  "</Schema>" +
+                "</edmx:DataServices>" +
+              "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""Aggregation"": {
+    ""RecursiveHierarchyType"": {
+      ""$Kind"": ""ComplexType"",
+      ""NodeProperty"": {
+        ""$Type"": ""Edm.PropertyPath""
+      },
+      ""ParentNavigationProperty"": {
+        ""$Type"": ""Edm.NavigationPropertyPath""
+      }
+    },
+    ""RecursiveHierarchy"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""Aggregation.RecursiveHierarchyType"",
+      ""$Nullable"": true
+    }
+  },
+  ""Common"": {
+    ""RecursiveHierarchyType"": {
+      ""$Kind"": ""ComplexType"",
+      ""ExternalNodeKeyProperty"": {
+        ""$Type"": ""Edm.PropertyPath""
+      },
+      ""NodeDrillStateProperty"": {
+        ""$Type"": ""Edm.PropertyPath""
+      }
+    },
+    ""RecursiveHierarchy"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""Common.RecursiveHierarchyType"",
+      ""$BaseTerm"": ""Aggregation.RecursiveHierarchy"",
+      ""$Nullable"": true
+    }
+  },
+  ""NS"": {
+    ""Appliance"": {
+      ""$Kind"": ""EnumType"",
+      ""$UnderlyingType"": ""Edm.Int64"",
+      ""$IsFlags"": true,
+      ""@Common.RecursiveHierarchy"": {
+        ""NodeProperty"": ""a/b/c"",
+        ""ParentNavigationProperty"": ""e/f/g"",
+        ""ExternalNodeKeyProperty"": ""opq"",
+        ""NodeDrillStateProperty"": ""x/y/z""
+      }
+    }
+  }
+}");
+        }
+
+        [Fact]
         public void CanWritePropertyWithCoreTypeDefinitionAndValidationPassed()
         {
             // Arrange
