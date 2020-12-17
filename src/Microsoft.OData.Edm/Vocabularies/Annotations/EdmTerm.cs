@@ -16,6 +16,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         private readonly IEdmTypeReference type;
         private readonly string appliesTo;
         private readonly string defaultValue;
+        private readonly IEdmTerm baseTerm;
 
         /// <summary>
         /// Initializes a new instance of <see cref="EdmTerm"/> class.
@@ -49,7 +50,19 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// <param name="name">Name of the term.</param>
         /// <param name="type">Type of the term.</param>
         public EdmTerm(string namespaceName, string name, IEdmTypeReference type)
-            : this(namespaceName, name, type, null)
+            : this(namespaceName, name, type, baseTerm: null, appliesTo: null, defaultValue: null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EdmTerm"/> class.
+        /// </summary>
+        /// <param name="namespaceName">Namespace of the term.</param>
+        /// <param name="name">Name of the term.</param>
+        /// <param name="type">Type of the term.</param>
+        /// <param name="baseTerm">Base term of the term.</param>
+        public EdmTerm(string namespaceName, string name, IEdmTypeReference type, IEdmTerm baseTerm)
+            : this(namespaceName, name, type, baseTerm, appliesTo: null, defaultValue: null)
         {
         }
 
@@ -74,6 +87,20 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// <param name="appliesTo">AppliesTo of the term.</param>
         /// <param name="defaultValue">DefaultValue of the term.</param>
         public EdmTerm(string namespaceName, string name, IEdmTypeReference type, string appliesTo, string defaultValue)
+            : this(namespaceName, name, type, baseTerm: null, appliesTo: appliesTo, defaultValue: defaultValue)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EdmTerm"/> class.
+        /// </summary>
+        /// <param name="namespaceName">Namespace of the term.</param>
+        /// <param name="name">Name of the term.</param>
+        /// <param name="type">Type of the term.</param>
+        /// <param name="baseTerm">Base term of the term.</param>
+        /// <param name="appliesTo">AppliesTo of the term.</param>
+        /// <param name="defaultValue">DefaultValue of the term.</param>
+        public EdmTerm(string namespaceName, string name, IEdmTypeReference type, IEdmTerm baseTerm, string appliesTo, string defaultValue)
             : base(name)
         {
             EdmUtil.CheckArgumentNull(namespaceName, "namespaceName");
@@ -81,6 +108,7 @@ namespace Microsoft.OData.Edm.Vocabularies
 
             this.namespaceName = namespaceName;
             this.type = type;
+            this.baseTerm = baseTerm;
             this.appliesTo = appliesTo;
             this.defaultValue = defaultValue;
             this.fullName = EdmUtil.GetFullNameForSchemaElement(this.namespaceName, this.Name);
@@ -124,6 +152,14 @@ namespace Microsoft.OData.Edm.Vocabularies
         public string DefaultValue
         {
             get { return this.defaultValue; }
+        }
+
+        /// <summary>
+        /// Gets the base term of this term.
+        /// </summary>
+        public IEdmTerm BaseTerm
+        {
+            get { return this.baseTerm; }
         }
 
         /// <summary>

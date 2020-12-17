@@ -24,6 +24,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         private readonly Cache<CsdlSemanticsTerm, IEdmTypeReference> typeCache = new Cache<CsdlSemanticsTerm, IEdmTypeReference>();
         private static readonly Func<CsdlSemanticsTerm, IEdmTypeReference> ComputeTypeFunc = (me) => me.ComputeType();
+        private readonly Cache<CsdlSemanticsTerm, IEdmTerm> baseTermCache = new Cache<CsdlSemanticsTerm, IEdmTerm>();
+        private static readonly Func<CsdlSemanticsTerm, IEdmTerm> ComputeBaseTermFunc = (me) => me.ComputeBaseTerm();
+        private static readonly Func<CsdlSemanticsTerm, IEdmTerm> OnCycleBaseTermFunc = (me) => new CyclicTerm(me.GetCyclicBaseTermName(me.term.BaseTermName), me.Location);
 
         public CsdlSemanticsTerm(CsdlSemanticsSchema context, CsdlTerm valueTerm)
             : base(valueTerm)
@@ -61,6 +64,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.typeCache.GetValue(this, ComputeTypeFunc, null); }
         }
 
+        public IEdmTerm BaseTerm
+        {
+            get { return this.baseTermCache.GetValue(this, ComputeBaseTermFunc, OnCycleBaseTermFunc); }
+        }
+
         public string AppliesTo
         {
             get { return this.term.AppliesTo; }
@@ -89,6 +97,32 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private IEdmTypeReference ComputeType()
         {
             return CsdlSemanticsModel.WrapTypeReference(this.Context, this.term.Type);
+        }
+
+        private IEdmTerm ComputeBaseTerm()
+        {
+            if (this.term.BaseTermName != null)
+            {
+                IEdmTerm baseTerm = this.Context.FindTerm(this.term.BaseTermName);
+                if (baseTerm != null)
+                {
+                    // Evaluate the inductive step to detect cycles.
+                    // Overriding BaseTerm getter from concrete type implementing IEdmTerm will be invoked to
+                    // detect cycles. The object assignment is required by compiler only.
+                    IEdmTerm baseTerm2 = baseTerm.BaseTerm;
+                }
+
+                return baseTerm ?? new UnresolvedVocabularyTerm(this.term.BaseTermName);
+            }
+
+            return null;
+        }
+
+        // Resolves the real name of the base term, in case it was using an alias before.
+        protected string GetCyclicBaseTermName(string baseTermName)
+        {
+            IEdmTerm schemaBaseTerm = this.Context.FindTerm(baseTermName);
+            return (schemaBaseTerm != null) ? schemaBaseTerm.FullName() : baseTermName;
         }
     }
 }

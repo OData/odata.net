@@ -51,6 +51,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.type; }
         }
 
+        public IEdmTerm BaseTerm
+        {
+            get { return null; }
+        }
+
         public string AppliesTo
         {
             get { return this.appliesTo; }

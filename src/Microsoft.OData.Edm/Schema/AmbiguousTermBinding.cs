@@ -55,6 +55,11 @@ namespace Microsoft.OData.Edm
             get { return this.type.GetValue(this, ComputeTypeFunc, null); }
         }
 
+        public IEdmTerm BaseTerm
+        {
+            get { return null; }
+        }
+
         public string AppliesTo
         {
             get { return this.appliesTo; }

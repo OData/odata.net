@@ -67,6 +67,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 this.WriteRequiredAttribute(CsdlConstants.Attribute_Type, term.Type, this.TypeReferenceAsXml);
             }
 
+            this.WriteOptionalAttribute(CsdlConstants.Attribute_BaseTerm, term.BaseTerm, this.SerializationName);
+
             this.WriteOptionalAttribute(CsdlConstants.Attribute_DefaultValue, term.DefaultValue, EdmValueWriter.StringAsXml);
             this.WriteOptionalAttribute(CsdlConstants.Attribute_AppliesTo, term.AppliesTo, EdmValueWriter.StringAsXml);
         }

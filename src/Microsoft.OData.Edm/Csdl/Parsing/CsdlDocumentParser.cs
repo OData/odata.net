@@ -509,8 +509,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             string name = Required(CsdlConstants.Attribute_Name);
             string appliesTo = Optional(CsdlConstants.Attribute_AppliesTo);
             string defaultValue = Optional(CsdlConstants.Attribute_DefaultValue);
+            string baseTerm = Optional(CsdlConstants.Attribute_BaseTerm);
 
-            return new CsdlTerm(name, type, appliesTo, defaultValue, element.Location);
+            return new CsdlTerm(name, type, baseTerm, appliesTo, defaultValue, element.Location);
         }
 
         private CsdlAnnotations OnAnnotationsElement(XmlElementInfo element, XmlElementValueCollection childValues)

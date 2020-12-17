@@ -79,7 +79,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
 
             // A term MAY specialize another term in scope by specifying it as its base term.
-            // The value of $BaseTerm is the qualified name of the base term. So far, it's not supported.
+            // The value of $BaseTerm is the qualified name of the base term.
+            this.jsonWriter.WriteOptionalProperty("$BaseTerm", term.BaseTerm, this.SerializationName);
 
             // It MAY contain the members $AppliesTo.
             // The value of $AppliesTo is an array whose items are strings containing symbolic values from a table

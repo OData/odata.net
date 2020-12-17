@@ -68,6 +68,7 @@ namespace Microsoft.OData.Edm.Csdl
         internal const string Attribute_DateTimeOffset = "DateTimeOffset";
         internal const string Attribute_Decimal = "Decimal";
         internal const string Attribute_DefaultValue = "DefaultValue";
+        internal const string Attribute_BaseTerm = "BaseTerm";
         internal const string Attribute_ElementType = "ElementType";
         internal const string Attribute_Extends = "Extends";
         internal const string Attribute_EntityType = "EntityType";

@@ -164,6 +164,15 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
         }
 
+        protected override void ProcessTerm(IEdmTerm element)
+        {
+            base.ProcessTerm(element);
+            if (element.BaseTerm != null)
+            {
+                this.CheckSchemaElementReference(element.BaseTerm);
+            }
+        }
+
         protected override void ProcessEnumType(IEdmEnumType element)
         {
             base.ProcessEnumType(element);
