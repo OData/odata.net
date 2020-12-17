@@ -63,11 +63,6 @@
     <WarningsNotAsErrors>$(WarningsNotAsErrors);1058</WarningsNotAsErrors>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release'">
-    <!--Overide the default full debug symbols regardless of configuration-->
-    <DebugType>pdbonly</DebugType>
-  </PropertyGroup>
-
   <Import Project="$(EnlistmentRoot)\tools\CustomMSBuild\Build.props" />
 
   <!-- NuGet packages settings -->
