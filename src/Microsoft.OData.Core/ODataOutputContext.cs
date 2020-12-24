@@ -645,6 +645,16 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Asynchronously writes a metadata document as message payload.
+        /// </summary>
+        /// <returns>A task representing the asynchronous operation of writing the metadata document.</returns>
+        /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
+        internal virtual Task WriteMetadataDocumentAsync()
+        {
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.MetadataDocument);
+        }
+
+        /// <summary>
         /// Asserts that the input context was created for synchronous operation.
         /// </summary>
         [Conditional("DEBUG")]
