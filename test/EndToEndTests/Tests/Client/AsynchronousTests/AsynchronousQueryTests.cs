@@ -19,6 +19,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
     using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference;
     using Xunit.Abstractions;
     using Xunit;
+    using System.Reflection;
+    using System;
 
     /// <summary>
     /// Client query tests using asynchronous APIs
@@ -294,25 +296,29 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             this.EnqueueTestComplete();
         }
 
-#if !PORTABLELIB && !NETCOREAPP1_0
         /// <summary>
         /// CancelRequest for Batch Requests
         /// </summary>
-        // github issuse: #896
-        // [Fact, Asynchronous]
+        [Fact, Asynchronous]
         public void CancelBatchRequestTest()
         {
-            var context = this.CreateWrappedContext<DefaultContainer>().Context;
+            DefaultContainer context = this.CreateWrappedContext<DefaultContainer>().Context;
             ServicePoint servicePoint = null;
             context.SendingRequest2 += ((sender, args) =>
             {
+                servicePoint = ServicePointManager.FindServicePoint(args.RequestMessage.Url);
+                MethodInfo ReleaseConns = servicePoint.GetType().GetMethod
+                        ("ReleaseAllConnectionGroups",
+                        BindingFlags.Instance | BindingFlags.NonPublic);
+                ReleaseConns.Invoke(servicePoint, null);
+
                 if (args.RequestMessage is HttpClientRequestMessage)
                 {
-                   
+                    servicePoint = ServicePointManager.FindServicePoint(args.RequestMessage.Url);
                 }
             });
 
-            var arBatch = context.BeginExecuteBatch(
+            IAsyncResult arBatch = context.BeginExecuteBatch(
                 null,
                 null,
                 new DataServiceRequest[]
@@ -320,11 +326,11 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                     new DataServiceRequest<Customer>(((from c in context.Customer where c.CustomerId == -8 select c) as DataServiceQuery<Customer>).RequestUri),
                     new DataServiceRequest<Customer>(((from c in context.Customer where c.CustomerId == -6 select c) as DataServiceQuery<Customer>).RequestUri),
                 });
+
             Assert.Equal(1, servicePoint.CurrentConnections);
             context.CancelRequest(arBatch);
             Assert.Equal(0, servicePoint.CurrentConnections);
         }
-#endif
 
         /// <summary>
         /// Query Entity Set
