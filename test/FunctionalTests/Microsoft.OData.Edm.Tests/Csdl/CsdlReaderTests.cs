@@ -1175,6 +1175,43 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Equal("123/456.t", ((IEdmPathExpression)annotation.Value).Path);
         }
 
+        [Fact]
+        public void ParsingUntypedPropertiesWorks()
+        {
+            string csdl =
+            "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+                "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                  "<edmx:DataServices>" +
+                    "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                      "<ComplexType Name=\"Complex\">" +
+                        "<Property Name=\"Value\" Type=\"Edm.Untyped\" />" +
+                        "<Property Name=\"Data\" Type=\"Collection(Edm.Untyped)\" />" +
+                      "</ComplexType>" +
+                    "</Schema>" +
+                  "</edmx:DataServices>" +
+                "</edmx:Edmx>";
+
+            IEdmModel model;
+            IEnumerable<EdmError> errors;
+
+            bool result = CsdlReader.TryParse(XElement.Parse(csdl).CreateReader(), out model, out errors);
+            Assert.True(result);
+            Assert.NotNull(model);
+
+            IEdmComplexType complexType = model.SchemaElements.OfType<IEdmComplexType>().FirstOrDefault();
+            Assert.NotNull(complexType);
+
+            Assert.Equal(2, complexType.Properties().Count());
+
+            IEdmProperty valueProperty = complexType.Properties().FirstOrDefault(p => p.Name == "Value");
+            Assert.NotNull(valueProperty);
+            Assert.Equal("Edm.Untyped", valueProperty.Type.FullName());
+
+            IEdmProperty dataProperty = complexType.Properties().FirstOrDefault(p => p.Name == "Data");
+            Assert.NotNull(dataProperty);
+            Assert.Equal("Collection(Edm.Untyped)", dataProperty.Type.FullName());
+        }
+
         [Theory]
         [InlineData("4.0")]
         [InlineData("4.01")]

@@ -2354,6 +2354,61 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 }");
         }
 
+        [Fact]
+        public void CanWriteEdmModelWithUntypedProperty()
+        {
+            EdmModel model = new EdmModel();
+
+            var entityType = new EdmEntityType("NS", "Entity");
+            var key = entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.String);
+            entityType.AddKeys(key);
+            entityType.AddStructuralProperty("Value", EdmCoreModel.Instance.GetUntyped());
+            entityType.AddStructuralProperty("Data", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetUntyped())));
+            model.AddElement(entityType);
+
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+                "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                  "<edmx:DataServices>" +
+                    "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                      "<EntityType Name=\"Entity\">" +
+                        "<Key>" +
+                          "<PropertyRef Name=\"Id\" />" +
+                        "</Key>" +
+                        "<Property Name=\"Id\" Type=\"Edm.String\" />" +
+                        "<Property Name=\"Value\" Type=\"Edm.Untyped\" />" +
+                        "<Property Name=\"Data\" Type=\"Collection(Edm.Untyped)\" />" +
+                      "</EntityType>" +
+                    "</Schema>" +
+                  "</edmx:DataServices>" +
+                "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""Entity"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {
+        ""$Nullable"": true
+      },
+      ""Value"": {
+        ""$Type"": ""Edm.Untyped"",
+        ""$Nullable"": true
+      },
+      ""Data"": {
+        ""$Collection"": true,
+        ""$Type"": ""Edm.Untyped"",
+        ""$Nullable"": true
+      }
+    }
+  }
+}");
+        }
+
         [Theory]
         [InlineData("4.0")]
         [InlineData("4.01")]
