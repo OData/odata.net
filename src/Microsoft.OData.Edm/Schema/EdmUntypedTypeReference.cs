@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
-
 namespace Microsoft.OData.Edm
 {
     /// <summary>
@@ -18,7 +16,17 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="definition">IEdmUntypedType definition.</param>
         public EdmUntypedTypeReference(IEdmUntypedType definition)
-            : base(definition, true)
+            : this(definition, true)
+        {
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="definition">IEdmUntypedType definition.</param>
+        /// <param name="isNullable">Denotes whether the type can be nullable.</param>
+        public EdmUntypedTypeReference(IEdmUntypedType definition, bool isNullable)
+            : base(definition, isNullable)
         {
         }
     }

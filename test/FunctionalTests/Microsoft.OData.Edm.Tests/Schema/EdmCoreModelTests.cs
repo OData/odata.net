@@ -74,5 +74,18 @@ namespace Microsoft.OData.Edm.Tests.Library
         {
             Assert.Equal(kind, EdmCoreModel.Instance.GetPathTypeKind(qualifiedName));
         }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void GetUntypedShouldReturnCorrectUntypedTypeReference(bool isNullable)
+        {
+            IEdmUntypedTypeReference untypedTypeReference = EdmCoreModel.Instance.GetUntyped(isNullable);
+            Assert.NotNull(untypedTypeReference);
+            Assert.Equal(isNullable, untypedTypeReference.IsNullable);
+
+            IEdmUntypedType untypedType = EdmCoreModel.Instance.GetUntypedType();
+            Assert.Same(untypedTypeReference.Definition, untypedType);
+        }
     }
 }

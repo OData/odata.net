@@ -2529,6 +2529,7 @@ public class Microsoft.OData.Edm.EdmCoreModel : Microsoft.OData.Edm.EdmElement, 
     public Microsoft.OData.Edm.IEdmTemporalTypeReference GetTemporal (Microsoft.OData.Edm.EdmPrimitiveTypeKind kind, System.Nullable`1[[System.Int32]] precision, bool isNullable)
     public Microsoft.OData.Edm.IEdmTemporalTypeReference GetTimeOfDay (bool isNullable)
     public Microsoft.OData.Edm.IEdmUntypedTypeReference GetUntyped ()
+    public Microsoft.OData.Edm.IEdmUntypedTypeReference GetUntyped (bool isNullable)
     public Microsoft.OData.Edm.IEdmUntypedType GetUntypedType ()
 }
 
@@ -2837,6 +2838,7 @@ public class Microsoft.OData.Edm.EdmUntypedStructuredTypeReference : Microsoft.O
 
 public class Microsoft.OData.Edm.EdmUntypedTypeReference : Microsoft.OData.Edm.EdmTypeReference, IEdmElement, IEdmTypeReference, IEdmUntypedTypeReference {
     public EdmUntypedTypeReference (Microsoft.OData.Edm.IEdmUntypedType definition)
+    public EdmUntypedTypeReference (Microsoft.OData.Edm.IEdmUntypedType definition, bool isNullable)
 }
 
 public sealed class Microsoft.OData.Edm.EdmNavigationProperty : Microsoft.OData.Edm.EdmProperty, IEdmElement, IEdmNamedElement, IEdmNavigationProperty, IEdmProperty, IEdmVocabularyAnnotatable {
@@ -4095,6 +4097,10 @@ public sealed class Microsoft.OData.Edm.Vocabularies.TryGetClrTypeName : System.
     public virtual bool Invoke (Microsoft.OData.Edm.IEdmModel edmModel, string edmTypeName, out System.String& clrTypeName)
 }
 
+public sealed class Microsoft.OData.Edm.Vocabularies.V1.AuthorizationVocabularyModel {
+    public static readonly Microsoft.OData.Edm.IEdmModel Instance = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsModel
+}
+
 public sealed class Microsoft.OData.Edm.Vocabularies.V1.CapabilitiesVocabularyConstants {
     public static string ChangeTracking = "Org.OData.Capabilities.V1.ChangeTracking"
     public static string ChangeTrackingExpandableProperties = "ExpandableProperties"
@@ -4145,6 +4151,7 @@ public sealed class Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyModel {
     public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm PermissionsTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
     public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm RequiresTypeTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
     public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm ResourcePathTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
+    public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm RevisionsTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
 }
 
 public sealed class Microsoft.OData.Edm.Vocabularies.V1.ValidationVocabularyModel {
@@ -4165,6 +4172,10 @@ public sealed class Microsoft.OData.Edm.Vocabularies.Community.V1.AlternateKeysV
 public sealed class Microsoft.OData.Edm.Vocabularies.Community.V1.CommunityVocabularyModel {
     public static readonly Microsoft.OData.Edm.IEdmModel Instance = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsModel
     public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm UrlEscapeFunctionTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
+}
+
+public sealed class Microsoft.OData.Edm.Vocabularies.Measures.V1.MeasuresVocabularyModel {
+    public static readonly Microsoft.OData.Edm.IEdmModel Instance = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsModel
 }
 
 >>>Microsoft.OData.Core
@@ -5472,6 +5483,7 @@ public sealed class Microsoft.OData.ODataMessageWriter : IDisposable {
 public sealed class Microsoft.OData.ODataMessageWriterSettings {
     public ODataMessageWriterSettings ()
 
+    bool AlwaysAddTypeAnnotationsForDerivedTypes  { public get; public set; }
     Microsoft.OData.Buffers.ICharArrayPool ArrayPool  { public get; public set; }
     System.Uri BaseUri  { public get; public set; }
     bool EnableCharactersCheck  { public get; public set; }
@@ -7619,6 +7631,11 @@ public enum Microsoft.OData.Client.EntityStates : int {
     Unchanged = 2
 }
 
+public enum Microsoft.OData.Client.HttpRequestTransportMode : int {
+    HttpClient = 1
+    HttpWebRequest = 0
+}
+
 public enum Microsoft.OData.Client.MergeOption : int {
     AppendOnly = 0
     NoTracking = 3
@@ -7757,6 +7774,16 @@ public sealed class Microsoft.OData.Client.DataServiceExtensions {
     public static int CountDistinct (IQueryable`1 source, Expression`1 selector)
 }
 
+[
+ExtensionAttribute(),
+]
+public sealed class Microsoft.OData.Client.TaskExtensionMethods {
+    [
+    ExtensionAttribute(),
+    ]
+    public static Task`1 ToApm (Task`1 task, System.AsyncCallback callback, object state)
+}
+
 public sealed class Microsoft.OData.Client.Utility {
     public static System.Collections.Generic.IEnumerable`1[[System.Object]] GetCustomAttributes (System.Type type, System.Type attributeType, bool inherit)
 }
@@ -7867,6 +7894,7 @@ public class Microsoft.OData.Client.DataServiceContext {
     Microsoft.OData.Client.EntityParameterSendOption EntityParameterSendOption  { public virtual get; public virtual set; }
     Microsoft.OData.Client.EntityTracker EntityTracker  { public virtual get; public virtual set; }
     Microsoft.OData.Client.DataServiceClientFormat Format  { public virtual get; }
+    Microsoft.OData.Client.HttpRequestTransportMode HttpRequestTransportMode  { public get; public set; }
     bool IgnoreResourceNotFoundException  { public virtual get; public virtual set; }
     bool KeyComparisonGeneratesFilterQuery  { public virtual get; public virtual set; }
     System.Collections.ObjectModel.ReadOnlyCollection`1[[Microsoft.OData.Client.LinkDescriptor]] Links  { public virtual get; }
@@ -8101,7 +8129,40 @@ public class Microsoft.OData.Client.EntityTracker : Microsoft.OData.Client.Entit
     public Microsoft.OData.Client.EntityDescriptor TryGetEntityDescriptor (object entity)
 }
 
-public class Microsoft.OData.Client.HttpWebRequestMessage : Microsoft.OData.Client.DataServiceClientRequestMessage, IODataRequestMessage {
+public class Microsoft.OData.Client.HttpClientRequestMessage : Microsoft.OData.Client.DataServiceClientRequestMessage, IDisposable, IODataRequestMessage, ISendingRequest2 {
+    public HttpClientRequestMessage (Microsoft.OData.Client.DataServiceClientRequestMessageArgs args)
+
+    System.Net.ICredentials Credentials  { public virtual get; public virtual set; }
+    System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] Headers  { public virtual get; }
+    string Method  { public virtual get; public virtual set; }
+    [
+    ObsoleteAttribute(),
+    ]
+    int ReadWriteTimeout  { public virtual get; public virtual set; }
+
+    bool SendChunked  { public virtual get; public virtual set; }
+    int Timeout  { public virtual get; public virtual set; }
+    System.Uri Url  { public virtual get; public virtual set; }
+
+    public virtual void Abort ()
+    public virtual System.IAsyncResult BeginGetRequestStream (System.AsyncCallback callback, object state)
+    public virtual System.IAsyncResult BeginGetResponse (System.AsyncCallback callback, object state)
+    public virtual void Dispose ()
+    protected virtual void Dispose (bool disposing)
+    public virtual System.IO.Stream EndGetRequestStream (System.IAsyncResult asyncResult)
+    public virtual Microsoft.OData.IODataResponseMessage EndGetResponse (System.IAsyncResult asyncResult)
+    public virtual string GetHeader (string headerName)
+    public virtual Microsoft.OData.IODataResponseMessage GetResponse ()
+    public virtual System.IO.Stream GetStream ()
+    void Microsoft.OData.Client.ISendingRequest2.AfterSendingRequest2Event ()
+    void Microsoft.OData.Client.ISendingRequest2.BeforeSendingRequest2Event ()
+    public virtual void SetHeader (string headerName, string headerValue)
+}
+
+[
+ObsoleteAttribute(),
+]
+public class Microsoft.OData.Client.HttpWebRequestMessage : Microsoft.OData.Client.DataServiceClientRequestMessage, IODataRequestMessage, ISendingRequest2 {
     public HttpWebRequestMessage (Microsoft.OData.Client.DataServiceClientRequestMessageArgs args)
 
     System.Net.ICredentials Credentials  { public virtual get; public virtual set; }
@@ -8121,6 +8182,8 @@ public class Microsoft.OData.Client.HttpWebRequestMessage : Microsoft.OData.Clie
     public virtual string GetHeader (string headerName)
     public virtual Microsoft.OData.IODataResponseMessage GetResponse ()
     public virtual System.IO.Stream GetStream ()
+    void Microsoft.OData.Client.ISendingRequest2.AfterSendingRequest2Event ()
+    void Microsoft.OData.Client.ISendingRequest2.BeforeSendingRequest2Event ()
     public virtual void SetHeader (string headerName, string headerValue)
 }
 

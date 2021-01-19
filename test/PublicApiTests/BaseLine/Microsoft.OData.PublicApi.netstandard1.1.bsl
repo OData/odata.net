@@ -2529,6 +2529,7 @@ public class Microsoft.OData.Edm.EdmCoreModel : Microsoft.OData.Edm.EdmElement, 
     public Microsoft.OData.Edm.IEdmTemporalTypeReference GetTemporal (Microsoft.OData.Edm.EdmPrimitiveTypeKind kind, System.Nullable`1[[System.Int32]] precision, bool isNullable)
     public Microsoft.OData.Edm.IEdmTemporalTypeReference GetTimeOfDay (bool isNullable)
     public Microsoft.OData.Edm.IEdmUntypedTypeReference GetUntyped ()
+    public Microsoft.OData.Edm.IEdmUntypedTypeReference GetUntyped (bool isNullable)
     public Microsoft.OData.Edm.IEdmUntypedType GetUntypedType ()
 }
 
@@ -2837,6 +2838,7 @@ public class Microsoft.OData.Edm.EdmUntypedStructuredTypeReference : Microsoft.O
 
 public class Microsoft.OData.Edm.EdmUntypedTypeReference : Microsoft.OData.Edm.EdmTypeReference, IEdmElement, IEdmTypeReference, IEdmUntypedTypeReference {
     public EdmUntypedTypeReference (Microsoft.OData.Edm.IEdmUntypedType definition)
+    public EdmUntypedTypeReference (Microsoft.OData.Edm.IEdmUntypedType definition, bool isNullable)
 }
 
 public sealed class Microsoft.OData.Edm.EdmNavigationProperty : Microsoft.OData.Edm.EdmProperty, IEdmElement, IEdmNamedElement, IEdmNavigationProperty, IEdmProperty, IEdmVocabularyAnnotatable {
@@ -4095,6 +4097,10 @@ public sealed class Microsoft.OData.Edm.Vocabularies.TryGetClrTypeName : System.
     public virtual bool Invoke (Microsoft.OData.Edm.IEdmModel edmModel, string edmTypeName, out System.String& clrTypeName)
 }
 
+public sealed class Microsoft.OData.Edm.Vocabularies.V1.AuthorizationVocabularyModel {
+    public static readonly Microsoft.OData.Edm.IEdmModel Instance = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsModel
+}
+
 public sealed class Microsoft.OData.Edm.Vocabularies.V1.CapabilitiesVocabularyConstants {
     public static string ChangeTracking = "Org.OData.Capabilities.V1.ChangeTracking"
     public static string ChangeTrackingExpandableProperties = "ExpandableProperties"
@@ -4145,6 +4151,7 @@ public sealed class Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyModel {
     public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm PermissionsTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
     public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm RequiresTypeTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
     public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm ResourcePathTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
+    public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm RevisionsTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
 }
 
 public sealed class Microsoft.OData.Edm.Vocabularies.V1.ValidationVocabularyModel {
@@ -4165,6 +4172,10 @@ public sealed class Microsoft.OData.Edm.Vocabularies.Community.V1.AlternateKeysV
 public sealed class Microsoft.OData.Edm.Vocabularies.Community.V1.CommunityVocabularyModel {
     public static readonly Microsoft.OData.Edm.IEdmModel Instance = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsModel
     public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm UrlEscapeFunctionTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
+}
+
+public sealed class Microsoft.OData.Edm.Vocabularies.Measures.V1.MeasuresVocabularyModel {
+    public static readonly Microsoft.OData.Edm.IEdmModel Instance = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsModel
 }
 
 >>>Microsoft.OData.Core
@@ -5472,6 +5483,7 @@ public sealed class Microsoft.OData.ODataMessageWriter : IDisposable {
 public sealed class Microsoft.OData.ODataMessageWriterSettings {
     public ODataMessageWriterSettings ()
 
+    bool AlwaysAddTypeAnnotationsForDerivedTypes  { public get; public set; }
     Microsoft.OData.Buffers.ICharArrayPool ArrayPool  { public get; public set; }
     System.Uri BaseUri  { public get; public set; }
     bool EnableCharactersCheck  { public get; public set; }
