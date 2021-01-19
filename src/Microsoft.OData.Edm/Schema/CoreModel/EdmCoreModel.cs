@@ -761,7 +761,17 @@ namespace Microsoft.OData.Edm
         /// <returns>A new Edm.Untyped type reference.</returns>
         public IEdmUntypedTypeReference GetUntyped()
         {
-            return new EdmUntypedTypeReference(this.GetUntypedType());
+            return GetUntyped(true);
+        }
+
+        /// <summary>
+        /// Gets a reference to a Edm.Untyped type definition
+        /// </summary>
+        /// <param name="isNullable">Flag specifying if the referenced type should be nullable.</param>
+        /// <returns>A new Edm.Untyped type reference.</returns>
+        public IEdmUntypedTypeReference GetUntyped(bool isNullable)
+        {
+            return new EdmUntypedTypeReference(this.GetUntypedType(), isNullable);
         }
 
         /// <summary>
