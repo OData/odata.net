@@ -465,7 +465,7 @@ namespace Microsoft.OData
                 payloadTypeKind == EdmTypeKind.TypeDefinition || payloadTypeKind == EdmTypeKind.Untyped,
                 "The payload type kind must be one of None, Primitive, Enum, Untyped, Complex, Entity, Collection or TypeDefinition.");
             Debug.Assert(
-                expectedTypeReference == null || expectedTypeReference.TypeKind() == expectedTypeKind,
+                expectedTypeReference == null || expectedTypeReference.TypeKind() == EdmTypeKind.Untyped || expectedTypeReference.TypeKind() == expectedTypeKind,
                 "The expected type kind must match the expected type reference if that is available.");
             Debug.Assert(
                 payloadType == null || payloadType.TypeKind == payloadTypeKind,
@@ -823,7 +823,10 @@ namespace Microsoft.OData
                     {
                         // The payload type must be assignable to the expected type.
                         IEdmTypeReference payloadTypeReference = payloadType.ToTypeReference(/*nullable*/ true);
-                        ValidationUtils.ValidateEntityTypeIsAssignable((IEdmEntityTypeReference)expectedTypeReference, (IEdmEntityTypeReference)payloadTypeReference);
+                        if (!expectedTypeReference.IsUntyped())
+                        {
+                            ValidationUtils.ValidateEntityTypeIsAssignable((IEdmEntityTypeReference)expectedTypeReference, (IEdmEntityTypeReference)payloadTypeReference);
+                        }
 
                         // Use the payload type
                         return payloadTypeReference;
@@ -1003,7 +1006,7 @@ namespace Microsoft.OData
             }
 
             EdmTypeKind targetTypeKind;
-            if (expectedTypeKind != EdmTypeKind.None)
+            if (expectedTypeKind != EdmTypeKind.None && expectedTypeKind != EdmTypeKind.Untyped)
             {
                 // If we have an expected type, use that.
                 targetTypeKind = expectedTypeKind;

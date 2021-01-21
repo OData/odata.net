@@ -400,7 +400,7 @@ namespace Microsoft.OData
                 return;
             }
 
-            if (expectedTypeKind != actualTypeKind)
+            if (expectedTypeKind != EdmTypeKind.Untyped && expectedTypeKind != actualTypeKind)
             {
                 if (typeName == null)
                 {
