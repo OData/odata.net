@@ -115,9 +115,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             {
                 string schemaNamespace = schema.Namespace;
                 IEdmInclude edmInclude = referencedCsdlModel.ParentModelReferences.SelectMany(s => s.Includes).FirstOrDefault(s => s.Namespace == schemaNamespace);
-                if (edmInclude != null)
+                bool includeAnnotations = referencedCsdlModel.ParentModelReferences.SelectMany(s => s.IncludeAnnotations).Any();
+                if (edmInclude != null || includeAnnotations)
                 {
-                    this.AddSchema(schema, false /*addAnnotations*/);
+                    this.AddSchema(schema, includeAnnotations);
+                    //this.AddSchema(schema, false);
                 }
 
                 // TODO: REF add annotations
@@ -602,6 +604,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             {
                 this.SetEdmVersion(schema.Version);
             }
+        }
+
+        private void AddOutOfLineAnnotationsFromSchema(CsdlSchema schema)
+        {
+
         }
     }
 }

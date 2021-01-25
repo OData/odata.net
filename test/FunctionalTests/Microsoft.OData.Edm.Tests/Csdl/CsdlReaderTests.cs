@@ -1230,5 +1230,83 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Empty(edmErrors);
             Assert.Equal(edmModel.GetEdmVersion(), odataVersion == "4.0" ? EdmConstants.EdmVersion4 : EdmConstants.EdmVersion401);
         }
+
+        [Fact]
+        public void ImportsAnnotationsFromExernalReferencedModel()
+        {
+            string permissionsCsdl = @"<?xml version=""1.0"" encoding=""utf-8""?>
+<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
+  <edmx:Reference  Uri=""SimpleModel.xml"">
+    <edmx:Include Namespace=""Default""/>
+    <edmx:Include Namespace=""ODataAuthorizationDemo.Models"" />
+  </edmx:Reference >
+  <edmx:DataServices>
+    <Schema Namespace=""ODataAuthorizationDemo.Models"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+      <Annotations Target=""Default.Container/Products"">
+        <Annotation Term=""Org.OData.Capabilities.V1.InsertRestrictions"">
+          <Record>
+            <PropertyValue Property=""Permissions"">
+              <Collection>
+                <Record>
+                  <PropertyValue Property=""SchemeName"" String=""Scheme"" />
+                  <PropertyValue Property=""Scopes"">
+                    <Collection>
+                      <Record>
+                        <PropertyValue Property=""Scope"" String=""Product.Create"" />
+                      </Record>
+                    </Collection>
+                  </PropertyValue>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
+";
+            string mainCsdl = @"<?xml version=""1.0"" encoding=""utf-8""?>
+<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
+  <edmx:Reference  Uri=""SimplePermissions.xml"">
+    <edmx:IncludeAnnotations  TermNamespace=""Org.OData.Capabilities.V1""/>
+  </edmx:Reference >
+  <edmx:DataServices>
+    <Schema Namespace=""ODataAuthorizationDemo.Models"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+      <EntityType Name=""Product"">
+        <Key>
+          <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+        <Property Name=""Name"" Type=""Edm.String"" />
+        <Property Name=""Price"" Type=""Edm.Int32"" Nullable=""false"" />
+      </EntityType>
+    </Schema>
+    <Schema Namespace=""Default"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+      <EntityContainer Name=""Container"">
+        <EntitySet Name=""Products"" EntityType=""ODataAuthorizationDemo.Models.Product"" />
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
+";
+
+            Func<Uri, XmlReader> getReferenceModelReader = uri =>
+            {
+                string csdl = uri.OriginalString == "SimplePermissions.xml" ? permissionsCsdl : mainCsdl;
+                var stringReader = new System.IO.StringReader(permissionsCsdl);
+                return XmlReader.Create(stringReader);
+            };
+
+
+            var reader = XmlReader.Create(new System.IO.StringReader(mainCsdl));
+            IEdmModel model = CsdlReader.Parse(reader, getReferencedModelReaderFunc: getReferenceModelReader);
+
+            var entitySet = model.FindDeclaredEntitySet("Products");
+            var annotations = model.FindVocabularyAnnotations(entitySet);
+            Assert.NotNull(annotations.First(a => a.Term.Name == "InsertRestrictions"));
+        }
+
+        
     }
 }
