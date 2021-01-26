@@ -1238,10 +1238,10 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 <edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
   <edmx:Reference  Uri=""SimpleModel.xml"">
     <edmx:Include Namespace=""Default""/>
-    <edmx:Include Namespace=""ODataAuthorizationDemo.Models"" />
+    <edmx:Include Namespace=""Example.Types"" />
   </edmx:Reference >
   <edmx:DataServices>
-    <Schema Namespace=""ODataAuthorizationDemo.Models"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Schema Namespace=""Example.Permissions"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
       <Annotations Target=""Default.Container/Products"">
         <Annotation Term=""NotIncludedNS.MyAnnotationPathTerm"" AnnotationPath=""abc/efg"" />
         <Annotation Term=""Org.OData.Capabilities.V1.InsertRestrictions"">
@@ -1291,7 +1291,124 @@ namespace Microsoft.OData.Edm.Tests.Csdl
     <edmx:IncludeAnnotations  TermNamespace=""Org.OData.Capabilities.V1""/>
   </edmx:Reference >
   <edmx:DataServices>
-    <Schema Namespace=""ODataAuthorizationDemo.Models"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Schema Namespace=""Example.Types"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+      <EntityType Name=""Product"">
+        <Key>
+          <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+        <Property Name=""Name"" Type=""Edm.String"" />
+        <Property Name=""Price"" Type=""Edm.Int32"" Nullable=""false"" />
+      </EntityType>
+    </Schema>
+    <Schema Namespace=""Default"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+      <EntityContainer Name=""Container"">
+        <EntitySet Name=""Products"" EntityType=""Example.Types.Product"" />
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
+";
+
+            Func<Uri, XmlReader> getReferenceModelReader = uri =>
+            {
+                string csdl = uri.OriginalString == "SimplePermissions.xml" ? permissionsCsdl : mainCsdl;
+                var stringReader = new System.IO.StringReader(permissionsCsdl);
+                return XmlReader.Create(stringReader);
+            };
+
+
+            var reader = XmlReader.Create(new System.IO.StringReader(mainCsdl));
+            IEdmModel model = CsdlReader.Parse(reader, getReferencedModelReaderFunc: getReferenceModelReader);
+
+            var entitySet = model.FindDeclaredEntitySet("Products");
+            var annotations = model.FindVocabularyAnnotations(entitySet);
+            Assert.Equal(2, annotations.Count());
+
+            // only imports annotations terms in the Org.OData.Capabilities.V1 namespace
+            IEdmVocabularyAnnotation insertRestrictions = annotations.FirstOrDefault(a => a.Term.Name == "InsertRestrictions");
+            Assert.NotNull(insertRestrictions);
+            IEdmVocabularyAnnotation deleteRestrictions = annotations.FirstOrDefault(a => a.Term.Name == "DeleteRestrictions");
+            Assert.NotNull(deleteRestrictions);
+
+            IEdmRecordExpression record = insertRestrictions.Value as IEdmRecordExpression;
+            Assert.NotNull(record);
+            var insertPermissions = record.FindProperty("Permissions").Value as IEdmCollectionExpression;
+            Assert.NotNull(insertPermissions);
+
+            var permission = insertPermissions.Elements.FirstOrDefault() as IEdmRecordExpression;
+            Assert.NotNull(permission);
+            var scheme = permission.FindProperty("SchemeName");
+            Assert.NotNull(scheme);
+            Assert.Equal("Scheme", ((IEdmStringConstantExpression)scheme.Value).Value);
+        }
+
+        [Fact]
+        public void ImportsAnnotationsFromReferencedModelsOnlyIfTargetNamespaceAndQualifierMatch()
+        {
+            string permissionsCsdl = @"<?xml version=""1.0"" encoding=""utf-8""?>
+<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
+  <edmx:Reference  Uri=""SimpleModel.xml"">
+    <edmx:Include Namespace=""Default""/>
+    <edmx:Include Namespace=""Example.Types"" />
+  </edmx:Reference >
+  <edmx:DataServices>
+    <Schema Namespace=""Example.Permissions"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+      <Annotations Target=""Example.Types.Product"">
+         <Annotation Term=""OtherIncludedNS.SomeAnnotationPath"" AnnotationPath=""abc/efg"" />
+      </Annotations>
+      <Annotations Target=""Default.Container/Products"">
+        <Annotation Term=""OtherIncludedNS.SomeAnnotationPath"" AnnotationPath=""abc/efg"" />
+        <Annotation Term=""NotIncludedNS.MyAnnotationPathTerm"" AnnotationPath=""abc/efg"" />
+        <Annotation Term=""Org.OData.Capabilities.V1.InsertRestrictions"" Qualifier=""Insert"">
+          <Record>
+            <PropertyValue Property=""Permissions"">
+              <Collection>
+                <Record>
+                  <PropertyValue Property=""SchemeName"" String=""Scheme"" />
+                  <PropertyValue Property=""Scopes"">
+                    <Collection>
+                      <Record>
+                        <PropertyValue Property=""Scope"" String=""Product.Create"" />
+                      </Record>
+                    </Collection>
+                  </PropertyValue>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term=""Org.OData.Capabilities.V1.DeleteRestrictions"">
+          <Record>
+            <PropertyValue Property=""Permissions"">
+              <Collection>
+                <Record>
+                  <PropertyValue Property=""SchemeName"" String=""Scheme"" />
+                  <PropertyValue Property=""Scopes"">
+                    <Collection>
+                      <Record>
+                        <PropertyValue Property=""Scope"" String=""Product.Delete"" />
+                      </Record>
+                    </Collection>
+                  </PropertyValue>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
+";
+            string mainCsdl = @"<?xml version=""1.0"" encoding=""utf-8""?>
+<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
+  <edmx:Reference  Uri=""SimplePermissions.xml"">
+    <edmx:IncludeAnnotations  TermNamespace=""Org.OData.Capabilities.V1"" Qualifier=""Insert""/>
+    <edmx:IncludeAnnotations  TermNamespace=""OtherIncludedNS"" TargetNamespace=""Example.Types""/>
+  </edmx:Reference >
+  <edmx:DataServices>
+    <Schema Namespace=""Example.Types"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
       <EntityType Name=""Product"">
         <Key>
           <PropertyRef Name=""Id"" />
@@ -1322,25 +1439,19 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             IEdmModel model = CsdlReader.Parse(reader, getReferencedModelReaderFunc: getReferenceModelReader);
 
             var entitySet = model.FindDeclaredEntitySet("Products");
-            var annotations = model.FindVocabularyAnnotations(entitySet);
-            Assert.Equal(2, annotations.Count());
+            var entitySetAnnotations = model.FindVocabularyAnnotations(entitySet);
+            Assert.Single(entitySetAnnotations);
 
-            // only imports annotations terms in the Org.OData.Capabilities.V1 namespace
-            IEdmVocabularyAnnotation insertRestrictions = annotations.First(a => a.Term.Name == "InsertRestrictions");
+            // only imports annotation terms in the Org.OData.Capabilities.V1 namespace that match the qualifier Insert
+            IEdmVocabularyAnnotation insertRestrictions = entitySetAnnotations.FirstOrDefault(a => a.Term.Name == "InsertRestrictions");
             Assert.NotNull(insertRestrictions);
-            IEdmVocabularyAnnotation deleteRestrictions = annotations.First(a => a.Term.Name == "DeleteRestrictions");
-            Assert.NotNull(deleteRestrictions);
 
-            IEdmRecordExpression record = insertRestrictions.Value as IEdmRecordExpression;
-            Assert.NotNull(record);
-            var insertPermissions = record.FindProperty("Permissions").Value as IEdmCollectionExpression;
-            Assert.NotNull(insertPermissions);
-
-            var permission = insertPermissions.Elements.First() as IEdmRecordExpression;
-            Assert.NotNull(permission);
-            var scheme = permission.FindProperty("SchemeName");
-            Assert.NotNull(scheme);
-            Assert.Equal("Scheme", ((IEdmStringConstantExpression)scheme.Value).Value);
+            // imports annotation terms in the OtherIncludedNS namespace that match the target namespace Example.Types
+            var product = model.FindDeclaredType("Example.Types.Product");
+            var productAnnotations = model.FindVocabularyAnnotations(product);
+            Assert.Single(productAnnotations);
+            IEdmVocabularyAnnotation productAnnotation = productAnnotations.FirstOrDefault(a => a.Term.Name == "SomeAnnotationPath");
+            Assert.NotNull(productAnnotation);
         }
 
         
