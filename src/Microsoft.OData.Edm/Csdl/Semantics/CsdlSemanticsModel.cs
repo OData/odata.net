@@ -613,8 +613,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         private CsdlAnnotations FilterIncludedAnnotations(CsdlAnnotations csdlAnnotations, string target, IEnumerable<IEdmIncludeAnnotations> includeAnnotations)
         {
-            
-            if (includeAnnotations == null && !includeAnnotations.Any())
+            if (includeAnnotations == null || !includeAnnotations.Any())
             {
                 return csdlAnnotations;
             }
@@ -634,7 +633,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 (this.ReplaceAlias(annotation.Term).StartsWith(include.TermNamespace, System.StringComparison.Ordinal))
                     && (string.IsNullOrEmpty(include.Qualifier) || annotation.Qualifier == include.Qualifier)
                     && (string.IsNullOrEmpty(include.TargetNamespace)
-                        ||target.StartsWith(include.TargetNamespace, System.StringComparison.Ordinal))
+                        || target.StartsWith(include.TargetNamespace, System.StringComparison.Ordinal))
             );
         }
     }
