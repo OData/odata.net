@@ -1242,6 +1242,12 @@ namespace Microsoft.OData.Edm.Tests.Csdl
   </edmx:Reference >
   <edmx:DataServices>
     <Schema Namespace=""Example.Permissions"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+      <EntityType Name=""BasicType"">
+        <Key>
+          <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+      </EntityType>
       <Annotations Target=""Default.Container/Products"">
         <Annotation Term=""NotIncludedNS.MyAnnotationPathTerm"" AnnotationPath=""abc/efg"" />
         <Annotation Term=""Org.OData.Capabilities.V1.InsertRestrictions"">
@@ -1341,6 +1347,11 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             var scheme = permission.FindProperty("SchemeName");
             Assert.NotNull(scheme);
             Assert.Equal("Scheme", ((IEdmStringConstantExpression)scheme.Value).Value);
+
+            // do not import other schema elements since there's
+            // no explicit <edmx:Include Namespace="Example.Permissions" /> declaration
+            var basicType = model.FindType("Example.Permissions.BasicType");
+            Assert.Null(basicType);
         }
 
         [Fact]
@@ -1437,12 +1448,13 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
             var reader = XmlReader.Create(new System.IO.StringReader(mainCsdl));
             IEdmModel model = CsdlReader.Parse(reader, getReferencedModelReaderFunc: getReferenceModelReader);
-
+            
             var entitySet = model.FindDeclaredEntitySet("Products");
             var entitySetAnnotations = model.FindVocabularyAnnotations(entitySet);
             Assert.Single(entitySetAnnotations);
 
-            // only imports annotation terms in the Org.OData.Capabilities.V1 namespace that match the qualifier Insert
+
+            // imports annotation terms in the Org.OData.Capabilities.V1 namespace that match the qualifier Insert
             IEdmVocabularyAnnotation insertRestrictions = entitySetAnnotations.FirstOrDefault(a => a.Term.Name == "InsertRestrictions");
             Assert.NotNull(insertRestrictions);
 

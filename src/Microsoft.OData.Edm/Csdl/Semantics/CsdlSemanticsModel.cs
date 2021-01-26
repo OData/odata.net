@@ -114,13 +114,13 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             foreach (var schema in referencedCsdlModel.Schemata)
             {
                 string schemaNamespace = schema.Namespace;
-                IEdmInclude edmInclude = referencedCsdlModel.ParentModelReferences.SelectMany(s => s.Includes).FirstOrDefault(s => s.Namespace == schemaNamespace);
+                bool shouldAddTypes = referencedCsdlModel.ParentModelReferences.SelectMany(s => s.Includes).Any(s => s.Namespace == schemaNamespace);
                 IEnumerable<IEdmIncludeAnnotations> includeAnnotations = referencedCsdlModel.ParentModelReferences.SelectMany(s => s.IncludeAnnotations);
                 bool shouldAddAnnotations = includeAnnotations.Any();
 
-                if (edmInclude != null || shouldAddAnnotations)
+                if (shouldAddTypes || shouldAddAnnotations)
                 {
-                    this.AddSchema(schema, shouldAddAnnotations, includeAnnotations);
+                    this.AddSchema(schema, shouldAddTypes, shouldAddAnnotations, includeAnnotations);
                 }
             }
         }
@@ -523,15 +523,40 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 ann => new CsdlSemanticsVocabularyAnnotation(schema, targetContext, annotationsContext, ann, qualifier));
         }
 
-        private void AddSchema(CsdlSchema schema)
+        private void AddSchema(CsdlSchema schema, bool addSchemaElements = true)
         {
-            this.AddSchema(schema, true);
+            this.AddSchema(schema, addSchemaElements, true, null);
         }
 
-        private void AddSchema(CsdlSchema schema, bool addAnnotations, IEnumerable<IEdmIncludeAnnotations> includeAnnotations = null)
+        private void AddSchema(CsdlSchema schema, bool addSchemaElements, bool addAnnotations, IEnumerable<IEdmIncludeAnnotations> includeAnnotations = null)
         {
             CsdlSemanticsSchema schemaWrapper = new CsdlSemanticsSchema(this, schema);
             this.schemata.Add(schemaWrapper);
+
+            if (addSchemaElements)
+            {
+                AddSchemaElements(schema, schemaWrapper);
+            }
+
+            if (!string.IsNullOrEmpty(schema.Alias))
+            {
+                this.SetNamespaceAlias(schema.Namespace, schema.Alias);
+            }
+
+            if (addAnnotations)
+            {
+                AddOutOfLineAnnotationsFromSchema(schema, schemaWrapper, includeAnnotations);
+            }
+
+            var edmVersion = this.GetEdmVersion();
+            if (edmVersion == null || edmVersion < schema.Version)
+            {
+                this.SetEdmVersion(schema.Version);
+            }
+        }
+
+        private void AddSchemaElements(CsdlSchema schema, CsdlSemanticsSchema schemaWrapper)
+        {
             foreach (IEdmSchemaType type in schemaWrapper.Types)
             {
                 CsdlSemanticsStructuredTypeDefinition structuredType = type as CsdlSemanticsStructuredTypeDefinition;
@@ -574,22 +599,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             foreach (IEdmEntityContainer container in schemaWrapper.EntityContainers)
             {
                 RegisterElement(container);
-            }
-
-            if (!string.IsNullOrEmpty(schema.Alias))
-            {
-                this.SetNamespaceAlias(schema.Namespace, schema.Alias);
-            }
-
-            if (addAnnotations)
-            {
-                AddOutOfLineAnnotationsFromSchema(schema, schemaWrapper, includeAnnotations);
-            }
-
-            var edmVersion = this.GetEdmVersion();
-            if (edmVersion == null || edmVersion < schema.Version)
-            {
-                this.SetEdmVersion(schema.Version);
             }
         }
 
