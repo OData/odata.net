@@ -1243,6 +1243,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
   <edmx:DataServices>
     <Schema Namespace=""ODataAuthorizationDemo.Models"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
       <Annotations Target=""Default.Container/Products"">
+        <Annotation Term=""NotIncludedNS.MyAnnotationPathTerm"" AnnotationPath=""abc/efg"" />
         <Annotation Term=""Org.OData.Capabilities.V1.InsertRestrictions"">
           <Record>
             <PropertyValue Property=""Permissions"">
@@ -1253,6 +1254,24 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     <Collection>
                       <Record>
                         <PropertyValue Property=""Scope"" String=""Product.Create"" />
+                      </Record>
+                    </Collection>
+                  </PropertyValue>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term=""Org.OData.Capabilities.V1.DeleteRestrictions"">
+          <Record>
+            <PropertyValue Property=""Permissions"">
+              <Collection>
+                <Record>
+                  <PropertyValue Property=""SchemeName"" String=""Scheme"" />
+                  <PropertyValue Property=""Scopes"">
+                    <Collection>
+                      <Record>
+                        <PropertyValue Property=""Scope"" String=""Product.Delete"" />
                       </Record>
                     </Collection>
                   </PropertyValue>
@@ -1304,7 +1323,24 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
             var entitySet = model.FindDeclaredEntitySet("Products");
             var annotations = model.FindVocabularyAnnotations(entitySet);
-            Assert.NotNull(annotations.First(a => a.Term.Name == "InsertRestrictions"));
+            Assert.Equal(2, annotations.Count());
+
+            // only imports annotations terms in the Org.OData.Capabilities.V1 namespace
+            IEdmVocabularyAnnotation insertRestrictions = annotations.First(a => a.Term.Name == "InsertRestrictions");
+            Assert.NotNull(insertRestrictions);
+            IEdmVocabularyAnnotation deleteRestrictions = annotations.First(a => a.Term.Name == "DeleteRestrictions");
+            Assert.NotNull(deleteRestrictions);
+
+            IEdmRecordExpression record = insertRestrictions.Value as IEdmRecordExpression;
+            Assert.NotNull(record);
+            var insertPermissions = record.FindProperty("Permissions").Value as IEdmCollectionExpression;
+            Assert.NotNull(insertPermissions);
+
+            var permission = insertPermissions.Elements.First() as IEdmRecordExpression;
+            Assert.NotNull(permission);
+            var scheme = permission.FindProperty("SchemeName");
+            Assert.NotNull(scheme);
+            Assert.Equal("Scheme", ((IEdmStringConstantExpression)scheme.Value).Value);
         }
 
         

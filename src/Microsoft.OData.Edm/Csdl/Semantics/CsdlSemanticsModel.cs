@@ -115,14 +115,13 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             {
                 string schemaNamespace = schema.Namespace;
                 IEdmInclude edmInclude = referencedCsdlModel.ParentModelReferences.SelectMany(s => s.Includes).FirstOrDefault(s => s.Namespace == schemaNamespace);
-                bool includeAnnotations = referencedCsdlModel.ParentModelReferences.SelectMany(s => s.IncludeAnnotations).Any();
-                if (edmInclude != null || includeAnnotations)
-                {
-                    this.AddSchema(schema, includeAnnotations);
-                    //this.AddSchema(schema, false);
-                }
+                IEnumerable<IEdmIncludeAnnotations> includeAnnotations = referencedCsdlModel.ParentModelReferences.SelectMany(s => s.IncludeAnnotations);
+                bool shouldAddAnnotations = includeAnnotations.Any();
 
-                // TODO: REF add annotations
+                if (edmInclude != null || shouldAddAnnotations)
+                {
+                    this.AddSchema(schema, shouldAddAnnotations, includeAnnotations);
+                }
             }
         }
 
@@ -529,7 +528,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             this.AddSchema(schema, true);
         }
 
-        private void AddSchema(CsdlSchema schema, bool addAnnotations)
+        private void AddSchema(CsdlSchema schema, bool addAnnotations, IEnumerable<IEdmIncludeAnnotations> includeAnnotations = null)
         {
             CsdlSemanticsSchema schemaWrapper = new CsdlSemanticsSchema(this, schema);
             this.schemata.Add(schemaWrapper);
@@ -584,19 +583,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
             if (addAnnotations)
             {
-                foreach (CsdlAnnotations schemaOutOfLineAnnotations in schema.OutOfLineAnnotations)
-                {
-                    string target = this.ReplaceAlias(schemaOutOfLineAnnotations.Target);
-
-                    List<CsdlSemanticsAnnotations> annotations;
-                    if (!this.outOfLineAnnotations.TryGetValue(target, out annotations))
-                    {
-                        annotations = new List<CsdlSemanticsAnnotations>();
-                        this.outOfLineAnnotations[target] = annotations;
-                    }
-
-                    annotations.Add(new CsdlSemanticsAnnotations(schemaWrapper, schemaOutOfLineAnnotations));
-                }
+                AddOutOfLineAnnotationsFromSchema(schema, schemaWrapper, includeAnnotations);
             }
 
             var edmVersion = this.GetEdmVersion();
@@ -606,9 +593,49 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             }
         }
 
-        private void AddOutOfLineAnnotationsFromSchema(CsdlSchema schema)
+        private void AddOutOfLineAnnotationsFromSchema(CsdlSchema schema, CsdlSemanticsSchema schemaWrapper, IEnumerable<IEdmIncludeAnnotations> includeAnnotations)
         {
+            foreach (CsdlAnnotations schemaOutOfLineAnnotations in schema.OutOfLineAnnotations)
+            {
+                string target = this.ReplaceAlias(schemaOutOfLineAnnotations.Target);
 
+                List<CsdlSemanticsAnnotations> annotations;
+                if (!this.outOfLineAnnotations.TryGetValue(target, out annotations))
+                {
+                    annotations = new List<CsdlSemanticsAnnotations>();
+                    this.outOfLineAnnotations[target] = annotations;
+                }
+
+                CsdlAnnotations filteredAnnotations = FilterIncludedAnnotations(schemaOutOfLineAnnotations, target, includeAnnotations);
+                annotations.Add(new CsdlSemanticsAnnotations(schemaWrapper, filteredAnnotations));
+            }
+        }
+
+        private CsdlAnnotations FilterIncludedAnnotations(CsdlAnnotations csdlAnnotations, string target, IEnumerable<IEdmIncludeAnnotations> includeAnnotations)
+        {
+            
+            if (includeAnnotations == null && !includeAnnotations.Any())
+            {
+                return csdlAnnotations;
+            }
+
+            var filteredAnnotations = csdlAnnotations.Annotations.Where(annotation =>
+                ShouldIncludeAnnotation(annotation, target, includeAnnotations));
+            return new CsdlAnnotations(filteredAnnotations, csdlAnnotations.Target, csdlAnnotations.Qualifier);
+        }
+
+        private bool ShouldIncludeAnnotation(CsdlAnnotation annotation, string target, IEnumerable<IEdmIncludeAnnotations> includeAnnotations)
+        {
+            // include annotation if it matches one of the edmx:IncludeAnnotation references
+            // we check if the namespace matches, and (if applicable) also the target namespace and the qualifier
+            // see: http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_IncludedAnnotations
+
+            return includeAnnotations.Any(include =>
+                (this.ReplaceAlias(annotation.Term).StartsWith(include.TermNamespace, System.StringComparison.Ordinal))
+                    && (string.IsNullOrEmpty(include.Qualifier) || annotation.Qualifier == include.Qualifier)
+                    && (string.IsNullOrEmpty(include.TargetNamespace)
+                        ||target.StartsWith(include.TargetNamespace, System.StringComparison.Ordinal))
+            );
         }
     }
 }
