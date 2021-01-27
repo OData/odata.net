@@ -470,7 +470,88 @@ namespace Microsoft.OData
         internal String TranslateFilterClause(FilterClause filterClause)
         {
             Debug.Assert(filterClause != null, "filterClause != null");
-            return this.TranslateNode(filterClause.Expression);
+            string translatedNode = this.TranslateNode(filterClause.Expression);
+
+            switch (filterClause.Expression.Kind)
+            {
+                // $expand=Items($filter=$it/Product eq 'Some Product')
+                case QueryNodeKind.BinaryOperator:
+                    BinaryOperatorKind binaryNodeKind = (filterClause.Expression as BinaryOperatorNode).OperatorKind;
+
+                    string binaryOperator = this.BinaryOperatorNodeToString(binaryNodeKind);
+                    string[] binarySeparator = { binaryOperator };
+                    string[] binarySubstrings = translatedNode.Trim().Split(binarySeparator, StringSplitOptions.RemoveEmptyEntries);
+                    string leftBinary = binarySubstrings[0];
+                    string rightBinary = binarySubstrings[1];
+
+                    SingleValuePropertyAccessNode leftBinaryNode = ((filterClause.Expression as BinaryOperatorNode).Left as ConvertNode)?.Source as SingleValuePropertyAccessNode;
+                    SingleValuePropertyAccessNode rightBinaryNode = ((filterClause.Expression as BinaryOperatorNode).Right as ConvertNode)?.Source as SingleValuePropertyAccessNode;
+
+                    if (leftBinaryNode != null && IsDifferentSource(filterClause, leftBinaryNode))
+                    {
+                        leftBinary = "$it/" + leftBinary;
+                    }
+
+                    if (rightBinaryNode != null && IsDifferentSource(filterClause, rightBinaryNode))
+                    {
+                        rightBinary = "$it/" + rightBinary;
+                    }
+
+                    translatedNode = leftBinary + binaryOperator + rightBinary;
+                    break;
+
+                // $expand=Items($filter=$it/ID in ['1', '2', '3'])
+                case QueryNodeKind.In:
+                    string inOperator = ExpressionConstants.KeywordIn;
+                    string[] inSeparator = { inOperator };
+                    string[] inSubstrings = translatedNode.Trim().Split(inSeparator, StringSplitOptions.RemoveEmptyEntries);
+                    string leftIn = inSubstrings[0];
+                    string rightIn = inSubstrings[1];
+
+                    SingleValuePropertyAccessNode leftInNode = (filterClause.Expression as InNode).Left as SingleValuePropertyAccessNode;
+
+                    if (leftInNode != null && IsDifferentSource(filterClause, leftInNode))
+                    {
+                        leftIn = "$it/" + leftIn;
+                    }
+
+                    translatedNode = leftIn + inOperator + rightIn;
+                    break;
+
+                case QueryNodeKind.SingleValueFunctionCall:
+                    break;
+
+                case QueryNodeKind.Any:
+                    break;
+
+                case QueryNodeKind.SingleValueOpenPropertyAccess:
+                    break;
+
+                case QueryNodeKind.ParameterAlias:
+                    break;
+
+                default:
+                    break;
+            }
+
+            return translatedNode;
+        }
+
+        private static bool IsDifferentSource(FilterClause filterClause, SingleValuePropertyAccessNode property)
+        {
+            Debug.Assert(filterClause != null, "filterClause != null");
+            Debug.Assert(property != null, "property != null");
+
+            if (filterClause.RangeVariable is ResourceRangeVariable filterSource &&
+                property.Source is SingleResourceNode propertySource)
+            {
+                if(filterSource.NavigationSource != propertySource.NavigationSource)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>Translates a <see cref="OrderByClause"/> into a string.</summary>
