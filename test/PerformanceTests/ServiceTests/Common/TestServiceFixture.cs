@@ -60,6 +60,17 @@ namespace Microsoft.OData.Performance
 
         private string GetServicePath()
         {
+            string[] cmdArgs = Environment.GetCommandLineArgs();
+            for (int i = 0; i < cmdArgs.Length; i++)
+            {
+                if (cmdArgs[i] == "-ServicePath" && (i + 1) < cmdArgs.Length)
+                {
+                    Console.WriteLine("SERVICE DLL PATH {0}", cmdArgs[i + 1]);
+                    return cmdArgs[i + 1];
+                }
+            }
+
+
             var dllPath = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
             Console.WriteLine("SERVICE DLL PATH {0}", Directory.GetParent(dllPath).FullName);
             return Directory.GetParent(dllPath).FullName;

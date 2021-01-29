@@ -7,10 +7,11 @@
 namespace Microsoft.OData.Performance
 {
     using System;
-    using global::Xunit;
     using Microsoft.OData;
-    using Microsoft.Xunit.Performance;
+    using BenchmarkDotNet.Attributes;
+    using global::Xunit;
 
+    [MemoryDiagnoser]
     public class SimpleQueryTests : IClassFixture<TestServiceFixture<SimpleQueryTests>>
     {
         TestServiceFixture<SimpleQueryTests> serviceFixture;
@@ -20,52 +21,43 @@ namespace Microsoft.OData.Performance
             this.serviceFixture = serviceFixture;
         }
 
+        [GlobalSetup]
+        public void LaunchService()
+        {
+            serviceFixture = new TestServiceFixture<SimpleQueryTests>();
+        }
+
+        [GlobalSetup]
+        public void KillService()
+        {
+            serviceFixture.Dispose();
+        }
+
         [Benchmark]
-        [MeasureGCAllocations]
         public void QuerySimpleEntitySet()
         {
             int RequestsPerIteration = 100;
 
-            foreach (var iteration in Benchmark.Iterations)
+            for (int i = 0; i < RequestsPerIteration; i++)
             {
-                using (iteration.StartMeasurement())
-                {
-                    for (int i = 0; i < RequestsPerIteration; i++)
-                    {
-                        QueryAndVerify("SimplePeopleSet", "odata.maxpagesize=10");                        
-                    }
-                }
+                QueryAndVerify("SimplePeopleSet", "odata.maxpagesize=10");
             }
         }
 
         [Benchmark]
-        [MeasureGCAllocations]
         public void QueryLargeEntitySet()
         {
-            foreach (var iteration in Benchmark.Iterations)
-            {
-                using (iteration.StartMeasurement())
-                {
-                    QueryAndVerify("LargePeopleSet", "odata.maxpagesize=1000");
-                }
-            }
+            QueryAndVerify("LargePeopleSet", "odata.maxpagesize=1000");
         }
 
         [Benchmark]
-        [MeasureGCAllocations]
         public void QuerySingleEntity()
         {
             int RequestsPerIteration = 100;
 
-            foreach (var iteration in Benchmark.Iterations)
+            for (int i = 0; i < RequestsPerIteration; i++)
             {
-                using (iteration.StartMeasurement())
-                {
-                    for (int i = 0; i < RequestsPerIteration; i++)
-                    {
-                        QueryAndVerify("SimplePeopleSet(1)", null);
-                    }
-                }
+                QueryAndVerify("SimplePeopleSet(1)", null);
             }
         }
 
