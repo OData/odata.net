@@ -182,7 +182,7 @@ namespace Microsoft.OData
                 {
                     if (this.asynchronousOutputStream != null)
                     {
-                        this.asynchronousOutputStream.FlushSync();
+                        this.asynchronousOutputStream.FlushAsync();
                         this.asynchronousOutputStream.Dispose();
 
                         this.jsonWriter.FlushAsync();

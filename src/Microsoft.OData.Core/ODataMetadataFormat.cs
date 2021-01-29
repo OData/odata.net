@@ -67,10 +67,8 @@ namespace Microsoft.OData
             {
                 return new ODataMetadataJsonInputContext(messageInfo, messageReaderSettings);
             }
-            else
-            {
-                return new ODataMetadataInputContext(messageInfo, messageReaderSettings);
-            }
+
+            return new ODataMetadataInputContext(messageInfo, messageReaderSettings);
 #else
             if (isJson)
             {
@@ -101,10 +99,8 @@ namespace Microsoft.OData
             {
                 return new ODataMetadataJsonOutputContext(messageInfo, messageWriterSettings);
             }
-            else
-            {
-                return new ODataMetadataOutputContext(messageInfo, messageWriterSettings);
-            }
+
+            return new ODataMetadataOutputContext(messageInfo, messageWriterSettings);
 #else
             if (isJson)
             {
@@ -168,10 +164,8 @@ namespace Microsoft.OData
             {
                 return Task.FromResult<ODataOutputContext>(new ODataMetadataJsonOutputContext(messageInfo, messageWriterSettings));
             }
-            else
-            {
-                return Task.FromResult<ODataOutputContext>(new ODataMetadataOutputContext(messageInfo, messageWriterSettings));
-            }
+
+            return Task.FromResult<ODataOutputContext>(new ODataMetadataOutputContext(messageInfo, messageWriterSettings));
 #else
             if (isJson)
             {
