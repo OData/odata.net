@@ -17,8 +17,9 @@ namespace Microsoft.OData.Client.Metadata
     using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
     using c = Microsoft.OData.Client;
+    using System.Collections.Concurrent;
 
-#endregion Namespaces.
+    #endregion Namespaces.
 
     /// <summary>
     /// Utility methods for client types.
@@ -27,6 +28,8 @@ namespace Microsoft.OData.Client.Metadata
     {
         /// <summary>A static empty PropertyInfo array.</summary>
         internal static readonly PropertyInfo[] EmptyPropertyInfoArray = new PropertyInfo[0];
+
+        internal static ConcurrentDictionary<Type, ODataTypeInfo> ODataTypeInfoCache { get; set; } = new ConcurrentDictionary<Type, ODataTypeInfo>();
 
         /// <summary>
         /// Enumeration for the kind of key
@@ -439,70 +442,80 @@ namespace Microsoft.OData.Client.Metadata
         /// <returns>Returns the list of key properties defined on <paramref name="type"/>; null if <paramref name="type"/> is complex.</returns>
         internal static PropertyInfo[] GetKeyPropertiesOnType(Type type, out bool hasProperties)
         {
-            if (CommonUtil.IsUnsupportedType(type))
-            {
-                throw new InvalidOperationException(c.Strings.ClientType_UnsupportedType(type));
-            }
+            ODataTypeInfo typeInfo = GetODataTypeInfo(type);
 
-            string typeName = type.ToString();
-            IEnumerable<object> customAttributes = type.GetCustomAttributes(true);
-            bool isEntity = customAttributes.OfType<EntityTypeAttribute>().Any();
-            KeyAttribute dataServiceKeyAttribute = customAttributes.OfType<KeyAttribute>().FirstOrDefault();
-            List<PropertyInfo> keyProperties = new List<PropertyInfo>();
-            PropertyInfo[] properties = ClientTypeUtil.GetPropertiesOnType(type, false /*declaredOnly*/).ToArray();
- 
-            hasProperties = properties.Length > 0;
-            KeyKind currentKeyKind = KeyKind.NotKey;
-            KeyKind newKeyKind = KeyKind.NotKey;
-            foreach (PropertyInfo propertyInfo in properties)
+            if (typeInfo.KeyProperties == null)
             {
-                if ((newKeyKind = ClientTypeUtil.IsKeyProperty(propertyInfo, dataServiceKeyAttribute)) != KeyKind.NotKey)
+                if (CommonUtil.IsUnsupportedType(type))
                 {
-                    if (newKeyKind > currentKeyKind)
+                    throw new InvalidOperationException(c.Strings.ClientType_UnsupportedType(type));
+                }
+
+                string typeName = type.ToString();
+                IEnumerable<object> customAttributes = type.GetCustomAttributes(true);
+                bool isEntity = customAttributes.OfType<EntityTypeAttribute>().Any();
+                KeyAttribute dataServiceKeyAttribute = customAttributes.OfType<KeyAttribute>().FirstOrDefault();
+                List<PropertyInfo> keyProperties = new List<PropertyInfo>();
+                PropertyInfo[] properties = ClientTypeUtil.GetPropertiesOnType(type, false /*declaredOnly*/).ToArray();
+
+                hasProperties = properties.Length > 0;
+                typeInfo.HasProperties = hasProperties;
+
+                KeyKind currentKeyKind = KeyKind.NotKey;
+                KeyKind newKeyKind = KeyKind.NotKey;
+                foreach (PropertyInfo propertyInfo in properties)
+                {
+                    if ((newKeyKind = ClientTypeUtil.IsKeyProperty(propertyInfo, dataServiceKeyAttribute)) != KeyKind.NotKey)
                     {
-                        keyProperties.Clear();
-                        currentKeyKind = newKeyKind;
-                        keyProperties.Add(propertyInfo);
+                        if (newKeyKind > currentKeyKind)
+                        {
+                            keyProperties.Clear();
+                            currentKeyKind = newKeyKind;
+                            keyProperties.Add(propertyInfo);
+                        }
+                        else if (newKeyKind == currentKeyKind)
+                        {
+                            keyProperties.Add(propertyInfo);
+                        }
                     }
-                    else if (newKeyKind == currentKeyKind)
+                }
+
+                Type keyPropertyDeclaringType = null;
+                foreach (PropertyInfo key in keyProperties)
+                {
+                    if (keyPropertyDeclaringType == null)
                     {
-                        keyProperties.Add(propertyInfo);
+                        keyPropertyDeclaringType = key.DeclaringType;
+                    }
+                    else if (keyPropertyDeclaringType != key.DeclaringType)
+                    {
+                        throw c.Error.InvalidOperation(c.Strings.ClientType_KeysOnDifferentDeclaredType(typeName));
+                    }
+
+                    if (!PrimitiveType.IsKnownType(key.PropertyType) && !(key.PropertyType.GetGenericTypeDefinition() == typeof(System.Nullable<>) && key.PropertyType.GetGenericArguments().First().IsEnum()))
+                    {
+                        throw c.Error.InvalidOperation(c.Strings.ClientType_KeysMustBeSimpleTypes(key.Name, typeName, key.PropertyType.FullName));
                     }
                 }
+
+                if (dataServiceKeyAttribute != null)
+                {
+                    if (newKeyKind == KeyKind.AttributedKey && keyProperties.Count != dataServiceKeyAttribute?.KeyNames.Count)
+                    {
+                        var m = (from string a in dataServiceKeyAttribute.KeyNames
+                                 where (from b in properties
+                                        where b.Name == a
+                                        select b).FirstOrDefault() == null
+                                 select a).First<string>();
+                        throw c.Error.InvalidOperation(c.Strings.ClientType_MissingProperty(typeName, m));
+                    }
+                }
+
+                typeInfo.KeyProperties = keyProperties.Count > 0 ? keyProperties.ToArray() : (isEntity ? ClientTypeUtil.EmptyPropertyInfoArray : null);
             }
 
-            Type keyPropertyDeclaringType = null;
-            foreach (PropertyInfo key in keyProperties)
-            {
-                if (keyPropertyDeclaringType == null)
-                {
-                    keyPropertyDeclaringType = key.DeclaringType;
-                }
-                else if (keyPropertyDeclaringType != key.DeclaringType)
-                {
-                    throw c.Error.InvalidOperation(c.Strings.ClientType_KeysOnDifferentDeclaredType(typeName));
-                }
-
-                if (!PrimitiveType.IsKnownType(key.PropertyType) && !(key.PropertyType.GetGenericTypeDefinition() == typeof(System.Nullable<>) && key.PropertyType.GetGenericArguments().First().IsEnum()))
-                {
-                    throw c.Error.InvalidOperation(c.Strings.ClientType_KeysMustBeSimpleTypes(key.Name, typeName, key.PropertyType.FullName));
-                }
-            }
-
-            if (dataServiceKeyAttribute != null)
-            {
-                if (newKeyKind == KeyKind.AttributedKey && keyProperties.Count != dataServiceKeyAttribute?.KeyNames.Count)
-                {
-                    var m = (from string a in dataServiceKeyAttribute.KeyNames
-                             where (from b in properties
-                                    where b.Name == a
-                                    select b).FirstOrDefault() == null
-                             select a).First<string>();
-                    throw c.Error.InvalidOperation(c.Strings.ClientType_MissingProperty(typeName, m));
-                }
-            }
-
-            return keyProperties.Count > 0 ? keyProperties.ToArray() : (isEntity ? ClientTypeUtil.EmptyPropertyInfoArray : null);
+            hasProperties = typeInfo.HasProperties.Value;
+            return typeInfo.KeyProperties;
         }
 
         /// <summary>Gets the type of the specified <paramref name="member"/>.</summary>
@@ -556,27 +569,46 @@ namespace Microsoft.OData.Client.Metadata
         /// <returns>The server defined type name.</returns>
         internal static string GetServerDefinedTypeName(Type type)
         {
-            OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)type.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
-            if (originalNameAttribute != null)
+            ODataTypeInfo typeInfo = GetODataTypeInfo(type);
+
+            if (typeInfo.ServerDefinedTypeName == null)
             {
-                return originalNameAttribute.OriginalName;
+                OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)type.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
+                if (originalNameAttribute != null)
+                {
+                    typeInfo.ServerDefinedTypeName = originalNameAttribute.OriginalName;
+                }
+                else
+                {
+                    typeInfo.ServerDefinedTypeName = type.Name;
+                }
             }
 
-            return type.Name;
+            return typeInfo.ServerDefinedTypeName;
         }
+
 
         /// <summary>Gets the full server defined type name in <see cref="OriginalNameAttribute"/> of the specified <paramref name="type"/>.</summary>
         /// <param name="type">Member to get server defined name of.</param>
         /// <returns>The server defined type full name.</returns>
         internal static string GetServerDefinedTypeFullName(Type type)
         {
-            OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)type.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
-            if (originalNameAttribute != null)
+            ODataTypeInfo typeInfo = GetODataTypeInfo(type);
+
+            if (typeInfo.ServerDefinedTypeFullName == null)
             {
-                return type.Namespace + "." + originalNameAttribute.OriginalName;
+                OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)type.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
+                if (originalNameAttribute != null)
+                {
+                    typeInfo.ServerDefinedTypeFullName = type.Namespace + "." + originalNameAttribute.OriginalName;
+                }
+                else
+                {
+                    typeInfo.ServerDefinedTypeFullName = type.FullName;
+                }
             }
 
-            return type.FullName;
+            return typeInfo.ServerDefinedTypeFullName;
         }
 
         /// <summary>
@@ -587,25 +619,34 @@ namespace Microsoft.OData.Client.Metadata
         /// <returns>Client clr name.</returns>
         internal static string GetClientFieldName(Type t, string serverDefinedName)
         {
-            List<string> serverDefinedNames = serverDefinedName.Split(',').Select(name => name.Trim()).ToList();
-            List<string> clientMemberNames = new List<string>();
-            foreach (var serverSideName in serverDefinedNames)
-            {
-                FieldInfo memberInfo = t.GetField(serverSideName) ?? t.GetFields().ToList().Where(m =>
-                {
-                    OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)m.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
-                    return originalNameAttribute != null && originalNameAttribute.OriginalName == serverSideName;
-                }).SingleOrDefault();
+            ODataTypeInfo typeInfo = GetODataTypeInfo(t);
+            string clientFieldName;
 
-                if (memberInfo == null)
+            if (typeInfo.ClientDefinedNameDict.TryGetValue(serverDefinedName, out clientFieldName))
+            {
+                List<string> serverDefinedNames = serverDefinedName.Split(',').Select(name => name.Trim()).ToList();
+                List<string> clientMemberNames = new List<string>();
+                foreach (var serverSideName in serverDefinedNames)
                 {
-                    throw c.Error.InvalidOperation(c.Strings.ClientType_MissingProperty(t.ToString(), serverSideName));
+                    FieldInfo memberInfo = t.GetField(serverSideName) ?? t.GetFields().ToList().Where(m =>
+                    {
+                        OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)m.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
+                        return originalNameAttribute != null && originalNameAttribute.OriginalName == serverSideName;
+                    }).SingleOrDefault();
+
+                    if (memberInfo == null)
+                    {
+                        throw c.Error.InvalidOperation(c.Strings.ClientType_MissingProperty(t.ToString(), serverSideName));
+                    }
+
+                    clientMemberNames.Add(memberInfo.Name);
                 }
 
-                clientMemberNames.Add(memberInfo.Name);
+                clientFieldName = string.Join(",", clientMemberNames);
+                typeInfo.ClientDefinedNameDict[serverDefinedName] = clientFieldName;
             }
 
-            return string.Join(",", clientMemberNames);
+            return clientFieldName;
         }
 
         /// <summary>
@@ -617,23 +658,33 @@ namespace Microsoft.OData.Client.Metadata
         /// <returns>Client PropertyInfo, or null if the method is not found.</returns>
         internal static PropertyInfo GetClientPropertyInfo(Type t, string serverDefinedName, UndeclaredPropertyBehavior undeclaredPropertyBehavior)
         {
-            PropertyInfo propertyInfo = t.GetProperty(serverDefinedName);
-            if (propertyInfo == null)
+            ODataTypeInfo typeInfo = GetODataTypeInfo(t);
+            PropertyInfo clientPropertyInfo;
+
+            if (typeInfo.ClientPropertyInfoDict.TryGetValue(serverDefinedName, out clientPropertyInfo))
             {
-                propertyInfo = t.GetProperties().Where(
-                         m =>
-                         {
-                             OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)m.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
-                             return originalNameAttribute != null && originalNameAttribute.OriginalName == serverDefinedName;
-                         }).SingleOrDefault();
+                PropertyInfo propertyInfo = t.GetProperty(serverDefinedName);
+                if (propertyInfo == null)
+                {
+                    propertyInfo = t.GetProperties().Where(
+                             m =>
+                             {
+                                 OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)m.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
+                                 return originalNameAttribute != null && originalNameAttribute.OriginalName == serverDefinedName;
+                             }).SingleOrDefault();
+                }
+
+
+                clientPropertyInfo = propertyInfo;
+                typeInfo.ClientPropertyInfoDict[serverDefinedName] = clientPropertyInfo;
             }
 
-            if (propertyInfo == null && (undeclaredPropertyBehavior == UndeclaredPropertyBehavior.ThrowException))
+            if (clientPropertyInfo == null && (undeclaredPropertyBehavior == UndeclaredPropertyBehavior.ThrowException))
             {
                 throw c.Error.InvalidOperation(c.Strings.ClientType_MissingProperty(t.ToString(), serverDefinedName));
             }
 
-            return propertyInfo;
+            return clientPropertyInfo;
         }
 
         /// <summary>
@@ -675,6 +726,19 @@ namespace Microsoft.OData.Client.Metadata
             }
 
             return methodInfo;
+        }
+
+
+        private static ODataTypeInfo GetODataTypeInfo(Type type)
+        {
+            ODataTypeInfo typeInfo;
+            if (!ODataTypeInfoCache.TryGetValue(type, out typeInfo))
+            {
+                typeInfo = new ODataTypeInfo();
+                ODataTypeInfoCache[type] = typeInfo;
+            }
+
+            return typeInfo;
         }
 
         /// <summary>
