@@ -16,18 +16,13 @@ namespace Microsoft.OData.Performance
     {
         TestServiceFixture<SimpleQueryTests> serviceFixture;
 
-        public SimpleQueryTests(TestServiceFixture<SimpleQueryTests> serviceFixture)
-        {
-            this.serviceFixture = serviceFixture;
-        }
-
         [GlobalSetup]
         public void LaunchService()
         {
             serviceFixture = new TestServiceFixture<SimpleQueryTests>();
         }
 
-        [GlobalSetup]
+        [GlobalCleanup]
         public void KillService()
         {
             serviceFixture.Dispose();

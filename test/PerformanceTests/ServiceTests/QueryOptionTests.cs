@@ -62,9 +62,6 @@ namespace Microsoft.OData.Performance
             }
 
             var responseMessage = requestMessage.GetResponse();
-            var reader = new StreamReader(responseMessage.GetStream());
-            var result = reader.ReadToEnd();
-            // Console.WriteLine("Query result {0}", result);
             Assert.Equal(200, responseMessage.StatusCode);
         }
     }

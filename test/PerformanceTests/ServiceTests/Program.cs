@@ -1,6 +1,6 @@
 ﻿using BenchmarkDotNet.Running;
 
-namespace Microsoft.OData.Performance.ServiceTests
+namespace Microsoft.OData.Performance
 {
     class Program
     {

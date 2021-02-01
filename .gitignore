@@ -16,6 +16,7 @@ obj/
 # Test results
 sln/TestResults/
 test/packages/
+*BenchmarkDotNet.Artifacts*
 
 # VS2015 IDE generated files
 sln/*.ide/
