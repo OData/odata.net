@@ -519,9 +519,11 @@ namespace Microsoft.OData
                     translatedNode = leftIn + inOperator + rightIn;
                     break;
 
+                // $expand=Items($filter=endswith($it/Name, 'xyz')
                 case QueryNodeKind.SingleValueFunctionCall:
-                    string[] svfcSubtring = translatedNode.Trim().Split('(', ')');
-                    string withinBrackets = svfcSubtring[1];
+                    char[] svfcSeparators = { '(', ')' };
+                    string[] svfcSubtrings = translatedNode.Trim().Split(svfcSeparators, StringSplitOptions.RemoveEmptyEntries);
+                    string withinBrackets = svfcSubtrings[1];
                     string[] parameters = withinBrackets.Trim().Split(',');
                     string leftParameter = parameters[0];
                     string rightParameter = parameters.Length == 2 ? parameters[1] : String.Empty;
@@ -543,10 +545,26 @@ namespace Microsoft.OData
                     {
                         leftParameter = "$it/" + leftParameter;
                     }
-                    translatedNode = parameters.Length == 1 ? svfcSubtring[0] + '(' + leftParameter + ')' : svfcSubtring[0] + '(' + leftParameter + ',' + rightParameter + ')';
+                    translatedNode = parameters.Length == 1 ? svfcSubtrings[0] + '(' + leftParameter + ')' : svfcSubtrings[0] + '(' + leftParameter + ',' + rightParameter + ')';
                     break;
 
                 case QueryNodeKind.Any:
+                    const string slashAny = "/any";
+                    string[] anySeparators = { slashAny };
+                    string[] anySubtrings = translatedNode.Trim().Split(anySeparators, StringSplitOptions.RemoveEmptyEntries);
+                    string leftAnyNodeSubstring = anySubtrings[0];
+                    string rightAnyNodeSubstring = anySubtrings[1];
+
+                    ResourceRangeVariable expressionResourceRangeVariable = (filterClause.Expression as AnyNode).RangeVariables.Single(x => x.Name == "$it") as ResourceRangeVariable;
+
+                    ResourceRangeVariable filterResourceRangeVariable = filterClause.RangeVariable as ResourceRangeVariable;
+                    bool isDifferentSource = expressionResourceRangeVariable.NavigationSource != filterResourceRangeVariable.NavigationSource;
+
+                    if(isDifferentSource)
+                    {
+                        leftAnyNodeSubstring = leftAnyNodeSubstring + "/$it";
+                    }
+                    translatedNode = leftAnyNodeSubstring + slashAny + rightAnyNodeSubstring;
                     break;
 
                 case QueryNodeKind.SingleValueOpenPropertyAccess:
