@@ -622,7 +622,7 @@ namespace Microsoft.OData.Client.Metadata
             ODataTypeInfo typeInfo = GetODataTypeInfo(t);
             string clientFieldName;
 
-            if (typeInfo.ClientDefinedNameDict.TryGetValue(serverDefinedName, out clientFieldName))
+            if (!typeInfo.ClientDefinedNameDict.TryGetValue(serverDefinedName, out clientFieldName))
             {
                 List<string> serverDefinedNames = serverDefinedName.Split(',').Select(name => name.Trim()).ToList();
                 List<string> clientMemberNames = new List<string>();
@@ -661,7 +661,7 @@ namespace Microsoft.OData.Client.Metadata
             ODataTypeInfo typeInfo = GetODataTypeInfo(t);
             PropertyInfo clientPropertyInfo;
 
-            if (typeInfo.ClientPropertyInfoDict.TryGetValue(serverDefinedName, out clientPropertyInfo))
+            if (!typeInfo.ClientPropertyInfoDict.TryGetValue(serverDefinedName, out clientPropertyInfo))
             {
                 PropertyInfo propertyInfo = t.GetProperty(serverDefinedName);
                 if (propertyInfo == null)
