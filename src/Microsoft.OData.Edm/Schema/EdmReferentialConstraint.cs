@@ -24,7 +24,7 @@ namespace Microsoft.OData.Edm
         public EdmReferentialConstraint(IEnumerable<EdmReferentialConstraintPropertyPair> propertyPairs)
         {
             EdmUtil.CheckArgumentNull(propertyPairs, "propertyPairs");
-            this.propertyPairs = propertyPairs.ToList();
+            this.propertyPairs = propertyPairs;
         }
 
         /// <summary>

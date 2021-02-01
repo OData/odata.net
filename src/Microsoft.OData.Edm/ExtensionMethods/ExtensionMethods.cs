@@ -2864,8 +2864,8 @@ namespace Microsoft.OData.Edm
             relativeNavigations = null;
             lastEntityType = null;
 
-            var pathItems = pathExpression.PathSegments.ToList();
-            if (pathItems.Count < 1)
+            var pathItems = pathExpression.PathSegments;
+            if (!pathItems.Any())
             {
                 foundErrors.Add(new EdmError(element.Location(), EdmErrorCode.OperationWithInvalidEntitySetPathMissingCompletePath, Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathMissingBindingParameterName(CsdlConstants.Attribute_EntitySetPath)));
                 return false;

@@ -127,7 +127,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         {
             if (!navigationProperty.ContainsTarget)
             {
-                return this.NavigationPropertyBindings.Where(targetMapping => targetMapping.NavigationProperty == navigationProperty).ToList();
+                return this.NavigationPropertyBindings.Where(targetMapping => targetMapping.NavigationProperty == navigationProperty);
             }
 
             return null;
@@ -142,7 +142,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         private IEnumerable<IEdmNavigationPropertyBinding> ComputeNavigationTargets()
         {
-            return this.navigationSource.NavigationPropertyBindings.Select(this.CreateSemanticMappingForBinding).ToList();
+            return this.navigationSource.NavigationPropertyBindings.Select(this.CreateSemanticMappingForBinding);
         }
 
         private IEdmNavigationPropertyBinding CreateSemanticMappingForBinding(CsdlNavigationPropertyBinding binding)
