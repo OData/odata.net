@@ -8,7 +8,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <TestType Condition=" '$(TestType)' == '' ">Private</TestType>
     <ProjectGuid>{1277D018-9DFD-45B4-B9AA-9A6D7229B02C}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.OData.Performance</RootNamespace>
     <AssemblyName>Microsoft.OData.Performance.Service.Tests</AssemblyName>
@@ -21,6 +21,9 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
   <ItemGroup>
@@ -270,6 +273,7 @@
     <Compile Include="Common\HttpWebRequestMessage.cs" />
     <Compile Include="Common\HttpWebResponseMessage.cs" />
     <Compile Include="Common\TestServiceFixture.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="QueryOptionTests.cs" />
     <Compile Include="SimpleQueryTests.cs" />
     <Compile Include="UpdateTests.cs" />

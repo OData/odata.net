@@ -67,6 +67,7 @@ Function ExecuteTests
     # $testAssembly = Get-ChildItem -Filter Microsoft.OData.Performance.*.Tests.exe
     # &".\$testAssembly" --filter *
 
+    $testServicePath = "$location\test\PerformanceTests\Framework\TestService"
     Set-Location "test\PerformanceTests\ServiceTests\bin\$Config"
     $dllName = "Microsoft.OData.Performance.Service.Tests.dll"
     Write-Host "*** Run test for $dllName ***"
@@ -77,8 +78,8 @@ Function ExecuteTests
     $result = $runid + ".xml"
     $analysisResult = $runid + ".analysisResult.xml"
     $resultPath = $testfolder + "\" + $analysisResult
-    &$perfRunPath $dllName -runner $xunitConsoleRunnerPath -runnerargs "-parallel none" -runid $runid
-    &$perfAnalysisPath $result -xml $analysisResult
+    &$perfRunPath $dllName -runner $xunitConsoleRunnerPath -runnerargs "-parallel none -ServicePath $testServicePath" -runid $runid
+    # &$perfAnalysisPath $result -xml $analysisResult
     Write-Host "See result for $dllName in $resultPath"
     
     
