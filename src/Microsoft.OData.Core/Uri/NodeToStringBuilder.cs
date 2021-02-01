@@ -10,6 +10,7 @@ namespace Microsoft.OData
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
+    using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
     using Microsoft.OData.Edm;
@@ -519,6 +520,30 @@ namespace Microsoft.OData
                     break;
 
                 case QueryNodeKind.SingleValueFunctionCall:
+                    string[] svfcSubtring = translatedNode.Trim().Split('(', ')');
+                    string withinBrackets = svfcSubtring[1];
+                    string[] parameters = withinBrackets.Trim().Split(',');
+                    string leftParameter = parameters[0];
+                    string rightParameter = parameters.Length == 2 ? parameters[1] : String.Empty;
+
+                    SingleValuePropertyAccessNode leftParameterNode = null;
+                    QueryNode firstParameterNode = ((filterClause.Expression as SingleValueFunctionCallNode).Parameters).First();
+                    ConvertNode firstParameterConvertNode = firstParameterNode as ConvertNode;
+
+                    if(firstParameterConvertNode != null)
+                    {
+                        leftParameterNode = firstParameterConvertNode.Source as SingleValuePropertyAccessNode;
+                    }
+                    else
+                    {
+                        leftParameterNode = firstParameterNode as SingleValuePropertyAccessNode;
+                    }
+
+                    if (leftParameterNode != null && IsDifferentSource(filterClause, leftParameterNode))
+                    {
+                        leftParameter = "$it/" + leftParameter;
+                    }
+                    translatedNode = parameters.Length == 1 ? svfcSubtring[0] + '(' + leftParameter + ')' : svfcSubtring[0] + '(' + leftParameter + ',' + rightParameter + ')';
                     break;
 
                 case QueryNodeKind.Any:
