@@ -573,8 +573,9 @@ namespace Microsoft.OData
                     }
                     break;
 
-                case QueryNodeKind.ParameterAlias:
-                    break;
+                // Commenting this out just so that we keep in mind ParameterAlias in a node type in filterClause.Expression
+                //case QueryNodeKind.ParameterAlias:
+                    //break;
 
                 default:
                     break;
