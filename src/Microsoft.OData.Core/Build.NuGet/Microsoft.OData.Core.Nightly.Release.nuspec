@@ -12,7 +12,7 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <summary>Classes to serialize, deserialize and validate OData JSON payloads. Supports OData v4.</summary>
     <description>Classes to serialize, deserialize and validate OData JSON payloads. Supports OData v4. Enables construction of OData services and clients. Targets .NET Platform Standard 1.1.
-OData .NET library is open source at http://github.com/OData/odata.net. Documentation for the library can be found at https://odata.github.io/odata.net.</description>
+OData .NET library is open source at http://github.com/OData/odata.net. Documentation for the library can be found at https://docs.microsoft.com/en-us/odata/.</description>    
     <copyright>© Microsoft Corporation. All rights reserved.</copyright>
     <dependencies>
       <dependency id="Microsoft.Spatial" version="[$VersionFullSemantic$-Nightly$NightlyBuildVersion$]" />
