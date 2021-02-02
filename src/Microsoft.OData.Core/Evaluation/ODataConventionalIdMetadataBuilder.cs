@@ -273,7 +273,7 @@ namespace Microsoft.OData.Evaluation
         private Uri GetContainingEntitySetUri(Uri baseUri, ODataUri odataUri)
         {
             ODataPath path = odataUri.Path;
-            IList<ODataPathSegment> segments = path.Segments;
+            List<ODataPathSegment> segments = path.ToList();
             int lastIndex = segments.Count - 1;
             ODataPathSegment lastSegment = segments[lastIndex];
             while (!(lastSegment is NavigationPropertySegment) && !(lastSegment is OperationSegment))
@@ -298,7 +298,10 @@ namespace Microsoft.OData.Evaluation
             }
 
             // trim all the un-needed segments 
-            segments.RemoveAt(lastIndex);
+            if (lastIndex >= 0)
+            {
+                segments.RemoveAt(lastIndex);
+            }
 
             // append each segment to base uri
             Uri uri = baseUri;
