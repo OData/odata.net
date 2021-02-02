@@ -496,9 +496,8 @@ namespace Microsoft.OData
                     if (rightBinaryNode != null && IsDifferentSource(filterClause, rightBinaryNode))
                     {
                         rightBinary = "$it/" + rightBinary;
+                        translatedNode = leftBinary + binaryOperator + rightBinary;
                     }
-
-                    translatedNode = leftBinary + binaryOperator + rightBinary;
                     break;
 
                 // $expand=Items($filter=$it/ID in ['1', '2', '3'])
@@ -514,9 +513,8 @@ namespace Microsoft.OData
                     if (leftInNode != null && IsDifferentSource(filterClause, leftInNode))
                     {
                         leftIn = "$it/" + leftIn;
+                        translatedNode = leftIn + inOperator + rightIn;
                     }
-
-                    translatedNode = leftIn + inOperator + rightIn;
                     break;
 
                 // $expand=Items($filter=endswith($it/Name, 'xyz')
@@ -544,8 +542,8 @@ namespace Microsoft.OData
                     if (leftParameterNode != null && IsDifferentSource(filterClause, leftParameterNode))
                     {
                         leftParameter = "$it/" + leftParameter;
+                        translatedNode = parameters.Length == 1 ? svfcSubtrings[0] + '(' + leftParameter + ')' : svfcSubtrings[0] + '(' + leftParameter + ',' + rightParameter + ')';
                     }
-                    translatedNode = parameters.Length == 1 ? svfcSubtrings[0] + '(' + leftParameter + ')' : svfcSubtrings[0] + '(' + leftParameter + ',' + rightParameter + ')';
                     break;
 
                 // $expand=Orders($filter=$it/Items/any(d:d/Quantity gt 100))
@@ -558,23 +556,18 @@ namespace Microsoft.OData
 
                     ResourceRangeVariable anyExpressionResourceRangeVariable = (filterClause.Expression as AnyNode).RangeVariables.Single(x => x.Name == "$it") as ResourceRangeVariable;
 
-                    ResourceRangeVariable anyFilterResourceRangeVariable = filterClause.RangeVariable as ResourceRangeVariable;
-                    bool isDifferentSource = anyExpressionResourceRangeVariable.NavigationSource != anyFilterResourceRangeVariable.NavigationSource;
-
-                    if(isDifferentSource)
+                    if(IsDifferentSource(filterClause, anyExpressionResourceRangeVariable))
                     {
                         leftAnyNodeSubstring = "/$it" + leftAnyNodeSubstring;
+                        translatedNode = leftAnyNodeSubstring + slashAny + rightAnyNodeSubstring;
                     }
-                    translatedNode = leftAnyNodeSubstring + slashAny + rightAnyNodeSubstring;
                     break;
 
+                // Products?$filter=ProductName
                 case QueryNodeKind.SingleValueOpenPropertyAccess:
                     ResourceRangeVariable svopaExpressionResourceRangeVariable = ((filterClause.Expression as SingleValueOpenPropertyAccessNode).Source as ResourceRangeVariableReferenceNode).RangeVariable;
 
-                    ResourceRangeVariable svopaFilterResourceRangeVariable = filterClause.RangeVariable as ResourceRangeVariable;
-                    bool isDifferentSource2 = svopaExpressionResourceRangeVariable.NavigationSource != svopaFilterResourceRangeVariable.NavigationSource;
-
-                    if (isDifferentSource2)
+                    if (IsDifferentSource(filterClause, svopaExpressionResourceRangeVariable))
                     {
                         translatedNode = "/$it" + translatedNode;
                     }
@@ -599,6 +592,22 @@ namespace Microsoft.OData
                 property.Source is SingleResourceNode propertySource)
             {
                 if(filterSource.NavigationSource != propertySource.NavigationSource)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static bool IsDifferentSource(FilterClause filterClause, ResourceRangeVariable expressionRangeVariable)
+        {
+            Debug.Assert(filterClause != null, "filterClause != null");
+            Debug.Assert(expressionRangeVariable != null, "expressionRangeVariable != null");
+
+            if (filterClause.RangeVariable is ResourceRangeVariable filterSource)
+            {
+                if (filterSource.NavigationSource != expressionRangeVariable.NavigationSource)
                 {
                     return true;
                 }
