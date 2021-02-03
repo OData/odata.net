@@ -653,7 +653,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         }
 
         [Fact]
-        public void ExpandWithDollarItInFilterShouldWork()
+        public void ExpandWithDollarItInFilterBinaryOperatorShouldWork()
         {
             Uri queryUri = new Uri("People?$expand=MyDog($select=Color;$expand=LionsISaw($filter=ID1 eq $it/ID))", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
@@ -661,7 +661,15 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         }
 
         [Fact]
-        public void ExpandWithDollarItInFilterInClauseShouldWork()
+        public void ExpandWithDollarItInFilterComplexBinaryOperatorShouldWork()
+        {
+            Uri queryUri = new Uri("People?$expand=MyDog($filter=$it/MyAddress/City eq 'Seattle')", UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal("http://gobbledygook/People?$expand=" + Uri.EscapeDataString("MyDog($filter=$it/MyAddress/City eq 'Seattle')"), actualUri.OriginalString);
+        }
+
+        [Fact]
+        public void ExpandWithDollarItInFilterInOperatorShouldWork()
         {
             Uri queryUri = new Uri("People?$expand=MyDog($filter=$it/ID in ['1', '2', '3'])", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
@@ -669,7 +677,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         }
 
         [Fact]
-        public void ExpandWithDollarItInFilterAnyClauseShouldWork()
+        public void ExpandWithDollarItInFilterAnyOperatorShouldWork()
         {
             Uri queryUri = new Uri("People?$expand=MyDog($filter=$it/PreviousAddresses/any(d:d/City eq 'Seattle'))", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);

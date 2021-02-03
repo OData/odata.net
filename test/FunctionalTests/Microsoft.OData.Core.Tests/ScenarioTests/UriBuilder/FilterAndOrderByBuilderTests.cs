@@ -457,9 +457,17 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
             Assert.Equal(new Uri("http://gobbledygook/People?$filter=1%20in%20RelatedIDs"), actualUri);
         }
-#endregion
 
-#region test $orderby
+        [Fact]
+        public void BuildFilterWithDollarItInFunctionCall()
+        {
+            Uri queryUri = new Uri("People(1)/RelatedSSNs?$filter=endswith($it,'xyz')", UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal(new Uri("http://gobbledygook/People(1)/RelatedSSNs?$filter=endswith%28%24it%2C%27xyz%27%29"), actualUri);
+        }
+        #endregion
+
+        #region test $orderby
         [Fact]
         public void BuildOrderByWithEntitySetShouldBeAbleToDetermineSets()
         {

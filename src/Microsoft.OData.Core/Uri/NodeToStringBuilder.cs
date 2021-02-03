@@ -611,12 +611,37 @@ namespace Microsoft.OData
             Debug.Assert(filterClause != null, "filterClause != null");
             Debug.Assert(property != null, "property != null");
 
-            if (filterClause.RangeVariable is ResourceRangeVariable filterSource &&
-                property.Source is ResourceRangeVariableReferenceNode propertySource)
+            ResourceRangeVariable filterSource = filterClause.RangeVariable as ResourceRangeVariable;
+
+            if (filterSource !=null && property.Source is ResourceRangeVariableReferenceNode propertySource)
             {
                 if(filterSource.NavigationSource != propertySource.NavigationSource)
                 {
                     return true;
+                }
+            }
+
+            // EDGE case:
+            // In SingleComplexNodee, we traverse the Source properties until we get a ResourceRangeVariableReferenceNode.
+            else if (property.Source is SingleComplexNode complexPropertySource)
+            {
+                while(complexPropertySource.Source != null)
+                {
+                    if(complexPropertySource.Source is ResourceRangeVariableReferenceNode rangeVariableSource)
+                    {
+                        if (filterSource.NavigationSource != rangeVariableSource.NavigationSource)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        complexPropertySource = complexPropertySource.Source as SingleComplexNode;
+                    }
                 }
             }
 
