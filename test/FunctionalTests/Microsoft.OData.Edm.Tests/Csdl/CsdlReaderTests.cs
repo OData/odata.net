@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
@@ -1219,7 +1220,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         {
             string xml = "<?xml version=\"1.0\" encoding=\"utf-16\"?><edmx:Edmx Version=\"" + odataVersion + "\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\"><edmx:DataServices /></edmx:Edmx>";
 
-            var stringReader = new System.IO.StringReader(xml);
+            var stringReader = new StringReader(xml);
             var xmlReader = System.Xml.XmlReader.Create(stringReader);
 
             IEdmModel edmModel = null;
@@ -1319,12 +1320,12 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Func<Uri, XmlReader> getReferenceModelReader = uri =>
             {
                 string csdl = uri.OriginalString == "SimplePermissions.xml" ? permissionsCsdl : mainCsdl;
-                var stringReader = new System.IO.StringReader(permissionsCsdl);
+                var stringReader = new StringReader(csdl);
                 return XmlReader.Create(stringReader);
             };
 
 
-            var reader = XmlReader.Create(new System.IO.StringReader(mainCsdl));
+            var reader = XmlReader.Create(new StringReader(mainCsdl));
             IEdmModel model = CsdlReader.Parse(reader, getReferencedModelReaderFunc: getReferenceModelReader);
 
             var entitySet = model.FindDeclaredEntitySet("Products");
@@ -1441,12 +1442,12 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Func<Uri, XmlReader> getReferenceModelReader = uri =>
             {
                 string csdl = uri.OriginalString == "SimplePermissions.xml" ? permissionsCsdl : mainCsdl;
-                var stringReader = new System.IO.StringReader(permissionsCsdl);
+                var stringReader = new StringReader(csdl);
                 return XmlReader.Create(stringReader);
             };
 
 
-            var reader = XmlReader.Create(new System.IO.StringReader(mainCsdl));
+            var reader = XmlReader.Create(new StringReader(mainCsdl));
             IEdmModel model = CsdlReader.Parse(reader, getReferencedModelReaderFunc: getReferenceModelReader);
             
             var entitySet = model.FindDeclaredEntitySet("Products");
@@ -1466,6 +1467,87 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.NotNull(productAnnotation);
         }
 
-        
+        [Fact]
+        public void ImportAnnotationsFromExternalNamespaceWithAlias()
+        {
+            string permissionsCsdl = @"<?xml version=""1.0"" encoding=""utf-8""?>
+<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
+  <edmx:Reference  Uri=""SimpleModel.xml"">
+    <edmx:Include Namespace=""Default""/>
+    <edmx:Include Namespace=""Example.Types"" Alias=""examples"" />
+  </edmx:Reference >
+  <edmx:DataServices>
+    <Schema Namespace=""Example.Permissions"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+      <Annotations Target=""examples.Product"">
+         <Annotation Term=""MyNS.SomeAnnotationPath"" AnnotationPath=""abc/efg"" />
+      </Annotations>
+      <Annotations Target=""Default.Container/Products"">
+        <Annotation Term=""MyNS.MyAnnotationPathTerm"" AnnotationPath=""abc/efg"" />
+        <Annotation Term=""Org.OData.Capabilities.V1.InsertRestrictions"">
+          <Record>
+            <PropertyValue Property=""Permissions"">
+              <Collection>
+                <Record>
+                  <PropertyValue Property=""SchemeName"" String=""Scheme"" />
+                  <PropertyValue Property=""Scopes"">
+                    <Collection>
+                      <Record>
+                        <PropertyValue Property=""Scope"" String=""Product.Create"" />
+                      </Record>
+                    </Collection>
+                  </PropertyValue>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
+";
+            string mainCsdl = @"<?xml version=""1.0"" encoding=""utf-8""?>
+<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
+  <edmx:Reference  Uri=""SimplePermissions.xml"">
+    <edmx:IncludeAnnotations TermNamespace=""MyNS"" TargetNamespace=""Example.Types"" />
+  </edmx:Reference >
+  <edmx:DataServices>
+    <Schema Namespace=""Example.Types"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+      <EntityType Name=""Product"">
+        <Key>
+          <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+        <Property Name=""Name"" Type=""Edm.String"" />
+        <Property Name=""Price"" Type=""Edm.Int32"" Nullable=""false"" />
+      </EntityType>
+    </Schema>
+    <Schema Namespace=""Default"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+      <EntityContainer Name=""Container"">
+        <EntitySet Name=""Products"" EntityType=""Example.Types.Product"" />
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
+";
+
+            Func<Uri, XmlReader> getReferenceModelReader = uri =>
+            {
+                string csdl = uri.OriginalString == "SimplePermissions.xml" ? permissionsCsdl : mainCsdl;
+                var stringReader = new StringReader(csdl);
+                return XmlReader.Create(stringReader);
+            };
+
+
+            var reader = XmlReader.Create(new StringReader(mainCsdl));
+            IEdmModel model = CsdlReader.Parse(reader, getReferencedModelReaderFunc: getReferenceModelReader);
+
+            var entity = model.FindDeclaredType("Example.Types.Product");
+            var entityAnnotations = model.FindVocabularyAnnotations(entity);
+            Assert.Single(entityAnnotations);
+
+            IEdmVocabularyAnnotation annotation = entityAnnotations.First(a => a.Term.Name == "SomeAnnotationPath");
+            Assert.NotNull(annotation);
+        }
     }
 }
