@@ -482,11 +482,32 @@ namespace Microsoft.OData
                     string binaryOperator = this.BinaryOperatorNodeToString(binaryNodeKind);
                     string[] binarySeparator = { binaryOperator };
                     string[] binarySubstrings = translatedNode.Trim().Split(binarySeparator, StringSplitOptions.RemoveEmptyEntries);
-                    string leftBinary = binarySubstrings[0];
-                    string rightBinary = binarySubstrings[1];
+                    string leftBinary = binarySubstrings[0].Trim();
+                    string rightBinary = binarySubstrings[1].Trim();
 
-                    SingleValuePropertyAccessNode leftBinaryNode = ((filterClause.Expression as BinaryOperatorNode).Left as ConvertNode)?.Source as SingleValuePropertyAccessNode;
-                    SingleValuePropertyAccessNode rightBinaryNode = ((filterClause.Expression as BinaryOperatorNode).Right as ConvertNode)?.Source as SingleValuePropertyAccessNode;
+                    SingleValuePropertyAccessNode leftBinaryNode = null;
+                    SingleValuePropertyAccessNode rightBinaryNode = null;
+
+                    QueryNode leftBinaryQueryNode = (filterClause.Expression as BinaryOperatorNode).Left;
+                    QueryNode rightBinaryQueryNode = (filterClause.Expression as BinaryOperatorNode).Right;
+
+                    if (leftBinaryQueryNode is ConvertNode leftBinaryConvertNode)
+                    {
+                        leftBinaryNode = leftBinaryConvertNode.Source as SingleValuePropertyAccessNode;
+                    }
+                    else if (leftBinaryQueryNode is SingleValuePropertyAccessNode)
+                    {
+                        leftBinaryNode = leftBinaryQueryNode as SingleValuePropertyAccessNode;
+                    }
+
+                    if (rightBinaryQueryNode is ConvertNode rightBinaryConvertNode)
+                    {
+                        rightBinaryNode = rightBinaryConvertNode.Source as SingleValuePropertyAccessNode;
+                    }
+                    else if (rightBinaryQueryNode is SingleValuePropertyAccessNode)
+                    {
+                        rightBinaryNode = rightBinaryQueryNode as SingleValuePropertyAccessNode;
+                    }
 
                     if (leftBinaryNode != null && IsDifferentSource(filterClause, leftBinaryNode))
                     {
@@ -496,8 +517,9 @@ namespace Microsoft.OData
                     if (rightBinaryNode != null && IsDifferentSource(filterClause, rightBinaryNode))
                     {
                         rightBinary = "$it/" + rightBinary;
-                        translatedNode = leftBinary + binaryOperator + rightBinary;
                     }
+
+                    translatedNode = leftBinary + ' ' + binaryOperator + ' ' + rightBinary;
                     break;
 
                 // $expand=Items($filter=$it/ID in ['1', '2', '3'])
@@ -558,7 +580,7 @@ namespace Microsoft.OData
 
                     if(IsDifferentSource(filterClause, anyExpressionResourceRangeVariable))
                     {
-                        leftAnyNodeSubstring = "/$it" + leftAnyNodeSubstring;
+                        leftAnyNodeSubstring = "$it/" + leftAnyNodeSubstring;
                         translatedNode = leftAnyNodeSubstring + slashAny + rightAnyNodeSubstring;
                     }
                     break;
@@ -569,7 +591,7 @@ namespace Microsoft.OData
 
                     if (IsDifferentSource(filterClause, svopaExpressionResourceRangeVariable))
                     {
-                        translatedNode = "/$it" + translatedNode;
+                        translatedNode = "$it/" + translatedNode;
                     }
                     break;
 
@@ -590,7 +612,7 @@ namespace Microsoft.OData
             Debug.Assert(property != null, "property != null");
 
             if (filterClause.RangeVariable is ResourceRangeVariable filterSource &&
-                property.Source is SingleResourceNode propertySource)
+                property.Source is ResourceRangeVariableReferenceNode propertySource)
             {
                 if(filterSource.NavigationSource != propertySource.NavigationSource)
                 {
