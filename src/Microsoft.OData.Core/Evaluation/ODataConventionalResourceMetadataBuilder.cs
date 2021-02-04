@@ -12,6 +12,7 @@ namespace Microsoft.OData.Evaluation
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using Microsoft.OData.Edm.Vocabularies.V1;
     using Microsoft.OData.JsonLight;
     #endregion
 
@@ -428,13 +429,23 @@ namespace Microsoft.OData.Evaluation
                 string propertyName = unprocessedStreamProperties.Current;
                 ODataStreamReferenceValue streamPropertyValue = new ODataStreamReferenceValue();
                 streamPropertyValue.SetMetadataBuilder(this, propertyName);
+
+                // by default, let's retrieve the content type from vocabulary annotation
+                var edmProperty = this.ResourceMetadataContext.SelectedStreamProperties[propertyName];
+                var mediaTypes = this.MetadataContext.Model.GetVocabularyStringCollection(edmProperty, CoreVocabularyModel.AcceptableMediaTypesTerm);
+                if (mediaTypes != null)
+                {
+                    // TODO: Make sure we use ',' to concatant the multiple media types or pick the first one?
+                    streamPropertyValue.ContentType = string.Join(",", mediaTypes);
+                }
+
                 return new ODataProperty { Name = propertyName, Value = streamPropertyValue };
             }
 
             return null;
         }
 
-        //// Stream content type and ETag can't be computed from conventions.
+        //// Stream content type and ETag can't be computed from conventions, but it can retrieve from the vocabulary annoation?
 
         /// <summary>
         /// Gets the navigation link URI for the specified navigation property.

@@ -13,6 +13,7 @@ namespace Microsoft.OData.Evaluation
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.Edm.Vocabularies.V1;
     #endregion
 
     /// <summary>
@@ -230,6 +231,15 @@ namespace Microsoft.OData.Evaluation
             {
                 this.computedMediaResource = new ODataStreamReferenceValue();
                 this.computedMediaResource.SetMetadataBuilder(this, /*propertyName*/ null);
+
+                // from OData spec: Media entity types MAY specify a list of acceptable media types using an annotation with term Core.AcceptableMediaTypes
+                IEdmEntityType entityType = this.ResourceMetadataContext.ActualResourceType as IEdmEntityType;
+                var mediaTypes = this.MetadataContext.Model.GetVocabularyStringCollection(entityType, CoreVocabularyModel.AcceptableMediaTypesTerm);
+                if (mediaTypes != null)
+                {
+                    // TODO: Make sure we use ',' to concatant the multiple media types or pick the first one?
+                    this.computedMediaResource.ContentType = string.Join(",", mediaTypes);
+                }
             }
 
             return this.computedMediaResource;
@@ -426,6 +436,16 @@ namespace Microsoft.OData.Evaluation
                     {
                         ODataStreamReferenceValue streamPropertyValue = new ODataStreamReferenceValue();
                         streamPropertyValue.SetMetadataBuilder(this, missingStreamPropertyName);
+
+                        // by default, let's retrieve the content type from vocabulary annotation
+                        var edmProperty = projectedStreamProperties[missingStreamPropertyName];
+                        var mediaTypes = this.MetadataContext.Model.GetVocabularyStringCollection(edmProperty, CoreVocabularyModel.AcceptableMediaTypesTerm);
+                        if (mediaTypes != null)
+                        {
+                            // TODO: Make sure we use ',' to concatant the multiple media types or pick the first one?
+                            streamPropertyValue.ContentType = string.Join(",", mediaTypes);
+                        }
+
                         this.computedStreamProperties.Add(new ODataProperty { Name = missingStreamPropertyName, Value = streamPropertyValue });
                     }
                 }
