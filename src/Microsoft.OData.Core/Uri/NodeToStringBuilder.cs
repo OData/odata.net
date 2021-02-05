@@ -475,6 +475,11 @@ namespace Microsoft.OData
             return BindNode(filterClause.Expression, filterClause.RangeVariable as ResourceRangeVariable);
         }
 
+        /// <summary>
+        /// We return the <see cref="ResourceRangeVariableReferenceNode"/> within a <see cref="QueryNode"/>
+        /// </summary>
+        /// <param name="node">The node to extract the ResourceRangeVariableReferenceNode.</param>
+        /// <returns>The extracted ResourceRangeVariableReferenceNode.</returns>
         private ResourceRangeVariableReferenceNode GetResourceRangeVariableReferenceNode(QueryNode node)
         {
             switch(node.Kind)
@@ -514,13 +519,18 @@ namespace Microsoft.OData
             return null;
         }
 
+        /// <summary>
+        /// Bind $it to the <see cref="QueryNode"/> translated string.
+        /// </summary>
+        /// <param name="node">node to bind.</param>
+        /// <param name="filterClauseRangeVariable">The <see cref="FilterClause"/> range variable.</param>
+        /// <returns>The translated string with $it binding.</returns>
         private string BindNode(QueryNode node, ResourceRangeVariable filterClauseRangeVariable)
         {
             BinaryOperatorNode binaryNode = node as BinaryOperatorNode;
             InNode inNode = node as InNode;
             AnyNode anyNode = node as AnyNode;
             SingleValueFunctionCallNode singleValueFunctionCallNode = node as SingleValueFunctionCallNode;
-            SingleValuePropertyAccessNode singleValuePropertyAccessNode = node as SingleValuePropertyAccessNode;
             SingleValueOpenPropertyAccessNode singleValueOpenPropertyAccessNode = node as SingleValueOpenPropertyAccessNode;
 
             if (binaryNode != null)
@@ -549,6 +559,12 @@ namespace Microsoft.OData
             }
         }
 
+        /// <summary>
+        /// Bind $it to the <see cref="BinaryOperatorNode"/> translated string.
+        /// </summary>
+        /// <param name="node">node to bind.</param>
+        /// <param name="filterClauseRangeVariable">The <see cref="FilterClause"/> range variable.</param>
+        /// <returns>The translated string with $it binding.</returns>
         private string BindBinaryOperatorNode(BinaryOperatorNode node, ResourceRangeVariable filterClauseRangeVariable)
         {
             string translatedNode = this.TranslateNode(node);
@@ -576,6 +592,12 @@ namespace Microsoft.OData
             return leftBinary + ' ' + binaryOperator + ' ' + rightBinary;
         }
 
+        /// <summary>
+        /// Bind $it to the <see cref="InNode"/> translated string.
+        /// </summary>
+        /// <param name="node">node to bind.</param>
+        /// <param name="filterClauseRangeVariable">The <see cref="FilterClause"/> range variable.</param>
+        /// <returns>The translated string with $it binding.</returns>
         private string BindInNode(InNode node, ResourceRangeVariable filterClauseRangeVariable)
         {
             string translatedNode = this.TranslateNode(node);
@@ -595,6 +617,12 @@ namespace Microsoft.OData
             return translatedNode;
         }
 
+        /// <summary>
+        /// Bind $it to the <see cref="AnyNode"/> translated string.
+        /// </summary>
+        /// <param name="node">node to bind.</param>
+        /// <param name="filterClauseRangeVariable">The <see cref="FilterClause"/> range variable.</param>
+        /// <returns>The translated string with $it binding.</returns>
         private string BindAnyNode(AnyNode node, ResourceRangeVariable filterClauseRangeVariable)
         {
             string translatedNode = this.TranslateNode(node);
@@ -614,6 +642,12 @@ namespace Microsoft.OData
             return translatedNode;
         }
 
+        /// <summary>
+        /// Bind $it to the <see cref="SingleValueFunctionCallNode"/> translated string.
+        /// </summary>
+        /// <param name="node">node to bind.</param>
+        /// <param name="filterClauseRangeVariable">The <see cref="FilterClause"/> range variable.</param>
+        /// <returns>The translated string with $it binding.</returns>
         private string BindSingleValueFunctionCallNode(SingleValueFunctionCallNode node, ResourceRangeVariable filterClauseRangeVariable)
         {
             string translatedNode = this.TranslateNode(node);
@@ -634,6 +668,12 @@ namespace Microsoft.OData
             return translatedNode;
         }
 
+        /// <summary>
+        /// Bind $it to the <see cref="SingleValueOpenPropertyAccessNode"/> translated string.
+        /// </summary>
+        /// <param name="node">node to bind.</param>
+        /// <param name="filterClauseRangeVariable">The <see cref="FilterClause"/> range variable.</param>
+        /// <returns>The translated string with $it binding.</returns>
         private string BindSingleValueOpenPropertyAccess(SingleValueOpenPropertyAccessNode node, ResourceRangeVariable filterClauseRangeVariable)
         {
             string translatedNode = this.TranslateNode(node);
@@ -646,6 +686,12 @@ namespace Microsoft.OData
             return translatedNode;
         }
 
+        /// <summary>
+        /// Check whether Navigation source of the FilterClause rangeVariable is different from the Expression rangeVariable.
+        /// </summary>
+        /// <param name="filterClauseRangeVariable"><see cref="FilterClause"/> rangeVariable.</param>
+        /// <param name="rangeVariableReferenceNode">The rangeVariable of the expression.</param>
+        /// <returns>If Navigation Source are different, returns true. Otherwise false.</returns>
         private static bool IsDifferentSource(ResourceRangeVariable filterClauseRangeVariable, ResourceRangeVariableReferenceNode rangeVariableReferenceNode)
         {
             Debug.Assert(filterClauseRangeVariable != null, "filterClause != null");
