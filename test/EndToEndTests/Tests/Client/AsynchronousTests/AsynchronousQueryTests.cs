@@ -6,12 +6,12 @@
 
 namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
 {
+    using System;
     using System.Collections.Generic;
-    using System.Net;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Microsoft.OData.Client;
     using System.Linq;
+    using System.Net;
+    using System.Reflection;
+    using Microsoft.OData.Client;
 #if SILVERLIGHT
     using Microsoft.Silverlight.Testing;
 #endif
@@ -19,8 +19,6 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
     using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference;
     using Xunit.Abstractions;
     using Xunit;
-    using System.Reflection;
-    using System;
 
     /// <summary>
     /// Client query tests using asynchronous APIs
