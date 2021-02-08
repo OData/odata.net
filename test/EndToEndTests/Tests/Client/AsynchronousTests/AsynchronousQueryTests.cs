@@ -311,7 +311,6 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                         ("ReleaseAllConnectionGroups",
                         BindingFlags.Instance | BindingFlags.NonPublic);
                 ReleaseConns.Invoke(servicePoint, null);
-
                 if (args.RequestMessage is HttpClientRequestMessage)
                 {
                     servicePoint = ServicePointManager.FindServicePoint(args.RequestMessage.Url);
