@@ -305,10 +305,10 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             context.SendingRequest2 += ((sender, args) =>
             {
                 servicePoint = ServicePointManager.FindServicePoint(args.RequestMessage.Url);
-                MethodInfo ReleaseConns = servicePoint.GetType().GetMethod
+                MethodInfo releaseConns = servicePoint.GetType().GetMethod
                         ("ReleaseAllConnectionGroups",
                         BindingFlags.Instance | BindingFlags.NonPublic);
-                ReleaseConns.Invoke(servicePoint, null);
+                releaseConns.Invoke(servicePoint, null);
                 if (args.RequestMessage is HttpClientRequestMessage)
                 {
                     servicePoint = ServicePointManager.FindServicePoint(args.RequestMessage.Url);
