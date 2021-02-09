@@ -168,6 +168,8 @@ namespace Microsoft.OData.Tests.JsonLight
                 "\"" + binaryValue + "\"" +
                 ",\"" + stringValue + "\"" +
                 ",\"" + stringValue + "\"" +
+                ", { \"name\": \"Betty\",\"age@type\":\"#Int32\",\"age\": 18}" +
+                ", { \"@type\": \"#test.customer\",\"name\": \"Betty\",\"age\": 18}" +
                 ",null" +
                 ",true" +
                 ",false" +
@@ -186,60 +188,117 @@ namespace Microsoft.OData.Tests.JsonLight
                     return true;
                 };
 
-            foreach (Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> ShouldStream in new Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool>[] { StreamCollection, StreamAll })
+            Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> StreamNone =
+                (IEdmPrimitiveType type, bool isCollection, string propertyName, IEdmProperty property) =>
+                {
+                    return false;
+                };
+
+            foreach (Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> ShouldStream in new Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool>[] { StreamCollection, StreamAll, StreamNone })
             {
                 foreach (Variant variant in GetVariants(ShouldStream))
                 {
                     int expectedPropertyCount = variant.IsRequest ? 1 : 2;
-                    ODataResource resource = null;
-                    List<object> propertyValues = null;
-
+                    List<object> collectionValues = null;
+                    ODataResource currentResource = null;
+                    Stack<ODataResource> resources = new Stack<ODataResource>();
+                    ODataPropertyInfo currentProperty = null;
+                    Stack<List<ODataProperty>> nestedProperties = new Stack<List<ODataProperty>>();
                     ODataReader reader = CreateODataReader(payload, variant);
+
                     while (reader.Read())
                     {
                         switch (reader.State)
                         {
                             case ODataReaderState.ResourceStart:
-                                if (resource == null)
+                                currentResource = reader.Item as ODataResource;
+                                if (resources.Count == 1)
                                 {
-                                    resource = reader.Item as ODataResource;
+                                    collectionValues.Add(reader.Item);
                                 }
-                                else
+                                resources.Push(currentResource);
+                                nestedProperties.Push(new List<ODataProperty>());
+
+                                break;
+
+                            case ODataReaderState.ResourceEnd:
+                                currentResource = resources.Pop();
+                                List<ODataProperty> properties = nestedProperties.Pop();
+                                if (currentResource != null)
                                 {
-                                    propertyValues.Add(reader.Item);
+                                    properties.AddRange(currentResource.NonComputedProperties);
+                                    currentResource.Properties = properties;
                                 }
                                 break;
 
                             case ODataReaderState.Primitive:
-                                ODataPrimitiveValue primitive = reader.Item as ODataPrimitiveValue;
-                                propertyValues.Add(primitive.Value);
+                                if (resources.Count == 1)
+                                {
+                                    ODataPrimitiveValue primitive = reader.Item as ODataPrimitiveValue;
+                                    collectionValues.Add(primitive.Value);
+                                }
+
                                 break;
 
                             case ODataReaderState.Stream:
-                                propertyValues.Add(ReadStream(reader));
+                                string streamValue = ReadStream(reader);
+                                if (resources.Count == 1)
+                                {
+                                    collectionValues.Add(streamValue);
+                                }
+                                else if (currentProperty != null)
+                                {
+                                    nestedProperties.Peek().Add(new ODataProperty { Name = currentProperty.Name, Value = streamValue });
+                                }
+                                currentProperty = null;
+
+                                break;
+
+                            case ODataReaderState.NestedProperty:
+                                currentProperty = reader.Item as ODataPropertyInfo;
                                 break;
 
                             case ODataReaderState.NestedResourceInfoStart:
                                 ODataNestedResourceInfo info = reader.Item as ODataNestedResourceInfo;
                                 Assert.Equal("untypedCollection", info.Name);
-                                Assert.Null(propertyValues);
-                                propertyValues = new List<object>();
+                                Assert.Null(collectionValues);
+                                collectionValues = new List<object>();
                                 break;
                         }
                     }
 
-                    Assert.NotNull(resource);
-                    Assert.Equal(expectedPropertyCount, resource.Properties.Count());
-                    Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
-                    Assert.Equal(7, propertyValues.Count);
-                    Assert.Equal(binaryValue, propertyValues[0]);
-                    Assert.Equal(stringValue, propertyValues[1]);
-                    Assert.Equal(stringValue, propertyValues[2]);
-                    Assert.Null(propertyValues[3]);
-                    Assert.Equal(true, propertyValues[4]);
-                    Assert.Equal(false, propertyValues[5]);
-                    Assert.Equal(-10.5m, ((Decimal)propertyValues[6]));
+                    Assert.NotNull(currentResource);
+                    Assert.Equal(expectedPropertyCount, currentResource.Properties.Count());
+                    Assert.NotNull(currentResource.Properties.FirstOrDefault(p => p.Name == "id"));
+                    Assert.Equal(9, collectionValues.Count);
+                    Assert.Equal(binaryValue, collectionValues[0]);
+                    Assert.Equal(stringValue, collectionValues[1]);
+                    Assert.Equal(stringValue, collectionValues[2]);
+                    ValidateResource(collectionValues[3]);
+                    ValidateResource(collectionValues[4]);
+                    Assert.Equal("test.customer", ((ODataResource)collectionValues[4]).TypeName);
+                    Assert.Null(collectionValues[5]);
+                    Assert.Equal(true, collectionValues[6]);
+                    Assert.Equal(false, collectionValues[7]);
+                    Assert.Equal(-10.5m, (Decimal)collectionValues[8]);
                 }
+            }
+        }
+
+        private void ValidateResource(object value)
+        {
+            ODataResource resource = value as ODataResource;
+            Assert.NotNull(resource);
+            ValidateProperty(resource, "name", "Betty");
+            ValidateProperty(resource, "age", 18);
+        }
+
+        private void ValidateProperty(ODataResource resource, string propertyName, object expectedValue)
+        {
+            ODataProperty property = resource.Properties.FirstOrDefault(p => p.Name == propertyName);
+            if (property != null)
+            {
+                Assert.Equal(expectedValue, property.Value);
             }
         }
 

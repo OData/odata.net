@@ -1783,6 +1783,7 @@ namespace Microsoft.OData.JsonLight
                 }
             }
 
+            expectedTypeReference = expectedTypeReference != null && expectedTypeReference.IsUntyped() ? null : expectedTypeReference;
             ODataTypeAnnotation typeAnnotation;
             EdmTypeKind targetTypeKind;
             IEdmTypeReference targetTypeReference = this.ReaderValidator.ResolvePayloadTypeNameAndComputeTargetType(
@@ -1907,7 +1908,7 @@ namespace Microsoft.OData.JsonLight
                 }
 
                 // If we have no expected type make sure the collection items are of the same kind and specify the same name.
-                if (collectionValidator != null)
+                if (collectionValidator != null && targetTypeKind != EdmTypeKind.None)
                 {
                     string payloadTypeNameFromResult = ODataJsonLightReaderUtils.GetPayloadTypeName(result);
                     Debug.Assert(expectedTypeReference == null, "If a collection validator is specified there must not be an expected value type reference.");
