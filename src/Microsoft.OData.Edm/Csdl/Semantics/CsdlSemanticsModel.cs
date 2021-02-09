@@ -534,7 +534,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
             if (addAnnotations)
             {
-                AddOutOfLineAnnotationsFromSchema(schema, schemaWrapper, includeAnnotationsIndex: null);
+                // this adds all out-of-line annotations in the schema regardless of edmx:IncludeAnnotations references in the model
+                AddOutOfLineAnnotationsFromSchema(schema, schemaWrapper, /* includeAnnotationsIndex */ null);
             }
 
             var edmVersion = this.GetEdmVersion();
@@ -581,13 +582,13 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         /// <summary>
         /// Process the <see cref="IEdmReference"/>s of the parent model to
-        /// figure out whether the schema's types (entiy types, enums, containers, etc.) and annotations should
+        /// figure out whether the schema's types (entity types, enums, containers, etc.) and annotations should
         /// be imported
         /// </summary>
-        /// <param name="schema"></param>
-        /// <param name="schemaWrapper"></param>
-        /// <param name="parentReferences"></param>
-        /// <param name="shouldAddSchemaElements">Whether schema types such entity types, operations, enums, etc. should be important</param>
+        /// <param name="schema">The schema to process</param>
+        /// <param name="schemaWrapper">The <see cref="CsdlSemanticsSchema"/> wrapper of <paramref name="schema"/></param>
+        /// <param name="parentReferences">The references in the model that contains the <paramref name="schema"/></param>
+        /// <param name="shouldAddSchemaElements">Whether schema types such entity types, operations, enums, etc. should be added</param>
         /// <param name="includeAnnotationsIndex">Cache of the schema's out-of-line <see cref="IEdmIncludeAnnotations"/>s indexed by the term namespace</param>
         private static void ProcessSchemaParentReferences(
             CsdlSchema schema,
@@ -682,11 +683,26 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             }
         }
 
+        /// <summary>
+        /// Adds out-of-line annotations from the specified schema
+        /// if they are referenced in the <paramref name="includeAnnotationsIndex"/> cache.
+        /// </summary>
+        /// <param name="schema">The schema to add annotations from.</param>
+        /// <param name="schemaWrapper">The <see cref="CsdlSemanticsSchema"/> wrapper for the provided schema</param>
+        /// <param name="includeAnnotationsIndex">Cache of the schema's out-of-line <see cref="IEdmIncludeAnnotations"/>s indexed by the term namespace.
+        /// If this dictionary is non-empty, then only annotations that match
+        /// the references will be added. If it's empty, no annotations will be added. If it's null, all annotations
+        /// will be added unconditionally.</param>
         private void AddOutOfLineAnnotationsFromSchema(
             CsdlSchema schema,
             CsdlSemanticsSchema schemaWrapper,
             Dictionary<string, List<IEdmIncludeAnnotations>> includeAnnotationsIndex)
         {
+            if (includeAnnotationsIndex?.Count == 0)
+            {
+                return;
+            }
+
             foreach (CsdlAnnotations schemaOutOfLineAnnotations in schema.OutOfLineAnnotations)
             {
                 string target = this.ReplaceAlias(schemaOutOfLineAnnotations.Target);
@@ -729,8 +745,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
             string qualifiedTerm = this.ReplaceAlias(annotation.Term);
             string targetNamespace;
-            EdmUtil.TryGetNamespaceNameFromQualifiedName(target, out targetNamespace, out string baseTarget);
-            if (EdmUtil.TryGetNamespaceNameFromQualifiedName(qualifiedTerm, out string termNamespace, out string baseTerm))
+            EdmUtil.TryGetNamespaceNameFromQualifiedName(target, out targetNamespace, out _);
+            if (EdmUtil.TryGetNamespaceNameFromQualifiedName(qualifiedTerm, out string termNamespace, out _))
             {
                 if (includeAnnotationsIndex.TryGetValue(termNamespace, out List<IEdmIncludeAnnotations> includeAnnotations))
                 {
@@ -746,4 +762,3 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         }
     }
 }
-
