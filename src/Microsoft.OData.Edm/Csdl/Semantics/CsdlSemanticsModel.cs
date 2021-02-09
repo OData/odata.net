@@ -545,6 +545,12 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             }
         }
 
+        /// <summary>
+        /// Adds the specified <paramref name="schema"/> to this model if 
+        /// the schema's namespace or annotations are referenced by the parent model
+        /// </summary>
+        /// <param name="schema">The schema to add</param>
+        /// <param name="parentReferences">The <see cref="IEdmReference"/>s of the parent model.</param>
         private void AddSchemaIfReferenced(CsdlSchema schema, IEnumerable<IEdmReference> parentReferences)
         {
             CsdlSemanticsSchema schemaWrapper = new CsdlSemanticsSchema(this, schema);
@@ -636,19 +642,23 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             }
         }
 
-        private void AddSchemaElements(CsdlSchema schema, CsdlSemanticsSchema schemaWrapper)
+        /// <summary>
+        /// Registers schema elements (entity types, operations, entity containers, etc.) from the
+        /// specified schema into the model.
+        /// </summary>
+        /// <param name="schemaWrapper">The <see cref="CsdlSemanticsSchema"/> to add elements from</param>
+        private void AddSchemaElements(CsdlSemanticsSchema schemaWrapper)
         {
             foreach (IEdmSchemaType type in schemaWrapper.Types)
             {
                 CsdlSemanticsStructuredTypeDefinition structuredType = type as CsdlSemanticsStructuredTypeDefinition;
                 if (structuredType != null)
                 {
-                    string baseTypeNamespace;
                     string baseTypeName;
                     string baseTypeFullName = ((CsdlNamedStructuredType)structuredType.Element).BaseTypeName;
                     if (baseTypeFullName != null)
                     {
-                        EdmUtil.TryGetNamespaceNameFromQualifiedName(baseTypeFullName, out baseTypeNamespace, out baseTypeName);
+                        EdmUtil.TryGetNamespaceNameFromQualifiedName(baseTypeFullName, out _, out baseTypeName);
                         if (baseTypeName != null)
                         {
                             List<IEdmStructuredType> derivedTypes;
@@ -719,6 +729,18 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             }
         }
 
+        /// <summary>
+        /// Filters the annotations of the specified <paramref name="csdlAnnotations"/>
+        /// and returns a copy containing only the annotations that match the
+        /// specified <see cref="IEdmIncludeAnnotations"/>
+        /// </summary>
+        /// <param name="csdlAnnotations"><see cref="CsdlAnnotations"/> containing the out-of-line annotations to filter</param>
+        /// <param name="target">The target of the out-of-line annotations with the alias namespace already resolved.</param>
+        /// <param name="includeAnnotationsIndex">Cache of the schema's out-of-line <see cref="IEdmIncludeAnnotations"/>s indexed by the term namespace.
+        /// If the dictionary is non-null, only annotations that match the references will be included.
+        /// If it's null, all annotations will be added unconditionally.</param>
+        /// <returns>A <see cref="CsdlAnnotations"/> object with the same target and qualifier as the original, but including
+        /// only the annotations that match the references in the <paramref name="includeAnnotationsIndex"/>.</returns>
         private CsdlAnnotations FilterIncludedAnnotations(
             CsdlAnnotations csdlAnnotations,
             string target,
@@ -734,6 +756,15 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return new CsdlAnnotations(filteredAnnotations, csdlAnnotations.Target, csdlAnnotations.Qualifier);
         }
 
+        /// <summary>
+        /// Checks whether the specified annoation should be included in the model based
+        /// on whether it matches any of the provided <see cref="IEdmIncludeAnnotations"/> references.
+        /// </summary>
+        /// <param name="annotation">The annotation to test</param>
+        /// <param name="target">The target of the annotation, with the alias already resolved if any</param>
+        /// <param name="includeAnnotationsIndex">Cache of the schema's out-of-line <see cref="IEdmIncludeAnnotations"/>s indexed by the term namespace.
+        /// The annotation should be included if it matches at least one of references in this cache.</param>
+        /// <returns>Whether or not the annotation should be included in the model.</returns>
         private bool ShouldIncludeAnnotation(
             CsdlAnnotation annotation,
             string target,
@@ -744,8 +775,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             // see: http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_IncludedAnnotations
 
             string qualifiedTerm = this.ReplaceAlias(annotation.Term);
-            string targetNamespace;
-            EdmUtil.TryGetNamespaceNameFromQualifiedName(target, out targetNamespace, out _);
+            EdmUtil.TryGetNamespaceNameFromQualifiedName(target, out string targetNamespace, out _);
             if (EdmUtil.TryGetNamespaceNameFromQualifiedName(qualifiedTerm, out string termNamespace, out _))
             {
                 if (includeAnnotationsIndex.TryGetValue(termNamespace, out List<IEdmIncludeAnnotations> includeAnnotations))
