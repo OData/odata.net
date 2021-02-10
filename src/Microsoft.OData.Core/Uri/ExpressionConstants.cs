@@ -239,5 +239,8 @@ namespace Microsoft.OData
 
         /// <summary>"expand" keyword for $apply.</summary>
         internal const string KeywordExpand = "expand";
+
+        /// <summary>"$this" keyword for expressions.</summary>
+        internal const string This = "$this";
     }
 }

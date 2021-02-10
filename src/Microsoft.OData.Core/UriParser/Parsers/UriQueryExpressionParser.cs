@@ -37,7 +37,8 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         private readonly HashSet<string> parameters = new HashSet<string>(StringComparer.Ordinal)
         {
-            ExpressionConstants.It
+            ExpressionConstants.It,
+            ExpressionConstants.This
         };
 
         /// <summary>

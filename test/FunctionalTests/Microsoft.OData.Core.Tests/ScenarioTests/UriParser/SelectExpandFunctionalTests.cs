@@ -1415,6 +1415,42 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void DollarThisinOrderByPrimitiveCollectionInsideSelectShouldReferenceSelectedItem()
+        {
+            // People?$select=RelatedSSNs($orderby=$this)
+            SelectExpandClause clause = RunParseSelectExpand("RelatedSSNs($orderby=$this)", "", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            IEdmTypeReference typeReference =
+                (
+                    (
+                        clause.SelectedItems.First() as PathSelectItem // $select=RelatedSSNs(...)
+                    ).OrderByOption.Expression as NonResourceRangeVariableReferenceNode // $orderby=$this
+                ).TypeReference;
+
+            Assert.Equal("Edm.String", typeReference.Definition.FullTypeName());
+        }
+
+        [Fact]
+        public void DollarThisinFilterInsideSelectShouldReferenceSelectedItem()
+        {
+            // People?$select=RelatedSSNs($orderby=$this)
+            SelectExpandClause clause = RunParseSelectExpand("RelatedSSNs($filter=endswith($this,'xyz'))", "", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            IEdmTypeReference typeReference =
+                (
+                    (
+                        (
+                            (
+                                clause.SelectedItems.First() as PathSelectItem // $select=RelatedSSNs(...)
+                            ).FilterOption.Expression as SingleValueFunctionCallNode // $filter=endswith($this,'xyz')
+                        ).Parameters.First() as ConvertNode // $this
+                    ).Source as NonResourceRangeVariableReferenceNode
+                ).TypeReference;
+
+            Assert.Equal("Edm.String", typeReference.Definition.FullTypeName());
+        }
+
+        [Fact]
         public void SelectAndExpandShouldFailOnSelectWrongComplexProperties()
         {
             Action parse = () => RunParseSelectExpand("Name,MyAddress/City/Street,MyDog", "MyDog($select=Color)", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
