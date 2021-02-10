@@ -23,10 +23,9 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         /// <returns>Null or a collection string of qualified type name.</returns>
         public static IEnumerable<string> GetVocabularyStringCollection(this IEdmModel model, IEdmVocabularyAnnotatable target, IEdmTerm term)
         {
-            if (model == null || target == null || term == null)
-            {
-                return null;
-            }
+            EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(target, "target");
+            EdmUtil.CheckArgumentNull(target, "term");
 
             IEdmVocabularyAnnotation annotation = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(target, term).FirstOrDefault();
             if (annotation != null)
@@ -38,7 +37,7 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
                 }
             }
 
-            return null;
+            return Enumerable.Empty<string>();
         }
     }
 }

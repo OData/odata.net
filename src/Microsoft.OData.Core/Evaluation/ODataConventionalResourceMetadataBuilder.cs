@@ -433,10 +433,11 @@ namespace Microsoft.OData.Evaluation
                 // by default, let's retrieve the content type from vocabulary annotation
                 var edmProperty = this.ResourceMetadataContext.SelectedStreamProperties[propertyName];
                 var mediaTypes = this.MetadataContext.Model.GetVocabularyStringCollection(edmProperty, CoreVocabularyModel.AcceptableMediaTypesTerm);
-                if (mediaTypes != null)
+                if (mediaTypes.Count() == 1)
                 {
-                    // TODO: Make sure we use ',' to concatant the multiple media types or pick the first one?
-                    streamPropertyValue.ContentType = string.Join(",", mediaTypes);
+                    // Be noted: AcceptableMediaTypes might have more than one media type,
+                    // Convention (default) behavior only works if AcceptableMediaTypes is a collection of one.
+                    streamPropertyValue.ContentType = mediaTypes.ElementAt(0);
                 }
 
                 return new ODataProperty { Name = propertyName, Value = streamPropertyValue };

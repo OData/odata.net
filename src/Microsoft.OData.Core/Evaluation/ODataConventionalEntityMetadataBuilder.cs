@@ -11,6 +11,7 @@ namespace Microsoft.OData.Evaluation
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Text;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Vocabularies.V1;
@@ -235,10 +236,11 @@ namespace Microsoft.OData.Evaluation
                 // from OData spec: Media entity types MAY specify a list of acceptable media types using an annotation with term Core.AcceptableMediaTypes
                 IEdmEntityType entityType = this.ResourceMetadataContext.ActualResourceType as IEdmEntityType;
                 var mediaTypes = this.MetadataContext.Model.GetVocabularyStringCollection(entityType, CoreVocabularyModel.AcceptableMediaTypesTerm);
-                if (mediaTypes != null)
+                if (mediaTypes.Count() == 1)
                 {
-                    // TODO: Make sure we use ',' to concatant the multiple media types or pick the first one?
-                    this.computedMediaResource.ContentType = string.Join(",", mediaTypes);
+                    // Be noted: AcceptableMediaTypes might have more than one media type,
+                    // Convention (default) behavior only works if AcceptableMediaTypes is a collection of one.
+                    this.computedMediaResource.ContentType = mediaTypes.ElementAt(0);
                 }
             }
 
@@ -440,10 +442,11 @@ namespace Microsoft.OData.Evaluation
                         // by default, let's retrieve the content type from vocabulary annotation
                         var edmProperty = projectedStreamProperties[missingStreamPropertyName];
                         var mediaTypes = this.MetadataContext.Model.GetVocabularyStringCollection(edmProperty, CoreVocabularyModel.AcceptableMediaTypesTerm);
-                        if (mediaTypes != null)
+                        if (mediaTypes.Count() == 1)
                         {
-                            // TODO: Make sure we use ',' to concatant the multiple media types or pick the first one?
-                            streamPropertyValue.ContentType = string.Join(",", mediaTypes);
+                            // Be noted: AcceptableMediaTypes might have more than one media type,
+                            // Convention (default) behavior only works if AcceptableMediaTypes is a collection of one.
+                            streamPropertyValue.ContentType = mediaTypes.ElementAt(0);
                         }
 
                         this.computedStreamProperties.Add(new ODataProperty { Name = missingStreamPropertyName, Value = streamPropertyValue });
