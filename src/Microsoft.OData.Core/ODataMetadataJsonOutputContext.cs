@@ -182,11 +182,7 @@ namespace Microsoft.OData
                 {
                     if (this.asynchronousOutputStream != null)
                     {
-                        this.asynchronousOutputStream.FlushAsync();
-                        this.asynchronousOutputStream.Dispose();
-
-                        this.jsonWriter.FlushAsync();
-                        this.jsonWriter.DisposeAsync();
+                        DisposeOutputStreamAsync().Wait();
                     }
                     else
                     {
@@ -228,6 +224,15 @@ namespace Microsoft.OData
 
                 throw new ODataException(Strings.ODataMetadataOutputContext_ErrorWritingMetadata(builder.ToString()));
             }
+        }
+
+        private async Task DisposeOutputStreamAsync()
+        {
+            await this.asynchronousOutputStream.FlushAsync().ConfigureAwait(false);
+            this.asynchronousOutputStream.Dispose();
+
+            await this.jsonWriter.FlushAsync().ConfigureAwait(false);
+            await this.jsonWriter.DisposeAsync().ConfigureAwait(false);
         }
     }
 }
