@@ -115,7 +115,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
     internal class XmlElementValueCollection : IEnumerable<XmlElementValue>
     {
-        private static readonly XmlElementValueCollection empty = new XmlElementValueCollection(new XmlElementValue[] { }, new XmlElementValue[] { }.ToLookup(value => value.Name));
+        private static readonly XmlElementValueCollection empty = new XmlElementValueCollection(new List<XmlElementValue>(), Enumerable.Empty<XmlElementValue>().ToLookup(value => value.Name));
 
         private readonly IList<XmlElementValue> values;
         private ILookup<string, XmlElementValue> nameLookup;

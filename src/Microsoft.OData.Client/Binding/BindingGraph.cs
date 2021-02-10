@@ -297,7 +297,7 @@ namespace Microsoft.OData.Client
             {
                 BindingEntityInfo.BindingPropertyInfo bpi = BindingEntityInfo.GetObservableProperties(parent.GetType(), this.observer.Context.Model)
                                                                              .Single(p => p.PropertyInfo.PropertyName == parentProperty);
-                Debug.Assert(bpi.PropertyKind == BindingPropertyKind.BindingPropertyKindDataServiceCollection, "parentProperty must refer to an DataServiceCollection");
+                Debug.Assert(bpi.PropertyKind == BindingPropertyKind.DataServiceCollection, "parentProperty must refer to an DataServiceCollection");
 
                 parent = bpi.PropertyInfo.GetValue(parent);
             }
@@ -582,7 +582,7 @@ namespace Microsoft.OData.Client
                 {
                     switch (bpi.PropertyKind)
                     {
-                        case BindingPropertyKind.BindingPropertyKindDataServiceCollection:
+                        case BindingPropertyKind.DataServiceCollection:
                             this.AddDataServiceCollection(
                                     entity,
                                     bpi.PropertyInfo.PropertyName,
@@ -591,7 +591,7 @@ namespace Microsoft.OData.Client
 
                             break;
 
-                        case BindingPropertyKind.BindingPropertyKindPrimitiveOrComplexCollection:
+                        case BindingPropertyKind.PrimitiveOrComplexCollection:
                             this.AddPrimitiveOrComplexCollection(
                                     entity,
                                     bpi.PropertyInfo.PropertyName,
@@ -599,7 +599,7 @@ namespace Microsoft.OData.Client
                                     bpi.PropertyInfo.PrimitiveOrComplexCollectionItemType);
                             break;
 
-                        case BindingPropertyKind.BindingPropertyKindEntity:
+                        case BindingPropertyKind.Entity:
                             this.AddEntity(
                                     entity,
                                     bpi.PropertyInfo.PropertyName,
@@ -610,7 +610,7 @@ namespace Microsoft.OData.Client
                             break;
 
                         default:
-                            Debug.Assert(bpi.PropertyKind == BindingPropertyKind.BindingPropertyKindComplex, "Must be complex type if PropertyKind is not entity, DataServiceCollection, or collection.");
+                            Debug.Assert(bpi.PropertyKind == BindingPropertyKind.Complex, "Must be complex type if PropertyKind is not entity, DataServiceCollection, or collection.");
                             this.AddComplexObject(
                                     entity,
                                     bpi.PropertyInfo.PropertyName,

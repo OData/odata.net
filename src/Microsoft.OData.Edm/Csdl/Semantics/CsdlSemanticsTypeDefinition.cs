@@ -20,10 +20,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         public abstract EdmTypeKind TypeKind { get; }
 
-        public EdmSchemaElementKind SchemaElementKind
-        {
-            get { return EdmSchemaElementKind.TypeDefinition; }
-        }
+        public virtual EdmSchemaElementKind SchemaElementKind => EdmSchemaElementKind.TypeDefinition;
 
         public override string ToString()
         {

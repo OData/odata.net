@@ -67,7 +67,7 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
             // core
             string coreVocabularies = allResources.FirstOrDefault(x => x.Contains("CoreVocabularies.xml"));
             Debug.Assert(coreVocabularies != null, "CoreVocabularies.xml: not found.");
-            CoreModel = LoadSchemaEdmModel(assembly, coreVocabularies, new IEdmModel[] { });
+            CoreModel = LoadSchemaEdmModel(assembly, coreVocabularies, Enumerable.Empty<IEdmModel>());
 
             // Authorization
             string authorizationVocabularies = allResources.FirstOrDefault(x => x.Contains("AuthorizationVocabularies.xml"));

@@ -749,7 +749,7 @@ namespace Microsoft.OData.Client.Metadata
             {
                 Type propertyType = propertyInfo.PropertyType;
                 
-                // Handle Dictionary<,> , SortedDictionary<,> , ConcurrentDictionary<,> , etc - must also have parameterless constructor                
+                // Handle Dictionary<,> , SortedDictionary<,> , ConcurrentDictionary<,> , etc - must also have parameterless constructor
                 if (!propertyType.IsInterface() && !propertyType.IsAbstract() && propertyType.GetInstanceConstructor(true, new Type[0]) != null)
                 {
                     containerProperty = (IDictionary<string, object>)Util.ActivatorCreateInstance(propertyType);

@@ -196,7 +196,7 @@ namespace Microsoft.OData.Client
 
                         switch (bpi.PropertyKind)
                         {
-                            case BindingPropertyKind.BindingPropertyKindDataServiceCollection:
+                            case BindingPropertyKind.DataServiceCollection:
                                 // If collection is already being tracked by the graph we can not have > 1 links to it.
                                 if (sourcePropertyValue != null)
                                 {
@@ -234,7 +234,7 @@ namespace Microsoft.OData.Client
 
                                 break;
 
-                            case BindingPropertyKind.BindingPropertyKindPrimitiveOrComplexCollection:
+                            case BindingPropertyKind.PrimitiveOrComplexCollection:
                                 // Attach the newly assigned collection
                                 if (sourcePropertyValue != null)
                                 {
@@ -251,7 +251,7 @@ namespace Microsoft.OData.Client
                                         sourcePropertyValue);
                                 break;
 
-                            case BindingPropertyKind.BindingPropertyKindEntity:
+                            case BindingPropertyKind.Entity:
                                 // Add the newly added entity to the graph, or update entity reference.
                                 this.bindingGraph.AddEntity(
                                         source,
@@ -262,7 +262,7 @@ namespace Microsoft.OData.Client
                                 break;
 
                             default:
-                                Debug.Assert(bpi.PropertyKind == BindingPropertyKind.BindingPropertyKindComplex, "Must be complex type if PropertyKind is not entity or collection.");
+                                Debug.Assert(bpi.PropertyKind == BindingPropertyKind.Complex, "Must be complex type if PropertyKind is not entity or collection.");
 
                                 // Attach the newly assigned complex type object and it's child complex typed objects.
                                 if (sourcePropertyValue != null)

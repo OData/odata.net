@@ -525,7 +525,7 @@ namespace Microsoft.OData.Client
             {
                 HeaderCollection headers = new HeaderCollection(this.batchResponseMessage);
                 int statusCode = this.batchResponseMessage == null ? (int)HttpStatusCode.InternalServerError : (int)this.batchResponseMessage.StatusCode;
-                DataServiceResponse response = new DataServiceResponse(headers, statusCode, new OperationResponse[0], this.IsBatchRequest);
+                DataServiceResponse response = new DataServiceResponse(headers, statusCode, Enumerable.Empty<OperationResponse>(), this.IsBatchRequest);
                 throw new DataServiceRequestException(Strings.DataServiceException_GeneralError, ex, response);
             }
             finally

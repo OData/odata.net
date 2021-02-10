@@ -526,7 +526,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         private class ElementScope
         {
-            private static readonly IList<XmlElementValue> EmptyValues = new System.Collections.ObjectModel.ReadOnlyCollection<XmlElementValue>(new XmlElementValue[] { });
+            private static readonly IList<XmlElementValue> EmptyValues = new System.Collections.ObjectModel.ReadOnlyCollection<XmlElementValue>(new List<XmlElementValue>());
 
             private List<XmlElementValue> childValues;
 

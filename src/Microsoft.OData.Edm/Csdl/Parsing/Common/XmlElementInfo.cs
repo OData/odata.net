@@ -78,7 +78,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         internal IList<XmlAnnotationInfo> Annotations
         {
-            get { return this.annotations ?? ((IList<XmlAnnotationInfo>)new XmlAnnotationInfo[] { }); }
+            get { return this.annotations ?? new List<XmlAnnotationInfo>(); }
         }
 
         XmlAttributeInfo IXmlElementAttributes.this[string attributeName]

@@ -44,7 +44,7 @@ namespace Microsoft.OData.UriParser
         {
             this.selectTerms = selectTerms != null ?
                 new ReadOnlyEnumerableForUriParser<SelectTermToken>(selectTerms) :
-                new ReadOnlyEnumerableForUriParser<SelectTermToken>(new SelectTermToken[0]);
+                new ReadOnlyEnumerableForUriParser<SelectTermToken>(Enumerable.Empty<SelectTermToken>());
         }
 
         /// <summary>

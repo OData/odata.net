@@ -13,6 +13,7 @@ namespace Microsoft.OData.UriParser
     #region Namespaces
 
     using System.Collections.Generic;
+    using System.Linq;
 
     #endregion Namespaces
 
@@ -41,7 +42,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="expandTerms">The properties according to which to expand the results.</param>
         public ExpandToken(IEnumerable<ExpandTermToken> expandTerms)
         {
-            this.expandTerms = new ReadOnlyEnumerableForUriParser<ExpandTermToken>(expandTerms ?? new ExpandTermToken[0]);
+            this.expandTerms = new ReadOnlyEnumerableForUriParser<ExpandTermToken>(expandTerms ?? Enumerable.Empty<ExpandTermToken>());
         }
 
         /// <summary>

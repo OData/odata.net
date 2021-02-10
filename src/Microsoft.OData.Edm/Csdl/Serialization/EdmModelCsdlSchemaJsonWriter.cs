@@ -1264,7 +1264,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             return sb.ToString();
         }
 
-        protected string EnumMemberExpressionAsJson(IEnumerable<IEdmEnumMember> members)
+        protected static string EnumMemberExpressionAsJson(IEnumerable<IEdmEnumMember> members)
         {
             IList<string> memberList = new List<string>();
             foreach (var member in members)

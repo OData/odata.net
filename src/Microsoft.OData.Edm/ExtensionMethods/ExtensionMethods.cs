@@ -824,7 +824,7 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(model, "model");
 
-            IEnumerable<IEdmSchemaElement> result = new IEdmSchemaElement[] { };
+            IEnumerable<IEdmSchemaElement> result = Enumerable.Empty<IEdmSchemaElement>();
             foreach (IEdmModel referencedModel in model.ReferencedModels)
             {
                 result = result.Concat(referencedModel.SchemaElements);

@@ -21,16 +21,16 @@ namespace Microsoft.OData.Client
     internal enum BindingPropertyKind
     {
         /// <summary>Property type is a complex type.</summary>
-        BindingPropertyKindComplex,
+        Complex,
 
         /// <summary>Property type is an entity type with keys.</summary>
-        BindingPropertyKindEntity,
+        Entity,
 
         /// <summary>Property is a DataServiceCollection.</summary>
-        BindingPropertyKindDataServiceCollection,
+        DataServiceCollection,
 
         /// <summary>Property is a collection of primitives or complex types.</summary>
-        BindingPropertyKindPrimitiveOrComplexCollection
+        PrimitiveOrComplexCollection
     }
 
     /// <summary>Cache of information about entity types and their observable properties</summary>
@@ -327,24 +327,24 @@ namespace Microsoft.OData.Client
                 else if (p.IsPrimitiveOrEnumOrComplexCollection)
                 {
                     Debug.Assert(!BindingEntityInfo.IsDataServiceCollection(propertyType, model), "DataServiceCollection cannot be the type that backs collections of primitives or complex types.");
-                    bpi = new BindingPropertyInfo { PropertyKind = BindingPropertyKind.BindingPropertyKindPrimitiveOrComplexCollection };
+                    bpi = new BindingPropertyInfo { PropertyKind = BindingPropertyKind.PrimitiveOrComplexCollection };
                 }
                 else if (p.IsEntityCollection)
                 {
                     if (BindingEntityInfo.IsDataServiceCollection(propertyType, model))
                     {
-                        bpi = new BindingPropertyInfo { PropertyKind = BindingPropertyKind.BindingPropertyKindDataServiceCollection };
+                        bpi = new BindingPropertyInfo { PropertyKind = BindingPropertyKind.DataServiceCollection };
                     }
                 }
                 else if (BindingEntityInfo.IsEntityType(propertyType, model))
                 {
-                    bpi = new BindingPropertyInfo { PropertyKind = BindingPropertyKind.BindingPropertyKindEntity };
+                    bpi = new BindingPropertyInfo { PropertyKind = BindingPropertyKind.Entity };
                 }
                 else if (BindingEntityInfo.CanBeComplexType(propertyType))
                 {
                     // Add complex types and nothing else.
                     Debug.Assert(!p.IsKnownType, "Known types do not implement INotifyPropertyChanged.");
-                    bpi = new BindingPropertyInfo { PropertyKind = BindingPropertyKind.BindingPropertyKindComplex };
+                    bpi = new BindingPropertyInfo { PropertyKind = BindingPropertyKind.Complex };
                 }
 
                 if (bpi != null)
@@ -354,8 +354,8 @@ namespace Microsoft.OData.Client
                     // For entity types, all of the above types of properties are interesting.
                     // For complex types, only observe collections and complex type properties.
                     if (bindingEntityInfo.ClientType.IsEntityType ||
-                        bpi.PropertyKind == BindingPropertyKind.BindingPropertyKindComplex ||
-                        bpi.PropertyKind == BindingPropertyKind.BindingPropertyKindPrimitiveOrComplexCollection)
+                        bpi.PropertyKind == BindingPropertyKind.Complex ||
+                        bpi.PropertyKind == BindingPropertyKind.PrimitiveOrComplexCollection)
                     {
                         bindingEntityInfo.ObservableProperties.Add(bpi);
                     }

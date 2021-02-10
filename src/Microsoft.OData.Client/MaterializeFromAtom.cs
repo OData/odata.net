@@ -11,10 +11,11 @@ namespace Microsoft.OData.Client
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Xml;
     using Microsoft.OData.Client.Materialization;
     using Microsoft.OData.Client.Metadata;
-    using System.Diagnostics;
-    using System.Xml;
     using Microsoft.OData;
 
     #endregion Namespaces
@@ -541,7 +542,7 @@ namespace Microsoft.OData.Client
             internal ResultsWrapper(DataServiceContext context, IEnumerable results, DataServiceQueryContinuation continuation)
             {
                 this.context = context;
-                this.results = results ?? new object[0];
+                this.results = results ?? Enumerable.Empty<object>();
                 this.continuation = continuation;
             }
 
