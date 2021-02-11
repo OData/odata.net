@@ -581,12 +581,12 @@ namespace Microsoft.OData
 
             if (leftRangeVariableNode != null && IsDifferentSource(filterClauseRangeVariable, leftRangeVariableNode))
             {
-                leftBinary = "$it/" + leftBinary;
+                leftBinary = ExpressionConstants.It + ExpressionConstants.SymbolForwardSlash + leftBinary;
             }
 
             if (rightRangeVariableNode != null && IsDifferentSource(filterClauseRangeVariable, rightRangeVariableNode))
             {
-                rightBinary = "$it/" + rightBinary;
+                rightBinary = ExpressionConstants.It + ExpressionConstants.SymbolForwardSlash + rightBinary;
             }
 
             return leftBinary + ' ' + binaryOperator + ' ' + rightBinary;
@@ -611,9 +611,10 @@ namespace Microsoft.OData
 
             if (leftRangeVariableNode != null && IsDifferentSource(filterClauseRangeVariable, leftRangeVariableNode))
             {
-                leftIn = "$it/" + leftIn;
+                leftIn = ExpressionConstants.It + ExpressionConstants.SymbolForwardSlash + leftIn;
                 translatedNode = leftIn + inOperator + rightIn;
             }
+
             return translatedNode;
         }
 
@@ -636,9 +637,10 @@ namespace Microsoft.OData
 
             if (leftRangeVariableNode != null && IsDifferentSource(filterClauseRangeVariable, leftRangeVariableNode))
             {
-                leftAnyNodeSubstring = "$it/" + leftAnyNodeSubstring;
+                leftAnyNodeSubstring = ExpressionConstants.It + ExpressionConstants.SymbolForwardSlash + leftAnyNodeSubstring;
                 translatedNode = leftAnyNodeSubstring + slashAny + rightAnyNodeSubstring;
             }
+
             return translatedNode;
         }
 
@@ -656,15 +658,17 @@ namespace Microsoft.OData
             char[] separators = { '(', ')' };
             string[] subtrings = translatedNode.Trim().Split(separators, StringSplitOptions.RemoveEmptyEntries);
             string withinBrackets = subtrings[1];
-            string[] parameters = withinBrackets.Trim().Split(',');
+            char[] parameterSeparators = { ',' };
+            string[] parameters = withinBrackets.Trim().Split(parameterSeparators, StringSplitOptions.RemoveEmptyEntries);
             string leftParameter = parameters[0];
             string rightParameter = parameters.Length == 2 ? parameters[1] : String.Empty;
 
             if (firstParameterRangeVariableNode != null && IsDifferentSource(filterClauseRangeVariable, firstParameterRangeVariableNode))
             {
-                leftParameter = "$it/" + leftParameter;
+                leftParameter = ExpressionConstants.It + ExpressionConstants.SymbolForwardSlash + leftParameter;
                 translatedNode = parameters.Length == 1 ? subtrings[0] + '(' + leftParameter + ')' : subtrings[0] + '(' + leftParameter + ',' + rightParameter + ')';
             }
+
             return translatedNode;
         }
 
@@ -681,8 +685,9 @@ namespace Microsoft.OData
 
             if (rangeVariableNode != null && IsDifferentSource(filterClauseRangeVariable, rangeVariableNode))
             {
-                translatedNode = "$it/" + translatedNode;
+                translatedNode = ExpressionConstants.It + ExpressionConstants.SymbolForwardSlash + translatedNode;
             }
+
             return translatedNode;
         }
 
@@ -721,6 +726,7 @@ namespace Microsoft.OData
             }
 
             orderByClause = orderByClause.ThenBy;
+
             if (orderByClause == null)
             {
                 return expr;
