@@ -11,8 +11,10 @@ namespace Microsoft.OData.Evaluation
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Text;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.Edm.Vocabularies.V1;
     #endregion
 
     /// <summary>
@@ -230,6 +232,19 @@ namespace Microsoft.OData.Evaluation
             {
                 this.computedMediaResource = new ODataStreamReferenceValue();
                 this.computedMediaResource.SetMetadataBuilder(this, /*propertyName*/ null);
+
+                // from OData spec: Media entity types MAY specify a list of acceptable media types using an annotation with term Core.AcceptableMediaTypes
+                IEdmEntityType entityType = this.ResourceMetadataContext.ActualResourceType as IEdmEntityType;
+                if (entityType != null)
+                {
+                    var mediaTypes = this.MetadataContext.Model.GetVocabularyStringCollection(entityType, CoreVocabularyModel.AcceptableMediaTypesTerm);
+                    if (mediaTypes.Count() == 1)
+                    {
+                        // Be noted: AcceptableMediaTypes might have more than one media type,
+                        // Convention (default) behavior only works if AcceptableMediaTypes is a collection of one.
+                        this.computedMediaResource.ContentType = mediaTypes.ElementAt(0);
+                    }
+                }
             }
 
             return this.computedMediaResource;
@@ -426,6 +441,17 @@ namespace Microsoft.OData.Evaluation
                     {
                         ODataStreamReferenceValue streamPropertyValue = new ODataStreamReferenceValue();
                         streamPropertyValue.SetMetadataBuilder(this, missingStreamPropertyName);
+
+                        // by default, let's retrieve the content type from vocabulary annotation
+                        var edmProperty = projectedStreamProperties[missingStreamPropertyName];
+                        var mediaTypes = this.MetadataContext.Model.GetVocabularyStringCollection(edmProperty, CoreVocabularyModel.AcceptableMediaTypesTerm);
+                        if (mediaTypes.Count() == 1)
+                        {
+                            // Be noted: AcceptableMediaTypes might have more than one media type,
+                            // Convention (default) behavior only works if AcceptableMediaTypes is a collection of one.
+                            streamPropertyValue.ContentType = mediaTypes.ElementAt(0);
+                        }
+
                         this.computedStreamProperties.Add(new ODataProperty { Name = missingStreamPropertyName, Value = streamPropertyValue });
                     }
                 }

@@ -1181,6 +1181,8 @@ namespace Microsoft.OData.Tests.Evaluation
         public IDictionary<string, IEdmStructuralProperty> SelectedStreamProperties { get; set; }
 
         public IEnumerable<IEdmOperation> SelectedBindableOperations { get; set; }
+
+        public IEdmStructuredType ActualResourceType { get; set; }
     }
 
     internal class TestFeedAndEntryTypeContext : IODataResourceTypeContext

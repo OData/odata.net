@@ -90,6 +90,11 @@ namespace Microsoft.OData.Evaluation
         }
 
         /// <summary>
+        /// The actual structured type of the resource.
+        /// </summary>
+        public IEdmStructuredType ActualResourceType { get; set; }
+
+        /// <summary>
         /// The actual structured type of the resource, i.e. ODataResource.TypeName.
         /// </summary>
         public abstract string ActualResourceTypeName { get; }
@@ -143,10 +148,16 @@ namespace Microsoft.OData.Evaluation
         {
             if (serializationInfo != null)
             {
-                return new ODataResourceMetadataContextWithoutModel(resource, typeContext, serializationInfo, requiresId);
+                return new ODataResourceMetadataContextWithoutModel(resource, typeContext, serializationInfo, requiresId)
+                {
+                    ActualResourceType = actualResourceType
+                };
             }
 
-            return new ODataResourceMetadataContextWithModel(resource, typeContext, actualResourceType, metadataContext, selectedProperties, metadataSelector, requiresId);
+            return new ODataResourceMetadataContextWithModel(resource, typeContext, actualResourceType, metadataContext, selectedProperties, metadataSelector, requiresId)
+            {
+                ActualResourceType = actualResourceType
+            };
         }
 
         /// <summary>

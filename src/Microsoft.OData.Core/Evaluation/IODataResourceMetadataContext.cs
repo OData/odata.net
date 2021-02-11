@@ -28,6 +28,11 @@ namespace Microsoft.OData.Evaluation
         IODataResourceTypeContext TypeContext { get; }
 
         /// <summary>
+        /// The actual structured type of the resource.
+        /// </summary>
+        IEdmStructuredType ActualResourceType { get; }
+
+        /// <summary>
         /// The actual structured type of the resource, i.e. ODataResource.TypeName.
         /// </summary>
         string ActualResourceTypeName { get; }
