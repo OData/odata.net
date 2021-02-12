@@ -1572,7 +1572,7 @@ namespace Microsoft.OData.Metadata
                     IEdmStructuredType untypedType = type as IEdmStructuredType;
                     if (untypedType != null)
                     {
-                        return new EdmUntypedStructuredTypeReference(untypedType);
+                        return new EdmUntypedStructuredTypeReference(untypedType, nullable);
                     }
 
                     return new EdmUntypedTypeReference((IEdmUntypedType)type);

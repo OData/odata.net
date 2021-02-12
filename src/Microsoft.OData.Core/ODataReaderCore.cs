@@ -739,7 +739,7 @@ namespace Microsoft.OData
             ODataTypeAnnotation typeAnnotation;
             EdmTypeKind targetTypeKind;
             IEdmStructuredTypeReference targetResourceTypeReference =
-                (IEdmStructuredTypeReference)this.inputContext.MessageReaderSettings.Validator.ResolvePayloadTypeNameAndComputeTargetType(
+                this.inputContext.MessageReaderSettings.Validator.ResolvePayloadTypeNameAndComputeTargetType(
                     EdmTypeKind.None,
                     /*expectStructuredType*/ true,
                     /*defaultPrimitivePayloadType*/ null,
@@ -748,7 +748,7 @@ namespace Microsoft.OData
                     this.inputContext.Model,
                     () => EdmTypeKind.Entity,
                     out targetTypeKind,
-                    out typeAnnotation);
+                    out typeAnnotation) as IEdmStructuredTypeReference;
 
             IEdmStructuredType targetResourceType = null;
             ODataResourceBase resource = this.Item as ODataResourceBase;
@@ -765,6 +765,12 @@ namespace Microsoft.OData
             else if (resourceTypeNameFromPayload != null)
             {
                 resource.TypeName = resourceTypeNameFromPayload;
+            }
+            else if (this.CurrentResourceTypeReference.IsUntyped())
+            {
+                targetResourceTypeReference = this.CurrentResourceTypeReference.IsNullable ?
+                    EdmUntypedStructuredTypeReference.NullableTypeReference : 
+                    EdmUntypedStructuredTypeReference.NonNullableTypeReference;
             }
 
             // Set the current resource type since the type might be derived from the expected one.

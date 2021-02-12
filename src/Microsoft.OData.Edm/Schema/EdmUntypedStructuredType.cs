@@ -18,6 +18,11 @@ namespace Microsoft.OData.Edm
         private readonly string fullName;
 
         /// <summary>
+        /// The core Edm.Untyped singleton.
+        /// </summary>
+        public static readonly EdmUntypedStructuredType Instance = new EdmUntypedStructuredType();
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="EdmStructuredType"/> class.
         /// </summary>
         /// <param name="namespaceName">The namespace this type belongs to.</param>
