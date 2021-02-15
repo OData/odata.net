@@ -1433,7 +1433,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void DollarThisinFilterInsideSelectShouldReferenceSelectedItem()
         {
-            // People?$select=RelatedSSNs($orderby=$this)
+            // People?$select=RelatedSSNs($filter=endswith($this,'xyz'))
             SelectExpandClause clause = RunParseSelectExpand("RelatedSSNs($filter=endswith($this,'xyz'))", "", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
             IEdmTypeReference typeReference =

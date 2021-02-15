@@ -299,6 +299,24 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Fact]
+        public void ParseOrderByThisInSelectWorks()
+        {
+            // Arrange & Act
+            SelectToken selectToken = ParseSelectClause("Emails($orderby=$this)");
+
+            // Assert
+            Assert.NotNull(selectToken);
+            SelectTermToken selectTermToken = Assert.Single(selectToken.SelectTerms);
+            selectTermToken.PathToProperty.ShouldBeNonSystemToken("Emails");
+            Assert.NotNull(selectTermToken.OrderByOptions);
+            OrderByToken orderBy = Assert.Single(selectTermToken.OrderByOptions);
+            orderBy.Expression.ShouldBeRangeVariableToken("$this");
+
+            // If you don't specify direction, it's Ascending by default.
+            Assert.Equal(OrderByDirection.Ascending, orderBy.Direction);
+        }
+
+        [Fact]
         public void ParseNestedSelectInSelectWorks()
         {
             // Arrange & Act
