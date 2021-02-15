@@ -9,11 +9,15 @@ namespace Microsoft.OData.Performance
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using global::Xunit;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.Xunit.Performance;
+    using BenchmarkDotNet.Attributes;
 
+    /// <summary>
+    /// Measures the performance of the ODataWriter when handling
+    /// different types of properties.
+    /// </summary>
+    [MemoryDiagnoser]
     public class WriteFeedPropertyTypeTests
     {
         private static readonly IEdmModel Model = TestUtils.GetEntityWithDifferentPropertyTypeModel();
@@ -21,81 +25,46 @@ namespace Microsoft.OData.Performance
         private static readonly int MaxStreamSize = 220000000;
         private static Stream WriteStream = new MemoryStream(MaxStreamSize);
 
-        [Benchmark]
-        [MeasureGCAllocations]
-        public void WriteFeedWithStringSet()
+        [Params("EntityStringSet",
+            "EntityInt32Set",
+            "EntityInt64Set",
+            "EntityDecimalSet",
+            "EntityDateTimeOffsetSet",
+            "EntityGuidSet",
+            "EntityMixedSet")]
+        public string propertyType;
+        public ODataResource entry;
+        public IEdmEntitySet entitySet;
+
+        [GlobalSetup]
+        public void SetupEntryAndEntitySet()
         {
-            TestAndMeasure("EntityStringSet");
+            entry = GenerateEntry(propertyType);
+            entitySet = Model.EntityContainer.FindEntitySet(propertyType);
+        }
+
+        [IterationSetup]
+        public void RewindStream()
+        {
+            // Reuse the same stream
+            WriteStream.Seek(0, SeekOrigin.Begin);
         }
 
         [Benchmark]
-        [MeasureGCAllocations]
-        public void WriteFeedWithInt32Set()
+        public void WriteFeed()
         {
-            TestAndMeasure("EntityInt32Set");
-        }
-
-        [Benchmark]
-        [MeasureGCAllocations]
-        public void WriteFeedWithInt64Set()
-        {
-            TestAndMeasure("EntityInt64Set");
-        }
-
-        [Benchmark]
-        [MeasureGCAllocations]
-        public void WriteFeedWithDecimalSet()
-        {
-            TestAndMeasure("EntityDecimalSet");
-        }
-
-        [Benchmark]
-        [MeasureGCAllocations]
-        public void WriteFeedWithDateTimeOffsetSet()
-        {
-            TestAndMeasure("EntityDateTimeOffsetSet");
-        }
-
-        [Benchmark]
-        [MeasureGCAllocations]
-        public void WriteFeedWithGuidSet()
-        {
-            TestAndMeasure("EntityGuidSet");
-        }
-
-        [Benchmark]
-        [MeasureGCAllocations]
-        public void WriteFeedWithMixedSet()
-        {
-            TestAndMeasure("EntityMixedSet");
-        }
-
-        private void TestAndMeasure(string propertyType)
-        {
-            var entry = GenerateEntry(propertyType);
-            var entitySet = Model.EntityContainer.FindEntitySet(propertyType);
-
-            foreach (var iteration in Benchmark.Iterations)
+            using (var messageWriter = ODataMessageHelper.CreateMessageWriter(WriteStream, Model, ODataMessageKind.Response, isFullValidation: true))
             {
-                // Reuse the same stream
-                WriteStream.Seek(0, SeekOrigin.Begin);
-
-                using (iteration.StartMeasurement())
+                ODataWriter writer = messageWriter.CreateODataResourceSetWriter(entitySet, entitySet.EntityType());
+                writer.WriteStart(new ODataResourceSet { Id = new Uri("http://www.odata.org/Perf.svc") });
+                for (int i = 0; i < NumberOfEntries; ++i)
                 {
-                    using (var messageWriter = ODataMessageHelper.CreateMessageWriter(WriteStream, Model, ODataMessageKind.Response, isFullValidation: true))
-                    {
-                        ODataWriter writer = messageWriter.CreateODataResourceSetWriter(entitySet, entitySet.EntityType());
-                        writer.WriteStart(new ODataResourceSet { Id = new Uri("http://www.odata.org/Perf.svc") });
-                        for (int i = 0; i < NumberOfEntries; ++i)
-                        {
-                            writer.WriteStart(entry);
-                            writer.WriteEnd();
-                        }
-
-                        writer.WriteEnd();
-                        writer.Flush();
-                    }
+                    writer.WriteStart(entry);
+                    writer.WriteEnd();
                 }
+
+                writer.WriteEnd();
+                writer.Flush();
             }
         }
 

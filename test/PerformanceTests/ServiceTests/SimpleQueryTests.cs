@@ -7,65 +7,57 @@
 namespace Microsoft.OData.Performance
 {
     using System;
-    using global::Xunit;
     using Microsoft.OData;
-    using Microsoft.Xunit.Performance;
+    using BenchmarkDotNet.Attributes;
+    using global::Xunit;
 
+    /// <summary>
+    /// Performance tests on making queries to a service.
+    /// These tests make simple queries (without query options) to the service
+    /// and verify the status code.
+    /// </summary>
+    [MemoryDiagnoser]
     public class SimpleQueryTests : IClassFixture<TestServiceFixture<SimpleQueryTests>>
     {
         TestServiceFixture<SimpleQueryTests> serviceFixture;
 
-        public SimpleQueryTests(TestServiceFixture<SimpleQueryTests> serviceFixture)
+        [GlobalSetup]
+        public void LaunchService()
         {
-            this.serviceFixture = serviceFixture;
+            serviceFixture = new TestServiceFixture<SimpleQueryTests>();
+        }
+
+        [GlobalCleanup]
+        public void KillService()
+        {
+            serviceFixture.Dispose();
         }
 
         [Benchmark]
-        [MeasureGCAllocations]
         public void QuerySimpleEntitySet()
         {
             int RequestsPerIteration = 100;
 
-            foreach (var iteration in Benchmark.Iterations)
+            for (int i = 0; i < RequestsPerIteration; i++)
             {
-                using (iteration.StartMeasurement())
-                {
-                    for (int i = 0; i < RequestsPerIteration; i++)
-                    {
-                        QueryAndVerify("SimplePeopleSet", "odata.maxpagesize=10");                        
-                    }
-                }
+                QueryAndVerify("SimplePeopleSet", "odata.maxpagesize=10");
             }
         }
 
         [Benchmark]
-        [MeasureGCAllocations]
         public void QueryLargeEntitySet()
         {
-            foreach (var iteration in Benchmark.Iterations)
-            {
-                using (iteration.StartMeasurement())
-                {
-                    QueryAndVerify("LargePeopleSet", "odata.maxpagesize=1000");
-                }
-            }
+            QueryAndVerify("LargePeopleSet", "odata.maxpagesize=1000");
         }
 
         [Benchmark]
-        [MeasureGCAllocations]
         public void QuerySingleEntity()
         {
             int RequestsPerIteration = 100;
 
-            foreach (var iteration in Benchmark.Iterations)
+            for (int i = 0; i < RequestsPerIteration; i++)
             {
-                using (iteration.StartMeasurement())
-                {
-                    for (int i = 0; i < RequestsPerIteration; i++)
-                    {
-                        QueryAndVerify("SimplePeopleSet(1)", null);
-                    }
-                }
+                QueryAndVerify("SimplePeopleSet(1)", null);
             }
         }
 

@@ -6,90 +6,93 @@
 
 namespace Microsoft.OData.Performance
 {
-    using System;
     using System.IO;
-    using global::Xunit;
     using Microsoft.OData.Edm;
     using Microsoft.OData;
-    using Microsoft.Xunit.Performance;
+    using BenchmarkDotNet.Attributes;
 
+    /// <summary>
+    /// Measures the performance and memory usage of ODataReader
+    /// when reading json payloads into a memory stream.
+    /// </summary>
+    [MemoryDiagnoser]
     public class ODataReaderFeedTests
     {
         private static readonly IEdmModel Model = TestUtils.GetAdventureWorksModel();
         private static readonly IEdmEntitySet TestEntitySet = Model.EntityContainer.FindEntitySet("Product");
         private static readonly IEdmEntityType TestEntityType = Model.FindDeclaredType("PerformanceServices.Edm.AdventureWorks.Product") as IEdmEntityType;
 
-        [Benchmark]
-        [MeasureGCAllocations]
-        public void ReadFeed()
-        { 
-            ReadFeedTestAndMeasure("Entry.json", 1000, true);
+        [Params(true, false)]
+        public bool _isFullValidation;
+
+        public Stream _stream;
+
+        [IterationCleanup]
+        public void Cleanup()
+        {
+            _stream.Dispose();
+        }
+
+        [IterationSetup(Target = nameof(ReadFeed))]
+        public void SetupForReadFeed()
+        {
+            SetupDataStream("Entry.json", 1000);
         }
 
         [Benchmark]
-        [MeasureGCAllocations]
+        public void ReadFeed()
+        {
+            RunReadFeedTest(_isFullValidation);
+        }
+
+        [IterationSetup(Target = nameof(ReadFeedIncludeSpatial))]
+        public void SetupForReadFeedIncludeSpatial()
+        {
+            SetupDataStream("EntryIncludeSpatial.json", 1000);
+        }
+
+        [Benchmark]
         public void ReadFeedIncludeSpatial()
         {
-            ReadFeedTestAndMeasure("EntryIncludeSpatial.json", 1000, true); 
+            RunReadFeedTest(_isFullValidation);
+        }
+
+        [IterationSetup(Target = nameof(ReadFeedWithExpansions))]
+        public void SetupForReadFeedWithExpansions()
+        {
+            SetupDataStream("EntryWithExpansions.json", 100);
         }
 
         [Benchmark]
-        [MeasureGCAllocations]
         public void ReadFeedWithExpansions()
         {
-            ReadFeedTestAndMeasure("EntryWithExpansions.json", 100, true);
+            RunReadFeedTest(_isFullValidation);
+        }
+
+        [IterationSetup(Target = nameof(ReadFeedIncludeSpatialWithExpansions))]
+        public void SetupForReadFeedIncludeSpatialWithExpansions()
+        {
+            SetupDataStream("EntryIncludeSpatialWithExpansions.json", 100);
         }
 
         [Benchmark]
-        [MeasureGCAllocations]
         public void ReadFeedIncludeSpatialWithExpansions()
         {
-            ReadFeedTestAndMeasure("EntryIncludeSpatialWithExpansions.json", 100, true);
+            RunReadFeedTest(_isFullValidation);
+        }
+        
+        
+        public void SetupDataStream(string templateFile, int entryCount)
+        {
+            _stream = new MemoryStream(PayloadGenerator.GenerateFeed(templateFile, entryCount));
         }
 
-        [Benchmark]
-        [MeasureGCAllocations]
-        public void ReadFeed_NoValidation()
+        public void RunReadFeedTest(bool isFullValidation)
         {
-            ReadFeedTestAndMeasure("Entry.json", 1000, false);
-        }
-
-        [Benchmark]
-        [MeasureGCAllocations]
-        public void ReadFeedIncludeSpatial_NoValidation()
-        {
-            ReadFeedTestAndMeasure("EntryIncludeSpatial.json", 1000, false);
-        }
-
-        [Benchmark]
-        [MeasureGCAllocations]
-        public void ReadFeedWithExpansions_NoValidation()
-        {
-            ReadFeedTestAndMeasure("EntryWithExpansions.json", 100, false);
-        }
-
-        [Benchmark]
-        [MeasureGCAllocations]
-        public void ReadFeedIncludeSpatialWithExpansions_NoValidation()
-        {
-            ReadFeedTestAndMeasure("EntryIncludeSpatialWithExpansions.json", 100, false);
-        }
-
-        private void ReadFeedTestAndMeasure(string templateFile, int entryCount, bool isFullValidation)
-        {
-            foreach (var iteration in Benchmark.Iterations)
+            using (var messageReader = ODataMessageHelper.CreateMessageReader(_stream, Model, ODataMessageKind.Response, isFullValidation))
             {
-                using (var stream = new MemoryStream(PayloadGenerator.GenerateFeed(templateFile, entryCount)))
-                {
-                    using (iteration.StartMeasurement())
-                    {
-                        using (var messageReader = ODataMessageHelper.CreateMessageReader(stream, Model, ODataMessageKind.Response, isFullValidation))
-                        {
-                            ODataReader feedReader = messageReader.CreateODataResourceSetReader(TestEntitySet, TestEntityType);
-                            while (feedReader.Read()) { }
-                        }
-                    }
-                }
+                ODataReader feedReader = messageReader.CreateODataResourceSetReader(TestEntitySet, TestEntityType);
+                while (feedReader.Read()) { }
             }
         }
     }

@@ -9,12 +9,18 @@ namespace Microsoft.OData.Performance
     using System;
     using System.IO;
     using System.Linq;
-    using global::Xunit;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Spatial;
-    using Microsoft.Xunit.Performance;
+    using BenchmarkDotNet.Attributes;
 
+    /// <summary>
+    /// Measures the performance and memory usage of the
+    /// ODataWriter on writing different kinds of payloads
+    /// to a memory stream.
+    /// </summary>
+
+    [MemoryDiagnoser]
     public class ODataWriterFeedTests
     {
         private static readonly IEdmModel Model = TestUtils.GetAdventureWorksModel();
@@ -23,57 +29,55 @@ namespace Microsoft.OData.Performance
 
         private static readonly Stream WriteStream = new MemoryStream(MaxStreamSize);
 
+        [IterationSetup]
+        public void RewindStream()
+        {
+            WriteStream.Seek(0, SeekOrigin.Begin);
+        }
+
         [Benchmark]
-        [MeasureGCAllocations]
         public void WriteFeed()
         {
             WriteFeedTestAndMeasure(expandNavigationLinks: false, includeSpatial: false, entryCount: 1000, isFullValidation: true);
         }
 
         [Benchmark]
-        [MeasureGCAllocations]
         public void WriteFeedIncludeSpatial()
         {
             WriteFeedTestAndMeasure(expandNavigationLinks: false, includeSpatial: true, entryCount: 1000, isFullValidation: true);
         }
 
         [Benchmark]
-        [MeasureGCAllocations]
         public void WriteFeedWithExpansions()
         {
             WriteFeedTestAndMeasure(expandNavigationLinks: true, includeSpatial: false, entryCount: 100, isFullValidation: true);
         }
 
         [Benchmark]
-        [MeasureGCAllocations]
         public void WriteFeedIncludeSpatialWithExpansions()
         {
             WriteFeedTestAndMeasure(expandNavigationLinks: true, includeSpatial: true, entryCount: 100, isFullValidation: true);
         }
 
         [Benchmark]
-        [MeasureGCAllocations]
         public void WriteFeed_NoValidation()
         {
             WriteFeedTestAndMeasure(expandNavigationLinks: false, includeSpatial: false, entryCount: 1000, isFullValidation: false);
         }
 
         [Benchmark]
-        [MeasureGCAllocations]
         public void WriteFeedIncludeSpatial_NoValidation()
         {
             WriteFeedTestAndMeasure(expandNavigationLinks: false, includeSpatial: true, entryCount: 1000, isFullValidation: false);
         }
 
         [Benchmark]
-        [MeasureGCAllocations]
         public void WriteFeedWithExpansions_NoValidation()
         {
             WriteFeedTestAndMeasure(expandNavigationLinks: true, includeSpatial: false, entryCount: 100, isFullValidation: false);
         }
 
         [Benchmark]
-        [MeasureGCAllocations]
         public void WriteFeedIncludeSpatialWithExpansions_NoValidation()
         {
             WriteFeedTestAndMeasure(expandNavigationLinks: true, includeSpatial: true, entryCount: 100, isFullValidation: false);
@@ -81,18 +85,9 @@ namespace Microsoft.OData.Performance
 
         private void WriteFeedTestAndMeasure(bool expandNavigationLinks, bool includeSpatial, int entryCount, bool isFullValidation)
         {
-            foreach (var iteration in Benchmark.Iterations)
+            using (var messageWriter = ODataMessageHelper.CreateMessageWriter(WriteStream, Model, ODataMessageKind.Request, isFullValidation))
             {
-                // Reuse the same stream
-                WriteStream.Seek(0, SeekOrigin.Begin);
-
-                using (iteration.StartMeasurement())
-                {
-                    using (var messageWriter = ODataMessageHelper.CreateMessageWriter(WriteStream, Model, ODataMessageKind.Request, isFullValidation))
-                    {
-                        WriterTestMetaProperties(messageWriter, expandNavigationLinks, includeSpatial, entryCount);
-                    }
-                }
+                WriterTestMetaProperties(messageWriter, expandNavigationLinks, includeSpatial, entryCount);
             }
         }
 

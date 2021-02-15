@@ -7,61 +7,53 @@
 namespace Microsoft.OData.Performance
 {
     using System;
+    using System.IO;
     using global::Xunit;
     using Microsoft.OData;
-    using Microsoft.Xunit.Performance;
+    using BenchmarkDotNet.Attributes;
 
+    /// <summary>
+    /// Performance tests making queries with different query options
+    /// to am OData service.
+    /// </summary>
+    [MemoryDiagnoser]
     public class QueryOptionTests : IClassFixture<TestServiceFixture<QueryOptionTests>>
     {
         TestServiceFixture<QueryOptionTests> serviceFixture;
 
-        public QueryOptionTests(TestServiceFixture<QueryOptionTests> serviceFixture)
+        [GlobalSetup]
+        public void SetupService()
         {
-            this.serviceFixture = serviceFixture;
+            serviceFixture = new TestServiceFixture<QueryOptionTests>();
+        }
+
+        [GlobalCleanup]
+        public void KillService()
+        {
+            serviceFixture.Dispose();
         }
 
         [Benchmark]
-        [MeasureGCAllocations]
         public void QueryOptionsWithoutExpand()
         {
             int RequestsPerIteration = 20;
 
-            foreach (var iteration in Benchmark.Iterations)
+            for (int i = 0; i < RequestsPerIteration; i++)
             {
-                using (iteration.StartMeasurement())
-                {
-                    for (int i = 0; i < RequestsPerIteration; i++)
-                    {
-                        QueryAndVerify("CompanySet?$filter=Revenue gt 500&$select=Name&$orderby=Revenue", "odata.maxpagesize=100");
-                    }
-                }
+                QueryAndVerify("CompanySet?$filter=Revenue gt 500&$select=Name&$orderby=Revenue", "odata.maxpagesize=100");
             }
         }
 
         [Benchmark]
-        [MeasureGCAllocations]
         public void QueryOptionsWithExpand()
         {
-            foreach (var iteration in Benchmark.Iterations)
-            {
-                using (iteration.StartMeasurement())
-                {
-                    QueryAndVerify("CompanySet?$filter=Revenue gt 500&$select=Name&$orderby=Revenue&$expand=Employees", "odata.maxpagesize=100");
-                }
-            }
+            QueryAndVerify("CompanySet?$filter=Revenue gt 500&$select=Name&$orderby=Revenue&$expand=Employees", "odata.maxpagesize=100");
         }
 
         [Benchmark]
-        [MeasureGCAllocations]
         public void NestedQueryOptionsWithExpand()
         {
-            foreach (var iteration in Benchmark.Iterations)
-            {
-                using (iteration.StartMeasurement())
-                {
-                    QueryAndVerify("CompanySet?$orderby=Name&$expand=Employees($filter=Age gt 40;$select=FirstName,Age;$orderby=Age)", "odata.maxpagesize=1000");
-                }
-            }
+            QueryAndVerify("CompanySet?$orderby=Name&$expand=Employees($filter=Age gt 40;$select=FirstName,Age;$orderby=Age)", "odata.maxpagesize=1000");
         }
 
         private void QueryAndVerify(string query, string preferHeader)
@@ -72,6 +64,7 @@ namespace Microsoft.OData.Performance
             {
                 requestMessage.SetHeader("Prefer", preferHeader);
             }
+
             var responseMessage = requestMessage.GetResponse();
             Assert.Equal(200, responseMessage.StatusCode);
         }

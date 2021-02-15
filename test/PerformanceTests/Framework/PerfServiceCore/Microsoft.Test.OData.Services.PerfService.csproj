@@ -8,12 +8,14 @@
     <OdlVersion Condition=" '$(OdlVersion)' == '' ">6.14</OdlVersion>
     <ProjectGuid>{6DA1260D-FE35-424B-ADFA-158368AD02DC}</ProjectGuid>
     <OutputType>Library</OutputType>
+    <OutputPath>bin\$(Configuration)</OutputPath>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.Test.OData.Services.PerfService</RootNamespace>
     <AssemblyName>Microsoft.Test.OData.Services.PerfService</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
   <ItemGroup>

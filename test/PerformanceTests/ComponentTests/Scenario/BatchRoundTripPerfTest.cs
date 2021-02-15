@@ -12,18 +12,13 @@ namespace Microsoft.OData.Performance
     using System.IO;
     using System.Globalization;
     using System.Text;
-    using global::Xunit.Abstractions;
-    using Microsoft.Xunit.Performance;
     using Microsoft.OData.Edm;
+    using BenchmarkDotNet.Attributes;
 
     /// <summary>
     /// Performance tests for Json & Multipart batch formats using big payload.
-    /// Currently Json tests can only be run locally since Json batch is introduced in OData 7.4.
-    /// To run Json tests locally:
-    /// 1. Enable the annotations {Benchmark, MeasureGCAllocations} of the Json batch tests.
-    /// 2. Run power shell command <code>PerformanceBuild.ps1 -Config Release</code> from the
-    ///   repository's root directory.
     /// </summary>
+    [MemoryDiagnoser]
     public class BatchRoundTripPerfTest
     {
         private const string serviceDocumentUri = "http://odata.org/test/";
@@ -42,13 +37,11 @@ namespace Microsoft.OData.Performance
         private readonly EdmEntityType webType;
 
         private readonly string aLongString;
-        private readonly ITestOutputHelper output;
 
         private string currentBatchContentType = null;
 
-        public BatchRoundTripPerfTest(ITestOutputHelper output)
+        public BatchRoundTripPerfTest()
         {
-            this.output = output;
 
             this.userModel = new EdmModel();
 
@@ -69,29 +62,25 @@ namespace Microsoft.OData.Performance
             this.aLongString = sb.ToString();
         }
 
-//        [Benchmark]
-//        [MeasureGCAllocations]
+        [Benchmark]
         public void JsonBatchNCreationsTest()
         {
             BatchNCreationsTest(batchContentTypeApplicationJson);
         }
 
-//        [Benchmark]
-//        [MeasureGCAllocations]
+        [Benchmark]
         public void JsonBatchNRoundTripsTest()
         {
             BatchNRoundTripsTest(batchContentTypeApplicationJson);
         }
 
         [Benchmark]
-        [MeasureGCAllocations]
         public void MultipartBatchNCreationsTest()
         {
             BatchNCreationsTest(batchContentTypeMultipartMime);
         }
 
         [Benchmark]
-        [MeasureGCAllocations]
         public void MultipartBatchNRoundTripsTest()
         {
             BatchNRoundTripsTest(batchContentTypeMultipartMime);
@@ -105,18 +94,11 @@ namespace Microsoft.OData.Performance
             {
                 // Create a batch which has memory foot print of about 10kB.
                 // Repeat N times.
-                const int N = 1 << 10;
-                foreach (var iteration in Benchmark.Iterations)
+                const int N = 1 << 10;for (int i = 0; i < N; i++)
                 {
-                    using (iteration.StartMeasurement())
-                    {
-
-                        for (int i = 0; i < N; i++)
-                        {
-                            PrintProgress(i);
-                            this.CreateBatchRequest(this.currentBatchContentType, NumOfUnitsPerBatch);
-                        }
-                    }
+                    // TODO: does printing progress affect results?
+                    //PrintProgress(i);
+                    this.CreateBatchRequest(this.currentBatchContentType, NumOfUnitsPerBatch);
                 }
             }
             finally
@@ -129,22 +111,17 @@ namespace Microsoft.OData.Performance
         {
             this.currentBatchContentType = batchContentType;
 
+            // TODO: check whether the try-catch impacts the results
+
             try
             {
-                const int N = 1<<10;
-                foreach (var iteration in Benchmark.Iterations)
+                const int N = 1 << 10;// Create a batch and exercise round trip.
+                // Repeat N times.
+                // Memory usage should stay relatively flat.
+                for (int i = 0; i < N; i++)
                 {
-                    using (iteration.StartMeasurement())
-                    {
-                        // Create a batch and exercise round trip.
-                        // Repeat N times.
-                        // Memory usage should stay relatively flat.
-                        for (int i = 0; i < N; i++)
-                        {
-                            PrintProgress(i);
-                            DoOneRoundTrip();
-                        }
-                    }
+                    //PrintProgress(i);
+                    DoOneRoundTrip();
                 }
             }
             finally
@@ -163,9 +140,10 @@ namespace Microsoft.OData.Performance
 
         private void PrintProgress(int i)
         {
+            // TODO: check whether printing progress impacts the results. Is there BDN-specific alternative?
             if (i%100 == 0)
             {
-                this.output.WriteLine("iteration: " + i);
+                Console.WriteLine("iteration: " + i);
             }
         }
 

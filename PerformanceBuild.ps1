@@ -1,7 +1,7 @@
 ﻿Param
 (
     [String]
-    $Config = "Debug"
+    $Config = "Release"
 )
 
 If("Debug","Release" -notcontains $Config)
@@ -10,73 +10,43 @@ If("Debug","Release" -notcontains $Config)
     exit
 }
 
-$ProgramFilesX86 = [Environment]::GetFolderPath("ProgramFilesX86")
-$EnlistmentRoot = Split-Path -Parent $MyInvocation.MyCommand.Definition
-$LogDir = $EnlistmentRoot + "\bin"
-$Msbuild= $ProgramFilesX86 + "\MSBuild\12.0\Bin\MSBuild.exe"
-$TestDir = $EnlistmentRoot  + "\bin\AnyCPU\$Config\Test\Desktop\Performance\bin"
-$PackagesPath = $EnlistmentRoot  + "\sln\packages\"
-
-$Item = Get-ChildItem -Filter xunit.performance.run.exe -Recurse -path $PackagesPath
-$PerfRunPath = $Item.FullName
-
-$Item = Get-ChildItem -Filter xunit.performance.analysis.exe -Recurse -path $PackagesPath
-$PerfAnalysisPath = $Item.FullName
-
-$Item = Get-ChildItem -Filter xunit.console.exe -Recurse -path $PackagesPath
-$XunitConsoleRunnerPath = $Item.FullName
-
-Function RunBuild ($sln, $type, $conf)
-{
-    Write-Host "*** Building $sln ***"
-    $slnpath = $EnlistmentRoot + "\sln\$sln"
-    & $Msbuild $slnpath /t:rebuild /m /nr:false /fl "/p:Platform=Any CPU" /p:Configuration=$conf /p:Desktop=true /flp:LogFile=$LogDir/msbuild.log /flp:Verbosity=Normal 1>$null
-    if($LASTEXITCODE -eq 0)
-    {
-        Write-Host "Build $sln SUCCESS" -ForegroundColor Green
-        write-host "`n"
-    }
-    else
-    {
-        Write-Host "Build $sln FAILED" -ForegroundColor Red
-        Write-Host "For more information, please open the following test result files:"
-        Write-Host "$LogDir\msbuild.log"
-        exit
-    }
-}
 
 Function ExecuteTests
 {
     Param(
-        [string]$testFolder,
-        [string]$perfRunPath,
-        [string]$perfAnalysisPath,
-        [string]$xunitConsoleRunnerPath
+        [string]$projectRoot,
+        [string]$config,
+        [string]$servicePath,
+        [string]$baseName  
     )
 
-    $location = Get-Location
-    Set-Location $testFolder
-    $testDlls = Get-ChildItem -Filter Microsoft.OData.Performance.*.Tests.dll
-    $time = Get-Date -Format yyyyMMdd.hhmmss
 
-    foreach ($dll in $testDlls)
+    $exeName = "$baseName.exe"
+    $exePath = "$projectRoot\bin\$config\$exeName";
+
+    Write-Host "*** Building tests project $projectRoot***"
+    dotnet build -c $config $projectRoot
+
+    if($LASTEXITCODE -eq 0)
     {
-        $dllName = $dll.Name; 
-        Write-Host "*** Run test for $dllName ***"
-        $rawName = $dllName.Replace("Microsoft.OData.Performance.","")
-        $rawName = $rawName.Replace(".Tests.dll", "")
-        $runid = $rawName + "." + $time
-        $result = $runid + ".xml"
-        $analysisResult = $runid + ".analysisResult.xml"
-        $resultPath = $testfolder + "\" + $analysisResult
-        &$perfRunPath $dll.Name -runner $xunitConsoleRunnerPath -runnerargs "-parallel none" -runid $runid
-        &$perfAnalysisPath $result -xml $analysisResult
-        Write-Host "See result for $dllName in $resultPath"
+        Write-Host "Build $projectRoot SUCCESS" -ForegroundColor Green
+        write-host "`n"
+    }
+    else
+    {
+        Write-Host "Build FAILED" -ForegroundColor Red
+        exit
     }
 
-    Set-Location $location
+    Write-Host "Running $exePath tests...";
+    &$exePath --filter * --envVars ServicePath:"$servicePath"
+
 }
 
-RunBuild 'OData.Tests.Performance.sln' $TestType $Config
 
-ExecuteTests $TestDir $PerfRunPath $PerfAnalysisPath $XunitConsoleRunnerPath
+$location = Get-Location
+$testServicePath = "$location\test\PerformanceTests\Framework\TestService"
+$perfTestsRoot = "$location\test\PerformanceTests"
+
+ExecuteTests "$perfTestsRoot\ComponentTests" $Config $testServicePath "Microsoft.OData.Performance.Component.Tests"
+ExecuteTests "$perfTestsRoot\ServiceTests" $Config $testServicePath "Microsoft.OData.Performance.Service.Tests"

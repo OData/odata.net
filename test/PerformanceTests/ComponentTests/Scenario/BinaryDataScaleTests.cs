@@ -8,12 +8,14 @@ namespace Microsoft.OData.Performance
 {
     using System;
     using System.IO;
-    using System.Linq;
-    using global::Xunit;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.Xunit.Performance;
+    using BenchmarkDotNet.Attributes;
 
+    /// <summary>
+    /// Performance tests for reading and writing large binary data
+    /// </summary>
+    [MemoryDiagnoser]
     public class BinaryDataScaleTests : WriteReadFeedTestBase
     {
         private static IEdmModel ExchangeAttachmentModel = TestUtils.GetExchangeAttachmentModel();
@@ -23,39 +25,35 @@ namespace Microsoft.OData.Performance
         private const int MaxStreamSize = 64 * 1024;
         private static Stream WriteStream = new MemoryStream(MaxStreamSize);
 
-        [Benchmark]
-        [MeasureGCAllocations]
-        public void WriteFeedBinaryData_4MB()
+
+        [IterationSetup(Target = nameof(WriteFeedBinaryData_4MB))]
+        public void SetupForWriteFeedBinaryData()
         {
-            Action<ODataWriter> writeEntry = (writer) => this.WriteEntry(writer, 4 * 1024);
-
-            foreach (var iteration in Benchmark.Iterations)
-            {
-                WriteStream.SetLength(0);
-
-                using (iteration.StartMeasurement())
-                {
-                    WriteFeed(WriteStream, ExchangeAttachmentModel, NumberOfEntries, writeEntry, TestEntitySet);
-                }
-            }
+            WriteStream.SetLength(0);
         }
 
         [Benchmark]
-        [MeasureGCAllocations]
+        public void WriteFeedBinaryData_4MB()
+        {
+            WriteFeed(WriteStream, ExchangeAttachmentModel, NumberOfEntries, Write4MB, TestEntitySet);
+        }
+
+        [GlobalSetup(Target = nameof(ReadFeedBinaryData_4MB))]
+        public void SetupForReadFeedBinaryData()
+        {
+            WriteStream.SetLength(0);
+            WriteFeed(WriteStream, ExchangeAttachmentModel, NumberOfEntries, Write4MB, TestEntitySet);
+        }
+
+        [Benchmark]
         public void ReadFeedBinaryData_4MB()
         {
-            Action<ODataWriter> writeEntry = (writer) => this.WriteEntry(writer, 4 * 1024);
+            ReadFeed(WriteStream, ExchangeAttachmentModel, TestEntitySet, TestEntityType);
+        }
 
-            WriteStream.SetLength(0);
-            WriteFeed(WriteStream, ExchangeAttachmentModel, NumberOfEntries, writeEntry, TestEntitySet);
-
-            foreach (var iteration in Benchmark.Iterations)
-            {
-                using (iteration.StartMeasurement())
-                {
-                    ReadFeed(WriteStream, ExchangeAttachmentModel, TestEntitySet, TestEntityType);
-                }
-            }
+        private void Write4MB(ODataWriter writer)
+        {
+            this.WriteEntry(writer, 4 * 1024);
         }
 
         private void WriteEntry(ODataWriter odataWriter, int dataSizeKb)

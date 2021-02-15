@@ -5,7 +5,7 @@
     <SignAssemblyAttribute>true</SignAssemblyAttribute>
      <TargetFrameworkProfile />
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net45;net472</TargetFrameworks>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
     <RestorePackages>true</RestorePackages>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>

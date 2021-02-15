@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AssemblyName>Microsoft.Test.OData.DependencyInjection</AssemblyName> 
-    <TargetFrameworks>net45;netcoreapp1.1;netcoreapp2.1;netcoreapp3.1</TargetFrameworks> 
+    <TargetFrameworks>net45;net472;netcoreapp1.1;netcoreapp2.1;netcoreapp3.1</TargetFrameworks> 
     <TestType Condition=" '$(TestType)' == '' ">Private</TestType>
     <RestorePackages>true</RestorePackages>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -12,7 +12,7 @@
 
   <Import Project="..\Build.props" />
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' or '$(TargetFramework)' == 'netcoreapp3.1' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'netcoreapp2.1' or '$(TargetFramework)' == 'netcoreapp3.1' ">
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.1' or '$(TargetFramework)' == 'net45'">
