@@ -653,6 +653,46 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         }
 
         [Fact]
+        public void ExpandWithDollarItInFilterBinaryOperatorShouldWork()
+        {
+            Uri queryUri = new Uri("People?$expand=MyDog($select=Color;$expand=LionsISaw($filter=ID1 eq $it/ID))", UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal("http://gobbledygook/People?$expand=" + Uri.EscapeDataString("MyDog($select=Color;$expand=LionsISaw($filter=ID1 eq $it/ID))"), actualUri.OriginalString);
+        }
+
+        [Fact]
+        public void ExpandWithDollarItInFilterComplexBinaryOperatorShouldWork()
+        {
+            Uri queryUri = new Uri("People?$expand=MyDog($filter=$it/MyAddress/City eq 'Seattle')", UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal("http://gobbledygook/People?$expand=" + Uri.EscapeDataString("MyDog($filter=$it/MyAddress/City eq 'Seattle')"), actualUri.OriginalString);
+        }
+
+        [Fact]
+        public void ExpandWithDollarItInFilterInOperatorShouldWork()
+        {
+            Uri queryUri = new Uri("People?$expand=MyDog($filter=$it/ID in ['1', '2', '3'])", UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal("http://gobbledygook/People?$expand=" + Uri.EscapeDataString("MyDog($filter=$it/ID in ['1', '2', '3'])"), actualUri.OriginalString);
+        }
+
+        [Fact]
+        public void ExpandWithDollarItInFilterAnyOperatorShouldWork()
+        {
+            Uri queryUri = new Uri("People?$expand=MyDog($filter=$it/PreviousAddresses/any(d:d/City eq 'Seattle'))", UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal("http://gobbledygook/People?$expand=" + Uri.EscapeDataString("MyDog($filter=$it/PreviousAddresses/any(d:d/City eq 'Seattle'))"), actualUri.OriginalString);
+        }
+
+        [Fact]
+        public void ExpandWithDollarItInFilterFunctionCallShouldWork()
+        {
+            Uri queryUri = new Uri("People?$expand=MyDog($filter=endswith($it/Name,'abcd'))", UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal("http://gobbledygook/People?$expand=" + Uri.EscapeDataString("MyDog($filter=endswith($it/Name,'abcd'))"), actualUri.OriginalString);
+        }
+
+        [Fact]
         public void ExpandWithNestedQueryOptionsShouldWork()
         {
             var ervFilter = new ResourceRangeVariable(ExpressionConstants.It, HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
