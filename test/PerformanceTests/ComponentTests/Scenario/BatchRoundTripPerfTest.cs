@@ -17,11 +17,6 @@ namespace Microsoft.OData.Performance
 
     /// <summary>
     /// Performance tests for Json & Multipart batch formats using big payload.
-    /// Currently Json tests can only be run locally since Json batch is introduced in OData 7.4.
-    /// To run Json tests locally:
-    /// 1. Enable the annotations {Benchmark, MeasureGCAllocations} of the Json batch tests.
-    /// 2. Run power shell command <code>PerformanceBuild.ps1 -Config Release</code> from the
-    ///   repository's root directory.
     /// </summary>
     [MemoryDiagnoser]
     public class BatchRoundTripPerfTest

@@ -14,6 +14,9 @@ namespace Microsoft.OData.Performance
     using Microsoft.Spatial;
     using BenchmarkDotNet.Attributes;
 
+    /// <summary>
+    /// Performance tests for reading and writing large data sets.
+    /// </summary>
     public class DataSizeScaleTests : WriteReadFeedTestBase
     {
         private static readonly IEdmModel AdventureWorksModel = TestUtils.GetAdventureWorksModel();

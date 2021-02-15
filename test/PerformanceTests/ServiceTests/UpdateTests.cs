@@ -11,6 +11,12 @@ namespace Microsoft.OData.Performance
     using Microsoft.OData;
     using BenchmarkDotNet.Attributes;
 
+    /// <summary>
+    /// Performance tests for OData POST, PUT, PATCH and DELETE
+    /// requests against a real (locally running) service.
+    /// These tests involve writing the request payload and sending the
+    /// request to the service as well as get the response status code.
+    /// </summary>
     [MemoryDiagnoser]
     public class UpdateTests : IClassFixture<TestServiceFixture<UpdateTests>>
     {

@@ -11,6 +11,11 @@ namespace Microsoft.OData.Performance
     using BenchmarkDotNet.Attributes;
     using global::Xunit;
 
+    /// <summary>
+    /// Performance tests on making queries to a service.
+    /// These tests make simple queries (without query options) to the service
+    /// and verify the status code.
+    /// </summary>
     [MemoryDiagnoser]
     public class SimpleQueryTests : IClassFixture<TestServiceFixture<SimpleQueryTests>>
     {

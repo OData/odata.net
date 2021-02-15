@@ -11,6 +11,11 @@ namespace Microsoft.OData.Performance
     using Microsoft.OData.UriParser;
     using BenchmarkDotNet.Attributes;
 
+    /// <summary>
+    /// Tests the performance of the URI parser
+    /// on parsing the uri and main query options
+    /// </summary>
+
     [MemoryDiagnoser]
     public class UriParserTests
     {
@@ -32,7 +37,6 @@ namespace Microsoft.OData.Performance
 
             int roundPerIteration = 1000;
 
-            // TODO: verify whether setting up these params prior to executing the method affects results
             TestExecution(query, roundPerIteration, parser => parser.ParseUri());
         }
 

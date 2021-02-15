@@ -12,6 +12,9 @@ namespace Microsoft.OData.Performance
     using System.Text;
     using System.Threading.Tasks;
 
+    /// <summary>
+    /// Generates OData payloads from a template
+    /// </summary>
     public static class PayloadGenerator
     {
         private static string prologueOfPayload = "{\"@odata.context\":\"http://odata.org/Perf.svc/$metadata#Product\",\"value\":[";

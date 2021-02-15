@@ -14,6 +14,12 @@ namespace Microsoft.OData.Performance
     using Microsoft.Spatial;
     using BenchmarkDotNet.Attributes;
 
+    /// <summary>
+    /// Measures the performance and memory usage of the
+    /// ODataWriter on writing different kinds of payloads
+    /// to a memory stream.
+    /// </summary>
+
     [MemoryDiagnoser]
     public class ODataWriterFeedTests
     {

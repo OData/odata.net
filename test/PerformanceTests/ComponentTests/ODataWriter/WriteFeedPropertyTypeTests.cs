@@ -13,6 +13,10 @@ namespace Microsoft.OData.Performance
     using Microsoft.OData.Edm;
     using BenchmarkDotNet.Attributes;
 
+    /// <summary>
+    /// Measures the performance of the ODataWriter when handling
+    /// different types of properties.
+    /// </summary>
     [MemoryDiagnoser]
     public class WriteFeedPropertyTypeTests
     {

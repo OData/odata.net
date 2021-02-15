@@ -11,6 +11,10 @@ namespace Microsoft.OData.Performance
     using Microsoft.OData;
     using BenchmarkDotNet.Attributes;
 
+    /// <summary>
+    /// Measures the performance and memory usage of ODataReader
+    /// when reading json payloads into a memory stream.
+    /// </summary>
     [MemoryDiagnoser]
     public class ODataReaderFeedTests
     {
@@ -38,7 +42,7 @@ namespace Microsoft.OData.Performance
         [Benchmark]
         public void ReadFeed()
         {
-            RunReadTest(_isFullValidation);
+            RunReadFeedTest(_isFullValidation);
         }
 
         [IterationSetup(Target = nameof(ReadFeedIncludeSpatial))]
@@ -50,7 +54,7 @@ namespace Microsoft.OData.Performance
         [Benchmark]
         public void ReadFeedIncludeSpatial()
         {
-            RunReadTest(_isFullValidation);
+            RunReadFeedTest(_isFullValidation);
         }
 
         [IterationSetup(Target = nameof(ReadFeedWithExpansions))]
@@ -62,7 +66,7 @@ namespace Microsoft.OData.Performance
         [Benchmark]
         public void ReadFeedWithExpansions()
         {
-            RunReadTest(_isFullValidation);
+            RunReadFeedTest(_isFullValidation);
         }
 
         [IterationSetup(Target = nameof(ReadFeedIncludeSpatialWithExpansions))]
@@ -74,7 +78,7 @@ namespace Microsoft.OData.Performance
         [Benchmark]
         public void ReadFeedIncludeSpatialWithExpansions()
         {
-            RunReadTest(_isFullValidation);
+            RunReadFeedTest(_isFullValidation);
         }
         
         
@@ -83,7 +87,7 @@ namespace Microsoft.OData.Performance
             _stream = new MemoryStream(PayloadGenerator.GenerateFeed(templateFile, entryCount));
         }
 
-        public void RunReadTest(bool isFullValidation)
+        public void RunReadFeedTest(bool isFullValidation)
         {
             using (var messageReader = ODataMessageHelper.CreateMessageReader(_stream, Model, ODataMessageKind.Response, isFullValidation))
             {

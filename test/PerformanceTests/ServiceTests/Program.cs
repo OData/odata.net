@@ -1,7 +1,7 @@
-﻿using BenchmarkDotNet.Running;
-
-namespace Microsoft.OData.Performance
+﻿namespace Microsoft.OData.Performance
 {
+    using BenchmarkDotNet.Running;
+
     class Program
     {
         static void Main(string[] args)

@@ -12,6 +12,10 @@ namespace Microsoft.OData.Performance
     using Microsoft.OData;
     using BenchmarkDotNet.Attributes;
 
+    /// <summary>
+    /// Performance tests making queries with different query options
+    /// to am OData service.
+    /// </summary>
     [MemoryDiagnoser]
     public class QueryOptionTests : IClassFixture<TestServiceFixture<QueryOptionTests>>
     {

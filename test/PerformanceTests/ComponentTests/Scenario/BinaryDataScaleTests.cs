@@ -12,6 +12,9 @@ namespace Microsoft.OData.Performance
     using Microsoft.OData.Edm;
     using BenchmarkDotNet.Attributes;
 
+    /// <summary>
+    /// Performance tests for reading and writing large binary data
+    /// </summary>
     [MemoryDiagnoser]
     public class BinaryDataScaleTests : WriteReadFeedTestBase
     {
@@ -23,8 +26,6 @@ namespace Microsoft.OData.Performance
         private static Stream WriteStream = new MemoryStream(MaxStreamSize);
 
 
-
-        //TODO: check whether iteration setup spoils results
         [IterationSetup(Target = nameof(WriteFeedBinaryData_4MB))]
         public void SetupForWriteFeedBinaryData()
         {
@@ -37,7 +38,6 @@ namespace Microsoft.OData.Performance
             WriteFeed(WriteStream, ExchangeAttachmentModel, NumberOfEntries, Write4MB, TestEntitySet);
         }
 
-        // TODO: used GlobalSetup here because the setup code appeared before the iterations in the old tests
         [GlobalSetup(Target = nameof(ReadFeedBinaryData_4MB))]
         public void SetupForReadFeedBinaryData()
         {

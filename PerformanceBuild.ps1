@@ -24,7 +24,7 @@ Function ExecuteTests
     $exeName = "$baseName.exe"
     $exePath = "$projectRoot\bin\$config\$exeName";
 
-    Write-Host "*** Building Component tests $projectRoot***"
+    Write-Host "*** Building tests project $projectRoot***"
     dotnet build -c $config $projectRoot
 
     if($LASTEXITCODE -eq 0)
