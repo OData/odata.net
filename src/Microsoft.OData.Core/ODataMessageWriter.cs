@@ -283,8 +283,6 @@ namespace Microsoft.OData
                 (context) => context.CreateODataDeltaResourceSetWriter(entitySet, resourceType));
         }
 
-
-
         /// <summary> Asynchronously creates an <see cref="Microsoft.OData.ODataWriter" /> to write a delta resource set. </summary>
         /// <returns>A running task for the created writer.</returns>
         public Task<ODataWriter> CreateODataDeltaResourceSetWriterAsync()
@@ -330,7 +328,6 @@ namespace Microsoft.OData
                 ODataPayloadKind.ResourceSet,
                 (context) => context.CreateODataDeltaWriter(entitySet, entityType));
         }
-
 
         /// <summary>
         /// Asynchronously creates an <see cref="ODataDeltaWriter" /> to write a delta response.
@@ -424,7 +421,6 @@ namespace Microsoft.OData
                 (context) => context.CreateODataUriParameterResourceWriter(navigationSource, resourceType));
         }
 
-
         /// <summary>
         /// Asynchronously creates an <see cref="ODataWriter" /> to write Uri operation parameter.
         /// </summary>
@@ -452,7 +448,6 @@ namespace Microsoft.OData
                 ODataPayloadKind.ResourceSet,
                 (context) => context.CreateODataUriParameterResourceSetWriter(entitySetBase, resourceType));
         }
-
 
         /// <summary>
         /// Asynchronously creates an <see cref="ODataWriter" /> to write Uri operation parameter.
@@ -488,7 +483,6 @@ namespace Microsoft.OData
                 (context) => context.CreateODataCollectionWriter(itemTypeReference));
         }
 
-
         /// <summary> Asynchronously creates an <see cref="Microsoft.OData.ODataCollectionWriter" /> to write a collection of primitive or complex values (as result of a service operation invocation). </summary>
         /// <returns>A running task for the created collection writer.</returns>
         public Task<ODataCollectionWriter> CreateODataCollectionWriterAsync()
@@ -519,7 +513,6 @@ namespace Microsoft.OData
                 (context) => context.CreateODataBatchWriter());
         }
 
-
         /// <summary> Asynchronously creates an <see cref="Microsoft.OData.ODataBatchWriter" /> to write a batch of requests or responses. </summary>
         /// <returns>A running task for the created batch writer.</returns>
         public Task<ODataBatchWriter> CreateODataBatchWriterAsync()
@@ -542,7 +535,6 @@ namespace Microsoft.OData
                 ODataPayloadKind.Parameter,
                 (context) => context.CreateODataParameterWriter(operation));
         }
-
 
         /// <summary>
         /// Asynchronously creates an <see cref="ODataParameterWriter" /> to write a parameter payload.
@@ -567,7 +559,6 @@ namespace Microsoft.OData
                 (context) => context.WriteServiceDocument(serviceDocument));
         }
 
-
         /// <summary> Asynchronously writes a service document with the specified <paramref name="serviceDocument" /> as the message payload. </summary>
         /// <returns>A task representing the asynchronous operation of writing the service document.</returns>
         /// <param name="serviceDocument">The service document to write.</param>
@@ -588,7 +579,6 @@ namespace Microsoft.OData
                 ODataPayloadKind.Property,
                 (context) => context.WriteProperty(property));
         }
-
 
         /// <summary> Asynchronously writes an <see cref="Microsoft.OData.ODataProperty" /> as the message payload. </summary>
         /// <returns>A task representing the asynchronous operation of writing the property.</returns>
@@ -625,7 +615,6 @@ namespace Microsoft.OData
             this.outputContext.WriteInStreamError(error, includeDebugInformation);
         }
 
-
         /// <summary> Asynchronously writes an <see cref="Microsoft.OData.ODataError" /> as the message payload. </summary>
         /// <returns>A task representing the asynchronous operation of writing the error.</returns>
         /// <param name="error">The error to write.</param>
@@ -660,7 +649,6 @@ namespace Microsoft.OData
                 (context) => context.WriteEntityReferenceLinks(links));
         }
 
-
         /// <summary> Asynchronously writes the result of a $ref query as the message payload. </summary>
         /// <returns>A task representing the asynchronous writing of the entity reference links.</returns>
         /// <param name="links">The entity reference links to write as message payload.</param>
@@ -681,7 +669,6 @@ namespace Microsoft.OData
                 ODataPayloadKind.EntityReferenceLink,
                 (context) => context.WriteEntityReferenceLink(link));
         }
-
 
         /// <summary> Asynchronously writes a singleton result of a $ref query as the message payload. </summary>
         /// <returns>A running task representing the writing of the link.</returns>
@@ -704,7 +691,6 @@ namespace Microsoft.OData
                 (context) => context.WriteValue(value));
         }
 
-
         /// <summary> Asynchronously writes a single value as the message body. </summary>
         /// <returns>A running task representing the writing of the value.</returns>
         /// <param name="value">The value to write.</param>
@@ -723,6 +709,18 @@ namespace Microsoft.OData
             this.WriteToOutput(
                 ODataPayloadKind.MetadataDocument,
                 (context) => context.WriteMetadataDocument());
+        }
+
+        /// <summary>
+        /// Asynchronously writes a metadata document as the message payload.
+        /// </summary>
+        /// <returns>A task representing the asynchronous operation of writing the metadata document.</returns>
+        public Task WriteMetadataDocumentAsync()
+        {
+            this.VerifyCanWriteMetadataDocument();
+            return this.WriteToOutputAsync(
+                ODataPayloadKind.MetadataDocument,
+                (context) => context.WriteMetadataDocumentAsync());
         }
 
         /// <summary><see cref="System.IDisposable.Dispose()" /> implementation to cleanup unmanaged resources of the writer. </summary>

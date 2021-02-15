@@ -10,6 +10,7 @@ using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Xunit;
+using System.Threading.Tasks;
 
 namespace Microsoft.OData.Tests
 {
@@ -189,18 +190,7 @@ namespace Microsoft.OData.Tests
         public void WriteMetadataDocument_WorksForJsonCsdl()
         {
             // Arrange
-            EdmModel edmModel = new EdmModel();
-
-            EdmEntityContainer container = new EdmEntityContainer("NS", "Container");
-            edmModel.AddElement(container);
-
-            EdmEntityType customerType = new EdmEntityType("NS", "Customer");
-            var idProperty = new EdmStructuralProperty(customerType, "Id", EdmCoreModel.Instance.GetInt32(false));
-            customerType.AddProperty(idProperty);
-            customerType.AddKeys(new IEdmStructuralProperty[] { idProperty });
-            customerType.AddProperty(new EdmStructuralProperty(customerType, "Name", EdmCoreModel.Instance.GetString(false)));
-            edmModel.AddElement(customerType);
-            container.AddEntitySet("Customers", customerType);
+            IEdmModel edmModel = GetEdmModel();
 
             string contentType = "application/json";
 
@@ -246,7 +236,107 @@ namespace Microsoft.OData.Tests
 #endif
         }
 
-        private string WriteAndGetPayload(EdmModel edmModel, string contentType, Action<ODataMessageWriter> test)
+#if NETCOREAPP3_1 || NETCOREAPP2_1
+        [Fact]
+        public async Task WriteMetadataDocumentAsync_WorksForJsonCsdl()
+        {
+            // Arrange
+            IEdmModel edmModel = GetEdmModel();
+
+
+            // Act - JSON
+            string payload = await this.WriteAndGetPayloadAsync(edmModel, "application/json", async omWriter =>
+            {
+                await omWriter.WriteMetadataDocumentAsync();
+            });
+
+            // Assert
+            Assert.Equal(@"{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""NS.Container"",
+  ""NS"": {
+    ""Customer"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {
+        ""$Type"": ""Edm.Int32""
+      },
+      ""Name"": {}
+    },
+    ""Container"": {
+      ""$Kind"": ""EntityContainer"",
+      ""Customers"": {
+        ""$Collection"": true,
+        ""$Type"": ""NS.Customer""
+      }
+    }
+  }
+}", payload);
+    }
+#endif
+
+        [Fact]
+        public async Task WriteMetadataDocumentAsync_WorksForXmlCsdl()
+        {
+            // Arrange
+            IEdmModel edmModel = GetEdmModel();
+
+            // Act - XML
+            string payload = await this.WriteAndGetPayloadAsync(edmModel, "application/xml", async omWriter =>
+            {
+                await omWriter.WriteMetadataDocumentAsync();
+            });
+
+            // Assert - XML
+            Assert.Equal("<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
+                "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                  "<edmx:DataServices>" +
+                    "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                      "<EntityType Name=\"Customer\">" +
+                        "<Key>" +
+                          "<PropertyRef Name=\"Id\" />" +
+                        "</Key>" +
+                        "<Property Name=\"Id\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                        "<Property Name=\"Name\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                      "</EntityType>" +
+                      "<EntityContainer Name=\"Container\">" +
+                        "<EntitySet Name=\"Customers\" EntityType=\"NS.Customer\" />" +
+                      "</EntityContainer>" +
+                    "</Schema>" +
+                  "</edmx:DataServices>" +
+                "</edmx:Edmx>", payload);
+        }
+
+        private static IEdmModel _edmModel;
+
+        private static IEdmModel GetEdmModel()
+        {
+            if (_edmModel != null)
+            {
+                return _edmModel;
+            }
+
+            EdmModel edmModel = new EdmModel();
+
+            EdmEntityContainer container = new EdmEntityContainer("NS", "Container");
+            edmModel.AddElement(container);
+
+            EdmEntityType customerType = new EdmEntityType("NS", "Customer");
+            var idProperty = new EdmStructuralProperty(customerType, "Id", EdmCoreModel.Instance.GetInt32(false));
+            customerType.AddProperty(idProperty);
+            customerType.AddKeys(new IEdmStructuralProperty[] { idProperty });
+            customerType.AddProperty(new EdmStructuralProperty(customerType, "Name", EdmCoreModel.Instance.GetString(false)));
+            edmModel.AddElement(customerType);
+            container.AddEntitySet("Customers", customerType);
+
+            _edmModel = edmModel;
+
+            return edmModel;
+        }
+
+        private string WriteAndGetPayload(IEdmModel edmModel, string contentType, Action<ODataMessageWriter> test)
         {
             var message = new InMemoryMessage() { Stream = new MemoryStream() };
             if (contentType != null)
@@ -267,10 +357,33 @@ namespace Microsoft.OData.Tests
             message.Stream.Seek(0, SeekOrigin.Begin);
             using (StreamReader reader = new StreamReader(message.Stream))
             {
-                contentType = message.GetHeader("Content-Type");
                 return reader.ReadToEnd();
             }
         }
 
+        private async Task<string> WriteAndGetPayloadAsync(IEdmModel edmModel, string contentType, Func<ODataMessageWriter, Task> test)
+        {
+            var message = new InMemoryMessage() { Stream = new MemoryStream() };
+            if (contentType != null)
+            {
+                message.SetHeader("Content-Type", contentType);
+            }
+
+            ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings();
+            writerSettings.EnableMessageStreamDisposal = false;
+            writerSettings.BaseUri = new Uri("http://www.example.com/");
+            writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
+
+            using (var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, edmModel))
+            {
+                await test(msgWriter);
+            }
+
+            message.Stream.Seek(0, SeekOrigin.Begin);
+            using (StreamReader reader = new StreamReader(message.Stream))
+            {
+                return reader.ReadToEnd();
+            }
+        }
     }
 }

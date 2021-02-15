@@ -7,10 +7,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Microsoft.OData.Tests
 {
     public class InMemoryMessage : IODataRequestMessage, IODataResponseMessage, IContainerProvider, IDisposable
+        , IODataRequestMessageAsync, IODataResponseMessageAsync
     {
         private readonly Dictionary<string, string> headers;
 
@@ -51,6 +53,13 @@ namespace Microsoft.OData.Tests
         }
 
         public Action DisposeAction { get; set; }
+
+        public Task<Stream> GetStreamAsync()
+        {
+            TaskCompletionSource<Stream> taskCompletionSource = new TaskCompletionSource<Stream>();
+            taskCompletionSource.SetResult(this.Stream);
+            return taskCompletionSource.Task;
+        }
 
         void IDisposable.Dispose()
         {

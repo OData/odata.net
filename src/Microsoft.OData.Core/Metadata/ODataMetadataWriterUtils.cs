@@ -32,6 +32,11 @@ namespace Microsoft.OData.Metadata
 
             XmlWriterSettings xmlWriterSettings = CreateXmlWriterSettings(messageWriterSettings, encoding);
 
+            if (stream is AsyncBufferedStream)
+            {
+                xmlWriterSettings.Async = true;
+            }
+
             XmlWriter writer = XmlWriter.Create(stream, xmlWriterSettings);
 
             return writer;

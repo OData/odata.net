@@ -12,6 +12,7 @@ using System.IO;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 
@@ -28,6 +29,9 @@ namespace Microsoft.OData
         /// <summary>The jsonWriter to write to.</summary>
         private Utf8JsonWriter jsonWriter;
 
+        /// <summary>The asynchronous output stream if we're writing asynchronously.</summary>
+        private AsyncBufferedStream asynchronousOutputStream;
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -39,12 +43,23 @@ namespace Microsoft.OData
             : base(ODataFormat.Metadata, messageInfo, messageWriterSettings)
         {
             Debug.Assert(messageInfo.MessageStream != null, "messageInfo.MessageStream != null");
-            Debug.Assert(!messageInfo.IsAsync, "Metadata output context is only supported in synchronous operations.");
 
             try
             {
                 this.messageOutputStream = messageInfo.MessageStream;
-                this.jsonWriter = CreateJsonWriter(this.messageOutputStream, messageWriterSettings);
+
+                Stream outputStream;
+                if (this.Synchronous)
+                {
+                    outputStream = this.messageOutputStream;
+                }
+                else
+                {
+                    this.asynchronousOutputStream = new AsyncBufferedStream(this.messageOutputStream);
+                    outputStream = this.asynchronousOutputStream;
+                }
+
+                this.jsonWriter = CreateJsonWriter(outputStream, messageWriterSettings);
             }
             catch (Exception e)
             {
@@ -56,6 +71,34 @@ namespace Microsoft.OData
 
                 throw;
             }
+        }
+
+        /// <summary>
+        /// Asynchronously flush the underlying stream.
+        /// </summary>
+        /// <returns></returns>
+        internal Task FlushAsync()
+        {
+            this.AssertAsynchronous();
+
+            return this.jsonWriter.FlushAsync();
+        }
+
+        /// <summary>
+        /// Asynchronously writes a metadata document as message payload.
+        /// </summary>
+        /// <returns>A task representing the asynchronous operation of writing the metadata document.</returns>
+        /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
+        internal override Task WriteMetadataDocumentAsync()
+        {
+            this.AssertAsynchronous();
+
+            return TaskUtils.GetTaskForSynchronousOperationReturningTask(
+                () =>
+                {
+                    this.WriteMetadataDocumentImplementation();
+                    return this.FlushAsync();
+                });
         }
 
         /// <summary>
@@ -88,7 +131,6 @@ namespace Microsoft.OData
             this.AssertSynchronous();
 
             // What error should we write here?
-
             this.Flush();
         }
 
@@ -100,25 +142,7 @@ namespace Microsoft.OData
         {
             this.AssertSynchronous();
 
-            IEnumerable<EdmError> errors;
-
-            CsdlJsonWriterSettings writerSettings = new CsdlJsonWriterSettings
-            {
-                IsIeee754Compatible = MessageWriterSettings.IsIeee754Compatible
-            };
-
-            if (!CsdlWriter.TryWriteCsdl(this.Model, this.jsonWriter, writerSettings, out errors))
-            {
-                Debug.Assert(errors != null, "errors != null");
-
-                StringBuilder builder = new StringBuilder();
-                foreach (EdmError error in errors)
-                {
-                    builder.AppendLine(error.ToString());
-                }
-
-                throw new ODataException(Strings.ODataMetadataOutputContext_ErrorWritingMetadata(builder.ToString()));
-            }
+            this.WriteMetadataDocumentImplementation();
 
             this.Flush();
         }
@@ -156,18 +180,59 @@ namespace Microsoft.OData
             {
                 if (this.jsonWriter != null)
                 {
-                    this.jsonWriter.Flush();
-                    this.jsonWriter.Dispose();
+                    if (this.asynchronousOutputStream != null)
+                    {
+                        DisposeOutputStreamAsync().Wait();
+                    }
+                    else
+                    {
+                        this.jsonWriter.Flush();
+                        this.jsonWriter.Dispose();
+                    }
+
                     this.messageOutputStream.Dispose();
                 }
             }
             finally
             {
                 this.messageOutputStream = null;
+                this.asynchronousOutputStream = null;
                 this.jsonWriter = null;
             }
 
             base.Dispose(disposing);
+        }
+
+        private void WriteMetadataDocumentImplementation()
+        {
+            IEnumerable<EdmError> errors;
+
+            CsdlJsonWriterSettings writerSettings = new CsdlJsonWriterSettings
+            {
+                IsIeee754Compatible = MessageWriterSettings.IsIeee754Compatible
+            };
+
+            if (!CsdlWriter.TryWriteCsdl(this.Model, this.jsonWriter, writerSettings, out errors))
+            {
+                Debug.Assert(errors != null, "errors != null");
+
+                StringBuilder builder = new StringBuilder();
+                foreach (EdmError error in errors)
+                {
+                    builder.AppendLine(error.ToString());
+                }
+
+                throw new ODataException(Strings.ODataMetadataOutputContext_ErrorWritingMetadata(builder.ToString()));
+            }
+        }
+
+        private async Task DisposeOutputStreamAsync()
+        {
+            await this.asynchronousOutputStream.FlushAsync().ConfigureAwait(false);
+            this.asynchronousOutputStream.Dispose();
+
+            await this.jsonWriter.FlushAsync().ConfigureAwait(false);
+            await this.jsonWriter.DisposeAsync().ConfigureAwait(false);
         }
     }
 }
