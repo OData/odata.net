@@ -482,7 +482,7 @@ namespace Microsoft.OData
         /// <returns>The extracted ResourceRangeVariableReferenceNode.</returns>
         private ResourceRangeVariableReferenceNode GetResourceRangeVariableReferenceNode(QueryNode node)
         {
-            switch(node.Kind)
+            switch (node.Kind)
             {
                 case QueryNodeKind.SingleValuePropertyAccess:
                     SingleValuePropertyAccessNode singleValuePropertyAccessNode = node as SingleValuePropertyAccessNode;
@@ -514,9 +514,10 @@ namespace Microsoft.OData
                 case QueryNodeKind.CollectionComplexNode:
                     CollectionComplexNode collectionComplexNode = node as CollectionComplexNode;
                     return GetResourceRangeVariableReferenceNode(collectionComplexNode.Source);
-            }
 
-            return null;
+                default:
+                    return null;
+            }
         }
 
         /// <summary>
@@ -527,35 +528,35 @@ namespace Microsoft.OData
         /// <returns>The translated string with $it binding.</returns>
         private string BindNode(QueryNode node, ResourceRangeVariable filterClauseRangeVariable)
         {
-            BinaryOperatorNode binaryNode = node as BinaryOperatorNode;
-            InNode inNode = node as InNode;
-            AnyNode anyNode = node as AnyNode;
-            SingleValueFunctionCallNode singleValueFunctionCallNode = node as SingleValueFunctionCallNode;
-            SingleValueOpenPropertyAccessNode singleValueOpenPropertyAccessNode = node as SingleValueOpenPropertyAccessNode;
+            switch (node.Kind)
+            {
+                // $expand=Items($filter=$it/Product eq 'Some Product')
+                case QueryNodeKind.BinaryOperator:
+                    BinaryOperatorNode binaryNode = node as BinaryOperatorNode;
+                    return BindBinaryOperatorNode(binaryNode, filterClauseRangeVariable);
 
-            if (binaryNode != null)
-            {
-                return BindBinaryOperatorNode(binaryNode, filterClauseRangeVariable);
-            }
-            else if (inNode != null)
-            {
-                return BindInNode(inNode, filterClauseRangeVariable);
-            }
-            else if (anyNode != null)
-            {
-                return BindAnyNode(anyNode, filterClauseRangeVariable);
-            }
-            else if (singleValueFunctionCallNode != null)
-            {
-                return BindSingleValueFunctionCallNode(singleValueFunctionCallNode, filterClauseRangeVariable);
-            }
-            else if (singleValueOpenPropertyAccessNode != null)
-            {
-                return BindSingleValueOpenPropertyAccess(singleValueOpenPropertyAccessNode, filterClauseRangeVariable);
-            }
-            else
-            {
-                return this.TranslateNode(node);
+                // $expand=Items($filter=$it/ID in ['1', '2', '3'])
+                case QueryNodeKind.In:
+                    InNode inNode = node as InNode;
+                    return BindInNode(inNode, filterClauseRangeVariable);
+
+                // $expand=Orders($filter=$it/Items/any(d:d/Quantity gt 100))
+                case QueryNodeKind.Any:
+                    AnyNode anyNode = node as AnyNode;
+                    return BindAnyNode(anyNode, filterClauseRangeVariable);
+
+                // $expand=Items($filter=endswith($it/Name, 'xyz')
+                case QueryNodeKind.SingleValueFunctionCall:
+                    SingleValueFunctionCallNode singleValueFunctionCallNode = node as SingleValueFunctionCallNode;
+                    return BindSingleValueFunctionCallNode(singleValueFunctionCallNode, filterClauseRangeVariable);
+
+                // Products?$filter=ProductName
+                case QueryNodeKind.SingleValueOpenPropertyAccess:
+                    SingleValueOpenPropertyAccessNode singleValueOpenPropertyAccessNode = node as SingleValueOpenPropertyAccessNode;
+                    return BindSingleValueOpenPropertyAccess(singleValueOpenPropertyAccessNode, filterClauseRangeVariable);
+
+                default:
+                    return this.TranslateNode(node);
             }
         }
 
@@ -603,14 +604,14 @@ namespace Microsoft.OData
             string translatedNode = this.TranslateNode(node);
             ResourceRangeVariableReferenceNode leftRangeVariableNode = GetResourceRangeVariableReferenceNode(node.Left);
 
-            string inOperator = ExpressionConstants.KeywordIn;
-            string[] inSeparator = { inOperator };
-            string[] substrings = translatedNode.Trim().Split(inSeparator, StringSplitOptions.RemoveEmptyEntries);
-            string leftIn = substrings[0];
-            string rightIn = substrings[1];
-
             if (leftRangeVariableNode != null && IsDifferentSource(filterClauseRangeVariable, leftRangeVariableNode))
             {
+                string inOperator = ExpressionConstants.KeywordIn;
+                string[] inSeparator = { inOperator };
+                string[] substrings = translatedNode.Trim().Split(inSeparator, StringSplitOptions.RemoveEmptyEntries);
+                string leftIn = substrings[0];
+                string rightIn = substrings[1];
+
                 leftIn = ExpressionConstants.It + ExpressionConstants.SymbolForwardSlash + leftIn;
                 translatedNode = leftIn + inOperator + rightIn;
             }
@@ -629,14 +630,14 @@ namespace Microsoft.OData
             string translatedNode = this.TranslateNode(node);
             ResourceRangeVariableReferenceNode leftRangeVariableNode = GetResourceRangeVariableReferenceNode(node);
 
-            const string slashAny = "/any";
-            string[] anySeparator = { slashAny };
-            string[] substrings = translatedNode.Trim().Split(anySeparator, StringSplitOptions.RemoveEmptyEntries);
-            string leftAnyNodeSubstring = substrings[0];
-            string rightAnyNodeSubstring = substrings[1];
-
             if (leftRangeVariableNode != null && IsDifferentSource(filterClauseRangeVariable, leftRangeVariableNode))
             {
+                const string slashAny = "/any";
+                string[] anySeparator = { slashAny };
+                string[] substrings = translatedNode.Trim().Split(anySeparator, StringSplitOptions.RemoveEmptyEntries);
+                string leftAnyNodeSubstring = substrings[0];
+                string rightAnyNodeSubstring = substrings[1];
+
                 leftAnyNodeSubstring = ExpressionConstants.It + ExpressionConstants.SymbolForwardSlash + leftAnyNodeSubstring;
                 translatedNode = leftAnyNodeSubstring + slashAny + rightAnyNodeSubstring;
             }
@@ -655,16 +656,16 @@ namespace Microsoft.OData
             string translatedNode = this.TranslateNode(node);
             ResourceRangeVariableReferenceNode firstParameterRangeVariableNode = GetResourceRangeVariableReferenceNode(node);
 
-            char[] separators = { '(', ')' };
-            string[] subtrings = translatedNode.Trim().Split(separators, StringSplitOptions.RemoveEmptyEntries);
-            string withinBrackets = subtrings[1];
-            char[] parameterSeparators = { ',' };
-            string[] parameters = withinBrackets.Trim().Split(parameterSeparators, StringSplitOptions.RemoveEmptyEntries);
-            string leftParameter = parameters[0];
-            string rightParameter = parameters.Length == 2 ? parameters[1] : String.Empty;
-
             if (firstParameterRangeVariableNode != null && IsDifferentSource(filterClauseRangeVariable, firstParameterRangeVariableNode))
             {
+                char[] separators = { '(', ')' };
+                string[] subtrings = translatedNode.Trim().Split(separators, StringSplitOptions.RemoveEmptyEntries);
+                string withinBrackets = subtrings[1];
+                char[] parameterSeparators = { ',' };
+                string[] parameters = withinBrackets.Trim().Split(parameterSeparators, StringSplitOptions.RemoveEmptyEntries);
+                string leftParameter = parameters[0];
+                string rightParameter = parameters.Length == 2 ? parameters[1] : String.Empty;
+
                 leftParameter = ExpressionConstants.It + ExpressionConstants.SymbolForwardSlash + leftParameter;
                 translatedNode = parameters.Length == 1 ? subtrings[0] + '(' + leftParameter + ')' : subtrings[0] + '(' + leftParameter + ',' + rightParameter + ')';
             }
@@ -702,14 +703,8 @@ namespace Microsoft.OData
             Debug.Assert(filterClauseRangeVariable != null, "filterClause != null");
             Debug.Assert(rangeVariableReferenceNode != null, "rangeVariableReferenceNode != null");
 
-            if (filterClauseRangeVariable.NavigationSource != rangeVariableReferenceNode.NavigationSource)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return filterClauseRangeVariable.NavigationSource != rangeVariableReferenceNode.NavigationSource
+                && rangeVariableReferenceNode.Name == ExpressionConstants.It;
         }
 
         /// <summary>Translates a <see cref="OrderByClause"/> into a string.</summary>
