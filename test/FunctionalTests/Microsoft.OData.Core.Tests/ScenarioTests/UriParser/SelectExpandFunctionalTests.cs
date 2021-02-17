@@ -1414,12 +1414,17 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal(expectedLeft, left);
         }
 
-        [Fact]
-        public void DollarThisinOrderByPrimitiveCollectionInsideSelectShouldReferenceSelectedItem()
+        [Theory]
+        [InlineData("RelatedSSNs($orderby=$this)", OrderByDirection.Ascending)]
+        [InlineData("RelatedSSNs($orderby=$this asc)", OrderByDirection.Ascending)]
+        [InlineData("RelatedSSNs($orderby=$this desc)", OrderByDirection.Descending)]
+        public void DollarThisinOrderByPrimitiveCollectionInsideSelectShouldReferenceSelectedItem(string queryString, OrderByDirection orderByDirection)
         {
             // Arrange & Act
             // People?$select=RelatedSSNs($orderby=$this)
-            SelectExpandClause clause = RunParseSelectExpand("RelatedSSNs($orderby=$this)", "", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            // People?$select=RelatedSSNs($orderby=$this asc)
+            // People?$select=RelatedSSNs($orderby=$this desc)
+            SelectExpandClause clause = RunParseSelectExpand(queryString, "", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
             OrderByClause orderByClause =
                 (
@@ -1430,7 +1435,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             // Assert
             orderByClause.Expression.ShouldBeNonResourceRangeVariableReferenceNode(ExpressionConstants.This);
-            Assert.Equal(OrderByDirection.Ascending, orderByClause.Direction); // If you don't specify direction, it's Ascending by default.
+            Assert.Equal(orderByDirection, orderByClause.Direction);
             Assert.Equal("Edm.String", typeReference.Definition.FullTypeName()); // RelatedSSNs is a collection of strings.
         }
 
@@ -1441,18 +1446,17 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             // People?$select=RelatedSSNs($filter=endswith($this,'xyz'))
             SelectExpandClause clause = RunParseSelectExpand("RelatedSSNs($filter=endswith($this,'xyz'))", "", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
-            IEdmTypeReference typeReference =
-                (
-                    (
-                        (
-                            (
-                                clause.SelectedItems.First() as PathSelectItem // $select=RelatedSSNs(...)
-                            ).FilterOption.Expression as SingleValueFunctionCallNode // $filter=endswith($this,'xyz')
-                        ).Parameters.First() as ConvertNode // $this
-                    ).Source as NonResourceRangeVariableReferenceNode
-                ).TypeReference;
-
             // Assert
+            PathSelectItem selectItem = (PathSelectItem) Assert.Single(clause.SelectedItems);
+            Assert.NotNull(selectItem.FilterOption);
+            selectItem.FilterOption.Expression.ShouldBeSingleValueFunctionCallQueryNode("endswith");
+
+            SingleValueFunctionCallNode singleValueFunctionCallNode = (SingleValueFunctionCallNode)selectItem.FilterOption.Expression;
+            Assert.Equal(2, singleValueFunctionCallNode.Parameters.Count());
+
+            ConvertNode convertNode = (ConvertNode) singleValueFunctionCallNode.Parameters.First();
+            convertNode.Source.ShouldBeNonResourceRangeVariableReferenceNode(ExpressionConstants.This);
+            IEdmTypeReference typeReference = convertNode.Source.TypeReference;
             Assert.Equal("Edm.String", typeReference.Definition.FullTypeName()); // RelatedSSNs is a collection of strings.
         }
 
