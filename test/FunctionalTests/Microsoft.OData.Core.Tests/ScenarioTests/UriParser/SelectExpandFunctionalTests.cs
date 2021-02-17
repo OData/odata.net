@@ -1466,20 +1466,22 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             // Arrange & Act
             // People?$expand=MyDog($select=Nicknames($filter=startswith($this, 'blu')))
             SelectExpandClause clause = RunParseSelectExpand("", "MyDog($select=Nicknames($filter=startswith($this, 'blu')))", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            IEdmTypeReference typeReference =
-                (
-                    (
-                        (
-                            (
-                                (
-                                    clause.SelectedItems.First() as ExpandedNavigationSelectItem // $expand=MyDog(...)
-                                ).SelectAndExpand.SelectedItems.First() as PathSelectItem // $select=Nicknames(...)
-                            ).FilterOption.Expression as SingleValueFunctionCallNode // $filter=startswith($this,'blu')
-                        ).Parameters.First() as ConvertNode // $this
-                    ).Source as NonResourceRangeVariableReferenceNode
-                ).TypeReference;
 
             // Assert
+            ExpandedNavigationSelectItem expandedSelectItem = (ExpandedNavigationSelectItem)Assert.Single(clause.SelectedItems); // $expand=MyDog(...)
+            Assert.NotNull(expandedSelectItem.SelectAndExpand);
+            SelectExpandClause innerClause = expandedSelectItem.SelectAndExpand; // $select=Nicknames(...)
+
+            PathSelectItem selectItem = (PathSelectItem)Assert.Single(innerClause.SelectedItems);
+            Assert.NotNull(selectItem.FilterOption);
+            selectItem.FilterOption.Expression.ShouldBeSingleValueFunctionCallQueryNode("startswith");
+
+            SingleValueFunctionCallNode singleValueFunctionCallNode = (SingleValueFunctionCallNode)selectItem.FilterOption.Expression;
+            Assert.Equal(2, singleValueFunctionCallNode.Parameters.Count());
+
+            ConvertNode convertNode = (ConvertNode)singleValueFunctionCallNode.Parameters.First();
+            convertNode.Source.ShouldBeNonResourceRangeVariableReferenceNode(ExpressionConstants.This);
+            IEdmTypeReference typeReference = convertNode.Source.TypeReference;
             Assert.Equal("Edm.String", typeReference.Definition.FullTypeName()); // Nicknames is a collection of strings.
         }
 
