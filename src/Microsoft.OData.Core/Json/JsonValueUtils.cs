@@ -21,7 +21,7 @@ namespace Microsoft.OData.Json
     /// <summary>
     /// Provides helper method for converting data values to and from the OData JSON format.
     /// </summary>
-    internal static class JsonValueUtils
+    internal static partial class JsonValueUtils
     {
         /// <summary>
         /// PositiveInfinitySymbol used in OData Json format
@@ -85,7 +85,7 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(writer != null, "writer != null");
 
-            writer.Write(value ? JsonConstants.JsonTrueLiteral : JsonConstants.JsonFalseLiteral);
+            writer.Write(FormatAsBooleanLiteral(value));
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(writer != null, "writer != null");
 
-            if (float.IsInfinity(value) || float.IsNaN(value))
+            if (JsonSharedUtils.IsFloatValueSerializedAsString(value))
             {
                 JsonValueUtils.WriteQuoted(writer, value.ToString(JsonValueUtils.ODataNumberFormatInfo));
             }
@@ -209,8 +209,6 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(writer != null, "writer != null");
 
-            Int32 offsetMinutes = (Int32)value.Offset.TotalMinutes;
-
             switch (dateTimeFormat)
             {
                 case ODataJsonDateTimeFormat.ISO8601DateTime:
@@ -240,12 +238,7 @@ namespace Microsoft.OData.Json
                         //
                         // ticks = *DIGIT
                         // offset = 4DIGIT
-                        string textValue = String.Format(
-                            CultureInfo.InvariantCulture,
-                            JsonConstants.ODataDateTimeOffsetFormat,
-                            JsonValueUtils.DateTimeTicksToJsonTicks(value.Ticks),
-                            offsetMinutes >= 0 ? JsonConstants.ODataDateTimeOffsetPlusSign : string.Empty,
-                            offsetMinutes);
+                        string textValue = FormatDateTimeAsJsonTicksString(value);
                         JsonValueUtils.WriteQuoted(writer, textValue);
                     }
 
@@ -380,14 +373,8 @@ namespace Microsoft.OData.Json
 
             for (int offsetIn = 0; offsetIn < value.Length; offsetIn += bufferByteSize)
             {
-                int length = bufferByteSize;
-                if (offsetIn + length > value.Length)
-                {
-                    length = value.Length - offsetIn;
-                }
-
-                int output = Convert.ToBase64CharArray(value, offsetIn, length, buffer, 0);
-                writer.Write(buffer, 0, output);
+                int count = WriteByteArrayToBuffer(value, offsetIn, buffer, bufferByteSize);
+                writer.Write(buffer, 0, count);
             }
         }
 
@@ -457,17 +444,12 @@ namespace Microsoft.OData.Json
                     }
                     else
                     {
-                        inputString.CopyTo(currentIndex, buffer, 0, subStrLength);
-                        bufferIndex = subStrLength;
-                        currentIndex += subStrLength;
+                        WriteSubstringToBuffer(inputString, ref currentIndex, buffer, ref bufferIndex, subStrLength);
                     }
                 }
 
                 // start writing escaped strings
-                for (; currentIndex < inputStringLength; currentIndex++)
-                {
-                    bufferIndex = EscapeAndWriteCharToBuffer(writer, inputString[currentIndex], buffer, bufferIndex, stringEscapeOption);
-                }
+                WriteEscapedStringToBuffer(writer, inputString, ref currentIndex, buffer, ref bufferIndex, stringEscapeOption);
 
                 // write any remaining chars to the writer
                 if (bufferIndex > 0)
@@ -492,10 +474,7 @@ namespace Microsoft.OData.Json
             int bufferIndex = 0;
             buffer = BufferUtils.InitializeBufferIfRequired(bufferPool, buffer);
 
-            for (; inputArrayOffset < inputArrayCount; inputArrayOffset++)
-            {
-                bufferIndex = EscapeAndWriteCharToBuffer(writer, inputArray[inputArrayOffset], buffer, bufferIndex, stringEscapeOption);
-            }
+            WriteEscapedCharArrayToBuffer(writer, inputArray, ref inputArrayOffset, inputArrayCount, buffer, ref bufferIndex, stringEscapeOption);
 
             // write remaining bytes in buffer
             if (bufferIndex > 0)
@@ -721,6 +700,122 @@ namespace Microsoft.OData.Json
             specialCharToEscapedStringMap['\f'] = "\\f";
 
             return specialCharToEscapedStringMap;
+        }
+
+        /// <summary>
+        /// Formats a DateTimeOffset value into JSON "\/Date(number of ticks)\/" format.
+        /// </summary>
+        /// <param name="value">DateTimeOffset value to be formatted.</param>
+        /// <returns>The string representation of the DateTimeOffset value in JSON "\/Date(number of ticks)\/" format.</returns>
+        private static string FormatDateTimeAsJsonTicksString(DateTimeOffset value)
+        {
+            Int32 offsetMinutes = (Int32)value.Offset.TotalMinutes;
+
+            return String.Format(
+                CultureInfo.InvariantCulture,
+                JsonConstants.ODataDateTimeOffsetFormat,
+                DateTimeTicksToJsonTicks(value.Ticks),
+                offsetMinutes >= 0 ? JsonConstants.ODataDateTimeOffsetPlusSign : string.Empty,
+                offsetMinutes);
+        }
+
+        /// <summary>
+        /// Formats a boolean value into its equivalent string representation in JSON.
+        /// </summary>
+        /// <param name="value">Boolean value to be formatted.</param>
+        /// <returns>The string representation of the boolean value.</returns>
+        private static string FormatAsBooleanLiteral(bool value)
+        {
+            return value ? JsonConstants.JsonTrueLiteral : JsonConstants.JsonFalseLiteral;
+        }
+
+        /// <summary>
+        /// Writes the byte array to the buffer.
+        /// </summary>
+        /// <param name="value">Byte array to be written.</param>
+        /// <param name="offsetIn">A position in the byte array.</param>
+        /// <param name="buffer">Char buffer to use for streaming data.</param>
+        /// <param name="bufferByteSize">Desired buffer byte size.</param>
+        /// <returns>A count of the bytes written to the buffer.</returns>
+        private static int WriteByteArrayToBuffer(byte[] value, int offsetIn, char[] buffer, int bufferByteSize)
+        {
+            Debug.Assert(value != null, "value != null");
+            Debug.Assert(buffer != null, "buffer != null");
+
+            int length = bufferByteSize;
+            if (offsetIn + length > value.Length)
+            {
+                length = value.Length - offsetIn;
+            }
+
+            return Convert.ToBase64CharArray(value, offsetIn, length, buffer, 0);
+        }
+
+        /// <summary>
+        /// Writes a substring starting at a specified position on the string to the buffer.
+        /// </summary>
+        /// <param name="inputString">Input string value.</param>
+        /// <param name="currentIndex">The index in the string at which the substring begins.</param>
+        /// <param name="buffer">Char buffer to use for streaming data.</param>
+        /// <param name="bufferIndex">Current position in the buffer after the substring has been written.</param>
+        /// <param name="substrLength">The length of the substring to be copied.</param>
+        private static void WriteSubstringToBuffer(string inputString, ref int currentIndex, char[] buffer, ref int bufferIndex, int substrLength)
+        {
+            Debug.Assert(inputString != null, "inputString != null");
+            Debug.Assert(buffer != null, "buffer != null");
+
+            inputString.CopyTo(currentIndex, buffer, 0, substrLength);
+            bufferIndex = substrLength;
+            currentIndex += substrLength;
+        }
+
+        /// <summary>
+        /// Writes an escaped string to the buffer.
+        /// </summary>
+        /// <param name="writer">The text writer to write the output to.</param>
+        /// <param name="inputString">Input string value.</param>
+        /// <param name="currentIndex">The index in the string at which copying should begin.</param>
+        /// <param name="buffer">Char buffer to use for streaming data.</param>
+        /// <param name="bufferIndex">Current position in the buffer after the string has been written.</param>
+        /// <param name="stringEscapeOption">The string escape option.</param>
+        /// <remarks>
+        /// IMPORTANT: After all characters have been written,
+        /// caller is responsible for writing the final buffer contents to the writer.
+        /// </remarks>
+        private static void WriteEscapedStringToBuffer(TextWriter writer, string inputString, ref int currentIndex, char[] buffer, ref int bufferIndex, ODataStringEscapeOption stringEscapeOption)
+        {
+            Debug.Assert(inputString != null, "inputString != null");
+            Debug.Assert(buffer != null, "buffer != null");
+
+            for (; currentIndex < inputString.Length; currentIndex++)
+            {
+                bufferIndex = EscapeAndWriteCharToBuffer(writer, inputString[currentIndex], buffer, bufferIndex, stringEscapeOption);
+            }
+        }
+
+        /// <summary>
+        /// Writes an escaped char array to the buffer.
+        /// </summary>
+        /// <param name="writer">The text writer to write the output to.</param>
+        /// <param name="inputArray">Character array to write.</param>
+        /// <param name="inputArrayOffset">How many characters to skip in the input array.</param>
+        /// <param name="inputArrayCount">How many characters to write from the input array.</param>
+        /// <param name="buffer">Char buffer to use for streaming data.</param>
+        /// <param name="bufferIndex">Current position in the buffer after the string has been written.</param>
+        /// <param name="stringEscapeOption">The string escape option.</param>
+        /// <remarks>
+        /// IMPORTANT: After all characters have been written,
+        /// caller is responsible for writing the final buffer contents to the writer.
+        /// </remarks>
+        private static void WriteEscapedCharArrayToBuffer(TextWriter writer, char[] inputArray, ref int inputArrayOffset, int inputArrayCount, char[] buffer, ref int bufferIndex, ODataStringEscapeOption stringEscapeOption)
+        {
+            Debug.Assert(inputArray != null, "inputArray != null");
+            Debug.Assert(buffer != null, "buffer != null");
+
+            for (; inputArrayOffset < inputArrayCount; inputArrayOffset++)
+            {
+                bufferIndex = EscapeAndWriteCharToBuffer(writer, inputArray[inputArrayOffset], buffer, bufferIndex, stringEscapeOption);
+            }
         }
     }
 }
