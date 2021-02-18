@@ -722,7 +722,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 "}";
 
             Action read = () => this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { });
-            read.Throws<ODataException>("A null value was found for the property named 'Test', which has the expected type 'Collection(Edm.String)[Nullable=False]'. The expected type 'Collection(Edm.String)[Nullable=False]' does not allow null values.");
+            read.Throws<ODataException>("A null value was found for the property named 'Test', which has the expected type 'Collection(Edm.String)[Nullable=True]'. The expected type 'Collection(Edm.String)[Nullable=True]' cannot be null but it can have null values.");
         }
 
         [Fact]
@@ -792,7 +792,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 "}";
 
             Action read = () => this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { });
-            read.Throws<ODataException>("A null value was found for the property named 'CountriesOrRegions', which has the expected type 'Collection(Edm.String)[Nullable=False]'. The expected type 'Collection(Edm.String)[Nullable=False]' does not allow null values.");
+            read.Throws<ODataException>("A null value was found for the property named 'CountriesOrRegions', which has the expected type 'Collection(Edm.String)[Nullable=True]'. The expected type 'Collection(Edm.String)[Nullable=True]' cannot be null but it can have null values.");
         }
 
         [Fact]

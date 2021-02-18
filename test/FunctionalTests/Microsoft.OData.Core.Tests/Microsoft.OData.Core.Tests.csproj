@@ -46,13 +46,7 @@
   <ItemGroup>
     <Compile Remove="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <Compile Remove="IntegrationTests\**" />
-    <EmbeddedResource Remove="IntegrationTests\**" />
-    <None Remove="IntegrationTests\**" />
-  </ItemGroup>
-  
+
   <ItemGroup>
     <Compile Include="..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Common\ExceptionUtilities.cs" Link="ExceptionUtilities.cs" />
     <Compile Include="..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\EdmConstants.cs" Link="EdmConstants.cs" />
@@ -61,7 +55,6 @@
     <Compile Include="..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\MetadataUtils.cs" Link="MetadataUtils.cs" />
     <Compile Include="..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\TestModels.cs" Link="TestModels.cs" />
     <Compile Include="..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\ODataLibTest\ModelBuilder.cs" Link="ModelBuilder.cs" />
-    <Compile Include="IntegrationTests\Writer\JsonLight\ODataJsonLightWriterShortSpanIntegrationTests.cs" />
   </ItemGroup>
 
   <ItemGroup>

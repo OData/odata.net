@@ -424,7 +424,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 "\"ComplexCollectionProperty\":[{\"@odata.type\":\"#NS.MyDerivedComplexType\",\"CLongId\":\"1\",\"CFloatId\":1},{\"CLongId\":\"1\"},{\"CLongId\":\"1\",\"CFloatId\":1,\"@odata.type\":\"#NS.MyDerivedComplexType\"}]" +
                 "}";
 
-            ReadingComplexInheritInCollection(payload);
+            ReadingComplexInheritInCollectionImpl(payload);
         }
 
         [Fact]
@@ -438,10 +438,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 "\"ComplexCollectionProperty\":[{\"@odata.type\":\"#NS.MyDerivedComplexType\",\"CLongId\":\"1\",\"CFloatId\":1},{\"CLongId\":\"1\"},{\"CLongId\":\"1\",\"CFloatId\":1,\"@odata.type\":\"#NS.MyDerivedComplexType\"}]" +
                 "}";
 
-            ReadingComplexInheritInCollection(payload);
+            ReadingComplexInheritInCollectionImpl(payload);
         }
 
-        private void ReadingComplexInheritInCollection(string payload)
+        private void ReadingComplexInheritInCollectionImpl(string payload)
         {
             EdmModel model = new EdmModel();
             EdmEntityType entityType = new EdmEntityType("NS", "MyTestEntity");

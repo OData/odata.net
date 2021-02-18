@@ -1606,7 +1606,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
 
             string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=full", true, itemsToWrite, Model, containedEntitySet, DerivedType, null, null, "EntitySet(0)/Namespace.DerivedType/ContainedNonCollectionNavProp");
 
-            Uri containedId = new Uri("http://example.com/EntitySet(0)/ContainedNonCollectionNavProp");
+            Uri containedId = new Uri("http://example.com/EntitySet(0)/Namespace.DerivedType/ContainedNonCollectionNavProp");
             Assert.Equal(containedId, this.derivedEntry.Id);
         }
 

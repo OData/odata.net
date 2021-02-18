@@ -626,16 +626,16 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         [Fact]
         public void WriteTopLevelComplexCollectionProperty()
         {
-            WriteTopLevelComplexCollectionProperty(false);
+            WriteTopLevelComplexCollectionPropertyImplementation(false);
         }
 
         [Fact]
         public void WriteTopLevelComplexCollectionProperty_Inherit()
         {
-            WriteTopLevelComplexCollectionProperty(true);
+            WriteTopLevelComplexCollectionPropertyImplementation(true);
         }
 
-        private void WriteTopLevelComplexCollectionProperty(bool inherit)
+        private void WriteTopLevelComplexCollectionPropertyImplementation(bool inherit)
         {
             EdmModel model = new EdmModel();
             EdmComplexType complexType = AddAndGetComplexType(model);

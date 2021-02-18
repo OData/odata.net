@@ -289,11 +289,11 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             ReadAndValidate(payload, addressT, false, (resources, nestedResourceInfos, resourceSets) =>
             {
-                Assert.Equal(1, resourceSets.Count);
+                Assert.Single(resourceSets);
                 Assert.Equal(2, resources.ElementAt(0).Properties.Count());
-                Assert.Equal(0, resources.ElementAt(1).Properties.Count());
+                Assert.Empty(resources.ElementAt(1).Properties);
                 Assert.Equal(2, resources.ElementAt(2).Properties.Count());
-                Assert.Equal(0, resources.ElementAt(3).Properties.Count());
+                Assert.Empty(resources.ElementAt(3).Properties);
                 Assert.Equal(2, nestedResourceInfos.Count);
             });
         }
