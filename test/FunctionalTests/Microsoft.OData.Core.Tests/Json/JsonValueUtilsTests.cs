@@ -17,7 +17,7 @@ namespace Microsoft.OData.Tests.Json
     {
         private MemoryStream stream;
         private NonIndentedTextWriter writer;
-        private char[] buffer;
+        private Ref<char[]> buffer;
         private IDictionary<string, string> escapedCharMap;
         private IDictionary<string, string> controlCharsMap;
 
@@ -54,7 +54,7 @@ namespace Microsoft.OData.Tests.Json
         public void WriteEmptyStringShouldWork(ODataStringEscapeOption stringEscapeOption)
         {
             this.TestInit();
-            JsonValueUtils.WriteEscapedJsonString(this.writer, string.Empty, stringEscapeOption, ref this.buffer);
+            JsonValueUtils.WriteEscapedJsonString(this.writer, string.Empty, stringEscapeOption, this.buffer);
             Assert.Equal("\"\"", this.StreamToString());
         }
 
@@ -64,7 +64,7 @@ namespace Microsoft.OData.Tests.Json
         public void WriteNonSpecialCharactersShouldWork(ODataStringEscapeOption stringEscapeOption)
         {
             this.TestInit();
-            JsonValueUtils.WriteEscapedJsonString(this.writer, "abcdefg123", stringEscapeOption, ref this.buffer);
+            JsonValueUtils.WriteEscapedJsonString(this.writer, "abcdefg123", stringEscapeOption, this.buffer);
             Assert.Equal("\"abcdefg123\"", this.StreamToString());
         }
 
@@ -74,7 +74,7 @@ namespace Microsoft.OData.Tests.Json
         public void WriteLowSpecialCharactersShouldWorkForEscapeOption(ODataStringEscapeOption stringEscapeOption)
         {
             this.TestInit();
-            JsonValueUtils.WriteEscapedJsonString(this.writer, "cA_\n\r\b", stringEscapeOption, ref this.buffer);
+            JsonValueUtils.WriteEscapedJsonString(this.writer, "cA_\n\r\b", stringEscapeOption, this.buffer);
             Assert.Equal("\"cA_\\n\\r\\b\"", this.StreamToString());
         }
 
@@ -82,7 +82,7 @@ namespace Microsoft.OData.Tests.Json
         public void WriteHighSpecialCharactersShouldWorkForEscapeNonAsciiOption()
         {
             this.TestInit();
-            JsonValueUtils.WriteEscapedJsonString(this.writer, "cA_Россия", ODataStringEscapeOption.EscapeNonAscii, ref this.buffer);
+            JsonValueUtils.WriteEscapedJsonString(this.writer, "cA_Россия", ODataStringEscapeOption.EscapeNonAscii, this.buffer);
             Assert.Equal("\"cA_\\u0420\\u043e\\u0441\\u0441\\u0438\\u044f\"", this.StreamToString());
         }
 
@@ -90,7 +90,7 @@ namespace Microsoft.OData.Tests.Json
         public void WriteHighSpecialCharactersShouldWorkForEscapeOnlyControlsOption()
         {
             this.TestInit();
-            JsonValueUtils.WriteEscapedJsonString(this.writer, "cA_Россия", ODataStringEscapeOption.EscapeOnlyControls, ref this.buffer);
+            JsonValueUtils.WriteEscapedJsonString(this.writer, "cA_Россия", ODataStringEscapeOption.EscapeOnlyControls, this.buffer);
             Assert.Equal("\"cA_Россия\"", this.StreamToString());
         }
 
@@ -101,7 +101,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 this.TestInit();
                 JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("{0}", specialChar),
-                    ODataStringEscapeOption.EscapeNonAscii, ref this.buffer);
+                    ODataStringEscapeOption.EscapeNonAscii, this.buffer);
                 Assert.Equal(string.Format("\"{0}\"", this.escapedCharMap[specialChar]), this.StreamToString());
             }
         }
@@ -113,7 +113,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 this.TestInit();
                 JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("{0}MiddleEnd", specialChar),
-                    ODataStringEscapeOption.EscapeNonAscii, ref this.buffer);
+                    ODataStringEscapeOption.EscapeNonAscii, this.buffer);
                 Assert.Equal(string.Format("\"{0}MiddleEnd\"", this.escapedCharMap[specialChar]), this.StreamToString());
             }
         }
@@ -125,7 +125,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 this.TestInit();
                 JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("Start{0}End", specialChar),
-                    ODataStringEscapeOption.EscapeNonAscii, ref this.buffer);
+                    ODataStringEscapeOption.EscapeNonAscii, this.buffer);
                 Assert.Equal(string.Format("\"Start{0}End\"", this.escapedCharMap[specialChar]), this.StreamToString());
             }
         }
@@ -137,7 +137,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 this.TestInit();
                 JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("StartMiddle{0}", specialChar),
-                    ODataStringEscapeOption.EscapeNonAscii, ref this.buffer);
+                    ODataStringEscapeOption.EscapeNonAscii, this.buffer);
                 Assert.Equal(string.Format("\"StartMiddle{0}\"", this.escapedCharMap[specialChar]), this.StreamToString());
             }
         }
@@ -149,7 +149,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 this.TestInit();
                 JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("{0}Start{0}Middle{0}End", specialChar),
-                    ODataStringEscapeOption.EscapeNonAscii, ref this.buffer);
+                    ODataStringEscapeOption.EscapeNonAscii, this.buffer);
                 Assert.Equal(string.Format("\"{0}Start{0}Middle{0}End\"", this.escapedCharMap[specialChar]), this.StreamToString());
             }
         }
@@ -160,9 +160,9 @@ namespace Microsoft.OData.Tests.Json
             foreach (string specialChar in this.escapedCharMap.Keys)
             {
                 this.TestInit();
-                char[] charBuffer = new char[10];
+                Ref<char[]> charBuffer = new Ref<char[]>(new char[10]);
                 JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("StartMiddle{0}End", specialChar),
-                    ODataStringEscapeOption.EscapeNonAscii, ref charBuffer);
+                    ODataStringEscapeOption.EscapeNonAscii, charBuffer);
                 Assert.Equal(string.Format("\"StartMiddle{0}End\"", this.escapedCharMap[specialChar]), this.StreamToString());
             }
         }
@@ -173,9 +173,9 @@ namespace Microsoft.OData.Tests.Json
             foreach (string specialChar in this.escapedCharMap.Keys)
             {
                 this.TestInit();
-                char[] charBuffer = new char[6];
+                Ref<char[]> charBuffer = new Ref<char[]>(new char[6]);
                 JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("Start{0}Middle{0}End{0}", specialChar),
-                    ODataStringEscapeOption.EscapeNonAscii, ref charBuffer);
+                    ODataStringEscapeOption.EscapeNonAscii, charBuffer);
                 Assert.Equal(string.Format("\"Start{0}Middle{0}End{0}\"", this.escapedCharMap[specialChar]), this.StreamToString());
             }
         }
@@ -186,9 +186,9 @@ namespace Microsoft.OData.Tests.Json
             foreach (string specialChar in this.escapedCharMap.Keys)
             {
                 this.TestInit();
-                char[] charBuffer = new char[6];
+                Ref<char[]> charBuffer = new Ref<char[]>(new char[6]);
                 JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("Start{0}", specialChar),
-                    ODataStringEscapeOption.EscapeNonAscii, ref charBuffer);
+                    ODataStringEscapeOption.EscapeNonAscii, charBuffer);
                 Assert.Equal(string.Format("\"Start{0}\"", this.escapedCharMap[specialChar]), this.StreamToString());
             }
         }
@@ -201,9 +201,9 @@ namespace Microsoft.OData.Tests.Json
             foreach (string specialChar in this.controlCharsMap.Keys)
             {
                 this.TestInit();
-                char[] charBuffer = new char[6];
+                Ref<char[]> charBuffer = new Ref<char[]>(new char[6]);
                 JsonValueUtils.WriteEscapedJsonString(this.writer, string.Format("S{0}M{0}E{0}", specialChar),
-                    escapeOption, ref charBuffer);
+                    escapeOption, charBuffer);
                 Assert.Equal(string.Format("\"S{0}M{0}E{0}\"", this.controlCharsMap[specialChar]), this.StreamToString());
             }
         }
@@ -214,10 +214,10 @@ namespace Microsoft.OData.Tests.Json
         public void WriteStringWithNoSpecialCharShouldLeaveBufferUntouched(ODataStringEscapeOption stringEscapeOption)
         {
             this.TestInit();
-            char[] charBuffer = null;
-            JsonValueUtils.WriteEscapedJsonString(this.writer, "StartMiddleEnd", stringEscapeOption, ref charBuffer);
+            Ref<char[]> charBuffer = new Ref<char[]>(null);
+            JsonValueUtils.WriteEscapedJsonString(this.writer, "StartMiddleEnd", stringEscapeOption, charBuffer);
             Assert.Equal("\"StartMiddleEnd\"", this.StreamToString());
-            Assert.Null(charBuffer);
+            Assert.Null(charBuffer.Value);
         }
 
         [Theory]
@@ -226,13 +226,13 @@ namespace Microsoft.OData.Tests.Json
         public void WriteStringShouldIgnoreExistingContentsOfTheBuffer(ODataStringEscapeOption stringEscapeOption)
         {
             this.TestInit();
-            char[] charBuffer = new char[128];
+            Ref<char[]> charBuffer = new Ref<char[]>(new char[128]);
             for (int index = 0; index < 128; index++)
             {
-                charBuffer[index] = (char)index;
+                charBuffer.Value[index] = (char)index;
             }
 
-            JsonValueUtils.WriteEscapedJsonString(this.writer, "StartVeryVeryLongMiddleEnd", stringEscapeOption, ref charBuffer);
+            JsonValueUtils.WriteEscapedJsonString(this.writer, "StartVeryVeryLongMiddleEnd", stringEscapeOption, charBuffer);
             Assert.Equal("\"StartVeryVeryLongMiddleEnd\"", this.StreamToString());
         }
 
@@ -241,7 +241,7 @@ namespace Microsoft.OData.Tests.Json
         {
             this.TestInit();
             var byteArray = new byte[] { 1, 2, 3 };
-            JsonValueUtils.WriteValue(this.writer, byteArray, ref this.buffer);
+            JsonValueUtils.WriteValue(this.writer, byteArray, this.buffer);
             Assert.Equal("\"AQID\"", this.StreamToString());
         }
 
@@ -257,7 +257,7 @@ namespace Microsoft.OData.Tests.Json
             }
 
             // Act, Get Base64 string from OData library
-            JsonValueUtils.WriteValue(this.writer, byteArray, ref this.buffer);
+            JsonValueUtils.WriteValue(this.writer, byteArray, this.buffer);
             string convertedBase64String = this.StreamToString();
 
             // Get Base64 string directly calling the converter.
@@ -276,7 +276,7 @@ namespace Microsoft.OData.Tests.Json
 
             // Initialize the buffer
             int bufferLength = 40;
-            this.buffer = new char[bufferLength];
+            this.buffer = new Ref<char[]>(new char[bufferLength]);
             int byteSize = bufferLength * 3 / 4;
 
             // Make the output Base64 string length same as the buffer size.
@@ -287,7 +287,7 @@ namespace Microsoft.OData.Tests.Json
             }
 
             // Act, Get Base64 string from OData library
-            JsonValueUtils.WriteValue(this.writer, byteArray, ref this.buffer);
+            JsonValueUtils.WriteValue(this.writer, byteArray, this.buffer);
             string convertedBase64String = this.StreamToString();
 
             // Get Base64 string directly calling the converter.
@@ -303,7 +303,7 @@ namespace Microsoft.OData.Tests.Json
         {
             this.TestInit();
             var byteArray = new byte[] { };
-            JsonValueUtils.WriteValue(this.writer, byteArray, ref this.buffer);
+            JsonValueUtils.WriteValue(this.writer, byteArray, this.buffer);
             Assert.Equal("\"\"", this.StreamToString());
         }
 
@@ -311,7 +311,7 @@ namespace Microsoft.OData.Tests.Json
         public void WriteNullByteShouldWork()
         {
             this.TestInit();
-            JsonValueUtils.WriteValue(this.writer, (byte[])null, ref this.buffer);
+            JsonValueUtils.WriteValue(this.writer, (byte[])null, this.buffer);
             Assert.Equal("null", this.StreamToString());
         }
 
@@ -321,6 +321,7 @@ namespace Microsoft.OData.Tests.Json
             StreamWriter innerWriter = new StreamWriter(this.stream);
             innerWriter.AutoFlush = true;
             this.writer = new NonIndentedTextWriter(innerWriter);
+            this.buffer = new Ref<char[]>();
         }
 
         private string StreamToString()

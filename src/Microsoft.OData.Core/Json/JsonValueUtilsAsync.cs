@@ -436,20 +436,20 @@ namespace Microsoft.OData.Json
         /// <param name="inputArrayOffset">How many characters to skip in the input array.</param>
         /// <param name="inputArrayCount">How many characters to write from the input array.</param>
         /// <param name="stringEscapeOption">The string escape option.</param>
+        /// <param name="buffer">Char buffer to use for streaming data.</param>
         /// <param name="bufferPool">Character buffer pool.</param>
-        internal static async Task WriteEscapedCharArrayAsync(this TextWriter writer, char[] inputArray, int inputArrayOffset, int inputArrayCount, ODataStringEscapeOption stringEscapeOption, ICharArrayPool bufferPool)
+        internal static async Task WriteEscapedCharArrayAsync(this TextWriter writer, char[] inputArray, int inputArrayOffset, 
+            int inputArrayCount,ODataStringEscapeOption stringEscapeOption, Ref<char[]> buffer, ICharArrayPool bufferPool)
         {
             int bufferIndex = 0;
-            char[] buffer = null;
-
-            buffer = BufferUtils.InitializeBufferIfRequired(bufferPool, buffer);
+            buffer.Value = BufferUtils.InitializeBufferIfRequired(bufferPool, buffer.Value);
             
-            WriteEscapedCharArrayToBuffer(writer, inputArray, ref inputArrayOffset, inputArrayCount, buffer, ref bufferIndex, stringEscapeOption);
+            WriteEscapedCharArrayToBuffer(writer, inputArray, ref inputArrayOffset, inputArrayCount, buffer.Value, ref bufferIndex, stringEscapeOption);
 
             // write remaining bytes in buffer
             if (bufferIndex > 0)
             {
-                await writer.WriteAsync(buffer, 0, bufferIndex).ConfigureAwait(false);
+                await writer.WriteAsync(buffer.Value, 0, bufferIndex).ConfigureAwait(false);
             }
         }
 
