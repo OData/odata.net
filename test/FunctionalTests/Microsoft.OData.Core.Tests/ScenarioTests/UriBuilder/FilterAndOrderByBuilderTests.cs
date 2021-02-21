@@ -465,6 +465,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
             Assert.Equal(new Uri("http://gobbledygook/People(1)/RelatedSSNs?$filter=endswith%28%24it%2C%27xyz%27%29"), actualUri);
         }
+
+        [Fact]
+        public void BuildFilterWithManyBinaryOperator()
+        {
+            Uri queryUri = new Uri("People?$filter=ID eq 1 or ID eq 2 or ID eq 3 or ID eq 4 or ID eq 5", UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal(new Uri("http://gobbledygook/People?$filter=ID eq 1 or ID eq 2 or ID eq 3 or ID eq 4 or ID eq 5"), actualUri);
+        }
         #endregion
 
         #region test $orderby

@@ -567,29 +567,43 @@ namespace Microsoft.OData
         /// <returns>The translated string with $it binding.</returns>
         private string BindBinaryOperatorNode(BinaryOperatorNode node, ResourceRangeVariable filterClauseRangeVariable)
         {
-            string translatedNode = this.TranslateNode(node);
+            string left = BindNode(node.Left, filterClauseRangeVariable);
             ResourceRangeVariableReferenceNode leftRangeVariableNode = GetResourceRangeVariableReferenceNode(node.Left);
-            ResourceRangeVariableReferenceNode rightRangeVariableNode = GetResourceRangeVariableReferenceNode(node.Right);
-
-            BinaryOperatorKind binaryNodeKind = node.OperatorKind;
-
-            string binaryOperator = this.BinaryOperatorNodeToString(binaryNodeKind);
-            string[] binarySeparator = { binaryOperator };
-            string[] substrings = translatedNode.Trim().Split(binarySeparator, StringSplitOptions.RemoveEmptyEntries);
-            string leftBinary = substrings[0].Trim();
-            string rightBinary = substrings[1].Trim();
-
             if (leftRangeVariableNode != null && IsDifferentSource(filterClauseRangeVariable, leftRangeVariableNode))
             {
-                leftBinary = ExpressionConstants.It + ExpressionConstants.SymbolForwardSlash + leftBinary;
+                left = ExpressionConstants.It + ExpressionConstants.SymbolForwardSlash + left;
             }
+            left = AddParentheses(left, node.OperatorKind, node.Left);
 
+            string right = BindNode(node.Right, filterClauseRangeVariable);
+            ResourceRangeVariableReferenceNode rightRangeVariableNode = GetResourceRangeVariableReferenceNode(node.Right);
             if (rightRangeVariableNode != null && IsDifferentSource(filterClauseRangeVariable, rightRangeVariableNode))
             {
-                rightBinary = ExpressionConstants.It + ExpressionConstants.SymbolForwardSlash + rightBinary;
+                right = ExpressionConstants.It + ExpressionConstants.SymbolForwardSlash + right;
             }
+            right = AddParentheses(right, node.OperatorKind, node.Right);
 
-            return leftBinary + ' ' + binaryOperator + ' ' + rightBinary;
+            return left + ' ' + BinaryOperatorNodeToString(node.OperatorKind) + ' ' + right;
+        }
+
+        /// <summary>
+        /// Add parentheses if needed.
+        /// </summary>
+        /// <param name="query">The translated string.</param>
+        /// <param name="operatorKind">The binary operator.</param>
+        /// <param name="node">Left or right node to bind.</param>
+        /// <returns></returns>
+        private static string AddParentheses(string query, BinaryOperatorKind operatorKind, SingleValueNode node)
+        {
+            if (node is BinaryOperatorNode binary &&
+                TranslateBinaryOperatorPriority(binary.OperatorKind) < TranslateBinaryOperatorPriority(operatorKind) ||
+                node is ConvertNode convert &&
+                convert.Source is BinaryOperatorNode source &&
+                TranslateBinaryOperatorPriority(source.OperatorKind) < TranslateBinaryOperatorPriority(operatorKind))
+            {
+                query = ExpressionConstants.SymbolOpenParen + query + ExpressionConstants.SymbolClosedParen;
+            }
+            return query;
         }
 
         /// <summary>
