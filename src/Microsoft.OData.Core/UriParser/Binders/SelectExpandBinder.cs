@@ -901,6 +901,11 @@ namespace Microsoft.OData.UriParser
                 state.RangeVariables.Push(explicitRangeVariable);
             }
 
+            // Create $this rangeVariable and add it to the Stack.
+            RangeVariable dollarThisRangeVariable = NodeFactory.CreateDollarThisRangeVariable(
+                elementType != null ? elementType : targetNavigationSource.EntityType().ToTypeReference(), targetNavigationSource);
+            state.RangeVariables.Push(dollarThisRangeVariable);
+
             return state;
         }
 

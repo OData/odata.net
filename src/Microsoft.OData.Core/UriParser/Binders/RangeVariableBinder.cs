@@ -25,16 +25,6 @@ namespace Microsoft.OData.UriParser
         {
             ExceptionUtils.CheckArgumentNotNull(rangeVariableToken, "rangeVariableToken");
 
-            // If $this is the rangeVariableToken Name, we push a rangeVariable with the same TypeReference as the ImplicitRangevariable
-            // to the state.RangeVariables stack.
-            if (rangeVariableToken.Name == ExpressionConstants.This)
-            {
-                // $this range variable will always have the same TypeReference as the ImplicitRangevariable.
-                IEdmTypeReference thisRangeVariableTypeReference = state.ImplicitRangeVariable.TypeReference;
-                RangeVariable thisRangeVariable = new NonResourceRangeVariable(ExpressionConstants.This, thisRangeVariableTypeReference, null);
-                state.RangeVariables.Push(thisRangeVariable);
-            }
-
             RangeVariable rangeVariable = state.RangeVariables.SingleOrDefault(p => p.Name == rangeVariableToken.Name);
 
             if (rangeVariable == null)
