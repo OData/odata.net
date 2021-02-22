@@ -66,6 +66,10 @@ SelectExpandQueryOption
 										Name = a
 										TypeReference = [Edm.String Nullable=True Unicode=True]
 									ResourceRangeVariable
+										Name = $this
+										NavigationSource = LoggedInEmployee
+										TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
+									ResourceRangeVariable
 										Name = $it
 										NavigationSource = OrderDetails
 										TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=False]
