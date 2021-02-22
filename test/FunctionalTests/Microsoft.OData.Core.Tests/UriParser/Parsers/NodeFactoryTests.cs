@@ -60,7 +60,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void CreateDollarThisRangeVariableShouldReturnNonEntityParameterQueryNodeForPrimitiveEntityType()
         {
             var type = EdmCoreModel.Instance.GetString(false);
-            var resultNode = NodeFactory.CreateImplicitRangeVariable(type, null);
+            var resultNode = NodeFactory.CreateDollarThisRangeVariable(type, null);
             var typeReference = resultNode.ShouldBeNonentityRangeVariable(ExpressionConstants.This).TypeReference;
             Assert.True(typeReference.IsEquivalentTo(type));
         }
