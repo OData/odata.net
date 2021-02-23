@@ -525,7 +525,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             CsdlSemanticsSchema schemaWrapper = new CsdlSemanticsSchema(this, schema);
             this.schemata.Add(schemaWrapper);
 
-            AddSchemaElements(schema, schemaWrapper);
+            AddSchemaElements(schemaWrapper);
 
             if (!string.IsNullOrEmpty(schema.Alias))
             {
@@ -566,7 +566,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
             if (shouldAddSchemaElements)
             {
-                AddSchemaElements(schema, schemaWrapper);
+                AddSchemaElements(schemaWrapper);
             }
 
             if (includeAnnotationsIndex.Count > 0)
@@ -708,7 +708,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             CsdlSemanticsSchema schemaWrapper,
             Dictionary<string, List<IEdmIncludeAnnotations>> includeAnnotationsIndex)
         {
-            if (includeAnnotationsIndex?.Count == 0)
+            if (includeAnnotationsIndex != null && includeAnnotationsIndex.Count == 0)
             {
                 return;
             }
