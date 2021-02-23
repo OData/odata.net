@@ -1607,7 +1607,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       </EntityType>
     </Schema>
     <Schema Namespace=""Other.Types"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-        <EntitType Name=""Person"">
+        <EntityType Name=""Person"">
           <Key>
             <PropertyRef Name=""Id"" />
           </Key>
@@ -1638,6 +1638,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             var container = model.FindEntityContainer("Default.Container");
             Assert.NotNull(container);
 
+            // this is not imported because the Other.Types namespace is not referenced by the permissionsCsdl model
             var personType = model.FindType("Other.Types.Person");
             Assert.Null(personType);
         }
