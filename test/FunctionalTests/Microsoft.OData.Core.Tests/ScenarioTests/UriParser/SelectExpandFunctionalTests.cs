@@ -1440,7 +1440,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void DollarThisinFilterInsideSelectShouldReferenceSelectedItem()
+        public void DollarThisinFilterInsideSelectShouldReferenceSelectedItemPrimitiveType()
         {
             // Arrange & Act
             // People?$select=RelatedSSNs($filter=endswith($this,'xyz'))
@@ -1455,9 +1455,39 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal(2, singleValueFunctionCallNode.Parameters.Count());
 
             ConvertNode convertNode = (ConvertNode) singleValueFunctionCallNode.Parameters.First();
+
+            // $this references RelatedSSNs which is a collection of primitives, that's why we have a NonResourceRangeVariableReferenceNode
             convertNode.Source.ShouldBeNonResourceRangeVariableReferenceNode(ExpressionConstants.This);
             IEdmTypeReference typeReference = convertNode.Source.TypeReference;
             Assert.Equal("Edm.String", typeReference.Definition.FullTypeName()); // RelatedSSNs is a collection of strings.
+        }
+
+        [Fact]
+        public void DollarThisinFilterInsideSelectShouldReferenceSelectedItemStructuredType()
+        {
+            // Arrange
+
+            // $this/Street references PreviousAddresses which is a collection of Type Address.
+            IEdmStructuredType expectedType = (IEdmStructuredType)HardCodedTestModel.GetAddressType();
+
+            // Act
+            // People?$select=PreviousAddresses($filter=endswith($this/Street,'xyz'))
+            SelectExpandClause clause = RunParseSelectExpand("PreviousAddresses($filter=endswith($this/Street,'xyz'))", "", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            // Assert
+            PathSelectItem selectItem = (PathSelectItem)Assert.Single(clause.SelectedItems);
+            Assert.NotNull(selectItem.FilterOption);
+            selectItem.FilterOption.Expression.ShouldBeSingleValueFunctionCallQueryNode("endswith");
+
+            SingleValueFunctionCallNode singleValueFunctionCallNode = (SingleValueFunctionCallNode)selectItem.FilterOption.Expression; // endswith($this/Street,'xyz')
+            Assert.Equal(2, singleValueFunctionCallNode.Parameters.Count());
+
+            SingleValuePropertyAccessNode singleValuePropertyAccessNode = (SingleValuePropertyAccessNode)singleValueFunctionCallNode.Parameters.First(); // $this/Street
+
+            // $this references Address which is a structured stype, that's why we have a ResourceRangeVariableReferenceNode.
+            singleValuePropertyAccessNode.Source.ShouldBeResourceRangeVariableReferenceNode(ExpressionConstants.This);
+            Assert.Equal("Street", singleValuePropertyAccessNode.Property.Name);
+            Assert.Equal(expectedType, singleValuePropertyAccessNode.Property.DeclaringType); // Address is the DeclaringType of Street
         }
 
         [Fact]
