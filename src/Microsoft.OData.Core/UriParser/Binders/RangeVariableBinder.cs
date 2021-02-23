@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System.Linq;
-using Microsoft.OData.Edm;
 using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.UriParser
