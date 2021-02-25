@@ -46,6 +46,12 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// </summary>
         public VersioningDictionary<string, string> NamespaceAliasMappings { get; }
 
+        internal abstract void WriteReferenceElementHeader(IEdmReference reference);
+        internal abstract void WriteReferenceElementEnd(IEdmReference reference);
+
+        internal abstract void WritIncludeElementHeader(IEdmInclude include);
+        internal abstract void WriteIncludeElementEnd(IEdmInclude include);
+
         internal abstract void WriteTermElementHeader(IEdmTerm term, bool inlineType);
 
         internal abstract void WriteComplexTypeElementHeader(IEdmComplexType complexType);

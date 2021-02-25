@@ -154,20 +154,20 @@ namespace Microsoft.OData.Edm.Csdl
                 }
 
                 // Skip the built-in vocabulary annotation model
-                if (edmReference.Uri != null && (edmReference.Uri.OriginalString.EndsWith("/Org.OData.Core.V1.json", StringComparison.Ordinal) ||
-                    edmReference.Uri.OriginalString.EndsWith("/Org.OData.Capabilities.V1.json", StringComparison.Ordinal) ||
-                    edmReference.Uri.OriginalString.EndsWith("/Org.OData.Authorization.V1.json", StringComparison.Ordinal) ||
-                    edmReference.Uri.OriginalString.EndsWith("/Org.OData.Validation.V1.json", StringComparison.Ordinal) ||
-                    edmReference.Uri.OriginalString.EndsWith("/Org.OData.Community.V1.json", StringComparison.Ordinal) ||
-                    edmReference.Uri.OriginalString.EndsWith("/OData.Community.Keys.V1.json", StringComparison.Ordinal)))
+                if (edmReference.Uri != null && (edmReference.Uri.EndsWith("/Org.OData.Core.V1.json", StringComparison.Ordinal) ||
+                    edmReference.Uri.EndsWith("/Org.OData.Capabilities.V1.json", StringComparison.Ordinal) ||
+                    edmReference.Uri.EndsWith("/Org.OData.Authorization.V1.json", StringComparison.Ordinal) ||
+                    edmReference.Uri.EndsWith("/Org.OData.Validation.V1.json", StringComparison.Ordinal) ||
+                    edmReference.Uri.EndsWith("/Org.OData.Community.V1.json", StringComparison.Ordinal) ||
+                    edmReference.Uri.EndsWith("/OData.Community.Keys.V1.json", StringComparison.Ordinal)))
                 {
                     continue;
                 }
 
-                Utf8JsonReader referencedJsonReader = context.Settings.JsonSchemaReaderFactory(edmReference.Uri, out bool skip);
+                Utf8JsonReader referencedJsonReader = context.Settings.JsonSchemaReaderFactory(new Uri(edmReference.Uri, UriKind.RelativeOrAbsolute), out bool skip);
                 if (!skip)
                 {
-                    string source = edmReference.Uri != null ? edmReference.Uri.OriginalString : null;
+                    string source = edmReference.Uri != null ? edmReference.Uri : null;
                     CsdlJsonReaderSettings newSettings = context.Settings.Clone();
 
                     // set it to null to make sure stop the next level reference parsing.

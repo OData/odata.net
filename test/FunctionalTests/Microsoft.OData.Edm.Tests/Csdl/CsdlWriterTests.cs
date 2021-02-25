@@ -31,7 +31,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             // Arrange
             EdmModel model = new EdmModel();
             EdmReference reference1 = new EdmReference(new Uri("https://example.com/Org.OData.Authorization.V1.xml"));
-            reference1.AddInclude(new EdmInclude("Auth", "Org.OData.Authorization.V1"));
+            EdmInclude authInclude = new EdmInclude("Auth", "Org.OData.Authorization.V1");
+            reference1.AddInclude(authInclude);
             reference1.AddIncludeAnnotations(new EdmIncludeAnnotations("org.example.validation", null, null));
             reference1.AddIncludeAnnotations(new EdmIncludeAnnotations("org.example.display", "Tablet", null));
 
@@ -41,11 +42,23 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             reference2.AddIncludeAnnotations(new EdmIncludeAnnotations("org.example.hcm", "Tablet", "com.example.Person"));
             model.SetEdmReferences(new[] { reference1, reference2 });
 
+            EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(authInclude,
+                CoreVocabularyModel.LongDescriptionTerm, new EdmStringConstant("Include Description."));
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
+
+            annotation = new EdmVocabularyAnnotation(reference2,
+                CoreVocabularyModel.LongDescriptionTerm, new EdmStringConstant("EdmReference Description."));
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
+
             // Act & Assert for XML
             WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
               "<edmx:Reference Uri=\"https://example.com/Org.OData.Authorization.V1.xml\">" +
-                "<edmx:Include Namespace=\"Org.OData.Authorization.V1\" Alias=\"Auth\" />" +
+                "<edmx:Include Namespace=\"Org.OData.Authorization.V1\" Alias=\"Auth\">" +
+                  "<Annotation Term=\"Org.OData.Core.V1.LongDescription\" String=\"Include Description.\" />" +
+                "</edmx:Include>" +
                 "<edmx:IncludeAnnotations TermNamespace=\"org.example.validation\" />" +
                 "<edmx:IncludeAnnotations TermNamespace=\"org.example.display\" Qualifier=\"Tablet\" />" +
               "</edmx:Reference>" +
@@ -53,6 +66,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 "<edmx:Include Namespace=\"Org.OData.Core.V1\" Alias=\"Core\" />" +
                 "<edmx:IncludeAnnotations TermNamespace=\"org.example.hcm\" TargetNamespace=\"com.example.Sales\" />" +
                 "<edmx:IncludeAnnotations TermNamespace=\"org.example.hcm\" Qualifier=\"Tablet\" TargetNamespace=\"com.example.Person\" />" +
+                "<Annotation Term=\"Org.OData.Core.V1.LongDescription\" String=\"EdmReference Description.\" />" +
               "</edmx:Reference>" +
               "<edmx:DataServices />" +
             "</edmx:Edmx>");
@@ -65,7 +79,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       ""$Include"": [
         {
           ""$Namespace"": ""Org.OData.Authorization.V1"",
-          ""$Alias"": ""Auth""
+          ""$Alias"": ""Auth"",
+          ""@Org.OData.Core.V1.LongDescription"": ""Include Description.""
         }
       ],
       ""$IncludeAnnotations"": [
@@ -95,7 +110,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
           ""$Qualifier"": ""Tablet"",
           ""$TargetNamespace"": ""com.example.Person""
         }
-      ]
+      ],
+      ""@Org.OData.Core.V1.LongDescription"": ""EdmReference Description.""
     }
   }
 }");
