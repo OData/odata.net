@@ -40,8 +40,9 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentNotNull(node, "node");
 
+            string source = TranslateNode(node.Source);
             rangeVariables.Push(node.CurrentRangeVariable);
-            String result = String.Concat(this.TranslateNode(node.Source), ExpressionConstants.SymbolForwardSlash, ExpressionConstants.KeywordAll, ExpressionConstants.SymbolOpenParen, node.CurrentRangeVariable.Name, ":", this.TranslateNode(node.Body), ExpressionConstants.SymbolClosedParen);
+            String result = String.Concat(source, ExpressionConstants.SymbolForwardSlash, ExpressionConstants.KeywordAll, ExpressionConstants.SymbolOpenParen, node.CurrentRangeVariable.Name, ":", this.TranslateNode(node.Body), ExpressionConstants.SymbolClosedParen);
             rangeVariables.Pop();
             return result;
         }
@@ -61,8 +62,9 @@ namespace Microsoft.OData
             }
             else
             {
+                string source = TranslateNode(node.Source);
                 rangeVariables.Push(node.CurrentRangeVariable);
-                string query = String.Concat(this.TranslateNode(node.Source), ExpressionConstants.SymbolForwardSlash, ExpressionConstants.KeywordAny, ExpressionConstants.SymbolOpenParen, node.CurrentRangeVariable.Name, ":", this.TranslateNode(node.Body), ExpressionConstants.SymbolClosedParen);
+                string query = String.Concat(source, ExpressionConstants.SymbolForwardSlash, ExpressionConstants.KeywordAny, ExpressionConstants.SymbolOpenParen, node.CurrentRangeVariable.Name, ":", this.TranslateNode(node.Body), ExpressionConstants.SymbolClosedParen);
                 rangeVariables.Pop();
                 return query;
             }
@@ -78,12 +80,6 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(node, "node");
 
             var left = this.TranslateNode(node.Left);
-            ResourceRangeVariableReferenceNode leftRangeVariableNode = GetResourceRangeVariableReferenceNode(node.Left);
-            if (IsDifferentSource(leftRangeVariableNode))
-            {
-                left = ExpressionConstants.It + ExpressionConstants.SymbolForwardSlash + left;
-            }
-
             if (node.Left.Kind == QueryNodeKind.BinaryOperator && TranslateBinaryOperatorPriority(((BinaryOperatorNode)node.Left).OperatorKind) < TranslateBinaryOperatorPriority(node.OperatorKind) ||
                 node.Left.Kind == QueryNodeKind.Convert && ((ConvertNode)node.Left).Source.Kind == QueryNodeKind.BinaryOperator &&
                 TranslateBinaryOperatorPriority(((BinaryOperatorNode)((ConvertNode)node.Left).Source).OperatorKind) < TranslateBinaryOperatorPriority(node.OperatorKind))
@@ -92,12 +88,6 @@ namespace Microsoft.OData
             }
 
             var right = this.TranslateNode(node.Right);
-            ResourceRangeVariableReferenceNode rightRangeVariableNode = GetResourceRangeVariableReferenceNode(node.Right);
-            if (IsDifferentSource(rightRangeVariableNode))
-            {
-                right = ExpressionConstants.It + ExpressionConstants.SymbolForwardSlash + right;
-            }
-
             if (node.Right.Kind == QueryNodeKind.BinaryOperator && TranslateBinaryOperatorPriority(((BinaryOperatorNode)node.Right).OperatorKind) < TranslateBinaryOperatorPriority(node.OperatorKind) ||
                 node.Right.Kind == QueryNodeKind.Convert && ((ConvertNode)node.Right).Source.Kind == QueryNodeKind.BinaryOperator &&
                 TranslateBinaryOperatorPriority(((BinaryOperatorNode)((ConvertNode)node.Right).Source).OperatorKind) < TranslateBinaryOperatorPriority(node.OperatorKind))
@@ -119,13 +109,6 @@ namespace Microsoft.OData
 
             string left = this.TranslateNode(node.Left);
             string right = this.TranslateNode(node.Right);
-
-            ResourceRangeVariableReferenceNode leftRangeVariableNode = GetResourceRangeVariableReferenceNode(node.Left);
-            if (IsDifferentSource(leftRangeVariableNode))
-            {
-                left = ExpressionConstants.It + ExpressionConstants.SymbolForwardSlash + left;
-            }
-
             return String.Concat(left, ' ', ExpressionConstants.KeywordIn, ' ', right);
         }
 
@@ -356,14 +339,7 @@ namespace Microsoft.OData
         public override String Visit(SingleValueOpenPropertyAccessNode node)
         {
             ExceptionUtils.CheckArgumentNotNull(node, "node");
-            string translatedNode = this.TranslatePropertyAccess(node.Source, node.Name);
-
-            ResourceRangeVariableReferenceNode rangeVariableNode = GetResourceRangeVariableReferenceNode(node);
-            if (IsDifferentSource(rangeVariableNode))
-            {
-                translatedNode = ExpressionConstants.It + ExpressionConstants.SymbolForwardSlash + translatedNode;
-            }
-            return translatedNode;
+            return this.TranslatePropertyAccess(node.Source, node.Name);
         }
 
         /// <summary>
@@ -613,8 +589,15 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(sourceNode, "sourceNode");
             ExceptionUtils.CheckArgumentNotNull(edmPropertyName, "edmPropertyName");
 
+            rangeVariables.Push(GetResourceRangeVariableReferenceNode(sourceNode)?.RangeVariable);
             String source = this.TranslateNode(sourceNode);
-            return String.IsNullOrEmpty(source) ? edmPropertyName : string.Concat(source, ExpressionConstants.SymbolForwardSlash, edmPropertyName);
+            rangeVariables.Pop();
+            string query = String.IsNullOrEmpty(source) ? edmPropertyName : string.Concat(source, ExpressionConstants.SymbolForwardSlash, edmPropertyName);
+            if (IsDifferentSource(sourceNode))
+            {
+                query = ExpressionConstants.It + ExpressionConstants.SymbolForwardSlash + query;
+            }
+            return query;
         }
 
         /// <summary>
@@ -751,17 +734,22 @@ namespace Microsoft.OData
         /// <summary>
         /// Check whether Navigation source of the FilterClause rangeVariable is different from the Expression rangeVariable.
         /// </summary>
-        /// <param name="rangeVariableReferenceNode">The rangeVariable of the expression.</param>
+        /// <param name="node">Expression node.</param>
         /// <returns>If Navigation Source are different, returns true. Otherwise false.</returns>
-        private bool IsDifferentSource(ResourceRangeVariableReferenceNode rangeVariableReferenceNode)
+        private bool IsDifferentSource(QueryNode node)
         {
+            ResourceRangeVariableReferenceNode rangeVariableReferenceNode = GetResourceRangeVariableReferenceNode(node);
+            if (rangeVariableReferenceNode == null)
+            {
+                return false;
+            }
             if (rangeVariables.Count == 0)
             {
                 return false;
             }
 
             RangeVariable rangeVariable = rangeVariables.Peek();
-            if (rangeVariable == null || rangeVariableReferenceNode == null)
+            if (rangeVariable == null)
             {
                 return false;
             }
@@ -775,6 +763,11 @@ namespace Microsoft.OData
         /// <returns>The extracted ResourceRangeVariableReferenceNode.</returns>
         private ResourceRangeVariableReferenceNode GetResourceRangeVariableReferenceNode(QueryNode node)
         {
+            if (node == null)
+            {
+                return null;
+            }
+
             switch (node.Kind)
             {
                 case QueryNodeKind.SingleValuePropertyAccess:
@@ -815,6 +808,14 @@ namespace Microsoft.OData
                 case QueryNodeKind.SingleNavigationNode:
                     SingleNavigationNode singleNavigationNode = node as SingleNavigationNode;
                     return GetResourceRangeVariableReferenceNode(singleNavigationNode.Source);
+
+                case QueryNodeKind.CollectionResourceFunctionCall:
+                    CollectionResourceFunctionCallNode collectionResourceFunctionCallNode = node as CollectionResourceFunctionCallNode;
+                    return GetResourceRangeVariableReferenceNode(collectionResourceFunctionCallNode.Source);
+
+                case QueryNodeKind.SingleResourceFunctionCall:
+                    SingleResourceFunctionCallNode singleResourceFunctionCallNode = node as SingleResourceFunctionCallNode;
+                    return GetResourceRangeVariableReferenceNode(singleResourceFunctionCallNode.Source);
             }
 
             return null;
