@@ -113,14 +113,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
             foreach (var schema in referencedCsdlModel.Schemata)
             {
-                string schemaNamespace = schema.Namespace;
-                IEdmInclude edmInclude = referencedCsdlModel.ParentModelReferences.SelectMany(s => s.Includes).FirstOrDefault(s => s.Namespace == schemaNamespace);
-                if (edmInclude != null)
-                {
-                    this.AddSchema(schema, false /*addAnnotations*/);
-                }
-
-                // TODO: REF add annotations
+                this.AddSchemaIfReferenced(schema, referencedCsdlModel.ParentModelReferences);
             }
         }
 
@@ -531,17 +524,141 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         {
             CsdlSemanticsSchema schemaWrapper = new CsdlSemanticsSchema(this, schema);
             this.schemata.Add(schemaWrapper);
+
+            AddSchemaElements(schemaWrapper);
+
+            if (!string.IsNullOrEmpty(schema.Alias))
+            {
+                this.SetNamespaceAlias(schema.Namespace, schema.Alias);
+            }
+
+            if (addAnnotations)
+            {
+                // this adds all out-of-line annotations in the schema regardless of edmx:IncludeAnnotations references in the model
+                AddOutOfLineAnnotationsFromSchema(schema, schemaWrapper, /* includeAnnotationsIndex */ null);
+            }
+
+            var edmVersion = this.GetEdmVersion();
+            if (edmVersion == null || edmVersion < schema.Version)
+            {
+                this.SetEdmVersion(schema.Version);
+            }
+        }
+
+        /// <summary>
+        /// Adds the specified <paramref name="schema"/> to this model if 
+        /// the schema's namespace or annotations are referenced by the parent model
+        /// </summary>
+        /// <param name="schema">The schema to add</param>
+        /// <param name="parentReferences">The <see cref="IEdmReference"/>s of the parent model.</param>
+        private void AddSchemaIfReferenced(CsdlSchema schema, IEnumerable<IEdmReference> parentReferences)
+        {
+            CsdlSemanticsSchema schemaWrapper = new CsdlSemanticsSchema(this, schema);
+
+            bool shouldAddSchemaElements;
+            Dictionary<string, List<IEdmIncludeAnnotations>> includeAnnotationsIndex;
+            ProcessSchemaParentReferences(schema, schemaWrapper, parentReferences, out shouldAddSchemaElements, out includeAnnotationsIndex);
+
+            if (!string.IsNullOrEmpty(schema.Alias))
+            {
+                this.SetNamespaceAlias(schema.Namespace, schema.Alias);
+            }
+
+            if (shouldAddSchemaElements)
+            {
+                AddSchemaElements(schemaWrapper);
+            }
+
+            if (includeAnnotationsIndex.Count > 0)
+            {
+                AddOutOfLineAnnotationsFromSchema(schema, schemaWrapper, includeAnnotationsIndex);
+            }
+
+            if (shouldAddSchemaElements || includeAnnotationsIndex.Count > 0)
+            {
+                this.schemata.Add(schemaWrapper);
+
+                var edmVersion = this.GetEdmVersion();
+                if (edmVersion == null || edmVersion < schema.Version)
+                {
+                    this.SetEdmVersion(schema.Version);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Process the <see cref="IEdmReference"/>s of the parent model to
+        /// figure out whether the schema's types (entity types, enums, containers, etc.) and annotations should
+        /// be imported
+        /// </summary>
+        /// <param name="schema">The schema to process</param>
+        /// <param name="schemaWrapper">The <see cref="CsdlSemanticsSchema"/> wrapper of <paramref name="schema"/></param>
+        /// <param name="parentReferences">The references in the model that contains the <paramref name="schema"/></param>
+        /// <param name="shouldAddSchemaElements">Whether schema types such entity types, operations, enums, etc. should be added</param>
+        /// <param name="includeAnnotationsIndex">Cache of the schema's out-of-line <see cref="IEdmIncludeAnnotations"/>s indexed by the term namespace</param>
+        private static void ProcessSchemaParentReferences(
+            CsdlSchema schema,
+            CsdlSemanticsSchema schemaWrapper,
+            IEnumerable<IEdmReference> parentReferences,
+            out bool shouldAddSchemaElements,
+            out Dictionary<string, List<IEdmIncludeAnnotations>> includeAnnotationsIndex)
+        {
+            string schemaNamespace = schema.Namespace;
+
+            shouldAddSchemaElements = false;
+            includeAnnotationsIndex = new Dictionary<string, List<IEdmIncludeAnnotations>>();
+            
+
+            foreach (IEdmReference reference in parentReferences)
+            {
+                if (!shouldAddSchemaElements)
+                {
+                    // we should add types from this schema if there's at least
+                    // one edmx:Include that references this schema's namespace
+                    foreach (IEdmInclude include in reference.Includes)
+                    {
+                        if (include.Namespace == schemaNamespace)
+                        {
+                            shouldAddSchemaElements = true;
+                            break;
+                        }
+                    }
+                }
+
+                foreach(IEdmIncludeAnnotations includeAnnotations in reference.IncludeAnnotations)
+                {
+                    // index the edmx:IncludeAnnotations by namespace to make it
+                    // easier to filter which annotations to import with the schema
+                    string termNamespace = includeAnnotations.TermNamespace;
+                    List<IEdmIncludeAnnotations> cachedAnnotations;
+                    if (!includeAnnotationsIndex.TryGetValue(termNamespace, out cachedAnnotations))
+                    {
+                        cachedAnnotations = new List<IEdmIncludeAnnotations>();
+                        includeAnnotationsIndex[termNamespace] = cachedAnnotations;
+                    }
+
+                    cachedAnnotations.Add(includeAnnotations);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Registers schema elements (entity types, operations, entity containers, etc.) from the
+        /// specified schema into the model.
+        /// </summary>
+        /// <param name="schemaWrapper">The <see cref="CsdlSemanticsSchema"/> to add elements from</param>
+        private void AddSchemaElements(CsdlSemanticsSchema schemaWrapper)
+        {
             foreach (IEdmSchemaType type in schemaWrapper.Types)
             {
                 CsdlSemanticsStructuredTypeDefinition structuredType = type as CsdlSemanticsStructuredTypeDefinition;
                 if (structuredType != null)
                 {
-                    string baseTypeNamespace;
                     string baseTypeName;
                     string baseTypeFullName = ((CsdlNamedStructuredType)structuredType.Element).BaseTypeName;
                     if (baseTypeFullName != null)
                     {
-                        EdmUtil.TryGetNamespaceNameFromQualifiedName(baseTypeFullName, out baseTypeNamespace, out baseTypeName);
+                        EdmUtil.TryGetNamespaceNameFromQualifiedName(baseTypeFullName, out _, out baseTypeName);
                         if (baseTypeName != null)
                         {
                             List<IEdmStructuredType> derivedTypes;
@@ -574,35 +691,104 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             {
                 RegisterElement(container);
             }
+        }
 
-            if (!string.IsNullOrEmpty(schema.Alias))
+        /// <summary>
+        /// Adds out-of-line annotations from the specified schema
+        /// if they are referenced in the <paramref name="includeAnnotationsIndex"/> cache.
+        /// </summary>
+        /// <param name="schema">The schema to add annotations from.</param>
+        /// <param name="schemaWrapper">The <see cref="CsdlSemanticsSchema"/> wrapper for the provided schema</param>
+        /// <param name="includeAnnotationsIndex">Cache of the schema's out-of-line <see cref="IEdmIncludeAnnotations"/>s indexed by the term namespace.
+        /// If this dictionary is non-empty, then only annotations that match
+        /// the references will be added. If it's empty, no annotations will be added. If it's null, all annotations
+        /// will be added unconditionally.</param>
+        private void AddOutOfLineAnnotationsFromSchema(
+            CsdlSchema schema,
+            CsdlSemanticsSchema schemaWrapper,
+            Dictionary<string, List<IEdmIncludeAnnotations>> includeAnnotationsIndex)
+        {
+            if (includeAnnotationsIndex != null && includeAnnotationsIndex.Count == 0)
             {
-                this.SetNamespaceAlias(schema.Namespace, schema.Alias);
+                return;
             }
 
-            if (addAnnotations)
+            foreach (CsdlAnnotations schemaOutOfLineAnnotations in schema.OutOfLineAnnotations)
             {
-                foreach (CsdlAnnotations schemaOutOfLineAnnotations in schema.OutOfLineAnnotations)
+                string target = this.ReplaceAlias(schemaOutOfLineAnnotations.Target);
+                
+                List<CsdlSemanticsAnnotations> annotations;
+                if (!this.outOfLineAnnotations.TryGetValue(target, out annotations))
                 {
-                    string target = this.ReplaceAlias(schemaOutOfLineAnnotations.Target);
-
-                    List<CsdlSemanticsAnnotations> annotations;
-                    if (!this.outOfLineAnnotations.TryGetValue(target, out annotations))
-                    {
-                        annotations = new List<CsdlSemanticsAnnotations>();
-                        this.outOfLineAnnotations[target] = annotations;
-                    }
-
-                    annotations.Add(new CsdlSemanticsAnnotations(schemaWrapper, schemaOutOfLineAnnotations));
+                    annotations = new List<CsdlSemanticsAnnotations>();
+                    this.outOfLineAnnotations[target] = annotations;
                 }
+
+                CsdlAnnotations filteredAnnotations = FilterIncludedAnnotations(schemaOutOfLineAnnotations, target, includeAnnotationsIndex);
+                annotations.Add(new CsdlSemanticsAnnotations(schemaWrapper, filteredAnnotations));
+            }
+        }
+
+        /// <summary>
+        /// Filters the annotations of the specified <paramref name="csdlAnnotations"/>
+        /// and returns a copy containing only the annotations that match the
+        /// specified <see cref="IEdmIncludeAnnotations"/>
+        /// </summary>
+        /// <param name="csdlAnnotations"><see cref="CsdlAnnotations"/> containing the out-of-line annotations to filter</param>
+        /// <param name="target">The target of the out-of-line annotations with the alias namespace already resolved.</param>
+        /// <param name="includeAnnotationsIndex">Cache of the schema's out-of-line <see cref="IEdmIncludeAnnotations"/>s indexed by the term namespace.
+        /// If the dictionary is non-null, only annotations that match the references will be included.
+        /// If it's null, all annotations will be added unconditionally.</param>
+        /// <returns>A <see cref="CsdlAnnotations"/> object with the same target and qualifier as the original, but including
+        /// only the annotations that match the references in the <paramref name="includeAnnotationsIndex"/>.</returns>
+        private CsdlAnnotations FilterIncludedAnnotations(
+            CsdlAnnotations csdlAnnotations,
+            string target,
+            Dictionary<string, List<IEdmIncludeAnnotations>> includeAnnotationsIndex)
+        {
+            if (includeAnnotationsIndex == null)
+            {
+                return csdlAnnotations;
             }
 
-            var edmVersion = this.GetEdmVersion();
-            if (edmVersion == null || edmVersion < schema.Version)
+            var filteredAnnotations = csdlAnnotations.Annotations.Where(annotation =>
+                ShouldIncludeAnnotation(annotation, target, includeAnnotationsIndex));
+            return new CsdlAnnotations(filteredAnnotations, csdlAnnotations.Target, csdlAnnotations.Qualifier);
+        }
+
+        /// <summary>
+        /// Checks whether the specified annoation should be included in the model based
+        /// on whether it matches any of the provided <see cref="IEdmIncludeAnnotations"/> references.
+        /// </summary>
+        /// <param name="annotation">The annotation to test</param>
+        /// <param name="target">The target of the annotation, with the alias already resolved if any</param>
+        /// <param name="includeAnnotationsIndex">Cache of the schema's out-of-line <see cref="IEdmIncludeAnnotations"/>s indexed by the term namespace.
+        /// The annotation should be included if it matches at least one of references in this cache.</param>
+        /// <returns>Whether or not the annotation should be included in the model.</returns>
+        private bool ShouldIncludeAnnotation(
+            CsdlAnnotation annotation,
+            string target,
+            Dictionary<string, List<IEdmIncludeAnnotations>> includeAnnotationsIndex)
+        {
+            // include annotation if it matches one of the edmx:IncludeAnnotation references
+            // we check if the namespace matches, and (if applicable) also the target namespace and the qualifier
+            // see: http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_IncludedAnnotations
+
+            string qualifiedTerm = this.ReplaceAlias(annotation.Term);
+            EdmUtil.TryGetNamespaceNameFromQualifiedName(target, out string targetNamespace, out _);
+            if (EdmUtil.TryGetNamespaceNameFromQualifiedName(qualifiedTerm, out string termNamespace, out _))
             {
-                this.SetEdmVersion(schema.Version);
+                if (includeAnnotationsIndex.TryGetValue(termNamespace, out List<IEdmIncludeAnnotations> includeAnnotations))
+                {
+
+                    return includeAnnotations.Any(include =>
+                        (string.IsNullOrEmpty(include.Qualifier) || annotation.Qualifier == include.Qualifier)
+                        && (string.IsNullOrEmpty(include.TargetNamespace) || targetNamespace == include.TargetNamespace));
+                }
+                   
             }
+
+            return false;
         }
     }
 }
-
