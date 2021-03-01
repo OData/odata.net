@@ -80,8 +80,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
         private CsdlInclude OnIncludeElement(XmlElementInfo element, XmlElementValueCollection childValues)
         {
-            string alias = Required(CsdlConstants.Attribute_Alias);
             string nameSp = Required(CsdlConstants.Attribute_Namespace);
+            string alias = Optional(CsdlConstants.Attribute_Alias);
             return new CsdlInclude(alias, nameSp, element.Location);
         }
 
