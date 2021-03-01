@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
@@ -179,8 +180,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             });
 
             CsdlReference reference = new CsdlReference(url,
-                includes,
-                includeAnnotations,
+                includes ?? Enumerable.Empty<CsdlInclude>(),
+                includeAnnotations ?? Enumerable.Empty<CsdlIncludeAnnotations>(),
                 context.Location());
             annotations.ForEach(a => reference.AddAnnotation(a));
             return reference;
