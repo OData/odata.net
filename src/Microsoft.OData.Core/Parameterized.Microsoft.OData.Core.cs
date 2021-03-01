@@ -5334,6 +5334,17 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The parameter alias value expression is not string value."
+        /// </summary>
+        internal static string MetadataBinder_ParameterAliasValueExpressionNotSingleValue
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.MetadataBinder_ParameterAliasValueExpressionNotSingleValue);
+            }
+        }
+
+        /// <summary>
         /// A string like "An unsupported query token kind '{0}' was found."
         /// </summary>
         internal static string MetadataBinder_UnsupportedQueryTokenKind(object p0)

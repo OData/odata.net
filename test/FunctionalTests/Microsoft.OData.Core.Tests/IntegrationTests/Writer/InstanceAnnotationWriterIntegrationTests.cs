@@ -751,7 +751,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
 
         private void WriteAnnotationAtStartInDeltaFeed(string expectedPayload, long? count, Uri nextLink, Uri deltaLink)
         {
-            Action<ODataDeltaWriter> action = (odataWriter) =>
+            Action<ODataWriter> action = (odataWriter) =>
             {
                 var feedToWrite = new ODataDeltaResourceSet { Id = new Uri("urn:feedId") };
                 feedToWrite.InstanceAnnotations.Add(new ODataInstanceAnnotation("Custom.StartAnnotation", PrimitiveValue1));
@@ -767,7 +767,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
 
         private void WriteAnnotationAtEndInDeltaFeed(string expectedPayload, long? count, Uri nextLink, Uri deltaLink)
         {
-            Action<ODataDeltaWriter> action = (odataWriter) =>
+            Action<ODataWriter> action = (odataWriter) =>
             {
                 var feedToWrite = new ODataDeltaResourceSet { Id = new Uri("urn:feedId") };
                 odataWriter.WriteStart(feedToWrite);
@@ -781,7 +781,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
             WriteDeltaFeedAnnotationsAndValidatePayload(action, EntitySet, expectedPayload);
         }
 
-        private void WriteDeltaFeedAnnotationsAndValidatePayload(Action<ODataDeltaWriter> action, IEdmEntitySet entitySet, string expectedPayload)
+        private void WriteDeltaFeedAnnotationsAndValidatePayload(Action<ODataWriter> action, IEdmEntitySet entitySet, string expectedPayload)
         {
             var writerSettings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false };
             writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
@@ -792,7 +792,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
             responseMessageToWrite.PreferenceAppliedHeader().AnnotationFilter = "*";
             using (var messageWriter = new ODataMessageWriter(responseMessageToWrite, writerSettings, Model))
             {
-                ODataDeltaWriter odataDeltaWriter = messageWriter.CreateODataDeltaWriter(entitySet, EntityType);
+                ODataWriter odataDeltaWriter = messageWriter.CreateODataDeltaResourceSetWriter(entitySet, EntityType);
                 action(odataDeltaWriter);
             }
 

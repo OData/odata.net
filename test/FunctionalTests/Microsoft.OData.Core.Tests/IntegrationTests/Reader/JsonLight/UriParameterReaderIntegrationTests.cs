@@ -16,7 +16,6 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 {
     public class UriParameterReaderIntegrationTests
     {
-        private readonly Uri metadataDocumentUri = new Uri("http://odata.org/test/$metadata");
         private readonly string ns = "NS";
         private readonly EdmModel model;
         private readonly EdmEntitySet peopleSet;
@@ -323,7 +322,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             ReadAndValidate(payload, null, false, (resources, nestedResourceInfos, resourceSets) =>
             {
-                Assert.Equal(1, resourceSets.Count);
+                Assert.Single(resourceSets);
                 Assert.Equal(2, resources.ElementAt(0).Properties.Count());
                 Assert.Equal("NS.Address", resources.ElementAt(1).TypeName);
                 Assert.Equal(2, resources.ElementAt(2).Properties.Count());
@@ -357,11 +356,11 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             ReadAndValidate(payload, addressT, false, (resources, nestedResourceInfos, resourceSets) =>
             {
-                Assert.Equal(1, resourceSets.Count);
+                Assert.Single(resourceSets);
                 Assert.Equal(2, resources.ElementAt(0).Properties.Count());
-                Assert.Equal(0, resources.ElementAt(1).Properties.Count());
+                Assert.Empty(resources.ElementAt(1).Properties);
                 Assert.Equal(2, resources.ElementAt(2).Properties.Count());
-                Assert.Equal(1, resources.ElementAt(3).Properties.Count());
+                Assert.Single(resources.ElementAt(3).Properties);
                 Assert.Equal(2, nestedResourceInfos.Count);
             });
         }
@@ -417,7 +416,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 Assert.Equal("CompanyAddress", nestedResourceInfos.ElementAt(1).Name);
                 Assert.Equal("NS.CompanyAddress", resources.ElementAt(1).TypeName);
 
-                Assert.Equal(1, resourceSets.Count);
+                Assert.Single(resourceSets);
                 Assert.Equal("BillingAddresses", nestedResourceInfos.ElementAt(4).Name);
                 Assert.Null(resources.ElementAt(5).Properties.Single().Value);
 
@@ -450,11 +449,11 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 Assert.Equal("CompanyAddress", nestedResourceInfos.ElementAt(0).Name);
                 Assert.Null(resources.ElementAt(0));
 
-                Assert.Equal(1, resourceSets.Count);
+                Assert.Single(resourceSets);
                 Assert.Equal("BillingAddresses", nestedResourceInfos.ElementAt(1).Name);
 
                 Assert.Equal("Address", nestedResourceInfos.ElementAt(3).Name);
-                Assert.Equal(0, resources.ElementAt(1).Properties.Count());
+                Assert.Empty(resources.ElementAt(1).Properties);
             });
 
         }
@@ -498,7 +497,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             {
                 Assert.Equal(7, resources.Count);
                 Assert.Equal(5, nestedResourceInfos.Count);
-                Assert.Equal(1, resourceSets.Count);
+                Assert.Single(resourceSets);
 
                 Assert.Equal("OtherAddresses", nestedResourceInfos.ElementAt(4).Name);
 
@@ -530,7 +529,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             {
                 Assert.Equal(3, resources.Count);
                 Assert.Equal(3, nestedResourceInfos.Count);
-                Assert.Equal(1, resourceSets.Count);
+                Assert.Single(resourceSets);
 
                 Assert.Equal("OtherAddresses", nestedResourceInfos.ElementAt(2).Name);
                 Assert.True(nestedResourceInfos.ElementAt(2).IsCollection);
@@ -597,7 +596,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             {
                 Assert.Equal(3, resources.Count);
                 Assert.Equal(3, nestedResourceInfos.Count);
-                Assert.Equal(1, resourceSets.Count);
+                Assert.Single(resourceSets);
 
                 Assert.Equal("OtherAddresses", nestedResourceInfos.ElementAt(2).Name);
                 Assert.True(nestedResourceInfos.ElementAt(2).IsCollection);

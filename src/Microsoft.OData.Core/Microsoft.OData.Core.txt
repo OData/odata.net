@@ -710,6 +710,7 @@ UriUtils_DateTimeOffsetInvalidFormat=The DateTimeOffset text '{0}' should be in 
 
 SelectionItemBinder_NonNavigationPathToken=Inner or start path segments must be navigation properties in $select.
 
+MetadataBinder_ParameterAliasValueExpressionNotSingleValue=The parameter alias value expression is not string value.
 MetadataBinder_UnsupportedQueryTokenKind=An unsupported query token kind '{0}' was found.
 MetadataBinder_PropertyNotDeclared=Could not find a property named '{1}' on type '{0}'.
 MetadataBinder_InvalidIdentifierInQueryOption=Can not resolve the segment identifier '{0}' in query option.

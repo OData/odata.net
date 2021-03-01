@@ -614,6 +614,7 @@ namespace Microsoft.OData
         internal const string UriQueryPathParser_InvalidEscapeUri = "UriQueryPathParser_InvalidEscapeUri";
         internal const string UriUtils_DateTimeOffsetInvalidFormat = "UriUtils_DateTimeOffsetInvalidFormat";
         internal const string SelectionItemBinder_NonNavigationPathToken = "SelectionItemBinder_NonNavigationPathToken";
+        internal const string MetadataBinder_ParameterAliasValueExpressionNotSingleValue = "MetadataBinder_ParameterAliasValueExpressionNotSingleValue";
         internal const string MetadataBinder_UnsupportedQueryTokenKind = "MetadataBinder_UnsupportedQueryTokenKind";
         internal const string MetadataBinder_PropertyNotDeclared = "MetadataBinder_PropertyNotDeclared";
         internal const string MetadataBinder_InvalidIdentifierInQueryOption = "MetadataBinder_InvalidIdentifierInQueryOption";

@@ -65,18 +65,19 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         public void WriteComplexParameter_WithModel()
         {
             var resource = CreateAddress(1);
-            WriteParameter(resource, true, (actual) => Assert.Equal(actual, "{\"@odata.type\":\"#NS.Address\",\"City\":{\"CityName\":\"City1\",\"AreaCode\":\"AreaCode1\"}}"));
+            WriteParameter(resource, true, (actual) => Assert.Equal("{\"@odata.type\":\"#NS.Address\",\"City\":{\"CityName\":\"City1\",\"AreaCode\":\"AreaCode1\"}}", actual));
         }
 
         [Fact]
         public void WriteComplexParameter_WithoutModel()
         {
             var resource = CreateAddress(1);
-            WriteParameter(resource, false, (actual) => Assert.Equal(actual,
+            WriteParameter(resource, false, (actual) => Assert.Equal(
                 "{" +
                     "\"@odata.type\":\"#NS.Address\"," +
                     "\"City\":{\"@odata.type\":\"#NS.City\",\"CityName\":\"City1\",\"AreaCode\":\"AreaCode1\"}" +
-                "}"));
+                "}",
+                actual));
         }
 
         [Fact]
@@ -84,7 +85,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         {
             WriteResourceSetParameter(true, false,
                 (actual) =>
-                    Assert.Equal(actual, "[{\"@odata.type\":\"#NS.Address\",\"City\":{\"CityName\":\"City0\",\"AreaCode\":\"AreaCode0\"}},{\"@odata.type\":\"#NS.CompanyAddress\",\"CompanyName\":\"MS\",\"City\":{\"CityName\":\"City1\",\"AreaCode\":\"AreaCode1\"}}]"));
+                    Assert.Equal("[{\"@odata.type\":\"#NS.Address\",\"City\":{\"CityName\":\"City0\",\"AreaCode\":\"AreaCode0\"}},{\"@odata.type\":\"#NS.CompanyAddress\",\"CompanyName\":\"MS\",\"City\":{\"CityName\":\"City1\",\"AreaCode\":\"AreaCode1\"}}]", actual));
         }
 
         [Fact]
@@ -115,8 +116,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                     TypeName = "NS.OtherInfo"
                 }
             };
-            WriteParameter(resource, true, (actual) => Assert.Equal(actual, "{\"@odata.type\":\"#NS.OtherInfo\"}"));
-            WriteParameter(resource, false, (actual) => Assert.Equal(actual, "{\"@odata.type\":\"#NS.OtherInfo\"}"));
+            WriteParameter(resource, true, (actual) => Assert.Equal("{\"@odata.type\":\"#NS.OtherInfo\"}", actual));
+            WriteParameter(resource, false, (actual) => Assert.Equal("{\"@odata.type\":\"#NS.OtherInfo\"}", actual));
         }
 
 
@@ -158,7 +159,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 }
             };
 
-            WriteParameter(resource, true, (actual) => Assert.Equal(actual, "{\"@odata.type\":\"#NS.OtherInfo\",\"Hight\":12,\"City\":{\"@odata.type\":\"#NS.City\",\"CityName\":\"City0\",\"AreaCode\":\"AreaCode0\"}}"));
+            WriteParameter(resource, true,
+                (actual) => Assert.Equal("{\"@odata.type\":\"#NS.OtherInfo\",\"Hight\":12,\"City\":{\"@odata.type\":\"#NS.City\",\"CityName\":\"City0\",\"AreaCode\":\"AreaCode0\"}}", actual));
         }
 
         [Fact]
@@ -168,8 +170,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             {
                 ResourceSet = new ODataResourceSet()
             };
-            WriteParameter(resourceSet, true, (actual) => Assert.Equal(actual, "[]"));
-            WriteParameter(resourceSet, false, (actual) => Assert.Equal(actual, "[]"));
+            WriteParameter(resourceSet, true, (actual) => Assert.Equal("[]", actual));
+            WriteParameter(resourceSet, false, (actual) => Assert.Equal("[]", actual));
         }
 
         [Fact]
@@ -185,14 +187,14 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         public void WriteComplexParameter_WithNull()
         {
             var resource = CreateCompanyAddress(0, true);
-            WriteParameter(resource, true, (actual) => Assert.Equal(actual, "{\"@odata.type\":\"#NS.CompanyAddress\",\"City\":null,\"CompanyName\":null}"));
+            WriteParameter(resource, true, (actual) => Assert.Equal("{\"@odata.type\":\"#NS.CompanyAddress\",\"City\":null,\"CompanyName\":null}", actual));
         }
 
         [Fact]
         public void WriteEntityParameter_WithModel()
         {
             var resource = CreatePerson(0);
-            WriteParameter(resource, true, (actual) => Assert.Equal(actual,
+            WriteParameter(resource, true, (actual) => Assert.Equal(
                 "{" +
                     "\"@odata.type\":\"#NS.Person\"," +
                     "\"Id\":0," +
@@ -207,14 +209,15 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                             "\"City\":{\"CityName\":\"City3\",\"AreaCode\":\"AreaCode3\"}" +
                         "}" +
                     "]" +
-                "}"));
+                "}",
+                actual));
         }
 
         [Fact]
         public void WriteEntityParameter_WithoutModel()
         {
             var resource = CreatePerson(0);
-            WriteParameter(resource, false, (actual) => Assert.Equal(actual,
+            WriteParameter(resource, false, (actual) => Assert.Equal(
                 "{" +
                     "\"@odata.type\":\"#NS.Person\"," +
                     "\"Id\":0," +
@@ -234,7 +237,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                             "\"City\":{\"@odata.type\":\"#NS.City\",\"CityName\":\"City3\",\"AreaCode\":\"AreaCode3\"}" +
                         "}" +
                     "]" +
-                "}"));
+                "}",
+                actual));
         }
 
         [Fact]
@@ -242,7 +246,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         {
             WriteResourceSetParameter(true, true,
                 (actual) =>
-                    Assert.Equal(actual,
+                    Assert.Equal(
                     "[" +
                         "{" +
                             "\"@odata.type\":\"#NS.Person\"," +
@@ -274,14 +278,15 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                                 "}" +
                             "]" +
                         "}" +
-                    "]"));
+                    "]",
+                    actual));
         }
 
         [Fact]
         public void WriteEntityCollectionParameter_WithoutModel()
         {
             WriteResourceSetParameter(false, true,
-                (actual) => Assert.Equal(actual,
+                (actual) => Assert.Equal(
                     "[" +
                         "{" +
                             "\"@odata.type\":\"#NS.Person\"," +
@@ -323,7 +328,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                                 "}" +
                             "]" +
                         "}" +
-                    "]"));
+                    "]",
+                    actual));
         }
 
         private void WriteResourceSetParameter(bool withModel, bool isEntity, Action<string> validate)

@@ -92,7 +92,7 @@ namespace Microsoft.OData.UriParser
             if (result == null)
             {
                 // TODO: add string resource
-                throw new ODataException("ODataErrorStrings.MetadataBinder_ParameterAliasValueExpressionNotSingleValue");
+                throw new ODataException(Strings.MetadataBinder_ParameterAliasValueExpressionNotSingleValue);
             }
 
             return result;

@@ -1180,7 +1180,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
 
             // #2
             nestedResource = nestedResources.First(c => c.TypeName == "NS.Customer");
-            Assert.Equal(1, nestedResource.Properties.Count());
+            Assert.Single(nestedResource.Properties);
             Assert.Equal(42, nestedResource.Properties.First(p => p.Name == "Id").Value);
         }
 

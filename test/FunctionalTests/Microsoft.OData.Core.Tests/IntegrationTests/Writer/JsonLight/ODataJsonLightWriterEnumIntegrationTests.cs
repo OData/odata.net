@@ -899,7 +899,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
 
         #endregion
 
-        public void WriteToMessageWriterAndVerifyPayload(string contentType, Action<ODataMessageWriter, bool> writerAction, string expectedPayload)
+        private void WriteToMessageWriterAndVerifyPayload(string contentType, Action<ODataMessageWriter, bool> writerAction, string expectedPayload)
         {
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings() { Version = ODataVersion.V4, EnableMessageStreamDisposal = false };
             settings.SetContentType(contentType, "utf-8");

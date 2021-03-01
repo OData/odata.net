@@ -542,7 +542,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
         #endregion
 
         #region private methods
-        public void ReadFromMessageReaderAndVerifyPayload(string payload, string contentType, Action<ODataMessageReader> readerAction)
+        private void ReadFromMessageReaderAndVerifyPayload(string payload, string contentType, Action<ODataMessageReader> readerAction)
         {
             var settings = new ODataMessageReaderSettings { EnableMessageStreamDisposal = true };
             // with model

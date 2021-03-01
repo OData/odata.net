@@ -718,7 +718,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 {
                     var resource = reader.Item as ODataResource;
                     Assert.Equal("NS.Address", resource.TypeName);
-                    Assert.Equal(0, resource.Properties.Count());
+                    Assert.Empty(resource.Properties);
                 }
             },
             true);
