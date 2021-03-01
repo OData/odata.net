@@ -16,30 +16,18 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     {
         private readonly CsdlConstantExpression expression;
 
-        public CsdlSemanticsNullExpression(CsdlConstantExpression expression, CsdlSemanticsSchema schema)
-            : base(schema, expression)
+        public CsdlSemanticsNullExpression(CsdlConstantExpression expression, CsdlSemanticsModel model)
+            : base(model, expression)
         {
             this.expression = expression;
         }
 
-        public override CsdlElement Element
-        {
-            get { return this.expression; }
-        }
+        public override CsdlElement Element => this.expression;
 
-        public override EdmExpressionKind ExpressionKind
-        {
-            get { return EdmExpressionKind.Null; }
-        }
+        public override EdmExpressionKind ExpressionKind => EdmExpressionKind.Null;
 
-        public EdmValueKind ValueKind
-        {
-            get { return this.expression.ValueKind; }
-        }
+        public EdmValueKind ValueKind => this.expression.ValueKind;
 
-        public IEdmTypeReference Type
-        {
-            get { return null; }
-        }
+        public IEdmTypeReference Type => null;
     }
 }

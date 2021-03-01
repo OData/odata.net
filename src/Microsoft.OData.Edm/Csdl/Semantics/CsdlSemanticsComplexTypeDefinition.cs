@@ -33,33 +33,18 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.baseTypeCache.GetValue(this, ComputeBaseTypeFunc, OnCycleBaseTypeFunc); }
         }
 
-        public override EdmTypeKind TypeKind
-        {
-            get { return EdmTypeKind.Complex; }
-        }
+        public override EdmTypeKind TypeKind => EdmTypeKind.Complex;
 
-        public override bool IsAbstract
-        {
-            get { return this.complex.IsAbstract; }
-        }
+        public override bool IsAbstract => this.complex.IsAbstract;
 
-        public override bool IsOpen
-        {
-            get { return this.complex.IsOpen; }
-        }
+        public override bool IsOpen => this.complex.IsOpen;
 
-        public string Name
-        {
-            get { return this.complex.Name; }
-        }
+        public string Name => this.complex.Name;
 
         /// <summary>
         /// Gets the full name of this schema element.
         /// </summary>
-        public string FullName
-        {
-            get { return this.fullName; }
-        }
+        public string FullName => this.fullName;
 
         protected override CsdlStructuredType MyStructured
         {

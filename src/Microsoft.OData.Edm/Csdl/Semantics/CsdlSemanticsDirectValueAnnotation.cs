@@ -16,7 +16,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     internal class CsdlSemanticsDirectValueAnnotation : CsdlSemanticsElement, IEdmDirectValueAnnotation
     {
         private readonly CsdlDirectValueAnnotation annotation;
-        private readonly CsdlSemanticsModel model;
 
         private readonly Cache<CsdlSemanticsDirectValueAnnotation, IEdmValue> valueCache = new Cache<CsdlSemanticsDirectValueAnnotation, IEdmValue>();
         private static readonly Func<CsdlSemanticsDirectValueAnnotation, IEdmValue> ComputeValueFunc = (me) => me.ComputeValue();
@@ -25,28 +24,16 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             : base(annotation)
         {
             this.annotation = annotation;
-            this.model = model;
+            Model = model;
         }
 
-        public override CsdlElement Element
-        {
-            get { return this.annotation; }
-        }
+        public override CsdlElement Element => this.annotation;
 
-        public override CsdlSemanticsModel Model
-        {
-            get { return this.model; }
-        }
+        public override CsdlSemanticsModel Model { get; }
 
-        public string NamespaceUri
-        {
-            get { return this.annotation.NamespaceName; }
-        }
+        public string NamespaceUri => this.annotation.NamespaceName;
 
-        public string Name
-        {
-            get { return this.annotation.Name; }
-        }
+        public string Name => this.annotation.Name;
 
         public object Value
         {
@@ -56,7 +43,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private IEdmValue ComputeValue()
         {
             IEdmStringValue value = new EdmStringConstant(new EdmStringTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), false), this.annotation.Value);
-            value.SetIsSerializedAsElement(this.model, !this.annotation.IsAttribute);
+            value.SetIsSerializedAsElement(Model, !this.annotation.IsAttribute);
             return value;
         }
     }

@@ -23,25 +23,13 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             this.type = type;
         }
 
-        public IEdmType Definition
-        {
-            get { return this.type; }
-        }
+        public IEdmType Definition => this.type;
 
-        public bool IsNullable
-        {
-            get { return this.expressionUsage.IsNullable; }
-        }
+        public bool IsNullable => this.expressionUsage.IsNullable;
 
-        public override CsdlSemanticsModel Model
-        {
-            get { return this.type.Model; }
-        }
+        public override CsdlSemanticsModel Model => this.type.Model;
 
-        public override CsdlElement Element
-        {
-            get { return this.expressionUsage; }
-        }
+        public override CsdlElement Element => this.expressionUsage;
 
         public override string ToString()
         {

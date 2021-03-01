@@ -21,22 +21,16 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly Cache<CsdlSemanticsLabeledExpressionReferenceExpression, IEdmLabeledExpression> elementCache = new Cache<CsdlSemanticsLabeledExpressionReferenceExpression, IEdmLabeledExpression>();
         private static readonly Func<CsdlSemanticsLabeledExpressionReferenceExpression, IEdmLabeledExpression> ComputeElementFunc = (me) => me.ComputeElement();
 
-        public CsdlSemanticsLabeledExpressionReferenceExpression(CsdlLabeledExpressionReferenceExpression expression, IEdmEntityType bindingContext, CsdlSemanticsSchema schema)
-            : base(schema, expression)
+        public CsdlSemanticsLabeledExpressionReferenceExpression(CsdlLabeledExpressionReferenceExpression expression, IEdmEntityType bindingContext, CsdlSemanticsModel model)
+            : base(model, expression)
         {
             this.expression = expression;
             this.bindingContext = bindingContext;
         }
 
-        public override CsdlElement Element
-        {
-            get { return this.expression; }
-        }
+        public override CsdlElement Element => this.expression;
 
-        public override EdmExpressionKind ExpressionKind
-        {
-            get { return EdmExpressionKind.LabeledExpressionReference; }
-        }
+        public override EdmExpressionKind ExpressionKind => EdmExpressionKind.LabeledExpressionReference;
 
         public IEdmLabeledExpression ReferencedLabeledExpression
         {
@@ -58,7 +52,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         private IEdmLabeledExpression ComputeElement()
         {
-            IEdmLabeledExpression result = this.Schema.FindLabeledElement(this.expression.Label, this.bindingContext);
+            IEdmLabeledExpression result = this.Model.FindLabeledElement(this.expression.Label, this.bindingContext);
             if (result != null)
             {
                 return result;

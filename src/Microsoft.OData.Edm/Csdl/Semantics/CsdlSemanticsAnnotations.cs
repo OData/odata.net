@@ -13,23 +13,14 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// </summary>
     internal class CsdlSemanticsAnnotations
     {
-        private readonly CsdlAnnotations annotations;
-        private readonly CsdlSemanticsSchema context;
-
-        public CsdlSemanticsAnnotations(CsdlSemanticsSchema context, CsdlAnnotations annotations)
+        public CsdlSemanticsAnnotations(CsdlSemanticsSchema schema, CsdlAnnotations annotations)
         {
-            this.context = context;
-            this.annotations = annotations;
+            Schema = schema;
+            Annotations = annotations;
         }
 
-        public CsdlSemanticsSchema Context
-        {
-            get { return this.context; }
-        }
+        public CsdlSemanticsSchema Schema { get; }
 
-        public CsdlAnnotations Annotations
-        {
-            get { return this.annotations; }
-        }
+        public CsdlAnnotations Annotations { get; }
     }
 }

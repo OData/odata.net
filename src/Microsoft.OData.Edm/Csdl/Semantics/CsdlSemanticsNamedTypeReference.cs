@@ -14,16 +14,15 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// </summary>
     internal class CsdlSemanticsNamedTypeReference : CsdlSemanticsElement, IEdmTypeReference
     {
-        private readonly CsdlSemanticsSchema schema;
         private readonly CsdlNamedTypeReference reference;
 
         private readonly Cache<CsdlSemanticsNamedTypeReference, IEdmType> definitionCache = new Cache<CsdlSemanticsNamedTypeReference, IEdmType>();
         private static readonly Func<CsdlSemanticsNamedTypeReference, IEdmType> ComputeDefinitionFunc = (me) => me.ComputeDefinition();
 
-        public CsdlSemanticsNamedTypeReference(CsdlSemanticsSchema schema, CsdlNamedTypeReference reference)
+        public CsdlSemanticsNamedTypeReference(CsdlSemanticsModel model, CsdlNamedTypeReference reference)
             : base(reference)
         {
-            this.schema = schema;
+            Model = model;
             this.reference = reference;
         }
 
@@ -37,15 +36,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.reference.IsNullable; }
         }
 
-        public override CsdlSemanticsModel Model
-        {
-            get { return this.schema.Model; }
-        }
+        public override CsdlSemanticsModel Model { get; }
 
-        public override CsdlElement Element
-        {
-            get { return this.reference; }
-        }
+        public override CsdlElement Element => this.reference;
 
         public override string ToString()
         {
@@ -54,9 +47,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         private IEdmType ComputeDefinition()
         {
-            IEdmType binding = this.schema.FindType(this.reference.FullName);
+            IEdmType binding = this.Model.FindType(this.reference.FullName);
 
-            return binding ?? new UnresolvedType(this.schema.ReplaceAlias(this.reference.FullName), this.Location);
+            return binding ?? new UnresolvedType(this.Model.ReplaceAlias(this.reference.FullName), this.Location);
         }
     }
 }

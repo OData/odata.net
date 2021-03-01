@@ -21,6 +21,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             this.DefaultValueString = defaultValue;
         }
 
-        public string DefaultValueString { get; private set; }
+        public string DefaultValueString { get; }
     }
 }

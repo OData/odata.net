@@ -38,38 +38,20 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.baseTypeCache.GetValue(this, ComputeBaseTypeFunc, OnCycleBaseTypeFunc); }
         }
 
-        public override EdmTypeKind TypeKind
-        {
-            get { return EdmTypeKind.Entity; }
-        }
+        public override EdmTypeKind TypeKind => EdmTypeKind.Entity;
 
-        public string Name
-        {
-            get { return this.entity.Name; }
-        }
+        public string Name => this.entity.Name;
 
         /// <summary>
         /// Gets the full name of this schema element.
         /// </summary>
-        public string FullName
-        {
-            get { return this.fullName; }
-        }
+        public string FullName => this.fullName;
 
-        public override bool IsAbstract
-        {
-            get { return this.entity.IsAbstract; }
-        }
+        public override bool IsAbstract => this.entity.IsAbstract;
 
-        public override bool IsOpen
-        {
-            get { return this.entity.IsOpen; }
-        }
+        public override bool IsOpen => this.entity.IsOpen;
 
-        public bool HasStream
-        {
-            get { return this.entity.HasStream; }
-        }
+        public bool HasStream => this.entity.HasStream;
 
         public IEnumerable<IEdmStructuralProperty> DeclaredKey
         {

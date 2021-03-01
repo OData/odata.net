@@ -24,27 +24,19 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly Cache<CsdlSemanticsIfExpression, IEdmExpression> ifFalseCache = new Cache<CsdlSemanticsIfExpression, IEdmExpression>();
         private static readonly Func<CsdlSemanticsIfExpression, IEdmExpression> ComputeIfFalseFunc = (me) => me.ComputeIfFalse();
 
-        public CsdlSemanticsIfExpression(CsdlIfExpression expression, IEdmEntityType bindingContext, CsdlSemanticsSchema schema)
-            : base(schema, expression)
+        public CsdlSemanticsIfExpression(CsdlIfExpression expression, IEdmEntityType bindingContext, CsdlSemanticsModel model)
+            : base(model, expression)
         {
             this.expression = expression;
             this.bindingContext = bindingContext;
         }
 
-        public override CsdlElement Element
-        {
-            get { return this.expression; }
-        }
+        public override CsdlElement Element => this.expression;
 
-        public IEdmEntityType BindingContext
-        {
-            get { return this.bindingContext; }
-        }
 
-        public override EdmExpressionKind ExpressionKind
-        {
-            get { return EdmExpressionKind.If; }
-        }
+        public IEdmEntityType BindingContext => this.bindingContext;
+
+        public override EdmExpressionKind ExpressionKind => EdmExpressionKind.If;
 
         public IEdmExpression TestExpression
         {
@@ -63,17 +55,17 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         private IEdmExpression ComputeTest()
         {
-            return CsdlSemanticsModel.WrapExpression(this.expression.Test, this.BindingContext, this.Schema);
+            return CsdlSemanticsModel.WrapExpression(this.expression.Test, this.BindingContext, this.Model);
         }
 
         private IEdmExpression ComputeIfTrue()
         {
-            return CsdlSemanticsModel.WrapExpression(this.expression.IfTrue, this.BindingContext, this.Schema);
+            return CsdlSemanticsModel.WrapExpression(this.expression.IfTrue, this.BindingContext, this.Model);
         }
 
         private IEdmExpression ComputeIfFalse()
         {
-            return CsdlSemanticsModel.WrapExpression(this.expression.IfFalse, this.BindingContext, this.Schema);
+            return CsdlSemanticsModel.WrapExpression(this.expression.IfFalse, this.BindingContext, this.Model);
         }
     }
 }

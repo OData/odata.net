@@ -14,40 +14,27 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     internal class CsdlSemanticsUntypedTypeReference : CsdlSemanticsElement, IEdmUntypedTypeReference
     {
         internal readonly CsdlUntypedTypeReference Reference;
-        private readonly CsdlSemanticsSchema schema;
 
         /// <summary>
         /// The IEdmUntypedType instance from EdmCoreModel.
         /// </summary>
         private readonly IEdmUntypedType definition;
 
-        public CsdlSemanticsUntypedTypeReference(CsdlSemanticsSchema schema, CsdlUntypedTypeReference reference)
+        public CsdlSemanticsUntypedTypeReference(CsdlSemanticsModel model, CsdlUntypedTypeReference reference)
             : base(reference)
         {
-            this.schema = schema;
+            Model = model;
             this.Reference = reference;
             this.definition = EdmCoreModel.Instance.GetUntypedType();
         }
 
-        public bool IsNullable
-        {
-            get { return this.Reference.IsNullable; }
-        }
+        public bool IsNullable => this.Reference.IsNullable;
 
-        public IEdmType Definition
-        {
-            get { return this.definition; }
-        }
+        public IEdmType Definition => this.definition;
 
-        public override CsdlSemanticsModel Model
-        {
-            get { return this.schema.Model; }
-        }
+        public override CsdlSemanticsModel Model { get; }
 
-        public override CsdlElement Element
-        {
-            get { return this.Reference; }
-        }
+        public override CsdlElement Element => this.Reference;
 
         public override string ToString()
         {

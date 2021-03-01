@@ -25,22 +25,16 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly Cache<CsdlSemanticsRecordExpression, IEnumerable<IEdmPropertyConstructor>> propertiesCache = new Cache<CsdlSemanticsRecordExpression, IEnumerable<IEdmPropertyConstructor>>();
         private static readonly Func<CsdlSemanticsRecordExpression, IEnumerable<IEdmPropertyConstructor>> ComputePropertiesFunc = (me) => me.ComputeProperties();
 
-        public CsdlSemanticsRecordExpression(CsdlRecordExpression expression, IEdmEntityType bindingContext, CsdlSemanticsSchema schema)
-            : base(schema, expression)
+        public CsdlSemanticsRecordExpression(CsdlRecordExpression expression, IEdmEntityType bindingContext, CsdlSemanticsModel model)
+            : base(model, expression)
         {
             this.expression = expression;
             this.bindingContext = bindingContext;
         }
 
-        public override CsdlElement Element
-        {
-            get { return this.expression; }
-        }
+        public override CsdlElement Element => this.expression;
 
-        public override EdmExpressionKind ExpressionKind
-        {
-            get { return EdmExpressionKind.Record; }
-        }
+        public override EdmExpressionKind ExpressionKind => EdmExpressionKind.Record;
 
         public IEdmStructuredTypeReference DeclaredType
         {
@@ -71,7 +65,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         private IEdmStructuredTypeReference ComputeDeclaredType()
         {
-            return this.expression.Type != null ? CsdlSemanticsModel.WrapTypeReference(this.Schema, this.expression.Type).AsStructured() : null;
+            return this.expression.Type != null ? CsdlSemanticsModel.WrapTypeReference(this.Model, this.expression.Type).AsStructured() : null;
         }
     }
 }

@@ -13,19 +13,13 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// </summary>
     internal class CsdlSemanticsBinaryTypeReference : CsdlSemanticsPrimitiveTypeReference, IEdmBinaryTypeReference
     {
-        public CsdlSemanticsBinaryTypeReference(CsdlSemanticsSchema schema, CsdlBinaryTypeReference reference)
-            : base(schema, reference)
+        public CsdlSemanticsBinaryTypeReference(CsdlSemanticsModel model, CsdlBinaryTypeReference reference)
+            : base(model, reference)
         {
         }
 
-        public bool IsUnbounded
-        {
-            get { return ((CsdlBinaryTypeReference)this.Reference).IsUnbounded; }
-        }
+        public bool IsUnbounded => ((CsdlBinaryTypeReference)Reference).IsUnbounded;
 
-        public int? MaxLength
-        {
-            get { return ((CsdlBinaryTypeReference)this.Reference).MaxLength; }
-        }
+        public int? MaxLength => ((CsdlBinaryTypeReference)Reference).MaxLength;
     }
 }

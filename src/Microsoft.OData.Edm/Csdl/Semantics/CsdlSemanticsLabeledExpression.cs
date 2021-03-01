@@ -14,54 +14,38 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     {
         private readonly string name;
         private readonly CsdlExpressionBase sourceElement;
-        private readonly CsdlSemanticsSchema schema;
         private readonly IEdmEntityType bindingContext;
 
         private readonly Cache<CsdlSemanticsLabeledExpression, IEdmExpression> expressionCache = new Cache<CsdlSemanticsLabeledExpression, IEdmExpression>();
         private static readonly Func<CsdlSemanticsLabeledExpression, IEdmExpression> ComputeExpressionFunc = (me) => me.ComputeExpression();
 
-        public CsdlSemanticsLabeledExpression(string name, CsdlExpressionBase element, IEdmEntityType bindingContext, CsdlSemanticsSchema schema)
+        public CsdlSemanticsLabeledExpression(string name, CsdlExpressionBase element, IEdmEntityType bindingContext, CsdlSemanticsModel model)
             : base(element)
         {
             this.name = name;
             this.sourceElement = element;
             this.bindingContext = bindingContext;
-            this.schema = schema;
+            this.Model = model;
         }
 
-        public override CsdlElement Element
-        {
-            get { return this.sourceElement; }
-        }
+        public override CsdlElement Element => this.sourceElement;
 
-        public override CsdlSemanticsModel Model
-        {
-            get { return this.schema.Model; }
-        }
+        public override CsdlSemanticsModel Model { get; }
 
-        public IEdmEntityType BindingContext
-        {
-            get { return this.bindingContext; }
-        }
+        public IEdmEntityType BindingContext => this.bindingContext;
 
         public IEdmExpression Expression
         {
             get { return this.expressionCache.GetValue(this, ComputeExpressionFunc, null); }
         }
 
-        public EdmExpressionKind ExpressionKind
-        {
-            get { return EdmExpressionKind.Labeled; }
-        }
+        public EdmExpressionKind ExpressionKind => EdmExpressionKind.Labeled;
 
-        public string Name
-        {
-            get { return this.name; }
-        }
+        public string Name => this.name;
 
         private IEdmExpression ComputeExpression()
         {
-            return CsdlSemanticsModel.WrapExpression(this.sourceElement, this.BindingContext, this.schema);
+            return CsdlSemanticsModel.WrapExpression(this.sourceElement, this.BindingContext, this.Model);
         }
     }
 }

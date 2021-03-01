@@ -13,14 +13,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// </summary>
     internal class CsdlSemanticsPropertyPathExpression : CsdlSemanticsPathExpression
     {
-        public CsdlSemanticsPropertyPathExpression(CsdlPathExpression expression, IEdmEntityType bindingContext, CsdlSemanticsSchema schema)
-            : base(expression, bindingContext, schema)
+        public CsdlSemanticsPropertyPathExpression(CsdlPathExpression expression, IEdmEntityType bindingContext, CsdlSemanticsModel model)
+            : base(expression, bindingContext, model)
         {
         }
 
-        public override EdmExpressionKind ExpressionKind
-        {
-            get { return EdmExpressionKind.PropertyPath; }
-        }
+        public override EdmExpressionKind ExpressionKind => EdmExpressionKind.PropertyPath;
     }
 }

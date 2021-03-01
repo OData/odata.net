@@ -10,27 +10,14 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
     internal abstract class CsdlSemanticsExpression : CsdlSemanticsElement, IEdmExpression
     {
-        private readonly CsdlSemanticsSchema schema;
-
-        protected CsdlSemanticsExpression(CsdlSemanticsSchema schema, CsdlExpressionBase element)
+        protected CsdlSemanticsExpression(CsdlSemanticsModel model, CsdlExpressionBase element)
             : base(element)
         {
-            this.schema = schema;
+            Model = model;
         }
 
-        public abstract EdmExpressionKind ExpressionKind
-        {
-            get;
-        }
+        public abstract EdmExpressionKind ExpressionKind { get; }
 
-        public CsdlSemanticsSchema Schema
-        {
-            get { return this.schema; }
-        }
-
-        public override CsdlSemanticsModel Model
-        {
-            get { return this.schema.Model; }
-        }
+        public override CsdlSemanticsModel Model { get; }
     }
 }

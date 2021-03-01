@@ -21,14 +21,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             this.function = function;
         }
 
-        public bool IsComposable
-        {
-            get { return this.function.IsComposable; }
-        }
+        public bool IsComposable => this.function.IsComposable;
 
-        public override EdmSchemaElementKind SchemaElementKind
-        {
-            get { return EdmSchemaElementKind.Function; }
-        }
+        public override EdmSchemaElementKind SchemaElementKind => EdmSchemaElementKind.Function;
     }
 }

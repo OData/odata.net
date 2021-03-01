@@ -23,22 +23,16 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         protected static readonly Func<CsdlSemanticsPathExpression, IEnumerable<string>> ComputePathFunc = (me) => me.ComputePath();
 
-        public CsdlSemanticsPathExpression(CsdlPathExpression expression, IEdmEntityType bindingContext, CsdlSemanticsSchema schema)
-            : base(schema, expression)
+        public CsdlSemanticsPathExpression(CsdlPathExpression expression, IEdmEntityType bindingContext, CsdlSemanticsModel model)
+            : base(model, expression)
         {
             this.Expression = expression;
             this.BindingContext = bindingContext;
         }
 
-        public override CsdlElement Element
-        {
-            get { return this.Expression; }
-        }
+        public override CsdlElement Element => this.Expression;
 
-        public override EdmExpressionKind ExpressionKind
-        {
-            get { return EdmExpressionKind.Path; }
-        }
+        public override EdmExpressionKind ExpressionKind => EdmExpressionKind.Path;
 
         public IEnumerable<string> PathSegments
         {

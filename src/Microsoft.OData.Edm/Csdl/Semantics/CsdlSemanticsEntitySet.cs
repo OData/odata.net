@@ -24,10 +24,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return new EdmCollectionType(new EdmEntityTypeReference(this.typeCache.GetValue(this, ComputeElementTypeFunc, null), false)); }
         }
 
-        public override EdmContainerElementKind ContainerElementKind
-        {
-            get { return EdmContainerElementKind.EntitySet; }
-        }
+        public override EdmContainerElementKind ContainerElementKind => EdmContainerElementKind.EntitySet;
 
         public bool IncludeInServiceDocument
         {

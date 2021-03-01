@@ -44,20 +44,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             this.navigationProperty = navigationProperty;
         }
 
-        public override CsdlSemanticsModel Model
-        {
-            get { return this.declaringType.Model; }
-        }
+        public override CsdlSemanticsModel Model => this.declaringType.Model;
 
-        public override CsdlElement Element
-        {
-            get { return this.navigationProperty; }
-        }
+        public override CsdlElement Element => this.navigationProperty;
 
-        public string Name
-        {
-            get { return this.navigationProperty.Name; }
-        }
+        public string Name => this.navigationProperty.Name;
 
         public EdmOnDeleteAction OnDelete
         {
@@ -67,10 +58,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             }
         }
 
-        public IEdmStructuredType DeclaringType
-        {
-            get { return this.declaringType; }
-        }
+        public IEdmStructuredType DeclaringType => this.declaringType;
 
         public bool ContainsTarget
         {
@@ -82,10 +70,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.typeCache.GetValue(this, ComputeTypeFunc, null); }
         }
 
-        public EdmPropertyKind PropertyKind
-        {
-            get { return EdmPropertyKind.Navigation; }
-        }
+        public EdmPropertyKind PropertyKind => EdmPropertyKind.Navigation;
 
         public IEdmNavigationProperty Partner
         {

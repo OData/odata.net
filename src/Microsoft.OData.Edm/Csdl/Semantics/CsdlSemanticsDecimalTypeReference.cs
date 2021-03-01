@@ -13,19 +13,13 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// </summary>
     internal class CsdlSemanticsDecimalTypeReference : CsdlSemanticsPrimitiveTypeReference, IEdmDecimalTypeReference
     {
-        public CsdlSemanticsDecimalTypeReference(CsdlSemanticsSchema schema, CsdlDecimalTypeReference reference)
-            : base(schema, reference)
+        public CsdlSemanticsDecimalTypeReference(CsdlSemanticsModel model, CsdlDecimalTypeReference reference)
+            : base(model, reference)
         {
         }
 
-        public int? Precision
-        {
-            get { return ((CsdlDecimalTypeReference)this.Reference).Precision; }
-        }
+        public int? Precision => ((CsdlDecimalTypeReference)this.Reference).Precision;
 
-        public int? Scale
-        {
-            get { return ((CsdlDecimalTypeReference)this.Reference).Scale; }
-        }
+        public int? Scale => ((CsdlDecimalTypeReference)this.Reference).Scale;
     }
 }

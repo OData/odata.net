@@ -25,22 +25,16 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly Cache<CsdlSemanticsCollectionExpression, IEnumerable<IEdmExpression>> elementsCache = new Cache<CsdlSemanticsCollectionExpression, IEnumerable<IEdmExpression>>();
         private static readonly Func<CsdlSemanticsCollectionExpression, IEnumerable<IEdmExpression>> ComputeElementsFunc = (me) => me.ComputeElements();
 
-        public CsdlSemanticsCollectionExpression(CsdlCollectionExpression expression, IEdmEntityType bindingContext, CsdlSemanticsSchema schema)
-            : base(schema, expression)
+        public CsdlSemanticsCollectionExpression(CsdlCollectionExpression expression, IEdmEntityType bindingContext, CsdlSemanticsModel model)
+            : base(model, expression)
         {
             this.expression = expression;
             this.bindingContext = bindingContext;
         }
 
-        public override CsdlElement Element
-        {
-            get { return this.expression; }
-        }
+        public override CsdlElement Element => this.expression;
 
-        public override EdmExpressionKind ExpressionKind
-        {
-            get { return EdmExpressionKind.Collection; }
-        }
+        public override EdmExpressionKind ExpressionKind => EdmExpressionKind.Collection;
 
         public IEdmTypeReference DeclaredType
         {
@@ -58,7 +52,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
             foreach (CsdlExpressionBase elementValue in this.expression.ElementValues)
             {
-                elements.Add(CsdlSemanticsModel.WrapExpression(elementValue, this.bindingContext, this.Schema));
+                elements.Add(CsdlSemanticsModel.WrapExpression(elementValue, this.bindingContext, this.Model));
             }
 
             return elements;
@@ -66,7 +60,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         private IEdmTypeReference ComputeDeclaredType()
         {
-            return this.expression.Type != null ? CsdlSemanticsModel.WrapTypeReference(this.Schema, this.expression.Type) : null;
+            return this.expression.Type != null ? CsdlSemanticsModel.WrapTypeReference(this.Model, this.expression.Type) : null;
         }
     }
 }

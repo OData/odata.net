@@ -20,19 +20,10 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             this.functionImport = functionImport;
         }
 
-        public IEdmFunction Function
-        {
-            get { return (IEdmFunction)this.Operation; }
-        }
+        public IEdmFunction Function => (IEdmFunction)this.Operation;
 
-        public bool IncludeInServiceDocument
-        {
-            get { return this.functionImport.IncludeInServiceDocument; }
-        }
+        public bool IncludeInServiceDocument => this.functionImport.IncludeInServiceDocument;
 
-        public override EdmContainerElementKind ContainerElementKind
-        {
-            get { return EdmContainerElementKind.FunctionImport; }
-        }
+        public override EdmContainerElementKind ContainerElementKind => EdmContainerElementKind.FunctionImport;
     }
 }

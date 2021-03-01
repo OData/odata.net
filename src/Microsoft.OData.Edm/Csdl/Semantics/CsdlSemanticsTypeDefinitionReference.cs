@@ -28,8 +28,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly Cache<CsdlSemanticsTypeDefinitionReference, int?> scaleCache = new Cache<CsdlSemanticsTypeDefinitionReference, int?>();
         private readonly Cache<CsdlSemanticsTypeDefinitionReference, int?> sridCache = new Cache<CsdlSemanticsTypeDefinitionReference, int?>();
 
-        public CsdlSemanticsTypeDefinitionReference(CsdlSemanticsSchema schema, CsdlNamedTypeReference reference)
-            : base(schema, reference)
+        public CsdlSemanticsTypeDefinitionReference(CsdlSemanticsModel model, CsdlNamedTypeReference reference)
+            : base(model, reference)
         {
         }
 

@@ -160,7 +160,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             // Guarantee that multiple requests to wrap a given labeled element all return the same object.
             if (!this.semanticsLabeledElements.TryGetValue(labeledElement, out result))
             {
-                result = new CsdlSemanticsLabeledExpression(labeledElement.Label, labeledElement.Element, bindingContext, this);
+                result = new CsdlSemanticsLabeledExpression(labeledElement.Label, labeledElement.Element, bindingContext, Model);
                 this.semanticsLabeledElements[labeledElement] = result;
             }
 

@@ -29,25 +29,13 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         public IEdmOperation Operation { get; private set; }
 
-        public override CsdlSemanticsModel Model
-        {
-            get { return this.container.Context.Model; }
-        }
+        public override CsdlSemanticsModel Model => this.container.Context.Model;
 
-        public override CsdlElement Element
-        {
-            get { return this.operationImport; }
-        }
+        public override CsdlElement Element => this.operationImport;
 
-        public string Name
-        {
-            get { return this.operationImport.Name; }
-        }
+        public string Name => this.operationImport.Name;
 
-        public IEdmEntityContainer Container
-        {
-            get { return this.container; }
-        }
+        public IEdmEntityContainer Container => this.container;
 
         public IEdmExpression EntitySet
         {
@@ -81,11 +69,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             {
             }
 
-            public EdmLocation Location
-            {
-                get;
-                set;
-            }
+            public EdmLocation Location { get; set; }
         }
     }
 }

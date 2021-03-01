@@ -15,14 +15,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         {
         }
 
-        public IEdmAction Action
-        {
-            get { return (IEdmAction)this.Operation; }
-        }
+        public IEdmAction Action => (IEdmAction)this.Operation;
 
-        public override EdmContainerElementKind ContainerElementKind
-        {
-            get { return EdmContainerElementKind.ActionImport; }
-        }
+        public override EdmContainerElementKind ContainerElementKind => EdmContainerElementKind.ActionImport;
     }
 }

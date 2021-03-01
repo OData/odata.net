@@ -30,30 +30,18 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             this.declaringType = declaringType;
         }
 
-        public string Name
-        {
-            get { return this.member.Name; }
-        }
+        public string Name => this.member.Name;
 
-        public IEdmEnumType DeclaringType
-        {
-            get { return this.declaringType; }
-        }
+        public IEdmEnumType DeclaringType => this.declaringType;
 
         public IEdmEnumMemberValue Value
         {
             get { return this.valueCache.GetValue(this, ComputeValueFunc, null); }
         }
 
-        public override CsdlSemanticsModel Model
-        {
-            get { return this.declaringType.Model; }
-        }
+        public override CsdlSemanticsModel Model => this.declaringType.Model;
 
-        public override CsdlElement Element
-        {
-            get { return this.member; }
-        }
+        public override CsdlElement Element => this.member;
 
         protected override IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations()
         {
