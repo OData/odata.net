@@ -753,7 +753,8 @@ namespace Microsoft.OData
             {
                 return false;
             }
-            return rangeVariable is ResourceRangeVariable resourceRangeVariable ? resourceRangeVariable.NavigationSource != rangeVariableReferenceNode.NavigationSource : false;
+            return rangeVariable is ResourceRangeVariable resourceRangeVariable ?
+                resourceRangeVariable.NavigationSource != rangeVariableReferenceNode.NavigationSource && rangeVariableReferenceNode.Name == ExpressionConstants.It : false;
         }
 
         /// <summary>
