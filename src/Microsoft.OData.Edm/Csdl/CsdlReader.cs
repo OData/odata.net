@@ -640,7 +640,8 @@ namespace Microsoft.OData.Edm.Csdl
                             this.errors.Add(error);
                         }
                     }
-                    else
+
+                    if (referenceParser.Result != null)
                     {
                         this.references.Add(referenceParser.Result.Value);
                     }
