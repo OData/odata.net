@@ -27,6 +27,11 @@ namespace Microsoft.OData
         private bool searchFlag;
 
         /// <summary>
+        /// Stack current RangeVariable.
+        /// </summary>
+        private readonly Stack<RangeVariable> rangeVariables = new Stack<RangeVariable>();
+
+        /// <summary>
         /// Translates a <see cref="AllNode"/> into a corresponding <see cref="String"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>
@@ -35,7 +40,10 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentNotNull(node, "node");
 
-            String result = String.Concat(this.TranslateNode(node.Source), ExpressionConstants.SymbolForwardSlash, ExpressionConstants.KeywordAll, ExpressionConstants.SymbolOpenParen, node.CurrentRangeVariable.Name, ":", this.TranslateNode(node.Body), ExpressionConstants.SymbolClosedParen);
+            string source = TranslateNode(node.Source);
+            rangeVariables.Push(node.CurrentRangeVariable);
+            String result = String.Concat(source, ExpressionConstants.SymbolForwardSlash, ExpressionConstants.KeywordAll, ExpressionConstants.SymbolOpenParen, node.CurrentRangeVariable.Name, ":", this.TranslateNode(node.Body), ExpressionConstants.SymbolClosedParen);
+            rangeVariables.Pop();
             return result;
         }
 
@@ -54,7 +62,11 @@ namespace Microsoft.OData
             }
             else
             {
-                return String.Concat(this.TranslateNode(node.Source), ExpressionConstants.SymbolForwardSlash, ExpressionConstants.KeywordAny, ExpressionConstants.SymbolOpenParen, node.CurrentRangeVariable.Name, ":", this.TranslateNode(node.Body), ExpressionConstants.SymbolClosedParen);
+                string source = TranslateNode(node.Source);
+                rangeVariables.Push(node.CurrentRangeVariable);
+                string query = String.Concat(source, ExpressionConstants.SymbolForwardSlash, ExpressionConstants.KeywordAny, ExpressionConstants.SymbolOpenParen, node.CurrentRangeVariable.Name, ":", this.TranslateNode(node.Body), ExpressionConstants.SymbolClosedParen);
+                rangeVariables.Pop();
+                return query;
             }
         }
 
@@ -97,7 +109,6 @@ namespace Microsoft.OData
 
             string left = this.TranslateNode(node.Left);
             string right = this.TranslateNode(node.Right);
-
             return String.Concat(left, ' ', ExpressionConstants.KeywordIn, ' ', right);
         }
 
@@ -471,245 +482,10 @@ namespace Microsoft.OData
         internal String TranslateFilterClause(FilterClause filterClause)
         {
             Debug.Assert(filterClause != null, "filterClause != null");
-
-            return BindNode(filterClause.Expression, filterClause.RangeVariable as ResourceRangeVariable);
-        }
-
-        /// <summary>
-        /// We return the <see cref="ResourceRangeVariableReferenceNode"/> within a <see cref="QueryNode"/>
-        /// </summary>
-        /// <param name="node">The node to extract the ResourceRangeVariableReferenceNode.</param>
-        /// <returns>The extracted ResourceRangeVariableReferenceNode.</returns>
-        private ResourceRangeVariableReferenceNode GetResourceRangeVariableReferenceNode(QueryNode node)
-        {
-            switch(node.Kind)
-            {
-                case QueryNodeKind.SingleValuePropertyAccess:
-                    SingleValuePropertyAccessNode singleValuePropertyAccessNode = node as SingleValuePropertyAccessNode;
-                    return GetResourceRangeVariableReferenceNode(singleValuePropertyAccessNode.Source);
-
-                case QueryNodeKind.Convert:
-                    ConvertNode convertNode = node as ConvertNode;
-                    return GetResourceRangeVariableReferenceNode(convertNode.Source);
-
-                case QueryNodeKind.Any:
-                    AnyNode anyNode = node as AnyNode;
-                    return GetResourceRangeVariableReferenceNode(anyNode.Source);
-
-                case QueryNodeKind.SingleValueFunctionCall:
-                    SingleValueFunctionCallNode singleValueFunctionCallNode = node as SingleValueFunctionCallNode;
-                    return GetResourceRangeVariableReferenceNode(singleValueFunctionCallNode.Parameters.First());
-
-                case QueryNodeKind.ResourceRangeVariableReference:
-                    return node as ResourceRangeVariableReferenceNode;
-
-                case QueryNodeKind.SingleValueOpenPropertyAccess:
-                    SingleValueOpenPropertyAccessNode singleValueOpenPropertyAccessNode = node as SingleValueOpenPropertyAccessNode;
-                    return GetResourceRangeVariableReferenceNode(singleValueOpenPropertyAccessNode.Source);
-
-                case QueryNodeKind.SingleComplexNode:
-                    SingleComplexNode singleComplexNode = node as SingleComplexNode;
-                    return GetResourceRangeVariableReferenceNode(singleComplexNode.Source);
-
-                case QueryNodeKind.CollectionComplexNode:
-                    CollectionComplexNode collectionComplexNode = node as CollectionComplexNode;
-                    return GetResourceRangeVariableReferenceNode(collectionComplexNode.Source);
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Bind $it to the <see cref="QueryNode"/> translated string.
-        /// </summary>
-        /// <param name="node">node to bind.</param>
-        /// <param name="filterClauseRangeVariable">The <see cref="FilterClause"/> range variable.</param>
-        /// <returns>The translated string with $it binding.</returns>
-        private string BindNode(QueryNode node, ResourceRangeVariable filterClauseRangeVariable)
-        {
-            BinaryOperatorNode binaryNode = node as BinaryOperatorNode;
-            InNode inNode = node as InNode;
-            AnyNode anyNode = node as AnyNode;
-            SingleValueFunctionCallNode singleValueFunctionCallNode = node as SingleValueFunctionCallNode;
-            SingleValueOpenPropertyAccessNode singleValueOpenPropertyAccessNode = node as SingleValueOpenPropertyAccessNode;
-
-            if (binaryNode != null)
-            {
-                return BindBinaryOperatorNode(binaryNode, filterClauseRangeVariable);
-            }
-            else if (inNode != null)
-            {
-                return BindInNode(inNode, filterClauseRangeVariable);
-            }
-            else if (anyNode != null)
-            {
-                return BindAnyNode(anyNode, filterClauseRangeVariable);
-            }
-            else if (singleValueFunctionCallNode != null)
-            {
-                return BindSingleValueFunctionCallNode(singleValueFunctionCallNode, filterClauseRangeVariable);
-            }
-            else if (singleValueOpenPropertyAccessNode != null)
-            {
-                return BindSingleValueOpenPropertyAccess(singleValueOpenPropertyAccessNode, filterClauseRangeVariable);
-            }
-            else
-            {
-                return this.TranslateNode(node);
-            }
-        }
-
-        /// <summary>
-        /// Bind $it to the <see cref="BinaryOperatorNode"/> translated string.
-        /// </summary>
-        /// <param name="node">node to bind.</param>
-        /// <param name="filterClauseRangeVariable">The <see cref="FilterClause"/> range variable.</param>
-        /// <returns>The translated string with $it binding.</returns>
-        private string BindBinaryOperatorNode(BinaryOperatorNode node, ResourceRangeVariable filterClauseRangeVariable)
-        {
-            string translatedNode = this.TranslateNode(node);
-            ResourceRangeVariableReferenceNode leftRangeVariableNode = GetResourceRangeVariableReferenceNode(node.Left);
-            ResourceRangeVariableReferenceNode rightRangeVariableNode = GetResourceRangeVariableReferenceNode(node.Right);
-
-            BinaryOperatorKind binaryNodeKind = node.OperatorKind;
-
-            string binaryOperator = this.BinaryOperatorNodeToString(binaryNodeKind);
-            string[] binarySeparator = { binaryOperator };
-            string[] substrings = translatedNode.Trim().Split(binarySeparator, StringSplitOptions.RemoveEmptyEntries);
-            string leftBinary = substrings[0].Trim();
-            string rightBinary = substrings[1].Trim();
-
-            if (leftRangeVariableNode != null && IsDifferentSource(filterClauseRangeVariable, leftRangeVariableNode))
-            {
-                leftBinary = ExpressionConstants.It + ExpressionConstants.SymbolForwardSlash + leftBinary;
-            }
-
-            if (rightRangeVariableNode != null && IsDifferentSource(filterClauseRangeVariable, rightRangeVariableNode))
-            {
-                rightBinary = ExpressionConstants.It + ExpressionConstants.SymbolForwardSlash + rightBinary;
-            }
-
-            return leftBinary + ' ' + binaryOperator + ' ' + rightBinary;
-        }
-
-        /// <summary>
-        /// Bind $it to the <see cref="InNode"/> translated string.
-        /// </summary>
-        /// <param name="node">node to bind.</param>
-        /// <param name="filterClauseRangeVariable">The <see cref="FilterClause"/> range variable.</param>
-        /// <returns>The translated string with $it binding.</returns>
-        private string BindInNode(InNode node, ResourceRangeVariable filterClauseRangeVariable)
-        {
-            string translatedNode = this.TranslateNode(node);
-            ResourceRangeVariableReferenceNode leftRangeVariableNode = GetResourceRangeVariableReferenceNode(node.Left);
-
-            string inOperator = ExpressionConstants.KeywordIn;
-            string[] inSeparator = { inOperator };
-            string[] substrings = translatedNode.Trim().Split(inSeparator, StringSplitOptions.RemoveEmptyEntries);
-            string leftIn = substrings[0];
-            string rightIn = substrings[1];
-
-            if (leftRangeVariableNode != null && IsDifferentSource(filterClauseRangeVariable, leftRangeVariableNode))
-            {
-                leftIn = ExpressionConstants.It + ExpressionConstants.SymbolForwardSlash + leftIn;
-                translatedNode = leftIn + inOperator + rightIn;
-            }
-
-            return translatedNode;
-        }
-
-        /// <summary>
-        /// Bind $it to the <see cref="AnyNode"/> translated string.
-        /// </summary>
-        /// <param name="node">node to bind.</param>
-        /// <param name="filterClauseRangeVariable">The <see cref="FilterClause"/> range variable.</param>
-        /// <returns>The translated string with $it binding.</returns>
-        private string BindAnyNode(AnyNode node, ResourceRangeVariable filterClauseRangeVariable)
-        {
-            string translatedNode = this.TranslateNode(node);
-            ResourceRangeVariableReferenceNode leftRangeVariableNode = GetResourceRangeVariableReferenceNode(node);
-
-            const string slashAny = "/any";
-            string[] anySeparator = { slashAny };
-            string[] substrings = translatedNode.Trim().Split(anySeparator, StringSplitOptions.RemoveEmptyEntries);
-            string leftAnyNodeSubstring = substrings[0];
-            string rightAnyNodeSubstring = substrings[1];
-
-            if (leftRangeVariableNode != null && IsDifferentSource(filterClauseRangeVariable, leftRangeVariableNode))
-            {
-                leftAnyNodeSubstring = ExpressionConstants.It + ExpressionConstants.SymbolForwardSlash + leftAnyNodeSubstring;
-                translatedNode = leftAnyNodeSubstring + slashAny + rightAnyNodeSubstring;
-            }
-
-            return translatedNode;
-        }
-
-        /// <summary>
-        /// Bind $it to the <see cref="SingleValueFunctionCallNode"/> translated string.
-        /// </summary>
-        /// <param name="node">node to bind.</param>
-        /// <param name="filterClauseRangeVariable">The <see cref="FilterClause"/> range variable.</param>
-        /// <returns>The translated string with $it binding.</returns>
-        private string BindSingleValueFunctionCallNode(SingleValueFunctionCallNode node, ResourceRangeVariable filterClauseRangeVariable)
-        {
-            string translatedNode = this.TranslateNode(node);
-            ResourceRangeVariableReferenceNode firstParameterRangeVariableNode = GetResourceRangeVariableReferenceNode(node);
-
-            char[] separators = { '(', ')' };
-            string[] subtrings = translatedNode.Trim().Split(separators, StringSplitOptions.RemoveEmptyEntries);
-            string withinBrackets = subtrings[1];
-            char[] parameterSeparators = { ',' };
-            string[] parameters = withinBrackets.Trim().Split(parameterSeparators, StringSplitOptions.RemoveEmptyEntries);
-            string leftParameter = parameters[0];
-            string rightParameter = parameters.Length == 2 ? parameters[1] : String.Empty;
-
-            if (firstParameterRangeVariableNode != null && IsDifferentSource(filterClauseRangeVariable, firstParameterRangeVariableNode))
-            {
-                leftParameter = ExpressionConstants.It + ExpressionConstants.SymbolForwardSlash + leftParameter;
-                translatedNode = parameters.Length == 1 ? subtrings[0] + '(' + leftParameter + ')' : subtrings[0] + '(' + leftParameter + ',' + rightParameter + ')';
-            }
-
-            return translatedNode;
-        }
-
-        /// <summary>
-        /// Bind $it to the <see cref="SingleValueOpenPropertyAccessNode"/> translated string.
-        /// </summary>
-        /// <param name="node">node to bind.</param>
-        /// <param name="filterClauseRangeVariable">The <see cref="FilterClause"/> range variable.</param>
-        /// <returns>The translated string with $it binding.</returns>
-        private string BindSingleValueOpenPropertyAccess(SingleValueOpenPropertyAccessNode node, ResourceRangeVariable filterClauseRangeVariable)
-        {
-            string translatedNode = this.TranslateNode(node);
-            ResourceRangeVariableReferenceNode rangeVariableNode = GetResourceRangeVariableReferenceNode(node);
-
-            if (rangeVariableNode != null && IsDifferentSource(filterClauseRangeVariable, rangeVariableNode))
-            {
-                translatedNode = ExpressionConstants.It + ExpressionConstants.SymbolForwardSlash + translatedNode;
-            }
-
-            return translatedNode;
-        }
-
-        /// <summary>
-        /// Check whether Navigation source of the FilterClause rangeVariable is different from the Expression rangeVariable.
-        /// </summary>
-        /// <param name="filterClauseRangeVariable"><see cref="FilterClause"/> rangeVariable.</param>
-        /// <param name="rangeVariableReferenceNode">The rangeVariable of the expression.</param>
-        /// <returns>If Navigation Source are different, returns true. Otherwise false.</returns>
-        private static bool IsDifferentSource(ResourceRangeVariable filterClauseRangeVariable, ResourceRangeVariableReferenceNode rangeVariableReferenceNode)
-        {
-            Debug.Assert(filterClauseRangeVariable != null, "filterClause != null");
-            Debug.Assert(rangeVariableReferenceNode != null, "rangeVariableReferenceNode != null");
-
-            if (filterClauseRangeVariable.NavigationSource != rangeVariableReferenceNode.NavigationSource)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            rangeVariables.Push(filterClause.RangeVariable);
+            string query = this.TranslateNode(filterClause.Expression);
+            rangeVariables.Pop();
+            return query;
         }
 
         /// <summary>Translates a <see cref="OrderByClause"/> into a string.</summary>
@@ -726,7 +502,6 @@ namespace Microsoft.OData
             }
 
             orderByClause = orderByClause.ThenBy;
-
             if (orderByClause == null)
             {
                 return expr;
@@ -814,8 +589,15 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(sourceNode, "sourceNode");
             ExceptionUtils.CheckArgumentNotNull(edmPropertyName, "edmPropertyName");
 
+            rangeVariables.Push(GetResourceRangeVariableReferenceNode(sourceNode)?.RangeVariable);
             String source = this.TranslateNode(sourceNode);
-            return String.IsNullOrEmpty(source) ? edmPropertyName : string.Concat(source, ExpressionConstants.SymbolForwardSlash, edmPropertyName);
+            rangeVariables.Pop();
+            string query = String.IsNullOrEmpty(source) ? edmPropertyName : string.Concat(source, ExpressionConstants.SymbolForwardSlash, edmPropertyName);
+            if (IsDifferentSource(sourceNode))
+            {
+                query = ExpressionConstants.It + ExpressionConstants.SymbolForwardSlash + query;
+            }
+            return query;
         }
 
         /// <summary>
@@ -947,6 +729,97 @@ namespace Microsoft.OData
             {
                 return true;
             }
+        }
+
+        /// <summary>
+        /// Check whether Navigation source of the FilterClause rangeVariable is different from the Expression rangeVariable.
+        /// </summary>
+        /// <param name="node">Expression node.</param>
+        /// <returns>If Navigation Source are different, returns true. Otherwise false.</returns>
+        private bool IsDifferentSource(QueryNode node)
+        {
+            ResourceRangeVariableReferenceNode rangeVariableReferenceNode = GetResourceRangeVariableReferenceNode(node);
+            if (rangeVariableReferenceNode == null)
+            {
+                return false;
+            }
+            if (rangeVariables.Count == 0)
+            {
+                return false;
+            }
+
+            RangeVariable rangeVariable = rangeVariables.Peek();
+            if (rangeVariable == null)
+            {
+                return false;
+            }
+            return rangeVariable is ResourceRangeVariable resourceRangeVariable ?
+                resourceRangeVariable.NavigationSource != rangeVariableReferenceNode.NavigationSource && rangeVariableReferenceNode.Name == ExpressionConstants.It : false;
+        }
+
+        /// <summary>
+        /// We return the <see cref="ResourceRangeVariableReferenceNode"/> within a <see cref="QueryNode"/>
+        /// </summary>
+        /// <param name="node">The node to extract the ResourceRangeVariableReferenceNode.</param>
+        /// <returns>The extracted ResourceRangeVariableReferenceNode.</returns>
+        private ResourceRangeVariableReferenceNode GetResourceRangeVariableReferenceNode(QueryNode node)
+        {
+            if (node == null)
+            {
+                return null;
+            }
+
+            switch (node.Kind)
+            {
+                case QueryNodeKind.SingleValuePropertyAccess:
+                    SingleValuePropertyAccessNode singleValuePropertyAccessNode = node as SingleValuePropertyAccessNode;
+                    return GetResourceRangeVariableReferenceNode(singleValuePropertyAccessNode.Source);
+
+                case QueryNodeKind.Convert:
+                    ConvertNode convertNode = node as ConvertNode;
+                    return GetResourceRangeVariableReferenceNode(convertNode.Source);
+
+                case QueryNodeKind.Any:
+                    AnyNode anyNode = node as AnyNode;
+                    return GetResourceRangeVariableReferenceNode(anyNode.Source);
+
+                case QueryNodeKind.SingleValueFunctionCall:
+                    SingleValueFunctionCallNode singleValueFunctionCallNode = node as SingleValueFunctionCallNode;
+                    return GetResourceRangeVariableReferenceNode(singleValueFunctionCallNode.Parameters.First());
+
+                case QueryNodeKind.ResourceRangeVariableReference:
+                    return node as ResourceRangeVariableReferenceNode;
+
+                case QueryNodeKind.SingleValueOpenPropertyAccess:
+                    SingleValueOpenPropertyAccessNode singleValueOpenPropertyAccessNode = node as SingleValueOpenPropertyAccessNode;
+                    return GetResourceRangeVariableReferenceNode(singleValueOpenPropertyAccessNode.Source);
+
+                case QueryNodeKind.SingleComplexNode:
+                    SingleComplexNode singleComplexNode = node as SingleComplexNode;
+                    return GetResourceRangeVariableReferenceNode(singleComplexNode.Source);
+
+                case QueryNodeKind.CollectionComplexNode:
+                    CollectionComplexNode collectionComplexNode = node as CollectionComplexNode;
+                    return GetResourceRangeVariableReferenceNode(collectionComplexNode.Source);
+
+                case QueryNodeKind.CollectionNavigationNode:
+                    CollectionNavigationNode collectionNavigationNode = node as CollectionNavigationNode;
+                    return GetResourceRangeVariableReferenceNode(collectionNavigationNode.Source);
+
+                case QueryNodeKind.SingleNavigationNode:
+                    SingleNavigationNode singleNavigationNode = node as SingleNavigationNode;
+                    return GetResourceRangeVariableReferenceNode(singleNavigationNode.Source);
+
+                case QueryNodeKind.CollectionResourceFunctionCall:
+                    CollectionResourceFunctionCallNode collectionResourceFunctionCallNode = node as CollectionResourceFunctionCallNode;
+                    return GetResourceRangeVariableReferenceNode(collectionResourceFunctionCallNode.Source);
+
+                case QueryNodeKind.SingleResourceFunctionCall:
+                    SingleResourceFunctionCallNode singleResourceFunctionCallNode = node as SingleResourceFunctionCallNode;
+                    return GetResourceRangeVariableReferenceNode(singleResourceFunctionCallNode.Source);
+            }
+
+            return null;
         }
     }
 }

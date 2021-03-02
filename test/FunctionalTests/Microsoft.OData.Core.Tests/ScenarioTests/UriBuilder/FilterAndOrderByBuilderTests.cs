@@ -465,6 +465,22 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
             Assert.Equal(new Uri("http://gobbledygook/People(1)/RelatedSSNs?$filter=endswith%28%24it%2C%27xyz%27%29"), actualUri);
         }
+
+        [Fact]
+        public void BuildFilterWithManyBinaryOperator()
+        {
+            Uri queryUri = new Uri("People?$filter=(ID eq 1 or ID eq 2 or ID eq 3) and (ID eq 4 or ID eq 5)", UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal(new Uri("http://gobbledygook/People?$filter=%28ID eq 1 or ID eq 2 or ID eq 3%29 and %28ID eq 4 or ID eq 5%29"), actualUri);
+        }
+
+        [Fact]
+        public void BuildFilterWithDollarItInsideAny()
+        {
+            Uri queryUri = new Uri("People?$filter=MyPaintings%2Fany(p%3Ap%2FOpenProperty eq 1 or p%2FOpenProperty eq 2 and p%2FOpenProperty lt %24it%2FID and p%2FOpenProperty lt 1 add %24it%2FID)", UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal(new Uri("http://gobbledygook/People?$filter=MyPaintings%2Fany(p%3Ap%2FOpenProperty eq 1 or p%2FOpenProperty eq 2 and p%2FOpenProperty lt %24it%2FID and p%2FOpenProperty lt 1 add %24it%2FID)"), actualUri, new UriComparer<Uri>());
+        }
         #endregion
 
         #region test $orderby
