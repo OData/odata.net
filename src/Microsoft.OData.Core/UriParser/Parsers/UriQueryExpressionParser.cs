@@ -994,7 +994,6 @@ namespace Microsoft.OData.UriParser
                     this.lexer.NextToken();
                     QueryToken right = this.ParsePrimary();
                     left = new InToken(left, right);
-                    this.RecurseLeave();
                 }
                 else if (this.TokenIdentifierIs(ExpressionConstants.KeywordHas))
                 {
