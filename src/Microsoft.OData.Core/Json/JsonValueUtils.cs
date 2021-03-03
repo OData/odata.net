@@ -742,13 +742,12 @@ namespace Microsoft.OData.Json
             Debug.Assert(value != null, "value != null");
             Debug.Assert(buffer != null, "buffer != null");
 
-            int length = bufferByteSize;
-            if (offsetIn + length > value.Length)
+            if (offsetIn + bufferByteSize > value.Length)
             {
-                length = value.Length - offsetIn;
+                bufferByteSize = value.Length - offsetIn;
             }
 
-            return Convert.ToBase64CharArray(value, offsetIn, length, buffer, 0);
+            return Convert.ToBase64CharArray(value, offsetIn, bufferByteSize, buffer, 0);
         }
 
         /// <summary>

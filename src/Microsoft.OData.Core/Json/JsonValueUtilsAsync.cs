@@ -461,7 +461,7 @@ namespace Microsoft.OData.Json
         private static async Task WriteQuotedAsync(this TextWriter writer, string text)
         {
             await writer.WriteAsync(
-                JsonConstants.QuoteCharacter + text + JsonConstants.QuoteCharacter)
+                string.Concat(JsonConstants.QuoteCharacter, text, JsonConstants.QuoteCharacter))
                 .ConfigureAwait(false);
         }
     }
