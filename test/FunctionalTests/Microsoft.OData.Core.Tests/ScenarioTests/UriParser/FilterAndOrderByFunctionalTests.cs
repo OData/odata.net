@@ -1967,6 +1967,27 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void FilterWithInOperationWithAny()
+        {
+            // https://github.com/OData/odata.net/issues/1447
+            FilterClause filter = ParseFilter("Colors/any(x:x/Edm.String in ('Blue','Red'))", HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
+            var anyNode = filter.Expression.ShouldBeAnyQueryNode();
+            var inNode = anyNode.Body.ShouldBeInNode();
+            var svcn = Assert.IsType<SingleValueCastNode>(inNode.Left);
+
+            Assert.Equal("Edm.String", svcn.TypeReference.FullName());
+            Assert.Equal(InternalQueryNodeKind.SingleValueCast, svcn.InternalKind);
+            Assert.Equal(QueryNodeKind.SingleValueCast, svcn.Kind);
+            svcn.Source.ShouldBeNonResourceRangeVariableReferenceNode("x");
+
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+            Assert.Equal("('Blue','Red')", collectionNode.LiteralText);
+            Assert.Equal(2, collectionNode.Collection.Count);
+            collectionNode.Collection.ElementAt(0).ShouldBeConstantQueryNode("Blue");
+            collectionNode.Collection.ElementAt(1).ShouldBeConstantQueryNode("Red");
+        }
+
+        [Fact]
         public void FilterWithInOperationWithParensCollection()
         {
             FilterClause filter = ParseFilter("ID in (1,2,3)", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
