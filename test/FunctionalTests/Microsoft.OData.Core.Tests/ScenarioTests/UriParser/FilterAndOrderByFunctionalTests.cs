@@ -1880,6 +1880,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void FilterWithInOperationWithLogicalNotOperation()
+        {
+            FilterClause filter = ParseFilter("not ID in RelatedIDs", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            var uon = filter.Expression.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Not);
+            var inNode = Assert.IsType<InNode>(uon.Operand);
+            Assert.Equal("ID", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
+            Assert.Equal("RelatedIDs", Assert.IsType<CollectionPropertyAccessNode>(inNode.Right).Property.Name);
+        }
+
+        [Fact]
         public void FilterWithInOperationWithNestedOperation()
         {
             FilterClause filter = ParseFilter("(ID in RelatedIDs) eq false", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
@@ -1966,6 +1976,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("(1,2,3)", Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
         }
 
+        [Fact]
+        public void FilterWithInOperationWithParensCollectionAndLogicalNotOperator()
+        {
+            FilterClause filter = ParseFilter("not ID in (1,2,3)", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            var uon = filter.Expression.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Not);
+            var inNode = Assert.IsType<InNode>(uon.Operand);
+            Assert.Equal("ID", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
+            Assert.Equal("(1,2,3)", Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
+        }
+
         [Theory]
         [InlineData("('abc','xyz')")]
         [InlineData("(  'abc',      'xyz'  )")]
@@ -1977,6 +1997,27 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             FilterClause filter = ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
             var inNode = Assert.IsType<InNode>(filter.Expression);
+            Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
+
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+            Assert.Equal(collection, collectionNode.LiteralText);
+            Assert.Equal(2, collectionNode.Collection.Count);
+            collectionNode.Collection.ElementAt(0).ShouldBeConstantQueryNode("abc");
+            collectionNode.Collection.ElementAt(1).ShouldBeConstantQueryNode("xyz");
+        }
+
+        [Theory]
+        [InlineData("('abc','xyz')")]
+        [InlineData("(  'abc',      'xyz'  )")]
+        [InlineData("(\"abc\",\"xyz\")")]  // for backward compatibility
+        [InlineData("(  \"abc\",     \"xyz\"   )")]
+        public void FilterWithInOperationWithParensStringCollectionAndLogicalNotOperator(string collection)
+        {
+            string filterClause = $"not SSN in {collection}";
+            FilterClause filter = ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var uon = filter.Expression.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Not);
+            var inNode = Assert.IsType<InNode>(uon.Operand);
             Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
@@ -2246,6 +2287,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             OrderByClause orderby = ParseOrderBy("ID in RelatedIDs", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
             var inNode = Assert.IsType<InNode>(orderby.Expression);
+            Assert.Equal("ID", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
+            Assert.Equal("RelatedIDs", Assert.IsType<CollectionPropertyAccessNode>(inNode.Right).Property.Name);
+        }
+
+        [Fact]
+        public void OrderByWithInOperationWithPrimitiveTypePropertiesWithLogicalNotOperator()
+        {
+            OrderByClause orderby = ParseOrderBy("not ID in RelatedIDs", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            var uon = orderby.Expression.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Not);
+            var inNode = Assert.IsType<InNode>(uon.Operand);
             Assert.Equal("ID", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
             Assert.Equal("RelatedIDs", Assert.IsType<CollectionPropertyAccessNode>(inNode.Right).Property.Name);
         }
