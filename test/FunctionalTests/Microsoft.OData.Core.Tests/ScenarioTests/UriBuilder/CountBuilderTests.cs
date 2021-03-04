@@ -57,7 +57,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         {
             Uri queryUri = new Uri("People?$filter=MyPaintings/$count($filter=OpenProperty eq 1) gt 1", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
-            Assert.Equal(new Uri("http://gobbledygook/People?$filter=MyPaintings%2F%24count(%24filter%3DOpenProperty%20eq%201)%20gt%201"), actualUri);
+            Assert.Equal(new Uri("http://gobbledygook/People?$filter=MyPaintings%2F%24count%28%24filter%3D%24it%2FOpenProperty eq 1%29 gt 1"), actualUri);
         }
 
         [Fact]
