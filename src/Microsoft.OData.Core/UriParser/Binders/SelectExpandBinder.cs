@@ -630,10 +630,6 @@ namespace Microsoft.OData.UriParser
                     throw new ODataException(ODataErrorStrings.SelectExpandBinder_SystemTokenInSelect(firstNonTypeToken.Identifier));
                 }
             }
-            if (isCount)
-            {
-                return new ExpandedCountSelectItem(pathToNavProp, targetNavigationSource, filterOption, orderbyOption, tokenIn.TopOption, tokenIn.SkipOption, tokenIn.CountQueryOption, searchOption);
-            }
 
             // next, create a segment for the first non-type segment in the path.
             ODataPathSegment lastSegment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(tokenIn, this.Model, currentLevelType, this.configuration.Resolver, this.state);
@@ -727,10 +723,6 @@ namespace Microsoft.OData.UriParser
                     tokenIn = nextToken;
                     pathSoFar.Add(lastSegment);
                 }
-            }
-            if (isCount)
-            {
-                return new ExpandedCountSelectItem(pathToNavProp, targetNavigationSource, filterOption, orderbyOption, tokenIn.TopOption, tokenIn.SkipOption, tokenIn.CountQueryOption, searchOption);
             }
 
             // non-navigation cases do not allow further segments in $select.
