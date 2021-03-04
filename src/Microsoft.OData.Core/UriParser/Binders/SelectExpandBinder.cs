@@ -425,6 +425,10 @@ namespace Microsoft.OData.UriParser
             {
                 return new ExpandedReferenceSelectItem(pathToNavProp, targetNavigationSource, filterOption, orderbyOption, tokenIn.TopOption, tokenIn.SkipOption, tokenIn.CountQueryOption, searchOption, computeOption, applyOption);
             }
+            if (isCount)
+            {
+	            return new ExpandedCountSelectItem(pathToNavProp, targetNavigationSource, filterOption, orderbyOption, tokenIn.TopOption, tokenIn.SkipOption, tokenIn.CountQueryOption, searchOption);
+            }
 
             // $select & $expand
             SelectExpandClause subSelectExpand = BindSelectExpand(tokenIn.ExpandOption, tokenIn.SelectOption, parsedPath, this.ResourcePathNavigationSource, targetNavigationSource, null, generatedProperties, collapsed);
