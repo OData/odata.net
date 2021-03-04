@@ -728,6 +728,10 @@ namespace Microsoft.OData.UriParser
                     pathSoFar.Add(lastSegment);
                 }
             }
+            if (isCount)
+            {
+                return new ExpandedCountSelectItem(pathToNavProp, targetNavigationSource, filterOption, orderbyOption, tokenIn.TopOption, tokenIn.SkipOption, tokenIn.CountQueryOption, searchOption);
+            }
 
             // non-navigation cases do not allow further segments in $select.
             if (tokenIn.NextToken != null)
