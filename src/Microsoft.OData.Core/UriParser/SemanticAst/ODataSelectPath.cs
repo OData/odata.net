@@ -58,7 +58,11 @@ namespace Microsoft.OData.UriParser
                 {
                     if (index != this.Count - 1)
                     {
-                        throw new ODataException(ODataErrorStrings.ODataSelectPath_NavPropSegmentCanOnlyBeLastSegment);
+	                    var isCount = Segments[Count - 1] is DynamicPathSegment d && d.Identifier == ExpressionConstants.QueryOptionCount;
+	                    if (!isCount)
+	                    {
+		                    throw new ODataException(ODataErrorStrings.ODataSelectPath_NavPropSegmentCanOnlyBeLastSegment);
+	                    }
                     }
                 }
                 else if (segment is OperationSegment)

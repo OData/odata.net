@@ -654,6 +654,7 @@ namespace Microsoft.OData.UriParser
                     DynamicPathSegment dynamicPath = lastSegment as DynamicPathSegment;
                     if ((currentLevelType == null || currentLevelType.TypeKind != EdmTypeKind.Complex)
                         && (collectionType == null || collectionType.ElementType.TypeKind() != EdmTypeKind.Complex)
+                        && (collectionType == null || tokenIn.NextToken == null || !(collectionType.ElementType.TypeKind() == EdmTypeKind.Entity && tokenIn.NextToken.Identifier == ExpressionConstants.QueryOptionCount))
                         && (primitiveType == null || primitiveType.TypeKind != EdmTypeKind.Primitive)
                         && (dynamicPath == null || tokenIn.NextToken == null))
                     {
