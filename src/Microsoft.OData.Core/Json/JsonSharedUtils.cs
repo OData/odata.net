@@ -27,6 +27,16 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
+        /// Determines if the given float is serialized as a string in JSON.
+        /// </summary>
+        /// <param name="value">The value to check.</param>
+        /// <returns>true if the value should be written as a string, false if should be written as a JSON number.</returns>
+        internal static bool IsFloatValueSerializedAsString(float value)
+        {
+            return float.IsInfinity(value) || float.IsNaN(value);
+        }
+
+        /// <summary>
         /// Determines if the given primitive value is of a basic type where we can rely on just the JSON representation to convey type information.
         /// If so, we don't have to write the type name.
         /// </summary>
