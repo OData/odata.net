@@ -1,6 +1,5 @@
 <Project>
   <PropertyGroup>
-    <PackageVersion>8.1.0.1</PackageVersion>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
   </PropertyGroup>
     
