@@ -12,6 +12,9 @@ namespace Microsoft.OData
         /// <summary>"$it" keyword for expressions.</summary>
         internal const string It = "$it";
 
+        /// <summary>"$this" keyword for expressions.</summary>
+        internal const string This = "$this";
+
         /// <summary>"add" keyword for expressions.</summary>
         internal const string KeywordAdd = "add";
 

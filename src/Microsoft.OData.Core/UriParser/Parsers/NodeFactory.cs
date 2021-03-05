@@ -65,6 +65,23 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Creates a ParameterQueryNode for an $this parameter.
+        /// </summary>
+        /// <param name="elementType">Element type the parameter represents.</param>
+        /// <param name="navigationSource">The navigation source. May be null and must be null for non structured types.</param>
+        /// <returns>A new IParameterNode.</returns>
+        internal static RangeVariable CreateDollarThisRangeVariable(IEdmTypeReference elementType, IEdmNavigationSource navigationSource)
+        {
+            if (elementType.IsStructured())
+            {
+                return new ResourceRangeVariable(ExpressionConstants.This, elementType as IEdmStructuredTypeReference, navigationSource);
+            }
+
+            Debug.Assert(navigationSource == null, "if the type wasn't a structured type then there should be no navigation source");
+            return new NonResourceRangeVariable(ExpressionConstants.This, elementType, null);
+        }
+
+        /// <summary>
         /// Creates a RangeVariableReferenceNode for a given range variable
         /// </summary>
         /// <param name="rangeVariable">Name of the rangeVariable.</param>

@@ -298,6 +298,45 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             selectTermToken.SearchOption.ShouldBeStringLiteralToken("xyz");
         }
 
+        [Theory]
+        [InlineData("Emails($orderby=$this)", OrderByDirection.Ascending)]
+        [InlineData("Emails($orderby=$this asc)", OrderByDirection.Ascending)]
+        [InlineData("Emails($orderby=$this desc)", OrderByDirection.Descending)]
+        public void ParseOrderByThisInSelectWorks(string queryString, OrderByDirection orderByDirection)
+        {
+            // Arrange & Act
+            SelectToken selectToken = ParseSelectClause(queryString);
+
+            // Assert
+            Assert.NotNull(selectToken);
+            SelectTermToken selectTermToken = Assert.Single(selectToken.SelectTerms);
+            selectTermToken.PathToProperty.ShouldBeNonSystemToken("Emails");
+            Assert.NotNull(selectTermToken.OrderByOptions);
+            OrderByToken orderBy = Assert.Single(selectTermToken.OrderByOptions);
+            orderBy.Expression.ShouldBeRangeVariableToken("$this");
+            Assert.Equal(orderByDirection, orderBy.Direction);
+        }
+
+        [Fact]
+        public void ParseFilterByThisInSelectWorks()
+        {
+            // Arrange & Act
+            SelectToken selectToken = ParseSelectClause("RelatedSSNs($filter=endswith($this,'xyz'))");
+
+            // Assert
+            Assert.NotNull(selectToken);
+            SelectTermToken selectTermToken = Assert.Single(selectToken.SelectTerms);
+            selectTermToken.PathToProperty.ShouldBeNonSystemToken("RelatedSSNs");
+            Assert.NotNull(selectTermToken.FilterOption);
+
+            FunctionCallToken functionCallToken = (FunctionCallToken) selectTermToken.FilterOption;
+            functionCallToken.ShouldBeFunctionCallToken("endswith");
+            Assert.Equal(2, functionCallToken.Arguments.Count());
+
+            FunctionParameterToken parameterToken = functionCallToken.Arguments.First();
+            parameterToken.ValueToken.ShouldBeRangeVariableToken(ExpressionConstants.This);
+        }
+
         [Fact]
         public void ParseNestedSelectInSelectWorks()
         {
@@ -360,7 +399,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             ODataUriParserConfiguration configuration = new ODataUriParserConfiguration(EdmCoreModel.Instance)
             {
-                Settings = { PathLimit = 10, FilterLimit = 10, OrderByLimit = 10, SearchLimit = 10, SelectExpandLimit = 10 }
+                Settings = { PathLimit = 10, FilterLimit = 20, OrderByLimit = 10, SearchLimit = 10, SelectExpandLimit = 10 }
             };
 
             SelectExpandParser expandParser = new SelectExpandParser(select, configuration.Settings.SelectExpandLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier)

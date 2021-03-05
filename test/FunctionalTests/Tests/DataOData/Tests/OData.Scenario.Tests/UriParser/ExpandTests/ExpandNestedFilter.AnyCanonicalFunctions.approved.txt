@@ -153,6 +153,10 @@ SelectExpandQueryOption
 						NavigationSource = OrderDetails
 						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
 					ResourceRangeVariable
+						Name = $this
+						NavigationSource = Orders
+						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
+					ResourceRangeVariable
 						Name = $it
 						NavigationSource = OrderDetails
 						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=False]

@@ -19,7 +19,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
     {
         private readonly HashSet<string> parameters = new HashSet<string>
         {
-            ExpressionConstants.It
+            ExpressionConstants.It,
+            ExpressionConstants.This
         };
 
         // Constructor
@@ -67,6 +68,14 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var tokenizer = this.GetIdentifierTokenizerWithRealFunctionParser("variable");
             QueryToken result = tokenizer.ParseMemberAccess(null);
             result.ShouldBeRangeVariableToken("variable");
+        }
+
+        [Fact]
+        public void MemberAccessWithNoIdentifierAndDollarThisAsLexerReturnsRangeVariableToken()
+        {
+            var tokenizer = this.GetIdentifierTokenizerWithRealFunctionParser("$this");
+            QueryToken result = tokenizer.ParseMemberAccess(null);
+            result.ShouldBeRangeVariableToken(ExpressionConstants.This);
         }
 
         [Fact]

@@ -282,8 +282,7 @@ namespace Microsoft.OData.UriParser
                 return new PathSelectItem(new ODataSelectPath(selectedPath));
             }
 
-            // We should use the "NavigationSource" at this level for the next level binding.
-            IEdmNavigationSource targetNavigationSource = this.NavigationSource;
+            IEdmNavigationSource targetNavigationSource = null;
             ODataPathSegment lastSegment = selectedPath.Last();
             IEdmType targetElementType = lastSegment.TargetEdmType;
             IEdmCollectionType collection = targetElementType as IEdmCollectionType;
@@ -293,6 +292,14 @@ namespace Microsoft.OData.UriParser
             }
 
             IEdmTypeReference elementTypeReference = targetElementType.ToTypeReference();
+
+            // When Creating Range Variables, we only need a Navigation Source when the elementTypeReference is a StructuredTypeReference.
+            // When the elementTypeReference is NOT StructuredTypeReference, We will create a NonResourceRangeVariable which don't require a Navigation Source.
+            if (elementTypeReference != null && elementTypeReference.IsStructured())
+            {
+                // We should use the "NavigationSource" at this level for the next level binding.
+                targetNavigationSource = this.NavigationSource;
+            }
 
             // $compute
             ComputeClause compute = BindCompute(tokenIn.ComputeOption, this.ResourcePathNavigationSource, targetNavigationSource, elementTypeReference);
@@ -893,6 +900,11 @@ namespace Microsoft.OData.UriParser
                     resourcePathNavigationSource.EntityType().ToTypeReference(), resourcePathNavigationSource);
                 state.RangeVariables.Push(explicitRangeVariable);
             }
+
+            // Create $this rangeVariable and add it to the Stack.
+            RangeVariable dollarThisRangeVariable = NodeFactory.CreateDollarThisRangeVariable(
+                elementType != null ? elementType : targetNavigationSource.EntityType().ToTypeReference(), targetNavigationSource);
+            state.RangeVariables.Push(dollarThisRangeVariable);
 
             return state;
         }

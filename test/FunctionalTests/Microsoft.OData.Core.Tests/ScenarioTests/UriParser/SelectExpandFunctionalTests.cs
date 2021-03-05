@@ -1414,6 +1414,107 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal(expectedLeft, left);
         }
 
+        [Theory]
+        [InlineData("RelatedSSNs($orderby=$this)", OrderByDirection.Ascending)]
+        [InlineData("RelatedSSNs($orderby=$this asc)", OrderByDirection.Ascending)]
+        [InlineData("RelatedSSNs($orderby=$this desc)", OrderByDirection.Descending)]
+        public void DollarThisinOrderByPrimitiveCollectionInsideSelectShouldReferenceSelectedItem(string queryString, OrderByDirection orderByDirection)
+        {
+            // Arrange & Act
+            // People?$select=RelatedSSNs($orderby=$this)
+            // People?$select=RelatedSSNs($orderby=$this asc)
+            // People?$select=RelatedSSNs($orderby=$this desc)
+            SelectExpandClause clause = RunParseSelectExpand(queryString, "", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            OrderByClause orderByClause =
+                (
+                    clause.SelectedItems.First() as PathSelectItem // $select=RelatedSSNs(...)
+                ).OrderByOption;
+
+            IEdmTypeReference typeReference = (orderByClause.Expression as NonResourceRangeVariableReferenceNode).TypeReference;
+
+            // Assert
+            orderByClause.Expression.ShouldBeNonResourceRangeVariableReferenceNode(ExpressionConstants.This);
+            Assert.Equal(orderByDirection, orderByClause.Direction);
+            Assert.Equal("Edm.String", typeReference.Definition.FullTypeName()); // RelatedSSNs is a collection of strings.
+        }
+
+        [Fact]
+        public void DollarThisinFilterInsideSelectShouldReferenceSelectedItemPrimitiveType()
+        {
+            // Arrange & Act
+            // People?$select=RelatedSSNs($filter=endswith($this,'xyz'))
+            SelectExpandClause clause = RunParseSelectExpand("RelatedSSNs($filter=endswith($this,'xyz'))", "", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            // Assert
+            PathSelectItem selectItem = (PathSelectItem) Assert.Single(clause.SelectedItems);
+            Assert.NotNull(selectItem.FilterOption);
+            selectItem.FilterOption.Expression.ShouldBeSingleValueFunctionCallQueryNode("endswith");
+
+            SingleValueFunctionCallNode singleValueFunctionCallNode = (SingleValueFunctionCallNode)selectItem.FilterOption.Expression;
+            Assert.Equal(2, singleValueFunctionCallNode.Parameters.Count());
+
+            ConvertNode convertNode = (ConvertNode) singleValueFunctionCallNode.Parameters.First();
+
+            // $this references RelatedSSNs which is a collection of primitives, that's why we have a NonResourceRangeVariableReferenceNode
+            convertNode.Source.ShouldBeNonResourceRangeVariableReferenceNode(ExpressionConstants.This);
+            IEdmTypeReference typeReference = convertNode.Source.TypeReference;
+            Assert.Equal("Edm.String", typeReference.Definition.FullTypeName()); // RelatedSSNs is a collection of strings.
+        }
+
+        [Fact]
+        public void DollarThisinFilterInsideSelectShouldReferenceSelectedItemStructuredType()
+        {
+            // Arrange
+
+            // $this/Street references PreviousAddresses which is a collection of Type Address.
+            IEdmStructuredType expectedType = (IEdmStructuredType)HardCodedTestModel.GetAddressType();
+
+            // Act
+            // People?$select=PreviousAddresses($filter=endswith($this/Street,'xyz'))
+            SelectExpandClause clause = RunParseSelectExpand("PreviousAddresses($filter=endswith($this/Street,'xyz'))", "", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            // Assert
+            PathSelectItem selectItem = (PathSelectItem)Assert.Single(clause.SelectedItems);
+            Assert.NotNull(selectItem.FilterOption);
+            selectItem.FilterOption.Expression.ShouldBeSingleValueFunctionCallQueryNode("endswith");
+
+            SingleValueFunctionCallNode singleValueFunctionCallNode = (SingleValueFunctionCallNode)selectItem.FilterOption.Expression; // endswith($this/Street,'xyz')
+            Assert.Equal(2, singleValueFunctionCallNode.Parameters.Count());
+
+            SingleValuePropertyAccessNode singleValuePropertyAccessNode = (SingleValuePropertyAccessNode)singleValueFunctionCallNode.Parameters.First(); // $this/Street
+
+            // $this references Address which is a structured stype, that's why we have a ResourceRangeVariableReferenceNode.
+            singleValuePropertyAccessNode.Source.ShouldBeResourceRangeVariableReferenceNode(ExpressionConstants.This);
+            Assert.Equal("Street", singleValuePropertyAccessNode.Property.Name);
+            Assert.Equal(expectedType, singleValuePropertyAccessNode.Property.DeclaringType); // Address is the DeclaringType of Street
+        }
+
+        [Fact]
+        public void DollarThisinFilterInsideSelectInsideExpandShouldReferenceSelectedItem()
+        {
+            // Arrange & Act
+            // People?$expand=MyDog($select=Nicknames($filter=startswith($this, 'blu')))
+            SelectExpandClause clause = RunParseSelectExpand("", "MyDog($select=Nicknames($filter=startswith($this, 'blu')))", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            // Assert
+            ExpandedNavigationSelectItem expandedSelectItem = (ExpandedNavigationSelectItem)Assert.Single(clause.SelectedItems); // $expand=MyDog(...)
+            Assert.NotNull(expandedSelectItem.SelectAndExpand);
+            SelectExpandClause innerClause = expandedSelectItem.SelectAndExpand; // $select=Nicknames(...)
+
+            PathSelectItem selectItem = (PathSelectItem)Assert.Single(innerClause.SelectedItems);
+            Assert.NotNull(selectItem.FilterOption);
+            selectItem.FilterOption.Expression.ShouldBeSingleValueFunctionCallQueryNode("startswith");
+
+            SingleValueFunctionCallNode singleValueFunctionCallNode = (SingleValueFunctionCallNode)selectItem.FilterOption.Expression;
+            Assert.Equal(2, singleValueFunctionCallNode.Parameters.Count());
+
+            ConvertNode convertNode = (ConvertNode)singleValueFunctionCallNode.Parameters.First();
+            convertNode.Source.ShouldBeNonResourceRangeVariableReferenceNode(ExpressionConstants.This);
+            IEdmTypeReference typeReference = convertNode.Source.TypeReference;
+            Assert.Equal("Edm.String", typeReference.Definition.FullTypeName()); // Nicknames is a collection of strings.
+        }
+
         [Fact]
         public void SelectAndExpandShouldFailOnSelectWrongComplexProperties()
         {

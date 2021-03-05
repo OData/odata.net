@@ -50,6 +50,22 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Fact]
+        public void CreateDollarThisRangeVariableShouldReturnEntityParameterQueryNodeForEntityType()
+        {
+            var resultNode = NodeFactory.CreateDollarThisRangeVariable(HardCodedTestModel.GetPersonType().ToTypeReference(), HardCodedTestModel.GetPeopleSet());
+            resultNode.ShouldBeResourceRangeVariable(HardCodedTestModel.GetPersonTypeReference());
+        }
+
+        [Fact]
+        public void CreateDollarThisRangeVariableShouldReturnNonEntityParameterQueryNodeForPrimitiveEntityType()
+        {
+            var type = EdmCoreModel.Instance.GetString(false);
+            var resultNode = NodeFactory.CreateDollarThisRangeVariable(type, null);
+            var typeReference = resultNode.ShouldBeNonentityRangeVariable(ExpressionConstants.This).TypeReference;
+            Assert.True(typeReference.IsEquivalentTo(type));
+        }
+
+        [Fact]
         public void CreateImplicitParameterNodeUsesEntitySetIfProvidedAndTypeWasEntity()
         {
             var resultNode = NodeFactory.CreateImplicitRangeVariable(HardCodedTestModel.GetPersonType().ToTypeReference(), HardCodedTestModel.GetPeopleSet());
