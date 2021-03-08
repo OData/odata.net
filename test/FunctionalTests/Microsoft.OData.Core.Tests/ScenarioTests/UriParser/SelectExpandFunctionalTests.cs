@@ -1582,8 +1582,45 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.NotNull(pathSelectItem.TopOption);
             Assert.Equal(4, pathSelectItem.TopOption);
 
-            Assert.NotNull(pathSelectItem.TopOption);
+            Assert.NotNull(pathSelectItem.SkipOption);
             Assert.Equal(2, pathSelectItem.SkipOption);
+        }
+
+        // Confirm if the OData spec supports:
+        // $select=collectionValuedProp/$count
+        // [Fact]
+        public void SelectWithComplexCollectionCountWorks()
+        {
+            // Arrange
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$select", "PreviousAddresses/$count"}
+                });
+
+            // Act
+            var selectExpandClause = odataQueryOptionParser.ParseSelectAndExpand();
+
+            Assert.NotNull(selectExpandClause);
+        }
+
+        // $expand=navProp/$count
+        [Fact]
+        public void ExpandWithNavigationPropCountWorks()
+        {
+            // Arrange
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$expand", "MyPaintings/$count"}
+                });
+
+            // Act
+            var selectExpandClause = odataQueryOptionParser.ParseSelectAndExpand();
+
+            Assert.NotNull(selectExpandClause);
         }
 
         [Fact]

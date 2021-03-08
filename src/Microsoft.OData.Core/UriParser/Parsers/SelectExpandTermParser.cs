@@ -110,7 +110,9 @@ namespace Microsoft.OData.UriParser
         private PathSegmentToken ParseSegment(PathSegmentToken previousSegment, bool allowRef)
         {
             // TODO $count is defined in specification for expand, it is not supported now. Also note $count is not supported with star as expand option.
-            if (this.lexer.CurrentToken.Text.StartsWith("$", StringComparison.Ordinal) && (!allowRef || this.lexer.CurrentToken.Text != UriQueryConstants.RefSegment))
+            if (this.lexer.CurrentToken.Text.StartsWith("$", StringComparison.Ordinal)
+                && (!allowRef || this.lexer.CurrentToken.Text != UriQueryConstants.RefSegment)
+                && this.lexer.CurrentToken.Text != UriQueryConstants.CountSegment)
             {
                 throw new ODataException(ODataErrorStrings.UriSelectParser_SystemTokenInSelectExpand(this.lexer.CurrentToken.Text, this.lexer.ExpressionText));
             }

@@ -371,11 +371,31 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void ParseFilterWithPrimitiveCollectionCountGt()
+        {
+            var filterQueryNode = ParseFilter("MyDates/$count gt 2", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan).
+                Left.ShouldBeCountNode().
+                    Source.ShouldBeCollectionPropertyAccessQueryNode(HardCodedTestModel.GetPersonMyDatesProp());
+        }
+
+        [Fact]
         public void ParseFilterWithComplexCollectionCount()
         {
             var filterQueryNode = ParseFilter("PreviousAddresses/$count eq 2", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
             filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
+                Left.ShouldBeCountNode().
+                    Source.ShouldBeCollectionComplexNode(HardCodedTestModel.GetPersonPreviousAddressesProp());
+        }
+
+        [Fact]
+        public void ParseFilterWithComplexCollectionCountGe()
+        {
+            var filterQueryNode = ParseFilter("PreviousAddresses/$count ge 2", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThanOrEqual).
                 Left.ShouldBeCountNode().
                     Source.ShouldBeCollectionComplexNode(HardCodedTestModel.GetPersonPreviousAddressesProp());
         }
@@ -398,6 +418,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
                 Left.ShouldBeCountNode().
                     Source.ShouldBeCollectionNavigationNode(HardCodedTestModel.GetPersonMyFriendsDogsProp());
+        }
+
+        [Fact]
+        public void ParseFilterWithNavigationPropertyCount()
+        {
+            var filterQueryNode = ParseFilter("MyPaintings/$count gt 2", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan).
+                Left.ShouldBeCountNode().
+                    Source.ShouldBeCollectionNavigationNode(HardCodedTestModel.GetPersonMyPaintingsNavProp());
         }
 
         [Fact]
