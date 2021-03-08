@@ -110,7 +110,6 @@ namespace Microsoft.OData
         public override string Translate(PathSelectItem item)
         {
             NodeToStringBuilder nodeToStringBuilder = new NodeToStringBuilder();
-            string currentExpandClause = string.Empty;
             string res = string.Empty;
             if (item.FilterOption != null)
             {
@@ -166,7 +165,7 @@ namespace Microsoft.OData
                 res += nodeToStringBuilder.TranslateComputeClause(item.ComputeOption);
             }
 
-            return string.Concat(currentExpandClause, string.IsNullOrEmpty(res) ? null : string.Concat(ExpressionConstants.SymbolOpenParen, res, ExpressionConstants.SymbolClosedParen));
+            return string.IsNullOrEmpty(res) ? null : string.Concat(ExpressionConstants.SymbolOpenParen, res, ExpressionConstants.SymbolClosedParen);
         }
 
         /// <summary>
