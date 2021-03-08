@@ -701,6 +701,22 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         }
 
         [Fact]
+        public void SelectWithDollarThisInFilterClauseShouldWork()
+        {
+            Uri queryUri = new Uri("People?$select=RelatedSSNs($filter=endswith($this,'xyz'))", UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal("http://gobbledygook/People?$select=" + Uri.EscapeDataString("RelatedSSNs($filter=endswith($this,'xyz'))"), actualUri.OriginalString);
+        }
+
+        [Fact]
+        public void SelectWithDollarThisSlashPropertyInFilterClauseShouldWork()
+        {
+            Uri queryUri = new Uri("People?$select=PreviousAddresses($filter=endswith($this/Street,'xyz'))", UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal("http://gobbledygook/People?$select=" + Uri.EscapeDataString("PreviousAddresses($filter=endswith($this/Street,'xyz'))"), actualUri.OriginalString);
+        }
+
+        [Fact]
         public void ExpandWithNestedQueryOptionsShouldWork()
         {
             var ervFilter = new ResourceRangeVariable(ExpressionConstants.It, HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
