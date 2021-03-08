@@ -38,6 +38,11 @@ namespace Microsoft.OData
                 selectClause = String.Join(ODataConstants.ContextUriProjectionPropertySeparator, selectList.ToArray());
             }
 
+            foreach (PathSelectItem pathSelectItem in selectExpandClause.SelectedItems.Where(I => I.GetType() == typeof(PathSelectItem)))
+            {
+                selectClause += this.Translate(pathSelectItem);
+            }
+
             selectClause = string.IsNullOrEmpty(selectClause) ? null : string.Concat("$select", ExpressionConstants.SymbolEqual, isFirstSelectItem ? Uri.EscapeDataString(selectClause) : selectClause);
             isFirstSelectItem = false;
 
@@ -104,7 +109,64 @@ namespace Microsoft.OData
         /// <returns>Defined by the implementer</returns>
         public override string Translate(PathSelectItem item)
         {
-            return string.Empty;
+            NodeToStringBuilder nodeToStringBuilder = new NodeToStringBuilder();
+            string currentExpandClause = string.Empty;
+            string res = string.Empty;
+            if (item.FilterOption != null)
+            {
+                res += "$filter=" + nodeToStringBuilder.TranslateFilterClause(item.FilterOption);
+            }
+
+            if (item.OrderByOption != null)
+            {
+                res += string.IsNullOrEmpty(res) ? null : ";";
+                res += "$orderby=" + nodeToStringBuilder.TranslateOrderByClause(item.OrderByOption);
+            }
+
+            if (item.TopOption != null)
+            {
+                res += string.IsNullOrEmpty(res) ? null : ";";
+                res += "$top=" + item.TopOption.ToString();
+            }
+
+            if (item.SkipOption != null)
+            {
+                res += string.IsNullOrEmpty(res) ? null : ";";
+                res += "$skip=" + item.SkipOption.ToString();
+            }
+
+            if (item.CountOption != null)
+            {
+                res += string.IsNullOrEmpty(res) ? null : ";";
+                res += "$count";
+                res += ExpressionConstants.SymbolEqual;
+                if (item.CountOption == true)
+                {
+                    res += ExpressionConstants.KeywordTrue;
+                }
+                else
+                {
+                    res += ExpressionConstants.KeywordFalse;
+                }
+            }
+
+            if (item.SearchOption != null)
+            {
+                res += string.IsNullOrEmpty(res) ? null : ";";
+                res += "$search";
+                res += ExpressionConstants.SymbolEqual;
+                res += nodeToStringBuilder.TranslateSearchClause(item.SearchOption);
+            }
+
+            if (item.ComputeOption != null)
+            {
+                res += string.IsNullOrEmpty(res) ? null : ";";
+                res += "$compute";
+                res += ExpressionConstants.SymbolEqual;
+                res += nodeToStringBuilder.TranslateComputeClause(item.ComputeOption);
+            }
+
+            return string.Concat(currentExpandClause, string.IsNullOrEmpty(res) ? null : string.Concat(ExpressionConstants.SymbolOpenParen, res, ExpressionConstants.SymbolClosedParen));
         }
 
         /// <summary>
