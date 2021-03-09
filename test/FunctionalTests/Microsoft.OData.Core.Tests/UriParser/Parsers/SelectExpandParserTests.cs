@@ -375,6 +375,68 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
         #endregion
 
+        #region ParseSelectExpand
+        [Fact]
+        public void NoDollarNestedOptions()
+        {
+            // Act
+            SelectExpandParserTests.ParseSelectExpand(
+                select: "foo,bar(select=baz)",
+                expand: "foo,bar(select=baz;expand=qux)",
+                out SelectToken selectToken,
+                out ExpandToken expandToken,
+                enableNoDollarQueryOptions: true);
+
+            // Assert Select
+            Assert.NotNull(selectToken.Properties);
+            PathSegmentToken[] properties = selectToken.Properties.ToArray();
+            Assert.Equal(2, properties.Length);
+            Assert.Equal("foo", properties[0].Identifier);
+            Assert.Equal("bar", properties[1].Identifier);
+
+            Assert.NotNull(selectToken.SelectTerms);
+            SelectTermToken[] selectTerms = selectToken.SelectTerms.ToArray();
+            Assert.Equal(2, selectTerms.Length);
+            Assert.Null(selectTerms[0].SelectOption);
+            Assert.NotNull(selectTerms[1].SelectOption);
+            Assert.NotEmpty(selectTerms[1].SelectOption.SelectTerms);
+
+            // Assert Expand
+            Assert.NotNull(expandToken.ExpandTerms);
+            ExpandTermToken[] expandTerms = expandToken.ExpandTerms.ToArray();
+            Assert.Equal(2, expandTerms.Length);
+            Assert.Null(expandTerms[0].ExpandOption);
+            Assert.Null(expandTerms[0].SelectOption);
+            Assert.NotNull(expandTerms[1].ExpandOption);
+            Assert.NotEmpty(expandTerms[1].ExpandOption.ExpandTerms);
+            Assert.NotNull(expandTerms[1].SelectOption);
+            Assert.NotEmpty(expandTerms[1].SelectOption.SelectTerms);
+        }
+
+        private static void ParseSelectExpand(
+            string select,
+            string expand,
+            out SelectToken selectToken,
+            out ExpandToken expandToken,
+            int selectExpandLimit = ODataUriParserSettings.DefaultSelectExpandLimit,
+            bool enableCaseInsensitiveUriFunctionIdentifier = false,
+            bool enableNoDollarQueryOptions = false)
+        {
+            SelectExpandSyntacticParser.Parse(
+                select,
+                expand,
+                parentStructuredType: null,
+                new ODataUriParserConfiguration(EdmCoreModel.Instance)
+                {
+                    EnableCaseInsensitiveUriFunctionIdentifier = enableCaseInsensitiveUriFunctionIdentifier,
+                    EnableNoDollarQueryOptions = enableNoDollarQueryOptions,
+                    Settings = { SelectExpandLimit = selectExpandLimit },
+                },
+                out expandToken,
+                out selectToken);
+        }
+        #endregion
+
         #region Star Expand Testing
         [Fact]
         public void ParseStarInExpand()
