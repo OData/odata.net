@@ -980,7 +980,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Parses the has, and in operators.
+        /// Parses the has and in operators.
         /// </summary>
         /// <returns>The lexical token representing the expression.</returns>
         private QueryToken ParseInHas()
