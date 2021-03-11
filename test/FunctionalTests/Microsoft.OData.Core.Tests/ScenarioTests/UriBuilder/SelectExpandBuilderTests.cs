@@ -701,7 +701,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         }
 
         [Fact]
-        public void SelectWithDollarThisInFilterClauseShouldWork()
+        public void SelectWithDollarThisInNestedDollarFilterClauseShouldWork()
         {
             Uri queryUri = new Uri("People?$select=RelatedSSNs($filter=endswith($this,'xyz'))", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
@@ -732,6 +732,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Assert.Equal("http://gobbledygook/People?$select=" + Uri.EscapeDataString("PreviousAddresses($filter=endswith($this/City,'xyz');$orderby=$this/City;$top=10;$skip=5;$count=true)"), actualUri.OriginalString);
         }
 
+        //MyDog($select=Color;$expand=MyPeople($expand=MyPaintings($filter=ID eq $it/ID)))
+        [Fact]
+        public void SelectWithinMultipleNestedExpandsShouldWork()
+        {
+            Uri queryUri = new Uri("People?$expand=MyDog($select=Color;$expand=MyPeople($select=PreviousAddresses($count=true;$filter=endswith($this/City,'xyz');$orderby=$this/City;$top=10;$skip=5)))", UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal("http://gobbledygook/People?$expand=" + Uri.EscapeDataString("MyDog($select=Color;$expand=MyPeople($select=PreviousAddresses($filter=endswith($this/City,'xyz');$orderby=$this/City;$top=10;$skip=5;$count=true)))"), actualUri.OriginalString);
+        }
         [Fact]
         public void ExpandWithNestedQueryOptionsShouldWork()
         {
