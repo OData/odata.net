@@ -17,11 +17,6 @@ namespace Microsoft.OData
     internal sealed class SelectExpandClauseToStringBuilder : SelectItemTranslator<string>
     {
         /// <summary>
-        /// the flag used to mark the SelectItem first appeared
-        /// </summary>
-        private bool isFirstSelectItem = true;
-
-        /// <summary>
         /// Build the expand clause for a given level in the selectExpandClause
         /// </summary>
         /// <param name="selectExpandClause">the current level select expand clause</param>
@@ -33,47 +28,50 @@ namespace Microsoft.OData
 
             List<string> selectList = selectExpandClause.GetCurrentLevelSelectList();
             string selectClause = null;
+            string expandClause = null;
+
             if (selectList.Any())
             {
                 selectClause = String.Join(ODataConstants.ContextUriProjectionPropertySeparator, selectList.ToArray());
             }
 
-            foreach (PathSelectItem pathSelectItem in selectExpandClause.SelectedItems.Where(I => I.GetType() == typeof(PathSelectItem)))
+            foreach (SelectItem selectItem in selectExpandClause.SelectedItems)
             {
-                selectClause += this.Translate(pathSelectItem);
+                if(selectItem.GetType() == typeof(PathSelectItem))
+                {
+                    selectClause += this.Translate((PathSelectItem)selectItem);
+                }
+
+                if (selectItem.GetType() == typeof(ExpandedNavigationSelectItem))
+                {
+                    if (string.IsNullOrEmpty(expandClause))
+                    {
+                        expandClause = firstFlag ? expandClause : string.Concat("$expand", ExpressionConstants.SymbolEqual);
+                    }
+                    else
+                    {
+                        expandClause += ExpressionConstants.SymbolComma;
+                    }
+
+                    expandClause += this.Translate((ExpandedNavigationSelectItem)selectItem);
+                }
+
+                if (selectItem.GetType() == typeof(ExpandedReferenceSelectItem))
+                {
+                    if (string.IsNullOrEmpty(expandClause))
+                    {
+                        expandClause = firstFlag ? expandClause : string.Concat("$expand", ExpressionConstants.SymbolEqual);
+                    }
+                    else
+                    {
+                        expandClause += ExpressionConstants.SymbolComma;
+                    }
+
+                    expandClause += this.Translate((ExpandedReferenceSelectItem)selectItem) + "/$ref";
+                }
             }
 
-            selectClause = string.IsNullOrEmpty(selectClause) ? null : string.Concat("$select", ExpressionConstants.SymbolEqual, isFirstSelectItem ? Uri.EscapeDataString(selectClause) : selectClause);
-            isFirstSelectItem = false;
-
-            string expandClause = null;
-            foreach (ExpandedNavigationSelectItem expandSelectItem in selectExpandClause.SelectedItems.Where(I => I.GetType() == typeof(ExpandedNavigationSelectItem)))
-            {
-                if (string.IsNullOrEmpty(expandClause))
-                {
-                    expandClause = firstFlag ? expandClause : string.Concat("$expand", ExpressionConstants.SymbolEqual);
-                }
-                else
-                {
-                    expandClause += ExpressionConstants.SymbolComma;
-                }
-
-                expandClause += this.Translate(expandSelectItem);
-            }
-
-            foreach (ExpandedReferenceSelectItem expandSelectItem in selectExpandClause.SelectedItems.Where(I => I.GetType() == typeof(ExpandedReferenceSelectItem)))
-            {
-                if (string.IsNullOrEmpty(expandClause))
-                {
-                    expandClause = firstFlag ? expandClause : string.Concat("$expand", ExpressionConstants.SymbolEqual);
-                }
-                else
-                {
-                    expandClause += ExpressionConstants.SymbolComma;
-                }
-
-                expandClause += this.Translate(expandSelectItem) + "/$ref";
-            }
+            selectClause = string.IsNullOrEmpty(selectClause) ? null : string.Concat("$select", ExpressionConstants.SymbolEqual, firstFlag ? Uri.EscapeDataString(selectClause) : selectClause);
 
             if (string.IsNullOrEmpty(expandClause))
             {
