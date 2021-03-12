@@ -381,8 +381,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             // Act
             SelectExpandParserTests.ParseSelectExpand(
-                select: "foo,bar(select=baz)",
-                expand: "foo,bar(select=baz;expand=qux)",
+                select: "prop1,prop2(select=prop3,prop4)",
+                expand: "nav1,nav2(select=prop5,prop6;expand=nav3,nav4)",
                 out SelectToken selectToken,
                 out ExpandToken expandToken,
                 enableNoDollarQueryOptions: true);
@@ -391,26 +391,46 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Assert.NotNull(selectToken.Properties);
             PathSegmentToken[] properties = selectToken.Properties.ToArray();
             Assert.Equal(2, properties.Length);
-            Assert.Equal("foo", properties[0].Identifier);
-            Assert.Equal("bar", properties[1].Identifier);
+            properties[0].ShouldBeNonSystemToken("prop1");
+            properties[1].ShouldBeNonSystemToken("prop2");
 
             Assert.NotNull(selectToken.SelectTerms);
             SelectTermToken[] selectTerms = selectToken.SelectTerms.ToArray();
             Assert.Equal(2, selectTerms.Length);
+            selectTerms[0].PathToProperty.ShouldBeNonSystemToken("prop1");
             Assert.Null(selectTerms[0].SelectOption);
+            selectTerms[1].PathToProperty.ShouldBeNonSystemToken("prop2");
             Assert.NotNull(selectTerms[1].SelectOption);
-            Assert.NotEmpty(selectTerms[1].SelectOption.SelectTerms);
+            Assert.NotNull(selectTerms[1].SelectOption.SelectTerms);
+            SelectTermToken[] subSelectTerms = selectTerms[1].SelectOption.SelectTerms.ToArray();
+            Assert.Equal(2, subSelectTerms.Length);
+            subSelectTerms[0].PathToProperty.ShouldBeNonSystemToken("prop3");
+            subSelectTerms[1].PathToProperty.ShouldBeNonSystemToken("prop4");
 
             // Assert Expand
             Assert.NotNull(expandToken.ExpandTerms);
             ExpandTermToken[] expandTerms = expandToken.ExpandTerms.ToArray();
             Assert.Equal(2, expandTerms.Length);
+            expandTerms[0].PathToProperty.ShouldBeNonSystemToken("nav1");
             Assert.Null(expandTerms[0].ExpandOption);
             Assert.Null(expandTerms[0].SelectOption);
+            expandTerms[1].PathToProperty.ShouldBeNonSystemToken("nav2");
             Assert.NotNull(expandTerms[1].ExpandOption);
-            Assert.NotEmpty(expandTerms[1].ExpandOption.ExpandTerms);
+            ExpandTermToken[] subExpandTerms = expandTerms[1].ExpandOption.ExpandTerms.ToArray();
+            Assert.Equal(2, subExpandTerms.Length);
+            subExpandTerms[0].PathToProperty.ShouldBeNonSystemToken("nav3");
+            Assert.Null(subExpandTerms[0].ExpandOption);
+            Assert.Null(subExpandTerms[0].SelectOption);
+            subExpandTerms[1].PathToProperty.ShouldBeNonSystemToken("nav4");
+            Assert.Null(subExpandTerms[1].ExpandOption);
+            Assert.Null(subExpandTerms[1].SelectOption);
             Assert.NotNull(expandTerms[1].SelectOption);
-            Assert.NotEmpty(expandTerms[1].SelectOption.SelectTerms);
+            subSelectTerms = expandTerms[1].SelectOption.SelectTerms.ToArray();
+            Assert.Equal(2, subSelectTerms.Length);
+            subSelectTerms[0].PathToProperty.ShouldBeNonSystemToken("prop5");
+            Assert.Null(subSelectTerms[0].SelectOption);
+            subSelectTerms[1].PathToProperty.ShouldBeNonSystemToken("prop6");
+            Assert.Null(subSelectTerms[1].SelectOption);
         }
 
         private static void ParseSelectExpand(
