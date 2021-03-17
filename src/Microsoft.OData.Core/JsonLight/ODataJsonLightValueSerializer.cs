@@ -16,6 +16,7 @@ namespace Microsoft.OData.JsonLight
     using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Strings;
+    using System.Threading.Tasks;
 
     #endregion Namespaces
 
@@ -379,6 +380,337 @@ namespace Microsoft.OData.JsonLight
                 stream.Flush();
                 stream.Dispose();
                 streamWriter.EndStreamValueScope();
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously writes a null value to the writer.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        public virtual Task WriteNullValueAsync()
+        {
+            return this.AsynchronousJsonWriter.WriteValueAsync((string)null);
+        }
+
+        /// <summary>
+        /// Asynchronously writes enum value
+        /// </summary>
+        /// <param name="value">enum value</param>
+        /// <param name="expectedTypeReference">expected type reference</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        public virtual Task WriteEnumValueAsync(
+            ODataEnumValue value,
+            IEdmTypeReference expectedTypeReference)
+        {
+            if (value.Value == null)
+            {
+                return this.WriteNullValueAsync();
+            }
+            else
+            {
+                return this.AsynchronousJsonWriter.WritePrimitiveValueAsync(value.Value);
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously writes out the value of a resource (complex or entity).
+        /// </summary>
+        /// <param name="resourceValue">The resource (complex or entity) value to write.</param>
+        /// <param name="metadataTypeReference">The metadata type for the resource value.</param>
+        /// <param name="isOpenPropertyType">true if the type name belongs to an open (dynamic) property.</param>
+        /// <param name="duplicatePropertyNamesChecker">The checker instance for duplicate property names.</param>
+        /// <remarks>The current recursion depth should be a value, measured by the number of resource and collection values between
+        /// this resource value and the top-level payload, not including this one.</remarks>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:LiteralsShouldBeSpelledCorrectly", Justification = "Names are correct. String can't be localized after string freeze.")]
+        public virtual async Task WriteResourceValueAsync(
+            ODataResourceValue resourceValue,
+            IEdmTypeReference metadataTypeReference,
+            bool isOpenPropertyType,
+            IDuplicatePropertyNameChecker duplicatePropertyNamesChecker)
+        {
+            Debug.Assert(resourceValue != null, "resourceValue != null");
+
+            this.IncreaseRecursionDepth();
+
+            // Start the object scope which will represent the entire resource instance;
+            await this.AsynchronousJsonWriter.StartObjectScopeAsync().ConfigureAwait(false);
+
+            string typeName = resourceValue.TypeName;
+
+            // In requests, we allow the property type reference to be null if the type name is specified in the OM
+            if (metadataTypeReference == null && !this.WritingResponse && typeName == null && this.Model.IsUserModel())
+            {
+                throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForResourceValueRequest);
+            }
+
+            // Resolve the type name to the type; if no type name is specified we will use the type inferred from metadata.
+            IEdmStructuredTypeReference resourceValueTypeReference =
+                (IEdmStructuredTypeReference)TypeNameOracle.ResolveAndValidateTypeForResourceValue(this.Model, metadataTypeReference, resourceValue, isOpenPropertyType, this.WriterValidator);
+            Debug.Assert(
+                metadataTypeReference == null || resourceValueTypeReference == null || EdmLibraryExtensions.IsAssignableFrom(metadataTypeReference, resourceValueTypeReference),
+                "Complex property types must be the same as or inherit from the ones from metadata (unless open).");
+
+            typeName = this.JsonLightOutputContext.TypeNameOracle.GetValueTypeNameForWriting(resourceValue, metadataTypeReference, resourceValueTypeReference, isOpenPropertyType);
+            if (typeName != null)
+            {
+                await this.AsynchronousODataAnnotationWriter.WriteODataTypeInstanceAnnotationAsync(typeName)
+                    .ConfigureAwait(false);
+            }
+
+            // Write custom instance annotations
+            await this.InstanceAnnotationWriter.WriteInstanceAnnotationsAsync(resourceValue.InstanceAnnotations)
+                .ConfigureAwait(false);
+
+            // Write the properties of the resource value as usual. Note we do not allow resource types to contain named stream properties.
+            await this.PropertySerializer.WritePropertiesAsync(
+                resourceValueTypeReference == null ? null : resourceValueTypeReference.StructuredDefinition(),
+                resourceValue.Properties,
+                true /* isComplexValue */,
+                duplicatePropertyNamesChecker,
+                null).ConfigureAwait(false);
+
+            // End the object scope which represents the resource instance;
+            await this.AsynchronousJsonWriter.EndObjectScopeAsync().ConfigureAwait(false);
+
+            this.DecreaseRecursionDepth();
+        }
+
+        /// <summary>
+        /// Asynchronously writes out the value of a collection property.
+        /// </summary>
+        /// <param name="collectionValue">The collection value to write.</param>
+        /// <param name="metadataTypeReference">The metadata type reference for the collection.</param>
+        /// <param name="valueTypeReference">The value type reference for the collection.</param>
+        /// <param name="isTopLevelProperty">Whether or not a top-level property is being written.</param>
+        /// <param name="isInUri">Whether or not the value is being written for a URI.</param>
+        /// <param name="isOpenPropertyType">True if the type name belongs to an open property.</param>
+        /// <remarks>The current recursion depth is measured by the number of resource and collection values between
+        /// this one and the top-level payload, not including this one.</remarks>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        [SuppressMessage("Microsoft.Naming", "CA2204:LiteralsShouldBeSpelledCorrectly", Justification = "Names are correct. String can't be localized after string freeze.")]
+        public virtual async Task WriteCollectionValueAsync(ODataCollectionValue collectionValue, IEdmTypeReference metadataTypeReference, IEdmTypeReference valueTypeReference, bool isTopLevelProperty, bool isInUri, bool isOpenPropertyType)
+        {
+            Debug.Assert(collectionValue != null, "collectionValue != null");
+            Debug.Assert(!isTopLevelProperty || !isInUri, "Cannot be a top level property and in a uri");
+
+            this.IncreaseRecursionDepth();
+
+            // If the CollectionValue has type information write out the metadata and the type in it.
+            string typeName = collectionValue.TypeName;
+
+            if (isTopLevelProperty)
+            {
+                Debug.Assert(metadataTypeReference == null, "Never expect a metadata type for top-level properties.");
+                if (typeName == null)
+                {
+                    throw new ODataException(ODataErrorStrings.ODataJsonLightValueSerializer_MissingTypeNameOnCollection);
+                }
+            }
+            else
+            {
+                // In requests, we allow the metadata type reference to be null if the type name is specified in the OM
+                if (metadataTypeReference == null && !this.WritingResponse && typeName == null && this.Model.IsUserModel())
+                {
+                    throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForCollectionValueInRequest);
+                }
+            }
+
+            if (valueTypeReference == null)
+            {
+                valueTypeReference = TypeNameOracle.ResolveAndValidateTypeForCollectionValue(this.Model, metadataTypeReference, collectionValue, isOpenPropertyType, this.WriterValidator);
+            }
+
+            bool useValueProperty = false;
+            if (isInUri)
+            {
+                // resolve the type name to the type; if no type name is specified we will use the
+                // type inferred from metadata
+                typeName = this.JsonLightOutputContext.TypeNameOracle.GetValueTypeNameForWriting(collectionValue, metadataTypeReference, valueTypeReference, isOpenPropertyType);
+                if (!string.IsNullOrEmpty(typeName))
+                {
+                    useValueProperty = true;
+
+                    // "{"
+                    await this.AsynchronousJsonWriter.StartObjectScopeAsync().ConfigureAwait(false);
+                    await this.AsynchronousODataAnnotationWriter.WriteODataTypeInstanceAnnotationAsync(typeName)
+                        .ConfigureAwait(false);
+                    await this.AsynchronousJsonWriter.WriteValuePropertyNameAsync().ConfigureAwait(false);
+                }
+            }
+
+            // [
+            // This represents the array of items in the CollectionValue
+            await this.AsynchronousJsonWriter.StartArrayScopeAsync().ConfigureAwait(false);
+
+            // Iterate through the CollectionValue items and write them out (treat null Items as an empty enumeration)
+            IEnumerable items = collectionValue.Items;
+            if (items != null)
+            {
+                IEdmTypeReference expectedItemTypeReference = valueTypeReference == null ? null : ((IEdmCollectionTypeReference)valueTypeReference).ElementType();
+
+                IDuplicatePropertyNameChecker duplicatePropertyNamesChecker = null;
+                foreach (object item in items)
+                {
+                    ValidationUtils.ValidateCollectionItem(item, expectedItemTypeReference.IsNullable());
+
+                    ODataResourceValue itemAsResourceValue = item as ODataResourceValue;
+                    if (itemAsResourceValue != null)
+                    {
+                        if (duplicatePropertyNamesChecker == null)
+                        {
+                            duplicatePropertyNamesChecker = this.CreateDuplicatePropertyNameChecker();
+                        }
+
+                        await this.WriteResourceValueAsync(
+                            itemAsResourceValue,
+                            expectedItemTypeReference,
+                            false /*isOpenPropertyType*/,
+                            duplicatePropertyNamesChecker).ConfigureAwait(false);
+
+                        duplicatePropertyNamesChecker.Reset();
+                    }
+                    else
+                    {
+                        Debug.Assert(!(item is ODataCollectionValue), "!(item is ODataCollectionValue)");
+                        Debug.Assert(!(item is ODataStreamReferenceValue), "!(item is ODataStreamReferenceValue)");
+
+                        // by design: collection element's type name is not written for enum or non-spatial primitive value even in case of full metadata.
+                        // because enum and non-spatial primitive types don't have inheritance, the type of each element is the same as the item type of the collection, whose type name for spatial types in full metadata mode.
+                        ODataEnumValue enumValue = item as ODataEnumValue;
+                        if (enumValue != null)
+                        {
+                            await this.WriteEnumValueAsync(enumValue, expectedItemTypeReference).ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            ODataUntypedValue untypedValue = item as ODataUntypedValue;
+                            if (untypedValue != null)
+                            {
+                                await this.WriteUntypedValueAsync(untypedValue).ConfigureAwait(false);
+                            }
+                            else if (item != null)
+                            {
+                                await this.WritePrimitiveValueAsync(item, expectedItemTypeReference).ConfigureAwait(false);
+                            }
+                            else
+                            {
+                                await this.WriteNullValueAsync().ConfigureAwait(false);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // End the array scope which holds the items
+            await this.AsynchronousJsonWriter.EndArrayScopeAsync().ConfigureAwait(false);
+
+            if (useValueProperty)
+            {
+                await this.AsynchronousJsonWriter.EndObjectScopeAsync().ConfigureAwait(false);
+            }
+
+            this.DecreaseRecursionDepth();
+        }
+
+        /// <summary>
+        /// Asynchronously writes a primitive value.
+        /// Uses a registered primitive type converter to write the value if one is registered for the type, otherwise directly writes the value.
+        /// </summary>
+        /// <param name="value">The value to write.</param>
+        /// <param name="expectedTypeReference">The expected type reference of the primitive value.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        public virtual Task WritePrimitiveValueAsync(
+            object value,
+            IEdmTypeReference expectedTypeReference)
+        {
+            return this.WritePrimitiveValueAsync(value, null, expectedTypeReference);
+        }
+
+        /// <summary>
+        /// Asynchronously writes a primitive value.
+        /// </summary>
+        /// <param name="value">The value to write.</param>
+        /// <param name="actualTypeReference">The actual type reference of the primitive value.</param>
+        /// <param name="expectedTypeReference">The expected type reference of the primitive value.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        public virtual async Task WritePrimitiveValueAsync(
+            object value,
+            IEdmTypeReference actualTypeReference,
+            IEdmTypeReference expectedTypeReference)
+        {
+            Debug.Assert(value != null, "value != null");
+
+            if (actualTypeReference == null)
+            {
+                // Try convert primitive values from their actual CLR types to their underlying CLR types.
+                value = this.Model.ConvertToUnderlyingTypeIfUIntValue(value, expectedTypeReference);
+                actualTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(value.GetType());
+            }
+
+            ODataPayloadValueConverter converter = this.JsonLightOutputContext.PayloadValueConverter;
+
+            // Skip validation if user has set custom PayloadValueConverter
+            if (expectedTypeReference != null && converter.GetType() == typeof(ODataPayloadValueConverter))
+            {
+                this.WriterValidator.ValidateIsExpectedPrimitiveType(value, (IEdmPrimitiveTypeReference)actualTypeReference, expectedTypeReference);
+            }
+
+            value = converter.ConvertToPayloadValue(value, expectedTypeReference);
+
+            if (actualTypeReference != null && actualTypeReference.IsSpatial())
+            {
+                // TODO: Implement asynchronous handling of spatial types in a separate PR
+                await TaskUtils.GetTaskForSynchronousOperation(() =>
+                {
+                    PrimitiveConverter.Instance.WriteJsonLight(value, this.JsonWriter);
+                }).ConfigureAwait(false);
+            }
+            else
+            {
+                await this.AsynchronousJsonWriter.WritePrimitiveValueAsync(value).ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously writes an untyped value.
+        /// </summary>
+        /// <param name="value">The untyped value to write.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        public virtual Task WriteUntypedValueAsync(
+            ODataUntypedValue value)
+        {
+            Debug.Assert(value != null, "value != null");
+
+            if (string.IsNullOrEmpty(value.RawValue))
+            {
+                throw new ODataException(ODataErrorStrings.ODataJsonLightValueSerializer_MissingRawValueOnUntyped);
+            }
+
+            return this.AsynchronousJsonWriter.WriteRawValueAsync(value.RawValue);
+        }
+
+        /// <summary>
+        /// Asynchronously writes a binary stream value.
+        /// </summary>
+        /// <param name="streamValue">The binary stream value.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        public virtual async Task WriteStreamValueAsync(ODataBinaryStreamValue streamValue)
+        {
+            IJsonStreamWriterAsync streamWriter = this.AsynchronousJsonWriter as IJsonStreamWriterAsync;
+            if (streamWriter == null)
+            {
+                // write as a string
+                string value = await new StreamReader(streamValue.Stream).ReadToEndAsync().ConfigureAwait(false);
+                await this.AsynchronousJsonWriter.WritePrimitiveValueAsync(value).ConfigureAwait(false);
+            }
+            else
+            {
+                Stream stream = await streamWriter.StartStreamValueScopeAsync().ConfigureAwait(false);
+                await streamValue.Stream.CopyToAsync(stream).ConfigureAwait(false);
+                await stream.FlushAsync().ConfigureAwait(false);
+                stream.Dispose();
+                await streamWriter.EndStreamValueScopeAsync().ConfigureAwait(false);
             }
         }
 
