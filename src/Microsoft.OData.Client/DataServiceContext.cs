@@ -27,6 +27,7 @@ namespace Microsoft.OData.Client
     using Microsoft.OData;
     using Microsoft.OData.Client.Annotation;
     using Microsoft.OData.Client.Metadata;
+    using Microsoft.OData.Client.Providers;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Vocabularies;
     using ClientStrings = Microsoft.OData.Client.Strings;
@@ -2577,10 +2578,10 @@ namespace Microsoft.OData.Client
             this.UpdateObjectInternal(entity, false /*failIfNotUnchanged*/, dependsOn.Count>0 ? dependsOn:null);
         }
 
-        /// <summary>Changes the state of the specified object in the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> to <see cref="F:Microsoft.OData.Client.EntityStates.Modified" />.</summary>
-        /// <param name="entity">The tracked entity to be assigned to the <see cref="F:Microsoft.OData.Client.EntityStates.Modified" /> state.</param>
-        /// <exception cref="T:System.ArgumentNullException">When <paramref name="entity" /> is null.</exception>
-        /// <exception cref="T:System.ArgumentException">When <paramref name="entity" /> is in the <see cref="F:Microsoft.OData.Client.EntityStates.Detached" /> state.</exception>
+        /// <summary>Changes the state of the specified object in the <see cref="Microsoft.OData.Client.DataServiceContext" /> to <see cref="Microsoft.OData.Client.EntityStates.Modified" />.</summary>
+        /// <param name="entity">The tracked entity to be assigned to the <see cref="Microsoft.OData.Client.EntityStates.Modified" /> state.</param>
+        /// <exception cref="System.ArgumentNullException">When <paramref name="entity" /> is null.</exception>
+        /// <exception cref="System.ArgumentException">When <paramref name="entity" /> is in the <see cref="Microsoft.OData.Client.EntityStates.Detached" /> state.</exception>
         public virtual void UpdateObject(object entity)
         {
             this.UpdateObject(entity, null);
@@ -3932,7 +3933,9 @@ namespace Microsoft.OData.Client
                     foreach (var entityDescriptor in this.EntityTracker.Entities)
                     {
                         var e = (object)entityDescriptor.Entity;
-                        var id = e.GetType().GetProperty("Id").GetValue(e, null);
+                        string entityName = e.GetType().FullName;
+                        var key = GetKeyPropertyName(this.Model, entityName);
+                        var id = e.GetType().GetProperty(key).GetValue(e, null);
                         if(dependOnId == id.ToString())
                         {
                             var changeOrder = entityDescriptor.ChangeOrder;
@@ -3948,6 +3951,18 @@ namespace Microsoft.OData.Client
             resource.State = EntityStates.Modified;
             resource.ChangeSetId = Guid.NewGuid().ToString();
             this.entityTracker.IncrementChange(resource);
+        }
+
+        /// <summary>
+        /// Returns the name of the Declared Key for an entity.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="entityName"></param>
+        /// <returns>Declared key property name.</returns>
+        private static string GetKeyPropertyName(ClientEdmModel model, string entityName)
+        {
+            EdmEntityTypeWithDelayLoadedProperties schemaType = (EdmEntityTypeWithDelayLoadedProperties)model.FindDeclaredType(entityName);
+            return schemaType.DeclaredKey.First().Name;
         }
 
         /// <summary>
