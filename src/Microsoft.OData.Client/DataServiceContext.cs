@@ -2606,7 +2606,7 @@ namespace Microsoft.OData.Client
         /// <exception cref="System.ArgumentException">When <paramref name="entity" /> is in the <see cref="Microsoft.OData.Client.EntityStates.Detached" /> state.</exception>
         public virtual void UpdateObject(object entity)
         {
-            this.UpdateObjectInternal(entity, false /*failIfInAddedState*/);
+            this.UpdateObjectInternal(entity, false /*failIfNotUnchanged*/);
         }
 
         /// <summary>Update a related object to the context.</summary>
