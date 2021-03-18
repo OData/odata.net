@@ -2550,7 +2550,7 @@ namespace Microsoft.OData.Client
                 }
             }
 
-            this.DeleteObjectInternal(entity, false /*failIfInAddedState*/, dependsOn);
+            this.DeleteObjectInternal(entity, false /*failIfInAddedState*/, dependsOn.Count > 0 ? dependsOn : null);
         }
 
         /// <summary>Changes the state of the specified object to be deleted in the <see cref="Microsoft.OData.Client.DataServiceContext" />.</summary>
