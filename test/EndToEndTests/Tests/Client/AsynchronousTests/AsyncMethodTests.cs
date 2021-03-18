@@ -11,6 +11,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
+    using Microsoft.OData;
     using Microsoft.OData.Client;
 #if SILVERLIGHT
     using Microsoft.Silverlight.Testing;
@@ -131,6 +132,51 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
 
             var dscResponse = await context.SaveChangesAsync(SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.UseJsonBatch);
             Assert.Equal(204, (dscResponse.First() as ChangeOperationResponse).StatusCode);
+
+            this.EnqueueTestComplete();
+        }
+
+        [Fact, Asynchronous]
+        public async Task JsonBatchSequencingTest()
+        {
+            DefaultContainer context = this.CreateWrappedContext<DefaultContainer>().Context;
+            Customer c1 = new Customer { CustomerId = 1, Name = "customerOne" };
+            Customer c2 = new Customer { CustomerId = 2, Name = "customerTwo" };
+            context.AddToCustomer(c1);
+            context.AddToCustomer(c2);
+            await context.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset);
+
+            c1.Name = "customerOne updated name";
+            c2.Name = "customerTwo updated name";
+
+            context.UpdateObject(c1);
+            context.UpdateObject(c2, c1.CustomerId);
+
+            var dscResponse = await context.SaveChangesAsync(SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.UseJsonBatch);
+            Assert.Equal(204, (dscResponse.First() as ChangeOperationResponse).StatusCode);
+
+            this.EnqueueTestComplete();
+        }
+
+        [Fact, Asynchronous]
+        public async Task BatchSequencingTestFailsWithMultiPartMixed()
+        {
+            DefaultContainer context = this.CreateWrappedContext<DefaultContainer>().Context;
+            Customer c1 = new Customer { CustomerId = 1, Name = "customerOne" };
+            Customer c2 = new Customer { CustomerId = 2, Name = "customerTwo" };
+            context.AddToCustomer(c1);
+            context.AddToCustomer(c2);
+            await context.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset);
+
+            c1.Name = "customerOne updated name";
+            c2.Name = "customerTwo updated name";
+
+            context.UpdateObject(c1);
+            context.UpdateObject(c2, c1.CustomerId);
+
+            Task response() => context.SaveChangesAsync(SaveChangesOptions.BatchWithIndependentOperations);
+            var exception = await Assert.ThrowsAsync<ODataException>(response);
+            Assert.Contains("The dependsOn Id in request is not matching any of the request Id and atomic group Id seen so far", exception.Message);
 
             this.EnqueueTestComplete();
         }
