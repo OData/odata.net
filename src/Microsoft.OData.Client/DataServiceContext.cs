@@ -4038,6 +4038,21 @@ namespace Microsoft.OData.Client
             }
         }
 
+        /// <summary>
+        /// Mark an existing object being tracked by the context for deletion.
+        /// </summary>
+        /// <param name="entity">entity to be mark deleted</param>
+        /// <param name="failIfInAddedState">If true, then an exception will be thrown if the entity is in the added state.</param>
+        /// <exception cref="ArgumentNullException">if entity is null</exception>
+        /// <exception cref="InvalidOperationException">if entity is not being tracked by the context, or if the entity is in the added state and <paramref name="failIfInAddedState"/> is true.</exception>
+        /// <remarks>
+        /// Existing objects in the Added state become detached if <paramref name="failIfInAddedState"/> is false.
+        /// </remarks>
+        private void DeleteObjectInternal(object entity, bool failIfInAddedState)
+        {
+            this.DeleteObjectInternal(entity, failIfInAddedState, null);
+        }
+
         private static void GetDependsOnChangeOrdersAndChangeSetIds(
             List<string> dependsOnIds,
             IEnumerable<EntityDescriptor> entities,
@@ -4076,21 +4091,6 @@ namespace Microsoft.OData.Client
         {
             EdmEntityTypeWithDelayLoadedProperties schemaType = (EdmEntityTypeWithDelayLoadedProperties)model.FindDeclaredType(entityName);
             return schemaType.DeclaredKey.First().Name;
-        }
-
-        /// <summary>
-        /// Mark an existing object being tracked by the context for deletion.
-        /// </summary>
-        /// <param name="entity">entity to be mark deleted</param>
-        /// <param name="failIfInAddedState">If true, then an exception will be thrown if the entity is in the added state.</param>
-        /// <exception cref="ArgumentNullException">if entity is null</exception>
-        /// <exception cref="InvalidOperationException">if entity is not being tracked by the context, or if the entity is in the added state and <paramref name="failIfInAddedState"/> is true.</exception>
-        /// <remarks>
-        /// Existing objects in the Added state become detached if <paramref name="failIfInAddedState"/> is false.
-        /// </remarks>
-        private void DeleteObjectInternal(object entity, bool failIfInAddedState)
-        {
-            this.DeleteObjectInternal(entity, failIfInAddedState, null);
         }
 
         /// <summary>
