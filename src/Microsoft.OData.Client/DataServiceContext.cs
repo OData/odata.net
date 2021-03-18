@@ -2533,6 +2533,28 @@ namespace Microsoft.OData.Client
 
         /// <summary>Changes the state of the specified object to be deleted in the <see cref="Microsoft.OData.Client.DataServiceContext" />.</summary>
         /// <param name="entity">The tracked entity to be changed to the deleted state.</param>
+        /// <param name="dependsOnIds">DependsOnIds for the deleted entity.</param>
+        /// <exception cref="System.ArgumentNullException">When <paramref name="entity" /> is null.</exception>
+        /// <exception cref="System.InvalidOperationException">When the object is not being tracked by the <see cref="Microsoft.OData.Client.DataServiceContext" />.</exception>
+        /// <remarks>
+        /// Existing objects in the Added state become detached.
+        /// </remarks>
+        public virtual void DeleteObject(object entity, params object[] dependsOnIds)
+        {
+            var dependsOn = new List<string>();
+            if (dependsOnIds != null)
+            {
+                foreach (var id in dependsOnIds)
+                {
+                    dependsOn.Add(id.ToString());
+                }
+            }
+
+            this.DeleteObjectInternal(entity, false /*failIfInAddedState*/, dependsOn);
+        }
+
+        /// <summary>Changes the state of the specified object to be deleted in the <see cref="Microsoft.OData.Client.DataServiceContext" />.</summary>
+        /// <param name="entity">The tracked entity to be changed to the deleted state.</param>
         /// <exception cref="System.ArgumentNullException">When <paramref name="entity" /> is null.</exception>
         /// <exception cref="System.InvalidOperationException">When the object is not being tracked by the <see cref="Microsoft.OData.Client.DataServiceContext" />.</exception>
         /// <remarks>
@@ -2584,7 +2606,7 @@ namespace Microsoft.OData.Client
         /// <exception cref="System.ArgumentException">When <paramref name="entity" /> is in the <see cref="Microsoft.OData.Client.EntityStates.Detached" /> state.</exception>
         public virtual void UpdateObject(object entity)
         {
-            this.UpdateObject(entity, null);
+            this.UpdateObjectInternal(entity, false /*failIfInAddedState*/);
         }
 
         /// <summary>Update a related object to the context.</summary>
@@ -3926,24 +3948,14 @@ namespace Microsoft.OData.Client
                 //We will extract ChangeOrder from the entity descriptor based on the Id.
                 //This is because we pass the ChangeOrder as Content-ID to the batch writer.
                 //We will pass the Content-ID(s) as dependsOnIds to the batch writer.
-                var dependsOnIdsAsChangeOrders = new List<string>();
-                var dependsOnChangeSetIds = new List<string>();
-                foreach (var dependOnId in dependsOnIds)
-                {
-                    foreach (var entityDescriptor in this.EntityTracker.Entities)
-                    {
-                        var e = (object)entityDescriptor.Entity;
-                        string entityName = e.GetType().FullName;
-                        var key = GetKeyPropertyName(this.Model, entityName);
-                        var id = e.GetType().GetProperty(key).GetValue(e, null);
-                        if(dependOnId == id.ToString())
-                        {
-                            var changeOrder = entityDescriptor.ChangeOrder;
-                            dependsOnIdsAsChangeOrders.Add(changeOrder.ToString(CultureInfo.CurrentCulture));
-                            dependsOnChangeSetIds.Add(entityDescriptor.ChangeSetId);
-                        }
-                    }
-                }
+                List<string> dependsOnIdsAsChangeOrders, dependsOnChangeSetIds;
+
+                GetDependsOnChangeOrdersAndChangeSetIds(
+                    dependsOnIds,
+                    this.EntityTracker.Entities,
+                    this.Model,
+                    out dependsOnIdsAsChangeOrders,
+                    out dependsOnChangeSetIds);
                 resource.DependsOnIds = dependsOnIdsAsChangeOrders;
                 resource.DependsOnChangeSetIds = dependsOnChangeSetIds.Distinct().ToList();
             }
@@ -3951,18 +3963,6 @@ namespace Microsoft.OData.Client
             resource.State = EntityStates.Modified;
             resource.ChangeSetId = Guid.NewGuid().ToString();
             this.entityTracker.IncrementChange(resource);
-        }
-
-        /// <summary>
-        /// Returns the name of the Declared Key for an entity.
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="entityName"></param>
-        /// <returns>Declared key property name.</returns>
-        private static string GetKeyPropertyName(ClientEdmModel model, string entityName)
-        {
-            EdmEntityTypeWithDelayLoadedProperties schemaType = (EdmEntityTypeWithDelayLoadedProperties)model.FindDeclaredType(entityName);
-            return schemaType.DeclaredKey.First().Name;
         }
 
         /// <summary>
@@ -3983,12 +3983,13 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="entity">entity to be mark deleted</param>
         /// <param name="failIfInAddedState">If true, then an exception will be thrown if the entity is in the added state.</param>
+        /// <param name="dependsOnIds">DependsOnIds for the deleted entity.</param>
         /// <exception cref="ArgumentNullException">if entity is null</exception>
         /// <exception cref="InvalidOperationException">if entity is not being tracked by the context, or if the entity is in the added state and <paramref name="failIfInAddedState"/> is true.</exception>
         /// <remarks>
         /// Existing objects in the Added state become detached if <paramref name="failIfInAddedState"/> is false.
         /// </remarks>
-        private void DeleteObjectInternal(object entity, bool failIfInAddedState)
+        private void DeleteObjectInternal(object entity, bool failIfInAddedState, List<string> dependsOnIds)
         {
             Util.CheckArgumentNull(entity, "entity");
 
@@ -4010,11 +4011,86 @@ namespace Microsoft.OData.Client
                     Util.IncludeLinkState(state),
                     "bad state transition to deleted");
 
+                if (dependsOnIds != null)
+                {
+                    //In DataServiceContext.UpdateObject, we pass entity Id(s) as dependsOnIds.
+                    //We will extract ChangeOrder from the entity descriptor based on the Id.
+                    //This is because we pass the ChangeOrder as Content-ID to the batch writer.
+                    //We will pass the Content-ID(s) as dependsOnIds to the batch writer.
+                    List<string> dependsOnIdsAsChangeOrders, dependsOnChangeSetIds;
+
+                    GetDependsOnChangeOrdersAndChangeSetIds(
+                        dependsOnIds,
+                        this.EntityTracker.Entities,
+                        this.Model,
+                        out dependsOnIdsAsChangeOrders,
+                        out dependsOnChangeSetIds);
+
+                    resource.DependsOnIds = dependsOnIdsAsChangeOrders;
+                    resource.DependsOnChangeSetIds = dependsOnChangeSetIds.Distinct().ToList();
+                }
+
                 // Leave related links alone which means we can have a link in the Added
                 // or Modified state referencing a source/target entity in the Deleted state.
                 resource.State = EntityStates.Deleted;
+                resource.ChangeSetId = Guid.NewGuid().ToString();
                 this.entityTracker.IncrementChange(resource);
             }
+        }
+
+        private static void GetDependsOnChangeOrdersAndChangeSetIds(
+            List<string> dependsOnIds,
+            IEnumerable<EntityDescriptor> entities,
+            ClientEdmModel model,
+            out List<string>  dependsOnIdsAsChangeOrders,
+            out List<string>  dependsOnChangeSetIds)
+        {
+            dependsOnIdsAsChangeOrders = new List<string>();
+            dependsOnChangeSetIds = new List<string>();
+
+            foreach (var dependOnId in dependsOnIds)
+            {
+                foreach (var entityDescriptor in entities)
+                {
+                    var e = (object)entityDescriptor.Entity;
+                    string entityName = e.GetType().FullName;
+                    var key = GetKeyPropertyName(model, entityName);
+                    var id = e.GetType().GetProperty(key).GetValue(e, null);
+                    if (dependOnId == id.ToString())
+                    {
+                        var changeOrder = entityDescriptor.ChangeOrder;
+                        dependsOnIdsAsChangeOrders.Add(changeOrder.ToString(CultureInfo.CurrentCulture));
+                        dependsOnChangeSetIds.Add(entityDescriptor.ChangeSetId);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns the name of the Declared Key for an entity.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="entityName"></param>
+        /// <returns>Declared key property name.</returns>
+        private static string GetKeyPropertyName(ClientEdmModel model, string entityName)
+        {
+            EdmEntityTypeWithDelayLoadedProperties schemaType = (EdmEntityTypeWithDelayLoadedProperties)model.FindDeclaredType(entityName);
+            return schemaType.DeclaredKey.First().Name;
+        }
+
+        /// <summary>
+        /// Mark an existing object being tracked by the context for deletion.
+        /// </summary>
+        /// <param name="entity">entity to be mark deleted</param>
+        /// <param name="failIfInAddedState">If true, then an exception will be thrown if the entity is in the added state.</param>
+        /// <exception cref="ArgumentNullException">if entity is null</exception>
+        /// <exception cref="InvalidOperationException">if entity is not being tracked by the context, or if the entity is in the added state and <paramref name="failIfInAddedState"/> is true.</exception>
+        /// <remarks>
+        /// Existing objects in the Added state become detached if <paramref name="failIfInAddedState"/> is false.
+        /// </remarks>
+        private void DeleteObjectInternal(object entity, bool failIfInAddedState)
+        {
+            this.DeleteObjectInternal(entity, failIfInAddedState, null);
         }
 
         /// <summary>
