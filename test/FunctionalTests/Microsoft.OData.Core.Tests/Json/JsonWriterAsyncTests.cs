@@ -153,12 +153,12 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteJsonObjectValueAsyncCallsInjectedPropertyAction()
         {
             var properties = new Dictionary<string, object> { { "Name", "Sue" } };
-            Func<IJsonWriterAsync, Task> injectPropertyAction = async (IJsonWriterAsync actionWriter) =>
+            Func<IJsonWriterAsync, Task> injectPropertyDelegate = async (IJsonWriterAsync actionWriter) =>
             {
                 await actionWriter.WriteNameAsync("Id");
                 await actionWriter.WriteValueAsync(7);
             };
-            await this.writer.WriteJsonObjectValueAsync(properties, injectPropertyAction);
+            await this.writer.WriteJsonObjectValueAsync(properties, injectPropertyDelegate);
             Assert.Equal("{\"Id\":7,\"Name\":\"Sue\"}", this.builder.ToString());
         }
 

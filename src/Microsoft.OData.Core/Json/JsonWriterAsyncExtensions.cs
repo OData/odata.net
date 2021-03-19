@@ -27,21 +27,21 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="jsonWriter">The <see cref="JsonWriter"/> to write to.</param>
         /// <param name="jsonObjectValue">Writes the given json object value to the underlying json writer.</param>
-        /// <param name="injectPropertyAction">Called when the top-level object is started to possibly inject first property into the object.</param>
+        /// <param name="injectPropertyDelegate">Called when the top-level object is started to possibly inject first property into the object.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
         internal static async Task WriteJsonObjectValueAsync(
             this IJsonWriterAsync jsonWriter,
             IDictionary<string, object> jsonObjectValue,
-            Func<IJsonWriterAsync, Task> injectPropertyAction)
+            Func<IJsonWriterAsync, Task> injectPropertyDelegate)
         {
             Debug.Assert(jsonWriter != null, "jsonWriter != null");
             Debug.Assert(jsonObjectValue != null, "jsonObjectValue != null");
 
             await jsonWriter.StartObjectScopeAsync().ConfigureAwait(false);
 
-            if (injectPropertyAction != null)
+            if (injectPropertyDelegate != null)
             {
-                await injectPropertyAction(jsonWriter).ConfigureAwait(false);
+                await injectPropertyDelegate(jsonWriter).ConfigureAwait(false);
             }
 
             foreach (KeyValuePair<string, object> property in jsonObjectValue)
