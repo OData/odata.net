@@ -439,7 +439,7 @@ namespace Microsoft.OData.Json
         /// <param name="buffer">Char buffer to use for streaming data.</param>
         /// <param name="bufferPool">Character buffer pool.</param>
         internal static async Task WriteEscapedCharArrayAsync(this TextWriter writer, char[] inputArray, int inputArrayOffset, 
-            int inputArrayCount,ODataStringEscapeOption stringEscapeOption, Ref<char[]> buffer, ICharArrayPool bufferPool)
+            int inputArrayCount, ODataStringEscapeOption stringEscapeOption, Ref<char[]> buffer, ICharArrayPool bufferPool)
         {
             int bufferIndex = 0;
             buffer.Value = BufferUtils.InitializeBufferIfRequired(bufferPool, buffer.Value);

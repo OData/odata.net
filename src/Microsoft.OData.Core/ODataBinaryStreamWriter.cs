@@ -147,7 +147,7 @@ namespace Microsoft.OData
 
             PrepareByteArray(bytes, offset, count, out byteArray);
 
-            JsonValueUtils.WriteBinaryString(this.Writer, byteArray, wrappedBuffer, this.bufferPool);
+            JsonValueUtils.WriteBinaryString(this.Writer, byteArray, this.wrappedBuffer, this.bufferPool);
         }
 
         /// <inheritdoc />
