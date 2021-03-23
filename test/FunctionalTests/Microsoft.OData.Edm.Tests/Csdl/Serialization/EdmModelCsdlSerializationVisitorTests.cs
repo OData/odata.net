@@ -2015,6 +2015,40 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
         }
         #endregion
 
+        #region Collection Type References
+        [Fact]
+        public void VerifyCollectionTypeReferencesWrittenCorrectly()
+        {
+            // see https://github.com/OData/odata.net/issues/2028
+            // Arrange
+            EdmComplexType structuredType = new EdmComplexType("NS", "Customer");
+            structuredType.AddStructuralProperty("test01", EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetDecimal(true)));
+            structuredType.AddStructuralProperty("test02", EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetDecimal(false)));
+            structuredType.AddStructuralProperty("test03", EdmCoreModel.Instance.GetDecimal(true));
+            structuredType.AddStructuralProperty("test04", EdmCoreModel.Instance.GetDecimal(false));
+
+            // Act & Assert for XML
+            VisitAndVerifyXml(v => v.VisitSchemaType(structuredType), @"<ComplexType Name=""Customer"">
+  <Property Name=""test01"" Type=""Collection(Edm.Decimal)"" Nullable=""true"" />
+  <Property Name=""test02"" Type=""Collection(Edm.Decimal)"" Nullable=""false"" />
+  <Property Name=""test03"" Type=""Edm.Decimal"" />
+  <Property Name=""test04"" Type=""Edm.Decimal"" Nullable=""false"" />
+</ComplexType>"
+);
+
+            // Act & Assert for JSON
+            VisitAndVerifyJson(v => v.VisitSchemaType(structuredType), @"{
+  ""Customer"": {
+    ""$Kind"": ""ComplexType"",
+    ""test01"": { ""$Type"": ""Edm.Decimal"", ""$Collection"": true, ""$Nullable"": true },
+    ""test02"": { ""$Type"": ""Edm.Decimal"", ""$Collection"": true, ""$Nullable"": false },                   
+    ""test03"": { ""$Type"": ""Edm.Decimal"", ""$Nullable"": true },                   
+    ""test04"": { ""$Type"": ""Edm.Decimal"", ""$Nullable"": false },                   
+  }
+}");
+        }
+        #endregion
+
         internal void VisitAndVerifyXml(Action<EdmModelCsdlSerializationVisitor> testAction, string expected, bool indent = true)
         {
             XmlWriter xmlWriter;

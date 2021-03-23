@@ -105,7 +105,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             // Nothing here
         }
 
-        internal abstract void WriteNullableAttribute(IEdmTypeReference reference);
+        internal abstract void WriteNullableAttribute(IEdmTypeReference reference, bool alwaysWrite);
 
         internal abstract void WriteTypeDefinitionAttributes(IEdmTypeDefinitionReference reference);
 

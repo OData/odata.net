@@ -223,9 +223,16 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.xmlWriter.WriteEndElement();
         }
 
-        internal override void WriteNullableAttribute(IEdmTypeReference reference)
+        internal override void WriteNullableAttribute(IEdmTypeReference reference, bool alwaysWrite)
         {
-            this.WriteOptionalAttribute(CsdlConstants.Attribute_Nullable, reference.IsNullable, CsdlConstants.Default_Nullable, EdmValueWriter.BooleanAsXml);
+            if (alwaysWrite)
+            {
+                this.WriteRequiredAttribute(CsdlConstants.Attribute_Nullable, reference.IsNullable, EdmValueWriter.BooleanAsXml);
+            }
+            else
+            {
+                this.WriteOptionalAttribute(CsdlConstants.Attribute_Nullable, reference.IsNullable, CsdlConstants.Default_Nullable, EdmValueWriter.BooleanAsXml);
+            }
         }
 
         internal override void WriteTypeDefinitionAttributes(IEdmTypeDefinitionReference reference)
