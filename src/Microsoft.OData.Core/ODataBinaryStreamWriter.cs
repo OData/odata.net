@@ -20,23 +20,26 @@ namespace Microsoft.OData
     /// </summary>
     internal sealed class ODataBinaryStreamWriter : Stream
     {
+        /// <summary>Desired minimum bytes per write operation.</summary>
+        private const int MinBytesPerWriteEvent = 3;
+
         /// <summary>The writer to write to the underlying stream.</summary>
         private readonly TextWriter Writer;
 
         /// <summary>Trailing bytes from a previous write to be prepended to the next write.</summary>
-        private Byte[] trailingBytes = new Byte[0];
+        private byte[] trailingBytes = new byte[0];
 
         /// <summary>
-        /// The buffer to help with streaming responses.
+        /// The wrapped buffer to help with streaming responses.
         /// </summary>
-        private char[] streamingBuffer;
+        private Ref<char[]> wrappedBuffer;
 
         /// <summary>
         /// Get/sets the character buffer pool for streaming.
         /// </summary>
         private ICharArrayPool bufferPool;
 
-        /// <summary> An empty byte[].</summary>
+        /// <summary>An empty byte[].</summary>
         private static byte[] emptyByteArray = new byte[0];
 
         /// <summary>
@@ -56,10 +59,10 @@ namespace Microsoft.OData
         /// <param name="writer">A Textwriter for writing to the stream.</param>
         /// <param name="streamingBuffer">A temporary buffer to use when converting binary values.</param>
         /// <param name="bufferPool">Array pool for renting a buffer.</param>
-        public ODataBinaryStreamWriter(TextWriter writer, ref char[] streamingBuffer, ICharArrayPool bufferPool)
+        public ODataBinaryStreamWriter(TextWriter writer, Ref<char[]> wrappedBuffer, ICharArrayPool bufferPool)
         {
             this.Writer = writer;
-            this.streamingBuffer = streamingBuffer;
+            this.wrappedBuffer = wrappedBuffer;
             this.bufferPool = bufferPool;
         }
 
@@ -131,37 +134,40 @@ namespace Microsoft.OData
         /// <param name="count">The number of bytes to write.</param>
         public override void Write(byte[] bytes, int offset, int count)
         {
-            byte[] prefixByteString = emptyByteArray;
-            int trailingByteLength = trailingBytes.Length;
-            int numberOfBytesToPrefix = trailingByteLength > 0 ? 3 - trailingByteLength : 0;
+            Debug.Assert(this.wrappedBuffer != null, "this.wrappedBuffer != null");
 
             // if we have less than 3 bytes, store the bytes and continue
-            if (count + trailingByteLength < 3)
+            if (count + trailingBytes.Length < MinBytesPerWriteEvent)
             {
-                trailingBytes = trailingBytes.Concat(bytes.Skip(offset).Take(count)).ToArray();
+                this.trailingBytes = this.trailingBytes.Concat(bytes.Skip(offset).Take(count)).ToArray();
                 return;
             }
 
-            // if we have bytes left over from the previous write, prepend them
-            if (trailingByteLength > 0)
-            {
-                // convert the trailing bytes plus the first 3-trailingByteLength bytes of the new byte[]
-                prefixByteString = trailingBytes.Concat(bytes.Skip(offset).Take(numberOfBytesToPrefix)).ToArray();
-            }
+            byte[] byteArray;
 
-            // compute if there will be trailing bytes from this write
-            int remainingBytes = (count - numberOfBytesToPrefix) % 3;
-            trailingBytes = bytes.Skip(offset + count - remainingBytes).Take(remainingBytes).ToArray();
+            PrepareByteArray(bytes, offset, count, out byteArray);
 
-            JsonValueUtils.WriteBinaryString(this.Writer, prefixByteString.Concat(bytes.Skip(offset + numberOfBytesToPrefix).Take(count - numberOfBytesToPrefix - remainingBytes)).ToArray(), ref streamingBuffer, this.bufferPool);
+            JsonValueUtils.WriteBinaryString(this.Writer, byteArray, this.wrappedBuffer, this.bufferPool);
         }
 
-    
         /// <inheritdoc />
-        public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        public override async Task WriteAsync(byte[] bytes, int offset, int count, CancellationToken cancellationToken)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() =>
-                this.Write(buffer, offset, count));
+            Debug.Assert(this.wrappedBuffer != null, "this.wrappedBuffer != null");
+
+            // if we have less than 3 bytes, store the bytes and continue
+            if (count + trailingBytes.Length < MinBytesPerWriteEvent)
+            {
+                this.trailingBytes = this.trailingBytes.Concat(bytes.Skip(offset).Take(count)).ToArray();
+                return;
+            }
+
+            byte[] byteArray;
+
+            PrepareByteArray(bytes, offset, count, out byteArray);
+
+            await JsonValueUtils.WriteBinaryStringAsync(this.Writer, 
+                byteArray, this.wrappedBuffer, this.bufferPool).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -201,7 +207,13 @@ namespace Microsoft.OData
         /// </summary>
         public override void Flush()
         {
-            Writer.Flush();
+            this.Writer.Flush();
+        }
+
+        /// <inheritdoc/>
+        public override async Task FlushAsync(CancellationToken cancellationToken)
+        {
+            await this.Writer.FlushAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -219,6 +231,36 @@ namespace Microsoft.OData
 
             this.Writer.Flush();
             base.Dispose(disposing);
+        }
+
+        /// <summary>
+        /// Prepares bytes to be written for the particular write event
+        /// </summary>
+        /// <param name="bytes">The bytes to write to the stream.</param>
+        /// <param name="offset">The offset in the buffer to start from.</param>
+        /// <param name="count">The number of bytes targeted in this write event.</param>
+        /// <param name="byteArray">The bytes to be written in this write event.</param>
+        private void PrepareByteArray(byte[] bytes, int offset, int count, out byte[] byteArray)
+        {
+            int trailingBytesLength = this.trailingBytes.Length;
+            byte[] prefixByteString = emptyByteArray;
+            int numberOfBytesToPrefix = trailingBytesLength > 0 ? MinBytesPerWriteEvent - trailingBytesLength : 0;
+
+            // if we have bytes left over from the previous write, prepend them
+            if (trailingBytesLength > 0)
+            {
+                // convert the trailing bytes plus the first 3-trailingByteLength bytes of the new byte[]
+                prefixByteString = trailingBytes.Concat(bytes.Skip(offset).Take(numberOfBytesToPrefix)).ToArray();
+            }
+
+            // compute if there will be trailing bytes from this write
+            int remainingBytes = (count - numberOfBytesToPrefix) % MinBytesPerWriteEvent;
+            trailingBytes = bytes.Skip(offset + count - remainingBytes).Take(remainingBytes).ToArray();
+
+            // TODO: Too much LINQ? Investigate a more performant way of achieving this
+            byteArray = prefixByteString.Concat(bytes
+                .Skip(offset + numberOfBytesToPrefix)
+                .Take(count - numberOfBytesToPrefix - remainingBytes)).ToArray();
         }
     }
 }

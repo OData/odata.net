@@ -14,6 +14,7 @@ namespace Microsoft.OData.Json
     using System.Globalization;
     using System.IO;
     using System.Text;
+    using System.Threading.Tasks;
     using Microsoft.OData.Buffers;
     using Microsoft.OData.Edm;
     #endregion Namespaces
@@ -22,7 +23,7 @@ namespace Microsoft.OData.Json
     /// Writer for the JSON format. http://www.json.org
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "This class does not own the underlying stream/writer and thus should never dispose it.")]
-    internal sealed class JsonWriter : IJsonStreamWriter, IDisposable
+    internal sealed partial class JsonWriter : IJsonStreamWriter, IJsonStreamWriterAsync, IDisposable
     {
         /// <summary>
         /// Writer to write text into.
@@ -46,9 +47,9 @@ namespace Microsoft.OData.Json
         private readonly ODataStringEscapeOption stringEscapeOption;
 
         /// <summary>
-        /// The buffer to help with streaming responses.
+        /// The wrapped buffer to help with streaming responses.
         /// </summary>
-        private char[] buffer;
+        private Ref<char[]> wrappedBuffer;
 
         /// <summary>
         /// Current stream for writing a binary property.
@@ -82,6 +83,7 @@ namespace Microsoft.OData.Json
             this.scopes = new Stack<Scope>();
             this.isIeee754Compatible = isIeee754Compatible;
             this.stringEscapeOption = stringEscapeOption;
+            this.wrappedBuffer = new Ref<char[]>();
         }
 
         /// <summary>
@@ -213,7 +215,7 @@ namespace Microsoft.OData.Json
 
             currentScope.ObjectCount++;
 
-            JsonValueUtils.WriteEscapedJsonString(this.writer, name, this.stringEscapeOption, ref this.buffer);
+            JsonValueUtils.WriteEscapedJsonString(this.writer, name, this.stringEscapeOption, this.wrappedBuffer);
             this.writer.Write(JsonConstants.NameValueSeparator);
         }
 
@@ -278,7 +280,7 @@ namespace Microsoft.OData.Json
             if (isIeee754Compatible)
             {
                 JsonValueUtils.WriteValue(this.writer, value.ToString(CultureInfo.InvariantCulture),
-                    this.stringEscapeOption, ref this.buffer);
+                    this.stringEscapeOption, this.wrappedBuffer);
             }
             else
             {
@@ -318,7 +320,7 @@ namespace Microsoft.OData.Json
             if (isIeee754Compatible)
             {
                 JsonValueUtils.WriteValue(this.writer, value.ToString(CultureInfo.InvariantCulture),
-                    this.stringEscapeOption, ref this.buffer);
+                    this.stringEscapeOption, this.wrappedBuffer);
             }
             else
             {
@@ -393,7 +395,7 @@ namespace Microsoft.OData.Json
         public void WriteValue(string value)
         {
             this.WriteValueSeparator();
-            JsonValueUtils.WriteValue(this.writer, value, this.stringEscapeOption, ref this.buffer);
+            JsonValueUtils.WriteValue(this.writer, value, this.stringEscapeOption, this.wrappedBuffer);
         }
 
         /// <summary>
@@ -403,7 +405,7 @@ namespace Microsoft.OData.Json
         public void WriteValue(byte[] value)
         {
             this.WriteValueSeparator();
-            JsonValueUtils.WriteValue(this.writer, value, ref this.buffer, ArrayPool);
+            JsonValueUtils.WriteValue(this.writer, value, this.wrappedBuffer, this.ArrayPool);
         }
 
         /// <summary>
@@ -434,7 +436,7 @@ namespace Microsoft.OData.Json
             this.writer.Write(JsonConstants.QuoteCharacter);
             this.writer.Flush();
 
-            this.binaryValueStream = new ODataBinaryStreamWriter(writer, ref buffer, ArrayPool);
+            this.binaryValueStream = new ODataBinaryStreamWriter(writer, this.wrappedBuffer, this.ArrayPool);
             return this.binaryValueStream;
         }
 
@@ -463,7 +465,7 @@ namespace Microsoft.OData.Json
             {
                 this.writer.Write(JsonConstants.QuoteCharacter);
                 this.writer.Flush();
-                return new ODataJsonTextWriter(writer, ref buffer, this.ArrayPool);
+                return new ODataJsonTextWriter(writer, this.wrappedBuffer, this.ArrayPool);
             }
 
             this.writer.Flush();
@@ -487,11 +489,11 @@ namespace Microsoft.OData.Json
         /// </summary>
         public void Dispose()
         {
-            if (this.ArrayPool != null && this.buffer != null)
+            if (this.ArrayPool != null && this.wrappedBuffer.Value != null)
             {
-                BufferUtils.ReturnToBuffer(this.ArrayPool, this.buffer);
+                BufferUtils.ReturnToBuffer(this.ArrayPool, this.wrappedBuffer.Value);
                 this.ArrayPool = null;
-                this.buffer = null;
+                this.wrappedBuffer.Value = null;
             }
 
             if (this.binaryValueStream != null)

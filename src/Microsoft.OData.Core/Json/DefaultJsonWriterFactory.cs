@@ -13,7 +13,7 @@ namespace Microsoft.OData.Json
     /// Default JSON writer factory
     /// </summary>
     [CLSCompliant(false)]
-    public sealed class DefaultJsonWriterFactory : IJsonWriterFactory
+    public sealed class DefaultJsonWriterFactory : IJsonWriterFactory, IJsonWriterFactoryAsync
     {
         private ODataStringEscapeOption stringEscapeOption;
 
@@ -41,6 +41,17 @@ namespace Microsoft.OData.Json
         /// <param name="isIeee754Compatible">True if it is IEEE754Compatible.</param>
         /// <returns>The JSON writer created.</returns>
         public IJsonWriter CreateJsonWriter(TextWriter textWriter, bool isIeee754Compatible)
+        {
+            return new JsonWriter(textWriter, isIeee754Compatible, this.stringEscapeOption);
+        }
+
+        /// <summary>
+        /// Creates a new JSON writer of <see cref="IJsonWriter"/> with support for writing asynchronously.
+        /// </summary>
+        /// <param name="textWriter">Writer to which text needs to be written.</param>
+        /// <param name="isIeee754Compatible">True if it is IEEE754Compatible.</param>
+        /// <returns>The JSON writer created.</returns>
+        public IJsonWriterAsync CreateAsynchronousJsonWriter(TextWriter textWriter, bool isIeee754Compatible)
         {
             return new JsonWriter(textWriter, isIeee754Compatible, this.stringEscapeOption);
         }
