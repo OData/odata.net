@@ -201,7 +201,7 @@ namespace Microsoft.OData.Json
 
             if (writingJsonLight)
             {
-                Debug.Assert(writeInstanceAnnotationsDelegate != null, "writeInstanceAnnotations != null");
+                Debug.Assert(writeInstanceAnnotationsDelegate != null, "writeInstanceAnnotationsDelegate != null");
                 writeInstanceAnnotationsDelegate(instanceAnnotations);
             }
 
