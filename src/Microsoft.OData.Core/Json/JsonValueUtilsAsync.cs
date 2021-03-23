@@ -285,7 +285,12 @@ namespace Microsoft.OData.Json
         /// <param name="stringEscapeOption">The string escape option.</param>
         /// <param name="buffer">Char buffer to use for streaming data.</param>
         /// <param name="arrayPool">Array pool for renting a buffer.</param>
-        internal static async Task WriteValueAsync(this TextWriter writer, string value, ODataStringEscapeOption stringEscapeOption, Ref<char[]> buffer, ICharArrayPool arrayPool = null)
+        internal static async Task WriteValueAsync(
+            this TextWriter writer,
+            string value,
+            ODataStringEscapeOption stringEscapeOption,
+            Ref<char[]> buffer,
+            ICharArrayPool arrayPool = null)
         {
             Debug.Assert(writer != null, "writer != null");
 
@@ -357,8 +362,12 @@ namespace Microsoft.OData.Json
         /// <param name="stringEscapeOption">The string escape option.</param>
         /// <param name="buffer">Char buffer to use for streaming data.</param>
         /// <param name="bufferPool">Array pool for renting a buffer.</param>
-        internal static async Task WriteEscapedJsonStringAsync(this TextWriter writer, string inputString,
-            ODataStringEscapeOption stringEscapeOption, Ref<char[]> buffer, ICharArrayPool bufferPool = null)
+        internal static async Task WriteEscapedJsonStringAsync(
+            this TextWriter writer,
+            string inputString,
+            ODataStringEscapeOption stringEscapeOption,
+            Ref<char[]> buffer,
+            ICharArrayPool bufferPool = null)
         {
             Debug.Assert(writer != null, "writer != null");
             Debug.Assert(inputString != null, "The string value must not be null.");
@@ -376,8 +385,12 @@ namespace Microsoft.OData.Json
         /// <param name="stringEscapeOption">The string escape option.</param>
         /// <param name="buffer">Char buffer to use for streaming data.</param>
         /// <param name="bufferPool">Array pool for renting a buffer.</param>
-        internal static async Task WriteEscapedJsonStringValueAsync(this TextWriter writer, string inputString,
-            ODataStringEscapeOption stringEscapeOption, Ref<char[]> buffer, ICharArrayPool bufferPool)
+        internal static async Task WriteEscapedJsonStringValueAsync(
+            this TextWriter writer,
+            string inputString,
+            ODataStringEscapeOption stringEscapeOption,
+            Ref<char[]> buffer,
+            ICharArrayPool bufferPool)
         {
             Debug.Assert(writer != null, "writer != null");
             Debug.Assert(inputString != null, "The string value must not be null.");
@@ -438,8 +451,14 @@ namespace Microsoft.OData.Json
         /// <param name="stringEscapeOption">The string escape option.</param>
         /// <param name="buffer">Char buffer to use for streaming data.</param>
         /// <param name="bufferPool">Character buffer pool.</param>
-        internal static async Task WriteEscapedCharArrayAsync(this TextWriter writer, char[] inputArray, int inputArrayOffset, 
-            int inputArrayCount, ODataStringEscapeOption stringEscapeOption, Ref<char[]> buffer, ICharArrayPool bufferPool)
+        internal static async Task WriteEscapedCharArrayAsync(
+            this TextWriter writer,
+            char[] inputArray,
+            int inputArrayOffset, 
+            int inputArrayCount,
+            ODataStringEscapeOption stringEscapeOption,
+            Ref<char[]> buffer,
+            ICharArrayPool bufferPool)
         {
             int bufferIndex = 0;
             buffer.Value = BufferUtils.InitializeBufferIfRequired(bufferPool, buffer.Value);
