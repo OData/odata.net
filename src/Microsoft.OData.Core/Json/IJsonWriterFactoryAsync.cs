@@ -22,6 +22,6 @@ namespace Microsoft.OData.Json
         /// <param name="textWriter">Writer to which text needs to be written.</param>
         /// <param name="isIeee754Compatible">True if it is IEEE754Compatible.</param>
         /// <returns>The JSON writer created.</returns>
-        IJsonWriterAsync CreateAsyncJsonWriter(TextWriter textWriter, bool isIeee754Compatible);
+        IJsonWriterAsync CreateAsynchronousJsonWriter(TextWriter textWriter, bool isIeee754Compatible);
     }
 }
