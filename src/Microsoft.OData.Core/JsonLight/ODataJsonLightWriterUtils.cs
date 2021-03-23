@@ -8,6 +8,7 @@ namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System.Diagnostics;
+    using System.Threading.Tasks;
     using Microsoft.OData.Json;
     #endregion Namespaces
 
@@ -53,6 +54,48 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
 
             jsonWriter.WriteName(JsonLightConstants.ODataPropertyAnnotationSeparatorChar + annotationName);
+        }
+
+        /// <summary>
+        /// Writes the 'value' property name asynchronously.
+        /// </summary>
+        /// <param name="jsonWriter">The JSON writer to write to.</param>
+        internal static async Task WriteValuePropertyNameAsync(this IJsonWriterAsync jsonWriter)
+        {
+            Debug.Assert(jsonWriter != null, "jsonWriter != null");
+
+            await jsonWriter.WriteNameAsync(JsonLightConstants.ODataValuePropertyName)
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Write a JSON property name which represents a property annotation asynchronously.
+        /// </summary>
+        /// <param name="jsonWriter">The JSON writer to write to.</param>
+        /// <param name="propertyName">The name of the property to annotate.</param>
+        /// <param name="annotationName">The name of the annotation to write.</param>
+        internal static async Task WritePropertyAnnotationNameAsync(this IJsonWriterAsync jsonWriter, string propertyName, string annotationName)
+        {
+            Debug.Assert(jsonWriter != null, "jsonWriter != null");
+            Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
+            Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
+
+            await jsonWriter.WriteNameAsync(propertyName + JsonLightConstants.ODataPropertyAnnotationSeparatorChar + annotationName)
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Write a JSON instance annotation name which represents a instance annotation.
+        /// </summary>
+        /// <param name="jsonWriter">The JSON writer to write to.</param>
+        /// <param name="annotationName">The name of the instance annotation to write.</param>
+        internal static async Task WriteInstanceAnnotationNameAsync(this IJsonWriterAsync jsonWriter, string annotationName)
+        {
+            Debug.Assert(jsonWriter != null, "jsonWriter != null");
+            Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
+
+            await jsonWriter.WriteNameAsync(JsonLightConstants.ODataPropertyAnnotationSeparatorChar + annotationName)
+                .ConfigureAwait(false);
         }
     }
 }
