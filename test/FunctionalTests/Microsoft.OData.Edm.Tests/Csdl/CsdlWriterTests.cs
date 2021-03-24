@@ -1421,7 +1421,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 "<edmx:DataServices>" +
                   "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
                     "<ComplexType Name=\"SelectType\">" +
-                      "<Property Name=\"DefaultSelect\" Type=\"Collection(Edm.PropertyPath)\" />" +
+                      "<Property Name=\"DefaultSelect\" Type=\"Collection(Edm.PropertyPath)\" Nullable=\"true\" />" +
                       "<Property Name=\"DefaultHidden\" Type=\"Collection(Edm.NavigationPropertyPath)\" Nullable=\"false\" />" +
                     "</ComplexType>" +
                     "<Term Name=\"MyTerm\" Type=\"NS.SelectType\" />" +
@@ -1604,8 +1604,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                         "<PropertyRef Name=\"Id\" />" +
                       "</Key>" +
                       "<Property Name=\"Id\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
-                      "<Property Name=\"Primitive\" Type=\"Collection(Edm.PrimitiveType)\" />" +
-                      "<Property Name=\"Complex\" Type=\"Collection(Edm.ComplexType)\" />" +
+                      "<Property Name=\"Primitive\" Type=\"Collection(Edm.PrimitiveType)\" Nullable=\"true\" />" +
+                      "<Property Name=\"Complex\" Type=\"Collection(Edm.ComplexType)\" Nullable=\"true\" />" +
                     "</EntityType>" +
                   "</Schema>" +
                 "</edmx:DataServices>" +
@@ -1730,7 +1730,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 "<edmx:DataServices>" +
                   "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
                     "<Function Name=\"GetCustomer\">" +
-                      "<ReturnType Type=\"Collection(Edm.PrimitiveType)\" />" +
+                      "<ReturnType Type=\"Collection(Edm.PrimitiveType)\" Nullable=\"true\" />" +
                     "</Function>" +
                     "<Function Name=\"GetSomething\">" +
                       "<ReturnType Type=\"Collection(Edm.ComplexType)\" Nullable=\"false\" />" +
@@ -2377,7 +2377,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                         "</Key>" +
                         "<Property Name=\"Id\" Type=\"Edm.String\" />" +
                         "<Property Name=\"Value\" Type=\"Edm.Untyped\" />" +
-                        "<Property Name=\"Data\" Type=\"Collection(Edm.Untyped)\" />" +
+                        "<Property Name=\"Data\" Type=\"Collection(Edm.Untyped)\" Nullable=\"true\" />" +
                       "</EntityType>" +
                     "</Schema>" +
                   "</edmx:DataServices>" +

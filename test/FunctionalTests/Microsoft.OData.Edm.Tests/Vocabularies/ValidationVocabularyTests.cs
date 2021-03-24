@@ -93,12 +93,12 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     <Annotation Term=""Core.Description"" String=""Values are restricted to types that are both identical to or derived from the declared type and a type listed in this collection."" />
     <Annotation Term=""Core.LongDescription"" String=""This allows restricting values to certain sub-trees of an inheritance hierarchy. Types listed in this collection that are not derived from the declared type of the annotated model element are ignored."" />
   </Term>
-  <Term Name=""AllowedTerms"" Type=""Collection(Core.QualifiedTermName)"" AppliesTo=""Term Property"">
+  <Term Name=""AllowedTerms"" Type=""Collection(Core.QualifiedTermName)"" AppliesTo=""Term Property"" Nullable=""true"">
     <Annotation Term=""Core.Description"" String=""Annotate a term of type Edm.AnnotationPath, or a property of type Edm.AnnotationPath that is used within a structured term, to restrict the terms that can be targeted by the path."" />
     <Annotation Term=""Core.LongDescription"" String=""The annotation path expression is intended to end in a path segment with one of the listed terms. For forward compatibility, clients should be prepared for the annotation to reference terms besides those listed."" />
     <Annotation Term=""Core.RequiresType"" String=""Edm.AnnotationPath"" />
   </Term>
-  <Term Name=""ApplicableTerms"" Type=""Collection(Core.QualifiedTermName)"">
+  <Term Name=""ApplicableTerms"" Type=""Collection(Core.QualifiedTermName)"" Nullable=""true"">
     <Annotation Term=""Core.Description"" String=""Names of specific terms that are applicable and may be applied in the current context. This annotation does not restrict the use of other terms."" />
   </Term>
   <Term Name=""MaxItems"" Type=""Edm.Int64"" AppliesTo=""Collection"" Nullable=""false"">

@@ -27,7 +27,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             const string expectedText = @"<?xml version=""1.0"" encoding=""utf-16""?>
 <Schema Namespace=""OData.Community.Keys.V1"" Alias=""Keys"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
   <ComplexType Name=""AlternateKey"">
-    <Property Name=""Key"" Type=""Collection(Keys.PropertyRef)"">
+    <Property Name=""Key"" Type=""Collection(Keys.PropertyRef)"" Nullable=""true"">
       <Annotation Term=""Core.Description"" String=""The set of properties that make up this key"" />
     </Property>
   </ComplexType>
@@ -39,7 +39,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
       <Annotation Term=""Core.Description"" String=""A SimpleIdentifier that MUST be unique within the set of aliases, structural and navigation properties of the containing entity type that MUST be used in the key predicate of URLs"" />
     </Property>
   </ComplexType>
-  <Term Name=""AlternateKeys"" Type=""Collection(Keys.AlternateKey)"" AppliesTo=""EntityType"">
+  <Term Name=""AlternateKeys"" Type=""Collection(Keys.AlternateKey)"" AppliesTo=""EntityType"" Nullable=""true"">
     <Annotation Term=""Core.Description"" String=""Communicates available alternate keys"" />
   </Term>
 </Schema>";
