@@ -42,29 +42,29 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         <NavigationProperty Name=""Owner"" Type=""Test.Person"" Partner=""Cars"" />
       </EntityType>
       <Function Name=""Get1"">
-        <Parameter Name=""People"" Type=""Collection(Test.Person)"" Nullable=""true"" />
+        <Parameter Name=""People"" Type=""Collection(Test.Person)"" />
         <ReturnType Type=""Test.Person"" />
       </Function>
       <Function Name=""Get2"" IsComposable=""true"">
         <ReturnType Type=""Edm.String"" />
       </Function>
       <Function Name=""Get3"">
-        <Parameter Name=""Foo"" Type=""Collection(Edm.String)"" Nullable=""true"" />
+        <Parameter Name=""Foo"" Type=""Collection(Edm.String)"" />
         <ReturnType Type=""Test.Person"" />
       </Function>
       <Function Name=""Get3"">
         <ReturnType Type=""Test.Person"" />
       </Function>
       <Action Name=""Add"">
-        <Parameter Name=""People"" Type=""Collection(Test.Person)"" Nullable=""true"" />
+        <Parameter Name=""People"" Type=""Collection(Test.Person)"" />
         <ReturnType Type=""Test.Person"" />
       </Action>
       <Action Name=""Other"">
         <ReturnType Type=""Edm.String"" />
       </Action>
       <Action Name=""RemoveBadCar"" IsBound=""true"" EntitySetPath=""People/Cars"">
-        <Parameter Name=""People"" Type=""Collection(Test.Person)"" Nullable=""true"" />
-        <ReturnType Type=""Collection(Test.Car)"" Nullable=""true"" />
+        <Parameter Name=""People"" Type=""Collection(Test.Person)"" />
+        <ReturnType Type=""Collection(Test.Car)"" />
       </Action>
       <EntityContainer Name=""Container"">
         <EntitySet Name=""People"" EntityType=""Test.Person"">

@@ -156,7 +156,10 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         protected override void ProcessStructuralProperty(IEdmStructuralProperty element)
         {
             bool inlineType = IsInlineType(element.Type);
-            this.BeginElement(element, (IEdmStructuralProperty t) => { this.schemaWriter.WriteStructuralPropertyElementHeader(t, inlineType); }, e => { this.ProcessFacets(e.Type, inlineType); });
+            this.BeginElement(element, 
+                (IEdmStructuralProperty t) => { this.schemaWriter.WriteStructuralPropertyElementHeader(t, inlineType); },
+                e => { this.ProcessFacets(e.Type, inlineType, true); }
+            );
             if (!inlineType)
             {
                 VisitTypeReference(element.Type);
@@ -243,7 +246,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         protected override void ProcessTerm(IEdmTerm term)
         {
             bool inlineType = term.Type != null && IsInlineType(term.Type);
-            this.BeginElement(term, (IEdmTerm t) => { this.schemaWriter.WriteTermElementHeader(t, inlineType); }, e => { this.ProcessFacets(e.Type, inlineType); });
+            this.BeginElement(term, (IEdmTerm t) => { this.schemaWriter.WriteTermElementHeader(t, inlineType); }, e => { this.ProcessFacets(e.Type, inlineType, false); });
             if (!inlineType)
             {
                 if (term.Type != null)
@@ -271,7 +274,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.BeginElement(
                 element,
                 (IEdmOperationParameter t) => { this.schemaWriter.WriteOperationParameterElementHeader(t, inlineType); },
-                e => { this.ProcessFacets(e.Type, inlineType); });
+                e => { this.ProcessFacets(e.Type, inlineType, false); });
             if (!inlineType)
             {
                 VisitTypeReference(element.Type);
@@ -303,7 +306,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                     if (inlineType)
                     {
                         this.schemaWriter.WriteTypeAttribute(type);
-                        this.ProcessFacets(type, true /*inlineType*/);
+                        this.ProcessFacets(type, true /*inlineType*/, false);
                     }
                     else
                     {
@@ -319,7 +322,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.BeginElement(
                 element,
                 (IEdmCollectionType t) => this.schemaWriter.WriteCollectionTypeElementHeader(t, inlineType),
-                e => this.ProcessFacets(e.ElementType, inlineType));
+                e => this.ProcessFacets(e.ElementType, inlineType, false));
             if (!inlineType)
             {
                 VisitTypeReference(element.ElementType);
@@ -439,7 +442,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
             if (this.isXml)
             {
-                this.BeginElement(expression, (IEdmIsTypeExpression t) => { this.schemaWriter.WriteIsTypeExpressionElementHeader(t, inlineType); }, e => { this.ProcessFacets(e.Type, inlineType); });
+                this.BeginElement(expression, (IEdmIsTypeExpression t) => { this.schemaWriter.WriteIsTypeExpressionElementHeader(t, inlineType); }, e => { this.ProcessFacets(e.Type, inlineType, false); });
                 if (!inlineType)
                 {
                     VisitTypeReference(expression.Type);
@@ -453,7 +456,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 this.BeginElement(expression, (IEdmIsTypeExpression t) => { this.schemaWriter.WriteIsTypeExpressionElementHeader(t, inlineType); });
                 this.VisitExpression(expression.Operand);
                 this.schemaWriter.WriteIsOfExpressionType(expression, inlineType);
-                this.ProcessFacets(expression.Type, inlineType);
+                this.ProcessFacets(expression.Type, inlineType, false);
                 this.EndElement(expression);
             }
         }
@@ -533,7 +536,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
             if (this.isXml)
             {
-                this.BeginElement(expression, (IEdmCastExpression t) => { this.schemaWriter.WriteCastExpressionElementHeader(t, inlineType); }, e => { this.ProcessFacets(e.Type, inlineType); });
+                this.BeginElement(expression, (IEdmCastExpression t) => { this.schemaWriter.WriteCastExpressionElementHeader(t, inlineType); }, e => { this.ProcessFacets(e.Type, inlineType, false); });
                 if (!inlineType)
                 {
                     VisitTypeReference(expression.Type);
@@ -549,7 +552,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 this.VisitExpression(expression.Operand);
 
                 this.schemaWriter.WriteCastExpressionType(expression, inlineType);
-                this.ProcessFacets(expression.Type, inlineType);
+                this.ProcessFacets(expression.Type, inlineType, false);
 
                 this.EndElement(expression, t => this.schemaWriter.WriteCastExpressionElementEnd(t, inlineType));
             }
@@ -653,7 +656,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
         }
 
-        private void ProcessFacets(IEdmTypeReference element, bool inlineType)
+        private void ProcessFacets(IEdmTypeReference element, bool inlineType, bool nullableAttributeRequiredForCollection)
         {
             if (element != null)
             {
@@ -668,7 +671,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                     if (element.TypeKind() == EdmTypeKind.Collection)
                     {
                         IEdmCollectionTypeReference collectionElement = element.AsCollection();
-                        this.schemaWriter.WriteNullableAttribute(collectionElement.CollectionDefinition().ElementType, true);
+                        this.schemaWriter.WriteNullableAttribute(collectionElement.CollectionDefinition().ElementType, nullableAttributeRequiredForCollection);
                         VisitTypeReference(collectionElement.CollectionDefinition().ElementType);
                     }
                     else

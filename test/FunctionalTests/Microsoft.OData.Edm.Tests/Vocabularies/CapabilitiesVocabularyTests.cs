@@ -716,13 +716,13 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   <Term Name=""ReadRestrictions"" Type=""Capabilities.ReadRestrictionsType"" AppliesTo=""EntitySet Singleton"">
     <Annotation Term=""Core.Description"" String=""Restrictions for retrieving a collection of entities, retrieving a singleton instance."" />
   </Term>
-  <Term Name=""CustomHeaders"" Type=""Collection(Capabilities.CustomParameter)"" AppliesTo=""EntityContainer"" Nullable=""true"">
+  <Term Name=""CustomHeaders"" Type=""Collection(Capabilities.CustomParameter)"" AppliesTo=""EntityContainer"">
     <Annotation Term=""Core.Description"" String=""Custom headers that are supported/required for the annotated resource"" />
     <Annotation Term=""Core.Example"">
       <Record />
     </Annotation>
   </Term>
-  <Term Name=""CustomQueryOptions"" Type=""Collection(Capabilities.CustomParameter)"" AppliesTo=""EntityContainer"" Nullable=""true"">
+  <Term Name=""CustomQueryOptions"" Type=""Collection(Capabilities.CustomParameter)"" AppliesTo=""EntityContainer"">
     <Annotation Term=""Core.Description"" String=""Custom query options that are supported/required for the annotated resource"" />
     <Annotation Term=""Core.LongDescription"" String=""If the entity container is annotated, the query option is supported/required by all resources in that container."" />
     <Annotation Term=""Core.Example"">

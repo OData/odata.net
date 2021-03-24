@@ -367,7 +367,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
 
             // Act & Assert for XML
             VisitAndVerifyXml(v => v.VisitSchemaElement(action),
-                @"<Action Name=""Checkout""><ReturnType Type=""Collection(Edm.String)"" Nullable=""true"" /></Action>", false);
+                @"<Action Name=""Checkout""><ReturnType Type=""Collection(Edm.String)"" /></Action>", false);
 
             // Act & Assert for JSON
             VisitAndVerifyJson(v => v.VisitSchemaElement(action), @"{
@@ -624,7 +624,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             // Act & Assert for XML
             VisitAndVerifyXml(v => v.VisitSchemaElement(function),
                 @"<Function Name=""Checkout"">
-  <ReturnType Type=""Collection(Edm.String)"" Nullable=""true"" />
+  <ReturnType Type=""Collection(Edm.String)"" />
 </Function>");
 
             // Act & Assert for JSON
@@ -649,7 +649,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             VisitAndVerifyXml(v => v.VisitSchemaElement(function),
                 @"<Function Name=""DoStuff"" IsBound=""true"" EntitySetPath=""Customers/Orders"" IsComposable=""true"">
   <Parameter Name=""bindingParameter"" Type=""Edm.String"" />
-  <Parameter Name=""param"" Type=""Collection(Edm.Int32)"" Nullable=""true"" />
+  <Parameter Name=""param"" Type=""Collection(Edm.Int32)"" />
   <ReturnType Type=""Edm.String"" />
 </Function>");
 
@@ -1891,7 +1891,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             // Act & Assert for XML
             VisitAndVerifyXml(v => v.VisitVocabularyAnnotation(annotation),
                 @"<Annotation Term=""Self.IsPreferredCustomer"">
-  <IsType Type=""Collection(Edm.String)"" Nullable=""true"" MaxLength=""42"">
+  <IsType Type=""Collection(Edm.String)"" MaxLength=""42"">
     <Path>Customer</Path>
   </IsType>
 </Annotation>");

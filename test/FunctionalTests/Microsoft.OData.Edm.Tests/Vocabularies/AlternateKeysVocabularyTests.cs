@@ -39,7 +39,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
       <Annotation Term=""Core.Description"" String=""A SimpleIdentifier that MUST be unique within the set of aliases, structural and navigation properties of the containing entity type that MUST be used in the key predicate of URLs"" />
     </Property>
   </ComplexType>
-  <Term Name=""AlternateKeys"" Type=""Collection(Keys.AlternateKey)"" AppliesTo=""EntityType"" Nullable=""true"">
+  <Term Name=""AlternateKeys"" Type=""Collection(Keys.AlternateKey)"" AppliesTo=""EntityType"">
     <Annotation Term=""Core.Description"" String=""Communicates available alternate keys"" />
   </Term>
 </Schema>";

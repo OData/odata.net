@@ -1730,7 +1730,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 "<edmx:DataServices>" +
                   "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
                     "<Function Name=\"GetCustomer\">" +
-                      "<ReturnType Type=\"Collection(Edm.PrimitiveType)\" Nullable=\"true\" />" +
+                      "<ReturnType Type=\"Collection(Edm.PrimitiveType)\" />" +
                     "</Function>" +
                     "<Function Name=\"GetSomething\">" +
                       "<ReturnType Type=\"Collection(Edm.ComplexType)\" Nullable=\"false\" />" +
