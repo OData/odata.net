@@ -3954,7 +3954,8 @@ namespace Microsoft.OData.Client
                 //We will extract ChangeOrder from the entity descriptor based on the Id.
                 //This is because we pass the ChangeOrder as Content-ID to the batch writer.
                 //We will pass the Content-ID(s) as dependsOnIds to the batch writer.
-                List<string> dependsOnIdsAsChangeOrders, dependsOnChangeSetIds;
+                List<string> dependsOnIdsAsChangeOrders;
+                HashSet<string> dependsOnChangeSetIds;
 
                 GetDependsOnChangeOrdersAndChangeSetIds(
                     dependsOnIds,
@@ -3963,7 +3964,7 @@ namespace Microsoft.OData.Client
                     out dependsOnIdsAsChangeOrders,
                     out dependsOnChangeSetIds);
                 resource.DependsOnIds = dependsOnIdsAsChangeOrders;
-                resource.DependsOnChangeSetIds = dependsOnChangeSetIds.Distinct().ToList();
+                resource.DependsOnChangeSetIds = dependsOnChangeSetIds.ToList();
             }
 
             resource.State = EntityStates.Modified;
@@ -4023,7 +4024,8 @@ namespace Microsoft.OData.Client
                     //We will extract ChangeOrder from the entity descriptor based on the Id.
                     //This is because we pass the ChangeOrder as Content-ID to the batch writer.
                     //We will pass the Content-ID(s) as dependsOnIds to the batch writer.
-                    List<string> dependsOnIdsAsChangeOrders, dependsOnChangeSetIds;
+                    List<string> dependsOnIdsAsChangeOrders;
+                    HashSet<string> dependsOnChangeSetIds;
 
                     GetDependsOnChangeOrdersAndChangeSetIds(
                         dependsOnIds,
@@ -4033,7 +4035,7 @@ namespace Microsoft.OData.Client
                         out dependsOnChangeSetIds);
 
                     resource.DependsOnIds = dependsOnIdsAsChangeOrders;
-                    resource.DependsOnChangeSetIds = dependsOnChangeSetIds.Distinct().ToList();
+                    resource.DependsOnChangeSetIds = dependsOnChangeSetIds.ToList();
                 }
 
                 // Leave related links alone which means we can have a link in the Added
@@ -4064,10 +4066,10 @@ namespace Microsoft.OData.Client
             IEnumerable<EntityDescriptor> entities,
             ClientEdmModel model,
             out List<string>  dependsOnIdsAsChangeOrders,
-            out List<string>  dependsOnChangeSetIds)
+            out HashSet<string> dependsOnChangeSetIds)
         {
             dependsOnIdsAsChangeOrders = new List<string>();
-            dependsOnChangeSetIds = new List<string>();
+            dependsOnChangeSetIds = new HashSet<string>();
 
             foreach (string dependOnId in dependsOnIds)
             {
