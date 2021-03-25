@@ -21,14 +21,12 @@ namespace Microsoft.OData.Tests.Json
         private StringWriter stringWriter;
         private IJsonWriterAsync jsonWriter;
         private ODataMessageWriterSettings settings;
-        private Func<IEnumerable<ODataInstanceAnnotation>, Task> writeInstanceAnnotationsDelegate;
 
         public ODataJsonWriterUtilsAsyncTests()
         {
             this.stringWriter = new StringWriter();
             this.jsonWriter = new JsonWriter(this.stringWriter, isIeee754Compatible: true);
             this.settings = new ODataMessageWriterSettings();
-            this.writeInstanceAnnotationsDelegate = async (IEnumerable<ODataInstanceAnnotation> odataInstanceAnnotations) => await TaskUtils.CompletedTask;
         }
 
         [Fact]
@@ -83,11 +81,9 @@ namespace Microsoft.OData.Tests.Json
 
             await ODataJsonWriterUtils.WriteErrorAsync(
                 this.jsonWriter,
-                this.writeInstanceAnnotationsDelegate,
                 error,
                 includeDebugInformation: false,
-                maxInnerErrorDepth: 0,
-                writingJsonLight: false);
+                maxInnerErrorDepth: 0);
             var result = stringWriter.GetStringBuilder().ToString();
             Assert.Equal("{\"error\":{" +
                 "\"code\":\"\"," +
@@ -136,11 +132,9 @@ namespace Microsoft.OData.Tests.Json
 
             await ODataJsonWriterUtils.WriteErrorAsync(
                 this.jsonWriter,
-                this.writeInstanceAnnotationsDelegate,
                 error,
                 includeDebugInformation: true,
-                maxInnerErrorDepth: 5,
-                writingJsonLight: false);
+                maxInnerErrorDepth: 5);
              var result = stringWriter.GetStringBuilder().ToString();
              Assert.Equal("{\"error\":{" +
                  "\"code\":\"\"," +
@@ -184,11 +178,9 @@ namespace Microsoft.OData.Tests.Json
 
             await ODataJsonWriterUtils.WriteErrorAsync(
                 this.jsonWriter,
-                this.writeInstanceAnnotationsDelegate,
                 error,
                 includeDebugInformation: true,
-                maxInnerErrorDepth: 5,
-                writingJsonLight: false);
+                maxInnerErrorDepth: 5);
             var result = stringWriter.GetStringBuilder().ToString();
             Assert.Equal("{\"error\":{" +
                 "\"code\":\"\"," +
@@ -221,11 +213,9 @@ namespace Microsoft.OData.Tests.Json
 
             await ODataJsonWriterUtils.WriteErrorAsync(
                 this.jsonWriter,
-                this.writeInstanceAnnotationsDelegate,
                 error,
                 includeDebugInformation: true,
-                maxInnerErrorDepth: 5,
-                writingJsonLight: false);
+                maxInnerErrorDepth: 5);
             var result = stringWriter.GetStringBuilder().ToString();
             Assert.Equal("{\"error\":{" +
                 "\"code\":\"\"," +
@@ -271,11 +261,9 @@ namespace Microsoft.OData.Tests.Json
 
             await ODataJsonWriterUtils.WriteErrorAsync(
                 this.jsonWriter,
-                this.writeInstanceAnnotationsDelegate,
                 error,
                 includeDebugInformation: true,
-                maxInnerErrorDepth: 5,
-                writingJsonLight: false);
+                maxInnerErrorDepth: 5);
             var result = stringWriter.GetStringBuilder().ToString();
             Assert.Equal("{\"error\":{" +
                 "\"code\":\"\"," +
