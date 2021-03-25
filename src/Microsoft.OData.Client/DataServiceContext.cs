@@ -2541,14 +2541,7 @@ namespace Microsoft.OData.Client
         /// </remarks>
         public virtual void DeleteObject(object entity, params object[] dependsOnIds)
         {
-            var dependsOn = new List<string>();
-            if (dependsOnIds != null)
-            {
-                foreach (var id in dependsOnIds)
-                {
-                    dependsOn.Add(id.ToString());
-                }
-            }
+            List<string> dependsOn = ConvertDependOnIdsToString(dependsOnIds);
 
             this.DeleteObjectInternal(entity, false /*failIfInAddedState*/, dependsOn.Count > 0 ? dependsOn : null);
         }
@@ -2589,14 +2582,8 @@ namespace Microsoft.OData.Client
         /// <exception cref="System.ArgumentException">When <paramref name="entity" /> is in the <see cref="Microsoft.OData.Client.EntityStates.Detached" /> state.</exception>
         public virtual void UpdateObject(object entity, params object[] dependsOnIds)
         {
-            var dependsOn = new List<string>();
-            if(dependsOnIds != null)
-            {
-                foreach(var id in dependsOnIds)
-                {
-                    dependsOn.Add(id.ToString());
-                }
-            }
+            List<string> dependsOn = ConvertDependOnIdsToString(dependsOnIds);
+
             this.UpdateObjectInternal(entity, false /*failIfNotUnchanged*/, dependsOn.Count>0 ? dependsOn:null);
         }
 
@@ -2607,6 +2594,25 @@ namespace Microsoft.OData.Client
         public virtual void UpdateObject(object entity)
         {
             this.UpdateObjectInternal(entity, false /*failIfNotUnchanged*/);
+        }
+
+        /// <summary>
+        /// Convert array object to List of strings.
+        /// </summary>
+        /// <param name="dependsOnIds">Object array of DependsOnIds.</param>
+        /// <returns>List of strings.</returns>
+        private static List<string> ConvertDependOnIdsToString(object[] dependsOnIds)
+        {
+            var dependsOn = new List<string>();
+            if (dependsOnIds != null)
+            {
+                foreach (var id in dependsOnIds)
+                {
+                    dependsOn.Add(id.ToString());
+                }
+            }
+
+            return dependsOn;
         }
 
         /// <summary>Update a related object to the context.</summary>
@@ -4063,18 +4069,18 @@ namespace Microsoft.OData.Client
             dependsOnIdsAsChangeOrders = new List<string>();
             dependsOnChangeSetIds = new List<string>();
 
-            foreach (var dependOnId in dependsOnIds)
+            foreach (string dependOnId in dependsOnIds)
             {
-                foreach (var entityDescriptor in entities)
+                foreach (EntityDescriptor entityDescriptor in entities)
                 {
-                    var e = (object)entityDescriptor.Entity;
-                    string entityName = e.GetType().FullName;
-                    var key = GetKeyPropertyName(model, entityName);
-                    var id = e.GetType().GetProperty(key).GetValue(e, null);
+                    object entity = (object)entityDescriptor.Entity;
+                    string entityName = entity.GetType().FullName;
+                    string key = GetKeyPropertyName(model, entityName);
+                    object id = entity.GetType().GetProperty(key).GetValue(entity, null);
                     if (dependOnId == id.ToString())
                     {
-                        var changeOrder = entityDescriptor.ChangeOrder;
-                        dependsOnIdsAsChangeOrders.Add(changeOrder.ToString(CultureInfo.CurrentCulture));
+                        uint changeOrder = entityDescriptor.ChangeOrder;
+                        dependsOnIdsAsChangeOrders.Add(changeOrder.ToString(CultureInfo.InvariantCulture));
                         dependsOnChangeSetIds.Add(entityDescriptor.ChangeSetId);
                     }
                 }

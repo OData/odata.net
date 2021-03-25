@@ -153,7 +153,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             context.UpdateObject(c2, c1.CustomerId);
 
             var dscResponse = await context.SaveChangesAsync(SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.UseJsonBatch);
-            Assert.Equal(204, (dscResponse.First() as ChangeOperationResponse).StatusCode);
+            Assert.Equal(204, (dscResponse.Last() as ChangeOperationResponse).StatusCode);
 
             this.EnqueueTestComplete();
         }
