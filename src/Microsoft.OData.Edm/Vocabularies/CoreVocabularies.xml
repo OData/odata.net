@@ -341,6 +341,7 @@
   <Term Name="ComputedDefaultValue" Type="Core.Tag" Nullable="false" DefaultValue="true" AppliesTo="Property">
     <Annotation Term="Core.Description" String="A value for this property can be provided by the client on insert and update. If no value is provided on insert, a non-static default value is generated" />
   </Term>
+  
   <Term Name="IsURL" Type="Core.Tag" Nullable="false" DefaultValue="true" AppliesTo="Property Term">
     <Annotation Term="Core.Description" String="Properties and terms annotated with this term MUST contain a valid URL" />
     <Annotation Term="Core.RequiresType" String="Edm.String" />

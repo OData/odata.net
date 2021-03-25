@@ -86,6 +86,12 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         public static readonly IEdmTerm ComputedTerm = VocabularyModelProvider.CoreModel.FindDeclaredTerm(CoreVocabularyConstants.Computed);
 
         /// <summary>
+        /// The ComputedDefaultValue term.
+        /// </summary>
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
+        public static readonly IEdmTerm ComputedDefaultValueTerm = VocabularyModelProvider.CoreModel.FindDeclaredTerm(CoreVocabularyConstants.ComputedDefaultValue);
+
+        /// <summary>
         /// The Optional Parameter term.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
