@@ -311,7 +311,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       },
       ""Addresses"": {
         ""$Collection"": true,
-        ""$Type"": ""DefaultNs.Address""
+        ""$Type"": ""DefaultNs.Address"",
+        ""$Nullable"": false
       }
     },
     ""City"": {
@@ -745,7 +746,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       },
       ""ComplexProp"": {
         ""$Collection"": true,
-        ""$Type"": ""NS.ComplexType1""
+        ""$Type"": ""NS.ComplexType1"",
+        ""$Nullable"": false
       },
       ""OuterNavA"": {
         ""$Kind"": ""NavigationProperty"",
@@ -1442,7 +1444,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       },
       ""DefaultHidden"": {
         ""$Collection"": true,
-        ""$Type"": ""Edm.NavigationPropertyPath""
+        ""$Type"": ""Edm.NavigationPropertyPath"",
+        ""$Nullable"": false
       }
     },
     ""MyTerm"": {

@@ -216,7 +216,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
     ""$Kind"": ""EntityType"",
     ""Locations"": {
       ""$Collection"": true,
-      ""$Type"": ""NS.Address""
+      ""$Type"": ""NS.Address"",
+      ""$Nullable"": false
     },
     ""Orders"": {
       ""$Kind"": ""NavigationProperty"",
@@ -2040,10 +2041,23 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             VisitAndVerifyJson(v => v.VisitSchemaType(structuredType), @"{
   ""Customer"": {
     ""$Kind"": ""ComplexType"",
-    ""test01"": { ""$Type"": ""Edm.Decimal"", ""$Collection"": true, ""$Nullable"": true },
-    ""test02"": { ""$Type"": ""Edm.Decimal"", ""$Collection"": true, ""$Nullable"": false },                   
-    ""test03"": { ""$Type"": ""Edm.Decimal"", ""$Nullable"": true },                   
-    ""test04"": { ""$Type"": ""Edm.Decimal"", ""$Nullable"": false },                   
+    ""test01"": {
+      ""$Collection"": true,
+      ""$Type"": ""Edm.Decimal"",
+      ""$Nullable"": true
+    },
+    ""test02"": {
+      ""$Collection"": true,
+      ""$Type"": ""Edm.Decimal"",
+      ""$Nullable"": false
+    },
+    ""test03"": {
+      ""$Type"": ""Edm.Decimal"",
+      ""$Nullable"": true
+    },
+    ""test04"": {
+      ""$Type"": ""Edm.Decimal""
+    }
   }
 }");
         }
