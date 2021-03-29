@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.OData.Json;
+using Microsoft.OData.JsonLight;
 using Xunit;
 
 namespace Microsoft.OData.Tests.Json
@@ -21,12 +22,14 @@ namespace Microsoft.OData.Tests.Json
         private StringWriter stringWriter;
         private IJsonWriterAsync jsonWriter;
         private ODataMessageWriterSettings settings;
+        private Func<IEnumerable<ODataInstanceAnnotation>, Task> writeInstanceAnnotationsDelegate;
 
         public ODataJsonWriterUtilsAsyncTests()
         {
             this.stringWriter = new StringWriter();
             this.jsonWriter = new JsonWriter(this.stringWriter, isIeee754Compatible: true);
             this.settings = new ODataMessageWriterSettings();
+            this.writeInstanceAnnotationsDelegate = async (IEnumerable<ODataInstanceAnnotation> instanceAnnotations) => await TaskUtils.CompletedTask;
         }
 
         [Fact]
@@ -81,6 +84,7 @@ namespace Microsoft.OData.Tests.Json
 
             await ODataJsonWriterUtils.WriteErrorAsync(
                 this.jsonWriter,
+                this.writeInstanceAnnotationsDelegate,
                 error,
                 includeDebugInformation: false,
                 maxInnerErrorDepth: 0);
@@ -132,6 +136,7 @@ namespace Microsoft.OData.Tests.Json
 
             await ODataJsonWriterUtils.WriteErrorAsync(
                 this.jsonWriter,
+                this.writeInstanceAnnotationsDelegate,
                 error,
                 includeDebugInformation: true,
                 maxInnerErrorDepth: 5);
@@ -178,6 +183,7 @@ namespace Microsoft.OData.Tests.Json
 
             await ODataJsonWriterUtils.WriteErrorAsync(
                 this.jsonWriter,
+                this.writeInstanceAnnotationsDelegate,
                 error,
                 includeDebugInformation: true,
                 maxInnerErrorDepth: 5);
@@ -213,6 +219,7 @@ namespace Microsoft.OData.Tests.Json
 
             await ODataJsonWriterUtils.WriteErrorAsync(
                 this.jsonWriter,
+                this.writeInstanceAnnotationsDelegate,
                 error,
                 includeDebugInformation: true,
                 maxInnerErrorDepth: 5);
@@ -261,6 +268,7 @@ namespace Microsoft.OData.Tests.Json
 
             await ODataJsonWriterUtils.WriteErrorAsync(
                 this.jsonWriter,
+                this.writeInstanceAnnotationsDelegate,
                 error,
                 includeDebugInformation: true,
                 maxInnerErrorDepth: 5);
@@ -278,6 +286,33 @@ namespace Microsoft.OData.Tests.Json
                     "\"NullProperty\":null," +
                     "\"CollectionValue\":[null,\"CollectionValue\",1]" +
                 "}" +
+            "}}", result);
+        }
+
+        [Fact]
+        public async Task WriteErrorAsync_WritesInstanceAnnotations()
+        {
+            var error = new ODataError { };
+            error.InstanceAnnotations.Add(new ODataInstanceAnnotation("NS.AnnotationName", new ODataPrimitiveValue("AnnotationValue")));
+
+            await ODataJsonWriterUtils.WriteErrorAsync(
+                this.jsonWriter,
+                async (IEnumerable<ODataInstanceAnnotation> instanceAnnotations) =>
+                {
+                    foreach (var annotation in instanceAnnotations)
+                    {
+                        await this.jsonWriter.WriteNameAsync(JsonLightConstants.ODataPropertyAnnotationSeparatorChar + annotation.Name);
+                        await this.jsonWriter.WritePrimitiveValueAsync(((ODataPrimitiveValue)annotation.Value).Value);
+                    }
+                },
+                error,
+                includeDebugInformation: false,
+                maxInnerErrorDepth: 0);
+            var result = stringWriter.GetStringBuilder().ToString();
+            Assert.Equal("{\"error\":{" +
+                "\"code\":\"\"," +
+                "\"message\":\"\"," +
+                "\"@NS.AnnotationName\":\"AnnotationValue\"" +
             "}}", result);
         }
     }

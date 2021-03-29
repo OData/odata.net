@@ -127,6 +127,79 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
+        /// Asynchronously writes an error message.
+        /// </summary>
+        /// <param name="jsonWriter">The JSON writer to write the error.</param>
+        /// <param name="writeInstanceAnnotationsDelegate">Delegate to write the instance annotations.</param>
+        /// <param name="error">The error instance to write.</param>
+        /// <param name="includeDebugInformation">A flag indicating whether error details should be written (in debug mode only) or not.</param>
+        /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        internal static Task WriteErrorAsync(
+            IJsonWriterAsync jsonWriter,
+            Func<IEnumerable<ODataInstanceAnnotation>, Task> writeInstanceAnnotationsDelegate,
+            ODataError error,
+            bool includeDebugInformation,
+            int maxInnerErrorDepth)
+        {
+            Debug.Assert(jsonWriter != null, "jsonWriter != null");
+            Debug.Assert(error != null, "error != null");
+
+            string code, message;
+            ErrorUtils.GetErrorDetails(error, out code, out message);
+
+            ODataInnerError innerError = includeDebugInformation ? error.InnerError : null;
+
+            return WriteErrorAsync(
+                jsonWriter,
+                code,
+                message,
+                error.Target,
+                error.Details,
+                innerError,
+                error.GetInstanceAnnotations(),
+                writeInstanceAnnotationsDelegate,
+                maxInnerErrorDepth);
+        }
+
+        /// <summary>
+        /// Asynchronously writes the function's name and start the JSONP scope if we are writing a response and the
+        /// JSONP function name is not null or empty.
+        /// </summary>
+        /// <param name="jsonWriter">JsonWriter to write to.</param>
+        /// <param name="settings">Writer settings.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        internal static async Task StartJsonPaddingIfRequiredAsync(IJsonWriterAsync jsonWriter, ODataMessageWriterSettings settings)
+        {
+            Debug.Assert(jsonWriter != null, "jsonWriter should not be null");
+
+            if (settings.HasJsonPaddingFunction())
+            {
+                await jsonWriter.WritePaddingFunctionNameAsync(settings.JsonPCallback).ConfigureAwait(false);
+                await jsonWriter.StartPaddingFunctionScopeAsync().ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// If we are writing a response and the given Json Padding function name is not null or empty
+        /// this function will close the JSONP scope asynchronously.
+        /// </summary>
+        /// <param name="jsonWriter">JsonWriter to write to.</param>
+        /// <param name="settings">Writer settings.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        internal static Task EndJsonPaddingIfRequiredAsync(IJsonWriterAsync jsonWriter, ODataMessageWriterSettings settings)
+        {
+            Debug.Assert(jsonWriter != null, "jsonWriter should not be null");
+
+            if (settings.HasJsonPaddingFunction())
+            {
+                return jsonWriter.EndPaddingFunctionScopeAsync();
+            }
+
+            return TaskUtils.CompletedTask;
+        }
+
+        /// <summary>
         /// Write an error message.
         /// </summary>
         /// <param name="jsonWriter">JSON writer.</param>
@@ -307,76 +380,6 @@ namespace Microsoft.OData.Json
             jsonWriter.EndObjectScope();
         }
 
-        /// <summary>
-        /// Asynchronously writes an error message.
-        /// </summary>
-        /// <param name="jsonWriter">The JSON writer to write the error.</param>
-        /// <param name="error">The error instance to write.</param>
-        /// <param name="includeDebugInformation">A flag indicating whether error details should be written (in debug mode only) or not.</param>
-        /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
-        /// <returns>A task that represents the asynchronous write operation.</returns>
-        internal static Task WriteErrorAsync(
-            IJsonWriterAsync jsonWriter,
-            ODataError error,
-            bool includeDebugInformation,
-            int maxInnerErrorDepth)
-        {
-            Debug.Assert(jsonWriter != null, "jsonWriter != null");
-            Debug.Assert(error != null, "error != null");
-
-            string code, message;
-            ErrorUtils.GetErrorDetails(error, out code, out message);
-
-            ODataInnerError innerError = includeDebugInformation ? error.InnerError : null;
-
-            return WriteErrorAsync(
-                jsonWriter,
-                code,
-                message,
-                error.Target,
-                error.Details,
-                innerError,
-                error.GetInstanceAnnotations(),
-                maxInnerErrorDepth);
-        }
-
-        /// <summary>
-        /// Asynchronously writes the function's name and start the JSONP scope if we are writing a response and the
-        /// JSONP function name is not null or empty.
-        /// </summary>
-        /// <param name="jsonWriter">JsonWriter to write to.</param>
-        /// <param name="settings">Writer settings.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
-        internal static async Task StartJsonPaddingIfRequiredAsync(IJsonWriterAsync jsonWriter, ODataMessageWriterSettings settings)
-        {
-            Debug.Assert(jsonWriter != null, "jsonWriter should not be null");
-
-            if (settings.HasJsonPaddingFunction())
-            {
-                await jsonWriter.WritePaddingFunctionNameAsync(settings.JsonPCallback).ConfigureAwait(false);
-                await jsonWriter.StartPaddingFunctionScopeAsync().ConfigureAwait(false);
-            }
-        }
-
-        /// <summary>
-        /// If we are writing a response and the given Json Padding function name is not null or empty
-        /// this function will close the JSONP scope asynchronously.
-        /// </summary>
-        /// <param name="jsonWriter">JsonWriter to write to.</param>
-        /// <param name="settings">Writer settings.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
-        internal static Task EndJsonPaddingIfRequiredAsync(IJsonWriterAsync jsonWriter, ODataMessageWriterSettings settings)
-        {
-            Debug.Assert(jsonWriter != null, "jsonWriter should not be null");
-
-            if (settings.HasJsonPaddingFunction())
-            {
-                return jsonWriter.EndPaddingFunctionScopeAsync();
-            }
-
-            return TaskUtils.CompletedTask;
-        }
-
         private static void ODataCollectionValueToString(StringBuilder sb, ODataCollectionValue value)
         {
             bool isFirst = true;
@@ -438,6 +441,7 @@ namespace Microsoft.OData.Json
         /// <param name="details">The details of the error.</param>
         /// <param name="innerError">Inner error details that will be included in debug mode (if present).</param>
         /// <param name="instanceAnnotations">Instance annotations for this error.</param>
+        /// <param name="writeInstanceAnnotationsDelegate">Delegate to write the instance annotations.</param>
         /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
         private static async Task WriteErrorAsync(
@@ -448,6 +452,7 @@ namespace Microsoft.OData.Json
             IEnumerable<ODataErrorDetail> details,
             ODataInnerError innerError,
             IEnumerable<ODataInstanceAnnotation> instanceAnnotations,
+            Func<IEnumerable<ODataInstanceAnnotation>, Task> writeInstanceAnnotationsDelegate,
             int maxInnerErrorDepth)
         {
             Debug.Assert(jsonWriter != null, "jsonWriter != null");
@@ -457,7 +462,7 @@ namespace Microsoft.OData.Json
 
             // "error": {
             await jsonWriter.StartObjectScopeAsync().ConfigureAwait(false);
-            await jsonWriter.WriteNameAsync(JsonConstants.ODataErrorName).ConfigureAwait(false);
+            await jsonWriter.WriteNameAsync(JsonLightConstants.ODataErrorPropertyName).ConfigureAwait(false);
             await jsonWriter.StartObjectScopeAsync().ConfigureAwait(false);
 
             // "code": "<code>"
@@ -481,7 +486,7 @@ namespace Microsoft.OData.Json
             //   "target": "$search",
             //   "message": "$search query option not supported"
             //  }]
-            if (details != null)
+            if (details?.Any() == true)
             {
                 await WriteErrorDetailsAsync(jsonWriter, details, JsonConstants.ODataErrorDetailsName).ConfigureAwait(false);
             }
@@ -490,6 +495,14 @@ namespace Microsoft.OData.Json
             {
                 await WriteInnerErrorAsync(jsonWriter, innerError, JsonConstants.ODataErrorInnerErrorName,
                     /* recursionDepth */ 0, maxInnerErrorDepth).ConfigureAwait(false);
+            }
+
+            if (instanceAnnotations.Any())
+            {
+                // We expect the delegate not to be null if instance annotations collections is not empty
+                Debug.Assert(writeInstanceAnnotationsDelegate != null, "writeInstanceAnnotationsDelegate != null");
+
+                await writeInstanceAnnotationsDelegate(instanceAnnotations).ConfigureAwait(false);
             }
 
             // } }
