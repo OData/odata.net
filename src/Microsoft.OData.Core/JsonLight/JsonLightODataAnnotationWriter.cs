@@ -16,7 +16,7 @@ namespace Microsoft.OData.JsonLight
     /// <summary>
     /// JsonLight writer for OData annotations, i.e., odata.*
     /// </summary>
-    internal sealed partial class JsonLightODataAnnotationWriter
+    internal sealed class JsonLightODataAnnotationWriter
     {
         /// <summary>
         /// Length of "odata.".
