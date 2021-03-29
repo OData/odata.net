@@ -9,13 +9,14 @@ namespace Microsoft.OData.JsonLight
     #region Namespaces
     using System;
     using System.Diagnostics;
+    using System.Threading.Tasks;
     using Microsoft.OData.Json;
     #endregion Namespaces
 
     /// <summary>
     /// JsonLight writer for OData annotations, i.e., odata.*
     /// </summary>
-    internal sealed class JsonLightODataAnnotationWriter
+    internal sealed partial class JsonLightODataAnnotationWriter
     {
         /// <summary>
         /// Length of "odata.".
@@ -27,6 +28,11 @@ namespace Microsoft.OData.JsonLight
         /// The underlying JSON writer.
         /// </summary>
         private readonly IJsonWriter jsonWriter;
+
+        /// <summary>
+        /// The underlying asynchronous JSON writer.
+        /// </summary>
+        private readonly IJsonWriterAsync asyncJsonWriter;
 
         /// <summary>
         /// Whether write odata annotation without "odata." prefix in name.
@@ -49,6 +55,21 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(jsonWriter != null, "jsonWriter != null");
 
             this.jsonWriter = jsonWriter;
+            this.enableWritingODataAnnotationWithoutPrefix = enableWritingODataAnnotationWithoutPrefix;
+            this.odataVersion = odataVersion ?? ODataVersion.V4;
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="jsonWriter">The underlying JSON writer.</param>
+        /// <param name="enableWritingODataAnnotationWithoutPrefix">Whether write odata annotation without "odata." prefix in name.</param>
+        /// <param name="odataVersion">OData Version used when writing the annotations.</param>
+        public JsonLightODataAnnotationWriter(IJsonWriterAsync asyncJsonWriter, bool enableWritingODataAnnotationWithoutPrefix, ODataVersion? odataVersion)
+        {
+            Debug.Assert(asyncJsonWriter != null, "asyncJsonWriter != null");
+
+            this.asyncJsonWriter = asyncJsonWriter;
             this.enableWritingODataAnnotationWithoutPrefix = enableWritingODataAnnotationWithoutPrefix;
             this.odataVersion = odataVersion ?? ODataVersion.V4;
         }
@@ -116,6 +137,81 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
+        /// Asynchronously writes the odata.type instance annotation with the specified type name.
+        /// </summary>
+        /// <param name="typeName">The type name to write.</param>
+        /// <param name="writeRawValue">Whether to write the raw typeName without removing/adding prefix 'Edm.'/'#'.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        public async Task WriteODataTypeInstanceAnnotationAsync(string typeName, bool writeRawValue = false)
+        {
+            this.AssertAsynchronous();
+            Debug.Assert(typeName != null, "typeName != null");
+
+            // "@odata.type": "#typename"
+            await WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataType)
+                .ConfigureAwait(false);
+
+            if (writeRawValue)
+            {
+                await asyncJsonWriter.WriteValueAsync(typeName).ConfigureAwait(false);
+            }
+            else
+            {
+                await asyncJsonWriter.WriteValueAsync(WriterUtils.PrefixTypeNameForWriting(typeName, odataVersion))
+                    .ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously writes the odata.type property annotation for the specified property with the specified type name.
+        /// </summary>
+        /// <param name="propertyName">The name of the property for which to write the odata.type annotation.</param>
+        /// <param name="typeName">The type name to write.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        public async Task WriteODataTypePropertyAnnotationAsync(string propertyName, string typeName)
+        {
+            this.AssertAsynchronous();
+            Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
+            Debug.Assert(typeName != null, "typeName != null");
+
+            // "<propertyName>@odata.type": #"typename"
+            await WritePropertyAnnotationNameAsync(propertyName, ODataAnnotationNames.ODataType)
+                .ConfigureAwait(false);
+            await asyncJsonWriter.WriteValueAsync(WriterUtils.PrefixTypeNameForWriting(typeName, odataVersion))
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Asynchronously writes a JSON property name which represents a property annotation.
+        /// </summary>
+        /// <param name="propertyName">The name of the property to annotate.</param>
+        /// <param name="annotationName">The name of the annotation to write.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        public Task WritePropertyAnnotationNameAsync(string propertyName, string annotationName)
+        {
+            this.AssertAsynchronous();
+            Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
+            Debug.Assert(annotationName.StartsWith(JsonLightConstants.ODataAnnotationNamespacePrefix,
+                StringComparison.Ordinal), "annotationName.StartsWith(\"odata.\")");
+
+            return asyncJsonWriter.WritePropertyAnnotationNameAsync(propertyName, SimplifyODataAnnotationName(annotationName));
+        }
+
+        /// <summary>
+        /// Asynchronously writes a JSON instance annotation name which represents a instance annotation.
+        /// </summary>
+        /// <param name="annotationName">The name of the instance annotation to write.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        public Task WriteInstanceAnnotationNameAsync(string annotationName)
+        {
+            this.AssertAsynchronous();
+            Debug.Assert(annotationName.StartsWith(JsonLightConstants.ODataAnnotationNamespacePrefix,
+                StringComparison.Ordinal), "annotationName.StartsWith(\"odata.\")");
+
+            return asyncJsonWriter.WriteInstanceAnnotationNameAsync(SimplifyODataAnnotationName(annotationName));
+        }
+
+        /// <summary>
         /// Simplify OData annotation name if necessary.
         /// </summary>
         /// <param name="annotationName">The annotation name to be simplified.</param>
@@ -123,6 +219,17 @@ namespace Microsoft.OData.JsonLight
         private string SimplifyODataAnnotationName(string annotationName)
         {
             return enableWritingODataAnnotationWithoutPrefix ? annotationName.Substring(ODataAnnotationPrefixLength) : annotationName;
+        }
+
+        /// <summary>
+        /// Asserts that the annotation writer was created for asynchronous operation.
+        /// </summary>
+        [Conditional("DEBUG")]
+        private void AssertAsynchronous()
+        {
+#if DEBUG
+            Debug.Assert(this.asyncJsonWriter != null, "The method should only be called on an asynchronous annotation writer.");
+#endif
         }
     }
 }
