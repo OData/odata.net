@@ -145,6 +145,8 @@ namespace Microsoft.OData.Json
             Debug.Assert(jsonWriter != null, "jsonWriter != null");
             Debug.Assert(error != null, "error != null");
 
+            ExceptionUtils.CheckArgumentNotNull(writeInstanceAnnotationsDelegate, "writeInstanceAnnotationsDelegate");
+
             string code, message;
             ErrorUtils.GetErrorDetails(error, out code, out message);
 
@@ -460,6 +462,8 @@ namespace Microsoft.OData.Json
             Debug.Assert(message != null, "message != null");
             Debug.Assert(instanceAnnotations != null, "instanceAnnotations != null");
 
+            ExceptionUtils.CheckArgumentNotNull(writeInstanceAnnotationsDelegate, "writeInstanceAnnotationsDelegate");
+
             // "error": {
             await jsonWriter.StartObjectScopeAsync().ConfigureAwait(false);
             await jsonWriter.WriteNameAsync(JsonLightConstants.ODataErrorPropertyName).ConfigureAwait(false);
@@ -486,7 +490,7 @@ namespace Microsoft.OData.Json
             //   "target": "$search",
             //   "message": "$search query option not supported"
             //  }]
-            if (details?.Any() == true)
+            if (details != null)
             {
                 await WriteErrorDetailsAsync(jsonWriter, details, JsonConstants.ODataErrorDetailsName).ConfigureAwait(false);
             }

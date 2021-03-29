@@ -315,5 +315,24 @@ namespace Microsoft.OData.Tests.Json
                 "\"@NS.AnnotationName\":\"AnnotationValue\"" +
             "}}", result);
         }
+
+
+        [Fact]
+        public async Task WriteErrorAsync_ShouldThrowArgumentNullException_ForWriteInstanceAnnotationsDelegateIsNull()
+        {
+            var error = new ODataError { };
+
+            await Assert.ThrowsAsync<ArgumentNullException>(
+                "writeInstanceAnnotationsDelegate",
+                async () =>
+                {
+                    await ODataJsonWriterUtils.WriteErrorAsync(
+                    this.jsonWriter,
+                    null,
+                    error,
+                    includeDebugInformation: false,
+                    maxInnerErrorDepth: 0);
+                });
+        }
     }
 }
