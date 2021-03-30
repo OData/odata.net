@@ -501,13 +501,7 @@ namespace Microsoft.OData.Json
                     /* recursionDepth */ 0, maxInnerErrorDepth).ConfigureAwait(false);
             }
 
-            if (instanceAnnotations.Any())
-            {
-                // We expect the delegate not to be null if instance annotations collections is not empty
-                Debug.Assert(writeInstanceAnnotationsDelegate != null, "writeInstanceAnnotationsDelegate != null");
-
-                await writeInstanceAnnotationsDelegate(instanceAnnotations).ConfigureAwait(false);
-            }
+            await writeInstanceAnnotationsDelegate(instanceAnnotations).ConfigureAwait(false);
 
             // } }
             await jsonWriter.EndObjectScopeAsync().ConfigureAwait(false);
