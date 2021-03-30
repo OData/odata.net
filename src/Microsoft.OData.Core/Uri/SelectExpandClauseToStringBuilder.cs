@@ -37,7 +37,7 @@ namespace Microsoft.OData
 
             foreach (SelectItem selectItem in selectExpandClause.SelectedItems)
             {
-                if(selectItem.GetType() == typeof(PathSelectItem))
+                if (selectItem.GetType() == typeof(PathSelectItem))
                 {
                     selectClause += this.Translate((PathSelectItem)selectItem);
                 }
@@ -46,7 +46,7 @@ namespace Microsoft.OData
                 {
                     if (string.IsNullOrEmpty(expandClause))
                     {
-                        expandClause = firstFlag ? expandClause : string.Concat("$expand", ExpressionConstants.SymbolEqual);
+                        expandClause = firstFlag ? expandClause : string.Concat(ExpressionConstants.QueryOptionExpand, ExpressionConstants.SymbolEqual);
                     }
                     else
                     {
@@ -60,18 +60,18 @@ namespace Microsoft.OData
                 {
                     if (string.IsNullOrEmpty(expandClause))
                     {
-                        expandClause = firstFlag ? expandClause : string.Concat("$expand", ExpressionConstants.SymbolEqual);
+                        expandClause = firstFlag ? expandClause : string.Concat(ExpressionConstants.QueryOptionExpand, ExpressionConstants.SymbolEqual);
                     }
                     else
                     {
                         expandClause += ExpressionConstants.SymbolComma;
                     }
 
-                    expandClause += this.Translate((ExpandedReferenceSelectItem)selectItem) + "/$ref";
+                    expandClause += this.Translate((ExpandedReferenceSelectItem)selectItem) + ODataConstants.UriSegmentSeparator + ODataConstants.EntityReferenceSegmentName;
                 }
             }
 
-            selectClause = string.IsNullOrEmpty(selectClause) ? null : string.Concat("$select", ExpressionConstants.SymbolEqual, firstFlag ? Uri.EscapeDataString(selectClause) : selectClause);
+            selectClause = string.IsNullOrEmpty(selectClause) ? null : string.Concat(ExpressionConstants.QueryOptionSelect, ExpressionConstants.SymbolEqual, firstFlag ? Uri.EscapeDataString(selectClause) : selectClause);
 
             if (string.IsNullOrEmpty(expandClause))
             {
@@ -81,7 +81,7 @@ namespace Microsoft.OData
             {
                 if (firstFlag)
                 {
-                    return string.IsNullOrEmpty(selectClause) ? string.Concat("$expand=", Uri.EscapeDataString(expandClause)) : string.Concat(selectClause, "&$expand=", Uri.EscapeDataString(expandClause));
+                    return string.IsNullOrEmpty(selectClause) ? string.Concat(ExpressionConstants.QueryOptionExpand, ExpressionConstants.SymbolEqual, Uri.EscapeDataString(expandClause)) : string.Concat(selectClause, ExpressionConstants.SymbolQueryConcatenate, ExpressionConstants.QueryOptionExpand, ExpressionConstants.SymbolEqual, Uri.EscapeDataString(expandClause));
                 }
                 else
                 {
