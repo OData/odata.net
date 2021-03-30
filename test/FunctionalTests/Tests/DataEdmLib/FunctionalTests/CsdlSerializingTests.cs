@@ -153,11 +153,11 @@ namespace EdmLibTests.FunctionalTests
   </ComplexType>
   <ComplexType Name=""Smod"">
     <Property Name=""Id"" Type=""Edm.Int32"" />
-    <Property Name=""myBinary"" Type=""Collection(Edm.Binary)"" MaxLength=""64"" />
-    <Property Name=""myBinaryMax"" Type=""Collection(Edm.Binary)"" MaxLength=""max"" />
-    <Property Name=""myBoolean"" Type=""Collection(Edm.Boolean)"" />
-    <Property Name=""myEnum"" Type=""Collection(Grumble.Color)"" />
-    <Property Name=""myComplex"" Type=""Collection(Grumble.Foo)"" />
+    <Property Name=""myBinary"" Type=""Collection(Edm.Binary)"" Nullable=""true"" MaxLength=""64"" />
+    <Property Name=""myBinaryMax"" Type=""Collection(Edm.Binary)"" Nullable=""true"" MaxLength=""max"" />
+    <Property Name=""myBoolean"" Type=""Collection(Edm.Boolean)"" Nullable=""true""/>
+    <Property Name=""myEnum"" Type=""Collection(Grumble.Color)"" Nullable=""true"" />
+    <Property Name=""myComplex"" Type=""Collection(Grumble.Foo)"" Nullable=""true"" />
   </ComplexType>
   <EnumType Name=""Color"" IsFlags=""true"">
     <Member Name=""Red"" />
@@ -372,7 +372,7 @@ namespace EdmLibTests.FunctionalTests
     <Property Name=""Address"" Type=""Edm.String"" MaxLength=""2048"" />
   </ComplexType>
 </Schema>";
-            VerifyRoundTrip(new string[] {inputText1, inputText2});
+            VerifyRoundTrip(new string[] { inputText1, inputText2 });
         }
 
         [TestMethod]
@@ -543,7 +543,7 @@ namespace EdmLibTests.FunctionalTests
 
             using (XmlWriter xw = XmlWriter.Create(sw, settings))
             {
-                IEnumerable<EdmError> expectedSerializationErrors = new EdmLibTestErrors() 
+                IEnumerable<EdmError> expectedSerializationErrors = new EdmLibTestErrors()
                 {
                     {0, 0, EdmErrorCode.SingleFileExpected},
                 };
@@ -566,7 +566,7 @@ namespace EdmLibTests.FunctionalTests
     <Property Name=""Property1"" Type=""Edm.String"" Nullable=""false"" />
   </EntityType>
   <Function Name=""MyFunction"">
-    <ReturnType Type=""Collection(MyNamespace.MyEntityType)"" />
+    <ReturnType Type=""Collection(MyNamespace.MyEntityType)"" Nullable=""true"" />
   </Function>
 </Schema>";
             VerifyRoundTrip(inputText);
@@ -699,7 +699,7 @@ namespace EdmLibTests.FunctionalTests
 
             VerifyRoundTrip(inputText);
         }
-        
+
         [TestMethod]
         public void SerializeWithCoreVocabularyTerm()
         {
@@ -1396,10 +1396,10 @@ namespace EdmLibTests.FunctionalTests
                 </ComplexType>
               </Schema>")};
 
-            var actualCsdls = this.GetSerializerResult(this.GetParserResult(expectedCsdls)).Select(n=>XElement.Parse(n));
+            var actualCsdls = this.GetSerializerResult(this.GetParserResult(expectedCsdls)).Select(n => XElement.Parse(n));
             Assert.IsTrue
                 (
-                    XElement.DeepEquals( GetCsdl(expectedCsdls, "DefaultNamespace"), GetCsdl(actualCsdls, "DefaultNamespace")) && XElement.DeepEquals( GetCsdl(expectedCsdls, "Org.OData.Display"), GetCsdl(actualCsdls, "Org.OData.Display")), 
+                    XElement.DeepEquals(GetCsdl(expectedCsdls, "DefaultNamespace"), GetCsdl(actualCsdls, "DefaultNamespace")) && XElement.DeepEquals(GetCsdl(expectedCsdls, "Org.OData.Display"), GetCsdl(actualCsdls, "Org.OData.Display")),
                     "The CSDLs that the serializer generates is different from the original CSDLs"
                 );
         }
@@ -1433,7 +1433,7 @@ namespace EdmLibTests.FunctionalTests
             VerifyRoundTrip(csdl);
         }
 
-        [ TestMethod]
+        [TestMethod]
         public void RoundtripModelWithTypeDefinitionFacets()
         {
             const string csdl = @"<?xml version=""1.0"" encoding=""utf-16""?>
