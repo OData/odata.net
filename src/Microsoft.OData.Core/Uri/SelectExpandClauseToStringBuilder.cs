@@ -42,7 +42,7 @@ namespace Microsoft.OData
                     selectClause += this.Translate((PathSelectItem)selectItem);
                 }
 
-                if (selectItem.GetType() == typeof(ExpandedNavigationSelectItem))
+                else if (selectItem.GetType() == typeof(ExpandedNavigationSelectItem))
                 {
                     if (string.IsNullOrEmpty(expandClause))
                     {
@@ -56,7 +56,7 @@ namespace Microsoft.OData
                     expandClause += this.Translate((ExpandedNavigationSelectItem)selectItem);
                 }
 
-                if (selectItem.GetType() == typeof(ExpandedReferenceSelectItem))
+                else if (selectItem.GetType() == typeof(ExpandedReferenceSelectItem))
                 {
                     if (string.IsNullOrEmpty(expandClause))
                     {
