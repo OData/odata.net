@@ -81,6 +81,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="writeRawValue">Whether to write the raw typeName without removing/adding prefix 'Edm.'/'#'.</param>
         public void WriteODataTypeInstanceAnnotation(string typeName, bool writeRawValue = false)
         {
+            this.AssertSynchronous();
             Debug.Assert(typeName != null, "typeName != null");
 
             // "@odata.type": "#typename"
@@ -102,6 +103,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="typeName">The type name to write.</param>
         public void WriteODataTypePropertyAnnotation(string propertyName, string typeName)
         {
+            this.AssertSynchronous();
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
             Debug.Assert(typeName != null, "typeName != null");
 
@@ -117,7 +119,9 @@ namespace Microsoft.OData.JsonLight
         /// <param name="annotationName">The name of the annotation to write.</param>
         public void WritePropertyAnnotationName(string propertyName, string annotationName)
         {
+            this.AssertSynchronous();
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
+            Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
             Debug.Assert(annotationName.StartsWith(JsonLightConstants.ODataAnnotationNamespacePrefix,
                 StringComparison.Ordinal), "annotationName.StartsWith(\"odata.\")");
 
@@ -130,6 +134,8 @@ namespace Microsoft.OData.JsonLight
         /// <param name="annotationName">The name of the instance annotation to write.</param>
         public void WriteInstanceAnnotationName(string annotationName)
         {
+            this.AssertSynchronous();
+            Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
             Debug.Assert(annotationName.StartsWith(JsonLightConstants.ODataAnnotationNamespacePrefix,
                 StringComparison.Ordinal), "annotationName.StartsWith(\"odata.\")");
 
@@ -191,6 +197,7 @@ namespace Microsoft.OData.JsonLight
         {
             this.AssertAsynchronous();
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
+            Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
             Debug.Assert(annotationName.StartsWith(JsonLightConstants.ODataAnnotationNamespacePrefix,
                 StringComparison.Ordinal), "annotationName.StartsWith(\"odata.\")");
 
@@ -205,6 +212,7 @@ namespace Microsoft.OData.JsonLight
         public Task WriteInstanceAnnotationNameAsync(string annotationName)
         {
             this.AssertAsynchronous();
+            Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
             Debug.Assert(annotationName.StartsWith(JsonLightConstants.ODataAnnotationNamespacePrefix,
                 StringComparison.Ordinal), "annotationName.StartsWith(\"odata.\")");
 
@@ -225,11 +233,18 @@ namespace Microsoft.OData.JsonLight
         /// Asserts that the annotation writer was created for asynchronous operation.
         /// </summary>
         [Conditional("DEBUG")]
+        private void AssertSynchronous()
+        {
+            Debug.Assert(this.jsonWriter != null, "The method should only be called on a synchronous annotation writer.");
+        }
+
+        /// <summary>
+        /// Asserts that the annotation writer was created for asynchronous operation.
+        /// </summary>
+        [Conditional("DEBUG")]
         private void AssertAsynchronous()
         {
-#if DEBUG
             Debug.Assert(this.asyncJsonWriter != null, "The method should only be called on an asynchronous annotation writer.");
-#endif
         }
     }
 }
