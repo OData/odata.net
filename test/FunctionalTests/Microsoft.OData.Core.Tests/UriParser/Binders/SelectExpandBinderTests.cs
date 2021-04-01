@@ -110,6 +110,34 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             clause.SelectedItems.Last().ShouldBePathSelectionItem(new ODataPath(new NavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp(), HardCodedTestModel.GetPeopleSet())));
         }
 
+        [Fact]
+        public void SelectWildcardStoresSubsumed()
+        {
+            // Arrange: $select=Name,*,Birthdate
+            SelectToken selectToken = new SelectToken(
+                new SelectTermToken[]
+                {
+                    new SelectTermToken(new NonSystemToken("Name", null, null)),
+                    new SelectTermToken(new NonSystemToken("*", null, null)),
+                    new SelectTermToken(new NonSystemToken("Birthdate", null, null)),
+                });
+
+
+            // Act
+            SelectExpandClause clause = BinderForPerson.Bind(expandToken: null, selectToken);
+
+            // Assert
+            Assert.NotNull(clause);
+            Assert.False(clause.AllSelected);
+            WildcardSelectItem wildcardSelectItem = Assert.Single(clause.SelectedItems) as WildcardSelectItem;
+            Assert.NotNull(wildcardSelectItem);
+
+            SelectItem[] subsumedSelectItems = wildcardSelectItem.SubsumedSelectItems.ToArray();
+            Assert.Equal(2, subsumedSelectItems.Length);
+            subsumedSelectItems[0].ShouldBePathSelectionItem(new ODataPath(new PropertySegment(HardCodedTestModel.GetPersonNameProp())));
+            subsumedSelectItems[1].ShouldBePathSelectionItem(new ODataPath(new PropertySegment(HardCodedTestModel.GetPersonBirthdateProp())));
+        }
+
         #region helpers
         public static ExpandToken ParseExpandToken(string expand)
         {

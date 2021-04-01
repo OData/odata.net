@@ -4,6 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
 namespace Microsoft.OData.UriParser
 {
     /// <summary>
@@ -11,6 +14,14 @@ namespace Microsoft.OData.UriParser
     /// </summary>
     public sealed class WildcardSelectItem : SelectItem
     {
+        private readonly List<SelectItem> subsumedSelectItems = new List<SelectItem>();
+
+        /// <summary>
+        /// Returns all <see cref="SelectItem"/> that were provided by the client but are ignored by the framework because they are
+        /// covered by the wildcard. This allows services to determine if properties were explicitly selected.
+        /// </summary>
+        public IEnumerable<SelectItem> SubsumedSelectItems => new ReadOnlyCollection<SelectItem>(this.subsumedSelectItems);
+
         /// <summary>
         /// Translate using a <see cref="SelectItemTranslator{T}"/>.
         /// </summary>
@@ -31,6 +42,22 @@ namespace Microsoft.OData.UriParser
         public override void HandleWith(SelectItemHandler handler)
         {
             handler.Handle(this);
+        }
+
+        /// <summary>
+        /// Adds the provided <see cref="SelectItem"/> to the set of items that are replaced by the wildcard.
+        /// </summary>
+        internal void AddSubsumed(SelectItem selectItem)
+        {
+            this.subsumedSelectItems.Add(selectItem);
+        }
+
+        /// <summary>
+        /// Adds the provided <see cref="IEnumerable{SelectItem}"/> to the set of items that are replaced by the wildcard.
+        /// </summary>
+        internal void AddSubsumed(IEnumerable<SelectItem> selectItems)
+        {
+            this.subsumedSelectItems.AddRange(selectItems);
         }
     }
 }

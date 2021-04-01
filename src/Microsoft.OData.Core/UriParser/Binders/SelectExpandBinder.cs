@@ -964,8 +964,10 @@ namespace Microsoft.OData.UriParser
             }
 
             // ignore all property selection if there's a wildcard select item.
-            if (selectItems.Any(x => x is WildcardSelectItem) && IsStructuralOrNavigationPropertySelectionItem(itemToAdd))
+            WildcardSelectItem wildcardSelectItem = selectItems.FirstOrDefault(x => x is WildcardSelectItem) as WildcardSelectItem;
+            if (wildcardSelectItem != null && IsStructuralOrNavigationPropertySelectionItem(itemToAdd))
             {
+                wildcardSelectItem.AddSubsumed(itemToAdd);
                 return;
             }
 
@@ -984,9 +986,11 @@ namespace Microsoft.OData.UriParser
             }
 
             // if the selected item is "*", filter the existing property selection.
-            if (itemToAdd is WildcardSelectItem)
+            wildcardSelectItem = itemToAdd as WildcardSelectItem;
+            if (wildcardSelectItem != null)
             {
-                var shouldFilter = selectItems.Where(s => IsStructuralSelectionItem(s)).ToList();
+                List<SelectItem> shouldFilter = selectItems.Where(s => IsStructuralSelectionItem(s)).ToList();
+                wildcardSelectItem.AddSubsumed(shouldFilter);
                 foreach (var filterItem in shouldFilter)
                 {
                     selectItems.Remove(filterItem);
