@@ -37,9 +37,9 @@ namespace Microsoft.OData
 
             foreach (SelectItem selectItem in selectExpandClause.SelectedItems)
             {
-                if (selectItem.GetType() == typeof(PathSelectItem))
+                if (selectItem is PathSelectItem pathSelectItem)
                 {
-                    selectClause += this.Translate((PathSelectItem)selectItem);
+                    selectClause += this.Translate(pathSelectItem);
                 }
 
                 else if (selectItem.GetType() == typeof(ExpandedNavigationSelectItem))
