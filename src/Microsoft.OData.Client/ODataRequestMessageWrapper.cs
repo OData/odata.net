@@ -128,7 +128,7 @@ namespace Microsoft.OData.Client
                 requestMessageArgs.RequestUri,
                 contentId,
                 isRelativeUri ? BatchPayloadUriOption.RelativeUri : BatchPayloadUriOption.AbsoluteUri,
-                requestMessageArgs.Descriptor == null ? null : requestMessageArgs.Descriptor.DependsOnIds
+                requestMessageArgs.Descriptor?.DependsOnIds
                 );
 
             foreach (var h in requestMessageArgs.Headers)
