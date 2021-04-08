@@ -693,6 +693,54 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         }
 
         [Fact]
+        public void SelectWithDollarThisInOrderByClauseShouldWork()
+        {
+            Uri queryUri = new Uri("People?$select=RelatedSSNs($orderby=$this)", UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal("http://gobbledygook/People?$select=" + Uri.EscapeDataString("RelatedSSNs($orderby=$this)"), actualUri.OriginalString);
+        }
+
+        [Fact]
+        public void SelectWithDollarThisInNestedDollarFilterClauseShouldWork()
+        {
+            Uri queryUri = new Uri("People?$select=RelatedSSNs($filter=endswith($this,'xyz'))", UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal("http://gobbledygook/People?$select=" + Uri.EscapeDataString("RelatedSSNs($filter=endswith($this,'xyz'))"), actualUri.OriginalString);
+        }
+
+        [Fact]
+        public void SelectWithDollarThisSlashPropertyInFilterClauseShouldWork()
+        {
+            Uri queryUri = new Uri("People?$select=PreviousAddresses($filter=endswith($this/Street,'xyz'))", UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal("http://gobbledygook/People?$select=" + Uri.EscapeDataString("PreviousAddresses($filter=endswith($this/Street,'xyz'))"), actualUri.OriginalString);
+        }
+
+        [Fact]
+        public void SelectWithMultipleOptionsInPrimitiveCollectionShouldWork()
+        {
+            Uri queryUri = new Uri("People?$select=RelatedSSNs($count=true;$filter=endswith($this,'xyz');$orderby=$this;$top=10;$skip=5)", UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal("http://gobbledygook/People?$select=" + Uri.EscapeDataString("RelatedSSNs($filter=endswith($this,'xyz');$orderby=$this;$top=10;$skip=5;$count=true)"), actualUri.OriginalString);
+        }
+
+        [Fact]
+        public void SelectWithMultipleOptionsInComplexCollectionShouldWork()
+        {
+            Uri queryUri = new Uri("People?$select=PreviousAddresses($count=true;$filter=endswith($this/City,'xyz');$orderby=$this/City;$top=10;$skip=5)", UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal("http://gobbledygook/People?$select=" + Uri.EscapeDataString("PreviousAddresses($filter=endswith($this/City,'xyz');$orderby=$this/City;$top=10;$skip=5;$count=true)"), actualUri.OriginalString);
+        }
+
+        //MyDog($select=Color;$expand=MyPeople($expand=MyPaintings($filter=ID eq $it/ID)))
+        [Fact]
+        public void SelectWithinMultipleNestedExpandsShouldWork()
+        {
+            Uri queryUri = new Uri("People?$expand=MyDog($select=Color;$expand=MyPeople($select=PreviousAddresses($count=true;$filter=endswith($this/City,'xyz');$orderby=$this/City;$top=10;$skip=5)))", UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal("http://gobbledygook/People?$expand=" + Uri.EscapeDataString("MyDog($select=Color;$expand=MyPeople($select=PreviousAddresses($filter=endswith($this/City,'xyz');$orderby=$this/City;$top=10;$skip=5;$count=true)))"), actualUri.OriginalString);
+        }
+        [Fact]
         public void ExpandWithNestedQueryOptionsShouldWork()
         {
             var ervFilter = new ResourceRangeVariable(ExpressionConstants.It, HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
