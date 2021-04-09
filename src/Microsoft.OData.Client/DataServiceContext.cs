@@ -3946,17 +3946,11 @@ namespace Microsoft.OData.Client
 
             if (dependsOnObjects != null)
             {
-                List<string> dependsOnIdsAsChangeOrders;
-                HashSet<string> dependsOnChangeSetIds;
-
-                GetDependsOnChangeOrdersAndChangeSetIds(
-                    dependsOnObjects,
-                    this.EntityTracker,
-                    out dependsOnIdsAsChangeOrders,
-                    out dependsOnChangeSetIds);
-
-                resource.DependsOnIds = dependsOnIdsAsChangeOrders;
-                resource.DependsOnChangeSetIds = dependsOnChangeSetIds.ToList();
+                UpdateResourceWithDependsOnChangeOrdersAndChangeSetIds(
+                        resource,
+                        dependsOnObjects,
+                        this.EntityTracker,
+                        out resource);
             }
 
             resource.State = EntityStates.Modified;
@@ -4012,17 +4006,11 @@ namespace Microsoft.OData.Client
 
                 if (dependsOnObjects != null)
                 {
-                    List<string> dependsOnIdsAsChangeOrders;
-                    HashSet<string> dependsOnChangeSetIds;
-
-                    GetDependsOnChangeOrdersAndChangeSetIds(
+                    UpdateResourceWithDependsOnChangeOrdersAndChangeSetIds(
+                        resource,
                         dependsOnObjects,
                         this.EntityTracker,
-                        out dependsOnIdsAsChangeOrders,
-                        out dependsOnChangeSetIds);
-
-                    resource.DependsOnIds = dependsOnIdsAsChangeOrders;
-                    resource.DependsOnChangeSetIds = dependsOnChangeSetIds.ToList();
+                        out resource);
                 }
 
                 // Leave related links alone which means we can have a link in the Added
@@ -4048,21 +4036,24 @@ namespace Microsoft.OData.Client
             this.DeleteObjectInternal(entity, failIfInAddedState, null);
         }
 
-        private static void GetDependsOnChangeOrdersAndChangeSetIds(
+        private static void UpdateResourceWithDependsOnChangeOrdersAndChangeSetIds(
+            EntityDescriptor res,
             object[] dependsOnObjects,
             EntityTracker entityTracker,
-            out List<string> dependsOnIdsAsChangeOrders,
-            out HashSet<string> dependsOnChangeSetIds)
+            out EntityDescriptor resource)
         {
-            dependsOnIdsAsChangeOrders = new List<string>();
-            dependsOnChangeSetIds = new HashSet<string>();
-
+            List<string> dependsOnIdsAsChangeOrders = new List<string>();
+            HashSet<string> dependsOnChangeSetIds = new HashSet<string>();
+            resource = res;
             foreach (var obj in dependsOnObjects)
             {
                 EntityDescriptor dependsOnResource = entityTracker.TryGetEntityDescriptor(obj);
                 dependsOnIdsAsChangeOrders.Add(dependsOnResource.ChangeOrder.ToString(CultureInfo.InvariantCulture));
                 dependsOnChangeSetIds.Add(dependsOnResource.ChangeSetId);
             }
+
+            resource.DependsOnIds = dependsOnIdsAsChangeOrders;
+            resource.DependsOnChangeSetIds = dependsOnChangeSetIds.ToList();
         }
 
         /// <summary>
