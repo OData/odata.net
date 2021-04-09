@@ -12,7 +12,6 @@ namespace Microsoft.OData.JsonLight
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Threading.Tasks;
-    using Microsoft.OData.Buffers;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Json;
     #endregion Namespaces

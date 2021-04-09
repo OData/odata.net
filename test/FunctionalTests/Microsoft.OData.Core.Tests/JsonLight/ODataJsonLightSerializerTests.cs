@@ -9,10 +9,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
-using Microsoft.OData.JsonLight;
-using Microsoft.OData.Edm;
-using Xunit;
 using System.Threading.Tasks;
+using Microsoft.OData.Edm;
+using Microsoft.OData.JsonLight;
+using Xunit;
 
 namespace Microsoft.OData.Tests.JsonLight
 {

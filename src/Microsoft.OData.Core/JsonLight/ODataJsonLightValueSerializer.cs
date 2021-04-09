@@ -12,11 +12,11 @@ namespace Microsoft.OData.JsonLight
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
+    using System.Threading.Tasks;
+    using Microsoft.OData.Edm;
     using Microsoft.OData.Json;
     using Microsoft.OData.Metadata;
-    using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Strings;
-    using System.Threading.Tasks;
 
     #endregion Namespaces
 
