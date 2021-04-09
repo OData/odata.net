@@ -150,7 +150,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             c2.Name = "customerTwo updated name";
 
             context.UpdateObject(c1);
-            context.UpdateObject(c2, c1.CustomerId);
+            context.UpdateObject(c2, c1);
 
             var dscResponse = await context.SaveChangesAsync(SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.UseJsonBatch);
             Assert.Equal(204, (dscResponse.Last() as ChangeOperationResponse).StatusCode);
@@ -172,7 +172,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             c2.Name = "customerTwo updated name";
 
             context.UpdateObject(c1);
-            context.UpdateObject(c2, c1.CustomerId);
+            context.UpdateObject(c2, c1);
 
             Task response() => context.SaveChangesAsync(SaveChangesOptions.BatchWithIndependentOperations);
             var exception = await Assert.ThrowsAsync<ODataException>(response);
