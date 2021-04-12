@@ -155,7 +155,6 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Writes the start of the entire JSON payload.
         /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "This method is an instance method for consistency with other formats.")]
         internal void WritePayloadStart()
         {
             ODataJsonWriterUtils.StartJsonPaddingIfRequired(this.JsonWriter, this.MessageWriterSettings);
@@ -164,7 +163,6 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Writes the end of the entire JSON payload.
         /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "This method is an instance method for consistency with other formats.")]
         internal void WritePayloadEnd()
         {
             ODataJsonWriterUtils.EndJsonPaddingIfRequired(this.JsonWriter, this.MessageWriterSettings);
@@ -250,7 +248,6 @@ namespace Microsoft.OData.JsonLight
         /// Asynchronously writes the start of the entire JSON payload.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "This method is an instance method for consistency with other formats.")]
         internal Task WritePayloadStartAsync()
         {
             return ODataJsonWriterUtils.StartJsonPaddingIfRequiredAsync(this.AsynchronousJsonWriter, this.MessageWriterSettings);
@@ -260,7 +257,6 @@ namespace Microsoft.OData.JsonLight
         /// Asynchronously writes the end of the entire JSON payload.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "This method is an instance method for consistency with other formats.")]
         internal Task WritePayloadEndAsync()
         {
             return ODataJsonWriterUtils.EndJsonPaddingIfRequiredAsync(this.AsynchronousJsonWriter, this.MessageWriterSettings);

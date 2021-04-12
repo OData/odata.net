@@ -108,7 +108,6 @@ namespace Microsoft.OData.JsonLight
         /// <param name="duplicatePropertyNamesChecker">The checker instance for duplicate property names.</param>
         /// <remarks>The current recursion depth should be a value, measured by the number of resource and collection values between
         /// this resource value and the top-level payload, not including this one.</remarks>
-        [SuppressMessage("Microsoft.Naming", "CA2204:LiteralsShouldBeSpelledCorrectly", Justification = "Names are correct. String can't be localized after string freeze.")]
         public virtual void WriteResourceValue(
             ODataResourceValue resourceValue,
             IEdmTypeReference metadataTypeReference,
@@ -171,7 +170,6 @@ namespace Microsoft.OData.JsonLight
         /// <param name="isOpenPropertyType">True if the type name belongs to an open property.</param>
         /// <remarks>The current recursion depth is measured by the number of resource and collection values between
         /// this one and the top-level payload, not including this one.</remarks>
-        [SuppressMessage("Microsoft.Naming", "CA2204:LiteralsShouldBeSpelledCorrectly", Justification = "Names are correct. String can't be localized after string freeze.")]
         public virtual void WriteCollectionValue(ODataCollectionValue collectionValue, IEdmTypeReference metadataTypeReference, IEdmTypeReference valueTypeReference, bool isTopLevelProperty, bool isInUri, bool isOpenPropertyType)
         {
             Debug.Assert(collectionValue != null, "collectionValue != null");
@@ -422,7 +420,6 @@ namespace Microsoft.OData.JsonLight
         /// <remarks>The current recursion depth should be a value, measured by the number of resource and collection values between
         /// this resource value and the top-level payload, not including this one.</remarks>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:LiteralsShouldBeSpelledCorrectly", Justification = "Names are correct. String can't be localized after string freeze.")]
         public virtual async Task WriteResourceValueAsync(
             ODataResourceValue resourceValue,
             IEdmTypeReference metadataTypeReference,
@@ -488,7 +485,6 @@ namespace Microsoft.OData.JsonLight
         /// <remarks>The current recursion depth is measured by the number of resource and collection values between
         /// this one and the top-level payload, not including this one.</remarks>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:LiteralsShouldBeSpelledCorrectly", Justification = "Names are correct. String can't be localized after string freeze.")]
         public virtual async Task WriteCollectionValueAsync(ODataCollectionValue collectionValue, IEdmTypeReference metadataTypeReference, IEdmTypeReference valueTypeReference, bool isTopLevelProperty, bool isInUri, bool isOpenPropertyType)
         {
             Debug.Assert(collectionValue != null, "collectionValue != null");
@@ -718,7 +714,6 @@ namespace Microsoft.OData.JsonLight
         /// Asserts that the current recursion depth of values is zero. This should be true on all calls into this class from outside of this class.
         /// </summary>
         [Conditional("DEBUG")]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "The this is needed in DEBUG build.")]
         internal void AssertRecursionDepthIsZero()
         {
             Debug.Assert(this.recursionDepth == 0, "The current recursion depth must be 0.");
