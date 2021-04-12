@@ -846,7 +846,11 @@ namespace Microsoft.OData.JsonLight
         /// <param name="owningType">The owning type for the <paramref name="propertyInfo"/> or null if no metadata is available.</param>
         /// <param name="isTopLevel">true when writing a top-level property; false for nested properties.</param>
         /// <param name="duplicatePropertyNameChecker">The DuplicatePropertyNameChecker to use.</param>
-        private void ValidatePropertyInfo(ODataPropertyInfo propertyInfo, IEdmStructuredType owningType, bool isTopLevel, IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
+        private void ValidatePropertyInfo(
+            ODataPropertyInfo propertyInfo,
+            IEdmStructuredType owningType,
+            bool isTopLevel,
+            IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
         {
             WriterValidationUtils.ValidatePropertyNotNull(propertyInfo);
 
@@ -891,7 +895,10 @@ namespace Microsoft.OData.JsonLight
         /// <param name="propertyName">The property name.</param>
         /// <param name="metadataBuilder">The metadata builder for the resource.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteStreamValueAsync(IODataStreamReferenceInfo streamInfo, string propertyName, ODataResourceMetadataBuilder metadataBuilder)
+        private async Task WriteStreamValueAsync(
+            IODataStreamReferenceInfo streamInfo,
+            string propertyName,
+            ODataResourceMetadataBuilder metadataBuilder)
         {
             WriterValidationUtils.ValidateStreamPropertyInfo(streamInfo, currentPropertyInfo.MetadataType.EdmProperty, propertyName, this.WritingResponse);
             await this.WriteStreamInfoAsync(propertyName, streamInfo)

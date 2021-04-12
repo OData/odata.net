@@ -170,7 +170,13 @@ namespace Microsoft.OData.JsonLight
         /// <param name="isOpenPropertyType">True if the type name belongs to an open property.</param>
         /// <remarks>The current recursion depth is measured by the number of resource and collection values between
         /// this one and the top-level payload, not including this one.</remarks>
-        public virtual void WriteCollectionValue(ODataCollectionValue collectionValue, IEdmTypeReference metadataTypeReference, IEdmTypeReference valueTypeReference, bool isTopLevelProperty, bool isInUri, bool isOpenPropertyType)
+        public virtual void WriteCollectionValue(
+            ODataCollectionValue collectionValue,
+            IEdmTypeReference metadataTypeReference,
+            IEdmTypeReference valueTypeReference,
+            bool isTopLevelProperty,
+            bool isInUri,
+            bool isOpenPropertyType)
         {
             Debug.Assert(collectionValue != null, "collectionValue != null");
             Debug.Assert(!isTopLevelProperty || !isInUri, "Cannot be a top level property and in a uri");
@@ -485,7 +491,13 @@ namespace Microsoft.OData.JsonLight
         /// <remarks>The current recursion depth is measured by the number of resource and collection values between
         /// this one and the top-level payload, not including this one.</remarks>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        public virtual async Task WriteCollectionValueAsync(ODataCollectionValue collectionValue, IEdmTypeReference metadataTypeReference, IEdmTypeReference valueTypeReference, bool isTopLevelProperty, bool isInUri, bool isOpenPropertyType)
+        public virtual async Task WriteCollectionValueAsync(
+            ODataCollectionValue collectionValue,
+            IEdmTypeReference metadataTypeReference,
+            IEdmTypeReference valueTypeReference,
+            bool isTopLevelProperty,
+            bool isInUri,
+            bool isOpenPropertyType)
         {
             Debug.Assert(collectionValue != null, "collectionValue != null");
             Debug.Assert(!isTopLevelProperty || !isInUri, "Cannot be a top level property and in a uri");

@@ -176,7 +176,11 @@ namespace Microsoft.OData.JsonLight
         /// <param name="parentContextUrlInfo">The parent contextUrlInfo.</param>
         /// <param name="propertyName">Property name to write contextUri on.</param>
         /// <returns>The contextUrlInfo, if the context URI was successfully written.</returns>
-        internal ODataContextUrlInfo WriteContextUriProperty(ODataPayloadKind payloadKind, Func<ODataContextUrlInfo> contextUrlInfoGen = null, ODataContextUrlInfo parentContextUrlInfo = null, string propertyName = null)
+        internal ODataContextUrlInfo WriteContextUriProperty(
+            ODataPayloadKind payloadKind,
+            Func<ODataContextUrlInfo> contextUrlInfoGen = null,
+            ODataContextUrlInfo parentContextUrlInfo = null,
+            string propertyName = null)
         {
             if (this.jsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel)
             {
@@ -272,7 +276,11 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task that represents the asynchronous read operation. 
         /// The value of the TResult parameter contains the contextUrlInfo, 
         /// if the context URI was successfully written.</returns>
-        internal async Task<ODataContextUrlInfo> WriteContextUriPropertyAsync(ODataPayloadKind payloadKind, Func<ODataContextUrlInfo> contextUrlInfoGen = null, ODataContextUrlInfo parentContextUrlInfo = null, string propertyName = null)
+        internal async Task<ODataContextUrlInfo> WriteContextUriPropertyAsync(
+            ODataPayloadKind payloadKind,
+            Func<ODataContextUrlInfo> contextUrlInfoGen = null,
+            ODataContextUrlInfo parentContextUrlInfo = null,
+            string propertyName = null)
         {
             if (this.jsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel)
             {

@@ -83,9 +83,11 @@ namespace Microsoft.OData
         /// <param name="tracker">The tracker to track if instance annotations are written.</param>
         /// <param name="ignoreFilter">Whether to ignore the filter in settings.</param>
         /// <param name="propertyName">The name of the property this instance annotation applies to</param>
-        internal void WriteInstanceAnnotations(IEnumerable<ODataInstanceAnnotation> instanceAnnotations,
-                                               InstanceAnnotationWriteTracker tracker,
-                                               bool ignoreFilter = false, string propertyName = null)
+        internal void WriteInstanceAnnotations(
+            IEnumerable<ODataInstanceAnnotation> instanceAnnotations,
+            InstanceAnnotationWriteTracker tracker,
+            bool ignoreFilter = false,
+            string propertyName = null)
         {
             Debug.Assert(instanceAnnotations != null, "instanceAnnotations should not be null if we called this");
             Debug.Assert(tracker != null, "tracker should not be null if we called this");
@@ -113,7 +115,10 @@ namespace Microsoft.OData
         /// <param name="instanceAnnotations">Collection of instance annotations to write.</param>
         /// <param name="propertyName">The name of the property this instance annotation applies to</param>
         /// <param name="isUndeclaredProperty">If writing an undeclared property.</param>
-        internal void WriteInstanceAnnotations(IEnumerable<ODataInstanceAnnotation> instanceAnnotations, string propertyName = null, bool isUndeclaredProperty = false)
+        internal void WriteInstanceAnnotations(
+            IEnumerable<ODataInstanceAnnotation> instanceAnnotations,
+            string propertyName = null,
+            bool isUndeclaredProperty = false)
         {
             Debug.Assert(instanceAnnotations != null, "instanceAnnotations should not be null if we called this");
             if (isUndeclaredProperty)
@@ -146,7 +151,10 @@ namespace Microsoft.OData
         /// <param name="instanceAnnotation">The instance annotation to write.</param>
         /// <param name="ignoreFilter">Whether to ignore the filter in settings.</param>
         /// <param name="propertyName">The name of the property this instance annotation applies to</param>
-        internal void WriteInstanceAnnotation(ODataInstanceAnnotation instanceAnnotation, bool ignoreFilter = false, string propertyName = null)
+        internal void WriteInstanceAnnotation(
+            ODataInstanceAnnotation instanceAnnotation,
+            bool ignoreFilter = false,
+            string propertyName = null)
         {
             string name = instanceAnnotation.Name;
             ODataValue value = instanceAnnotation.Value;
@@ -246,9 +254,11 @@ namespace Microsoft.OData
         /// <param name="tracker">The tracker to track if instance annotations are written.</param>
         /// <param name="ignoreFilter">Whether to ignore the filter in settings.</param>
         /// <param name="propertyName">The name of the property this instance annotation applies to</param>
-        internal async Task WriteInstanceAnnotationsAsync(IEnumerable<ODataInstanceAnnotation> instanceAnnotations,
-                                               InstanceAnnotationWriteTracker tracker,
-                                               bool ignoreFilter = false, string propertyName = null)
+        internal async Task WriteInstanceAnnotationsAsync(
+            IEnumerable<ODataInstanceAnnotation> instanceAnnotations,
+            InstanceAnnotationWriteTracker tracker,
+            bool ignoreFilter = false,
+            string propertyName = null)
         {
             Debug.Assert(instanceAnnotations != null, "instanceAnnotations should not be null if we called this");
             Debug.Assert(tracker != null, "tracker should not be null if we called this");
@@ -277,7 +287,10 @@ namespace Microsoft.OData
         /// <param name="instanceAnnotations">Collection of instance annotations to write.</param>
         /// <param name="propertyName">The name of the property this instance annotation applies to</param>
         /// <param name="isUndeclaredProperty">If writing an undeclared property.</param>
-        internal async Task WriteInstanceAnnotationsAsync(IEnumerable<ODataInstanceAnnotation> instanceAnnotations, string propertyName = null, bool isUndeclaredProperty = false)
+        internal async Task WriteInstanceAnnotationsAsync(
+            IEnumerable<ODataInstanceAnnotation> instanceAnnotations,
+            string propertyName = null,
+            bool isUndeclaredProperty = false)
         {
             Debug.Assert(instanceAnnotations != null, "instanceAnnotations should not be null if we called this");
             if (isUndeclaredProperty)
@@ -312,7 +325,10 @@ namespace Microsoft.OData
         /// <param name="instanceAnnotation">The instance annotation to write.</param>
         /// <param name="ignoreFilter">Whether to ignore the filter in settings.</param>
         /// <param name="propertyName">The name of the property this instance annotation applies tos</param>
-        internal async Task WriteInstanceAnnotationAsync(ODataInstanceAnnotation instanceAnnotation, bool ignoreFilter = false, string propertyName = null)
+        internal async Task WriteInstanceAnnotationAsync(
+            ODataInstanceAnnotation instanceAnnotation,
+            bool ignoreFilter = false,
+            string propertyName = null)
         {
             string annotationName = instanceAnnotation.Name;
             ODataValue annotationValue = instanceAnnotation.Value;
