@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.OData.Edm;
 using Microsoft.OData.JsonLight;
 using Xunit;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.JsonLight
 {
@@ -369,7 +370,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 Items = new List<object> { "Foo", "Bar" }
             };
 
-            await Assert.ThrowsAsync<ODataException>(
+            var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonLightValueSerializerAndRunTestAsync(
                     (jsonLightValueSerializer) =>
                     {
@@ -381,6 +382,8 @@ namespace Microsoft.OData.Tests.JsonLight
                             /* isInUri */ false,
                             /* isOpenProperty */ true);
                     }));
+
+            Assert.Equal(ODataErrorStrings.WriterValidationUtils_MissingTypeNameWithMetadata, exception.Message);
         }
 
         [Fact]
@@ -391,7 +394,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 Items = new List<object> { "Foo", "Bar" }
             };
 
-            await Assert.ThrowsAsync<ODataException>(
+            var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonLightValueSerializerAndRunTestAsync(
                     (jsonLightValueSerializer) =>
                     {
@@ -403,6 +406,8 @@ namespace Microsoft.OData.Tests.JsonLight
                             /* isInUri */ false,
                             /* isOpenProperty */ false);
                     }));
+
+            Assert.Equal(ODataErrorStrings.ODataJsonLightValueSerializer_MissingTypeNameOnCollection, exception.Message);
         }
 
         [Fact]
@@ -425,7 +430,7 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             var untypedValue = new ODataUntypedValue { RawValue = "" };
 
-            await Assert.ThrowsAsync<ODataException>(
+            var exception = await Assert.ThrowsAsync<ODataException>(
                 () => {
                     return SetupJsonLightValueSerializerAndRunTestAsync(
                         (jsonLightValueSerializer) =>
@@ -433,6 +438,8 @@ namespace Microsoft.OData.Tests.JsonLight
                             return jsonLightValueSerializer.WriteUntypedValueAsync(untypedValue);
                         });
                 });
+
+            Assert.Equal(ODataErrorStrings.ODataJsonLightValueSerializer_MissingRawValueOnUntyped, exception.Message);
         }
 
         [Fact]

@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.OData.Edm;
 using Microsoft.OData.JsonLight;
 using Xunit;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -217,7 +218,7 @@ namespace Microsoft.OData.Tests.Json
                 new ODataInstanceAnnotation("favorite.Coffee", new ODataPrimitiveValue("Cappuccino")),
             };
 
-            await Assert.ThrowsAsync<ODataException>(
+            var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonLightInstanceAnnotationWriterAndRunTestAsync(
                     (jsonLightInstanceAnnotationWriter) =>
                     {
@@ -227,6 +228,10 @@ namespace Microsoft.OData.Tests.Json
                             /* ignoreFilter */ true,
                             "FunFacts");
                     }));
+
+            Assert.Equal(
+                ODataErrorStrings.JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection("favorite.Coffee"),
+                exception.Message);
         }
 
         [Fact]
