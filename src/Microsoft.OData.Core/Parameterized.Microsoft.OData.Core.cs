@@ -6929,6 +6929,28 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "No property is allowed after $count segment."
+        /// </summary>
+        internal static string ExpressionToken_NoPropAllowedAfterDollarCount
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ExpressionToken_NoPropAllowedAfterDollarCount);
+            }
+        }
+
+        /// <summary>
+        /// A string like "$count is only allowed in $expand option."
+        /// </summary>
+        internal static string ExpressionToken_DollarCountOnlyAllowedInExpand
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ExpressionToken_DollarCountOnlyAllowedInExpand);
+            }
+        }
+
+        /// <summary>
         /// A string like "No segment is allowed before star in $expand."
         /// </summary>
         internal static string ExpressionToken_NoSegmentAllowedBeforeStarInExpand

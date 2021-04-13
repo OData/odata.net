@@ -791,7 +791,9 @@ namespace Microsoft.OData
         internal const string ExceptionUtils_CheckLongPositive = "ExceptionUtils_CheckLongPositive";
         internal const string ExceptionUtils_ArgumentStringNullOrEmpty = "ExceptionUtils_ArgumentStringNullOrEmpty";
         internal const string ExpressionToken_OnlyRefAllowWithStarInExpand = "ExpressionToken_OnlyRefAllowWithStarInExpand";
+        internal const string ExpressionToken_DollarCountOnlyAllowedInExpand = "ExpressionToken_DollarCountOnlyAllowedInExpand";
         internal const string ExpressionToken_NoPropAllowedAfterRef = "ExpressionToken_NoPropAllowedAfterRef";
+        internal const string ExpressionToken_NoPropAllowedAfterDollarCount = "ExpressionToken_NoPropAllowedAfterDollarCount";
         internal const string ExpressionToken_NoSegmentAllowedBeforeStarInExpand = "ExpressionToken_NoSegmentAllowedBeforeStarInExpand";
         internal const string ExpressionToken_IdentifierExpected = "ExpressionToken_IdentifierExpected";
         internal const string ExpressionLexer_UnterminatedStringLiteral = "ExpressionLexer_UnterminatedStringLiteral";

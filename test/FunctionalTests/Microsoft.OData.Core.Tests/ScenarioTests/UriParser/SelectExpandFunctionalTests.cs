@@ -61,6 +61,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void SelectPropertiesWithDollarCountOperationThrows()
+        {
+            Action readResult = () => RunParseSelectExpand("MyLions/$count", null, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            readResult.Throws<ODataException>(ODataErrorStrings.ExpressionToken_DollarCountOnlyAllowedInExpand);
+        }
+
+        [Fact]
         public void SelectWithAsteriskMeansWildcard()
         {
             ParseSingleSelectForPerson("*").ShouldBeWildcardSelectionItem();
@@ -570,6 +577,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             const string expandClauseText = "MyDog/$ref/MyPeople";
             Action readResult = () => RunParseSelectExpand(null, expandClauseText, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             readResult.Throws<ODataException>(ODataErrorStrings.ExpressionToken_NoPropAllowedAfterRef);
+        }
+
+        [Fact]
+        public void ExpandNavigationWithNavigationAfterDollarCountOperationThrows()
+        {
+            const string expandClauseText = "MyDog/$count/MyPeople";
+            Action readResult = () => RunParseSelectExpand(null, expandClauseText, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            readResult.Throws<ODataException>(ODataErrorStrings.ExpressionToken_NoPropAllowedAfterDollarCount);
         }
 
         [Fact]
