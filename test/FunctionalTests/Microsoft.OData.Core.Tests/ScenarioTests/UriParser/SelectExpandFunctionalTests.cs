@@ -1601,25 +1601,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal(2, pathSelectItem.SkipOption);
         }
 
-        // Confirm if the OData spec supports:
-        // $select=collectionValuedProp/$count
-        // [Fact]
-        public void SelectWithComplexCollectionCountWorks()
-        {
-            // Arrange
-            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
-                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
-                new Dictionary<string, string>()
-                {
-                    {"$select", "PreviousAddresses/$count"}
-                });
-
-            // Act
-            var selectExpandClause = odataQueryOptionParser.ParseSelectAndExpand();
-
-            Assert.NotNull(selectExpandClause);
-        }
-
         // $expand=navProp/$count
         [Fact]
         public void ExpandWithNavigationPropCountWorks()
@@ -1635,7 +1616,55 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             // Act
             var selectExpandClause = odataQueryOptionParser.ParseSelectAndExpand();
 
+            // Assert
             Assert.NotNull(selectExpandClause);
+            ExpandedCountSelectItem expandedCountSelectItem = Assert.IsType<ExpandedCountSelectItem>(Assert.Single(selectExpandClause.SelectedItems));
+            Assert.Null(expandedCountSelectItem.FilterOption);
+            Assert.Null(expandedCountSelectItem.SearchOption);
+        }
+
+        // $expand=navProp/$count($filter=prop)
+        [Fact]
+        public void ExpandWithNavigationPropCountWithFilterOptionWorks()
+        {
+            // Arrange
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$expand", "MyPaintings/$count($filter=Artist eq 'Artist One')"}
+                });
+
+            // Act
+            var selectExpandClause = odataQueryOptionParser.ParseSelectAndExpand();
+
+            // Assert
+            Assert.NotNull(selectExpandClause);
+            ExpandedCountSelectItem expandedCountSelectItem = Assert.IsType<ExpandedCountSelectItem>(Assert.Single(selectExpandClause.SelectedItems));
+            Assert.NotNull(expandedCountSelectItem.FilterOption);
+            Assert.Null(expandedCountSelectItem.SearchOption);
+        }
+
+        // $expand=navProp/$count($search=prop)
+        [Fact]
+        public void ExpandWithNavigationPropCountWithSearchOptionWorks()
+        {
+            // Arrange
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$expand", "MyPaintings/$count($search=Blue)"}
+                });
+
+            // Act
+            var selectExpandClause = odataQueryOptionParser.ParseSelectAndExpand();
+
+            // Assert
+            Assert.NotNull(selectExpandClause);
+            ExpandedCountSelectItem expandedCountSelectItem = Assert.IsType<ExpandedCountSelectItem>(Assert.Single(selectExpandClause.SelectedItems));
+            Assert.Null(expandedCountSelectItem.FilterOption);
+            Assert.NotNull(expandedCountSelectItem.SearchOption);
         }
 
         [Fact]
