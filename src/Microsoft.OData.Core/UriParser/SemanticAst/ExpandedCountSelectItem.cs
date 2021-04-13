@@ -19,35 +19,11 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="pathToNavigationProperty">the path to the navigation property for this expand item, including any type segments</param>
         /// <param name="navigationSource">the navigation source for this ExpandItem</param>
-        /// <param name="selectExpandOption">This level select and any sub expands for this expand item.</param>
+        /// <param name="filterOption">A filter clause for this expand (can be null)</param>
+        /// <param name="searchOption">A search clause for this expand (can be null)</param>
         /// <exception cref="System.ArgumentNullException">Throws if input pathToNavigationProperty is null.</exception>
         public ExpandedCountSelectItem(ODataExpandPath pathToNavigationProperty, IEdmNavigationSource navigationSource, FilterClause filterOption, SearchClause searchOption)
-            : this(pathToNavigationProperty, navigationSource, filterOption, null, null, null, null, searchOption)
-        {
-        }
-
-        /// <summary>
-        /// Create an expand item, using a navigationProperty, its entity set, and any expand options.
-        /// </summary>
-        /// <param name="pathToNavigationProperty">the path to the navigation property for this expand item, including any type segments</param>
-        /// <param name="navigationSource">the navigation source for this expand level.</param>
-        /// <param name="filterOption">A filter clause for this expand (can be null)</param>
-        /// <param name="orderByOption">An Orderby clause for this expand (can be null)</param>
-        /// <param name="topOption">A top clause for this expand (can be null)</param>
-        /// <param name="skipOption">A skip clause for this expand (can be null)</param>
-        /// <param name="countOption">An query count clause for this expand (can be null)</param>
-        /// <param name="searchOption">An levels clause for this expand (can be null)</param>
-        /// <exception cref="System.ArgumentNullException">Throws if input pathToNavigationProperty is null.</exception>
-        public ExpandedCountSelectItem(
-             ODataExpandPath pathToNavigationProperty,
-             IEdmNavigationSource navigationSource,
-             FilterClause filterOption,
-             OrderByClause orderByOption,
-             long? topOption,
-             long? skipOption,
-             bool? countOption,
-             SearchClause searchOption)
-            : base(pathToNavigationProperty, navigationSource, filterOption, orderByOption, topOption, skipOption, countOption, searchOption)
+            : base(pathToNavigationProperty, navigationSource, filterOption, null, null, null, null, searchOption)
         {
             ExceptionUtils.CheckArgumentNotNull(pathToNavigationProperty, "pathToNavigationProperty");
         }
