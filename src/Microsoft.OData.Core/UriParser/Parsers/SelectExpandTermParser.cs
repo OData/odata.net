@@ -109,7 +109,6 @@ namespace Microsoft.OData.UriParser
         /// <returns>A parsed PathSegmentToken representing the next segment in this path.</returns>
         private PathSegmentToken ParseSegment(PathSegmentToken previousSegment, bool allowRef)
         {
-            // TODO $count is defined in specification for expand, it is not supported now. Also note $count is not supported with star as expand option.
             if (this.lexer.CurrentToken.Text.StartsWith("$", StringComparison.Ordinal)
                 && (!allowRef || this.lexer.CurrentToken.Text != UriQueryConstants.RefSegment)
                 && this.lexer.CurrentToken.Text != UriQueryConstants.CountSegment)
@@ -122,7 +121,7 @@ namespace Microsoft.OData.UriParser
             {
                 if (previousSegment != null && previousSegment.Identifier == UriQueryConstants.Star && this.lexer.CurrentToken.GetIdentifier() != UriQueryConstants.RefSegment)
                 {
-                    // Star can only be followed with $ref
+                    // Star can only be followed with $ref. $count is not supported with star as expand option
                     throw new ODataException(ODataErrorStrings.ExpressionToken_OnlyRefAllowWithStarInExpand);
                 }
                 else if (previousSegment != null && previousSegment.Identifier == UriQueryConstants.RefSegment)
@@ -142,7 +141,6 @@ namespace Microsoft.OData.UriParser
                 // $count in only allowed in $expand. e.g $expand=NavProperty/$count
                 // It is not allowed in $select e.g $select=NavProperty/$count
                 throw new ODataException(ODataErrorStrings.ExpressionToken_DollarCountOnlyAllowedInExpand);
-
             }
 
             string propertyName;
