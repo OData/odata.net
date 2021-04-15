@@ -25,10 +25,10 @@ namespace Microsoft.OData.Json
     internal sealed partial class JsonWriter
     {
         /// <inheritdoc/>
-        public async Task StartPaddingFunctionScopeAsync()
+        public Task StartPaddingFunctionScopeAsync()
         {
             Debug.Assert(this.scopes.Count == 0, "Padding scope can only be the outer most scope.");
-            await this.StartScopeAsync(ScopeType.Padding).ConfigureAwait(false);
+            return this.StartScopeAsync(ScopeType.Padding);
         }
 
         /// <inheritdoc/>
@@ -46,9 +46,9 @@ namespace Microsoft.OData.Json
         }
 
         /// <inheritdoc/>
-        public async Task StartObjectScopeAsync()
+        public Task StartObjectScopeAsync()
         {
-            await this.StartScopeAsync(ScopeType.Object).ConfigureAwait(false);
+            return this.StartScopeAsync(ScopeType.Object);
         }
 
         /// <inheritdoc/>
@@ -66,9 +66,9 @@ namespace Microsoft.OData.Json
         }
 
         /// <inheritdoc/>
-        public async Task StartArrayScopeAsync()
+        public Task StartArrayScopeAsync()
         {
-            await this.StartScopeAsync(ScopeType.Array).ConfigureAwait(false);
+            return this.StartScopeAsync(ScopeType.Array);
         }
 
         /// <inheritdoc/>
@@ -106,9 +106,9 @@ namespace Microsoft.OData.Json
         }
 
         /// <inheritdoc/>
-        public async Task WritePaddingFunctionNameAsync(string functionName)
+        public Task WritePaddingFunctionNameAsync(string functionName)
         {
-            await this.writer.WriteAsync(functionName).ConfigureAwait(false);
+            return this.writer.WriteAsync(functionName);
         }
 
         /// <inheritdoc/>
@@ -253,9 +253,9 @@ namespace Microsoft.OData.Json
         }
 
         /// <inheritdoc/>
-        public async Task FlushAsync()
+        public Task FlushAsync()
         {
-            await this.writer.FlushAsync().ConfigureAwait(false);
+            return this.writer.FlushAsync();
         }
 
         /// <inheritdoc/>
@@ -303,13 +303,14 @@ namespace Microsoft.OData.Json
         }
 
         /// <inheritdoc/>
-        public async Task EndTextWriterValueScopeAsync()
+        public Task EndTextWriterValueScopeAsync()
         {
             if (!IsWritingJson)
             {
-                await this.writer.WriteAsync(JsonConstants.QuoteCharacter)
-                    .ConfigureAwait(false);
+                return this.writer.WriteAsync(JsonConstants.QuoteCharacter);
             }
+
+            return TaskUtils.CompletedTask;
         }
 
         /// <summary>
