@@ -96,6 +96,7 @@
     <Compile Include="..\Microsoft.OData.Core\UriParser\Aggregation\EntitySetAggregateToken.cs" Link="ALinq\UriParser\Aggregation\EntitySetAggregateToken.cs" />
     <Compile Include="..\Microsoft.OData.Core\UriParser\Aggregation\AggregateTokenBase.cs" Link="ALinq\UriParser\Aggregation\AggregateTokenBase.cs" />
     <Compile Include="..\Microsoft.OData.Core\UriParser\Aggregation\AggregateExpressionToken.cs" Link="ALinq\UriParser\Aggregation\AggregateExpressionToken.cs" />
+    <Compile Include="..\Microsoft.OData.Core\UriParser\SyntacticAst\CountSegmentToken.cs" Link="ALinq\UriParser\SyntacticAst\CountSegmentToken.cs" />
   </ItemGroup>
 
   <ItemGroup>
