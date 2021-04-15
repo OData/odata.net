@@ -76,22 +76,20 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="value">Float value to be written.</param>
-        internal static async Task WriteValueAsync(this TextWriter writer, float value)
+        internal static Task WriteValueAsync(this TextWriter writer, float value)
         {
             Debug.Assert(writer != null, "writer != null");
 
             if (JsonSharedUtils.IsFloatValueSerializedAsString(value))
             {
-                await writer.WriteQuotedAsync(value.ToString(ODataNumberFormatInfo))
-                    .ConfigureAwait(false);
+                return writer.WriteQuotedAsync(value.ToString(ODataNumberFormatInfo));
             }
             else
             {
                 // float.ToString() supports a max scale of six,
                 // whereas float.MinValue and float.MaxValue have 8 digits scale. Hence we need
                 // to use XmlConvert in all other cases, except infinity
-                await writer.WriteAsync(XmlConvert.ToString(value))
-                    .ConfigureAwait(false);
+                return writer.WriteAsync(XmlConvert.ToString(value));
             }
         }
 
