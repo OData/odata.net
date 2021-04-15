@@ -26,36 +26,24 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly Cache<CsdlSemanticsDecimalConstantExpression, IEnumerable<EdmError>> errorsCache = new Cache<CsdlSemanticsDecimalConstantExpression, IEnumerable<EdmError>>();
         private static readonly Func<CsdlSemanticsDecimalConstantExpression, IEnumerable<EdmError>> ComputeErrorsFunc = (me) => me.ComputeErrors();
 
-        public CsdlSemanticsDecimalConstantExpression(CsdlConstantExpression expression, CsdlSemanticsSchema schema)
-            : base(schema, expression)
+        public CsdlSemanticsDecimalConstantExpression(CsdlConstantExpression expression, CsdlSemanticsModel model)
+            : base(model, expression)
         {
             this.expression = expression;
         }
 
-        public override CsdlElement Element
-        {
-            get { return this.expression; }
-        }
+        public override CsdlElement Element => this.expression;
 
         public decimal Value
         {
             get { return this.valueCache.GetValue(this, ComputeValueFunc, null); }
         }
 
-        public IEdmTypeReference Type
-        {
-            get { return null; }
-        }
+        public IEdmTypeReference Type => null;
 
-        public override EdmExpressionKind ExpressionKind
-        {
-            get { return EdmExpressionKind.DecimalConstant; }
-        }
+        public override EdmExpressionKind ExpressionKind => EdmExpressionKind.DecimalConstant;
 
-        public EdmValueKind ValueKind
-        {
-            get { return this.expression.ValueKind; }
-        }
+        public EdmValueKind ValueKind => this.expression.ValueKind;
 
         public IEnumerable<EdmError> Errors
         {

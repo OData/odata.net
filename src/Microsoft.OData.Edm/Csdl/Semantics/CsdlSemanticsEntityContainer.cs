@@ -50,53 +50,32 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             this.fullName = EdmUtil.GetFullNameForSchemaElement(this.context?.Namespace, this.entityContainer?.Name);
         }
 
-        public EdmSchemaElementKind SchemaElementKind
-        {
-            get { return EdmSchemaElementKind.EntityContainer; }
-        }
+        public EdmSchemaElementKind SchemaElementKind => EdmSchemaElementKind.EntityContainer;
 
-        public override CsdlSemanticsModel Model
-        {
-            get { return this.context.Model; }
-        }
+        public override CsdlSemanticsModel Model => this.context.Model;
 
         public IEnumerable<IEdmEntityContainerElement> Elements
         {
             get { return this.elementsCache.GetValue(this, ComputeElementsFunc, null); }
         }
 
-        public string Namespace
-        {
-            get { return this.context.Namespace; }
-        }
+        public string Namespace => this.context.Namespace;
 
-        public string Name
-        {
-            get { return this.entityContainer.Name; }
-        }
+        public string Name => this.entityContainer.Name;
 
         /// <summary>
         /// Gets the full name of this schema element.
         /// </summary>
-        public string FullName
-        {
-            get { return this.fullName; }
-        }
+        public string FullName => this.fullName;
 
         public IEnumerable<EdmError> Errors
         {
             get { return this.errorsCache.GetValue(this, ComputeErrorsFunc, null); }
         }
 
-        public override CsdlElement Element
-        {
-            get { return this.entityContainer; }
-        }
+        public override CsdlElement Element => this.entityContainer;
 
-        internal CsdlSemanticsSchema Context
-        {
-            get { return this.context; }
-        }
+        internal CsdlSemanticsSchema Context => this.context;
 
         internal IEdmEntityContainer Extends
         {

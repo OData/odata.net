@@ -26,36 +26,24 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly Cache<CsdlSemanticsDurationConstantExpression, IEnumerable<EdmError>> errorsCache = new Cache<CsdlSemanticsDurationConstantExpression, IEnumerable<EdmError>>();
         private static readonly Func<CsdlSemanticsDurationConstantExpression, IEnumerable<EdmError>> ComputeErrorsFunc = (me) => me.ComputeErrors();
 
-        public CsdlSemanticsDurationConstantExpression(CsdlConstantExpression expression, CsdlSemanticsSchema schema)
-            : base(schema, expression)
+        public CsdlSemanticsDurationConstantExpression(CsdlConstantExpression expression, CsdlSemanticsModel model)
+            : base(model, expression)
         {
             this.expression = expression;
         }
 
-        public override CsdlElement Element
-        {
-            get { return this.expression; }
-        }
+        public override CsdlElement Element => this.expression;
 
         public TimeSpan Value
         {
             get { return this.valueCache.GetValue(this, ComputeValueFunc, null); }
         }
 
-        public IEdmTypeReference Type
-        {
-            get { return null; }
-        }
+        public IEdmTypeReference Type => null;
 
-        public override EdmExpressionKind ExpressionKind
-        {
-            get { return EdmExpressionKind.DurationConstant; }
-        }
+        public override EdmExpressionKind ExpressionKind => EdmExpressionKind.DurationConstant;
 
-        public EdmValueKind ValueKind
-        {
-            get { return this.expression.ValueKind; }
-        }
+        public EdmValueKind ValueKind => this.expression.ValueKind;
 
         public IEnumerable<EdmError> Errors
         {

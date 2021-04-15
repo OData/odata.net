@@ -14,44 +14,33 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// </summary>
     internal class CsdlSemanticsEntityReferenceTypeDefinition : CsdlSemanticsTypeDefinition, IEdmEntityReferenceType
     {
-        private readonly CsdlSemanticsSchema schema;
-
         private readonly Cache<CsdlSemanticsEntityReferenceTypeDefinition, IEdmEntityType> entityTypeCache = new Cache<CsdlSemanticsEntityReferenceTypeDefinition, IEdmEntityType>();
         private static readonly Func<CsdlSemanticsEntityReferenceTypeDefinition, IEdmEntityType> ComputeEntityTypeFunc = (me) => me.ComputeEntityType();
 
         private readonly CsdlEntityReferenceType entityTypeReference;
 
-        public CsdlSemanticsEntityReferenceTypeDefinition(CsdlSemanticsSchema schema, CsdlEntityReferenceType entityTypeReference)
+        public CsdlSemanticsEntityReferenceTypeDefinition(CsdlSemanticsModel model, CsdlEntityReferenceType entityTypeReference)
             : base(entityTypeReference)
         {
-            this.schema = schema;
+            Model = model;
             this.entityTypeReference = entityTypeReference;
         }
 
-        public override EdmTypeKind TypeKind
-        {
-            get { return EdmTypeKind.EntityReference; }
-        }
+        public override EdmTypeKind TypeKind => EdmTypeKind.EntityReference;
 
         public IEdmEntityType EntityType
         {
             get { return this.entityTypeCache.GetValue(this, ComputeEntityTypeFunc, null); }
         }
 
-        public override CsdlElement Element
-        {
-            get { return this.entityTypeReference; }
-        }
+        public override CsdlElement Element => this.entityTypeReference;
 
-        public override CsdlSemanticsModel Model
-        {
-            get { return this.schema.Model; }
-        }
+        public override CsdlSemanticsModel Model { get; }
 
         private IEdmEntityType ComputeEntityType()
         {
-            IEdmTypeReference type = CsdlSemanticsModel.WrapTypeReference(this.schema, this.entityTypeReference.EntityType);
-            return type.TypeKind() == EdmTypeKind.Entity ? type.AsEntity().EntityDefinition() : new UnresolvedEntityType(this.schema.UnresolvedName(type.FullName()), this.Location);
+            IEdmTypeReference type = CsdlSemanticsModel.WrapTypeReference(Model, this.entityTypeReference.EntityType);
+            return type.TypeKind() == EdmTypeKind.Entity ? type.AsEntity().EntityDefinition() : new UnresolvedEntityType(this.Model.ReplaceAlias(type.FullName()), this.Location);
         }
     }
 }

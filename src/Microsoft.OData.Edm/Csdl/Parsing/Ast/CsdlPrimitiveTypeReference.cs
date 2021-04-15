@@ -11,17 +11,12 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     /// </summary>
     internal class CsdlPrimitiveTypeReference : CsdlNamedTypeReference
     {
-        private readonly EdmPrimitiveTypeKind kind;
-
         public CsdlPrimitiveTypeReference(EdmPrimitiveTypeKind kind, string typeName, bool isNullable, CsdlLocation location)
             : base(typeName, isNullable, location)
         {
-            this.kind = kind;
+            Kind = kind;
         }
 
-        public EdmPrimitiveTypeKind Kind
-        {
-            get { return this.kind; }
-        }
+        public EdmPrimitiveTypeKind Kind { get; }
     }
 }

@@ -43,51 +43,23 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.membersCache.GetValue(this, ComputeMembersFunc, null); }
         }
 
-        bool IEdmEnumType.IsFlags
-        {
-            get { return this.enumeration.IsFlags; }
-        }
+        bool IEdmEnumType.IsFlags => this.enumeration.IsFlags;
 
-        EdmSchemaElementKind IEdmSchemaElement.SchemaElementKind
-        {
-            get { return EdmSchemaElementKind.TypeDefinition; }
-        }
+        EdmSchemaElementKind IEdmSchemaElement.SchemaElementKind => EdmSchemaElementKind.TypeDefinition;
 
-        public string Namespace
-        {
-            get { return this.Context.Namespace; }
-        }
+        public string Namespace => this.Context.Namespace;
 
-        public string FullName
-        {
-            get { return this.fullName; }
-        }
+        public string FullName => this.fullName;
 
-        string IEdmNamedElement.Name
-        {
-            get { return this.enumeration.Name; }
-        }
+        string IEdmNamedElement.Name => this.enumeration.Name;
 
-        public override EdmTypeKind TypeKind
-        {
-            get { return EdmTypeKind.Enum; }
-        }
+        public override EdmTypeKind TypeKind => EdmTypeKind.Enum;
 
-        public override CsdlSemanticsModel Model
-        {
-            get { return this.Context.Model; }
-        }
+        public override CsdlSemanticsModel Model => this.Context.Model;
 
-        public override CsdlElement Element
-        {
-            get { return this.enumeration; }
-        }
+        public override CsdlElement Element => this.enumeration;
 
-        public CsdlSemanticsSchema Context
-        {
-            get;
-            private set;
-        }
+        public CsdlSemanticsSchema Context { get; }
 
         protected override IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations()
         {

@@ -172,7 +172,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         CsdlSemanticsAnnotations annotations = new CsdlSemanticsAnnotations(schema, sourceAnnotations);
                         foreach (CsdlAnnotation sourceAnnotation in sourceAnnotations.Annotations)
                         {
-                            IEdmVocabularyAnnotation vocabAnnotation = this.WrapVocabularyAnnotation(sourceAnnotation, schema, null, annotations, sourceAnnotations.Qualifier);
+                            IEdmVocabularyAnnotation vocabAnnotation = this.WrapVocabularyAnnotation(sourceAnnotation, null, annotations, sourceAnnotations.Qualifier);
                             vocabAnnotation.SetSerializationLocation(this, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
                             vocabAnnotation.SetSchemaNamespace(this, schema.Namespace);
                             result.Add(vocabAnnotation);
@@ -289,7 +289,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 {
                     foreach (CsdlAnnotation annotation in annotations.Annotations.Annotations)
                     {
-                        IEdmVocabularyAnnotation vocabAnnotation = this.WrapVocabularyAnnotation(annotation, annotations.Context, null, annotations, annotations.Annotations.Qualifier);
+                        IEdmVocabularyAnnotation vocabAnnotation = this.WrapVocabularyAnnotation(annotation, null, annotations, annotations.Annotations.Qualifier);
                         vocabAnnotation.SetSerializationLocation(this, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
                         result.Add(vocabAnnotation);
                     }
@@ -330,69 +330,69 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             }
         }
 
-        internal static IEdmExpression WrapExpression(CsdlExpressionBase expression, IEdmEntityType bindingContext, CsdlSemanticsSchema schema)
+        internal static IEdmExpression WrapExpression(CsdlExpressionBase expression, IEdmEntityType bindingContext, CsdlSemanticsModel model)
         {
             if (expression != null)
             {
                 switch (expression.ExpressionKind)
                 {
                     case EdmExpressionKind.Cast:
-                        return new CsdlSemanticsCastExpression((CsdlCastExpression)expression, bindingContext, schema);
+                        return new CsdlSemanticsCastExpression((CsdlCastExpression)expression, bindingContext, model);
                     case EdmExpressionKind.BinaryConstant:
-                        return new CsdlSemanticsBinaryConstantExpression((CsdlConstantExpression)expression, schema);
+                        return new CsdlSemanticsBinaryConstantExpression((CsdlConstantExpression)expression, model);
                     case EdmExpressionKind.BooleanConstant:
-                        return new CsdlSemanticsBooleanConstantExpression((CsdlConstantExpression)expression, schema);
+                        return new CsdlSemanticsBooleanConstantExpression((CsdlConstantExpression)expression, model);
                     case EdmExpressionKind.Collection:
-                        return new CsdlSemanticsCollectionExpression((CsdlCollectionExpression)expression, bindingContext, schema);
+                        return new CsdlSemanticsCollectionExpression((CsdlCollectionExpression)expression, bindingContext, model);
                     case EdmExpressionKind.DateTimeOffsetConstant:
-                        return new CsdlSemanticsDateTimeOffsetConstantExpression((CsdlConstantExpression)expression, schema);
+                        return new CsdlSemanticsDateTimeOffsetConstantExpression((CsdlConstantExpression)expression, model);
                     case EdmExpressionKind.DecimalConstant:
-                        return new CsdlSemanticsDecimalConstantExpression((CsdlConstantExpression)expression, schema);
+                        return new CsdlSemanticsDecimalConstantExpression((CsdlConstantExpression)expression, model);
                     case EdmExpressionKind.EnumMember:
-                        return new CsdlSemanticsEnumMemberExpression((CsdlEnumMemberExpression)expression, bindingContext, schema);
+                        return new CsdlSemanticsEnumMemberExpression((CsdlEnumMemberExpression)expression, model);
                     case EdmExpressionKind.FloatingConstant:
-                        return new CsdlSemanticsFloatingConstantExpression((CsdlConstantExpression)expression, schema);
+                        return new CsdlSemanticsFloatingConstantExpression((CsdlConstantExpression)expression, model);
                     case EdmExpressionKind.Null:
-                        return new CsdlSemanticsNullExpression((CsdlConstantExpression)expression, schema);
+                        return new CsdlSemanticsNullExpression((CsdlConstantExpression)expression, model);
                     case EdmExpressionKind.FunctionApplication:
-                        return new CsdlSemanticsApplyExpression((CsdlApplyExpression)expression, bindingContext, schema);
+                        return new CsdlSemanticsApplyExpression((CsdlApplyExpression)expression, bindingContext, model);
                     case EdmExpressionKind.GuidConstant:
-                        return new CsdlSemanticsGuidConstantExpression((CsdlConstantExpression)expression, schema);
+                        return new CsdlSemanticsGuidConstantExpression((CsdlConstantExpression)expression, model);
                     case EdmExpressionKind.If:
-                        return new CsdlSemanticsIfExpression((CsdlIfExpression)expression, bindingContext, schema);
+                        return new CsdlSemanticsIfExpression((CsdlIfExpression)expression, bindingContext, model);
                     case EdmExpressionKind.IntegerConstant:
-                        return new CsdlSemanticsIntConstantExpression((CsdlConstantExpression)expression, schema);
+                        return new CsdlSemanticsIntConstantExpression((CsdlConstantExpression)expression, model);
                     case EdmExpressionKind.IsType:
-                        return new CsdlSemanticsIsTypeExpression((CsdlIsTypeExpression)expression, bindingContext, schema);
+                        return new CsdlSemanticsIsTypeExpression((CsdlIsTypeExpression)expression, bindingContext, model);
                     case EdmExpressionKind.LabeledExpressionReference:
-                        return new CsdlSemanticsLabeledExpressionReferenceExpression((CsdlLabeledExpressionReferenceExpression)expression, bindingContext, schema);
+                        return new CsdlSemanticsLabeledExpressionReferenceExpression((CsdlLabeledExpressionReferenceExpression)expression, bindingContext, model);
                     case EdmExpressionKind.Labeled:
-                        return schema.WrapLabeledElement((CsdlLabeledExpression)expression, bindingContext);
+                        return model.WrapLabeledElement((CsdlLabeledExpression)expression, bindingContext);
                     case EdmExpressionKind.Path:
-                        return new CsdlSemanticsPathExpression((CsdlPathExpression)expression, bindingContext, schema);
+                        return new CsdlSemanticsPathExpression((CsdlPathExpression)expression, bindingContext, model);
                     case EdmExpressionKind.PropertyPath:
-                        return new CsdlSemanticsPropertyPathExpression((CsdlPropertyPathExpression)expression, bindingContext, schema);
+                        return new CsdlSemanticsPropertyPathExpression((CsdlPropertyPathExpression)expression, bindingContext, model);
                     case EdmExpressionKind.NavigationPropertyPath:
-                        return new CsdlSemanticsNavigationPropertyPathExpression((CsdlNavigationPropertyPathExpression)expression, bindingContext, schema);
+                        return new CsdlSemanticsNavigationPropertyPathExpression((CsdlNavigationPropertyPathExpression)expression, bindingContext, model);
                     case EdmExpressionKind.Record:
-                        return new CsdlSemanticsRecordExpression((CsdlRecordExpression)expression, bindingContext, schema);
+                        return new CsdlSemanticsRecordExpression((CsdlRecordExpression)expression, bindingContext, model);
                     case EdmExpressionKind.StringConstant:
-                        return new CsdlSemanticsStringConstantExpression((CsdlConstantExpression)expression, schema);
+                        return new CsdlSemanticsStringConstantExpression((CsdlConstantExpression)expression, model);
                     case EdmExpressionKind.DurationConstant:
-                        return new CsdlSemanticsDurationConstantExpression((CsdlConstantExpression)expression, schema);
+                        return new CsdlSemanticsDurationConstantExpression((CsdlConstantExpression)expression, model);
                     case EdmExpressionKind.DateConstant:
-                        return new CsdlSemanticsDateConstantExpression((CsdlConstantExpression)expression, schema);
+                        return new CsdlSemanticsDateConstantExpression((CsdlConstantExpression)expression, model);
                     case EdmExpressionKind.TimeOfDayConstant:
-                        return new CsdlSemanticsTimeOfDayConstantExpression((CsdlConstantExpression)expression, schema);
+                        return new CsdlSemanticsTimeOfDayConstantExpression((CsdlConstantExpression)expression, model);
                     case EdmExpressionKind.AnnotationPath:
-                        return new CsdlSemanticsAnnotationPathExpression((CsdlAnnotationPathExpression)expression, bindingContext, schema);
+                        return new CsdlSemanticsAnnotationPathExpression((CsdlAnnotationPathExpression)expression, bindingContext, model);
                 }
             }
 
             return null;
         }
 
-        internal static IEdmTypeReference WrapTypeReference(CsdlSemanticsSchema schema, CsdlTypeReference type)
+        internal static IEdmTypeReference WrapTypeReference(CsdlSemanticsModel model, CsdlTypeReference type)
         {
             var typeReference = type as CsdlNamedTypeReference;
             if (typeReference != null)
@@ -413,21 +413,21 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         case EdmPrimitiveTypeKind.SByte:
                         case EdmPrimitiveTypeKind.Single:
                         case EdmPrimitiveTypeKind.Stream:
-                            return new CsdlSemanticsPrimitiveTypeReference(schema, primitiveReference);
+                            return new CsdlSemanticsPrimitiveTypeReference(model, primitiveReference);
 
                         case EdmPrimitiveTypeKind.Binary:
-                            return new CsdlSemanticsBinaryTypeReference(schema, (CsdlBinaryTypeReference)primitiveReference);
+                            return new CsdlSemanticsBinaryTypeReference(model, (CsdlBinaryTypeReference)primitiveReference);
 
                         case EdmPrimitiveTypeKind.DateTimeOffset:
                         case EdmPrimitiveTypeKind.Duration:
                         case EdmPrimitiveTypeKind.TimeOfDay:
-                            return new CsdlSemanticsTemporalTypeReference(schema, (CsdlTemporalTypeReference)primitiveReference);
+                            return new CsdlSemanticsTemporalTypeReference(model, (CsdlTemporalTypeReference)primitiveReference);
 
                         case EdmPrimitiveTypeKind.Decimal:
-                            return new CsdlSemanticsDecimalTypeReference(schema, (CsdlDecimalTypeReference)primitiveReference);
+                            return new CsdlSemanticsDecimalTypeReference(model, (CsdlDecimalTypeReference)primitiveReference);
 
                         case EdmPrimitiveTypeKind.String:
-                            return new CsdlSemanticsStringTypeReference(schema, (CsdlStringTypeReference)primitiveReference);
+                            return new CsdlSemanticsStringTypeReference(model, (CsdlStringTypeReference)primitiveReference);
 
                         case EdmPrimitiveTypeKind.Geography:
                         case EdmPrimitiveTypeKind.GeographyPoint:
@@ -445,7 +445,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         case EdmPrimitiveTypeKind.GeometryMultiPolygon:
                         case EdmPrimitiveTypeKind.GeometryMultiLineString:
                         case EdmPrimitiveTypeKind.GeometryMultiPoint:
-                            return new CsdlSemanticsSpatialTypeReference(schema, (CsdlSpatialTypeReference)primitiveReference);
+                            return new CsdlSemanticsSpatialTypeReference(model, (CsdlSpatialTypeReference)primitiveReference);
                     }
                 }
                 else
@@ -453,16 +453,16 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                     CsdlUntypedTypeReference csdlUntypedTypeReference = typeReference as CsdlUntypedTypeReference;
                     if (csdlUntypedTypeReference != null)
                     {
-                        return new CsdlSemanticsUntypedTypeReference(schema, csdlUntypedTypeReference);
+                        return new CsdlSemanticsUntypedTypeReference(model, csdlUntypedTypeReference);
                     }
 
-                    if (schema.FindType(typeReference.FullName) is IEdmTypeDefinition)
+                    if (model.FindType(typeReference.FullName) is IEdmTypeDefinition)
                     {
-                        return new CsdlSemanticsTypeDefinitionReference(schema, typeReference);
+                        return new CsdlSemanticsTypeDefinitionReference(model, typeReference);
                     }
                 }
 
-                return new CsdlSemanticsNamedTypeReference(schema, typeReference);
+                return new CsdlSemanticsNamedTypeReference(model, typeReference);
             }
 
             var typeExpression = type as CsdlExpressionTypeReference;
@@ -471,13 +471,13 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 var collectionType = typeExpression.TypeExpression as CsdlCollectionType;
                 if (collectionType != null)
                 {
-                    return new CsdlSemanticsCollectionTypeExpression(typeExpression, new CsdlSemanticsCollectionTypeDefinition(schema, collectionType));
+                    return new CsdlSemanticsCollectionTypeExpression(typeExpression, new CsdlSemanticsCollectionTypeDefinition(model, collectionType));
                 }
 
                 var entityReferenceType = typeExpression.TypeExpression as CsdlEntityReferenceType;
                 if (entityReferenceType != null)
                 {
-                    return new CsdlSemanticsEntityReferenceTypeExpression(typeExpression, new CsdlSemanticsEntityReferenceTypeDefinition(schema, entityReferenceType));
+                    return new CsdlSemanticsEntityReferenceTypeExpression(typeExpression, new CsdlSemanticsEntityReferenceTypeDefinition(model, entityReferenceType));
                 }
             }
 
@@ -495,7 +495,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                     List<IEdmVocabularyAnnotation> wrappedAnnotations = new List<IEdmVocabularyAnnotation>();
                     foreach (CsdlAnnotation vocabularyAnnotation in vocabularyAnnotations)
                     {
-                        IEdmVocabularyAnnotation vocabAnnotation = this.WrapVocabularyAnnotation(vocabularyAnnotation, schema, vocabularyAnnotatableElement, null, vocabularyAnnotation.Qualifier);
+                        IEdmVocabularyAnnotation vocabAnnotation = this.WrapVocabularyAnnotation(vocabularyAnnotation, vocabularyAnnotatableElement, null, vocabularyAnnotation.Qualifier);
                         vocabAnnotation.SetSerializationLocation(this, EdmVocabularyAnnotationSerializationLocation.Inline);
                         wrappedAnnotations.Add(vocabAnnotation);
                     }
@@ -507,12 +507,32 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return Enumerable.Empty<IEdmVocabularyAnnotation>();
         }
 
-        private IEdmVocabularyAnnotation WrapVocabularyAnnotation(CsdlAnnotation annotation, CsdlSemanticsSchema schema, IEdmVocabularyAnnotatable targetContext, CsdlSemanticsAnnotations annotationsContext, string qualifier)
+        private IEdmVocabularyAnnotation WrapVocabularyAnnotation(CsdlAnnotation annotation, IEdmVocabularyAnnotatable targetContext, CsdlSemanticsAnnotations annotationsContext, string qualifier)
         {
             return EdmUtil.DictionaryGetOrUpdate(
                 this.wrappedAnnotations,
                 annotation,
-                ann => new CsdlSemanticsVocabularyAnnotation(schema, targetContext, annotationsContext, ann, qualifier));
+                ann => new CsdlSemanticsVocabularyAnnotation(this, targetContext, annotationsContext, ann, qualifier));
+        }
+
+        public IEdmLabeledExpression FindLabeledElement(string label, IEdmEntityType bindingContext)
+        {
+            foreach (var schema in this.schemata)
+            {
+                return schema.FindLabeledElement(label, bindingContext);
+            }
+
+            return null;
+        }
+
+        public IEdmLabeledExpression WrapLabeledElement(CsdlLabeledExpression labeledElement, IEdmEntityType bindingContext)
+        {
+            foreach (var schema in this.schemata)
+            {
+                return schema.WrapLabeledElement(labeledElement, bindingContext);
+            }
+
+            return null;
         }
 
         private void AddSchema(CsdlSchema schema)

@@ -20,7 +20,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     internal class CsdlSemanticsVocabularyAnnotation : CsdlSemanticsElement, IEdmVocabularyAnnotation, IEdmCheckable
     {
         protected readonly CsdlAnnotation Annotation;
-        private readonly CsdlSemanticsSchema schema;
         private readonly string qualifier;
         private readonly IEdmVocabularyAnnotatable targetContext;
         private readonly CsdlSemanticsAnnotations annotationsContext;
@@ -34,35 +33,21 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly Cache<CsdlSemanticsVocabularyAnnotation, IEdmVocabularyAnnotatable> targetCache = new Cache<CsdlSemanticsVocabularyAnnotation, IEdmVocabularyAnnotatable>();
         private static readonly Func<CsdlSemanticsVocabularyAnnotation, IEdmVocabularyAnnotatable> ComputeTargetFunc = (me) => me.ComputeTarget();
 
-        public CsdlSemanticsVocabularyAnnotation(CsdlSemanticsSchema schema, IEdmVocabularyAnnotatable targetContext, CsdlSemanticsAnnotations annotationsContext, CsdlAnnotation annotation, string qualifier)
+        public CsdlSemanticsVocabularyAnnotation(CsdlSemanticsModel model, IEdmVocabularyAnnotatable targetContext, CsdlSemanticsAnnotations annotationsContext, CsdlAnnotation annotation, string qualifier)
             : base(annotation)
         {
-            this.schema = schema;
+            this.Model = model;
             this.Annotation = annotation;
             this.qualifier = qualifier ?? annotation.Qualifier;
             this.targetContext = targetContext;
             this.annotationsContext = annotationsContext;
         }
 
-        public CsdlSemanticsSchema Schema
-        {
-            get { return this.schema; }
-        }
+        public override CsdlElement Element => this.Annotation;
 
-        public override CsdlElement Element
-        {
-            get { return this.Annotation; }
-        }
+        public string Qualifier => this.qualifier;
 
-        public string Qualifier
-        {
-            get { return this.qualifier; }
-        }
-
-        public override CsdlSemanticsModel Model
-        {
-            get { return this.schema.Model; }
-        }
+        public override CsdlSemanticsModel Model { get; }
 
         public IEdmTerm Term
         {
@@ -123,7 +108,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         protected IEdmTerm ComputeTerm()
         {
-            return this.Schema.FindTerm(this.Annotation.Term) ?? new UnresolvedVocabularyTerm(this.Schema.UnresolvedName(this.Annotation.Term));
+            return this.Model.FindTerm(this.Annotation.Term) ?? new UnresolvedVocabularyTerm(this.Model.ReplaceAlias(this.Annotation.Term));
         }
 
         private IEdmExpression ComputeValue()
@@ -131,7 +116,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             IEdmTypeReference termType = Term is UnresolvedVocabularyTerm ? null : Term.Type;
             CsdlExpressionBase adjustedExpression = AdjustStringConstantUsingTermType((this.Annotation).Expression, termType);
 
-            return CsdlSemanticsModel.WrapExpression(adjustedExpression, TargetBindingContext, this.Schema);
+            return CsdlSemanticsModel.WrapExpression(adjustedExpression, TargetBindingContext, this.Model);
         }
 
         private static CsdlExpressionBase AdjustStringConstantUsingTermType(CsdlExpressionBase expression, IEdmTypeReference termType)
@@ -301,36 +286,36 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 if (targetSegmentsCount == 1)
                 {
                     string elementName = targetSegments[0];
-                    IEdmSchemaType type = this.schema.FindType(elementName);
+                    IEdmSchemaType type = this.Model.FindType(elementName);
                     if (type != null)
                     {
                         return type;
                     }
 
-                    IEdmTerm term = this.schema.FindTerm(elementName);
+                    IEdmTerm term = this.Model.FindTerm(elementName);
                     if (term != null)
                     {
                         return term;
                     }
 
-                    IEdmOperation operation = this.FindParameterizedOperation(elementName, this.Schema.FindOperations, this.CreateAmbiguousOperation);
+                    IEdmOperation operation = this.FindParameterizedOperation(elementName, this.Model.FindOperations, this.CreateAmbiguousOperation);
                     if (operation != null)
                     {
                         return operation;
                     }
 
-                    container = this.schema.FindEntityContainer(elementName);
+                    container = this.Model.FindEntityContainer(elementName);
                     if (container != null)
                     {
                         return container;
                     }
 
-                    return new UnresolvedType(this.Schema.UnresolvedName(targetSegments[0]), this.Location);
+                    return new UnresolvedType(this.Model.ReplaceAlias(targetSegments[0]), this.Location);
                 }
 
                 if (targetSegmentsCount == 2)
                 {
-                    container = this.schema.FindEntityContainer(targetSegments[0]);
+                    container = this.Model.FindEntityContainer(targetSegments[0]);
                     if (container != null)
                     {
                         IEdmEntityContainerElement containerElement = container.FindEntitySetExtended(targetSegments[1]);
@@ -348,7 +333,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         return new UnresolvedEntitySet(targetSegments[1], container, this.Location);
                     }
 
-                    IEdmSchemaType type = this.schema.FindType(targetSegments[0]);
+                    IEdmSchemaType type = this.Model.FindType(targetSegments[0]);
                     if (type != null)
                     {
                         IEdmStructuredType structuredType;
@@ -377,7 +362,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         }
                     }
 
-                    IEdmOperation operation = this.FindParameterizedOperation(targetSegments[0], this.Schema.FindOperations, this.CreateAmbiguousOperation);
+                    IEdmOperation operation = this.FindParameterizedOperation(targetSegments[0], this.Model.FindOperations, this.CreateAmbiguousOperation);
                     if (operation != null)
                     {
                         // $ReturnType
@@ -400,7 +385,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         return new UnresolvedParameter(operation, targetSegments[1], this.Location);
                     }
 
-                    return new UnresolvedProperty(new UnresolvedEntityType(this.Schema.UnresolvedName(targetSegments[0]), this.Location), targetSegments[1], this.Location);
+                    return new UnresolvedProperty(new UnresolvedEntityType(this.Model.ReplaceAlias(targetSegments[0]), this.Location), targetSegments[1], this.Location);
                 }
 
                 if (targetSegmentsCount == 3)
@@ -553,13 +538,13 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                     switch (typeInformation[0])
                     {
                         case CsdlConstants.Value_Collection:
-                            isMatch = parameter.Type.IsCollection() && this.Schema.FindType(typeInformation[1]).IsEquivalentTo(parameter.Type.AsCollection().ElementType().Definition);
+                            isMatch = parameter.Type.IsCollection() && this.Model.FindType(typeInformation[1]).IsEquivalentTo(parameter.Type.AsCollection().ElementType().Definition);
                             break;
                         case CsdlConstants.Value_Ref:
-                            isMatch = parameter.Type.IsEntityReference() && this.Schema.FindType(typeInformation[1]).IsEquivalentTo(parameter.Type.AsEntityReference().EntityType());
+                            isMatch = parameter.Type.IsEntityReference() && this.Model.FindType(typeInformation[1]).IsEquivalentTo(parameter.Type.AsEntityReference().EntityType());
                             break;
                         default:
-                            isMatch = EdmCoreModel.Instance.FindDeclaredType(parameterTypeNameEnumerator.Current).IsEquivalentTo(parameter.Type.Definition) || this.Schema.FindType(parameterTypeNameEnumerator.Current).IsEquivalentTo(parameter.Type.Definition);
+                            isMatch = EdmCoreModel.Instance.FindDeclaredType(parameterTypeNameEnumerator.Current).IsEquivalentTo(parameter.Type.Definition) || this.Model.FindType(parameterTypeNameEnumerator.Current).IsEquivalentTo(parameter.Type.Definition);
                             break;
                     }
 

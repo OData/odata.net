@@ -14,42 +14,32 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// </summary>
     internal class CsdlSemanticsCollectionTypeDefinition : CsdlSemanticsTypeDefinition, IEdmCollectionType
     {
-        private readonly CsdlSemanticsSchema schema;
         private readonly CsdlCollectionType collection;
 
         private readonly Cache<CsdlSemanticsCollectionTypeDefinition, IEdmTypeReference> elementTypeCache = new Cache<CsdlSemanticsCollectionTypeDefinition, IEdmTypeReference>();
         private static readonly Func<CsdlSemanticsCollectionTypeDefinition, IEdmTypeReference> ComputeElementTypeFunc = (me) => me.ComputeElementType();
 
-        public CsdlSemanticsCollectionTypeDefinition(CsdlSemanticsSchema schema, CsdlCollectionType collection)
+        public CsdlSemanticsCollectionTypeDefinition(CsdlSemanticsModel model, CsdlCollectionType collection)
             : base(collection)
         {
+            Model = model;
             this.collection = collection;
-            this.schema = schema;
         }
 
-        public override EdmTypeKind TypeKind
-        {
-            get { return EdmTypeKind.Collection; }
-        }
+        public override EdmTypeKind TypeKind => EdmTypeKind.Collection;
 
         public IEdmTypeReference ElementType
         {
             get { return this.elementTypeCache.GetValue(this, ComputeElementTypeFunc, null); }
         }
 
-        public override CsdlSemanticsModel Model
-        {
-            get { return this.schema.Model; }
-        }
+        public override CsdlSemanticsModel Model { get; }
 
-        public override CsdlElement Element
-        {
-            get { return this.collection; }
-        }
+        public override CsdlElement Element => this.collection;
 
         private IEdmTypeReference ComputeElementType()
         {
-            return CsdlSemanticsModel.WrapTypeReference(this.schema, this.collection.ElementType);
+            return CsdlSemanticsModel.WrapTypeReference(this.Model, this.collection.ElementType);
         }
     }
 }

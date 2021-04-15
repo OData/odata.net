@@ -33,53 +33,29 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             this.fullName = EdmUtil.GetFullNameForSchemaElement(this.Context?.Namespace, this.term?.Name);
         }
 
-        public string Name
-        {
-            get { return this.term.Name; }
-        }
+        public string Name => this.term.Name;
 
-        public string Namespace
-        {
-            get { return this.Context.Namespace; }
-        }
+        public string Namespace => this.Context.Namespace;
 
         /// <summary>
         /// Gets the full name of this schema element.
         /// </summary>
-        public string FullName
-        {
-            get { return this.fullName; }
-        }
+        public string FullName => this.fullName;
 
-        public EdmSchemaElementKind SchemaElementKind
-        {
-            get { return EdmSchemaElementKind.Term; }
-        }
+        public EdmSchemaElementKind SchemaElementKind => EdmSchemaElementKind.Term;
 
         public IEdmTypeReference Type
         {
             get { return this.typeCache.GetValue(this, ComputeTypeFunc, null); }
         }
 
-        public string AppliesTo
-        {
-            get { return this.term.AppliesTo; }
-        }
+        public string AppliesTo => this.term.AppliesTo;
 
-        public string DefaultValue
-        {
-            get { return this.term.DefaultValue; }
-        }
+        public string DefaultValue => this.term.DefaultValue;
 
-        public override CsdlSemanticsModel Model
-        {
-            get { return this.Context.Model; }
-        }
+        public override CsdlSemanticsModel Model => this.Context.Model;
 
-        public override CsdlElement Element
-        {
-            get { return this.term; }
-        }
+        public override CsdlElement Element => this.term;
 
         protected override IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations()
         {
@@ -88,7 +64,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         private IEdmTypeReference ComputeType()
         {
-            return CsdlSemanticsModel.WrapTypeReference(this.Context, this.term.Type);
+            return CsdlSemanticsModel.WrapTypeReference(this.Model, this.term.Type);
         }
     }
 }

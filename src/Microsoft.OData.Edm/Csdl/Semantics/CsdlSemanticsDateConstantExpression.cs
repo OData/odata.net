@@ -26,36 +26,24 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly Cache<CsdlSemanticsDateConstantExpression, IEnumerable<EdmError>> errorsCache = new Cache<CsdlSemanticsDateConstantExpression, IEnumerable<EdmError>>();
         private static readonly Func<CsdlSemanticsDateConstantExpression, IEnumerable<EdmError>> ComputeErrorsFunc = (me) => me.ComputeErrors();
 
-        public CsdlSemanticsDateConstantExpression(CsdlConstantExpression expression, CsdlSemanticsSchema schema)
-            : base(schema, expression)
+        public CsdlSemanticsDateConstantExpression(CsdlConstantExpression expression, CsdlSemanticsModel model)
+            : base(model, expression)
         {
             this.expression = expression;
         }
 
-        public override CsdlElement Element
-        {
-            get { return this.expression; }
-        }
+        public override CsdlElement Element => this.expression;
 
         public Date Value
         {
             get { return this.valueCache.GetValue(this, ComputeValueFunc, null); }
         }
 
-        public IEdmTypeReference Type
-        {
-            get { return null; }
-        }
+        public IEdmTypeReference Type => null;
 
-        public override EdmExpressionKind ExpressionKind
-        {
-            get { return EdmExpressionKind.DateConstant; }
-        }
+        public override EdmExpressionKind ExpressionKind => EdmExpressionKind.DateConstant;
 
-        public EdmValueKind ValueKind
-        {
-            get { return this.expression.ValueKind; }
-        }
+        public EdmValueKind ValueKind => this.expression.ValueKind;
 
         public IEnumerable<EdmError> Errors
         {

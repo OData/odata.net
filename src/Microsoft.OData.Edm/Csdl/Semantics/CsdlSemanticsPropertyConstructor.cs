@@ -50,7 +50,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         private IEdmExpression ComputeValue()
         {
-            return CsdlSemanticsModel.WrapExpression(this.property.Expression, this.context.BindingContext, this.context.Schema);
+            return CsdlSemanticsModel.WrapExpression(this.property.Expression, this.context.BindingContext, this.context.Model);
         }
     }
 }

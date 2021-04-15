@@ -12,7 +12,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl.Parsing.Ast;
     using Microsoft.OData.Edm.Vocabularies;
@@ -50,30 +49,15 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             this.path = new EdmPathExpression(this.navigationSource.Name);
         }
 
-        public override CsdlSemanticsModel Model
-        {
-            get { return this.container.Model; }
-        }
+        public override CsdlSemanticsModel Model => this.container.Model;
 
-        public IEdmEntityContainer Container
-        {
-            get { return this.container; }
-        }
+        public IEdmEntityContainer Container => this.container;
 
-        public override CsdlElement Element
-        {
-            get { return this.navigationSource; }
-        }
+        public override CsdlElement Element => this.navigationSource;
 
-        public string Name
-        {
-            get { return this.navigationSource.Name; }
-        }
+        public string Name => this.navigationSource.Name;
 
-        public IEdmPathExpression Path
-        {
-            get { return this.path; }
-        }
+        public IEdmPathExpression Path => this.path;
 
         public abstract IEdmType Type { get; }
 

@@ -10,14 +10,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
     internal class CsdlSemanticsSpatialTypeReference : CsdlSemanticsPrimitiveTypeReference, IEdmSpatialTypeReference
     {
-        public CsdlSemanticsSpatialTypeReference(CsdlSemanticsSchema schema, CsdlSpatialTypeReference reference)
-            : base(schema, reference)
+        public CsdlSemanticsSpatialTypeReference(CsdlSemanticsModel model, CsdlSpatialTypeReference reference)
+            : base(model, reference)
         {
         }
 
-        public int? SpatialReferenceIdentifier
-        {
-            get { return ((CsdlSpatialTypeReference)this.Reference).Srid; }
-        }
+        public int? SpatialReferenceIdentifier => ((CsdlSpatialTypeReference)Reference).Srid;
     }
 }

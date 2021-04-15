@@ -16,7 +16,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     internal class CsdlSemanticsApplyExpression : CsdlSemanticsExpression, IEdmApplyExpression, IEdmCheckable
     {
         private readonly CsdlApplyExpression expression;
-        private readonly CsdlSemanticsSchema schema;
         private readonly IEdmEntityType bindingContext;
 
         private readonly Cache<CsdlSemanticsApplyExpression, IEdmFunction> appliedFunctionCache = new Cache<CsdlSemanticsApplyExpression, IEdmFunction>();
@@ -25,23 +24,16 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly Cache<CsdlSemanticsApplyExpression, IEnumerable<IEdmExpression>> argumentsCache = new Cache<CsdlSemanticsApplyExpression, IEnumerable<IEdmExpression>>();
         private static readonly Func<CsdlSemanticsApplyExpression, IEnumerable<IEdmExpression>> ComputeArgumentsFunc = (me) => me.ComputeArguments();
 
-        public CsdlSemanticsApplyExpression(CsdlApplyExpression expression, IEdmEntityType bindingContext, CsdlSemanticsSchema schema)
-            : base(schema, expression)
+        public CsdlSemanticsApplyExpression(CsdlApplyExpression expression, IEdmEntityType bindingContext, CsdlSemanticsModel model)
+            : base(model, expression)
         {
             this.expression = expression;
             this.bindingContext = bindingContext;
-            this.schema = schema;
         }
 
-        public override CsdlElement Element
-        {
-            get { return this.expression; }
-        }
+        public override CsdlElement Element => this.expression;
 
-        public override EdmExpressionKind ExpressionKind
-        {
-            get { return EdmExpressionKind.FunctionApplication; }
-        }
+        public override EdmExpressionKind ExpressionKind => EdmExpressionKind.FunctionApplication;
 
         public IEdmFunction AppliedFunction
         {
@@ -73,7 +65,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 return null;
             }
 
-            IEnumerable<IEdmFunction> candidateFunctions = this.schema.FindOperations(this.expression.Function).OfType<IEdmFunction>();
+            IEnumerable<IEdmFunction> candidateFunctions = this.Model.FindOperations(this.expression.Function).OfType<IEdmFunction>();
             int candidateCount = candidateFunctions.Count();
             if (candidateCount == 0)
             {
@@ -114,7 +106,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 }
                 else
                 {
-                    result.Add(CsdlSemanticsModel.WrapExpression(argument, this.bindingContext, this.schema));
+                    result.Add(CsdlSemanticsModel.WrapExpression(argument, this.bindingContext, Model));
                 }
             }
 

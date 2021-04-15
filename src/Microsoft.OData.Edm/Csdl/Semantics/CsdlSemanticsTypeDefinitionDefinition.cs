@@ -36,43 +36,22 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.underlyingTypeCache.GetValue(this, ComputeUnderlyingTypeFunc, null); }
         }
 
-        EdmSchemaElementKind IEdmSchemaElement.SchemaElementKind
-        {
-            get { return EdmSchemaElementKind.TypeDefinition; }
-        }
+        EdmSchemaElementKind IEdmSchemaElement.SchemaElementKind => EdmSchemaElementKind.TypeDefinition;
 
-        public string Namespace
-        {
-            get { return this.context.Namespace; }
-        }
+        public string Namespace => this.context.Namespace;
 
-        string IEdmNamedElement.Name
-        {
-            get { return this.typeDefinition.Name; }
-        }
+        string IEdmNamedElement.Name => this.typeDefinition.Name;
 
         /// <summary>
         /// Gets the full name of this schema element.
         /// </summary>
-        public string FullName
-        {
-            get { return this.fullName; }
-        }
+        public string FullName => this.fullName;
 
-        public override EdmTypeKind TypeKind
-        {
-            get { return EdmTypeKind.TypeDefinition; }
-        }
+        public override EdmTypeKind TypeKind => EdmTypeKind.TypeDefinition;
 
-        public override CsdlSemanticsModel Model
-        {
-            get { return this.context.Model; }
-        }
+        public override CsdlSemanticsModel Model => this.context.Model;
 
-        public override CsdlElement Element
-        {
-            get { return this.typeDefinition; }
-        }
+        public override CsdlElement Element => this.typeDefinition;
 
         protected override IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations()
         {

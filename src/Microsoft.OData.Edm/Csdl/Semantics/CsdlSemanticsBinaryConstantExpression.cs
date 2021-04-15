@@ -26,36 +26,24 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly Cache<CsdlSemanticsBinaryConstantExpression, IEnumerable<EdmError>> errorsCache = new Cache<CsdlSemanticsBinaryConstantExpression, IEnumerable<EdmError>>();
         private static readonly Func<CsdlSemanticsBinaryConstantExpression, IEnumerable<EdmError>> ComputeErrorsFunc = (me) => me.ComputeErrors();
 
-        public CsdlSemanticsBinaryConstantExpression(CsdlConstantExpression expression, CsdlSemanticsSchema schema)
-            : base(schema, expression)
+        public CsdlSemanticsBinaryConstantExpression(CsdlConstantExpression expression, CsdlSemanticsModel model)
+            : base(model, expression)
         {
             this.expression = expression;
         }
 
-        public override CsdlElement Element
-        {
-            get { return this.expression; }
-        }
+        public override CsdlElement Element => this.expression;
 
         public byte[] Value
         {
             get { return this.valueCache.GetValue(this, ComputeValueFunc, null); }
         }
 
-        public override EdmExpressionKind ExpressionKind
-        {
-            get { return EdmExpressionKind.BinaryConstant; }
-        }
+        public override EdmExpressionKind ExpressionKind => EdmExpressionKind.BinaryConstant;
 
-        public EdmValueKind ValueKind
-        {
-            get { return this.expression.ValueKind; }
-        }
+        public EdmValueKind ValueKind => this.expression.ValueKind;
 
-        public IEdmTypeReference Type
-        {
-            get { return null; }
-        }
+        public IEdmTypeReference Type => null;
 
         public IEnumerable<EdmError> Errors
         {

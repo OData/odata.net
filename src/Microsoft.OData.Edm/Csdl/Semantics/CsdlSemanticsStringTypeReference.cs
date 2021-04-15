@@ -13,24 +13,15 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// </summary>
     internal class CsdlSemanticsStringTypeReference : CsdlSemanticsPrimitiveTypeReference, IEdmStringTypeReference
     {
-        public CsdlSemanticsStringTypeReference(CsdlSemanticsSchema schema, CsdlStringTypeReference reference)
-            : base(schema, reference)
+        public CsdlSemanticsStringTypeReference(CsdlSemanticsModel model, CsdlStringTypeReference reference)
+            : base(model, reference)
         {
         }
 
-        public bool IsUnbounded
-        {
-            get { return ((CsdlStringTypeReference)this.Reference).IsUnbounded; }
-        }
+        public bool IsUnbounded => ((CsdlStringTypeReference)Reference).IsUnbounded;
 
-        public int? MaxLength
-        {
-            get { return ((CsdlStringTypeReference)this.Reference).MaxLength; }
-        }
+        public int? MaxLength => ((CsdlStringTypeReference)Reference).MaxLength;
 
-        public bool? IsUnicode
-        {
-            get { return ((CsdlStringTypeReference)this.Reference).IsUnicode; }
-        }
+        public bool? IsUnicode => ((CsdlStringTypeReference)Reference).IsUnicode;
     }
 }

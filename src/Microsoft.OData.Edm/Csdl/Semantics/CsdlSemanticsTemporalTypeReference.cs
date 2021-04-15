@@ -13,14 +13,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// </summary>
     internal class CsdlSemanticsTemporalTypeReference : CsdlSemanticsPrimitiveTypeReference, IEdmTemporalTypeReference
     {
-        public CsdlSemanticsTemporalTypeReference(CsdlSemanticsSchema schema, CsdlTemporalTypeReference reference)
-            : base(schema, reference)
+        public CsdlSemanticsTemporalTypeReference(CsdlSemanticsModel model, CsdlTemporalTypeReference reference)
+            : base(model, reference)
         {
         }
 
-        public int? Precision
-        {
-            get { return ((CsdlTemporalTypeReference)this.Reference).Precision; }
-        }
+        public int? Precision => ((CsdlTemporalTypeReference)this.Reference).Precision;
     }
 }

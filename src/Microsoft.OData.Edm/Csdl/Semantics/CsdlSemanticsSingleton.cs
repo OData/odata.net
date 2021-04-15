@@ -24,10 +24,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.typeCache.GetValue(this, ComputeElementTypeFunc, null); }
         }
 
-        public override EdmContainerElementKind ContainerElementKind
-        {
-            get { return EdmContainerElementKind.Singleton; }
-        }
+        public override EdmContainerElementKind ContainerElementKind => EdmContainerElementKind.Singleton;
 
         protected override IEdmEntityType ComputeElementType()
         {

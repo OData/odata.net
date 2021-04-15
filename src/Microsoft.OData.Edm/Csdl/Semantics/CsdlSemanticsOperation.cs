@@ -40,38 +40,20 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         public abstract EdmSchemaElementKind SchemaElementKind { get; }
 
-        public override CsdlSemanticsModel Model
-        {
-            get { return this.Context.Model; }
-        }
+        public override CsdlSemanticsModel Model => this.Context.Model;
 
-        public string Name
-        {
-            get { return this.operation.Name; }
-        }
+        public string Name => this.operation.Name;
 
         /// <summary>
         /// Gets the full name of this schema element.
         /// </summary>
-        public string FullName
-        {
-            get { return this.fullName; }
-        }
+        public string FullName => this.fullName;
 
-        public override CsdlElement Element
-        {
-            get { return this.operation; }
-        }
+        public override CsdlElement Element => this.operation;
 
-        public string Namespace
-        {
-            get { return this.Context.Namespace; }
-        }
+        public string Namespace => this.Context.Namespace;
 
-        public bool IsBound
-        {
-            get { return this.operation.IsBound; }
-        }
+        public bool IsBound => this.operation.IsBound;
 
         public IEdmPathExpression EntitySetPath
         {
@@ -104,7 +86,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.parametersCache.GetValue(this, ComputeParametersFunc, null); }
         }
 
-        public CsdlSemanticsSchema Context { get; private set; }
+        public CsdlSemanticsSchema Context { get; }
 
         public IEdmOperationParameter FindParameter(string name)
         {

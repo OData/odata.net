@@ -16,16 +16,13 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         /// <summary>
         /// Initializes a new instance of the <see cref="CsdlSemanticsAction"/> class.
         /// </summary>
-        /// <param name="context">The context.</param>
+        /// <param name="schema">The schema.</param>
         /// <param name="action">The action.</param>
-        public CsdlSemanticsAction(CsdlSemanticsSchema context, CsdlAction action)
-            : base(context, action)
+        public CsdlSemanticsAction(CsdlSemanticsSchema schema, CsdlAction action)
+            : base(schema, action)
         {
         }
 
-        public override EdmSchemaElementKind SchemaElementKind
-        {
-            get { return EdmSchemaElementKind.Action; }
-        }
+        public override EdmSchemaElementKind SchemaElementKind => EdmSchemaElementKind.Action;
     }
 }

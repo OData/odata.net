@@ -56,7 +56,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         private IEdmTypeReference ComputeType()
         {
-            return CsdlSemanticsModel.WrapTypeReference(this.declaringOperation.Context, this.operationReturn.ReturnType);
+            return CsdlSemanticsModel.WrapTypeReference(Model, this.operationReturn.ReturnType);
         }
     }
 }

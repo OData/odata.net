@@ -30,50 +30,26 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             this.context = context;
         }
 
-        public virtual bool IsAbstract
-        {
-            get { return false; }
-        }
+        public virtual bool IsAbstract => false;
 
-        public virtual bool IsOpen
-        {
-            get { return false; }
-        }
+        public virtual bool IsOpen => false;
 
-        public abstract IEdmStructuredType BaseType
-        {
-            get;
-        }
+        public abstract IEdmStructuredType BaseType { get; }
 
-        public override CsdlElement Element
-        {
-            get { return this.MyStructured; }
-        }
+        public override CsdlElement Element => this.MyStructured;
 
-        public override CsdlSemanticsModel Model
-        {
-            get { return this.context.Model; }
-        }
+        public override CsdlSemanticsModel Model => this.context.Model;
 
-        public string Namespace
-        {
-            get { return this.context.Namespace; }
-        }
+        public string Namespace => this.context.Namespace;
 
-        public CsdlSemanticsSchema Context
-        {
-            get { return this.context; }
-        }
+        public CsdlSemanticsSchema Context => this.context;
 
         public IEnumerable<IEdmProperty> DeclaredProperties
         {
             get { return this.declaredPropertiesCache.GetValue(this, ComputeDeclaredPropertiesFunc, null); }
         }
 
-        protected abstract CsdlStructuredType MyStructured
-        {
-            get;
-        }
+        protected abstract CsdlStructuredType MyStructured { get; }
 
         private IDictionary<string, IEdmProperty> PropertiesDictionary
         {
