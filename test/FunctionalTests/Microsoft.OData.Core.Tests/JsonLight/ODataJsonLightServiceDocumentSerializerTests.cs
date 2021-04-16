@@ -8,8 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Microsoft.OData.JsonLight;
+using System.Threading.Tasks;
 using Microsoft.OData.Edm;
+using Microsoft.OData.JsonLight;
 using Xunit;
 
 namespace Microsoft.OData.Tests.JsonLight
@@ -112,7 +113,186 @@ namespace Microsoft.OData.Tests.JsonLight
             WriteServiceDocumentShouldError(serviceDocument).Throws<ODataException>(Strings.ValidationUtils_WorkspaceResourceMustNotContainNullItem);
         }
 
-        private static ODataJsonLightServiceDocumentSerializer CreateODataJsonLightServiceDocumentSerializer(MemoryStream memoryStream, IODataPayloadUriConverter urlResolver = null)
+        public static IEnumerable<object[]> GetWriteServiceDocumentTestData()
+        {
+            yield return new object[]
+            {
+                new ODataServiceDocument {},
+                "{\"value\":[]}"
+            };
+
+            var entitySets = new List<ODataEntitySetInfo>
+            {
+                new ODataEntitySetInfo { Name = "Customers", Title = "Customers", Url = new Uri("http://tempuri.org/Customers") },
+                new ODataEntitySetInfo { Name = "Orders", Title = "Orders", Url = new Uri("http://tempuri.org/Orders") }
+            };
+
+            // EntitySet
+
+            yield return new object[]
+            {
+                new ODataServiceDocument
+                {
+                    EntitySets = entitySets
+                },
+                "{\"value\":[" +
+                "{\"name\":\"Customers\",\"kind\":\"EntitySet\",\"url\":\"http://tempuri.org/Customers\"}," +
+                "{\"name\":\"Orders\",\"kind\":\"EntitySet\",\"url\":\"http://tempuri.org/Orders\"}" +
+                "]}"
+            };
+
+            var singletons = new List<ODataSingletonInfo>
+            {
+                new ODataSingletonInfo { Name = "Company", Title = "BusinessEntity", Url = new Uri("http://tempuri.org/Company") }
+            };
+
+            // Singleton (Title different from Name)
+
+            yield return new object[]
+            {
+                new ODataServiceDocument
+                {
+                    Singletons = singletons
+                },
+                "{\"value\":[" +
+                "{\"name\":\"Company\",\"title\":\"BusinessEntity\",\"kind\":\"Singleton\",\"url\":\"http://tempuri.org/Company\"}" +
+                "]}"
+            };
+
+            var functionImports = new List<ODataFunctionImportInfo>
+            {
+                new ODataFunctionImportInfo { Name = "GetOpenOrders", Url = new Uri("http://tempuri.org/GetOpenOrders") },
+                new ODataFunctionImportInfo { Name = "GetTop5Customers", Url = new Uri("http://tempuri.org/GetTop5Customers") }
+            };
+
+            // FunctionImport
+
+            yield return new object[]
+            {
+                new ODataServiceDocument
+                {
+                    FunctionImports = functionImports
+                },
+                "{\"value\":[" +
+                "{\"name\":\"GetOpenOrders\",\"kind\":\"FunctionImport\",\"url\":\"http://tempuri.org/GetOpenOrders\"}," +
+                "{\"name\":\"GetTop5Customers\",\"kind\":\"FunctionImport\",\"url\":\"http://tempuri.org/GetTop5Customers\"}" +
+                "]}"
+            };
+
+            // FunctionImport (Collection containing duplicates)
+
+            var duplicatedFunctionImports = new List<ODataFunctionImportInfo>(functionImports);
+            duplicatedFunctionImports[1] = duplicatedFunctionImports[0];
+
+            yield return new object[]
+            {
+                new ODataServiceDocument
+                {
+                    FunctionImports = duplicatedFunctionImports
+                },
+                "{\"value\":[" +
+                "{\"name\":\"GetOpenOrders\",\"kind\":\"FunctionImport\",\"url\":\"http://tempuri.org/GetOpenOrders\"}" +
+                "]}"
+            };
+
+
+            // Multiple element types
+
+            yield return new object[]
+            {
+                new ODataServiceDocument
+                {
+                    EntitySets = entitySets,
+                    Singletons = singletons,
+                    FunctionImports = functionImports
+                },
+                "{\"value\":[" +
+                "{\"name\":\"Customers\",\"kind\":\"EntitySet\",\"url\":\"http://tempuri.org/Customers\"}," +
+                "{\"name\":\"Orders\",\"kind\":\"EntitySet\",\"url\":\"http://tempuri.org/Orders\"}," +
+                "{\"name\":\"Company\",\"title\":\"BusinessEntity\",\"kind\":\"Singleton\",\"url\":\"http://tempuri.org/Company\"}," +
+                "{\"name\":\"GetOpenOrders\",\"kind\":\"FunctionImport\",\"url\":\"http://tempuri.org/GetOpenOrders\"}," +
+                "{\"name\":\"GetTop5Customers\",\"kind\":\"FunctionImport\",\"url\":\"http://tempuri.org/GetTop5Customers\"}" +
+                "]}"
+            };
+        }
+
+        [Theory]
+        [MemberData(nameof(GetWriteServiceDocumentTestData))]
+        public async Task WriteServiceDocumentAsync_WritesExpectedOutput(ODataServiceDocument serviceDocument, string expected)
+        {
+            var result = await SetupJsonLightServiceDocumentSerializerAndRunTestAsync(
+                (jsonLightServiceDocumentSerializer) =>
+                {
+                    return jsonLightServiceDocumentSerializer.WriteServiceDocumentAsync(serviceDocument);
+                });
+
+            Assert.Equal(expected, result);
+        }
+
+        public static IEnumerable<object[]> GetWriteServiceDocumentExceptionsTestData()
+        {
+            // Null FunctionImport
+            yield return new object[]
+            {
+                new ODataServiceDocument
+                {
+                    FunctionImports = new List<ODataFunctionImportInfo> { null }
+                },
+                Strings.ValidationUtils_WorkspaceResourceMustNotContainNullItem
+            };
+
+            // Null EntitySet (Singletons handled the same)
+            yield return new object[]
+            {
+                new ODataServiceDocument
+                {
+                    EntitySets = new List<ODataEntitySetInfo> { null }
+                },
+                Strings.ValidationUtils_WorkspaceResourceMustNotContainNullItem
+            };
+
+            // EntitySet with null value as Url (Singletons handled the same)
+            yield return new object[]
+            {
+                new ODataServiceDocument
+                {
+                    EntitySets = new List<ODataEntitySetInfo>
+                    {
+                        new ODataEntitySetInfo { Name = "Customers", Url = null }
+                    }
+                },
+                Strings.ValidationUtils_ResourceMustSpecifyUrl
+            };
+
+            // EntitySet with null value as Name (Singletons handled the same) 
+            yield return new object[]
+            {
+                new ODataServiceDocument
+                {
+                    EntitySets = new List<ODataEntitySetInfo>
+                    {
+                        new ODataEntitySetInfo { Name = null, Url = new Uri("http://tempuri.org/Customers") }
+                    }
+                },
+                Strings.ValidationUtils_ResourceMustSpecifyName("http://tempuri.org/Customers")
+            };
+        }
+
+        [Theory]
+        [MemberData(nameof(GetWriteServiceDocumentExceptionsTestData))]
+        public async Task WriteServiceDocumentAsync_ThrowsException(ODataServiceDocument serviceDocument, string exceptionMessage)
+        {
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightServiceDocumentSerializerAndRunTestAsync(
+                    (jsonLightServiceDocumentSerializer) =>
+                    {
+                        return jsonLightServiceDocumentSerializer.WriteServiceDocumentAsync(serviceDocument);
+                    }));
+
+            Assert.Equal(exceptionMessage, exception.Message);
+        }
+
+        private static ODataJsonLightServiceDocumentSerializer CreateODataJsonLightServiceDocumentSerializer(MemoryStream memoryStream, IODataPayloadUriConverter urlResolver = null, bool isAsync = false)
         {
             var model = new EdmModel();
             var messageWriterSettings = new ODataMessageWriterSettings();
@@ -123,7 +303,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 MediaType = new ODataMediaType("application", "json"),
                 Encoding = Encoding.UTF8,
                 IsResponse = false,
-                IsAsync = false,
+                IsAsync = isAsync,
                 Model = mainModel,
                 PayloadUriConverter = urlResolver
             };
@@ -148,6 +328,18 @@ namespace Microsoft.OData.Tests.JsonLight
             serializer.JsonWriter.Flush();
             string actualResult = Encoding.UTF8.GetString(memoryStream.ToArray());
             Assert.Equal(expectedOutput, actualResult);
+        }
+
+        private async Task<string> SetupJsonLightServiceDocumentSerializerAndRunTestAsync(Func<ODataJsonLightServiceDocumentSerializer, Task> func)
+        {
+            MemoryStream memoryStream = new MemoryStream();
+            var jsonLightServiceDocumentSerializer = CreateODataJsonLightServiceDocumentSerializer(memoryStream, /* urlResolver */ null, true);
+            await func(jsonLightServiceDocumentSerializer);
+            await jsonLightServiceDocumentSerializer.JsonLightOutputContext.FlushAsync();
+            await jsonLightServiceDocumentSerializer.AsynchronousJsonWriter.FlushAsync();
+
+            memoryStream.Position = 0;
+            return await new StreamReader(memoryStream).ReadToEndAsync();
         }
     }
 }
