@@ -28,8 +28,8 @@ namespace Microsoft.OData.Edm.Tests.Validation
         {
             EdmFunctionImport functionImport = new EdmFunctionImport(new EdmEntityContainer("ds.n", "Container"), "function1", new EdmFunction("ds", "func", EdmCoreModel.Instance.GetString(true), true /*IsBound*/, null, false));
             ValidateError(
-                ValidationRules.OperationImportCannotImportBoundOperation, 
-                functionImport, 
+                ValidationRules.OperationImportCannotImportBoundOperation,
+                functionImport,
                 EdmErrorCode.OperationImportCannotImportBoundOperation,
                 Strings.EdmModel_Validator_Semantic_OperationImportCannotImportBoundOperation("function1", "func"));
         }
@@ -160,7 +160,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
             var container = new EdmEntityContainer("ns", "container");
             container.AddEntitySet("Set", DefaultValidEntityType.EntityDefinition());
             container.AddActionImport("Set", new EdmAction("n", "set", null));
-            
+
             ValidateError(
                 ValidationRules.EntityContainerDuplicateEntityContainerMemberName,
                 container,
@@ -174,7 +174,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
             var container = new EdmEntityContainer("ns", "container");
             container.AddActionImport("Set", new EdmAction("n", "set", null));
             container.AddEntitySet("Set", DefaultValidEntityType.EntityDefinition());
-            
+
             ValidateError(
                 ValidationRules.EntityContainerDuplicateEntityContainerMemberName,
                 container,
@@ -486,7 +486,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
         {
             OperationOperationEntitySetPathMustBeValidValidTestModel testModelContainer = new OperationOperationEntitySetPathMustBeValidValidTestModel();
 
-            EdmFunction function = new EdmFunction("ns", "GetStuff", new EdmComplexTypeReference(new EdmComplexType("ns","complexType"), false), true /*isBound*/, new EdmPathExpression("bindingEntity/ColNav"), false);
+            EdmFunction function = new EdmFunction("ns", "GetStuff", new EdmComplexTypeReference(new EdmComplexType("ns", "complexType"), false), true /*isBound*/, new EdmPathExpression("bindingEntity/ColNav"), false);
             function.AddParameter("bindingEntity", new EdmCollectionTypeReference(new EdmCollectionType(new EdmEntityTypeReference(testModelContainer.T3, false))));
 
             ValidateErrorInList(
@@ -534,7 +534,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
             OperationOperationEntitySetPathMustBeValidValidTestModel testModelContainer = new OperationOperationEntitySetPathMustBeValidValidTestModel();
 
             EdmFunction function = new EdmFunction("ns", "GetStuff", EdmCoreModel.Instance.GetString(false), true /*isBound*/, new EdmPathExpression("bindingEntity/Nav1/Bunk.T1Foo"), false);
-            
+
             ValidateNoError(ValidationRules.OperationReturnTypeEntityTypeMustBeValid, testModelContainer.Model, function);
         }
 
@@ -549,7 +549,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 this.T1DerivedFromT2 = new EdmEntityType("Bunk", "T1", this.T2);
 
                 EdmStructuralProperty f31 = this.T3.AddStructuralProperty("F31", EdmCoreModel.Instance.GetString(false));
-                this.T3.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo() {Name = "Nav1", Target = this.T2, TargetMultiplicity = EdmMultiplicity.One });
+                this.T3.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo() { Name = "Nav1", Target = this.T2, TargetMultiplicity = EdmMultiplicity.One });
                 this.T3.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo() { Name = "ColNav", Target = this.T2, TargetMultiplicity = EdmMultiplicity.Many });
                 this.T3.AddKeys(f31);
                 this.Model.AddElement(this.T3);
@@ -656,7 +656,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
         {
             var edmFunction = new EdmFunction("n.s", "GetStuff", EdmCoreModel.Instance.GetString(true), true /*isBound*/, null /*entitySetPath*/, false /*isComposable*/);
             edmFunction.AddParameter("bindingParameter", EdmCoreModel.Instance.GetInt16(true));
-            var edmFunction2 = new TestFunction("n.s", "GetStuff") {IsBound = true};
+            var edmFunction2 = new TestFunction("n.s", "GetStuff") { IsBound = true };
 
             EdmModel model = new EdmModel();
             model.AddElement(edmFunction);
@@ -720,8 +720,8 @@ namespace Microsoft.OData.Edm.Tests.Validation
             model.AddElement(edmFunction);
             model.AddElement(edmFunction2);
             ValidateError(
-                ValidationRules.ModelDuplicateSchemaElementName, 
-                model, 
+                ValidationRules.ModelDuplicateSchemaElementName,
+                model,
                 EdmErrorCode.DuplicateFunctions,
                 Strings.EdmModel_Validator_Semantic_ModelDuplicateBoundFunctionParameterTypes("n.s.GetStuff"));
         }
@@ -803,7 +803,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
 
             EdmEntityType type2 = new EdmEntityType("ns", "type2");
             var Id2 = type2.AddStructuralProperty("Id2", EdmCoreModel.Instance.GetInt32(false));
-            
+
             var foreignKey = type2.AddStructuralProperty("foreignKey", EdmCoreModel.Instance.GetInt32(true));
 
             type1.AddKeys(Id1);
@@ -828,7 +828,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
             EdmNavigationProperty navProp = type2.AddBidirectionalNavigation(navInfo2, navInfo1);
 
             ValidateError(
-                ValidationRules.NavigationPropertyDependentEndMultiplicity, 
+                ValidationRules.NavigationPropertyDependentEndMultiplicity,
                 navProp,
                 EdmErrorCode.InvalidMultiplicityOfDependentEnd,
                 Strings.EdmModel_Validator_Semantic_InvalidMultiplicityOfDependentEndMustBeMany("nav2"));
@@ -870,7 +870,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.NavigationPropertyTypeMismatchRelationshipConstraint,
                 navProp,
                 EdmErrorCode.TypeMismatchRelationshipConstraint,
-                Strings.EdmModel_Validator_Semantic_TypeMismatchRelationshipConstraint("foreignKey","ns.type2","Id1", "type1", "Fred"));
+                Strings.EdmModel_Validator_Semantic_TypeMismatchRelationshipConstraint("foreignKey", "ns.type2", "Id1", "type1", "Fred"));
         }
 
         [Fact]
@@ -1419,6 +1419,25 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 "EntitySet Singleton ActionImport FunctionImport", "Org.OData.Core.V1.ResourcePath"));
         }
 
+        [Fact]
+        public void TargetOfSingletonTypeIsFound()
+        {
+            EdmModel model = new EdmModel();
+            EdmEntityType entity = model.AddEntityType("NS", "Entity");
+            entity.AddKeys(entity.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false)));
+            EdmEntityContainer container = model.AddEntityContainer("NS", "Container");
+            EdmSingleton singleton = container.AddSingleton("Me", entity);
+            IEdmTerm term = model.FindTerm("Org.OData.Core.V1.Description");
+            EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(singleton, term, new EdmStringConstant("Description"));
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
+            model.SetVocabularyAnnotation(annotation);
+
+            ValidateNoError(
+                ValidationRules.VocabularyAnnotationInaccessibleTarget,
+                model,
+                annotation);
+        }
+
         private static void ValidateNoError<T>(ValidationRule<T> validationRule, IEdmModel model, T item) where T : IEdmElement
         {
             ValidationContext context = new ValidationContext(model, (object o) => false);
@@ -1437,12 +1456,12 @@ namespace Microsoft.OData.Edm.Tests.Validation
             Assert.Equal(expectedError, error.ErrorMessage);
         }
 
-        private static void ValidateExactErrorsInList<T>(ValidationRule<T> validationRule, IEdmModel model, T item, params Tuple<EdmErrorCode,string> [] expectedErrors) where T : IEdmElement
+        private static void ValidateExactErrorsInList<T>(ValidationRule<T> validationRule, IEdmModel model, T item, params Tuple<EdmErrorCode, string>[] expectedErrors) where T : IEdmElement
         {
             ValidationContext context = new ValidationContext(model, (object o) => false);
             validationRule.Evaluate(context, item);
             int currentIndex = 0;
-            foreach(var actualError in context.Errors)
+            foreach (var actualError in context.Errors)
             {
                 Assert.Equal(expectedErrors[currentIndex].Item1, actualError.ErrorCode);
                 Assert.Equal(expectedErrors[currentIndex].Item2, actualError.ErrorMessage);
@@ -1456,12 +1475,12 @@ namespace Microsoft.OData.Edm.Tests.Validation
         {
             ValidationContext context = new ValidationContext(model, (object o) => false);
             validationRule.Evaluate(context, item);
-            var error = context.Errors.SingleOrDefault(e=>e.ErrorCode == expectedErrorCode);
+            var error = context.Errors.SingleOrDefault(e => e.ErrorCode == expectedErrorCode);
             Assert.NotNull(error);
             Assert.Equal(expectedError, error.ErrorMessage);
         }
 
-        private static void ValidateError<T>(ValidationRule<T> validationRule, T item, EdmErrorCode expectedErrorCode, string expectedError) where T:IEdmElement
+        private static void ValidateError<T>(ValidationRule<T> validationRule, T item, EdmErrorCode expectedErrorCode, string expectedError) where T : IEdmElement
         {
             ValidateError(validationRule, new EdmModel(), item, expectedErrorCode, expectedError);
         }
@@ -1491,7 +1510,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
 
             public IEdmOperationParameter FindParameter(string name)
             {
-               return this.Parameters.Single(p=>p.Name == name);
+                return this.Parameters.Single(p => p.Name == name);
             }
 
             public EdmSchemaElementKind SchemaElementKind
