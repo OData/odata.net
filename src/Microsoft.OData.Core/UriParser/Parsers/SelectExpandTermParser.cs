@@ -138,8 +138,7 @@ namespace Microsoft.OData.UriParser
 
             if (this.lexer.CurrentToken.Text == UriQueryConstants.CountSegment && isSelect)
             {
-                // $count in only allowed in $expand. e.g $expand=NavProperty/$count
-                // It is not allowed in $select e.g $select=NavProperty/$count
+                // $count is not allowed in $select e.g $select=NavProperty/$count
                 throw new ODataException(ODataErrorStrings.ExpressionToken_DollarCountNotAllowedInSelect);
             }
 
