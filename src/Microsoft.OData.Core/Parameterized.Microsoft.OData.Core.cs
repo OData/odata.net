@@ -6940,13 +6940,13 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "$count is only allowed in $expand option."
+        /// A string like "$count is not allowed in $select option."
         /// </summary>
-        internal static string ExpressionToken_DollarCountOnlyAllowedInExpand
+        internal static string ExpressionToken_DollarCountNotAllowedInSelect
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ExpressionToken_DollarCountOnlyAllowedInExpand);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ExpressionToken_DollarCountNotAllowedInSelect);
             }
         }
 

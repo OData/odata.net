@@ -140,7 +140,7 @@ namespace Microsoft.OData.UriParser
             {
                 // $count in only allowed in $expand. e.g $expand=NavProperty/$count
                 // It is not allowed in $select e.g $select=NavProperty/$count
-                throw new ODataException(ODataErrorStrings.ExpressionToken_DollarCountOnlyAllowedInExpand);
+                throw new ODataException(ODataErrorStrings.ExpressionToken_DollarCountNotAllowedInSelect);
             }
 
             string propertyName;

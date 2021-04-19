@@ -64,7 +64,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void SelectPropertiesWithDollarCountOperationThrows()
         {
             Action readResult = () => RunParseSelectExpand("MyLions/$count", null, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            readResult.Throws<ODataException>(ODataErrorStrings.ExpressionToken_DollarCountOnlyAllowedInExpand);
+            readResult.Throws<ODataException>(ODataErrorStrings.ExpressionToken_DollarCountNotAllowedInSelect);
         }
 
         [Fact]
