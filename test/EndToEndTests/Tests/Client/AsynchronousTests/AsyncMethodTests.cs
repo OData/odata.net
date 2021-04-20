@@ -178,7 +178,32 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             context.DeleteObject(c3, c2);
 
             var response = await context.SaveChangesAsync(SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.UseJsonBatch);
-            Assert.Equal(200, (response.Last() as ChangeOperationResponse).StatusCode);
+            Assert.Equal(204, (response.Last() as ChangeOperationResponse).StatusCode);
+
+            this.EnqueueTestComplete();
+        }
+
+        [Fact, Asynchronous]
+        public async Task JsonBatchSequencingSingeChangeSetTest()
+        {
+            DefaultContainer context = this.CreateWrappedContext<DefaultContainer>().Context;
+            Customer c1 = new Customer { CustomerId = 1, Name = "customerOne" };
+            Customer c2 = new Customer { CustomerId = 2, Name = "customerTwo" };
+            Customer c3 = new Customer { CustomerId = 3, Name = "customerThree" };
+            context.AddToCustomer(c1);
+            context.AddToCustomer(c2);
+            context.AddToCustomer(c3);
+            await context.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset);
+
+            c1.Name = "customerOne updated name";
+            c2.Name = "customerTwo updated name";
+
+            context.UpdateObject(c1);
+            context.UpdateObject(c2, c1);
+            context.DeleteObject(c3, c2);
+
+            var response = await context.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset | SaveChangesOptions.UseJsonBatch);
+            Assert.Equal(204, (response.First() as ChangeOperationResponse).StatusCode);
 
             this.EnqueueTestComplete();
         }
