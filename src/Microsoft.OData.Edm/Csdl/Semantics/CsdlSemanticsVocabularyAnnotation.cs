@@ -333,7 +333,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                     container = this.schema.FindEntityContainer(targetSegments[0]);
                     if (container != null)
                     {
-                        IEdmEntityContainerElement containerElement = container.FindEntitySetExtended(targetSegments[1]);
+                        // Using the methods here results in a much faster lookup as it uses a dictionary instead of using the list of container elements.
+                        IEdmEntityContainerElement containerElement = container.FindEntitySetExtended(targetSegments[1])
+                                                                      ?? container.FindSingletonExtended(targetSegments[1]) as IEdmEntityContainerElement;
                         if (containerElement != null)
                         {
                             return containerElement;

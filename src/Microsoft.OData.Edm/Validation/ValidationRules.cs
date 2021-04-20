@@ -2380,113 +2380,91 @@ namespace Microsoft.OData.Edm.Validation
             new ValidationRule<IEdmVocabularyAnnotation>(
                 (context, annotation) =>
                 {
-                    var target = annotation.Target;
+                    IEdmVocabularyAnnotatable target = annotation.Target;
                     bool foundTarget = false;
 
-                    IEdmEntityContainer entityContainer = target as IEdmEntityContainer;
-                    if (entityContainer != null)
+                    if (target is IEdmEntityContainer entityContainer)
                     {
                         foundTarget = (context.Model.FindEntityContainer(entityContainer.FullName()) as IEdmEntityContainer != null);
                     }
-                    else
+                    else if (target is IEdmEntitySet entitySet)
                     {
-                        IEdmEntitySet entitySet = target as IEdmEntitySet;
-                        if (entitySet != null)
+                        IEdmEntityContainer container = entitySet.Container;
+                        if (container != null)
                         {
-                            IEdmEntityContainer container = entitySet.Container as IEdmEntityContainer;
-                            if (container != null)
+                            foundTarget = (container.FindEntitySetExtended(entitySet.Name) != null);
+                        }
+                    }
+                    else if (target is IEdmSingleton singleton)
+                    {
+                        IEdmEntityContainer container = singleton.Container;
+                        if (container != null)
+                        {
+                            foundTarget = container.FindSingletonExtended(singleton.Name) != null;
+                        }
+                    }
+                    else if (target is IEdmSchemaType schemaType)
+                    {
+                        foundTarget = (context.Model.FindType(schemaType.FullName()) as IEdmSchemaType != null);
+                    }
+                    else if (target is IEdmTerm term)
+                    {
+                        foundTarget = (context.Model.FindTerm(term.FullName()) != null);
+                    }
+                    else if (target is IEdmOperation operation)
+                    {
+                        foundTarget = context.Model.FindOperations(operation.FullName()).Any();
+                    }
+                    else if (target is IEdmOperationImport operationImport)
+                    {
+                        foundTarget = operationImport.Container.FindOperationImportsExtended(operationImport.Name).Any();
+                    }
+                    else if (target is IEdmProperty typeProperty)
+                    {
+                        string declaringTypeFullName = EdmUtil.FullyQualifiedName(typeProperty.DeclaringType as IEdmSchemaType);
+                        IEdmStructuredType modelType = context.Model.FindType(declaringTypeFullName) as IEdmStructuredType;
+                        if (modelType != null)
+                        {
+                            // If we can find a structured type with this name in the model check if it has a property with this name
+                            foundTarget = (modelType.FindProperty(typeProperty.Name) != null);
+                        }
+                    }
+                    else if (target is IEdmOperationParameter operationParameter)
+                    {
+                        IEdmOperation declaringOperation = operationParameter.DeclaringOperation as IEdmOperation;
+                        if (declaringOperation != null)
+                        {
+                            // For all functions with this name declared in the model check if it has a parameter with this name
+                            foreach (var func in context.Model.FindOperations(declaringOperation.FullName()))
                             {
-                                foundTarget = (container.FindEntitySetExtended(entitySet.Name) != null);
+                                if (func.FindParameter(operationParameter.Name) != null)
+                                {
+                                    foundTarget = true;
+                                    break;
+                                }
                             }
                         }
                         else
                         {
-                            IEdmSchemaType schemaType = target as IEdmSchemaType;
-                            if (schemaType != null)
+                            if (operationParameter.DeclaringOperation is IEdmOperationImport declaringFunctionImport)
                             {
-                                foundTarget = (context.Model.FindType(schemaType.FullName()) as IEdmSchemaType != null);
-                            }
-                            else
-                            {
-                                IEdmTerm term = target as IEdmTerm;
-                                if (term != null)
+                                IEdmEntityContainer container = declaringFunctionImport.Container as IEdmEntityContainer;
+                                foreach (IEdmOperationImport currentFunction in container.FindOperationImportsExtended(declaringFunctionImport.Name))
                                 {
-                                    foundTarget = (context.Model.FindTerm(term.FullName()) != null);
-                                }
-                                else
-                                {
-                                    IEdmOperation operation = target as IEdmOperation;
-                                    if (operation != null)
+                                    if (currentFunction.Operation.FindParameter(operationParameter.Name) != null)
                                     {
-                                        foundTarget = context.Model.FindOperations(operation.FullName()).Any();
-                                    }
-                                    else
-                                    {
-                                        IEdmOperationImport operationImport = target as IEdmOperationImport;
-                                        if (operationImport != null)
-                                        {
-                                            foundTarget = operationImport.Container.FindOperationImportsExtended(operationImport.Name).Any();
-                                        }
-                                        else
-                                        {
-                                            IEdmProperty typeProperty = target as IEdmProperty;
-                                            if (typeProperty != null)
-                                            {
-                                                string declaringTypeFullName = EdmUtil.FullyQualifiedName(typeProperty.DeclaringType as IEdmSchemaType);
-                                                IEdmStructuredType modelType = context.Model.FindType(declaringTypeFullName) as IEdmStructuredType;
-                                                if (modelType != null)
-                                                {
-                                                    // If we can find a structured type with this name in the model check if it has a property with this name
-                                                    foundTarget = (modelType.FindProperty(typeProperty.Name) != null);
-                                                }
-                                            }
-                                            else
-                                            {
-                                                IEdmOperationParameter operationParameter = target as IEdmOperationParameter;
-                                                if (operationParameter != null)
-                                                {
-                                                    IEdmOperation declaringOperation = operationParameter.DeclaringOperation as IEdmOperation;
-                                                    if (declaringOperation != null)
-                                                    {
-                                                        // For all functions with this name declared in the model check if it has a parameter with this name
-                                                        foreach (var func in context.Model.FindOperations(declaringOperation.FullName()))
-                                                        {
-                                                            if (func.FindParameter(operationParameter.Name) != null)
-                                                            {
-                                                                foundTarget = true;
-                                                                break;
-                                                            }
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        IEdmOperationImport declaringFunctionImport = operationParameter.DeclaringOperation as IEdmOperationImport;
-                                                        if (declaringFunctionImport != null)
-                                                        {
-                                                            var container = declaringFunctionImport.Container as IEdmEntityContainer;
-                                                            foreach (var currentFunction in container.FindOperationImportsExtended(declaringFunctionImport.Name))
-                                                            {
-                                                                if (currentFunction.Operation.FindParameter(operationParameter.Name) != null)
-                                                                {
-                                                                    foundTarget = true;
-                                                                    break;
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    // Only validate annotations targeting elements that can be found via the model API.
-                                                    // E.g. annotations targeting annotations will not be valid without this branch.
-                                                    foundTarget = true;
-                                                }
-                                            }
-                                        }
+                                        foundTarget = true;
+                                        break;
                                     }
                                 }
                             }
                         }
+                    }
+                    else
+                    {
+                        // Only validate annotations targeting elements that can be found via the model API.
+                        // E.g. annotations targeting annotations will not be valid without this branch.
+                        foundTarget = true;
                     }
 
                     if (!foundTarget)
@@ -2567,9 +2545,9 @@ namespace Microsoft.OData.Edm.Validation
 
         #region IEdmPropertyValueBinding
 
-                /// <summary>
-                /// Validates that the value of a property value binding is the correct type.
-                /// </summary>
+        /// <summary>
+        /// Validates that the value of a property value binding is the correct type.
+        /// </summary>
         public static readonly ValidationRule<IEdmPropertyValueBinding> PropertyValueBindingValueIsCorrectType =
             new ValidationRule<IEdmPropertyValueBinding>(
                 (context, binding) =>
