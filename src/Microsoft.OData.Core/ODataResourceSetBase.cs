@@ -59,9 +59,9 @@ namespace Microsoft.OData
             }
         }
 
-    /// <summary>Gets or sets the number of items in the resource set.</summary>
-    /// <returns>The number of items in the resource set.</returns>
-    public long? Count
+        /// <summary>Gets or sets the number of items in the resource set.</summary>
+        /// <returns>The number of items in the resource set.</returns>
+        public long? Count
         {
             get;
             set;

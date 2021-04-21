@@ -424,7 +424,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
         /// <summary>
         /// Sets up an ODataJsonLightSerializer,
-        /// then runs the given test code asynchonously,
+        /// then runs the given test code asynchronously,
         /// then flushes and reads the stream back as a string for customized verification.
         /// </summary>
         private static async Task<string> SetupSerializerAndRunTestAsync(string jsonpFunctionName, Func<ODataJsonLightSerializer, Task> func)
