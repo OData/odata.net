@@ -164,5 +164,94 @@ namespace Microsoft.OData.JsonLight
                 }
             }
         }
+
+        /// <summary>
+        /// Asynchronously start writing an OData payload.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected override Task StartPayloadAsync()
+        {
+            return this.jsonLightCollectionSerializer.WritePayloadStartAsync();
+        }
+
+        /// <summary>
+        /// Asynchronously finish writing an OData payload.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected override Task EndPayloadAsync()
+        {
+            return this.jsonLightCollectionSerializer.WritePayloadEndAsync();
+        }
+
+        /// <summary>
+        /// Asynchronously start writing a collection.
+        /// </summary>
+        /// <param name="collectionStart">The <see cref="ODataCollectionStart"/> representing the collection.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected override Task StartCollectionAsync(ODataCollectionStart collectionStart)
+        {
+            return this.jsonLightCollectionSerializer.WriteCollectionStartAsync(collectionStart, this.ItemTypeReference);
+        }
+
+        /// <summary>
+        /// Asynchronously finish writing a collection.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected override Task EndCollectionAsync()
+        {
+            return this.jsonLightCollectionSerializer.WriteCollectionEndAsync();
+        }
+
+        /// <summary>
+        /// Asynchronously writes a collection item (either primitive or complex)
+        /// </summary>
+        /// <param name="item">The collection item to write.</param>
+        /// <param name="expectedItemTypeReference">The expected type of the collection item or null if no expected item type exists.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected override async Task WriteCollectionItemAsync(object item, IEdmTypeReference expectedItemType)
+        {
+            if (item == null)
+            {
+                this.jsonLightOutputContext.WriterValidator.ValidateNullCollectionItem(expectedItemType);
+                await this.jsonLightOutputContext.AsynchronousJsonWriter.WriteValueAsync((string)null)
+                    .ConfigureAwait(false);
+            }
+            else
+            {
+                if (item is ODataResourceValue resourceValue)
+                {
+                    this.jsonLightCollectionSerializer.AssertRecursionDepthIsZero();
+                    await this.jsonLightCollectionSerializer.WriteResourceValueAsync(
+                        resourceValue,
+                        expectedItemType,
+                        false /*isOpenPropertyType*/,
+                        this.DuplicatePropertyNameChecker).ConfigureAwait(false);
+                    this.jsonLightCollectionSerializer.AssertRecursionDepthIsZero();
+                    this.DuplicatePropertyNameChecker.Reset();
+                }
+                else if (item is ODataEnumValue enumVal)
+                {
+                    if (enumVal.Value == null)
+                    {
+                        await this.jsonLightCollectionSerializer.WriteNullValueAsync()
+                            .ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        // write ODataEnumValue.Value as string value
+                        await this.jsonLightCollectionSerializer.WritePrimitiveValueAsync(
+                            enumVal.Value,
+                            EdmCoreModel.Instance.GetString(true)).ConfigureAwait(false);
+                    }
+                }
+                else
+                {
+                    Debug.Assert(!(item is ODataCollectionValue), "!(item is ODataCollectionValue)");
+                    Debug.Assert(!(item is ODataStreamReferenceValue), "!(item is ODataStreamReferenceValue)");
+                    await this.jsonLightCollectionSerializer.WritePrimitiveValueAsync(item, expectedItemType)
+                        .ConfigureAwait(false);
+                }
+            }
+        }
     }
 }
