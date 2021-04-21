@@ -760,6 +760,12 @@ namespace Microsoft.OData
             this.EnterScope(WriterState.Error, this.CurrentScope.Item);
         }
 
+        /// <inheritdoc/>
+        Task IODataOutputInStreamErrorListener.OnInStreamErrorAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// This method is called when a stream is requested. It is a no-op.
         /// </summary>
