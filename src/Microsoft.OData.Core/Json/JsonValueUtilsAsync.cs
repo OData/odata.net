@@ -52,11 +52,11 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="value">The boolean value to write.</param>
-        internal static async Task WriteValueAsync(this TextWriter writer, bool value)
+        internal static Task WriteValueAsync(this TextWriter writer, bool value)
         {
             Debug.Assert(writer != null, "writer != null");
 
-            await writer.WriteAsync(FormatAsBooleanLiteral(value)).ConfigureAwait(false);
+            return writer.WriteAsync(FormatAsBooleanLiteral(value));
         }
 
         /// <summary>
@@ -64,11 +64,11 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="value">Integer value to be written.</param>
-        internal static async Task WriteValueAsync(this TextWriter writer, int value)
+        internal static Task WriteValueAsync(this TextWriter writer, int value)
         {
             Debug.Assert(writer != null, "writer != null");
 
-            await writer.WriteAsync(value.ToString(CultureInfo.InvariantCulture)).ConfigureAwait(false);
+            return writer.WriteAsync(value.ToString(CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -76,20 +76,20 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="value">Float value to be written.</param>
-        internal static async Task WriteValueAsync(this TextWriter writer, float value)
+        internal static Task WriteValueAsync(this TextWriter writer, float value)
         {
             Debug.Assert(writer != null, "writer != null");
 
             if (JsonSharedUtils.IsFloatValueSerializedAsString(value))
             {
-                await writer.WriteQuotedAsync(value.ToString(ODataNumberFormatInfo)).ConfigureAwait(false);
+                return writer.WriteQuotedAsync(value.ToString(ODataNumberFormatInfo));
             }
             else
             {
                 // float.ToString() supports a max scale of six,
                 // whereas float.MinValue and float.MaxValue have 8 digits scale. Hence we need
                 // to use XmlConvert in all other cases, except infinity
-                await writer.WriteAsync(XmlConvert.ToString(value)).ConfigureAwait(false);
+                return writer.WriteAsync(XmlConvert.ToString(value));
             }
         }
 
@@ -98,11 +98,11 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="value">Short value to be written.</param>
-        internal static async Task WriteValueAsync(this TextWriter writer, short value)
+        internal static Task WriteValueAsync(this TextWriter writer, short value)
         {
             Debug.Assert(writer != null, "writer != null");
 
-            await writer.WriteAsync(value.ToString(CultureInfo.InvariantCulture)).ConfigureAwait(false);
+            return writer.WriteAsync(value.ToString(CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -110,11 +110,11 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="value">Long value to be written.</param>
-        internal static async Task WriteValueAsync(this TextWriter writer, long value)
+        internal static Task WriteValueAsync(this TextWriter writer, long value)
         {
             Debug.Assert(writer != null, "writer != null");
 
-            await writer.WriteAsync(value.ToString(CultureInfo.InvariantCulture)).ConfigureAwait(false);
+            return writer.WriteAsync(value.ToString(CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -150,11 +150,11 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="value">Guid value to be written.</param>
-        internal static async Task WriteValueAsync(this TextWriter writer, Guid value)
+        internal static Task WriteValueAsync(this TextWriter writer, Guid value)
         {
             Debug.Assert(writer != null, "writer != null");
 
-            await writer.WriteQuotedAsync(value.ToString()).ConfigureAwait(false);
+            return writer.WriteQuotedAsync(value.ToString());
         }
 
         /// <summary>
@@ -162,11 +162,11 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="value">Decimal value to be written.</param>
-        internal static async Task WriteValueAsync(this TextWriter writer, decimal value)
+        internal static Task WriteValueAsync(this TextWriter writer, decimal value)
         {
             Debug.Assert(writer != null, "writer != null");
 
-            await writer.WriteAsync(value.ToString(CultureInfo.InvariantCulture)).ConfigureAwait(false);
+            return writer.WriteAsync(value.ToString(CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -222,11 +222,11 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="value">TimeSpan value to be written.</param>
-        internal static async Task WriteValueAsync(this TextWriter writer, TimeSpan value)
+        internal static Task WriteValueAsync(this TextWriter writer, TimeSpan value)
         {
             Debug.Assert(writer != null, "writer != null");
 
-            await writer.WriteQuotedAsync(EdmValueWriter.DurationAsXml(value)).ConfigureAwait(false);
+            return writer.WriteQuotedAsync(EdmValueWriter.DurationAsXml(value));
         }
 
         /// <summary>
@@ -234,11 +234,11 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="value">TimeOfDay value to be written.</param>
-        internal static async Task WriteValueAsync(this TextWriter writer, TimeOfDay value)
+        internal static Task WriteValueAsync(this TextWriter writer, TimeOfDay value)
         {
             Debug.Assert(writer != null, "writer != null");
 
-            await writer.WriteQuotedAsync(value.ToString()).ConfigureAwait(false);
+            return writer.WriteQuotedAsync(value.ToString());
         }
 
         /// <summary>
@@ -246,11 +246,11 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="value">Date value to be written.</param>
-        internal static async Task WriteValueAsync(this TextWriter writer, Date value)
+        internal static Task WriteValueAsync(this TextWriter writer, Date value)
         {
             Debug.Assert(writer != null, "writer != null");
 
-            await writer.WriteQuotedAsync(value.ToString()).ConfigureAwait(false);
+            return writer.WriteQuotedAsync(value.ToString());
         }
 
         /// <summary>
@@ -258,11 +258,11 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="value">Byte value to be written.</param>
-        internal static async Task WriteValueAsync(this TextWriter writer, byte value)
+        internal static Task WriteValueAsync(this TextWriter writer, byte value)
         {
             Debug.Assert(writer != null, "writer != null");
 
-            await writer.WriteAsync(value.ToString(CultureInfo.InvariantCulture)).ConfigureAwait(false);
+            return writer.WriteAsync(value.ToString(CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -270,11 +270,11 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="value">SByte value to be written.</param>
-        internal static async Task WriteValueAsync(this TextWriter writer, sbyte value)
+        internal static Task WriteValueAsync(this TextWriter writer, sbyte value)
         {
             Debug.Assert(writer != null, "writer != null");
 
-            await writer.WriteAsync(value.ToString(CultureInfo.InvariantCulture)).ConfigureAwait(false);
+            return writer.WriteAsync(value.ToString(CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -285,7 +285,7 @@ namespace Microsoft.OData.Json
         /// <param name="stringEscapeOption">The string escape option.</param>
         /// <param name="buffer">Char buffer to use for streaming data.</param>
         /// <param name="arrayPool">Array pool for renting a buffer.</param>
-        internal static async Task WriteValueAsync(
+        internal static Task WriteValueAsync(
             this TextWriter writer,
             string value,
             ODataStringEscapeOption stringEscapeOption,
@@ -296,11 +296,11 @@ namespace Microsoft.OData.Json
 
             if (value == null)
             {
-                await writer.WriteAsync(JsonConstants.JsonNullLiteral).ConfigureAwait(false);
+                return writer.WriteAsync(JsonConstants.JsonNullLiteral);
             }
             else
             {
-                await writer.WriteEscapedJsonStringAsync(value, stringEscapeOption, buffer, arrayPool).ConfigureAwait(false);
+                return writer.WriteEscapedJsonStringAsync(value, stringEscapeOption, buffer, arrayPool);
             }
         }
 
@@ -477,11 +477,10 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="text">String value to be written.</param>
-        private static async Task WriteQuotedAsync(this TextWriter writer, string text)
+        private static Task WriteQuotedAsync(this TextWriter writer, string text)
         {
-            await writer.WriteAsync(
-                string.Concat(JsonConstants.QuoteCharacter, text, JsonConstants.QuoteCharacter))
-                .ConfigureAwait(false);
+            return writer.WriteAsync(
+                string.Concat(JsonConstants.QuoteCharacter, text, JsonConstants.QuoteCharacter));
         }
     }
 }

@@ -211,9 +211,9 @@ namespace Microsoft.OData
         }
 
         /// <inheritdoc/>
-        public override async Task FlushAsync(CancellationToken cancellationToken)
+        public override Task FlushAsync(CancellationToken cancellationToken)
         {
-            await this.Writer.FlushAsync().ConfigureAwait(false);
+            return this.Writer.FlushAsync();
         }
 
         /// <summary>
