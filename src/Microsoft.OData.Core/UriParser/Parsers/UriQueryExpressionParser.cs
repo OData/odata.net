@@ -824,7 +824,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Parses the eq, ne, lt, gt, le, ge, has, and in operators.
+        /// Parses the eq, ne, lt, gt, le, and ge operators.
         /// </summary>
         /// <returns>The lexical token representing the expression.</returns>
         private QueryToken ParseComparison()
@@ -833,52 +833,39 @@ namespace Microsoft.OData.UriParser
             QueryToken left = this.ParseAdditive();
             while (true)
             {
-                if (this.TokenIdentifierIs(ExpressionConstants.KeywordIn))
+                BinaryOperatorKind binaryOperatorKind;
+                if (this.TokenIdentifierIs(ExpressionConstants.KeywordEqual))
                 {
-                    this.lexer.NextToken();
-                    QueryToken right = this.ParseAdditive();
-                    left = new InToken(left, right);
+                    binaryOperatorKind = BinaryOperatorKind.Equal;
+                }
+                else if (this.TokenIdentifierIs(ExpressionConstants.KeywordNotEqual))
+                {
+                    binaryOperatorKind = BinaryOperatorKind.NotEqual;
+                }
+                else if (this.TokenIdentifierIs(ExpressionConstants.KeywordGreaterThan))
+                {
+                    binaryOperatorKind = BinaryOperatorKind.GreaterThan;
+                }
+                else if (this.TokenIdentifierIs(ExpressionConstants.KeywordGreaterThanOrEqual))
+                {
+                    binaryOperatorKind = BinaryOperatorKind.GreaterThanOrEqual;
+                }
+                else if (this.TokenIdentifierIs(ExpressionConstants.KeywordLessThan))
+                {
+                    binaryOperatorKind = BinaryOperatorKind.LessThan;
+                }
+                else if (this.TokenIdentifierIs(ExpressionConstants.KeywordLessThanOrEqual))
+                {
+                    binaryOperatorKind = BinaryOperatorKind.LessThanOrEqual;
                 }
                 else
                 {
-                    BinaryOperatorKind binaryOperatorKind;
-                    if (this.TokenIdentifierIs(ExpressionConstants.KeywordEqual))
-                    {
-                        binaryOperatorKind = BinaryOperatorKind.Equal;
-                    }
-                    else if (this.TokenIdentifierIs(ExpressionConstants.KeywordNotEqual))
-                    {
-                        binaryOperatorKind = BinaryOperatorKind.NotEqual;
-                    }
-                    else if (this.TokenIdentifierIs(ExpressionConstants.KeywordGreaterThan))
-                    {
-                        binaryOperatorKind = BinaryOperatorKind.GreaterThan;
-                    }
-                    else if (this.TokenIdentifierIs(ExpressionConstants.KeywordGreaterThanOrEqual))
-                    {
-                        binaryOperatorKind = BinaryOperatorKind.GreaterThanOrEqual;
-                    }
-                    else if (this.TokenIdentifierIs(ExpressionConstants.KeywordLessThan))
-                    {
-                        binaryOperatorKind = BinaryOperatorKind.LessThan;
-                    }
-                    else if (this.TokenIdentifierIs(ExpressionConstants.KeywordLessThanOrEqual))
-                    {
-                        binaryOperatorKind = BinaryOperatorKind.LessThanOrEqual;
-                    }
-                    else if (this.TokenIdentifierIs(ExpressionConstants.KeywordHas))
-                    {
-                        binaryOperatorKind = BinaryOperatorKind.Has;
-                    }
-                    else
-                    {
-                        break;
-                    }
-
-                    this.lexer.NextToken();
-                    QueryToken right = this.ParseAdditive();
-                    left = new BinaryOperatorToken(binaryOperatorKind, left, right);
+                    break;
                 }
+
+                this.lexer.NextToken();
+                QueryToken right = this.ParseAdditive();
+                left = new BinaryOperatorToken(binaryOperatorKind, left, right);
             }
 
             this.RecurseLeave();
@@ -970,7 +957,7 @@ namespace Microsoft.OData.UriParser
                     numberLiteral.Position = operatorToken.Position;
                     this.lexer.CurrentToken = numberLiteral;
                     this.RecurseLeave();
-                    return this.ParsePrimary();
+                    return this.ParseInHas();
                 }
 
                 QueryToken operand = this.ParseUnary();
@@ -990,7 +977,39 @@ namespace Microsoft.OData.UriParser
             }
 
             this.RecurseLeave();
-            return this.ParsePrimary();
+            return this.ParseInHas();
+        }
+
+        /// <summary>
+        /// Parses the has and in operators.
+        /// </summary>
+        /// <returns>The lexical token representing the expression.</returns>
+        private QueryToken ParseInHas()
+        {
+            this.RecurseEnter();
+            QueryToken left = this.ParsePrimary();
+            while (true)
+            {
+                if (this.TokenIdentifierIs(ExpressionConstants.KeywordIn))
+                {
+                    this.lexer.NextToken();
+                    QueryToken right = this.ParsePrimary();
+                    left = new InToken(left, right);
+                }
+                else if (this.TokenIdentifierIs(ExpressionConstants.KeywordHas))
+                {
+                    this.lexer.NextToken();
+                    QueryToken right = this.ParsePrimary();
+                    left = new BinaryOperatorToken(BinaryOperatorKind.Has, left, right);
+                } 
+                else
+                {
+                    break;
+                }
+            }
+
+            this.RecurseLeave();
+            return left;
         }
 
         /// <summary>

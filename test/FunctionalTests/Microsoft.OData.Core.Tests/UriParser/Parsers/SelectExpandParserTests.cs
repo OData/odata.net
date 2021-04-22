@@ -795,7 +795,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             ExpandToken expandTree;
             ODataUriParserConfiguration configuration = new ODataUriParserConfiguration(EdmCoreModel.Instance)
             {
-                Settings = { PathLimit = 2, FilterLimit = 7, OrderByLimit = 7, SearchLimit = 7, SelectExpandLimit = 5 }
+                Settings = { PathLimit = 2, FilterLimit = 8, OrderByLimit = 8, SearchLimit = 7, SelectExpandLimit = 5 }
             };
 
             SelectExpandSyntacticParser.Parse(select, expand, null , configuration, out expandTree, out selectTree);
