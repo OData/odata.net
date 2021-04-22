@@ -109,18 +109,19 @@ namespace Microsoft.OData.UriParser
         /// <returns>A parsed PathSegmentToken representing the next segment in this path.</returns>
         private PathSegmentToken ParseSegment(PathSegmentToken previousSegment, bool allowRef)
         {
-            // TODO $count is defined in specification for expand, it is not supported now. Also note $count is not supported with star as expand option.
-            if (this.lexer.CurrentToken.Text.StartsWith("$", StringComparison.Ordinal) && (!allowRef || this.lexer.CurrentToken.Text != UriQueryConstants.RefSegment))
+            if (this.lexer.CurrentToken.Text.StartsWith("$", StringComparison.Ordinal)
+                && (!allowRef || this.lexer.CurrentToken.Text != UriQueryConstants.RefSegment)
+                && this.lexer.CurrentToken.Text != UriQueryConstants.CountSegment)
             {
                 throw new ODataException(ODataErrorStrings.UriSelectParser_SystemTokenInSelectExpand(this.lexer.CurrentToken.Text, this.lexer.ExpressionText));
             }
 
-            // Some check here to throw exception, both prop1/*/prop2 and */$ref/prop will throw exception, both are for $expand cases
+            // Some check here to throw exception, prop1/*/prop2 and */$ref/prop and prop1/$count/prop2 will throw exception, all are $expand cases.
             if (!isSelect)
             {
                 if (previousSegment != null && previousSegment.Identifier == UriQueryConstants.Star && this.lexer.CurrentToken.GetIdentifier() != UriQueryConstants.RefSegment)
                 {
-                    // Star can only be followed with $ref
+                    // Star can only be followed with $ref. $count is not supported with star as expand option
                     throw new ODataException(ODataErrorStrings.ExpressionToken_OnlyRefAllowWithStarInExpand);
                 }
                 else if (previousSegment != null && previousSegment.Identifier == UriQueryConstants.RefSegment)
@@ -128,6 +129,17 @@ namespace Microsoft.OData.UriParser
                     // $ref should not have more property followed.
                     throw new ODataException(ODataErrorStrings.ExpressionToken_NoPropAllowedAfterRef);
                 }
+                else if (previousSegment != null && previousSegment.Identifier == UriQueryConstants.CountSegment)
+                {
+                    // $count should not have more property followed. e.g $expand=NavProperty/$count/MyProperty
+                    throw new ODataException(ODataErrorStrings.ExpressionToken_NoPropAllowedAfterDollarCount);
+                }
+            }
+
+            if (this.lexer.CurrentToken.Text == UriQueryConstants.CountSegment && isSelect)
+            {
+                // $count is not allowed in $select e.g $select=NavProperty/$count
+                throw new ODataException(ODataErrorStrings.ExpressionToken_DollarCountNotAllowedInSelect);
             }
 
             string propertyName;

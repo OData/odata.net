@@ -915,6 +915,8 @@ ExceptionUtils_CheckLongPositive=A positive long value was expected; however, th
 ExceptionUtils_ArgumentStringNullOrEmpty=Value cannot be null or empty.
 
 ExpressionToken_OnlyRefAllowWithStarInExpand=Only $ref is allowed with star in $expand option.
+ExpressionToken_DollarCountNotAllowedInSelect=$count is not allowed in $select option.
+ExpressionToken_NoPropAllowedAfterDollarCount=No property is allowed after $count segment.
 ExpressionToken_NoPropAllowedAfterRef=No property is allowed after $ref segment.
 ExpressionToken_NoSegmentAllowedBeforeStarInExpand=No segment is allowed before star in $expand.
 ExpressionToken_IdentifierExpected=An identifier was expected at position {0}.
