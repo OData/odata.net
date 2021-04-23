@@ -44,7 +44,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// The current recursion depth.
         /// </summary>
-        private int recursionDepth;
+        internal int recursionDepth;
 
         /// <summary>
         /// The lexer being used for the parsing.
@@ -132,6 +132,16 @@ namespace Microsoft.OData.UriParser
         public QueryToken ParseFilter(string filter)
         {
             return this.ParseExpressionText(filter);
+        }
+
+        /// <summary>
+        /// Parses the $search expression.
+        /// </summary>
+        /// <param name="search">The $search expression string to parse.</param>
+        /// <returns>The lexical token representing the filter.</returns>
+        public QueryToken ParseSearch(string search)
+        {
+            return this.ParseExpressionText(search);
         }
 
         /// <summary>
@@ -1046,7 +1056,7 @@ namespace Microsoft.OData.UriParser
                 }
                 else
                 {
-                    IdentifierTokenizer identifierTokenizer = new IdentifierTokenizer(this.parameters, new FunctionCallParser(this.lexer, this, this.IsInAggregateExpression));
+                    IdentifierTokenizer identifierTokenizer = new IdentifierTokenizer(this.parameters, new FunctionCallParser(this.lexer, this, this.IsInAggregateExpression), this);
                     expr = identifierTokenizer.ParseIdentifier(expr);
                 }
             }
