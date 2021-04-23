@@ -4,17 +4,17 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.OData.Evaluation;
-using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Evaluation;
 using Microsoft.OData.Metadata;
+using Microsoft.OData.UriParser;
 
 namespace Microsoft.OData
 {
@@ -423,7 +423,6 @@ namespace Microsoft.OData
             }
         }
 
-
         /// <summary>
         /// Asynchronously flushes the write buffer to the underlying stream.
         /// </summary>
@@ -446,16 +445,17 @@ namespace Microsoft.OData
             this.WriteStartResourceSetImplementation(resourceSet);
         }
 
-
         /// <summary>
         /// Asynchronously start writing a resourceSet.
         /// </summary>
         /// <param name="resourceSet">Resource Set/collection to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public sealed override Task WriteStartAsync(ODataResourceSet resourceSet)
+        public sealed override async Task WriteStartAsync(ODataResourceSet resourceSet)
         {
-            this.VerifyCanWriteStartResourceSet(false, resourceSet);
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartResourceSetImplementation(resourceSet));
+            await this.VerifyCanWriteStartResourceSetAsync(false, resourceSet)
+                .ConfigureAwait(false);
+            await this.WriteStartResourceSetImplementationAsync(resourceSet)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -468,16 +468,17 @@ namespace Microsoft.OData
             this.WriteStartDeltaResourceSetImplementation(deltaResourceSet);
         }
 
-
         /// <summary>
         /// Asynchronously start writing a delta resourceSet.
         /// </summary>
         /// <param name="deltaResourceSet">Resource Set/collection to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public sealed override Task WriteStartAsync(ODataDeltaResourceSet deltaResourceSet)
+        public sealed override async Task WriteStartAsync(ODataDeltaResourceSet deltaResourceSet)
         {
-            this.VerifyCanWriteStartDeltaResourceSet(false, deltaResourceSet);
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartDeltaResourceSetImplementation(deltaResourceSet));
+            await this.VerifyCanWriteStartDeltaResourceSetAsync(false, deltaResourceSet)
+                .ConfigureAwait(false);
+            await this.WriteStartDeltaResourceSetImplementationAsync(deltaResourceSet)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -490,16 +491,16 @@ namespace Microsoft.OData
             this.WriteStartResourceImplementation(resource);
         }
 
-
         /// <summary>
         /// Asynchronously start writing a resource.
         /// </summary>
         /// <param name="resource">Resource/item to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public sealed override Task WriteStartAsync(ODataResource resource)
+        public sealed override async Task WriteStartAsync(ODataResource resource)
         {
             this.VerifyCanWriteStartResource(false, resource);
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartResourceImplementation(resource));
+            await this.WriteStartResourceImplementationAsync(resource)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -512,19 +513,16 @@ namespace Microsoft.OData
             this.WriteStartDeletedResourceImplementation(deletedResource);
         }
 
-
         /// <summary>
         /// Asynchronously write a delta deleted resource.
         /// </summary>
         /// <param name="deletedResource">The delta deleted resource to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public sealed override Task WriteStartAsync(ODataDeletedResource deletedResource)
+        public sealed override async Task WriteStartAsync(ODataDeletedResource deletedResource)
         {
             this.VerifyCanWriteStartDeletedResource(false, deletedResource);
-            return TaskUtils.GetTaskForSynchronousOperation(() =>
-            {
-                this.WriteStartDeletedResourceImplementation(deletedResource);
-            });
+            await this.WriteStartDeletedResourceImplementationAsync(deletedResource)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -537,16 +535,16 @@ namespace Microsoft.OData
             this.WriteDeltaLinkImplementation(deltaLink);
         }
 
-
         /// <summary>
         /// Asynchronously writing a delta link.
         /// </summary>
         /// <param name="deltaLink">The delta link to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public override Task WriteDeltaLinkAsync(ODataDeltaLink deltaLink)
+        public override async Task WriteDeltaLinkAsync(ODataDeltaLink deltaLink)
         {
             this.VerifyCanWriteLink(false, deltaLink);
-            return this.WriteDeltaLinkAsyncImplementation(deltaLink);
+            await this.WriteDeltaLinkImplementationAsync(deltaLink)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -559,16 +557,16 @@ namespace Microsoft.OData
             this.WriteDeltaLinkImplementation(deltaLink);
         }
 
-
         /// <summary>
         /// Asynchronously writing a delta link.
         /// </summary>
         /// <param name="deltaLink">The delta link to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public override Task WriteDeltaDeletedLinkAsync(ODataDeltaDeletedLink deltaLink)
+        public override async Task WriteDeltaDeletedLinkAsync(ODataDeltaDeletedLink deltaLink)
         {
             this.VerifyCanWriteLink(false, deltaLink);
-            return this.WriteDeltaLinkAsyncImplementation(deltaLink);
+            await this.WriteDeltaLinkImplementationAsync(deltaLink)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -581,16 +579,16 @@ namespace Microsoft.OData
             this.WritePrimitiveValueImplementation(primitiveValue);
         }
 
-
         /// <summary>
         /// Asynchronously write a primitive value.
         /// </summary>
         /// <param name="primitiveValue"> Primitive value to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public sealed override Task WritePrimitiveAsync(ODataPrimitiveValue primitiveValue)
+        public sealed override async Task WritePrimitiveAsync(ODataPrimitiveValue primitiveValue)
         {
             this.VerifyCanWritePrimitive(false, primitiveValue);
-            return this.WritePrimitiveValueAsyncImplementation(primitiveValue);
+            await this.WritePrimitiveValueImplementationAsync(primitiveValue)
+                .ConfigureAwait(false);
         }
 
         /// <summary>Writes a primitive property within a resource.</summary>
@@ -604,10 +602,11 @@ namespace Microsoft.OData
         /// <summary> Asynchronously write a primitive property within a resource. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         /// <param name="primitiveProperty">The primitive property to write.</param>
-        public sealed override Task WriteStartAsync(ODataPropertyInfo primitiveProperty)
+        public sealed override async Task WriteStartAsync(ODataPropertyInfo primitiveProperty)
         {
             this.VerifyCanWriteProperty(false, primitiveProperty);
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartPropertyImplementation(primitiveProperty));
+            await this.WriteStartPropertyImplementationAsync(primitiveProperty)
+                .ConfigureAwait(false);
         }
 
         /// <summary>Creates a stream for writing a binary value.</summary>
@@ -618,13 +617,14 @@ namespace Microsoft.OData
             return this.CreateWriteStreamImplementation();
         }
 
-
         /// <summary>Asynchronously creates a stream for writing a binary value.</summary>
-        /// <returns>A stream to write a binary value to.</returns>
-        public sealed override Task<Stream> CreateBinaryWriteStreamAsync()
+        /// <returns>A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains a <see cref="Stream"/> to write a binary value to.</returns>
+        public sealed override async Task<Stream> CreateBinaryWriteStreamAsync()
         {
             this.VerifyCanCreateWriteStream(false);
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateWriteStreamImplementation());
+            return await this.CreateWriteStreamImplementationAsync()
+                .ConfigureAwait(false);
         }
 
         /// <summary>Creates a TextWriter for writing a string value.</summary>
@@ -635,13 +635,14 @@ namespace Microsoft.OData
             return this.CreateTextWriterImplementation();
         }
 
-
-        /// <summary>Asynchronously creates a stream for writing a binary value.</summary>
-        /// <returns>A stream to write a binary value to.</returns>
-        public sealed override Task<TextWriter> CreateTextWriterAsync()
+        /// <summary>Asynchronously creates a <see cref="TextWriter"/> for writing a string value.</summary>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains a <see cref="TextWriter"/> to write a string value to.</returns>
+        public sealed override async Task<TextWriter> CreateTextWriterAsync()
         {
             this.VerifyCanCreateWriteStream(false);
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateTextWriterImplementation());
+            return await this.CreateTextWriterImplementationAsync()
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -660,10 +661,12 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="nestedResourceInfo">Navigation link to writer.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public sealed override Task WriteStartAsync(ODataNestedResourceInfo nestedResourceInfo)
+        public sealed override async Task WriteStartAsync(ODataNestedResourceInfo nestedResourceInfo)
         {
             this.VerifyCanWriteStartNestedResourceInfo(false, nestedResourceInfo);
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartNestedResourceInfoImplementation(nestedResourceInfo));
+            // Currently, no asynchronous operation is involved when commencing with writing a nested resource info
+            await TaskUtils.GetTaskForSynchronousOperation(
+                () => this.WriteStartNestedResourceInfoImplementation(nestedResourceInfo)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -685,10 +688,10 @@ namespace Microsoft.OData
         /// Asynchronously finish writing a resourceSet/resource/nested resource info.
         /// </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public sealed override Task WriteEndAsync()
+        public sealed override async Task WriteEndAsync()
         {
             this.VerifyCanWriteEnd(false);
-            return TaskUtils.GetTaskForSynchronousOperation(this.WriteEndImplementation)
+            await this.WriteEndImplementationAsync()
                 .FollowOnSuccessWithTask(
                     task =>
                     {
@@ -701,7 +704,7 @@ namespace Microsoft.OData
                         {
                             return TaskUtils.CompletedTask;
                         }
-                    });
+                    }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -732,10 +735,11 @@ namespace Microsoft.OData
         /// The <see cref="ODataNestedResourceInfo.Url"/> will be ignored in that case and the Uri from the <see cref="ODataEntityReferenceLink.Url"/> will be used
         /// as the binding URL to be written.
         /// </remarks>
-        public sealed override Task WriteEntityReferenceLinkAsync(ODataEntityReferenceLink entityReferenceLink)
+        public sealed override async Task WriteEntityReferenceLinkAsync(ODataEntityReferenceLink entityReferenceLink)
         {
             this.VerifyCanWriteEntityReferenceLink(entityReferenceLink, false);
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteEntityReferenceLinkImplementation(entityReferenceLink));
+            await this.WriteEntityReferenceLinkImplementationAsync(entityReferenceLink)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -761,9 +765,20 @@ namespace Microsoft.OData
         }
 
         /// <inheritdoc/>
-        Task IODataOutputInStreamErrorListener.OnInStreamErrorAsync()
+        async Task IODataOutputInStreamErrorListener.OnInStreamErrorAsync()
         {
-            throw new NotImplementedException();
+            this.VerifyNotDisposed();
+
+            // We're in a completed state trying to write an error (we can't write error after the payload was finished as it might
+            // introduce another top-level element in XML)
+            if (this.State == WriterState.Completed)
+            {
+                throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromCompleted(this.State.ToString(), WriterState.Error.ToString()));
+            }
+
+            await this.StartPayloadInStartStateAsync()
+                .ConfigureAwait(false);
+            this.EnterScope(WriterState.Error, this.CurrentScope.Item);
         }
 
         /// <summary>
@@ -773,14 +788,13 @@ namespace Microsoft.OData
         {
         }
 
-
         /// <summary>
         /// This method is called when an async stream is requested. It is a no-op.
         /// </summary>
         /// <returns>A task for method called when a stream is requested.</returns>
         Task IODataStreamListener.StreamRequestedAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => ((IODataStreamListener)this).StreamRequested());
+            return TaskUtils.CompletedTask;
         }
 
         /// <summary>
@@ -804,12 +818,28 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// This method is called asynchronously when a stream is disposed
+        /// This method is called asynchronously when a stream is disposed.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        Task IODataStreamListener.StreamDisposedAsync()
+        async Task IODataStreamListener.StreamDisposedAsync()
         {
-            throw new NotImplementedException();
+            Debug.Assert(this.State == WriterState.Stream || this.State == WriterState.String,
+                "Stream was disposed when not in WriterState.Stream state.");
+
+            // Complete writing the stream
+            if (this.State == WriterState.Stream)
+            {
+                await this.EndBinaryStreamAsync()
+                    .ConfigureAwait(false);
+            }
+            else if (this.State == WriterState.String)
+            {
+                await this.EndTextWriterAsync()
+                    .ConfigureAwait(false);
+            }
+
+            await this.LeaveScopeAsync()
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1168,13 +1198,13 @@ namespace Microsoft.OData
             ODataDeltaSerializationInfo deltaSerializationInfo = null;
             ODataResourceSerializationInfo resourceSerializationInfo = null;
 
-            var deltaLink = item as ODataDeltaLink;
+            ODataDeltaLink deltaLink = item as ODataDeltaLink;
             if (deltaLink != null)
             {
                 deltaSerializationInfo = deltaLink.SerializationInfo;
             }
 
-            var deltaDeletedLink = item as ODataDeltaDeletedLink;
+            ODataDeltaDeletedLink deltaDeletedLink = item as ODataDeltaDeletedLink;
             if (deltaDeletedLink != null)
             {
                 deltaSerializationInfo = deltaDeletedLink.SerializationInfo;
@@ -1303,6 +1333,235 @@ namespace Microsoft.OData
             {
                 throw new ODataException(Strings.ODataWriterCore_DeltaLinkNotSupportedOnExpandedResourceSet);
             }
+        }
+
+        /// <summary>
+        /// Asynchronously start writing an OData payload.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected abstract Task StartPayloadAsync();
+
+        /// <summary>
+        /// Asynchronously finish writing an OData payload.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected abstract Task EndPayloadAsync();
+
+        /// <summary>
+        /// Asynchronously start writing a resource.
+        /// </summary>
+        /// <param name="resource">The resource to write.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected abstract Task StartResourceAsync(ODataResource resource);
+
+        /// <summary>
+        /// Asynchronously finish writing a resource.
+        /// </summary>
+        /// <param name="resource">The resource to write.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected abstract Task EndResourceAsync(ODataResource resource);
+
+        /// <summary>
+        /// Asynchronously start writing a single property.
+        /// </summary>
+        /// <param name="property">The property to write.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected virtual Task StartPropertyAsync(ODataPropertyInfo property)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Asynchronously finish writing a property.
+        /// </summary>
+        /// <param name="property">The property to write.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected virtual Task EndPropertyAsync(ODataPropertyInfo property)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Asynchronously start writing a resourceSet.
+        /// </summary>
+        /// <param name="resourceSet">The resourceSet to write.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected abstract Task StartResourceSetAsync(ODataResourceSet resourceSet);
+
+        /// <summary>
+        /// Asynchronously finish writing a resourceSet.
+        /// </summary>
+        /// <param name="resourceSet">The resourceSet to write.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected abstract Task EndResourceSetAsync(ODataResourceSet resourceSet);
+
+        /// <summary>
+        /// Asynchronously start writing a delta resource set.
+        /// </summary>
+        /// <param name="deltaResourceSet">The delta resource set to write.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected virtual Task StartDeltaResourceSetAsync(ODataDeltaResourceSet deltaResourceSet)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Asynchronously finish writing a delta resource set.
+        /// </summary>
+        /// <param name="deltaResourceSet">The delta resource set to write.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected virtual Task EndDeltaResourceSetAsync(ODataDeltaResourceSet deltaResourceSet)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Asynchronously start writing a deleted resource.
+        /// </summary>
+        /// <param name="deletedEntry">The deleted entry to write.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected virtual Task StartDeletedResourceAsync(ODataDeletedResource deletedEntry)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Asynchronously finish writing a deleted resource.
+        /// </summary>
+        /// <param name="deletedResource">The delta resource set to write.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected virtual Task EndDeletedResourceAsync(ODataDeletedResource deletedResource)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Asynchronously write a delta link or delta deleted link.
+        /// </summary>
+        /// <param name="deltaLink">The deleted entry to write.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected virtual Task StartDeltaLinkAsync(ODataDeltaLinkBase deltaLink)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Asynchronously create a <see cref="Stream"/> to write a binary value.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation. 
+        /// The value of the TResult parameter contains the <see cref="Stream"/> for writing the binary value.</returns>
+        protected virtual Task<Stream> StartBinaryStreamAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Asynchronously finish writing a stream.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected virtual Task EndBinaryStreamAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Asynchronously create a <see cref="TextWriter"/> to write a string value.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation. 
+        /// The value of the TResult parameter contains the <see cref="TextWriter"/> for writing a string value.</returns>
+        protected virtual Task<TextWriter> StartTextWriterAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Asynchronously finish writing a string value.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected virtual Task EndTextWriterAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Asynchronously write a primitive value within an untyped collection.
+        /// </summary>
+        /// <param name="primitiveValue">The primitive value to write.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected virtual Task WritePrimitiveValueAsync(ODataPrimitiveValue primitiveValue)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Asynchronously write a deferred (non-expanded) nested resource info.
+        /// </summary>
+        /// <param name="nestedResourceInfo">The nested resource info to write.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected abstract Task WriteDeferredNestedResourceInfoAsync(ODataNestedResourceInfo nestedResourceInfo);
+
+        /// <summary>
+        /// Asynchronously start writing a nested resource info with content.
+        /// </summary>
+        /// <param name="nestedResourceInfo">The nested resource info to write.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected abstract Task StartNestedResourceInfoWithContentAsync(ODataNestedResourceInfo nestedResourceInfo);
+
+        /// <summary>
+        /// Asynchronously finish writing a nested resource info with content.
+        /// </summary>
+        /// <param name="nestedResourceInfo">The nested resource info to write.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected abstract Task EndNestedResourceInfoWithContentAsync(ODataNestedResourceInfo nestedResourceInfo);
+
+        /// <summary>
+        /// Asynchronously write an entity reference link into a navigation link content.
+        /// </summary>
+        /// <param name="parentNestedResourceInfo">The parent navigation link which is being written around the entity reference link.</param>
+        /// <param name="entityReferenceLink">The entity reference link to write.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected abstract Task WriteEntityReferenceInNavigationLinkContentAsync(
+            ODataNestedResourceInfo parentNestedResourceInfo,
+            ODataEntityReferenceLink entityReferenceLink);
+
+        /// <summary>
+        /// Place where derived writers can perform custom steps before the resource is written, 
+        /// at the beginning of WriteStartAsync(ODataResource).
+        /// </summary>
+        /// <param name="resourceScope">The ResourceScope.</param>
+        /// <param name="resource">Resource to write.</param>
+        /// <param name="writingResponse">True if writing response.</param>
+        /// <param name="selectedProperties">The selected properties of this scope.</param>
+        protected virtual Task PrepareResourceForWriteStartAsync(
+            ResourceScope resourceScope,
+            ODataResource resource,
+            bool writingResponse,
+            SelectedPropertiesNode selectedProperties)
+        {
+            // No-op Atom and Verbose JSON.
+            // ODataJsonLightWriter will override this method and inject the appropriate metadata builder
+            // into the resource before writing.
+            return TaskUtils.CompletedTask;
+        }
+
+        /// <summary>
+        /// Place where derived writers can perform custom steps before the deleted resource is written, 
+        /// at the beginning of WriteStartAsync(ODataDeletedResource).
+        /// </summary>
+        /// <param name="resourceScope">The ResourceScope.</param>
+        /// <param name="deletedResource">Resource to write.</param>
+        /// <param name="writingResponse">True if writing response.</param>
+        /// <param name="selectedProperties">The selected properties of this scope.</param>
+        protected virtual Task PrepareDeletedResourceForWriteStartAsync(
+            DeletedResourceScope resourceScope,
+            ODataDeletedResource deletedResource,
+            bool writingResponse,
+            SelectedPropertiesNode selectedProperties)
+        {
+            // No-op Atom and Verbose JSON.
+            // ODataJsonLightWriter will override this method and inject the appropriate metadata builder
+            // into the resource before writing.
+            return TaskUtils.CompletedTask;
         }
 
         /// <summary>
@@ -1525,15 +1784,13 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="deltaLink">Delta (deleted) link to write.</param>
         /// <returns>The task.</returns>
-        private async Task WriteDeltaLinkAsyncImplementation(ODataDeltaLinkBase deltaLink)
+        private async Task WriteDeltaLinkImplementationAsync(ODataDeltaLinkBase deltaLink)
         {
-            await TaskUtils.GetTaskForSynchronousOperation(() =>
-            {
-                EnterScope(deltaLink is ODataDeltaLink ? WriterState.DeltaLink : WriterState.DeltaDeletedLink, deltaLink);
-                StartDeltaLink(deltaLink);
-            }).FollowOnSuccessWithTask((t) => WriteEndAsync()).ConfigureAwait(false);
+            EnterScope(deltaLink is ODataDeltaLink ? WriterState.DeltaLink : WriterState.DeltaDeletedLink, deltaLink);
+            await this.StartDeltaLinkAsync(deltaLink)
+                .FollowOnSuccessWithTask((t) => WriteEndAsync()).ConfigureAwait(false);
         }
-        
+
         /// <summary>
         /// Verifies that calling WriteStart nested resource info is valid.
         /// </summary>
@@ -1602,25 +1859,24 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="primitiveValue">Primitive value to write.</param>
         /// <returns>The task.</returns>
-        private async Task WritePrimitiveValueAsyncImplementation(ODataPrimitiveValue primitiveValue)
+        private async Task WritePrimitiveValueImplementationAsync(ODataPrimitiveValue primitiveValue)
         {
-            await InterceptExceptionAsync(async () =>
-               {
-                   await TaskUtils.GetTaskForSynchronousOperation(() =>
-                   {
-                       EnterScope(WriterState.Primitive, primitiveValue);
-                       if (!(CurrentResourceSetValidator == null) && primitiveValue != null)
-                       {
-                           Debug.Assert(primitiveValue.Value != null, "PrimitiveValue.Value should never be null!");
-                           IEdmType itemType = EdmLibraryExtensions.GetPrimitiveTypeReference(primitiveValue.Value.GetType()).Definition;
-                           CurrentResourceSetValidator.ValidateResource(itemType);
-                       }
+            EnterScope(WriterState.Primitive, primitiveValue);
 
-                       WritePrimitiveValue(primitiveValue);
-                   }).FollowOnSuccessWithTask((t) => WriteEndAsync()).ConfigureAwait(false);
-               }).ConfigureAwait(false);
+            await InterceptExceptionAsync(async () =>
+            {
+                if (!(CurrentResourceSetValidator == null) && primitiveValue != null)
+                {
+                    Debug.Assert(primitiveValue.Value != null, "PrimitiveValue.Value should never be null!");
+                    IEdmType itemType = EdmLibraryExtensions.GetPrimitiveTypeReference(primitiveValue.Value.GetType()).Definition;
+                    CurrentResourceSetValidator.ValidateResource(itemType);
+                }
+
+                await WritePrimitiveValueAsync(primitiveValue)
+                    .FollowOnSuccessWithTask((t) => WriteEndAsync()).ConfigureAwait(false);
+            }).ConfigureAwait(false);
         }
-        
+
         /// <summary>
         /// Verifies that calling CreateWriteStream is valid.
         /// </summary>
@@ -1815,7 +2071,7 @@ namespace Microsoft.OData
             this.VerifyNotDisposed();
             this.VerifyCallAllowed(synchronousCall);
 
-            ExceptionUtils.CheckArgumentNotNull(deltaLink, "delta link");
+            ExceptionUtils.CheckArgumentNotNull(deltaLink, "deltaLink");
         }
 
         /// <summary>
@@ -2142,7 +2398,7 @@ namespace Microsoft.OData
                 throw;
             }
         }
-        
+
         /// <summary>
         /// Increments the nested resource count by one and fails if the new value exceeds the maximum nested resource depth limit.
         /// </summary>
@@ -2299,10 +2555,10 @@ namespace Microsoft.OData
                     && (currentState == WriterState.Start || currentState == WriterState.NestedResourceInfo || currentState == WriterState.NestedResourceInfoWithContent)
                     && (newState == WriterState.ResourceSet || newState == WriterState.DeltaResourceSet))
                 {
-                    var resourceSet = item as ODataResourceSetBase;
+                    ODataResourceSetBase resourceSet = item as ODataResourceSetBase;
                     if (resourceSet != null && resourceSet.TypeName != null && this.outputContext.Model.IsUserModel())
                     {
-                        var collectionType = TypeNameOracle.ResolveAndValidateTypeName(
+                        IEdmCollectionType collectionType = TypeNameOracle.ResolveAndValidateTypeName(
                             this.outputContext.Model,
                             resourceSet.TypeName,
                             EdmTypeKind.Collection,
@@ -2334,14 +2590,14 @@ namespace Microsoft.OData
                         ODataPath odataPath = odataUri.Path;
                         IEdmStructuredType currentResourceType = currentScope.ResourceType;
 
-                        var resourceScope = currentScope as ResourceBaseScope;
+                        ResourceBaseScope resourceScope = currentScope as ResourceBaseScope;
                         TypeSegment resourceTypeCast = null;
                         if (resourceScope.ResourceTypeFromMetadata != currentResourceType)
                         {
                             resourceTypeCast = new TypeSegment(currentResourceType, null);
                         }
 
-                        var structuredProperty = this.WriterValidator.ValidatePropertyDefined(
+                        IEdmStructuralProperty structuredProperty = this.WriterValidator.ValidatePropertyDefined(
                             nestedResourceInfo.Name, currentResourceType)
                             as IEdmStructuralProperty;
 
@@ -2369,11 +2625,6 @@ namespace Microsoft.OData
                                 derivedTypeConstraints = this.outputContext.Model.GetDerivedTypeConstraints(navigationProperty);
 
                                 itemType = navigationProperty.ToEntityType();
-                                if (!nestedResourceInfo.IsCollection.HasValue)
-                                {
-                                    nestedResourceInfo.IsCollection = navigationProperty.Type.IsEntityCollectionType();
-                                }
-
                                 if (!nestedResourceInfo.IsCollection.HasValue)
                                 {
                                     nestedResourceInfo.IsCollection = navigationProperty.Type.IsEntityCollectionType();
@@ -2647,6 +2898,7 @@ namespace Microsoft.OData
                             throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromResource(this.State.ToString(), newState.ToString()));
                         }
 
+                        // TODO: The conditional expressions in the 2 `if` blocks below are adequately covered by the `if` block above?
                         if (newState == WriterState.DeletedResource && this.ParentScope.State != WriterState.DeltaResourceSet)
                         {
                             throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromResourceSet(this.State.ToString(), newState.ToString()));
@@ -2848,6 +3100,522 @@ namespace Microsoft.OData
             else
             {
                 return this.ParentResourceType != null && (this.ParentResourceType.FindProperty((this.CurrentScope.Item as ODataNestedResourceInfo).Name) == null);
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously verifies that calling <see cref="WriteStartAsync(ODataResourceSet)"/> is valid.
+        /// </summary>
+        /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
+        /// <param name="resourceSet">The resource set/collection to write.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        private async Task VerifyCanWriteStartResourceSetAsync(bool synchronousCall, ODataResourceSet resourceSet)
+        {
+            ExceptionUtils.CheckArgumentNotNull(resourceSet, "resourceSet");
+
+            this.VerifyNotDisposed();
+            this.VerifyCallAllowed(synchronousCall);
+
+            await this.StartPayloadInStartStateAsync()
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Asynchronously start writing a resource set - implementation of the actual functionality.
+        /// </summary>
+        /// <param name="resourceSet">The resource set to write.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        private async Task WriteStartResourceSetImplementationAsync(ODataResourceSet resourceSet)
+        {
+            await this.CheckForNestedResourceInfoWithContentAsync(ODataPayloadKind.ResourceSet, resourceSet)
+                .ConfigureAwait(false);
+            this.EnterScope(WriterState.ResourceSet, resourceSet);
+
+            if (!this.SkipWriting)
+            {
+                await this.InterceptExceptionAsync(async () =>
+                {
+                    // Verify query count
+                    if (resourceSet.Count.HasValue)
+                    {
+                        // Check that Count is not set for requests
+                        if (!this.outputContext.WritingResponse)
+                        {
+                            this.ThrowODataException(Strings.ODataWriterCore_QueryCountInRequest, resourceSet);
+                        }
+                    }
+
+                    await this.StartResourceSetAsync(resourceSet)
+                        .ConfigureAwait(false);
+                }).ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously verifies that calling <see cref="WriteStartAsync(ODataDeltaResourceSet)"/> is valid.
+        /// </summary>
+        /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
+        /// <param name="deltaResourceSet">The delta resource set/collection to write.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        private async Task VerifyCanWriteStartDeltaResourceSetAsync(bool synchronousCall, ODataDeltaResourceSet deltaResourceSet)
+        {
+            ExceptionUtils.CheckArgumentNotNull(deltaResourceSet, "deltaResourceSet");
+
+            this.VerifyWritingDelta();
+            this.VerifyNotDisposed();
+            this.VerifyCallAllowed(synchronousCall);
+
+            await this.StartPayloadInStartStateAsync()
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Asynchronously start writing a delta resource set - implementation of the actual functionality.
+        /// </summary>
+        /// <param name="deltaResourceSet">The delta resource set to write.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        private async Task WriteStartDeltaResourceSetImplementationAsync(ODataDeltaResourceSet deltaResourceSet)
+        {
+            await this.CheckForNestedResourceInfoWithContentAsync(ODataPayloadKind.ResourceSet, deltaResourceSet)
+                .ConfigureAwait(false);
+            this.EnterScope(WriterState.DeltaResourceSet, deltaResourceSet);
+
+            await this.InterceptExceptionAsync(async () =>
+            {
+                if (!this.outputContext.WritingResponse)
+                {
+                    // Check that links are not set for requests
+                    if (deltaResourceSet.NextPageLink != null)
+                    {
+                        this.ThrowODataException(Strings.ODataWriterCore_QueryNextLinkInRequest, deltaResourceSet);
+                    }
+
+                    if (deltaResourceSet.DeltaLink != null)
+                    {
+                        this.ThrowODataException(Strings.ODataWriterCore_QueryDeltaLinkInRequest, deltaResourceSet);
+                    }
+                }
+
+                await this.StartDeltaResourceSetAsync(deltaResourceSet)
+                    .ConfigureAwait(false);
+            }).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Asynchronously start writing a resource - implementation of the actual functionality.
+        /// </summary>
+        /// <param name="resource">Resource/item to write.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        private async Task WriteStartResourceImplementationAsync(ODataResource resource)
+        {
+            await this.StartPayloadInStartStateAsync()
+                .ConfigureAwait(false);
+            await this.CheckForNestedResourceInfoWithContentAsync(ODataPayloadKind.Resource, resource)
+                .ConfigureAwait(false);
+            this.EnterScope(WriterState.Resource, resource);
+
+            if (!this.SkipWriting)
+            {
+                this.IncreaseResourceDepth();
+                await this.InterceptExceptionAsync(async () =>
+                {
+                    if (resource != null)
+                    {
+                        ResourceScope resourceScope = (ResourceScope)this.CurrentScope;
+                        this.ValidateResourceForResourceSet(resource, resourceScope);
+                        await this.PrepareResourceForWriteStartAsync(
+                            resourceScope,
+                            resource,
+                            this.outputContext.WritingResponse,
+                            resourceScope.SelectedProperties).ConfigureAwait(false);
+                    }
+
+                    await this.StartResourceAsync(resource)
+                        .ConfigureAwait(false);
+                }).ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously start writing a deleted resource - implementation of the actual functionality.
+        /// </summary>
+        /// <param name="resource">Resource/item to write.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        private async Task WriteStartDeletedResourceImplementationAsync(ODataDeletedResource resource)
+        {
+            Debug.Assert(resource != null, "resource != null");
+
+            await this.StartPayloadInStartStateAsync()
+                .ConfigureAwait(false);
+            await this.CheckForNestedResourceInfoWithContentAsync(ODataPayloadKind.Resource, resource)
+                .ConfigureAwait(false);
+            this.EnterScope(WriterState.DeletedResource, resource);
+            this.IncreaseResourceDepth();
+
+            await this.InterceptExceptionAsync(async () =>
+            {
+                DeletedResourceScope resourceScope = this.CurrentScope as DeletedResourceScope;
+                this.ValidateResourceForResourceSet(resource, resourceScope);
+
+                await this.PrepareDeletedResourceForWriteStartAsync(
+                    resourceScope,
+                    resource,
+                    this.outputContext.WritingResponse,
+                    resourceScope.SelectedProperties).ConfigureAwait(false);
+                await this.StartDeletedResourceAsync(resource)
+                    .ConfigureAwait(false);
+            }).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Asynchronously start writing a property - implementation of the actual functionality.
+        /// </summary>
+        /// <param name="property">Property to write.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        private async Task WriteStartPropertyImplementationAsync(ODataPropertyInfo property)
+        {
+            this.EnterScope(WriterState.Property, property);
+
+            if (!this.SkipWriting)
+            {
+                await this.InterceptExceptionAsync(async () =>
+                {
+                    await this.StartPropertyAsync(property)
+                        .ConfigureAwait(false);
+
+                    if (property is ODataProperty)
+                    {
+                        PropertyInfoScope scope = this.CurrentScope as PropertyInfoScope;
+                        Debug.Assert(scope != null, "Scope for ODataPropertyInfo is not ODataPropertyInfoScope");
+                        scope.ValueWritten = true;
+                    }
+                }).ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously create a write stream - implementation of the actual functionality.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation. 
+        /// The value of the TResult parameter contains the stream for writing the binary.</returns>
+        private async Task<Stream> CreateWriteStreamImplementationAsync()
+        {
+            this.EnterScope(WriterState.Stream, null);
+            Stream underlyingStream = await this.StartBinaryStreamAsync()
+                .ConfigureAwait(false);
+
+            return new ODataNotificationStream(underlyingStream, /*listener*/ this, /*synchronous*/ false);
+        }
+
+        /// <summary>
+        /// Asynchronously create a text writer - implementation of the actual functionality.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation. 
+        /// The value of the TResult parameter contains the textwriter for writing a string value.</returns>
+        private async Task<TextWriter> CreateTextWriterImplementationAsync()
+        {
+            this.EnterScope(WriterState.String, null);
+            TextWriter textWriter = await this.StartTextWriterAsync()
+                .ConfigureAwait(false);
+
+            return new ODataNotificationWriter(textWriter, /*listener*/ this, /*synchronous*/ false);
+        }
+
+        /// <summary>
+        /// Asynchronously finish writing a resource set/resource/nested resource info.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        private Task WriteEndImplementationAsync()
+        {
+            return this.InterceptExceptionAsync(async () =>
+            {
+                Scope currentScope = this.CurrentScope;
+
+                switch (currentScope.State)
+                {
+                    case WriterState.Resource:
+                        if (!this.SkipWriting)
+                        {
+                            ODataResource resource = (ODataResource)currentScope.Item;
+
+                            await this.EndResourceAsync(resource)
+                                .ConfigureAwait(false);
+                            this.DecreaseResourceDepth();
+                        }
+
+                        break;
+                    case WriterState.DeletedResource:
+                        if (!this.SkipWriting)
+                        {
+                            ODataDeletedResource resource = (ODataDeletedResource)currentScope.Item;
+
+                            await this.EndDeletedResourceAsync(resource)
+                                .ConfigureAwait(false);
+                            this.DecreaseResourceDepth();
+                        }
+
+                        break;
+                    case WriterState.ResourceSet:
+                        if (!this.SkipWriting)
+                        {
+                            ODataResourceSet resourceSet = (ODataResourceSet)currentScope.Item;
+                            WriterValidationUtils.ValidateResourceSetAtEnd(resourceSet, !this.outputContext.WritingResponse);
+                            await this.EndResourceSetAsync(resourceSet)
+                                .ConfigureAwait(false);
+                        }
+
+                        break;
+                    case WriterState.DeltaLink:
+                    case WriterState.DeltaDeletedLink:
+                        break;
+                    case WriterState.DeltaResourceSet:
+                        if (!this.SkipWriting)
+                        {
+                            ODataDeltaResourceSet deltaResourceSet = (ODataDeltaResourceSet)currentScope.Item;
+                            WriterValidationUtils.ValidateDeltaResourceSetAtEnd(deltaResourceSet, !this.outputContext.WritingResponse);
+                            await this.EndDeltaResourceSetAsync(deltaResourceSet)
+                                .ConfigureAwait(false);
+                        }
+
+                        break;
+                    case WriterState.NestedResourceInfo:
+                        if (!this.outputContext.WritingResponse)
+                        {
+                            throw new ODataException(Strings.ODataWriterCore_DeferredLinkInRequest);
+                        }
+
+                        if (!this.SkipWriting)
+                        {
+                            ODataNestedResourceInfo link = (ODataNestedResourceInfo)currentScope.Item;
+                            this.DuplicatePropertyNameChecker.ValidatePropertyUniqueness(link);
+                            await this.WriteDeferredNestedResourceInfoAsync(link)
+                                .ConfigureAwait(false);
+
+                            this.MarkNestedResourceInfoAsProcessed(link);
+                        }
+
+                        break;
+                    case WriterState.NestedResourceInfoWithContent:
+                        if (!this.SkipWriting)
+                        {
+                            ODataNestedResourceInfo link = (ODataNestedResourceInfo)currentScope.Item;
+                            await this.EndNestedResourceInfoWithContentAsync(link)
+                                .ConfigureAwait(false);
+
+                            this.MarkNestedResourceInfoAsProcessed(link);
+                        }
+
+                        break;
+                    case WriterState.Property:
+                        {
+                            ODataPropertyInfo property = (ODataPropertyInfo)currentScope.Item;
+                            await this.EndPropertyAsync(property)
+                                .ConfigureAwait(false);
+                        }
+
+                        break;
+                    case WriterState.Primitive:
+                        // WriteEnd for WriterState.Primitive is a no-op; just leave scope
+                        break;
+                    case WriterState.Stream:
+                    case WriterState.String:
+                        throw new ODataException(Strings.ODataWriterCore_StreamNotDisposed);
+                    case WriterState.Start:                 // fall through
+                    case WriterState.Completed:             // fall through
+                    case WriterState.Error:                 // fall through
+                        throw new ODataException(Strings.ODataWriterCore_WriteEndCalledInInvalidState(currentScope.State.ToString()));
+                    default:
+                        throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_WriteEnd_UnreachableCodePath));
+                }
+
+                await this.LeaveScopeAsync()
+                    .ConfigureAwait(false);
+            });
+        }
+
+        /// <summary>
+        /// Asynchronously write an entity reference link.
+        /// </summary>
+        /// <param name="entityReferenceLink">The entity reference link to write.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        private async Task WriteEntityReferenceLinkImplementationAsync(ODataEntityReferenceLink entityReferenceLink)
+        {
+            Debug.Assert(entityReferenceLink != null, "entityReferenceLink != null");
+
+            await this.CheckForNestedResourceInfoWithContentAsync(ODataPayloadKind.EntityReferenceLink, null)
+                .ConfigureAwait(false);
+            Debug.Assert(
+                this.CurrentScope.Item is ODataNestedResourceInfo || this.ParentNestedResourceInfoScope.Item is ODataNestedResourceInfo,
+                "The CheckForNestedResourceInfoWithContent should have verified that entity reference link can only be written inside a nested resource info.");
+
+            if (!this.SkipWriting)
+            {
+                await this.InterceptExceptionAsync(async () =>
+                {
+                    WriterValidationUtils.ValidateEntityReferenceLink(entityReferenceLink);
+
+                    ODataNestedResourceInfo nestedInfo = this.CurrentScope.Item as ODataNestedResourceInfo;
+                    if (nestedInfo == null)
+                    {
+                        NestedResourceInfoScope nestedResourceInfoScope = this.ParentNestedResourceInfoScope;
+                        Debug.Assert(nestedResourceInfoScope != null);
+                        nestedInfo = (ODataNestedResourceInfo)nestedResourceInfoScope.Item;
+                    }
+
+                    await this.WriteEntityReferenceInNavigationLinkContentAsync(nestedInfo, entityReferenceLink)
+                        .ConfigureAwait(false);
+                }).ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously checks whether we are currently writing the first top-level element; if so call StartPayloadAsync
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        private Task StartPayloadInStartStateAsync()
+        {
+            if (this.State == WriterState.Start)
+            {
+                return this.InterceptExceptionAsync(this.StartPayloadAsync);
+            }
+
+            return TaskUtils.CompletedTask;
+        }
+
+        /// <summary>
+        /// Asynchronously checks whether we are currently writing a nested resource info and switches to NestedResourceInfoWithContent state if we do.
+        /// </summary>
+        /// <param name="contentPayloadKind">
+        /// What kind of payload kind is being written as the content of a nested resource info.
+        /// Only Resource Set, Resource or EntityReferenceLink are allowed.
+        /// </param>
+        /// <param name="contentPayload">The ODataResource or ODataResourceSet to write, or null for ODataEntityReferenceLink.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        private async Task CheckForNestedResourceInfoWithContentAsync(ODataPayloadKind contentPayloadKind, ODataItem contentPayload)
+        {
+            Debug.Assert(
+                contentPayloadKind == ODataPayloadKind.ResourceSet || contentPayloadKind == ODataPayloadKind.Resource || contentPayloadKind == ODataPayloadKind.EntityReferenceLink,
+                "Only ResourceSet, Resource or EntityReferenceLink can be specified as a payload kind for a nested resource info content.");
+
+            Scope currentScope = this.CurrentScope;
+            if (currentScope.State == WriterState.NestedResourceInfo || currentScope.State == WriterState.NestedResourceInfoWithContent)
+            {
+                ODataNestedResourceInfo currentNestedResourceInfo = (ODataNestedResourceInfo)currentScope.Item;
+
+                this.InterceptException(() =>
+                {
+                    if (this.ParentResourceType != null)
+                    {
+                        IEdmStructuralProperty structuralProperty = this.ParentResourceType.FindProperty(
+                            currentNestedResourceInfo.Name) as IEdmStructuralProperty;
+                        if (structuralProperty != null)
+                        {
+                            this.CurrentScope.ItemType = structuralProperty.Type.Definition.AsElementType();
+                            IEdmNavigationSource parentNavigationSource = this.ParentResourceNavigationSource;
+
+                            this.CurrentScope.NavigationSource = parentNavigationSource;
+                        }
+                        else
+                        {
+                            IEdmNavigationProperty navigationProperty = this.WriterValidator.ValidateNestedResourceInfo(
+                                currentNestedResourceInfo,
+                                this.ParentResourceType,
+                                contentPayloadKind);
+                            if (navigationProperty != null)
+                            {
+                                this.CurrentScope.ResourceType = navigationProperty.ToEntityType();
+                                IEdmNavigationSource parentNavigationSource = this.ParentResourceNavigationSource;
+
+                                if (this.CurrentScope.NavigationSource == null)
+                                {
+                                    IEdmPathExpression bindingPath;
+                                    this.CurrentScope.NavigationSource = parentNavigationSource?.FindNavigationTarget(
+                                        navigationProperty,
+                                        BindingPathHelper.MatchBindingPath,
+                                        this.CurrentScope.ODataUri.Path.Segments,
+                                        out bindingPath);
+                                }
+                            }
+                        }
+                    }
+                });
+
+                if (currentScope.State == WriterState.NestedResourceInfoWithContent)
+                {
+                    // If we are already in the NestedResourceInfoWithContent state, it means the caller is trying to write two items
+                    // into the nested resource info content. This is only allowed for collection navigation property in request/response.
+                    if (currentNestedResourceInfo.IsCollection != true)
+                    {
+                        this.ThrowODataException(Strings.ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent, currentNestedResourceInfo);
+                    }
+
+                    // Note that we don't invoke duplicate property checker in this case as it's not necessary.
+                    // What happens inside the nested resource info was already validated by the condition above.
+                    // For collection in request we allow any combination anyway.
+                    // For everything else we only allow a single item in the content and thus we will fail above.
+                }
+                else
+                {
+                    // We are writing a nested resource info with content; change the state
+                    this.PromoteNestedResourceInfoScope(contentPayload);
+
+                    if (!this.SkipWriting)
+                    {
+                        await this.InterceptExceptionAsync(async () =>
+                        {
+                            if (!(currentNestedResourceInfo.SerializationInfo != null && currentNestedResourceInfo.SerializationInfo.IsComplex)
+                                && (this.CurrentScope.ItemType == null || this.CurrentScope.ItemType.IsEntityOrEntityCollectionType()))
+                            {
+                                this.DuplicatePropertyNameChecker.ValidatePropertyUniqueness(currentNestedResourceInfo);
+                                await this.StartNestedResourceInfoWithContentAsync(currentNestedResourceInfo)
+                                    .ConfigureAwait(false);
+                            }
+                        }).ConfigureAwait(false);
+                    }
+                }
+            }
+            else
+            {
+                if (contentPayloadKind == ODataPayloadKind.EntityReferenceLink)
+                {
+                    Scope parentScope = this.ParentNestedResourceInfoScope;
+                    Debug.Assert(parentScope != null);
+                    if (parentScope.State != WriterState.NestedResourceInfo && parentScope.State != WriterState.NestedResourceInfoWithContent)
+                    {
+                        this.ThrowODataException(Strings.ODataWriterCore_EntityReferenceLinkWithoutNavigationLink, null);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously leave the current writer scope and return to the previous scope.
+        /// When reaching the top-level replace the 'Started' scope with a 'Completed' scope.
+        /// </summary>
+        /// <remarks>Note that this method is never called once an error has been written or a fatal exception has been thrown.</remarks>
+        private async Task LeaveScopeAsync()
+        {
+            Debug.Assert(this.State != WriterState.Error, "this.State != WriterState.Error");
+
+            this.scopeStack.Pop();
+
+            // if we are back at the root replace the 'Start' state with the 'Completed' state
+            if (this.scopeStack.Count == 1)
+            {
+                Scope startScope = this.scopeStack.Pop();
+                Debug.Assert(startScope.State == WriterState.Start, "startScope.State == WriterState.Start");
+                this.PushScope(
+                    WriterState.Completed,
+                    /*item*/ null,
+                    startScope.NavigationSource,
+                    startScope.ResourceType,
+                    /*skipWriting*/ false,
+                    startScope.SelectedProperties,
+                    startScope.ODataUri,
+                    /*derivedTypeConstraints*/ null);
+                await this.InterceptExceptionAsync(this.EndPayloadAsync)
+                    .ConfigureAwait(false);
+                this.NotifyListener(WriterState.Completed);
             }
         }
 
@@ -3212,7 +3980,7 @@ namespace Microsoft.OData
                     // For Entity, currently we check the navigation source.
                     // For Complex, we don't have navigation source, So we shouldn't check it.
                     // If ResourceType is not provided, serialization info or navigation source info should be provided.
-                    var throwIfMissingTypeInfo = writingResponse && (this.ResourceType == null || this.ResourceType.TypeKind == EdmTypeKind.Entity);
+                    bool throwIfMissingTypeInfo = writingResponse && (this.ResourceType == null || this.ResourceType.TypeKind == EdmTypeKind.Entity);
 
                     this.typeContext = ODataResourceTypeContext.Create(
                         this.serializationInfo,

@@ -50,7 +50,6 @@ namespace Microsoft.OData.Tests.JsonLight
 
             this.categoriesEntitySet = new EdmEntitySet(entityContainer, "Categories", this.categoryEntityType, true);
 
-
             this.stream = new MemoryStream();
             this.messageWriterSettings = new ODataMessageWriterSettings
             {

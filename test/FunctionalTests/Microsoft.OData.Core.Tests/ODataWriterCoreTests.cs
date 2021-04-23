@@ -278,6 +278,56 @@ namespace Microsoft.OData.Tests
             {
                 throw new NotImplementedException();
             }
+
+            protected override Task StartPayloadAsync()
+            {
+                throw new NotImplementedException();
+            }
+
+            protected override Task EndPayloadAsync()
+            {
+                throw new NotImplementedException();
+            }
+
+            protected override Task StartResourceAsync(ODataResource resource)
+            {
+                throw new NotImplementedException();
+            }
+
+            protected override Task EndResourceAsync(ODataResource resource)
+            {
+                throw new NotImplementedException();
+            }
+
+            protected override Task StartResourceSetAsync(ODataResourceSet resourceSet)
+            {
+                throw new NotImplementedException();
+            }
+
+            protected override Task EndResourceSetAsync(ODataResourceSet resourceSet)
+            {
+                throw new NotImplementedException();
+            }
+
+            protected override Task WriteDeferredNestedResourceInfoAsync(ODataNestedResourceInfo nestedResourceInfo)
+            {
+                throw new NotImplementedException();
+            }
+
+            protected override Task StartNestedResourceInfoWithContentAsync(ODataNestedResourceInfo nestedResourceInfo)
+            {
+                throw new NotImplementedException();
+            }
+
+            protected override Task EndNestedResourceInfoWithContentAsync(ODataNestedResourceInfo nestedResourceInfo)
+            {
+                throw new NotImplementedException();
+            }
+
+            protected override Task WriteEntityReferenceInNavigationLinkContentAsync(ODataNestedResourceInfo parentNestedResourceInfo, ODataEntityReferenceLink entityReferenceLink)
+            {
+                throw new NotImplementedException();
+            }
             #endregion
         }
 
