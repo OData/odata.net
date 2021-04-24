@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Metadata;
@@ -2494,6 +2495,63 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             Action parse = () => ParseOrderBy("ID in (1,2,3]", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
             parse.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_UnbalancedBracketExpression);
+        }
+        
+        [Fact]
+        public void FilterWithInOperationWithDateTimeOffsetCollection()
+        {
+            FilterClause filter = ParseFilter("Birthdate in (1950-01-02T06:15:00Z, 1977-09-16T15:00:00+05:00)",
+                HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+            Assert.Equal("Birthdate", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
+            Assert.Equal("(1950-01-02T06:15:00Z, 1977-09-16T15:00:00+05:00)",
+                Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
+            Assert.Equal(new object[]{new DateTimeOffset(1950, 1, 2, 6, 15, 0, TimeSpan.Zero), 
+                    new DateTimeOffset(1977, 9, 16, 15, 0, 0, TimeSpan.FromHours(5))},
+                Assert.IsType<CollectionConstantNode>(inNode.Right).Collection.Select(x => x.Value));
+        }
+        
+        [Fact]
+        public void FilterWithInOperationWithDateCollection()
+        {
+            FilterClause filter = ParseFilter("MyDate in (1950-01-02, 1977-09-16)",
+                HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+            Assert.Equal("MyDate", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
+            Assert.Equal("(1950-01-02, 1977-09-16)",
+                Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
+            Assert.Equal(new object[]{new Date(1950, 1, 2), new Date(1977, 9, 16)},
+                Assert.IsType<CollectionConstantNode>(inNode.Right).Collection.Select(x => x.Value));
+        }
+        
+        [Fact]
+        public void FilterWithInOperationWithTimeOfDayCollection()
+        {
+            FilterClause filter = ParseFilter("MyTimeOfDay in (12:00:00, 08:00:01)",
+                HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+            Assert.Equal("MyTimeOfDay", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
+            Assert.Equal("(12:00:00, 08:00:01)",
+                Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
+            Assert.Equal(new object[]{new TimeOfDay(12, 0, 0, 0), new TimeOfDay(8, 0, 1, 0)},
+                Assert.IsType<CollectionConstantNode>(inNode.Right).Collection.Select(x => x.Value));
+        }
+        
+        [Fact]
+        public void FilterWithInOperationWithDurationCollection()
+        {
+            FilterClause filter = ParseFilter("TimeEmployed in (duration'PT2H47M30S', duration'PT2H46M40S')",
+                HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+            Assert.Equal("TimeEmployed", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
+            Assert.Equal("(duration'PT2H47M30S', duration'PT2H46M40S')",
+                Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
+            Assert.Equal(new object[]{new TimeSpan(2, 47, 30), new TimeSpan(2, 46, 40)},
+                Assert.IsType<CollectionConstantNode>(inNode.Right).Collection.Select(x => x.Value));
         }
 #endregion
 
