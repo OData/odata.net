@@ -77,7 +77,7 @@ namespace Microsoft.OData.UriParser
 
             string identifier = this.lexer.CurrentToken.GetIdentifier();
 
-            bool enableCaseInsensitive = uriQueryExpressionParser.enableCaseInsensitiveBuiltinIdentifier;
+            bool enableCaseInsensitive = uriQueryExpressionParser != null ? uriQueryExpressionParser.enableCaseInsensitiveBuiltinIdentifier : false;
 
             // If identifier is $count, we need to return a CountSegmentToken.
             if (identifier.Equals(UriQueryConstants.CountSegment, enableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
