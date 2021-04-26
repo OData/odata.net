@@ -411,6 +411,20 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void ParseFilterWithEntityCollectionCountWithUnbalanceParenthesisThrows()
+        {
+            Action parse = () => ParseFilter("MyFriendsDogs/$count($filter=Color eq 'Brown' gt 1", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            parse.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_CloseParenExpected(50, "MyFriendsDogs/$count($filter=Color eq 'Brown' gt 1"));
+        }
+
+        [Fact]
+        public void ParseFilterWithEntityCollectionCountWithIllegalQueryOptionThrows()
+        {
+            Action parse = () => ParseFilter("MyFriendsDogs/$count($orderby=Color) gt 1", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            parse.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_IllegalQueryOptioninDollarCount());
+        }
+
+        [Fact]
         public void CompareComplexWithNull()
         {
             var filter = ParseFilter("MyAddress eq null", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());

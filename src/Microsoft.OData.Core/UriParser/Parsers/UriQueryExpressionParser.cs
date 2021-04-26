@@ -54,7 +54,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Whether to allow case insensitive for builtin identifier.
         /// </summary>
-        private bool enableCaseInsensitiveBuiltinIdentifier = false;
+        internal bool enableCaseInsensitiveBuiltinIdentifier = false;
 
         /// <summary>
         /// Tracks the depth of aggregate expression recursion.

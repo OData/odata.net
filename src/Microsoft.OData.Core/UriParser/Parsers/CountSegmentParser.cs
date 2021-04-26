@@ -80,6 +80,7 @@ namespace Microsoft.OData.UriParser
                 textWithinParenthesis = this.lexer.AdvanceThroughExpandOption();
             }
 
+            // TODO: check for NoDollarQueryOptions
             if (textWithinParenthesis.StartsWith(ExpressionConstants.QueryOptionFilter, StringComparison.OrdinalIgnoreCase))
             {
                 string filterQuery = TryGetQueryOption(ExpressionConstants.QueryOptionFilter, textWithinParenthesis);
@@ -92,12 +93,13 @@ namespace Microsoft.OData.UriParser
             }
             else
             {
-                // Error
+                // Only a $filter and $search can be inside a $count()
+                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_IllegalQueryOptioninDollarCount());
             }
 
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
             {
-                // Error
+                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_CloseParenExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             this.lexer.NextToken();
@@ -124,6 +126,14 @@ namespace Microsoft.OData.UriParser
             char[] trimmingChars = queryOption.ToCharArray();
 
             return query.TrimStart(trimmingChars);
+        }
+
+        /// <summary>Creates an exception for a parse error.</summary>
+        /// <param name="message">Message text.</param>
+        /// <returns>A new Exception.</returns>
+        private static Exception ParseError(string message)
+        {
+            return new ODataException(message);
         }
     }
 }
