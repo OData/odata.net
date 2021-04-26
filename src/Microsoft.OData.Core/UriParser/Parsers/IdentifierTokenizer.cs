@@ -36,34 +36,17 @@ namespace Microsoft.OData.UriParser
         private readonly IFunctionCallParser functionCallParser;
 
         /// <summary>
-        /// Parser which consumes the query expressions.
-        /// </summary>
-        private readonly UriQueryExpressionParser uriQueryExpressionParser;
-
-        /// <summary>
         /// Parse an Identifier into the right QueryToken
         /// </summary>
         /// <param name="parameters">parameters passed in to the UriQueryExpressionParser</param>
         /// <param name="functionCallParser">Object to use to handle parsing function calls.</param>
         public IdentifierTokenizer(HashSet<string> parameters, IFunctionCallParser functionCallParser)
-            :this(parameters, functionCallParser, null)
-        {
-        }
-
-        /// <summary>
-        /// Parse an Identifier into the right QueryToken
-        /// </summary>
-        /// <param name="parameters">parameters passed in to the UriQueryExpressionParser</param>
-        /// <param name="functionCallParser">Object to use to handle parsing function calls.</param>
-        /// <param name="uriQueryExpressionParser">Instance of the UriQueryExpressionParser.</param>
-        public IdentifierTokenizer(HashSet<string> parameters, IFunctionCallParser functionCallParser, UriQueryExpressionParser uriQueryExpressionParser)
         {
             ExceptionUtils.CheckArgumentNotNull(parameters, "parameters");
             ExceptionUtils.CheckArgumentNotNull(functionCallParser, "functionCallParser");
             this.lexer = functionCallParser.Lexer;
             this.parameters = parameters;
             this.functionCallParser = functionCallParser;
-            this.uriQueryExpressionParser = uriQueryExpressionParser;
         }
 
         /// <summary>
@@ -74,19 +57,6 @@ namespace Microsoft.OData.UriParser
         public QueryToken ParseIdentifier(QueryToken parent)
         {
             this.lexer.ValidateToken(ExpressionTokenKind.Identifier);
-
-            string identifier = this.lexer.CurrentToken.GetIdentifier();
-
-            bool enableCaseInsensitive = uriQueryExpressionParser != null ? uriQueryExpressionParser.enableCaseInsensitiveBuiltinIdentifier : false;
-
-            // If identifier is $count, we need to return a CountSegmentToken.
-            if (identifier.Equals(UriQueryConstants.CountSegment, enableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
-            {
-                this.lexer.NextToken();
-
-                CountSegmentParser countSegmentParser = new CountSegmentParser(this.lexer, this.uriQueryExpressionParser);
-                return countSegmentParser.CreateCountSegmentToken(identifier, parent);
-            }
 
             // An open paren here would indicate calling a method in regular C# syntax.
             // TODO: Make this more generalized to work with any kind of function.

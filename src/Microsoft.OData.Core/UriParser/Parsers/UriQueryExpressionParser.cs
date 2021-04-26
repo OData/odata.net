@@ -54,7 +54,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Whether to allow case insensitive for builtin identifier.
         /// </summary>
-        internal bool enableCaseInsensitiveBuiltinIdentifier = false;
+        private bool enableCaseInsensitiveBuiltinIdentifier = false;
 
         /// <summary>
         /// Tracks the depth of aggregate expression recursion.
@@ -1050,13 +1050,17 @@ namespace Microsoft.OData.UriParser
                 {
                     expr = this.ParseAll(expr);
                 }
+                else if (this.TokenIdentifierIs(ExpressionConstants.QueryOptionCount))
+                {
+                    expr = this.ParseCountSegment(expr);
+                }
                 else if (this.lexer.PeekNextToken().Kind == ExpressionTokenKind.Slash)
                 {
                     expr = this.ParseSegment(expr);
                 }
                 else
                 {
-                    IdentifierTokenizer identifierTokenizer = new IdentifierTokenizer(this.parameters, new FunctionCallParser(this.lexer, this, this.IsInAggregateExpression), this);
+                    IdentifierTokenizer identifierTokenizer = new IdentifierTokenizer(this.parameters, new FunctionCallParser(this.lexer, this, this.IsInAggregateExpression));
                     expr = identifierTokenizer.ParseIdentifier(expr);
                 }
             }
@@ -1227,6 +1231,20 @@ namespace Microsoft.OData.UriParser
             }
 
             return new InnerPathToken(propertyName, parent, null);
+        }
+
+        /// <summary>
+        /// Parses a $count segment.
+        /// </summary>
+        /// <param name="parent">The parent of the segment node.</param>
+        /// <returns>The lexical token representing the $count segment.</returns>
+        private QueryToken ParseCountSegment(QueryToken parent)
+        {
+            string identifier = this.lexer.CurrentToken.GetIdentifier();
+            this.lexer.NextToken();
+
+            CountSegmentParser countSegmentParser = new CountSegmentParser(this.lexer, this);
+            return countSegmentParser.CreateCountSegmentToken(identifier, parent);
         }
 
         private AggregationMethodDefinition ParseAggregateWith()
