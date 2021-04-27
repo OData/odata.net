@@ -377,11 +377,11 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Binds a CountSegment token.
         /// </summary>
-        /// <param name="CountSegmentToken">The CountSegment token to bind.</param>
+        /// <param name="countSegmentToken">The CountSegment token to bind.</param>
         /// <returns>The bound CountSegment token.</returns>
         protected virtual QueryNode BindCountSegment(CountSegmentToken countSegmentToken)
         {
-            CountSegmentBinder countSegmentBinder = new CountSegmentBinder(this.Bind);
+            CountSegmentBinder countSegmentBinder = new CountSegmentBinder(this.Bind, this.BindingState);
             return countSegmentBinder.BindCountSegment(countSegmentToken);
         }
     }

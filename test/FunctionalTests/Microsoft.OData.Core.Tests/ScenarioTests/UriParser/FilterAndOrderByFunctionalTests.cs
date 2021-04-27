@@ -405,7 +405,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var filterQueryNode = ParseFilter("MyFriendsDogs/$count($filter=Color eq 'Brown') gt 1", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
-            filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
+            filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan).
                 Left.ShouldBeCountNode().
                     Source.ShouldBeCollectionNavigationNode(HardCodedTestModel.GetPersonMyFriendsDogsProp());
         }

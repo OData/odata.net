@@ -6,40 +6,67 @@
 
 namespace Microsoft.OData.UriParser
 {
-    using System.Linq;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Metadata;
     using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
-    /// Class that knows how to bind an end path token, which could be several things.
+    /// Class that knows how to bind a Count segment token.
     /// </summary>
     internal sealed class CountSegmentBinder
     {
         /// <summary>
-        /// Constructs a CountSegmentBinder object using the given function to bind parent token.
+        /// Method to use to visit the token tree and bind the tokens recursively.
         /// </summary>
-        /// <param name="bindMethod">Method to bind the EndPathToken's parent, if there is one.</param>
-        /// <param name="state">State of the metadata binding.</param>am>
-        /// <remarks>
-        /// Make bindMethod of return type SingleValueQueryNode.
-        /// </remarks>
-        internal CountSegmentBinder(MetadataBinder.QueryTokenVisitor bindMethod)
+        private readonly MetadataBinder.QueryTokenVisitor bindMethod;
+
+        /// <summary>
+        /// State to use for binding.
+        /// </summary>
+        private readonly BindingState state;
+
+        /// <summary>
+        /// Constructs a CountSegmentBinder object.
+        /// </summary>
+        /// <param name="bindMethod">Method to use to visit the token tree and bind the tokens recursively.</param>
+        /// <param name="state">State of the metadata binding.</param>
+        internal CountSegmentBinder(MetadataBinder.QueryTokenVisitor bindMethod, BindingState state)
         {
+            this.bindMethod = bindMethod;
+            this.state = state;
         }
 
         /// <summary>
-        /// Binds an In operator token.
+        /// Binds an Count segment token.
         /// </summary>
-        /// <param name="inToken">The In operator token to bind.</param>
+        /// <param name="countSegmentToken">The Count segment token to bind.</param>
         /// <param name="state">State of the metadata binding.</param>
-        /// <returns>The bound In operator token.</returns>
+        /// <returns>The bound Count segment token.</returns>
         internal QueryNode BindCountSegment(CountSegmentToken countSegmentToken)
         {
             ExceptionUtils.CheckArgumentNotNull(countSegmentToken, "countSegmentToken");
 
-            CollectionNode node = null;
-            return new CountNode(node);
+            QueryNode source = this.bindMethod(countSegmentToken.NextToken);
+            CollectionNode node = source as CollectionNode;
+
+            FilterClause filterClause = null;
+            SearchClause searchClause = null;
+
+            BindingState innerBindingState = new BindingState(state.Configuration);
+            MetadataBinder binder = new MetadataBinder(innerBindingState);
+            innerBindingState.ImplicitRangeVariable = NodeFactory.CreateParameterNode(ExpressionConstants.It, node);
+
+            if (countSegmentToken.FilterOption != null)
+            {
+                FilterBinder filterBinder = new FilterBinder(binder.Bind, innerBindingState);
+                filterClause = filterBinder.BindFilter(countSegmentToken.FilterOption);
+            }
+
+            if(countSegmentToken.SearchOption != null)
+            {
+                SearchBinder searchBinder = new SearchBinder(bindMethod);
+                searchClause = searchBinder.BindSearch(countSegmentToken.SearchOption);
+            }
+
+            return new CountNode(node, filterClause, searchClause);
         }
     }
 }

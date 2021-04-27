@@ -24,15 +24,42 @@ namespace Microsoft.OData.UriParser
         private readonly CollectionNode source;
 
         /// <summary>
+        /// The filter clause to be evaluated first before count is applied.
+        /// </summary>
+        private readonly FilterClause filterClause;
+
+        /// <summary>
+        /// The search clause to be evaluated first before count is applied.
+        /// </summary>
+        private readonly SearchClause searchClause;
+
+        /// <summary>
         /// Constructs a new <see cref="CountNode"/>.
         /// </summary>
         /// <param name="source">The value containing the property.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input source is null.</exception>
         public CountNode(CollectionNode source)
+            :this(source, null, null)
         {
             ExceptionUtils.CheckArgumentNotNull(source, "source");
 
             this.source = source;
+        }
+
+        /// <summary>
+        /// Constructs a new <see cref="CountNode"/>.
+        /// </summary>
+        /// <param name="source">The value containing the property.</param>
+        /// <param name="filterClause">The <see cref="Microsoft.OData.UriParser.FilterClause"/>in the count node.</param>
+        /// <param name="searchClause">The <see cref="Microsoft.OData.UriParser.SearchClause"/>in the count node.</param>
+        /// <exception cref="System.ArgumentNullException">Throws if the input source is null.</exception>
+        public CountNode(CollectionNode source, FilterClause filterClause, SearchClause searchClause)
+        {
+            ExceptionUtils.CheckArgumentNotNull(source, "source");
+
+            this.source = source;
+            this.filterClause = filterClause;
+            this.searchClause = searchClause;
         }
 
         /// <summary>
@@ -41,6 +68,22 @@ namespace Microsoft.OData.UriParser
         public CollectionNode Source
         {
             get { return this.source; }
+        }
+
+        /// <summary>
+        /// Gets the filter node.
+        /// </summary>
+        public FilterClause FilterClause
+        {
+            get { return this.filterClause; }
+        }
+
+        /// <summary>
+        /// Gets the search node.
+        /// </summary>
+        public SearchClause SearchClause
+        {
+            get { return this.searchClause; }
         }
 
         /// <summary>
