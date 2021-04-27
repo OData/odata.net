@@ -70,6 +70,7 @@ namespace Microsoft.OData.UriParser
             // We need to maintain the recursionDepth of the outer $filter query since calling
             // ParseFilter or ParseSearch below will reset it to 0.
             int outerRecursiveDepth = this.UriQueryExpressionParser.recursionDepth;
+            ExpressionLexer outerLexer = this.UriQueryExpressionParser.Lexer;
 
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
             {
@@ -104,6 +105,7 @@ namespace Microsoft.OData.UriParser
 
             this.lexer.NextToken();
             this.UriQueryExpressionParser.recursionDepth = outerRecursiveDepth;
+            this.UriQueryExpressionParser.Lexer = outerLexer;
             return new CountSegmentToken(identifier, countedInstance, filterToken, searchToken);
         }
 
