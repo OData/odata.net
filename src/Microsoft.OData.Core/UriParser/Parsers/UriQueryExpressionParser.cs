@@ -1050,10 +1050,10 @@ namespace Microsoft.OData.UriParser
                 {
                     expr = this.ParseAll(expr);
                 }
-                else if (this.TokenIdentifierIs(ExpressionConstants.QueryOptionCount))
+                /*else if (this.TokenIdentifierIs(ExpressionConstants.QueryOptionCount))
                 {
                     expr = this.ParseCountSegment(expr);
-                }
+                }*/
                 else if (this.lexer.PeekNextToken().Kind == ExpressionTokenKind.Slash)
                 {
                     expr = this.ParseSegment(expr);
