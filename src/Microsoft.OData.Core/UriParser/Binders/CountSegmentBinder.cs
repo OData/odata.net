@@ -50,9 +50,9 @@ namespace Microsoft.OData.UriParser
             FilterClause filterClause = null;
             SearchClause searchClause = null;
 
-            BindingState innerBindingState = new BindingState(state.Configuration);
-            MetadataBinder binder = new MetadataBinder(innerBindingState);
+            BindingState innerBindingState = new BindingState(state.Configuration);            
             innerBindingState.ImplicitRangeVariable = NodeFactory.CreateParameterNode(ExpressionConstants.It, node);
+            MetadataBinder binder = new MetadataBinder(innerBindingState);
 
             if (countSegmentToken.FilterOption != null)
             {

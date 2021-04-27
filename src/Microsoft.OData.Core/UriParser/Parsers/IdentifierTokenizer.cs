@@ -10,7 +10,6 @@ namespace Microsoft.OData.UriParser
 
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using ODataErrorStrings = Microsoft.OData.Strings;
 
     #endregion Namespaces
@@ -61,7 +60,6 @@ namespace Microsoft.OData.UriParser
             // An open paren here would indicate calling a method in regular C# syntax.
             // TODO: Make this more generalized to work with any kind of function.
             bool identifierIsFunction = this.lexer.ExpandIdentifierAsFunction();
-
             QueryToken functionCallToken;
             if (identifierIsFunction && this.functionCallParser.TryParseIdentifierAsFunction(parent, out functionCallToken))
             {
