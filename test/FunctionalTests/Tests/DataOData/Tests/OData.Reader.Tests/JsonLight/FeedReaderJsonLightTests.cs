@@ -179,9 +179,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         .JsonRepresentation("{" +
                             "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
                             "\"" + JsonLightConstants.ODataValuePropertyName + "\":[ 1 ]" +
-                            "}"),
+                            "}")
+                        .ExpectedEntityType(cityType, citiesEntitySet),               
                     PayloadEdmModel = model,
-                    ExpectedResultPayloadElement = (ReaderTestConfiguration t) => { return PayloadBuilder.EntitySet().Append(new PrimitiveValue("Edm.Int32", 1)); },
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonReader_CannotReadResourcesOfResourceSet","PrimitiveValue"),
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
