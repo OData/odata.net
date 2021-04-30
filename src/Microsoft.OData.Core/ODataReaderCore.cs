@@ -473,6 +473,15 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// This method is called asynchronously when a stream is disposed.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        Task IODataStreamListener.StreamDisposedAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Seek scope in the stack which is type of <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">The type of scope to seek.</typeparam>

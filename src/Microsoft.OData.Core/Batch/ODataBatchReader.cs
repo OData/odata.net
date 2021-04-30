@@ -232,6 +232,16 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// This method is called asynchronously to notify that the content stream of a batch operation has been disposed.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        Task IODataStreamListener.StreamDisposedAsync()
+        {
+            this.operationState = OperationState.StreamDisposed;
+            return TaskUtils.CompletedTask;
+        }
+
+        /// <summary>
         /// Sets the 'Exception' state and then throws an ODataException with the specified error message.
         /// </summary>
         /// <param name="errorMessage">The error message for the exception.</param>

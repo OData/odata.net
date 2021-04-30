@@ -411,6 +411,17 @@ namespace Microsoft.OData
         public abstract void StreamDisposed();
 
         /// <summary>
+        /// This method is called asynchronously to notify that the content stream of a batch operation has been disposed.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        public virtual Task StreamDisposedAsync()
+        {
+            // NOTE: ODataBatchWriter class is abstract and public. This method body is intended
+            // to prevent a breaking change in subclasses that provide the implementation.
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// This method notifies the listener, that an in-stream error is to be written.
         /// </summary>
         /// <remarks>
