@@ -288,13 +288,19 @@ namespace Microsoft.OData.Evaluation
             Debug.Assert(resource != null, "resource != null");
             Debug.Assert(propertyKind == ODataPropertyKind.Key || propertyKind == ODataPropertyKind.ETag, "propertyKind == ODataPropertyKind.Key || propertyKind == ODataPropertyKind.ETag");
 
-            KeyValuePair<string, object>[] properties = EmptyProperties;
+            List<KeyValuePair<string, object>> properties = new List<KeyValuePair<string, object>>(); ;
             if (resource.NonComputedProperties != null)
             {
-                properties = resource.NonComputedProperties.Where(p => p.SerializationInfo != null && p.SerializationInfo.PropertyKind == propertyKind).Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitiveOrEnumPropertyValue(actualEntityTypeName, p, propertyKind == ODataPropertyKind.Key))).ToArray();
+                foreach(ODataProperty property in resource.NonComputedProperties)
+                {
+                    if(property.SerializationInfo != null && property.SerializationInfo.PropertyKind == propertyKind)
+                    {
+                        properties.Add(new KeyValuePair<string, object>(property.Name, GetPrimitiveOrEnumPropertyValue(actualEntityTypeName, property, propertyKind == ODataPropertyKind.Key)));
+                    }
+                }                
             }
 
-            return properties;
+            return properties.ToArray();
         }
 
         /// <summary>

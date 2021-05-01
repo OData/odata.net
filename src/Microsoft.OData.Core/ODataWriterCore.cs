@@ -2450,29 +2450,82 @@ namespace Microsoft.OData
         private ODataPath AppendEntitySetKeySegment(ODataPath odataPath, bool throwIfFail)
         {
             ODataPath path = odataPath;
-
-            try
+            
+            if (EdmExtensionMethods.HasKey(this.CurrentScope.NavigationSource, this.CurrentScope.ResourceType))
             {
-                if (EdmExtensionMethods.HasKey(this.CurrentScope.NavigationSource, this.CurrentScope.ResourceType))
+                IEdmEntityType currentEntityType = this.CurrentScope.ResourceType as IEdmEntityType;
+                ODataResourceBase resource = this.CurrentScope.Item as ODataResourceBase;
+                Debug.Assert(resource != null,
+                    "If the current state is Resource the current item must be an ODataResource as well (and not null either).");
+
+                ODataResourceSerializationInfo serializationInfo = this.GetResourceSerializationInfo(resource);
+
+                if (!throwIfFail)
                 {
-                    IEdmEntityType currentEntityType = this.CurrentScope.ResourceType as IEdmEntityType;
-                    ODataResourceBase resource = this.CurrentScope.Item as ODataResourceBase;
-                    Debug.Assert(resource != null,
-                        "If the current state is Resource the current item must be an ODataResource as well (and not null either).");
+                    if (resource.NonComputedProperties != null)
+                    {
+                        List<KeyValuePair<string, object>> keys = new List<KeyValuePair<string, object>>();
+
+                        if (serializationInfo != null)
+                        {
+                            foreach (ODataProperty property in resource.NonComputedProperties)
+                            {
+                                if (property.SerializationInfo != null && property.SerializationInfo.PropertyKind == ODataPropertyKind.Key)
+                                {
+                                    if(!CreateKeyValuePair(keys, property, property.Value))
+                                    {
+                                        return path;
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            HashSet<string> keySet = new HashSet<string>();
+
+                            foreach (IEdmStructuralProperty property in currentEntityType.Key())
+                            {
+                                keySet.Add(property.Name);
+                            }
+
+                            foreach (ODataProperty property in resource.NonComputedProperties)
+                            {
+                                if (keySet.Contains(property.Name))
+                                {
+                                    if (!CreateKeyValuePair(keys, property, property.Value))
+                                    {
+                                        return path;
+                                    }
+                                }
+                            }
+                        }
+
+                        path = path.AddKeySegment(keys.ToArray(), currentEntityType, this.CurrentScope.NavigationSource);
+                    }                        
+                }
+                else 
+                {
                     KeyValuePair<string, object>[] keys = ODataResourceMetadataContext.GetKeyProperties(resource,
                         this.GetResourceSerializationInfo(resource), currentEntityType);
+
                     path = path.AddKeySegment(keys, currentEntityType, this.CurrentScope.NavigationSource);
-                }
-            }
-            catch (ODataException)
-            {
-                if (throwIfFail)
-                {
-                    throw;
-                }
+                }                    
             }
 
+
             return path;
+        }
+
+        private static bool CreateKeyValuePair(List<KeyValuePair<string, object>> keys, ODataProperty property, object propertyValue)
+        {
+            if (propertyValue == null || (propertyValue is ODataValue && !(propertyValue is ODataEnumValue)))
+            {
+                return false;
+            }
+
+            keys.Add(new KeyValuePair<string, object>(property.Name, propertyValue));
+
+            return true;
         }
 
         /// <summary>
