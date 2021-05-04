@@ -305,15 +305,10 @@ namespace Microsoft.OData.UriParser
 
             for (int i = 0; i < items.Length; i++)
             {
-                if (items[i] == "null")
-                {
-                    items[i] = items[i];
-                }
-                else if(items[i][0] != '\'' && items[i][0] != '"')
+                if (items[i] != "null" && items[i][0] != '\'' && items[i][0] != '"')
                 {
                     items[i] = String.Format(CultureInfo.InvariantCulture, "'{0}'", items[i]);
                 }
-
             }
 
             return "[" + String.Join(",", items) + "]";
