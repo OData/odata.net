@@ -19,6 +19,8 @@ namespace Microsoft.OData.UriParser
     /// </summary>
     internal sealed class InBinder
     {
+        private const string NullLiteral = "null";
+
         /// <summary>
         /// Method to use for binding the parent node, if needed.
         /// </summary>
@@ -198,9 +200,9 @@ namespace Microsoft.OData.UriParser
                             i = index - 1;
                         }
 
-                        if (subStr == "null")
+                        if (subStr == NullLiteral)
                         {
-                            sb.Append("null");
+                            sb.Append(NullLiteral);
                         }
                         else
                         {
@@ -333,6 +335,10 @@ namespace Microsoft.OData.UriParser
             for (int i = 0; i < items.Length; i++)
             {
                 const string durationPrefix = "duration";
+                if (items[i] == NullLiteral)
+                {
+                    continue;
+                }
                 if (items[i].StartsWith(durationPrefix, StringComparison.Ordinal))
                 {
                     items[i] = items[i].Remove(0, durationPrefix.Length);

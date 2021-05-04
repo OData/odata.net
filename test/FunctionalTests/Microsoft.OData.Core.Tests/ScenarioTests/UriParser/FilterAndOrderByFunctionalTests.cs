@@ -2552,6 +2552,35 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal(new object[]{new TimeSpan(2, 47, 30), new TimeSpan(2, 46, 40)},
                 Assert.IsType<CollectionConstantNode>(inNode.Right).Collection.Select(x => x.Value));
         }
+        
+        [Fact]
+        public void FilterWithInOperationWithDateTimeOffsetCollectionContainingNulls()
+        {
+            FilterClause filter = ParseFilter("FavoriteDate in (1950-01-02T06:15:00Z, null)",
+                HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+            Assert.Equal("FavoriteDate", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
+            Assert.Equal("(1950-01-02T06:15:00Z, null)",
+                Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
+            Assert.Equal(new object[]{new DateTimeOffset(1950, 1, 2, 6, 15, 0, TimeSpan.Zero), 
+                    null},
+                Assert.IsType<CollectionConstantNode>(inNode.Right).Collection.Select(x => x.Value));
+        }
+        
+        [Fact]
+        public void FilterWithInOperationWithDurationCollectionContainingNulls()
+        {
+            FilterClause filter = ParseFilter("TimeEmployed in (duration'PT2H47M30S', null)",
+                HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+            Assert.Equal("TimeEmployed", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
+            Assert.Equal("(duration'PT2H47M30S', null)",
+                Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
+            Assert.Equal(new object[]{new TimeSpan(2, 47, 30), null},
+                Assert.IsType<CollectionConstantNode>(inNode.Right).Collection.Select(x => x.Value));
+        }
 #endregion
 
         private static FilterClause ParseFilter(string text, IEdmModel edmModel, IEdmType edmType, IEdmNavigationSource edmEntitySet = null)
