@@ -313,6 +313,7 @@ namespace Microsoft.OData.UriParser
                 {
                     items[i] = String.Format(CultureInfo.InvariantCulture, "'{0}'", items[i]);
                 }
+
             }
 
             return "[" + String.Join(",", items) + "]";
