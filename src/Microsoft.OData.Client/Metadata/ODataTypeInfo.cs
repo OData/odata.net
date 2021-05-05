@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ClientTypeUtil.cs" company="Microsoft">
+// <copyright file="ODataTypeInfo.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -8,16 +8,8 @@ namespace Microsoft.OData.Client.Metadata
 {
     #region Namespaces.
 
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using System.Reflection;
-    using Microsoft.OData.Metadata;
-    using Microsoft.OData.Edm;
-    using c = Microsoft.OData.Client;
     using System.Collections.Concurrent;
+    using System.Reflection;
 
     #endregion Namespaces.
 

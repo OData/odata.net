@@ -9,6 +9,7 @@ namespace Microsoft.OData.Client.Metadata
     #region Namespaces.
 
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -16,8 +17,7 @@ namespace Microsoft.OData.Client.Metadata
     using System.Reflection;
     using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
-    using c = Microsoft.OData.Client;
-    using System.Collections.Concurrent;
+    using c = Microsoft.OData.Client;    
 
     #endregion Namespaces.
 
