@@ -136,7 +136,9 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(qualifiedName, "qualifiedName");
 
-            return FindAcrossModels(model, qualifiedName, findTerm, RegistrationHelper.CreateAmbiguousTermBinding);
+            string fullyQualifiedName = model.ReplaceAlias(qualifiedName);
+
+            return FindAcrossModels(model, fullyQualifiedName, findTerm, RegistrationHelper.CreateAmbiguousTermBinding);
         }
 
         /// <summary>

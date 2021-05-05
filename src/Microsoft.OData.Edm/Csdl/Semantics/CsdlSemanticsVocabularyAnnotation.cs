@@ -20,7 +20,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     internal class CsdlSemanticsVocabularyAnnotation : CsdlSemanticsElement, IEdmVocabularyAnnotation, IEdmCheckable
     {
         protected readonly CsdlAnnotation Annotation;
-        private readonly CsdlSemanticsSchema schema;
+        private readonly CsdlSemanticsModel model;
         private readonly string qualifier;
         private readonly IEdmVocabularyAnnotatable targetContext;
         private readonly CsdlSemanticsAnnotations annotationsContext;
@@ -34,20 +34,18 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly Cache<CsdlSemanticsVocabularyAnnotation, IEdmVocabularyAnnotatable> targetCache = new Cache<CsdlSemanticsVocabularyAnnotation, IEdmVocabularyAnnotatable>();
         private static readonly Func<CsdlSemanticsVocabularyAnnotation, IEdmVocabularyAnnotatable> ComputeTargetFunc = (me) => me.ComputeTarget();
 
-        public CsdlSemanticsVocabularyAnnotation(CsdlSemanticsSchema schema, IEdmVocabularyAnnotatable targetContext, CsdlSemanticsAnnotations annotationsContext, CsdlAnnotation annotation, string qualifier)
+        public CsdlSemanticsVocabularyAnnotation(CsdlSemanticsModel model, CsdlSemanticsSchema schema, IEdmVocabularyAnnotatable targetContext, CsdlSemanticsAnnotations annotationsContext, CsdlAnnotation annotation, string qualifier)
             : base(annotation)
         {
-            this.schema = schema;
+            this.model = model;
+            Schema = schema;
             this.Annotation = annotation;
             this.qualifier = qualifier ?? annotation.Qualifier;
             this.targetContext = targetContext;
             this.annotationsContext = annotationsContext;
         }
 
-        public CsdlSemanticsSchema Schema
-        {
-            get { return this.schema; }
-        }
+        public CsdlSemanticsSchema Schema { get; }
 
         public override CsdlElement Element
         {
@@ -61,7 +59,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         public override CsdlSemanticsModel Model
         {
-            get { return this.schema.Model; }
+            get { return this.model; }
         }
 
         public IEdmTerm Term
@@ -123,7 +121,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         protected IEdmTerm ComputeTerm()
         {
-            return this.Schema.FindTerm(this.Annotation.Term) ?? new UnresolvedVocabularyTerm(this.Schema.UnresolvedName(this.Annotation.Term));
+            return this.model.FindTerm(this.Annotation.Term) ?? new UnresolvedVocabularyTerm(this.model.ReplaceAlias(this.Annotation.Term));
         }
 
         private IEdmExpression ComputeValue()
@@ -301,36 +299,36 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 if (targetSegmentsCount == 1)
                 {
                     string elementName = targetSegments[0];
-                    IEdmSchemaType type = this.schema.FindType(elementName);
+                    IEdmSchemaType type = this.model.FindType(elementName);
                     if (type != null)
                     {
                         return type;
                     }
 
-                    IEdmTerm term = this.schema.FindTerm(elementName);
+                    IEdmTerm term = this.model.FindTerm(elementName);
                     if (term != null)
                     {
                         return term;
                     }
 
-                    IEdmOperation operation = this.FindParameterizedOperation(elementName, this.Schema.FindOperations, this.CreateAmbiguousOperation);
+                    IEdmOperation operation = this.FindParameterizedOperation(elementName, this.model.FindOperations, this.CreateAmbiguousOperation);
                     if (operation != null)
                     {
                         return operation;
                     }
 
-                    container = this.schema.FindEntityContainer(elementName);
+                    container = this.model.FindEntityContainer(elementName);
                     if (container != null)
                     {
                         return container;
                     }
 
-                    return new UnresolvedType(this.Schema.UnresolvedName(targetSegments[0]), this.Location);
+                    return new UnresolvedType(this.model.ReplaceAlias(targetSegments[0]), this.Location);
                 }
 
                 if (targetSegmentsCount == 2)
                 {
-                    container = this.schema.FindEntityContainer(targetSegments[0]);
+                    container = this.model.FindEntityContainer(targetSegments[0]);
                     if (container != null)
                     {
                         // Using the methods here results in a much faster lookup as it uses a dictionary instead of using the list of container elements.
@@ -350,7 +348,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         return new UnresolvedEntitySet(targetSegments[1], container, this.Location);
                     }
 
-                    IEdmSchemaType type = this.schema.FindType(targetSegments[0]);
+                    IEdmSchemaType type = this.model.FindType(targetSegments[0]);
                     if (type != null)
                     {
                         IEdmStructuredType structuredType;
@@ -379,7 +377,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         }
                     }
 
-                    IEdmOperation operation = this.FindParameterizedOperation(targetSegments[0], this.Schema.FindOperations, this.CreateAmbiguousOperation);
+                    IEdmOperation operation = this.FindParameterizedOperation(targetSegments[0], this.model.FindOperations, this.CreateAmbiguousOperation);
                     if (operation != null)
                     {
                         // $ReturnType
@@ -402,7 +400,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         return new UnresolvedParameter(operation, targetSegments[1], this.Location);
                     }
 
-                    return new UnresolvedProperty(new UnresolvedEntityType(this.Schema.UnresolvedName(targetSegments[0]), this.Location), targetSegments[1], this.Location);
+                    return new UnresolvedProperty(new UnresolvedEntityType(this.model.ReplaceAlias(targetSegments[0]), this.Location), targetSegments[1], this.Location);
                 }
 
                 if (targetSegmentsCount == 3)
@@ -555,13 +553,13 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                     switch (typeInformation[0])
                     {
                         case CsdlConstants.Value_Collection:
-                            isMatch = parameter.Type.IsCollection() && this.Schema.FindType(typeInformation[1]).IsEquivalentTo(parameter.Type.AsCollection().ElementType().Definition);
+                            isMatch = parameter.Type.IsCollection() && this.model.FindType(typeInformation[1]).IsEquivalentTo(parameter.Type.AsCollection().ElementType().Definition);
                             break;
                         case CsdlConstants.Value_Ref:
-                            isMatch = parameter.Type.IsEntityReference() && this.Schema.FindType(typeInformation[1]).IsEquivalentTo(parameter.Type.AsEntityReference().EntityType());
+                            isMatch = parameter.Type.IsEntityReference() && this.model.FindType(typeInformation[1]).IsEquivalentTo(parameter.Type.AsEntityReference().EntityType());
                             break;
                         default:
-                            isMatch = EdmCoreModel.Instance.FindDeclaredType(parameterTypeNameEnumerator.Current).IsEquivalentTo(parameter.Type.Definition) || this.Schema.FindType(parameterTypeNameEnumerator.Current).IsEquivalentTo(parameter.Type.Definition);
+                            isMatch = EdmCoreModel.Instance.FindDeclaredType(parameterTypeNameEnumerator.Current).IsEquivalentTo(parameter.Type.Definition) || this.model.FindType(parameterTypeNameEnumerator.Current).IsEquivalentTo(parameter.Type.Definition);
                             break;
                     }
 

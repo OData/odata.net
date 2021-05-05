@@ -88,6 +88,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             get { return this.errors; }
         }
 
+        protected abstract bool CheckAnnotationNamespace { get; }
+
         private bool IsTextNode
         {
             get
@@ -353,13 +355,27 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             }
         }
 
+        private bool CheckNamespace(string elementName, string elementNamespace)
+        {
+            if (elementName == CsdlConstants.Element_Annotation)
+            {
+                if (!CheckAnnotationNamespace)
+                {
+                    return true;
+                }
+            }
+
+            return elementNamespace == this.DocumentNamespace;
+        }
+
         private void ProcessElement()
         {
             bool emptyElement = this.reader.IsEmptyElement;
             string elementNamespace = this.reader.NamespaceURI;
             string elementName = this.reader.LocalName;
 
-            if (elementNamespace == this.DocumentNamespace)
+            // Annotation element in Reference doesn't have the element Namespace.
+            if (CheckNamespace(elementName, elementNamespace))
             {
                 XmlElementParser newParser;
 

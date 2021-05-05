@@ -32,19 +32,28 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.edmxNamespace = CsdlConstants.SupportedEdmxVersions[edmVersion];
         }
 
-        internal void WriteReferenceElementHeader(IEdmReference reference)
+        internal override void WriteReferenceElementHeader(IEdmReference reference)
         {
             // e.g. <edmx:Reference Uri="http://host/schema/VipCustomer.xml">
             this.xmlWriter.WriteStartElement(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_Reference, this.edmxNamespace);
             this.WriteRequiredAttribute(CsdlConstants.Attribute_Uri, reference.Uri, EdmValueWriter.UriAsXml);
         }
 
-        internal void WriteIncludeElement(IEdmInclude include)
+        internal override void WriteReferenceElementEnd(IEdmReference reference)
+        {
+            this.xmlWriter.WriteEndElement();
+        }
+
+        internal override void WritIncludeElementHeader(IEdmInclude include)
         {
             // e.g. <edmx:Include Namespace="NS.Ref1" Alias="VPCT" />
             this.xmlWriter.WriteStartElement(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_Include, this.edmxNamespace);
             this.WriteRequiredAttribute(CsdlConstants.Attribute_Namespace, include.Namespace, EdmValueWriter.StringAsXml);
             this.WriteRequiredAttribute(CsdlConstants.Attribute_Alias, include.Alias, EdmValueWriter.StringAsXml);
+        }
+
+        internal override void WriteIncludeElementEnd(IEdmInclude include)
+        {
             this.xmlWriter.WriteEndElement();
         }
 

@@ -42,6 +42,63 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 
         [Fact]
+        public void ShouldReadEdmReference()
+        {
+            // Act & Assert for XML
+            string csdl = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+              "<edmx:Reference Uri=\"https://example.com/Org.OData.Authorization.V1.xml\">" +
+                "<edmx:Include Namespace=\"Org.OData.Authorization.V1\" Alias=\"Auth\" >" +
+                  "<Annotation Term=\"Core.Description\" String=\"Default Include.\" />" +
+                "</edmx:Include>" +
+                "<edmx:IncludeAnnotations TermNamespace=\"org.example.validation\" />" +
+                "<edmx:IncludeAnnotations TermNamespace=\"org.example.display\" Qualifier=\"Tablet\" />" +
+              "</edmx:Reference>" +
+              "<edmx:Reference Uri=\"https://example.com/Org.OData.Core.V1.xml\">" +
+                "<edmx:Include Namespace=\"Org.OData.Core.V1\" Alias=\"Core\" />" +
+                "<edmx:IncludeAnnotations TermNamespace=\"org.example.hcm\" TargetNamespace=\"com.example.Sales\" />" +
+                "<edmx:IncludeAnnotations TermNamespace=\"org.example.hcm\" Qualifier=\"Tablet\" TargetNamespace=\"com.example.Person\" />" +
+                "<Annotation Term=\"Core.Description\" String=\"Default Reference.\" />" +
+               "</edmx:Reference>" +
+              "<edmx:DataServices />" +
+            "</edmx:Edmx>";
+
+            var model = CsdlReader.Parse(XElement.Parse(csdl).CreateReader());
+
+            var references = model.GetEdmReferences().ToList();
+            foreach (var reference in references)
+            {
+                CsdlSemanticsReference edmRef = Assert.IsType<CsdlSemanticsReference>(reference);
+                Assert.NotNull(edmRef);
+
+                IEdmReference edmReference = Assert.IsAssignableFrom<IEdmReference>(reference);
+                Assert.NotNull(edmReference);
+            }
+
+            Assert.Equal(2, model.VocabularyAnnotations.Count());
+
+            IEdmReference autheRef = references.First(f => f.Uri.OriginalString.EndsWith("Org.OData.Authorization.V1.xml"));
+            var annotations = model.FindVocabularyAnnotations(autheRef);
+            Assert.Empty(annotations);
+
+            // annotation on include
+            IEdmInclude authInclude = Assert.Single(autheRef.Includes);
+            annotations = model.FindVocabularyAnnotations(authInclude);
+            IEdmVocabularyAnnotation annotation = Assert.Single(annotations);
+            Assert.Equal("Org.OData.Core.V1.Description", annotation.Term.FullName());
+            Assert.Same(authInclude, annotation.Target);
+            Assert.Equal("Default Include.", (annotation.Value as IEdmStringConstantExpression).Value);
+
+            // Annotation on reference
+            IEdmReference coreRef = references.First(f => f.Uri.OriginalString.EndsWith("Org.OData.Core.V1.xml"));
+            annotations = model.FindVocabularyAnnotations(coreRef);
+            annotation = Assert.Single(annotations);
+            Assert.Equal("Org.OData.Core.V1.Description", annotation.Term.FullName());
+            Assert.Same(coreRef, annotation.Target);
+            Assert.Equal("Default Reference.", (annotation.Value as IEdmStringConstantExpression).Value);
+        }
+
+        [Fact]
         public void ReadNavigationPropertyPartnerTest()
         {
             var csdl =
