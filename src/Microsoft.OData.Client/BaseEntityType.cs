@@ -7,7 +7,7 @@
 namespace Microsoft.OData.Client
 {
     /// <summary>
-    /// Base type of entity type to include <see cref="T:Microsoft.OData.Client.DataServiceContext" /> for function and action invocation
+    /// Base type of entity type to include <see cref="Microsoft.OData.Client.DataServiceContext" /> for function and action invocation
     /// </summary>
     public class BaseEntityType : IBaseEntityType
     {
