@@ -836,9 +836,16 @@ namespace Microsoft.OData
         private static SelectedPropertiesNode CombineSelectAndExpandResult(IEnumerable<string> selectList, IEnumerable<SelectedPropertiesNode> expandList)
         {
             HashSet<string> expandSet = new HashSet<string>();
+            bool isEntireSubTree = true;
+
             foreach(SelectedPropertiesNode propNode in expandList)
             {
                 expandSet.Add(propNode.nodeName);
+
+                if (!propNode.IsEntireSubtree())
+                {
+                    isEntireSubTree = false;
+                }
             }
 
             List<string> rawSelect = new List<string>();
@@ -851,7 +858,7 @@ namespace Microsoft.OData
                 }
             }
                        
-            if (rawSelect.Count == 0 && expandList.All(n => n.IsEntireSubtree()))
+            if (rawSelect.Count == 0 && isEntireSubTree)
             {
                 return new SelectedPropertiesNode(SelectionType.EntireSubtree);
             }
@@ -862,7 +869,7 @@ namespace Microsoft.OData
                 children = new Dictionary<string, SelectedPropertiesNode>(StringComparer.Ordinal)
             };
 
-            for (int i=0; i<rawSelect.Count; i++)
+            for (int i=0; i < rawSelect.Count; i++)
             {
                 if (StarSegment == rawSelect[i])
                 {

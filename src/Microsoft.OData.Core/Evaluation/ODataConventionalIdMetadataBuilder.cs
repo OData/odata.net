@@ -278,7 +278,6 @@ namespace Microsoft.OData.Evaluation
             ODataPathSegment lastSegment = segments[lastIndex];
             while (!(lastSegment is NavigationPropertySegment) && !(lastSegment is OperationSegment))
             {
-                segments.RemoveAt(lastIndex);
                 lastSegment = segments[--lastIndex];
             }
 
@@ -288,7 +287,6 @@ namespace Microsoft.OData.Evaluation
                 IEdmStructuredType owningType = previousSegment.TargetEdmType as IEdmStructuredType;
                 if (owningType != null && owningType.FindProperty(lastSegment.Identifier) != null)
                 {
-                    segments.RemoveAt(lastIndex);
                     lastSegment = segments[--lastIndex];
                 }
                 else
@@ -298,10 +296,7 @@ namespace Microsoft.OData.Evaluation
             }
 
             // trim all the un-needed segments 
-            if (lastIndex >= 0)
-            {
-                segments.RemoveAt(lastIndex);
-            }
+            segments = segments.GetRange(0, lastIndex);
 
             // append each segment to base uri
             Uri uri = baseUri;

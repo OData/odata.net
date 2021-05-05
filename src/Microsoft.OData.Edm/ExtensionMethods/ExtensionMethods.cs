@@ -2865,7 +2865,9 @@ namespace Microsoft.OData.Edm
             lastEntityType = null;
 
             var pathItems = pathExpression.PathSegments;
-            if (!pathItems.Any())
+            string bindingParameterName = pathItems.FirstOrDefault();
+
+            if (bindingParameterName == null)
             {
                 foundErrors.Add(new EdmError(element.Location(), EdmErrorCode.OperationWithInvalidEntitySetPathMissingCompletePath, Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathMissingBindingParameterName(CsdlConstants.Attribute_EntitySetPath)));
                 return false;
@@ -2879,8 +2881,7 @@ namespace Microsoft.OData.Edm
             }
 
             bool foundRelativePath = true;
-
-            string bindingParameterName = pathItems.First();
+                        
             if (parameter.Name != bindingParameterName)
             {
                 foundErrors.Add(
