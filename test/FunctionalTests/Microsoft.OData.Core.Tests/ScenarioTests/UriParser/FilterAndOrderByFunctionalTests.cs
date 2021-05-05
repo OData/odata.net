@@ -2581,6 +2581,34 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal(new object[]{new TimeSpan(2, 47, 30), null},
                 Assert.IsType<CollectionConstantNode>(inNode.Right).Collection.Select(x => x.Value));
         }
+        
+        [Fact]
+        public void FilterWithInOperationWithDateTimeOffsetCollectionContainingSingleItem()
+        {
+            FilterClause filter = ParseFilter("FavoriteDate in (1950-01-02T06:15:00Z)",
+                HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+            Assert.Equal("FavoriteDate", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
+            Assert.Equal("(1950-01-02T06:15:00Z)",
+                Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
+            Assert.Equal(new object[]{new DateTimeOffset(1950, 1, 2, 6, 15, 0, TimeSpan.Zero)},
+                Assert.IsType<CollectionConstantNode>(inNode.Right).Collection.Select(x => x.Value));
+        }
+        
+        [Fact]
+        public void FilterWithInOperationWithDateTimeOffsetCollectionContainingSingleNull()
+        {
+            FilterClause filter = ParseFilter("FavoriteDate in (null)",
+                HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+            Assert.Equal("FavoriteDate", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
+            Assert.Equal("(null)",
+                Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
+            Assert.Equal(new object[] {null},
+                Assert.IsType<CollectionConstantNode>(inNode.Right).Collection.Select(x => x.Value));
+        }
 #endregion
 
         private static FilterClause ParseFilter(string text, IEdmModel edmModel, IEdmType edmType, IEdmNavigationSource edmEntitySet = null)
