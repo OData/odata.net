@@ -804,6 +804,15 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// This method is called asynchronously when a stream is disposed
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        Task IODataStreamListener.StreamDisposedAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Get instance of the parent resource scope
         /// </summary>
         /// <returns>

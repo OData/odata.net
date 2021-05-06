@@ -35,5 +35,11 @@ namespace Microsoft.OData
         /// This method notifies the implementer of this interface that the content stream of a batch operation has been disposed.
         /// </summary>
         void StreamDisposed();
+
+        /// <summary>
+        /// Asynchronously notifies the implementer of this interface that the content stream of an operation has been disposed.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        Task StreamDisposedAsync();
     }
 }
