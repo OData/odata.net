@@ -111,7 +111,6 @@ namespace Microsoft.OData.UriParser
         internal ExpressionLexer Lexer
         {
             get { return this.lexer; }
-            set { this.lexer = value; }
         }
 
         /// <summary>
@@ -141,16 +140,6 @@ namespace Microsoft.OData.UriParser
         public QueryToken ParseFilter(string filter)
         {
             return this.ParseExpressionText(filter);
-        }
-
-        /// <summary>
-        /// Parses the $search expression.
-        /// </summary>
-        /// <param name="search">The $search expression string to parse.</param>
-        /// <returns>The lexical token representing the filter.</returns>
-        public QueryToken ParseSearch(string search)
-        {
-            return this.ParseExpressionText(search);
         }
 
         /// <summary>
