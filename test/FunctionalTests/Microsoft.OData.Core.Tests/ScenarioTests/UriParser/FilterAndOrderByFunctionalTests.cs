@@ -414,7 +414,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilterWithEntityCollectionCountWithUnbalanceParenthesisThrows()
         {
             Action parse = () => ParseFilter("MyFriendsDogs/$count($filter=Color eq 'Brown' gt 1", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parse.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_CloseParenExpected(50, "MyFriendsDogs/$count($filter=Color eq 'Brown' gt 1"));
+            parse.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_SyntaxError(50, "MyFriendsDogs/$count($filter=Color eq 'Brown' gt 1"));
         }
 
         [Fact]

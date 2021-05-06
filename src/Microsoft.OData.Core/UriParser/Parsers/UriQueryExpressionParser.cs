@@ -1241,11 +1241,10 @@ namespace Microsoft.OData.UriParser
         /// <returns>The lexical token representing the $count segment.</returns>
         private QueryToken ParseCountSegment(QueryToken parent)
         {
-            string identifier = this.lexer.CurrentToken.GetIdentifier();
             this.lexer.NextToken();
 
             CountSegmentParser countSegmentParser = new CountSegmentParser(this.lexer, this);
-            return countSegmentParser.CreateCountSegmentToken(identifier, parent);
+            return countSegmentParser.CreateCountSegmentToken(parent);
         }
 
         private AggregationMethodDefinition ParseAggregateWith()

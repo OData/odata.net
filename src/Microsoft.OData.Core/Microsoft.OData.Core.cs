@@ -600,7 +600,6 @@ namespace Microsoft.OData
         internal const string UriQueryExpressionParser_OpenParenExpected = "UriQueryExpressionParser_OpenParenExpected";
         internal const string UriQueryExpressionParser_CloseParenOrCommaExpected = "UriQueryExpressionParser_CloseParenOrCommaExpected";
         internal const string UriQueryExpressionParser_CloseParenOrOperatorExpected = "UriQueryExpressionParser_CloseParenOrOperatorExpected";
-        internal const string UriQueryExpressionParser_CloseParenExpected = "UriQueryExpressionParser_CloseParenExpected";
         internal const string UriQueryExpressionParser_IllegalQueryOptioninDollarCount = "UriQueryExpressionParser_IllegalQueryOptioninDollarCount";
         internal const string UriQueryExpressionParser_CannotCreateStarTokenFromNonStar = "UriQueryExpressionParser_CannotCreateStarTokenFromNonStar";
         internal const string UriQueryExpressionParser_RangeVariableAlreadyDeclared = "UriQueryExpressionParser_RangeVariableAlreadyDeclared";

@@ -5213,14 +5213,6 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "')' expected at position {0} in '{1}'."
-        /// </summary>
-        internal static string UriQueryExpressionParser_CloseParenExpected(object p0, object p1)
-        {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriQueryExpressionParser_CloseParenExpected, p0, p1);
-        }
-
-        /// <summary>
         /// A string like "Only $filter and $search query options are allowed within $count."
         /// </summary>
         internal static string UriQueryExpressionParser_IllegalQueryOptioninDollarCount()

@@ -56,9 +56,8 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Create a <see cref="CountSegmentToken"/>.
         /// </summary>
-        /// <param name="identifier">The name of this token, which in this case is always "$count".The name of this token, which in this case is always "$count".</param>
         /// <param name="countedInstance">The instance to count on.</param>
-        public CountSegmentToken CreateCountSegmentToken(string identifier, QueryToken countedInstance)
+        public CountSegmentToken CreateCountSegmentToken(QueryToken countedInstance)
         {
             QueryToken filterToken = null;
             QueryToken searchToken = null;
@@ -71,7 +70,7 @@ namespace Microsoft.OData.UriParser
 
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
             {
-                return new CountSegmentToken(identifier, countedInstance);
+                return new CountSegmentToken(countedInstance);
             }
             else
             {
@@ -96,15 +95,12 @@ namespace Microsoft.OData.UriParser
                 throw ParseError(ODataErrorStrings.UriQueryExpressionParser_IllegalQueryOptioninDollarCount());
             }
 
-            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
-            {
-                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_CloseParenExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
-            }
+            this.lexer.ValidateToken(ExpressionTokenKind.CloseParen);
 
             this.lexer.NextToken();
             this.UriQueryExpressionParser.recursionDepth = outerRecursiveDepth;
             this.UriQueryExpressionParser.Lexer = outerLexer;
-            return new CountSegmentToken(identifier, countedInstance, filterToken, searchToken);
+            return new CountSegmentToken(countedInstance, filterToken, searchToken);
         }
 
         /// <summary>

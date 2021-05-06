@@ -16,11 +16,6 @@ namespace Microsoft.OData.UriParser
     public sealed class CountSegmentToken : PathToken
     {
         /// <summary>
-        /// The name of this token, which in this case is always "$count".
-        /// </summary>
-        private readonly string identifier;
-
-        /// <summary>
         /// The instance to count on.
         /// </summary>
         private QueryToken nextToken;
@@ -36,28 +31,24 @@ namespace Microsoft.OData.UriParser
         private QueryToken searchOption;
 
         /// <summary>
-        /// Create a CountSegmentToken given the Identifier and the NextToken.
+        /// Create a CountSegmentToken given the NextToken.
         /// </summary>
-        /// <param name="identifier">The name of this token, which in this case is always "$count".</param>
         /// <param name="nextToken">The instance to count on.</param>
-        public CountSegmentToken(string identifier, QueryToken nextToken)
-            :this(identifier, nextToken, null, null)
+        public CountSegmentToken(QueryToken nextToken)
+            :this(nextToken, null, null)
         {
         }
 
         /// <summary>
-        /// Create a CountSegmentToken given the Identifier, NextToken, FilterOption (if any) and SearchOption (if any).
+        /// Create a CountSegmentToken given the NextToken, FilterOption (if any) and SearchOption (if any).
         /// </summary>
-        /// <param name="identifier">The name of this token, which in this case is always "$count".</param>
         /// <param name="nextToken">The instance to count on.</param>
         /// <param name="filterOption">The <see cref="QueryToken"/> representing $filter.</param>
         /// <param name="searchOption">The <see cref="QueryToken"/> representing $search. </param>
-        public CountSegmentToken(string identifier, QueryToken nextToken, QueryToken filterOption, QueryToken searchOption)
+        public CountSegmentToken(QueryToken nextToken, QueryToken filterOption, QueryToken searchOption)
         {
-            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(identifier, "identifier");
             ExceptionUtils.CheckArgumentNotNull(nextToken, "nextToken");
 
-            this.identifier = identifier;
             this.nextToken = nextToken;
             this.filterOption = filterOption;
             this.searchOption = searchOption;
@@ -76,7 +67,11 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         public override string Identifier
         {
-            get { return this.identifier; }
+#if ODATA_CLIENT
+            get { return UriHelper.VIRTUALPROPERTYCOUNT; }
+#else
+            get { return ExpressionConstants.QueryOptionCount; }
+#endif
         }
 
         /// <summary>
