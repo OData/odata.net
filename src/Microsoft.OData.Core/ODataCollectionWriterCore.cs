@@ -265,6 +265,12 @@ namespace Microsoft.OData
             this.EnterScope(CollectionWriterState.Error, this.scopes.Peek().Item);
         }
 
+        /// <inheritdoc/>
+        Task IODataOutputInStreamErrorListener.OnInStreamErrorAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Determines whether a given writer state is considered an error state.
         /// </summary>

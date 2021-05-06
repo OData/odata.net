@@ -287,6 +287,12 @@ namespace Microsoft.OData.JsonLight
             this.inStreamErrorListener.OnInStreamError();
         }
 
+        /// <inheritdoc/>
+        Task IODataOutputInStreamErrorListener.OnInStreamErrorAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

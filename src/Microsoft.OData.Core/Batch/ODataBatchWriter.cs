@@ -419,6 +419,14 @@ namespace Microsoft.OData
         /// </remarks>
         public abstract void OnInStreamError();
 
+        /// <inheritdoc/>
+        public virtual Task OnInStreamErrorAsync()
+        {
+            // NOTE: ODataBatchWriter class is abstract and public. This method body is intended
+            // to prevent a breaking change in subclasses that provide the implementation.
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Flush the output.
         /// </summary>
