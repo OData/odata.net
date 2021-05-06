@@ -6205,6 +6205,14 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "Empty parenthesis not allowed."
+        /// </summary>
+        internal static string UriParser_EmptyParenthesis()
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriParser_EmptyParenthesis);
+        }
+
+        /// <summary>
         /// A string like "Missing select option on property '{0}'. If a parenthesis expression follows a selected property, then at least one query option must be provided."
         /// </summary>
         internal static string UriParser_MissingSelectOption(object p0)

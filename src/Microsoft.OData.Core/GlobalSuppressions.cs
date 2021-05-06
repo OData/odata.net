@@ -52,5 +52,6 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "Microsoft.OData.UriParser.InnerPathTokenBinder.#BindInnerPathSegment(Microsoft.OData.UriParser.InnerPathToken)")]
 [assembly: SuppressMessage("Microsoft.Globalization", "CA1305:SpecifyIFormatProvider", MessageId = "System.String.Format(System.String,System.Object[])", Scope = "member", Target = "Microsoft.OData.PropertyCacheHandler.#GetProperty(System.String,Microsoft.OData.Edm.IEdmStructuredType)")]
 [assembly: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Utils", Scope = "type", Target = "Microsoft.OData.Buffers.BufferUtils")]
+[assembly: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.UriParser.CountSegmentParser.#CreateCountSegmentToken(Microsoft.OData.UriParser.QueryToken)")]
 [assembly: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.UriParser.SelectExpandOptionParser.#BuildSelectTermToken(Microsoft.OData.UriParser.PathSegmentToken,System.String)")]
 

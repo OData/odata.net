@@ -712,6 +712,7 @@ namespace Microsoft.OData
         internal const string UriSelectParser_InvalidLevelsOption = "UriSelectParser_InvalidLevelsOption";
         internal const string UriSelectParser_SystemTokenInSelectExpand = "UriSelectParser_SystemTokenInSelectExpand";
         internal const string UriParser_MissingExpandOption = "UriParser_MissingExpandOption";
+        internal const string UriParser_EmptyParenthesis = "UriParser_EmptyParenthesis";
         internal const string UriParser_MissingSelectOption = "UriParser_MissingSelectOption";
         internal const string UriParser_RelativeUriMustBeRelative = "UriParser_RelativeUriMustBeRelative";
         internal const string UriParser_NeedServiceRootForThisOverload = "UriParser_NeedServiceRootForThisOverload";

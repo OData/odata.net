@@ -427,6 +427,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void ParseFilterWithEntityCollectionCountWithEmptyParenthesisThrows()
+        {
+            Action parse = () => ParseFilter("MyFriendsDogs/$count()", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            parse.Throws<ODataException>(ODataErrorStrings.UriParser_EmptyParenthesis());
+        }
+
+        [Fact]
         public void ParseFilterWithEntityCollectionCountWithIllegalQueryOptionThrows()
         {
             Action parse = () => ParseFilter("MyFriendsDogs/$count($orderby=Color) gt 1", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());

@@ -62,109 +62,104 @@ namespace Microsoft.OData.UriParser
             QueryToken filterToken = null;
             QueryToken searchToken = null;
 
-            bool isFilterOption = false;
-            bool isSearchOption = false;
-
-            string filterText = string.Empty;
-            string searchText = string.Empty;
-
-            // We need to maintain the recursionDepth of the outer $filter query since calling
-            // ParseFilter or ParseSearch below will reset it to 0.
-            int outerRecursiveDepth = this.UriQueryExpressionParser.recursionDepth;
-            ExpressionLexer outerLexer = this.UriQueryExpressionParser.Lexer;
-
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
             {
                 return new CountSegmentToken(countedInstance);
             }
             else
             {
-                this.lexer.NextToken();
-                isFilterOption = this.lexer.CurrentToken.IdentifierIs(ExpressionConstants.QueryOptionFilter, this.UriQueryExpressionParser.enableCaseInsensitiveBuiltinIdentifier);
-                isSearchOption = this.lexer.CurrentToken.IdentifierIs(ExpressionConstants.QueryOptionSearch, this.UriQueryExpressionParser.enableCaseInsensitiveBuiltinIdentifier);
-
+                // advance past the '('
                 this.lexer.NextToken();
 
-                if (isFilterOption)
+                // Check for (), which is not allowed.
+                if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.CloseParen)
                 {
-                    filterText = this.lexer.AdvanceThroughExpandOption();
-                    filterToken = filterText == null ? null : this.UriQueryExpressionParser.ParseFilter(filterText);
+                    throw new ODataException(ODataErrorStrings.UriParser_EmptyParenthesis());
                 }
-                else if(isSearchOption)
+
+                // Look for all the supported query options
+                while (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
                 {
-                    searchText = this.lexer.AdvanceThroughExpandOption();
-                    SearchParser searchParser = new SearchParser(ODataUriParserSettings.DefaultSearchLimit);
-                    searchToken = searchText == null ? null : searchParser.ParseSearch(searchText);
-                }
-                else
-                {
-                    // Only a $filter and $search can be inside a $count()
-                    throw ParseError(ODataErrorStrings.UriQueryExpressionParser_IllegalQueryOptioninDollarCount());
+                    string text = this.UriQueryExpressionParser.EnableCaseInsensitiveBuiltinIdentifier
+                        ? this.lexer.CurrentToken.Text.ToLowerInvariant()
+                        : this.lexer.CurrentToken.Text;
+
+                    switch (text)
+                    {
+                        case ExpressionConstants.QueryOptionFilter: // $filter within $count segment
+                            filterToken = ParseInnerFilter();
+                            break;
+
+                        case ExpressionConstants.QueryOptionSearch: // $search within $count segment
+                            searchToken = ParseInnerSearch();
+                            break;
+
+                        default:
+                            {
+                                throw new ODataException(ODataErrorStrings.UriQueryExpressionParser_IllegalQueryOptioninDollarCount());
+                            }
+                    }
                 }
             }
 
-            if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.SemiColon)
-            {
-                this.lexer.NextToken();
-                isFilterOption = this.lexer.CurrentToken.IdentifierIs(ExpressionConstants.QueryOptionFilter, this.UriQueryExpressionParser.enableCaseInsensitiveBuiltinIdentifier);
-                isSearchOption = this.lexer.CurrentToken.IdentifierIs(ExpressionConstants.QueryOptionSearch, this.UriQueryExpressionParser.enableCaseInsensitiveBuiltinIdentifier);
-
-                this.lexer.NextToken();
-
-                if (isFilterOption)
-                {
-                    filterText = this.lexer.AdvanceThroughExpandOption();
-                    filterToken = filterText == null ? null : this.UriQueryExpressionParser.ParseFilter(filterText);
-                }
-                else if (isSearchOption)
-                {
-                    searchText = this.lexer.AdvanceThroughExpandOption();
-                    SearchParser searchParser = new SearchParser(ODataUriParserSettings.DefaultSearchLimit);
-                    searchToken = searchText == null ? null : searchParser.ParseSearch(searchText);
-                }
-                else
-                {
-                    // Only a $filter and $search can be inside a $count()
-                    throw ParseError(ODataErrorStrings.UriQueryExpressionParser_IllegalQueryOptioninDollarCount());
-                }
-            }
-
-
-            this.lexer.ValidateToken(ExpressionTokenKind.CloseParen);
-
+            // Move past the ')'
             this.lexer.NextToken();
-            this.UriQueryExpressionParser.recursionDepth = outerRecursiveDepth;
-            this.UriQueryExpressionParser.Lexer = outerLexer;
             return new CountSegmentToken(countedInstance, filterToken, searchToken);
         }
 
         /// <summary>
-        /// 
+        /// Parse the filter option in the $count segment.
         /// </summary>
-        /// <param name="queryOptionName"></param>
-        /// <param name="query"></param>
-        /// <returns></returns>
-        private static string TryGetQueryOption(string queryOptionName, string query)
+        /// <returns>The filter option for the $count segment.</returns>
+        private QueryToken ParseInnerFilter()
         {
-            if (queryOptionName == null)
-            {
-                return null;
-            }
+            // advance to the equal sign
+            this.lexer.NextToken();
+            string filterText = this.ReadQueryOption();
 
-            // Concat $filter or $search with an = symbol to get $filter= or $search=
-            string queryOption = string.Concat(queryOptionName, ExpressionConstants.SymbolEqual);
-
-            char[] trimmingChars = queryOption.ToCharArray();
-
-            return query.TrimStart(trimmingChars);
+            UriQueryExpressionParser filterParser = new UriQueryExpressionParser(ODataUriParserSettings.DefaultFilterLimit, this.UriQueryExpressionParser.EnableCaseInsensitiveBuiltinIdentifier);
+            return filterParser.ParseFilter(filterText);
         }
 
-        /// <summary>Creates an exception for a parse error.</summary>
-        /// <param name="message">Message text.</param>
-        /// <returns>A new Exception.</returns>
-        private static Exception ParseError(string message)
+        /// <summary>
+        /// Parse the search option in the $count segment.
+        /// </summary>
+        /// <returns>The search option for the $count segment.</returns>
+        private QueryToken ParseInnerSearch()
         {
-            return new ODataException(message);
+            // advance to the equal sign
+            this.lexer.NextToken();
+            string searchText = this.ReadQueryOption();
+
+            SearchParser searchParser = new SearchParser(ODataUriParserSettings.DefaultSearchLimit);
+            return searchParser.ParseSearch(searchText);
+        }
+
+        /// <summary>
+        /// Read a query option within the $count brackets.
+        /// </summary>
+        /// <returns>The query option as a string.</returns>
+        private string ReadQueryOption()
+        {
+            // $filter or $search should be followed by an equal sign.
+            // e.g $filter= or $search=
+            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.Equal)
+            {
+                throw new ODataException(ODataErrorStrings.ExpressionLexer_SyntaxError(this.lexer.Position, this.lexer.ExpressionText));
+            }
+
+            string expressionText = this.lexer.AdvanceThroughExpandOption();
+
+            if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.SemiColon)
+            {
+                // Move over the ';' separator
+                this.lexer.NextToken();
+                return expressionText;
+            }
+
+            // If there wasn't a semicolon, it MUST be the last option. We must be at ')' in this case
+            this.lexer.ValidateToken(ExpressionTokenKind.CloseParen);
+            return expressionText;
         }
     }
 }

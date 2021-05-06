@@ -44,7 +44,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// The current recursion depth.
         /// </summary>
-        internal int recursionDepth;
+        private int recursionDepth;
 
         /// <summary>
         /// The lexer being used for the parsing.
@@ -54,7 +54,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Whether to allow case insensitive for builtin identifier.
         /// </summary>
-        internal bool enableCaseInsensitiveBuiltinIdentifier = false;
+        private bool enableCaseInsensitiveBuiltinIdentifier = false;
 
         /// <summary>
         /// Tracks the depth of aggregate expression recursion.
@@ -112,6 +112,14 @@ namespace Microsoft.OData.UriParser
         {
             get { return this.lexer; }
             set { this.lexer = value; }
+        }
+
+        /// <summary>
+        /// Reference to the lexer.
+        /// </summary>
+        internal bool EnableCaseInsensitiveBuiltinIdentifier
+        {
+            get { return this.enableCaseInsensitiveBuiltinIdentifier; }
         }
 
         /// <summary>
