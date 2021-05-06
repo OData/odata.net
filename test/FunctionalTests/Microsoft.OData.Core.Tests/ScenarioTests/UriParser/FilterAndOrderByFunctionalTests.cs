@@ -468,6 +468,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void ParseFilterWithSingleValueCountWithFilterAndSearchOptionsThrows()
+        {
+            Action parse = () => ParseFilter("ID/$count($filter=Color eq 'Brown';$search=brown) gt 1", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_CountSegmentNextTokenNotCollectionValue());
+        }
+
+        [Fact]
         public void CompareComplexWithNull()
         {
             var filter = ParseFilter("MyAddress eq null", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());

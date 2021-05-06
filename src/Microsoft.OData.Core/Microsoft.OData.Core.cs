@@ -633,6 +633,7 @@ namespace Microsoft.OData
         internal const string MetadataBinder_LeftOperandNotSingleValue = "MetadataBinder_LeftOperandNotSingleValue";
         internal const string MetadataBinder_RightOperandNotCollectionValue = "MetadataBinder_RightOperandNotCollectionValue";
         internal const string MetadataBinder_PropertyAccessSourceNotSingleValue = "MetadataBinder_PropertyAccessSourceNotSingleValue";
+        internal const string MetadataBinder_CountSegmentNextTokenNotCollectionValue = "MetadataBinder_CountSegmentNextTokenNotCollectionValue";
         internal const string MetadataBinder_IncompatibleOperandsError = "MetadataBinder_IncompatibleOperandsError";
         internal const string MetadataBinder_IncompatibleOperandError = "MetadataBinder_IncompatibleOperandError";
         internal const string MetadataBinder_UnknownFunction = "MetadataBinder_UnknownFunction";

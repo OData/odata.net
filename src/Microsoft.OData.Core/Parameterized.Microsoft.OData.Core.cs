@@ -5504,6 +5504,14 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The next token in a CountSegmentNode must be a collection."
+        /// </summary>
+        internal static string MetadataBinder_CountSegmentNextTokenNotCollectionValue()
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.MetadataBinder_CountSegmentNextTokenNotCollectionValue);
+        }
+
+        /// <summary>
         /// A string like "A binary operator with incompatible types was detected. Found operand types '{0}' and '{1}' for operator kind '{2}'."
         /// </summary>
         internal static string MetadataBinder_IncompatibleOperandsError(object p0, object p1, object p2)

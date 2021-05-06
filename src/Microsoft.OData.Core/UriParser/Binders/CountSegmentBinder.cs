@@ -47,6 +47,11 @@ namespace Microsoft.OData.UriParser
             QueryNode source = this.bindMethod(countSegmentToken.NextToken);
             CollectionNode node = source as CollectionNode;
 
+            if(node == null)
+            {
+                throw new ODataException(ODataErrorStrings.MetadataBinder_CountSegmentNextTokenNotCollectionValue());
+            }
+
             FilterClause filterClause = null;
             SearchClause searchClause = null;
 

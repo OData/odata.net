@@ -729,6 +729,7 @@ MetadataBinder_UnaryOperatorOperandNotSingleValue=The operand for a unary operat
 MetadataBinder_LeftOperandNotSingleValue=The left operand for the IN operation is not a single value. IN operations require the left operand to be a single value and the right operand to be a collection value.
 MetadataBinder_RightOperandNotCollectionValue=The right operand for the IN operation is not a collection value. IN operations require the left operand to be a single value and the right operand to be a collection value.
 MetadataBinder_PropertyAccessSourceNotSingleValue=The parent value for a property access of a property '{0}' is not a single value. Property access can only be applied to a single value.
+MetadataBinder_CountSegmentNextTokenNotCollectionValue=The next token in a CountSegmentNode must be a collection.
 MetadataBinder_IncompatibleOperandsError=A binary operator with incompatible types was detected. Found operand types '{0}' and '{1}' for operator kind '{2}'.
 MetadataBinder_IncompatibleOperandError=A unary operator with an incompatible type was detected. Found operand type '{0}' for operator kind '{1}'.
 MetadataBinder_UnknownFunction=An unknown function with name '{0}' was found. This may also be a function import or a key lookup on a navigation property, which is not allowed.
