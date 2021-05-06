@@ -425,6 +425,18 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void ParseFilterWithEntityCollectionCountWithSearchOption()
+        {
+            var filterQueryNode = ParseFilter("MyFriendsDogs/$count($search=brown) gt 1", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            BinaryOperatorNode binaryNode = filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan);
+            CountNode countNode = binaryNode.Left.ShouldBeCountNode();
+
+            Assert.Null(countNode.FilterClause);
+            countNode.SearchClause.Expression.ShouldBeSearchTermNode("brown");
+        }
+
+        [Fact]
         public void CompareComplexWithNull()
         {
             var filter = ParseFilter("MyAddress eq null", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());

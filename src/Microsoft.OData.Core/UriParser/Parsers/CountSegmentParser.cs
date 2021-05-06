@@ -87,7 +87,8 @@ namespace Microsoft.OData.UriParser
             else if (textWithinParenthesis.StartsWith(ExpressionConstants.QueryOptionSearch, StringComparison.OrdinalIgnoreCase))
             {
                 string searchQuery = TryGetQueryOption(ExpressionConstants.QueryOptionSearch, textWithinParenthesis);
-                searchToken = searchQuery == null ? null : this.UriQueryExpressionParser.ParseSearch(searchQuery);
+                SearchParser searchParser = new SearchParser(ODataUriParserSettings.DefaultSearchLimit);
+                searchToken = searchQuery == null ? null : searchParser.ParseSearch(searchQuery);
             }
             else
             {

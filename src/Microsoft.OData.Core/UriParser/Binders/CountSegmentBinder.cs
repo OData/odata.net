@@ -62,7 +62,7 @@ namespace Microsoft.OData.UriParser
 
             if(countSegmentToken.SearchOption != null)
             {
-                SearchBinder searchBinder = new SearchBinder(bindMethod);
+                SearchBinder searchBinder = new SearchBinder(binder.Bind);
                 searchClause = searchBinder.BindSearch(countSegmentToken.SearchOption);
             }
 
