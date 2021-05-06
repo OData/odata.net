@@ -408,6 +408,15 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan).
                 Left.ShouldBeCountNode().
                     Source.ShouldBeCollectionNavigationNode(HardCodedTestModel.GetPersonMyFriendsDogsProp());
+
+            BinaryOperatorNode binaryNode = filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan);
+            CountNode countNode = binaryNode.Left.ShouldBeCountNode();
+            countNode.Source.ShouldBeCollectionNavigationNode(HardCodedTestModel.GetPersonMyFriendsDogsProp());
+
+            Assert.Null(countNode.SearchClause);
+            BinaryOperatorNode innerBinaryNode = countNode.FilterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            Assert.Equal("Color", Assert.IsType<SingleValuePropertyAccessNode>(innerBinaryNode.Left).Property.Name);
+            Assert.Equal("Brown", Assert.IsType<ConstantNode>(innerBinaryNode.Right).Value);
         }
 
         [Fact]
@@ -431,9 +440,24 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             BinaryOperatorNode binaryNode = filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan);
             CountNode countNode = binaryNode.Left.ShouldBeCountNode();
+            countNode.Source.ShouldBeCollectionNavigationNode(HardCodedTestModel.GetPersonMyFriendsDogsProp());
 
             Assert.Null(countNode.FilterClause);
             countNode.SearchClause.Expression.ShouldBeSearchTermNode("brown");
+        }
+
+        [Fact]
+        public void ParseFilterWithEntityCollectionCountWithFilterAndSearchOptions()
+        {
+            var filterQueryNode = ParseFilter("MyFriendsDogs/$count($filter=Color eq 'Brown';$search=brown) gt 1", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            BinaryOperatorNode binaryNode = filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan);
+            CountNode countNode = binaryNode.Left.ShouldBeCountNode();
+            countNode.SearchClause.Expression.ShouldBeSearchTermNode("brown");
+
+            BinaryOperatorNode innerBinaryNode = countNode.FilterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            Assert.Equal("Color", Assert.IsType<SingleValuePropertyAccessNode>(innerBinaryNode.Left).Property.Name);
+            Assert.Equal("Brown", Assert.IsType<ConstantNode>(innerBinaryNode.Right).Value);
         }
 
         [Fact]

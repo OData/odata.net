@@ -54,7 +54,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Whether to allow case insensitive for builtin identifier.
         /// </summary>
-        private bool enableCaseInsensitiveBuiltinIdentifier = false;
+        internal bool enableCaseInsensitiveBuiltinIdentifier = false;
 
         /// <summary>
         /// Tracks the depth of aggregate expression recursion.
@@ -700,7 +700,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>The lexer for the expression, which will have already moved to the first token.</returns>
         private static ExpressionLexer CreateLexerForFilterOrOrderByOrApplyExpression(string expression)
         {
-            return new ExpressionLexer(expression, true /*moveToFirstToken*/, false /*useSemicolonDelimiter*/, true /*parsingFunctionParameters*/);
+            return new ExpressionLexer(expression, true /*moveToFirstToken*/, true /*useSemicolonDelimiter*/, true /*parsingFunctionParameters*/);
         }
 
         /// <summary>Creates an exception for a parse error.</summary>

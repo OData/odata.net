@@ -61,7 +61,12 @@ namespace Microsoft.OData.UriParser
         {
             QueryToken filterToken = null;
             QueryToken searchToken = null;
-            string textWithinParenthesis = null;
+
+            bool isFilterOption = false;
+            bool isSearchOption = false;
+
+            string filterText = string.Empty;
+            string searchText = string.Empty;
 
             // We need to maintain the recursionDepth of the outer $filter query since calling
             // ParseFilter or ParseSearch below will reset it to 0.
@@ -74,26 +79,56 @@ namespace Microsoft.OData.UriParser
             }
             else
             {
-                textWithinParenthesis = this.lexer.AdvanceThroughExpandOption();
+                this.lexer.NextToken();
+                isFilterOption = this.lexer.CurrentToken.IdentifierIs(ExpressionConstants.QueryOptionFilter, this.UriQueryExpressionParser.enableCaseInsensitiveBuiltinIdentifier);
+                isSearchOption = this.lexer.CurrentToken.IdentifierIs(ExpressionConstants.QueryOptionSearch, this.UriQueryExpressionParser.enableCaseInsensitiveBuiltinIdentifier);
+
+                this.lexer.NextToken();
+
+                if (isFilterOption)
+                {
+                    filterText = this.lexer.AdvanceThroughExpandOption();
+                    filterToken = filterText == null ? null : this.UriQueryExpressionParser.ParseFilter(filterText);
+                }
+                else if(isSearchOption)
+                {
+                    searchText = this.lexer.AdvanceThroughExpandOption();
+                    SearchParser searchParser = new SearchParser(ODataUriParserSettings.DefaultSearchLimit);
+                    searchToken = searchText == null ? null : searchParser.ParseSearch(searchText);
+                }
+                else
+                {
+                    // Only a $filter and $search can be inside a $count()
+                    throw ParseError(ODataErrorStrings.UriQueryExpressionParser_IllegalQueryOptioninDollarCount());
+                }
             }
 
-            // TODO: check for NoDollarQueryOptions
-            if (textWithinParenthesis.StartsWith(ExpressionConstants.QueryOptionFilter, StringComparison.OrdinalIgnoreCase))
+            if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.SemiColon)
             {
-                string filterQuery = TryGetQueryOption(ExpressionConstants.QueryOptionFilter, textWithinParenthesis);
-                filterToken = filterQuery == null ? null: this.UriQueryExpressionParser.ParseFilter(filterQuery);
+                this.lexer.NextToken();
+                isFilterOption = this.lexer.CurrentToken.IdentifierIs(ExpressionConstants.QueryOptionFilter, this.UriQueryExpressionParser.enableCaseInsensitiveBuiltinIdentifier);
+                isSearchOption = this.lexer.CurrentToken.IdentifierIs(ExpressionConstants.QueryOptionSearch, this.UriQueryExpressionParser.enableCaseInsensitiveBuiltinIdentifier);
+
+                this.lexer.NextToken();
+
+                if (isFilterOption)
+                {
+                    filterText = this.lexer.AdvanceThroughExpandOption();
+                    filterToken = filterText == null ? null : this.UriQueryExpressionParser.ParseFilter(filterText);
+                }
+                else if (isSearchOption)
+                {
+                    searchText = this.lexer.AdvanceThroughExpandOption();
+                    SearchParser searchParser = new SearchParser(ODataUriParserSettings.DefaultSearchLimit);
+                    searchToken = searchText == null ? null : searchParser.ParseSearch(searchText);
+                }
+                else
+                {
+                    // Only a $filter and $search can be inside a $count()
+                    throw ParseError(ODataErrorStrings.UriQueryExpressionParser_IllegalQueryOptioninDollarCount());
+                }
             }
-            else if (textWithinParenthesis.StartsWith(ExpressionConstants.QueryOptionSearch, StringComparison.OrdinalIgnoreCase))
-            {
-                string searchQuery = TryGetQueryOption(ExpressionConstants.QueryOptionSearch, textWithinParenthesis);
-                SearchParser searchParser = new SearchParser(ODataUriParserSettings.DefaultSearchLimit);
-                searchToken = searchQuery == null ? null : searchParser.ParseSearch(searchQuery);
-            }
-            else
-            {
-                // Only a $filter and $search can be inside a $count()
-                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_IllegalQueryOptioninDollarCount());
-            }
+
 
             this.lexer.ValidateToken(ExpressionTokenKind.CloseParen);
 
