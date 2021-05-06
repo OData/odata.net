@@ -128,7 +128,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             }
 
             IEnumerable<CsdlDirectValueAnnotation> annotations = this.Element.ImmediateValueAnnotations;
-            if (annotations.FirstOrDefault() != null)
+            if (annotations.Any())
             {
                 List<IEdmDirectValueAnnotation> wrappedAnnotations = new List<IEdmDirectValueAnnotation>();
 

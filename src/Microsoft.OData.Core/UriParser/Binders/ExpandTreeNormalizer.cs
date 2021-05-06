@@ -110,7 +110,7 @@ namespace Microsoft.OData.UriParser
         {
             Debug.Assert(new PathSegmentTokenEqualityComparer().Equals(existingToken.PathToNavigationProp, newToken.PathToNavigationProp), "Paths should be equal.");
 
-            IEnumerable<ExpandTermToken> childNodes = CombineChildNodes(existingToken, newToken);
+            List<ExpandTermToken> childNodes = CombineChildNodes(existingToken, newToken).ToList();
             SelectToken combinedSelects = CombineSelects(existingToken, newToken);
             return new ExpandTermToken(
                     existingToken.PathToNavigationProp,
