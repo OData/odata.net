@@ -511,7 +511,7 @@ namespace Microsoft.OData.Client.Metadata
             {
                 string memberInfoName;
 
-                if (!typeInfo.ClientDefinedNameDict.TryGetValue(serverDefinedName, out memberInfoName))
+                if (!typeInfo.ServerSideNameDict.TryGetValue(serverSideName, out memberInfoName))
                 {
                     FieldInfo memberInfo = t.GetField(serverSideName) ?? t.GetFields().ToList().Where(m =>
                     {
@@ -525,7 +525,7 @@ namespace Microsoft.OData.Client.Metadata
                     }
 
                     memberInfoName = memberInfo.Name;
-                    typeInfo.ClientDefinedNameDict[serverDefinedName] = memberInfoName;
+                    typeInfo.ServerSideNameDict[serverSideName] = memberInfoName;
                 }
 
                 clientMemberNames.Add(memberInfoName);

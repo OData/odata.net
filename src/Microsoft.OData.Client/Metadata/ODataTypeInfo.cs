@@ -36,7 +36,7 @@ namespace Microsoft.OData.Client.Metadata
         public ODataTypeInfo(Type type)
         {
             this.type = type;
-            ClientDefinedNameDict = new ConcurrentDictionary<string, string>();
+            ServerSideNameDict = new ConcurrentDictionary<string, string>();
             _propertyInfoDict = new Dictionary<string, PropertyInfo>();            
         }
 
@@ -85,7 +85,7 @@ namespace Microsoft.OData.Client.Metadata
         /// <summary>
         /// Concurrent Dictionary cache to save ClientDefinedName for the type and serverDefinedName
         /// </summary>
-        public ConcurrentDictionary<string, string> ClientDefinedNameDict { get; set; }
+        public ConcurrentDictionary<string, string> ServerSideNameDict { get; set; }
 
         /// <summary>
         /// Dictionary cache to save Propertyinfo for the type
