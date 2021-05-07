@@ -65,7 +65,7 @@ namespace Microsoft.OData.Client.Metadata
             {
                 if (!_hasProperties.HasValue)
                 {
-                    GetAllProperties();
+                    _properties = GetAllProperties();
                 }
 
                 return _hasProperties.Value;
@@ -96,7 +96,7 @@ namespace Microsoft.OData.Client.Metadata
             {
                 if (_propertyInfoDict == null)
                 {
-                    GetAllProperties();
+                    _properties = GetAllProperties();
                 }
 
                 return _propertyInfoDict;

@@ -365,10 +365,16 @@ namespace Microsoft.OData.Client.Metadata
             if (!PrimitiveType.IsKnownType(type))
             {
                 ODataTypeInfo typeInfo = GetODataTypeInfo(type);
-                return typeInfo.Properties;
-            }
+                foreach (PropertyInfo propertyInfo in typeInfo.Properties)
+                {
+                    if (declaredOnly && IsOverride(type, propertyInfo))
+                    {
+                        continue;
+                    }
 
-            return null;
+                    yield return propertyInfo;
+                }
+            }
         }
 
         /// <summary>
