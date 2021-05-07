@@ -17,9 +17,28 @@ namespace Microsoft.OData.Client.Metadata
     using System.Reflection;
     using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
-    using c = Microsoft.OData.Client;    
+    using c = Microsoft.OData.Client;
 
     #endregion Namespaces.
+
+
+    /// <summary>
+    /// Enumeration for the kind of key
+    /// </summary>
+    internal enum KeyKind
+    {
+        /// <summary>If this is not a key </summary>
+        NotKey = 0,
+
+        /// <summary> If the key property name was equal to ID </summary>
+        Id = 1,
+
+        /// <summary> If the key property name was equal to TypeName+ID </summary>
+        TypeNameId = 2,
+
+        /// <summary> if the key property was attributed </summary>
+        AttributedKey = 3,
+    }
 
     /// <summary>
     /// Utility methods for client types.
@@ -30,24 +49,6 @@ namespace Microsoft.OData.Client.Metadata
         internal static readonly PropertyInfo[] EmptyPropertyInfoArray = new PropertyInfo[0];
 
         internal static ConcurrentDictionary<Type, ODataTypeInfo> ODataTypeInfoCache { get; set; } = new ConcurrentDictionary<Type, ODataTypeInfo>();
-
-        /// <summary>
-        /// Enumeration for the kind of key
-        /// </summary>
-        private enum KeyKind
-        {
-            /// <summary>If this is not a key </summary>
-            NotKey = 0,
-
-            /// <summary> If the key property name was equal to ID </summary>
-            Id = 1,
-
-            /// <summary> If the key property name was equal to TypeName+ID </summary>
-            TypeNameId = 2,
-
-            /// <summary> if the key property was attributed </summary>
-            AttributedKey = 3,
-        }
 
         /// <summary>
         /// Sets the single instance of <see cref="ClientTypeAnnotation"/> on the given instance of <paramref name="edmType"/>.
@@ -363,64 +364,11 @@ namespace Microsoft.OData.Client.Metadata
         {
             if (!PrimitiveType.IsKnownType(type))
             {
-                foreach (PropertyInfo propertyInfo in type.GetPublicProperties(true /*instanceOnly*/, declaredOnly))
-                {
-                    //// examples where class<PropertyType>
-
-                    //// the normal examples
-                    //// PropertyType Property { get; set }
-                    //// Nullable<PropertyType> Property { get; set; }
-
-                    //// if 'Property: struct' then we would be unable set the property during construction (and have them stick)
-                    //// but when its a class, we can navigate if non-null and set the nested properties
-                    //// PropertyType Property { get; } where PropertyType: class
-
-                    //// we do support adding elements to collections
-                    //// ICollection<PropertyType> { get; /*ignored set;*/ }
-
-                    //// indexed properties are not supporter because
-                    //// we don't have anything to use as the index
-                    //// PropertyType Property[object x] { /*ignored get;*/ /*ignored set;*/ }
-
-                    //// also ignored
-                    //// if PropertyType.IsPointer (like byte*)
-                    //// if PropertyType.IsArray except for byte[] and char[]
-                    //// if PropertyType == IntPtr or UIntPtr
-
-                    //// Properties overriding abstract or virtual properties on a base type
-                    //// are also ignored (because they are part of the base type declaration
-                    //// and not of the derived type).
-
-                    Type propertyType = propertyInfo.PropertyType; // class / interface / value
-                    propertyType = Nullable.GetUnderlyingType(propertyType) ?? propertyType;
-
-                    if (propertyType.IsPointer ||
-                        (propertyType.IsArray && (typeof(byte[]) != propertyType) && typeof(char[]) != propertyType) ||
-                        (typeof(IntPtr) == propertyType) ||
-                        (typeof(UIntPtr) == propertyType))
-                    {
-                        continue;
-                    }
-
-                    // Ignore properties overriding abstract/virtual properties of a base type
-                    // when only getting the declared properties (otherwise the property will
-                    // only be included once in the property list anyways).
-                    if (declaredOnly && IsOverride(type, propertyInfo))
-                    {
-                        continue;
-                    }
-
-                    Debug.Assert(!propertyType.ContainsGenericParameters(), "remove when test case is found that encounters this");
-
-                    if (propertyInfo.CanRead &&
-                        (!propertyType.IsValueType() || propertyInfo.CanWrite) &&
-                        !propertyType.ContainsGenericParameters() &&
-                        propertyInfo.GetIndexParameters().Length == 0)
-                    {
-                        yield return propertyInfo;
-                    }
-                }
+                ODataTypeInfo typeInfo = GetODataTypeInfo(type);
+                return typeInfo.Properties;
             }
+
+            return null;
         }
 
         /// <summary>
@@ -444,77 +392,7 @@ namespace Microsoft.OData.Client.Metadata
         {
             ODataTypeInfo typeInfo = GetODataTypeInfo(type);
 
-            if (typeInfo.KeyProperties == null)
-            {
-                if (CommonUtil.IsUnsupportedType(type))
-                {
-                    throw new InvalidOperationException(c.Strings.ClientType_UnsupportedType(type));
-                }
-
-                string typeName = type.ToString();
-                IEnumerable<object> customAttributes = type.GetCustomAttributes(true);
-                bool isEntity = customAttributes.OfType<EntityTypeAttribute>().Any();
-                KeyAttribute dataServiceKeyAttribute = customAttributes.OfType<KeyAttribute>().FirstOrDefault();
-                List<PropertyInfo> keyProperties = new List<PropertyInfo>();
-                PropertyInfo[] properties = ClientTypeUtil.GetPropertiesOnType(type, false /*declaredOnly*/).ToArray();
-
-                hasProperties = properties.Length > 0;
-                typeInfo.HasProperties = hasProperties;
-
-                KeyKind currentKeyKind = KeyKind.NotKey;
-                KeyKind newKeyKind = KeyKind.NotKey;
-                foreach (PropertyInfo propertyInfo in properties)
-                {
-                    if ((newKeyKind = ClientTypeUtil.IsKeyProperty(propertyInfo, dataServiceKeyAttribute)) != KeyKind.NotKey)
-                    {
-                        if (newKeyKind > currentKeyKind)
-                        {
-                            keyProperties.Clear();
-                            currentKeyKind = newKeyKind;
-                            keyProperties.Add(propertyInfo);
-                        }
-                        else if (newKeyKind == currentKeyKind)
-                        {
-                            keyProperties.Add(propertyInfo);
-                        }
-                    }
-                }
-
-                Type keyPropertyDeclaringType = null;
-                foreach (PropertyInfo key in keyProperties)
-                {
-                    if (keyPropertyDeclaringType == null)
-                    {
-                        keyPropertyDeclaringType = key.DeclaringType;
-                    }
-                    else if (keyPropertyDeclaringType != key.DeclaringType)
-                    {
-                        throw c.Error.InvalidOperation(c.Strings.ClientType_KeysOnDifferentDeclaredType(typeName));
-                    }
-
-                    if (!PrimitiveType.IsKnownType(key.PropertyType) && !(key.PropertyType.GetGenericTypeDefinition() == typeof(System.Nullable<>) && key.PropertyType.GetGenericArguments().First().IsEnum()))
-                    {
-                        throw c.Error.InvalidOperation(c.Strings.ClientType_KeysMustBeSimpleTypes(key.Name, typeName, key.PropertyType.FullName));
-                    }
-                }
-
-                if (dataServiceKeyAttribute != null)
-                {
-                    if (newKeyKind == KeyKind.AttributedKey && keyProperties.Count != dataServiceKeyAttribute?.KeyNames.Count)
-                    {
-                        var m = (from string a in dataServiceKeyAttribute.KeyNames
-                                 where (from b in properties
-                                        where b.Name == a
-                                        select b).FirstOrDefault() == null
-                                 select a).First<string>();
-                        throw c.Error.InvalidOperation(c.Strings.ClientType_MissingProperty(typeName, m));
-                    }
-                }
-
-                typeInfo.KeyProperties = keyProperties.Count > 0 ? keyProperties.ToArray() : (isEntity ? ClientTypeUtil.EmptyPropertyInfoArray : null);
-            }
-
-            hasProperties = typeInfo.HasProperties.Value;
+            hasProperties = typeInfo.HasProperties;
             return typeInfo.KeyProperties;
         }
 
@@ -620,13 +498,14 @@ namespace Microsoft.OData.Client.Metadata
         internal static string GetClientFieldName(Type t, string serverDefinedName)
         {
             ODataTypeInfo typeInfo = GetODataTypeInfo(t);
-            string clientFieldName;
-
-            if (!typeInfo.ClientDefinedNameDict.TryGetValue(serverDefinedName, out clientFieldName))
+                        
+            List<string> serverDefinedNames = serverDefinedName.Split(',').Select(name => name.Trim()).ToList();
+            List<string> clientMemberNames = new List<string>();
+            foreach (var serverSideName in serverDefinedNames)
             {
-                List<string> serverDefinedNames = serverDefinedName.Split(',').Select(name => name.Trim()).ToList();
-                List<string> clientMemberNames = new List<string>();
-                foreach (var serverSideName in serverDefinedNames)
+                string memberInfoName;
+
+                if (!typeInfo.ClientDefinedNameDict.TryGetValue(serverDefinedName, out memberInfoName))
                 {
                     FieldInfo memberInfo = t.GetField(serverSideName) ?? t.GetFields().ToList().Where(m =>
                     {
@@ -639,14 +518,14 @@ namespace Microsoft.OData.Client.Metadata
                         throw c.Error.InvalidOperation(c.Strings.ClientType_MissingProperty(t.ToString(), serverSideName));
                     }
 
-                    clientMemberNames.Add(memberInfo.Name);
+                    memberInfoName = memberInfo.Name;
+                    typeInfo.ClientDefinedNameDict[serverDefinedName] = memberInfoName;
                 }
 
-                clientFieldName = string.Join(",", clientMemberNames);
-                typeInfo.ClientDefinedNameDict[serverDefinedName] = clientFieldName;
+                clientMemberNames.Add(memberInfoName);
             }
 
-            return clientFieldName;
+            return string.Join(",", clientMemberNames);
         }
 
         /// <summary>
@@ -655,33 +534,18 @@ namespace Microsoft.OData.Client.Metadata
         /// <param name="t">The type used to get the client PropertyInfo.</param>
         /// <param name="serverDefinedName">Name from server.</param>
         /// <param name="undeclaredPropertyBehavior">Flag to support untyped properties.</param>
-        /// <returns>Client PropertyInfo, or null if the method is not found.</returns>
+        /// <returns>Client PropertyInfo, or null if the method is not found or throws exception if undeclaredPropertyBehavior is ThrowException.</returns>
         internal static PropertyInfo GetClientPropertyInfo(Type t, string serverDefinedName, UndeclaredPropertyBehavior undeclaredPropertyBehavior)
         {
             ODataTypeInfo typeInfo = GetODataTypeInfo(t);
-            PropertyInfo clientPropertyInfo;
+            PropertyInfo clientPropertyInfo = null;
 
-            if (!typeInfo.ClientPropertyInfoDict.TryGetValue(serverDefinedName, out clientPropertyInfo))
+            if (!typeInfo.PropertyInfoDict.TryGetValue(serverDefinedName, out clientPropertyInfo))
             {
-                PropertyInfo propertyInfo = t.GetProperty(serverDefinedName);
-                if (propertyInfo == null)
+                if (clientPropertyInfo == null && (undeclaredPropertyBehavior == UndeclaredPropertyBehavior.ThrowException))
                 {
-                    propertyInfo = t.GetProperties().Where(
-                             m =>
-                             {
-                                 OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)m.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
-                                 return originalNameAttribute != null && originalNameAttribute.OriginalName == serverDefinedName;
-                             }).SingleOrDefault();
+                    throw c.Error.InvalidOperation(c.Strings.ClientType_MissingProperty(t.ToString(), serverDefinedName));
                 }
-
-
-                clientPropertyInfo = propertyInfo;
-                typeInfo.ClientPropertyInfoDict[serverDefinedName] = clientPropertyInfo;
-            }
-
-            if (clientPropertyInfo == null && (undeclaredPropertyBehavior == UndeclaredPropertyBehavior.ThrowException))
-            {
-                throw c.Error.InvalidOperation(c.Strings.ClientType_MissingProperty(t.ToString(), serverDefinedName));
             }
 
             return clientPropertyInfo;
@@ -728,18 +592,6 @@ namespace Microsoft.OData.Client.Metadata
             return methodInfo;
         }
 
-
-        private static ODataTypeInfo GetODataTypeInfo(Type type)
-        {
-            ODataTypeInfo typeInfo;
-            if (!ODataTypeInfoCache.TryGetValue(type, out typeInfo))
-            {
-                typeInfo = new ODataTypeInfo();
-                ODataTypeInfoCache[type] = typeInfo;
-            }
-
-            return typeInfo;
-        }
 
         /// <summary>
         /// Get the enum string split by "," with their server side names
@@ -838,45 +690,9 @@ namespace Microsoft.OData.Client.Metadata
             return true;
         }
 
-        /// <summary>
-        /// Returns the KeyKind if <paramref name="propertyInfo"/> is declared as a key in <paramref name="dataServiceKeyAttribute"/> or it follows the key naming convention.
-        /// </summary>
-        /// <param name="propertyInfo">Property in question.</param>
-        /// <param name="dataServiceKeyAttribute">DataServiceKeyAttribute instance.</param>
-        /// <returns>Returns the KeyKind if <paramref name="propertyInfo"/> is declared as a key in <paramref name="dataServiceKeyAttribute"/> or it follows the key naming convention.</returns>
-        private static KeyKind IsKeyProperty(PropertyInfo propertyInfo, KeyAttribute dataServiceKeyAttribute)
+        private static ODataTypeInfo GetODataTypeInfo(Type type)
         {
-            Debug.Assert(propertyInfo != null, "propertyInfo != null");
-
-            string propertyName = GetServerDefinedName(propertyInfo);
-
-            KeyKind keyKind = KeyKind.NotKey;
-            if (dataServiceKeyAttribute != null && dataServiceKeyAttribute.KeyNames.Contains(propertyName))
-            {
-                keyKind = KeyKind.AttributedKey;
-            }
-#if !PORTABLELIB
-            else if (propertyInfo.GetCustomAttributes().OfType<System.ComponentModel.DataAnnotations.KeyAttribute>().Any())
-            {
-                keyKind = KeyKind.AttributedKey;              
-            }
-#endif
-            else if (propertyName.EndsWith("ID", StringComparison.Ordinal))
-            {
-                string declaringTypeName = propertyInfo.DeclaringType.Name;
-                if ((propertyName.Length == (declaringTypeName.Length + 2)) && propertyName.StartsWith(declaringTypeName, StringComparison.Ordinal))
-                {
-                    // matched "DeclaringType.Name+ID" pattern
-                    keyKind = KeyKind.TypeNameId;
-                }
-                else if (propertyName.Length == 2)
-                {
-                    // matched "ID" pattern
-                    keyKind = KeyKind.Id;
-                }
-            }
-
-            return keyKind;
+            return ODataTypeInfoCache.GetOrAdd(type, (key) => new ODataTypeInfo(type));
         }
 
         /// <summary>
