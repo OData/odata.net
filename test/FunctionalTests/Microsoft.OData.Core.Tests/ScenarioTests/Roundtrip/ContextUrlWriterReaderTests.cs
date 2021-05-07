@@ -739,7 +739,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
         [Fact]
         public void CollectionOfExpandedEntities()
         {
-            string contextString = "\"{0}$metadata#Employees(AssociatedCompany())\"";
+            string contextString = "\"{0}$metadata#Employees(AssociatedCompany(*))\"";
             foreach (ODataVersion version in Versions)
             {
                 foreach (ODataFormat mimeType in mimeTypes)
@@ -806,7 +806,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                     feed.Id = new Uri("urn:test");
                     writer.WriteStart(feed);
                     writer.WriteEnd();
-                }, string.Format("\"{0}$metadata#Employees(AssociatedCompany())\"", TestBaseUri), out payload, out contentType);
+                }, string.Format("\"{0}$metadata#Employees(AssociatedCompany(*))\"", TestBaseUri), out payload, out contentType);
 
                 this.ReadPayload(payload, contentType, model, omReader =>
                 {
@@ -909,7 +909,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                     writer.WriteStart(entry);
                     writer.WriteEnd();
                 },
-                string.Format("\"{0}$metadata#Employees(AssociatedCompany,AssociatedCompany())/$entity\"", TestBaseUri),
+                string.Format("\"{0}$metadata#Employees(AssociatedCompany,AssociatedCompany(*))/$entity\"", TestBaseUri),
                 out payload, out contentType);
 
                 this.ReadPayload(payload, contentType, model, omReader =>
@@ -928,7 +928,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
         [InlineData(ODataVersion.V401)]
         public void ExpandedMultiSegmentEntity(ODataVersion version)
         {
-            string contextString = "\"{0}$metadata#Employees(AssociatedCompany,AssociatedCompany())/$entity\"";
+            string contextString = "\"{0}$metadata#Employees(AssociatedCompany,AssociatedCompany(*))/$entity\"";
             ODataResource entry = new ODataResource()
             {
                 TypeName = TestNameSpace + ".Employee",

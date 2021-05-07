@@ -281,9 +281,9 @@ namespace Microsoft.OData.Tests
 
         [Theory]
         // expand without select, $expand=A
-        [InlineData("TestModel.CapitolCity/Districts", "TestModel.CapitolCity/Districts()")]
+        [InlineData("TestModel.CapitolCity/Districts", "TestModel.CapitolCity/Districts(*)")]
         // expands without select, $expand=A,B
-        [InlineData("TestModel.CapitolCity/CapitolDistrict,TestModel.CapitolCity/Districts", "TestModel.CapitolCity/CapitolDistrict(),TestModel.CapitolCity/Districts()")]
+        [InlineData("TestModel.CapitolCity/CapitolDistrict,TestModel.CapitolCity/Districts", "TestModel.CapitolCity/CapitolDistrict(*),TestModel.CapitolCity/Districts(*)")]
         // expand with nested select, $expand=A($select=B)
         [InlineData("TestModel.CapitolCity/Districts($select=Name)", "TestModel.CapitolCity/Districts(Name)")]
 
@@ -297,13 +297,13 @@ namespace Microsoft.OData.Tests
 
         [Theory]
         // $select=A&$expand=B
-        [InlineData( "Name", "Districts", "Name,Districts()")]
+        [InlineData( "Name", "Districts", "Name,Districts(*)")]
         // $select=A&$expand=A
-        [InlineData( "Districts", "Districts", "Districts,Districts()")]
+        [InlineData( "Districts", "Districts", "Districts,Districts(*)")]
         // $select=A,B,C&$expand=A
-        [InlineData( "Name,Districts,Size", "Districts", "Name,Districts,Size,Districts()")]
+        [InlineData( "Name,Districts,Size", "Districts", "Name,Districts,Size,Districts(*)")]
         // $select=A&$expand=A,B
-        [InlineData( "Districts", "Districts,TestModel.CapitolCity/CapitolDistrict", "Districts,Districts(),TestModel.CapitolCity/CapitolDistrict()")]
+        [InlineData( "Districts", "Districts,TestModel.CapitolCity/CapitolDistrict", "Districts,Districts(*),TestModel.CapitolCity/CapitolDistrict(*)")]
         // $select=A,B&$expand=B($select=C)
         [InlineData( "Name,Districts", "Districts($select=Name)", "Name,Districts,Districts(Name)")]
         public void FeedContextUriWithSelectAndExpandString(string selectClause, string expandClause, string expectedClause)
@@ -341,7 +341,7 @@ namespace Microsoft.OData.Tests
         {
             // Without inner $select, $expand=A($expand=B($expand=C))
             string expandClause = "Districts($expand=City($expand=Districts))";
-            string expectedClause = "Districts(City(Districts()))";
+            string expectedClause = "Districts(City(Districts(*)))";
             string urlString = this.CreateEntryContextUri(null, expandClause, version).OriginalString;
             Assert.Equal(urlString, BuildExpectedContextUri("#Cities", true, expectedClause));
 
@@ -368,7 +368,7 @@ namespace Microsoft.OData.Tests
         {
             const string selectClause = "Size,Name";
             const string expandClause = "Districts($select=Zip,City;$expand=City($expand=Districts;$select=Name))";
-            const string expectedClause = "Size,Name,Districts(Zip,City,City(Name,Districts()))";
+            const string expectedClause = "Size,Name,Districts(Zip,City,City(Name,Districts(*)))";
             Assert.Equal(this.CreateFeedContextUri(selectClause, expandClause, null, null, version).OriginalString, BuildExpectedContextUri("#Cities", false, expectedClause));
         }
         #endregion context uri with $select and $expand
