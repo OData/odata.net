@@ -7,6 +7,7 @@
 namespace Microsoft.OData.UriParser
 {
     using System;
+    using System.Globalization;
     using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
@@ -83,6 +84,12 @@ namespace Microsoft.OData.UriParser
                     string text = this.UriQueryExpressionParser.EnableCaseInsensitiveBuiltinIdentifier
                         ? this.lexer.CurrentToken.Text.ToLowerInvariant()
                         : this.lexer.CurrentToken.Text;
+
+                    // Prepend '$' prefix if needed.
+                    if (this.UriQueryExpressionParser.EnableNoDollarQueryOptions && !text.StartsWith(UriQueryConstants.DollarSign, StringComparison.Ordinal))
+                    {
+                        text = string.Format(CultureInfo.InvariantCulture, "{0}{1}", UriQueryConstants.DollarSign, text);
+                    }
 
                     switch (text)
                     {
