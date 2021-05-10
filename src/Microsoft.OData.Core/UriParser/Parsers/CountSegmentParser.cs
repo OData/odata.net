@@ -122,7 +122,7 @@ namespace Microsoft.OData.UriParser
         {
             // advance to the equal sign
             this.lexer.NextToken();
-            string filterText = this.ReadQueryOption();
+            string filterText = UriParserHelper.ReadQueryOption(this.lexer);
 
             UriQueryExpressionParser filterParser = new UriQueryExpressionParser(ODataUriParserSettings.DefaultFilterLimit, this.UriQueryExpressionParser.EnableCaseInsensitiveBuiltinIdentifier);
             return filterParser.ParseFilter(filterText);
@@ -136,37 +136,10 @@ namespace Microsoft.OData.UriParser
         {
             // advance to the equal sign
             this.lexer.NextToken();
-            string searchText = this.ReadQueryOption();
+            string searchText = UriParserHelper.ReadQueryOption(this.lexer);
 
             SearchParser searchParser = new SearchParser(ODataUriParserSettings.DefaultSearchLimit);
             return searchParser.ParseSearch(searchText);
-        }
-
-        /// <summary>
-        /// Read a query option within the $count brackets.
-        /// </summary>
-        /// <returns>The query option as a string.</returns>
-        private string ReadQueryOption()
-        {
-            // $filter or $search should be followed by an equal sign.
-            // e.g $filter= or $search=
-            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.Equal)
-            {
-                throw new ODataException(ODataErrorStrings.ExpressionLexer_SyntaxError(this.lexer.Position, this.lexer.ExpressionText));
-            }
-
-            string expressionText = this.lexer.AdvanceThroughExpandOption();
-
-            if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.SemiColon)
-            {
-                // Move over the ';' separator
-                this.lexer.NextToken();
-                return expressionText;
-            }
-
-            // If there wasn't a semicolon, it MUST be the last option. We must be at ')' in this case
-            this.lexer.ValidateToken(ExpressionTokenKind.CloseParen);
-            return expressionText;
         }
     }
 }

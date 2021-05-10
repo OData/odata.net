@@ -438,7 +438,7 @@ namespace Microsoft.OData.UriParser
         {
             // advance to the equal sign
             this.lexer.NextToken();
-            string filterText = this.ReadQueryOption();
+            string filterText = UriParserHelper.ReadQueryOption(this.lexer);
 
             UriQueryExpressionParser filterParser = new UriQueryExpressionParser(this.MaxFilterDepth, enableCaseInsensitiveBuiltinIdentifier);
             return filterParser.ParseFilter(filterText);
@@ -452,7 +452,7 @@ namespace Microsoft.OData.UriParser
         {
             // advance to the equal sign
             this.lexer.NextToken();
-            string orderByText = this.ReadQueryOption();
+            string orderByText = UriParserHelper.ReadQueryOption(this.lexer);
 
             UriQueryExpressionParser orderbyParser = new UriQueryExpressionParser(this.MaxOrderByDepth, enableCaseInsensitiveBuiltinIdentifier);
             return orderbyParser.ParseOrderBy(orderByText);
@@ -466,7 +466,7 @@ namespace Microsoft.OData.UriParser
         {
             // advance to the equal sign
             this.lexer.NextToken();
-            string topText = this.ReadQueryOption();
+            string topText = UriParserHelper.ReadQueryOption(this.lexer);
 
             // TryParse requires a non-nullable non-negative long.
             long top;
@@ -486,7 +486,7 @@ namespace Microsoft.OData.UriParser
         {
             // advance to the equal sign
             this.lexer.NextToken();
-            string skipText = this.ReadQueryOption();
+            string skipText = UriParserHelper.ReadQueryOption(this.lexer);
 
             // TryParse requires a non-nullable non-negative long.
             long skip;
@@ -506,7 +506,7 @@ namespace Microsoft.OData.UriParser
         {
             // advance to the equal sign
             this.lexer.NextToken();
-            string countText = this.ReadQueryOption();
+            string countText = UriParserHelper.ReadQueryOption(this.lexer);
             switch (countText)
             {
                 case ExpressionConstants.KeywordTrue:
@@ -528,7 +528,7 @@ namespace Microsoft.OData.UriParser
         {
             // advance to the equal sign
             this.lexer.NextToken();
-            string searchText = this.ReadQueryOption();
+            string searchText = UriParserHelper.ReadQueryOption(this.lexer);
 
             SearchParser searchParser = new SearchParser(this.MaxSearchDepth);
             return searchParser.ParseSearch(searchText);
@@ -543,7 +543,7 @@ namespace Microsoft.OData.UriParser
         {
             // advance to the equal sign
             this.lexer.NextToken();
-            string selectText = this.ReadQueryOption();
+            string selectText = UriParserHelper.ReadQueryOption(this.lexer);
 
             IEdmStructuredType targetStructuredType = null;
             if (this.resolver != null && this.parentStructuredType != null)
@@ -579,7 +579,7 @@ namespace Microsoft.OData.UriParser
             // advance to the equal sign
             this.lexer.NextToken();
 
-            string expandText = this.ReadQueryOption();
+            string expandText = UriParserHelper.ReadQueryOption(this.lexer);
 
             IEdmStructuredType targetStructuredType = null;
             if (this.resolver != null && this.parentStructuredType != null)
@@ -617,7 +617,7 @@ namespace Microsoft.OData.UriParser
 
             // advance to the equal sign
             this.lexer.NextToken();
-            string levelsText = this.ReadQueryOption();
+            string levelsText = UriParserHelper.ReadQueryOption(this.lexer);
             long level;
 
             if (string.Equals(
@@ -646,7 +646,7 @@ namespace Microsoft.OData.UriParser
         private ComputeToken ParseInnerCompute()
         {
             this.lexer.NextToken();
-            string computeText = this.ReadQueryOption();
+            string computeText = UriParserHelper.ReadQueryOption(this.lexer);
 
             UriQueryExpressionParser computeParser = new UriQueryExpressionParser(this.MaxOrderByDepth, enableCaseInsensitiveBuiltinIdentifier);
             return computeParser.ParseCompute(computeText);
@@ -659,38 +659,10 @@ namespace Microsoft.OData.UriParser
         private IEnumerable<QueryToken> ParseInnerApply()
         {
             this.lexer.NextToken();
-            string applyText = this.ReadQueryOption();
+            string applyText = UriParserHelper.ReadQueryOption(this.lexer);
 
             UriQueryExpressionParser applyParser = new UriQueryExpressionParser(this.MaxOrderByDepth, enableCaseInsensitiveBuiltinIdentifier);
             return applyParser.ParseApply(applyText);
-        }
-
-        /// <summary>
-        /// Read a query option from the lexer.
-        /// </summary>
-        /// <returns>The query option as a string.</returns>
-        private string ReadQueryOption()
-        {
-            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.Equal)
-            {
-                throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(this.lexer.ExpressionText));
-            }
-
-            // get the full text from the current location onward
-            // there could be literals like 'A string literal; tricky!' in there, so we need to be careful.
-            // Also there could be more nested (...) expressions that we ignore until we recurse enough times to get there.
-            string expressionText = this.lexer.AdvanceThroughExpandOption();
-
-            if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.SemiColon)
-            {
-                // Move over the ';' separator
-                this.lexer.NextToken();
-                return expressionText;
-            }
-
-            // If there wasn't a semicolon, it MUST be the last option. We must be at ')' in this case
-            this.lexer.ValidateToken(ExpressionTokenKind.CloseParen);
-            return expressionText;
         }
     }
 }
