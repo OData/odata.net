@@ -8,9 +8,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
+using Microsoft.OData.Edm;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.UriParser;
-using Microsoft.OData.Edm;
 using Xunit;
 
 namespace Microsoft.OData.Tests.JsonLight
@@ -2684,6 +2685,145 @@ namespace Microsoft.OData.Tests.JsonLight
 
         #endregion 4.01 Tests
 
+        #region Async Tests
+
+        public static IEnumerable<object[]> GetWriteDeltaPayloadTestData()
+        {
+            var valueAsJson = "\"value\":[" +
+                "{\"@odata.id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\"}," +
+                "{\"@odata.context\":\"http://host/service/$metadata#Customers/$deletedLink\"," +
+                "\"source\":\"Customers('ALFKI')\",\"relationship\":\"Orders\",\"target\":\"Orders('10643')\"}," +
+                "{\"@odata.context\":\"http://host/service/$metadata#Customers/$link\"," +
+                "\"source\":\"Customers('BOTTM')\",\"relationship\":\"Orders\",\"target\":\"Orders('10645')\"}," +
+                "{\"@odata.context\":\"http://host/service/$metadata#Orders/$entity\"," +
+                "\"@odata.id\":\"Orders(10643)\"," +
+                "\"ShippingAddress\":{\"Street\":\"23 Tsawassen Blvd.\",\"City\":\"Tsawassen\",\"Region\":\"BC\",\"PostalCode\":\"T2F 8M4\"}},";
+
+            yield return new object[]
+            {
+                new ODataDeltaResourceSet
+                {
+                    Count = 5,
+                    DeltaLink = new Uri("Customers?$expand=Orders&$deltatoken=8015", UriKind.Relative)
+                },
+                false, // Writing request
+                ODataVersion.V4,
+                "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"@odata.count\":5," +
+                "\"@odata.deltaLink\":\"Customers?$expand=Orders&$deltatoken=8015\"," +
+                valueAsJson +
+                "{\"@odata.context\":\"http://host/service/$metadata#Customers/$deletedEntity\",\"id\":\"Customers('ANTON')\",\"reason\":\"deleted\"}"
+            };
+
+            yield return new object[]
+            {
+                new ODataDeltaResourceSet(),
+                true, // Writing request
+                ODataVersion.V4,
+                "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                valueAsJson +
+                "{\"@odata.context\":\"http://host/service/$metadata#Customers/$deletedEntity\",\"id\":\"Customers('ANTON')\",\"reason\":\"deleted\"}"
+            };
+
+            yield return new object[]
+            {
+                new ODataDeltaResourceSet
+                {
+                    Count = 5,
+                    DeltaLink = new Uri("Customers?$expand=Orders&$deltatoken=8015", UriKind.Relative)
+                },
+                false, // Writing request
+                ODataVersion.V401,
+                "{\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"@count\":5," +
+                "\"@deltaLink\":\"Customers?$expand=Orders&$deltatoken=8015\"," +
+                valueAsJson.Replace("@odata.", "@") +
+                "{\"@removed\":{\"reason\":\"deleted\"},\"@id\":\"Customers('ANTON')\"}"
+            };
+
+            yield return new object[]
+            {
+                new ODataDeltaResourceSet(),
+                true, // Writing request
+                ODataVersion.V401,
+                "{\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                valueAsJson.Replace("@odata.", "@") +
+                "{\"@removed\":{\"reason\":\"deleted\"},\"@id\":\"Customers('ANTON')\"}"
+            };
+        }
+
+        [Theory]
+        [MemberData(nameof(GetWriteDeltaPayloadTestData))]
+        public async Task WriteDeltaPayloadAsync(ODataDeltaResourceSet deltaResourceSet, bool writingRequest, ODataVersion odataVersion, string expected)
+        {
+            var result = await SetupJsonLightDeltaWriterAndRunTestAsync(
+                async (jsonLightDeltaWriter) =>
+                {
+                    await jsonLightDeltaWriter.WriteStartAsync(deltaResourceSet);
+                    await jsonLightDeltaWriter.WriteStartAsync(customerUpdated);
+                    await jsonLightDeltaWriter.WriteEndAsync();
+                    await jsonLightDeltaWriter.WriteDeltaDeletedLinkAsync(linkToOrder10643);
+                    await jsonLightDeltaWriter.WriteDeltaLinkAsync(linkToOrder10645);
+                    await jsonLightDeltaWriter.WriteStartAsync(order10643);
+                    await jsonLightDeltaWriter.WriteStartAsync(shippingAddressInfo);
+                    await jsonLightDeltaWriter.WriteStartAsync(shippingAddress);
+                    await jsonLightDeltaWriter.WriteEndAsync(); // shippingAddress
+                    await jsonLightDeltaWriter.WriteEndAsync(); // shippingAddressInfo
+                    await jsonLightDeltaWriter.WriteEndAsync(); // order10643
+                    await jsonLightDeltaWriter.WriteDeltaDeletedEntryAsync(customerDeletedEntry);
+                    await jsonLightDeltaWriter.WriteEndAsync(); // deltaResourceSet
+                    await jsonLightDeltaWriter.FlushAsync();
+                },
+                this.GetCustomers(),
+                this.GetCustomerType(),
+                odataVersion,
+                /*writingRequest*/ writingRequest);
+
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public async Task WriteExpandedResourceSetAsync()
+        {
+            var result = await SetupJsonLightDeltaWriterAndRunTestAsync(
+                async (jsonLightDeltaWriter) =>
+                {
+                    await jsonLightDeltaWriter.WriteStartAsync(deltaFeed);
+                    await jsonLightDeltaWriter.WriteStartAsync(customerEntry);
+                    await jsonLightDeltaWriter.WriteStartAsync(ordersNavigationLink);
+                    await jsonLightDeltaWriter.WriteStartAsync(ordersFeed);
+                    await jsonLightDeltaWriter.WriteStartAsync(orderEntry);
+                    await jsonLightDeltaWriter.WriteStartAsync(shippingAddressInfo);
+                    await jsonLightDeltaWriter.WriteStartAsync(shippingAddress);
+                    await jsonLightDeltaWriter.WriteEndAsync(); // shippingAddress
+                    await jsonLightDeltaWriter.WriteEndAsync(); // shippingAddressInfo
+                    await jsonLightDeltaWriter.WriteEndAsync(); // orderEntry
+                    await jsonLightDeltaWriter.WriteEndAsync(); // ordersFeed
+                    await jsonLightDeltaWriter.WriteEndAsync(); // ordersNavigationLink
+                    await jsonLightDeltaWriter.WriteStartAsync(favouriteProductsNavigationLink);
+                    await jsonLightDeltaWriter.WriteStartAsync(favouriteProductsFeed);
+                    await jsonLightDeltaWriter.WriteStartAsync(productEntry);
+                    await jsonLightDeltaWriter.WriteEndAsync(); // productEntry
+                    await jsonLightDeltaWriter.WriteEndAsync(); // favouriteProductsFeed
+                    await jsonLightDeltaWriter.WriteEndAsync(); // favouriteProductsNavigationLink
+                    await jsonLightDeltaWriter.WriteEndAsync(); // customerEntry
+                    await jsonLightDeltaWriter.WriteEndAsync(); // deltaFeed
+                    await jsonLightDeltaWriter.FlushAsync();
+                }, this.GetCustomers(),
+                this.GetCustomerType());
+
+            Assert.Equal(
+                "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[" +
+                "{\"@odata.id\":\"http://host/service/Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\"," +
+                "\"Orders\":[{\"@odata.id\":\"http://host/service/Orders(10643)\",\"Id\":10643," +
+                "\"ShippingAddress\":{\"Street\":\"23 Tsawassen Blvd.\",\"City\":\"Tsawassen\",\"Region\":\"BC\",\"PostalCode\":\"T2F 8M4\"}}]," +
+                "\"FavouriteProducts\":[{\"@odata.id\":\"http://host/service/Product(1)\",\"Id\":1,\"Name\":\"Car\"}]}]}",
+                result);
+        }
+
+        #endregion Async Tests
+
         #region Test Helper Methods
 
         private void TestInit(IEdmModel userModel = null, bool fullMetadata = false)
@@ -2815,7 +2955,7 @@ namespace Microsoft.OData.Tests.JsonLight
             return (new StreamReader(stream)).ReadToEnd();
         }
 
-        private static ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, IEdmModel userModel, bool fullMetadata = false, ODataUri uri = null, ODataVersion version = ODataVersion.V4, bool isResponse = true)
+        private static ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, IEdmModel userModel, bool fullMetadata = false, ODataUri uri = null, ODataVersion version = ODataVersion.V4, bool isResponse = true, bool isAsync = false)
         {
             var settings = new ODataMessageWriterSettings { Version = version, ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") };
             settings.SetServiceDocumentUri(new Uri("http://host/service"));
@@ -2842,7 +2982,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 MediaType = mediaType,
                 Encoding = Encoding.UTF8,
                 IsResponse = isResponse,
-                IsAsync = false,
+                IsAsync = isAsync,
                 Model = userModel ?? EdmCoreModel.Instance
             };
 
@@ -2857,6 +2997,38 @@ namespace Microsoft.OData.Tests.JsonLight
         private ODataJsonLightOutputContext GetV4OutputContext(bool isResponse)
         {
             return isResponse ? V4ResponseOutputContext : V4RequestOutputContext;
+        }
+
+        /// <summary>
+        /// Sets up an ODataJsonLightDeltaWriter,
+        /// then runs the given test code asynchronously,
+        /// then flushes and reads the stream back as a string for customized verification.
+        /// </summary>
+        private async Task<string> SetupJsonLightDeltaWriterAndRunTestAsync(
+            Func<ODataJsonLightDeltaWriter, Task> func,
+            IEdmNavigationSource navigationSource,
+            IEdmEntityType resourceType,
+            ODataVersion odataVersion = ODataVersion.V4,
+            bool writingRequest = false)
+        {
+            this.stream = new MemoryStream();
+            var jsonLightOutputContext = CreateJsonLightOutputContext(
+                    this.stream,
+                    this.GetModel(),
+                    /*fullMetadata*/ false,
+                    /*uri*/ null,
+                    odataVersion,
+                    !writingRequest,
+                    /*isAsync*/ true);
+            var jsonLightDeltaWriter = new ODataJsonLightDeltaWriter(
+                jsonLightOutputContext,
+                navigationSource,
+                resourceType);
+
+            await func(jsonLightDeltaWriter);
+
+            this.stream.Seek(0, SeekOrigin.Begin);
+            return await new StreamReader(this.stream).ReadToEndAsync();
         }
 
         #endregion
