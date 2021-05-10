@@ -458,7 +458,6 @@ namespace Microsoft.OData.Client.Metadata
             return typeInfo.ServerDefinedTypeName;
         }
 
-
         /// <summary>Gets the full server defined type name in <see cref="OriginalNameAttribute"/> of the specified <paramref name="type"/>.</summary>
         /// <param name="type">Member to get server defined name of.</param>
         /// <returns>The server defined type full name.</returns>
@@ -544,7 +543,6 @@ namespace Microsoft.OData.Client.Metadata
 
             return methodInfo;
         }
-
 
         /// <summary>
         /// Get the enum string split by "," with their server side names

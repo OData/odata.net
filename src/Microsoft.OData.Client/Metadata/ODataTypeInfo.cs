@@ -35,13 +35,18 @@ namespace Microsoft.OData.Client.Metadata
 
 
         /// <summary>
+        /// Concurrent Dictionary cache to save ClientDefinedName for the type and serverDefinedName
+        /// </summary>
+        private ConcurrentDictionary<string, string> ServerSideNameDict { get; set; }
+
+
+        /// <summary>
         /// Creates and instance of <see cref="ODataTypeInfo"/>
         /// </summary>
         public ODataTypeInfo(Type type)
         {
             this.type = type;
-            ServerSideNameDict = new ConcurrentDictionary<string, string>();
-            _propertyInfoDict = new Dictionary<string, PropertyInfo>();            
+            ServerSideNameDict = new ConcurrentDictionary<string, string>();                      
         }
 
         /// <summary>
@@ -133,27 +138,6 @@ namespace Microsoft.OData.Client.Metadata
             }
         }
 
-        /// <summary>
-        /// Concurrent Dictionary cache to save ClientDefinedName for the type and serverDefinedName
-        /// </summary>
-        private ConcurrentDictionary<string, string> ServerSideNameDict { get; set; }
-
-        /// <summary>
-        /// Dictionary cache to save Propertyinfo for the type
-        /// </summary>
-        internal Dictionary<string, PropertyInfo> PropertyInfoDict
-        {
-            get
-            {
-                if (_propertyInfoDict == null)
-                {
-                    _properties = GetAllProperties();
-                }
-
-                return _propertyInfoDict;
-            }
-        }
-
         public IEnumerable<PropertyInfo> Properties
         {
             get
@@ -165,6 +149,58 @@ namespace Microsoft.OData.Client.Metadata
 
                 return _properties;
             }
+        }
+
+        /// <summary>
+        /// Get ClientField name for a serverside name
+        /// </summary>
+        /// <param name="serverSideName">server side name from the list of serverdefined name</param>
+        /// <returns>Client field name for the serverside name</returns>
+        public string GetClientFieldName(string serverSideName)
+        {
+            string memberInfoName;
+
+            if (ServerSideNameDict.TryGetValue(serverSideName, out memberInfoName))
+            {
+                FieldInfo memberInfo = type.GetField(serverSideName) ?? type.GetFields().ToList().Where(m =>
+                {
+                    OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)m.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
+                    return originalNameAttribute != null && originalNameAttribute.OriginalName == serverSideName;
+                }).SingleOrDefault();
+
+                if (memberInfo == null)
+                {
+                    throw c.Error.InvalidOperation(c.Strings.ClientType_MissingProperty(type.ToString(), serverSideName));
+                }
+
+                memberInfoName = memberInfo.Name;
+                ServerSideNameDict[serverSideName] = memberInfoName;
+            }
+
+            return memberInfoName;
+        }
+
+        /// <summary>
+        /// Gets the clr name according to server defined name in the specified type.
+        /// </summary>        
+        /// <param name="serverDefinedName">Name from server.</param>
+        /// <param name="undeclaredPropertyBehavior">Flag to support untyped properties.</param>
+        /// <returns>Client PropertyInfo, or null if the method is not found or throws exception if undeclaredPropertyBehavior is ThrowException.</returns>
+        public PropertyInfo GetClientPropertyInfo(string serverDefinedName, UndeclaredPropertyBehavior undeclaredPropertyBehavior)
+        {
+            PropertyInfo clientPropertyInfo = null;
+
+            if (_propertyInfoDict == null)
+            {
+                _properties = GetAllProperties();
+            }
+
+            if ((!_propertyInfoDict.TryGetValue(serverDefinedName, out clientPropertyInfo)) && undeclaredPropertyBehavior == UndeclaredPropertyBehavior.ThrowException)
+            {
+                throw c.Error.InvalidOperation(c.Strings.ClientType_MissingProperty(type.ToString(), serverDefinedName));
+            }
+
+            return clientPropertyInfo;
         }
 
         private IEnumerable<PropertyInfo> GetAllProperties()
@@ -201,7 +237,10 @@ namespace Microsoft.OData.Client.Metadata
                 //// are also ignored (because they are part of the base type declaration
                 //// and not of the derived type).
 
-                propertyInfoDict[ServerDefinedTypeName] = propertyInfo;
+                OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)propertyInfo.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
+                string serverDefinedName = originalNameAttribute != null ? originalNameAttribute.OriginalName : propertyInfo.Name;
+
+                propertyInfoDict[serverDefinedName] = propertyInfo;
 
                 Type propertyType = propertyInfo.PropertyType; // class / interface / value
                 propertyType = Nullable.GetUnderlyingType(propertyType) ?? propertyType;
@@ -337,46 +376,5 @@ namespace Microsoft.OData.Client.Metadata
 
             return keyKind;
         }
-
-        
-        internal string GetClientFieldName(string serverSideName)
-        {            
-            string memberInfoName;
-
-            if (ServerSideNameDict.TryGetValue(serverSideName, out memberInfoName))
-            {
-                FieldInfo memberInfo = type.GetField(serverSideName) ?? type.GetFields().ToList().Where(m =>
-                {
-                    OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)m.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
-                    return originalNameAttribute != null && originalNameAttribute.OriginalName == serverSideName;
-                }).SingleOrDefault();
-
-                if (memberInfo == null)
-                {
-                    throw c.Error.InvalidOperation(c.Strings.ClientType_MissingProperty(type.ToString(), serverSideName));
-                }
-
-                memberInfoName = memberInfo.Name;
-                ServerSideNameDict[serverSideName] = memberInfoName;
-            }
-
-            return memberInfoName;
-        }
-
-        internal PropertyInfo GetClientPropertyInfo(string serverDefinedName, UndeclaredPropertyBehavior undeclaredPropertyBehavior)
-        {            
-            PropertyInfo clientPropertyInfo = null;
-
-            if (PropertyInfoDict.TryGetValue(serverDefinedName, out clientPropertyInfo))
-            {
-                if (clientPropertyInfo == null && (undeclaredPropertyBehavior == UndeclaredPropertyBehavior.ThrowException))
-                {
-                    throw c.Error.InvalidOperation(c.Strings.ClientType_MissingProperty(type.ToString(), serverDefinedName));
-                }
-            }
-
-            return clientPropertyInfo;
-        }
-
     }
 }
