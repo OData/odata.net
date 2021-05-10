@@ -160,7 +160,7 @@ namespace Microsoft.OData.Client.Metadata
         {
             string memberInfoName;
 
-            if (ServerSideNameDict.TryGetValue(serverSideName, out memberInfoName))
+            if (!ServerSideNameDict.TryGetValue(serverSideName, out memberInfoName))
             {
                 FieldInfo memberInfo = type.GetField(serverSideName) ?? type.GetFields().ToList().Where(m =>
                 {
