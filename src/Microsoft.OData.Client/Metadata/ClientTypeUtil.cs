@@ -453,20 +453,7 @@ namespace Microsoft.OData.Client.Metadata
         /// <returns>The server defined type name.</returns>
         internal static string GetServerDefinedTypeName(Type type)
         {
-            ODataTypeInfo typeInfo = GetODataTypeInfo(type);
-
-            if (typeInfo.ServerDefinedTypeName == null)
-            {
-                OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)type.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
-                if (originalNameAttribute != null)
-                {
-                    typeInfo.ServerDefinedTypeName = originalNameAttribute.OriginalName;
-                }
-                else
-                {
-                    typeInfo.ServerDefinedTypeName = type.Name;
-                }
-            }
+            ODataTypeInfo typeInfo = GetODataTypeInfo(type);           
 
             return typeInfo.ServerDefinedTypeName;
         }
@@ -478,19 +465,6 @@ namespace Microsoft.OData.Client.Metadata
         internal static string GetServerDefinedTypeFullName(Type type)
         {
             ODataTypeInfo typeInfo = GetODataTypeInfo(type);
-
-            if (typeInfo.ServerDefinedTypeFullName == null)
-            {
-                OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)type.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
-                if (originalNameAttribute != null)
-                {
-                    typeInfo.ServerDefinedTypeFullName = type.Namespace + "." + originalNameAttribute.OriginalName;
-                }
-                else
-                {
-                    typeInfo.ServerDefinedTypeFullName = type.FullName;
-                }
-            }
 
             return typeInfo.ServerDefinedTypeFullName;
         }
@@ -509,24 +483,7 @@ namespace Microsoft.OData.Client.Metadata
             List<string> clientMemberNames = new List<string>();
             foreach (var serverSideName in serverDefinedNames)
             {
-                string memberInfoName;
-
-                if (!typeInfo.ServerSideNameDict.TryGetValue(serverSideName, out memberInfoName))
-                {
-                    FieldInfo memberInfo = t.GetField(serverSideName) ?? t.GetFields().ToList().Where(m =>
-                    {
-                        OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)m.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
-                        return originalNameAttribute != null && originalNameAttribute.OriginalName == serverSideName;
-                    }).SingleOrDefault();
-
-                    if (memberInfo == null)
-                    {
-                        throw c.Error.InvalidOperation(c.Strings.ClientType_MissingProperty(t.ToString(), serverSideName));
-                    }
-
-                    memberInfoName = memberInfo.Name;
-                    typeInfo.ServerSideNameDict[serverSideName] = memberInfoName;
-                }
+                string memberInfoName = typeInfo.GetClientFieldName(serverSideName);
 
                 clientMemberNames.Add(memberInfoName);
             }
@@ -544,17 +501,7 @@ namespace Microsoft.OData.Client.Metadata
         internal static PropertyInfo GetClientPropertyInfo(Type t, string serverDefinedName, UndeclaredPropertyBehavior undeclaredPropertyBehavior)
         {
             ODataTypeInfo typeInfo = GetODataTypeInfo(t);
-            PropertyInfo clientPropertyInfo = null;
-
-            if (!typeInfo.PropertyInfoDict.TryGetValue(serverDefinedName, out clientPropertyInfo))
-            {
-                if (clientPropertyInfo == null && (undeclaredPropertyBehavior == UndeclaredPropertyBehavior.ThrowException))
-                {
-                    throw c.Error.InvalidOperation(c.Strings.ClientType_MissingProperty(t.ToString(), serverDefinedName));
-                }
-            }
-
-            return clientPropertyInfo;
+            return typeInfo.GetClientPropertyInfo(serverDefinedName, undeclaredPropertyBehavior);
         }
 
         /// <summary>

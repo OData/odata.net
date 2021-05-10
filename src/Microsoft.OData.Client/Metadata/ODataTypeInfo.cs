@@ -29,6 +29,10 @@ namespace Microsoft.OData.Client.Metadata
         private Type type;
         private Dictionary<string, PropertyInfo> _propertyInfoDict;
         private IEnumerable<PropertyInfo> _properties;
+        private string _serverDefinedTypeName;
+        private string _serverDefinedTypeFullName;
+        OriginalNameAttribute originalNameAttribute;
+
 
         /// <summary>
         /// Creates and instance of <see cref="ODataTypeInfo"/>
@@ -75,22 +79,69 @@ namespace Microsoft.OData.Client.Metadata
         /// <summary>
         /// Sertver defined type name
         /// </summary>
-        public string ServerDefinedTypeName { get; set; }
+        public string ServerDefinedTypeName 
+        { 
+            get
+            {
+                if (_serverDefinedTypeName == null)
+                {
+                    if (originalNameAttribute == null)
+                    {
+                        originalNameAttribute = (OriginalNameAttribute)type.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
+                    }
+
+                    if (originalNameAttribute != null)
+                    {
+                        _serverDefinedTypeName = originalNameAttribute.OriginalName;
+                    }
+                    else
+                    {
+                        _serverDefinedTypeName = type.Name;
+                    }                    
+                }
+
+                return _serverDefinedTypeName;
+            }
+        }
 
         /// <summary>
         /// Sertver defined type full name
         /// </summary>
-        public string ServerDefinedTypeFullName { get; set; }
+        public string ServerDefinedTypeFullName
+        {
+            get
+            {
+                if (_serverDefinedTypeFullName == null)
+                {
+                    if (originalNameAttribute == null)
+                    {
+                        originalNameAttribute = (OriginalNameAttribute)type.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
+                    }
+
+                    if (originalNameAttribute != null)
+                    {
+                        _serverDefinedTypeFullName = type.Namespace + "." + originalNameAttribute.OriginalName;
+                    }
+                    else
+                    {
+                        _serverDefinedTypeFullName = type.FullName;
+                    }
+
+                }
+
+                return _serverDefinedTypeFullName;
+            }
+        }
 
         /// <summary>
         /// Concurrent Dictionary cache to save ClientDefinedName for the type and serverDefinedName
         /// </summary>
-        public ConcurrentDictionary<string, string> ServerSideNameDict { get; set; }
+        private ConcurrentDictionary<string, string> ServerSideNameDict { get; set; }
 
         /// <summary>
         /// Dictionary cache to save Propertyinfo for the type
         /// </summary>
-        public Dictionary<string, PropertyInfo> PropertyInfoDict
+        internal Dictionary<string, PropertyInfo> PropertyInfoDict
         {
             get
             {
@@ -120,6 +171,7 @@ namespace Microsoft.OData.Client.Metadata
         {
             List<PropertyInfo> properties = new List<PropertyInfo>();
             _hasProperties = false;
+            Dictionary<string, PropertyInfo> propertyInfoDict = new Dictionary<string, PropertyInfo>();
 
             foreach (PropertyInfo propertyInfo in type.GetPublicProperties(true /*instanceOnly*/, false))
             {
@@ -149,10 +201,7 @@ namespace Microsoft.OData.Client.Metadata
                 //// are also ignored (because they are part of the base type declaration
                 //// and not of the derived type).
 
-                OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)propertyInfo.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
-                string serverDefinedName = originalNameAttribute != null? originalNameAttribute.OriginalName: propertyInfo.Name;
-
-                _propertyInfoDict[serverDefinedName] = propertyInfo;
+                propertyInfoDict[ServerDefinedTypeName] = propertyInfo;
 
                 Type propertyType = propertyInfo.PropertyType; // class / interface / value
                 propertyType = Nullable.GetUnderlyingType(propertyType) ?? propertyType;
@@ -177,6 +226,8 @@ namespace Microsoft.OData.Client.Metadata
                 }
             }
 
+            _propertyInfoDict = propertyInfoDict;
+
             return properties;
         }
 
@@ -192,11 +243,10 @@ namespace Microsoft.OData.Client.Metadata
             bool isEntity = customAttributes.OfType<EntityTypeAttribute>().Any();
             KeyAttribute dataServiceKeyAttribute = customAttributes.OfType<KeyAttribute>().FirstOrDefault();
             List<PropertyInfo> keyProperties = new List<PropertyInfo>();
-            PropertyInfo[] properties = Properties.ToArray();
-
+            
             KeyKind currentKeyKind = KeyKind.NotKey;
             KeyKind newKeyKind = KeyKind.NotKey;
-            foreach (PropertyInfo propertyInfo in properties)
+            foreach (PropertyInfo propertyInfo in Properties)
             {
                 if ((newKeyKind = IsKeyProperty(propertyInfo, dataServiceKeyAttribute)) != KeyKind.NotKey)
                 {
@@ -236,7 +286,7 @@ namespace Microsoft.OData.Client.Metadata
                 if (newKeyKind == KeyKind.AttributedKey && keyProperties.Count != dataServiceKeyAttribute?.KeyNames.Count)
                 {
                     var m = (from string a in dataServiceKeyAttribute.KeyNames
-                                where (from b in properties
+                                where (from b in Properties
                                     where b.Name == a
                                     select b).FirstOrDefault() == null
                                 select a).First<string>();
@@ -286,6 +336,46 @@ namespace Microsoft.OData.Client.Metadata
             }
 
             return keyKind;
+        }
+
+        
+        internal string GetClientFieldName(string serverSideName)
+        {            
+            string memberInfoName;
+
+            if (ServerSideNameDict.TryGetValue(serverSideName, out memberInfoName))
+            {
+                FieldInfo memberInfo = type.GetField(serverSideName) ?? type.GetFields().ToList().Where(m =>
+                {
+                    OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)m.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
+                    return originalNameAttribute != null && originalNameAttribute.OriginalName == serverSideName;
+                }).SingleOrDefault();
+
+                if (memberInfo == null)
+                {
+                    throw c.Error.InvalidOperation(c.Strings.ClientType_MissingProperty(type.ToString(), serverSideName));
+                }
+
+                memberInfoName = memberInfo.Name;
+                ServerSideNameDict[serverSideName] = memberInfoName;
+            }
+
+            return memberInfoName;
+        }
+
+        internal PropertyInfo GetClientPropertyInfo(string serverDefinedName, UndeclaredPropertyBehavior undeclaredPropertyBehavior)
+        {            
+            PropertyInfo clientPropertyInfo = null;
+
+            if (PropertyInfoDict.TryGetValue(serverDefinedName, out clientPropertyInfo))
+            {
+                if (clientPropertyInfo == null && (undeclaredPropertyBehavior == UndeclaredPropertyBehavior.ThrowException))
+                {
+                    throw c.Error.InvalidOperation(c.Strings.ClientType_MissingProperty(type.ToString(), serverDefinedName));
+                }
+            }
+
+            return clientPropertyInfo;
         }
 
     }
