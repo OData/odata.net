@@ -5213,6 +5213,14 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "Only $filter and $search query options are allowed within $count."
+        /// </summary>
+        internal static string UriQueryExpressionParser_IllegalQueryOptioninDollarCount()
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriQueryExpressionParser_IllegalQueryOptioninDollarCount);
+        }
+
+        /// <summary>
         /// A string like "Expecting a Star token but got: '{0}'."
         /// </summary>
         internal static string UriQueryExpressionParser_CannotCreateStarTokenFromNonStar(object p0)
@@ -5493,6 +5501,14 @@ namespace Microsoft.OData {
         internal static string MetadataBinder_PropertyAccessSourceNotSingleValue(object p0)
         {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.MetadataBinder_PropertyAccessSourceNotSingleValue, p0);
+        }
+
+        /// <summary>
+        /// A string like "The next token in a CountSegmentNode must be a collection."
+        /// </summary>
+        internal static string MetadataBinder_CountSegmentNextTokenNotCollectionValue()
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.MetadataBinder_CountSegmentNextTokenNotCollectionValue);
         }
 
         /// <summary>
@@ -6194,6 +6210,14 @@ namespace Microsoft.OData {
         internal static string UriParser_MissingExpandOption(object p0)
         {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriParser_MissingExpandOption, p0);
+        }
+
+        /// <summary>
+        /// A string like "Empty parenthesis not allowed."
+        /// </summary>
+        internal static string UriParser_EmptyParenthesis()
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriParser_EmptyParenthesis);
         }
 
         /// <summary>

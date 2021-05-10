@@ -401,6 +401,80 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void ParseFilterWithEntityCollectionCountWithFilterOption()
+        {
+            var filterQueryNode = ParseFilter("MyFriendsDogs/$count($filter=Color eq 'Brown') gt 1", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan).
+                Left.ShouldBeCountNode().
+                    Source.ShouldBeCollectionNavigationNode(HardCodedTestModel.GetPersonMyFriendsDogsProp());
+
+            BinaryOperatorNode binaryNode = filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan);
+            CountNode countNode = binaryNode.Left.ShouldBeCountNode();
+            countNode.Source.ShouldBeCollectionNavigationNode(HardCodedTestModel.GetPersonMyFriendsDogsProp());
+
+            Assert.Null(countNode.SearchClause);
+            BinaryOperatorNode innerBinaryNode = countNode.FilterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            Assert.Equal("Color", Assert.IsType<SingleValuePropertyAccessNode>(innerBinaryNode.Left).Property.Name);
+            Assert.Equal("Brown", Assert.IsType<ConstantNode>(innerBinaryNode.Right).Value);
+        }
+
+        [Fact]
+        public void ParseFilterWithEntityCollectionCountWithUnbalanceParenthesisThrows()
+        {
+            Action parse = () => ParseFilter("MyFriendsDogs/$count($filter=Color eq 'Brown' gt 1", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            parse.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_SyntaxError(50, "MyFriendsDogs/$count($filter=Color eq 'Brown' gt 1"));
+        }
+
+        [Fact]
+        public void ParseFilterWithEntityCollectionCountWithEmptyParenthesisThrows()
+        {
+            Action parse = () => ParseFilter("MyFriendsDogs/$count()", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            parse.Throws<ODataException>(ODataErrorStrings.UriParser_EmptyParenthesis());
+        }
+
+        [Fact]
+        public void ParseFilterWithEntityCollectionCountWithIllegalQueryOptionThrows()
+        {
+            Action parse = () => ParseFilter("MyFriendsDogs/$count($orderby=Color) gt 1", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            parse.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_IllegalQueryOptioninDollarCount());
+        }
+
+        [Fact]
+        public void ParseFilterWithEntityCollectionCountWithSearchOption()
+        {
+            var filterQueryNode = ParseFilter("MyFriendsDogs/$count($search=brown) gt 1", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            BinaryOperatorNode binaryNode = filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan);
+            CountNode countNode = binaryNode.Left.ShouldBeCountNode();
+            countNode.Source.ShouldBeCollectionNavigationNode(HardCodedTestModel.GetPersonMyFriendsDogsProp());
+
+            Assert.Null(countNode.FilterClause);
+            countNode.SearchClause.Expression.ShouldBeSearchTermNode("brown");
+        }
+
+        [Fact]
+        public void ParseFilterWithEntityCollectionCountWithFilterAndSearchOptions()
+        {
+            var filterQueryNode = ParseFilter("MyFriendsDogs/$count($filter=Color eq 'Brown';$search=brown) gt 1", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            BinaryOperatorNode binaryNode = filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan);
+            CountNode countNode = binaryNode.Left.ShouldBeCountNode();
+            countNode.SearchClause.Expression.ShouldBeSearchTermNode("brown");
+
+            BinaryOperatorNode innerBinaryNode = countNode.FilterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            Assert.Equal("Color", Assert.IsType<SingleValuePropertyAccessNode>(innerBinaryNode.Left).Property.Name);
+            Assert.Equal("Brown", Assert.IsType<ConstantNode>(innerBinaryNode.Right).Value);
+        }
+
+        [Fact]
+        public void ParseFilterWithSingleValueCountWithFilterAndSearchOptionsThrows()
+        {
+            Action parse = () => ParseFilter("ID/$count($filter=Color eq 'Brown';$search=brown) gt 1", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_CountSegmentNextTokenNotCollectionValue());
+        }
+
+        [Fact]
         public void CompareComplexWithNull()
         {
             var filter = ParseFilter("MyAddress eq null", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());

@@ -271,6 +271,34 @@ namespace Microsoft.OData.UriParser
             return !string.IsNullOrEmpty(identifier) && identifier[0] == UriQueryConstants.AnnotationPrefix && identifier.Contains(".");
         }
 
+        /// <summary>
+        /// Read a query option from the lexer.
+        /// </summary>
+        /// <returns>The query option as a string.</returns>
+        internal static string ReadQueryOption(ExpressionLexer lexer)
+        {
+            if (lexer.CurrentToken.Kind != ExpressionTokenKind.Equal)
+            {
+                throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(lexer.ExpressionText));
+            }
+
+            // get the full text from the current location onward
+            // there could be literals like 'A string literal; tricky!' in there, so we need to be careful.
+            // Also there could be more nested (...) expressions that we ignore until we recurse enough times to get there.
+            string expressionText = lexer.AdvanceThroughExpandOption();
+
+            if (lexer.CurrentToken.Kind == ExpressionTokenKind.SemiColon)
+            {
+                // Move over the ';' separator
+                lexer.NextToken();
+                return expressionText;
+            }
+
+            // If there wasn't a semicolon, it MUST be the last option. We must be at ')' in this case
+            lexer.ValidateToken(ExpressionTokenKind.CloseParen);
+            return expressionText;
+        }
+
         #endregion
 
         #region Private Methods

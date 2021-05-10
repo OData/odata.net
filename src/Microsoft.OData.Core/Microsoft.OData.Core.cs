@@ -600,6 +600,7 @@ namespace Microsoft.OData
         internal const string UriQueryExpressionParser_OpenParenExpected = "UriQueryExpressionParser_OpenParenExpected";
         internal const string UriQueryExpressionParser_CloseParenOrCommaExpected = "UriQueryExpressionParser_CloseParenOrCommaExpected";
         internal const string UriQueryExpressionParser_CloseParenOrOperatorExpected = "UriQueryExpressionParser_CloseParenOrOperatorExpected";
+        internal const string UriQueryExpressionParser_IllegalQueryOptioninDollarCount = "UriQueryExpressionParser_IllegalQueryOptioninDollarCount";
         internal const string UriQueryExpressionParser_CannotCreateStarTokenFromNonStar = "UriQueryExpressionParser_CannotCreateStarTokenFromNonStar";
         internal const string UriQueryExpressionParser_RangeVariableAlreadyDeclared = "UriQueryExpressionParser_RangeVariableAlreadyDeclared";
         internal const string UriQueryExpressionParser_AsExpected = "UriQueryExpressionParser_AsExpected";
@@ -632,6 +633,7 @@ namespace Microsoft.OData
         internal const string MetadataBinder_LeftOperandNotSingleValue = "MetadataBinder_LeftOperandNotSingleValue";
         internal const string MetadataBinder_RightOperandNotCollectionValue = "MetadataBinder_RightOperandNotCollectionValue";
         internal const string MetadataBinder_PropertyAccessSourceNotSingleValue = "MetadataBinder_PropertyAccessSourceNotSingleValue";
+        internal const string MetadataBinder_CountSegmentNextTokenNotCollectionValue = "MetadataBinder_CountSegmentNextTokenNotCollectionValue";
         internal const string MetadataBinder_IncompatibleOperandsError = "MetadataBinder_IncompatibleOperandsError";
         internal const string MetadataBinder_IncompatibleOperandError = "MetadataBinder_IncompatibleOperandError";
         internal const string MetadataBinder_UnknownFunction = "MetadataBinder_UnknownFunction";
@@ -711,6 +713,7 @@ namespace Microsoft.OData
         internal const string UriSelectParser_InvalidLevelsOption = "UriSelectParser_InvalidLevelsOption";
         internal const string UriSelectParser_SystemTokenInSelectExpand = "UriSelectParser_SystemTokenInSelectExpand";
         internal const string UriParser_MissingExpandOption = "UriParser_MissingExpandOption";
+        internal const string UriParser_EmptyParenthesis = "UriParser_EmptyParenthesis";
         internal const string UriParser_MissingSelectOption = "UriParser_MissingSelectOption";
         internal const string UriParser_RelativeUriMustBeRelative = "UriParser_RelativeUriMustBeRelative";
         internal const string UriParser_NeedServiceRootForThisOverload = "UriParser_NeedServiceRootForThisOverload";

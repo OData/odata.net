@@ -154,6 +154,11 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// SelectTerm Token
         /// </summary>
-        SelectTerm = 31
+        SelectTerm = 31,
+
+        /// <summary>
+        /// $count segment
+        /// </summary>
+        CountSegment = 32
     }
 }

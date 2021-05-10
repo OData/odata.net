@@ -40,6 +40,13 @@ namespace Microsoft.OData.UriParser
         T Visit(BinaryOperatorToken tokenIn);
 
         /// <summary>
+        /// Visits a CountSegmentToken
+        /// </summary>
+        /// <param name="tokenIn">The Count segment token to visit.</param>
+        /// <returns>A CountNode that's bound to this token</returns>
+        T Visit(CountSegmentToken tokenIn);
+
+        /// <summary>
         /// Visits an InToken
         /// </summary>
         /// <param name="tokenIn">The In token to visit.</param>

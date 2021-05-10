@@ -57,6 +57,11 @@ namespace Microsoft.OData.UriParser
         private bool enableCaseInsensitiveBuiltinIdentifier = false;
 
         /// <summary>
+        /// Whether to allow no-dollar query options.
+        /// </summary>
+        private bool enableNoDollarQueryOptions = false;
+
+        /// <summary>
         /// Tracks the depth of aggregate expression recursion.
         /// </summary>
         private int parseAggregateExpressionDepth = 0;
@@ -81,11 +86,23 @@ namespace Microsoft.OData.UriParser
         /// <param name="maxDepth">The maximum depth of each part of the query - a recursion limit.</param>
         /// <param name="enableCaseInsensitiveBuiltinIdentifier">Whether to allow case insensitive for builtin identifier.</param>
         internal UriQueryExpressionParser(int maxDepth, bool enableCaseInsensitiveBuiltinIdentifier = false)
+            : this(maxDepth, enableCaseInsensitiveBuiltinIdentifier, false)
+        {
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="maxDepth">The maximum depth of each part of the query - a recursion limit.</param>
+        /// <param name="enableCaseInsensitiveBuiltinIdentifier">Whether to allow case insensitive for builtin identifier.</param>
+        /// <param name="enableNoDollarQueryOptions">Whether to allow no-dollar query options.</param>
+        internal UriQueryExpressionParser(int maxDepth, bool enableCaseInsensitiveBuiltinIdentifier = false, bool enableNoDollarQueryOptions = false)
         {
             Debug.Assert(maxDepth >= 0, "maxDepth >= 0");
 
             this.maxDepth = maxDepth;
             this.enableCaseInsensitiveBuiltinIdentifier = enableCaseInsensitiveBuiltinIdentifier;
+            this.enableNoDollarQueryOptions = enableNoDollarQueryOptions;
         }
 
         /// <summary>
@@ -111,6 +128,22 @@ namespace Microsoft.OData.UriParser
         internal ExpressionLexer Lexer
         {
             get { return this.lexer; }
+        }
+
+        /// <summary>
+        /// Reference to the enableCaseInsensitiveBuiltinIdentifier.
+        /// </summary>
+        internal bool EnableCaseInsensitiveBuiltinIdentifier
+        {
+            get { return this.enableCaseInsensitiveBuiltinIdentifier; }
+        }
+
+        /// <summary>
+        /// Reference to the enableNoDollarQueryOptions.
+        /// </summary>
+        internal bool EnableNoDollarQueryOptions
+        {
+            get { return this.enableNoDollarQueryOptions; }
         }
 
         /// <summary>
@@ -689,7 +722,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>The lexer for the expression, which will have already moved to the first token.</returns>
         private static ExpressionLexer CreateLexerForFilterOrOrderByOrApplyExpression(string expression)
         {
-            return new ExpressionLexer(expression, true /*moveToFirstToken*/, false /*useSemicolonDelimiter*/, true /*parsingFunctionParameters*/);
+            return new ExpressionLexer(expression, true /*moveToFirstToken*/, true /*useSemicolonDelimiter*/, true /*parsingFunctionParameters*/);
         }
 
         /// <summary>Creates an exception for a parse error.</summary>
@@ -1040,6 +1073,10 @@ namespace Microsoft.OData.UriParser
                 {
                     expr = this.ParseAll(expr);
                 }
+                else if (this.TokenIdentifierIs(ExpressionConstants.QueryOptionCount))
+                {
+                    expr = this.ParseCountSegment(expr);
+                }
                 else if (this.lexer.PeekNextToken().Kind == ExpressionTokenKind.Slash)
                 {
                     expr = this.ParseSegment(expr);
@@ -1217,6 +1254,19 @@ namespace Microsoft.OData.UriParser
             }
 
             return new InnerPathToken(propertyName, parent, null);
+        }
+
+        /// <summary>
+        /// Parses a $count segment.
+        /// </summary>
+        /// <param name="parent">The parent of the segment node.</param>
+        /// <returns>The lexical token representing the $count segment.</returns>
+        private QueryToken ParseCountSegment(QueryToken parent)
+        {
+            this.lexer.NextToken();
+
+            CountSegmentParser countSegmentParser = new CountSegmentParser(this.lexer, this);
+            return countSegmentParser.CreateCountSegmentToken(parent);
         }
 
         private AggregationMethodDefinition ParseAggregateWith()
