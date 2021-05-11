@@ -190,6 +190,15 @@ namespace Microsoft.OData
             return filter.Matches;
         }
 
+        public static T[] GetEmptyArray<T>()
+        {
+#if NETSTANDARD2_0
+            return Array.Empty<T>();
+#else
+            return new T[0];
+#endif
+        }
+
         /// <summary>
         /// Generate a default ODataServiceDocument instance from model.
         /// </summary>
@@ -208,7 +217,7 @@ namespace Microsoft.OData
             IList<ODataSingletonInfo> lstSingletons = new List<ODataSingletonInfo>();
             IList<ODataFunctionImportInfo> functionImports = new List<ODataFunctionImportInfo>();
 
-            foreach (var element in model.EntityContainer.Elements)
+            foreach (var element in model.EntityContainer.AllElements())
             {
                 IEdmEntitySet entitySet = element as IEdmEntitySet;
 
@@ -227,8 +236,9 @@ namespace Microsoft.OData
                     else
                     {
                         IEdmFunctionImport functionImport = element as IEdmFunctionImport;
+                        var a = model.EntityContainer.OperationImports().OfType<IEdmFunctionImport>();
 
-                        if(functionImport != null && functionImport.IncludeInServiceDocument && !functionImport.Function.Parameters.Any())
+                        if (functionImport != null && functionImport.IncludeInServiceDocument && !functionImport.Function.Parameters.Any())
                         {
                             functionImports.Add(new ODataFunctionImportInfo() { Name = functionImport.Name, Title = functionImport.Name, Url = new Uri(functionImport.Name, UriKind.RelativeOrAbsolute) });
                         }
