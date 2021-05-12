@@ -317,9 +317,7 @@ namespace Microsoft.OData
             if (item.SearchOption != null)
             {
                 res += string.IsNullOrEmpty(res) ? null : ";";
-                res += "$search";
-                res += ExpressionConstants.SymbolEqual;
-                res += nodeToStringBuilder.TranslateSearchClause(item.SearchOption);
+                res += "$search=" + nodeToStringBuilder.TranslateSearchClause(item.SearchOption);
             }
 
             return string.Concat(currentExpandClause, ODataConstants.UriSegmentSeparator, UriQueryConstants.CountSegment, string.IsNullOrEmpty(res) ? null : string.Concat(ExpressionConstants.SymbolOpenParen, res, ExpressionConstants.SymbolClosedParen));
