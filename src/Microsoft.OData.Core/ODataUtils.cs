@@ -190,6 +190,15 @@ namespace Microsoft.OData
             return filter.Matches;
         }
 
+        public static T[] GetEmptyArray<T>()
+        {
+#if NETSTANDARD2_0
+            return Array.Empty<T>();
+#else
+            return new T[0];
+#endif
+        }
+
         /// <summary>
         /// Generate a default ODataServiceDocument instance from model.
         /// </summary>
@@ -204,13 +213,43 @@ namespace Microsoft.OData
                 throw new ODataException(Strings.ODataUtils_ModelDoesNotHaveContainer);
             }
 
+            IList<ODataEntitySetInfo> lstEntitySets = new List<ODataEntitySetInfo>();
+            IList<ODataSingletonInfo> lstSingletons = new List<ODataSingletonInfo>();
+            IList<ODataFunctionImportInfo> functionImports = new List<ODataFunctionImportInfo>();
+
+            foreach (var element in model.EntityContainer.AllElements())
+            {
+                IEdmEntitySet entitySet = element as IEdmEntitySet;
+
+                if (entitySet != null)
+                {
+                    lstEntitySets.Add(new ODataEntitySetInfo() { Name = entitySet.Name, Title = entitySet.Name, Url = new Uri(entitySet.Name, UriKind.RelativeOrAbsolute) });
+                }
+                else
+                {
+                    IEdmSingleton singleton = element as IEdmSingleton;
+
+                    if (singleton != null)
+                    {
+                        lstSingletons.Add(new ODataSingletonInfo() { Name = singleton.Name, Title = singleton.Name, Url = new Uri(singleton.Name, UriKind.RelativeOrAbsolute) });
+                    }
+                    else
+                    {
+                        IEdmFunctionImport functionImport = element as IEdmFunctionImport;
+                        var a = model.EntityContainer.OperationImports().OfType<IEdmFunctionImport>();
+
+                        if (functionImport != null && functionImport.IncludeInServiceDocument && !functionImport.Function.Parameters.Any())
+                        {
+                            functionImports.Add(new ODataFunctionImportInfo() { Name = functionImport.Name, Title = functionImport.Name, Url = new Uri(functionImport.Name, UriKind.RelativeOrAbsolute) });
+                        }
+                    }
+                }
+            }
+
             ODataServiceDocument serviceDocument = new ODataServiceDocument();
-            serviceDocument.EntitySets = model.EntityContainer.EntitySets()
-                .Select(entitySet => new ODataEntitySetInfo() { Name = entitySet.Name, Title = entitySet.Name, Url = new Uri(entitySet.Name, UriKind.RelativeOrAbsolute) }).ToList();
-            serviceDocument.Singletons = model.EntityContainer.Singletons()
-                .Select(singleton => new ODataSingletonInfo() { Name = singleton.Name, Title = singleton.Name, Url = new Uri(singleton.Name, UriKind.RelativeOrAbsolute) }).ToList();
-            serviceDocument.FunctionImports = model.EntityContainer.OperationImports().OfType<IEdmFunctionImport>().Where(functionImport => functionImport.IncludeInServiceDocument && !functionImport.Function.Parameters.Any())
-                .Select(functionImport => new ODataFunctionImportInfo() { Name = functionImport.Name, Title = functionImport.Name, Url = new Uri(functionImport.Name, UriKind.RelativeOrAbsolute) }).ToList();
+            serviceDocument.EntitySets = lstEntitySets;
+            serviceDocument.Singletons = lstSingletons;
+            serviceDocument.FunctionImports = functionImports;
 
             return serviceDocument;
         }

@@ -137,7 +137,7 @@ namespace Microsoft.OData.UriParser
         {
             if (existingToken.ExpandOption == null && newToken.ExpandOption == null)
             {
-                return new List<ExpandTermToken>();
+                return ODataUtils.GetEmptyArray<ExpandTermToken>();
             }
 
             var childNodes = new Dictionary<PathSegmentToken, ExpandTermToken>(new PathSegmentTokenEqualityComparer());
