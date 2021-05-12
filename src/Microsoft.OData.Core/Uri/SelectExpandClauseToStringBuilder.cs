@@ -311,13 +311,13 @@ namespace Microsoft.OData
             string res = string.Empty;
             if (item.FilterOption != null)
             {
-                res += "$filter=" + nodeToStringBuilder.TranslateFilterClause(item.FilterOption);
+                res += ExpressionConstants.QueryOptionFilter + ExpressionConstants.SymbolEqual + nodeToStringBuilder.TranslateFilterClause(item.FilterOption);
             }
 
             if (item.SearchOption != null)
             {
                 res += string.IsNullOrEmpty(res) ? null : ";";
-                res += "$search=" + nodeToStringBuilder.TranslateSearchClause(item.SearchOption);
+                res += ExpressionConstants.QueryOptionSearch + ExpressionConstants.SymbolEqual + nodeToStringBuilder.TranslateSearchClause(item.SearchOption);
             }
 
             return string.Concat(currentExpandClause, ODataConstants.UriSegmentSeparator, UriQueryConstants.CountSegment, string.IsNullOrEmpty(res) ? null : string.Concat(ExpressionConstants.SymbolOpenParen, res, ExpressionConstants.SymbolClosedParen));
