@@ -63,5 +63,15 @@ namespace Microsoft.OData.UriParser
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Translate an ExpandedCountSelectItem
+        /// </summary>
+        /// <param name="item">the item to Translate</param>
+        /// <returns>Defined by the implementer</returns>
+        public virtual T Translate(ExpandedCountSelectItem item)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

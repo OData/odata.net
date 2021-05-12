@@ -69,6 +69,20 @@ namespace Microsoft.OData
 
                     expandClause += this.Translate((ExpandedReferenceSelectItem)selectItem) + ODataConstants.UriSegmentSeparator + ODataConstants.EntityReferenceSegmentName;
                 }
+
+                else if (selectItem.GetType() == typeof(ExpandedCountSelectItem))
+                {
+                    if (string.IsNullOrEmpty(expandClause))
+                    {
+                        expandClause = firstFlag ? expandClause : string.Concat(ExpressionConstants.QueryOptionExpand, ExpressionConstants.SymbolEqual);
+                    }
+                    else
+                    {
+                        expandClause += ExpressionConstants.SymbolComma;
+                    }
+
+                    expandClause += this.Translate((ExpandedCountSelectItem)selectItem);
+                }
             }
 
             selectClause = string.IsNullOrEmpty(selectClause) ? null : string.Concat(ExpressionConstants.QueryOptionSelect, ExpressionConstants.SymbolEqual, firstFlag ? Uri.EscapeDataString(selectClause) : selectClause);
@@ -283,6 +297,32 @@ namespace Microsoft.OData
             }
 
             return string.Concat(currentExpandClause, string.IsNullOrEmpty(res) ? null : string.Concat(ExpressionConstants.SymbolOpenParen, res, ExpressionConstants.SymbolClosedParen));
+        }
+
+        /// <summary>
+        /// Translate an ExpandedCountSelectItem
+        /// </summary>
+        /// <param name="item">the item to Translate</param>
+        /// <returns>Defined by the implementer</returns>
+        public override string Translate(ExpandedCountSelectItem item)
+        {
+            NodeToStringBuilder nodeToStringBuilder = new NodeToStringBuilder();
+            string currentExpandClause = String.Join("/", item.PathToNavigationProperty.WalkWith(PathSegmentToStringTranslator.Instance).ToArray());
+            string res = string.Empty;
+            if (item.FilterOption != null)
+            {
+                res += "$filter=" + nodeToStringBuilder.TranslateFilterClause(item.FilterOption);
+            }
+
+            if (item.SearchOption != null)
+            {
+                res += string.IsNullOrEmpty(res) ? null : ";";
+                res += "$search";
+                res += ExpressionConstants.SymbolEqual;
+                res += nodeToStringBuilder.TranslateSearchClause(item.SearchOption);
+            }
+
+            return string.Concat(currentExpandClause, ODataConstants.UriSegmentSeparator, UriQueryConstants.CountSegment, string.IsNullOrEmpty(res) ? null : string.Concat(ExpressionConstants.SymbolOpenParen, res, ExpressionConstants.SymbolClosedParen));
         }
     }
 }
