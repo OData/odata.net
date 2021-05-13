@@ -123,7 +123,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Parsing
                 JsonElement rootElement = document.RootElement;
                 JsonParserContext context = new JsonParserContext();
 
-                IEdmInclude include = CsdlJsonParser.ParseInclude(rootElement, context);
+                CsdlInclude include = CsdlJsonParser.ParseInclude(rootElement, context);
 
                 Assert.NotNull(include);
                 Assert.Equal("UI", include.Alias);
@@ -143,7 +143,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Parsing
                 JsonElement rootElement = document.RootElement;
                 JsonParserContext context = new JsonParserContext();
 
-                IEdmInclude include = CsdlJsonParser.ParseInclude(rootElement, context);
+                CsdlInclude include = CsdlJsonParser.ParseInclude(rootElement, context);
 
                 Assert.NotNull(include);
                 Assert.Equal("org.example.display", include.Namespace);
@@ -163,14 +163,12 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Parsing
   ""$Qualifier"": ""Tablet"",
   ""$TargetNamespace"":   ""com.example.Person""  }";
 
-            Utf8JsonReader jsonReader = GetJsonReader(json);
-
             using (JsonDocument document = JsonDocument.Parse(json))
             {
                 JsonElement rootElement = document.RootElement;
 
                 JsonParserContext context = new JsonParserContext();
-                IEdmIncludeAnnotations includeAnnotations = CsdlJsonParser.ParseIncludeAnnotations(rootElement, context);
+                CsdlIncludeAnnotations includeAnnotations = CsdlJsonParser.ParseIncludeAnnotations(rootElement, context);
 
                 Assert.NotNull(includeAnnotations);
                 Assert.Equal("org.example.hcm", includeAnnotations.TermNamespace);

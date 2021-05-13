@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
@@ -60,7 +61,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     CsdlVersion = version
                 };
 
-                IList<IEdmReference> references = null;
+                IList<CsdlReference> references = null;
                 rootElement.ParseAsObject(context, (propertyName, propertyValue) =>
                 {
                     switch (propertyName)
@@ -115,7 +116,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         /// <param name="element">The input JSON element.</param>
         /// <param name="jsonPath">The parser context.</param>
         /// <returns>null or parsed collection of <see cref="IEdmReference"/>.</returns>
-        internal static IList<IEdmReference> ParseReferences(JsonElement element, JsonParserContext context)
+        internal static IList<CsdlReference> ParseReferences(JsonElement element, JsonParserContext context)
         {
             // The value of $Reference is an object that contains one member per referenced CSDL document.
             if (!element.ValidateValueKind(JsonValueKind.Object, context))
@@ -123,10 +124,10 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 return null;
             }
 
-            IList<IEdmReference> references = new List<IEdmReference>();
+            IList<CsdlReference> references = new List<CsdlReference>();
             element.ParseAsObject(context, (url, propertyValue) =>
             {
-                IEdmReference reference = ParseReference(url, propertyValue, context);
+                CsdlReference reference = ParseReference(url, propertyValue, context);
                 if (reference != null)
                 {
                     references.Add(reference);
@@ -143,7 +144,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         /// <param name="element">The input JSON element.</param>
         /// <param name="context">The parser context.</param>
         /// <returns>null or parsed <see cref="IEdmReference"/>.</returns>
-        internal static IEdmReference ParseReference(string url, JsonElement element, JsonParserContext context)
+        internal static CsdlReference ParseReference(string url, JsonElement element, JsonParserContext context)
         {
             // The value of each reference object is an object.
             if (!element.ValidateValueKind(JsonValueKind.Object, context))
@@ -151,9 +152,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 return null;
             }
 
-            IList<IEdmInclude> includes = null;
-            IList<IEdmIncludeAnnotations> includeAnnotations = null;
-
+            IList<CsdlInclude> includes = null;
+            IList<CsdlIncludeAnnotations> includeAnnotations = null;
+            IList<CsdlAnnotation> annotations = new List<CsdlAnnotation>();
             element.ParseAsObject(context, (propertyName, propertyValue) =>
             {
                 // The reference object MAY contain the members $Include and $IncludeAnnotations as well as annotations.
@@ -172,17 +173,18 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                         break;
 
                     default:
-                        // The reference objects MAY contain annotations.However, EdmReference doesn't support annotation.
-                        // So, skip the annotation.
-                        context.ReportError(EdmErrorCode.UnexpectedElement, Strings.CsdlJsonParser_UnexpectedJsonMember(context.Path, propertyValue.ValueKind));
+                        // The reference objects MAY contain annotations.
+                        SchemaJsonParser.ParseCsdlAnnotation(propertyName, propertyValue, context, annotations);
                         break;
                 }
             });
 
-            EdmReference edmReference = new EdmReference(new Uri(url, UriKind.RelativeOrAbsolute));
-            includes.ForEach(i => edmReference.AddInclude(i));
-            includeAnnotations.ForEach(i => edmReference.AddIncludeAnnotations(i));
-            return edmReference;
+            CsdlReference reference = new CsdlReference(url,
+                includes ?? Enumerable.Empty<CsdlInclude>(),
+                includeAnnotations ?? Enumerable.Empty<CsdlIncludeAnnotations>(),
+                context.Location());
+            annotations.ForEach(a => reference.AddAnnotation(a));
+            return reference;
         }
 
         /// <summary>
@@ -191,7 +193,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         /// <param name="element">The input JSON element.</param>
         /// <param name="context">The parser context.</param>
         /// <returns>null or parsed <see cref="IEdmInclude"/>.</returns>
-        internal static IEdmInclude ParseInclude(JsonElement element, JsonParserContext context)
+        internal static CsdlInclude ParseInclude(JsonElement element, JsonParserContext context)
         {
             // Each item in $Include is an object.
             if (!element.ValidateValueKind(JsonValueKind.Object, context))
@@ -201,6 +203,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
             string includeNamespace = null;
             string includeAlias = null;
+            IList<CsdlAnnotation> annotations = new List<CsdlAnnotation>();
             element.ParseAsObject(context, (propertyName, propertyValue) =>
             {
                 // Array items are objects that MUST contain the member $Namespace and MAY contain the member $Alias.
@@ -218,13 +221,14 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
                     default:
                         // The item objects MAY contain annotations.
-                        // However, EdmInclude does not supported yet. So skip
-                        context.ReportError(EdmErrorCode.UnexpectedElement, Strings.CsdlJsonParser_UnexpectedJsonMember(context.Path, propertyValue.ValueKind));
+                        SchemaJsonParser.ParseCsdlAnnotation(propertyName, propertyValue, context, annotations);
                         break;
                 }
             });
 
-            return new EdmInclude(includeAlias, includeNamespace);
+            CsdlInclude include = new CsdlInclude(includeAlias, includeNamespace, context.Location());
+            annotations.ForEach(a => include.AddAnnotation(a));
+            return include;
         }
 
         /// <summary>
@@ -233,7 +237,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         /// <param name="element">The input JSON element.</param>
         /// <param name="context">The parser context.</param>
         /// <returns>null or parsed <see cref="IEdmIncludeAnnotations"/>.</returns>
-        internal static IEdmIncludeAnnotations ParseIncludeAnnotations(JsonElement element, JsonParserContext context)
+        internal static CsdlIncludeAnnotations ParseIncludeAnnotations(JsonElement element, JsonParserContext context)
         {
             // Each item in $IncludeAnnotations is an object.
             if (!element.ValidateValueKind(JsonValueKind.Object, context))
@@ -265,14 +269,14 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                         break;
 
                     default:
-                        // The item objects MAY contain annotations. However, IEdmIncludeAnnotations doesn't support to have annotations.
+                        // The item objects doesn't contain vocabulary annotation.
                         context.ReportError(EdmErrorCode.UnexpectedElement,
                             Strings.CsdlJsonParser_UnexpectedJsonMember(context.Path, propertyValue.ValueKind));
                         break;
                 }
             });
 
-            return new EdmIncludeAnnotations(termNamespace, qualifier, targetNamespace);
+            return new CsdlIncludeAnnotations(termNamespace, qualifier, targetNamespace, context.Location());
         }
 
         private static JsonDocument GetJsonDocument(ref Utf8JsonReader jsonReader, JsonParserContext context)

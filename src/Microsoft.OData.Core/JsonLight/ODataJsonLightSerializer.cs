@@ -10,6 +10,7 @@ namespace Microsoft.OData.JsonLight
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Threading.Tasks;
     using Microsoft.OData.Json;
     #endregion Namespaces
 
@@ -37,6 +38,11 @@ namespace Microsoft.OData.JsonLight
         private readonly SimpleLazy<JsonLightODataAnnotationWriter> odataAnnotationWriter;
 
         /// <summary>
+        /// Asynchronous OData annotation writer.
+        /// </summary>
+        private readonly SimpleLazy<JsonLightODataAnnotationWriter> asynchronousODataAnnotationWriter;
+
+        /// <summary>
         /// Set to true when odata.context is written; set to false otherwise.
         /// When value is false, all URIs written to the payload must be absolute.
         /// </summary>
@@ -55,9 +61,22 @@ namespace Microsoft.OData.JsonLight
             this.jsonLightOutputContext = jsonLightOutputContext;
             this.instanceAnnotationWriter = new SimpleLazy<JsonLightInstanceAnnotationWriter>(() =>
                 new JsonLightInstanceAnnotationWriter(new ODataJsonLightValueSerializer(jsonLightOutputContext), jsonLightOutputContext.TypeNameOracle));
-            this.odataAnnotationWriter = new SimpleLazy<JsonLightODataAnnotationWriter>(() =>
-                new JsonLightODataAnnotationWriter(jsonLightOutputContext.JsonWriter,
-                    this.JsonLightOutputContext.OmitODataPrefix, this.MessageWriterSettings.Version));
+
+            // NOTE: Ideally, we should instantiate a JsonLightODataAnnotationWriter that supports EITHER synchronous OR asynchronous writing.
+            // Based on the value of `jsonLightOutputContext.Synchronous`
+            // However, some higher level classes expose asynchronous wrappers for synchronous methods. Asynchronous wrappers for synchronous methods
+            // that depend on the instance of JsonLightODataAnnotationWriter that supports synchronous writing would break hence the reason to maintain
+            // the two separate instances when asynchronous API implementation is in progress
+            this.odataAnnotationWriter = new SimpleLazy<JsonLightODataAnnotationWriter>(
+                () => new JsonLightODataAnnotationWriter(
+                    jsonLightOutputContext.JsonWriter,
+                    this.JsonLightOutputContext.OmitODataPrefix,
+                    this.MessageWriterSettings.Version));
+            this.asynchronousODataAnnotationWriter = new SimpleLazy<JsonLightODataAnnotationWriter>(
+                () => new JsonLightODataAnnotationWriter(
+                    jsonLightOutputContext.AsynchronousJsonWriter,
+                    this.JsonLightOutputContext.OmitODataPrefix,
+                    this.MessageWriterSettings.Version));
 
             if (initContextUriBuilder)
             {
@@ -89,6 +108,16 @@ namespace Microsoft.OData.JsonLight
                 return this.jsonLightOutputContext.JsonWriter;
             }
         }
+        /// <summary>
+        /// Returns the <see cref="JsonWriter"/> which is to be used to write the content of the message asynchronously.
+        /// </summary>
+        internal IJsonWriterAsync AsynchronousJsonWriter
+        {
+            get
+            {
+                return this.jsonLightOutputContext.AsynchronousJsonWriter;
+            }
+        }
 
         /// <summary>
         /// Instance annotation writer.
@@ -113,9 +142,19 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
+        /// OData annotation writer.
+        /// </summary>
+        internal JsonLightODataAnnotationWriter AsynchronousODataAnnotationWriter
+        {
+            get
+            {
+                return this.asynchronousODataAnnotationWriter.Value;
+            }
+        }
+
+        /// <summary>
         /// Writes the start of the entire JSON payload.
         /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "This method is an instance method for consistency with other formats.")]
         internal void WritePayloadStart()
         {
             ODataJsonWriterUtils.StartJsonPaddingIfRequired(this.JsonWriter, this.MessageWriterSettings);
@@ -124,7 +163,6 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Writes the end of the entire JSON payload.
         /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "This method is an instance method for consistency with other formats.")]
         internal void WritePayloadEnd()
         {
             ODataJsonWriterUtils.EndJsonPaddingIfRequired(this.JsonWriter, this.MessageWriterSettings);
@@ -138,7 +176,11 @@ namespace Microsoft.OData.JsonLight
         /// <param name="parentContextUrlInfo">The parent contextUrlInfo.</param>
         /// <param name="propertyName">Property name to write contextUri on.</param>
         /// <returns>The contextUrlInfo, if the context URI was successfully written.</returns>
-        internal ODataContextUrlInfo WriteContextUriProperty(ODataPayloadKind payloadKind, Func<ODataContextUrlInfo> contextUrlInfoGen = null, ODataContextUrlInfo parentContextUrlInfo = null, string propertyName = null)
+        internal ODataContextUrlInfo WriteContextUriProperty(
+            ODataPayloadKind payloadKind,
+            Func<ODataContextUrlInfo> contextUrlInfoGen = null,
+            ODataContextUrlInfo parentContextUrlInfo = null,
+            string propertyName = null)
         {
             if (this.jsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel)
             {
@@ -204,6 +246,120 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(error != null, "error != null");
 
             this.WriteTopLevelPayload(() => ODataJsonWriterUtils.WriteError(this.JsonLightOutputContext.JsonWriter, this.InstanceAnnotationWriter.WriteInstanceAnnotationsForError, error, includeDebugInformation, this.MessageWriterSettings.MessageQuotas.MaxNestingDepth, /*writingJsonLight*/ true));
+        }
+
+        /// <summary>
+        /// Asynchronously writes the start of the entire JSON payload.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        internal Task WritePayloadStartAsync()
+        {
+            return ODataJsonWriterUtils.StartJsonPaddingIfRequiredAsync(this.AsynchronousJsonWriter, this.MessageWriterSettings);
+        }
+
+        /// <summary>
+        /// Asynchronously writes the end of the entire JSON payload.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        internal Task WritePayloadEndAsync()
+        {
+            return ODataJsonWriterUtils.EndJsonPaddingIfRequiredAsync(this.AsynchronousJsonWriter, this.MessageWriterSettings);
+        }
+
+        /// <summary>
+        /// Asynchronously writes the context URI property and the specified value into the payload.
+        /// </summary>
+        /// <param name="payloadKind">The ODataPayloadKind for the context URI.</param>
+        /// <param name="contextUrlInfoGen">Function to generate contextUrlInfo.</param>
+        /// <param name="parentContextUrlInfo">The parent contextUrlInfo.</param>
+        /// <param name="propertyName">Property name to write contextUri on.</param>
+        /// <returns>A task that represents the asynchronous read operation. 
+        /// The value of the TResult parameter contains the contextUrlInfo, 
+        /// if the context URI was successfully written.</returns>
+        internal async Task<ODataContextUrlInfo> WriteContextUriPropertyAsync(
+            ODataPayloadKind payloadKind,
+            Func<ODataContextUrlInfo> contextUrlInfoGen = null,
+            ODataContextUrlInfo parentContextUrlInfo = null,
+            string propertyName = null)
+        {
+            if (this.jsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel)
+            {
+                return null;
+            }
+
+            ODataContextUrlInfo contextUrlInfo = null;
+
+            if (contextUrlInfoGen != null)
+            {
+                contextUrlInfo = contextUrlInfoGen();
+            }
+
+            if (contextUrlInfo != null && contextUrlInfo.IsHiddenBy(parentContextUrlInfo))
+            {
+                return null;
+            }
+
+            Uri contextUri = ContextUriBuilder.BuildContextUri(payloadKind, contextUrlInfo);
+
+            if (contextUri != null)
+            {
+                if (string.IsNullOrEmpty(propertyName))
+                {
+                    await this.AsynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataContext)
+                        .ConfigureAwait(false);
+                }
+                else
+                {
+                    await this.AsynchronousODataAnnotationWriter.WritePropertyAnnotationNameAsync(propertyName, ODataAnnotationNames.ODataContext)
+                        .ConfigureAwait(false);
+                }
+
+                await this.AsynchronousJsonWriter.WritePrimitiveValueAsync(contextUri.IsAbsoluteUri ? contextUri.AbsoluteUri : contextUri.OriginalString)
+                    .ConfigureAwait(false);
+                this.allowRelativeUri = true;
+
+                return contextUrlInfo;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Asynchronously writes the data wrapper around a JSON payload.
+        /// </summary>
+        /// <param name="payloadWriterAction">The action that writes the actual JSON payload that is being wrapped.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        internal async Task WriteTopLevelPayloadAsync(Func<Task> payloadWriterFunc)
+        {
+            Debug.Assert(payloadWriterFunc != null, "payloadWriterAction != null");
+
+            await this.WritePayloadStartAsync().ConfigureAwait(false);
+
+            await payloadWriterFunc().ConfigureAwait(false);
+
+            await this.WritePayloadEndAsync().ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Asynchronously writes a top-level error message.
+        /// </summary>
+        /// <param name="error">The error instance to write.</param>
+        /// <param name="includeDebugInformation">A flag indicating whether error details should be written (in debug mode only) or not.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        internal Task WriteTopLevelErrorAsync(ODataError error, bool includeDebugInformation)
+        {
+            Debug.Assert(error != null, "error != null");
+
+            return this.WriteTopLevelPayloadAsync(
+                () =>
+                {
+                    return ODataJsonWriterUtils.WriteErrorAsync(
+                        this.AsynchronousJsonWriter,
+                        this.InstanceAnnotationWriter.WriteInstanceAnnotationsForErrorAsync,
+                        error,
+                        includeDebugInformation,
+                        this.MessageWriterSettings.MessageQuotas.MaxNestingDepth);
+                });
         }
 
         /// <summary>

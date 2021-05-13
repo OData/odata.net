@@ -16,6 +16,8 @@ OData .NET library is open source at http://github.com/OData/odata.net. Document
     <copyright>© Microsoft Corporation. All rights reserved.</copyright>
     <dependencies>
       <group targetFramework=".NETStandard2.0">
+        <dependency id="System.Runtime.CompilerServices.Unsafe" version="4.6.0" />
+        <dependency id="System.Text.Encodings.Web" version="4.6.0" />
         <dependency id="System.Text.Json" version="4.6.0" />
       </group>
     </dependencies>

@@ -1476,7 +1476,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             return operationArray.ParseAsArray(context, (v, p) => ParseCsdlOperation(name, v, p));
         }
 
-        private static void ParseCsdlAnnotation(string name, JsonElement element, JsonParserContext context, IList<CsdlAnnotation> annotationContainer)
+        internal static void ParseCsdlAnnotation(string name, JsonElement element, JsonParserContext context, IList<CsdlAnnotation> annotationContainer)
         {
             Debug.Assert(name != null);
             Debug.Assert(context != null);

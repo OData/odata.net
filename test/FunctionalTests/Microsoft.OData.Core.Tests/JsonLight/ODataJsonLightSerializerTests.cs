@@ -9,8 +9,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
-using Microsoft.OData.JsonLight;
+using System.Threading.Tasks;
 using Microsoft.OData.Edm;
+using Microsoft.OData.JsonLight;
 using Xunit;
 
 namespace Microsoft.OData.Tests.JsonLight
@@ -301,6 +302,144 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.Equal("TestUri", uri);
         }
 
+        [Fact]
+        public async Task WritePayloadStartAsync_WritesLeftParenIfJsonPaddingSpecified()
+        {
+            var result = await SetupSerializerAndRunTestAsync(
+                "functionName",
+                lightJsonSerializer => lightJsonSerializer.WritePayloadStartAsync());
+            Assert.Equal("functionName(", result);
+        }
+
+        [Fact]
+        public async Task WritePayloadEndAsync_WritesRightParenIfJsonPaddingSpecified()
+        {
+            var result = await SetupSerializerAndRunTestAsync(
+                "functionName",
+                async (jsonLightSerializer) =>
+                {
+                    await jsonLightSerializer.WritePayloadStartAsync();
+                    await jsonLightSerializer.WritePayloadEndAsync();
+                });
+
+            Assert.Equal("functionName()", result);
+        }
+
+        [Fact]
+        public async Task WriteContextUriPropertyAsync_WritesInstanceAnnotationContextUri()
+        {
+            var result = await SetupSerializerAndRunTestAsync(
+                null,
+                async (jsonLightSerializer) =>
+                {
+                    await jsonLightSerializer.AsynchronousJsonWriter.StartObjectScopeAsync();
+                    await jsonLightSerializer.WriteContextUriPropertyAsync(ODataPayloadKind.ServiceDocument);
+                });
+
+            Assert.Equal("{\"@odata.context\":\"http://example.com/$metadata\"", result);
+        }
+
+        [Fact]
+        public async Task WriteContextUriPropertyAsync_WritesPropertyAnnotationContextUri()
+        {
+            var result = await SetupSerializerAndRunTestAsync(
+                null,
+                async (jsonLightSerializer) =>
+                {
+                    var property = new ODataProperty { Name = "Prop", Value = 13 };
+                    var contextUrlInfo = ODataContextUrlInfo.Create(
+                        property.ODataValue, ODataVersion.V4,
+                        jsonLightSerializer.JsonLightOutputContext.MessageWriterSettings.ODataUri,
+                        jsonLightSerializer.Model);
+
+                    await jsonLightSerializer.AsynchronousJsonWriter.StartObjectScopeAsync();
+                    await jsonLightSerializer.WriteContextUriPropertyAsync(ODataPayloadKind.Resource,
+                        () => contextUrlInfo, /* parentContextUrlInfo */ null, propertyName: "Prop");
+                });
+
+            Assert.Equal("{\"Prop@odata.context\":\"http://example.com/$metadata#Edm.Int32\"", result);
+        }
+
+        [Fact]
+        public async Task WriteTopLevelPayloadAsync_WritesTopLevelPayload()
+        {
+            var result = await SetupSerializerAndRunTestAsync(
+                null,
+                (jsonLightSerializer) =>
+                {
+                    return jsonLightSerializer.WriteTopLevelPayloadAsync(
+                        () =>
+                        {
+                            return jsonLightSerializer.AsynchronousJsonWriter.WriteValueAsync(13);
+                        });
+                });
+
+            Assert.Equal("13", result);
+        }
+
+        [Fact]
+        public async Task WriteTopLevelErrorAsync_WritesErrorPayload()
+        {
+            var result = await SetupSerializerAndRunTestAsync(
+                null,
+                (jsonLightSerializer) =>
+                {
+                    ODataError error = new ODataError
+                    {
+                        ErrorCode = "forbidden",
+                        Message = "Access to the resource is forbidden",
+                        Target = "Resource",
+                        Details = new Collection<ODataErrorDetail>
+                        {
+                            new ODataErrorDetail { ErrorCode = "insufficientPrivileges", Message = "You don't have the required privileges"}
+                        },
+                        InnerError = new ODataInnerError
+                        {
+                            Message = "Contact administrator"
+                        },
+                        InstanceAnnotations = new Collection<ODataInstanceAnnotation>
+                        {
+                            new ODataInstanceAnnotation("ns.workloadId", new ODataPrimitiveValue(new Guid("5a3c4b92-f401-416f-bf88-106cb03efaf4")))
+                        }
+                    };
+                    error.InnerError.Properties.Add("correlationId", new ODataPrimitiveValue(new Guid("4784efae-d1c4-4f1f-baba-e811b3b0826c")));
+
+                    return jsonLightSerializer.WriteTopLevelErrorAsync(error, true);
+                });
+
+            Assert.Equal("{\"error\":{" +
+                "\"code\":\"forbidden\"," +
+                "\"message\":\"Access to the resource is forbidden\"," +
+                "\"target\":\"Resource\"," +
+                "\"details\":[{\"code\":\"insufficientPrivileges\",\"message\":\"You don't have the required privileges\"}]," +
+                "\"innererror\":{" +
+                    "\"message\":\"Contact administrator\"," +
+                    "\"type\":\"\"," +
+                    "\"stacktrace\":\"\"," +
+                    "\"correlationId\":\"4784efae-d1c4-4f1f-baba-e811b3b0826c\"}," +
+                "\"ns.workloadId@odata.type\":\"#Guid\"," +
+                "\"@ns.workloadId\":\"5a3c4b92-f401-416f-bf88-106cb03efaf4\"" +
+            "}}", result);
+        }
+
+        /// <summary>
+        /// Sets up an ODataJsonLightSerializer,
+        /// then runs the given test code asynchronously,
+        /// then flushes and reads the stream back as a string for customized verification.
+        /// </summary>
+        private static async Task<string> SetupSerializerAndRunTestAsync(string jsonpFunctionName, Func<ODataJsonLightSerializer, Task> func)
+        {
+            var stream = new MemoryStream();
+            var jsonLightSerializer = GetSerializer(stream, jsonpFunctionName, isAsync: true);
+            await func(jsonLightSerializer);
+            await jsonLightSerializer.JsonLightOutputContext.FlushAsync();
+            await jsonLightSerializer.AsynchronousJsonWriter.FlushAsync();
+            stream.Position = 0;
+            var streamReader = new StreamReader(stream);
+
+            return await streamReader.ReadToEndAsync();
+        }
+
         /// <summary>
         /// Sets up a ODataJsonLightSerializer, runs the given test code, and then flushes and reads the stream back as a string for
         /// customized verification.
@@ -316,7 +455,7 @@ namespace Microsoft.OData.Tests.JsonLight
             return streamReader.ReadToEnd();
         }
 
-        private static ODataJsonLightSerializer GetSerializer(Stream stream, string jsonpFunctionName = null, bool nometadata = false, bool setMetadataDocumentUri = true)
+        private static ODataJsonLightSerializer GetSerializer(Stream stream, string jsonpFunctionName = null, bool nometadata = false, bool setMetadataDocumentUri = true, bool isAsync = false)
         {
             var model = new EdmModel();
             var complexType = new EdmComplexType("ns", "ErrorDetails");
@@ -340,7 +479,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 Encoding = Encoding.Default,
 #endif
                 IsResponse = true,
-                IsAsync = false,
+                IsAsync = isAsync,
                 Model = mainModel,
             };
             var context = new ODataJsonLightOutputContext(messageInfo, settings);

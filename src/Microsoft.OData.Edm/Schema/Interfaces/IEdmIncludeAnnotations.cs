@@ -9,7 +9,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// The interface of includeAnnotation information for referenced model.
     /// </summary>
-    public interface IEdmIncludeAnnotations
+    public interface IEdmIncludeAnnotations : IEdmElement
     {
         /// <summary>
         /// Gets the term namespace to include.

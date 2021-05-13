@@ -15,13 +15,13 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     internal class CsdlModel
     {
         private readonly List<CsdlSchema> schemata = new List<CsdlSchema>();
-        private readonly List<IEdmReference> currentModelReferences = new List<IEdmReference>();
-        private readonly List<IEdmReference> parentModelReferences = new List<IEdmReference>();
+        private readonly List<CsdlReference> currentModelReferences = new List<CsdlReference>();
+        private readonly List<CsdlReference> parentModelReferences = new List<CsdlReference>();
 
         /// <summary>
         /// Represents current model's $lt;edmx:Reference /&gt;
         /// </summary>
-        public IEnumerable<IEdmReference> CurrentModelReferences
+        public IEnumerable<CsdlReference> CurrentModelReferences
         {
             get { return currentModelReferences; }
         }
@@ -29,7 +29,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         /// <summary>
         /// Represents parent model's $lt;edmx:Reference ... /&gt;
         /// </summary>
-        public IEnumerable<IEdmReference> ParentModelReferences
+        public IEnumerable<CsdlReference> ParentModelReferences
         {
             get { return parentModelReferences; }
         }
@@ -50,7 +50,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         /// Adds from current model.
         /// </summary>
         /// <param name="referencesToAdd">The items to add.</param>
-        public void AddCurrentModelReferences(IEnumerable<IEdmReference> referencesToAdd)
+        public void AddCurrentModelReferences(IEnumerable<CsdlReference> referencesToAdd)
         {
             this.currentModelReferences.AddRange(referencesToAdd);
         }
@@ -59,7 +59,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         /// Adds from main model.
         /// </summary>
         /// <param name="referenceToAdd">The IEdmReference to add.</param>
-        public void AddParentModelReferences(IEdmReference referenceToAdd)
+        public void AddParentModelReferences(CsdlReference referenceToAdd)
         {
             this.parentModelReferences.Add(referenceToAdd);
         }

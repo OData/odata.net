@@ -38,9 +38,9 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="s">String value to be written.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        public override async Task WriteAsync(string s)
+        public override Task WriteAsync(string s)
         {
-            await this.writer.WriteAsync(s).ConfigureAwait(false);
+            return this.writer.WriteAsync(s);
         }
 
         /// <summary>
@@ -57,9 +57,9 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="value">Char value to be written.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        public override async Task WriteAsync(char value)
+        public override Task WriteAsync(char value)
         {
-            await this.writer.WriteAsync(value).ConfigureAwait(false);
+            return this.writer.WriteAsync(value);
         }
 
         /// <summary>
@@ -73,10 +73,9 @@ namespace Microsoft.OData.Json
         /// Writes a new line asynchronously.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2007:Consider calling ConfigureAwait on the awaited task", Justification = "ConfigureAwait has no effect on already completed task.")]
-        public override async Task WriteLineAsync()
+        public override Task WriteLineAsync()
         {
-            await TaskUtils.CompletedTask;
+            return TaskUtils.CompletedTask;
         }
     }
 }

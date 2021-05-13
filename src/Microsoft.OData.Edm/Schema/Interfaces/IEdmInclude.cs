@@ -4,12 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm.Vocabularies;
+
 namespace Microsoft.OData.Edm
 {
     /// <summary>
     /// The interface of include information for referenced model.
     /// </summary>
-    public interface IEdmInclude
+    public interface IEdmInclude : IEdmElement, IEdmVocabularyAnnotatable
     {
         /// <summary>
         /// Gets the alias.

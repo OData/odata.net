@@ -107,6 +107,22 @@ namespace Microsoft.OData.Client.Tests
         }
 
         [Fact]
+        public void TranslatesEnumerableNotContainsToNotInOperator()
+        {
+            // Arrange
+            var sut = new DataServiceQueryProvider(dsc);
+            var productNames = new[] { "Milk", "Cheese", "Donut" };
+            var products = dsc.CreateQuery<Product>("Products")
+                .Where(product => !productNames.Contains(product.Name));
+
+            // Act
+            var queryComponents = sut.Translate(products.Expression);
+
+            // Assert
+            Assert.Equal(@"http://root/Products?$filter=not Name in ('Milk','Cheese','Donut')", queryComponents.Uri.ToString());
+        }
+
+        [Fact]
         public void EnumerableContainsOnCollectionValuedPropertiesWithConstantIsNotSupported()
         {
             // Arrange

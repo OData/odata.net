@@ -306,6 +306,12 @@ namespace Microsoft.OData
             throw new ODataException(Strings.ODataParameterWriter_InStreamErrorNotSupported);
         }
 
+        /// <inheritdoc/>
+        Task IODataOutputInStreamErrorListener.OnInStreamErrorAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Check if the object has been disposed; called from all public API methods. Throws an ObjectDisposedException if the object
         /// has already been disposed.

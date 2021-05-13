@@ -835,10 +835,30 @@ namespace Microsoft.OData
         /// <returns>The generated SelectedPropertiesNode.</returns>
         private static SelectedPropertiesNode CombineSelectAndExpandResult(IEnumerable<string> selectList, IEnumerable<SelectedPropertiesNode> expandList)
         {
-            List<string> rawSelect = selectList.ToList();
-            rawSelect.RemoveAll(expandList.Select(m => m.nodeName).Contains);
+            HashSet<string> expandSet = new HashSet<string>();
+            bool isEntireSubTree = true;
 
-            if (rawSelect.Count == 0 && expandList.All(n => n.IsEntireSubtree()))
+            foreach(SelectedPropertiesNode propNode in expandList)
+            {
+                expandSet.Add(propNode.nodeName);
+
+                if (!propNode.IsEntireSubtree())
+                {
+                    isEntireSubTree = false;
+                }
+            }
+
+            List<string> rawSelect = new List<string>();
+
+            foreach(string name in selectList)
+            {
+                if (!expandSet.Contains(name))
+                {
+                    rawSelect.Add(name);
+                }
+            }
+                       
+            if (rawSelect.Count == 0 && isEntireSubTree)
             {
                 return new SelectedPropertiesNode(SelectionType.EntireSubtree);
             }
@@ -849,15 +869,15 @@ namespace Microsoft.OData
                 children = new Dictionary<string, SelectedPropertiesNode>(StringComparer.Ordinal)
             };
 
-            foreach (string selectItem in rawSelect)
+            for (int i=0; i < rawSelect.Count; i++)
             {
-                if (StarSegment == selectItem)
+                if (StarSegment == rawSelect[i])
                 {
                     node.hasWildcard = true;
                 }
                 else
                 {
-                    node.selectedProperties.Add(selectItem);
+                    node.selectedProperties.Add(rawSelect[i]);
                 }
             }
 

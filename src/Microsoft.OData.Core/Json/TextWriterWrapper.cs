@@ -81,27 +81,25 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Increases the level of indentation applied to the output asynchronously.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2007:Consider calling ConfigureAwait on the awaited task", Justification = "ConfigureAwait has no effect on already completed task.")]
-        public virtual async Task IncreaseIndentationAsync()
+        public virtual Task IncreaseIndentationAsync()
         {
-            await TaskUtils.CompletedTask;
+            return TaskUtils.CompletedTask;
         }
 
         /// <summary>
         /// Decreases the level of indentation applied to the output asynchronously.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2007:Consider calling ConfigureAwait on the awaited task", Justification = "ConfigureAwait has no effect on already completed task.")]
-        public virtual async Task DecreaseIndentationAsync()
+        public virtual Task DecreaseIndentationAsync()
         {
-            await TaskUtils.CompletedTask;
+            return TaskUtils.CompletedTask;
         }
 
         /// <summary>
         /// Clears the buffer of the current writer asynchronously.
         /// </summary>
-        public override async Task FlushAsync()
+        public override Task FlushAsync()
         {
-            await this.writer.FlushAsync().ConfigureAwait(false);
+            return this.writer.FlushAsync();
         }
 
         /// <summary>

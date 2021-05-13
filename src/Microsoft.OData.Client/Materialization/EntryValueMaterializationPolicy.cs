@@ -680,8 +680,7 @@ namespace Microsoft.OData.Client.Materialization
 
             Debug.Assert(entry.ResolvedObject != null, "entry.ResolvedObject != null -- otherwise we didn't do any useful work");
 
-            BaseEntityType entity = entry.ResolvedObject as BaseEntityType;
-            if (entity != null)
+            if (entry.ResolvedObject is IBaseEntityType entity)
             {
                 entity.Context = this.EntityTrackingAdapter.Context;
 

@@ -198,6 +198,9 @@ namespace Microsoft.OData.UriParser
                 case QueryTokenKind.In:
                     result = this.BindIn((InToken)token);
                     break;
+                case QueryTokenKind.CountSegment:
+                    result = this.BindCountSegment((CountSegmentToken)token);
+                    break;
                 default:
                     throw new ODataException(ODataErrorStrings.MetadataBinder_UnsupportedQueryTokenKind(token.Kind));
             }
@@ -369,6 +372,17 @@ namespace Microsoft.OData.UriParser
 
             InBinder inBinder = new InBinder(InBinderMethod);
             return inBinder.BindInOperator(inToken, this.BindingState);
+        }
+
+        /// <summary>
+        /// Binds a CountSegment token.
+        /// </summary>
+        /// <param name="countSegmentToken">The CountSegment token to bind.</param>
+        /// <returns>The bound CountSegment token.</returns>
+        protected virtual QueryNode BindCountSegment(CountSegmentToken countSegmentToken)
+        {
+            CountSegmentBinder countSegmentBinder = new CountSegmentBinder(this.Bind, this.BindingState);
+            return countSegmentBinder.BindCountSegment(countSegmentToken);
         }
     }
 }

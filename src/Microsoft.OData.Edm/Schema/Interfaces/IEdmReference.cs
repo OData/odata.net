@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm.Vocabularies;
 using System;
 using System.Collections.Generic;
 
@@ -12,7 +13,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Represents a definition of an edmx:reference element.
     /// </summary>
-    public interface IEdmReference : IEdmElement
+    public interface IEdmReference : IEdmElement, IEdmVocabularyAnnotatable
     {
         /// <summary>
         /// Uri

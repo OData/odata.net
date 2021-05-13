@@ -16,6 +16,7 @@ namespace Microsoft.OData.Client
     using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Linq.Expressions;
@@ -26,6 +27,7 @@ namespace Microsoft.OData.Client
     using Microsoft.OData;
     using Microsoft.OData.Client.Annotation;
     using Microsoft.OData.Client.Metadata;
+    using Microsoft.OData.Client.Providers;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Vocabularies;
     using ClientStrings = Microsoft.OData.Client.Strings;
@@ -2531,6 +2533,19 @@ namespace Microsoft.OData.Client
 
         /// <summary>Changes the state of the specified object to be deleted in the <see cref="Microsoft.OData.Client.DataServiceContext" />.</summary>
         /// <param name="entity">The tracked entity to be changed to the deleted state.</param>
+        /// <param name="dependsOnObjects">DependsOnObjects for the deleted entity.</param>
+        /// <exception cref="System.ArgumentNullException">When <paramref name="entity" /> is null.</exception>
+        /// <exception cref="System.InvalidOperationException">When the object is not being tracked by the <see cref="Microsoft.OData.Client.DataServiceContext" />.</exception>
+        /// <remarks>
+        /// Existing objects in the Added state become detached.
+        /// </remarks>
+        public virtual void DeleteObject(object entity, params object[] dependsOnObjects)
+        {
+            this.DeleteObjectInternal(entity, false /*failIfInAddedState*/, dependsOnObjects);
+        }
+
+        /// <summary>Changes the state of the specified object to be deleted in the <see cref="Microsoft.OData.Client.DataServiceContext" />.</summary>
+        /// <param name="entity">The tracked entity to be changed to the deleted state.</param>
         /// <exception cref="System.ArgumentNullException">When <paramref name="entity" /> is null.</exception>
         /// <exception cref="System.InvalidOperationException">When the object is not being tracked by the <see cref="Microsoft.OData.Client.DataServiceContext" />.</exception>
         /// <remarks>
@@ -2560,11 +2575,40 @@ namespace Microsoft.OData.Client
 
         /// <summary>Changes the state of the specified object in the <see cref="Microsoft.OData.Client.DataServiceContext" /> to <see cref="Microsoft.OData.Client.EntityStates.Modified" />.</summary>
         /// <param name="entity">The tracked entity to be assigned to the <see cref="Microsoft.OData.Client.EntityStates.Modified" /> state.</param>
+        /// <param name="dependsOnObjects">DependsOnIds for the modified entity.</param>
+        /// <exception cref="System.ArgumentNullException">When <paramref name="entity" /> is null.</exception>
+        /// <exception cref="System.ArgumentException">When <paramref name="entity" /> is in the <see cref="Microsoft.OData.Client.EntityStates.Detached" /> state.</exception>
+        public virtual void UpdateObject(object entity, params object[] dependsOnObjects)
+        {
+            this.UpdateObjectInternal(entity, false /*failIfNotUnchanged*/, dependsOnObjects);
+        }
+
+        /// <summary>Changes the state of the specified object in the <see cref="Microsoft.OData.Client.DataServiceContext" /> to <see cref="Microsoft.OData.Client.EntityStates.Modified" />.</summary>
+        /// <param name="entity">The tracked entity to be assigned to the <see cref="Microsoft.OData.Client.EntityStates.Modified" /> state.</param>
         /// <exception cref="System.ArgumentNullException">When <paramref name="entity" /> is null.</exception>
         /// <exception cref="System.ArgumentException">When <paramref name="entity" /> is in the <see cref="Microsoft.OData.Client.EntityStates.Detached" /> state.</exception>
         public virtual void UpdateObject(object entity)
         {
             this.UpdateObjectInternal(entity, false /*failIfNotUnchanged*/);
+        }
+
+        /// <summary>
+        /// Convert array object to List of strings.
+        /// </summary>
+        /// <param name="dependsOnIds">Object array of DependsOnIds.</param>
+        /// <returns>List of strings.</returns>
+        private static List<string> ConvertDependOnIdsToString(object[] dependsOnIds)
+        {
+            var dependsOn = new List<string>();
+            if (dependsOnIds != null)
+            {
+                foreach (var id in dependsOnIds)
+                {
+                    dependsOn.Add(id.ToString());
+                }
+            }
+
+            return dependsOn;
         }
 
         /// <summary>Update a related object to the context.</summary>
@@ -3871,10 +3915,11 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="entity">entity to be mark for update</param>
         /// <param name="failIfNotUnchanged">If true, then an exception should be thrown if the entity is in neither the unchanged nor modified states.</param>
+        /// <param name="dependsOnObjects">DependsOnObjects for the modified entity.</param>
         /// <exception cref="ArgumentNullException">if entity is null</exception>
         /// <exception cref="ArgumentException">if entity is detached</exception>
         /// <exception cref="InvalidOperationException">if entity is not unchanged or modified and <paramref name="failIfNotUnchanged"/> is true.</exception>
-        private void UpdateObjectInternal(object entity, bool failIfNotUnchanged)
+        private void UpdateObjectInternal(object entity, bool failIfNotUnchanged, object[] dependsOnObjects)
         {
             Util.CheckArgumentNull(entity, "entity");
 
@@ -3899,8 +3944,31 @@ namespace Microsoft.OData.Client
                 return;
             }
 
+            if (dependsOnObjects != null)
+            {
+                UpdateResourceWithDependsOnChangeOrdersAndChangeSetIds(
+                        resource,
+                        dependsOnObjects,
+                        this.EntityTracker,
+                        out resource);
+            }
+
             resource.State = EntityStates.Modified;
+            resource.ChangeSetId = Guid.NewGuid().ToString();
             this.entityTracker.IncrementChange(resource);
+        }
+
+        /// <summary>
+        /// Mark an existing object for update in the context.
+        /// </summary>
+        /// <param name="entity">entity to be mark for update</param>
+        /// <param name="failIfNotUnchanged">If true, then an exception should be thrown if the entity is in neither the unchanged nor modified states.</param>
+        /// <exception cref="ArgumentNullException">if entity is null</exception>
+        /// <exception cref="ArgumentException">if entity is detached</exception>
+        /// <exception cref="InvalidOperationException">if entity is not unchanged or modified and <paramref name="failIfNotUnchanged"/> is true.</exception>
+        private void UpdateObjectInternal(object entity, bool failIfNotUnchanged)
+        {
+            this.UpdateObjectInternal(entity, failIfNotUnchanged, null);
         }
 
         /// <summary>
@@ -3908,12 +3976,13 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="entity">entity to be mark deleted</param>
         /// <param name="failIfInAddedState">If true, then an exception will be thrown if the entity is in the added state.</param>
+        /// <param name="dependsOnObjects">DependsOnObjects for the deleted entity.</param>
         /// <exception cref="ArgumentNullException">if entity is null</exception>
         /// <exception cref="InvalidOperationException">if entity is not being tracked by the context, or if the entity is in the added state and <paramref name="failIfInAddedState"/> is true.</exception>
         /// <remarks>
         /// Existing objects in the Added state become detached if <paramref name="failIfInAddedState"/> is false.
         /// </remarks>
-        private void DeleteObjectInternal(object entity, bool failIfInAddedState)
+        private void DeleteObjectInternal(object entity, bool failIfInAddedState, object[] dependsOnObjects)
         {
             Util.CheckArgumentNull(entity, "entity");
 
@@ -3935,11 +4004,56 @@ namespace Microsoft.OData.Client
                     Util.IncludeLinkState(state),
                     "bad state transition to deleted");
 
+                if (dependsOnObjects != null)
+                {
+                    UpdateResourceWithDependsOnChangeOrdersAndChangeSetIds(
+                        resource,
+                        dependsOnObjects,
+                        this.EntityTracker,
+                        out resource);
+                }
+
                 // Leave related links alone which means we can have a link in the Added
                 // or Modified state referencing a source/target entity in the Deleted state.
                 resource.State = EntityStates.Deleted;
+                resource.ChangeSetId = Guid.NewGuid().ToString();
                 this.entityTracker.IncrementChange(resource);
             }
+        }
+
+        /// <summary>
+        /// Mark an existing object being tracked by the context for deletion.
+        /// </summary>
+        /// <param name="entity">entity to be mark deleted</param>
+        /// <param name="failIfInAddedState">If true, then an exception will be thrown if the entity is in the added state.</param>
+        /// <exception cref="ArgumentNullException">if entity is null</exception>
+        /// <exception cref="InvalidOperationException">if entity is not being tracked by the context, or if the entity is in the added state and <paramref name="failIfInAddedState"/> is true.</exception>
+        /// <remarks>
+        /// Existing objects in the Added state become detached if <paramref name="failIfInAddedState"/> is false.
+        /// </remarks>
+        private void DeleteObjectInternal(object entity, bool failIfInAddedState)
+        {
+            this.DeleteObjectInternal(entity, failIfInAddedState, null);
+        }
+
+        private static void UpdateResourceWithDependsOnChangeOrdersAndChangeSetIds(
+            EntityDescriptor res,
+            object[] dependsOnObjects,
+            EntityTracker entityTracker,
+            out EntityDescriptor resource)
+        {
+            List<string> dependsOnIdsAsChangeOrders = new List<string>();
+            HashSet<string> dependsOnChangeSetIds = new HashSet<string>();
+            resource = res;
+            foreach (var obj in dependsOnObjects)
+            {
+                EntityDescriptor dependsOnResource = entityTracker.TryGetEntityDescriptor(obj);
+                dependsOnIdsAsChangeOrders.Add(dependsOnResource.ChangeOrder.ToString(CultureInfo.InvariantCulture));
+                dependsOnChangeSetIds.Add(dependsOnResource.ChangeSetId);
+            }
+
+            resource.DependsOnIds = dependsOnIdsAsChangeOrders;
+            resource.DependsOnChangeSetIds = dependsOnChangeSetIds.ToList();
         }
 
         /// <summary>

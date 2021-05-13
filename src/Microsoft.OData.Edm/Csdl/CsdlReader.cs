@@ -31,7 +31,8 @@ namespace Microsoft.OData.Edm.Csdl
         private readonly Dictionary<string, Action> dataServicesParserLookup;
         private readonly XmlReader reader;
         private readonly List<EdmError> errors;
-        private readonly List<IEdmReference> edmReferences;
+        private readonly List<CsdlReference> references;
+
         private readonly CsdlParser csdlParser;
         private readonly Func<Uri, XmlReader> getReferencedModelReaderFunc; // Url -> XmlReader
 
@@ -60,7 +61,7 @@ namespace Microsoft.OData.Edm.Csdl
             this.reader = reader;
             this.getReferencedModelReaderFunc = getReferencedModelReaderFunc;
             this.errors = new List<EdmError>();
-            this.edmReferences = new List<IEdmReference>();
+            this.references = new List<CsdlReference>();
             this.csdlParser = new CsdlParser();
 
             // Setup the edmx parser.
@@ -369,25 +370,25 @@ namespace Microsoft.OData.Edm.Csdl
                 return referencedAstModels;
             }
 
-            foreach (var edmReference in this.edmReferences)
+            foreach (var reference in this.references)
             {
-                if (!edmReference.Includes.Any() && !edmReference.IncludeAnnotations.Any())
+                if (!reference.Includes.Any() && !reference.IncludeAnnotations.Any())
                 {
                     this.RaiseError(EdmErrorCode.ReferenceElementMustContainAtLeastOneIncludeOrIncludeAnnotationsElement, Strings.EdmxParser_InvalidReferenceIncorrectNumberOfIncludes);
                     continue;
                 }
 
-                if (edmReference.Uri != null && (edmReference.Uri.OriginalString.EndsWith(CoreVocabularyConstants.VocabularyUrlSuffix, StringComparison.Ordinal) ||
-                    edmReference.Uri.OriginalString.EndsWith(CapabilitiesVocabularyConstants.VocabularyUrlSuffix, StringComparison.Ordinal) ||
-                    edmReference.Uri.OriginalString.EndsWith("/Org.OData.Authorization.V1.xml", StringComparison.Ordinal) ||
-                    edmReference.Uri.OriginalString.EndsWith("/Org.OData.Validation.V1.xml", StringComparison.Ordinal) ||
-                    edmReference.Uri.OriginalString.EndsWith("/Org.OData.Community.V1.xml", StringComparison.Ordinal) ||
-                    edmReference.Uri.OriginalString.EndsWith(AlternateKeysVocabularyConstants.VocabularyUrlSuffix, StringComparison.Ordinal)))
+                if (reference.Uri != null && (reference.Uri.EndsWith(CoreVocabularyConstants.VocabularyUrlSuffix, StringComparison.Ordinal) ||
+                    reference.Uri.EndsWith(CapabilitiesVocabularyConstants.VocabularyUrlSuffix, StringComparison.Ordinal) ||
+                    reference.Uri.EndsWith("/Org.OData.Authorization.V1.xml", StringComparison.Ordinal) ||
+                    reference.Uri.EndsWith("/Org.OData.Validation.V1.xml", StringComparison.Ordinal) ||
+                    reference.Uri.EndsWith("/Org.OData.Community.V1.xml", StringComparison.Ordinal) ||
+                    reference.Uri.EndsWith(AlternateKeysVocabularyConstants.VocabularyUrlSuffix, StringComparison.Ordinal)))
                 {
                     continue;
                 }
 
-                XmlReader referencedXmlReader = this.getReferencedModelReaderFunc(edmReference.Uri);
+                XmlReader referencedXmlReader = this.getReferencedModelReaderFunc(new Uri(reference.Uri, UriKind.RelativeOrAbsolute));
                 if (referencedXmlReader == null)
                 {
                     this.RaiseError(EdmErrorCode.UnresolvedReferenceUriInEdmxReference, Strings.EdmxParser_UnresolvedReferenceUriInEdmxReference);
@@ -396,7 +397,7 @@ namespace Microsoft.OData.Edm.Csdl
 
                 // recursively use CsdlReader to parse sub edm:
                 CsdlReader referencedEdmxReader = new CsdlReader(referencedXmlReader, /*getReferencedModelReaderFunc*/ null);
-                referencedEdmxReader.source = edmReference.Uri != null ? edmReference.Uri.OriginalString : null;
+                referencedEdmxReader.source = reference.Uri != null ? reference.Uri : null;
                 referencedEdmxReader.ignoreUnexpectedAttributesAndElements = this.ignoreUnexpectedAttributesAndElements;
                 Version referencedEdmxVersion;
                 CsdlModel referencedAstModel;
@@ -408,7 +409,7 @@ namespace Microsoft.OData.Edm.Csdl
                         this.errors.Add(null);
                     }
 
-                    referencedAstModel.AddParentModelReferences(edmReference);
+                    referencedAstModel.AddParentModelReferences(reference);
                     referencedAstModels.Add(referencedAstModel);
                 }
 
@@ -469,7 +470,7 @@ namespace Microsoft.OData.Edm.Csdl
                 return false;
             }
 
-            csdlModel.AddCurrentModelReferences(this.edmReferences);
+            csdlModel.AddCurrentModelReferences(this.references);
             return true;
         }
 
@@ -610,70 +611,42 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// TODO: use XmlDocumentParser
+        /// Parse one Edm reference using CsdlReferenceParser
         /// </summary>
         private void ParseReferenceElement()
         {
-            // read 'Uri' attribute
-            EdmReference result = new EdmReference(new Uri(this.GetAttributeValue(null, CsdlConstants.Attribute_Uri), UriKind.RelativeOrAbsolute));
-            if (this.reader.IsEmptyElement)
+            Debug.Assert(this.reader.LocalName == CsdlConstants.Element_Reference);
+
+            XmlReaderSettings settings = new XmlReaderSettings();
+            IXmlLineInfo lineInfo = this.reader as IXmlLineInfo;
+            if (lineInfo != null && lineInfo.HasLineInfo())
             {
-                this.reader.Read();
-                this.edmReferences.Add(result);
-                return;
+                settings.LineNumberOffset = lineInfo.LineNumber - 1;
+                settings.LinePositionOffset = lineInfo.LinePosition - 2;
             }
 
-            this.reader.Read();
-            while (this.reader.NodeType != XmlNodeType.EndElement)
+            using (StringReader sr = new StringReader(this.reader.ReadOuterXml()))
             {
-                while (this.reader.NodeType == XmlNodeType.Whitespace && this.reader.Read())
-                { // read white spaces. can be an extension method.
-                }
+                using (XmlReader xr = XmlReader.Create(sr, settings))
+                {
+                    string artifactPath = this.source ?? this.reader.BaseURI;
+                    CsdlReferenceParser referenceParser = new CsdlReferenceParser(artifactPath, xr);
+                    referenceParser.ParseDocumentElement();
 
-                if (this.reader.NodeType != XmlNodeType.Element)
-                {
-                    break;
-                }
-
-                if (this.reader.LocalName == CsdlConstants.Element_Include)
-                {
-                    // parse: <edmx:Include Alias="IoTDeviceModel" Namespace="Microsoft.IntelligentSystems.DeviceModel.Vocabulary.V1"/>
-                    IEdmInclude tmp = new EdmInclude(this.GetAttributeValue(null, CsdlConstants.Attribute_Alias), this.GetAttributeValue(null, CsdlConstants.Attribute_Namespace));
-                    result.AddInclude(tmp);
-                }
-                else if (this.reader.LocalName == CsdlConstants.Element_IncludeAnnotations)
-                {
-                    // parse: <edmx:IncludeAnnotations TermNamespace="org.example.hcm" Qualifier="Tablet" TargetNamespace="com.contoso.Person" />
-                    IEdmIncludeAnnotations tmp = new EdmIncludeAnnotations(this.GetAttributeValue(null, CsdlConstants.Attribute_TermNamespace), this.GetAttributeValue(null, CsdlConstants.Attribute_Qualifier), this.GetAttributeValue(null, CsdlConstants.Attribute_TargetNamespace));
-                    result.AddIncludeAnnotations(tmp);
-                }
-                else if (this.reader.LocalName == CsdlConstants.Element_Annotation)
-                {
-                    this.reader.Skip();
-                    this.RaiseError(EdmErrorCode.UnexpectedXmlElement, Edm.Strings.XmlParser_UnexpectedElement(this.reader.LocalName));
-                    continue;
-                }
-                else
-                {
-                    this.RaiseError(EdmErrorCode.UnexpectedXmlElement, Edm.Strings.XmlParser_UnexpectedElement(this.reader.LocalName));
-                }
-
-                if (!this.reader.IsEmptyElement)
-                {
-                    this.reader.Read();
-                    while (this.reader.NodeType == XmlNodeType.Whitespace && this.reader.Read())
-                    { // read white spaces. can be an extension method.
+                    if (referenceParser.HasErrors)
+                    {
+                        foreach (var error in referenceParser.Errors)
+                        {
+                            this.errors.Add(error);
+                        }
                     }
 
-                    Debug.Assert(this.reader.NodeType == XmlNodeType.EndElement, "The XmlReader should be at the end of element");
+                    if (referenceParser.Result != null)
+                    {
+                        this.references.Add(referenceParser.Result.Value);
+                    }
                 }
-
-                this.reader.Read();
             }
-
-            Debug.Assert(this.reader.NodeType == XmlNodeType.EndElement, "The XmlReader should be at the end of element");
-            this.reader.Read();
-            this.edmReferences.Add(result);
         }
 
         private void ParseSchemaElement()

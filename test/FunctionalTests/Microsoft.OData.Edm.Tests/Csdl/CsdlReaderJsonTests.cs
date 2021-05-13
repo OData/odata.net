@@ -1785,8 +1785,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             bool ok = CsdlReader.TryParse(ref jsonReader, setting, out IEdmModel model, out IEnumerable<EdmError> errors);
             Assert.True(ok);
 
-            // we have two unexpected annotations which is not supported yet in ODL.
-            Assert.Equal(2, errors.Count());
+            // we have one unexpected annotation which is not supported yet in ODL.
+            Assert.Single(errors);
             Assert.NotNull(model);
 
             // 8 built-in + 1 referenced outside

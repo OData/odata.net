@@ -127,20 +127,19 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 return null;
             }
 
-            List<CsdlDirectValueAnnotation> annotations = this.Element.ImmediateValueAnnotations.ToList();
-            if (annotations.FirstOrDefault() != null)
-            {
-                List<IEdmDirectValueAnnotation> wrappedAnnotations = new List<IEdmDirectValueAnnotation>();
+            List<IEdmDirectValueAnnotation> wrappedAnnotations = null;
 
-                foreach (CsdlDirectValueAnnotation annotation in annotations)
+            foreach (CsdlDirectValueAnnotation annotation in this.Element.ImmediateValueAnnotations)
+            {
+                if (wrappedAnnotations == null)
                 {
-                    wrappedAnnotations.Add(new CsdlSemanticsDirectValueAnnotation(annotation, this.Model));
+                    wrappedAnnotations = new List<IEdmDirectValueAnnotation>();
                 }
 
-                return wrappedAnnotations;
+                wrappedAnnotations.Add(new CsdlSemanticsDirectValueAnnotation(annotation, this.Model));
             }
 
-            return null;
+            return wrappedAnnotations;
         }
     }
 }

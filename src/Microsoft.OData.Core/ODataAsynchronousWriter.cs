@@ -101,6 +101,12 @@ namespace Microsoft.OData
             throw new ODataException(Strings.ODataAsyncWriter_CannotWriteInStreamErrorForAsync);
         }
 
+        /// <inheritdoc/>
+        Task IODataOutputInStreamErrorListener.OnInStreamErrorAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Validates that the async writer is not disposed.
         /// </summary>

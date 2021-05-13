@@ -12,7 +12,6 @@ namespace Microsoft.OData.JsonLight
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Threading.Tasks;
-    using Microsoft.OData.Buffers;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Json;
     #endregion Namespaces
@@ -52,6 +51,9 @@ namespace Microsoft.OData.JsonLight
         /// <summary>The JSON writer to write to.</summary>
         /// <remarks>This field is also used to determine if the output context has been disposed already.</remarks>
         private IJsonWriter jsonWriter;
+
+        /// <summary>The asynchronous JSON writer to write to.</summary>
+        private IJsonWriterAsync asynchronousJsonWriter;
 
         /// <summary>
         /// The oracle to use to determine the type name to write for entries and values.
@@ -96,6 +98,7 @@ namespace Microsoft.OData.JsonLight
                 // COMPAT 2: JSON indentation - WCFDS indents only partially, it inserts newlines but doesn't actually insert spaces for indentation
                 // in here we allow the user to specify if true indentation should be used or if the limited functionality is enough.
                 this.jsonWriter = CreateJsonWriter(this.Container, this.textWriter, messageInfo.MediaType.HasIeee754CompatibleSetToTrue(), messageWriterSettings);
+                this.asynchronousJsonWriter = CreateAsynchronousJsonWriter(this.Container, this.textWriter, messageInfo.MediaType.HasIeee754CompatibleSetToTrue(), messageWriterSettings);
             }
             catch (Exception e)
             {
@@ -133,6 +136,7 @@ namespace Microsoft.OData.JsonLight
             this.textWriter = textWriter;
             bool ieee754CompatibleSetToTrue = (messageInfo.MediaType != null) ? messageInfo.MediaType.HasIeee754CompatibleSetToTrue() : false;
             this.jsonWriter = CreateJsonWriter(messageInfo.Container, textWriter, ieee754CompatibleSetToTrue, messageWriterSettings);
+            this.asynchronousJsonWriter = CreateAsynchronousJsonWriter(messageInfo.Container, textWriter, ieee754CompatibleSetToTrue, messageWriterSettings);
             this.metadataLevel = new JsonMinimalMetadataLevel();
             this.propertyCacheHandler = new PropertyCacheHandler();
         }
@@ -146,6 +150,18 @@ namespace Microsoft.OData.JsonLight
             {
                 Debug.Assert(this.jsonWriter != null, "Trying to get JsonWriter while none is available.");
                 return this.jsonWriter;
+            }
+        }
+
+        /// <summary>
+        /// Returns the <see cref="JsonWriter"/> which is to be used to write the content of the message asynchronously.
+        /// </summary>
+        public IJsonWriterAsync AsynchronousJsonWriter
+        {
+            get
+            {
+                Debug.Assert(this.asynchronousJsonWriter != null, "Trying to get asynchronous JsonWriter while none is available.");
+                return this.asynchronousJsonWriter;
             }
         }
 
@@ -818,6 +834,29 @@ namespace Microsoft.OData.JsonLight
             }
 
             return jsonWriter;
+        }
+
+        private static IJsonWriterAsync CreateAsynchronousJsonWriter(IServiceProvider container, TextWriter textWriter, bool isIeee754Compatible, ODataMessageWriterSettings writerSettings)
+        {
+            IJsonWriterAsync asynchronousJsonWriter;
+            if (container == null)
+            {
+                asynchronousJsonWriter = new JsonWriter(textWriter, isIeee754Compatible);
+            }
+            else
+            {
+                IJsonWriterFactoryAsync asynchronousJsonWriterFactory = container.GetRequiredService<IJsonWriterFactoryAsync>();
+                asynchronousJsonWriter = asynchronousJsonWriterFactory.CreateAsynchronousJsonWriter(textWriter, isIeee754Compatible);
+                Debug.Assert(asynchronousJsonWriter != null, "asynchronousJsonWriter != null");
+            }
+
+            JsonWriter writer = asynchronousJsonWriter as JsonWriter;
+            if (writer != null && writerSettings.ArrayPool != null)
+            {
+                writer.ArrayPool = writerSettings.ArrayPool;
+            }
+
+            return asynchronousJsonWriter;
         }
 
         /// <summary>

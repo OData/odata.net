@@ -61,6 +61,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void SelectPropertiesWithDollarCountOperationThrows()
+        {
+            Action readResult = () => RunParseSelectExpand("MyLions/$count", null, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            readResult.Throws<ODataException>(ODataErrorStrings.ExpressionToken_DollarCountNotAllowedInSelect);
+        }
+
+        [Fact]
         public void SelectWithAsteriskMeansWildcard()
         {
             ParseSingleSelectForPerson("*").ShouldBeWildcardSelectionItem();
@@ -570,6 +577,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             const string expandClauseText = "MyDog/$ref/MyPeople";
             Action readResult = () => RunParseSelectExpand(null, expandClauseText, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             readResult.Throws<ODataException>(ODataErrorStrings.ExpressionToken_NoPropAllowedAfterRef);
+        }
+
+        [Fact]
+        public void ExpandNavigationWithNavigationAfterDollarCountOperationThrows()
+        {
+            const string expandClauseText = "MyDog/$count/MyPeople";
+            Action readResult = () => RunParseSelectExpand(null, expandClauseText, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            readResult.Throws<ODataException>(ODataErrorStrings.ExpressionToken_NoPropAllowedAfterDollarCount);
         }
 
         [Fact]
@@ -1582,8 +1597,74 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.NotNull(pathSelectItem.TopOption);
             Assert.Equal(4, pathSelectItem.TopOption);
 
-            Assert.NotNull(pathSelectItem.TopOption);
+            Assert.NotNull(pathSelectItem.SkipOption);
             Assert.Equal(2, pathSelectItem.SkipOption);
+        }
+
+        // $expand=navProp/$count
+        [Fact]
+        public void ExpandWithNavigationPropCountWorks()
+        {
+            // Arrange
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$expand", "MyPaintings/$count"}
+                });
+
+            // Act
+            var selectExpandClause = odataQueryOptionParser.ParseSelectAndExpand();
+
+            // Assert
+            Assert.NotNull(selectExpandClause);
+            ExpandedCountSelectItem expandedCountSelectItem = Assert.IsType<ExpandedCountSelectItem>(Assert.Single(selectExpandClause.SelectedItems));
+            Assert.Null(expandedCountSelectItem.FilterOption);
+            Assert.Null(expandedCountSelectItem.SearchOption);
+        }
+
+        // $expand=navProp/$count($filter=prop)
+        [Fact]
+        public void ExpandWithNavigationPropCountWithFilterOptionWorks()
+        {
+            // Arrange
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$expand", "MyPaintings/$count($filter=Artist eq 'Artist One')"}
+                });
+
+            // Act
+            var selectExpandClause = odataQueryOptionParser.ParseSelectAndExpand();
+
+            // Assert
+            Assert.NotNull(selectExpandClause);
+            ExpandedCountSelectItem expandedCountSelectItem = Assert.IsType<ExpandedCountSelectItem>(Assert.Single(selectExpandClause.SelectedItems));
+            Assert.NotNull(expandedCountSelectItem.FilterOption);
+            Assert.Null(expandedCountSelectItem.SearchOption);
+        }
+
+        // $expand=navProp/$count($search=prop)
+        [Fact]
+        public void ExpandWithNavigationPropCountWithSearchOptionWorks()
+        {
+            // Arrange
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$expand", "MyPaintings/$count($search=Blue)"}
+                });
+
+            // Act
+            var selectExpandClause = odataQueryOptionParser.ParseSelectAndExpand();
+
+            // Assert
+            Assert.NotNull(selectExpandClause);
+            ExpandedCountSelectItem expandedCountSelectItem = Assert.IsType<ExpandedCountSelectItem>(Assert.Single(selectExpandClause.SelectedItems));
+            Assert.Null(expandedCountSelectItem.FilterOption);
+            Assert.NotNull(expandedCountSelectItem.SearchOption);
         }
 
         [Fact]

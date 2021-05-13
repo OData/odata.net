@@ -136,7 +136,9 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(qualifiedName, "qualifiedName");
 
-            return FindAcrossModels(model, qualifiedName, findTerm, RegistrationHelper.CreateAmbiguousTermBinding);
+            string fullyQualifiedName = model.ReplaceAlias(qualifiedName);
+
+            return FindAcrossModels(model, fullyQualifiedName, findTerm, RegistrationHelper.CreateAmbiguousTermBinding);
         }
 
         /// <summary>
@@ -2864,8 +2866,10 @@ namespace Microsoft.OData.Edm
             relativeNavigations = null;
             lastEntityType = null;
 
-            var pathItems = pathExpression.PathSegments.ToList();
-            if (pathItems.Count < 1)
+            var pathItems = pathExpression.PathSegments;
+            string bindingParameterName = pathItems.FirstOrDefault();
+
+            if (bindingParameterName == null)
             {
                 foundErrors.Add(new EdmError(element.Location(), EdmErrorCode.OperationWithInvalidEntitySetPathMissingCompletePath, Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathMissingBindingParameterName(CsdlConstants.Attribute_EntitySetPath)));
                 return false;
@@ -2879,8 +2883,7 @@ namespace Microsoft.OData.Edm
             }
 
             bool foundRelativePath = true;
-
-            string bindingParameterName = pathItems.First();
+                        
             if (parameter.Name != bindingParameterName)
             {
                 foundErrors.Add(
@@ -3009,7 +3012,7 @@ namespace Microsoft.OData.Edm
             return (segmentType.IsCollection() ? segmentType.AsCollection().ElementType() : segmentType).AsEntity().EntityDefinition();
         }
 
-        internal static IEnumerable<IEdmEntityContainerElement> AllElements(this IEdmEntityContainer container, int depth = ContainerExtendsMaxDepth)
+        public static IEnumerable<IEdmEntityContainerElement> AllElements(this IEdmEntityContainer container, int depth = ContainerExtendsMaxDepth)
         {
             if (depth <= 0)
             {

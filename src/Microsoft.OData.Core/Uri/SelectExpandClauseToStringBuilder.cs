@@ -17,11 +17,6 @@ namespace Microsoft.OData
     internal sealed class SelectExpandClauseToStringBuilder : SelectItemTranslator<string>
     {
         /// <summary>
-        /// the flag used to mark the SelectItem first appeared
-        /// </summary>
-        private bool isFirstSelectItem = true;
-
-        /// <summary>
         /// Build the expand clause for a given level in the selectExpandClause
         /// </summary>
         /// <param name="selectExpandClause">the current level select expand clause</param>
@@ -33,42 +28,64 @@ namespace Microsoft.OData
 
             List<string> selectList = selectExpandClause.GetCurrentLevelSelectList();
             string selectClause = null;
+            string expandClause = null;
+
             if (selectList.Any())
             {
                 selectClause = String.Join(ODataConstants.ContextUriProjectionPropertySeparator, selectList.ToArray());
             }
 
-            selectClause = string.IsNullOrEmpty(selectClause) ? null : string.Concat("$select", ExpressionConstants.SymbolEqual, isFirstSelectItem ? Uri.EscapeDataString(selectClause) : selectClause);
-            isFirstSelectItem = false;
-
-            string expandClause = null;
-            foreach (ExpandedNavigationSelectItem expandSelectItem in selectExpandClause.SelectedItems.Where(I => I.GetType() == typeof(ExpandedNavigationSelectItem)))
+            foreach (SelectItem selectItem in selectExpandClause.SelectedItems)
             {
-                if (string.IsNullOrEmpty(expandClause))
+                if (selectItem is PathSelectItem pathSelectItem)
                 {
-                    expandClause = firstFlag ? expandClause : string.Concat("$expand", ExpressionConstants.SymbolEqual);
-                }
-                else
-                {
-                    expandClause += ExpressionConstants.SymbolComma;
+                    selectClause += this.Translate(pathSelectItem);
                 }
 
-                expandClause += this.Translate(expandSelectItem);
+                else if (selectItem.GetType() == typeof(ExpandedNavigationSelectItem))
+                {
+                    if (string.IsNullOrEmpty(expandClause))
+                    {
+                        expandClause = firstFlag ? expandClause : string.Concat(ExpressionConstants.QueryOptionExpand, ExpressionConstants.SymbolEqual);
+                    }
+                    else
+                    {
+                        expandClause += ExpressionConstants.SymbolComma;
+                    }
+
+                    expandClause += this.Translate((ExpandedNavigationSelectItem)selectItem);
+                }
+
+                else if (selectItem.GetType() == typeof(ExpandedReferenceSelectItem))
+                {
+                    if (string.IsNullOrEmpty(expandClause))
+                    {
+                        expandClause = firstFlag ? expandClause : string.Concat(ExpressionConstants.QueryOptionExpand, ExpressionConstants.SymbolEqual);
+                    }
+                    else
+                    {
+                        expandClause += ExpressionConstants.SymbolComma;
+                    }
+
+                    expandClause += this.Translate((ExpandedReferenceSelectItem)selectItem) + ODataConstants.UriSegmentSeparator + ODataConstants.EntityReferenceSegmentName;
+                }
+
+                else if (selectItem.GetType() == typeof(ExpandedCountSelectItem))
+                {
+                    if (string.IsNullOrEmpty(expandClause))
+                    {
+                        expandClause = firstFlag ? expandClause : string.Concat(ExpressionConstants.QueryOptionExpand, ExpressionConstants.SymbolEqual);
+                    }
+                    else
+                    {
+                        expandClause += ExpressionConstants.SymbolComma;
+                    }
+
+                    expandClause += this.Translate((ExpandedCountSelectItem)selectItem);
+                }
             }
 
-            foreach (ExpandedReferenceSelectItem expandSelectItem in selectExpandClause.SelectedItems.Where(I => I.GetType() == typeof(ExpandedReferenceSelectItem)))
-            {
-                if (string.IsNullOrEmpty(expandClause))
-                {
-                    expandClause = firstFlag ? expandClause : string.Concat("$expand", ExpressionConstants.SymbolEqual);
-                }
-                else
-                {
-                    expandClause += ExpressionConstants.SymbolComma;
-                }
-
-                expandClause += this.Translate(expandSelectItem) + "/$ref";
-            }
+            selectClause = string.IsNullOrEmpty(selectClause) ? null : string.Concat(ExpressionConstants.QueryOptionSelect, ExpressionConstants.SymbolEqual, firstFlag ? Uri.EscapeDataString(selectClause) : selectClause);
 
             if (string.IsNullOrEmpty(expandClause))
             {
@@ -78,7 +95,7 @@ namespace Microsoft.OData
             {
                 if (firstFlag)
                 {
-                    return string.IsNullOrEmpty(selectClause) ? string.Concat("$expand=", Uri.EscapeDataString(expandClause)) : string.Concat(selectClause, "&$expand=", Uri.EscapeDataString(expandClause));
+                    return string.IsNullOrEmpty(selectClause) ? string.Concat(ExpressionConstants.QueryOptionExpand, ExpressionConstants.SymbolEqual, Uri.EscapeDataString(expandClause)) : string.Concat(selectClause, ExpressionConstants.SymbolQueryConcatenate, ExpressionConstants.QueryOptionExpand, ExpressionConstants.SymbolEqual, Uri.EscapeDataString(expandClause));
                 }
                 else
                 {
@@ -104,7 +121,63 @@ namespace Microsoft.OData
         /// <returns>Defined by the implementer</returns>
         public override string Translate(PathSelectItem item)
         {
-            return string.Empty;
+            NodeToStringBuilder nodeToStringBuilder = new NodeToStringBuilder();
+            string res = string.Empty;
+            if (item.FilterOption != null)
+            {
+                res += "$filter=" + nodeToStringBuilder.TranslateFilterClause(item.FilterOption);
+            }
+
+            if (item.OrderByOption != null)
+            {
+                res += string.IsNullOrEmpty(res) ? null : ";";
+                res += "$orderby=" + nodeToStringBuilder.TranslateOrderByClause(item.OrderByOption);
+            }
+
+            if (item.TopOption != null)
+            {
+                res += string.IsNullOrEmpty(res) ? null : ";";
+                res += "$top=" + item.TopOption.ToString();
+            }
+
+            if (item.SkipOption != null)
+            {
+                res += string.IsNullOrEmpty(res) ? null : ";";
+                res += "$skip=" + item.SkipOption.ToString();
+            }
+
+            if (item.CountOption != null)
+            {
+                res += string.IsNullOrEmpty(res) ? null : ";";
+                res += "$count";
+                res += ExpressionConstants.SymbolEqual;
+                if (item.CountOption == true)
+                {
+                    res += ExpressionConstants.KeywordTrue;
+                }
+                else
+                {
+                    res += ExpressionConstants.KeywordFalse;
+                }
+            }
+
+            if (item.SearchOption != null)
+            {
+                res += string.IsNullOrEmpty(res) ? null : ";";
+                res += "$search";
+                res += ExpressionConstants.SymbolEqual;
+                res += nodeToStringBuilder.TranslateSearchClause(item.SearchOption);
+            }
+
+            if (item.ComputeOption != null)
+            {
+                res += string.IsNullOrEmpty(res) ? null : ";";
+                res += "$compute";
+                res += ExpressionConstants.SymbolEqual;
+                res += nodeToStringBuilder.TranslateComputeClause(item.ComputeOption);
+            }
+
+            return string.IsNullOrEmpty(res) ? null : string.Concat(ExpressionConstants.SymbolOpenParen, res, ExpressionConstants.SymbolClosedParen);
         }
 
         /// <summary>
@@ -224,6 +297,30 @@ namespace Microsoft.OData
             }
 
             return string.Concat(currentExpandClause, string.IsNullOrEmpty(res) ? null : string.Concat(ExpressionConstants.SymbolOpenParen, res, ExpressionConstants.SymbolClosedParen));
+        }
+
+        /// <summary>
+        /// Translate an ExpandedCountSelectItem
+        /// </summary>
+        /// <param name="item">the item to Translate</param>
+        /// <returns>Defined by the implementer</returns>
+        public override string Translate(ExpandedCountSelectItem item)
+        {
+            NodeToStringBuilder nodeToStringBuilder = new NodeToStringBuilder();
+            string currentExpandClause = String.Join("/", item.PathToNavigationProperty.WalkWith(PathSegmentToStringTranslator.Instance).ToArray());
+            string res = string.Empty;
+            if (item.FilterOption != null)
+            {
+                res += ExpressionConstants.QueryOptionFilter + ExpressionConstants.SymbolEqual + nodeToStringBuilder.TranslateFilterClause(item.FilterOption);
+            }
+
+            if (item.SearchOption != null)
+            {
+                res += string.IsNullOrEmpty(res) ? null : ";";
+                res += ExpressionConstants.QueryOptionSearch + ExpressionConstants.SymbolEqual + nodeToStringBuilder.TranslateSearchClause(item.SearchOption);
+            }
+
+            return string.Concat(currentExpandClause, ODataConstants.UriSegmentSeparator, UriQueryConstants.CountSegment, string.IsNullOrEmpty(res) ? null : string.Concat(ExpressionConstants.SymbolOpenParen, res, ExpressionConstants.SymbolClosedParen));
         }
     }
 }

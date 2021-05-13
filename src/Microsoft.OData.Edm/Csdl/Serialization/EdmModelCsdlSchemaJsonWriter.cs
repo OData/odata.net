@@ -56,6 +56,37 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.settings = settings;
         }
 
+        internal override void WriteReferenceElementHeader(IEdmReference reference)
+        {
+            // The name of the pair is a URI for the referenced document.
+            this.jsonWriter.WritePropertyName(reference.Uri.OriginalString);
+
+            // The value of each member is a reference object.
+            this.jsonWriter.WriteStartObject();
+        }
+
+        internal override void WriteReferenceElementEnd(IEdmReference reference)
+        {
+            this.jsonWriter.WriteEndObject();
+        }
+
+        internal override void WritIncludeElementHeader(IEdmInclude include)
+        {
+            // Array items are objects.
+            this.jsonWriter.WriteStartObject();
+
+            // MUST contain the member $Namespace
+            this.jsonWriter.WriteRequiredProperty("$Namespace", include.Namespace);
+
+            // MAY contain the member $Alias
+            this.jsonWriter.WriteOptionalProperty("$Alias", include.Alias);
+        }
+
+        internal override void WriteIncludeElementEnd(IEdmInclude include)
+        {
+            this.jsonWriter.WriteEndObject();
+        }
+
         /// <summary>
         /// Write Term Object header
         /// </summary>

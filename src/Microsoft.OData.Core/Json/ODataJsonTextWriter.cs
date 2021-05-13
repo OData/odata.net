@@ -299,27 +299,27 @@ namespace Microsoft.OData
         }
 
         /// <inheritdoc/>
-        public override async Task WriteAsync(char value)
+        public override Task WriteAsync(char value)
         {
-            await this.WriteEscapedCharValueAsync(value).ConfigureAwait(false);
+            return this.WriteEscapedCharValueAsync(value);
         }
 
         /// <inheritdoc/>
-        public override async Task WriteAsync(char[] buffer, int index, int count)
+        public override Task WriteAsync(char[] buffer, int index, int count)
         {
-            await this.WriteEscapedCharArrayAsync(buffer, index, count).ConfigureAwait(false);
+            return this.WriteEscapedCharArrayAsync(buffer, index, count);
         }
 
         /// <inheritdoc/>
-        public override async Task WriteAsync(string value)
+        public override Task WriteAsync(string value)
         {
-            await this.WriteEscapedStringValueAsync(value).ConfigureAwait(false);
+            return this.WriteEscapedStringValueAsync(value);
         }
 
         /// <inheritdoc/>
-        public override async Task WriteLineAsync()
+        public override Task WriteLineAsync()
         {
-            await this.textWriter.WriteLineAsync().ConfigureAwait(false);
+            return this.textWriter.WriteLineAsync();
         }
 
         /// <inheritdoc/>
@@ -399,9 +399,9 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="value">Char value to be written.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteEscapedCharValueAsync(char value)
+        private Task WriteEscapedCharValueAsync(char value)
         {
-            await this.textWriter.WriteValueAsync(value, escapeOption).ConfigureAwait(false);
+            return this.textWriter.WriteValueAsync(value, escapeOption);
         }
 
         /// <summary>
@@ -409,12 +409,12 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="value">String value to be written.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteEscapedStringValueAsync(string value)
+        private Task WriteEscapedStringValueAsync(string value)
         {
             Debug.Assert(this.wrappedBuffer != null, "wrappedBuffer != null");
 
-            await this.textWriter.WriteEscapedJsonStringValueAsync(
-                value, escapeOption, this.wrappedBuffer, this.bufferPool).ConfigureAwait(false);
+            return this.textWriter.WriteEscapedJsonStringValueAsync(
+                value, escapeOption, this.wrappedBuffer, this.bufferPool);
         }
 
         /// <summary>
@@ -424,12 +424,12 @@ namespace Microsoft.OData
         /// <param name="offset">Number of characters to skip in the character array.</param>
         /// <param name="count">Number of characters to write from the character array.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteEscapedCharArrayAsync(char[] value, int offset, int count)
+        private Task WriteEscapedCharArrayAsync(char[] value, int offset, int count)
         {
             Debug.Assert(this.wrappedBuffer != null, "wrappedBuffer != null");
 
-            await this.textWriter.WriteEscapedCharArrayAsync(
-                value, offset, count, escapeOption, this.wrappedBuffer, this.bufferPool).ConfigureAwait(false);
+            return this.textWriter.WriteEscapedCharArrayAsync(
+                value, offset, count, escapeOption, this.wrappedBuffer, this.bufferPool);
         }
 
         #endregion Private async methods

@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Xml;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Csdl.Serialization
 {
@@ -31,11 +32,16 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 foreach (IEdmReference tmp in references)
                 {
                     this.schemaWriter.WriteReferenceElementHeader(tmp);
+
                     if (tmp.Includes != null)
                     {
                         foreach (IEdmInclude include in tmp.Includes)
                         {
-                            this.schemaWriter.WriteIncludeElement(include);
+                            this.schemaWriter.WritIncludeElementHeader(include);
+
+                            WriteAnnotations(model, include);
+
+                            this.schemaWriter.WriteIncludeElementEnd(include);
                         }
                     }
 
@@ -47,8 +53,20 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                         }
                     }
 
-                    this.schemaWriter.WriteEndElement();
+                    WriteAnnotations(model, tmp);
+
+                    this.schemaWriter.WriteReferenceElementEnd(tmp);
                 }
+            }
+        }
+
+        private void WriteAnnotations(IEdmModel model, IEdmVocabularyAnnotatable target)
+        {
+            var annotations = model.FindDeclaredVocabularyAnnotations(target);
+            foreach (IEdmVocabularyAnnotation annotation in annotations)
+            {
+                this.schemaWriter.WriteVocabularyAnnotationElementHeader(annotation, true);
+                this.schemaWriter.WriteVocabularyAnnotationElementEnd(annotation, true);
             }
         }
 
