@@ -22,22 +22,22 @@ namespace Microsoft.OData.UriParser
         {
             // Since we're going to be modifying the clause's selected items we need to make a copy here to avoid failures related to
             // enumerating a changed collection.
-            IEnumerable<SelectItem> selectItems = clause.SelectedItems.ToList();
+            List<SelectItem> selectItems = clause.SelectedItems.ToList();
 
             // make sure that there are already selects for this level, otherwise we change the select semantics.
             bool anyPathSelectItems = selectItems.Any(x => x is PathSelectItem);
 
             // If there are selects for this level, then we need to add nav prop select items for each expanded nav prop.
-            // NOTE: We avoid OfType<ExpandedNavigationSelectItem> because we do not want to match derived types.
+            // NOTE: We avoid OfType<ExpandedNavigationSelectItem>() because we do not want to match derived types.
             foreach (ExpandedNavigationSelectItem navigationSelect in selectItems.Where(I => I.GetType() == typeof(ExpandedNavigationSelectItem)))
             {
                 AddExplicitNavPropLinksWhereNecessary(navigationSelect.SelectAndExpand);
             }
 
             // We also make a copy here to avoid reevaluating the filter criteria for every ExpandedReferenceSelectItem we encounter.
-            IEnumerable<ODataSelectPath> selectedPaths = selectItems.OfType<PathSelectItem>().Select(item => item.SelectedPath).ToList();
+            List<ODataSelectPath> selectedPaths = selectItems.OfType<PathSelectItem>().Select(item => item.SelectedPath).ToList();
 
-            // NOTE: We avoid OfType<ExpandedReferenceSelectItem> because we do not want to match derived types.
+            // NOTE: We avoid OfType<ExpandedReferenceSelectItem>() because we do not want to match derived types.
             foreach (ExpandedReferenceSelectItem navigationSelect in selectItems.Where(I => I.GetType() == typeof(ExpandedReferenceSelectItem)))
             {
                 if (anyPathSelectItems && !selectedPaths.Any(x => x.Equals(navigationSelect.PathToNavigationProperty.ToSelectPath())))

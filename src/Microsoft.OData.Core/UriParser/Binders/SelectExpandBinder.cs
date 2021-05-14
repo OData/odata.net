@@ -975,7 +975,7 @@ namespace Microsoft.OData.UriParser
             }
 
             // ignore all property selection if there's a wildcard select item.
-            WildcardSelectItem wildcardSelectItem = selectItems.FirstOrDefault(x => x is WildcardSelectItem) as WildcardSelectItem;
+            WildcardSelectItem wildcardSelectItem = selectItems.OfType<WildcardSelectItem>().FirstOrDefault();
             if (wildcardSelectItem != null && IsStructuralOrNavigationPropertySelectionItem(itemToAdd))
             {
                 wildcardSelectItem.AddSubsumed(itemToAdd);

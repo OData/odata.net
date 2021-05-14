@@ -76,7 +76,7 @@ namespace Microsoft.OData.UriParser
         {
             ExceptionUtils.CheckArgumentNotNull(itemToAdd, "itemToAdd");
 
-            WildcardSelectItem wildcardSelectItem = this.selectedItems.FirstOrDefault(x => x is WildcardSelectItem) as WildcardSelectItem;
+            WildcardSelectItem wildcardSelectItem = this.selectedItems.OfType<WildcardSelectItem>().FirstOrDefault();
             if (wildcardSelectItem != null && IsStructuralOrNavigationPropertySelectionItem(itemToAdd))
             {
                 wildcardSelectItem.AddSubsumed(itemToAdd);
@@ -84,7 +84,6 @@ namespace Microsoft.OData.UriParser
             }
 
             wildcardSelectItem = itemToAdd as WildcardSelectItem;
-
             if (wildcardSelectItem != null)
             {
                 List<SelectItem> newSelectedItems = new List<SelectItem>();
