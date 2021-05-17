@@ -24,6 +24,7 @@ jobs:
       job: short
       base: "{{base}}"
     arguments: --job {{job}} --filter {{filter}} --memory
+    framework: netcoreapp3.1
     options:
       benchmarkDotNet: true
     onConfigure:
@@ -34,20 +35,12 @@ jobs:
     variables:
       filter: "*"
       job: short
+    framework: netcoreapp3.1
     arguments: --job {{job}} --filter {{filter}} --memory
     options:
       benchmarkDotNet: true
     onConfigure:
-     - |
-        if (job.variables && job.variables.base && job.variables.base.toString() === 'true') {
-          console.log('Run benchmarks against official repository master branch');
-          job.source.repository = 'https://github.com/OData/odata.net';
-          job.source.branchOrCommit = 'master';
-        }
-        else {
-          console.log('Run benchmarks against local repository');
-          job.source.localFolder = '.';
-        }
+     - "{{setSourceScript}}"
 
 scenarios:
   Reader:

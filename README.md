@@ -115,6 +115,57 @@ You can query the latest nightly NuGet packages using this query: [MAGIC OData q
 
 The release of the component binaries is carried out regularly through [Nuget](http://www.nuget.org/).
 
+### 3.6 Performance benchmarks
+
+#### Installation
+
+The easiest way to run the perf benchmarks is to use the [Microsoft.Crank](https://github.com/dotnet/crank) toolset.
+
+- Install the [Crank controller](https://www.nuget.org/packages/Microsoft.Crank.Controller), the CLI use to run benchmarks:
+
+    ```text
+    dotnet tool install -g --version "0.2.0-*"
+    ```
+- Install the [Crank agent](https://www.nuget.org/packages/Microsoft.Crank.Agent), service that executes benchmark jobs. This should be install on the server(s) where the benchmarks will run. Install locally if you intend to run benchmarks locally.
+
+    ```text
+    dotnet tool install -g Microsoft.Crank.Agent --version "0.2.0-*" 
+    ```
+- Verify installation was complete by running:
+
+    ```text
+    crank
+    ```
+
+#### Start the agent
+
+- Start the agent by running the following command.:
+    
+    ```text
+    crank-agent
+    ```
+
+    Once the agent has started, you should see output like:
+
+    ```text
+    Now listening on: http://[::]:5010
+    ...
+    Agent ready, waiting for jobs...
+    ```
+
+#### Run benchmarks locally
+
+- Run benchmarks for different components (reader, writer, batch, URI parser, etc.) using in-memory payloads:
+    
+    ```text
+    crank --config benchmarks.yml --scenario Components --profile local
+    ```
+- Run only ODataReader tests:
+
+    ```text
+    crank --config benchmarks.yml --scenario Reader --profile local
+    ```
+
 ## 4. Documentation
 
 Please visit the [ODataLib docs](https://docs.microsoft.com/en-us/odata/) on docs.microsoft.com. It has detailed descriptions on each feature provided by OData lib, how to use the OData .Net Client to consume OData service etc.
