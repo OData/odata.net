@@ -7,10 +7,12 @@ variables:
   # this script sets the source for the benchmarks to either the official repo
   # or the local directory based on the base variable
   setSourceScript: |
+    console.log('VARS', job.variables);
     if (job.variables && job.variables.base && job.variables.base.toString() === 'true') {
-      console.log('Run benchmarks against official repository master branch');
+      const branch = (job.variables && job.variables.baseBranch && job.variables.baseBranch.toString()) || 'master';
+      console.log('Run benchmarks against official repository branch', branch);
       job.source.repository = 'https://github.com/OData/odata.net';
-      job.source.branchOrCommit = (job.variables && job.variables.baseBranch && job.variables.baseBranch.toString()) || 'master';
+      job.source.branchOrCommit = branch;
     }
     else {
       console.log('Run benchmarks against local repository');
@@ -25,6 +27,7 @@ jobs:
       filter: "*"
       jobType: short
       base: "{{base}}"
+      baseBranch: "{{baseBranch}}"
     arguments: "--job {{jobType}} --filter {{filter}} --memory"
     options:
       benchmarkDotNet: true
@@ -36,6 +39,8 @@ jobs:
     variables:
       filter: "*"
       jobType: short
+      base: "{{base}}"
+      baseBranch: "{{baseBranch}}"
     framework: netcoreapp3.1
     arguments: "--job {{jobType}} --filter {{filter}} --memory"
     options:
