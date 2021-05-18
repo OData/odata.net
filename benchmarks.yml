@@ -7,7 +7,6 @@ variables:
   # this script sets the source for the benchmarks to either the official repo
   # or the local directory based on the base variable
   setSourceScript: |
-    console.log('VARS', job.variables);
     if (job.variables && job.variables.base && job.variables.base.toString() === 'true') {
       const branch = (job.variables && job.variables.baseBranch && job.variables.baseBranch.toString()) || 'master';
       console.log('Run benchmarks against official repository branch', branch);
