@@ -24,21 +24,44 @@ namespace Microsoft.OData.Tests
             this.streamListener = new MockODataStreamListener(this.writer);
         }
 
-        [Fact]
-        public void NotificationWriterDisposeShouldInvokeStreamDisposed()
+        [Theory]
+        [InlineData(true, "StreamDisposed")]
+        [InlineData(false, "StreamDisposedAsync")]
+        public void NotificationWriterDisposeShouldInvokeStreamDisposed(bool synchronous, string expected)
         {
             // We care about the notification writer being disposed
             // We don't care about the writer passed to the notification writer
             using (var notificationWriter = new ODataNotificationWriter(
                 new StreamWriter(new MemoryStream()),
-                this.streamListener))
+                this.streamListener,
+                synchronous))
             {
-
             }
 
             var result = ReadStreamContents();
 
-            Assert.Equal("StreamDisposed", result);
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(true, "StreamDisposed")]
+        [InlineData(false, "StreamDisposedAsync")]
+        public void NotificationWriterDisposeShouldBeIdempotent(bool synchronous, string expected)
+        {
+            var notificationWriter = new ODataNotificationWriter(
+                new StreamWriter(new MemoryStream()),
+                this.streamListener,
+                synchronous);
+
+            // 1st call to Dispose
+            notificationWriter.Dispose();
+            // 2nd call to Dispose
+            notificationWriter.Dispose();
+
+            var result = ReadStreamContents();
+
+            // StreamDisposed/StreamDisposeAsync was written only once
+            Assert.Equal(expected, result);
         }
 
 #if NETCOREAPP3_1
@@ -47,13 +70,30 @@ namespace Microsoft.OData.Tests
         {
             await using (var notificationWriter = new ODataNotificationWriter(
                 new StreamWriter(new MemoryStream()),
-                this.streamListener)) // `synchronous` argument becomes irrelevant
+                this.streamListener)) // `synchronous` argument becomes irrelevant since we'll directly call DisposeAsync
             {
-
             }
 
             var result = await this.ReadStreamContentsAsync();
 
+            Assert.Equal("StreamDisposedAsync", result);
+        }
+
+        [Fact]
+        public async Task NotificationWriterDisposeAsyncShouldBeIdempotent()
+        {
+            var notificationWriter = new ODataNotificationWriter(
+                new StreamWriter(new MemoryStream()),
+                this.streamListener);
+
+            // 1st call to DisposeAsync
+            await notificationWriter.DisposeAsync();
+            // 2nd call to DisposeAsync
+            await notificationWriter.DisposeAsync();
+
+            var result = await this.ReadStreamContentsAsync();
+
+            // StreamDisposeAsync was written only once
             Assert.Equal("StreamDisposedAsync", result);
         }
 
@@ -66,7 +106,6 @@ namespace Microsoft.OData.Tests
                 this.streamListener,
                 /*synchronous*/ false))
             {
-
             }
 
             var result = await this.ReadStreamContentsAsync();
