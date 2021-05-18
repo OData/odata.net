@@ -165,6 +165,17 @@ The easiest way to run the perf benchmarks is to use the [Microsoft.Crank](https
     ```text
     crank --config benchmarks.yml --scenario Reader --profile local
     ```
+- Run only ODataWriter tests:
+
+    ```text
+    crank --config benchmarks.yml --scenario Writer --profile local
+    ```
+
+- Run only UriParser tests:
+
+    ```text
+    crank --config benchmarks.yml --scenario UriParser --profile local
+    ```
 
 ## 4. Documentation
 
