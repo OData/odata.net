@@ -1,14 +1,16 @@
 
 variables:
-  # set to true to run benchmarks against master branch of main repo
+  # set to true to run benchmarks against master branch of main/official repo
   base: false
+  # the branch of the official repo against which to run the benchmarks
+  baseBranch: master
   # this script sets the source for the benchmarks to either the official repo
   # or the local directory based on the base variable
   setSourceScript: |
     if (job.variables && job.variables.base && job.variables.base.toString() === 'true') {
       console.log('Run benchmarks against official repository master branch');
       job.source.repository = 'https://github.com/OData/odata.net';
-      job.source.branchOrCommit = 'master';
+      job.source.branchOrCommit = (job.variables && job.variables.baseBranch && job.variables.baseBranch.toString()) || 'master';
     }
     else {
       console.log('Run benchmarks against local repository');

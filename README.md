@@ -160,6 +160,13 @@ The easiest way to run the perf benchmarks is to use the [Microsoft.Crank](https
     ```text
     crank --config benchmarks.yml --scenario Components --profile local
     ```
+
+- Run benchmarks for end-to-end scenarios against a local OData service:
+    
+    ```text
+    crank --config benchmarks.yml --scenario Service --profile local
+    ```
+
 - Run only ODataReader tests:
 
     ```text
@@ -176,6 +183,23 @@ The easiest way to run the perf benchmarks is to use the [Microsoft.Crank](https
     ```text
     crank --config benchmarks.yml --scenario UriParser --profile local
     ```
+
+#### Run benchmarks against the official repo
+
+To run benchmarks against the official repo instead of your local repo, pass
+the `base=true` variable to the command, e.g.:
+
+```text
+crank --config benchmarks.yml --scenario Service --profile local --variable base=true
+```
+
+This will cause the crank agent to clone the official repo and run the tests against the `master` branch.
+
+You can specify a different branch, commit or tag using the `baseBranch` variable:
+
+```text
+crank --config benchmarks.yml --scenario Service --profile local --variable base=true --variable baseBranch=v7.6.4
+```
 
 ## 4. Documentation
 
