@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <None Remove="Common\Models\AdventureWorksPlus.csdl" />
-    <None Remove="Common\Models\EntityWithDifferenPropertyType.csdl" />
+    <None Remove="Common\Models\EntityWithDifferentPropertyType.csdl" />
     <None Remove="Common\Models\ExchangeAttachment.csdl" />
     <None Remove="ODataReader\PayloadTemplate\Entry.json" />
     <None Remove="ODataReader\PayloadTemplate\EntryIncludeSpatial.json" />
@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Common\Models\AdventureWorksPlus.csdl" />
-    <EmbeddedResource Include="Common\Models\EntityWithDifferenPropertyType.csdl" />
+    <EmbeddedResource Include="Common\Models\EntityWithDifferentPropertyType.csdl" />
     <EmbeddedResource Include="Common\Models\ExchangeAttachment.csdl" />
     <EmbeddedResource Include="ODataReader\PayloadTemplate\Entry.json" />
     <EmbeddedResource Include="ODataReader\PayloadTemplate\EntryIncludeSpatial.json" />
