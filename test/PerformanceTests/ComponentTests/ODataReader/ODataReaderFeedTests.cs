@@ -80,8 +80,8 @@ namespace Microsoft.OData.Performance
         {
             RunReadFeedTest(_isFullValidation);
         }
-        
-        
+
+
         public void SetupDataStream(string templateFile, int entryCount)
         {
             _stream = new MemoryStream(PayloadGenerator.GenerateFeed(templateFile, entryCount));

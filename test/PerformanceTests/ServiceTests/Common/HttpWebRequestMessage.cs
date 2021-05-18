@@ -73,7 +73,7 @@ namespace Microsoft.OData.Performance
         {
             get
             {
-               return this.request.ContentLength;
+                return this.request.ContentLength;
             }
 
             set

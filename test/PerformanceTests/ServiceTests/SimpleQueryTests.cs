@@ -67,7 +67,7 @@ namespace Microsoft.OData.Performance
             var requestMessage = new HttpWebRequestMessage(new Uri(serviceFixture.ServiceBaseUri.AbsoluteUri + query, UriKind.Absolute));
             if (!String.IsNullOrEmpty(preferHeader))
             {
-                requestMessage.SetHeader("Prefer", preferHeader);                
+                requestMessage.SetHeader("Prefer", preferHeader);
             }
             var responseMessage = requestMessage.GetResponse();
             Assert.Equal(200, responseMessage.StatusCode);

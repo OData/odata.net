@@ -2,7 +2,7 @@
 variables:
   # set to true to run benchmarks against master branch of main repo
   base: false
-  # this script set the source for the benchmarks to either the official repo
+  # this script sets the source for the benchmarks to either the official repo
   # or the local directory based on the base variable
   setSourceScript: |
     if (job.variables && job.variables.base && job.variables.base.toString() === 'true') {
@@ -21,10 +21,9 @@ jobs:
       project: test/PerformanceTests/ComponentTests/Microsoft.OData.Performance.ComponentTests.csproj
     variables:
       filter: "*"
-      job: short
+      jobType: short
       base: "{{base}}"
-    arguments: --job {{job}} --filter {{filter}} --memory
-    framework: netcoreapp3.1
+    arguments: "--job {{jobType}} --filter {{filter}} --memory"
     options:
       benchmarkDotNet: true
     onConfigure:
@@ -34,9 +33,9 @@ jobs:
       project: test/PerformanceTests/ServiceTests/Microsoft.OData.Performance.ServiceTests.csproj
     variables:
       filter: "*"
-      job: short
+      jobType: short
     framework: netcoreapp3.1
-    arguments: --job {{job}} --filter {{filter}} --memory
+    arguments: "--job {{jobType}} --filter {{filter}} --memory"
     options:
       benchmarkDotNet: true
     onConfigure:
@@ -66,6 +65,8 @@ scenarios:
   Service:
     application:
       job: service
+      variables:
+        filter: "*"
 
 
 profiles:

@@ -24,12 +24,14 @@ namespace Microsoft.OData.Performance
         public TestServiceFixture()
         {
             KillServices();
+            string servicePath = GetServicePath();
+            Console.WriteLine("SERVICE PATH {0}", servicePath);
             var startInfo = new ProcessStartInfo
             {
                 CreateNoWindow = true,
                 UseShellExecute = false,
                 FileName = IISExpressPath,
-                Arguments = string.Format("/path:{0} /port:{1}", GetServicePath(), ServicePort)
+                Arguments = string.Format("/path:{0} /port:{1}", servicePath, ServicePort)
             };
 
             var process = Process.Start(startInfo);
@@ -58,6 +60,10 @@ namespace Microsoft.OData.Performance
             }
         }
 
+        /// <summary>
+        /// Returns the directory that contains the test service
+        /// </summary>
+        /// <returns></returns>
         private string GetServicePath()
         {
             // try to get it from cli args -ServicePath "path"
@@ -78,8 +84,31 @@ namespace Microsoft.OData.Performance
             }
 
 
+            // if the service path is not provided in env vars or CLI args, then
+            // let's try to find it
+
+            // the test service is located in odata.net/test/PerformanceTests/Framework/TestService
+            // the code being executed (if it was built using dotnet run or dotnet published)
+            // will be located in a nested subfolder under odata.net/test/PerformanceTests/ServiceTests/...
+
+            // so let's walk the directory tree backwards until we find the PerformanceTests directory
+
             var dllPath = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
-            return Directory.GetParent(dllPath).FullName;
+            var dir = Directory.GetParent(dllPath);
+            while (dir.Name != "PerformanceTests" && dir.FullName != dir.Root.FullName)
+            {
+                dir = dir.Parent;
+            }
+
+            if (dir.Name == "PerformanceTests")
+            {
+                var servicePath = Path.Combine(dir.FullName, "Framework", "TestService");
+                return servicePath;
+            }
+
+            throw new Exception("Service path not specified."
+                + " Please specify the path of the test service directory"
+                + " using the -ServicePath CLI arg or ServicePath environment variable.");
         }
     }
 }
