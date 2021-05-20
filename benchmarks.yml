@@ -1,0 +1,82 @@
+
+variables:
+  # set to true to run benchmarks against master branch of main/official repo
+  base: false
+  # the branch of the official repo against which to run the benchmarks
+  baseBranch: master
+  # this script sets the source for the benchmarks to either the official repo
+  # or the local directory based on the base variable
+  setSourceScript: |
+    if (job.variables && job.variables.base && job.variables.base.toString() === 'true') {
+      const branch = (job.variables && job.variables.baseBranch && job.variables.baseBranch.toString()) || 'master';
+      console.log('Run benchmarks against official repository branch', branch);
+      job.source.repository = 'https://github.com/OData/odata.net';
+      job.source.branchOrCommit = branch;
+    }
+    else {
+      console.log('Run benchmarks against local repository');
+      job.source.localFolder = '.';
+    }
+
+jobs:
+  components:
+    source:
+      project: test/PerformanceTests/ComponentTests/Microsoft.OData.Performance.ComponentTests.csproj
+    variables:
+      filter: "*"
+      jobType: short
+      base: "{{base}}"
+      baseBranch: "{{baseBranch}}"
+    arguments: "--job {{jobType}} --filter {{filter}} --memory"
+    options:
+      benchmarkDotNet: true
+    onConfigure:
+      - "{{setSourceScript}}"
+  service:
+    source:
+      project: test/PerformanceTests/ServiceTests/Microsoft.OData.Performance.ServiceTests.csproj
+    variables:
+      filter: "*"
+      jobType: short
+      base: "{{base}}"
+      baseBranch: "{{baseBranch}}"
+    framework: netcoreapp3.1
+    arguments: "--job {{jobType}} --filter {{filter}} --memory"
+    options:
+      benchmarkDotNet: true
+    onConfigure:
+     - "{{setSourceScript}}"
+
+scenarios:
+  Reader:
+    application:
+      job: components
+      variables:
+        filter: "*ODataReader*"
+  Writer:
+    application:
+      job: components
+      variables:
+        filter: "*ODataWriter*"
+  UriParser:
+    application:
+      job: component
+      variables:
+        filter: "*UriParser*"
+  Components:
+    application:
+      job: components
+      variables:
+        filter: "*"
+  Service:
+    application:
+      job: service
+      variables:
+        filter: "*"
+
+profiles:
+  local:
+    jobs:
+      application:
+        endpoints:
+          - http://localhost:5010

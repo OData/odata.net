@@ -176,7 +176,5 @@ namespace Microsoft.OData.Performance
                 Assert.Equal(204, responseMessage.StatusCode);
             }
         }
-
-        
     }
 }
