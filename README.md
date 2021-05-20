@@ -121,12 +121,12 @@ The release of the component binaries is carried out regularly through [Nuget](h
 
 The easiest way to run the perf benchmarks is to use the [Microsoft.Crank](https://github.com/dotnet/crank) toolset.
 
-- Install the [Crank controller](https://www.nuget.org/packages/Microsoft.Crank.Controller), the CLI use to run benchmarks:
+- Install the [Crank controller](https://www.nuget.org/packages/Microsoft.Crank.Controller), the CLI used to run benchmarks:
 
     ```text
-    dotnet tool install -g --version "0.2.0-*"
+    dotnet tool install -g Microsoft.Crank.Controller --version "0.2.0-*"
     ```
-- Install the [Crank agent](https://www.nuget.org/packages/Microsoft.Crank.Agent), service that executes benchmark jobs. This should be install on the server(s) where the benchmarks will run. Install locally if you intend to run benchmarks locally.
+- Install the [Crank agent](https://www.nuget.org/packages/Microsoft.Crank.Agent), service that executes benchmark jobs. This should be installed on the server(s) where the benchmarks will run. Install locally if you intend to run benchmarks locally.
 
     ```text
     dotnet tool install -g Microsoft.Crank.Agent --version "0.2.0-*" 
