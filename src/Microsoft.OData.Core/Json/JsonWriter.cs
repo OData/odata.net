@@ -215,7 +215,7 @@ namespace Microsoft.OData.Json
 
             currentScope.ObjectCount++;
 
-            JsonValueUtils.WriteEscapedJsonString(this.writer, name, this.stringEscapeOption, this.wrappedBuffer);
+            JsonValueUtils.WriteEscapedJsonString(this.writer, name, this.stringEscapeOption, this.wrappedBuffer, this.ArrayPool);
             this.writer.Write(JsonConstants.NameValueSeparator);
         }
 
@@ -280,7 +280,7 @@ namespace Microsoft.OData.Json
             if (isIeee754Compatible)
             {
                 JsonValueUtils.WriteValue(this.writer, value.ToString(CultureInfo.InvariantCulture),
-                    this.stringEscapeOption, this.wrappedBuffer);
+                    this.stringEscapeOption, this.wrappedBuffer, this.ArrayPool);
             }
             else
             {
@@ -320,7 +320,7 @@ namespace Microsoft.OData.Json
             if (isIeee754Compatible)
             {
                 JsonValueUtils.WriteValue(this.writer, value.ToString(CultureInfo.InvariantCulture),
-                    this.stringEscapeOption, this.wrappedBuffer);
+                    this.stringEscapeOption, this.wrappedBuffer, this.ArrayPool);
             }
             else
             {
@@ -395,7 +395,7 @@ namespace Microsoft.OData.Json
         public void WriteValue(string value)
         {
             this.WriteValueSeparator();
-            JsonValueUtils.WriteValue(this.writer, value, this.stringEscapeOption, this.wrappedBuffer);
+            JsonValueUtils.WriteValue(this.writer, value, this.stringEscapeOption, this.wrappedBuffer, this.ArrayPool);
         }
 
         /// <summary>

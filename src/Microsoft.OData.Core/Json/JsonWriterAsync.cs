@@ -100,7 +100,7 @@ namespace Microsoft.OData.Json
 
             currentScope.ObjectCount++;
 
-            await this.writer.WriteEscapedJsonStringAsync(name, this.stringEscapeOption, this.wrappedBuffer)
+            await this.writer.WriteEscapedJsonStringAsync(name, this.stringEscapeOption, this.wrappedBuffer, this.ArrayPool)
                 .ConfigureAwait(false);
             await this.writer.WriteAsync(JsonConstants.NameValueSeparator).ConfigureAwait(false);
         }
@@ -148,7 +148,7 @@ namespace Microsoft.OData.Json
             if (isIeee754Compatible)
             {
                 await this.writer.WriteValueAsync(value.ToString(CultureInfo.InvariantCulture),
-                    this.stringEscapeOption, this.wrappedBuffer).ConfigureAwait(false);
+                    this.stringEscapeOption, this.wrappedBuffer, this.ArrayPool).ConfigureAwait(false);
             }
             else
             {
@@ -179,7 +179,7 @@ namespace Microsoft.OData.Json
             if (isIeee754Compatible)
             {
                 await this.writer.WriteValueAsync(value.ToString(CultureInfo.InvariantCulture),
-                    this.stringEscapeOption, this.wrappedBuffer).ConfigureAwait(false);
+                    this.stringEscapeOption, this.wrappedBuffer, this.ArrayPool).ConfigureAwait(false);
             }
             else
             {
@@ -234,7 +234,7 @@ namespace Microsoft.OData.Json
         public async Task WriteValueAsync(string value)
         {
             await this.WriteValueSeparatorAsync().ConfigureAwait(false);
-            await this.writer.WriteValueAsync(value, this.stringEscapeOption, this.wrappedBuffer)
+            await this.writer.WriteValueAsync(value, this.stringEscapeOption, this.wrappedBuffer, this.ArrayPool)
                 .ConfigureAwait(false);
         }
 
@@ -242,7 +242,7 @@ namespace Microsoft.OData.Json
         public async Task WriteValueAsync(byte[] value)
         {
             await this.WriteValueSeparatorAsync().ConfigureAwait(false);
-            await this.writer.WriteValueAsync(value, this.wrappedBuffer, ArrayPool).ConfigureAwait(false);
+            await this.writer.WriteValueAsync(value, this.wrappedBuffer, this.ArrayPool).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -270,7 +270,7 @@ namespace Microsoft.OData.Json
             // ODL supports net45 and netstandard1.1 (in addition to .netstandard2.0)
             // This makes it complicated to implement IAsyncDisposable in ODataBinaryStreamWriter
             // TODO: Can the returned stream be safely used asynchronously?
-            this.binaryValueStream = new ODataBinaryStreamWriter(writer, this.wrappedBuffer, ArrayPool);
+            this.binaryValueStream = new ODataBinaryStreamWriter(writer, this.wrappedBuffer, this.ArrayPool);
             return this.binaryValueStream;
         }
 
