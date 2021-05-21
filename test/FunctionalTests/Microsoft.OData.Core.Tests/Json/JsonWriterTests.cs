@@ -7,8 +7,8 @@
 using System;
 using System.IO;
 using System.Text;
-using Microsoft.OData.Json;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Json;
 using Xunit;
 
 namespace Microsoft.OData.Tests.Json
@@ -174,5 +174,35 @@ namespace Microsoft.OData.Tests.Json
         }
 
         #endregion
+
+        [Fact]
+        public void WriteNameUsesProvidedCharArrayPool()
+        {
+            // Note: CharArrayPool is used if string has special chars
+            // This test is mostly theoretical since special characters are not allowed in names
+            SetupJsonWriterRunTestAndVerifyRent(
+                (jsonWriter) => jsonWriter.WriteName("foo\tbar"));
+        }
+
+        [Fact]
+        public void WriteStringValueUsesProvidedCharArrayPool()
+        {
+            SetupJsonWriterRunTestAndVerifyRent(
+                (jsonWriter) => jsonWriter.WriteValue("foo\tbar"));
+        }
+
+        private void SetupJsonWriterRunTestAndVerifyRent(Action<JsonWriter> action)
+        {
+            var jsonWriter = new JsonWriter(new StringWriter(builder), isIeee754Compatible: true);
+            bool rentVerified = false;
+
+            Action<int> rentVerifier = (minSize) => { rentVerified = true; };
+            jsonWriter.ArrayPool = new MockCharArrayPool { RentVerifier = rentVerifier };
+
+            jsonWriter.StartObjectScope();
+            action(jsonWriter);
+
+            Assert.True(rentVerified);
+        }
     }
 }
