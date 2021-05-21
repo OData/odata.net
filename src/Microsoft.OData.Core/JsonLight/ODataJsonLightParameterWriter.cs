@@ -105,8 +105,7 @@ namespace Microsoft.OData.JsonLight
             }
             else
             {
-                ODataEnumValue enumVal = parameterValue as ODataEnumValue;
-                if (enumVal != null)
+                if (parameterValue is ODataEnumValue enumVal)
                 {
                     this.jsonLightValueSerializer.WriteEnumValue(enumVal, expectedTypeReference);
                 }
@@ -152,6 +151,117 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
             this.jsonLightOutputContext.JsonWriter.WriteName(parameterName);
+            return new ODataJsonLightWriter(this.jsonLightOutputContext, null, null, /*writingResourceSet*/true, /*writingParameter*/true, /*writingDelta*/false, /*listener*/this);
+        }
+
+        /// <summary>
+        /// Asynchronously start writing an OData payload.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected override async Task StartPayloadAsync()
+        {
+            // NOTE: we are always writing a request payload here.
+            await this.jsonLightValueSerializer.WritePayloadStartAsync()
+                .ConfigureAwait(false);
+            await this.jsonLightOutputContext.AsynchronousJsonWriter.StartObjectScopeAsync()
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Asynchronously finish writing an OData payload.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected override async Task EndPayloadAsync()
+        {
+            // NOTE: we are always writing a request payload here.
+            await this.jsonLightOutputContext.AsynchronousJsonWriter.EndObjectScopeAsync()
+                .ConfigureAwait(false);
+            await this.jsonLightValueSerializer.WritePayloadEndAsync()
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Asynchronously writes a value parameter (either primitive or complex).
+        /// </summary>
+        /// <param name="parameterName">The name of the parameter to write.</param>
+        /// <param name="parameterValue">The value of the parameter to write.</param>
+        /// <param name="expectedTypeReference">The expected type reference of the parameter value.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected override async Task WriteValueParameterAsync(string parameterName, object parameterValue, IEdmTypeReference expectedTypeReference)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
+
+            await this.jsonLightOutputContext.AsynchronousJsonWriter.WriteNameAsync(parameterName)
+                .ConfigureAwait(false);
+            if (parameterValue == null)
+            {
+                await this.jsonLightOutputContext.AsynchronousJsonWriter.WriteValueAsync((string)null)
+                    .ConfigureAwait(false);
+            }
+            else
+            {
+                if (parameterValue is ODataEnumValue enumVal)
+                {
+                    await this.jsonLightValueSerializer.WriteEnumValueAsync(enumVal, expectedTypeReference)
+                        .ConfigureAwait(false);
+                }
+                else
+                {
+                    Debug.Assert(!(parameterValue is ODataCollectionValue), "!(parameterValue is ODataCollectionValue)");
+                    Debug.Assert(!(parameterValue is ODataStreamReferenceValue), "!(parameterValue is ODataStreamReferenceValue)");
+                    Debug.Assert(!(parameterValue is Stream), "!(parameterValue is Stream)");
+
+                    await this.jsonLightValueSerializer.WritePrimitiveValueAsync(parameterValue, expectedTypeReference)
+                        .ConfigureAwait(false);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously creates a format specific <see cref="ODataCollectionWriter"/> to write the value of a collection parameter.
+        /// </summary>
+        /// <param name="parameterName">The name of the collection parameter to write.</param>
+        /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
+        /// <returns>A task that represents the asynchronous operation. 
+        /// The value of the TResult parameter contains the newly created <see cref="ODataCollectionWriter"/>.</returns>
+        protected override async Task<ODataCollectionWriter> CreateFormatCollectionWriterAsync(string parameterName, IEdmTypeReference expectedItemType)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
+
+            await this.jsonLightOutputContext.AsynchronousJsonWriter.WriteNameAsync(parameterName)
+                .ConfigureAwait(false);
+            return new ODataJsonLightCollectionWriter(this.jsonLightOutputContext, expectedItemType, /*listener*/this);
+        }
+
+        /// <summary>
+        /// Asynchronously creates a format specific <see cref="ODataWriter"/> to write a resource.
+        /// </summary>
+        /// <param name="parameterName">The name of the parameter to write.</param>
+        /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains the newly created <see cref="ODataWriter"/>.</returns>
+        protected async override Task<ODataWriter> CreateFormatResourceWriterAsync(string parameterName, IEdmTypeReference expectedItemType)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
+
+            await this.jsonLightOutputContext.AsynchronousJsonWriter.WriteNameAsync(parameterName)
+                .ConfigureAwait(false);
+            return new ODataJsonLightWriter(this.jsonLightOutputContext, null, null, /*writingResourceSet*/false, /*writingParameter*/true, /*writingDelta*/false, /*listener*/this);
+        }
+
+        /// <summary>
+        /// Asynchronously creates a format specific <see cref="ODataWriter"/> to write a resource set.
+        /// </summary>
+        /// <param name="parameterName">The name of the parameter to write.</param>
+        /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
+        /// <returns>A task that represents the asynchronous operation. 
+        /// The value of the TResult parameter contains the newly created <see cref="ODataWriter"/>.</returns>
+        protected override async Task<ODataWriter> CreateFormatResourceSetWriterAsync(string parameterName, IEdmTypeReference expectedItemType)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
+
+            await this.jsonLightOutputContext.AsynchronousJsonWriter.WriteNameAsync(parameterName)
+                .ConfigureAwait(false);
             return new ODataJsonLightWriter(this.jsonLightOutputContext, null, null, /*writingResourceSet*/true, /*writingParameter*/true, /*writingDelta*/false, /*listener*/this);
         }
     }
