@@ -7,6 +7,7 @@
 namespace Microsoft.OData.Client
 {
     using System;
+    using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -68,6 +69,14 @@ namespace Microsoft.OData.Client
         public Task<OperationResponse> ExecuteAsync()
         {
             return Context.ExecuteAsync(this.RequestUri, XmlConstants.HttpMethodPost, Parameters);
+        }
+
+        /// <summary>Asynchronously sends the request so that this call does not block processing while waiting for the results from the service.</summary>
+        /// <returns>A task represents the result of the operation. </returns>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        public Task<OperationResponse> ExecuteAsync(CancellationToken cancellationToken)
+        {
+            return Context.ExecuteAsync(this.RequestUri, XmlConstants.HttpMethodPost, cancellationToken, Parameters);
         }
 
         /// <summary>Called to complete the <see cref="Microsoft.OData.Client.DataServiceActionQuery.BeginExecute(System.AsyncCallback,System.Object)" />.</summary>
