@@ -68,7 +68,7 @@ namespace Microsoft.OData.Client
         /// <returns>A task represents the result of the operation. </returns>
         public Task<OperationResponse> ExecuteAsync()
         {
-            return Context.ExecuteAsync(this.RequestUri, XmlConstants.HttpMethodPost, Parameters);
+            return this.ExecuteAsync(CancellationToken.None);
         }
 
         /// <summary>Asynchronously sends the request so that this call does not block processing while waiting for the results from the service.</summary>
