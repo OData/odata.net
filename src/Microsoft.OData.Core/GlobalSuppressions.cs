@@ -18,6 +18,10 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.UriParser.FunctionCallBinder.#BindAsUriFunction(Microsoft.OData.UriParser.FunctionCallToken,System.Collections.Generic.List`1<Microsoft.OData.UriParser.QueryNode>)")]
 [assembly: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.UriParser.SelectExpandOptionParser.#BuildStarExpandTermToken(Microsoft.OData.UriParser.PathSegmentToken)")]
 [module: SuppressMessage("Microsoft.Naming", "CA1701:ResourceStringCompoundWordsShouldBeCasedCorrectly", MessageId = "NonEntity", Scope = "resource", Target = "Microsoft.OData.Core.resources")]
+[assembly: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.JsonLight.ODataJsonLightBatchWriter.#WritePendingRequestMessageData")]
+[assembly: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.JsonLight.ODataJsonLightBatchWriter.#WritePendingResponseMessageData")]
+[assembly: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.JsonLight.ODataJsonLightBatchWriter.#WritePendingRequestMessageDataAsync")]
+[assembly: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.JsonLight.ODataJsonLightBatchWriter.#WritePendingResponseMessageDataAsync")]
 
 // By design.
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Scope = "member", Target = "Microsoft.OData.Evaluation.ODataResourceMetadataContext+ODataResourceMetadataContextWithoutModel.#serializationInfo")]

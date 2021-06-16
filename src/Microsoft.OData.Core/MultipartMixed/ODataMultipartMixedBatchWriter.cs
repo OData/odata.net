@@ -139,6 +139,12 @@ namespace Microsoft.OData.MultipartMixed
             this.RawOutputContext.InitializeRawValueWriter();
         }
 
+        public override Task StreamDisposedAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(
+                () => this.StreamDisposed());
+        }
+
         /// <summary>
         /// This method notifies the listener, that an in-stream error is to be written.
         /// </summary>

@@ -84,6 +84,11 @@ namespace Microsoft.OData.JsonLight
         private readonly IJsonWriter jsonWriter;
 
         /// <summary>
+        /// The underlying asynchronous JSON writer.
+        /// </summary>
+        private readonly IJsonWriterAsync asynchronousJsonWriter;
+
+        /// <summary>
         /// The auto-generated GUID for AtomicityGroup of the Json item. Should be null for Json item
         /// that doesn't belong to atomic group.
         /// </summary>
@@ -109,6 +114,7 @@ namespace Microsoft.OData.JsonLight
             : base(jsonLightOutputContext)
         {
             this.jsonWriter = this.JsonLightOutputContext.JsonWriter;
+            this.asynchronousJsonWriter = this.JsonLightOutputContext.AsynchronousJsonWriter;
         }
 
         /// <summary>
@@ -167,15 +173,17 @@ namespace Microsoft.OData.JsonLight
         /// A task representing any action that is running as part of the status change of the operation;
         /// null if no such action exists.
         /// </returns>
-        public override Task StreamRequestedAsync()
+        public override async Task StreamRequestedAsync()
         {
             // Write any pending data and flush the batch writer to the async buffered stream
-            this.StartBatchOperationContent();
+            await this.StartBatchOperationContentAsync()
+                .ConfigureAwait(false);
 
             // Asynchronously flush the async buffered stream to the underlying message stream (if there's any);
             // then dispose the batch writer (since we are now writing the operation content) and set the corresponding state.
-            return this.JsonLightOutputContext.FlushBuffersAsync()
-                .FollowOnSuccessWith(task => this.SetState(BatchWriterState.OperationStreamRequested));
+            await this.JsonLightOutputContext.FlushBuffersAsync()
+                .FollowOnSuccessWith(task => this.SetState(BatchWriterState.OperationStreamRequested))
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -193,6 +201,21 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
+        /// This method is called to notify that the content stream of a batch operation has been disposed.
+        /// </summary>
+        public override async Task StreamDisposedAsync()
+        {
+            Debug.Assert(this.CurrentOperationMessage != null, "Expected non-null operation message!");
+
+            this.SetState(BatchWriterState.OperationStreamDisposed);
+            this.CurrentOperationRequestMessage = null;
+            this.CurrentOperationResponseMessage = null;
+
+            await this.EnsurePrecedingMessageIsClosedAsync()
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// This method notifies the listener, that an in-stream error is to be written.
         /// </summary>
         /// <remarks>
@@ -203,9 +226,22 @@ namespace Microsoft.OData.JsonLight
         {
             this.JsonLightOutputContext.VerifyNotDisposed();
             this.SetState(BatchWriterState.Error);
-            this.JsonLightOutputContext.JsonWriter.Flush();
+            this.jsonWriter.Flush();
 
-            // The OData protocol spec did not defined the behavior when an exception is encountered outside of a batch operation. The batch writer
+            // The OData protocol spec does not define the behavior when an exception is encountered outside of a batch operation. The batch writer
+            // should not allow WriteError in this case. Note that WCF DS Server does serialize the error in XML format when it encounters one outside of a
+            // batch operation.
+            throw new ODataException(Strings.ODataBatchWriter_CannotWriteInStreamErrorForBatch);
+        }
+
+        public override async Task OnInStreamErrorAsync()
+        {
+            this.JsonLightOutputContext.VerifyNotDisposed();
+            this.SetState(BatchWriterState.Error);
+            await this.asynchronousJsonWriter.FlushAsync()
+                .ConfigureAwait(false);
+
+            // The OData protocol spec does not define the behavior when an exception is encountered outside of a batch operation. The batch writer
             // should not allow WriteError in this case. Note that WCF DS Server does serialize the error in XML format when it encounters one outside of a
             // batch operation.
             throw new ODataException(Strings.ODataBatchWriter_CannotWriteInStreamErrorForBatch);
@@ -268,7 +304,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="dependsOnIds">The dependsOn ids specifying current request's prerequisites.</param>
         protected override void ValidateDependsOnIds(string contentId, IEnumerable<string> dependsOnIds)
         {
-           foreach (var id in dependsOnIds)
+            foreach (var id in dependsOnIds)
             {
                 // Content-ID cannot be part of dependsOnIds. This is to avoid self referencing.
                 // The dependsOnId must be an existing request ID.
@@ -432,6 +468,189 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
+        /// Asynchronously starts a new batch.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected override async Task WriteStartBatchImplementationAsync()
+        {
+            await WriteBatchEnvelopeAsync()
+                .ConfigureAwait(false);
+            this.SetState(BatchWriterState.BatchStarted);
+        }
+
+        /// <summary>
+        /// Asynchronously ends a batch.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected override async Task WriteEndBatchImplementationAsync()
+        {
+            // write pending message data (headers, response line) for a previously unclosed message/request
+            await this.WritePendingMessageDataAsync(true)
+                .ConfigureAwait(false);
+
+            this.SetState(BatchWriterState.BatchCompleted);
+
+            // Close the messages array
+            await asynchronousJsonWriter.EndArrayScopeAsync()
+                .ConfigureAwait(false);
+
+            // Close the top level scope
+            await asynchronousJsonWriter.EndObjectScopeAsync()
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Asynchronously starts a new changeset.
+        /// </summary>
+        /// <param name="groupId">The atomic group id of the changeset to start.
+		/// If it is null for Json batch, an GUID will be generated and used as the atomic group id.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected override async Task WriteStartChangesetImplementationAsync(string groupId)
+        {
+            Debug.Assert(groupId != null, "groupId != null");
+
+            // write pending message data (headers, response line) for a previously unclosed message/request
+            await this.WritePendingMessageDataAsync(true)
+                .ConfigureAwait(false);
+
+            // important to do this first since it will set up the change set boundary.
+            this.SetState(BatchWriterState.ChangesetStarted);
+
+            this.atomicityGroupId = groupId;
+        }
+
+        /// <summary>
+        /// Asynchronously ends an active changeset.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected override async Task WriteEndChangesetImplementationAsync()
+        {
+            // write pending message data (headers, response line) for a previously unclosed message/request
+            await this.WritePendingMessageDataAsync(true)
+                .ConfigureAwait(false);
+
+            // change the state first so we validate the change set boundary before attempting to write it.
+            this.SetState(BatchWriterState.ChangesetCompleted);
+            this.atomicityGroupId = null;
+        }
+
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataBatchOperationRequestMessage"/> for writing an operation of a batch request.
+        /// </summary>
+        /// <param name="method">The Http method to be used for this request operation.</param>
+        /// <param name="uri">The Uri to be used for this request operation.</param>
+        /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
+        /// <param name="payloadUriOption">
+        /// The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
+        /// <param name="dependsOnIds">The prerequisite request ids of this request.</param>
+        /// <returns>A task that represents the asynchronous operation. 
+        /// The value of the TResult parameter contains an <see cref="ODataBatchOperationRequestMessage"/>
+        /// that can be used to write the request operation.</returns>
+        protected override async Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageImplementationAsync(
+            string method,
+            Uri uri,
+            string contentId,
+            BatchPayloadUriOption payloadUriOption,
+            IEnumerable<string> dependsOnIds)
+        {
+            // write pending message data (headers, request line) for a previously unclosed message/request
+            await this.WritePendingMessageDataAsync(true)
+                .ConfigureAwait(false);
+
+            // For json batch request, content Id is required for single request or request within atomicityGroup.
+            if (contentId == null)
+            {
+                contentId = Guid.NewGuid().ToString();
+            }
+
+            AddGroupIdLookup(contentId);
+
+            // Create the new request operation with a non-null dependsOnIds.
+            this.CurrentOperationRequestMessage = BuildOperationRequestMessage(
+                this.JsonLightOutputContext.GetOutputStream(), method, uri, contentId,
+                this.atomicityGroupId,
+                dependsOnIds ?? Enumerable.Empty<string>());
+
+            this.SetState(BatchWriterState.OperationCreated);
+
+            // write the operation's start boundary string
+            await this.WriteStartBoundaryForOperationAsync()
+                .ConfigureAwait(false);
+
+            await this.asynchronousJsonWriter.WriteNameAsync(PropertyId)
+                .ConfigureAwait(false);
+            await this.asynchronousJsonWriter.WriteValueAsync(contentId)
+                .ConfigureAwait(false);
+
+            if (this.atomicityGroupId != null)
+            {
+                await this.asynchronousJsonWriter.WriteNameAsync(PropertyAtomicityGroup)
+                    .ConfigureAwait(false);
+                await this.asynchronousJsonWriter.WriteValueAsync(this.atomicityGroupId)
+                    .ConfigureAwait(false);
+            }
+
+            if (this.CurrentOperationRequestMessage.DependsOnIds != null
+                && this.CurrentOperationRequestMessage.DependsOnIds.Any())
+            {
+                await this.asynchronousJsonWriter.WriteNameAsync(PropertyDependsOn)
+                    .ConfigureAwait(false);
+                await this.asynchronousJsonWriter.StartArrayScopeAsync()
+                    .ConfigureAwait(false);
+
+                foreach (string dependsOnId in this.CurrentOperationRequestMessage.DependsOnIds)
+                {
+                    ValidateDependsOnId(contentId, dependsOnId);
+                    await this.asynchronousJsonWriter.WriteValueAsync(dependsOnId)
+                        .ConfigureAwait(false);
+                }
+
+                await this.asynchronousJsonWriter.EndArrayScopeAsync()
+                    .ConfigureAwait(false);
+            }
+
+            await this.asynchronousJsonWriter.WriteNameAsync(PropertyMethod)
+                .ConfigureAwait(false);
+            await this.asynchronousJsonWriter.WriteValueAsync(method)
+                .ConfigureAwait(false);
+
+            await this.WriteRequestUriAsync(uri, payloadUriOption)
+                .ConfigureAwait(false);
+
+            return this.CurrentOperationRequestMessage;
+        }
+
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataBatchOperationResponseMessage"/> for writing an operation of a batch response.
+        /// </summary>
+        /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
+        /// <returns>A task that represents the asynchronous operation. 
+        /// The value of the TResult parameter contains an <see cref="ODataBatchOperationResponseMessage"/>
+        /// that can be used to write the response operation.</returns>
+        protected override async Task<ODataBatchOperationResponseMessage> CreateOperationResponseMessageImplementationAsync(string contentId)
+        {
+            await this.WritePendingMessageDataAsync(true)
+                .ConfigureAwait(false);
+
+            // Url resolver: In responses we don't need to use our batch URL resolver, since there are no cross referencing URLs
+            // so use the URL resolver from the batch message instead.
+            //
+            // ContentId: could be null from public API common for both formats, so we don't enforce non-null value for Json format
+            // for sake of backward compatibility. For Json Batch response message, normally caller should use the same value
+            // from the request.
+            this.CurrentOperationResponseMessage = BuildOperationResponseMessage(
+                this.JsonLightOutputContext.GetOutputStream(),
+                contentId, this.atomicityGroupId);
+            this.SetState(BatchWriterState.OperationCreated);
+
+            // Start the Json object for the response
+            await this.WriteStartBoundaryForOperationAsync()
+                .ConfigureAwait(false);
+
+            return this.CurrentOperationResponseMessage;
+        }
+
+        /// <summary>
         /// Validates the dependsOnId. It needs to be a valid id, and cannot be inside another atomic group.
         /// </summary>
         /// <param name="requestId">Current request's id.</param>
@@ -521,7 +740,7 @@ namespace Microsoft.OData.JsonLight
         private void StartBatchOperationContent()
         {
             Debug.Assert(this.CurrentOperationMessage != null, "Expected non-null operation message!");
-            Debug.Assert(this.JsonLightOutputContext.JsonWriter != null, "Must have a Json writer!");
+            Debug.Assert(this.jsonWriter != null, "Must have a Json writer!");
 
             // write the pending headers (if any)
             this.WritePendingMessageData(false);
@@ -534,7 +753,7 @@ namespace Microsoft.OData.JsonLight
 
             // flush the text writer to make sure all buffers of the text writer
             // are flushed to the underlying async stream
-            this.JsonLightOutputContext.JsonWriter.Flush();
+            this.jsonWriter.Flush();
         }
 
         /// <summary>
@@ -547,7 +766,7 @@ namespace Microsoft.OData.JsonLight
         {
             if (this.CurrentOperationMessage != null)
             {
-                Debug.Assert(this.JsonLightOutputContext.JsonWriter != null,
+                Debug.Assert(this.jsonWriter != null,
                     "Must have a batch writer if pending data exists.");
 
                 if (this.CurrentOperationRequestMessage != null)
@@ -590,14 +809,13 @@ namespace Microsoft.OData.JsonLight
             this.jsonWriter.StartObjectScope();
 
             // Start the requests / responses property
-            this.jsonWriter.WriteName(this.JsonLightOutputContext.WritingResponse ?  PropertyResponses : PropertyRequests);
+            this.jsonWriter.WriteName(this.JsonLightOutputContext.WritingResponse ? PropertyResponses : PropertyRequests);
             this.jsonWriter.StartArrayScope();
         }
 
         /// <summary>
         /// Writing pending data for the current request message.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Justification = "need to use lower characters for header key")]
         private void WritePendingRequestMessageData()
         {
             Debug.Assert(this.CurrentOperationRequestMessage != null, "this.CurrentOperationRequestMessage != null");
@@ -621,7 +839,6 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Writing pending data for the current response message.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Justification = "need to use lower characters for header key")]
         private void WritePendingResponseMessageData()
         {
             Debug.Assert(this.JsonLightOutputContext.WritingResponse, "If the response message is available we must be writing response.");
@@ -674,9 +891,9 @@ namespace Microsoft.OData.JsonLight
                         break;
 
                     case BatchPayloadUriOption.AbsoluteUriUsingHostHeader:
-                        string absoluteResourcePath = absoluteUriString.Substring(absoluteUriString.IndexOf('/', absoluteUriString.IndexOf("//", StringComparison.Ordinal) + 2));
+                        string absoluteResourcePath = ExtractAbsoluteResourcePath(absoluteUriString);
                         this.jsonWriter.WriteValue(absoluteResourcePath);
-                        this.CurrentOperationRequestMessage.SetHeader("host", string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}:{1}", uri.Host, uri.Port));
+                        this.CurrentOperationRequestMessage.SetHeader("host", string.Format(CultureInfo.InvariantCulture, "{0}:{1}", uri.Host, uri.Port));
                         break;
 
                     case BatchPayloadUriOption.RelativeUri:
@@ -692,6 +909,247 @@ namespace Microsoft.OData.JsonLight
             {
                 this.jsonWriter.WriteValue(UriUtils.UriToString(uri));
             }
+        }
+
+        /// <summary>
+        /// Asynchronously writes the start boundary for an operation. This is Json start object.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        private Task WriteStartBoundaryForOperationAsync()
+        {
+            // Start the individual message object
+            return this.asynchronousJsonWriter.StartObjectScopeAsync();
+        }
+
+        /// <summary>
+        /// Asynchronously writes all the pending headers and prepares the writer to write a content of the operation.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        private async Task StartBatchOperationContentAsync()
+        {
+            Debug.Assert(this.CurrentOperationMessage != null, "Expected non-null operation message!");
+            Debug.Assert(this.asynchronousJsonWriter != null, "Must have an asynchronous Json writer!");
+
+            // write the pending headers (if any)
+            await this.WritePendingMessageDataAsync(false)
+                .ConfigureAwait(false);
+
+            await this.asynchronousJsonWriter.WriteRawValueAsync(string.Format(CultureInfo.InvariantCulture,
+                "{0} \"{1}\" {2}",
+                JsonConstants.ArrayElementSeparator,
+                PropertyBody,
+                JsonConstants.NameValueSeparator)).ConfigureAwait(false);
+
+            // flush the text writer to make sure all buffers of the text writer
+            // are flushed to the underlying async stream
+            await this.asynchronousJsonWriter.FlushAsync()
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Asynchronously writes any pending data for the current operation message (if any).
+        /// </summary>
+        /// <param name="reportMessageCompleted">
+        /// A flag to control whether after writing the pending data we report writing the message to be completed or not.
+        /// </param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        private async Task WritePendingMessageDataAsync(bool reportMessageCompleted)
+        {
+            if (this.CurrentOperationMessage != null)
+            {
+                Debug.Assert(this.asynchronousJsonWriter != null,
+                    "Must have an asynchronous Json writer if pending data exists.");
+
+                if (this.CurrentOperationRequestMessage != null)
+                {
+                    await WritePendingRequestMessageDataAsync()
+                        .ConfigureAwait(false);
+                }
+                else
+                {
+                    await WritePendingResponseMessageDataAsync()
+                        .ConfigureAwait(false);
+                }
+
+                if (reportMessageCompleted)
+                {
+                    this.CurrentOperationMessage.PartHeaderProcessingCompleted();
+                    this.CurrentOperationRequestMessage = null;
+                    this.CurrentOperationResponseMessage = null;
+
+                    await this.EnsurePrecedingMessageIsClosedAsync()
+                        .ConfigureAwait(false);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously closes preceding message Json object if any.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        private Task EnsurePrecedingMessageIsClosedAsync()
+        {
+            // There shouldn't be any pending message object.
+            Debug.Assert(this.CurrentOperationMessage == null, "this.CurrentOperationMessage == null");
+            return this.asynchronousJsonWriter.EndObjectScopeAsync();
+        }
+
+        /// <summary>
+        /// Asynchronously writes the json format batch envelope.
+        /// Always sets the isBatchEnvelopeWritten flag to true before return.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        private async Task WriteBatchEnvelopeAsync()
+        {
+            // Start the top level scope
+            await this.asynchronousJsonWriter.StartObjectScopeAsync()
+                .ConfigureAwait(false);
+
+            // Start the requests / responses property
+            await this.asynchronousJsonWriter.WriteNameAsync(this.JsonLightOutputContext.WritingResponse ? PropertyResponses : PropertyRequests)
+                .ConfigureAwait(false);
+            await this.asynchronousJsonWriter.StartArrayScopeAsync()
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Asynchronously writes pending data for the current request message.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        private async Task WritePendingRequestMessageDataAsync()
+        {
+            Debug.Assert(this.CurrentOperationRequestMessage != null, "this.CurrentOperationRequestMessage != null");
+
+            // headers property.
+            await this.asynchronousJsonWriter.WriteNameAsync(PropertyHeaders)
+                .ConfigureAwait(false);
+            await this.asynchronousJsonWriter.StartObjectScopeAsync()
+                .ConfigureAwait(false);
+            IEnumerable<KeyValuePair<string, string>> headers = this.CurrentOperationRequestMessage.Headers;
+            if (headers != null)
+            {
+                foreach (KeyValuePair<string, string> headerPair in headers)
+                {
+                    await this.asynchronousJsonWriter.WriteNameAsync(headerPair.Key.ToLowerInvariant())
+                        .ConfigureAwait(false);
+                    await this.asynchronousJsonWriter.WriteValueAsync(headerPair.Value)
+                        .ConfigureAwait(false);
+                }
+            }
+
+            await this.asynchronousJsonWriter.EndObjectScopeAsync()
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Asynchronously writes pending data for the current response message.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        private async Task WritePendingResponseMessageDataAsync()
+        {
+            Debug.Assert(this.JsonLightOutputContext.WritingResponse, "If the response message is available we must be writing response.");
+            Debug.Assert(this.CurrentOperationResponseMessage != null, "this.CurrentOperationResponseMessage != null");
+
+            // id property.
+            await this.asynchronousJsonWriter.WriteNameAsync(PropertyId)
+                .ConfigureAwait(false);
+            await this.asynchronousJsonWriter.WriteValueAsync(this.CurrentOperationResponseMessage.ContentId)
+                .ConfigureAwait(false);
+
+            // atomicityGroup property.
+            if (this.atomicityGroupId != null)
+            {
+                await this.asynchronousJsonWriter.WriteNameAsync(PropertyAtomicityGroup)
+                    .ConfigureAwait(false);
+                await this.asynchronousJsonWriter.WriteValueAsync(this.atomicityGroupId)
+                    .ConfigureAwait(false);
+            }
+
+            // response status property.
+            await this.asynchronousJsonWriter.WriteNameAsync(PropertyStatus)
+                .ConfigureAwait(false);
+            await this.asynchronousJsonWriter.WriteValueAsync(this.CurrentOperationResponseMessage.StatusCode)
+                .ConfigureAwait(false);
+
+            // headers property.
+            await this.asynchronousJsonWriter.WriteNameAsync(PropertyHeaders)
+                .ConfigureAwait(false);
+            await this.asynchronousJsonWriter.StartObjectScopeAsync()
+                .ConfigureAwait(false);
+            IEnumerable<KeyValuePair<string, string>> headers = this.CurrentOperationMessage.Headers;
+            if (headers != null)
+            {
+                foreach (KeyValuePair<string, string> headerPair in headers)
+                {
+                    await this.asynchronousJsonWriter.WriteNameAsync(headerPair.Key.ToLowerInvariant())
+                        .ConfigureAwait(false);
+                    await this.asynchronousJsonWriter.WriteValueAsync(headerPair.Value)
+                        .ConfigureAwait(false);
+                }
+            }
+
+            await this.asynchronousJsonWriter.EndObjectScopeAsync()
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Asynchronously writes the request uri.
+        /// </summary>
+        /// <param name="uri">The uri for the request operation.</param>
+        /// <param name="payloadUriOption">
+        /// The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.
+        /// </param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        private async Task WriteRequestUriAsync(Uri uri, BatchPayloadUriOption payloadUriOption)
+        {
+            await this.asynchronousJsonWriter.WriteNameAsync(PropertyUrl)
+                .ConfigureAwait(false);
+
+            if (uri.IsAbsoluteUri)
+            {
+                Uri baseUri = this.OutputContext.MessageWriterSettings.BaseUri;
+                string absoluteUriString = uri.AbsoluteUri;
+
+                switch (payloadUriOption)
+                {
+                    case BatchPayloadUriOption.AbsoluteUri:
+                        await this.asynchronousJsonWriter.WriteValueAsync(UriUtils.UriToString(uri))
+                            .ConfigureAwait(false);
+                        break;
+
+                    case BatchPayloadUriOption.AbsoluteUriUsingHostHeader:
+                        string absoluteResourcePath = ExtractAbsoluteResourcePath(absoluteUriString);
+                        await this.asynchronousJsonWriter.WriteValueAsync(absoluteResourcePath)
+                            .ConfigureAwait(false);
+                        this.CurrentOperationRequestMessage.SetHeader("host",
+                            string.Format(CultureInfo.InvariantCulture, "{0}:{1}", uri.Host, uri.Port));
+                        break;
+
+                    case BatchPayloadUriOption.RelativeUri:
+                        Debug.Assert(baseUri != null, "baseUri != null");
+                        string baseUriString = UriUtils.UriToString(baseUri);
+                        Debug.Assert(uri.AbsoluteUri.StartsWith(baseUriString, StringComparison.Ordinal), "absoluteUriString.StartsWith(baseUriString)");
+                        string relativeResourcePath = uri.AbsoluteUri.Substring(baseUriString.Length);
+                        await this.asynchronousJsonWriter.WriteValueAsync(relativeResourcePath)
+                            .ConfigureAwait(false);
+                        break;
+                }
+            }
+            else
+            {
+                await this.asynchronousJsonWriter.WriteValueAsync(UriUtils.UriToString(uri))
+                    .ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Extracts the absolute resource path from the absolute Uri string.
+        /// </summary>
+        /// <param name="absoluteUriString">The absolute Uri string.</param>
+        /// <returns></returns>
+        private static string ExtractAbsoluteResourcePath(string absoluteUriString)
+        {
+            return absoluteUriString.Substring(absoluteUriString.IndexOf('/', absoluteUriString.IndexOf("//", StringComparison.Ordinal) + 2));
         }
     }
 }
