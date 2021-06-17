@@ -219,8 +219,7 @@ namespace Microsoft.OData
                 }
 
                 this.listener = null;
-
-                this.stream?.Dispose();
+                // NOTE: Do not dispose the stream since this instance does not own it.
                 this.stream = null;
             }
 
@@ -235,9 +234,9 @@ namespace Microsoft.OData
             {
                 await this.listener.StreamDisposedAsync()
                     .ConfigureAwait(false);
-                this.stream?.Dispose();
 
                 this.listener = null;
+                // NOTE: Do not dispose the stream since this instance does not own it.
                 this.stream = null;
             }
 

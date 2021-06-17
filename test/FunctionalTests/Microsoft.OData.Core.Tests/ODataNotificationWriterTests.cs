@@ -32,7 +32,7 @@ namespace Microsoft.OData.Tests
             // We care about the notification writer being disposed
             // We don't care about the writer passed to the notification writer
             using (var notificationWriter = new ODataNotificationWriter(
-                new StreamWriter(new MemoryStream()),
+                this.writer,
                 this.streamListener,
                 synchronous))
             {
@@ -49,7 +49,7 @@ namespace Microsoft.OData.Tests
         public void NotificationWriterDisposeShouldBeIdempotent(bool synchronous, string expected)
         {
             var notificationWriter = new ODataNotificationWriter(
-                new StreamWriter(new MemoryStream()),
+                this.writer,
                 this.streamListener,
                 synchronous);
 
@@ -69,7 +69,7 @@ namespace Microsoft.OData.Tests
         public async Task NotificationWriterDisposeShouldInvokeStreamDisposedAsync()
         {
             await using (var notificationWriter = new ODataNotificationWriter(
-                new StreamWriter(new MemoryStream()),
+                this.writer,
                 this.streamListener)) // `synchronous` argument becomes irrelevant since we'll directly call DisposeAsync
             {
             }
@@ -83,7 +83,7 @@ namespace Microsoft.OData.Tests
         public async Task NotificationWriterDisposeAsyncShouldBeIdempotent()
         {
             var notificationWriter = new ODataNotificationWriter(
-                new StreamWriter(new MemoryStream()),
+                this.writer,
                 this.streamListener);
 
             // 1st call to DisposeAsync
@@ -102,7 +102,7 @@ namespace Microsoft.OData.Tests
         public async Task NotificationWriterDisposeShouldInvokeStreamDisposedAsync()
         {
             using (var notificationWriter = new ODataNotificationWriter(
-                new StreamWriter(new MemoryStream()),
+                this.writer,
                 this.streamListener,
                 /*synchronous*/ false))
             {
