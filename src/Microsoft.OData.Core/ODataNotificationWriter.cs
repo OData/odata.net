@@ -340,8 +340,7 @@ namespace Microsoft.OData
                 }
 
                 this.listener = null;
-
-                this.textWriter?.Dispose();
+                // NOTE: Do not dispose the text writer since this instance does not own it.
                 this.textWriter = null;
             }
 
@@ -356,9 +355,9 @@ namespace Microsoft.OData
             {
                 await this.listener.StreamDisposedAsync()
                     .ConfigureAwait(false);
-                this.textWriter?.Dispose();
 
                 this.listener = null;
+                // NOTE: Do not dispose the text writer since this instance does not own it.
                 this.textWriter = null;
             }
 

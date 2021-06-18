@@ -32,7 +32,7 @@ namespace Microsoft.OData.Tests
             // We care about the notification stream being disposed
             // We don't care about the stream passed to the notification stream
             using (var notificationStream = new ODataNotificationStream(
-                new MemoryStream(),
+                this.stream,
                 this.streamListener,
                 synchronous))
             {
@@ -49,7 +49,7 @@ namespace Microsoft.OData.Tests
         public void NotificationStreamDisposeShouldBeIdempotent(bool synchronous, string expected)
         {
             var notificationStream = new ODataNotificationStream(
-                new MemoryStream(),
+                this.stream,
                 this.streamListener,
                 synchronous);
 
@@ -69,7 +69,7 @@ namespace Microsoft.OData.Tests
         public async Task NotificationStreamDisposeShouldInvokeStreamDisposedAsync()
         {
             await using (var notificationStream = new ODataNotificationStream(
-                new MemoryStream(),
+                this.stream,
                 this.streamListener)) // `synchronous` argument becomes irrelevant
             {
             }
@@ -83,7 +83,7 @@ namespace Microsoft.OData.Tests
         public async Task NotificationStreamDisposeAsyncShouldBeIdempotent()
         {
             var notificationStream = new ODataNotificationStream(
-                new MemoryStream(),
+                this.stream,
                 this.streamListener);
 
             // 1st call to DisposeAsync
@@ -102,7 +102,7 @@ namespace Microsoft.OData.Tests
         public async Task NotificationStreamDisposeShouldInvokeStreamDisposedAsync()
         {
             using (var notificationStream = new ODataNotificationStream(
-                new MemoryStream(),
+                this.stream,
                 this.streamListener,
                 /*synchronous*/ false))
             {
