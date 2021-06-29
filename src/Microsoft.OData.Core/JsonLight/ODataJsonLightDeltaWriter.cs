@@ -123,7 +123,7 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public override Task WriteStartAsync(ODataDeltaResourceSet deltaResourceSet)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.resourceWriter.WriteStart(deltaResourceSet));
+            return this.resourceWriter.WriteStartAsync(deltaResourceSet);
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public override Task WriteEndAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.resourceWriter.WriteEnd());
+            return this.resourceWriter.WriteEndAsync();
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public override Task WriteStartAsync(ODataNestedResourceInfo nestedResourceInfo)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.resourceWriter.WriteStart(nestedResourceInfo));
+            return this.resourceWriter.WriteStartAsync(nestedResourceInfo);
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public override Task WriteStartAsync(ODataResourceSet expandedResourceSet)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.resourceWriter.WriteStart(expandedResourceSet));
+            return this.resourceWriter.WriteStartAsync(expandedResourceSet);
         }
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public override Task WriteStartAsync(ODataResource deltaResource)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.resourceWriter.WriteStart(deltaResource));
+            return this.resourceWriter.WriteStartAsync(deltaResource);
         }
 
         /// <summary>
@@ -217,7 +217,7 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public override Task WriteDeltaDeletedEntryAsync(ODataDeltaDeletedEntry deltaDeletedEntry)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.resourceWriter.WriteStart(ODataDeltaDeletedEntry.GetDeletedResource(deltaDeletedEntry)));
+            return this.resourceWriter.WriteStartAsync(ODataDeltaDeletedEntry.GetDeletedResource(deltaDeletedEntry));
         }
 
         /// <summary>
@@ -236,7 +236,7 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public override Task WriteDeltaLinkAsync(ODataDeltaLink deltaLink)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.resourceWriter.WriteDeltaLink(deltaLink));
+            return this.resourceWriter.WriteDeltaLinkAsync(deltaLink);
         }
 
         /// <summary>
@@ -255,7 +255,7 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public override Task WriteDeltaDeletedLinkAsync(ODataDeltaDeletedLink deltaDeletedLink)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.resourceWriter.WriteDeltaDeletedLink(deltaDeletedLink));
+            return this.resourceWriter.WriteDeltaDeletedLinkAsync(deltaDeletedLink);
         }
 
         /// <summary>
@@ -290,7 +290,7 @@ namespace Microsoft.OData.JsonLight
         /// <inheritdoc/>
         Task IODataOutputInStreamErrorListener.OnInStreamErrorAsync()
         {
-            throw new NotImplementedException();
+            return this.inStreamErrorListener.OnInStreamErrorAsync();
         }
 
         #endregion

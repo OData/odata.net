@@ -6,26 +6,34 @@
 
 namespace Microsoft.OData
 {
+    using System;
     using System.Diagnostics;
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Wrapper to listen for dispose on a stream
+    /// Wrapper to listen for dispose on a <see cref="Stream"/>.
     /// </summary>
+#if NETSTANDARD2_0
+    internal sealed class ODataNotificationStream : Stream, IAsyncDisposable
+#else
     internal sealed class ODataNotificationStream : Stream
+#endif
     {
-        private readonly Stream stream;
+        private Stream stream;
         private IODataStreamListener listener;
+        private bool disposed = false;
+        private bool synchronous;
 
-        internal ODataNotificationStream(Stream underlyingStream, IODataStreamListener listener)
+        internal ODataNotificationStream(Stream underlyingStream, IODataStreamListener listener, bool synchronous = true)
         {
             Debug.Assert(underlyingStream != null, "Creating a notification stream for a null stream.");
             Debug.Assert(listener != null, "Creating a notification stream with a null listener.");
 
             this.stream = underlyingStream;
             this.listener = listener;
+            this.synchronous = synchronous;
         }
 
         /// <inheritdoc/>
@@ -163,7 +171,7 @@ namespace Microsoft.OData
             return this.stream.ToString();
         }
 
-        #region async methods
+#region async methods
 
 
         /// <inheritdoc/>
@@ -190,7 +198,7 @@ namespace Microsoft.OData
             return this.stream.WriteAsync(buffer, offset, count, cancellationToken);
         }
 
-        #endregion
+#endregion
 
         /// <summary>
         /// Disposes the object.
@@ -198,17 +206,44 @@ namespace Microsoft.OData
         /// <param name="disposing">True if called from Dispose; false if called from the finalizer.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
+            if (!this.disposed && disposing)
             {
-                if (this.listener != null)
+                // Tell the listener that the stream is being disposed.
+                if (synchronous)
                 {
-                    // Tell the listener that the stream is being disposed.
-                    this.listener.StreamDisposed();
-                    this.listener = null;
+                    this.listener?.StreamDisposed();
                 }
+                else
+                {
+                    this.listener?.StreamDisposedAsync().Wait();
+                }
+
+                this.listener = null;
+                // NOTE: Do not dispose the stream since this instance does not own it.
+                this.stream = null;
             }
 
+            this.disposed = true;
             base.Dispose(disposing);
         }
+
+#if NETSTANDARD2_0
+        public async ValueTask DisposeAsync()
+        {
+            if (!this.disposed && this.listener != null)
+            {
+                await this.listener.StreamDisposedAsync()
+                    .ConfigureAwait(false);
+
+                this.listener = null;
+                // NOTE: Do not dispose the stream since this instance does not own it.
+                this.stream = null;
+            }
+
+            // Dispose unmanaged resources
+            // Pass `false` to ensure functional equivalence with the synchronous dispose pattern
+            this.Dispose(false);
+        }
+#endif
     }
 }

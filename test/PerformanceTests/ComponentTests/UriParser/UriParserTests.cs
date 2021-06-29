@@ -44,7 +44,7 @@ namespace Microsoft.OData.Performance
         public void ParsePath()
         {
             string query = "Employee(1)/PurchaseOrderHeader/Vendor/ProductVendor/Product/ProductInventory(ProductID = 1,LocationID = 1)/Location/WorkOrderRouting/WorkOrder/Product/BillOfMaterials(1)/UnitMeasure/ModifiedDate";
-            
+
             int roundPerIteration = 5000;
 
             TestExecution(query, roundPerIteration, parser => parser.ParsePath());
@@ -56,7 +56,7 @@ namespace Microsoft.OData.Performance
             string query = "Product?$filter=contains(Name, 'aaaa') and startswith(ProductNumber, '000') " +
                            "and MakeFlag and concat(Color, SizeUnitMeasureCode) gt 'lll' and fractionalseconds(SellStartDate) eq 0 " +
                            "and round(StandardCost) mod ListPrice lt 10 and TimeZones/any(a: a/Offset eq maxdatetime())";
-            
+
             int roundPerIteration = 5000;
 
             TestExecution(query, roundPerIteration, parser => parser.ParseFilter());

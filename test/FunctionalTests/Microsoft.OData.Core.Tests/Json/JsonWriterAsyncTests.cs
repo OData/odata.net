@@ -5,13 +5,13 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Microsoft.OData.Json;
-using Microsoft.OData.Edm;
-using Xunit;
 using System.Threading.Tasks;
-using System.Collections.Generic;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Json;
+using Xunit;
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -359,5 +359,35 @@ namespace Microsoft.OData.Tests.Json
         }
 
         #endregion
+
+        [Fact]
+        public Task WriteNameAsyncUsesProvidedCharArrayPool()
+        {
+            // Note: CharArrayPool is used if string has special chars
+            // This test is mostly theoretical since special characters are not allowed in names
+            return SetupJsonWriterRunTestAndVerifyRentAsync(
+                (jsonWriter) => jsonWriter.WriteNameAsync("foo\tbar"));
+        }
+
+        [Fact]
+        public Task WriteStringValueUsesProvidedCharArrayPool()
+        {
+            return SetupJsonWriterRunTestAndVerifyRentAsync(
+                (jsonWriter) => jsonWriter.WriteValueAsync("foo\tbar"));
+        }
+
+        private async Task SetupJsonWriterRunTestAndVerifyRentAsync(Func<JsonWriter, Task> func)
+        {
+            var jsonWriter = new JsonWriter(new StringWriter(builder), isIeee754Compatible: true);
+            bool rentVerified = false;
+
+            Action<int> rentVerifier = (minSize) => { rentVerified = true; };
+            jsonWriter.ArrayPool = new MockCharArrayPool { RentVerifier = rentVerifier };
+
+            await jsonWriter.StartObjectScopeAsync();
+            await func(jsonWriter);
+
+            Assert.True(rentVerified);
+        }
     }
 }

@@ -14,32 +14,24 @@ If("Debug","Release" -notcontains $Config)
 Function ExecuteTests
 {
     Param(
-        [string]$projectRoot,
+        [string]$projectPath,
         [string]$config,
-        [string]$servicePath,
-        [string]$baseName  
+        [string]$servicePath 
     )
 
-
-    $exeName = "$baseName.exe"
-    $exePath = "$projectRoot\bin\$config\$exeName";
-
-    Write-Host "*** Building tests project $projectRoot***"
-    dotnet build -c $config $projectRoot
+    Write-Host "*** Running tests project $projectPath***"
+    dotnet run -c $config --project $projectPath -- --filter *
 
     if($LASTEXITCODE -eq 0)
     {
-        Write-Host "Build $projectRoot SUCCESS" -ForegroundColor Green
+        Write-Host "$projectPath SUCCESS" -ForegroundColor Green
         write-host "`n"
     }
     else
     {
-        Write-Host "Build FAILED" -ForegroundColor Red
+        Write-Host "FAILED" -ForegroundColor Red
         exit
     }
-
-    Write-Host "Running $exePath tests...";
-    &$exePath --filter * --envVars ServicePath:"$servicePath"
 
 }
 
@@ -48,5 +40,5 @@ $location = Get-Location
 $testServicePath = "$location\test\PerformanceTests\Framework\TestService"
 $perfTestsRoot = "$location\test\PerformanceTests"
 
-ExecuteTests "$perfTestsRoot\ComponentTests" $Config $testServicePath "Microsoft.OData.Performance.Component.Tests"
-ExecuteTests "$perfTestsRoot\ServiceTests" $Config $testServicePath "Microsoft.OData.Performance.Service.Tests"
+ExecuteTests "$perfTestsRoot\ComponentTests\Microsoft.OData.Performance.ComponentTests.csproj" $Config $testServicePath
+ExecuteTests "$perfTestsRoot\ServiceTests\Microsoft.OData.Performance.ServiceTests.csproj" $Config $testServicePath

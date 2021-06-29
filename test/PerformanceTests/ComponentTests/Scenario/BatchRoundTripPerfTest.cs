@@ -94,7 +94,7 @@ namespace Microsoft.OData.Performance
             {
                 // Create a batch which has memory foot print of about 10kB.
                 // Repeat N times.
-                const int N = 1 << 10;for (int i = 0; i < N; i++)
+                const int N = 1 << 10; for (int i = 0; i < N; i++)
                 {
                     // TODO: does printing progress affect results?
                     //PrintProgress(i);
@@ -141,7 +141,7 @@ namespace Microsoft.OData.Performance
         private void PrintProgress(int i)
         {
             // TODO: check whether printing progress impacts the results. Is there BDN-specific alternative?
-            if (i%100 == 0)
+            if (i % 100 == 0)
             {
                 Console.WriteLine("iteration: " + i);
             }

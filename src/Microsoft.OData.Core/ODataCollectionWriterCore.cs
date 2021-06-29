@@ -178,10 +178,11 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="collection">The <see cref="ODataCollectionStart"/> representing the collection.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public sealed override Task WriteStartAsync(ODataCollectionStart collection)
+        public sealed override async Task WriteStartAsync(ODataCollectionStart collection)
         {
             this.VerifyCanWriteStart(false, collection);
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartImplementation(collection));
+            await this.WriteStartImplementationAsync(collection)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -199,10 +200,11 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="item">The collection item to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public sealed override Task WriteItemAsync(object item)
+        public sealed override async Task WriteItemAsync(object item)
         {
             this.VerifyCanWriteItem(false);
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteItemImplementation(item));
+            await this.WriteItemImplementationAsync(item)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -224,10 +226,10 @@ namespace Microsoft.OData
         /// Asynchronously finish writing a collection.
         /// </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public sealed override Task WriteEndAsync()
+        public sealed override async Task WriteEndAsync()
         {
             this.VerifyCanWriteEnd(false);
-            return TaskUtils.GetTaskForSynchronousOperation(this.WriteEndImplementation)
+            await this.WriteEndImplementationAsync()
                 .FollowOnSuccessWithTask(
                     task =>
                     {
@@ -240,7 +242,7 @@ namespace Microsoft.OData
                         {
                             return TaskUtils.CompletedTask;
                         }
-                    });
+                    }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -266,9 +268,20 @@ namespace Microsoft.OData
         }
 
         /// <inheritdoc/>
-        Task IODataOutputInStreamErrorListener.OnInStreamErrorAsync()
+        async Task IODataOutputInStreamErrorListener.OnInStreamErrorAsync()
         {
-            throw new NotImplementedException();
+            this.VerifyNotDisposed();
+
+            // We're in a completed state trying to write an error
+            // We can't write error after the payload was finished as it might introduce another top-level element in XML
+            if (this.State == CollectionWriterState.Completed)
+            {
+                throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromCompleted(this.State.ToString(), CollectionWriterState.Error.ToString()));
+            }
+
+            await this.StartPayloadInStartStateAsync()
+                .ConfigureAwait(false);
+            this.EnterScope(CollectionWriterState.Error, this.scopes.Peek().Item);
         }
 
         /// <summary>
@@ -325,6 +338,39 @@ namespace Microsoft.OData
         /// <param name="item">The collection item to write.</param>
         /// <param name="expectedItemTypeReference">The expected type of the collection item or null if no expected item type exists.</param>
         protected abstract void WriteCollectionItem(object item, IEdmTypeReference expectedItemTypeReference);
+
+        /// <summary>
+        /// Asynchronously start writing an OData payload.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected abstract Task StartPayloadAsync();
+
+        /// <summary>
+        /// Asynchronously finish writing an OData payload.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected abstract Task EndPayloadAsync();
+
+        /// <summary>
+        /// Asynchronously start writing a collection.
+        /// </summary>
+        /// <param name="collectionStart">The <see cref="ODataCollectionStart"/> representing the collection.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected abstract Task StartCollectionAsync(ODataCollectionStart collectionStart);
+
+        /// <summary>
+        /// Asynchronously finish writing a collection.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected abstract Task EndCollectionAsync();
+
+        /// <summary>
+        /// Asynchronously writes a collection item (either primitive or complex)
+        /// </summary>
+        /// <param name="item">The collection item to write.</param>
+        /// <param name="expectedItemTypeReference">The expected type of the collection item or null if no expected item type exists.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected abstract Task WriteCollectionItemAsync(object item, IEdmTypeReference expectedItemTypeReference);
 
         /// <summary>
         /// Verifies that calling WriteStart is valid.
@@ -607,6 +653,143 @@ namespace Microsoft.OData
                     break;
                 default:
                     throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataCollectionWriterCore_ValidateTransition_UnreachableCodePath));
+            }
+        }
+
+        /// <summary>
+        /// Catch any exception thrown by the action passed in; in the exception case move the writer into
+        /// state ExceptionThrown and then rethrow the exception.
+        /// </summary>
+        /// <param name="action">The action to execute asynchronously.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        private async Task InterceptExceptionAsync(Func<Task> action)
+        {
+            try
+            {
+                await action().ConfigureAwait(false);
+            }
+            catch
+            {
+                if (!IsErrorState(this.State))
+                {
+                    this.EnterScope(CollectionWriterState.Error, this.scopes.Peek().Item);
+                }
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously checks whether we are currently writing the first top-level element; if so call StartPayload
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        private Task StartPayloadInStartStateAsync()
+        {
+            Scope current = this.scopes.Peek();
+            if (current.State == CollectionWriterState.Start)
+            {
+                return this.InterceptExceptionAsync(this.StartPayloadAsync);
+            }
+
+            return TaskUtils.CompletedTask;
+        }
+
+        /// <summary>
+        /// Asynchronously starts writing a collection - implementation of the actual functionality.
+        /// </summary>
+        /// <param name="collectionStart">The <see cref="ODataCollectionStart"/> representing the collection.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        private async Task WriteStartImplementationAsync(ODataCollectionStart collectionStart)
+        {
+            await this.StartPayloadInStartStateAsync()
+                .ConfigureAwait(false);
+            this.EnterScope(CollectionWriterState.Collection, collectionStart);
+            await this.InterceptExceptionAsync(async() =>
+            {
+                if (this.expectedItemType == null)
+                {
+                    this.collectionValidator = new CollectionWithoutExpectedTypeValidator(/*expectedItemTypeName*/ null);
+                }
+
+                await this.StartCollectionAsync(collectionStart)
+                    .ConfigureAwait(false);
+            }).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Asynchronously finishes writing a collection - implementation of the actual functionality.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        private Task WriteEndImplementationAsync()
+        {
+            return this.InterceptExceptionAsync(async () =>
+            {
+                Scope currentScope = this.scopes.Peek();
+
+                switch (currentScope.State)
+                {
+                    case CollectionWriterState.Collection:
+                        await this.EndCollectionAsync().ConfigureAwait(false);
+                        break;
+                    case CollectionWriterState.Item:
+                        await this.LeaveScopeAsync().ConfigureAwait(false);
+                        Debug.Assert(
+                            this.scopes.Peek().State == CollectionWriterState.Collection,
+                            "Expected to find collection state after popping from item state.");
+                        await this.EndCollectionAsync().ConfigureAwait(false);
+                        break;
+                    case CollectionWriterState.Start:                 // fall through
+                    case CollectionWriterState.Completed:             // fall through
+                    case CollectionWriterState.Error:                 // fall through
+                        throw new ODataException(Strings.ODataCollectionWriterCore_WriteEndCalledInInvalidState(currentScope.State.ToString()));
+                    default:
+                        throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataCollectionWriterCore_WriteEnd_UnreachableCodePath));
+                }
+
+                await this.LeaveScopeAsync().ConfigureAwait(false);
+            });
+        }
+
+        /// <summary>
+        /// Asynchronously writes a collection item - implementation of the actual functionality.
+        /// </summary>
+        /// <param name="item">The collection item to write.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        private async Task WriteItemImplementationAsync(object item)
+        {
+            if (this.scopes.Peek().State != CollectionWriterState.Item)
+            {
+                this.EnterScope(CollectionWriterState.Item, item);
+            }
+
+            await this.InterceptExceptionAsync(async() =>
+            {
+                ValidationUtils.ValidateCollectionItem(item, true /* isNullable */);
+                await this.WriteCollectionItemAsync(item, this.expectedItemType)
+                    .ConfigureAwait(false);
+            }).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Asynchronously leaves the current writer scope and return to the previous scope.
+        /// When reaching the top-level replace the 'Started' scope with a 'Completed' scope.
+        /// </summary>
+        /// <remarks>Note that this method is never called once an error has been written or a fatal exception has been thrown.</remarks>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        private async Task LeaveScopeAsync()
+        {
+            Debug.Assert(this.State != CollectionWriterState.Error, "this.State != WriterState.Error");
+
+            this.scopes.Pop();
+
+            // if we are back at the root replace the 'Start' state with the 'Completed' state
+            if (this.scopes.Count == 1)
+            {
+                this.scopes.Pop();
+                this.scopes.Push(new Scope(CollectionWriterState.Completed, null));
+                await this.InterceptExceptionAsync(this.EndPayloadAsync)
+                    .ConfigureAwait(false);
+                this.NotifyListener(CollectionWriterState.Completed);
             }
         }
 

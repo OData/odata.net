@@ -15,12 +15,18 @@ namespace Microsoft.OData
     /// <summary>
     /// Wrapper for TextWriter to listen for dispose.
     /// </summary>
+#if NETSTANDARD2_0
+    internal sealed class ODataNotificationWriter : TextWriter, IAsyncDisposable
+#else
     internal sealed class ODataNotificationWriter : TextWriter
+#endif
     {
-        private readonly TextWriter textWriter;
+        private TextWriter textWriter;
         private IODataStreamListener listener;
+        private bool disposed = false;
+        private readonly bool synchronous;
 
-        internal ODataNotificationWriter(TextWriter textWriter, IODataStreamListener listener)
+        internal ODataNotificationWriter(TextWriter textWriter, IODataStreamListener listener, bool synchronous = true)
             : base(System.Globalization.CultureInfo.InvariantCulture)
         {
             Debug.Assert(textWriter != null, "Creating a notification writer for a null textWriter.");
@@ -28,6 +34,7 @@ namespace Microsoft.OData
 
             this.textWriter = textWriter;
             this.listener = listener;
+            this.synchronous = synchronous;
         }
 
         /// <inheritdoc/>
@@ -81,6 +88,7 @@ namespace Microsoft.OData
         }
 
         #region Write methods
+
         /// <inheritdoc/>
         public override void Write(char value)
         {
@@ -168,6 +176,7 @@ namespace Microsoft.OData
         #endregion
 
         #region WriteLine methods
+
         /// <inheritdoc/>
         public override void WriteLine()
         {
@@ -262,7 +271,6 @@ namespace Microsoft.OData
 
         #region async methods
 
-
         /// <inheritdoc/>
         public override Task FlushAsync()
         {
@@ -319,18 +327,44 @@ namespace Microsoft.OData
         /// <param name="disposing">True if called from Dispose; false if called from the finalizer.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
+            if (!this.disposed && disposing)
             {
-                if (this.listener != null)
+                // Tell the listener that the stream is being disposed.
+                if (synchronous)
                 {
-                    // Tell the listener that the stream is being disposed.
-                    this.listener.StreamDisposed();
-                    this.listener = null;
+                    this.listener?.StreamDisposed();
                 }
+                else
+                {
+                    this.listener?.StreamDisposedAsync().Wait();
+                }
+
+                this.listener = null;
+                // NOTE: Do not dispose the text writer since this instance does not own it.
+                this.textWriter = null;
             }
 
-            this.textWriter.Dispose();
+            this.disposed = true;
             base.Dispose(disposing);
         }
+
+#if NETSTANDARD2_0
+        public async ValueTask DisposeAsync()
+        {
+            if (!this.disposed && this.listener != null)
+            {
+                await this.listener.StreamDisposedAsync()
+                    .ConfigureAwait(false);
+
+                this.listener = null;
+                // NOTE: Do not dispose the text writer since this instance does not own it.
+                this.textWriter = null;
+            }
+
+            // Dispose unmanaged resources
+            // Pass `false` to ensure functional equivalence with the synchronous dispose pattern
+            this.Dispose(false);
+        }
+#endif
     }
 }

@@ -14,6 +14,7 @@ namespace Microsoft.OData.Client
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Microsoft.OData.Client.Metadata;
+    using System.Runtime.CompilerServices;
     #endregion Namespaces
 
     /// <summary>
@@ -26,28 +27,12 @@ namespace Microsoft.OData.Client
 
         #region Resource state management
 
-    #if PORTABLELIB && WINDOWSPHONE
         /// <summary>Set of tracked resources</summary>
-        private Dictionary<object, EntityDescriptor> entityDescriptors = new Dictionary<object, EntityDescriptor>(EqualityComparer<object>.Default);
-    #else
-        /// <summary>Set of tracked resources</summary>
-        private ConcurrentDictionary<object, EntityDescriptor> entityDescriptors = new ConcurrentDictionary<object, EntityDescriptor>(EqualityComparer<object>.Default);
-    #endif
-    #if PORTABLELIB && WINDOWSPHONE
-        /// <summary>Set of tracked resources by Identity</summary>
-        private Dictionary<Uri, EntityDescriptor> identityToDescriptor;
-    #else
+        private ConcurrentDictionary<object, EntityDescriptor> entityDescriptors = new ConcurrentDictionary<object, EntityDescriptor>(EntityEqualityComparer<object>.Instance);
         /// <summary>Set of tracked resources by Identity</summary>
         private ConcurrentDictionary<Uri, EntityDescriptor> identityToDescriptor;
-    #endif
-
-    #if PORTABLELIB && WINDOWSPHONE
-        /// <summary>Set of tracked bindings</summary>
-        private Dictionary<LinkDescriptor, LinkDescriptor> bindings;
-    #else
         /// <summary>Set of tracked bindings</summary>
         private ConcurrentDictionary<LinkDescriptor, LinkDescriptor> bindings;
-    #endif
 
         /// <summary>change order</summary>
         private uint nextChange;
@@ -575,5 +560,17 @@ namespace Microsoft.OData.Client
                 throw Error.InvalidOperation(Strings.Context_DifferentEntityAlreadyContained);
             }
         }
+    }
+
+    /// <summary>
+    /// An object instance equality comparer
+    /// </summary>
+    /// <typeparam name="TObject"></typeparam>
+    internal class EntityEqualityComparer<TObject> : EqualityComparer<TObject> where TObject : class
+    {
+        public static EntityEqualityComparer<TObject> Instance = new EntityEqualityComparer<TObject>();
+        private EntityEqualityComparer() { }
+        public override bool Equals(TObject x, TObject y) => ReferenceEquals(x, y);
+        public override int GetHashCode(TObject obj) => RuntimeHelpers.GetHashCode(obj);
     }
 }

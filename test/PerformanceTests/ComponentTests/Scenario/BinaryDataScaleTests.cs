@@ -70,7 +70,7 @@ namespace Microsoft.OData.Performance
                     }
             };
 
-            var attachmentsP = new ODataNestedResourceInfo(){Name = "Attachments", IsCollection = true};
+            var attachmentsP = new ODataNestedResourceInfo() { Name = "Attachments", IsCollection = true };
 
             var attachmentsResourceSet = new ODataResourceSet()
             {
@@ -86,7 +86,7 @@ namespace Microsoft.OData.Performance
                         new ODataProperty { Name = "Name", Value = "attachment" },
                         new ODataProperty { Name = "IsInline", Value = false },
                         new ODataProperty { Name = "LastModifiedTime", Value = new DateTimeOffset(1987, 6, 5, 4, 3, 21, 0, new TimeSpan(0, 0, 3, 0)) },
-                        new ODataProperty { Name = "Content", Value = new byte[dataSizeKb * 1024]}, 
+                        new ODataProperty { Name = "Content", Value = new byte[dataSizeKb * 1024]},
                     }
                 };
 

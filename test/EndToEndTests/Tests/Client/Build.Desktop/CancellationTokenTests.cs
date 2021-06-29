@@ -228,5 +228,33 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
 
             this.EnqueueTestComplete();
         }
+
+        [Fact, Asynchronous]
+        public async Task DataServiceActionQueryExecuteAsyncCancellationTokenTest()
+        {
+            var source = new CancellationTokenSource();
+            var context = this.CreateWrappedContext<DefaultContainer>().Context;
+            Customer c1 = new Customer { CustomerId = 11, Name = "customerOne" };
+            context.AddToCustomer(c1);
+            Customer c2 = new Customer { CustomerId = 22, Name = "customerTwo" };
+            context.AddToCustomer(c2);
+            await context.SaveChangesAsync();
+
+            AuditInfo auditInfo = new AuditInfo()
+            {
+                ModifiedDate = new DateTimeOffset()
+            };
+
+            DataServiceQuerySingle<Customer> customer = context.Customer.ByKey(11);
+            DataServiceActionQuery getComputerAction = customer.ChangeCustomerAuditInfo(auditInfo);
+
+            Task response() => getComputerAction.ExecuteAsync(source.Token);
+
+            source.Cancel();
+            var exception = await Assert.ThrowsAsync<OperationCanceledException>(response);
+            Assert.Equal("The operation was canceled.", exception.Message);
+
+            this.EnqueueTestComplete();
+        }
     }
 }

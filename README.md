@@ -115,6 +115,92 @@ You can query the latest nightly NuGet packages using this query: [MAGIC OData q
 
 The release of the component binaries is carried out regularly through [Nuget](http://www.nuget.org/).
 
+### 3.6 Performance benchmarks
+
+#### Installation
+
+The easiest way to run the perf benchmarks is to use the [Microsoft.Crank](https://github.com/dotnet/crank) toolset.
+
+- Install the [Crank controller](https://www.nuget.org/packages/Microsoft.Crank.Controller), the CLI used to run benchmarks:
+
+    ```text
+    dotnet tool install -g Microsoft.Crank.Controller --version "0.2.0-*"
+    ```
+- Install the [Crank agent](https://www.nuget.org/packages/Microsoft.Crank.Agent), service that executes benchmark jobs. This should be installed on the server(s) where the benchmarks will run. Install locally if you intend to run benchmarks locally.
+
+    ```text
+    dotnet tool install -g Microsoft.Crank.Agent --version "0.2.0-*" 
+    ```
+- Verify installation was complete by running:
+
+    ```text
+    crank
+    ```
+
+#### Start the agent
+
+- Start the agent by running the following command.:
+    
+    ```text
+    crank-agent
+    ```
+
+    Once the agent has started, you should see output like:
+
+    ```text
+    Now listening on: http://[::]:5010
+    ...
+    Agent ready, waiting for jobs...
+    ```
+
+#### Run benchmarks locally
+
+- Run benchmarks for different components (reader, writer, batch, URI parser, etc.) using in-memory payloads:
+    
+    ```text
+    crank --config benchmarks.yml --scenario Components --profile local
+    ```
+
+- Run benchmarks for end-to-end scenarios against a local OData service:
+    
+    ```text
+    crank --config benchmarks.yml --scenario Service --profile local
+    ```
+
+- Run only ODataReader tests:
+
+    ```text
+    crank --config benchmarks.yml --scenario Reader --profile local
+    ```
+- Run only ODataWriter tests:
+
+    ```text
+    crank --config benchmarks.yml --scenario Writer --profile local
+    ```
+
+- Run only UriParser tests:
+
+    ```text
+    crank --config benchmarks.yml --scenario UriParser --profile local
+    ```
+
+#### Run benchmarks against the official repo
+
+To run benchmarks against the official repo instead of your local repo, pass
+the `base=true` variable to the command, e.g.:
+
+```text
+crank --config benchmarks.yml --scenario Service --profile local --variable base=true
+```
+
+This will cause the crank agent to clone the official repo and run the tests against the `master` branch.
+
+You can specify a different branch, commit or tag using the `baseBranch` variable:
+
+```text
+crank --config benchmarks.yml --scenario Service --profile local --variable base=true --variable baseBranch=v7.6.4
+```
+
 ## 4. Documentation
 
 Please visit the [ODataLib docs](https://docs.microsoft.com/en-us/odata/) on docs.microsoft.com. It has detailed descriptions on each feature provided by OData lib, how to use the OData .Net Client to consume OData service etc.

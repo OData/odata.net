@@ -2060,6 +2060,13 @@ namespace Microsoft.OData.JsonLight
                     this.ReadResourceSetEnd();
                     break;
                 case JsonNodeType.PrimitiveValue:
+                    if (resourceType?.TypeKind == EdmTypeKind.Entity && !resourceType.IsOpen())
+                    {
+                        throw new ODataException(
+                        ODataErrorStrings.ODataJsonReader_CannotReadResourcesOfResourceSet(
+                            this.jsonLightResourceDeserializer.JsonReader.NodeType));
+                    }
+
                     // Is this a stream, or a binary or string value with a collection that the client wants to read as a stream
                     if (!TryReadPrimitiveAsStream(resourceType))
                     {

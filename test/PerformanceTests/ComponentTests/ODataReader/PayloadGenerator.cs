@@ -39,7 +39,7 @@ namespace Microsoft.OData.Performance
         public static byte[] GenerateFeed(string payloadTemplate, int entryCount)
         {
             var sb = new StringBuilder(prologueOfPayload);
-            string entry =  ReadTemplate(payloadTemplate);
+            string entry = ReadTemplate(payloadTemplate);
 
             for (int i = 0; i < entryCount - 1; i++)
             {
