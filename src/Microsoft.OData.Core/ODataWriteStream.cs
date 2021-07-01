@@ -139,6 +139,16 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Asynchronously flush the stream to the underlying stream
+        /// </summary>
+        public override async Task FlushAsync(CancellationToken cancellationToken)
+        {
+            this.ValidateNotDisposed();
+            await this.stream.FlushAsync(cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Dispose the operation stream.
         /// </summary>
         /// <param name="disposing">If 'true' this method is called from user code; if 'false' it is called by the runtime.</param>

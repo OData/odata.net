@@ -115,15 +115,17 @@ namespace Microsoft.OData.MultipartMixed
         /// A task representing any action that is running as part of the status change of the operation;
         /// null if no such action exists.
         /// </returns>
-        public override Task StreamRequestedAsync()
+        public override async Task StreamRequestedAsync()
         {
             // Write any pending data and flush the batch writer to the async buffered stream
-            this.StartBatchOperationContent();
+            await this.StartBatchOperationContentAsync()
+                .ConfigureAwait(false);
 
             // Asynchronously flush the async buffered stream to the underlying message stream (if there's any);
             // then dispose the batch writer (since we are now writing the operation content) and set the corresponding state.
-            return this.RawOutputContext.FlushBuffersAsync()
-                .FollowOnSuccessWith(task => this.DisposeBatchWriterAndSetContentStreamRequestedState());
+            await this.RawOutputContext.FlushBuffersAsync()
+                .FollowOnSuccessWith(task => this.DisposeBatchWriterAndSetContentStreamRequestedState())
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -158,7 +160,20 @@ namespace Microsoft.OData.MultipartMixed
             this.SetState(BatchWriterState.Error);
             this.RawOutputContext.TextWriter.Flush();
 
-            // The OData protocol spec did not defined the behavior when an exception is encountered outside of a batch operation. The batch writer
+            // The OData protocol spec does not define the behavior when an exception is encountered outside of a batch operation. The batch writer
+            // should not allow WriteError in this case. Note that WCF DS Server does serialize the error in XML format when it encounters one outside of a
+            // batch operation.
+            throw new ODataException(Strings.ODataBatchWriter_CannotWriteInStreamErrorForBatch);
+        }
+
+        public override async Task OnInStreamErrorAsync()
+        {
+            this.RawOutputContext.VerifyNotDisposed();
+            this.SetState(BatchWriterState.Error);
+            await this.RawOutputContext.TextWriter.FlushAsync()
+                .ConfigureAwait(false);
+
+            // The OData protocol spec does not define the behavior when an exception is encountered outside of a batch operation. The batch writer
             // should not allow WriteError in this case. Note that WCF DS Server does serialize the error in XML format when it encounters one outside of a
             // batch operation.
             throw new ODataException(Strings.ODataBatchWriter_CannotWriteInStreamErrorForBatch);
@@ -377,6 +392,191 @@ namespace Microsoft.OData.MultipartMixed
         }
 
         /// <summary>
+        /// Asynchronously ends a batch - implementation of the actual functionality.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected override async Task WriteEndBatchImplementationAsync()
+        {
+            Debug.Assert(
+                this.batchStartBoundaryWritten || this.CurrentOperationMessage == null,
+                "If not batch boundary was written we must not have an active message.");
+
+            // Write pending message data (headers, response line) for a previously unclosed message/request
+            await this.WritePendingMessageDataAsync(true)
+                .ConfigureAwait(false);
+
+            this.SetState(BatchWriterState.BatchCompleted);
+
+            // Write the end boundary for the batch
+            await ODataMultipartMixedBatchWriterUtils.WriteEndBoundaryAsync(
+                this.RawOutputContext.TextWriter,
+                this.batchBoundary,
+                !this.batchStartBoundaryWritten).ConfigureAwait(false);
+
+            // For compatibility with WCF DS we write a newline after the end batch boundary.
+            // Technically it's not needed, but it doesn't violate anything either.
+            await this.RawOutputContext.TextWriter.WriteLineAsync()
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Asynchronously starts a new changeset - implementation of the actual functionality.
+        /// </summary>
+        /// <param name="changesetId">The value for changeset boundary for multipart batch.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected override async Task WriteStartChangesetImplementationAsync(string changesetId)
+        {
+            Debug.Assert(changesetId != null, "changesetId != null");
+
+            // Write pending message data (headers, response line) for a previously unclosed message/request
+            await this.WritePendingMessageDataAsync(true)
+                .ConfigureAwait(false);
+
+            this.SetState(BatchWriterState.ChangesetStarted);
+            Debug.Assert(this.changeSetBoundary == null, "this.changeSetBoundary == null");
+            this.changeSetBoundary = ODataMultipartMixedBatchWriterUtils.CreateChangeSetBoundary(this.RawOutputContext.WritingResponse, changesetId);
+
+            // Write the boundary string
+            await ODataMultipartMixedBatchWriterUtils.WriteStartBoundaryAsync(
+                this.RawOutputContext.TextWriter,
+                this.batchBoundary,
+                !this.batchStartBoundaryWritten).ConfigureAwait(false);
+            this.batchStartBoundaryWritten = true;
+
+            // Write the changeset headers
+            await ODataMultipartMixedBatchWriterUtils.WriteChangesetPreambleAsync(
+                this.RawOutputContext.TextWriter,
+                this.changeSetBoundary).ConfigureAwait(false);
+            this.changesetStartBoundaryWritten = false;
+
+            // Set state to track dependsOnIds.
+            this.dependsOnIdsTracker.ChangeSetStarted();
+        }
+
+        /// <summary>
+        /// Asynchronously ends an active changeset - implementation of the actual functionality.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected override async Task WriteEndChangesetImplementationAsync()
+        {
+            // Write pending message data (headers, response line) for a previously unclosed message/request
+            await this.WritePendingMessageDataAsync(true)
+                .ConfigureAwait(false);
+
+            string currentChangesetBoundary = this.changeSetBoundary;
+
+            // Change the state first so we validate the change set boundary before attempting to write it.
+            this.SetState(BatchWriterState.ChangesetCompleted);
+
+            this.dependsOnIdsTracker.ChangeSetEnded();
+
+            Debug.Assert(this.changeSetBoundary != null, "this.changeSetBoundary != null");
+            this.changeSetBoundary = null;
+
+            // In the case of an empty changeset the start changeset boundary has not been written yet
+            // we will leave it like that, since we want the empty changeset to be represented only as
+            // the end changeset boundary.
+            // Due to WCF DS V2 compatibility we must not write the start boundary in this case
+            // otherwise WCF DS V2 won't be able to read it (it fails on the start-end boundary empty changeset).
+
+            // Write the end boundary for the change set
+            await ODataMultipartMixedBatchWriterUtils.WriteEndBoundaryAsync(
+                this.RawOutputContext.TextWriter,
+                currentChangesetBoundary,
+                !this.changesetStartBoundaryWritten).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataBatchOperationRequestMessage"/> for writing an operation of a batch request
+        /// - implementation of the actual functionality.
+        /// </summary>
+        /// <param name="method">The Http method to be used for this request operation.</param>
+        /// <param name="uri">The Uri to be used for this request operation.</param>
+        /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
+        /// <param name="payloadUriOption">
+        /// The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
+        /// <param name="dependsOnIds">The prerequisite request ids of this request. By default its value should be null for Multipart/Mixed
+        /// format and the dependsOnIds implicitly derived per the protocol will be used; Otherwise, non-null will be used as override after
+        /// validation.</param>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains an <see cref="ODataBatchOperationRequestMessage"/>
+        /// that can be used to write the request operation.</returns>
+        protected override async Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageImplementationAsync(
+            string method, Uri uri, string contentId, BatchPayloadUriOption payloadUriOption,
+            IEnumerable<string> dependsOnIds)
+        {
+            // Write pending message data (headers, response line) for a previously unclosed message/request
+            await this.WritePendingMessageDataAsync(true)
+                .ConfigureAwait(false);
+
+            // Create the new request operation
+            // For Multipart batch format, validate dependsOnIds if it is user explicit input, otherwise skip validation
+            // when it is implicitly derived per protocol.
+            ODataBatchOperationRequestMessage operationRequestMessage = BuildOperationRequestMessage(
+                this.RawOutputContext.OutputStream,
+                method, uri, contentId,
+                this.changeSetBoundary,
+                dependsOnIds);
+
+            this.SetState(BatchWriterState.OperationCreated);
+
+            // Write the operation's start boundary string
+            await this.WriteStartBoundaryForOperationAsync()
+                .ConfigureAwait(false);
+
+            if (contentId != null)
+            {
+                this.dependsOnIdsTracker.AddDependsOnId(contentId);
+            }
+
+            // Write the headers and request line
+            await ODataMultipartMixedBatchWriterUtils.WriteRequestPreambleAsync(
+                this.RawOutputContext.TextWriter,
+                method,
+                uri,
+                this.RawOutputContext.MessageWriterSettings.BaseUri,
+                changeSetBoundary != null,
+                contentId,
+                payloadUriOption).ConfigureAwait(false);
+
+            return operationRequestMessage;
+        }
+
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataBatchOperationResponseMessage"/> for writing an operation of a batch response - implementation of the actual functionality.
+        /// </summary>
+        /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains an <see cref="ODataBatchOperationResponseMessage"/>
+        /// that can be used to write the response operation.</returns>
+        protected override async Task<ODataBatchOperationResponseMessage> CreateOperationResponseMessageImplementationAsync(string contentId)
+        {
+            await this.WritePendingMessageDataAsync(true)
+                .ConfigureAwait(false);
+
+            // In responses we don't need to use our batch URL resolver, since there are no cross referencing URLs
+            // so use the URL resolver from the batch message instead.
+            this.CurrentOperationResponseMessage = BuildOperationResponseMessage(
+                this.RawOutputContext.OutputStream,
+                contentId,
+                this.changeSetBoundary);
+
+            this.SetState(BatchWriterState.OperationCreated);
+
+            // Write the operation's start boundary string
+            await this.WriteStartBoundaryForOperationAsync()
+                .ConfigureAwait(false);
+
+            // Write the headers and request separator line
+            await ODataMultipartMixedBatchWriterUtils.WriteResponsePreambleAsync(
+                this.RawOutputContext.TextWriter,
+                changeSetBoundary != null,
+                contentId).ConfigureAwait(false);
+
+            return this.CurrentOperationResponseMessage;
+        }
+
+        /// <summary>
         /// Writes all the pending headers and prepares the writer to write a content of the operation.
         /// </summary>
         private void StartBatchOperationContent()
@@ -453,6 +653,96 @@ namespace Microsoft.OData.MultipartMixed
 
                 // write CRLF after the headers (or request/response line if there are no headers)
                 this.RawOutputContext.TextWriter.WriteLine();
+
+                if (reportMessageCompleted)
+                {
+                    this.CurrentOperationMessage.PartHeaderProcessingCompleted();
+                    this.CurrentOperationRequestMessage = null;
+                    this.CurrentOperationResponseMessage = null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously writes all the pending headers and prepares the writer to write a content of the operation.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        private async Task StartBatchOperationContentAsync()
+        {
+            Debug.Assert(this.CurrentOperationMessage != null, "Expected non-null operation message!");
+            Debug.Assert(this.RawOutputContext.TextWriter != null, "Must have a batch writer!");
+
+            // Write the pending headers (if any)
+            await this.WritePendingMessageDataAsync(false)
+                .ConfigureAwait(false);
+
+            // Flush the text writer to make sure all buffers of the text writer
+            // are flushed to the underlying async stream
+            await this.RawOutputContext.TextWriter.FlushAsync()
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Asynchronously writes the start boundary for an operation. This is either the batch or the changeset boundary.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        private async Task WriteStartBoundaryForOperationAsync()
+        {
+            if (this.changeSetBoundary == null)
+            {
+                await ODataMultipartMixedBatchWriterUtils.WriteStartBoundaryAsync(
+                    this.RawOutputContext.TextWriter,
+                    this.batchBoundary,
+                    !this.batchStartBoundaryWritten).ConfigureAwait(false);
+                this.batchStartBoundaryWritten = true;
+            }
+            else
+            {
+                await ODataMultipartMixedBatchWriterUtils.WriteStartBoundaryAsync(
+                    this.RawOutputContext.TextWriter,
+                    this.changeSetBoundary,
+                    !this.changesetStartBoundaryWritten).ConfigureAwait(false);
+                this.changesetStartBoundaryWritten = true;
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously write any pending headers for the current operation message (if any).
+        /// </summary>
+        /// <param name="reportMessageCompleted">
+        /// A flag to control whether after writing the pending data we report writing the message to be completed or not.
+        /// </param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        private async Task WritePendingMessageDataAsync(bool reportMessageCompleted)
+        {
+            if (this.CurrentOperationMessage != null)
+            {
+                Debug.Assert(this.RawOutputContext.TextWriter != null, "Must have a batch writer if pending data exists.");
+
+                if (this.CurrentOperationResponseMessage != null)
+                {
+                    Debug.Assert(this.RawOutputContext.WritingResponse, "If the response message is available we must be writing response.");
+                    int statusCode = this.CurrentOperationResponseMessage.StatusCode;
+                    string statusMessage = HttpUtils.GetStatusMessage(statusCode);
+
+                    await this.RawOutputContext.TextWriter.WriteLineAsync(
+                        string.Concat(ODataConstants.HttpVersionInBatching, " ", statusCode, " ", statusMessage)).ConfigureAwait(false);
+                }
+
+                IEnumerable<KeyValuePair<string, string>> headers = this.CurrentOperationMessage.Headers;
+                if (headers != null)
+                {
+                    foreach (KeyValuePair<string, string> headerPair in headers)
+                    {
+                        await this.RawOutputContext.TextWriter.WriteLineAsync(
+                            string.Concat(headerPair.Key, ": ", headerPair.Value))
+                            .ConfigureAwait(false);
+                    }
+                }
+
+                // Write CRLF after the headers (or request/response line if there are no headers)
+                await this.RawOutputContext.TextWriter.WriteLineAsync()
+                    .ConfigureAwait(false);
 
                 if (reportMessageCompleted)
                 {
