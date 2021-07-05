@@ -110,12 +110,13 @@ namespace Microsoft.OData
         /// <returns>A new <see cref="ODataWriteStream"/> instance.</returns>
         internal static ODataWriteStream CreateBatchOperationWriteStream(
             Stream outputStream,
-            IODataStreamListener operationListener)
+            IODataStreamListener operationListener,
+            bool synchronous = true)
         {
             Debug.Assert(outputStream != null, "outputStream != null");
             Debug.Assert(operationListener != null, "operationListener != null");
 
-            return new ODataWriteStream(outputStream, operationListener);
+            return new ODataWriteStream(outputStream, operationListener, synchronous);
         }
 
         /// <summary>
