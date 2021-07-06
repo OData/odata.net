@@ -8,9 +8,9 @@ namespace Microsoft.OData
 {
     using System;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Text;
+    using System.Threading.Tasks;
     using Microsoft.OData.Json;
     using Microsoft.Spatial;
 
@@ -119,9 +119,7 @@ namespace Microsoft.OData
         {
             Debug.Assert(!(value is byte[]), "!(value is byte[])");
 
-            string valueAsString;
-            ODataEnumValue enumValue = value as ODataEnumValue;
-            if (enumValue != null)
+            if (value is ODataEnumValue enumValue)
             {
                 this.textWriter.Write(enumValue.Value);
             }
@@ -129,7 +127,7 @@ namespace Microsoft.OData
             {
                 PrimitiveConverter.Instance.WriteJsonLight(value, jsonWriter);
             }
-            else if (ODataRawValueUtils.TryConvertPrimitiveToString(value, out valueAsString))
+            else if (ODataRawValueUtils.TryConvertPrimitiveToString(value, out string valueAsString))
             {
                 this.textWriter.Write(valueAsString);
             }
@@ -155,6 +153,85 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Asynchronously start writing a raw output. This should only be called once.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        internal async Task StartAsync()
+        {
+            if (this.settings.HasJsonPaddingFunction())
+            {
+                await this.textWriter.WriteAsync(this.settings.JsonPCallback)
+                    .ConfigureAwait(false);
+                await this.textWriter.WriteAsync(JsonConstants.StartPaddingFunctionScope)
+                    .ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously end the writing of a raw output. This should be the last thing called.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        internal Task EndAsync()
+        {
+            if (this.settings.HasJsonPaddingFunction())
+            {
+                return this.textWriter.WriteAsync(JsonConstants.EndPaddingFunctionScope);
+            }
+
+            return TaskUtils.CompletedTask;
+        }
+
+        /// <summary>
+        /// Asynchronously converts the specified <paramref name="value"/> into its raw format and writes it to the output.
+        /// The value has to be of enumeration or primitive type. Only one WriteRawValue call should be made before this object gets disposed.
+        /// </summary>
+        /// <param name="value">The (non-binary) value to write.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        /// <remarks>We do not accept binary values here; WriteBinaryValue should be used for binary data.</remarks>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        internal Task WriteRawValueAsync(object value)
+        {
+            Debug.Assert(!(value is byte[]), "!(value is byte[])");
+
+            if (value is ODataEnumValue enumValue)
+            {
+                return this.textWriter.WriteAsync(enumValue.Value);
+            }
+
+            if (value is Geometry || value is Geography)
+            {
+                return TaskUtils.GetTaskForSynchronousOperation(
+                    () => PrimitiveConverter.Instance.WriteJsonLight(value, jsonWriter));
+            }
+
+            if (ODataRawValueUtils.TryConvertPrimitiveToString(value, out string valueAsString))
+            {
+                return this.textWriter.WriteAsync(valueAsString);
+            }
+
+            // Value is neither enum nor primitive
+            return TaskUtils.GetFaultedTask(
+                new ODataException(Strings.ODataUtils_CannotConvertValueToRawString(value.GetType().FullName)));
+        }
+
+        /// <summary>
+        /// Asynchronously flushes the RawValueWriter.
+        /// The call gets pushed to the TextWriter (if there is one). In production code, this is StreamWriter.Flush, which turns into Stream.Flush.
+        /// In the synchronous case the underlying stream is the message stream itself, which will then Flush as well.
+        /// In the async case the underlying stream is the async buffered stream, which ignores Flush call.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous flush operation.</returns>
+        internal Task FlushAsync()
+        {
+            if (this.TextWriter != null)
+            {
+                return this.TextWriter.FlushAsync();
+            }
+
+            return TaskUtils.CompletedTask;
+        }
+
+        /// <summary>
         /// Initialized a new text writer over the message payload stream.
         /// </summary>
         /// <remarks>This can only be called if the text writer was not yet initialized or it has been closed.
@@ -173,7 +250,7 @@ namespace Microsoft.OData
             {
                 nonDisposingStream = MessageStreamWrapper.CreateNonDisposingStream(this.stream);
             }
-            
+
             this.textWriter = new StreamWriter(nonDisposingStream, this.encoding) { NewLine = this.settings.MultipartNewLine };
             this.jsonWriter = new JsonWriter(this.textWriter, isIeee754Compatible: false);
         }
