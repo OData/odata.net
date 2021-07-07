@@ -121,22 +121,20 @@ namespace Microsoft.OData
         /// </summary>
         /// <returns>Task which represents the pending flush operation.</returns>
         /// <remarks>The method should not throw directly if the flush operation itself fails, it should instead return a faulted task.</remarks>
-        internal Task FlushAsync()
+        internal async Task FlushAsync()
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperationReturningTask(
-                () =>
-                {
-                    if (this.rawValueWriter != null)
-                    {
-                        this.rawValueWriter.Flush();
-                    }
+            if (this.rawValueWriter != null)
+            {
+                await this.rawValueWriter.FlushAsync()
+                    .ConfigureAwait(false);
+            }
 
-                    Debug.Assert(this.asynchronousOutputStream != null, "In async writing we must have the async buffered stream.");
-                    return this.asynchronousOutputStream.FlushAsync();
-                })
-                .FollowOnSuccessWithTask((asyncBufferedStreamFlushTask) => this.messageOutputStream.FlushAsync());
+            Debug.Assert(this.asynchronousOutputStream != null, "In async writing we must have the async buffered stream.");
+            await this.asynchronousOutputStream.FlushAsync()
+                .FollowOnSuccessWithTask((asyncBufferedStreamFlushTask) => this.messageOutputStream.FlushAsync())
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -182,11 +180,12 @@ namespace Microsoft.OData
         /// the in-stream error is written.
         /// It is the responsibility of this method to flush the output before the task finishes.
         /// </remarks>
-        internal override Task WriteInStreamErrorAsync(ODataError error, bool includeDebugInformation)
+        internal override async Task WriteInStreamErrorAsync(ODataError error, bool includeDebugInformation)
         {
             if (this.outputInStreamErrorListener != null)
             {
-                this.outputInStreamErrorListener.OnInStreamError();
+                await this.outputInStreamErrorListener.OnInStreamErrorAsync()
+                    .ConfigureAwait(false);
             }
 
             throw new ODataException(Strings.ODataMessageWriter_CannotWriteInStreamErrorForRawValues);
@@ -235,16 +234,14 @@ namespace Microsoft.OData
         /// <param name="value">The value to write.</param>
         /// <returns>A running task representing the writing of the value.</returns>
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
-        internal override Task WriteValueAsync(object value)
+        internal override async Task WriteValueAsync(object value)
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperationReturningTask(
-                () =>
-                {
-                    this.WriteValueImplementation(value);
-                    return this.FlushAsync();
-                });
+            await this.WriteValueImplementationAsync(value)
+                .ConfigureAwait(false);
+            await this.FlushAsync()
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -368,6 +365,36 @@ namespace Microsoft.OData
                 this.rawValueWriter.Start();
                 this.rawValueWriter.WriteRawValue(value);
                 this.rawValueWriter.End();
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously writes a single value as the message body.
+        /// </summary>
+        /// <param name="value">The value to write.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        /// <remarks>Once the method returns all the data should be written, the only other call after this will be Dispose on the output context.</remarks>
+        private async Task WriteValueImplementationAsync(object value)
+        {
+            byte[] binaryValue = value as byte[];
+
+            if (binaryValue != null)
+            {
+                // write the bytes directly
+                await this.OutputStream.WriteAsync(binaryValue, 0, binaryValue.Length)
+                    .ConfigureAwait(false);
+            }
+            else
+            {
+                value = this.Model.ConvertToUnderlyingTypeIfUIntValue(value);
+
+                this.InitializeRawValueWriter();
+                await this.rawValueWriter.StartAsync()
+                    .ConfigureAwait(false);
+                await this.rawValueWriter.WriteRawValueAsync(value)
+                    .ConfigureAwait(false);
+                await this.rawValueWriter.EndAsync()
+                    .ConfigureAwait(false);
             }
         }
 
