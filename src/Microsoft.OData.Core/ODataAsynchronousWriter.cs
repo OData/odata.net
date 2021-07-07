@@ -62,11 +62,12 @@ namespace Microsoft.OData
         /// Asynchronously creates a message for writing an async response.
         /// </summary>
         /// <returns>The message that can be used to write the async response.</returns>
-        public Task<ODataAsynchronousResponseMessage> CreateResponseMessageAsync()
+        public async Task<ODataAsynchronousResponseMessage> CreateResponseMessageAsync()
         {
             this.VerifyCanCreateResponseMessage(false);
 
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResponseMessageImplementation());
+            return await this.CreateResponseMessageImplementationAsync()
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -83,11 +84,12 @@ namespace Microsoft.OData
         /// Asynchronously flushes the write buffer to the underlying stream.
         /// </summary>
         /// <returns>A task instance that represents the asynchronous operation.</returns>
-        public Task FlushAsync()
+        public async Task FlushAsync()
         {
             this.VerifyCanFlush(false);
 
-            return this.rawOutputContext.FlushAsync();
+            await this.rawOutputContext.FlushAsync()
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -102,9 +104,13 @@ namespace Microsoft.OData
         }
 
         /// <inheritdoc/>
-        Task IODataOutputInStreamErrorListener.OnInStreamErrorAsync()
+        async Task IODataOutputInStreamErrorListener.OnInStreamErrorAsync()
         {
-            throw new NotImplementedException();
+            this.rawOutputContext.VerifyNotDisposed();
+            await this.rawOutputContext.TextWriter.FlushAsync()
+                .ConfigureAwait(false);
+
+            throw new ODataException(Strings.ODataAsyncWriter_CannotWriteInStreamErrorForAsync);
         }
 
         /// <summary>
@@ -181,6 +187,24 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Asynchronously creates an <see cref="ODataAsynchronousResponseMessage"/> for writing an operation of an async response - implementation of the actual functionality.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains an <see cref="ODataAsynchronousResponseMessage"/>
+        /// that can be used to write the response.</returns>
+        private async Task<ODataAsynchronousResponseMessage> CreateResponseMessageImplementationAsync()
+        {
+            var responseMessage = await ODataAsynchronousResponseMessage.CreateMessageForWritingAsync(
+                rawOutputContext.OutputStream,
+                this.WriteInnerEnvelopeAsync,
+                this.container).ConfigureAwait(false);
+
+            responseMessageCreated = true;
+
+            return responseMessage;
+        }
+
+        /// <summary>
         /// Writes the envelope for the inner HTTP message.
         /// </summary>
         /// <param name="responseMessage">The response message to write the envelope.</param>
@@ -206,6 +230,39 @@ namespace Microsoft.OData
 
             // Flush the writer since we won't be able to access it anymore.
             this.rawOutputContext.TextWriter.Flush();
+        }
+
+        /// <summary>
+        /// Asynchronously writes the envelope for the inner HTTP message.
+        /// </summary>
+        /// <param name="responseMessage">The response message to write the envelope.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        private async Task WriteInnerEnvelopeAsync(ODataAsynchronousResponseMessage responseMessage)
+        {
+            // Write response line.
+            string statusMessage = HttpUtils.GetStatusMessage(responseMessage.StatusCode);
+            
+            await this.rawOutputContext.TextWriter.WriteLineAsync(
+                string.Concat(ODataConstants.HttpVersionInAsync, " ", responseMessage.StatusCode, " ", statusMessage))
+                .ConfigureAwait(false);
+
+            // Write headers.
+            if (responseMessage.Headers != null)
+            {
+                foreach (var headerPair in responseMessage.Headers)
+                {
+                    await this.rawOutputContext.TextWriter.WriteLineAsync(string.Concat(headerPair.Key, ": ", headerPair.Value))
+                        .ConfigureAwait(false);
+                }
+            }
+
+            // Write CRLF.
+            await this.rawOutputContext.TextWriter.WriteLineAsync()
+                .ConfigureAwait(false);
+
+            // Flush the writer since we won't be able to access it anymore.
+            await this.rawOutputContext.TextWriter.FlushAsync()
+                .ConfigureAwait(false);
         }
     }
 }

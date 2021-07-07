@@ -31,6 +31,9 @@ namespace Microsoft.OData
         /// <summary>The action to write envelope for the inner message before returning the stream.</summary>
         private readonly Action<ODataAsynchronousResponseMessage> writeEnvelope;
 
+        /// <summary>The action to write envelope for the inner message asynchronously before returning the stream.</summary>
+        private readonly Func<ODataAsynchronousResponseMessage, Task> writeEnvelopeAsync;
+
         /// <summary>The dependency injection container to get related services.</summary>
         private readonly IServiceProvider container;
 
@@ -49,6 +52,30 @@ namespace Microsoft.OData
         /// <param name="stream">The stream underlying the response message.</param>
         /// <param name="statusCode">The status code to use for the async response message.</param>
         /// <param name="headers">The headers to use for the async response message.</param>
+        /// <param name="writing">true if the response message is being written; false when it is read.</param>
+        /// <param name="container">The dependency injection container to get related services.</param>
+        private ODataAsynchronousResponseMessage(
+            Stream stream,
+            int statusCode,
+            IDictionary<string, string> headers,
+            bool writing,
+            IServiceProvider container)
+        {
+            Debug.Assert(stream != null, "stream != null");
+
+            this.stream = stream;
+            this.statusCode = statusCode;
+            this.headers = headers;
+            this.writing = writing;
+            this.container = container;
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="stream">The stream underlying the response message.</param>
+        /// <param name="statusCode">The status code to use for the async response message.</param>
+        /// <param name="headers">The headers to use for the async response message.</param>
         /// <param name="writeEnvelope">The action to write envelope for the inner message before returning the stream.</param>
         /// <param name="writing">true if the response message is being written; false when it is read.</param>
         /// <param name="container">The dependency injection container to get related services.</param>
@@ -59,15 +86,30 @@ namespace Microsoft.OData
             Action<ODataAsynchronousResponseMessage> writeEnvelope,
             bool writing,
             IServiceProvider container)
+            : this(stream, statusCode, headers, writing, container)
         {
-            Debug.Assert(stream != null, "stream != null");
-
-            this.stream = stream;
-            this.statusCode = statusCode;
-            this.headers = headers;
             this.writeEnvelope = writeEnvelope;
-            this.writing = writing;
-            this.container = container;
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="stream">The stream underlying the response message.</param>
+        /// <param name="statusCode">The status code to use for the async response message.</param>
+        /// <param name="headers">The headers to use for the async response message.</param>
+        /// <param name="writeEnvelopeAsync">The delegate to asynchronously write envelope for the inner message before returning the stream.</param>
+        /// <param name="writing">true if the response message is being written; false when it is read.</param>
+        /// <param name="container">The dependency injection container to get related services.</param>
+        private ODataAsynchronousResponseMessage(
+            Stream stream,
+            int statusCode,
+            IDictionary<string, string> headers,
+            Func<ODataAsynchronousResponseMessage, Task> writeEnvelopeAsync,
+            bool writing,
+            IServiceProvider container)
+            : this(stream, statusCode, headers, writing, container)
+        {
+            this.writeEnvelopeAsync = writeEnvelopeAsync;
         }
 
         /// <summary>Gets or sets the result status code of the response message.</summary>
@@ -164,9 +206,21 @@ namespace Microsoft.OData
 
         /// <summary>Asynchronously get the stream backing for this message.</summary>
         /// <returns>The stream backing for this message.</returns>
-        public Task<Stream> GetStreamAsync()
+        public async Task<Stream> GetStreamAsync()
         {
-            return Task<Stream>.Factory.StartNew(this.GetStream);
+            // If writing response, the envelope for the inner message should be written once and only once before returning the stream.
+            if (this.writing && !this.envelopeWritten)
+            {
+                if (this.writeEnvelopeAsync != null)
+                {
+                    await this.writeEnvelopeAsync(this)
+                        .ConfigureAwait(false);
+                }
+
+                this.envelopeWritten = true;
+            }
+
+            return this.stream;
         }
 
         /// <summary>
@@ -182,6 +236,24 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Asynchronously creates an async response message that can be used to write the response content to.
+        /// </summary>
+        /// <param name="outputStream">The output stream underlying the response message.</param>
+        /// <param name="writeEnvelopeAsync">The action to write envelope for the inner message before returning the stream.</param>
+        /// <param name="container">The dependency injection container to get related services.</param>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains an <see cref="ODataAsynchronousResponseMessage"/>
+        /// that can be used to write the response content.</returns>
+        internal static Task<ODataAsynchronousResponseMessage> CreateMessageForWritingAsync(
+            Stream outputStream,
+            Func<ODataAsynchronousResponseMessage, Task> writeEnvelopeAsync,
+            IServiceProvider container)
+        {
+            return Task.FromResult(
+                new ODataAsynchronousResponseMessage(outputStream, /*statusCode*/ 0, /*headers*/ null, writeEnvelopeAsync, /*writing*/ true, container));
+        }
+
+        /// <summary>
         /// Creates an async response message that can be used to read the response content from.
         /// </summary>
         /// <param name="stream">The input stream underlying the response message.</param>
@@ -191,7 +263,7 @@ namespace Microsoft.OData
         /// <returns>An <see cref="ODataAsynchronousResponseMessage"/> that can be used to read the response content.</returns>
         internal static ODataAsynchronousResponseMessage CreateMessageForReading(Stream stream, int statusCode, IDictionary<string, string> headers, IServiceProvider container)
         {
-            return new ODataAsynchronousResponseMessage(stream, statusCode, headers, /*writeEnvelope*/null, /*writing*/false, container);
+            return new ODataAsynchronousResponseMessage(stream, statusCode, headers, /*writing*/ false, container);
         }
 
         /// <summary>
