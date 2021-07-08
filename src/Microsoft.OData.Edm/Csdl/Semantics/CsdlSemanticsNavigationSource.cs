@@ -42,8 +42,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly ConcurrentDictionary<IEdmNavigationProperty, IEdmUnknownEntitySet> unknownNavigationPropertyCache =
             new ConcurrentDictionary<IEdmNavigationProperty, IEdmUnknownEntitySet>();
 
-        private ConcurrentDictionary<IEdmNavigationProperty, IEnumerable<IEdmNavigationPropertyBinding>> navigationPropertyBindingCache = 
-            new ConcurrentDictionary<IEdmNavigationProperty, IEnumerable<IEdmNavigationPropertyBinding>>();
+        private ConcurrentDictionary<IEdmNavigationProperty, IList<IEdmNavigationPropertyBinding>> navigationPropertyBindingCache = 
+            new ConcurrentDictionary<IEdmNavigationProperty, IList<IEdmNavigationPropertyBinding>>();
 
         public CsdlSemanticsNavigationSource(CsdlSemanticsEntityContainer container, CsdlAbstractNavigationSource navigationSource)
             : base(navigationSource)
@@ -130,11 +130,20 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         {
             if (!navigationProperty.ContainsTarget)
             {
-                IEnumerable<IEdmNavigationPropertyBinding> navigationBindingList = null;
+                IList<IEdmNavigationPropertyBinding> navigationBindingList = null;
 
                 if (!navigationPropertyBindingCache.TryGetValue(navigationProperty, out navigationBindingList))
                 {
-                    navigationBindingList = this.NavigationPropertyBindings.Where(targetMapping => targetMapping.NavigationProperty == navigationProperty);
+                    navigationBindingList = new List<IEdmNavigationPropertyBinding>();
+
+                    foreach (IEdmNavigationPropertyBinding targetMapping in this.NavigationPropertyBindings)
+                    {
+                        if (targetMapping.NavigationProperty == navigationProperty)
+                        {
+                            navigationBindingList.Add(targetMapping);
+                        }
+                    }
+                    
                     navigationPropertyBindingCache[navigationProperty] = navigationBindingList;
                 }
 
