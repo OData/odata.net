@@ -155,7 +155,12 @@ namespace Microsoft.OData.UriParser
                     NonSystemToken nonSystemToken = pathToken as NonSystemToken;
                     if (nonSystemToken != null && nonSystemToken.NamedValues != null)
                     {
-                        parameterNames = nonSystemToken.NamedValues.Select(s => s.Name).ToList();
+                        parameterNames = new List<string>();
+
+                        foreach(NamedValue namedValue in nonSystemToken.NamedValues)
+                        {
+                            parameterNames.Add(namedValue.Name);
+                        }
                     }
 
                     if (parameterNames.Count > 0)

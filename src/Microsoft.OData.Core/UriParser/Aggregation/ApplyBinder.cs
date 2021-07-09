@@ -125,7 +125,12 @@ namespace Microsoft.OData.UriParser.Aggregation
                 }
             }
 
-            return mergedTokens.Concat(entitySetTokens.Values).ToList();
+            foreach(AggregateTokenBase tokenBase in entitySetTokens.Values)
+            {
+                mergedTokens.Add(tokenBase);
+            }
+
+            return mergedTokens;
         }
 
         private AggregateExpressionBase BindAggregateExpressionToken(AggregateTokenBase aggregateToken)

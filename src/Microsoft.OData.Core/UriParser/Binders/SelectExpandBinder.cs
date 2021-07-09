@@ -997,10 +997,13 @@ namespace Microsoft.OData.UriParser
             // if the selected item is "*", filter the existing property selection.
             if (itemToAdd is WildcardSelectItem)
             {
-                var shouldFilter = selectItems.Where(s => IsStructuralSelectionItem(s)).ToList();
-                foreach (var filterItem in shouldFilter)
+                for(int selectCnt=0; selectCnt< selectItems.Count; selectCnt++)
                 {
-                    selectItems.Remove(filterItem);
+                    if(IsStructuralSelectionItem(selectItems[selectCnt]))
+                    {
+                        selectItems.RemoveAt(selectCnt);
+                        selectCnt--;
+                    }
                 }
             }
 
