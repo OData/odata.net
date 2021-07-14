@@ -1162,7 +1162,7 @@ namespace Microsoft.OData.JsonLight
                     UriUtils.UriToString(nestedInfo.ContextUrl),
                     payloadKind,
                     this.jsonLightResourceDeserializer.MessageReaderSettings.ClientCustomTypeResolver,
-                    this.jsonLightResourceDeserializer.JsonLightInputContext.ReadingResponse).Path;
+                    this.jsonLightResourceDeserializer.JsonLightInputContext.ReadingResponse || this.ReadingDelta).Path;
 
                 return new ODataUri() { Path = odataPath };
             }
