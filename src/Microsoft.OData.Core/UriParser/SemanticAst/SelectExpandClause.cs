@@ -19,7 +19,7 @@ namespace Microsoft.OData.UriParser
         /// The selected properties and operations.
         /// </summary>
         /// <remarks>This list includes expanded navigations properties, which may have additional nested selections and expansions.</remarks>
-        private ReadOnlyCollection<SelectItem> selectedItems;
+        private IList<SelectItem> selectedItems;
 
         /// <summary>
         /// Gets a flag indicating that everything at this level has been selected.
@@ -36,7 +36,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="allSelected">Flag indicating if all items have been selected at this level.</param>
         public SelectExpandClause(IEnumerable<SelectItem> selectedItems, bool allSelected)
         {
-            this.selectedItems = selectedItems != null ? new ReadOnlyCollection<SelectItem>(selectedItems.ToList()) : new ReadOnlyCollection<SelectItem>(new List<SelectItem>());
+            this.selectedItems = selectedItems != null ? new List<SelectItem>(selectedItems) : new List<SelectItem>();
             this.allSelected = allSelected;
         }
 
@@ -49,7 +49,7 @@ namespace Microsoft.OData.UriParser
             get
             {
                 ////Debug.Assert(!this.usedInternalLegacyConstructor || this.selectedItems != null, "You cannot get the list of selected items until processing is complete.");
-                return this.selectedItems.AsEnumerable();
+                return new ReadOnlyCollection<SelectItem>(this.selectedItems).AsEnumerable();
             }
         }
 
@@ -76,18 +76,19 @@ namespace Microsoft.OData.UriParser
         {
             ExceptionUtils.CheckArgumentNotNull(itemToAdd, "itemToAdd");
 
-            if (this.selectedItems.Any(x => x is WildcardSelectItem) && IsStructuralOrNavigationPropertySelectionItem(itemToAdd))
+            WildcardSelectItem wildcardSelectItem = this.selectedItems.OfType<WildcardSelectItem>().FirstOrDefault();
+            if (wildcardSelectItem != null && IsStructuralOrNavigationPropertySelectionItem(itemToAdd))
             {
+                wildcardSelectItem.AddSubsumed(itemToAdd);
                 return;
             }
 
-            bool isWildcard = itemToAdd is WildcardSelectItem;
-
-            List<SelectItem> newSelectedItems = new List<SelectItem>();
-
-            foreach (SelectItem selectedItem in this.selectedItems)
+            wildcardSelectItem = itemToAdd as WildcardSelectItem;
+            if (wildcardSelectItem != null)
             {
-                if (isWildcard)
+                List<SelectItem> newSelectedItems = new List<SelectItem>();
+
+                foreach (SelectItem selectedItem in this.selectedItems)
                 {
                     if (!IsStructuralSelectionItem(selectedItem))
                     {
@@ -100,16 +101,21 @@ namespace Microsoft.OData.UriParser
                         {
                             newSelectedItems.Add(selectedItem);
                         }
+                        else
+                        {
+                            wildcardSelectItem.AddSubsumed(selectedItem);
+                        }
+                    }
+                    else
+                    {
+                        wildcardSelectItem.AddSubsumed(selectedItem);
                     }
                 }
-                else
-                {
-                    newSelectedItems.Add(selectedItem);
-                }
+
+                this.selectedItems = newSelectedItems;
             }
 
-            newSelectedItems.Add(itemToAdd);
-            this.selectedItems = new ReadOnlyCollection<SelectItem>(newSelectedItems);
+            this.selectedItems.Add(itemToAdd);
         }
 
 
