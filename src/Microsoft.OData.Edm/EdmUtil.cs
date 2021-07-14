@@ -492,6 +492,7 @@ namespace Microsoft.OData.Edm
             return null;
         }
 
+        [DebuggerStepThrough]
         internal static T CheckArgumentNull<T>([ValidatedNotNull]T value, string parameterName) where T : class
         {
             if (value == null)

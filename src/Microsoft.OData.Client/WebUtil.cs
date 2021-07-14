@@ -201,6 +201,7 @@ namespace Microsoft.OData.Client
         /// <param name="value">argument whose value needs to be checked</param>
         /// <param name="parameterName">name of the argument</param>
         /// <returns>returns the argument back</returns>
+        [DebuggerStepThrough]
         internal static T CheckArgumentNull<T>([ValidatedNotNull] T value, string parameterName) where T : class
         {
             if (value == null)

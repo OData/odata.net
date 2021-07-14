@@ -422,7 +422,7 @@ namespace Microsoft.OData.Client
         private Type ResolveTypeFromName(string wireName, Type expectedType)
         {
             Debug.Assert(!String.IsNullOrEmpty(wireName), "!String.IsNullOrEmpty(wireName)");
-            Debug.Assert(expectedType != null, "userType != null");
+            Debug.Assert(expectedType != null, "expectedType != null");
 
             // If there is a mismatch between the wireName and expected type (For e.g. wireName is Edm.Int32 and expectedType is a complex type)
             // we will return Edm.Int32 from this method and ODatalib fails stating the type kind do not match.

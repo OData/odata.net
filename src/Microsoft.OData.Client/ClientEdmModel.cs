@@ -328,7 +328,7 @@ namespace Microsoft.OData.Client
                 {
                     hierarchy.Insert(0, type);
                 }
-                while ((type = c.PlatformHelper.GetBaseType(type)) != null);
+                while ((type = c.PlatformHelper.GetBaseType(type)) != null && type != typeof(object));
             }
 
             return hierarchy.ToArray();
@@ -413,7 +413,7 @@ namespace Microsoft.OData.Client
             }
 
             if (cachedEdmType == null)
-            {
+            { 
                 Type collectionType;
                 bool isOpen = false;
                 IEdmSchemaElement edmSchemaElement = null;

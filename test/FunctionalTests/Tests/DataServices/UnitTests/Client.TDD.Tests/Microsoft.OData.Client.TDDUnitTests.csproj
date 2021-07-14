@@ -79,6 +79,7 @@
     <Compile Include="Tests\Materialization\EntryMaterializationPolicyForComplexResourceTests.cs" />
     <Compile Include="Tests\Materialization\CollectionValueMaterializationPolicyTests.cs" />
     <Compile Include="Tests\Materialization\EntryValueMaterializationPolicyUnitTests.cs" />
+    <Compile Include="Tests\Materialization\CamelCasedTypeMaterializationTests.cs" />
     <Compile Include="Tests\Materialization\ODataMaterializerTests.cs" />
     <Compile Include="Tests\Materialization\ODataMaterializerTestsProxy.cs" />
     <Compile Include="Tests\Materialization\PrimitiveValueMaterializationPolicyTests.cs" />
