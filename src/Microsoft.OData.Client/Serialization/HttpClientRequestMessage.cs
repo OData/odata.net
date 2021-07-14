@@ -470,7 +470,7 @@ namespace Microsoft.OData.Client
             {
                 if (aggregateException.InnerExceptions.Count == 1)
                 {
-                    throw ConvertToDataServiceTransportException(new WebException(aggregateException.InnerException.InnerException.ToString()));
+                    throw ConvertToDataServiceTransportException(new WebException(aggregateException.InnerException.ToString()));
                 }
                 throw;
             }
