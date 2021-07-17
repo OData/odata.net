@@ -320,7 +320,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             if (this.outOfLineAnnotations.Count > 0)
             {
                 List<CsdlSemanticsAnnotations> elementAnnotations;
-                string fullName = semanticsElement.GetAnnotationFullQualifiedName(element);
+                string fullName = semanticsElement?.GetAnnotationFullQualifiedName(element);
 
                 if (fullName != null && this.outOfLineAnnotations.TryGetValue(fullName, out elementAnnotations))
                 {
