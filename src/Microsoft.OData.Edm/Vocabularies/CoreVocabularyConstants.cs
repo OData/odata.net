@@ -44,7 +44,7 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         /// <summary>Org.OData.Core.V1.Computed</summary>
         public const string Computed = "Org.OData.Core.V1.Computed";
 
-        /// <summary>Org.OData.Core.V1.Computed</summary>
+        /// <summary>Org.OData.Core.V1.ComputedDefaultValue</summary>
         public const string ComputedDefaultValue = "Org.OData.Core.V1.ComputedDefaultValue";
 
         /// <summary>Org.OData.Core.V1.IsURL</summary>
