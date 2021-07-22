@@ -13,6 +13,7 @@ namespace Microsoft.OData.MultipartMixed
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Threading.Tasks;
     #endregion Namespaces
 
     /// <summary>
@@ -205,6 +206,133 @@ namespace Microsoft.OData.MultipartMixed
         }
 
         /// <summary>
+        /// Asynchronously write the start boundary.
+        /// </summary>
+        /// <param name="writer">Writer to which the boundary needs to be written.</param>
+        /// <param name="boundary">Boundary string.</param>
+        /// <param name="firstBoundary">true if this is the first start boundary.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        internal static async Task WriteStartBoundaryAsync(TextWriter writer, string boundary, bool firstBoundary)
+        {
+            Debug.Assert(writer != null, "writer != null");
+            Debug.Assert(boundary != null, "boundary != null");
+
+            // Write the CRLF that belongs to the boundary (see RFC 2046, Section 5.1.1)
+            // but only if it's not the first boundary, the new line is not required by the boundary
+            // and we don't want to write it unless necessary.
+            if (!firstBoundary)
+            {
+                await writer.WriteLineAsync()
+                    .ConfigureAwait(false);
+            }
+
+            await writer.WriteLineAsync(string.Concat("--", boundary))
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Asynchronously write the end boundary.
+        /// </summary>
+        /// <param name="writer">Writer to which the end boundary needs to be written.</param>
+        /// <param name="boundary">Boundary string.</param>
+        /// <param name="missingStartBoundary">true if there was no start boundary written before this end boundary.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        internal static async Task WriteEndBoundaryAsync(TextWriter writer, string boundary, bool missingStartBoundary)
+        {
+            Debug.Assert(writer != null, "writer != null");
+            Debug.Assert(boundary != null, "boundary != null");
+
+            // Write the CRLF that belongs to the boundary (see RFC 2046, Section 5.1.1)
+            // but only if it's not the only boundary, the new line is not required by the first boundary
+            // and we don't want to write it unless necessary.
+            if (!missingStartBoundary)
+            {
+                await writer.WriteLineAsync()
+                    .ConfigureAwait(false);
+            }
+
+            // Note that we don't write a newline AFTER the end boundary since there's no need to.
+            await writer.WriteAsync(string.Concat("--", boundary, "--"))
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Asynchronously writes the headers, (optional) Content-ID and the request line.
+        /// </summary>
+        /// <param name="writer">Writer to write to.</param>
+        /// <param name="httpMethod">The Http method to be used for this request operation.</param>
+        /// <param name="uri">The Uri to be used for this request operation.</param>
+        /// <param name="baseUri">The service root Uri to be used for this request operation.</param>
+        /// <param name="inChangesetBound">Whether we are in changeset bound.</param>
+        /// <param name="contentId">The Content-ID value to write in changeset head.</param>
+        /// <param name="payloadUriOption">The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        internal static async Task WriteRequestPreambleAsync(
+            TextWriter writer,
+            string httpMethod,
+            Uri uri,
+            Uri baseUri,
+            bool inChangesetBound,
+            string contentId,
+            BatchPayloadUriOption payloadUriOption)
+        {
+            Debug.Assert(writer != null, "writer != null");
+            Debug.Assert(uri != null, "uri != null");
+            Debug.Assert(uri.IsAbsoluteUri || UriUtils.UriToString(uri).StartsWith("$", StringComparison.Ordinal), "uri.IsAbsoluteUri || uri.OriginalString.StartsWith(\"$\")");
+
+            // Write the headers
+            await WriteHeadersAsync(writer, inChangesetBound, contentId)
+                .ConfigureAwait(false);
+
+            // Write separator line between headers and the request line
+            await writer.WriteLineAsync()
+                .ConfigureAwait(false);
+
+            // Write request line
+            await WriteRequestUriAsync(writer, httpMethod, uri, baseUri, payloadUriOption)
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Asynchronously writes the headers and response line.
+        /// </summary>
+        /// <param name="writer">Writer to write to.</param>
+        /// <param name="inChangesetBound">Whether we are in changeset bound.</param>
+        /// <param name="contentId">The Content-ID value to write in changeset head.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        internal static async Task WriteResponsePreambleAsync(TextWriter writer, bool inChangesetBound, string contentId)
+        {
+            Debug.Assert(writer != null, "writer != null");
+
+            // Write the headers
+            await WriteHeadersAsync(writer, inChangesetBound, contentId)
+                .ConfigureAwait(false);
+
+            // Write separator line between headers and the response line
+            await writer.WriteLineAsync()
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Asynchronously writes the preamble for a changeset (e.g., the Content-Type header).
+        /// </summary>
+        /// <param name="writer">Writer to write to.</param>
+        /// <param name="changesetBoundary">The boundary string to use for the changeset.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        internal static async Task WriteChangesetPreambleAsync(TextWriter writer, string changesetBoundary)
+        {
+            Debug.Assert(changesetBoundary != null, "changesetBoundary != null");
+
+            string multipartContentType = CreateMultipartMixedContentType(changesetBoundary);
+            await writer.WriteLineAsync(string.Concat(ODataConstants.ContentTypeHeader, ": ", multipartContentType))
+                .ConfigureAwait(false);
+
+            // Write separator line between headers and first changeset operation
+            await writer.WriteLineAsync()
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Writes the headers.
         /// </summary>
         /// <param name="writer">Writer to write headers.</param>
@@ -241,7 +369,7 @@ namespace Microsoft.OData.MultipartMixed
                         break;
 
                     case BatchPayloadUriOption.AbsoluteUriUsingHostHeader:
-                        string absoluteResourcePath = absoluteUriString.Substring(absoluteUriString.IndexOf('/', absoluteUriString.IndexOf("//", StringComparison.Ordinal) + 2));
+                        string absoluteResourcePath = ExtractAbsoluteResourcePath(absoluteUriString);
                         writer.WriteLine("{0} {1} {2}", httpMethod, absoluteResourcePath, ODataConstants.HttpVersionInBatching);
                         writer.WriteLine("Host: {0}:{1}", uri.Host, uri.Port);
                         break;
@@ -259,6 +387,87 @@ namespace Microsoft.OData.MultipartMixed
             {
                 writer.WriteLine("{0} {1} {2}", httpMethod, UriUtils.UriToString(uri), ODataConstants.HttpVersionInBatching);
             }
+        }
+
+        /// <summary>
+        /// Asynchronously writes the headers.
+        /// </summary>
+        /// <param name="writer">Writer to write headers.</param>
+        /// <param name="inChangesetBound">Whether we are in changeset bound.</param>
+        /// <param name="contentId">The Content-ID value to write in changeset head.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        private static async Task WriteHeadersAsync(TextWriter writer, bool inChangesetBound, string contentId)
+        {
+            await writer.WriteLineAsync(string.Concat(ODataConstants.ContentTypeHeader, ": ", MimeConstants.MimeApplicationHttp))
+                .ConfigureAwait(false);
+            await writer.WriteLineAsync(string.Concat(ODataConstants.ContentTransferEncoding, ": ", ODataConstants.BatchContentTransferEncoding))
+                .ConfigureAwait(false);
+
+            if (inChangesetBound && contentId != null)
+            {
+                await writer.WriteLineAsync(string.Concat(ODataConstants.ContentIdHeader, ": ", contentId))
+                .ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously writes the request line.
+        /// </summary>
+        /// <param name="writer">Writer to write request uri.</param>
+        /// <param name="httpMethod">The Http method to be used for this request operation.</param>
+        /// <param name="uri">The Uri to be used for this request operation.</param>
+        /// <param name="baseUri">The service root Uri to be used for this request operation.</param>
+        /// <param name="payloadUriOption">The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        private static async Task WriteRequestUriAsync(TextWriter writer, string httpMethod, Uri uri, Uri baseUri, BatchPayloadUriOption payloadUriOption)
+        {
+            if (uri.IsAbsoluteUri)
+            {
+                string absoluteUriString = uri.AbsoluteUri;
+
+                switch (payloadUriOption)
+                {
+                    case BatchPayloadUriOption.AbsoluteUri:
+                        await writer.WriteLineAsync(string.Concat(httpMethod, " ", UriUtils.UriToString(uri), " ", ODataConstants.HttpVersionInBatching))
+                            .ConfigureAwait(false);
+                        break;
+
+                    case BatchPayloadUriOption.AbsoluteUriUsingHostHeader:
+                        string absoluteResourcePath = ExtractAbsoluteResourcePath(absoluteUriString);
+
+                        await writer.WriteLineAsync(string.Concat(httpMethod, " ", absoluteResourcePath, " ", ODataConstants.HttpVersionInBatching))
+                            .ConfigureAwait(false);
+                        await writer.WriteLineAsync(string.Concat("Host: ", uri.Host, ":", uri.Port))
+                            .ConfigureAwait(false);
+                        break;
+
+                    case BatchPayloadUriOption.RelativeUri:
+                        Debug.Assert(baseUri != null, "baseUri != null");
+                        string baseUriString = UriUtils.UriToString(baseUri);
+
+                        Debug.Assert(absoluteUriString.StartsWith(baseUriString, StringComparison.Ordinal), "absoluteUriString.StartsWith(baseUriString)");
+                        string relativeResourcePath = absoluteUriString.Substring(baseUriString.Length);
+
+                        await writer.WriteLineAsync(string.Concat(httpMethod, " ", relativeResourcePath, " ", ODataConstants.HttpVersionInBatching))
+                            .ConfigureAwait(false);
+                        break;
+                }
+            }
+            else
+            {
+                await writer.WriteLineAsync(string.Concat(httpMethod, " ", UriUtils.UriToString(uri), " ", ODataConstants.HttpVersionInBatching))
+                    .ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Extracts absolute resource path from an absolute Uri string.
+        /// </summary>
+        /// <param name="absoluteUriString">Absolute Uri string.</param>
+        /// <returns>Absolute resource path.</returns>
+        private static string ExtractAbsoluteResourcePath(string absoluteUriString)
+        {
+            return absoluteUriString.Substring(absoluteUriString.IndexOf('/', absoluteUriString.IndexOf("//", StringComparison.Ordinal) + 2));
         }
     }
 }

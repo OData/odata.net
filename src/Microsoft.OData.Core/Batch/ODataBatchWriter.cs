@@ -869,8 +869,6 @@ namespace Microsoft.OData
             this.currentOperationContentId = contentId;
         }
 
-
-
         /// <summary>
         /// Increases the size of the current batch message; throws if the allowed limit is exceeded.
         /// </summary>
