@@ -296,6 +296,46 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         }
 
         [Fact]
+        public async void ReadDeltaFeedTest()
+        {
+            string payload = "{\"" +
+                                                "@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet/$delta\"," +
+                                                 "\"value\":[" +
+                                                    "{" +
+                                                         "\"ID\":101,\"Name\":\"Alice\"" +
+                                                    "}" +
+                                                    "]" +
+                                            "}";
+            InMemoryMessage message = new InMemoryMessage();
+            message.SetHeader("Content-Type", "application/json;odata.metadata=minimal");
+            message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
+            List<ODataDeltaResourceSet> feedList = new List<ODataDeltaResourceSet>();
+
+            using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, null, ModelWithFunction))
+            {
+                var result = await messageReader.DetectPayloadKindAsync();
+
+                Assert.Equal(ODataPayloadKind.Delta, result.Single().PayloadKind);
+
+                var reader = await messageReader.CreateODataDeltaResourceSetReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.DeltaResourceSetEnd:
+                            feedList.Add(reader.Item as ODataDeltaResourceSet);
+                            break;
+                    }
+                }
+            }
+                        
+            Assert.Single(feedList);
+        }
+
+
+
+
+        [Fact]
         public void WritingFeedExpandWithCollectionContainedElement()
         {
             ODataItem[] itemsToWrite = new ODataItem[]
