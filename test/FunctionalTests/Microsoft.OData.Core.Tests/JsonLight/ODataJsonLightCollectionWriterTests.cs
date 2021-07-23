@@ -165,7 +165,7 @@ namespace Microsoft.OData.Tests.JsonLight
             {
                 SerializationInfo = new ODataCollectionStartSerializationInfo
                 {
-                    CollectionTypeName = "Collection(Product)"
+                    CollectionTypeName = "Collection(NS.Product)"
                 }
             };
 
@@ -180,7 +180,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 model,
                 itemTypeReference);
 
-            Assert.Equal("{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(Product)\"," +
+            Assert.Equal("{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(NS.Product)\"," +
                 "\"value\":[", result);
         }
 
@@ -213,7 +213,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 model,
                 itemTypeReference);
 
-            Assert.Equal("{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(Product)\"," +
+            Assert.Equal("{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(NS.Product)\"," +
                 "\"value\":[{\"Id\":1,\"Name\":\"Pencil\"}", result);
         }
 
@@ -313,7 +313,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 model,
                 itemTypeReference);
 
-            Assert.Equal("{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(Product)\"," +
+            Assert.Equal("{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(NS.Product)\"," +
                 "\"value\":[{\"Id\":1,\"Name\":\"Pencil\"},{\"Id\":2,\"Name\":\"Paper\"}]}", result);
         }
 
@@ -437,7 +437,7 @@ namespace Microsoft.OData.Tests.JsonLight
             {
                 SerializationInfo = new ODataCollectionStartSerializationInfo
                 {
-                    CollectionTypeName = "Collection(Product)"
+                    CollectionTypeName = "Collection(NS.Product)"
                 }
             };
         }
