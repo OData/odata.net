@@ -7,6 +7,7 @@
 namespace Microsoft.Test.OData.Services.ODataWCFService
 {
     using System.Collections.Generic;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.SampleService.Models.ModelRefDemo;
@@ -444,10 +445,10 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             return ModelRefInMemoryModel.CreateModelRefServiceModel();
         }
 
-        protected override void ConfigureContainer(IContainerBuilder builder)
+        protected override void ConfigureContainer(IServiceCollection services)
         {
-            base.ConfigureContainer(builder);
-            builder.AddService(ServiceLifetime.Scoped, sp => this.edmModel);
+            base.ConfigureContainer(services);
+            services.AddScoped(sp => this.edmModel);
         }
     }
 }

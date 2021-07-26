@@ -298,7 +298,7 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal("{\"FunFacts@favorite.Coffee\":\"Cappuccino\",\"FunFacts@favorite.Day\":\"Monday\"", result);
         }
 
-        private JsonLightInstanceAnnotationWriter CreateJsonLightInstanceAnnotationWriter(bool writingResponse, IServiceProvider container = null, bool isAsync = false)
+        private JsonLightInstanceAnnotationWriter CreateJsonLightInstanceAnnotationWriter(bool writingResponse, IServiceProvider serviceProvider = null, bool isAsync = false)
         {
             var messageInfo = new ODataMessageInfo
             {
@@ -312,7 +312,7 @@ namespace Microsoft.OData.Tests.Json
                 IsResponse = writingResponse,
                 IsAsync = isAsync,
                 Model = model,
-                Container = container
+                ServiceProvider = serviceProvider
             };
             var context = new ODataJsonLightOutputContext(messageInfo, this.settings);
             this.jsonLightValueSerializer = new ODataJsonLightValueSerializer(context);

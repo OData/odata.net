@@ -15,7 +15,7 @@ namespace Microsoft.Test.OData.Tests.Client.Common
 
     /// An implementation of IODataRequestMessageAsync that uses an HttpWebRequest under the covers.
     /// In ODataLibrary, a message is an abstraction which consists of stream and header interfaces that hides the details of stream-reading/writing.
-    public class HttpWebRequestMessage : IODataRequestMessageAsync, IContainerProvider
+    public class HttpWebRequestMessage : IODataRequestMessageAsync, IServiceCollectionProvider
     {
         private readonly HttpWebRequest request;
         private bool lockedHeaders = false;
@@ -94,7 +94,7 @@ namespace Microsoft.Test.OData.Tests.Client.Common
 
             return new HttpWebResponseMessage((HttpWebResponse)response)
             {
-                Container = this.Container
+                ServiceProvider = this.ServiceProvider
             };
         }
 
@@ -129,7 +129,7 @@ namespace Microsoft.Test.OData.Tests.Client.Common
             }
         }
 
-        public IServiceProvider Container { get; set; }
+        public IServiceProvider ServiceProvider { get; set; }
     }
 }
 

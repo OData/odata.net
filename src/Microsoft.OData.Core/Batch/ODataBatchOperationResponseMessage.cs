@@ -18,7 +18,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Message representing an operation in a batch response.
     /// </summary>
-    public sealed class ODataBatchOperationResponseMessage : IODataResponseMessageAsync, IODataPayloadUriConverter, IContainerProvider
+    public sealed class ODataBatchOperationResponseMessage : IODataResponseMessageAsync, IODataPayloadUriConverter, IServiceCollectionProvider
     {
         /// <summary>The Content-ID for this response message.</summary>
         public readonly string ContentId;
@@ -59,7 +59,7 @@ namespace Microsoft.OData
 
             this.message = new ODataBatchOperationMessage(contentStreamCreatorFunc, headers, operationListener, payloadUriConverter, writing);
             this.ContentId = contentId;
-            this.Container = container;
+            this.ServiceProvider = container;
             this.GroupId = groupId;
         }
 
@@ -89,7 +89,7 @@ namespace Microsoft.OData
         /// <summary>
         /// The dependency injection container to get related services.
         /// </summary>
-        public IServiceProvider Container { get; private set; }
+        public IServiceProvider ServiceProvider { get; private set; }
 
         /// <summary>
         /// The id of the group or change set that this response message is part of.

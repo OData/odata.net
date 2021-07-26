@@ -10,9 +10,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.OData.Core.Tests.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.JsonLight;
-using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 
 namespace Microsoft.OData.Tests.JsonLight
@@ -4122,7 +4122,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 MediaType = new ODataMediaType("application", "json"),
                 IsAsync = false,
                 Model = model ?? new EdmModel(),
-                Container = ContainerBuilderHelper.BuildContainer(null)
+                ServiceProvider = ServiceProviderHelper.BuildServiceProvider(null)
             };
 
             using (var inputContext = new ODataJsonLightInputContext(
@@ -4278,7 +4278,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 MediaType = new ODataMediaType("application", "json"),
                 IsAsync = false,
                 Model = model ?? new EdmModel(),
-                Container = ContainerBuilderHelper.BuildContainer(null)
+                ServiceProvider = ServiceProviderHelper.BuildServiceProvider(null)
             };
 
             var inputContext = new ODataJsonLightInputContext(
@@ -4559,7 +4559,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 IsResponse = isResponse,
                 IsAsync = isAsync,
                 Model = this.Model,
-                Container = ContainerBuilderHelper.BuildContainer(null)
+                ServiceProvider = ServiceProviderHelper.BuildServiceProvider(null)
             };
 
             return new ODataJsonLightInputContext(new StringReader(payload), messageInfo, this.messageReaderSettings);

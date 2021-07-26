@@ -16,6 +16,7 @@ namespace Microsoft.OData
     using System.Text;
     using System.Threading.Tasks;
     using System.Xml;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
     #endregion Namespaces
@@ -42,7 +43,7 @@ namespace Microsoft.OData
         private readonly IODataPayloadUriConverter payloadUriConverter;
 
         /// <summary>The optional dependency injection container to get related services for message reading.</summary>
-        private readonly IServiceProvider container;
+        private readonly IServiceProvider serviceProvider;
 
         /// <summary>The resolver to use when determining an entity set's element type.</summary>
         private readonly EdmTypeResolver edmTypeResolver;
@@ -103,14 +104,14 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentNotNull(requestMessage, "requestMessage");
 
-            this.container = GetContainer(requestMessage);
-            this.settings = ODataMessageReaderSettings.CreateReaderSettings(this.container, settings);
+            this.serviceProvider = GetContainer(requestMessage);
+            this.settings = ODataMessageReaderSettings.CreateReaderSettings(this.serviceProvider, settings);
             ReaderValidationUtils.ValidateMessageReaderSettings(this.settings, /*readingResponse*/ false);
 
             this.readingResponse = false;
             this.message = new ODataRequestMessage(requestMessage, /*writing*/ false, this.settings.EnableMessageStreamDisposal, this.settings.MessageQuotas.MaxReceivedMessageSize);
             this.payloadUriConverter = requestMessage as IODataPayloadUriConverter;
-            this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.container);
+            this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.serviceProvider);
 
             // Validate OData version against request message.
             ODataVersion requestedVersion = ODataUtilsInternal.GetODataVersion(this.message, this.settings.MaxProtocolVersion);
@@ -119,7 +120,7 @@ namespace Microsoft.OData
                 throw new ODataException(Strings.ODataUtils_MaxProtocolVersionExceeded(ODataUtils.ODataVersionToString(requestedVersion), ODataUtils.ODataVersionToString(this.settings.MaxProtocolVersion)));
             }
 
-            this.model = model ?? GetModel(this.container);
+            this.model = model ?? GetModel(this.serviceProvider);
             this.edmTypeResolver = new EdmTypeReaderResolver(this.model, this.settings.ClientCustomTypeResolver);
         }
 
@@ -148,14 +149,14 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentNotNull(responseMessage, "responseMessage");
 
-            this.container = GetContainer(responseMessage);
-            this.settings = ODataMessageReaderSettings.CreateReaderSettings(this.container, settings);
+            this.serviceProvider = GetContainer(responseMessage);
+            this.settings = ODataMessageReaderSettings.CreateReaderSettings(this.serviceProvider, settings);
             ReaderValidationUtils.ValidateMessageReaderSettings(this.settings, /*readingResponse*/ true);
 
             this.readingResponse = true;
             this.message = new ODataResponseMessage(responseMessage, /*writing*/ false, this.settings.EnableMessageStreamDisposal, this.settings.MessageQuotas.MaxReceivedMessageSize);
             this.payloadUriConverter = responseMessage as IODataPayloadUriConverter;
-            this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.container);
+            this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.serviceProvider);
 
             // Validate OData version against response message.
             ODataVersion requestedVersion = ODataUtilsInternal.GetODataVersion(this.message, this.settings.MaxProtocolVersion);
@@ -164,7 +165,7 @@ namespace Microsoft.OData
                 throw new ODataException(Strings.ODataUtils_MaxProtocolVersionExceeded(ODataUtils.ODataVersionToString(requestedVersion), ODataUtils.ODataVersionToString(this.settings.MaxProtocolVersion)));
             }
 
-            this.model = model ?? GetModel(this.container);
+            this.model = model ?? GetModel(this.serviceProvider);
             this.edmTypeResolver = new EdmTypeReaderResolver(this.model, this.settings.ClientCustomTypeResolver);
 
             // If the Preference-Applied header on the response message contains an annotation filter, we set the filter
@@ -890,8 +891,8 @@ namespace Microsoft.OData
         private static IServiceProvider GetContainer<T>(T message)
             where T : class
         {
-            var containerProvider = message as IContainerProvider;
-            return containerProvider == null ? null : containerProvider.Container;
+            var containerProvider = message as IServiceCollectionProvider;
+            return containerProvider == null ? null : containerProvider.ServiceProvider;
         }
 
         private static IEdmModel GetModel(IServiceProvider container)
@@ -903,13 +904,13 @@ namespace Microsoft.OData
         {
             if (this.messageInfo == null)
             {
-                if (this.container == null)
+                if (this.serviceProvider == null)
                 {
                     this.messageInfo = new ODataMessageInfo();
                 }
                 else
                 {
-                    this.messageInfo = this.container.GetRequiredService<ODataMessageInfo>();
+                    this.messageInfo = this.serviceProvider.GetRequiredService<ODataMessageInfo>();
                 }
 
                 this.messageInfo.Encoding = this.encoding;
@@ -918,7 +919,7 @@ namespace Microsoft.OData
                 this.messageInfo.MediaType = this.contentType;
                 this.messageInfo.Model = this.model;
                 this.messageInfo.PayloadUriConverter = this.payloadUriConverter;
-                this.messageInfo.Container = this.container;
+                this.messageInfo.ServiceProvider = this.serviceProvider;
                 this.messageInfo.MessageStream = messageStream;
                 this.messageInfo.PayloadKind = this.readerPayloadKind;
             }

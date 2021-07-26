@@ -7,9 +7,9 @@
 using System;
 using System.IO;
 using System.Linq;
+using Microsoft.OData.Core.Tests.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.JsonLight;
-using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
@@ -406,7 +406,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
                 MediaType = new ODataMediaType("application", "json"),
                 IsAsync = false,
                 Model = this.userModel,
-                Container = ContainerBuilderHelper.BuildContainer(null)
+                ServiceProvider = ServiceProviderHelper.BuildServiceProvider(null)
             };
 
             using (var inputContext = new ODataJsonLightInputContext(

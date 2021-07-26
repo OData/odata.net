@@ -13,6 +13,7 @@ namespace Microsoft.OData.JsonLight
     using System.IO;
     using System.Text;
     using System.Threading.Tasks;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Json;
     #endregion Namespaces
@@ -135,7 +136,7 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(messageWriterSettings != null, "messageWriterSettings != null");
 
             bool ieee754CompatibleSetToTrue = (messageInfo.MediaType != null) ? messageInfo.MediaType.HasIeee754CompatibleSetToTrue() : false;
-            this.jsonWriter = CreateJsonWriter(messageInfo.Container, stream, ieee754CompatibleSetToTrue, messageWriterSettings, messageInfo.Encoding);
+            this.jsonWriter = CreateJsonWriter(messageInfo.ServiceProvider, stream, ieee754CompatibleSetToTrue, messageWriterSettings, messageInfo.Encoding);
 
             this.metadataLevel = new JsonMinimalMetadataLevel();
             this.propertyCacheHandler = new PropertyCacheHandler();

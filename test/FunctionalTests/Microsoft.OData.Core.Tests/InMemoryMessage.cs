@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Tests
 {
-    public class InMemoryMessage : IODataRequestMessage, IODataResponseMessage, IContainerProvider, IDisposable
+    public class InMemoryMessage : IODataRequestMessage, IODataResponseMessage, IServiceCollectionProvider, IDisposable
         , IODataRequestMessageAsync, IODataResponseMessageAsync
     {
         private readonly Dictionary<string, string> headers;
@@ -34,7 +34,7 @@ namespace Microsoft.OData.Tests
 
         public Stream Stream { get; set; }
 
-        public IServiceProvider Container { get; set; }
+        public IServiceProvider ServiceProvider { get; set; }
 
         public string GetHeader(string headerName)
         {

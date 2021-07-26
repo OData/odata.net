@@ -4,14 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Test.OData.Services.ODataWCFService
+namespace Microsoft.Test.OData.Services.ODataWCFService 
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using Microsoft.OData;
 
-    class ODataRequestMessage : IODataRequestMessage, IContainerProvider
+    class ODataRequestMessage : IODataRequestMessage, IServiceCollectionProvider
     {
         private Stream body;
         private Dictionary<string, string> headers;
@@ -75,6 +75,6 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
 
         public string Method { get; set; }
 
-        public IServiceProvider Container { get; set; }
+        public IServiceProvider ServiceProvider { get; set; }
     }
 }

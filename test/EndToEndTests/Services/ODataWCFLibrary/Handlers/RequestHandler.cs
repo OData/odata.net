@@ -233,7 +233,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
         {
             return new ODataRequestMessage(messageBody, this.RequestHeaders, this.RequestUri, this.HttpMethod.ToString())
             {
-                Container = this.RequestContainer
+                ServiceProvider = this.RequestContainer
             };
         }
 
@@ -241,7 +241,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
         {
             return new ODataResponseMessage(stream, 200)
             {
-                Container = this.RequestContainer
+                ServiceProvider = this.RequestContainer
             };
         }
 

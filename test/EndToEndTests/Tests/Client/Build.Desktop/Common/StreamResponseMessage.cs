@@ -14,7 +14,7 @@ namespace Microsoft.Test.OData.Tests.Client.Common
 
     /// An implementation of IODataResponseMessage.
     /// In ODataLibrary, a message is an abstraction which consists of stream and header interfaces that hides the details of stream-reading/writing.
-    public class StreamResponseMessage : IODataResponseMessage, IContainerProvider
+    public class StreamResponseMessage : IODataResponseMessage, IServiceCollectionProvider
     {
         private readonly Stream stream;
         private readonly Dictionary<string, string> headers = new Dictionary<string, string>();
@@ -48,6 +48,6 @@ namespace Microsoft.Test.OData.Tests.Client.Common
             return this.stream;
         }
 
-        public IServiceProvider Container { get; set; }
+        public IServiceProvider ServiceProvider { get; set; }
     }
 }

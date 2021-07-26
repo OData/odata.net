@@ -8,9 +8,9 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.DataSource
 {
     using System;
     using System.Threading;
-    using Microsoft.OData;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.OData.Core.Tests.DependencyInjection;
     using Microsoft.OData.Edm;
-    using Microsoft.Test.OData.DependencyInjection;
 
     [Serializable]
     public abstract class ODataReflectionDataSource : IODataDataSource
@@ -85,7 +85,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.DataSource
             {
                 if (this.container == null)
                 {
-                    this.container = ContainerBuilderHelper.BuildContainer(this.ConfigureContainer);
+                    this.container = ServiceProviderHelper.BuildServiceProvider(this.ConfigureContainer);
                 }
 
                 return this.container;
@@ -98,9 +98,9 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.DataSource
 
         protected abstract IEdmModel CreateModel();
 
-        protected virtual void ConfigureContainer(IContainerBuilder builder)
+        protected virtual void ConfigureContainer(IServiceCollection serviceProvider)
         {
-            builder.AddService(ServiceLifetime.Singleton, sp => this.CreateModel());
+            serviceProvider.AddSingleton(sp => this.CreateModel());
         }
     }
 }

@@ -6,6 +6,9 @@
 
 using System;
 using System.IO;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Xunit;
@@ -562,10 +565,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             var message = new InMemoryMessage() { Stream = new MemoryStream() };
             if (stringEscapeOption != null)
             {
-                var containerBuilder = new Test.OData.DependencyInjection.TestContainerBuilder();
-                containerBuilder.AddDefaultODataServices();
-                containerBuilder.AddService<IJsonWriterFactory>(ServiceLifetime.Singleton, sp => new DefaultJsonWriterFactory(stringEscapeOption.Value));
-                message.Container = containerBuilder.BuildContainer();
+                IServiceCollection services = new ServiceCollection().AddDefaultODataServices();
+                services.AddSingleton<IJsonWriterFactory>(sp => new DefaultJsonWriterFactory(stringEscapeOption.Value));
+                message.ServiceProvider = services.BuildServiceProvider();
             }
 
             var writerSettings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false };

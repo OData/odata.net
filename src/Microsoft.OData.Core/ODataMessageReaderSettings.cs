@@ -7,6 +7,7 @@
 namespace Microsoft.OData
 {
     using System;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.OData.Buffers;
     using Microsoft.OData.Edm;
 

@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.Core.Tests.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Vocabularies;
@@ -16,8 +18,8 @@ using Microsoft.OData.Edm.Vocabularies.V1;
 using Microsoft.OData.Json;
 using Microsoft.OData.JsonLight;
 using Microsoft.Spatial;
-using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
+
 #if NETCOREAPP
 using System.Text.Json;
 #endif
@@ -611,9 +613,9 @@ namespace Microsoft.OData.Tests.JsonLight
                 Value = new ODataJsonElementValue(jsonDocument.RootElement)
             };
 
-            Action<IContainerBuilder> configureServices = (IContainerBuilder builder) =>
+            Action<IServiceCollection> configureServices = (IServiceCollection builder) =>
             {
-                builder.AddService<IJsonWriterFactory>(ServiceLifetime.Singleton, _ => ODataUtf8JsonWriterFactory.Default);
+                builder.AddSingleton<IJsonWriterFactory>(_ => ODataUtf8JsonWriterFactory.Default);
             };
 
             var result = SerializeProperty(null, property, configureServices);
@@ -627,7 +629,7 @@ namespace Microsoft.OData.Tests.JsonLight
         /// <param name="odataProperty">The property to serialize.</param>
         /// <param name="configureServices">Action to add custom services to the service provider.</param>
         /// <returns>A string of JSON text, where the given ODataProperty has been serialized and wrapped in a JSON object.</returns>
-        private string SerializeProperty(IEdmStructuredType owningType, ODataProperty odataProperty, Action<IContainerBuilder> configureServices = null)
+        private string SerializeProperty(IEdmStructuredType owningType, ODataProperty odataProperty, Action<IServiceCollection> configureServices = null)
         {
             MemoryStream outputStream = new MemoryStream();
             ODataJsonLightOutputContext jsonLightOutputContext = this.CreateJsonLightOutputContext(outputStream, configureServices);
@@ -649,7 +651,7 @@ namespace Microsoft.OData.Tests.JsonLight
             return result;
         }
 
-        private ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, Action<IContainerBuilder> configureServices = null)
+        private ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, Action<IServiceCollection> configureServices = null)
         {
             var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
             settings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
@@ -667,10 +669,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
             if (configureServices != null)
             {
-                TestContainerBuilder containerBuilder = new TestContainerBuilder();
-                containerBuilder.AddDefaultODataServices();
-                configureServices(containerBuilder);
-                messageInfo.Container = containerBuilder.BuildContainer();
+                messageInfo.ServiceProvider = ServiceProviderHelper.BuildServiceProvider(configureServices);
             }
 
             return new ODataJsonLightOutputContext(messageInfo, settings);

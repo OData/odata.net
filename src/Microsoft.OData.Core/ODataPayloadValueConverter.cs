@@ -9,6 +9,7 @@ namespace Microsoft.OData
     using System;
     using System.Diagnostics;
     using System.Globalization;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Json;
     using Microsoft.OData.Metadata;

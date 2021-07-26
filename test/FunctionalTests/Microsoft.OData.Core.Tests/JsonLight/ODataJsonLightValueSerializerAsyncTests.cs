@@ -475,7 +475,7 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.Equal("\"CjEyMzQ1Njc4OTA=\"", result);
         }
 
-        private ODataJsonLightValueSerializer CreateODataJsonLightValueSerializer(bool writingResponse, IServiceProvider container = null, bool isAsync = false)
+        private ODataJsonLightValueSerializer CreateODataJsonLightValueSerializer(bool writingResponse, IServiceProvider serviceProvider = null, bool isAsync = false)
         {
             var messageInfo = new ODataMessageInfo
             {
@@ -489,7 +489,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 IsResponse = writingResponse,
                 IsAsync = isAsync,
                 Model = this.model,
-                Container = container
+                ServiceProvider = serviceProvider
             };
             var context = new ODataJsonLightOutputContext(messageInfo, this.settings);
             return new ODataJsonLightValueSerializer(context);
@@ -500,9 +500,9 @@ namespace Microsoft.OData.Tests.JsonLight
         /// then runs the given test code asynchronously,
         /// then flushes and reads the stream back as a string for customized verification.
         /// </summary>
-        private async Task<string> SetupJsonLightValueSerializerAndRunTestAsync(Func<ODataJsonLightValueSerializer, Task> func, IServiceProvider container = null)
+        private async Task<string> SetupJsonLightValueSerializerAndRunTestAsync(Func<ODataJsonLightValueSerializer, Task> func, IServiceProvider serviceProvider = null)
         {
-            var jsonLightValueSerializer = CreateODataJsonLightValueSerializer(true, container, true);
+            var jsonLightValueSerializer = CreateODataJsonLightValueSerializer(true, serviceProvider, true);
             await func(jsonLightValueSerializer);
             await jsonLightValueSerializer.JsonLightOutputContext.FlushAsync();
             await jsonLightValueSerializer.JsonWriter.FlushAsync();

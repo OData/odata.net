@@ -12,7 +12,7 @@ namespace Microsoft.Test.OData.PluggableFormat
     using System.Threading.Tasks;
     using Microsoft.OData;
 
-    internal class InMemoryMessage : IODataRequestMessageAsync, IODataResponseMessageAsync, IContainerProvider, IDisposable
+    internal class InMemoryMessage : IODataRequestMessageAsync, IODataResponseMessageAsync, IServiceCollectionProvider, IDisposable
     {
         private readonly Dictionary<string, string> headers;
 
@@ -34,7 +34,7 @@ namespace Microsoft.Test.OData.PluggableFormat
 
         public Stream Stream { get; set; }
 
-        public IServiceProvider Container { get; set; }
+        public IServiceProvider ServiceProvider { get; set; }
 
         public string GetHeader(string headerName)
         {

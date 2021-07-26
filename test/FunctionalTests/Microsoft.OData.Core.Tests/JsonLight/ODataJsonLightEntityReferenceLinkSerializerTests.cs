@@ -164,7 +164,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
         private ODataJsonLightEntityReferenceLinkSerializer CreateODataJsonLightEntityReferenceLinkSerializer(
             bool writingResponse,
-            IServiceProvider container = null,
+            IServiceProvider serviceProvider = null,
             bool isAsync = false)
         {
             var messageInfo = new ODataMessageInfo
@@ -179,7 +179,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 IsResponse = writingResponse,
                 IsAsync = isAsync,
                 Model = this.model,
-                Container = container
+                ServiceProvider = serviceProvider
             };
 
             var jsonLightOutputContext = new ODataJsonLightOutputContext(messageInfo, this.messageWriterSettings);
@@ -191,9 +191,9 @@ namespace Microsoft.OData.Tests.JsonLight
         /// then runs the given test code asynchronously,
         /// then flushes and reads the stream back as a string for customized verification.
         /// </summary>
-        private async Task<string> SetupODataJsonLightEntityReferenceLinkSerializerAndRunTestAsync(Func<ODataJsonLightEntityReferenceLinkSerializer, Task> func, IServiceProvider container = null, bool writingTopLevelCollection = false)
+        private async Task<string> SetupODataJsonLightEntityReferenceLinkSerializerAndRunTestAsync(Func<ODataJsonLightEntityReferenceLinkSerializer, Task> func, IServiceProvider serviceProvider = null, bool writingTopLevelCollection = false)
         {
-            var jsonLightEntityReferenceLinkSerializer = CreateODataJsonLightEntityReferenceLinkSerializer(true, container, true);
+            var jsonLightEntityReferenceLinkSerializer = CreateODataJsonLightEntityReferenceLinkSerializer(true, serviceProvider, true);
             await func(jsonLightEntityReferenceLinkSerializer);
             await jsonLightEntityReferenceLinkSerializer.JsonLightOutputContext.FlushAsync();
             await jsonLightEntityReferenceLinkSerializer.JsonWriter.FlushAsync();

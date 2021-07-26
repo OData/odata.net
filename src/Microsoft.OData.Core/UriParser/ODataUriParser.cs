@@ -10,6 +10,7 @@ namespace Microsoft.OData.UriParser
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.OData.Edm;
     using Microsoft.OData.UriParser.Aggregation;
     using Microsoft.OData.UriParser.Validation;

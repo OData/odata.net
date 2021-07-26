@@ -39,7 +39,7 @@ namespace Microsoft.OData.Tests.Json
                 IsAsync = false,
                 Model = EdmCoreModel.Instance,
                 MessageStream = new MemoryStream(),
-                Container = null
+                ServiceProvider = null
             };
 
             this.inputContext = new ODataJsonLightInputContext(messageInfo, messageReaderSettings);
