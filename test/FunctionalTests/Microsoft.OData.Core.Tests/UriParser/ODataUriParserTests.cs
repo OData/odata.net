@@ -1133,6 +1133,35 @@ namespace Microsoft.OData.Tests.UriParser
         }
 
         [Theory]
+        [InlineData("/root/items/32:/", "/root/items/32/NS.NormalFunction(path='')")]
+        [InlineData("/root/items/32:/abc", "/root/items/32/NS.NormalFunction(path='abc')")]
+        [InlineData("/root/items/32:/photos:February", "/root/items/32/NS.NormalFunction(path='photos:February')")]
+        [InlineData("/root/items/32:/photos/2018/February", "/root/items/32/NS.NormalFunction(path='photos%2f2018%2fFebruary')")]
+        [InlineData("/root/items/32:/photos/2018////February", "/root/items/32/NS.NormalFunction(path='photos%2f2018%2f%2f%2f%2fFebruary')")]
+        [InlineData("/root/items/32:/photos%2F2018%2F/:February", "/root/items/32/NS.NormalFunction(path='photos%2F2018%2f%2f:February')")]
+        public void ParseNonComposableEscapeFunctionUrlReturnsTheSameODataPathForContainedNavigation(string escapePathString, string normalPathString)
+        {
+            // Arrange
+            IEdmModel model = GetEdmModelWithEscapeFunction(escape: true);
+
+            // Act
+            string fullUriString = ServiceRoot + normalPathString;
+            ODataUriParser parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
+            var functionPath = parser.ParsePath();
+
+            fullUriString = ServiceRoot + escapePathString;
+            parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
+            var escapePath = parser.ParsePath();
+
+            // Assert
+            Assert.True(functionPath.Equals(escapePath));
+
+            Assert.Equal(4, escapePath.Count());
+            OperationSegment segment = Assert.IsType<OperationSegment>(escapePath.Last());
+            Assert.Equal("NS.NormalFunction", segment.Operations.First().FullName());
+        }
+
+        [Theory]
         [InlineData("/root:/:", "/root/NS.ComposableFunction(arg='')")]
         [InlineData("/root:/abc:", "/root/NS.ComposableFunction(arg='abc')")]
         [InlineData("/root:/photos:February:", "/root/NS.ComposableFunction(arg='photos:February')")]
@@ -1157,6 +1186,35 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.True(functionPath.Equals(escapePath));
 
             Assert.Equal(2, escapePath.Count());
+            OperationSegment segment = Assert.IsType<OperationSegment>(escapePath.Last());
+            Assert.Equal("NS.ComposableFunction", segment.Operations.First().FullName());
+        }
+
+        [Theory]
+        [InlineData("/root/items/32:/:", "/root/items/32/NS.ComposableFunction(arg='')")]
+        [InlineData("/root/items/32:/abc:", "/root/items/32/NS.ComposableFunction(arg='abc')")]
+        [InlineData("/root/items/32:/photos:February:", "/root/items/32/NS.ComposableFunction(arg='photos:February')")]
+        [InlineData("/root/items/32:/photos/2018/February:", "/root/items/32/NS.ComposableFunction(arg='photos%2f2018%2fFebruary')")]
+        [InlineData("/root/items/32:/photos/2018//////February:", "/root/items/32/NS.ComposableFunction(arg='photos%2f2018%2f%2f%2f%2f%2f%2fFebruary')")]
+        [InlineData("/root/items/32:/photos%2F2018%2F/:February:", "/root/items/32/NS.ComposableFunction(arg='photos%2F2018%2F%2f:February')")]
+        public void ParseComposableEscapeFunctionUrlReturnsTheSameODataPathForContainedNavigation(string escapePathString, string normalPathString)
+        {
+            // Arrange
+            IEdmModel model = GetEdmModelWithEscapeFunction(escape: true);
+
+            // Act
+            string fullUriString = ServiceRoot + normalPathString;
+            ODataUriParser parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
+            var functionPath = parser.ParsePath();
+
+            fullUriString = ServiceRoot + escapePathString;
+            parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
+            var escapePath = parser.ParsePath();
+
+            // Assert
+            Assert.True(functionPath.Equals(escapePath));
+
+            Assert.Equal(4, escapePath.Count());
             OperationSegment segment = Assert.IsType<OperationSegment>(escapePath.Last());
             Assert.Equal("NS.ComposableFunction", segment.Operations.First().FullName());
         }
@@ -1255,7 +1313,6 @@ namespace Microsoft.OData.Tests.UriParser
         [InlineData("/vsDrive/32:/ComposableParameter::/nestedComposableParameter:", "/vsDrive/32/NS.SpecialOrders(path ='ComposableParameter')/NS.SpecialOrders(path ='nestedComposableParameter')")]
         [InlineData("/vsDrive/32/NS.OneDrive:/ComposableParameter:", "/vsDrive/32/NS.OneDrive/NS.ComposableFunction(arg='ComposableParameter')")]
         [InlineData("/vsDrive/32:/NonComposableParameter", "/vsDrive/32/NS.NormalFunction(path='NonComposableParameter')")]
-
         public void ParseEscapeFunctionWithInheritance(string escapeFunctionUri, string functionUri)
         {
             // Arrange
@@ -1339,45 +1396,73 @@ namespace Microsoft.OData.Tests.UriParser
         internal static IEdmModel GetEdmModelWithEscapeFunction(bool escape, bool multipleParameter = false)
         {
             EdmModel model = new EdmModel();
-            EdmEntityType entityType = new EdmEntityType("NS", "OneDrive");
-            entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmCoreModel.Instance.GetString(false)));
-            entityType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false));
-            EdmEntityType derivedType = new EdmEntityType("NS", "SpecialDrive", entityType);
+
+            EdmEntityType itemEntityType = new EdmEntityType("NS", "Item");
+            itemEntityType.AddKeys(itemEntityType.AddStructuralProperty("Id", EdmCoreModel.Instance.GetString(false)));
+            itemEntityType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false));
+
+            EdmEntityType driveEntityType = new EdmEntityType("NS", "OneDrive");
+            driveEntityType.AddKeys(driveEntityType.AddStructuralProperty("Id", EdmCoreModel.Instance.GetString(false)));
+            driveEntityType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false));
+            driveEntityType.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo
+                {
+                    ContainsTarget = true,
+                    Name = "items",
+                    Target = itemEntityType,
+                    TargetMultiplicity = EdmMultiplicity.Many,
+                });
+
+            EdmEntityType derivedType = new EdmEntityType("NS", "SpecialDrive", driveEntityType);
             derivedType.AddStructuralProperty("SpecialName", EdmCoreModel.Instance.GetString(false));
+
             EdmEntityType verySpecialDrive = new EdmEntityType("NS", "VerySpecialDrive", derivedType);
             derivedType.AddStructuralProperty("VerySpecialName", EdmCoreModel.Instance.GetString(false));
 
             var derivedTypeRef = new EdmEntityTypeReference(derivedType, true);
-            var entityTypeRef = new EdmEntityTypeReference(entityType, true);
-            var verySpecialDriveRef = new EdmEntityTypeReference(verySpecialDrive, true);
+            var itemEntityTypeRef = new EdmEntityTypeReference(itemEntityType, true);
+            var driveEntityTypeRef = new EdmEntityTypeReference(driveEntityType, true);
 
-            EdmFunction nonComFunction = new EdmFunction("NS", "NormalFunction", EdmCoreModel.Instance.GetInt32(true), true, null, false);
-            nonComFunction.AddParameter("entity", entityTypeRef);
-            nonComFunction.AddParameter("path", EdmCoreModel.Instance.GetString(true));
+            EdmFunction driveNonComFunction = new EdmFunction("NS", "NormalFunction", EdmCoreModel.Instance.GetInt32(true), true, null, false);
+            driveNonComFunction.AddParameter("entity", driveEntityTypeRef);
+            driveNonComFunction.AddParameter("path", EdmCoreModel.Instance.GetString(true));
 
             if (multipleParameter)
             {
-                nonComFunction.AddParameter("path2", EdmCoreModel.Instance.GetString(true));
+                driveNonComFunction.AddParameter("path2", EdmCoreModel.Instance.GetString(true));
             }
 
-            model.AddElement(entityType);
-            model.AddElement(nonComFunction);
+            model.AddElement(itemEntityType);
+            model.AddElement(driveEntityType);
+            model.AddElement(driveNonComFunction);
             model.AddElement(derivedType);
             model.AddElement(verySpecialDrive);
 
-            EdmFunction compFunction = new EdmFunction("NS", "ComposableFunction", entityTypeRef, true, null, true);
-            compFunction.AddParameter("entity", entityTypeRef);
-            compFunction.AddParameter("arg", EdmCoreModel.Instance.GetString(true));
-            model.AddElement(compFunction);
+            EdmFunction itemCompFunction = new EdmFunction("NS", "ComposableFunction", itemEntityTypeRef, true, null, true);
+            itemCompFunction.AddParameter("entity", itemEntityTypeRef);
+            itemCompFunction.AddParameter("arg", EdmCoreModel.Instance.GetString(true));
+            model.AddElement(itemCompFunction);
 
-            EdmFunction specialCompFunction = new EdmFunction("NS", "SpecialOrders", derivedTypeRef, true, null, true);
-            specialCompFunction.AddParameter("dervidEntity", derivedTypeRef);
-            specialCompFunction.AddParameter("path", EdmCoreModel.Instance.GetString(true));
-            model.AddElement(specialCompFunction);
+            // Non-composable COULD return item metadata, but does not have to. For example, in the case where "item" represents a file
+            // it could return the binary content of the file. We therefore choose a different return type to ensure we validate this.
+            EdmFunction itemNonComFunction = new EdmFunction("NS", "NormalFunction", EdmCoreModel.Instance.GetInt32(true), true, null, false);
+            itemNonComFunction.AddParameter("entity", itemEntityTypeRef);
+            itemNonComFunction.AddParameter("path", EdmCoreModel.Instance.GetString(true));
+            model.AddElement(itemNonComFunction);
+
+            EdmFunction driveCompFunction = new EdmFunction("NS", "ComposableFunction", driveEntityTypeRef, true, null, true);
+            driveCompFunction.AddParameter("entity", driveEntityTypeRef);
+            driveCompFunction.AddParameter("arg", EdmCoreModel.Instance.GetString(true));
+            model.AddElement(driveCompFunction);
+
+            EdmFunction driveSpecialCompFunction = new EdmFunction("NS", "SpecialOrders", derivedTypeRef, true, null, true);
+            driveSpecialCompFunction.AddParameter("dervidEntity", derivedTypeRef);
+            driveSpecialCompFunction.AddParameter("path", EdmCoreModel.Instance.GetString(true));
+            model.AddElement(driveSpecialCompFunction);
 
             EdmEntityContainer container = new EdmEntityContainer("Default", "Container");
-            container.AddSingleton("root", entityType);
-            container.AddEntitySet("entitySetEscaped", entityType);
+            container.AddSingleton("root", driveEntityType);
+            container.AddEntitySet("entitySetEscaped", driveEntityType);
             container.AddEntitySet("specialDrive", derivedType);
             container.AddEntitySet("vsDrive", verySpecialDrive);
 
@@ -1387,7 +1472,7 @@ namespace Microsoft.OData.Tests.UriParser
             {
                 IEdmBooleanConstantExpression booleanConstant = new EdmBooleanConstant(true);
                 IEdmTerm term = CommunityVocabularyModel.UrlEscapeFunctionTerm;
-                foreach (var function in new[] { nonComFunction, compFunction, specialCompFunction })
+                foreach (var function in new[] { itemNonComFunction, itemCompFunction, driveNonComFunction, driveCompFunction, driveSpecialCompFunction })
                 {
                     EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(function, term, booleanConstant);
                     annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
