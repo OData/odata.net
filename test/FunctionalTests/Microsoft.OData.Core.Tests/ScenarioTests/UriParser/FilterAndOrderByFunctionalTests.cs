@@ -2363,10 +2363,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [InlineData("ID in (  )")]
         [InlineData("SSN in (  )")]     // Edm.String
         [InlineData("MyGuid in (  )")]  // Edm.Guid
+        [InlineData("Birthdate in (  )")]  // Edm.DateTimeOffset
+        [InlineData("MyDate in (  )")]  // Edm.Date
         public void FilterWithInOperationWithEmptyCollection(string filterClause)
         {
-            Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_RightOperandNotCollectionValue);
+            FilterClause filter = ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+            Assert.Equal(0, collectionNode.Collection.Count);
         }
 
         [Fact]
