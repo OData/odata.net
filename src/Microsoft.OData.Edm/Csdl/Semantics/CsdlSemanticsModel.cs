@@ -303,6 +303,10 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 {
                     return semanticsReference.InlineVocabularyAnnotations;
                 }
+                else
+                {
+                    return Enumerable.Empty<IEdmVocabularyAnnotation>();
+                }
             }
 
             CsdlSemanticsInclude semanticsInclude = element as CsdlSemanticsInclude;
@@ -311,6 +315,10 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 if (semanticsInclude.Model == this)
                 {
                     return semanticsInclude.InlineVocabularyAnnotations;
+                }
+                else
+                {
+                    return Enumerable.Empty<IEdmVocabularyAnnotation>();
                 }
             }
 

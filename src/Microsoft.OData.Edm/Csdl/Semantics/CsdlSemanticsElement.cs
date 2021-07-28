@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Validation;
@@ -95,7 +96,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         /// <returns>The cached annotation full qualified name.</returns>
         public string GetAnnotationFullQualifiedName(IEdmVocabularyAnnotatable element)
         {
-            System.Diagnostics.Debug.Assert(object.ReferenceEquals(this as IEdmVocabularyAnnotatable, element));
+            Debug.Assert(object.ReferenceEquals(this as IEdmVocabularyAnnotatable, element));
             this.annotationFullName = this.annotationFullName ?? EdmUtil.FullyQualifiedName(element);
             return this.annotationFullName;
         }
