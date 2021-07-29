@@ -2375,6 +2375,21 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal(0, collectionNode.Collection.Count);
         }
 
+        [Theory]
+        [InlineData("SSN in ('')")]     // Edm.String
+        [InlineData("SSN in ( ' ' )")]     // Edm.String
+        [InlineData("MyGuid in ( '' )")]  // Edm.Guid
+        [InlineData("MyGuid in ( '  ' )")]  // Edm.Guid
+        public void FilterWithInOperationWithEmptyString(string filterClause)
+        {
+            FilterClause filter = ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+            Assert.Equal(0, collectionNode.Collection.Count);
+        }
+
         [Fact]
         public void FilterWithInOperationWithMismatchedClosureCollection()
         {

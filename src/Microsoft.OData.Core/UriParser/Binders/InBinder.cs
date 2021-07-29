@@ -155,6 +155,15 @@ namespace Microsoft.OData.UriParser
 
             // remove the '[' and ']'
             string normalizedText = literalText.Substring(1, literalText.Length - 2).Trim();
+
+            normalizedText = normalizedText.Replace(" ", string.Empty);
+
+            // If we have '' or "" we return empty brackets.
+            if (normalizedText == "''" || string.IsNullOrEmpty(normalizedText))
+            {
+                return "[]";
+            }
+
             int length = normalizedText.Length;
             StringBuilder sb = new StringBuilder(length + 2);
             sb.Append('[');
@@ -310,10 +319,14 @@ namespace Microsoft.OData.UriParser
         private static string NormalizeGuidCollectionItems(string bracketLiteralText)
         {
             string normalizedText = bracketLiteralText.Substring(1, bracketLiteralText.Length - 2).Trim();
-            if (normalizedText.Length == 0)
+            normalizedText = normalizedText.Replace(" ", string.Empty);
+
+            // If we have '' or "" we return empty brackets.
+            if (normalizedText == "''" || string.IsNullOrEmpty(normalizedText))
             {
                 return "[]";
             }
+
             string[] items = normalizedText.Split(',')
                 .Select(s => s.Trim()).ToArray();
 
