@@ -305,7 +305,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 }
                 else
                 {
-                    Enumerable.Empty<IEdmVocabularyAnnotation>();
+                    return Enumerable.Empty<IEdmVocabularyAnnotation>();
                 }
             }
 
@@ -318,31 +318,34 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 }
                 else
                 {
-                    Enumerable.Empty<IEdmVocabularyAnnotation>();
+                    return Enumerable.Empty<IEdmVocabularyAnnotation>();
                 }
             }
 
             CsdlSemanticsElement semanticsElement = element as CsdlSemanticsElement;
             IEnumerable<IEdmVocabularyAnnotation> inlineAnnotations = semanticsElement != null && semanticsElement.Model == this ? semanticsElement.InlineVocabularyAnnotations : Enumerable.Empty<IEdmVocabularyAnnotation>();
 
-            List<CsdlSemanticsAnnotations> elementAnnotations;
-            string fullName = EdmUtil.FullyQualifiedName(element);
-
-            if (fullName != null && this.outOfLineAnnotations.TryGetValue(fullName, out elementAnnotations))
+            if (this.outOfLineAnnotations.Count > 0)
             {
-                List<IEdmVocabularyAnnotation> result = new List<IEdmVocabularyAnnotation>();
+                List<CsdlSemanticsAnnotations> elementAnnotations;
+                string fullName = semanticsElement != null ? semanticsElement.GetAnnotationFullQualifiedName(element) : EdmUtil.FullyQualifiedName(element);
 
-                foreach (CsdlSemanticsAnnotations annotations in elementAnnotations)
+                if (fullName != null && this.outOfLineAnnotations.TryGetValue(fullName, out elementAnnotations))
                 {
-                    foreach (CsdlAnnotation annotation in annotations.Annotations.Annotations)
-                    {
-                        IEdmVocabularyAnnotation vocabAnnotation = this.WrapVocabularyAnnotation(annotation, annotations.Context, null, annotations, annotations.Annotations.Qualifier);
-                        vocabAnnotation.SetSerializationLocation(this, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
-                        result.Add(vocabAnnotation);
-                    }
-                }
+                    List<IEdmVocabularyAnnotation> result = new List<IEdmVocabularyAnnotation>();
 
-                return inlineAnnotations.Concat(result);
+                    foreach (CsdlSemanticsAnnotations annotations in elementAnnotations)
+                    {
+                        foreach (CsdlAnnotation annotation in annotations.Annotations.Annotations)
+                        {
+                            IEdmVocabularyAnnotation vocabAnnotation = this.WrapVocabularyAnnotation(annotation, annotations.Context, null, annotations, annotations.Annotations.Qualifier);
+                            vocabAnnotation.SetSerializationLocation(this, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
+                            result.Add(vocabAnnotation);
+                        }
+                    }
+
+                    return inlineAnnotations.Concat(result);
+                }
             }
 
             return inlineAnnotations;

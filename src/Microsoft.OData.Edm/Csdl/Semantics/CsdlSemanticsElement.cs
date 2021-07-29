@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Validation;
@@ -25,6 +26,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private static readonly Func<CsdlSemanticsElement, IEnumerable<IEdmDirectValueAnnotation>> ComputeDirectValueAnnotationsFunc = (me) => me.ComputeDirectValueAnnotations();
 
         private static readonly IEnumerable<IEdmVocabularyAnnotation> emptyVocabularyAnnotations = Enumerable.Empty<IEdmVocabularyAnnotation>();
+
+        private string annotationFullName = null;
 
         protected CsdlSemanticsElement(CsdlElement element)
         {
@@ -84,6 +87,18 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
                 return this.directValueAnnotationsCache.GetValue(this, ComputeDirectValueAnnotationsFunc, null);
             }
+        }
+
+        /// <summary>
+        /// Gets the cached annotation full qualified name.
+        /// </summary>
+        /// <param name="element">This element as <see cref="IEdmVocabularyAnnotatable"/>.</param>
+        /// <returns>The cached annotation full qualified name.</returns>
+        public string GetAnnotationFullQualifiedName(IEdmVocabularyAnnotatable element)
+        {
+            Debug.Assert(object.ReferenceEquals(this as IEdmVocabularyAnnotatable, element));
+            this.annotationFullName = this.annotationFullName ?? EdmUtil.FullyQualifiedName(element);
+            return this.annotationFullName;
         }
 
         /// <summary>
