@@ -117,7 +117,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "}"),
                     PayloadEdmModel = model,
                     // For requests the context URI is ignored and thus there's no type information in this case the reading should fail.
-                    ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_ResourceWithoutType"),
+                    ExpectedException = null,
                     SkipTestConfiguration = tc => !tc.IsRequest
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
