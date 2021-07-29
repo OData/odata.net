@@ -2382,7 +2382,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [InlineData("MyGuid in ( '' )")]  // Edm.Guid
         [InlineData("MyGuid in ( '  ' )")]  // Edm.Guid
         [InlineData("MyGuid in ( \" \" )")]  // Edm.Guid
-        public void FilterWithInOperationWithEmptyStringOrGuid(string filterClause)
+        public void FilterWithInOperationWithEmptyQuotes(string filterClause)
         {
             FilterClause filter = ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
