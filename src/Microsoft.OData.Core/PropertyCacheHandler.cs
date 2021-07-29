@@ -6,7 +6,6 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using Microsoft.OData.Edm;
 
 namespace Microsoft.OData
@@ -18,8 +17,6 @@ namespace Microsoft.OData
     /// </summary>
     internal class PropertyCacheHandler
     {
-        private const string PropertyTypeDelimiter = "-";
-
         private readonly Stack<PropertyCache> cacheStack = new Stack<PropertyCache>();
 
         private readonly Stack<int> scopeLevelStack = new Stack<int>();
@@ -38,14 +35,7 @@ namespace Microsoft.OData
 
             Debug.Assert(depth >= 1, "'depth' should always be greater than or equal to 1");
 
-            // In production, depthStr == 1 in most cases. So we optimize string allocation for this case.
-            string depthStr = depth == 1 ? string.Empty : depth.ToString(CultureInfo.InvariantCulture);
-
-            string uniqueName = owningType != null
-                ? string.Concat(owningType.FullTypeName(), PropertyCacheHandler.PropertyTypeDelimiter, depthStr, name)
-                : string.Concat(depthStr, name);
-
-            return this.currentPropertyCache.GetProperty(model, name, uniqueName, owningType);
+            return this.currentPropertyCache.GetProperty(model, depth, name, owningType);
         }
 
         public void SetCurrentResourceScopeLevel(int level)
