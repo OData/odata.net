@@ -2378,8 +2378,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Theory]
         [InlineData("SSN in ('')")]     // Edm.String
         [InlineData("SSN in ( ' ' )")]     // Edm.String
+        [InlineData("SSN in ( \" \" )")]     // Edm.String
         [InlineData("MyGuid in ( '' )")]  // Edm.Guid
         [InlineData("MyGuid in ( '  ' )")]  // Edm.Guid
+        [InlineData("MyGuid in ( \" \" )")]  // Edm.Guid
         public void FilterWithInOperationWithEmptyString(string filterClause)
         {
             FilterClause filter = ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());

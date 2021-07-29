@@ -156,10 +156,10 @@ namespace Microsoft.OData.UriParser
             // remove the '[' and ']'
             string normalizedText = literalText.Substring(1, literalText.Length - 2).Trim();
 
-            normalizedText = normalizedText.Replace(" ", string.Empty);
+            string normalizedTextWithoutWhitespaces = normalizedText.Replace(" ", string.Empty);
 
-            // If we have '' or "" we return empty brackets.
-            if (normalizedText == "''" || string.IsNullOrEmpty(normalizedText))
+            // If we have '' or "" or empty string we return empty brackets.
+            if (normalizedTextWithoutWhitespaces == "''" || normalizedTextWithoutWhitespaces == "\"\""  || normalizedTextWithoutWhitespaces.Length == 0)
             {
                 return "[]";
             }
@@ -321,8 +321,8 @@ namespace Microsoft.OData.UriParser
             string normalizedText = bracketLiteralText.Substring(1, bracketLiteralText.Length - 2).Trim();
             normalizedText = normalizedText.Replace(" ", string.Empty);
 
-            // If we have '' or "" we return empty brackets.
-            if (normalizedText == "''" || string.IsNullOrEmpty(normalizedText))
+            // If we have '' or "" or empty string we return empty brackets.
+            if (normalizedText == "''" || normalizedText == "\"\"" || normalizedText.Length == 0)
             {
                 return "[]";
             }
