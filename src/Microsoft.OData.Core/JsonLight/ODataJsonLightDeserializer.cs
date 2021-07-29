@@ -303,7 +303,7 @@ namespace Microsoft.OData.JsonLight
                             contextUriAnnotationValue,
                             payloadKind,
                             this.MessageReaderSettings.ClientCustomTypeResolver,
-                            this.JsonLightInputContext.ReadingResponse || payloadKind == ODataPayloadKind.Delta);
+                            this.JsonLightInputContext.ReadingResponse);
                     }
 
 #if DEBUG

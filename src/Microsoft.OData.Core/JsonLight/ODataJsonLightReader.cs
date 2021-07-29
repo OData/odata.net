@@ -1862,7 +1862,7 @@ namespace Microsoft.OData.JsonLight
                         contextUriStr,
                         this.ReadingDelta ? ODataPayloadKind.Delta : ODataPayloadKind.Resource,
                         this.jsonLightResourceDeserializer.MessageReaderSettings.ClientCustomTypeResolver,
-                        this.jsonLightInputContext.ReadingResponse || this.ReadingDelta);
+                        this.jsonLightInputContext.ReadingResponse );
                     if (parseResult != null)
                     {
                         // a top-level (deleted) resource in a delta response can come from any entity set
