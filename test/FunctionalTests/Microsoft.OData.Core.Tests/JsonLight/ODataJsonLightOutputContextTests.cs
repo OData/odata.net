@@ -930,8 +930,8 @@ namespace Microsoft.OData.Tests.JsonLight
                     NavigationSourceKind = EdmNavigationSourceKind.EntitySet
                 }
             };
-
-            #endregion Helper Methods
         }
+
+        #endregion Helper Methods
     }
 }
