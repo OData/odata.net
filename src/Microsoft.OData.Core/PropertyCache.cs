@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using Microsoft.OData.Edm;
 
-
 namespace Microsoft.OData
 {
     /// <summary>
