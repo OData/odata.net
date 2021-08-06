@@ -14,7 +14,7 @@ namespace Microsoft.OData.Edm
     /// "Mutating" operations return a new list (which, for efficiency, may share some of the state of the old one).
     /// </summary>
     /// <typeparam name="TElement">Element type of the list.</typeparam>
-    internal abstract class VersioningList<TElement> : IEnumerable<TElement>
+    internal abstract class VersioningList<TElement> : IReadOnlyList<TElement>, IEnumerable<TElement>
     {
         public abstract int Count { get; }
 
@@ -68,7 +68,7 @@ namespace Microsoft.OData.Edm
 
             public override VersioningList<TElement> Add(TElement value)
             {
-                return new LinkedVersioningList(this, value);
+                return new ArrayVersioningList(this, value);
             }
 
             public override IEnumerator<TElement> GetEnumerator()
@@ -113,140 +113,6 @@ namespace Microsoft.OData.Edm
             }
         }
 
-        internal sealed class LinkedVersioningList : VersioningList<TElement>
-        {
-            private readonly VersioningList<TElement> preceding;
-            private readonly TElement last;
-
-            public LinkedVersioningList(VersioningList<TElement> preceding, TElement last)
-            {
-                this.preceding = preceding;
-                this.last = last;
-            }
-
-            public override int Count
-            {
-                get { return this.preceding.Count + 1; }
-            }
-
-            public VersioningList<TElement> Preceding
-            {
-                get { return this.preceding; }
-            }
-
-            public TElement Last
-            {
-                get { return this.last; }
-            }
-
-            private int Depth
-            {
-                get
-                {
-                    int depth = 0;
-                    LinkedVersioningList layer = this;
-                    while (layer != null)
-                    {
-                        depth++;
-                        layer = layer.Preceding as LinkedVersioningList;
-                    }
-
-                    return depth;
-                }
-            }
-
-            public override VersioningList<TElement> Add(TElement value)
-            {
-                if (this.Depth < 5)
-                {
-                    return new LinkedVersioningList(this, value);
-                }
-
-                return new ArrayVersioningList(this, value);
-            }
-
-            public override IEnumerator<TElement> GetEnumerator()
-            {
-                return new LinkedListEnumerator(this);
-            }
-
-            protected override TElement IndexedElement(int index)
-            {
-                if (index == this.Count - 1)
-                {
-                    return this.last;
-                }
-
-                return this.preceding.IndexedElement(index);
-            }
-
-            protected override VersioningList<TElement> RemoveIndexedElement(int index)
-            {
-                if (index == this.Count - 1)
-                {
-                    return this.preceding;
-                }
-
-                return new LinkedVersioningList(this.preceding.RemoveIndexedElement(index), this.last);
-            }
-        }
-
-        internal sealed class LinkedListEnumerator : IEnumerator<TElement>
-        {
-            private readonly LinkedVersioningList list;
-            private IEnumerator<TElement> preceding;
-            private bool complete;
-
-            public LinkedListEnumerator(LinkedVersioningList list)
-            {
-                this.list = list;
-                this.preceding = list.Preceding.GetEnumerator();
-            }
-
-            public TElement Current
-            {
-                get
-                {
-                    if (this.complete)
-                    {
-                        return this.list.Last;
-                    }
-
-                    return this.preceding.Current;
-                }
-            }
-
-            object System.Collections.IEnumerator.Current
-            {
-                get { return this.Current; }
-            }
-
-            public void Dispose()
-            {
-            }
-
-            public bool MoveNext()
-            {
-                if (this.complete)
-                {
-                    return false;
-                }
-
-                if (!this.preceding.MoveNext())
-                {
-                    this.complete = true;
-                }
-
-                return true;
-            }
-
-            public void Reset()
-            {
-                this.preceding.Reset();
-                this.complete = false;
-            }
-        }
-
         internal sealed class ArrayVersioningList : VersioningList<TElement>
         {
             private readonly TElement[] elements;
@@ -254,13 +120,12 @@ namespace Microsoft.OData.Edm
             public ArrayVersioningList(VersioningList<TElement> preceding, TElement last)
             {
                 this.elements = new TElement[preceding.Count + 1];
-                int index = 0;
-                foreach (TElement element in preceding)
+                for (int i = 0; i < preceding.Count; i++)
                 {
-                    this.elements[index++] = element;
+                    this.elements[i] = preceding[i];
                 }
 
-                this.elements[index] = last;
+                this.elements[preceding.Count] = last;
             }
 
             private ArrayVersioningList(TElement[] elements)
@@ -280,7 +145,7 @@ namespace Microsoft.OData.Edm
 
             public override VersioningList<TElement> Add(TElement value)
             {
-                return new LinkedVersioningList(this, value);
+                return new ArrayVersioningList(this, value);
             }
 
             public override IEnumerator<TElement> GetEnumerator()
