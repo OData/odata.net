@@ -173,9 +173,13 @@ namespace Microsoft.OData.Edm.Vocabularies
             bool needTombstone = false;
             if (immutableAnnotations != null)
             {
-                if (immutableAnnotations.Any(existingAnnotation => existingAnnotation.NamespaceUri == namespaceName && existingAnnotation.Name == localName))
+                foreach (var existingAnnotation in immutableAnnotations)
                 {
-                    needTombstone = true;
+                    if (existingAnnotation.NamespaceUri == namespaceName && existingAnnotation.Name == localName)
+                    {
+                        needTombstone = true;
+                        break;
+                    }
                 }
             }
 
@@ -245,8 +249,14 @@ namespace Microsoft.OData.Edm.Vocabularies
                 else
                 {
                     VersioningList<IEdmDirectValueAnnotation> annotationsList = (VersioningList<IEdmDirectValueAnnotation>)transientAnnotations;
-                    return annotationsList.FirstOrDefault(
-                        existingAnnotation => existingAnnotation.NamespaceUri == namespaceName && existingAnnotation.Name == localName);
+
+                    foreach (IEdmDirectValueAnnotation existingAnnotation in annotationsList)
+                    {
+                        if (existingAnnotation.NamespaceUri == namespaceName && existingAnnotation.Name == localName)
+                        {
+                            return existingAnnotation;
+                        }
+                    }
                 }
             }
 
@@ -277,7 +287,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                             annotationsList = annotationsList.RemoveAt(index);
                             if (annotationsList.Count == 1)
                             {
-                                transientAnnotations = annotationsList.Single();
+                                transientAnnotations = annotationsList[0];
                             }
                             else
                             {
