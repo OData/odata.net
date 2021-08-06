@@ -202,11 +202,8 @@ namespace Microsoft.OData.JsonLight
                 this.jsonLightInputContext.CreatePropertyAndAnnotationCollector();
 
             // Position the reader on the first node depending on whether we are reading a nested payload or not.
-            ODataPayloadKind payloadKind = this.ReadingDelta
-                ? ODataPayloadKind.Delta
-                : this.ReadingResourceSet ?
-                    ODataPayloadKind.ResourceSet
-                    : ODataPayloadKind.Resource;
+            ODataPayloadKind payloadKind = this.ReadingResourceSet ?
+                this.ReadingDelta ? ODataPayloadKind.Delta : ODataPayloadKind.ResourceSet : ODataPayloadKind.Resource;
 
             return this.jsonLightResourceDeserializer.ReadPayloadStartAsync(
                 payloadKind,
