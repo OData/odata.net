@@ -358,6 +358,148 @@ namespace Microsoft.OData.Tests.JsonLight
                 "\"value\":[null]}", result);
         }
 
+        [Fact]
+        public async Task WriteStartAsync_ThrowsExceptionForWriterInCompletedState()
+        {
+            var collectionStart = CreateStringCollectionStart();
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightCollectionWriterAndRunTestAsync(
+                    async (jsonLightCollectionWriter) =>
+                    {
+                        await jsonLightCollectionWriter.WriteStartAsync(collectionStart);
+                        await jsonLightCollectionWriter.WriteEndAsync();
+                        await jsonLightCollectionWriter.WriteStartAsync(collectionStart);
+                    },
+                    new EdmModel(),
+                    EdmCoreModel.Instance.GetString(true)));
+
+            Assert.Equal(
+                Strings.ODataWriterCore_InvalidTransitionFromCompleted("Completed", "Collection"),
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task WriteStartAsync_ThrowsExceptionForWriterInCollectionState()
+        {
+            var collectionStart = CreateStringCollectionStart();
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightCollectionWriterAndRunTestAsync(
+                    async (jsonLightCollectionWriter) =>
+                    {
+                        await jsonLightCollectionWriter.WriteStartAsync(collectionStart);
+                        await jsonLightCollectionWriter.WriteStartAsync(collectionStart);
+                    },
+                    new EdmModel(),
+                    EdmCoreModel.Instance.GetString(true)));
+
+            Assert.Equal(
+                Strings.ODataCollectionWriterCore_InvalidTransitionFromCollection("Collection", "Collection"),
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task WriteStartAsync_ThrowsExceptionForWriterInItemState()
+        {
+            var collectionStart = CreateStringCollectionStart();
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightCollectionWriterAndRunTestAsync(
+                    async (jsonLightCollectionWriter) =>
+                    {
+                        await jsonLightCollectionWriter.WriteStartAsync(collectionStart);
+                        await jsonLightCollectionWriter.WriteItemAsync("Foo");
+                        await jsonLightCollectionWriter.WriteStartAsync(collectionStart);
+                    },
+                    new EdmModel(),
+                    EdmCoreModel.Instance.GetString(true)));
+
+            Assert.Equal(
+                Strings.ODataCollectionWriterCore_InvalidTransitionFromItem("Item", "Collection"),
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task WriteItemAsync_ThrowsExceptionForWriterInCompletedState()
+        {
+            var collectionStart = CreateStringCollectionStart();
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightCollectionWriterAndRunTestAsync(
+                    async (jsonLightCollectionWriter) =>
+                    {
+                        await jsonLightCollectionWriter.WriteStartAsync(collectionStart);
+                        await jsonLightCollectionWriter.WriteEndAsync();
+                        await jsonLightCollectionWriter.WriteItemAsync("Foo");
+                    },
+                    new EdmModel(),
+                    EdmCoreModel.Instance.GetString(true)));
+
+            Assert.Equal(
+                Strings.ODataWriterCore_InvalidTransitionFromCompleted("Completed", "Item"),
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task WriteItemAsync_ThrowsExceptionForWriterInStartState()
+        {
+            var collectionStart = CreateStringCollectionStart();
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightCollectionWriterAndRunTestAsync(
+                    async (jsonLightCollectionWriter) =>
+                    {
+                        await jsonLightCollectionWriter.WriteItemAsync("Foo");
+                    },
+                    new EdmModel(),
+                    EdmCoreModel.Instance.GetString(true)));
+
+            Assert.Equal(
+                Strings.ODataCollectionWriterCore_InvalidTransitionFromStart("Start", "Item"),
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task WriteEndAsync_ThrowsExceptionForWriterInCompletedState()
+        {
+            var collectionStart = CreateStringCollectionStart();
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightCollectionWriterAndRunTestAsync(
+                    async (jsonLightCollectionWriter) =>
+                    {
+                        await jsonLightCollectionWriter.WriteStartAsync(collectionStart);
+                        await jsonLightCollectionWriter.WriteEndAsync();
+                        await jsonLightCollectionWriter.WriteEndAsync();
+                    },
+                    new EdmModel(),
+                    EdmCoreModel.Instance.GetString(true)));
+
+            Assert.Equal(
+                Strings.ODataCollectionWriterCore_WriteEndCalledInInvalidState("Completed"),
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task WriteEndAsync_ThrowsExceptionForWriterInStartState()
+        {
+            var collectionStart = CreateStringCollectionStart();
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightCollectionWriterAndRunTestAsync(
+                    async (jsonLightCollectionWriter) =>
+                    {
+                        await jsonLightCollectionWriter.WriteEndAsync();
+                    },
+                    new EdmModel(),
+                    EdmCoreModel.Instance.GetString(true)));
+
+            Assert.Equal(
+                Strings.ODataCollectionWriterCore_WriteEndCalledInInvalidState("Start"),
+                exception.Message);
+        }
+
         private void WriteAndValidate(ODataCollectionStart collectionStart, IEnumerable<object> items, string expectedPayload, bool writingResponse = true, IEdmTypeReference itemTypeReference = null)
         {
             WriteAndValidateSync(itemTypeReference, collectionStart, items, expectedPayload, writingResponse);
@@ -417,7 +559,7 @@ namespace Microsoft.OData.Tests.JsonLight
             var jsonLightOutputContext = CreateJsonLightOutputContext(stream, model, /* writingResponse */ true, /* synchronous */ false);
             var jsonLightCollectionWriter = new ODataJsonLightCollectionWriter(jsonLightOutputContext, itemTypeReference);
             await func(jsonLightCollectionWriter);
-            
+
             stream.Position = 0;
             return await new StreamReader(stream).ReadToEndAsync();
         }

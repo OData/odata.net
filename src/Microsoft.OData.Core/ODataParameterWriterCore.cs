@@ -272,19 +272,18 @@ namespace Microsoft.OData
         {
             this.VerifyCanWriteEnd(false /*synchronousCall*/);
             await this.InterceptExceptionAsync(
-                () => this.WriteEndImplementationAsync()).FollowOnSuccessWithTask(
-                    task =>
+                async () =>
+                {
+                    await this.WriteEndImplementationAsync()
+                        .ConfigureAwait(false);
+
+                    if (this.State == ParameterWriterState.Completed)
                     {
-                        if (this.State == ParameterWriterState.Completed)
-                        {
-                            // Note that we intentionally go through the public API so that if the Flush fails the writer moves to the Error state.
-                            return this.FlushAsync();
-                        }
-                        else
-                        {
-                            return TaskUtils.CompletedTask;
-                        }
-                    }).ConfigureAwait(false);
+                        // Note that we intentionally go through the public API so that if the FlushAsync fails the writer moves to the Error state.
+                        await this.FlushAsync()
+                            .ConfigureAwait(false);
+                    }
+                }).ConfigureAwait(false);
         }
 
         /// <summary>

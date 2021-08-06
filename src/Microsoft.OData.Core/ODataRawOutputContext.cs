@@ -133,7 +133,8 @@ namespace Microsoft.OData
 
             Debug.Assert(this.asynchronousOutputStream != null, "In async writing we must have the async buffered stream.");
             await this.asynchronousOutputStream.FlushAsync()
-                .FollowOnSuccessWithTask((asyncBufferedStreamFlushTask) => this.messageOutputStream.FlushAsync())
+                .ConfigureAwait(false);
+            await this.messageOutputStream.FlushAsync()
                 .ConfigureAwait(false);
         }
 

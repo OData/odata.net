@@ -230,19 +230,14 @@ namespace Microsoft.OData
         {
             this.VerifyCanWriteEnd(false);
             await this.WriteEndImplementationAsync()
-                .FollowOnSuccessWithTask(
-                    task =>
-                    {
-                        if (this.scopes.Peek().State == CollectionWriterState.Completed)
-                        {
-                            // Note that we intentionally go through the public API so that if the Flush fails the writer moves to the Error state.
-                            return this.FlushAsync();
-                        }
-                        else
-                        {
-                            return TaskUtils.CompletedTask;
-                        }
-                    }).ConfigureAwait(false);
+                .ConfigureAwait(false);
+
+            if (this.scopes.Peek().State == CollectionWriterState.Completed)
+            {
+                // Note that we intentionally go through the public API so that if the FlushAsync fails the writer moves to the Error state.
+                await this.FlushAsync()
+                    .ConfigureAwait(false);
+            }
         }
 
         /// <summary>

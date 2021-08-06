@@ -692,19 +692,13 @@ namespace Microsoft.OData
         {
             this.VerifyCanWriteEnd(false);
             await this.WriteEndImplementationAsync()
-                .FollowOnSuccessWithTask(
-                    task =>
-                    {
-                        if (this.CurrentScope.State == WriterState.Completed)
-                        {
-                            // Note that we intentionally go through the public API so that if the Flush fails the writer moves to the Error state.
-                            return this.FlushAsync();
-                        }
-                        else
-                        {
-                            return TaskUtils.CompletedTask;
-                        }
-                    }).ConfigureAwait(false);
+                .ConfigureAwait(false);
+
+            if (this.CurrentScope.State == WriterState.Completed)
+            {
+                await this.FlushAsync()
+                    .ConfigureAwait(false);
+            }
         }
 
         /// <summary>
@@ -1788,7 +1782,9 @@ namespace Microsoft.OData
         {
             EnterScope(deltaLink is ODataDeltaLink ? WriterState.DeltaLink : WriterState.DeltaDeletedLink, deltaLink);
             await this.StartDeltaLinkAsync(deltaLink)
-                .FollowOnSuccessWithTask((t) => WriteEndAsync()).ConfigureAwait(false);
+                .ConfigureAwait(false);
+            await this.WriteEndAsync()
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1873,7 +1869,9 @@ namespace Microsoft.OData
                 }
 
                 await WritePrimitiveValueAsync(primitiveValue)
-                    .FollowOnSuccessWithTask((t) => WriteEndAsync()).ConfigureAwait(false);
+                    .ConfigureAwait(false);
+                await this.WriteEndAsync()
+                    .ConfigureAwait(false);
             }).ConfigureAwait(false);
         }
 

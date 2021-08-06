@@ -190,8 +190,9 @@ namespace Microsoft.OData
         {
             this.VerifyCanWriteEndBatch(false);
             await this.WriteEndBatchImplementationAsync()
-                // Note that we intentionally go through the public API so that if the Flush fails the writer moves to the Error state.
-                .FollowOnSuccessWithTask(task => this.FlushAsync())
+                .ConfigureAwait(false);
+            // Note that we intentionally go through the public API so that if the FlushAsync fails the writer moves to the Error state.
+            await this.FlushAsync()
                 .ConfigureAwait(false);
         }
 
@@ -238,8 +239,8 @@ namespace Microsoft.OData
 
             this.VerifyCanWriteStartChangeset(false);
             await this.WriteStartChangesetImplementationAsync(changesetId)
-                .FollowOnSuccessWith(t => this.FinishWriteStartChangeset())
                 .ConfigureAwait(false);
+            this.FinishWriteStartChangeset();
         }
 
         /// <summary>Ends an active changeset; this can only be called after WriteStartChangeset and only once for each changeset.</summary>
@@ -256,8 +257,8 @@ namespace Microsoft.OData
         {
             this.VerifyCanWriteEndChangeset(false);
             await this.WriteEndChangesetImplementationAsync()
-                .FollowOnSuccessWith(t => this.FinishWriteEndChangeset())
                 .ConfigureAwait(false);
+            this.FinishWriteEndChangeset();
         }
 
         /// <summary>Creates an <see cref="Microsoft.OData.ODataBatchOperationRequestMessage" /> for writing an operation of a batch request.</summary>

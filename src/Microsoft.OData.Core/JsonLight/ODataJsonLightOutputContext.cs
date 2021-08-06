@@ -519,7 +519,8 @@ namespace Microsoft.OData.JsonLight
 
             Debug.Assert(this.asynchronousOutputStream != null, "In async writing we must have the async buffered stream.");
             await this.asynchronousOutputStream.FlushAsync()
-                .FollowOnSuccessWithTask(_ => this.messageOutputStream.FlushAsync())
+                .ConfigureAwait(false);
+            await this.messageOutputStream.FlushAsync()
                 .ConfigureAwait(false);
         }
 

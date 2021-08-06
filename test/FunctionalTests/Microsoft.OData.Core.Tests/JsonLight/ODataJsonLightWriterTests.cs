@@ -1700,10 +1700,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             var customerResource = CreateCustomerResource();
             var orderCollectionNestedResourceInfo = CreateOrderCollectionNestedResourceInfo();
 
-            // TODO: Create a PR to fix TaskUtils.FollowOnSuccessWithContinuation such that the
-            // InnerException (ODataException) is set in the TaskCompletionSource object
-            // rather than AggregateException
-            var exception = await Assert.ThrowsAsync<AggregateException>(
+            var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonLightWriterAndRunTestAsync(
                 async (jsonLightWriter) =>
                 {
@@ -1721,8 +1718,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 /*writingParameter*/ false,
                 /*writingRequest*/ true));
 
-            Assert.IsType<ODataException>(exception.InnerException);
-            Assert.Equal(Strings.ODataWriterCore_DeferredLinkInRequest, exception.InnerException.Message);
+            Assert.Equal(Strings.ODataWriterCore_DeferredLinkInRequest, exception.Message);
         }
 
         [Fact]
@@ -1753,7 +1749,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             var customerResource = CreateCustomerResource();
 
-            var exception = await Assert.ThrowsAsync<AggregateException>(
+            var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonLightWriterAndRunTestAsync(
                     async (jsonLightWriter) =>
                     {
@@ -1766,10 +1762,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     this.customerEntitySet,
                     this.customerEntityType));
 
-            Assert.IsType<ODataException>(exception.InnerException);
-            Assert.Equal(
-                Strings.ODataWriterCore_WriteEndCalledInInvalidState("Completed"),
-                exception.InnerException.Message);
+            Assert.Equal(Strings.ODataWriterCore_WriteEndCalledInInvalidState("Completed"), exception.Message);
         }
 
         [Fact]
@@ -1784,7 +1777,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 ContentType = "text/plain"
             };
 
-            var exception = await Assert.ThrowsAsync<AggregateException>(
+            var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonLightWriterAndRunTestAsync(
                 async (jsonLightWriter) =>
                 {
@@ -1804,8 +1797,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 this.orderEntitySet,
                 this.orderEntityType));
 
-            Assert.IsType<ODataException>(exception.InnerException);
-            Assert.Equal(Strings.ODataWriterCore_StreamNotDisposed, exception.InnerException.Message);
+            Assert.Equal(Strings.ODataWriterCore_StreamNotDisposed, exception.Message);
         }
 
         #endregion Exception Cases
