@@ -29,27 +29,27 @@ namespace EdmLibTests.FunctionalTests
             TestList(list1, 0);
 
             VersioningList<int> list2 = list1.Add(0);
-            Assert.IsTrue(list2 is VersioningList<int>.LinkedVersioningList, "List type");
+            Assert.IsTrue(list2 is VersioningList<int>.ArrayVersioningList, "List type");
             TestList(list2, 1);
 
             VersioningList<int> list3 = list1.Add(0);
-            Assert.IsTrue(list3 is VersioningList<int>.LinkedVersioningList, "List type");
+            Assert.IsTrue(list3 is VersioningList<int>.ArrayVersioningList, "List type");
             TestList(list3, 1);
 
             VersioningList<int> list4 = list2.Add(10);
-            Assert.IsTrue(list4 is VersioningList<int>.LinkedVersioningList, "List type");
+            Assert.IsTrue(list4 is VersioningList<int>.ArrayVersioningList, "List type");
             TestList(list4, 2);
 
             VersioningList<int> list5 = list4.Add(20);
-            Assert.IsTrue(list5 is VersioningList<int>.LinkedVersioningList, "List type");
+            Assert.IsTrue(list5 is VersioningList<int>.ArrayVersioningList, "List type");
             TestList(list5, 3);
 
             VersioningList<int> list6 = list5.Add(30);
-            Assert.IsTrue(list6 is VersioningList<int>.LinkedVersioningList, "List type");
+            Assert.IsTrue(list6 is VersioningList<int>.ArrayVersioningList, "List type");
             TestList(list6, 4);
 
             VersioningList<int> list7 = list6.Add(40);
-            Assert.IsTrue(list7 is VersioningList<int>.LinkedVersioningList, "List type");
+            Assert.IsTrue(list7 is VersioningList<int>.ArrayVersioningList, "List type");
             TestList(list7, 5);
 
             VersioningList<int> list8 = list7.Add(50);
@@ -57,7 +57,7 @@ namespace EdmLibTests.FunctionalTests
             TestList(list8, 6);
 
             VersioningList<int> list9 = list8.Add(60);
-            Assert.IsTrue(list9 is VersioningList<int>.LinkedVersioningList, "List type");
+            Assert.IsTrue(list9 is VersioningList<int>.ArrayVersioningList, "List type");
             TestList(list9, 7);
 
             TestList(list8, 6);
