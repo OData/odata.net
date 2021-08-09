@@ -270,7 +270,7 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentNotNull(other, "other");
 
-            this.BaseUri = other.BaseUri;
+            this.BaseUri = new Uri(other.BaseUri.OriginalString);
             this.ClientCustomTypeResolver = other.ClientCustomTypeResolver;
             this.PrimitiveTypeResolver = other.PrimitiveTypeResolver;
             this.EnableMessageStreamDisposal = other.EnableMessageStreamDisposal;
