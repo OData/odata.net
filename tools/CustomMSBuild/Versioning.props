@@ -5,7 +5,7 @@
     <VersionMajor Condition="'$(VersionMajor)' == ''">7</VersionMajor>
     <VersionMinor Condition="'$(VersionMinor)' == ''">7</VersionMinor>
     <VersionBuildNumber Condition="'$(VersionBuildNumber)' == ''">3</VersionBuildNumber>
-    <VersionRelease Condition="'$(VersionRelease)' == ''"></VersionRelease>
+    <VersionRelease Condition="'$(VersionRelease)' == ''">BingAds</VersionRelease>
   </PropertyGroup>
 
   <!--
