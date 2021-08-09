@@ -222,7 +222,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         {
             if (transientAnnotations != null)
             {
-                // This method runs very hot in AGS, it is important to optimize it as much as possible.
+                // This method runs very hot in schemas where direct value annotations are used.
                 // 1. Doing indexed 'for' loop to avoid allocation of VersioningList enumerator.
                 // 2. VersioningList random access is O(1) because it uses ArrayVersioningList.
                 for (int index = 0; index < transientAnnotations.Count; index++)
