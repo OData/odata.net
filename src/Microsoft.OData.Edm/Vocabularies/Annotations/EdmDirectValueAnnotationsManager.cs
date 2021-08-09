@@ -173,7 +173,7 @@ namespace Microsoft.OData.Edm.Vocabularies
             bool needTombstone = false;
             if (immutableAnnotations != null)
             {
-                foreach (var existingAnnotation in immutableAnnotations)
+                foreach (IEdmDirectValueAnnotation existingAnnotation in immutableAnnotations)
                 {
                     if (existingAnnotation.NamespaceUri == namespaceName && existingAnnotation.Name == localName)
                     {
