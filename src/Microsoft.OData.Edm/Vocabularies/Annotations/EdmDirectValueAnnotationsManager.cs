@@ -205,28 +205,29 @@ namespace Microsoft.OData.Edm.Vocabularies
                 return;
             }
 
-            VersioningList<IEdmDirectValueAnnotation> annotationsList = transientAnnotations;
-            for (int index = 0; index < annotationsList.Count; index++)
+            for (int index = 0; index < transientAnnotations.Count; index++)
             {
-                IEdmDirectValueAnnotation existingAnnotation = annotationsList[index];
+                IEdmDirectValueAnnotation existingAnnotation = transientAnnotations[index];
                 if (existingAnnotation.NamespaceUri == namespaceName && existingAnnotation.Name == localName)
                 {
-                    annotationsList = annotationsList.RemoveAt(index);
+                    transientAnnotations = transientAnnotations.RemoveAt(index);
                     break;
                 }
             }
 
-            transientAnnotations = annotationsList.Add(newAnnotation);
+            transientAnnotations = transientAnnotations.Add(newAnnotation);
         }
 
         private static IEdmDirectValueAnnotation FindTransientAnnotation(VersioningList<IEdmDirectValueAnnotation> transientAnnotations, string namespaceName, string localName)
         {
             if (transientAnnotations != null)
             {
-                VersioningList<IEdmDirectValueAnnotation> annotationsList = transientAnnotations;
-                for (int index = 0; index < annotationsList.Count; index++)
+                // This method runs very hot in AGS, it is important to optimize it as much as possible.
+                // 1. Doing indexed 'for' loop to avoid allocation of VersioningList enumerator.
+                // 2. VersioningList random access is O(1) because it uses ArrayVersioningList.
+                for (int index = 0; index < transientAnnotations.Count; index++)
                 {
-                    IEdmDirectValueAnnotation existingAnnotation = annotationsList[index];
+                    IEdmDirectValueAnnotation existingAnnotation = transientAnnotations[index];
                     if (existingAnnotation.NamespaceUri == namespaceName && existingAnnotation.Name == localName)
                     {
                         return existingAnnotation;
@@ -241,13 +242,12 @@ namespace Microsoft.OData.Edm.Vocabularies
         {
             if (transientAnnotations != null)
             {
-                VersioningList<IEdmDirectValueAnnotation> annotationsList = transientAnnotations;
-                for (int index = 0; index < annotationsList.Count; index++)
+                for (int index = 0; index < transientAnnotations.Count; index++)
                 {
-                    IEdmDirectValueAnnotation existingAnnotation = annotationsList[index];
+                    IEdmDirectValueAnnotation existingAnnotation = transientAnnotations[index];
                     if (existingAnnotation.NamespaceUri == namespaceName && existingAnnotation.Name == localName)
                     {
-                        transientAnnotations = annotationsList.RemoveAt(index);
+                        transientAnnotations = transientAnnotations.RemoveAt(index);
                         return;
                     }
                 }
@@ -261,10 +261,9 @@ namespace Microsoft.OData.Edm.Vocabularies
                 yield break;
             }
 
-            VersioningList<IEdmDirectValueAnnotation> annotationsList = transientAnnotations;
-            for (int index = 0; index < annotationsList.Count; index++)
+            for (int index = 0; index < transientAnnotations.Count; index++)
             {
-                IEdmDirectValueAnnotation existingAnnotation = annotationsList[index];
+                IEdmDirectValueAnnotation existingAnnotation = transientAnnotations[index];
                 if (existingAnnotation.Value != null)
                 {
                     yield return existingAnnotation;
