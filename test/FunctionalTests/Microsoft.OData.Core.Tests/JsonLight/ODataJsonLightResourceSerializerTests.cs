@@ -198,7 +198,7 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             var resource = CreateCategoryResource();
             resource.MetadataBuilder = new TestODataResourceMetadataBuilder(
-                resource: resource,
+                resource.Id,
                 unprocessedNavigationLinksFactory: () => GetNavigationLinks(resource.Id),
                 unprocessedStreamPropertiesFactory: () => GetStreamProperties(resource.Id));
 
@@ -217,12 +217,12 @@ namespace Microsoft.OData.Tests.JsonLight
                         new NullDuplicatePropertyNameChecker());
                 });
 
-            Assert.Equal("{\"BestSeller@odata.associationLink\":\"http://tempuri.org/Categories(1)/associationLink\"," +
-                "\"BestSeller@odata.navigationLink\":\"http://tempuri.org/Categories(1)/navigationLink\"," +
-                "\"Img@odata.mediaEditLink\":\"http://tempuri.org/Categories(1)/blob/editLink\"," +
-                "\"Img@odata.mediaReadLink\":\"http://tempuri.org/Categories(1)/blob/readLink\"," +
+            Assert.Equal("{\"BestSeller@odata.associationLink\":\"http://tempuri.org/Categories(1)/BestSeller/$ref\"," +
+                "\"BestSeller@odata.navigationLink\":\"http://tempuri.org/Categories(1)/BestSeller\"," +
+                "\"Img@odata.mediaEditLink\":\"http://tempuri.org/Categories(1)/Img/Edit\"," +
+                "\"Img@odata.mediaReadLink\":\"http://tempuri.org/Categories(1)/Img\"," +
                 "\"Img@odata.mediaContentType\":\"image/png\"," +
-                "\"Img@odata.mediaEtag\":\"blob-etag\"",
+                "\"Img@odata.mediaEtag\":\"img-etag\"",
                 result);
         }
 
@@ -573,7 +573,7 @@ namespace Microsoft.OData.Tests.JsonLight
                     Name = "BestSeller",
                     Url = new Uri($"{uriString}/BestSeller"),
                     IsCollection = false,
-                    AssociationLinkUrl = new Uri($"{uriString}/associationLink")
+                    AssociationLinkUrl = new Uri($"{uriString}/BestSeller/$ref")
                 },
                 nestedProperty: this.categoryEntityType.FindProperty("BestSeller"),
                 nestedResourceType: this.productEntityType);
@@ -590,9 +590,9 @@ namespace Microsoft.OData.Tests.JsonLight
                 Name = "Img",
                 Value = new ODataStreamReferenceValue
                 {
-                    EditLink = new Uri($"{uriString}/blob/editLink"),
-                    ReadLink = new Uri($"{uriString}/blob/readLink"),
-                    ETag = "blob-etag",
+                    EditLink = new Uri($"{uriString}/Img/Edit"),
+                    ReadLink = new Uri($"{uriString}/Img"),
+                    ETag = "img-etag",
                     ContentType = "image/png"
                 }
             };
@@ -619,147 +619,5 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         #endregion Helper Methods
-
-        #region Helper Classes
-
-        private class TestODataJsonLightWriterResourceState : IODataJsonLightWriterResourceState
-        {
-            public TestODataJsonLightWriterResourceState(
-                ODataResourceBase resource,
-                IEdmStructuredType structuredType,
-                ODataResourceSerializationInfo serializationInfo,
-                IEdmNavigationSource navigationSource,
-                bool isUndeclared)
-            {
-                Resource = resource;
-                ResourceType = structuredType;
-                ResourceTypeFromMetadata = structuredType;
-                SerializationInfo = serializationInfo;
-                NavigationSource = navigationSource;
-                IsUndeclared = isUndeclared;
-            }
-
-            public ODataResourceBase Resource { get; }
-
-            public IEdmStructuredType ResourceType { get; }
-
-            public IEdmStructuredType ResourceTypeFromMetadata { get; }
-
-            public ODataResourceSerializationInfo SerializationInfo { get; }
-
-            public IEdmNavigationSource NavigationSource { get; }
-
-            public bool IsUndeclared { get; }
-
-            public bool EditLinkWritten { get; set; }
-            public bool ReadLinkWritten { get; set; }
-            public bool MediaEditLinkWritten { get; set; }
-            public bool MediaReadLinkWritten { get; set; }
-            public bool MediaContentTypeWritten { get; set; }
-            public bool MediaETagWritten { get; set; }
-
-            public ODataResourceTypeContext GetOrCreateTypeContext(bool writingResponse)
-            {
-                return new ODataResourceTypeContext.ODataResourceTypeContextWithModel(
-                    NavigationSource,
-                    ResourceType as IEdmEntityType,
-                    ResourceType);
-            }
-        }
-
-        /// <summary>
-        /// Metadata builder class specifically designed to help support test scenarios for ODataJsonLightResourceSerializer
-        /// </summary>
-        private class TestODataResourceMetadataBuilder : ODataResourceMetadataBuilder
-        {
-            private readonly ODataResource resource;
-            private readonly string resourceUriString;
-            private readonly Func<IEnumerable<ODataJsonLightReaderNestedResourceInfo>> unprocessedNavigationLinksFactory;
-            private readonly Func<IEnumerable<ODataProperty>> unprocessedStreamPropertiesFactory;
-            private IEnumerator<ODataJsonLightReaderNestedResourceInfo> unprocessedNavigationLinks;
-            private IEnumerator<ODataProperty> unprocessedStreamProperties;
-
-            public TestODataResourceMetadataBuilder(
-                ODataResource resource,
-                Func<IEnumerable<ODataJsonLightReaderNestedResourceInfo>> unprocessedNavigationLinksFactory = null,
-                Func<IEnumerable<ODataProperty>> unprocessedStreamPropertiesFactory = null)
-            {
-                this.resource = resource;
-                this.resourceUriString = resource.Id.ToString();
-                this.unprocessedNavigationLinksFactory = unprocessedNavigationLinksFactory;
-                this.unprocessedStreamPropertiesFactory = unprocessedStreamPropertiesFactory;
-                this.unprocessedNavigationLinks = null;
-                this.unprocessedStreamProperties = null;
-            }
-
-            internal override Uri GetEditLink()
-            {
-                return this.resource.EditLink;
-            }
-
-            internal override string GetETag()
-            {
-                return this.resource?.MediaResource.ETag;
-            }
-
-            internal override Uri GetId()
-            {
-                return new Uri(this.resourceUriString);
-            }
-
-            internal override Uri GetReadLink()
-            {
-                return this.resource.ReadLink;
-            }
-
-            internal override bool TryGetIdForSerialization(out Uri id)
-            {
-                id = new Uri(this.resourceUriString);
-
-                return true;
-            }
-
-            internal override Uri GetNavigationLinkUri(string navigationPropertyName, Uri navigationLinkUrl, bool hasNestedResourceInfoUrl)
-            {
-                return new Uri($"{this.resourceUriString}/navigationLink");
-            }
-
-            internal override Uri GetAssociationLinkUri(string navigationPropertyName, Uri associationLinkUrl, bool hasAssociationLinkUrl)
-            {
-                return new Uri($"{this.resourceUriString}/associationLink");
-            }
-
-            internal override ODataJsonLightReaderNestedResourceInfo GetNextUnprocessedNavigationLink()
-            {
-                if (this.unprocessedNavigationLinks == null && this.unprocessedNavigationLinksFactory != null)
-                {
-                    this.unprocessedNavigationLinks = this.unprocessedNavigationLinksFactory().GetEnumerator();
-                }
-
-                if (this.unprocessedNavigationLinks != null && this.unprocessedNavigationLinks.MoveNext())
-                {
-                    return unprocessedNavigationLinks.Current;
-                }
-
-                return null;
-            }
-
-            internal override ODataProperty GetNextUnprocessedStreamProperty()
-            {
-                if (this.unprocessedStreamProperties == null && this.unprocessedStreamPropertiesFactory != null)
-                {
-                    this.unprocessedStreamProperties = this.unprocessedStreamPropertiesFactory().GetEnumerator();
-                }
-
-                if (this.unprocessedStreamProperties != null && this.unprocessedStreamProperties.MoveNext())
-                {
-                    return unprocessedStreamProperties.Current;
-                }
-
-                return null;
-            }
-        }
-
-        #endregion Helper Classes
     }
 }
