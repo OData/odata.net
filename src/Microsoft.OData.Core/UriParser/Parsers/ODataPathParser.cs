@@ -1763,7 +1763,7 @@ namespace Microsoft.OData.UriParser
 
             if (previous != null)
             {
-                bindingType = previous.TargetEdmType;
+                bindingType = previous.EdmType;
             }
 
             if (bindingType == null || model == null)
