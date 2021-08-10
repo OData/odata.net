@@ -918,6 +918,37 @@ namespace Microsoft.OData.Tests.JsonLight
                     (jsonLightParameterWriter) => jsonLightParameterWriter.CreateResourceSetWriterAsync(null)));
         }
 
+        [Fact]
+        public async Task WriteStartAsync_ThrowsExceptionForWriterInCanWriteParameterState()
+        {
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                async () =>
+                {
+                    var jsonLightOutputContext = CreateJsonLightOutputContext(new MemoryStream(), writingResponse: false, synchronous: false);
+                    var jsonLightParameterWriter = new ODataJsonLightParameterWriter(jsonLightOutputContext, operation: null);
+
+                    await jsonLightParameterWriter.WriteStartAsync();
+                    await jsonLightParameterWriter.WriteStartAsync();
+                });
+
+            Assert.Equal(Strings.ODataParameterWriterCore_CannotWriteStart, exception.Message);
+        }
+
+        [Fact]
+        public async Task WriteEndAsync_ThrowsExceptionForWriterInStartState()
+        {
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                async () =>
+                {
+                    var jsonLightOutputContext = CreateJsonLightOutputContext(new MemoryStream(), writingResponse: false, synchronous: false);
+                    var jsonLightParameterWriter = new ODataJsonLightParameterWriter(jsonLightOutputContext, operation: null);
+
+                    await jsonLightParameterWriter.WriteEndAsync();
+                });
+
+            Assert.Equal(Strings.ODataParameterWriterCore_CannotWriteEnd, exception.Message);
+        }
+
         /// <summary>
         /// Sets up an ODataJsonLightParameterWriter,
         /// then runs the given test code asynchronously,

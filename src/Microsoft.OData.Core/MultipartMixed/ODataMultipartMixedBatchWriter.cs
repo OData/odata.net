@@ -124,8 +124,8 @@ namespace Microsoft.OData.MultipartMixed
             // Asynchronously flush the async buffered stream to the underlying message stream (if there's any);
             // then dispose the batch writer (since we are now writing the operation content) and set the corresponding state.
             await this.RawOutputContext.FlushBuffersAsync()
-                .FollowOnSuccessWith(task => this.DisposeBatchWriterAndSetContentStreamRequestedState())
                 .ConfigureAwait(false);
+            this.DisposeBatchWriterAndSetContentStreamRequestedState();
         }
 
         /// <summary>

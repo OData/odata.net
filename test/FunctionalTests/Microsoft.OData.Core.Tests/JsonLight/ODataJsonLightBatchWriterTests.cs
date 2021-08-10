@@ -495,7 +495,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         [Fact]
         public async Task WriteBatchRequestAsync_ThrowsExceptionForChangesetStartedWithinChangeset()
         {
-            var exception = await Assert.ThrowsAsync<AggregateException>(
+            var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonLightBatchWriterAndRunTestAsync(
                     async (jsonLightBatchWriter) =>
                     {
@@ -505,14 +505,13 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                         await jsonLightBatchWriter.WriteStartChangesetAsync();
                     }));
 
-            Assert.IsType<ODataException>(exception.InnerException);
-            Assert.Equal(Strings.ODataBatchWriter_CannotStartChangeSetWithActiveChangeSet, exception.InnerException.Message);
+            Assert.Equal(Strings.ODataBatchWriter_CannotStartChangeSetWithActiveChangeSet, exception.Message);
         }
 
         [Fact]
         public async Task WriteBatchRequestAsync_ThrowsExceptionForEndChangesetNotPrecededByStartChangeset()
         {
-            var exception = await Assert.ThrowsAsync<AggregateException>(
+            var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonLightBatchWriterAndRunTestAsync(
                     async (jsonLightBatchWriter) =>
                     {
@@ -521,14 +520,13 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                         await jsonLightBatchWriter.WriteEndChangesetAsync();
                     }));
 
-            Assert.IsType<ODataException>(exception.InnerException);
-            Assert.Equal(Strings.ODataBatchWriter_CannotCompleteChangeSetWithoutActiveChangeSet, exception.InnerException.Message);
+            Assert.Equal(Strings.ODataBatchWriter_CannotCompleteChangeSetWithoutActiveChangeSet, exception.Message);
         }
 
         [Fact]
         public async Task WriteBatchRequestAsync_ThrowsExceptionForEndBatchBeforeEndChangeset()
         {
-            var exception = await Assert.ThrowsAsync<AggregateException>(
+            var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonLightBatchWriterAndRunTestAsync(
                     async (jsonLightBatchWriter) =>
                     {
@@ -538,14 +536,13 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                         await jsonLightBatchWriter.WriteEndBatchAsync();
                     }));
 
-            Assert.IsType<ODataException>(exception.InnerException);
-            Assert.Equal(Strings.ODataBatchWriter_CannotCompleteBatchWithActiveChangeSet, exception.InnerException.Message);
+            Assert.Equal(Strings.ODataBatchWriter_CannotCompleteBatchWithActiveChangeSet, exception.Message);
         }
 
         [Fact]
         public async Task WriteBatchRequestAsync_ThrowsExceptionForNoStartBatch()
         {
-            var exception = await Assert.ThrowsAsync<AggregateException>(
+            var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonLightBatchWriterAndRunTestAsync(
                 async (jsonLightBatchWriter) =>
                 {
@@ -553,8 +550,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     await jsonLightBatchWriter.WriteStartChangesetAsync();
                 }));
 
-            Assert.IsType<ODataException>(exception.InnerException);
-            Assert.Equal(Strings.ODataBatchWriter_InvalidTransitionFromStart, exception.InnerException.Message);
+            Assert.Equal(Strings.ODataBatchWriter_InvalidTransitionFromStart, exception.Message);
         }
 
         [Fact]
