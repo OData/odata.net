@@ -668,15 +668,16 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
                 if (inlineType)
                 {
-                    if (element.TypeKind() == EdmTypeKind.Collection)
+                    var typeKind = element.TypeKind();
+                    if (typeKind == EdmTypeKind.Collection)
                     {
-                        IEdmCollectionTypeReference collectionElement = element.AsCollection();
-                        this.schemaWriter.WriteNullableAttribute(collectionElement.CollectionDefinition().ElementType, nullableAttributeRequiredForCollection);
-                        VisitTypeReference(collectionElement.CollectionDefinition().ElementType);
+                        var elementType = element.AsCollection().CollectionDefinition().ElementType;
+                        this.schemaWriter.WriteNullableAttribute(elementType, typeKind);
+                        VisitTypeReference(elementType);
                     }
                     else
                     {
-                        this.schemaWriter.WriteNullableAttribute(element, false);
+                        this.schemaWriter.WriteNullableAttribute(element, typeKind);
                         VisitTypeReference(element);
                     }
                 }

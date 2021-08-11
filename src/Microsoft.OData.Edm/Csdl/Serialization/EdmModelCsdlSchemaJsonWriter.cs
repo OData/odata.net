@@ -384,18 +384,12 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// 7.2.1 Nullable, A Boolean value specifying whether a value is required for the property.
         /// </summary>
         /// <param name="reference">The Edm type reference.</param>
-        /// <param name="alwaysWrite">Specifies if the attribute is always written or not if the value is the default value.
-        internal override void WriteNullableAttribute(IEdmTypeReference reference, bool alwaysWrite)
+        /// <param name="parentTypeKind">The parent object's (the property) type kind.
+        internal override void WriteNullableAttribute(IEdmTypeReference reference, EdmTypeKind parentTypeKind)
         {
-            // The value of $Nullable is one of the Boolean literals true or false. Absence of the member means false.
-            if(alwaysWrite)
-            {
-                this.jsonWriter.WriteRequiredProperty("$Nullable", reference.IsNullable);
-            }
-            else
-            {
-                this.jsonWriter.WriteOptionalProperty("$Nullable", reference.IsNullable, defaultValue: false);
-            }
+            // The value of $Nullable is one of the Boolean literals true or false. Absence of the JSON property means false.
+            // parentTypeKind gets intentionally ignored since JSON CSDL never writes $Nullable=false
+            this.jsonWriter.WriteOptionalProperty("$Nullable", reference.IsNullable, defaultValue: false);            
         }
 
         internal override void WriteTypeDefinitionAttributes(IEdmTypeDefinitionReference reference)
