@@ -91,10 +91,6 @@ namespace Microsoft.OData.UriParser
                 {
                     Debug.Assert(bracketLiteralText[bracketLiteralText.Length - 1] == ')',
                         "Collection with opening '(' should have corresponding ')'");
-                    if (bracketLiteralText.Replace(" ", String.Empty) == "()")
-                    {
-                        throw new ODataException(ODataErrorStrings.MetadataBinder_RightOperandNotCollectionValue);
-                    }
 
                     StringBuilder replacedText = new StringBuilder(bracketLiteralText);
                     replacedText[0] = '[';
@@ -313,12 +309,17 @@ namespace Microsoft.OData.UriParser
 
         private static string NormalizeGuidCollectionItems(string bracketLiteralText)
         {
-            string[] items = bracketLiteralText.Substring(1, bracketLiteralText.Length - 2).Split(',')
+            string normalizedText = bracketLiteralText.Substring(1, bracketLiteralText.Length - 2).Trim();
+            if (normalizedText.Length == 0)
+            {
+                return "[]";
+            }
+            string[] items = normalizedText.Split(',')
                 .Select(s => s.Trim()).ToArray();
 
             for (int i = 0; i < items.Length; i++)
             {
-                if (items[i] != "null" && items[i][0] != '\'' && items[i][0] != '"')
+                if (items[i] != NullLiteral && items[i][0] != '\'' && items[i][0] != '"')
                 {
                     items[i] = String.Format(CultureInfo.InvariantCulture, "'{0}'", items[i]);
                 }
@@ -329,7 +330,12 @@ namespace Microsoft.OData.UriParser
 
         private static string NormalizeDateTimeCollectionItems(string bracketLiteralText)
         {
-            string[] items = bracketLiteralText.Substring(1, bracketLiteralText.Length - 2).Split(',')
+            string normalizedText = bracketLiteralText.Substring(1, bracketLiteralText.Length - 2).Trim();
+            if (normalizedText.Length == 0)
+            {
+                return "[]";
+            }
+            string[] items = normalizedText.Split(',')
                 .Select(s => s.Trim()).ToArray();
 
             for (int i = 0; i < items.Length; i++)
