@@ -223,9 +223,12 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.xmlWriter.WriteEndElement();
         }
 
-        internal override void WriteNullableAttribute(IEdmTypeReference reference, bool alwaysWrite)
+        /// <inheritdoc/>
+        internal override void WriteNullableAttribute(IEdmTypeReference reference, EdmTypeKind parentTypeKind)
         {
-            if (alwaysWrite)
+            // if the parent type is a collection ensure the XML attribute is always written, even if false.
+            // see section 7.2.1 Nullable of OData 4.0.1
+            if (parentTypeKind == EdmTypeKind.Collection)
             {
                 this.WriteRequiredAttribute(CsdlConstants.Attribute_Nullable, reference.IsNullable, EdmValueWriter.BooleanAsXml);
             }
