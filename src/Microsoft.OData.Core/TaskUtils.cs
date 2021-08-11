@@ -154,6 +154,27 @@ namespace Microsoft.OData.Client
             }
         }
 
+        internal static Task<T> GetTaskForSynchronousOperation<T>(IODataLogger logger, Func<IODataLogger, T> synchronousOperation)
+        {
+            Debug.Assert(synchronousOperation != null, "synchronousOperation != null");
+            Debug.Assert(!(typeof(Task).IsAssignableFrom(typeof(T))), "This method doesn't support operations returning Task instances.");
+
+            try
+            {
+                T result = synchronousOperation(logger);
+                return TaskUtils.GetCompletedTask<T>(result);
+            }
+            catch (Exception e)
+            {
+                if (!ExceptionUtils.IsCatchableExceptionType(e))
+                {
+                    throw;
+                }
+
+                return TaskUtils.GetFaultedTask<T>(e);
+            }
+        }
+
         /// <summary>
         /// Returns an already completed task for the specified synchronous operation which returns a task.
         /// </summary>

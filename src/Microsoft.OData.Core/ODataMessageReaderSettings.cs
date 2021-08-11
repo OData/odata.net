@@ -60,7 +60,28 @@ namespace Microsoft.OData
                 this.ReadUntypedAsString = false;
                 this.MaxProtocolVersion = odataVersion;
             }
+
+            this.Magic = -1; // default one
         }
+
+        private IODataLogger _logger;
+        public IODataLogger Logger 
+        {
+            get
+            {
+                return _logger;
+            }
+            set
+            {
+                _logger = value;
+                if (_logger != null)
+                {
+                    _logger.LogInfo("[OData.NET]: Set the logger in Message Reader settings.");
+                }
+            }
+        }
+
+        public int Magic { get; set; }
 
         /// <summary>
         /// Gets or sets library compatibility version. Default value is <see cref="Microsoft.OData.ODataLibraryCompatibility.Latest"/>,
@@ -113,6 +134,11 @@ namespace Microsoft.OData
 
             set
             {
+                if (_logger != null)
+                {
+                    _logger.LogInfo($"[ReaderSetting]: Reset base Uri from '{this.baseUri}' to '{value}'");
+                }
+
                 this.baseUri = UriUtils.EnsureTaillingSlash(value);
             }
         }
@@ -270,6 +296,11 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentNotNull(other, "other");
 
+            if (_logger != null)
+            {
+                _logger.LogInfo($"[ReaderSetting]: this.BaseUri={this.BaseUri}, other.BaseUri={other.BaseUri}, OriginalMagic={this.Magic}, other.Magic={other.Magic}");
+            }
+
             this.BaseUri = new Uri(other.BaseUri.OriginalString);
             this.ClientCustomTypeResolver = other.ClientCustomTypeResolver;
             this.PrimitiveTypeResolver = other.PrimitiveTypeResolver;
@@ -288,6 +319,7 @@ namespace Microsoft.OData
             this.Version = other.Version;
             this.ReadAsStreamFunc = other.ReadAsStreamFunc;
             this.ArrayPool = other.ArrayPool;
+            this.Magic = other.Magic;
         }
     }
 }

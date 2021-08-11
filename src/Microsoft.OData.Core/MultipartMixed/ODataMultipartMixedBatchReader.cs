@@ -66,9 +66,12 @@ namespace Microsoft.OData.MultipartMixed
         /// in a batch request.
         /// </summary>
         /// <returns>The message that can be used to read the content of the batch request operation from.</returns>
-        protected override ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation()
+        protected override ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation(IODataLogger logger)
         {
             string requestLine = this.batchStream.ReadFirstNonEmptyLine();
+
+            this.InputContext.MessageReaderSettings.Logger.LogInfo($"[OData.NET - 1]: requestLine: {requestLine}");
+            logger.LogInfo($"[OData.NET - 1]: requestLine: {requestLine}, ReaderMagic={this.InputContext.MessageReaderSettings.Magic}");
 
             string httpMethod;
             Uri requestUri;
@@ -103,7 +106,8 @@ namespace Microsoft.OData.MultipartMixed
                 headers,
                 this.currentContentId,
                 this.batchStream.ChangeSetBoundary,
-                this.dependsOnIdsTracker.GetDependsOnIds(), /*dependsOnIdsValidationRequired*/false);
+                this.dependsOnIdsTracker.GetDependsOnIds(), /*dependsOnIdsValidationRequired*/false,
+                logger);
 
             if (this.currentContentId != null)
             {
@@ -111,6 +115,10 @@ namespace Microsoft.OData.MultipartMixed
             }
 
             this.currentContentId = null;
+
+
+            this.InputContext.MessageReaderSettings.Logger.LogInfo($"[OData.NET - 2]: requestMessage.Uri: {requestMessage.Url}");
+            logger.LogInfo($"[OData.NET - 2]: requestMessage.Uri: {requestMessage.Url}, ReaderMagic={this.InputContext.MessageReaderSettings.Magic}");
 
             return requestMessage;
         }

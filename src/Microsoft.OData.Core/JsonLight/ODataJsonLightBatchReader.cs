@@ -116,7 +116,7 @@ namespace Microsoft.OData.JsonLight
         /// in a batch request.
         /// </summary>
         /// <returns>The message that can be used to read the content of the batch request operation from.</returns>
-        protected override ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation()
+        protected override ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation(IODataLogger logger)
         {
             Debug.Assert(this.mode == ReaderMode.Requests, "this.mode == ReaderMode.Requests");
             Debug.Assert(this.messagePropertiesCache != null, "this.messagePropertiesCache != null");

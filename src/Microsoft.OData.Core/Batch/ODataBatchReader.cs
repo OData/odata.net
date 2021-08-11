@@ -13,6 +13,25 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData
 {
+    public interface IODataLogger
+    {
+        string Name { get; }
+
+        void LogInformation(string message);
+
+    }
+
+    public static class ODataLoggerExtensions
+    {
+        public static void LogInfo(this IODataLogger logger, string message)
+        {
+            if (logger != null)
+            {
+                logger.LogInformation($"[{logger.Name}]: LoggerMessage={message}");
+            }
+        }
+    }
+
     /// <summary>
     /// Abstract class for reading OData batch messages; also verifies the proper sequence of read calls on the reader.
     /// </summary>
@@ -148,11 +167,11 @@ namespace Microsoft.OData
 
         /// <summary>Returns an <see cref="Microsoft.OData.ODataBatchOperationRequestMessage" /> for reading the content of a batch operation.</summary>
         /// <returns>A request message for reading the content of a batch operation.</returns>
-        public ODataBatchOperationRequestMessage CreateOperationRequestMessage()
+        public ODataBatchOperationRequestMessage CreateOperationRequestMessage(IODataLogger logger = null)
         {
             this.VerifyCanCreateOperationRequestMessage(/*synchronousCall*/ true);
             ODataBatchOperationRequestMessage result =
-                this.InterceptException((Func<ODataBatchOperationRequestMessage>)this.CreateOperationRequestMessageImplementation);
+                this.InterceptException(logger, (Func<IODataLogger, ODataBatchOperationRequestMessage>)this.CreateOperationRequestMessageImplementation);
             this.ReaderOperationState = OperationState.MessageCreated;
             this.contentIdToAddOnNextRead = result.ContentId;
             return result;
@@ -160,10 +179,10 @@ namespace Microsoft.OData
 
         /// <summary>Asynchronously returns an <see cref="Microsoft.OData.ODataBatchOperationRequestMessage" /> for reading the content of a batch operation.</summary>
         /// <returns>A task that when completed returns a request message for reading the content of a batch operation.</returns>
-        public Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageAsync()
+        public Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageAsync(IODataLogger logger = null)
         {
             this.VerifyCanCreateOperationRequestMessage(/*synchronousCall*/ false);
-            return TaskUtils.GetTaskForSynchronousOperation<ODataBatchOperationRequestMessage>(
+            return TaskUtils.GetTaskForSynchronousOperation<ODataBatchOperationRequestMessage>(logger, 
                 this.CreateOperationRequestMessageImplementation)
                 .FollowOnSuccessWithTask(
                     t =>
@@ -257,7 +276,7 @@ namespace Microsoft.OData
         /// in a batch request.
         /// </summary>
         /// <returns>The message that can be used to read the content of the batch request operation from.</returns>
-        protected abstract ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation();
+        protected abstract ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation(IODataLogger logger);
 
         /// <summary>
         /// Returns the cached <see cref="ODataBatchOperationRequestMessage"/> for reading the content of an operation
@@ -321,15 +340,23 @@ namespace Microsoft.OData
             string contentId,
             string groupId,
             IEnumerable<string> dependsOnRequestIds,
-            bool dependsOnIdsValidationRequired)
+            bool dependsOnIdsValidationRequired, IODataLogger logger = null)
         {
             if (dependsOnRequestIds != null && dependsOnIdsValidationRequired)
             {
                 ValidateDependsOnIds(contentId, dependsOnRequestIds);
             }
 
+            string message = $"[BuildOperationRequestMessage 1]: ReaderSettings.BaseUri={this.inputContext.MessageReaderSettings.BaseUri}";
+            this.InputContext.MessageReaderSettings.Logger.LogInfo(message);
+            logger.LogInfo(message);
+
             Uri uri = ODataBatchUtils.CreateOperationRequestUri(
                 requestUri, this.inputContext.MessageReaderSettings.BaseUri, this.PayloadUriConverter);
+
+            this.InputContext.MessageReaderSettings.Logger.LogInfo($"[BuildOperationRequestMessage 2]: Uri: {uri}: PayloadUriConverter: {this.PayloadUriConverter != null}");
+
+            logger.LogInfo($"[BuildOperationRequestMessage 2]: Uri: {uri}: PayloadUriConverter: {this.PayloadUriConverter != null}");
 
             ODataBatchUtils.ValidateReferenceUri(requestUri, dependsOnRequestIds,
                 this.inputContext.MessageReaderSettings.BaseUri);
@@ -640,6 +667,23 @@ namespace Microsoft.OData
             try
             {
                 return action();
+            }
+            catch (Exception e)
+            {
+                if (ExceptionUtils.IsCatchableExceptionType(e))
+                {
+                    this.State = ODataBatchReaderState.Exception;
+                }
+
+                throw;
+            }
+        }
+
+        private T InterceptException<T>(IODataLogger logger, Func<IODataLogger, T> action)
+        {
+            try
+            {
+                return action(logger);
             }
             catch (Exception e)
             {
