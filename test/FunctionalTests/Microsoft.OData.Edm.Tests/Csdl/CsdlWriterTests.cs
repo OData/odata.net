@@ -747,7 +747,6 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       ""ComplexProp"": {
         ""$Collection"": true,
         ""$Type"": ""NS.ComplexType1"",
-        ""$Nullable"": false
       },
       ""OuterNavA"": {
         ""$Kind"": ""NavigationProperty"",
