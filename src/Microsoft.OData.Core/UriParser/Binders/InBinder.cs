@@ -319,12 +319,20 @@ namespace Microsoft.OData.UriParser
         private static string NormalizeGuidCollectionItems(string bracketLiteralText)
         {
             string normalizedText = bracketLiteralText.Substring(1, bracketLiteralText.Length - 2).Trim();
-            normalizedText = normalizedText.Replace(" ", string.Empty);
 
-            // If we have '' or "" or empty string we return empty brackets.
-            if (normalizedText == "''" || normalizedText == "\"\"" || normalizedText.Length == 0)
+            // If we have empty brackets ()
+            if (normalizedText.Length == 0)
             {
                 return "[]";
+            }
+
+            normalizedText = normalizedText.Replace(" ", string.Empty);
+
+            // If we have '' or "" or empty strings in the brackets e.g (' ')
+            // We throw an exception since empty strings are not valid guid values.
+            if (normalizedText == "''" || normalizedText == "\"\"")
+            {
+                throw new ODataException(ODataErrorStrings.MetadataBinder_RightOperandInvalidValue);
             }
 
             string[] items = normalizedText.Split(',')
@@ -344,10 +352,22 @@ namespace Microsoft.OData.UriParser
         private static string NormalizeDateTimeCollectionItems(string bracketLiteralText)
         {
             string normalizedText = bracketLiteralText.Substring(1, bracketLiteralText.Length - 2).Trim();
+
+            // If we have empty brackets ()
             if (normalizedText.Length == 0)
             {
                 return "[]";
             }
+
+            string normalizedTextWithoutSpaces = normalizedText.Replace(" ", string.Empty);
+
+            // If we have '' or "" or empty strings in the brackets e.g (' ')
+            // We throw an exception since empty strings are not valid guid values.
+            if (normalizedTextWithoutSpaces == "''" || normalizedTextWithoutSpaces == "\"\"")
+            {
+                throw new ODataException(ODataErrorStrings.MetadataBinder_RightOperandInvalidValue);
+            }
+
             string[] items = normalizedText.Split(',')
                 .Select(s => s.Trim()).ToArray();
 

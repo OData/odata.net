@@ -5496,6 +5496,17 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The right operand for the IN operation is an invalid value."
+        /// </summary>
+        internal static string MetadataBinder_RightOperandInvalidValue
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.MetadataBinder_RightOperandInvalidValue);
+            }
+        }
+
+        /// <summary>
         /// A string like "The parent value for a property access of a property '{0}' is not a single value. Property access can only be applied to a single value."
         /// </summary>
         internal static string MetadataBinder_PropertyAccessSourceNotSingleValue(object p0)

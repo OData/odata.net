@@ -2379,10 +2379,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [InlineData("SSN in ('')")]     // Edm.String
         [InlineData("SSN in ( ' ' )")]     // Edm.String
         [InlineData("SSN in ( \" \" )")]     // Edm.String
-        [InlineData("MyGuid in ( '' )")]  // Edm.Guid
-        [InlineData("MyGuid in ( '  ' )")]  // Edm.Guid
-        [InlineData("MyGuid in ( \" \" )")]  // Edm.Guid
-        public void FilterWithInOperationWithEmptyQuotes(string filterClause)
+        public void FilterWithInOperationWithEmptyString(string filterClause)
         {
             FilterClause filter = ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
@@ -2390,6 +2387,22 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
             Assert.Equal(0, collectionNode.Collection.Count);
+        }
+
+        [Theory]
+        [InlineData("MyGuid in ( '' )")]  // Edm.Guid
+        [InlineData("MyGuid in ( '  ' )")]  // Edm.Guid
+        [InlineData("MyGuid in ( \" \" )")]  // Edm.Guid
+        [InlineData("Birthdate in ( '' )")]  // Edm.DateTimeOffset
+        [InlineData("Birthdate in ( \" \" )")]  // Edm.DateTimeOffset
+        [InlineData("Birthdate in ('')")]  // Edm.DateTimeOffset
+        [InlineData("MyDate in ( '' )")]  // Edm.Date
+        [InlineData("MyDate in ( \" \" )")]  // Edm.Date
+        [InlineData("MyDate in ('')")]  // Edm.Date
+        public void FilterWithInOperationWithEmptyQuotesThrows(string filterClause)
+        {
+            Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_RightOperandInvalidValue);
         }
 
         [Fact]
