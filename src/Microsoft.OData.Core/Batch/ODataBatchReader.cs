@@ -351,15 +351,16 @@ namespace Microsoft.OData
             this.InputContext.MessageReaderSettings.Logger.LogInfo(message);
             logger.LogInfo(message);
 
+            // Here's a workaround to use BatchBaseUri not use "BaseUri"
             Uri uri = ODataBatchUtils.CreateOperationRequestUri(
-                requestUri, this.InputContext.MessageReaderSettings.BaseUri, this.PayloadUriConverter, this.InputContext.MessageReaderSettings, logger);
+                requestUri, this.InputContext.MessageReaderSettings.BatchBaseUri, this.PayloadUriConverter, this.InputContext.MessageReaderSettings, logger);
 
             this.InputContext.MessageReaderSettings.Logger.LogInfo($"[BuildOperationRequestMessage 2]: Uri: {uri}: PayloadUriConverter: {this.PayloadUriConverter != null}");
 
             logger.LogInfo($"[BuildOperationRequestMessage 2]: Uri: {uri}: PayloadUriConverter: {this.PayloadUriConverter != null}");
 
-            ODataBatchUtils.ValidateReferenceUri(requestUri, dependsOnRequestIds,
-                this.inputContext.MessageReaderSettings.BaseUri);
+            // Here's a workaround to use BatchBaseUri not use "BaseUri"
+            ODataBatchUtils.ValidateReferenceUri(requestUri, dependsOnRequestIds, this.inputContext.MessageReaderSettings.BatchBaseUri);
 
             return new ODataBatchOperationRequestMessage(streamCreatorFunc, method, uri, headers, this,
                 contentId, this.PayloadUriConverter, /*writing*/ false, this.container, dependsOnRequestIds, groupId);
