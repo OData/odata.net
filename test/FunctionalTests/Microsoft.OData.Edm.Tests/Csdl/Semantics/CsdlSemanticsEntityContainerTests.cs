@@ -70,5 +70,28 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
             Assert.Equal(EdmContainerElementKind.ActionImport, imports[0].ContainerElementKind);
             Assert.Null(imports[0].EntitySet);
         }
+
+        [Fact]
+        public void NavigationPropertyBindingsReturned()
+        {
+            // arrange
+            var entitySet1 = new CsdlEntitySet("EntitySet1", "unknown", new[] { 
+                new CsdlNavigationPropertyBinding("foo", "bar", testLocation)
+            }, testLocation);
+            var singleton1 = new CsdlSingleton("Singleton", "unknown", new[] {
+                new CsdlNavigationPropertyBinding("foo", "bar", testLocation)
+            }, testLocation);
+            var csdlEntityContainer = CsdlBuilder.EntityContainer("Container", entitySets: new [] { entitySet1 }, singletons: new[] { singleton1 } );
+            var schema = CsdlBuilder.Schema("FQ.NS", csdlEntityContainers: new CsdlEntityContainer[] { csdlEntityContainer });
+            var csdlModel = new CsdlModel();
+            csdlModel.AddSchema(schema);
+            
+            // act
+            var container = (IEdmEntityContainer)csdlEntityContainer;
+            var bindings = container.GetNavigationPropertyBindings().ToList();
+
+            // assert
+            Assert.Equal(2, bindings.Count);
+        }
     }
 }
