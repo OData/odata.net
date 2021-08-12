@@ -294,21 +294,28 @@ namespace Microsoft.OData.Edm
         // This is testing if the name can be parsed and serialized, not if it is valid.
         internal static bool IsQualifiedName(string name)
         {
-            string[] nameTokens = name.Split('.');
-            if (nameTokens.Length < 2)
-            {
-                return false;
-            }
+            bool isAllWhiteSpace = true;
+            bool hasDot = false;
 
-            foreach (string token in nameTokens)
+            foreach (char ch in name)
             {
-                if (IsNullOrWhiteSpaceInternal(token))
+                if (ch == '.')
                 {
-                    return false;
+                    if (isAllWhiteSpace)
+                    {
+                        return false;
+                    }
+
+                    hasDot = true;
+                    isAllWhiteSpace = true;
+                }
+                else if (!char.IsWhiteSpace(ch))
+                {
+                    isAllWhiteSpace = false;
                 }
             }
 
-            return true;
+            return hasDot && !isAllWhiteSpace;
         }
 
         internal static bool IsValidUndottedName(string name)

@@ -28,5 +28,25 @@ namespace Microsoft.OData.Edm.Tests
             var entitySet = new EdmEntitySet(new EdmEntityContainer("d.s", "container"), "entitySet", new EdmEntityType("foo", "type"));
             Assert.Equal("d.s.container/entitySet", EdmUtil.FullyQualifiedName(entitySet));
         }
+
+        [Theory]
+        [InlineData("", false)]
+        [InlineData(" ", false)]
+        [InlineData("a. ", false)]
+        [InlineData(".com", false)]
+        [InlineData("com.", false)]
+        [InlineData(".", false)]
+        [InlineData("com", false)]
+        [InlineData("a.b.com", true)]
+        [InlineData(" a.b.com", true)]
+        [InlineData("a.b.com ", true)]
+        [InlineData(" a . b . c ", true)]
+        [InlineData("a . . c", false)]
+        [InlineData("a .. c", false)]
+        public void IsQualifiedName_Test(string name, bool expected)
+        {
+            var actual = EdmUtil.IsQualifiedName(name);
+            Assert.Equal(expected, actual);
+        }
     }
 }
