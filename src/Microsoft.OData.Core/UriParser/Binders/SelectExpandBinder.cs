@@ -380,6 +380,12 @@ namespace Microsoft.OData.UriParser
 
             if (firstNonTypeToken.NextToken != null)
             {
+                PathSegmentToken nextToken = firstNonTypeToken.NextToken;
+                if (nextToken.IsNamespaceOrContainerQualified())
+                {
+                    pathSoFar.AddRange(SelectExpandPathBinder.FollowTypeSegments(currentToken, this.Model, this.Settings.SelectExpandLimit, this.configuration.Resolver, ref currentLevelEntityType, out firstNonTypeToken));
+                }
+
                 // lastly... make sure that, since we're on a NavProp, that the next token isn't null.
                 if (firstNonTypeToken.NextToken.Identifier == UriQueryConstants.RefSegment)
                 {

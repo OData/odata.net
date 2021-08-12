@@ -220,5 +220,18 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var ex = Record.Exception(bindWithEmptySelectedItemsList);
             Assert.Null(ex);
         }
+
+        [Fact]
+        public void BindingOnTreeWithWithTypeTokenDoesNotThrow()
+        {
+            // Arrange: $expand=MyPeople/Fully.Qualified.Namespace.Employee
+            NonSystemToken innerSegment = new NonSystemToken("Fully.Qualified.Namespace.Employee", null, null);
+            NonSystemToken navProp = new NonSystemToken("MyPeople", null, innerSegment);
+            ExpandToken expandToken = new ExpandToken(new ExpandTermToken[] { new ExpandTermToken(navProp) });
+
+            // Act & Assert
+            var binderForDog = new SelectExpandBinder(this.V4configuration, new ODataPathInfo(HardCodedTestModel.GetDogType(), null), null);
+            var result = binderForDog.Bind(expandToken, null);
+        }
     }
 }
