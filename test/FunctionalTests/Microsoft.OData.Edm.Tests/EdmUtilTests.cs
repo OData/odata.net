@@ -40,6 +40,9 @@ namespace Microsoft.OData.Edm.Tests
         [InlineData("a.b.com", true)]
         [InlineData(" a.b.com", true)]
         [InlineData("a.b.com ", true)]
+        [InlineData(" a . b . c ", true)]
+        [InlineData("a . . c", false)]
+        [InlineData("a .. c", false)]
         public void IsQualifiedName_Test(string name, bool expected)
         {
             var actual = EdmUtil.IsQualifiedName(name);
