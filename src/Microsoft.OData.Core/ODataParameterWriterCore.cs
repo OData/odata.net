@@ -104,7 +104,7 @@ namespace Microsoft.OData
             this.VerifyCanFlush(true /*synchronousCall*/);
 
             // make sure we switch to writer state Error if an exception is thrown during flushing.
-            this.InterceptException(this.FlushSynchronously);
+            this.InterceptException((thisParam) => thisParam.FlushSynchronously());
         }
 
 
@@ -126,7 +126,7 @@ namespace Microsoft.OData
         public sealed override void WriteStart()
         {
             this.VerifyCanWriteStart(true /*synchronousCall*/);
-            this.InterceptException(() => this.WriteStartImplementation());
+            this.InterceptException((thisParam) => thisParam.WriteStartImplementation());
         }
 
 
@@ -138,7 +138,7 @@ namespace Microsoft.OData
         {
             this.VerifyCanWriteStart(false /*synchronousCall*/);
             await this.InterceptExceptionAsync(
-                () => this.WriteStartImplementationAsync()).ConfigureAwait(false);
+                (thisParam) => thisParam.WriteStartImplementationAsync()).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -150,7 +150,10 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(parameterName, "parameterName");
             IEdmTypeReference expectedTypeReference = this.VerifyCanWriteValueParameter(true /*synchronousCall*/, parameterName, parameterValue);
-            this.InterceptException(() => this.WriteValueImplementation(parameterName, parameterValue, expectedTypeReference));
+            this.InterceptException(
+                (thisParam, parameterNameParam, parameterValueParam, expectedTypeReferenceParam) => 
+                    thisParam.WriteValueImplementation(parameterName, parameterValue, expectedTypeReference),
+                parameterName, parameterValue, expectedTypeReference);
         }
 
 
@@ -165,7 +168,9 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(parameterName, "parameterName");
             IEdmTypeReference expectedTypeReference = this.VerifyCanWriteValueParameter(false /*synchronousCall*/, parameterName, parameterValue);
             await this.InterceptExceptionAsync(
-                () => this.WriteValueImplementationAsync(parameterName, parameterValue, expectedTypeReference)).ConfigureAwait(false);
+                (thisParam, parameterNameParam, parameterValueParam, expectedTypeReferenceParam) => 
+                    thisParam.WriteValueImplementationAsync(parameterNameParam, parameterValueParam, expectedTypeReferenceParam),
+                parameterName, parameterValue, expectedTypeReference).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -177,7 +182,10 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(parameterName, "parameterName");
             IEdmTypeReference itemTypeReference = this.VerifyCanCreateCollectionWriter(true /*synchronousCall*/, parameterName);
-            return this.InterceptException(() => this.CreateCollectionWriterImplementation(parameterName, itemTypeReference));
+            return this.InterceptException(
+                (thisParam, parameterNameParam, itemTypeReferenceParam) => 
+                    thisParam.CreateCollectionWriterImplementation(parameterNameParam, itemTypeReferenceParam),
+                parameterName, itemTypeReference);
         }
 
 
@@ -192,7 +200,9 @@ namespace Microsoft.OData
             IEdmTypeReference itemTypeReference = this.VerifyCanCreateCollectionWriter(false /*synchronousCall*/, parameterName);
 
             ODataCollectionWriter collectionWriter = await this.InterceptExceptionAsync(
-                () => this.CreateCollectionWriterImplementationAsync(parameterName, itemTypeReference)).ConfigureAwait(false);
+                (thisParam, parameterNameParam, itemTypeReferenceParam) =>
+                    thisParam.CreateCollectionWriterImplementationAsync(parameterNameParam, itemTypeReferenceParam),
+                parameterName, itemTypeReference).ConfigureAwait(false);
 
             Debug.Assert(collectionWriter != null, "collectionWriter != null");
             return collectionWriter;
@@ -205,7 +215,10 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(parameterName, "parameterName");
             IEdmTypeReference itemTypeReference = this.VerifyCanCreateResourceWriter(true /*synchronousCall*/, parameterName);
-            return this.InterceptException(() => this.CreateResourceWriterImplementation(parameterName, itemTypeReference));
+            return this.InterceptException(
+                (thisParam, parameterNameParam, itemTypeReferenceParam) =>
+                    thisParam.CreateResourceWriterImplementation(parameterNameParam, itemTypeReferenceParam),
+                parameterName, itemTypeReference);
         }
 
 
@@ -218,7 +231,9 @@ namespace Microsoft.OData
             IEdmTypeReference itemTypeReference = this.VerifyCanCreateResourceWriter(false /*synchronousCall*/, parameterName);
 
             ODataWriter resourceWriter = await this.InterceptExceptionAsync(
-                () => this.CreateResourceWriterImplementationAsync(parameterName, itemTypeReference)).ConfigureAwait(false);
+                (thisParam, parameterNameParam, itemTypeReferenceParam) =>
+                    thisParam.CreateResourceWriterImplementationAsync(parameterNameParam, itemTypeReferenceParam),
+                parameterName, itemTypeReference).ConfigureAwait(false);
 
             Debug.Assert(resourceWriter != null, "resourceWriter != null");
             return resourceWriter;
@@ -231,7 +246,10 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(parameterName, "parameterName");
             IEdmTypeReference itemTypeReference = this.VerifyCanCreateResourceSetWriter(true /*synchronousCall*/, parameterName);
-            return this.InterceptException(() => this.CreateResourceSetWriterImplementation(parameterName, itemTypeReference));
+            return this.InterceptException(
+                (thisParam, parameterNameParam, itemTypeReferenceParam) =>
+                    thisParam.CreateResourceSetWriterImplementation(parameterNameParam, itemTypeReferenceParam),
+                parameterName, itemTypeReference);
         }
 
 
@@ -244,7 +262,9 @@ namespace Microsoft.OData
             IEdmTypeReference itemTypeReference = this.VerifyCanCreateResourceSetWriter(false /*synchronousCall*/, parameterName);
 
             ODataWriter resourceSetWriter = await this.InterceptExceptionAsync(
-                () => this.CreateResourceSetWriterImplementationAsync(parameterName, itemTypeReference)).ConfigureAwait(false);
+                (thisParam, parameterNameParam, itemTypeReferenceParam) =>
+                    thisParam.CreateResourceSetWriterImplementationAsync(parameterNameParam, itemTypeReferenceParam),
+                parameterName, itemTypeReference).ConfigureAwait(false);
 
             Debug.Assert(resourceSetWriter != null, "resourceSetWriter != null");
             return resourceSetWriter;
@@ -256,7 +276,7 @@ namespace Microsoft.OData
         public sealed override void WriteEnd()
         {
             this.VerifyCanWriteEnd(true /*synchronousCall*/);
-            this.InterceptException(() => this.WriteEndImplementation());
+            this.InterceptException((thisParam) => thisParam.WriteEndImplementation());
             if (this.State == ParameterWriterState.Completed)
             {
                 // Note that we intentionally go through the public API so that if the Flush fails the writer moves to the Error state.
@@ -272,15 +292,15 @@ namespace Microsoft.OData
         {
             this.VerifyCanWriteEnd(false /*synchronousCall*/);
             await this.InterceptExceptionAsync(
-                async () =>
+                async (thisParam) =>
                 {
-                    await this.WriteEndImplementationAsync()
+                    await thisParam.WriteEndImplementationAsync()
                         .ConfigureAwait(false);
 
-                    if (this.State == ParameterWriterState.Completed)
+                    if (thisParam.State == ParameterWriterState.Completed)
                     {
                         // Note that we intentionally go through the public API so that if the FlushAsync fails the writer moves to the Error state.
-                        await this.FlushAsync()
+                        await thisParam.FlushAsync()
                             .ConfigureAwait(false);
                     }
                 }).ConfigureAwait(false);
@@ -450,7 +470,7 @@ namespace Microsoft.OData
         private void WriteStartImplementation()
         {
             Debug.Assert(this.State == ParameterWriterState.Start, "this.State == ParameterWriterState.Start");
-            this.InterceptException(this.StartPayload);
+            this.InterceptException((thisParam) => thisParam.StartPayload());
             this.EnterScope(ParameterWriterState.CanWriteParameter);
         }
 
@@ -591,7 +611,10 @@ namespace Microsoft.OData
         private void WriteValueImplementation(string parameterName, object parameterValue, IEdmTypeReference expectedTypeReference)
         {
             Debug.Assert(this.State == ParameterWriterState.CanWriteParameter, "this.State == ParameterWriterState.CanWriteParameter");
-            this.InterceptException(() => this.WriteValueParameter(parameterName, parameterValue, expectedTypeReference));
+            this.InterceptException(
+                (thisParam, parameterNameParam, parameterValueParam, expectedTypeReferenceParam) =>
+                    thisParam.WriteValueParameter(parameterName, parameterValue, expectedTypeReference),
+                parameterName, parameterValue, expectedTypeReference);
         }
 
         /// <summary>
@@ -691,7 +714,7 @@ namespace Microsoft.OData
         /// </summary>
         private void WriteEndImplementation()
         {
-            this.InterceptException(() => this.EndPayload());
+            this.InterceptException((thisParam) => thisParam.EndPayload());
             this.LeaveScope();
         }
 
@@ -743,11 +766,43 @@ namespace Microsoft.OData
         /// state ExceptionThrown and then rethrow the exception.
         /// </summary>
         /// <param name="action">The action to execute.</param>
-        private void InterceptException(Action action)
+        /// <remarks>
+        /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
+        /// so the compiler optimizes the code to avoid creating allocations on every call to this method.
+        /// </remarks>
+        private void InterceptException(Action<ODataParameterWriterCore> action)
         {
             try
             {
-                action();
+                action(this);
+            }
+            catch
+            {
+                this.EnterErrorScope();
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Catch any exception thrown by the action passed in; in the exception case move the writer into
+        /// state ExceptionThrown and then rethrow the exception.
+        /// </summary>
+        /// <typeparam name="TArg0">The delegate first argument type.</typeparam>
+        /// <typeparam name="TArg1">The delegate second argument type.</typeparam>
+        /// <typeparam name="TArg2">The delegate third argument type.</typeparam>
+        /// <param name="action">The action to execute.</param>
+        /// <param name="arg0">The first argument value provided to the action.</param>
+        /// <param name="arg1">The second argument value provided to the action.</param>
+        /// <param name="arg2">The third argument value provided to the action.</param>
+        /// <remarks>
+        /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
+        /// so the compiler optimizes the code to avoid creating allocations on every call to this method.
+        /// </remarks>
+        private void InterceptException<TArg0, TArg1, TArg2>(Action<ODataParameterWriterCore, TArg0, TArg1, TArg2> action, TArg0 arg0, TArg1 arg1, TArg2 arg2)
+        {
+            try
+            {
+                action(this, arg0, arg1, arg2);
             }
             catch
             {
@@ -761,13 +816,21 @@ namespace Microsoft.OData
         /// state ExceptionThrown and then rethrow the exception.
         /// </summary>
         /// <typeparam name="T">The return type of <paramref name="function"/>.</typeparam>
+        /// <typeparam name="TArg0">The delegate first argument type.</typeparam>
+        /// <typeparam name="TArg1">The delegate second argument type.</typeparam>
         /// <param name="function">The function to execute.</param>
+        /// <param name="arg0">The first argument value provided to the action.</param>
+        /// <param name="arg1">The second argument value provided to the action.</param>
         /// <returns>Returns the return value from executing <paramref name="function"/>.</returns>
-        private T InterceptException<T>(Func<T> function)
+        /// <remarks>
+        /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
+        /// so the compiler optimizes the code to avoid creating allocations on every call to this method.
+        /// </remarks>
+        private T InterceptException<T, TArg0, TArg1>(Func<ODataParameterWriterCore, TArg0, TArg1, T> function, TArg0 arg0, TArg1 arg1)
         {
             try
             {
-                return function();
+                return function(this, arg0, arg1);
             }
             catch
             {
@@ -885,11 +948,15 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="func">The delegate to execute asynchronously.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        private async Task InterceptExceptionAsync(Func<Task> func)
+        /// <remarks>
+        /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
+        /// so the compiler optimizes the code to avoid creating allocations on every call to this method.
+        /// </remarks>
+        private async Task InterceptExceptionAsync(Func<ODataParameterWriterCore, Task> func)
         {
             try
             {
-                await func().ConfigureAwait(false);
+                await func(this).ConfigureAwait(false);
             }
             catch
             {
@@ -902,14 +969,51 @@ namespace Microsoft.OData
         /// Asynchronously catch any exception thrown by the action passed in; in the exception case move the writer into
         /// state ExceptionThrown and then rethrow the exception.
         /// </summary>
+        /// <typeparam name="TArg0">The delegate first argument type.</typeparam>
+        /// <typeparam name="TArg1">The delegate second argument type.</typeparam>
+        /// <typeparam name="TArg2">The delegate third argument type.</typeparam>
         /// <param name="func">The delegate to execute asynchronously.</param>
-        /// <returns>A task that represents the asynchronous operation. 
-        /// The value of the TResult parameter contains a T instance.</returns>
-        private async Task<T> InterceptExceptionAsync<T>(Func<Task<T>> func)
+        /// <param name="arg0">The first argument value provided to the action.</param>
+        /// <param name="arg1">The second argument value provided to the action.</param>
+        /// <param name="arg2">The third argument value provided to the action.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <remarks>
+        /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
+        /// so the compiler optimizes the code to avoid creating allocations on every call to this method.
+        /// </remarks>
+        private async Task InterceptExceptionAsync<TArg0, TArg1, TArg2>(Func<ODataParameterWriterCore, TArg0, TArg1, TArg2, Task> func, TArg0 arg0, TArg1 arg1, TArg2 arg2)
         {
             try
             {
-                return await func().ConfigureAwait(false);
+                await func(this, arg0, arg1, arg2).ConfigureAwait(false);
+            }
+            catch
+            {
+                this.EnterErrorScope();
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously catch any exception thrown by the action passed in; in the exception case move the writer into
+        /// state ExceptionThrown and then rethrow the exception.
+        /// </summary>
+        /// <typeparam name="TArg0">The delegate first argument type.</typeparam>
+        /// <typeparam name="TArg1">The delegate second argument type.</typeparam>
+        /// <param name="func">The delegate to execute asynchronously.</param>
+        /// <param name="arg0">The first argument value provided to the action.</param>
+        /// <param name="arg1">The second argument value provided to the action.</param>
+        /// <returns>A task that represents the asynchronous operation. 
+        /// The value of the TResult parameter contains a T instance.</returns>
+        /// <remarks>
+        /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
+        /// so the compiler optimizes the code to avoid creating allocations on every call to this method.
+        /// </remarks>
+        private async Task<T> InterceptExceptionAsync<T, TArg0, TArg1>(Func<ODataParameterWriterCore, TArg0, TArg1, Task<T>> func, TArg0 arg0, TArg1 arg1)
+        {
+            try
+            {
+                return await func(this, arg0, arg1).ConfigureAwait(false);
             }
             catch
             {
@@ -926,7 +1030,7 @@ namespace Microsoft.OData
         {
             Debug.Assert(this.State == ParameterWriterState.Start, "this.State == ParameterWriterState.Start");
 
-            await this.InterceptExceptionAsync(this.StartPayloadAsync)
+            await this.InterceptExceptionAsync((thisParam) => thisParam.StartPayloadAsync())
                 .ConfigureAwait(false);
             this.EnterScope(ParameterWriterState.CanWriteParameter);
         }
@@ -942,7 +1046,7 @@ namespace Microsoft.OData
         {
             Debug.Assert(this.State == ParameterWriterState.CanWriteParameter, "this.State == ParameterWriterState.CanWriteParameter");
 
-            return this.InterceptExceptionAsync(() => this.WriteValueParameterAsync(parameterName, parameterValue, expectedTypeReference));
+            return this.InterceptExceptionAsync((thisParam) => thisParam.WriteValueParameterAsync(parameterName, parameterValue, expectedTypeReference));
         }
 
         /// <summary>
@@ -1004,7 +1108,7 @@ namespace Microsoft.OData
 		/// <returns>A task that represents the asynchronous write operation.</returns>
         private async Task WriteEndImplementationAsync()
         {
-            await this.InterceptExceptionAsync(() => this.EndPayloadAsync())
+            await this.InterceptExceptionAsync((thisParam) => thisParam.EndPayloadAsync())
                 .ConfigureAwait(false);
             this.LeaveScope();
         }
