@@ -70,8 +70,8 @@ namespace Microsoft.OData.MultipartMixed
         {
             string requestLine = this.batchStream.ReadFirstNonEmptyLine();
 
-            this.InputContext.MessageReaderSettings.Logger.LogInfo($"[OData.NET - 1]: requestLine: {requestLine}");
-            logger.LogInfo($"[OData.NET - 1]: requestLine: {requestLine}, ReaderMagic={this.InputContext.MessageReaderSettings.Magic}");
+            this.InputContext.MessageReaderSettings.Logger.LogInfo($"[OData.NET - 1]: requestLine: {requestLine}, Magic={this.InputContext.MessageReaderSettings.Magic}");
+            logger.LogInfo($"[OData.NET - 1]: requestLine: {requestLine}, Magic={this.InputContext.MessageReaderSettings.Magic}");
 
             string httpMethod;
             Uri requestUri;

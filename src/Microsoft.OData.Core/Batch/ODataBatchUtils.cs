@@ -36,9 +36,15 @@ namespace Microsoft.OData
         /// This method will fail if no custom resolution is implemented and the specified <paramref name="uri"/> is
         /// relative and there's no base URI available.
         /// </remarks>
-        internal static Uri CreateOperationRequestUri(Uri uri, Uri baseUri, IODataPayloadUriConverter payloadUriConverter)
+        internal static Uri CreateOperationRequestUri(Uri uri, Uri baseUri, IODataPayloadUriConverter payloadUriConverter, ODataMessageReaderSettings readerSettings = null, IODataLogger logger = null)
         {
             Debug.Assert(uri != null, "uri != null");
+
+            if (readerSettings != null)
+            {
+                readerSettings.Logger.LogInfo($"in CreateOperationRequestUri 1, readerSettings.BaseUri={readerSettings.BaseUri}");
+            }
+            logger.LogInfo("in CreateOperationRequestUri 1");
 
             Uri resultUri;
             if (payloadUriConverter != null)
@@ -47,9 +53,21 @@ namespace Microsoft.OData
                 resultUri = payloadUriConverter.ConvertPayloadUri(baseUri, uri);
                 if (resultUri != null)
                 {
+                    if (readerSettings != null)
+                    {
+                        readerSettings.Logger.LogInfo($"in CreateOperationRequestUri 111111, readerSettings.BaseUri={readerSettings.BaseUri}, resultUri={resultUri}");
+                    }
+                    logger.LogInfo($"in CreateOperationRequestUri 111111, resultUri={resultUri}");
+
                     return resultUri;
                 }
             }
+
+            if (readerSettings != null)
+            {
+                readerSettings.Logger.LogInfo($"in CreateOperationRequestUri 2, readerSettings.BaseUri={readerSettings.BaseUri}");
+            }
+            logger.LogInfo("in CreateOperationRequestUri 2");
 
             if (uri.IsAbsoluteUri)
             {
@@ -67,6 +85,13 @@ namespace Microsoft.OData
 
                 resultUri = UriUtils.UriToAbsoluteUri(baseUri, uri);
             }
+
+
+            if (readerSettings != null)
+            {
+                readerSettings.Logger.LogInfo($"in CreateOperationRequestUri 22222, readerSettings.BaseUri={readerSettings.BaseUri}, resultUri={resultUri}");
+            }
+            logger.LogInfo($"in CreateOperationRequestUri 22222, resultUri={resultUri}");
 
             return resultUri;
         }

@@ -347,12 +347,12 @@ namespace Microsoft.OData
                 ValidateDependsOnIds(contentId, dependsOnRequestIds);
             }
 
-            string message = $"[BuildOperationRequestMessage 1]: ReaderSettings.BaseUri={this.inputContext.MessageReaderSettings.BaseUri}";
+            string message = $"[BuildOperationRequestMessage 1]: ReaderSettings.BaseUri={this.inputContext.MessageReaderSettings.BaseUri} BatchBaseUri={this.InputContext.MessageReaderSettings.BatchBaseUri}";
             this.InputContext.MessageReaderSettings.Logger.LogInfo(message);
             logger.LogInfo(message);
 
             Uri uri = ODataBatchUtils.CreateOperationRequestUri(
-                requestUri, this.inputContext.MessageReaderSettings.BaseUri, this.PayloadUriConverter);
+                requestUri, this.InputContext.MessageReaderSettings.BaseUri, this.PayloadUriConverter, this.InputContext.MessageReaderSettings, logger);
 
             this.InputContext.MessageReaderSettings.Logger.LogInfo($"[BuildOperationRequestMessage 2]: Uri: {uri}: PayloadUriConverter: {this.PayloadUriConverter != null}");
 

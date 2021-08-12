@@ -61,7 +61,7 @@ namespace Microsoft.OData
                 this.MaxProtocolVersion = odataVersion;
             }
 
-            this.Magic = -1; // default one
+            this.Magic = Guid.Empty; // default one
         }
 
         private IODataLogger _logger;
@@ -73,15 +73,20 @@ namespace Microsoft.OData
             }
             set
             {
+                string originalLoggerName = string.Empty;
+                if (_logger != null)                
+                {
+                    originalLoggerName = _logger.Name;
+                }
                 _logger = value;
                 if (_logger != null)
                 {
-                    _logger.LogInfo("[OData.NET]: Set the logger in Message Reader settings.");
+                    _logger.LogInfo($"[ReaderSetting]: Set the logger for Message Reader settings, from {originalLoggerName} to {_logger.Name}.");
                 }
             }
         }
 
-        public int Magic { get; set; }
+        public Guid Magic { get; set; }
 
         /// <summary>
         /// Gets or sets library compatibility version. Default value is <see cref="Microsoft.OData.ODataLibraryCompatibility.Latest"/>,
@@ -141,6 +146,14 @@ namespace Microsoft.OData
 
                 this.baseUri = UriUtils.EnsureTaillingSlash(value);
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Uri BatchBaseUri
+        {
+            get;set;
         }
 
         /// <summary>
@@ -298,7 +311,7 @@ namespace Microsoft.OData
 
             if (_logger != null)
             {
-                _logger.LogInfo($"[ReaderSetting]: this.BaseUri={this.BaseUri}, other.BaseUri={other.BaseUri}, OriginalMagic={this.Magic}, other.Magic={other.Magic}");
+                _logger.LogInfo($"[CopyFrom]: this.BaseUri={this.BaseUri}, other.BaseUri={other.BaseUri}, OriginalMagic={this.Magic}, other.Magic={other.Magic}");
             }
 
             this.BaseUri = new Uri(other.BaseUri.OriginalString);
@@ -320,6 +333,7 @@ namespace Microsoft.OData
             this.ReadAsStreamFunc = other.ReadAsStreamFunc;
             this.ArrayPool = other.ArrayPool;
             this.Magic = other.Magic;
+            this.BatchBaseUri = other.BatchBaseUri;
         }
     }
 }
