@@ -26,7 +26,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// <summary>
         /// Keeps track of transient annotations on elements.
         /// </summary>
-        private VersioningDictionary<IEdmElement, object> annotationsDictionary;
+        private VersioningDictionary<IEdmElement, VersioningList<IEdmDirectValueAnnotation>> annotationsDictionary;
 
         /// <summary>
         /// Used for locking during updates to the annotations dictionary;
@@ -48,7 +48,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// </summary>
         public EdmDirectValueAnnotationsManager()
         {
-            this.annotationsDictionary = VersioningDictionary<IEdmElement, object>.Create(this.CompareElements);
+            this.annotationsDictionary = VersioningDictionary<IEdmElement, VersioningList<IEdmDirectValueAnnotation>>.Create(this.CompareElements);
         }
 
         /// <summary>
@@ -59,10 +59,10 @@ namespace Microsoft.OData.Edm.Vocabularies
         public IEnumerable<IEdmDirectValueAnnotation> GetDirectValueAnnotations(IEdmElement element)
         {
             // Fetch the annotations dictionary once and only once, because this.annotationsDictionary might get updated by another thread.
-            VersioningDictionary<IEdmElement, object> annotationsDictionary = this.annotationsDictionary;
+            VersioningDictionary<IEdmElement, VersioningList<IEdmDirectValueAnnotation>> annotationsDictionary = this.annotationsDictionary;
 
             IEnumerable<IEdmDirectValueAnnotation> immutableAnnotations = this.GetAttachedAnnotations(element);
-            object transientAnnotations = GetTransientAnnotations(element, annotationsDictionary);
+            VersioningList<IEdmDirectValueAnnotation> transientAnnotations = GetTransientAnnotations(element, annotationsDictionary);
 
             if (immutableAnnotations != null)
             {
@@ -94,7 +94,7 @@ namespace Microsoft.OData.Edm.Vocabularies
             {
                 // Use a local variable to store any interim changes to the annotations dictionary, and perform one atomic update
                 // to the field. Otherwise, other threads could see a dictionary in an interim state.
-                VersioningDictionary<IEdmElement, object> annotationsDictionary = this.annotationsDictionary;
+                VersioningDictionary<IEdmElement, VersioningList<IEdmDirectValueAnnotation>> annotationsDictionary = this.annotationsDictionary;
                 this.SetAnnotationValue(element, namespaceName, localName, value, ref annotationsDictionary);
 
                 this.annotationsDictionary = annotationsDictionary;
@@ -111,7 +111,7 @@ namespace Microsoft.OData.Edm.Vocabularies
             {
                 // Use a local variable to store any interim changes to the annotations dictionary, and perform one atomic update
                 // to the field. Otherwise, other threads could see a dictionary in an interim state.
-                VersioningDictionary<IEdmElement, object> annotationsDictionary = this.annotationsDictionary;
+                VersioningDictionary<IEdmElement, VersioningList<IEdmDirectValueAnnotation>> annotationsDictionary = this.annotationsDictionary;
 
                 foreach (IEdmDirectValueAnnotationBinding annotation in annotations)
                 {
@@ -132,7 +132,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         public object GetAnnotationValue(IEdmElement element, string namespaceName, string localName)
         {
             // Fetch the annotations dictionary once and only once, because this.annotationsDictionary might get updated by another thread.
-            VersioningDictionary<IEdmElement, object> annotationsDictionary = this.annotationsDictionary;
+            VersioningDictionary<IEdmElement, VersioningList<IEdmDirectValueAnnotation>> annotationsDictionary = this.annotationsDictionary;
 
             return this.GetAnnotationValue(element, namespaceName, localName, annotationsDictionary);
         }
@@ -145,7 +145,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         public object[] GetAnnotationValues(IEnumerable<IEdmDirectValueAnnotationBinding> annotations)
         {
             // Fetch the annotations dictionary once and only once, because this.annotationsDictionary might get updated by another thread.
-            VersioningDictionary<IEdmElement, object> annotationsDictionary = this.annotationsDictionary;
+            VersioningDictionary<IEdmElement, VersioningList<IEdmDirectValueAnnotation>> annotationsDictionary = this.annotationsDictionary;
 
             object[] values = new object[annotations.Count()];
 
@@ -168,14 +168,18 @@ namespace Microsoft.OData.Edm.Vocabularies
             return null;
         }
 
-        private static void SetAnnotation(IEnumerable<IEdmDirectValueAnnotation> immutableAnnotations, ref object transientAnnotations, string namespaceName, string localName, object value)
+        private static void SetAnnotation(IEnumerable<IEdmDirectValueAnnotation> immutableAnnotations, ref VersioningList<IEdmDirectValueAnnotation> transientAnnotations, string namespaceName, string localName, object value)
         {
             bool needTombstone = false;
             if (immutableAnnotations != null)
             {
-                if (immutableAnnotations.Any(existingAnnotation => existingAnnotation.NamespaceUri == namespaceName && existingAnnotation.Name == localName))
+                foreach (IEdmDirectValueAnnotation existingAnnotation in immutableAnnotations)
                 {
-                    needTombstone = true;
+                    if (existingAnnotation.NamespaceUri == namespaceName && existingAnnotation.Name == localName)
+                    {
+                        needTombstone = true;
+                        break;
+                    }
                 }
             }
 
@@ -197,121 +201,69 @@ namespace Microsoft.OData.Edm.Vocabularies
 
             if (transientAnnotations == null)
             {
-                transientAnnotations = newAnnotation;
+                transientAnnotations = VersioningList<IEdmDirectValueAnnotation>.Create().Add(newAnnotation);
                 return;
             }
 
-            IEdmDirectValueAnnotation singleAnnotation = transientAnnotations as IEdmDirectValueAnnotation;
-            if (singleAnnotation != null)
+            for (int index = 0; index < transientAnnotations.Count; index++)
             {
-                if (singleAnnotation.NamespaceUri == namespaceName && singleAnnotation.Name == localName)
-                {
-                    transientAnnotations = newAnnotation;
-                }
-                else
-                {
-                    transientAnnotations = VersioningList<IEdmDirectValueAnnotation>.Create().Add(singleAnnotation).Add(newAnnotation);
-                }
-
-                return;
-            }
-
-            VersioningList<IEdmDirectValueAnnotation> annotationsList = (VersioningList<IEdmDirectValueAnnotation>)transientAnnotations;
-            for (int index = 0; index < annotationsList.Count; index++)
-            {
-                IEdmDirectValueAnnotation existingAnnotation = annotationsList[index];
+                IEdmDirectValueAnnotation existingAnnotation = transientAnnotations[index];
                 if (existingAnnotation.NamespaceUri == namespaceName && existingAnnotation.Name == localName)
                 {
-                    annotationsList = annotationsList.RemoveAt(index);
+                    transientAnnotations = transientAnnotations.RemoveAt(index);
                     break;
                 }
             }
 
-            transientAnnotations = annotationsList.Add(newAnnotation);
+            transientAnnotations = transientAnnotations.Add(newAnnotation);
         }
 
-        private static IEdmDirectValueAnnotation FindTransientAnnotation(object transientAnnotations, string namespaceName, string localName)
+        private static IEdmDirectValueAnnotation FindTransientAnnotation(VersioningList<IEdmDirectValueAnnotation> transientAnnotations, string namespaceName, string localName)
         {
             if (transientAnnotations != null)
             {
-                IEdmDirectValueAnnotation singleAnnotation = transientAnnotations as IEdmDirectValueAnnotation;
-                if (singleAnnotation != null)
+                // This method runs very hot in schemas where direct value annotations are used.
+                // 1. Doing indexed 'for' loop to avoid allocation of VersioningList enumerator.
+                // 2. VersioningList random access is O(1) because it uses ArrayVersioningList.
+                for (int index = 0; index < transientAnnotations.Count; index++)
                 {
-                    if (singleAnnotation.NamespaceUri == namespaceName && singleAnnotation.Name == localName)
+                    IEdmDirectValueAnnotation existingAnnotation = transientAnnotations[index];
+                    if (existingAnnotation.NamespaceUri == namespaceName && existingAnnotation.Name == localName)
                     {
-                        return singleAnnotation;
+                        return existingAnnotation;
                     }
-                }
-                else
-                {
-                    VersioningList<IEdmDirectValueAnnotation> annotationsList = (VersioningList<IEdmDirectValueAnnotation>)transientAnnotations;
-                    return annotationsList.FirstOrDefault(
-                        existingAnnotation => existingAnnotation.NamespaceUri == namespaceName && existingAnnotation.Name == localName);
                 }
             }
 
             return null;
         }
 
-        private static void RemoveTransientAnnotation(ref object transientAnnotations, string namespaceName, string localName)
+        private static void RemoveTransientAnnotation(ref VersioningList<IEdmDirectValueAnnotation> transientAnnotations, string namespaceName, string localName)
         {
             if (transientAnnotations != null)
             {
-                IEdmDirectValueAnnotation singleAnnotation = transientAnnotations as IEdmDirectValueAnnotation;
-                if (singleAnnotation != null)
+                for (int index = 0; index < transientAnnotations.Count; index++)
                 {
-                    if (singleAnnotation.NamespaceUri == namespaceName && singleAnnotation.Name == localName)
+                    IEdmDirectValueAnnotation existingAnnotation = transientAnnotations[index];
+                    if (existingAnnotation.NamespaceUri == namespaceName && existingAnnotation.Name == localName)
                     {
-                        transientAnnotations = null;
+                        transientAnnotations = transientAnnotations.RemoveAt(index);
                         return;
-                    }
-                }
-                else
-                {
-                    VersioningList<IEdmDirectValueAnnotation> annotationsList = (VersioningList<IEdmDirectValueAnnotation>)transientAnnotations;
-                    for (int index = 0; index < annotationsList.Count; index++)
-                    {
-                        IEdmDirectValueAnnotation existingAnnotation = annotationsList[index];
-                        if (existingAnnotation.NamespaceUri == namespaceName && existingAnnotation.Name == localName)
-                        {
-                            annotationsList = annotationsList.RemoveAt(index);
-                            if (annotationsList.Count == 1)
-                            {
-                                transientAnnotations = annotationsList.Single();
-                            }
-                            else
-                            {
-                                transientAnnotations = annotationsList;
-                            }
-
-                            return;
-                        }
                     }
                 }
             }
         }
 
-        private static IEnumerable<IEdmDirectValueAnnotation> TransientAnnotations(object transientAnnotations)
+        private static IEnumerable<IEdmDirectValueAnnotation> TransientAnnotations(VersioningList<IEdmDirectValueAnnotation> transientAnnotations)
         {
             if (transientAnnotations == null)
             {
                 yield break;
             }
 
-            IEdmDirectValueAnnotation singleAnnotation = transientAnnotations as IEdmDirectValueAnnotation;
-            if (singleAnnotation != null)
+            for (int index = 0; index < transientAnnotations.Count; index++)
             {
-                if (singleAnnotation.Value != null)
-                {
-                    yield return singleAnnotation;
-                }
-
-                yield break;
-            }
-
-            VersioningList<IEdmDirectValueAnnotation> annotationsList = (VersioningList<IEdmDirectValueAnnotation>)transientAnnotations;
-            foreach (IEdmDirectValueAnnotation existingAnnotation in annotationsList)
-            {
+                IEdmDirectValueAnnotation existingAnnotation = transientAnnotations[index];
                 if (existingAnnotation.Value != null)
                 {
                     yield return existingAnnotation;
@@ -319,7 +271,7 @@ namespace Microsoft.OData.Edm.Vocabularies
             }
         }
 
-        private static bool IsDead(string namespaceName, string localName, object transientAnnotations)
+        private static bool IsDead(string namespaceName, string localName, VersioningList<IEdmDirectValueAnnotation> transientAnnotations)
         {
             return FindTransientAnnotation(transientAnnotations, namespaceName, localName) != null;
         }
@@ -331,17 +283,17 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// <param name="annotationsDictionary">The dictionary for looking up the element's annotations.</param>
         /// <returns>The transient annotations for the element, in a form managed by the annotations manager.</returns>
         /// <remarks>This method is static to guarantee that the annotations dictionary is not fetched more than once per lookup operation.</remarks>
-        private static object GetTransientAnnotations(IEdmElement element, VersioningDictionary<IEdmElement, object> annotationsDictionary)
+        private static VersioningList<IEdmDirectValueAnnotation> GetTransientAnnotations(IEdmElement element, VersioningDictionary<IEdmElement, VersioningList<IEdmDirectValueAnnotation>> annotationsDictionary)
         {
-            object transientAnnotations;
+            VersioningList<IEdmDirectValueAnnotation> transientAnnotations;
             annotationsDictionary.TryGetValue(element, out transientAnnotations);
             return transientAnnotations;
         }
 
-        private void SetAnnotationValue(IEdmElement element, string namespaceName, string localName, object value, ref VersioningDictionary<IEdmElement, object> annotationsDictionary)
+        private void SetAnnotationValue(IEdmElement element, string namespaceName, string localName, object value, ref VersioningDictionary<IEdmElement, VersioningList<IEdmDirectValueAnnotation>> annotationsDictionary)
         {
-            object transientAnnotations = GetTransientAnnotations(element, annotationsDictionary);
-            object transientAnnotationsBeforeSet = transientAnnotations;
+            VersioningList<IEdmDirectValueAnnotation> transientAnnotations = GetTransientAnnotations(element, annotationsDictionary);
+            VersioningList<IEdmDirectValueAnnotation> transientAnnotationsBeforeSet = transientAnnotations;
             SetAnnotation(this.GetAttachedAnnotations(element), ref transientAnnotations, namespaceName, localName, value);
 
             // There is at least one case (removing an annotation that was not present to begin with) where the transient annotations are not changed,
@@ -352,7 +304,7 @@ namespace Microsoft.OData.Edm.Vocabularies
             }
         }
 
-        private object GetAnnotationValue(IEdmElement element, string namespaceName, string localName, VersioningDictionary<IEdmElement, object> annotationsDictionary)
+        private object GetAnnotationValue(IEdmElement element, string namespaceName, string localName, VersioningDictionary<IEdmElement, VersioningList<IEdmDirectValueAnnotation>> annotationsDictionary)
         {
             IEdmDirectValueAnnotation annotation = FindTransientAnnotation(GetTransientAnnotations(element, annotationsDictionary), namespaceName, localName);
             if (annotation != null)
