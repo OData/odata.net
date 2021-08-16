@@ -229,9 +229,17 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             NonSystemToken navProp = new NonSystemToken("MyPeople", null, innerSegment);
             ExpandToken expandToken = new ExpandToken(new ExpandTermToken[] { new ExpandTermToken(navProp) });
 
-            // Act & Assert
-            var binderForDog = new SelectExpandBinder(this.V4configuration, new ODataPathInfo(HardCodedTestModel.GetDogType(), null), null);
-            var result = binderForDog.Bind(expandToken, null);
+            // Act
+            var binderForDog = new SelectExpandBinder(this.V4configuration, new ODataPathInfo(HardCodedTestModel.GetDogType(), HardCodedTestModel.GetDogsSet()), null);
+            SelectExpandClause selectExpandClause = binderForDog.Bind(expandToken, null);
+
+            // Assert
+            Assert.NotNull(selectExpandClause);
+            var selectItem = Assert.Single(selectExpandClause.SelectedItems, x => x is ExpandedNavigationSelectItem);
+            ExpandedNavigationSelectItem expandedNavigationSelectItem = selectItem as ExpandedNavigationSelectItem;
+            Assert.Equal(1, expandedNavigationSelectItem.PathToNavigationProperty.Count);
+            Assert.Equal("MyPeople", expandedNavigationSelectItem.PathToNavigationProperty.Segments.First().Identifier);
+            Assert.Equal("Collection(Fully.Qualified.Namespace.Employee)", expandedNavigationSelectItem.PathToNavigationProperty.Segments.First().EdmType.FullTypeName());
         }
     }
 }

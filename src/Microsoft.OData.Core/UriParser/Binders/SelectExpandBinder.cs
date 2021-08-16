@@ -377,15 +377,20 @@ namespace Microsoft.OData.UriParser
 
             bool isRef = false;
             bool isCount = false;
+            PathSegmentToken derivedTypeToken = null;
+            IEdmEntityType derivedType = null;
+
+            // Handle $expand=Customer/VipCustomer
+            // The deriveTypeToken is VipCustomer
+            if (firstNonTypeToken.NextToken != null && firstNonTypeToken.NextToken.IsNamespaceOrContainerQualified())
+            {
+                derivedTypeToken = firstNonTypeToken.NextToken;
+                derivedType = UriEdmHelpers.FindTypeFromModel(this.Model, derivedTypeToken.Identifier, this.configuration.Resolver) as IEdmEntityType;
+                firstNonTypeToken = derivedTypeToken;
+            }
 
             if (firstNonTypeToken.NextToken != null)
             {
-                PathSegmentToken nextToken = firstNonTypeToken.NextToken;
-                if (nextToken.IsNamespaceOrContainerQualified())
-                {
-                    pathSoFar.AddRange(SelectExpandPathBinder.FollowTypeSegments(currentToken, this.Model, this.Settings.SelectExpandLimit, this.configuration.Resolver, ref currentLevelEntityType, out firstNonTypeToken));
-                }
-
                 // lastly... make sure that, since we're on a NavProp, that the next token isn't null.
                 if (firstNonTypeToken.NextToken.Identifier == UriQueryConstants.RefSegment)
                 {
@@ -404,6 +409,36 @@ namespace Microsoft.OData.UriParser
             // Add the segments in select and expand to parsed segments
             List<ODataPathSegment> parsedPath = new List<ODataPathSegment>(this.parsedSegments);
             parsedPath.AddRange(pathSoFar);
+
+            // Replace the currentNavProp with a Navigation property with the derived type.
+            if (derivedType != null)
+            {
+                EdmMultiplicity edmMultiplicity;
+
+                if (currentNavProp.Type.IsCollection())
+                {
+                    edmMultiplicity = EdmMultiplicity.Many;
+                }
+                else if (currentNavProp.Type.IsNullable)
+                {
+                    edmMultiplicity = EdmMultiplicity.ZeroOrOne;
+                }
+                else
+                {
+                    edmMultiplicity = EdmMultiplicity.One;
+                }
+
+                EdmNavigationPropertyInfo edmNavigationPropertyInfo = new EdmNavigationPropertyInfo()
+                {
+                    Name = currentNavProp.Name,
+                    Target = derivedType,
+                    TargetMultiplicity = edmMultiplicity,
+                    ContainsTarget = currentNavProp.ContainsTarget,
+                    OnDelete = currentNavProp.OnDelete
+                };
+
+                currentNavProp = EdmNavigationProperty.CreateNavigationProperty(currentNavProp.DeclaringType, edmNavigationPropertyInfo);
+            }
 
             IEdmNavigationSource targetNavigationSource = null;
             if (this.NavigationSource != null)
