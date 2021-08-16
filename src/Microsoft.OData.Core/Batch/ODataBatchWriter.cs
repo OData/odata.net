@@ -372,7 +372,7 @@ namespace Microsoft.OData
         {
             this.VerifyCanFlush(true);
 
-            // make sure we switch to state FatalExceptionThrown if an exception is thrown during flushing.
+            // make sure we switch to state Error if an exception is thrown during flushing.
             try
             {
                 this.FlushSynchronously();
@@ -666,7 +666,7 @@ namespace Microsoft.OData
 
         /// <summary>
         /// Catch any exception thrown by the action passed in; in the exception case move the writer into
-        /// state ExceptionThrown and then re-throw the exception.
+        /// state Error and then re-throw the exception.
         /// </summary>
         /// <param name="action">The action to execute.</param>
         /// <remarks>
@@ -692,7 +692,7 @@ namespace Microsoft.OData
 
         /// <summary>
         /// Catch any exception thrown by the action passed in; in the exception case move the writer into
-        /// state ExceptionThrown and then rethrow the exception.
+        /// state Error and then rethrow the exception.
         /// </summary>
         /// <typeparam name="TArg0">The action argument type.</typeparam>
         /// <param name="action">The action to execute.</param>

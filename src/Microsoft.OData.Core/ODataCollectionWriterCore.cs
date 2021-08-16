@@ -517,7 +517,7 @@ namespace Microsoft.OData
 
         /// <summary>
         /// Catch any exception thrown by the action passed in; in the exception case move the writer into
-        /// state ExceptionThrown and then re-throw the exception.
+        /// state Error and then re-throw the exception.
         /// </summary>
         /// <param name="action">The action to execute.</param>
         /// <remarks>
@@ -543,7 +543,7 @@ namespace Microsoft.OData
 
         /// <summary>
         /// Catch any exception thrown by the action passed in; in the exception case move the writer into
-        /// state ExceptionThrown and then rethrow the exception.
+        /// state Error and then rethrow the exception.
         /// </summary>
         /// <typeparam name="TArg0">The action argument type.</typeparam>
         /// <param name="action">The action to execute.</param>
@@ -688,7 +688,7 @@ namespace Microsoft.OData
 
         /// <summary>
         /// Catch any exception thrown by the action passed in; in the exception case move the writer into
-        /// state ExceptionThrown and then rethrow the exception.
+        /// state Error and then rethrow the exception.
         /// </summary>
         /// <param name="action">The action to execute asynchronously.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>

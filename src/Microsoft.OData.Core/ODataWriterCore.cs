@@ -411,7 +411,7 @@ namespace Microsoft.OData
         {
             this.VerifyCanFlush(true);
 
-            // Make sure we switch to writer state FatalExceptionThrown if an exception is thrown during flushing.
+            // Make sure we switch to writer state Error if an exception is thrown during flushing.
             try
             {
                 this.FlushSynchronously();
@@ -2157,10 +2157,10 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Enters the 'ExceptionThrown' state and then throws an ODataException with the specified error message.
+        /// Enters the 'Error' state and then throws an ODataException with the specified error message.
         /// </summary>
         /// <param name="errorMessage">The error message for the exception.</param>
-        /// <param name="item">The OData item to associate with the 'ExceptionThrown' state.</param>
+        /// <param name="item">The OData item to associate with the 'Error' state.</param>
         private void ThrowODataException(string errorMessage, ODataItem item)
         {
             this.EnterScope(WriterState.Error, item);
@@ -2364,7 +2364,7 @@ namespace Microsoft.OData
 
         /// <summary>
         /// Catch any exception thrown by the action passed in; in the exception case move the writer into
-        /// state ExceptionThrown and then rethrow the exception.
+        /// state Error and then rethrow the exception.
         /// </summary>
         /// <param name="action">The action to execute.</param>
         /// <remarks>
@@ -2390,7 +2390,7 @@ namespace Microsoft.OData
 
         /// <summary>
         /// Catch any exception thrown by the action passed in; in the exception case move the writer into
-        /// state ExceptionThrown and then rethrow the exception.
+        /// state Error and then rethrow the exception.
         /// </summary>
         /// <typeparam name="TArg0">The action argument type.</typeparam>
         /// <param name="action">The action to execute.</param>
@@ -2418,7 +2418,7 @@ namespace Microsoft.OData
 
         /// <summary>
         /// Catch any exception thrown by the action passed in; in the exception case move the writer into
-        /// state ExceptionThrown and then rethrow the exception.
+        /// state Error and then rethrow the exception.
         /// </summary>
         /// <param name="action">The action to execute.</param>
         /// <returns>The task.</returns>
@@ -2445,7 +2445,7 @@ namespace Microsoft.OData
 
         /// <summary>
         /// Catch any exception thrown by the action passed in; in the exception case move the writer into
-        /// state ExceptionThrown and then rethrow the exception.
+        /// state Error and then rethrow the exception.
         /// </summary>
         /// <typeparam name="TArg0">The action argument type.</typeparam>
         /// <param name="action">The action to execute.</param>
