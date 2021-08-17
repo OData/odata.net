@@ -2406,19 +2406,66 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Theory]
-        [InlineData("MyGuid in ( '' )")]  // Edm.Guid
-        [InlineData("MyGuid in ( '  ' )")]  // Edm.Guid
-        [InlineData("MyGuid in ( \" \" )")]  // Edm.Guid
-        [InlineData("Birthdate in ( '' )")]  // Edm.DateTimeOffset
-        [InlineData("Birthdate in ( \" \" )")]  // Edm.DateTimeOffset
-        [InlineData("Birthdate in ('')")]  // Edm.DateTimeOffset
-        [InlineData("MyDate in ( '' )")]  // Edm.Date
-        [InlineData("MyDate in ( \" \" )")]  // Edm.Date
-        [InlineData("MyDate in ('')")]  // Edm.Date
-        public void FilterWithInOperationWithEmptyQuotesThrows(string filterClause)
+        [InlineData("MyGuid in ( '' )", "")]  // Edm.Guid
+        [InlineData("MyGuid in ( '  ' )", "  ")]  // Edm.Guid
+        [InlineData("MyGuid in ( \" \" )", " ")]  // Edm.Guid
+        public void FilterWithInOperationGuidWithEmptyQuotesThrows(string filterClause, string quotedString)
         {
             Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_RightOperandInvalidValue);
+            parse.Throws<ODataException>(Strings.ReaderValidationUtils_CannotConvertPrimitiveValue(quotedString, "Edm.Guid"));
+        }
+
+        [Theory]
+        [InlineData("Birthdate in ( '' )", "")]  // Edm.DateTimeOffset
+        [InlineData("Birthdate in ( \" \" )", " ")]  // Edm.DateTimeOffset
+        [InlineData("Birthdate in ('   ')", "   ")]  // Edm.DateTimeOffset
+        public void FilterWithInOperationDateTimeOffsetWithEmptyQuotesThrows(string filterClause, string quotedString)
+        {
+            Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            parse.Throws<ODataException>(Strings.ReaderValidationUtils_CannotConvertPrimitiveValue(quotedString, "Edm.DateTimeOffset"));
+        }
+
+        [Theory]
+        [InlineData("MyDate in ( '' )", "")]  // Edm.Date
+        [InlineData("MyDate in ( \" \" )", " ")]  // Edm.Date
+        [InlineData("MyDate in ('   ')", "   ")]  // Edm.Date
+        public void FilterWithInOperationDateWithEmptyQuotesThrows(string filterClause, string quotedString)
+        {
+            Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            parse.Throws<ODataException>(Strings.ReaderValidationUtils_CannotConvertPrimitiveValue(quotedString, "Edm.Date"));
+        }
+
+        [Theory]
+        [InlineData("('D01663CF-EB21-4A0E-88E0-361C10ACE7FD', '','492CF54A-84C9-490C-A7A4-B5010FAD8104')")]
+        [InlineData("('D01663CF-EB21-4A0E-88E0-361C10ACE7FD', \"\",'492CF54A-84C9-490C-A7A4-B5010FAD8104')")]
+        public void FilterWithInOperationWithQuotedGuidCollectionWithInvalidValues(string guidsCollection)
+        {
+            string filterClause = $"MyGuid in {guidsCollection}";
+
+            Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            parse.Throws<ODataException>(Strings.ReaderValidationUtils_CannotConvertPrimitiveValue("", "Edm.Guid"));
+        }
+
+        [Theory]
+        [InlineData("(1950-01-02T06:15:00Z, '',1977-09-16T15:00:00+05:00)")]
+        [InlineData("(1950-01-02T06:15:00Z, \"\",1977-09-16T15:00:00+05:00)")]
+        public void FilterWithInOperationWithQuotedDateTimeOffsetCollectionWithInvalidValues(string dateTimeOffsetCollection)
+        {
+            string filterClause = $"Birthdate in {dateTimeOffsetCollection}";
+
+            Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            parse.Throws<ODataException>(Strings.ReaderValidationUtils_CannotConvertPrimitiveValue("", "Edm.DateTimeOffset"));
+        }
+
+        [Theory]
+        [InlineData("(1950-01-02, '',1977-09-16)")]
+        [InlineData("(1950-01-02, \"\",1977-09-16)")]
+        public void FilterWithInOperationWithQuotedDateCollectionWithInvalidValues(string dateCollection)
+        {
+            string filterClause = $"MyDate in {dateCollection}";
+
+            Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            parse.Throws<ODataException>(Strings.ReaderValidationUtils_CannotConvertPrimitiveValue("", "Edm.Date"));
         }
 
         [Fact]
