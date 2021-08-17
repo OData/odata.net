@@ -2377,8 +2377,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
         [Theory]
         [InlineData("SSN in ('')")]     // Edm.String
-        [InlineData("SSN in ( ' ' )")]     // Edm.String
-        [InlineData("SSN in ( \" \" )")]     // Edm.String
+        [InlineData("SSN in ( '' )")]     // Edm.String
         public void FilterWithInOperationWithEmptyString(string filterClause)
         {
             FilterClause filter = ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
@@ -2387,6 +2386,23 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
             Assert.Equal(0, collectionNode.Collection.Count);
+        }
+
+        [Theory]
+        [InlineData("SSN in ( ' ' )")]     // Edm.String
+        [InlineData("SSN in ( '   ' )")]     // Edm.String
+        [InlineData("SSN in ( \" \" )")]     // Edm.String
+        [InlineData("SSN in ( \"     \" )")]     // Edm.String
+        public void FilterWithInOperationWithWhitespace(string filterClause)
+        {
+            FilterClause filter = ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+
+            // A single whitespace or multiple whitespaces are valid literals
+            Assert.Equal(1, collectionNode.Collection.Count);
         }
 
         [Theory]

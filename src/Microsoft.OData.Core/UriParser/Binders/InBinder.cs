@@ -156,10 +156,7 @@ namespace Microsoft.OData.UriParser
             // remove the '[' and ']'
             string normalizedText = literalText.Substring(1, literalText.Length - 2).Trim();
 
-            string normalizedTextWithoutWhitespaces = normalizedText.Replace(" ", string.Empty);
-
-            // If we have '' or "" or empty string we return empty brackets.
-            if (normalizedTextWithoutWhitespaces == "''" || normalizedTextWithoutWhitespaces == "\"\""  || normalizedTextWithoutWhitespaces.Length == 0)
+            if (normalizedText.Length == 0 || normalizedText == "''" || normalizedText == "\"\"")
             {
                 return "[]";
             }
@@ -326,14 +323,7 @@ namespace Microsoft.OData.UriParser
                 return "[]";
             }
 
-            normalizedText = normalizedText.Replace(" ", string.Empty);
-
-            // If we have '' or "" or empty strings in the brackets e.g (' ')
-            // We throw an exception since empty strings are not valid guid values.
-            if (normalizedText == "''" || normalizedText == "\"\"")
-            {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_RightOperandInvalidValue);
-            }
+            ValidateEmptyStrings(normalizedText);
 
             string[] items = normalizedText.Split(',')
                 .Select(s => s.Trim()).ToArray();
@@ -359,14 +349,7 @@ namespace Microsoft.OData.UriParser
                 return "[]";
             }
 
-            string normalizedTextWithoutSpaces = normalizedText.Replace(" ", string.Empty);
-
-            // If we have '' or "" or empty strings in the brackets e.g (' ')
-            // We throw an exception since empty strings are not valid guid values.
-            if (normalizedTextWithoutSpaces == "''" || normalizedTextWithoutSpaces == "\"\"")
-            {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_RightOperandInvalidValue);
-            }
+            ValidateEmptyStrings(normalizedText);
 
             string[] items = normalizedText.Split(',')
                 .Select(s => s.Trim()).ToArray();
@@ -389,6 +372,18 @@ namespace Microsoft.OData.UriParser
             }
 
             return "[" + String.Join(",", items) + "]";
+        }
+
+        private static void ValidateEmptyStrings(string normalizedText)
+        {
+            normalizedText = normalizedText.Replace(" ", string.Empty);
+
+            // If we have '' or "" or whitespaces only in the brackets e.g (' ')
+            // We throw an exception since empty strings/whitespaces are not valid guid/date/time values.
+            if (normalizedText == "''" || normalizedText == "\"\"")
+            {
+                throw new ODataException(ODataErrorStrings.MetadataBinder_RightOperandInvalidValue);
+            }
         }
     }
 }
