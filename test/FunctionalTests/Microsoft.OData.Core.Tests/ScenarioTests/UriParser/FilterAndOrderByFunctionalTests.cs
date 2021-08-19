@@ -2349,6 +2349,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void FilterWithEqOperation_EmptyString()
+        {
+            FilterClause filter = ParseFilter("SSN eq ''", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var bon = Assert.IsType<BinaryOperatorNode>(filter.Expression);
+            Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(bon.Left).Property.Name);
+            bon.Right.ShouldBeConstantQueryNode("");
+        }
+
+        [Fact]
         public void FilterWithInOperationWithBracketedCollection()
         {
             FilterClause filter = ParseFilter("ID in [1,2,3]", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
