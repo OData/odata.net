@@ -50,7 +50,9 @@ namespace Microsoft.OData.UriParser
         /// <exception cref="System.ArgumentNullException">Throws if the input literalText is null.</exception>
         public ConstantNode(object constantValue, string literalText, IEdmTypeReference typeReference)
         {
-            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(literalText, "literalText");
+            // Commented the validation line below since we should be able to create a 
+            // ConstantNode whose LiteralText is an empty string '' or String.Empty
+            //ExceptionUtils.CheckArgumentStringNotNullOrEmpty(literalText, "literalText");
 
             this.constantValue = constantValue;
             this.LiteralText = literalText;

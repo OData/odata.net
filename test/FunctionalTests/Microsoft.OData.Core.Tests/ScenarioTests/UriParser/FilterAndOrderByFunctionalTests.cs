@@ -2385,7 +2385,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var inNode = Assert.IsType<InNode>(filter.Expression);
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-            Assert.Equal(0, collectionNode.Collection.Count);
+            Assert.Equal(1, collectionNode.Collection.Count);
         }
 
         [Theory]

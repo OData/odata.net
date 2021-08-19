@@ -156,7 +156,7 @@ namespace Microsoft.OData.UriParser
             // remove the '[' and ']'
             string normalizedText = literalText.Substring(1, literalText.Length - 2).Trim();
 
-            if (normalizedText.Length == 0 || normalizedText == "''" || normalizedText == "\"\"")
+            if (normalizedText.Length == 0)
             {
                 return "[]";
             }
