@@ -155,7 +155,6 @@ namespace Microsoft.OData.UriParser
 
             // remove the '[' and ']'
             string normalizedText = literalText.Substring(1, literalText.Length - 2).Trim();
-
             int length = normalizedText.Length;
             StringBuilder sb = new StringBuilder(length + 2);
             sb.Append('[');
