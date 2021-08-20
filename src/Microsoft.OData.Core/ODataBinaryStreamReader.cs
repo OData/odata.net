@@ -50,7 +50,7 @@ namespace Microsoft.OData
             Debug.Assert(reader != null, "reader cannot be null");
 
             this.reader = reader;
-            chars = new char[charLength];
+            this.chars = new char[this.charLength];
         }
 
         /// <summary>
@@ -97,23 +97,23 @@ namespace Microsoft.OData
         public override int Read(byte[] buffer, int offset, int count)
         {
             int bytesCopied = 0;
-            int bytesRemaining = bytes.Length - bytesOffset;
+            int bytesRemaining = this.bytes.Length - this.bytesOffset;
 
             while (bytesCopied < count)
             {
                 if (bytesRemaining == 0)
                 {
-                    int charsRead = reader(chars, offset, charLength);
+                    int charsRead = this.reader(this.chars, offset, this.charLength);
                     if (charsRead < 1)
                     {
                         break;
                     }
 
                    // chars = chars.Select(c => c == '_' ? '/' : c == '-' ? '+' : c).ToArray();
-                    bytes = Convert.FromBase64CharArray(chars, 0, charsRead);
+                    this.bytes = Convert.FromBase64CharArray(this.chars, 0, charsRead);
 
-                    bytesRemaining = bytes.Length;
-                    bytesOffset = 0;
+                    bytesRemaining = this.bytes.Length;
+                    this.bytesOffset = 0;
 
                     // If the remaining characters were padding characters then no bytes will be returned
                     if (bytesRemaining < 1)
@@ -122,9 +122,9 @@ namespace Microsoft.OData
                     }
                 }
 
-                buffer[bytesCopied] = bytes[bytesOffset];
+                buffer[bytesCopied] = this.bytes[this.bytesOffset];
                 bytesCopied++;
-                bytesOffset++;
+                this.bytesOffset++;
                 bytesRemaining--;
             }
 
