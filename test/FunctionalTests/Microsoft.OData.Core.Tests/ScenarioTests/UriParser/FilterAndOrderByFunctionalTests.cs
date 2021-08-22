@@ -2416,6 +2416,21 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Theory]
+        [InlineData("SSN in ( '', ' ' )")]     // Edm.String
+        [InlineData("SSN in ( \"\", \" \" )")]     // Edm.String
+        public void FilterWithInOperationWithEmptyStringAndWhitespace(string filterClause)
+        {
+            FilterClause filter = ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+
+            // A single whitespace or multiple whitespaces are valid literals
+            Assert.Equal(2, collectionNode.Collection.Count);
+        }
+
+        [Theory]
         [InlineData("MyGuid in ( '' )", "")]  // Edm.Guid
         [InlineData("MyGuid in ( '  ' )", "  ")]  // Edm.Guid
         [InlineData("MyGuid in ( \" \" )", " ")]  // Edm.Guid
