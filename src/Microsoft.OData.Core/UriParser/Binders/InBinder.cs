@@ -290,15 +290,14 @@ namespace Microsoft.OData.UriParser
                             if(k > 2 && input[k - 2] == '\'')
                             {
                                 // Ignore we have 3 single quotes e.g 'xyz'''
-                                // It means we need to escape the te double quotes to return the result "xyz'"
+                                // It means we need to escape the double quotes to return the result "xyz'"
                                 continue;
                             }
                             // We append \"\" so as to return "\"\"" instead of "".
                             // This is to avoid passing an empty string to the ConstantNode.
-                            //sb.Append("''");
                             sb.Append("\\\"\\\"");
                         }
-                        // match with single qutoe ('), stop it.
+                        // match with single quote ('), stop it.
                         break;
                     }
                     else
