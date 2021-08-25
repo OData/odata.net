@@ -389,15 +389,16 @@ namespace Microsoft.OData
             this.StartPayloadInStartState();
             this.EnterScope(CollectionWriterState.Collection, collectionStart);
             this.InterceptException(
-                (thisParam) =>
+                (thisParam, collectionStartParam) =>
                 {
                     if (thisParam.expectedItemType == null)
                     {
                         thisParam.collectionValidator = new CollectionWithoutExpectedTypeValidator(/*expectedItemTypeName*/ null);
                     }
 
-                    thisParam.StartCollection(collectionStart);
-                });
+                    thisParam.StartCollection(collectionStartParam);
+                },
+                collectionStart);
         }
 
         /// <summary>
