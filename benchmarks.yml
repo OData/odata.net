@@ -1,4 +1,3 @@
-
 variables:
   # set to true to run benchmarks against master branch of main/official repo
   base: false
@@ -80,3 +79,17 @@ profiles:
       application:
         endpoints:
           - http://localhost:5010
+  # Remote lab machines for benchmarking
+  # These are also used by ASP.NET team
+  # for more info visit: https://github.com/aspnet/Benchmarks/tree/main/scenarios
+  # and https://github.com/aspnet/Benchmarks/blob/main/scenarios/aspnet.profiles.yml
+  lab-windows:
+    jobs:
+      application:
+        endpoints:
+          - http://asp-perf-win:5001
+  lab-linux:
+    jobs:
+      application:
+        endpoints:
+          - http://asp-perf-lin:5001
