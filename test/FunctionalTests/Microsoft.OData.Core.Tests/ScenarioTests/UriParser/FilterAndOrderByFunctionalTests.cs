@@ -2388,6 +2388,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Theory]
         [InlineData("SSN in ('')")]     // Edm.String
         [InlineData("SSN in ( '' )")]     // Edm.String
+        [InlineData("SSN in (\"\")")]     // Edm.String
+        [InlineData("SSN in ( \"\" )")]     // Edm.String
         public void FilterWithInOperationWithEmptyString(string filterClause)
         {
             FilterClause filter = ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
@@ -2418,6 +2420,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Theory]
         [InlineData("SSN in ( '', ' ' )")]     // Edm.String
         [InlineData("SSN in ( \"\", \" \" )")]     // Edm.String
+        [InlineData("SSN in ( '', \" \" )")]     // Edm.String
+        [InlineData("SSN in ( \"\", ' ' )")]     // Edm.String
         public void FilterWithInOperationWithEmptyStringAndWhitespace(string filterClause)
         {
             FilterClause filter = ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());

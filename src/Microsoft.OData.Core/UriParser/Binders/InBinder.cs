@@ -235,9 +235,9 @@ namespace Microsoft.OData.UriParser
                     // If prev and next are both double quotes, then it's an empty string.
                     if (input[k - 1] == '"')
                     {
-                        // We append '' so as to return "''" instead of "".
+                        // We append \"\" so as to return "\"\"" instead of "".
                         // This is to avoid passing an empty string to the ConstantNode.
-                        sb.Append("''");
+                        sb.Append("\\\"\\\"");
                     }
                     break;
                 }
@@ -293,9 +293,10 @@ namespace Microsoft.OData.UriParser
                                 // It means we need to escape the te double quotes to return the result "xyz'"
                                 continue;
                             }
-                            // We append '' so as to return "''" instead of "".
+                            // We append \"\" so as to return "\"\"" instead of "".
                             // This is to avoid passing an empty string to the ConstantNode.
-                            sb.Append("''");
+                            //sb.Append("''");
+                            sb.Append("\\\"\\\"");
                         }
                         // match with single qutoe ('), stop it.
                         break;
