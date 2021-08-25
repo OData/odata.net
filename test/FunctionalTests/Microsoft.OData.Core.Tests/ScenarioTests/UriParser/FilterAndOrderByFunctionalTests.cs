@@ -2349,6 +2349,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void FilterWithEqOperation_EmptyString()
+        {
+            FilterClause filter = ParseFilter("SSN eq ''", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var bon = Assert.IsType<BinaryOperatorNode>(filter.Expression);
+            Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(bon.Left).Property.Name);
+            bon.Right.ShouldBeConstantQueryNode("");
+        }
+
+        [Fact]
         public void FilterWithInOperationWithBracketedCollection()
         {
             FilterClause filter = ParseFilter("ID in [1,2,3]", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
@@ -2373,6 +2383,124 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
             Assert.Equal(0, collectionNode.Collection.Count);
+        }
+
+        [Theory]
+        [InlineData("SSN in ('')")]     // Edm.String
+        [InlineData("SSN in ( '' )")]     // Edm.String
+        [InlineData("SSN in (\"\")")]     // Edm.String
+        [InlineData("SSN in ( \"\" )")]     // Edm.String
+        public void FilterWithInOperationWithEmptyString(string filterClause)
+        {
+            FilterClause filter = ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+            Assert.Equal(1, collectionNode.Collection.Count);
+
+            ConstantNode constantNode = collectionNode.Collection.First();
+            Assert.Equal("\"\"", constantNode.LiteralText);
+        }
+
+        [Theory]
+        [InlineData("SSN in ( ' ' )", " ")]     // 1 space
+        [InlineData("SSN in ( '   ' )", "   ")]     // 3 spaces
+        [InlineData("SSN in ( \"  \" )", "  ")]     // 2 spaces
+        [InlineData("SSN in ( \"    \" )", "    ")]     // 4 spaces
+        public void FilterWithInOperationWithWhitespace(string filterClause, string expectedLiteralText)
+        {
+            FilterClause filter = ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+
+            // A single whitespace or multiple whitespaces are valid literals
+            Assert.Equal(1, collectionNode.Collection.Count);
+
+            ConstantNode constantNode = collectionNode.Collection.First();
+            Assert.Equal(expectedLiteralText, constantNode.LiteralText);
+        }
+
+        [Theory]
+        [InlineData("SSN in ( '', ' ' )")]     // Edm.String
+        [InlineData("SSN in ( \"\", \" \" )")]     // Edm.String
+        [InlineData("SSN in ( '', \" \" )")]     // Edm.String
+        [InlineData("SSN in ( \"\", ' ' )")]     // Edm.String
+        public void FilterWithInOperationWithEmptyStringAndWhitespace(string filterClause)
+        {
+            FilterClause filter = ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+
+            // A single whitespace or multiple whitespaces are valid literals
+            Assert.Equal(2, collectionNode.Collection.Count);
+        }
+
+        [Theory]
+        [InlineData("MyGuid in ( '' )", "")]  // Edm.Guid
+        [InlineData("MyGuid in ( '  ' )", "  ")]  // Edm.Guid
+        [InlineData("MyGuid in ( \" \" )", " ")]  // Edm.Guid
+        public void FilterWithInOperationGuidWithEmptyQuotesThrows(string filterClause, string quotedString)
+        {
+            Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            parse.Throws<ODataException>(Strings.ReaderValidationUtils_CannotConvertPrimitiveValue(quotedString, "Edm.Guid"));
+        }
+
+        [Theory]
+        [InlineData("Birthdate in ( '' )", "")]  // Edm.DateTimeOffset
+        [InlineData("Birthdate in ( \" \" )", " ")]  // Edm.DateTimeOffset
+        [InlineData("Birthdate in ('   ')", "   ")]  // Edm.DateTimeOffset
+        public void FilterWithInOperationDateTimeOffsetWithEmptyQuotesThrows(string filterClause, string quotedString)
+        {
+            Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            parse.Throws<ODataException>(Strings.ReaderValidationUtils_CannotConvertPrimitiveValue(quotedString, "Edm.DateTimeOffset"));
+        }
+
+        [Theory]
+        [InlineData("MyDate in ( '' )", "")]  // Edm.Date
+        [InlineData("MyDate in ( \" \" )", " ")]  // Edm.Date
+        [InlineData("MyDate in ('   ')", "   ")]  // Edm.Date
+        public void FilterWithInOperationDateWithEmptyQuotesThrows(string filterClause, string quotedString)
+        {
+            Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            parse.Throws<ODataException>(Strings.ReaderValidationUtils_CannotConvertPrimitiveValue(quotedString, "Edm.Date"));
+        }
+
+        [Theory]
+        [InlineData("('D01663CF-EB21-4A0E-88E0-361C10ACE7FD', '','492CF54A-84C9-490C-A7A4-B5010FAD8104')")]
+        [InlineData("('D01663CF-EB21-4A0E-88E0-361C10ACE7FD', \"\",'492CF54A-84C9-490C-A7A4-B5010FAD8104')")]
+        public void FilterWithInOperationWithQuotedGuidCollectionWithInvalidValuesThrows(string guidsCollection)
+        {
+            string filterClause = $"MyGuid in {guidsCollection}";
+
+            Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            parse.Throws<ODataException>(Strings.ReaderValidationUtils_CannotConvertPrimitiveValue("", "Edm.Guid"));
+        }
+
+        [Theory]
+        [InlineData("(1950-01-02T06:15:00Z, '',1977-09-16T15:00:00+05:00)")]
+        [InlineData("(1950-01-02T06:15:00Z, \"\",1977-09-16T15:00:00+05:00)")]
+        public void FilterWithInOperationWithQuotedDateTimeOffsetCollectionWithInvalidValuesThrows(string dateTimeOffsetCollection)
+        {
+            string filterClause = $"Birthdate in {dateTimeOffsetCollection}";
+
+            Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            parse.Throws<ODataException>(Strings.ReaderValidationUtils_CannotConvertPrimitiveValue("", "Edm.DateTimeOffset"));
+        }
+
+        [Theory]
+        [InlineData("(1950-01-02, '',1977-09-16)")]
+        [InlineData("(1950-01-02, \"\",1977-09-16)")]
+        public void FilterWithInOperationWithQuotedDateCollectionWithInvalidValuesThrows(string dateCollection)
+        {
+            string filterClause = $"MyDate in {dateCollection}";
+
+            Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            parse.Throws<ODataException>(Strings.ReaderValidationUtils_CannotConvertPrimitiveValue("", "Edm.Date"));
         }
 
         [Fact]
