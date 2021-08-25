@@ -2369,7 +2369,7 @@ namespace Microsoft.OData
         /// <param name="action">The action to execute.</param>
         /// <remarks>
         /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
-        /// so the compiler optimizes the code to avoid creating allocations on every call to this method.
+        /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
         /// </remarks>
         private void InterceptException(Action<ODataWriterCore> action)
         {
@@ -2397,7 +2397,7 @@ namespace Microsoft.OData
         /// <param name="arg0">The argument value provided to the action.</param>
         /// <remarks>
         /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
-        /// so the compiler optimizes the code to avoid creating allocations on every call to this method.
+        /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
         /// </remarks>
         private void InterceptException<TArg0>(Action<ODataWriterCore, TArg0> action, TArg0 arg0)
         {
@@ -2424,7 +2424,7 @@ namespace Microsoft.OData
         /// <returns>The task.</returns>
         /// <remarks>
         /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
-        /// so the compiler optimizes the code to avoid creating allocations on every call to this method.
+        /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
         /// </remarks>
         private async Task InterceptExceptionAsync(Func<ODataWriterCore, Task> action)
         {
@@ -2453,7 +2453,7 @@ namespace Microsoft.OData
         /// <returns>The task.</returns>
         /// <remarks>
         /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
-        /// so the compiler optimizes the code to avoid creating allocations on every call to this method.
+        /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
         /// </remarks>
         private async Task InterceptExceptionAsync<TArg0>(Func<ODataWriterCore, TArg0, Task> action, TArg0 arg0)
         {

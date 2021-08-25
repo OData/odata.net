@@ -768,7 +768,7 @@ namespace Microsoft.OData
         /// <param name="action">The action to execute.</param>
         /// <remarks>
         /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
-        /// so the compiler optimizes the code to avoid creating allocations on every call to this method.
+        /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
         /// </remarks>
         private void InterceptException(Action<ODataParameterWriterCore> action)
         {
@@ -796,7 +796,7 @@ namespace Microsoft.OData
         /// <param name="arg2">The third argument value provided to the action.</param>
         /// <remarks>
         /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
-        /// so the compiler optimizes the code to avoid creating allocations on every call to this method.
+        /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
         /// </remarks>
         private void InterceptException<TArg0, TArg1, TArg2>(Action<ODataParameterWriterCore, TArg0, TArg1, TArg2> action, TArg0 arg0, TArg1 arg1, TArg2 arg2)
         {
@@ -824,7 +824,7 @@ namespace Microsoft.OData
         /// <returns>Returns the return value from executing <paramref name="function"/>.</returns>
         /// <remarks>
         /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
-        /// so the compiler optimizes the code to avoid creating allocations on every call to this method.
+        /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
         /// </remarks>
         private T InterceptException<T, TArg0, TArg1>(Func<ODataParameterWriterCore, TArg0, TArg1, T> function, TArg0 arg0, TArg1 arg1)
         {
@@ -950,7 +950,7 @@ namespace Microsoft.OData
         /// <returns>A task that represents the asynchronous operation.</returns>
         /// <remarks>
         /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
-        /// so the compiler optimizes the code to avoid creating allocations on every call to this method.
+        /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
         /// </remarks>
         private async Task InterceptExceptionAsync(Func<ODataParameterWriterCore, Task> func)
         {
@@ -979,7 +979,7 @@ namespace Microsoft.OData
         /// <returns>A task that represents the asynchronous operation.</returns>
         /// <remarks>
         /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
-        /// so the compiler optimizes the code to avoid creating allocations on every call to this method.
+        /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
         /// </remarks>
         private async Task InterceptExceptionAsync<TArg0, TArg1, TArg2>(Func<ODataParameterWriterCore, TArg0, TArg1, TArg2, Task> func, TArg0 arg0, TArg1 arg1, TArg2 arg2)
         {
@@ -1007,7 +1007,7 @@ namespace Microsoft.OData
         /// The value of the TResult parameter contains a T instance.</returns>
         /// <remarks>
         /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
-        /// so the compiler optimizes the code to avoid creating allocations on every call to this method.
+        /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
         /// </remarks>
         private async Task<T> InterceptExceptionAsync<T, TArg0, TArg1>(Func<ODataParameterWriterCore, TArg0, TArg1, Task<T>> func, TArg0 arg0, TArg1 arg1)
         {

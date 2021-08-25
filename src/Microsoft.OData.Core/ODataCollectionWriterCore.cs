@@ -522,7 +522,7 @@ namespace Microsoft.OData
         /// <param name="action">The action to execute.</param>
         /// <remarks>
         /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
-        /// so the compiler optimizes the code to avoid creating allocations on every call to this method.
+        /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
         /// </remarks>
         private void InterceptException(Action<ODataCollectionWriterCore> action)
         {
@@ -550,7 +550,7 @@ namespace Microsoft.OData
         /// <param name="arg0">The argument value provided to the action.</param>
         /// <remarks>
         /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
-        /// so the compiler optimizes the code to avoid creating allocations on every call to this method.
+        /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
         /// </remarks>
         private void InterceptException<TArg0>(Action<ODataCollectionWriterCore, TArg0> action, TArg0 arg0)
         {
@@ -692,11 +692,43 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="action">The action to execute asynchronously.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        private async Task InterceptExceptionAsync(Func<Task> action)
+        /// <remarks>
+        /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
+        /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
+        /// </remarks>
+        private async Task InterceptExceptionAsync(Func<ODataCollectionWriterCore, Task> action)
         {
             try
             {
-                await action().ConfigureAwait(false);
+                await action(this).ConfigureAwait(false);
+            }
+            catch
+            {
+                if (!IsErrorState(this.State))
+                {
+                    this.EnterScope(CollectionWriterState.Error, this.scopes.Peek().Item);
+                }
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Catch any exception thrown by the action passed in; in the exception case move the writer into
+        /// state Error and then rethrow the exception.
+        /// </summary>
+        /// <typeparam name="TArg0">The action argument type.</typeparam>
+        /// <param name="action">The action to execute asynchronously.</param>
+        /// <param name="arg0">The argument value provided to the action.</param>
+        /// <remarks>
+        /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
+        /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
+        /// </remarks>
+        private async Task InterceptExceptionAsync<TArg0>(Func<ODataCollectionWriterCore, TArg0, Task> action, TArg0 arg0)
+        {
+            try
+            {
+                await action(this, arg0).ConfigureAwait(false);
             }
             catch
             {
@@ -718,7 +750,7 @@ namespace Microsoft.OData
             Scope current = this.scopes.Peek();
             if (current.State == CollectionWriterState.Start)
             {
-                return this.InterceptExceptionAsync(this.StartPayloadAsync);
+                return this.InterceptExceptionAsync((thisParam) => thisParam.StartPayloadAsync());
             }
 
             return TaskUtils.CompletedTask;
@@ -734,16 +766,18 @@ namespace Microsoft.OData
             await this.StartPayloadInStartStateAsync()
                 .ConfigureAwait(false);
             this.EnterScope(CollectionWriterState.Collection, collectionStart);
-            await this.InterceptExceptionAsync(async() =>
-            {
-                if (this.expectedItemType == null)
+            await this.InterceptExceptionAsync(
+                async (thisParam, collectionStartParam) =>
                 {
-                    this.collectionValidator = new CollectionWithoutExpectedTypeValidator(/*expectedItemTypeName*/ null);
-                }
+                    if (thisParam.expectedItemType == null)
+                    {
+                        thisParam.collectionValidator = new CollectionWithoutExpectedTypeValidator(/*expectedItemTypeName*/ null);
+                    }
 
-                await this.StartCollectionAsync(collectionStart)
-                    .ConfigureAwait(false);
-            }).ConfigureAwait(false);
+                    await thisParam.StartCollectionAsync(collectionStartParam)
+                        .ConfigureAwait(false);
+                },
+                collectionStart).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -752,21 +786,21 @@ namespace Microsoft.OData
         /// <returns>A task that represents the asynchronous write operation.</returns>
         private Task WriteEndImplementationAsync()
         {
-            return this.InterceptExceptionAsync(async () =>
+            return this.InterceptExceptionAsync(async (thisParam) =>
             {
-                Scope currentScope = this.scopes.Peek();
+                Scope currentScope = thisParam.scopes.Peek();
 
                 switch (currentScope.State)
                 {
                     case CollectionWriterState.Collection:
-                        await this.EndCollectionAsync().ConfigureAwait(false);
+                        await thisParam.EndCollectionAsync().ConfigureAwait(false);
                         break;
                     case CollectionWriterState.Item:
-                        await this.LeaveScopeAsync().ConfigureAwait(false);
+                        await thisParam.LeaveScopeAsync().ConfigureAwait(false);
                         Debug.Assert(
-                            this.scopes.Peek().State == CollectionWriterState.Collection,
+                            thisParam.scopes.Peek().State == CollectionWriterState.Collection,
                             "Expected to find collection state after popping from item state.");
-                        await this.EndCollectionAsync().ConfigureAwait(false);
+                        await thisParam.EndCollectionAsync().ConfigureAwait(false);
                         break;
                     case CollectionWriterState.Start:                 // fall through
                     case CollectionWriterState.Completed:             // fall through
@@ -776,7 +810,7 @@ namespace Microsoft.OData
                         throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataCollectionWriterCore_WriteEnd_UnreachableCodePath));
                 }
 
-                await this.LeaveScopeAsync().ConfigureAwait(false);
+                await thisParam.LeaveScopeAsync().ConfigureAwait(false);
             });
         }
 
@@ -792,12 +826,14 @@ namespace Microsoft.OData
                 this.EnterScope(CollectionWriterState.Item, item);
             }
 
-            await this.InterceptExceptionAsync(async() =>
-            {
-                ValidationUtils.ValidateCollectionItem(item, true /* isNullable */);
-                await this.WriteCollectionItemAsync(item, this.expectedItemType)
-                    .ConfigureAwait(false);
-            }).ConfigureAwait(false);
+            await this.InterceptExceptionAsync(
+                async(thisParam, itemParam) =>
+                {
+                    ValidationUtils.ValidateCollectionItem(itemParam, true /* isNullable */);
+                    await thisParam.WriteCollectionItemAsync(itemParam, thisParam.expectedItemType)
+                        .ConfigureAwait(false);
+                },
+                item).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -817,7 +853,7 @@ namespace Microsoft.OData
             {
                 this.scopes.Pop();
                 this.scopes.Push(new Scope(CollectionWriterState.Completed, null));
-                await this.InterceptExceptionAsync(this.EndPayloadAsync)
+                await this.InterceptExceptionAsync((thisParam) => thisParam.EndPayloadAsync())
                     .ConfigureAwait(false);
                 this.NotifyListener(CollectionWriterState.Completed);
             }

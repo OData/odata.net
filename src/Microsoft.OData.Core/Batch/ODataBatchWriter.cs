@@ -671,7 +671,7 @@ namespace Microsoft.OData
         /// <param name="action">The action to execute.</param>
         /// <remarks>
         /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
-        /// so the compiler optimizes the code to avoid creating allocations on every call to this method.
+        /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
         /// </remarks>
         private void InterceptException(Action<ODataBatchWriter> action)
         {
@@ -699,7 +699,7 @@ namespace Microsoft.OData
         /// <param name="arg0">The argument value provided to the action.</param>
         /// <remarks>
         /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
-        /// so the compiler optimizes the code to avoid creating allocations on every call to this method.
+        /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
         /// </remarks>
         private void InterceptException<TArg0>(Action<ODataBatchWriter, TArg0> action, TArg0 arg0)
         {
