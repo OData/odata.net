@@ -388,15 +388,17 @@ namespace Microsoft.OData
         {
             this.StartPayloadInStartState();
             this.EnterScope(CollectionWriterState.Collection, collectionStart);
-            this.InterceptException(() =>
+            this.InterceptException(
+                (thisParam, collectionStartParam) =>
                 {
-                    if (this.expectedItemType == null)
+                    if (thisParam.expectedItemType == null)
                     {
-                        this.collectionValidator = new CollectionWithoutExpectedTypeValidator(/*expectedItemTypeName*/ null);
+                        thisParam.collectionValidator = new CollectionWithoutExpectedTypeValidator(/*expectedItemTypeName*/ null);
                     }
 
-                    this.StartCollection(collectionStart);
-                });
+                    thisParam.StartCollection(collectionStartParam);
+                },
+                collectionStart);
         }
 
         /// <summary>
@@ -420,11 +422,12 @@ namespace Microsoft.OData
                 this.EnterScope(CollectionWriterState.Item, item);
             }
 
-            this.InterceptException(() =>
-            {
-                ValidationUtils.ValidateCollectionItem(item, true /* isNullable */);
-                this.WriteCollectionItem(item, this.expectedItemType);
-            });
+            this.InterceptException(
+                (thisParam, itemParam) =>
+                {
+                    ValidationUtils.ValidateCollectionItem(itemParam, true /* isNullable */);
+                    thisParam.WriteCollectionItem(itemParam, thisParam.expectedItemType);
+                }, item);
         }
 
         /// <summary>
@@ -442,30 +445,31 @@ namespace Microsoft.OData
         /// </summary>
         private void WriteEndImplementation()
         {
-            this.InterceptException(() =>
-            {
-                Scope currentScope = this.scopes.Peek();
-
-                switch (currentScope.State)
+            this.InterceptException(
+                (thisParam) =>
                 {
-                    case CollectionWriterState.Collection:
-                        this.EndCollection();
-                        break;
-                    case CollectionWriterState.Item:
-                        this.LeaveScope();
-                        Debug.Assert(this.scopes.Peek().State == CollectionWriterState.Collection, "Expected to find collection state after popping from item state.");
-                        this.EndCollection();
-                        break;
-                    case CollectionWriterState.Start:                 // fall through
-                    case CollectionWriterState.Completed:             // fall through
-                    case CollectionWriterState.Error:                 // fall through
-                        throw new ODataException(Strings.ODataCollectionWriterCore_WriteEndCalledInInvalidState(currentScope.State.ToString()));
-                    default:
-                        throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataCollectionWriterCore_WriteEnd_UnreachableCodePath));
-                }
+                    Scope currentScope = thisParam.scopes.Peek();
 
-                this.LeaveScope();
-            });
+                    switch (currentScope.State)
+                    {
+                        case CollectionWriterState.Collection:
+                            thisParam.EndCollection();
+                            break;
+                        case CollectionWriterState.Item:
+                            thisParam.LeaveScope();
+                            Debug.Assert(thisParam.scopes.Peek().State == CollectionWriterState.Collection, "Expected to find collection state after popping from item state.");
+                            thisParam.EndCollection();
+                            break;
+                        case CollectionWriterState.Start:                 // fall through
+                        case CollectionWriterState.Completed:             // fall through
+                        case CollectionWriterState.Error:                 // fall through
+                            throw new ODataException(Strings.ODataCollectionWriterCore_WriteEndCalledInInvalidState(currentScope.State.ToString()));
+                        default:
+                            throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataCollectionWriterCore_WriteEnd_UnreachableCodePath));
+                    }
+
+                    thisParam.LeaveScope();
+                });
         }
 
         /// <summary>
@@ -508,20 +512,52 @@ namespace Microsoft.OData
             Scope current = this.scopes.Peek();
             if (current.State == CollectionWriterState.Start)
             {
-                this.InterceptException(this.StartPayload);
+                this.InterceptException((thisParam) => thisParam.StartPayload());
             }
         }
 
         /// <summary>
         /// Catch any exception thrown by the action passed in; in the exception case move the writer into
-        /// state ExceptionThrown and then rethrow the exception.
+        /// state Error and then re-throw the exception.
         /// </summary>
         /// <param name="action">The action to execute.</param>
-        private void InterceptException(Action action)
+        /// <remarks>
+        /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
+        /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
+        /// </remarks>
+        private void InterceptException(Action<ODataCollectionWriterCore> action)
         {
             try
             {
-                action();
+                action(this);
+            }
+            catch
+            {
+                if (!IsErrorState(this.State))
+                {
+                    this.EnterScope(CollectionWriterState.Error, this.scopes.Peek().Item);
+                }
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Catch any exception thrown by the action passed in; in the exception case move the writer into
+        /// state Error and then rethrow the exception.
+        /// </summary>
+        /// <typeparam name="TArg0">The action argument type.</typeparam>
+        /// <param name="action">The action to execute.</param>
+        /// <param name="arg0">The argument value provided to the action.</param>
+        /// <remarks>
+        /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
+        /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
+        /// </remarks>
+        private void InterceptException<TArg0>(Action<ODataCollectionWriterCore, TArg0> action, TArg0 arg0)
+        {
+            try
+            {
+                action(this, arg0);
             }
             catch
             {
@@ -561,7 +597,7 @@ namespace Microsoft.OData
         /// <param name="item">The item to associate with the new scope.</param>
         private void EnterScope(CollectionWriterState newState, object item)
         {
-            this.InterceptException(() => this.ValidateTransition(newState));
+            this.InterceptException((thisParam, newStateParam) => thisParam.ValidateTransition(newStateParam), newState);
             this.scopes.Push(new Scope(newState, item));
             this.NotifyListener(newState);
         }
@@ -582,7 +618,7 @@ namespace Microsoft.OData
             {
                 this.scopes.Pop();
                 this.scopes.Push(new Scope(CollectionWriterState.Completed, null));
-                this.InterceptException(this.EndPayload);
+                this.InterceptException((thisParam) => thisParam.EndPayload());
                 this.NotifyListener(CollectionWriterState.Completed);
             }
         }
@@ -653,15 +689,47 @@ namespace Microsoft.OData
 
         /// <summary>
         /// Catch any exception thrown by the action passed in; in the exception case move the writer into
-        /// state ExceptionThrown and then rethrow the exception.
+        /// state Error and then rethrow the exception.
         /// </summary>
         /// <param name="action">The action to execute asynchronously.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        private async Task InterceptExceptionAsync(Func<Task> action)
+        /// <remarks>
+        /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
+        /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
+        /// </remarks>
+        private async Task InterceptExceptionAsync(Func<ODataCollectionWriterCore, Task> action)
         {
             try
             {
-                await action().ConfigureAwait(false);
+                await action(this).ConfigureAwait(false);
+            }
+            catch
+            {
+                if (!IsErrorState(this.State))
+                {
+                    this.EnterScope(CollectionWriterState.Error, this.scopes.Peek().Item);
+                }
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Catch any exception thrown by the action passed in; in the exception case move the writer into
+        /// state Error and then rethrow the exception.
+        /// </summary>
+        /// <typeparam name="TArg0">The action argument type.</typeparam>
+        /// <param name="action">The action to execute asynchronously.</param>
+        /// <param name="arg0">The argument value provided to the action.</param>
+        /// <remarks>
+        /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
+        /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
+        /// </remarks>
+        private async Task InterceptExceptionAsync<TArg0>(Func<ODataCollectionWriterCore, TArg0, Task> action, TArg0 arg0)
+        {
+            try
+            {
+                await action(this, arg0).ConfigureAwait(false);
             }
             catch
             {
@@ -683,7 +751,7 @@ namespace Microsoft.OData
             Scope current = this.scopes.Peek();
             if (current.State == CollectionWriterState.Start)
             {
-                return this.InterceptExceptionAsync(this.StartPayloadAsync);
+                return this.InterceptExceptionAsync((thisParam) => thisParam.StartPayloadAsync());
             }
 
             return TaskUtils.CompletedTask;
@@ -699,16 +767,18 @@ namespace Microsoft.OData
             await this.StartPayloadInStartStateAsync()
                 .ConfigureAwait(false);
             this.EnterScope(CollectionWriterState.Collection, collectionStart);
-            await this.InterceptExceptionAsync(async() =>
-            {
-                if (this.expectedItemType == null)
+            await this.InterceptExceptionAsync(
+                async (thisParam, collectionStartParam) =>
                 {
-                    this.collectionValidator = new CollectionWithoutExpectedTypeValidator(/*expectedItemTypeName*/ null);
-                }
+                    if (thisParam.expectedItemType == null)
+                    {
+                        thisParam.collectionValidator = new CollectionWithoutExpectedTypeValidator(/*expectedItemTypeName*/ null);
+                    }
 
-                await this.StartCollectionAsync(collectionStart)
-                    .ConfigureAwait(false);
-            }).ConfigureAwait(false);
+                    await thisParam.StartCollectionAsync(collectionStartParam)
+                        .ConfigureAwait(false);
+                },
+                collectionStart).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -717,21 +787,21 @@ namespace Microsoft.OData
         /// <returns>A task that represents the asynchronous write operation.</returns>
         private Task WriteEndImplementationAsync()
         {
-            return this.InterceptExceptionAsync(async () =>
+            return this.InterceptExceptionAsync(async (thisParam) =>
             {
-                Scope currentScope = this.scopes.Peek();
+                Scope currentScope = thisParam.scopes.Peek();
 
                 switch (currentScope.State)
                 {
                     case CollectionWriterState.Collection:
-                        await this.EndCollectionAsync().ConfigureAwait(false);
+                        await thisParam.EndCollectionAsync().ConfigureAwait(false);
                         break;
                     case CollectionWriterState.Item:
-                        await this.LeaveScopeAsync().ConfigureAwait(false);
+                        await thisParam.LeaveScopeAsync().ConfigureAwait(false);
                         Debug.Assert(
-                            this.scopes.Peek().State == CollectionWriterState.Collection,
+                            thisParam.scopes.Peek().State == CollectionWriterState.Collection,
                             "Expected to find collection state after popping from item state.");
-                        await this.EndCollectionAsync().ConfigureAwait(false);
+                        await thisParam.EndCollectionAsync().ConfigureAwait(false);
                         break;
                     case CollectionWriterState.Start:                 // fall through
                     case CollectionWriterState.Completed:             // fall through
@@ -741,7 +811,7 @@ namespace Microsoft.OData
                         throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataCollectionWriterCore_WriteEnd_UnreachableCodePath));
                 }
 
-                await this.LeaveScopeAsync().ConfigureAwait(false);
+                await thisParam.LeaveScopeAsync().ConfigureAwait(false);
             });
         }
 
@@ -757,12 +827,14 @@ namespace Microsoft.OData
                 this.EnterScope(CollectionWriterState.Item, item);
             }
 
-            await this.InterceptExceptionAsync(async() =>
-            {
-                ValidationUtils.ValidateCollectionItem(item, true /* isNullable */);
-                await this.WriteCollectionItemAsync(item, this.expectedItemType)
-                    .ConfigureAwait(false);
-            }).ConfigureAwait(false);
+            await this.InterceptExceptionAsync(
+                async(thisParam, itemParam) =>
+                {
+                    ValidationUtils.ValidateCollectionItem(itemParam, true /* isNullable */);
+                    await thisParam.WriteCollectionItemAsync(itemParam, thisParam.expectedItemType)
+                        .ConfigureAwait(false);
+                },
+                item).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -782,7 +854,7 @@ namespace Microsoft.OData
             {
                 this.scopes.Pop();
                 this.scopes.Push(new Scope(CollectionWriterState.Completed, null));
-                await this.InterceptExceptionAsync(this.EndPayloadAsync)
+                await this.InterceptExceptionAsync((thisParam) => thisParam.EndPayloadAsync())
                     .ConfigureAwait(false);
                 this.NotifyListener(CollectionWriterState.Completed);
             }
