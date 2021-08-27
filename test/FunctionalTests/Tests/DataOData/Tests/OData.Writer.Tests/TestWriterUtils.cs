@@ -1043,15 +1043,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                         }
                         else
                         {
-#if SILVERLIGHT || WINDOWS_PHONE
-                            exception = exception.GetBaseException();
-#else
                             AggregateException aggregate = exception as AggregateException;
                             assert.IsNotNull(aggregate, "Expected AggregateException");
                             aggregate = aggregate.Flatten();
                             assert.AreEqual(1, aggregate.InnerExceptions.Count, "Expected a single exception.");
                             exception = aggregate.InnerExceptions.Single();
-#endif
+
                             if (streamClosed)
                             {
                                 // TODO: Support raw error message verification for non-product exceptions
@@ -1248,12 +1245,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             {
                 return;
             }
-#if !SILVERLIGHT
             var payload = ReadToString(message);
             baselineLogger.LogPayload(payload);
-#else
-            //TODO: Add roundtrip for silverlight
-#endif
         }
 
         /// <summary>
@@ -1669,7 +1662,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             }
         }
 
-#if !SILVERLIGHT
         /// <summary>
         /// Reads from the stream using a test deserializer, then compares the result to the given payload
         /// </summary>
@@ -1688,7 +1680,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             ExceptionUtilities.Assert(numOfBytesRead == arr.Length, "all the bytes from the memory stream should be read");
             return System.Text.Encoding.UTF8.GetString(arr);
         }
-#endif
 
         /// <summary>
         /// Reads the non batch payload based on the content type
@@ -1829,11 +1820,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             }
             else
             {
-#if !SILVERLIGHT && !WINDOWS_PHONE
                 return message.GetStreamAsync().WaitForResult();
-#else
-                return message.GetStream();
-#endif
             }
         }
 
@@ -1851,11 +1838,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             }
             else
             {
-#if !SILVERLIGHT && !WINDOWS_PHONE
                 return message.GetStreamAsync().WaitForResult();
-#else
-                return message.GetStream();
-#endif
             }
         }
 

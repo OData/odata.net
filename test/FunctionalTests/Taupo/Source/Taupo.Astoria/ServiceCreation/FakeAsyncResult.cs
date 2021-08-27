@@ -8,9 +8,6 @@ namespace Microsoft.Test.Taupo.Astoria.ServiceCreation
 {
     using System;
     using System.Threading;
-#if WIN8
-    using System.Threading.Tasks;
-#endif
 
     /// <summary>
     /// Mock IAsync implementation so that DataServiceWebServerLookup can 
@@ -33,11 +30,7 @@ namespace Microsoft.Test.Taupo.Astoria.ServiceCreation
             this.asyncCallback = asyncCallback;
             this.state = state;
 
-#if !WIN8
             ThreadPool.QueueUserWorkItem(new WaitCallback(this.Invoke));
-#else
-            new Task(() => this.Invoke(this.state)).Wait();
-#endif
         }
         
         /// <summary>

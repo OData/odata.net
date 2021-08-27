@@ -32,11 +32,7 @@ namespace Microsoft.OData.Client
         private static bool? dataServiceCollectionAvailable = null;
 
         /// <summary>Method info for GetDefaultValue&lt;T&gt;.</summary>
-#if PORTABLELIB
-        private static MethodInfo getDefaultValueMethodInfo = typeof(WebUtil).GetMethodWithGenericArgs("GetDefaultValue", false /*isPublic*/, true /*isStatic*/, 1 /*genericArgCount*/);
-#else
         private static MethodInfo getDefaultValueMethodInfo = (MethodInfo)typeof(WebUtil).GetMember("GetDefaultValue", BindingFlags.NonPublic | BindingFlags.Static).Single(m => ((MethodInfo)m).GetGenericArguments().Length == 1);
-#endif
 
         /// <summary>
         /// Returns true if DataServiceCollection&lt;&gt; type is available or false otherwise.

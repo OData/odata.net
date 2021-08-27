@@ -45,7 +45,6 @@ namespace Microsoft.OData.Client
         /// </summary>
         public Uri RequestUri { get; private set; }
 
-#if !PORTABLELIB // Synchronous methods not available
         /// <summary>
         /// Executes the action and returns the result.
         /// </summary>
@@ -55,7 +54,6 @@ namespace Microsoft.OData.Client
         {
             return context.Execute<T>(this.RequestUri, XmlConstants.HttpMethodPost, true, parameters).Single();
         }
-#endif
 
         /// <summary>Asynchronously sends a request to the data service to execute a specific URI.</summary>
         /// <returns>The result of the operation.</returns>

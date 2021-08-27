@@ -103,7 +103,6 @@ namespace Microsoft.OData.Client
             }
         }
 
-#if !PORTABLELIB
         /// <summary>
         /// Executes the request synchronously.
         /// </summary>
@@ -135,7 +134,6 @@ namespace Microsoft.OData.Client
 
             return this.End();
         }
-#endif
 
         /// <summary>invoked for derived classes to cleanup before callback is invoked</summary>
         protected override void CompletedRequest()

@@ -4,9 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-// Since the Product API does not expose async on SILVERLIGHT and PHONE these tests don't apply. 
-// TODO: Enable async Tests on Phone and Silverlight when Product Supports them 
-#if !SILVERLIGHT && !WINDOWS_PHONE
 namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
 {
     using System;
@@ -106,4 +103,3 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
         }
     }
 }
-#endif

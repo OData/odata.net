@@ -11,28 +11,10 @@ namespace Microsoft.Test.Taupo.Astoria.ServiceReferences
     using System.ServiceModel;
     using Microsoft.Test.Taupo.Astoria.Contracts;
     using Microsoft.Test.Taupo.Astoria.Contracts.ServiceReferences;
-#if SILVERLIGHT
-#if !WIN8
-    using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataOracleService.Silverlight;
-    using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataServiceBuilderService.Silverlight;
-#else 
-    using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataOracleService.Win8;
-    using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataServiceBuilderService.Win8;
-#endif
-#else
     using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataOracleService.DotNet;
     using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataServiceBuilderService.DotNet;
-#endif
     using Microsoft.Test.Taupo.Common;
-#if SILVERLIGHT
-#if !WIN8
-    using Microsoft.Test.Taupo.Contracts.WebServices.CompilerService.Silverlight;
-#else
-    using Microsoft.Test.Taupo.Contracts.WebServices.CompilerService.Win8;
-#endif
-#else
     using Microsoft.Test.Taupo.Contracts.WebServices.CompilerService.DotNet;
-#endif
 
     /// <summary>
     /// Implementation of the service reference factory contract for the known service types in Taupo.WebServices
@@ -85,7 +67,7 @@ namespace Microsoft.Test.Taupo.Astoria.ServiceReferences
                 OpenTimeout = TimeSpan.FromMinutes(10),
                 CloseTimeout = TimeSpan.FromMinutes(10)
             };
-#if !SILVERLIGHT
+
             if (this.AuthenticationMode != Taupo.Common.AuthenticationMode.None)
             {
                 BasicHttpSecurity basicHttpSecuritySettings = new BasicHttpSecurity() { Mode = BasicHttpSecurityMode.TransportCredentialOnly };
@@ -108,7 +90,7 @@ namespace Microsoft.Test.Taupo.Astoria.ServiceReferences
             binding.ReaderQuotas.MaxStringContentLength = int.MaxValue;
             binding.ReaderQuotas.MaxDepth = int.MaxValue;
             binding.ReaderQuotas.MaxArrayLength = int.MaxValue;
-#endif
+
             return binding;
         }
     }

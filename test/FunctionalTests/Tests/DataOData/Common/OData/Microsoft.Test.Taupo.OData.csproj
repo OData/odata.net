@@ -179,7 +179,6 @@
     <Compile Include="Contracts\IPayloadGenerator.cs" />
     <Compile Include="Common\MetadataUtils.cs" />
     <Compile Include="Common\ODataV2ModelGenerator.cs" />
-    <Compile Include="Common\ODataV2ModelGenerator.objectlayer.cs" />
     <Compile Include="Common\ODataObjectResultComparer.cs" />
     <Compile Include="Common\ODataPayloadElementComparer.cs" />
     <Compile Include="Common\ODataPayloadElementDeepCopyingVisitor.cs" />
@@ -219,12 +218,6 @@
     <Compile Include="Common\QueryValueToClrValueConverter.cs" />
     <Compile Include="Common\TraceLogger.cs" />
     <Compile Include="Common\TestTypeUtils.cs" />
-    <Compile Include="MSTestStubs\IgnoreAttribute.cs" />
-    <Compile Include="MSTestStubs\TestCategoryAttribute.cs" />
-    <Compile Include="MSTestStubs\TestClassAttribute.cs" />
-    <Compile Include="MSTestStubs\TestInitializeAttribute.cs" />
-    <Compile Include="MSTestStubs\TestMethodAttribute.cs" />
-    <Compile Include="MSTestStubs\Trace.cs" />
     <Compile Include="PayloadTransformation\AddWhiteSpaceJsonTransform.cs" />
     <Compile Include="PayloadTransformation\MetadataDocumentReorderingTransform.cs" />
     <Compile Include="PayloadTransformation\ODataLibPayloadTransformFactory.cs" />

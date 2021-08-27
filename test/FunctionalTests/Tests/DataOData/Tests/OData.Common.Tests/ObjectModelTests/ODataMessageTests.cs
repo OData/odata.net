@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !SILVERLIGHT && !WINDOWS_PHONE
 namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
 {
     #region Namespaces
@@ -409,4 +408,3 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
         }
     }
 }
-#endif

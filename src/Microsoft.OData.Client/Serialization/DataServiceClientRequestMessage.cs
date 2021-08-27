@@ -76,11 +76,7 @@ namespace Microsoft.OData.Client
         ///  Internet resource.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1811", Justification = "Make code very confusing and cumbersome to write code for various platforms. Hence suppressing the message")]
-#if !PORTABLELIB
         public abstract bool SendChunked { get; set; }
-#else
-        internal bool SendChunked { get; set; }
-#endif
 
         /// <summary>
         /// Gets or the actual method. In post tunneling situations method will be POST instead of the specified verb method.
@@ -148,13 +144,11 @@ namespace Microsoft.OData.Client
         /// <returns>A System.Net.WebResponse that contains the response from the Internet resource.</returns>
         public abstract IODataResponseMessage EndGetResponse(IAsyncResult asyncResult);
 
-#if !PORTABLELIB
         /// <summary>
         /// Returns a response from an Internet resource.
         /// </summary>
         /// <returns>A System.Net.WebResponse that contains the response from the Internet resource.</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "This is intentionally a method.")]
         public abstract IODataResponseMessage GetResponse();
-#endif
     }
 }

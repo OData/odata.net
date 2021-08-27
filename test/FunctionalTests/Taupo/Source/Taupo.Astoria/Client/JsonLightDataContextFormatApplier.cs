@@ -60,7 +60,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
         public void Apply(DataServiceContext context)
         {
             ExceptionUtilities.CheckArgumentNotNull(context, "context");
-#if !WINDOWS_PHONE
+
             if (context.Format.LoadServiceModel != null)
             {
                 context.Format.UseJson();
@@ -69,9 +69,6 @@ namespace Microsoft.Test.Taupo.Astoria.Client
             {
                 context.Format.UseJson(this.workspace.EdmModel);
             }
-#else
-            throw new TaupoNotSupportedException("JSON Light format not supported on Phone client");
-#endif
         }
     }
 }

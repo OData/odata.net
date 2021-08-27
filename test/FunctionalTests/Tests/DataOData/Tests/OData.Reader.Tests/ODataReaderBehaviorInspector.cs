@@ -16,7 +16,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
 
     // These tests and helpers are disabled on Silverlight and Phone because they  
     // use private reflection not available on Silverlight and Phone
-#if !SILVERLIGHT && !WINDOWS_PHONE
     internal static class ODataReaderBehaviorInspector
     {
         public static int GetFormatBehaviorKind(this ODataMessageReaderSettings readerSettings)
@@ -72,5 +71,4 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             return (Func<IEdmType, string, IEdmType>)ReflectionUtils.GetProperty(readerBehavior, "TypeResolver");
         }
     }
-#endif
 }

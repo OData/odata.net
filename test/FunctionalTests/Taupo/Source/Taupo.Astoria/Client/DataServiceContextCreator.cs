@@ -109,12 +109,11 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                 context.ResolveName = (type) => type.Namespace + "." + type.Name;
             }
 
-#if !WINDOWS_PHONE
             if (this.EntitySetResolver != null)
             {
                 ctx.ResolveEntitySet = this.EntitySetResolver.ResolveEntitySetUri;
             }
-#endif
+
             return ctx;
         }
 
@@ -126,12 +125,8 @@ namespace Microsoft.Test.Taupo.Astoria.Client
         {
             DataServiceContext ctx = context.Product as DataServiceContext;
             ExceptionUtilities.CheckObjectNotNull(ctx, "context has to be WrappedDataServiceContext.");
-#if WINDOWS_PHONE
-            ctx.SendingRequest += this.InjectAuthenticationCookies;
-#else
             // use SendingRequest2 since the client does not allow SendingRequest and BuildingRequest registered at the same time
             ctx.SendingRequest2 += this.InjectAuthenticationCookies;
-#endif
         }
 
         /// <summary>
@@ -150,7 +145,6 @@ namespace Microsoft.Test.Taupo.Astoria.Client
 
         internal void SetAcceptAndContentTypeHeaders(DataServiceContext context)
         {
-#if !WINDOWS_PHONE
             if (!string.IsNullOrWhiteSpace(this.ClientRequestAcceptHeader))
             {
                 context.SendingRequest2 += (sender, e) =>
@@ -159,21 +153,8 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                     e.RequestMessage.SetHeader(HttpHeaders.ContentType, this.ClientRequestAcceptHeader);
                 };
             }
-#endif
         }
-#if WINDOWS_PHONE
-        // Currently SendingRequest2/SendingRequest2EventArgs is not supported in Phone
-        private void InjectAuthenticationCookies(object sender, SendingRequestEventArgs e)
-        {
-            if (this.authenticationHeaders != null)
-            {
-                foreach (var header in this.authenticationHeaders)
-                {
-                    e.RequestHeaders[header.Key] = header.Value;
-                }
-            }
-        }
-#else
+
         // use SendingRequest2/SendingRequest2EventArgs since the client does not allow SendingRequest and BuildingRequest registered at the same time
         private void InjectAuthenticationCookies(object sender, SendingRequest2EventArgs e)
         {
@@ -185,27 +166,17 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                 }
             }
         }
-#endif
-#if WINDOWS_PHONE
-        private void SetCredentials(DataServiceContext context)
-        {
-            ExceptionUtilities.Assert(!this.AuthenticationProvider.UseDefaultCredentials, "Cannot use default credentials on Windows Phone platform");
-            // TODO: Upgrade to latest client library to get authentication support here.
-        }
-#else
+
         private void SetCredentials(DataServiceContext context)
         {
             if (this.AuthenticationProvider.UseDefaultCredentials)
             {
-#if !SILVERLIGHT
                 context.Credentials = CredentialCache.DefaultNetworkCredentials;
-#endif
             }
             else if (this.AuthenticationProvider.GetAuthenticationCredentials() != null)
             {
                 context.Credentials = this.AuthenticationProvider.GetAuthenticationCredentials();
             }
         }
-#endif
     }
 }

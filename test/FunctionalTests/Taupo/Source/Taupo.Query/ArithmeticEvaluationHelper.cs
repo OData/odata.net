@@ -150,9 +150,6 @@ namespace Microsoft.Test.Taupo.Query
             ExceptionUtilities.CheckArgumentNotNull(value, "value");
             ExceptionUtilities.CheckArgumentNotNull(typeToConvertTo, "typeToConvertTo");
 
-#if (SILVERLIGHT || WINDOWS_PHONE)
-          return Convert.ChangeType(value, typeToConvertTo, CultureInfo.InvariantCulture);
-#else
             TypeConverter tc = TypeDescriptor.GetConverter(typeToConvertTo);
             if (tc.CanConvertTo(typeToConvertTo))
             {
@@ -162,7 +159,6 @@ namespace Microsoft.Test.Taupo.Query
             {
                 return Convert.ChangeType(value, typeToConvertTo, CultureInfo.InvariantCulture);
             }
-#endif
         }
 
         /// <summary>

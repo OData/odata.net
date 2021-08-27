@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !SILVERLIGHT
-
 namespace Microsoft.Test.Taupo.Runners
 {
     using System;
@@ -196,5 +194,3 @@ namespace Microsoft.Test.Taupo.Runners
         }
     }
 }
-
-#endif

@@ -60,13 +60,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
 
             // read the message content using the Taupo infrastructure
             ExceptionUtilities.CheckArgumentNotNull(message.TestStream, "stream != null");
-#if !SILVERLIGHT
             var observed = TestWriterUtils.ReadToString(message);
 
             if (logger != null) logger.LogPayload(TestWriterUtils.BaseLineFixup(observed));
-#endif
-            // TODO: Handle SILVERLIGHT
-
         }
     }
 }

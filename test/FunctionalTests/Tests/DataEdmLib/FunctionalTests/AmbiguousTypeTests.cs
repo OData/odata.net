@@ -9,9 +9,6 @@ using EdmLibTests.StubEdm;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
-#if SILVERLIGHT
-    using Microsoft.Silverlight.Testing;
-#endif
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EdmLibTests.FunctionalTests

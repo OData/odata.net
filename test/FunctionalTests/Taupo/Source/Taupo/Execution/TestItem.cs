@@ -365,11 +365,7 @@ namespace Microsoft.Test.Taupo.Execution
         /// <returns>
         /// An enumerable of bug attributes describing all bugs that affect this test case.
         /// </returns>
-#if WIN8
-        protected IEnumerable<BugAttribute> FindBugs(Type testCaseMember)
-#else
         protected IEnumerable<BugAttribute> FindBugs(MemberInfo testCaseMember)
-#endif
         {
             ExceptionUtilities.CheckArgumentNotNull(testCaseMember, "testCaseMember");
 

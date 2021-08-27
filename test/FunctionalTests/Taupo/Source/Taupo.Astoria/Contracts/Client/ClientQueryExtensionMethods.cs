@@ -60,11 +60,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Client
         /// <param name="clientExpectedError">Expected Client Error</param>
         public static void ExecuteAndCompareSync<TResult>(this IClientQueryResultComparer linqToAstoriaResultComparer, IQueryable<TResult> query, QueryValue expectedValue, DataServiceContext dataContext, ExpectedClientErrorBaseline clientExpectedError)
         {
-#if !SILVERLIGHT
             SyncHelpers.ExecuteActionAndWait(c => linqToAstoriaResultComparer.ExecuteAndCompare<TResult>(c, false, query, expectedValue, dataContext, clientExpectedError));
-#else
-            throw new TaupoInvalidOperationException("Cannot execute in Silverlight");
-#endif
         }
 
         /// <summary>
@@ -81,11 +77,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Client
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string", Justification = "uriString is a common naming convention.")]
         public static void ExecuteUriAndCompareSync<TResult>(this IClientQueryResultComparer linqToAstoriaResultComparer, IQueryable<TResult> query, string uriString, QueryValue expectedValue, DataServiceContext dataContext, ExpectedClientErrorBaseline clientExpectedError)
         {
-#if !SILVERLIGHT
             SyncHelpers.ExecuteActionAndWait(c => linqToAstoriaResultComparer.ExecuteUriAndCompare<TResult>(c, false, query, uriString, expectedValue, dataContext, clientExpectedError));
-#else
-            throw new TaupoInvalidOperationException("Cannot execute in Silverlight");
-#endif
         }
     }
 }

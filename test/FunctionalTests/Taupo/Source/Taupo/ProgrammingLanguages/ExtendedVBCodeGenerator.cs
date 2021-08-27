@@ -49,19 +49,13 @@ namespace Microsoft.Test.Taupo.ProgrammingLanguages
         /// <returns>
         /// The wrapped <see cref="ICodeGenerator"/>.
         /// </returns>
-#if !SILVERLIGHT
         [SecuritySafeCritical]
-#endif
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Code generators don't hold unmanaged resources.")]
         protected override ICodeGenerator CreateCodeGenerator()
         {
-#if SILVERLIGHT
-            return new VBCodeGenerator();
-#else
 #pragma warning disable 618
             return new VBCodeProvider().CreateGenerator();
 #pragma warning restore 618
-#endif
         }
 
         /// <summary>
@@ -1053,7 +1047,6 @@ namespace Microsoft.Test.Taupo.ProgrammingLanguages
             private Type GetType(string clrTypeName)
             {
                 Type clrType = Type.GetType(clrTypeName);
-#if !SILVERLIGHT
                 if (clrType == null)
                 {
                     foreach (Assembly assemblyInAppDomain in AppDomain.CurrentDomain.GetAssemblies())
@@ -1065,7 +1058,7 @@ namespace Microsoft.Test.Taupo.ProgrammingLanguages
                         }
                     }
                 }
-#endif
+
                 return clrType;
             }
         }

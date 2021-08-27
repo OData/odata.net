@@ -22,10 +22,6 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Client
         /// </summary>
         /// <param name="expected">The expected request data.</param>
         /// <param name="observed">The observed requests.</param>
-#if WINDOWS_PHONE
-        void VerifyRequests(IEnumerable<HttpRequestData> expected, IEnumerable<SendingRequestEventArgs> observed);
-#else
         void VerifyRequests(IEnumerable<HttpRequestData> expected, IEnumerable<SendingRequest2EventArgs> observed);
-#endif
     }
 }

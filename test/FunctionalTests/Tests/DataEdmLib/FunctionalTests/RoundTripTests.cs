@@ -7,24 +7,17 @@
 namespace EdmLibTests.FunctionalTests
 {
     using System.Linq;
-#if !SILVERLIGHT
     using ApprovalTests.Reporters;
-#endif
     using System.Runtime.CompilerServices;
     using EdmLibTests.FunctionalUtilities;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Common;
-#if SILVERLIGHT
-    using Microsoft.Silverlight.Testing;
-#endif
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-#if !SILVERLIGHT
     [UseReporter(typeof(LoggingReporter))]
     [DeploymentItem("FunctionalTests")]
-#endif
     public class RoundTripTests : EdmLibTestCaseBase
     {
         [TestMethod]

@@ -54,12 +54,8 @@ namespace Microsoft.Test.OData.Framework.Common
         /// <returns>The resource manager.</returns>
         public static ResourceManager BuildResourceManager(Assembly assembly)
         {
-#if WIN8 && !PORTABLELIB
-            return null;
-#else
             ExceptionUtilities.CheckArgumentNotNull(assembly, "assembly");
             return new ResourceManager(FindSingleResourceTable(assembly), assembly);
-#endif
         }
 
         /// <summary>

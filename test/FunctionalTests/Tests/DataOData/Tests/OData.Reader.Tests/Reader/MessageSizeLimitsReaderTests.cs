@@ -197,7 +197,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
         }
 
         // These tests use different encodings on SL/phone and thus will behave differently on those platforms.
-#if !SILVERLIGHT && !WINDOWS_PHONE
         [TestMethod, TestCategory("Reader.MessageReader"), Variation(Description = "Verify correct behavior of the max message size setting when reading primitive value payloads.")]
         public void PrimitiveValueMessageSizeLimitReadTest()
         {
@@ -359,7 +358,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
 
             this.RunRawMessageSizeLimitTests(model, payload, testCases, tc => true);
         }
-#endif
 
         private void RunAtomJsonMessageSizeLimitTests(
             EdmModel model,

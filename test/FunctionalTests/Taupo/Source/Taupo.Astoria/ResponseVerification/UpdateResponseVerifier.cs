@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !SILVERLIGHT
 namespace Microsoft.Test.Taupo.Astoria.ResponseVerification
 {
     using System;
@@ -375,4 +374,3 @@ Actual:   {2}";
         }
     }
 }
-#endif

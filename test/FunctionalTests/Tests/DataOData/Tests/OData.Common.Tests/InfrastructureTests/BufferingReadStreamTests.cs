@@ -7,7 +7,6 @@
 namespace Microsoft.Test.Taupo.OData.Common.Tests.InfrastructureTests
 {
 // Tests use private reflection and thus cannot run on Silverlight or the phone.
-#if !SILVERLIGHT && !WINDOWS_PHONE
 
     #region Namespaces
     using System;
@@ -286,5 +285,4 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.InfrastructureTests
             protected override void Dispose(bool disposing) { this.bufferingReadStream.Dispose(); }
         }
     }
-#endif
 }

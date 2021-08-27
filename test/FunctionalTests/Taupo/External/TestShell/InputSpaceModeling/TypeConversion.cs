@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !WIN8
 using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
@@ -78,4 +77,3 @@ namespace Microsoft.SqlServer.Test.TestShell.Core.InputSpaceModeling
 		}
 	}
 }
-#endif

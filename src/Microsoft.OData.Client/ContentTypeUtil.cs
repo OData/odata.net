@@ -96,11 +96,7 @@ namespace Microsoft.OData.Service
         {
             get
             {
-#if PORTABLELIB  // ISO-8859-1 not available
-                return Encoding.UTF8;
-#else
                 return Encoding.GetEncoding("ISO-8859-1", new EncoderExceptionFallback(), new DecoderExceptionFallback());
-#endif
             }
         }
 

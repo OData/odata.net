@@ -4,16 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !SILVERLIGHT && !WINDOWS_PHONE
 namespace Microsoft.Test.Taupo.OData.Common.Tests.InfrastructureTests
 {
     #region Namespaces
     using System;
     using System.IO;
     using System.Reflection;
-#if !SILVERLIGHT
      using System.Threading.Tasks;
-#endif
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Contracts;
@@ -105,11 +102,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.InfrastructureTests
 
                         this.Assert.AreEqual(0, testStream.InnerStream.Length, "The buffered stream should not have written anything to the underlying stream yet.");
 
-#if SILVERLIGHT
-                        asyncBufferedStream.Flush();
-#else
                         asyncBufferedStream.FlushAsync().Wait();
-#endif
                         byte[] writtenData = ((MemoryStream)testStream.InnerStream).GetBuffer();
                         this.Assert.AreEqual(totalWrittenCount, testStream.InnerStream.Length, "Wrong number of bytes was written to the stream.");
                         for (int i = 0; i < totalWrittenCount; i++)
@@ -165,12 +158,12 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.InfrastructureTests
             public override long Seek(long offset, SeekOrigin origin) { return this.asyncBufferedStream.Seek(offset, origin); }
             public override void SetLength(long value) { this.asyncBufferedStream.SetLength(value); }
             public override void Write(byte[] buffer, int offset, int count) { this.asyncBufferedStream.Write(buffer, offset, count); }
-#if !SILVERLIGHT
+
             public new Task FlushAsync()
             {
                 return (Task)ReflectionUtils.InvokeMethod(this.asyncBufferedStream, "FlushAsync");
             }
-#endif
+
             public void Clear()
             {
                 ReflectionUtils.InvokeMethod(this.asyncBufferedStream, "Clear");
@@ -180,4 +173,3 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.InfrastructureTests
         }
     }
 }
-#endif

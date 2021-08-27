@@ -39,12 +39,10 @@ namespace Microsoft.Test.Taupo.OData.Common
             this.AssertionHandler.AreEqual(expected.ExpectedExceptionType, actual.GetType(), "Unexpected exception type caught");
 
             // Resource lookup not supported on Silverlight or Phone platforms.
-#if !SILVERLIGHT && !WINDOWS_PHONE
             if (expected.ExpectedMessage != null)
             {
                 expected.ExpectedMessage.VerifyMatch(null, actual.Message, expected.ExactMatch);
             }
-#endif
 
             if (expected.CustomVerification != null)
             {

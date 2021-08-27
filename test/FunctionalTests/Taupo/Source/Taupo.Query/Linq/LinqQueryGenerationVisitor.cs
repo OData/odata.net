@@ -25,11 +25,7 @@ namespace Microsoft.Test.Taupo.Query.Linq
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Coupling is temporarily allowed until further refactoring of current design.")]
     public abstract class LinqQueryGenerationVisitor : ILinqExpressionVisitor<Expression>
     {
-#if WIN8
-        private Type expressionGeneratorType = typeof(Enumerable);
-#else
         private Type expressionGeneratorType = typeof(Queryable);
-#endif
         private List<object> closures;
         private IAnonymousTypeBuilder anonymousTypeBuilder;
         private Dictionary<LinqParameterExpression, ParameterExpression> parametersInScope;
@@ -1078,29 +1074,9 @@ namespace Microsoft.Test.Taupo.Query.Linq
 
         private Type GetCollectionTypeArgument(Expression expression)
         {
-#if WIN8
-            var interfaces = expression.Type.GetInterfaces().Where(i => i.IsGenericType() && i.GetGenericTypeDefinition() == typeof(IEnumerable<>));
-            if (interfaces.Any())
-            {
-                Type enumerableInterface = interfaces.Single();
-                return enumerableInterface.GetGenericArguments()[0];
-            }
-
-            if (expression.Type.IsGenericType())
-            {
-                var genericTypeDefinition = expression.Type.GetGenericTypeDefinition();
-                if (genericTypeDefinition == typeof(IEnumerable<>))
-                {
-                    return expression.Type.GetGenericArguments()[0];
-                }
-            }
-
-            throw new TaupoArgumentException("Type of expression is not a collection.");
-#else
             Type enumerableInterface = expression.Type.GetInterfaces().Where(i => i.IsGenericType() && i.GetGenericTypeDefinition() == typeof(IEnumerable<>)).Single();
 
             return enumerableInterface.GetGenericArguments()[0];
-#endif
         }
 
         private Expression GenerateQueryMethodWithLambda(LinqQueryMethodWithLambdaExpression expression, string queryMethodName)

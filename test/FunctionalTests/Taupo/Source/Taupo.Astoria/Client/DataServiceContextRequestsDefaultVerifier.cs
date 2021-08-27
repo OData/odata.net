@@ -33,13 +33,8 @@ namespace Microsoft.Test.Taupo.Astoria.Client
         /// </summary>
         /// <param name="expected">The expected request data.</param>
         /// <param name="observed">The observed requests.</param>
-#if WINDOWS_PHONE
-        public void VerifyRequests(IEnumerable<HttpRequestData> expected, IEnumerable<SendingRequestEventArgs> observed)
-#else
         public void VerifyRequests(IEnumerable<HttpRequestData> expected, IEnumerable<SendingRequest2EventArgs> observed)
-#endif
         {
-#if !WINDOWS_PHONE
             var expectedList = expected.ToList();
             var observedList = observed.ToList();
 
@@ -84,7 +79,6 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                     }
                 }
             }
-#endif
         }
     }
 }

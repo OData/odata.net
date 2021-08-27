@@ -15,17 +15,11 @@ namespace Microsoft.Test.OData.Tests.Client
     using System.Collections.Generic;
     using Microsoft.OData.Client;
     using System.Linq;
-#if SILVERLIGHT
-    using Microsoft.Silverlight.Testing;
-#endif
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Xunit.Abstractions;
     using Xunit;
 
-#if SILVERLIGHT
-    [Ignore]
-#endif
     public class AsynchronousSingletonClientTest : EndToEndTestBase
     {
         InMemoryEntities TestClientContext;

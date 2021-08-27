@@ -10,9 +10,7 @@ namespace Microsoft.Test.Taupo.OData.Common
     using System;
     using System.Collections.Generic;
     using System.IO;
-#if !SILVERLIGHT
     using System.Threading.Tasks;
-#endif
     using Microsoft.Test.Taupo.Common;
     #endregion Namespaces
 
@@ -163,7 +161,7 @@ namespace Microsoft.Test.Taupo.OData.Common
             this.StreamRetrieved = true;
             return this.stream;
         }
-#if !SILVERLIGHT
+
         /// <summary>
         /// Returns the content of the message as a stream.
         /// </summary>
@@ -188,6 +186,5 @@ namespace Microsoft.Test.Taupo.OData.Common
             this.StreamRetrieved = true;
             return TestTaskUtils.GetCompletedTask(this.stream);
         }
-#endif
     }
 }

@@ -248,9 +248,7 @@ namespace Microsoft.Test.Taupo.Astoria.Json
         private void Close()
         {
             this.TextWriter.Flush();
-#if !WIN8
             this.TextWriter.Close();
-#endif
             this.TextWriter.Dispose();
         }
 
@@ -316,7 +314,6 @@ namespace Microsoft.Test.Taupo.Astoria.Json
                 }
             }
             
-#if !WIN8
             /// <summary> Closes the underlying writer</summary>
             public override void Close()
             {
@@ -324,12 +321,6 @@ namespace Microsoft.Test.Taupo.Astoria.Json
                 // Since we don't own the stream, we should never close it.
                 this.writer.Close();
             }
-#else
-            public override void Write(char value)
-            {
-                throw new NotImplementedException();
-            }
-#endif
 
             /// <summary> Clears all the buffer of the current writer </summary>
             public override void Flush()

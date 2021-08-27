@@ -18,11 +18,7 @@ namespace Microsoft.Test.Taupo.Runners
     /// Implementation of <see cref="ITestLogWriter"/> which delegates all notifications
     /// to multiple writers (Composite pattern).
     /// </summary>
-#if SILVERLIGHT
-    public sealed class CompositeTestLogWriter : ITestLogWriter
-#else
     public sealed class CompositeTestLogWriter : MarshalByRefObject, ITestLogWriter
-#endif
     {
         private ReadOnlyCollection<ITestLogWriter> writers;
 
@@ -113,7 +109,6 @@ namespace Microsoft.Test.Taupo.Runners
             this.ForAll(i => i.EndVariation(variation, result, exception));
         }
 
-#if !SILVERLIGHT
         /// <summary>
         /// Obtains a lifetime service object to control the lifetime policy for this instance.
         /// </summary>
@@ -125,7 +120,6 @@ namespace Microsoft.Test.Taupo.Runners
         {
             return null;
         }
-#endif
 
         /// <summary>
         /// Writes the line to the test log.

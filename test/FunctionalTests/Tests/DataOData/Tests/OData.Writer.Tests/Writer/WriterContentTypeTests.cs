@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-// This class is disabled on Silverlight and Phone because its method calls CreateContentTypeResultCallback which use ODataMessageWriterSettingsTestWrapper which uses private reflection
-#if !SILVERLIGHT && !WINDOWS_PHONE
 namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 {
     using System;
@@ -751,17 +749,15 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 (testDescriptor, testConfiguration) => messageWriter => messageWriter.WriteEntityReferenceLink(testDescriptor.PayloadItems[0]);
             Func<PayloadWriterTestDescriptor<ODataProperty>, WriterTestConfiguration, Action<ODataMessageWriterTestWrapper>> propertyWriterFunc =
                 (testDescriptor, testConfiguration) => messageWriter => messageWriter.WriteProperty(testDescriptor.PayloadItems[0]);
-#if !SILVERLIGHT
+
             this.CombinatorialEngineProvider.SkipVerify();
-#endif
             // Run the same set of test cases for each JSON-serializing payload kind.
             this.RunTopLevelContentTypeTest(error, ODataPayloadKind.Error, null, null, errorWriterFunc, CreateAppJsonVersioningTestCases(ODataPayloadKind.Error), true);
             this.RunTopLevelContentTypeTest(serviceDocument, ODataPayloadKind.ServiceDocument, model, null, serviceDocWriterFunc, CreateAppJsonVersioningTestCases(ODataPayloadKind.ServiceDocument), true);
             this.RunTopLevelContentTypeTest(entityReferenceLink, ODataPayloadKind.EntityReferenceLink, model, null, linkWriterFunc, CreateAppJsonVersioningTestCases(ODataPayloadKind.EntityReferenceLink));
             this.RunTopLevelContentTypeTest(property, ODataPayloadKind.Property, model, owningEntityType, propertyWriterFunc, CreateAppJsonVersioningTestCases(ODataPayloadKind.Property));
-#if !SILVERLIGHT
+
             Approvals.Verify(new ApprovalTextWriter(this.Logger.GetBaseline()), new CustomSourcePathNamer(this.TestContext.DeploymentDirectory), Approvals.GetReporter());
-#endif
         }
 
         /// <summary>
@@ -1279,4 +1275,3 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
     }
 }
-#endif

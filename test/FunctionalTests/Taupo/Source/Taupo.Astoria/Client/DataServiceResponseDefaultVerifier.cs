@@ -140,9 +140,6 @@ namespace Microsoft.Test.Taupo.Astoria.Client
             }
             else
             {
-#if WINDOWS_PHONE
-                throw new TaupoNotSupportedException("StreamDescriptors are not supported on Windows Phone");
-#else
                 ExceptionUtilities.CheckObjectNotNull(streamDescriptorData, "Expected was not an entity, link, or stream descriptor: {0}", expected);
 
                 StreamDescriptor streamDescriptor = actual as StreamDescriptor;
@@ -155,7 +152,6 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                 this.Assert.AreEqual(streamDescriptorData.ContentType, streamDescriptor.StreamLink.ContentType, GetVerificationFailureMessage(responseOrder, "Stream descriptor content type verification failed."));
                 this.Assert.AreEqual(streamDescriptorData.EditLink, streamDescriptor.StreamLink.EditLink, GetVerificationFailureMessage(responseOrder, "Stream descriptor edit link verification failed."));
                 this.Assert.AreEqual(streamDescriptorData.SelfLink, streamDescriptor.StreamLink.SelfLink, GetVerificationFailureMessage(responseOrder, "Stream descriptor self link verification failed."));
-#endif
             }
         }
     }

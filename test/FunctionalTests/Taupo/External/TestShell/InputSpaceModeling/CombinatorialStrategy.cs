@@ -16,9 +16,7 @@ namespace Microsoft.SqlServer.Test.TestShell.Core.InputSpaceModeling
 	/// <summary>
 	/// Attempted to set exploration strategy for a dimension that is not in the target matrix.
 	/// </summary>
-#if !SILVERLIGHT    
 	[Serializable]
-#endif
 	public class DimensionNotInMatrixException : Exception
 	{
 		/// <summary>
@@ -44,7 +42,6 @@ namespace Microsoft.SqlServer.Test.TestShell.Core.InputSpaceModeling
 		/// <param name="inner">The inner.</param>
 		public DimensionNotInMatrixException(string message, Exception inner) : base(message, inner) { }
 
-#if !SILVERLIGHT
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DimensionNotInMatrixException"/> class.
 		/// </summary>
@@ -56,15 +53,12 @@ namespace Microsoft.SqlServer.Test.TestShell.Core.InputSpaceModeling
 		System.Runtime.Serialization.SerializationInfo info,
 		System.Runtime.Serialization.StreamingContext context)
 			: base(info, context) { }
-#endif
 	}
 
 	/// <summary>
 	/// Attempted to explore a combinatorial strategy without setting exploration strategies for all the dimensions.
 	/// </summary>
-#if !SILVERLIGHT
 	[Serializable]
-#endif
 	public class DimensionStrategyNotSetException : Exception
 	{
 		/// <summary>
@@ -89,7 +83,6 @@ namespace Microsoft.SqlServer.Test.TestShell.Core.InputSpaceModeling
 		/// <param name="message">The message.</param>
 		/// <param name="inner">The inner.</param>
 		public DimensionStrategyNotSetException(string message, Exception inner) : base(message, inner) { }
-#if !SILVERLIGHT
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DimensionStrategyNotSetException"/> class.
 		/// </summary>
@@ -101,7 +94,6 @@ namespace Microsoft.SqlServer.Test.TestShell.Core.InputSpaceModeling
 		System.Runtime.Serialization.SerializationInfo info,
 		System.Runtime.Serialization.StreamingContext context)
 			: base(info, context) { }
-#endif
 	}
 
 	/// <summary>

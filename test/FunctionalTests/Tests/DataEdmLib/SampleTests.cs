@@ -6,9 +6,6 @@
 
 namespace EdmLibTests
 {
-#if SILVERLIGHT
-    using Microsoft.Silverlight.Testing;
-#endif
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     
     /// <summary>

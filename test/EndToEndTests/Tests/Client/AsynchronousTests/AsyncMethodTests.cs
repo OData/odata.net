@@ -13,9 +13,6 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
     using System.Threading.Tasks;
     using Microsoft.OData;
     using Microsoft.OData.Client;
-#if SILVERLIGHT
-    using Microsoft.Silverlight.Testing;
-#endif
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference;
     using Xunit;

@@ -126,7 +126,6 @@ namespace Microsoft.OData.Client
             return new DataServiceQuerySingle<T>(this.CreateFunctionQuery<T>(functionName, isComposable, parameters), isComposable);
         }
 
-#if !PORTABLELIB // Synchronous methods not available
         /// <summary>
         /// Executes the query and returns the result.
         /// </summary>
@@ -141,7 +140,6 @@ namespace Microsoft.OData.Client
 
             return this.Query.Execute().SingleOrDefault();
         }
-#endif
 
         /// <summary>Starts an asynchronous network operation that executes the query represented by this object instance.</summary>
         /// <returns>An <see cref="System.IAsyncResult" /> that represents the status of the asynchronous operation.</returns>

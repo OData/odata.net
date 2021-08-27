@@ -164,7 +164,6 @@ namespace Microsoft.Test.Taupo.OData.Common
             IStringResourceVerifier verifier = null;
            
             // Resource lookup not supported on Silverlight or Phone platforms.
-#if !SILVERLIGHT && !WINDOWS_PHONE
             if (!resourceVerifierCache.TryGetValue(assemblyFullName, out verifier))
             {
                Assembly assembly = Assembly.Load(new AssemblyName(assemblyFullName));
@@ -172,7 +171,6 @@ namespace Microsoft.Test.Taupo.OData.Common
                verifier = new StringResourceVerifier(lookup);
                resourceVerifierCache.Add(assemblyFullName, verifier);               
             }
-#endif
 
             return verifier;
         }

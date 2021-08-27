@@ -43,11 +43,7 @@ namespace Microsoft.Test.Taupo.OData.Common
             payload.Accept(this);
             ExceptionUtilities.CheckObjectNotNull(this.odataProperties, "ODataProperty cannot be null");
             ExceptionUtilities.Assert(this.odataProperties.Count == 1, "There can be only one property left when writing the result");
-#if SILVERLIGHT 
-            this.writer.WriteProperty(this.odataProperties.First());
-#else
             this.writer.WritePropertyAsync(this.odataProperties.First()).Wait();
-#endif
             this.odataProperties.Clear();
         }
 

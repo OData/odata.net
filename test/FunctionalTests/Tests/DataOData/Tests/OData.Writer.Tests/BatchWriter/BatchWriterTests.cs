@@ -12,9 +12,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
     using System.Globalization;
     using System.IO;
     using System.Linq;
-#if !SILVERLIGHT
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.Taupo.Execution;
@@ -1701,9 +1699,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
 
             public string GetHeader(string headerName) { return (string)ReflectionUtils.InvokeMethod(this.instance, "GetHeader", headerName); }
             public void SetHeader(string headerName, string headerValue) { ReflectionUtils.InvokeMethod(this.instance, "SetHeader", headerName, headerValue); }
-#if !SILVERLIGHT
             public Task<Stream> GetStreamAsync() { return (Task<Stream>)ReflectionUtils.InvokeMethod(this.instance, "GetStreamAsync"); }
-#endif
         }
 
         private sealed class BatchTestWithDirection

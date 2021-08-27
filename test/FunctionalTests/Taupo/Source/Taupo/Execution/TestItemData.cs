@@ -17,11 +17,7 @@ namespace Microsoft.Test.Taupo.Execution
     /// A facade over <see cref="TestItem"/> that exposes only data
     /// about the item, instead of a way to execute it.
     /// </summary>
-#if SILVERLIGHT
-    public class TestItemData
-#else
     public class TestItemData : MarshalByRefObject
-#endif
     {
         private string stringRepresentation;
 
@@ -191,7 +187,6 @@ namespace Microsoft.Test.Taupo.Execution
                 .ToArray();
         }
 
-#if !SILVERLIGHT
         /// <summary>
         /// Obtains a lifetime service object to control the lifetime policy for this instance.
         /// </summary>
@@ -203,7 +198,6 @@ namespace Microsoft.Test.Taupo.Execution
         {
             return null;
         }
-#endif
 
         /// <summary>
         /// Determines whether the specified <see cref="System.Object"/> is equal to this instance.

@@ -9,18 +9,14 @@ namespace Microsoft.OData.Client
     using System;
 
     /// <summary>Exception that indicates an error occurred while querying the data service. </summary>
-#if !PORTABLELIB
     [Serializable]
-#endif
     [System.Diagnostics.DebuggerDisplay("{Message}")]
     public sealed class DataServiceQueryException : InvalidOperationException
     {
         #region Private fields
 
         /// <summary>Actual response object.</summary>
-#if !PORTABLELIB
         [NonSerialized]
-#endif
         private readonly QueryOperationResponse response;
 
         #endregion Private fields
@@ -58,7 +54,6 @@ namespace Microsoft.OData.Client
             this.response = response;
         }
 
-#if !PORTABLELIB
 #pragma warning disable 0628
         /// <summary>
         /// Initializes a new instance of the DataServiceQueryException class from the
@@ -77,7 +72,6 @@ namespace Microsoft.OData.Client
         {
         }
 #pragma warning restore 0628
-#endif
 
         #endregion Constructors
 

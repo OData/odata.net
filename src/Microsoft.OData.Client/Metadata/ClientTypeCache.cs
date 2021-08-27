@@ -26,7 +26,6 @@ namespace Microsoft.OData.Client.Metadata
         /// <summary>cache &lt;T&gt; and wireName to mapped type</summary>
         private static readonly Dictionary<TypeName, Type> namedTypes = new Dictionary<TypeName, Type>(new TypeNameEqualityComparer());
 
-#if !PORTABLELIB
         /// <summary>
         /// resolve the wireName/userType pair to a CLR type
         /// </summary>
@@ -35,16 +34,6 @@ namespace Microsoft.OData.Client.Metadata
         /// <returns>mapped clr type</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<Pending>")]
         internal static Type ResolveFromName(string wireName, Type userType)
-#else
-        /// <summary>
-        /// resolve the wireName/userType pair to a CLR type
-        /// </summary>
-        /// <param name="wireName">type name sent by server</param>
-        /// <param name="userType">type passed by user or on propertyType from a class</param>
-        /// <param name="contextType">typeof context for strongly typed assembly</param>
-        /// <returns>mapped clr type</returns>
-        internal static Type ResolveFromName(string wireName, Type userType, Type contextType)
-#endif
         {
             Type foundType;
 
@@ -78,12 +67,8 @@ namespace Microsoft.OData.Client.Metadata
                 }
                 else
                 {
-#if !PORTABLELIB
                     // searching only loaded assemblies, not referenced assemblies
                     foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
-#else
-                    foreach (Assembly assembly in new Assembly[] { userType.GetAssembly(), contextType.GetAssembly() }.Distinct())
-#endif
                     {
                         Type found = assembly.GetType(wireName, false);
                         ResolveSubclass(name, userType, found, ref foundType);

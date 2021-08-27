@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !SILVERLIGHT
-
 namespace Microsoft.Test.Taupo.Execution.Ltm
 {
     using System;
@@ -178,5 +176,3 @@ namespace Microsoft.Test.Taupo.Execution.Ltm
         }
     }
 }
-
-#endif

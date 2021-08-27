@@ -12,7 +12,6 @@ using System.Security;
 using System.Threading;
 using Microsoft.Test.Taupo.Common;
 
-#if !SILVERLIGHT
 namespace Microsoft.Test.Taupo.Execution.Ltm
 {
     [SecurityCritical]
@@ -222,5 +221,3 @@ namespace Microsoft.Test.Taupo.Execution.Ltm
         }
     }
 }
-
-#endif

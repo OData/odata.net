@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !PORTABLELIB && !SILVERLIGHT
 namespace Microsoft.Test.OData.Framework.Verification
 {
     using System;
@@ -65,4 +64,3 @@ namespace Microsoft.Test.OData.Framework.Verification
         }
     }
 }
-#endif

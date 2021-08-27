@@ -63,9 +63,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts
         {
             ExceptionUtilities.CheckArgumentNotNull(entityType, "entityType");
             ExceptionUtilities.CheckArgumentNotNull(contentType, "contentType");
-#if !WINDOWS_PHONE
             ExceptionUtilities.Assert(calculationType == VersionCalculationType.Metadata || maxProtocolVersion != DataServiceProtocolVersion.Unspecified, "Max protocol version cannot be unspecified for non-metadata cases");
-#endif
 
             return DataServiceProtocolVersion.V4;
         }

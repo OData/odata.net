@@ -414,11 +414,7 @@ namespace Microsoft.OData.Client
         {
             if (constructor == null)
             {
-#if PORTABLELIB
-                throw new MissingMemberException();
-#else
                 throw new MissingMethodException();
-#endif
             }
 
             return constructor.Invoke(arguments);

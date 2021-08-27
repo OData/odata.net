@@ -31,11 +31,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         /// </summary>
         static WrappedLinkDescriptor()
         {
-#if SILVERLIGHT && !WIN8 && !WINDOWS_PHONE
-            WrappedObjectType = AstoriaWrapperUtilities.GetTypeFromAssembly("Microsoft.OData.Client.LinkDescriptor", "Microsoft.OData.Client.SL");
-#else
             WrappedObjectType = AstoriaWrapperUtilities.GetTypeFromAssembly("Microsoft.OData.Client.LinkDescriptor", "Microsoft.OData.Client");
-#endif
         }
         
         /// <summary>

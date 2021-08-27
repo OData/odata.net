@@ -194,11 +194,9 @@ namespace EdmLibTests.FunctionalTests
 
             this.ValidateClrObjectConverter(valueAnnotation, new Person7() { Id = 10 });
 
-#if !SILVERLIGHT
             Person8 actual = ConvertToClrObject<Person8>(valueAnnotation);
             Assert.AreEqual(10, actual.Id, "Failed");
             Assert.AreEqual("Young", actual.FirstName, "Failed");
-#endif
         }
 
         [TestMethod]
@@ -337,7 +335,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(edmToClrConverter.AsClrValue(GetIntegerExpression("PersonValueAnnotation3"), typeof(EnumInt)), EnumInt.Member1, "It should return Infinit for Single when the value is greater than Single.MaxValue.");
             Assert.AreEqual(new EdmToClrEvaluator(null).EvaluateToClrValue<EnumInt>(GetIntegerExpression("PersonValueAnnotation3")), EnumInt.Member1, "It should return Infinit for Single when the value is greater than Single.MaxValue.");
             Assert.AreEqual(new EdmToClrEvaluator(null).EvaluateToClrValue<EnumInt>(GetIntegerExpression("PersonValueAnnotation4")), (EnumInt)(-2), "It should return Infinit for Single when the value is greater than Single.MaxValue.");
-#if !SILVERLIGHT
+
             this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation1").Single(),
                    new ClassWithEnum()
                    {
@@ -345,33 +343,27 @@ namespace EdmLibTests.FunctionalTests
                        EnumByte = (EnumByte)10,
                        EnumULong = EnumULong.Member2
                    });
-#endif
             this.VerifyThrowsException(typeof(InvalidCastException), () => new EdmToClrEvaluator(null).EvaluateToClrValue<EnumInt>(GetIntegerExpression("PersonValueAnnotation2")));
-#if !SILVERLIGHT
             this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation8").Single(),
                    new ClassWithEnum()
                    {
                        EnumInt = (EnumInt)10,
                    });
-#endif
         }
 
         [TestMethod]
         public void ClrTypeMappingVocabularyAnnotationDuplicatePropertyNameTests()
         {
             var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.VocabularyAnnotationDuplicatePropertyNameTest());
-#if !SILVERLIGHT
             this.VerifyThrowsException(typeof(InvalidCastException),
                             () => this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation1").Single(), new ClassWithEnum())
                         );
-#endif
         }
 
         [TestMethod]
         public void ClrTypeMappingVocabularyAnnotationEmptyVocabularyAnnotations()
         {
             var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.VocabularyAnnotationEmptyVocabularyAnnotations());
-#if !SILVERLIGHT
             this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation1").Single(),
                                 new ClassWithEnum()
                                 {
@@ -379,7 +371,7 @@ namespace EdmLibTests.FunctionalTests
                                     EnumByte = EnumByte.Member1,
                                     EnumULong = (EnumULong)0
                                 });
-#endif
+
             this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation1").Single(), new ClassWithCollectionProperty());
             this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation1").Single(), new ClassWithCollectionOfCollectionProperty());
             this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation1").Single(), new DisplayCoordination());

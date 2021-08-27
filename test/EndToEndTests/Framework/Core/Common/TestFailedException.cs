@@ -12,9 +12,7 @@ namespace Microsoft.Test.OData.Framework.Common
     /// <summary>
     /// Exception thrown whenever the test fails.
     /// </summary>
-#if !SILVERLIGHT && !PORTABLELIB
     [Serializable]
-#endif
     public abstract class TestFailedException : Exception
     {
         /// <summary>
@@ -43,7 +41,6 @@ namespace Microsoft.Test.OData.Framework.Common
         {
         }
 
-#if !SILVERLIGHT && !PORTABLELIB
         /// <summary>
         /// Initializes a new instance of the TestFailedException class based on 
         /// <see cref="SerializationInfo"/>
@@ -54,6 +51,5 @@ namespace Microsoft.Test.OData.Framework.Common
             : base(info, context)
         {
         }
-#endif
     }
 }

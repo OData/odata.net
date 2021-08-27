@@ -265,12 +265,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
         private void SetDefaultAcceptHeader(ExpectedClientRequest request, SaveChangesOptions options)
         {
             request.Headers[HttpHeaders.Accept] = string.IsNullOrWhiteSpace(this.ClientRequestAcceptHeader) ? DefaultAccept : this.ClientRequestAcceptHeader;
-#if !SILVERLIGHT
             request.Headers[HttpHeaders.AcceptCharset] = DefaultEncoding;
-#else
-            // Silverlight does not specify AcceptCharset at the top level "because the http stack does not support it"
-            request.Headers[HttpHeaders.AcceptCharset] = (options == SaveChangesOptions.Batch) ? DefaultEncoding : null;
-#endif
         }
 
         private void SetContentTypeHeaderForEntity(ExpectedClientRequest request)

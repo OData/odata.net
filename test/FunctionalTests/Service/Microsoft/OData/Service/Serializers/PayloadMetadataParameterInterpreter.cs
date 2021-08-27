@@ -394,7 +394,6 @@ namespace Microsoft.OData.Service.Serializers
             return true;
         }
 
-#if !ASTORIA_LIGHT
         /// <summary>
         /// Unit test method for determining whether two facades are equivalent (ie: wrap the same server/client models).
         /// </summary>
@@ -409,7 +408,6 @@ namespace Microsoft.OData.Service.Serializers
                 && other.metadataParameterValue == this.metadataParameterValue
                 && other.metadataParameterValueForTypeNames == this.metadataParameterValueForTypeNames;
         }
-#endif
 
         /// <summary>
         /// Parses the raw parameter value provided in the media type and returns a simplified representation, assuming the format is Json Light.

@@ -285,15 +285,6 @@ namespace Microsoft.OData.Client
             this.UsingDataServiceCollection = false;
             this.UsePostTunneling = false;
             this.keyComparisonGeneratesFilterQuery = false;
-
-            // Need to use the same defaults when running sl in portable lib as when running in SL normally.
-#if PORTABLELIB
-            if (HttpWebRequestMessage.IsRunningOnSilverlight)
-            {
-                this.UsePostTunneling = true;
-                this.UseDefaultCredentials = true;
-            }
-#endif
         }
 
         #endregion
@@ -1195,14 +1186,14 @@ namespace Microsoft.OData.Client
             return this.FromAsync(this.BeginLoadProperty, this.EndLoadProperty, entity, propertyName, cancellationToken);
         }
 
-    /// <summary>Asynchronously loads a page of related entities from the data service by using the supplied next link URI.</summary>
-    /// <returns>An <see cref="System.IAsyncResult" /> object that is used to track the status of the asynchronous operation. </returns>
-    /// <param name="entity">The entity that contains the property to load.</param>
-    /// <param name="propertyName">The name of the property of the specified entity to load.</param>
-    /// <param name="nextLinkUri">The URI used to load the next results page.</param>
-    /// <param name="callback">Delegate to invoke when results are available for client consumption.</param>
-    /// <param name="state">User-defined state object passed to the callback.</param>
-    public virtual IAsyncResult BeginLoadProperty(object entity, string propertyName, Uri nextLinkUri, AsyncCallback callback, object state)
+        /// <summary>Asynchronously loads a page of related entities from the data service by using the supplied next link URI.</summary>
+        /// <returns>An <see cref="System.IAsyncResult" /> object that is used to track the status of the asynchronous operation. </returns>
+        /// <param name="entity">The entity that contains the property to load.</param>
+        /// <param name="propertyName">The name of the property of the specified entity to load.</param>
+        /// <param name="nextLinkUri">The URI used to load the next results page.</param>
+        /// <param name="callback">Delegate to invoke when results are available for client consumption.</param>
+        /// <param name="state">User-defined state object passed to the callback.</param>
+        public virtual IAsyncResult BeginLoadProperty(object entity, string propertyName, Uri nextLinkUri, AsyncCallback callback, object state)
         {
             LoadPropertyResult result = this.CreateLoadPropertyRequest(entity, propertyName, callback, state, nextLinkUri, null);
             result.BeginExecuteQuery();
@@ -1266,16 +1257,15 @@ namespace Microsoft.OData.Client
             return this.FromAsync(this.BeginLoadProperty, this.EndLoadProperty, entity, propertyName, continuation, cancellationToken);
         }
 
-    /// <summary>Called to complete the <see cref="Microsoft.OData.Client.DataServiceContext.BeginLoadProperty(System.Object,System.String,System.AsyncCallback,System.Object)" /> operation.</summary>
-    /// <returns>The response to the load operation.</returns>
-    /// <param name="asyncResult">An <see cref="System.IAsyncResult" /> that represents the status of the asynchronous operation.</param>
-    public virtual QueryOperationResponse EndLoadProperty(IAsyncResult asyncResult)
+        /// <summary>Called to complete the <see cref="Microsoft.OData.Client.DataServiceContext.BeginLoadProperty(System.Object,System.String,System.AsyncCallback,System.Object)" /> operation.</summary>
+        /// <returns>The response to the load operation.</returns>
+        /// <param name="asyncResult">An <see cref="System.IAsyncResult" /> that represents the status of the asynchronous operation.</param>
+        public virtual QueryOperationResponse EndLoadProperty(IAsyncResult asyncResult)
         {
             LoadPropertyResult response = BaseAsyncResult.EndExecute<LoadPropertyResult>(this, Util.LoadPropertyMethodName, asyncResult);
             return response.LoadProperty();
         }
 
-#if !PORTABLELIB // Synchronous methods not available
         /// <summary>Loads deferred content for a specified property from the data service.</summary>
         /// <returns>The response to the load operation.</returns>
         /// <param name="entity">The entity that contains the property to load.</param>
@@ -1365,9 +1355,6 @@ namespace Microsoft.OData.Client
             result.ExecuteQuery();
             return (QueryOperationResponse<T>)result.LoadProperty();
         }
-
-#endif
-
 
         #endregion
 
@@ -1528,7 +1515,6 @@ namespace Microsoft.OData.Client
             return result.End();
         }
 
-#if !PORTABLELIB
         /// <summary>Gets the binary data stream that belongs to the specified entity.</summary>
         /// <returns>An instance of <see cref="Microsoft.OData.Client.DataServiceStreamResponse" /> that represents the response.</returns>
         /// <param name="entity">The entity that has the binary stream to retrieve. </param>
@@ -1583,7 +1569,6 @@ namespace Microsoft.OData.Client
             return result.Execute();
         }
 
-#endif
         #endregion
 
         #region SetSaveStream
@@ -1793,7 +1778,6 @@ namespace Microsoft.OData.Client
             return result.EndRequest();
         }
 
-#if !PORTABLELIB // Synchronous methods not available
         /// <summary>Synchronously submits a group of queries as a batch to the data service.</summary>
         /// <returns>The response to the batch operation.</returns>
         /// <param name="queries">Array of <see cref="Microsoft.OData.Client.DataServiceRequest" /> objects that make up the queries.</param>
@@ -1819,7 +1803,6 @@ namespace Microsoft.OData.Client
             result.BatchRequest();
             return result.EndRequest();
         }
-#endif
 
         #endregion
 
@@ -1933,15 +1916,15 @@ namespace Microsoft.OData.Client
             return this.FromAsync((callback, state) => this.BeginExecute<TElement>(requestUri, callback, state, httpMethod, singleResult, operationParameters), this.EndExecute<TElement>, cancellationToken);
         }
 
-            /// <summary>Asynchronously sends a request to the data service to execute a specific URI.</summary>
-            /// <returns>The result of the operation.</returns>
-            /// <param name="requestUri">The URI to which the query request will be sent.</param>
-            /// <param name="callback">Delegate to invoke when results are available for client consumption.</param>
-            /// <param name="state">User-defined state object passed to the callback.</param>
-            /// <param name="httpMethod">The HTTP data transfer method used by the client.</param>
-            /// <param name="operationParameters">The operation parameters used.</param>
-            /// <typeparam name="TElement">The type returned by the query.</typeparam>
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Type is used to infer result")]
+        /// <summary>Asynchronously sends a request to the data service to execute a specific URI.</summary>
+        /// <returns>The result of the operation.</returns>
+        /// <param name="requestUri">The URI to which the query request will be sent.</param>
+        /// <param name="callback">Delegate to invoke when results are available for client consumption.</param>
+        /// <param name="state">User-defined state object passed to the callback.</param>
+        /// <param name="httpMethod">The HTTP data transfer method used by the client.</param>
+        /// <param name="operationParameters">The operation parameters used.</param>
+        /// <typeparam name="TElement">The type returned by the query.</typeparam>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Type is used to infer result")]
         public virtual IAsyncResult BeginExecute<TElement>(Uri requestUri, AsyncCallback callback, object state, string httpMethod, params OperationParameter[] operationParameters)
         {
             bool? singleResult = this.IsSingletonType<TElement>();
@@ -1971,13 +1954,13 @@ namespace Microsoft.OData.Client
             return this.FromAsync((callback, state) => this.BeginExecute<TElement>(requestUri, callback, state, httpMethod, operationParameters), this.EndExecute<TElement>, cancellationToken);
         }
 
-            /// <summary>Asynchronously sends a request to the data service to retrieve the next page of data in a paged query result.</summary>
-            /// <returns>An <see cref="System.IAsyncResult" /> that represents the status of the operation.</returns>
-            /// <param name="continuation">A <see cref="Microsoft.OData.Client.DataServiceQueryContinuation{T}" /> object that represents the next page of data to return from the data service.</param>
-            /// <param name="callback">Delegate to invoke when results are available for client consumption.</param>
-            /// <param name="state">User-defined state object passed to the callback.</param>
-            /// <typeparam name="T">The type returned by the query.</typeparam>
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Type is used to infer result")]
+        /// <summary>Asynchronously sends a request to the data service to retrieve the next page of data in a paged query result.</summary>
+        /// <returns>An <see cref="System.IAsyncResult" /> that represents the status of the operation.</returns>
+        /// <param name="continuation">A <see cref="Microsoft.OData.Client.DataServiceQueryContinuation{T}" /> object that represents the next page of data to return from the data service.</param>
+        /// <param name="callback">Delegate to invoke when results are available for client consumption.</param>
+        /// <param name="state">User-defined state object passed to the callback.</param>
+        /// <typeparam name="T">The type returned by the query.</typeparam>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Type is used to infer result")]
         public virtual IAsyncResult BeginExecute<T>(DataServiceQueryContinuation<T> continuation, AsyncCallback callback, object state)
         {
             Util.CheckArgumentNull(continuation, "continuation");
@@ -2038,7 +2021,6 @@ namespace Microsoft.OData.Client
             return result;
         }
 
-#if !PORTABLELIB // Synchronous methods not available
         /// <summary>Sends a request to the data service to execute a specific URI.</summary>
         /// <returns>The results of the query operation.</returns>
         /// <param name="requestUri">The URI to which the query request will be sent. The URI may be any valid data service URI. Can contain $ query parameters.</param>
@@ -2130,7 +2112,6 @@ namespace Microsoft.OData.Client
             return InnerSynchExecute<TElement>(requestUri, httpMethod, singleResult, operationParameters);
         }
 
-#endif
         #endregion
 
         #region SaveChanges, BeginSaveChanges, EndSaveChanges
@@ -2218,7 +2199,6 @@ namespace Microsoft.OData.Client
             return errors;
         }
 
-#if !PORTABLELIB // Synchronous methods not available
         /// <summary>Saves the changes that the <see cref="Microsoft.OData.Client.DataServiceContext" /> is tracking to storage.</summary>
         /// <returns>A <see cref="Microsoft.OData.Client.DataServiceResponse" /> that contains status, headers, and errors that result from the call to <see cref="Microsoft.OData.Client.DataServiceContext.SaveChanges()" />.</returns>
         public virtual DataServiceResponse SaveChanges()
@@ -2255,7 +2235,7 @@ namespace Microsoft.OData.Client
 
             return errors;
         }
-#endif
+
         #endregion
 
         #region Add, Attach, Delete, Detach, Update, TryGetEntity, TryGetUri
@@ -2944,8 +2924,6 @@ namespace Microsoft.OData.Client
                 cancellationToken).Unwrap();
         }
 
-#if !PORTABLELIB
-
         /// <summary>
         /// Loads all pages of related entities for a specified property from the data service.
         /// </summary>
@@ -3010,7 +2988,6 @@ namespace Microsoft.OData.Client
             DataServiceRequest request = new DataServiceRequest<TElement>(requestUri, qc, null);
             return request.Execute<TElement>(this, qc);
         }
-#endif
 
         /// <summary>Begins the execution of the request uri based on the http method.</summary>
         /// <typeparam name="TElement">element type of the result</typeparam>
@@ -3884,7 +3861,6 @@ namespace Microsoft.OData.Client
             IODataResponseMessage response = null;
             try
             {
-#if !PORTABLELIB
                 if (asyncResult == null)
                 {
                     response = request.GetResponse();
@@ -3893,9 +3869,7 @@ namespace Microsoft.OData.Client
                 {
                     response = request.EndGetResponse(asyncResult);
                 }
-#else
-                response = request.EndGetResponse(asyncResult);
-#endif
+
                 this.FireReceivingResponseEvent(new ReceivingResponseEventArgs(response, request.Descriptor));
             }
             catch (DataServiceTransportException e)
@@ -4106,12 +4080,7 @@ namespace Microsoft.OData.Client
                 Dictionary<ODataProtocolVersion, ClientEdmModel> cache =
                 new Dictionary<ODataProtocolVersion, ClientEdmModel>(EqualityComparer<ODataProtocolVersion>.Default);
 
-                IEnumerable<ODataProtocolVersion> protocolVersions =
-#if PORTABLELIB // Portable lib does not support Enum.GetValues()
- typeof(ODataProtocolVersion).GetFields().Where(f => f.IsLiteral).Select(f => f.GetValue(typeof(ODataProtocolVersion))).Cast<ODataProtocolVersion>();
-#else
- Enum.GetValues(typeof(ODataProtocolVersion)).Cast<ODataProtocolVersion>();
-#endif
+                IEnumerable<ODataProtocolVersion> protocolVersions = Enum.GetValues(typeof(ODataProtocolVersion)).Cast<ODataProtocolVersion>();
 
                 foreach (var protocolVersion in protocolVersions)
                 {

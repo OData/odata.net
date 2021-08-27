@@ -169,15 +169,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                     new bool[] { true, false },  // skipStateValidationBeforeRead
                     (version, enableMessageStreamDisposal, isRequest, synchronous, skipStateValidationBeforeRead) =>
                     {
-
-#if SILVERLIGHT || WINDOWS_PHONE
-                        // If we are running in Silverlight or windows phone, we don't want to generate asynchronous variations
-                        // hence we will skip generation of asynchronous test combinations
-                        if (!synchronous)
-                        {
-                            return;
-                        }
-#endif
                         var settings = new ODataMessageReaderSettings
                         {
                             EnableMessageStreamDisposal = enableMessageStreamDisposal
@@ -210,15 +201,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                     new bool[] { true, false },  // skipStateValidationBeforeRead
                     (limitedCombination, isRequest, skipStateValidationBeforeRead) =>
                     {
-
-#if SILVERLIGHT || WINDOWS_PHONE
-                        // If we are running in Silverlight or windows phone, we don't want to generate asynchronous variations
-                        // hence we will skip generation of asynchronous test combinations
-                        if (!limitedCombination.Synchronous)
-                        {
-                            return;
-                        }
-#endif
                         var settings = new ODataMessageReaderSettings
                         {
                             EnableMessageStreamDisposal = limitedCombination.EnableMessageStreamDisposal

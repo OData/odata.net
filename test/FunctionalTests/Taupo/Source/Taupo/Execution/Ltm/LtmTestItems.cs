@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !SILVERLIGHT
-
 namespace Microsoft.Test.Taupo.Execution.Ltm
 {
     using System.Collections.Generic;
@@ -36,5 +34,3 @@ namespace Microsoft.Test.Taupo.Execution.Ltm
         }
     }
 }
-
-#endif

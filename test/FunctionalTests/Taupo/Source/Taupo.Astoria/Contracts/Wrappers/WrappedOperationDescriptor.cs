@@ -31,11 +31,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         /// </summary>
         static WrappedOperationDescriptor()
         {
-#if SILVERLIGHT && !WIN8
-            WrappedObjectType = AstoriaWrapperUtilities.GetTypeFromAssembly("Microsoft.OData.Client.OperationDescriptor", "Microsoft.OData.Client.SL");
-#else
             WrappedObjectType = AstoriaWrapperUtilities.GetTypeFromAssembly("Microsoft.OData.Client.OperationDescriptor", "Microsoft.OData.Client");
-#endif
         }
         
         /// <summary>

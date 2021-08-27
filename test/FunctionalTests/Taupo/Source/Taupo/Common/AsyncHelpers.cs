@@ -11,9 +11,6 @@ namespace Microsoft.Test.Taupo.Common
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Threading;
-#if SILVERLIGHT
-    using System.Windows;
-#endif
 
     /// <summary>
     /// Helper functions for simplifying executing asynchronous patterns.
@@ -71,31 +68,24 @@ namespace Microsoft.Test.Taupo.Common
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Need to catch all exceptions here.")]
         public static void CatchErrors(this IAsyncContinuation continuation, Action action, Action final)
         {
-#if SILVERLIGHT && !WIN8
-            Deployment.Current.Dispatcher.BeginInvoke(() =>
-             {
-#endif
-                 try
-                 {
-                     action();
-                 }
-                 catch (Exception ex)
-                 {
-                     if (ExceptionUtilities.IsCatchable(ex))
-                     {
-                         continuation.Fail(ex);
-                     }
-                 }
-                 finally
-                 {
-                     if (final != null)
-                     {
-                         CatchErrors(continuation, final);
-                     }
-                 }
-#if SILVERLIGHT && !WIN8
-             });
-#endif
+            try
+            {
+                action();
+            }
+            catch (Exception ex)
+            {
+                if (ExceptionUtilities.IsCatchable(ex))
+                {
+                    continuation.Fail(ex);
+                }
+            }
+            finally
+            {
+                if (final != null)
+                {
+                    CatchErrors(continuation, final);
+                }
+            }
         }
 
         /// <summary>
@@ -313,9 +303,6 @@ namespace Microsoft.Test.Taupo.Common
             }
             else
             {
-#if SILVERLIGHT
-                throw new TaupoNotSupportedException("Sync APIs not supported in Silverlight");
-#else
                 AsyncHelpers.CatchErrors(
                     continuation,
                     () =>
@@ -323,7 +310,6 @@ namespace Microsoft.Test.Taupo.Common
                         var returnValue = syncCall();
                         onCompletion(returnValue);
                     });
-#endif
             }
         }
 
