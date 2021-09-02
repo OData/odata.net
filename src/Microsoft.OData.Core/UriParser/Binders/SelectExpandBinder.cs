@@ -369,14 +369,9 @@ namespace Microsoft.OData.UriParser
                 currentNavProp = ParseComplexTypesBeforeNavigation(currentComplexProp, ref firstNonTypeToken, pathSoFar);
             }
 
-            // ensure that we're always dealing with proper V4 syntax
-            if (firstNonTypeToken.NextToken != null && firstNonTypeToken.NextToken.NextToken != null)
-            {
-                throw new ODataException(ODataErrorStrings.ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath);
-            }
-
             bool isRef = false;
             bool isCount = false;
+            bool hasDerivedType = false;
             PathSegmentToken derivedTypeToken = null;
             IEdmEntityType derivedType = null;
 
@@ -384,9 +379,16 @@ namespace Microsoft.OData.UriParser
             // The deriveTypeToken is VipCustomer
             if (firstNonTypeToken.NextToken != null && firstNonTypeToken.NextToken.IsNamespaceOrContainerQualified())
             {
+                hasDerivedType = true;
                 derivedTypeToken = firstNonTypeToken.NextToken;
                 derivedType = UriEdmHelpers.FindTypeFromModel(this.Model, derivedTypeToken.Identifier, this.configuration.Resolver) as IEdmEntityType;
                 firstNonTypeToken = derivedTypeToken;
+            }
+
+            // ensure that we're always dealing with proper V4 syntax
+            if (firstNonTypeToken.NextToken != null && firstNonTypeToken.NextToken.NextToken != null && !hasDerivedType)
+            {
+                throw new ODataException(ODataErrorStrings.ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath);
             }
 
             if (firstNonTypeToken.NextToken != null)
