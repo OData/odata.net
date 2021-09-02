@@ -1687,6 +1687,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             ExpandedCountSelectItem expandedCountSelectItem = Assert.IsType<ExpandedCountSelectItem>(Assert.Single(selectExpandClause.SelectedItems));
             Assert.Null(expandedCountSelectItem.FilterOption);
             Assert.Null(expandedCountSelectItem.SearchOption);
+            Assert.Equal(1, expandedCountSelectItem.PathToNavigationProperty.Count);
+            Assert.Equal("MyPeople", expandedCountSelectItem.PathToNavigationProperty.Segments.First().Identifier);
+            Assert.Equal("Collection(Fully.Qualified.Namespace.Employee)", expandedCountSelectItem.PathToNavigationProperty.Segments.First().EdmType.FullTypeName());
         }
 
         // $expand=navProp/fully.qualified.type/$count($filter=prop)
@@ -1709,6 +1712,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             ExpandedCountSelectItem expandedCountSelectItem = Assert.IsType<ExpandedCountSelectItem>(Assert.Single(selectExpandClause.SelectedItems));
             Assert.NotNull(expandedCountSelectItem.FilterOption);
             Assert.Null(expandedCountSelectItem.SearchOption);
+            Assert.Equal(1, expandedCountSelectItem.PathToNavigationProperty.Count);
+            Assert.Equal("MyPeople", expandedCountSelectItem.PathToNavigationProperty.Segments.First().Identifier);
+            Assert.Equal("Collection(Fully.Qualified.Namespace.Employee)", expandedCountSelectItem.PathToNavigationProperty.Segments.First().EdmType.FullTypeName());
         }
 
         // $expand=navProp/fully.qualified.type/$count($search=prop)
@@ -1731,6 +1737,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             ExpandedCountSelectItem expandedCountSelectItem = Assert.IsType<ExpandedCountSelectItem>(Assert.Single(selectExpandClause.SelectedItems));
             Assert.Null(expandedCountSelectItem.FilterOption);
             Assert.NotNull(expandedCountSelectItem.SearchOption);
+            Assert.Equal(1, expandedCountSelectItem.PathToNavigationProperty.Count);
+            Assert.Equal("MyPeople", expandedCountSelectItem.PathToNavigationProperty.Segments.First().Identifier);
+            Assert.Equal("Collection(Fully.Qualified.Namespace.Employee)", expandedCountSelectItem.PathToNavigationProperty.Segments.First().EdmType.FullTypeName());
         }
 
         [Fact]
