@@ -1667,6 +1667,72 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.NotNull(expandedCountSelectItem.SearchOption);
         }
 
+        // $expand=navProp/fully.qualified.type/$count
+        [Fact]
+        public void ExpandWithNavigationPropCountWithFullyQualifiedTypeWorks()
+        {
+            // Arrange
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetDogType(), HardCodedTestModel.GetDogsSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$expand", "MyPeople/Fully.Qualified.Namespace.Employee/$count"}
+                });
+
+            // Act
+            var selectExpandClause = odataQueryOptionParser.ParseSelectAndExpand();
+
+            // Assert
+            Assert.NotNull(selectExpandClause);
+            ExpandedCountSelectItem expandedCountSelectItem = Assert.IsType<ExpandedCountSelectItem>(Assert.Single(selectExpandClause.SelectedItems));
+            Assert.Null(expandedCountSelectItem.FilterOption);
+            Assert.Null(expandedCountSelectItem.SearchOption);
+        }
+
+        // $expand=navProp/fully.qualified.type/$count($filter=prop)
+        [Fact]
+        public void ExpandWithNavigationPropCountWithFilterAndFullyQualifiedTypeWorks()
+        {
+            // Arrange
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetDogType(), HardCodedTestModel.GetDogsSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$expand", "MyPeople/Fully.Qualified.Namespace.Employee/$count($filter=ID eq 1)"}
+                });
+
+            // Act
+            var selectExpandClause = odataQueryOptionParser.ParseSelectAndExpand();
+
+            // Assert
+            Assert.NotNull(selectExpandClause);
+            ExpandedCountSelectItem expandedCountSelectItem = Assert.IsType<ExpandedCountSelectItem>(Assert.Single(selectExpandClause.SelectedItems));
+            Assert.NotNull(expandedCountSelectItem.FilterOption);
+            Assert.Null(expandedCountSelectItem.SearchOption);
+        }
+
+        // $expand=navProp/fully.qualified.type/$count($search=prop)
+        [Fact]
+        public void ExpandWithNavigationPropCountWithSearchAndFullyQualifiedTypeWorks()
+        {
+            // Arrange
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetDogType(), HardCodedTestModel.GetDogsSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$expand", "MyPeople/Fully.Qualified.Namespace.Employee/$count($search=blue)"}
+                });
+
+            // Act
+            var selectExpandClause = odataQueryOptionParser.ParseSelectAndExpand();
+
+            // Assert
+            Assert.NotNull(selectExpandClause);
+            ExpandedCountSelectItem expandedCountSelectItem = Assert.IsType<ExpandedCountSelectItem>(Assert.Single(selectExpandClause.SelectedItems));
+            Assert.Null(expandedCountSelectItem.FilterOption);
+            Assert.NotNull(expandedCountSelectItem.SearchOption);
+        }
+
         [Fact]
         public void SelectWithNestedSelectWorks()
         {
