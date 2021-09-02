@@ -184,6 +184,32 @@ The easiest way to run the perf benchmarks is to use the [Microsoft.Crank](https
     crank --config benchmarks.yml --scenario UriParser --profile local
     ```
 
+#### Run benchmarks on remote dedicated agents
+
+The `local` profile is provided for testing purposes, but it's not ideal for running benchmarks.
+For more stable results and results that we can more reliably compare, the following profiles are also
+available and should be preferred whenever possible:
+
+Profile       | Machine Architecture | OS
+--------------|----------------------|------
+`lab-windows` | INTEL, 12 Cores      | Windows Server 2016
+`lab-linux`   | INTEL, 12 Cores      | Ubuntu 18.04, Kernel 4.x
+
+Use the `--profile` argument to specify the profile you want to use. For example,
+to run the components benchmark on the Windows agent, run the following command:
+
+```
+crank --config benchmarks.yml --scenario Components --profile lab-windows
+```
+
+And to run on the Linux agent:
+
+```
+crank --config benchmarks.yml --scenario Components --profile lab-linux
+```
+
+PS: We should not use these machines to run automated scheduled benchmarks.
+
 #### Run benchmarks against the official repo
 
 To run benchmarks against the official repo instead of your local repo, pass
