@@ -12,6 +12,7 @@ namespace Microsoft.OData.Client
     #region Namespaces
 
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
@@ -169,6 +170,8 @@ namespace Microsoft.OData.Client
 
         /// <summary>A factory class to use in selecting the the request message transport mode implementation </summary>
         private IDataServiceRequestMessageFactory requestMessageFactory = new DataServiceRequestMessageFactory();
+
+        private ConcurrentDictionary<string, Type> resolveTypesCache = new ConcurrentDictionary<string, Type>();
 
         #region Test hooks for header and payload verification
 
@@ -3246,31 +3249,31 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Determines the type that
+        /// Resolves a type with specified name from the loaded assemblies.
         /// </summary>
         /// <param name="typeName">Name of the type to resolve.</param>
         /// <param name="fullNamespace">Namespace of the type.</param>
         /// <param name="languageDependentNamespace">Namespace of the type, can be different in VB than the fullNamespace.</param>
         /// <returns>Type that the name resolved to or null if none found.</returns>
-        /// <remarks>Function was added for Portable Lib support to handle the differences in accessing the assembly of the context.</remarks>
+        /// <remarks>Function was added to handle the differences in accessing the assembly of the context.</remarks>
         protected internal Type DefaultResolveType(string typeName, string fullNamespace, string languageDependentNamespace)
         {
             if (typeName != null && typeName.StartsWith(fullNamespace, StringComparison.Ordinal))
             {
-                int namespaceLength = fullNamespace != null ? fullNamespace.Length : 0;
-                Type type = this.GetType().GetAssembly().GetType(string.Concat(languageDependentNamespace, typeName.Substring(namespaceLength)), false);
-                if (type == null)
+                Type matchedType;
+
+                if (!this.resolveTypesCache.TryGetValue(typeName, out matchedType))
                 {
-                    return this.GetType().GetAssembly().GetTypes().ToList().Where(t =>
+                    if (ClientTypeUtil.TryResolveType(typeName, fullNamespace, languageDependentNamespace, out matchedType))
                     {
-                        string serverDefinedName = typeName.Substring(namespaceLength + 1);
-                        OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)t.GetCustomAttributes(typeof(OriginalNameAttribute), true).SingleOrDefault();
-                        return originalNameAttribute != null && originalNameAttribute.OriginalName == serverDefinedName && t.Namespace == languageDependentNamespace;
-                    }).SingleOrDefault();
+                        this.resolveTypesCache.TryAdd(typeName, matchedType);
+
+                        return matchedType;
+                    }
                 }
                 else
                 {
-                    return type;
+                    return matchedType;
                 }
             }
 

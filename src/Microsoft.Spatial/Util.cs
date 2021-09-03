@@ -7,6 +7,7 @@
 namespace Microsoft.Spatial
 {
     using System;
+    using System.Diagnostics;
 
     /// <summary>
     /// Util class
@@ -27,6 +28,7 @@ namespace Microsoft.Spatial
         /// </summary>
         /// <param name="arg">The input argument</param>
         /// <param name="errorMessage">The error to throw</param>
+        [DebuggerStepThrough]
         internal static void CheckArgumentNull([ValidatedNotNull] object arg, string errorMessage)
         {
             if (arg == null)
