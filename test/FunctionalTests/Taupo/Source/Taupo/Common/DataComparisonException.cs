@@ -15,9 +15,7 @@ namespace Microsoft.Test.Taupo.Common
     /// <summary>
     /// Exception raised wherever there's data miscompare in the test.
     /// </summary>
-#if !SILVERLIGHT
     [Serializable]
-#endif
     public class DataComparisonException : TestFailedException
     {
         /// <summary>
@@ -44,7 +42,6 @@ namespace Microsoft.Test.Taupo.Common
         {
         }
 
-#if !SILVERLIGHT
         /// <summary>
         /// Initializes a new instance of the DataComparisonException class based on 
         /// <see cref="SerializationInfo"/>
@@ -65,7 +62,6 @@ namespace Microsoft.Test.Taupo.Common
             this.ExpectedValue = info.GetString("ExpectedValue");
             this.ActualValue = info.GetString("ActualValue");
         }
-#endif
 
         /// <summary>
         /// Gets or sets actual value.
@@ -99,7 +95,6 @@ namespace Microsoft.Test.Taupo.Common
             }
         }
 
-#if !SILVERLIGHT
         /// <summary>
         /// Adds exception data to <see cref="SerializationInfo"/>.
         /// </summary>
@@ -112,6 +107,5 @@ namespace Microsoft.Test.Taupo.Common
             info.AddValue("ExpectedValue", ToStringConverter.ConvertObjectToString(this.ExpectedValue));
             info.AddValue("ActualValue", ToStringConverter.ConvertObjectToString(this.ActualValue));
         }
-#endif
     }
 }

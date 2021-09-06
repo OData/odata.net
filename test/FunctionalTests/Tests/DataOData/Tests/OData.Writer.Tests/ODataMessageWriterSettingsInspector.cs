@@ -13,9 +13,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
     using Microsoft.Test.Taupo.OData.Common;
     #endregion Namespaces
 
-    // These tests and helpers are disabled on Silverlight and Phone because they  
-    // use private reflection not available on Silverlight and Phone
-#if !SILVERLIGHT && !WINDOWS_PHONE
     internal static class ODataMessageWriterSettingsInspector
     {
         public static object GetWriterBehavior(this ODataMessageWriterSettings settings)
@@ -48,5 +45,4 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             return (Action<ODataResource, XmlWriter, XmlWriter>)ReflectionUtils.GetProperty(settings, "AtomEndResourceXmlCustomizationCallback");
         }
     }
-#endif
 }

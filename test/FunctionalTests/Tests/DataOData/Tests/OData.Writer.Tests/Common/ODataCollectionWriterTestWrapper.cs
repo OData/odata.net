@@ -9,9 +9,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
     #region Namespaces
     using System;
     using System.Reflection;
-#if !WINDOWS_PHONE
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData;
     using Microsoft.Test.Taupo.Common;
     #endregion Namespaces
@@ -66,15 +64,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-#if  WINDOWS_PHONE
-                throw new TaupoNotSupportedException("This test is not supported in asynchronous mode in Silverlight or Windows Phone");
-#else
                 this.collectionWriter.WriteStartAsync(collection).Wait();
-#endif
             }
         }
 
-#if !WINDOWS_PHONE
         /// <summary>
         /// Asynchronously start writing a collection.
         /// </summary>
@@ -84,7 +77,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         {
             throw new NotImplementedException("Tests should always use synchronous APIs.");
         }
-#endif
 
         /// <summary>
         /// Start writing a collection item.
@@ -98,15 +90,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-#if WINDOWS_PHONE
-                throw new TaupoNotSupportedException("This test is not supported in asynchronous mode in Silverlight or Windows Phone");
-#else
                 this.collectionWriter.WriteItemAsync(item).Wait();
-#endif
             }
         }
 
-#if !WINDOWS_PHONE
         /// <summary>
         /// Asynchronously start writing a collection item.
         /// </summary>
@@ -116,7 +103,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         {
             throw new NotImplementedException("Tests should always use synchronous APIs.");
         }
-#endif
 
         /// <summary>
         /// Finish writing a collection.
@@ -129,15 +115,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-#if  WINDOWS_PHONE
-                throw new TaupoNotSupportedException("This test is not supported in asynchronous mode in Silverlight or Windows Phone");
-#else
                 this.collectionWriter.WriteEndAsync().Wait();
-#endif
             }
         }
 
-#if !WINDOWS_PHONE
         /// <summary>
         /// Asynchronously finish writing a collection.
         /// </summary>
@@ -146,7 +127,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         {
             throw new NotImplementedException("Tests should always use synchronous APIs.");
         }
-#endif
 
         /// <summary>
         /// Flushes the write buffer to the underlying stream.
@@ -159,15 +139,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-#if  WINDOWS_PHONE
-                throw new TaupoNotSupportedException("This test is not supported in asynchronous mode in Silverlight or Windows Phone");
-#else
                 this.collectionWriter.FlushAsync().Wait();
-#endif
             }
         }
 
-#if !WINDOWS_PHONE
         /// <summary>
         /// Asynchronously flushes the write buffer to the underlying stream.
         /// </summary>
@@ -176,6 +151,5 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         {
             throw new NotImplementedException("Tests should only use synchronous APIs.");
         }
-#endif
     }
 }

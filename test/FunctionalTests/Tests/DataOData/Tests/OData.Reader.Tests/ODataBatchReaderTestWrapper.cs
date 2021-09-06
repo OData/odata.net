@@ -8,9 +8,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
 {
     #region Namespaces
     using System;
-#if !SILVERLIGHT && !WINDOWS_PHONE
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.OData.Common;
@@ -74,15 +72,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
-#else
                 return this.batchReader.ReadAsync().WaitForResult();
-#endif
             }
         }
 
-#if !SILVERLIGHT && !WINDOWS_PHONE
         /// <summary>
         /// Asynchronously reads the next <see cref="ODataItem"/> from the message payload.
         /// </summary>
@@ -91,7 +84,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         {
             throw new NotImplementedException("Tests should always use synchronous APIs.");
         }
-#endif
 
         /// <summary>
         /// Returns an <see cref="ODataBatchOperationRequestMessage"/> for reading the content of a batch operation.
@@ -105,15 +97,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
-#else
                 return this.batchReader.CreateOperationRequestMessageAsync().WaitForResult();
-#endif
             }
         }
 
-#if !SILVERLIGHT && !WINDOWS_PHONE
         /// <summary>
         /// Asynchronously returns an <see cref="ODataBatchOperationRequestMessage"/> for reading the content of a batch operation.
         /// </summary>
@@ -122,7 +109,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         {
             throw new NotImplementedException("Tests should always use synchronous APIs.");
         }
-#endif
 
         /// <summary>
         /// Returns an <see cref="ODataBatchOperationResponseMessage"/> for reading the content of a batch operation.
@@ -136,15 +122,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
-#else
                 return this.batchReader.CreateOperationResponseMessageAsync().WaitForResult();
-#endif
             }
         }
 
-#if !SILVERLIGHT && !WINDOWS_PHONE
         /// <summary>
         /// Asynchronously returns an <see cref="ODataBatchOperationResponseMessage"/> for reading the content of a batch operation.
         /// </summary>
@@ -153,6 +134,5 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         {
             throw new NotImplementedException("Tests should always use synchronous APIs.");
         }
-#endif
     }
 }

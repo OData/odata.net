@@ -691,11 +691,8 @@ namespace Microsoft.OData.Client
                             entryParameterAtMemberInit,
                             expressions.Skip(1));
                     }
-#if PORTABLELIB
-                    Type memberParentType = assignment.Member.DeclaringType;
-#else
+
                     Type memberParentType = assignment.Member.ReflectedType;
-#endif
                     ProjectionPathSegment nestedSegment = new ProjectionPathSegment(
                         entryPath,
                         assignment.Member.Name,

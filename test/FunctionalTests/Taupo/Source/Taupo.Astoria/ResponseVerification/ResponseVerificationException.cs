@@ -13,9 +13,7 @@ namespace Microsoft.Test.Taupo.Astoria.ResponseVerification
     /// <summary>
     /// The exception type thrown whenever response verification fails
     /// </summary>
-#if !SILVERLIGHT
     [Serializable]
-#endif
     public class ResponseVerificationException : TestFailedException
     {
         internal const string ErrorMessage = "Response verification failed";
@@ -56,7 +54,6 @@ namespace Microsoft.Test.Taupo.Astoria.ResponseVerification
         {
         }
 
-#if !SILVERLIGHT
         /// <summary>
         /// Initializes a new instance of the ResponseVerificationException class based on 
         /// <see cref="SerializationInfo"/>
@@ -67,6 +64,5 @@ namespace Microsoft.Test.Taupo.Astoria.ResponseVerification
             : base(info, context)
         {
         }
-#endif
     }
 }

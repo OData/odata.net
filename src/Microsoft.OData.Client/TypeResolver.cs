@@ -434,11 +434,7 @@ namespace Microsoft.OData.Client
                 if (payloadType == null)
                 {
                     // if the type resolution method returns null or the ResolveType property was not set
-#if !PORTABLELIB
                     payloadType = ClientTypeCache.ResolveFromName(wireName, expectedType);
-#else
-                    payloadType = ClientTypeCache.ResolveFromName(wireName, expectedType, this.GetType());
-#endif
                 }
 
                 if (!this.skipTypeAssignabilityCheck && (payloadType != null) && (!expectedType.IsAssignableFrom(payloadType)))

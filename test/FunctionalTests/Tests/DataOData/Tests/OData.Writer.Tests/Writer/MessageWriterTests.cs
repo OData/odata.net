@@ -11,9 +11,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using System.IO;
     using System.Linq;
     using System.Text;
-#if !SILVERLIGHT
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.Taupo.Common;
@@ -518,8 +516,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
-        // These tests are disabled on Silverlight and Phone because they use private reflection to validate the test result.
-#if !SILVERLIGHT && !WINDOWS_PHONE
         [Ignore] // Remove Atom
         // [TestMethod, Variation(Description = "Tests the correct behavior of a message writer when the data service version is specified as message header.")]
         public void SetVersionInMessageHeaderTest()
@@ -988,9 +984,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             var customEncodings = new[]
                 {
                     new { CharSet = ";charset=iso-8859-1", Encoding = TestMediaTypeUtils.Latin1Encoding },
-#if !SILVERLIGHT && !WINDOWS_PHONE   // Encoding not supported on these platforms
                     new { CharSet = ";charset=ibm850", Encoding = TestMediaTypeUtils.Ibm850Encoding}
-#endif
                 };
             var encodingTestCases = testCases.SelectMany(
                 testCase => customEncodings.Select(
@@ -1015,7 +1009,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             return testCases.Concat(extraParameterTestCases).Concat(encodingTestCases).Concat(errorTestCases);
         }
-#endif
 
         [Ignore] // Remove Atom
         // [TestMethod, Variation(Description = "Verifies that the writer gracefully fails if the message returns a null stream.")]
@@ -1111,8 +1104,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             ExceptionUtilities.Assert(exception == null, "No exception was expected. Exception was thrown {0}", exception);
         }
 
-        // These tests are disabled on Silverlight and Phone because they only run on async configuration 
-#if !SILVERLIGHT && !WINDOWS_PHONE
         [Ignore] // Remove Atom
         // [TestMethod, Variation(Description = "Verifies that the writer gracefully fails if the message returns a null stream task.")]
         public void NullStreamTaskMessageTest()
@@ -1148,18 +1139,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     }
                 });
         }
-#endif
 
-        private class NullStreamRequestMessage :
-#if SILVERLIGHT
- IODataRequestMessage
-#else
- IODataRequestMessageAsync
-#endif
+        private class NullStreamRequestMessage : IODataRequestMessageAsync
         {
-#if !SILVERLIGHT
             public Task<Stream> GetStreamAsync() { return TestTaskUtils.GetCompletedTask<Stream>(null); }
-#endif
             public IEnumerable<KeyValuePair<string, string>> Headers { get { throw new TaupoInvalidOperationException("Headers should not be accessed on the message."); } }
             public Uri Url
             {
@@ -1176,16 +1159,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             public Stream GetStream() { return null; }
         }
 
-        private class NullStreamResponseMessage :
-#if SILVERLIGHT
- IODataResponseMessage
-#else
- IODataResponseMessageAsync
-#endif
+        private class NullStreamResponseMessage : IODataResponseMessageAsync
         {
-#if !SILVERLIGHT
             public Task<Stream> GetStreamAsync() { return TestTaskUtils.GetCompletedTask<Stream>(null); }
-#endif
             public IEnumerable<KeyValuePair<string, string>> Headers { get { throw new TaupoInvalidOperationException("Headers should not be accessed on the message."); } }
             public int StatusCode
             {
@@ -1207,16 +1183,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             public Stream GetStream() { return null; }
         }
 
-        private class NullStreamTaskRequestMessage :
-#if SILVERLIGHT
- IODataRequestMessage
-#else
- IODataRequestMessageAsync
-#endif
+        private class NullStreamTaskRequestMessage : IODataRequestMessageAsync
         {
-#if !SILVERLIGHT
             public Task<Stream> GetStreamAsync() { return null; }
-#endif
             public IEnumerable<KeyValuePair<string, string>> Headers { get { throw new TaupoInvalidOperationException("Headers should not be accessed on the message."); } }
             public Uri Url
             {
@@ -1233,16 +1202,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             public Stream GetStream() { throw new TaupoInvalidOperationException("GetStream should not be accessed on the message."); }
         }
 
-        private class NullStreamTaskResponseMessage :
-#if SILVERLIGHT
- IODataResponseMessage
-#else
- IODataResponseMessageAsync
-#endif
+        private class NullStreamTaskResponseMessage : IODataResponseMessageAsync
         {
-#if !SILVERLIGHT
             public Task<Stream> GetStreamAsync() { return null; }
-#endif
             public IEnumerable<KeyValuePair<string, string>> Headers { get { throw new TaupoInvalidOperationException("Headers should not be accessed on the message."); } }
             public int StatusCode
             {
@@ -1275,11 +1237,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 set
                 {
                     // iso-8859 is not available on Phone and Silverlight
-#if !SILVERLIGHT && !WINDOWS_PHONE
                     this.expectedContentType = value;
-#else
-                    this.expectedContentType= value.Replace("iso-8859-1", "utf-8");
-#endif
                 }
             }
             public ExpectedException ExpectedException { get; set; }

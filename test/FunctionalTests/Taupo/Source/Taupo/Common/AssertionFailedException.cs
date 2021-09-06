@@ -12,9 +12,7 @@ namespace Microsoft.Test.Taupo.Common
     /// <summary>
     /// Thrown whenever there's an assertion failure in the test code.
     /// </summary>
-#if !SILVERLIGHT
     [Serializable]
-#endif
     public class AssertionFailedException : TestFailedException
     {
         /// <summary>
@@ -41,7 +39,6 @@ namespace Microsoft.Test.Taupo.Common
         {
         }
 
-#if !SILVERLIGHT
         /// <summary>
         /// Initializes a new instance of the AssertionFailedException class based on 
         /// <see cref="SerializationInfo"/>
@@ -54,6 +51,5 @@ namespace Microsoft.Test.Taupo.Common
             : base(info, context)
         {
         }
-#endif
     }
 }

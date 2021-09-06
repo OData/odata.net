@@ -55,11 +55,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.LinqToAstoria
         {
             get
             {
-#if WINDOWS_PHONE
-                throw new TaupoNotSupportedException("DataServiceStreamLink type is unavailable on Windows Phone");
-#else
                 return typeof(DataServiceStreamLink);
-#endif
             }
         }
 
@@ -81,12 +77,8 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.LinqToAstoria
         /// <returns>Newly created value.</returns>
         public AstoriaQueryStreamValue CreateValue(byte[] value, WrappedStreamDescriptor descriptor)
         {
-#if WINDOWS_PHONE
-            throw new TaupoNotSupportedException("Stream values are not supported on Windows Phone");
-#else
             var streamLink = descriptor.StreamLink;
             return this.CreateValue(value, streamLink.ContentType, streamLink.ETag, streamLink.EditLink, streamLink.SelfLink);
-#endif
         }
 
         /// <summary>

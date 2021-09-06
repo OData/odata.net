@@ -29,11 +29,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
         /// <param name="lineFeedChars">The line feed characters to use in the test.</param>
         public BatchReaderStreamOrBufferTestCase(Encoding encoding = null, char[] lineFeedChars = null)
         {
-#if SILVERLIGHT || WINDOWS_PHONE
-            this.Encoding = encoding ?? Encoding.UTF8;
-#else
             this.Encoding = encoding ?? Encoding.ASCII;
-#endif
             this.LineFeedChars = lineFeedChars ?? BatchReaderStreamTestUtils.DefaultLineFeedChars;
         }
 

@@ -6,7 +6,6 @@
 
 namespace Microsoft.Test.Taupo.OData.Common
 {
-#if !SILVERLIGHT
     #region Namespaces
     using System.Threading.Tasks;
     using Microsoft.Test.Taupo.Common;
@@ -68,5 +67,4 @@ namespace Microsoft.Test.Taupo.OData.Common
             return task.Result;
         }
     }
-#endif
 }

@@ -37,7 +37,6 @@ namespace Microsoft.Test.Taupo.ProgrammingLanguages
             return new ExtendedCSharpCodeGenerator();
         }
 
-#if !SILVERLIGHT
         /// <summary>
         /// Creates the CodeDOM code provider for the language.
         /// </summary>
@@ -47,6 +46,5 @@ namespace Microsoft.Test.Taupo.ProgrammingLanguages
         {
             return new CSharpCodeProvider();
         }
-#endif
     }
 }

@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !SILVERLIGHT
 namespace Microsoft.Test.Taupo.Astoria.Contracts.Http
 {
     using Microsoft.Test.Taupo.Common;
@@ -23,4 +22,3 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Http
         HttpResponseData GetResponse(IHttpRequest request);
     }
 }
-#endif

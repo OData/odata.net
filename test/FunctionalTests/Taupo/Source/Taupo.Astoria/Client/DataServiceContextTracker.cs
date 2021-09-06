@@ -383,16 +383,12 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                     }
                     else
                     {
-#if WINDOWS_PHONE
-                        throw new TaupoNotSupportedException("Stream Descriptors are not supported on Windows Phone");
-#else
                         // for stream descriptors, we need to find the parent descriptor, then get the stream descriptor data from it                        
                         var streamDescriptor = (DSClient.StreamDescriptor)changeResponse.Descriptor;
                         
                         entityDescriptor = streamDescriptor.EntityDescriptor;
                         streamDescriptorData = data.GetStreamDescriptorData(entityDescriptor.Entity, streamDescriptor.StreamLink.Name);
                         descriptorData = streamDescriptorData;
-#endif
                     }
                 }
 

@@ -64,13 +64,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             BaselineLogger logger)
         {
             // Get observed payload
-#if !SILVERLIGHT
             var observed = TestWriterUtils.ReadToString(message);
 
             if (logger != null) logger.LogPayload(TestWriterUtils.BaseLineFixup(observed));
-#endif
-            // TODO: Handle SILVERLIGHT
-
         }
     }
 }

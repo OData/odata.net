@@ -15,12 +15,7 @@ namespace Microsoft.Test.Taupo.OData.Common
     /// <summary>
     /// A test request message that stores the version and the underlying stream.
     /// </summary>
-    public class TestRequestMessage : TestMessage,
-#if SILVERLIGHT
-        IODataRequestMessage
-#else
-        IODataRequestMessageAsync
-#endif
+    public class TestRequestMessage : TestMessage, IODataRequestMessageAsync
     {
         /// <summary>
         /// The URL of the request.

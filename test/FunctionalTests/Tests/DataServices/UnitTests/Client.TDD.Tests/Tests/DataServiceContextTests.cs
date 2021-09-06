@@ -11,18 +11,11 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using System.Linq;
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.TDDUnitTests;
-
-#if !PORTABLELIB
     using AstoriaUnitTests.ClientExtensions;
-#endif
     using FluentAssertions;
-#if !PORTABLELIB
     using Microsoft.OData.Tests;
-#endif
-#if !PORTABLELIB
     using ClientStrings = Microsoft.OData.Client.Strings;
     using Xunit;
-#endif
 
     public class DataServiceContextTests
     {
@@ -31,14 +24,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         {
             bool usePostTunnelingDefault = false;
             // If the portable library is running on 
-#if SILVERLIGHT
-            usePostTunnelingDefault = true;
-#endif
             var context = new DataServiceContext().ReConfigureForNetworkLoadingTests();
             context.UsePostTunneling.Should().Be(usePostTunnelingDefault);
         }
 
-#if !PORTABLELIB
         private DataServiceContext testSubject;
         private EventHandler<SendingRequestEventArgs> sendingRequestHandler1 = (sender, args) => { };
 
@@ -351,7 +340,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         {
             public int ID { get; set; }
         }
-#endif
     }
 
     internal class DefaultResolveTypeContext : DataServiceContext

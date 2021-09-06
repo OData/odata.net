@@ -8,9 +8,6 @@ using Microsoft.OData.Edm.Vocabularies;
 
 namespace EdmLibTests.FunctionalTests
 {
-    #if SILVERLIGHT
-    using Microsoft.Silverlight.Testing;
-#endif
     using System;
     using System.Collections.Generic;
     using System.Linq;

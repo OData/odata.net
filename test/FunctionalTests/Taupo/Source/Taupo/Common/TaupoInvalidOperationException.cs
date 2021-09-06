@@ -12,9 +12,7 @@ namespace Microsoft.Test.Taupo.Common
     /// <summary>
     /// The exception that is thrown when a method call is invalid for the current state of Taupo object.
     /// </summary>
-#if !SILVERLIGHT
     [Serializable]
-#endif
     public class TaupoInvalidOperationException : TaupoException
     {
         /// <summary>
@@ -43,7 +41,6 @@ namespace Microsoft.Test.Taupo.Common
         {
         }
 
-#if !SILVERLIGHT
         /// <summary>
         /// Initializes a new instance of the TaupoInvalidOperationException class based on 
         /// <see cref="SerializationInfo"/>
@@ -54,6 +51,5 @@ namespace Microsoft.Test.Taupo.Common
             : base(info, context)
         {
         }
-#endif
     }
 }

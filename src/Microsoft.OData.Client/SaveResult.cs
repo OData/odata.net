@@ -200,7 +200,6 @@ namespace Microsoft.OData.Client
             Debug.Assert(this.entryIndex < this.ChangedEntries.Count || this.ChangedEntries.All(o => o.ContentGeneratedForSave), "didn't generate content for all entities/links");
         }
 
-#if !PORTABLELIB// Synchronous methods not available
         /// <summary>
         /// This starts the next change
         /// </summary>
@@ -258,7 +257,6 @@ namespace Microsoft.OData.Client
 
             Debug.Assert(this.entryIndex < this.ChangedEntries.Count || this.ChangedEntries.All(o => o.ContentGeneratedForSave), "didn't generate content for all entities/links");
         }
-#endif
 
         /// <summary>Read and store response data for the current change, and try to start the next one</summary>
         /// <param name="pereq">the completed per request object</param>
@@ -600,13 +598,8 @@ namespace Microsoft.OData.Client
 
                     contentLength = buffer.Length;
 
-#if PORTABLELIB
-                    // Win8 doesn't allow accessing the buffer, so the constructor we normally use doesn't exist
-                    this.mediaResourceRequestStream = new MemoryStream(buffer, 0, buffer.Length, false);
-#else
                     // Need to specify that the buffer is publicly visible as we need to access it later on
                     this.mediaResourceRequestStream = new MemoryStream(buffer, 0, buffer.Length, false, true);
-#endif
                 }
 
                 HeaderCollection headers = new HeaderCollection();
@@ -809,7 +802,6 @@ namespace Microsoft.OData.Client
             }
         }
 
-#if !PORTABLELIB
         /// <summary>
         /// copy the response data
         /// </summary>
@@ -839,7 +831,6 @@ namespace Microsoft.OData.Client
                 }
             }
         }
-#endif
 
         /// <summary>
         /// Handle the response payload.

@@ -136,17 +136,12 @@ namespace Microsoft.OData.Client
         internal static QueryOperationResponse GetInstance(Type elementType, HeaderCollection headers, DataServiceRequest query, MaterializeAtom results)
         {
             Type genericType = typeof(QueryOperationResponse<>).MakeGenericType(elementType);
-#if !PORTABLELIB
             return (QueryOperationResponse)Activator.CreateInstance(
                 genericType,
                 BindingFlags.CreateInstance | BindingFlags.NonPublic | BindingFlags.Instance,
                 null,
                 new object[] { headers, query, results },
                 System.Globalization.CultureInfo.InvariantCulture);
-#else
-            ConstructorInfo info = genericType.GetInstanceConstructors(false /*isPublic*/).Single();
-            return (QueryOperationResponse)Util.ConstructorInvoke(info, new object[] { headers, query, results });
-#endif
         }
 
         /// <summary>Gets the enumeration helper for the <see cref="Microsoft.OData.Client.QueryOperationResponse" />.</summary>

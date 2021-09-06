@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-//#if SILVERLIGHT || PORTABLELIB
 namespace Microsoft.Test.OData.Framework.Server
 {
     using System;
@@ -44,4 +43,3 @@ namespace Microsoft.Test.OData.Framework.Server
         }
     }
 }
-//#endif

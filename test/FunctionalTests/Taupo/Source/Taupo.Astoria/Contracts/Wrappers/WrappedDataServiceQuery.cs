@@ -36,11 +36,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         /// </summary>
         static WrappedDataServiceQuery()
         {
-#if SILVERLIGHT && !WIN8 && !WINDOWS_PHONE
-            WrappedObjectType = AstoriaWrapperUtilities.GetTypeFromAssembly("Microsoft.OData.Client.DataServiceQuery", "Microsoft.OData.Client.SL");
-#else
             WrappedObjectType = AstoriaWrapperUtilities.GetTypeFromAssembly("Microsoft.OData.Client.DataServiceQuery", "Microsoft.OData.Client");
-#endif
             BeforeEventArgs["System.Collections.IEnumerable Execute()"] = typeof(EventsTracker.BeforeExecuteEventArgs).GetInstanceConstructors(true).First();
             AfterEventArgs["System.Collections.IEnumerable Execute()"] = typeof(EventsTracker.AfterExecuteEventArgs).GetInstanceConstructors(true).First();
             BeforeEvents["System.Collections.IEnumerable Execute()"] = typeof(EventsTracker).GetMethod("RaiseBeforeExecute", null, false);

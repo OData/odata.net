@@ -10,12 +10,6 @@ namespace Microsoft.Test.Taupo.Contracts
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-#if SILVERLIGHT
-    using System.Windows;
-#if !WIN8
-    using System.Windows.Resources;
-#endif
-#endif
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts.Wrappers;
 
@@ -288,13 +282,12 @@ namespace Microsoft.Test.Taupo.Contracts
         /// <returns>Method info.</returns>
         public static MethodInfo GetMethodInfo(Type type, string signature)
         {
-#if !WINDOWS_PHONE
             ExceptionUtilities.CheckObjectNotNull(PlatformMethodMap, "Platform method map was not initialized");
             if (PlatformMethodMap.ContainsKey(signature))
             {
                 signature = PlatformMethodMap[signature];
             }
-#endif
+
             foreach (var method in type.GetMethods())
             {
                 if (MethodMatches(signature, method))
@@ -336,33 +329,6 @@ namespace Microsoft.Test.Taupo.Contracts
         {
             Type type = null;
 
-#if SILVERLIGHT
-            Assembly assembly;
-            if (String.Equals("mscorlib", assemblyName, StringComparison.OrdinalIgnoreCase))
-            {
-                // the alternative to is to first search local directory
-                // second to search framework install directory
-                // third to search framework sdk install directory
-                // rather than including framework assemblies in the .xap
-#if WIN8
-                assembly = Assembly.Load(new AssemblyName(assemblyName));
-#else
-                assembly = typeof(object).Assembly;
-#endif
-            }
-            else
-            {
-#if WINDOWS_PHONE || WIN8
-                // this is handled in an extension method specific to Taupo.Astoria
-                throw new TaupoNotSupportedException("Loading types from non-system assemblies is not supported in this extension method");
-#else
-                StreamResourceInfo info = Application.GetResourceStream(new Uri(assemblyName + ".dll", UriKind.Relative));
-                assembly = new AssemblyPart().Load(info.Stream);
-#endif
-            }
-
-            type = assembly.GetType(typeName);
-#else
             foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 if (assembly.FullName.Substring(0, assembly.FullName.IndexOf(",", StringComparison.Ordinal)) == assemblyName)
@@ -374,7 +340,7 @@ namespace Microsoft.Test.Taupo.Contracts
                     }
                 }
             }
-#endif
+
             ExceptionUtilities.CheckObjectNotNull(type, "Type {0} not found", typeName);
             return type;
         }
@@ -699,16 +665,6 @@ namespace Microsoft.Test.Taupo.Contracts
         private static void InitializePlatformSpecificMethodMap()
         {
             platformSpecificMethodMap = new Dictionary<string, string>();
-#if WINDOWS_PHONE
-            InitializeWindowsPhonePlatformMethodMap(platformSpecificMethodMap);
-#endif
         }
-
-#if WINDOWS_PHONE
-        private static void InitializeWindowsPhonePlatformMethodMap(Dictionary<string, string> methodMap)
-        {
-            methodMap.Add("System.Collections.Generic.IEnumerator`1[T] GetEnumerator()", "System.Collections.Generic.IEnumerator`1 GetEnumerator()");
-        }
-#endif
     }
 }

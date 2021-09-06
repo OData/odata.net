@@ -18,7 +18,6 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.OData
     [DebuggerDisplay("{StringRepresentation}")]
     public abstract class ODataPayloadElement : IAnnotatable<ODataPayloadElementAnnotation>
     {
-#if !SILVERLIGHT && !WINDOWS_PHONE
         /// <summary>
         /// Map which stores the mapping between type name and the respective element type enum.
         /// </summary>
@@ -40,7 +39,6 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.OData
                 typeNameToElementTypeMap.Add(Enum.GetName(typeof(ODataPayloadElementType), payloadElementType), (ODataPayloadElementType)payloadElementType);
             }
         }
-#endif
 
         /// <summary>
         /// Initializes a new instance of the ODataPayloadElement class. 
@@ -112,14 +110,9 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.OData
         {
             ExceptionUtilities.Assert(typeof(ODataPayloadElement).IsAssignableFrom(t), "!typeof(ODataPayloadElement).IsAssignableFrom(t)");
 
-#if SILVERLIGHT || WINDOWS_PHONE
-            ExceptionUtilities.Assert(Enum.IsDefined(typeof(ODataPayloadElementType), t.Name), "!Enum.IsDefined(typeof(PayloadElementType), t.Name)");
-            return (ODataPayloadElementType)Enum.Parse(typeof(ODataPayloadElementType), t.Name, false);
-#else
             ODataPayloadElementType payloadElementType;
             ExceptionUtilities.Assert(typeNameToElementTypeMap.TryGetValue(t.Name, out payloadElementType), "!Enum.IsDefined(typeof(ODataPayloadElementType), t.Name)");
             return payloadElementType;
-#endif
         }
     }
 }

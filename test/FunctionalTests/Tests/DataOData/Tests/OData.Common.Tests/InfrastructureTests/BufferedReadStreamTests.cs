@@ -6,7 +6,6 @@
 
 namespace Microsoft.Test.Taupo.OData.Common.Tests.InfrastructureTests
 {
-#if !SILVERLIGHT
     #region Namespaces
     using System;
     using System.Collections.Generic;
@@ -205,5 +204,4 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.InfrastructureTests
             protected override void Dispose(bool disposing) { this.bufferedReadStream.Dispose(); }
         }
     }
-#endif
 }

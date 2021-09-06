@@ -9,9 +9,7 @@ namespace Microsoft.Test.OData.Utils.ODataLibTest
     using System;
     using System.Collections.Generic;
     using System.IO;
-#if !SILVERLIGHT
     using System.Threading.Tasks;
-#endif
     using Microsoft.Test.OData.Utils.Common;
 
     /// <summary>
@@ -161,7 +159,7 @@ namespace Microsoft.Test.OData.Utils.ODataLibTest
             this.StreamRetrieved = true;
             return this.stream;
         }
-#if !SILVERLIGHT
+
         /// <summary>
         /// Returns the content of the message as a stream.
         /// </summary>
@@ -186,6 +184,5 @@ namespace Microsoft.Test.OData.Utils.ODataLibTest
             this.StreamRetrieved = true;
             return TestTaskUtils.GetCompletedTask(this.stream);
         }
-#endif
     }
 }

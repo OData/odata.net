@@ -12,16 +12,6 @@ using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Security;
 
-#if !SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE
-#if PORTABLELIB
-#if ODATA_CLIENT
-[assembly: TargetFramework(".NETPortable,Version=v4.5,Profile=Profile259", FrameworkDisplayName = ".NET Portable Subset")]
-#else
-[assembly: TargetFramework(".NETPortable,Version=v4.0,Profile=Profile328", FrameworkDisplayName = ".NET Portable Subset")]
-#endif
-#endif
-#endif
-
 [assembly: AssemblyCompany("Microsoft Corporation")]
 // If you want to control this metadata globally but not with the VersionProductName property, hard-code the value below.
 // If you want to control this metadata at the individual project level with AssemblyInfo.cs, comment-out the line below.

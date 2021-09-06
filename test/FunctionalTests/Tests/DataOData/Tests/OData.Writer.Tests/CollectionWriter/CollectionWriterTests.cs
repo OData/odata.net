@@ -730,9 +730,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
                 });
         }
 
-        // These tests and helpers are disabled on Silverlight and Phone because they
-        // use private reflection not available on Silverlight and Phone
-#if !SILVERLIGHT && !WINDOWS_PHONE
         [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test writing collection payloads with complex items that have duplicate property names.")]
         public void DuplicatePropertyNamesTest()
@@ -804,7 +801,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
                     CollectionWriterUtils.WriteAndVerifyCollectionPayload(testDescriptor, testConfig, this.Assert, this.Logger);
                 });
         }
-#endif
 
         [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Tests behavior of collection writers with collection type specified.")]

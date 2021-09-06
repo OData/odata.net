@@ -4,16 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-// Product does not support async on Phone and Silverlight, hence the tests are disabled.
-// TODO: Enable async Tests on Phone and Silverlight when Product Supports them 
-#if !SILVERLIGHT && !WINDOWS_PHONE
 namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
 {
     using System;
     using System.IO;
-#if !SILVERLIGHT
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;
@@ -394,4 +389,3 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
         }
     }
 }
-#endif

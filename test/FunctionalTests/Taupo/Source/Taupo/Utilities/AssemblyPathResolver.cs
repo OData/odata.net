@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !WINDOWS_PHONE        
 namespace Microsoft.Test.Taupo.Utilities
 {
     using System;
@@ -12,9 +11,7 @@ namespace Microsoft.Test.Taupo.Utilities
     using System.IO;
     using System.Linq;
     using System.Security;
-#if !WIN8
     using System.Security.Permissions;
-#endif
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts;
 
@@ -29,13 +26,7 @@ namespace Microsoft.Test.Taupo.Utilities
         /// </summary>
         public AssemblyPathResolver()
         {
-#if !SILVERLIGHT && !WIN8
             this.TempAssemblyDirectory = IOHelpers.CreateTempDirectory("CompiledAsemblies");
-#else
-#if WIN8
-            this.TempAssemblyDirectory = @"C:\Users\mfrintu\Documents\CompiledAssemblies";
-#endif
-#endif
         }
 
         /// <summary>
@@ -79,30 +70,21 @@ namespace Microsoft.Test.Taupo.Utilities
         /// Directories to look in to find assemblies in
         /// </summary>
         /// <returns>Returns a list of directories to lookup</returns>
-#if !SILVERLIGHT
         [SecuritySafeCritical]
         [PermissionSet(SecurityAction.Assert, Unrestricted = true)]
         [AssertJustification("Reading environment variable demands full trust.")]
-#endif        
         protected virtual IEnumerable<string> GetDirectoryLookupLocations()
         {
             return new string[] 
             {
                 this.TempAssemblyDirectory,
-#if !SILVERLIGHT
                 Environment.ExpandEnvironmentVariables(DataFxAssemblyRef.File.DS_ReferenceAssemblyPath)
-#endif
             };
         }
 
         private static List<string> FindFilePaths(IEnumerable<string> directories, string assemblyName)
         {
-#if !SILVERLIGHT
             return directories.Select(d => Path.Combine(d, assemblyName)).Where(f => IOHelpers.FileExists(f)).ToList();
-#else
-            return new List<string>();
-#endif
         }
     }
 }
-#endif

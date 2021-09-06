@@ -14,9 +14,7 @@ namespace EdmLibTests
     using System.Text;
     using System.Xml;
     using System.Xml.Linq;
-#if !SILVERLIGHT
     using ApprovalTests;
-#endif
     using EdmLibTests.FunctionalUtilities;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
@@ -25,9 +23,6 @@ namespace EdmLibTests
     using Microsoft.Test.OData.Framework.Verification;
     using Microsoft.Test.OData.Utils.Common;
     using Microsoft.Test.OData.Utils.Metadata;
-#if SILVERLIGHT
-    using Microsoft.Silverlight.Testing;
-#endif
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using EdmVersion = Microsoft.Test.OData.Utils.Metadata.EdmVersion;
     using ExceptionUtilities = Microsoft.Test.OData.Utils.Common.ExceptionUtilities;
@@ -39,9 +34,6 @@ namespace EdmLibTests
     /// </summary>
     [TestClass]
     public class EdmLibTestCaseBase
-#if SILVERLIGHT
-    	: SilverlightTest
-#endif
     {
         protected Dictionary<EdmVersion, Version> toProductVersionlookup = new Dictionary<EdmVersion, Version>()
         {
@@ -92,13 +84,13 @@ namespace EdmLibTests
             IEnumerable<EdmError> errors;
             var csdlElements = this.GetSerializerResult(edmModel, out errors).ToArray();
             ExceptionUtilities.Assert(!errors.Any(), "Did not expect serializer errors: " + string.Join(",", errors.Select(e => e.ErrorMessage)));
-#if !SILVERLIGHT
+
             if (!skipBaseline)
             {
                 var csdl = PrettyPrintCsdl(csdlElements) + Environment.NewLine;
                 Approvals.Verify(new ApprovalTextWriter(csdl), new CustomSourcePathNamer(this.TestContext.DeploymentDirectory), Approvals.GetReporter());
             }
-#endif
+
             IEdmModel resultEdmModel = this.GetParserResult(csdlElements);
             CsdlToEdmModelComparer.Compare(csdlElements.Select(XElement.Parse), resultEdmModel);
         }
@@ -111,10 +103,9 @@ namespace EdmLibTests
             IEnumerable<EdmError> errors;
             var resultCsdlElements = this.GetSerializerResult(resultEdmModel, out errors).ToArray();
             ExceptionUtilities.Assert(!errors.Any(), "Did not expect serializer errors: " + string.Join(",", errors.Select(e => e.ErrorMessage)));
-#if !SILVERLIGHT
+
             var csdl = PrettyPrintCsdl(resultCsdlElements) + Environment.NewLine;
             Approvals.Verify(new ApprovalTextWriter(csdl), new CustomSourcePathNamer(this.TestContext.DeploymentDirectory), Approvals.GetReporter());
-#endif
         }
 
         protected IEnumerable<string> GetSerializerResult(IEdmModel edmModel, EdmVersion edmVersion, out IEnumerable<EdmError> errors)

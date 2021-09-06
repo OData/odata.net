@@ -18,9 +18,6 @@ namespace Microsoft.OData.Client
     using System.Net;
     using System.Text;
     using System.Threading;
-#if PORTABLELIB
-    using System.Threading.Tasks;
-#endif
     using Microsoft.OData;
     using Microsoft.OData.Client.Metadata;
 
@@ -514,11 +511,7 @@ namespace Microsoft.OData.Client
                     do
                     {
                         Util.DebugInjectFault("SaveAsyncResult::AsyncEndGetResponse_BeforeBeginRead");
-#if PORTABLELIB
-                        asyncResult = BaseAsyncResult.InvokeTask(httpResponseStream.ReadAsync, this.buildBatchBuffer, 0, this.buildBatchBuffer.Length, this.AsyncEndRead, new AsyncReadState(pereq));
-#else
                         asyncResult = InvokeAsync(httpResponseStream.BeginRead, this.buildBatchBuffer, 0, this.buildBatchBuffer.Length, this.AsyncEndRead, new AsyncReadState(pereq));
-#endif
                         pereq.SetRequestCompletedSynchronously(asyncResult.CompletedSynchronously); // BeginRead
                     }
                     while (asyncResult.CompletedSynchronously && !pereq.RequestCompleted && !this.IsCompletedInternally && httpResponseStream.CanRead);
@@ -1326,29 +1319,13 @@ namespace Microsoft.OData.Client
             }
         }
 
-#if PORTABLELIB
-        /// <summary>Handle responseStream.ReadAsync and complete the read operation.</summary>
-        /// <param name="task">Task that has completed.</param>
-        /// <param name="asyncState">State associated with the Task.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "required for this feature")]
-        private void AsyncEndRead(Task task, object asyncState)
-#else
-
         /// <summary>handle responseStream.BeginRead with responseStream.EndRead</summary>
         /// <param name="asyncResult">async result</param>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "required for this feature")]
         private void AsyncEndRead(IAsyncResult asyncResult)
-#endif
         {
-#if PORTABLELIB
-            IAsyncResult asyncResult = (IAsyncResult)task;
-#endif
             Debug.Assert(asyncResult != null && asyncResult.IsCompleted, "asyncResult.IsCompleted");
-#if PORTABLELIB
-            AsyncReadState state = (AsyncReadState)asyncState;
-#else
             AsyncReadState state = (AsyncReadState)asyncResult.AsyncState;
-#endif
             PerRequest pereq = state.Pereq;
             int count = 0;
             try
@@ -1360,11 +1337,7 @@ namespace Microsoft.OData.Client
                 Stream httpResponseStream = Util.NullCheck(pereq.ResponseStream, InternalError.InvalidEndReadStream);
 
                 Util.DebugInjectFault("SaveAsyncResult::AsyncEndRead_BeforeEndRead");
-#if PORTABLELIB
-                count = ((Task<int>)task).Result;
-#else
                 count = httpResponseStream.EndRead(asyncResult);
-#endif
                 if (count > 0)
                 {
                     Stream outputResponse = Util.NullCheck(this.ResponseStream, InternalError.InvalidEndReadCopy);
@@ -1376,11 +1349,7 @@ namespace Microsoft.OData.Client
                         // if CompletedSynchronously then caller will call and we reduce risk of stack overflow
                         do
                         {
-#if PORTABLELIB
-                            asyncResult = BaseAsyncResult.InvokeTask(httpResponseStream.ReadAsync, this.buildBatchBuffer, 0, this.buildBatchBuffer.Length, this.AsyncEndRead, new AsyncReadState(pereq));
-#else
                             asyncResult = InvokeAsync(httpResponseStream.BeginRead, this.buildBatchBuffer, 0, this.buildBatchBuffer.Length, this.AsyncEndRead, state);
-#endif
                             pereq.SetRequestCompletedSynchronously(asyncResult.CompletedSynchronously); // BeginRead
                         }
                         while (asyncResult.CompletedSynchronously && !pereq.RequestCompleted && !this.IsCompletedInternally && httpResponseStream.CanRead);

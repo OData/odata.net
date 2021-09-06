@@ -37,11 +37,7 @@ namespace Microsoft.Test.Taupo.Astoria.Common
         /// <returns>The wire representation of the primitive</returns>
         public virtual TWire SerializePrimitive(object value)
         {
-#if !WIN8
             if (value == null || value is DBNull)
-#else
-            if (value == null)
-#endif
             {
                 return this.SerializeNull();
             }

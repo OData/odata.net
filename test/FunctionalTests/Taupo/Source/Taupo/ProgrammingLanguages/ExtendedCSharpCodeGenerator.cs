@@ -35,20 +35,13 @@ namespace Microsoft.Test.Taupo.ProgrammingLanguages
         /// <returns>
         /// The wrapped <see cref="ICodeGenerator"/>.
         /// </returns>
-#if !SILVERLIGHT
         [SecuritySafeCritical]
-#endif
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Code generators don't hold unmanaged resources.")]
         protected override ICodeGenerator CreateCodeGenerator()
         {
-#if SILVERLIGHT
-            return new CSharpCodeGenerator();
-#else
-
 #pragma warning disable 618
             return new CSharpCodeProvider().CreateGenerator();
 #pragma warning restore 618
-#endif
         }
 
         /// <summary>

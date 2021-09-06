@@ -26,13 +26,11 @@ namespace Microsoft.OData.Service
         /// <summary>Type of OutOfMemoryException.</summary>
         private static readonly Type OutOfMemoryType = typeof(OutOfMemoryException);
 
-#if !PORTABLELIB
         /// <summary>Type of StackOverflowException.</summary>
         private static readonly Type StackOverflowType = typeof(StackOverflowException);
 
         /// <summary>Type of ThreadAbortException.</summary>
         private static readonly Type ThreadAbortType = typeof(ThreadAbortException);
-#endif
 
         public static object ParseJsonToPrimitiveValue(string rawValue)
         {
@@ -66,12 +64,7 @@ namespace Microsoft.OData.Service
 
             // a 'catchable' exception is defined by what it is not.
             Type type = e.GetType();
-            return (
-#if !PORTABLELIB
-(type != ThreadAbortType) &&
-                    (type != StackOverflowType) &&
-#endif
- (type != OutOfMemoryType));
+            return (type != ThreadAbortType) && (type != StackOverflowType) && (type != OutOfMemoryType);
         }
     }
 }

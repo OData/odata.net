@@ -11,9 +11,6 @@ namespace Microsoft.Test.Taupo.Astoria
     using System.IO;
     using System.Linq;
     using System.Net;
-#if SILVERLIGHT && !WIN8
-    using System.Net.Browser;
-#endif
     using System.Xml;
     using System.Xml.Linq;       
     using Microsoft.Test.Taupo.Astoria.Common;
@@ -128,11 +125,7 @@ namespace Microsoft.Test.Taupo.Astoria
         {
             HttpWebRequest streamPutRequest;
 
-#if SILVERLIGHT && !WIN8
-            streamPutRequest = CreateClientHttpWebRequest(editLinkString);
-#else
             streamPutRequest = (HttpWebRequest)HttpWebRequest.Create(editLinkString);
-#endif
             // using verb-tunneling
             streamPutRequest.Method = "POST";
             streamPutRequest.Headers[HttpHeaders.HttpMethod] = HttpVerb.Put.ToHttpMethod();
@@ -143,10 +136,8 @@ namespace Microsoft.Test.Taupo.Astoria
                 streamPutRequest.Headers[HttpHeaders.IfMatch] = etag;
             }
 
-#if !WINDOWS_PHONE && !WIN8
             streamPutRequest.AllowWriteStreamBuffering = false;
             streamPutRequest.ContentLength = streamData.Length;
-#endif
             streamPutRequest.BeginGetRequestStream(
                (requestStreamResult) =>
                {
@@ -360,15 +351,5 @@ namespace Microsoft.Test.Taupo.Astoria
 
             return streamData;
         }
-
-#if SILVERLIGHT && !WIN8
-        private static HttpWebRequest CreateClientHttpWebRequest(string editLinkString)
-        {
-            HttpWebRequest streamPutRequest;
-            WebRequest.RegisterPrefix(editLinkString, WebRequestCreator.ClientHttp);
-            streamPutRequest = (HttpWebRequest)WebRequestCreator.ClientHttp.Create(new Uri(editLinkString));
-            return streamPutRequest;
-        }
-#endif
     }
 }

@@ -15,9 +15,7 @@ namespace Microsoft.Test.Taupo.OData.Common
     using System.Text;
     using System.Xml;
     using System.Xml.Linq;
-#if !SILVERLIGHT
     using System.Xml.XPath;
-#endif
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts;
     #endregion Namespaces
@@ -134,7 +132,6 @@ namespace Microsoft.Test.Taupo.OData.Common
             }
         }
 
-#if !SILVERLIGHT
         /// <summary>
         /// Verifies that the specified XPath (or more) return at least one result.
         /// </summary>
@@ -163,7 +160,7 @@ namespace Microsoft.Test.Taupo.OData.Common
                 }
             }
         }
-#endif
+
         /// <summary>
         /// Compare two <see cref="XElement"/> instances for equality using XNode.DeepEquals. 
         /// Optionally normalize namespace declarations prior to comparison.

@@ -11,9 +11,6 @@ namespace EdmLibTests.FunctionalTests
     using EdmLibTests.VocabularyStubs;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Vocabularies;
-#if SILVERLIGHT
-    using Microsoft.Silverlight.Testing;
-#endif
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]

@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !SILVERLIGHT
-
 using System;
 using System.Runtime.InteropServices;
 using System.Security;
@@ -221,5 +219,3 @@ namespace Microsoft.Test.Taupo.Execution.Ltm
                                                 int lineno);
     }
 }
-
-#endif

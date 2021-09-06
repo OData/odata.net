@@ -56,7 +56,6 @@
     <Compile Include="Client\ClientResultComparerBase.cs" />
     <Compile Include="Client\ClientSideProjectionReplacingVisitor.cs" />
     <Compile Include="Client\DataServiceContextCreator.cs" />
-    <Compile Include="Client\DataServiceContextExtensions.cs" />
     <Compile Include="Client\DataServiceContextHttpTracker.cs" />
     <Compile Include="Client\DataServiceContextRequestsDefaultVerifier.cs" />
     <Compile Include="Client\DataServiceContextTracker.cs" />

@@ -37,11 +37,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         /// </summary>
         static WrappedDataServiceContext()
         {
-#if SILVERLIGHT && !WIN8 && !WINDOWS_PHONE
-            WrappedObjectType = AstoriaWrapperUtilities.GetTypeFromAssembly("Microsoft.OData.Client.DataServiceContext", "Microsoft.OData.Client.SL");
-#else
             WrappedObjectType = AstoriaWrapperUtilities.GetTypeFromAssembly("Microsoft.OData.Client.DataServiceContext", "Microsoft.OData.Client");
-#endif
             BeforeEventArgs["Void AddObject(System.String, System.Object)"] = typeof(EventsTracker.AddObjectEventArgs).GetInstanceConstructors(true).First();
             AfterEventArgs["Void AddObject(System.String, System.Object)"] = typeof(EventsTracker.AddObjectEventArgs).GetInstanceConstructors(true).First();
             BeforeEvents["Void AddObject(System.String, System.Object)"] = typeof(EventsTracker).GetMethod("RaiseBeforeAddObject", null, false);

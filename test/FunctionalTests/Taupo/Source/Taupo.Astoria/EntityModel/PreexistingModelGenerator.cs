@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !SILVERLIGHT
 namespace Microsoft.Test.Taupo.Astoria.EntityModel
 {
     using System;
@@ -75,4 +74,3 @@ namespace Microsoft.Test.Taupo.Astoria.EntityModel
         }
     }
 }
-#endif

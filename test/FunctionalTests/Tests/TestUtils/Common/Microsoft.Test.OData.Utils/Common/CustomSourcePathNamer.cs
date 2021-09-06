@@ -6,7 +6,6 @@
 
 namespace Microsoft.Test.OData.Utils.Common
 {
-#if !SILVERLIGHT
     using System;
     using ApprovalTests.Core;
 
@@ -36,5 +35,4 @@ namespace Microsoft.Test.OData.Utils.Common
             }
         }
     }
-#endif
 }

@@ -11,9 +11,7 @@ namespace Microsoft.Test.Taupo.Runners
     /// <summary>
     /// Encapsulates statistics for a particular test run.
     /// </summary>
-#if !SILVERLIGHT
     [Serializable]
-#endif
     public class RunStatistics
     {
         /// <summary>

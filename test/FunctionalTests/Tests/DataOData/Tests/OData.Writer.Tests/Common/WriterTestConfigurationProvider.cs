@@ -263,15 +263,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                     new bool[] { true, false },  // synchronous
                     (version, enableMessageStreamDisposal, isRequest, synchronous) =>
                     {
-#if SILVERLIGHT || WINDOWS_PHONE
-                        // If we are running in Silverlight or windows phone, we don't want to generate asynchronous variations
-                        // hence we will skip generation of asynchronous test combinations
-                        if (!synchronous)
-                        {
-                            return;
-                        }
-#endif
-
                         configurations.Add(new WriterTestConfiguration(
                             format,
                             GetDefaultMessageWriterSettings(format, null, enableMessageStreamDisposal, version),
@@ -309,14 +300,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                     new bool[] { true, false },  // isRequest
                     (limitedCombination, isRequest) =>
                     {
-#if SILVERLIGHT || WINDOWS_PHONE
-                        // If we are running in Silverlight or windows phone, we don't want to generate asynchronous variations
-                        // hence we will skip generation of asynchronous test combinations
-                        if (!limitedCombination.Synchronous)
-                        {
-                            return;
-                        }
-#endif
                         configurations.Add(new WriterTestConfiguration(
                             format,
                             GetDefaultMessageWriterSettings(

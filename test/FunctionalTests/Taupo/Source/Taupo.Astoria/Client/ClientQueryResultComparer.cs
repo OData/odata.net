@@ -175,9 +175,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                                 inputParameters,
                                 delegate
                                 {
-#if !SILVERLIGHT
                                     dataContext.SendingRequest2 -= sendingRequest;
-#endif
                                     continuation2.Continue();
                                 });
                         });
@@ -214,7 +212,6 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                         {
                             this.Logger.WriteLine(LogLevel.Verbose, "Executing Invoke Action, async:{0}, Uri:{1}:", isAsync, dataContext.BaseUri + "/" + uriString);
                             Uri builtUri = new Uri(dataContext.BaseUri + "/" + uriString);
-#if !SILVERLIGHT
                             EventHandler<SendingRequest2EventArgs> sendingRequest = delegate(object sender, SendingRequest2EventArgs args)
                             {
                                 HttpRequestMessage request = ((HttpClientRequestMessage)args.RequestMessage).HttpRequestMessage;
@@ -223,7 +220,6 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                             };
 
                             dataContext.SendingRequest2 += sendingRequest;
-#endif
                             dataContext.ExecuteUri<TResult>(
                                 continuation2,
                                 isAsync,

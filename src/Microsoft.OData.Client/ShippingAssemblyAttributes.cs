@@ -19,10 +19,3 @@
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("AstoriaUnitTests.ClientCSharp" + AssemblyRef.TestPublicKey)]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.OData.Client.Tests" + AssemblyRef.TestPublicKey)]
 #pragma warning restore 436
-
-#if PORTABLELIB
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("DSClient.Net45.Delta.UnitTests" + AssemblyRef.TestPublicKey)]
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("DSClient.Win8Store.Delta.UnitTests" + AssemblyRef.TestPublicKey)]
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("DSClient.Win8Phone.Delta.UnitTests" + AssemblyRef.TestPublicKey)]
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("DSClient.SL.Delta.UnitTests" + AssemblyRef.TestPublicKey)]
-#endif

@@ -12,9 +12,7 @@ namespace Microsoft.Test.Taupo.Common
     /// <summary>
     /// Exception thrown for cases not supported by Taupo.
     /// </summary>
-#if !SILVERLIGHT
     [Serializable]
-#endif
     public class TaupoNotSupportedException : TaupoException
     {
         /// <summary>
@@ -43,7 +41,6 @@ namespace Microsoft.Test.Taupo.Common
         {
         }
 
-#if !SILVERLIGHT
         /// <summary>
         /// Initializes a new instance of the TaupoNotSupportedException class based on 
         /// <see cref="SerializationInfo"/>
@@ -54,6 +51,5 @@ namespace Microsoft.Test.Taupo.Common
             : base(info, context)
         {
         }
-#endif
     }
 }

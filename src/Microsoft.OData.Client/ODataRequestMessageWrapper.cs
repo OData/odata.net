@@ -236,8 +236,6 @@ namespace Microsoft.OData.Client
             return this.requestMessage.EndGetRequestStream(asyncResult);
         }
 
-#if !PORTABLELIB
-
         /// <summary>
         /// Sets the request stream.
         /// </summary>
@@ -275,8 +273,6 @@ namespace Microsoft.OData.Client
             }
         }
 
-#endif
-
         /// <summary>
         ///  Begins an asynchronous request to an Internet resource.
         /// </summary>
@@ -301,7 +297,6 @@ namespace Microsoft.OData.Client
             return this.requestMessage.EndGetResponse(asyncResult);
         }
 
-#if !PORTABLELIB
         /// <summary>
         /// Returns a response from an Internet resource.
         /// </summary>
@@ -315,7 +310,6 @@ namespace Microsoft.OData.Client
             
             return this.requestMessage.GetResponse();
         }
-#endif
 
         /// <summary>
         /// Sets the content length header for the given request message.

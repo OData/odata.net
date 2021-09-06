@@ -10,9 +10,7 @@ namespace Microsoft.Test.Taupo.Runners
     using System.Collections.Generic;
     using System.Globalization;
     using System.Security;
-#if !WIN8
     using System.Security.Permissions;
-#endif
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
 
@@ -142,11 +140,9 @@ namespace Microsoft.Test.Taupo.Runners
         /// <param name="text">The text to be written.</param>
         protected abstract void WriteStatusText(LogLevel severity, int indentLevel, string text);
 
-#if !SILVERLIGHT
         [SecuritySafeCritical]
         [PermissionSet(SecurityAction.Assert, Unrestricted = true)]
         [AssertJustification("Some exceptions (such as SecurityExceptions) need elevated permissions to read all of their information.")]
-#endif
         private static string FormatException(ExceptionDetails ex)
         {
             return ex.ExceptionAsString;

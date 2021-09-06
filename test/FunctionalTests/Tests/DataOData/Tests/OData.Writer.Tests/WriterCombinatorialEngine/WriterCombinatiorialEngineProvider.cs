@@ -8,12 +8,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.WriterCombinatorialEngine
 {
     using System;
     using System.Collections.Generic;
-#if !SILVERLIGHT
     using ApprovalTests;
     using ApprovalTests.Core;
     using Microsoft.Test.OData.Utils.Common;
     using Approvals = ApprovalTests.Approvals;
-#endif
 
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
 
@@ -22,7 +20,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.WriterCombinatorialEngine
         private Func<string> baselineCallback;
         private Action<int> combinationCallback;
 
-#if !SILVERLIGHT
         // <summary>Verify result or not</summary>
         private bool skipVerify = false;
         private string approvalFileSoucePath = null;
@@ -44,19 +41,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.WriterCombinatorialEngine
             this.approvalFileSoucePath = sourcePath;
             return this;
         }
-#endif
+
         public ICombinatorialEngine CreateEngine(IEnumerable<CombinatorialDimension> dimensions)
         {
-#if !SILVERLIGHT
             return new WriterCombinatorialEngine(dimensions)
                 .SetBaselineCallback(this.baselineCallback)
                 .SetLogCombinationCallback(this.combinationCallback)
                 .SkipVerify(skipVerify).SetApprovalFileSoucePath(approvalFileSoucePath);
-#else
-            return new WriterCombinatorialEngine(dimensions)
-                .SetBaselineCallback(this.baselineCallback)
-                .SetLogCombinationCallback(this.combinationCallback);
-#endif
         }
 
         /// <summary>
@@ -103,7 +94,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.WriterCombinatorialEngine
             private Func<string> baselineCallback;
             private Action<int> combinationCallback;
 
-#if !SILVERLIGHT
             // <summary>Verify result or not</summary>
             private bool skipVerify = false;
             private string approvalFileSoucePath = null;
@@ -125,8 +115,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.WriterCombinatorialEngine
                 this.approvalFileSoucePath = sourcePath;
                 return this;
             }
-            
-#endif
 
             /// <summary>
             /// Constructor
@@ -204,7 +192,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.WriterCombinatorialEngine
                             this.currentDimensionIndices[index] = 0;
                             if (index == 0)
                             {
-#if !SILVERLIGHT
                                 string baseline = baselineCallback();
                                 if (!skipVerify && !string.IsNullOrEmpty(baseline))
                                 {
@@ -213,7 +200,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.WriterCombinatorialEngine
                                     else
                                         Approvals.Verify(baseline);
                                 }
-#endif
+
                                 return false;
                             }
                         }

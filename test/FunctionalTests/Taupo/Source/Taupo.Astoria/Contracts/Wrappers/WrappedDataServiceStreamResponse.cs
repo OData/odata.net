@@ -32,11 +32,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         /// </summary>
         static WrappedDataServiceStreamResponse()
         {
-#if SILVERLIGHT && !WIN8
-            WrappedObjectType = AstoriaWrapperUtilities.GetTypeFromAssembly("Microsoft.OData.Client.DataServiceStreamResponse", "Microsoft.OData.Client.SL");
-#else
             WrappedObjectType = AstoriaWrapperUtilities.GetTypeFromAssembly("Microsoft.OData.Client.DataServiceStreamResponse", "Microsoft.OData.Client");
-#endif
         }
         
         /// <summary>

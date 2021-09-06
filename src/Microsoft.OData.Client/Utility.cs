@@ -36,11 +36,7 @@ namespace Microsoft.OData.Client
         /// </returns>
         public static IEnumerable<object> GetCustomAttributes(Type type, Type attributeType, bool inherit)
         {
-#if PORTABLELIB
-            return type.GetTypeInfo().GetCustomAttributes(attributeType, inherit);
-#else
             return type.GetCustomAttributes(attributeType, inherit);
-#endif
         }
     }
 }

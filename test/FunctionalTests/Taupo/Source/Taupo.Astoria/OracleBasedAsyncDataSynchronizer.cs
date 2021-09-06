@@ -10,15 +10,7 @@ namespace Microsoft.Test.Taupo.Astoria
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.Test.Taupo.Astoria.Contracts;
-#if SILVERLIGHT
-#if !WIN8
-    using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataOracleService.Silverlight;
-#else
-    using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataOracleService.Win8;
-#endif
-#else
     using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataOracleService.DotNet;
-#endif
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts;
 
@@ -51,7 +43,6 @@ namespace Microsoft.Test.Taupo.Astoria
             ExceptionUtilities.CheckArgumentNotNull(entitySetName, "entitySetName");
             ExceptionUtilities.CheckAllRequiredDependencies(this);
 
-#if !WIN8
             this.OracleServiceClient.BeginGetEntitySet(
                 entitySetName,
                 result => AsyncHelpers.CatchErrors(
@@ -70,21 +61,6 @@ namespace Microsoft.Test.Taupo.Astoria
                         continuation.Continue();
                     }),
                 null);
-#else
-            var task = this.OracleServiceClient.GetEntitySetAsync(new GetEntitySetRequest(entitySetName));
-            task.Wait();
-            var result = task.Result;
-            var entities = result.GetEntitySetResult;
-            var error = result.errorMessage;
-            if (error != null)
-            {
-                continuation.Fail(new Exception(error));
-                return;
-            }
-
-            this.UnderlyingSynchronizer.SynchronizeEntireEntitySet(entitySetName, entities);
-            continuation.Continue();
-#endif
         }
 
         /// <summary>
@@ -100,7 +76,6 @@ namespace Microsoft.Test.Taupo.Astoria
             ExceptionUtilities.CheckCollectionNotEmpty(keyValues, "keyValues");
             ExceptionUtilities.CheckAllRequiredDependencies(this);
 
-#if !WIN8
             this.OracleServiceClient.BeginGetEntity(
                 entitySetName, 
                 keyValues.Select(v => new SerializableNamedValue() { Name = v.Name, Value = v.Value }).ToList(),
@@ -120,24 +95,6 @@ namespace Microsoft.Test.Taupo.Astoria
                         continuation.Continue();
                     }),
                 null);
-#else
-            var task = this.OracleServiceClient.GetEntityAsync(
-                new GetEntityRequest(
-                    entitySetName,
-                    keyValues.Select(v => new SerializableNamedValue() { Name = v.Name, Value = v.Value }).ToArray()));
-            task.Wait();
-            var result = task.Result;
-            var entity = result.GetEntityResult;
-            var error = result.errorMessage;
-            if (error != null)
-            {
-                continuation.Fail(new Exception(error));
-                return;
-            }
-
-            this.UnderlyingSynchronizer.SynchronizeEntityInstanceGraph(entity);
-            continuation.Continue();
-#endif
         }
     }
 }

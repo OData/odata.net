@@ -449,38 +449,5 @@ namespace Microsoft.OData.Client
                 }
             }
         }
-
-#if PORTABLELIB
-        /// <summary>Read-writer lock, implemented over a Monitor.</summary>
-        private sealed class ReaderWriterLockSlim
-        {
-            /// <summary>Single object on which to lock.</summary>
-            private object readerWriterLock = new object();
-
-            /// <summary>Enters a reader lock. Writers will also be blocked.</summary>
-            internal void EnterReadLock()
-            {
-                Monitor.Enter(this.readerWriterLock);
-            }
-
-            /// <summary>Enters a writer lock. Readers will also be blocked.</summary>
-            internal void EnterWriteLock()
-            {
-                Monitor.Enter(this.readerWriterLock);
-            }
-
-            /// <summary>Exits a reader lock.</summary>
-            internal void ExitReadLock()
-            {
-                Monitor.Exit(this.readerWriterLock);
-            }
-
-            /// <summary>Exits a writer lock.</summary>
-            internal void ExitWriteLock()
-            {
-                Monitor.Exit(this.readerWriterLock);
-            }
-        }
-#endif
     }
 }

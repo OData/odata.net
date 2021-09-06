@@ -7,9 +7,7 @@
 namespace Microsoft.Test.Taupo.Common
 {
     using System;
-#if !WIN8
     using System.Security.Cryptography;
-#endif
     using System.Text;
 
     /// <summary>
@@ -67,15 +65,10 @@ namespace Microsoft.Test.Taupo.Common
         public static byte[] ComputeHash(this byte[] data)
         {
             ExceptionUtilities.CheckArgumentNotNull(data, "data");
-#if WIN8
-            // TODO: this will make type names very long - should use hashing function once we figure out how
-            return data;
-#else
             using (var hash = new SHA1Managed())
             {
                 return hash.ComputeHash(data);
             }
-#endif
         }
 
         /// <summary>

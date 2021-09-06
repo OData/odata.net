@@ -13,9 +13,6 @@ namespace Microsoft.Test.Taupo.Astoria
     using System.IO;
     using System.Linq;
     using System.Net;
-#if SILVERLIGHT
-    using System.Net.Browser;
-#endif
     using System.Threading;
     using System.Xml;
     using System.Xml.Linq;
@@ -23,21 +20,10 @@ namespace Microsoft.Test.Taupo.Astoria
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
     using Microsoft.OData.Edm.Validation;
-#if SILVERLIGHT
-    using System.Windows;
-#endif
     using Microsoft.Test.Taupo.Astoria.Common;
     using Microsoft.Test.Taupo.Astoria.Contracts;
     using Microsoft.Test.Taupo.Astoria.Contracts.EntityModel;
-#if SILVERLIGHT
-#if !WIN8
-    using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataServiceBuilderService.Silverlight;
-#else
-    using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataServiceBuilderService.Win8;
-#endif
-#else
     using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataServiceBuilderService.DotNet;
-#endif
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts;
     using Microsoft.Test.Taupo.Contracts.EntityModel;
@@ -151,7 +137,6 @@ namespace Microsoft.Test.Taupo.Astoria
                 deployerName = DeploymentSettings.RelayServiceDeployerPrefix + deployerName;
             }
 
-#if !WIN8
             this.DataServiceBuilder.BeginCreateCustomDataService(
                 csdlContentStrings,
                 this.DataProviderSettings.DataProviderKind,
@@ -190,44 +175,6 @@ namespace Microsoft.Test.Taupo.Astoria
                         continuation.Continue();
                     }),
                     null);
-#else 
-            var task = this.DataServiceBuilder.CreateCustomDataServiceAsync(
-                new CreateCustomDataServiceRequest(
-                    new ObservableCollection<string>(csdlContentStrings),
-                    this.DataProviderSettings.DataProviderKind,
-                    deployerName,
-                    new ObservableCollection<ServiceBuilderParameter>(settings)));
-            task.Wait();
-            var result = task.Result;
-            this.CurrentWorkspace.WorkspaceInfo = result.CreateCustomDataServiceResult;
-            errorMessage = result.errorLog;
-
-            ExceptionUtilities.CheckObjectNotNull(this.CurrentWorkspace.WorkspaceInfo, "Cannot get workspace info after creation. Error:" + errorMessage);
-
-            string serviceUri = this.CurrentWorkspace.WorkspaceInfo.ServiceUri;
-            if (serviceUri == null)
-            {
-                continuation.Fail(new TaupoInfrastructureException(errorMessage));
-                return;
-            }
-
-            this.Logger.WriteLine(LogLevel.Verbose, "Service URI: {0}", serviceUri);
-            var builder = this.DataServiceBuilder;
-
-            this.CurrentWorkspace.OnDispose += (sender, e) =>
-            {
-                if (!this.SkipDataServiceDispose)
-                {
-                    // begin removal of the data service - note that nobody is waiting
-                    // for this operation to complete
-                    this.Logger.WriteLine(LogLevel.Verbose, "Uninstalling service {0} asynchronously", serviceUri);
-                    builder.UninstallDataServiceAsync(serviceUri).Wait();
-                }
-            };
-
-            this.CurrentWorkspace.ServiceUri = new Uri(serviceUri);
-            continuation.Continue();
-#endif
         }
 
         /// <summary>
@@ -244,11 +191,7 @@ namespace Microsoft.Test.Taupo.Astoria
 
             var serviceMetadataUri = new Uri(this.CurrentWorkspace.ServiceUri.AbsoluteUri + "/$metadata", UriKind.Absolute);
             this.Logger.WriteLine(LogLevel.Trace, "Retrieve metadata of service: {0}", serviceMetadataUri.AbsoluteUri);
-#if SILVERLIGHT
-            var httpWebRequest = (HttpWebRequest)WebRequestCreator.ClientHttp.Create(serviceMetadataUri);
-#else
             var httpWebRequest = (HttpWebRequest)HttpWebRequest.Create(serviceMetadataUri);
-#endif
             httpWebRequest.Accept = MimeTypes.ApplicationXml;
              httpWebRequest.BeginGetResponse(
                 (asyncResult) =>
@@ -273,7 +216,6 @@ namespace Microsoft.Test.Taupo.Astoria
         /// <param name="continuation">The async continuation</param>
         protected override void UpdateEntityModel(IAsyncContinuation continuation)
         {
-#if !SILVERLIGHT
             // get CSDL contents
             List<string> csdlContent = new List<string>();
             foreach (var key in this.CurrentWorkspace.WorkspaceInfo.AdditionalProviderInfo.Keys.Where(k => k.StartsWith(AstoriaWorkspaceInfoConstants.CsdlKeyPrefix, StringComparison.OrdinalIgnoreCase)))
@@ -296,7 +238,6 @@ namespace Microsoft.Test.Taupo.Astoria
             customAnnotationConverter.ConvertAnnotations(this.CurrentWorkspace.ConceptualModel);
 
             functionAnnotationPreserver.RestoreFunctionAnnotations(this.CurrentWorkspace.ConceptualModel.Functions);
-#endif
             base.UpdateEntityModel(continuation);
         }
 
@@ -322,13 +263,8 @@ namespace Microsoft.Test.Taupo.Astoria
             IEdmModel model = null;
             IEnumerable<EdmError> errors = null;
 
-#if !WINDOWS_PHONE && !SILVERLIGHT
             using (var xmlTextReader = XmlTextReader.Create(s, new XmlReaderSettings()))
             {
-#else
-            using(var xmlTextReader = XmlReader.Create(s))
-            {
-#endif
                 ExceptionUtilities.Assert(CsdlReader.TryParse(xmlTextReader, out model, out errors), "Cannot read csdl model");
                 ExceptionUtilities.Assert(!errors.Any(), "Errors on parsing csdl");
             }

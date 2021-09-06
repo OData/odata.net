@@ -45,14 +45,13 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts
             ExceptionUtilities.CheckArgumentNotNull(collection, "collection");
             ExceptionUtilities.CheckArgumentNotNull(predicate, "predicate");
 
-#if !SILVERLIGHT
             var list = collection as List<T>;
             if (list != null)
             {
                 Predicate<T> match = i => predicate(i);
                 return list.RemoveAll(match);
             }
-#endif
+
             var itemsToBeDeleted = collection.Where(predicate).ToList();
             foreach (T item in itemsToBeDeleted)
             {
@@ -101,11 +100,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts
             var list = elements as List<T>;
             if (list != null)
             {
-#if WIN8
-                PlatformHelper.ForEach(list, action);
-#else
                 list.ForEach(action);
-#endif
             }
             else
             {

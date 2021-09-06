@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !(SILVERLIGHT || WINDOWS_PHONE)
     // These tests use Reflection to create & test internal product types,
     // (in the test wrapper of JsonReader) which cannot be done in Silverlight/Phone. 
     // Running these unit tests on desktop only is sufficient.
@@ -563,4 +562,3 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
         }
     }
 }
-#endif

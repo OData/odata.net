@@ -276,12 +276,10 @@ namespace Microsoft.Test.Taupo.Runners
             {
                 this.writer.WriteStartElement("Compare");
                 this.writer.WriteAttributeString("Message", exception.Message);
-#if !SILVERLIGHT
                 if (!string.IsNullOrEmpty(exception.Source))
                 {
                     this.writer.WriteAttributeString("Source", exception.Source);
                 }
-#endif
 
                 this.writer.WriteStartElement("Details");
                 this.writer.WriteCData(this.ExceptionFormatter(exception));
