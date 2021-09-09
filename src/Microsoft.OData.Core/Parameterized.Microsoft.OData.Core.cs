@@ -6407,13 +6407,13 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The last segment, and only the last segment, must be a navigation property in $expand."
+        /// A string like "The last segment, and only the last segment, must be a navigation property or type segment in $expand."
         /// </summary>
-        internal static string ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty
+        internal static string ODataExpandPath_OnlyLastSegmentMustBeNavigationPropertyOrTypeSegment
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataExpandPath_OnlyLastSegmentMustBeNavigationPropertyOrTypeSegment);
             }
         }
 

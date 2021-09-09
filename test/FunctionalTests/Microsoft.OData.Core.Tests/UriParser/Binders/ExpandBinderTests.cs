@@ -237,9 +237,13 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             Assert.NotNull(selectExpandClause);
             var selectItem = Assert.Single(selectExpandClause.SelectedItems, x => x is ExpandedNavigationSelectItem);
             ExpandedNavigationSelectItem expandedNavigationSelectItem = selectItem as ExpandedNavigationSelectItem;
-            Assert.Equal(1, expandedNavigationSelectItem.PathToNavigationProperty.Count);
-            Assert.Equal("MyPeople", expandedNavigationSelectItem.PathToNavigationProperty.Segments.First().Identifier);
-            Assert.Equal("Collection(Fully.Qualified.Namespace.Employee)", expandedNavigationSelectItem.PathToNavigationProperty.Segments.First().EdmType.FullTypeName());
+            Assert.Equal(2, expandedNavigationSelectItem.PathToNavigationProperty.Count);
+
+            NavigationPropertySegment navPropSegment = Assert.IsType<NavigationPropertySegment>(expandedNavigationSelectItem.PathToNavigationProperty.Segments.First());
+            TypeSegment typeSegment = Assert.IsType<TypeSegment>(expandedNavigationSelectItem.PathToNavigationProperty.Segments.Last());
+            Assert.Equal("MyPeople", navPropSegment.Identifier);
+            Assert.Equal("Collection(Fully.Qualified.Namespace.Person)", navPropSegment.EdmType.FullTypeName());
+            Assert.Equal("Fully.Qualified.Namespace.Employee", typeSegment.EdmType.FullTypeName());
         }
     }
 }

@@ -1685,11 +1685,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             // Assert
             Assert.NotNull(selectExpandClause);
             ExpandedCountSelectItem expandedCountSelectItem = Assert.IsType<ExpandedCountSelectItem>(Assert.Single(selectExpandClause.SelectedItems));
+            Assert.Same(HardCodedTestModel.GetPeopleSet(), expandedCountSelectItem.NavigationSource);
             Assert.Null(expandedCountSelectItem.FilterOption);
             Assert.Null(expandedCountSelectItem.SearchOption);
-            Assert.Equal(1, expandedCountSelectItem.PathToNavigationProperty.Count);
-            Assert.Equal("MyPeople", expandedCountSelectItem.PathToNavigationProperty.Segments.First().Identifier);
-            Assert.Equal("Collection(Fully.Qualified.Namespace.Employee)", expandedCountSelectItem.PathToNavigationProperty.Segments.First().EdmType.FullTypeName());
+            Assert.Equal(2, expandedCountSelectItem.PathToNavigationProperty.Count);
+
+            NavigationPropertySegment navPropSegment = Assert.IsType<NavigationPropertySegment>(expandedCountSelectItem.PathToNavigationProperty.Segments.First());
+            TypeSegment typeSegment = Assert.IsType<TypeSegment>(expandedCountSelectItem.PathToNavigationProperty.Segments.Last());
+            Assert.Equal("MyPeople", navPropSegment.Identifier);
+            Assert.Equal("Collection(Fully.Qualified.Namespace.Person)", navPropSegment.EdmType.FullTypeName());
+            Assert.Equal("Fully.Qualified.Namespace.Employee", typeSegment.EdmType.FullTypeName());
         }
 
         // $expand=navProp/fully.qualified.type/$count($filter=prop)
@@ -1710,11 +1715,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             // Assert
             Assert.NotNull(selectExpandClause);
             ExpandedCountSelectItem expandedCountSelectItem = Assert.IsType<ExpandedCountSelectItem>(Assert.Single(selectExpandClause.SelectedItems));
+            Assert.Same(HardCodedTestModel.GetPeopleSet(), expandedCountSelectItem.NavigationSource);
             Assert.NotNull(expandedCountSelectItem.FilterOption);
             Assert.Null(expandedCountSelectItem.SearchOption);
-            Assert.Equal(1, expandedCountSelectItem.PathToNavigationProperty.Count);
-            Assert.Equal("MyPeople", expandedCountSelectItem.PathToNavigationProperty.Segments.First().Identifier);
-            Assert.Equal("Collection(Fully.Qualified.Namespace.Employee)", expandedCountSelectItem.PathToNavigationProperty.Segments.First().EdmType.FullTypeName());
+            Assert.Equal(2, expandedCountSelectItem.PathToNavigationProperty.Count);
+
+            NavigationPropertySegment navPropSegment = Assert.IsType<NavigationPropertySegment>(expandedCountSelectItem.PathToNavigationProperty.Segments.First());
+            TypeSegment typeSegment = Assert.IsType<TypeSegment>(expandedCountSelectItem.PathToNavigationProperty.Segments.Last());
+            Assert.Equal("MyPeople", navPropSegment.Identifier);
+            Assert.Equal("Collection(Fully.Qualified.Namespace.Person)", navPropSegment.EdmType.FullTypeName());
+            Assert.Equal("Fully.Qualified.Namespace.Employee", typeSegment.EdmType.FullTypeName());
         }
 
         // $expand=navProp/fully.qualified.type/$count($search=prop)
@@ -1735,11 +1745,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             // Assert
             Assert.NotNull(selectExpandClause);
             ExpandedCountSelectItem expandedCountSelectItem = Assert.IsType<ExpandedCountSelectItem>(Assert.Single(selectExpandClause.SelectedItems));
+            Assert.Same(HardCodedTestModel.GetPeopleSet(), expandedCountSelectItem.NavigationSource);
             Assert.Null(expandedCountSelectItem.FilterOption);
             Assert.NotNull(expandedCountSelectItem.SearchOption);
-            Assert.Equal(1, expandedCountSelectItem.PathToNavigationProperty.Count);
-            Assert.Equal("MyPeople", expandedCountSelectItem.PathToNavigationProperty.Segments.First().Identifier);
-            Assert.Equal("Collection(Fully.Qualified.Namespace.Employee)", expandedCountSelectItem.PathToNavigationProperty.Segments.First().EdmType.FullTypeName());
+            Assert.Equal(2, expandedCountSelectItem.PathToNavigationProperty.Count);
+
+            NavigationPropertySegment navPropSegment = Assert.IsType<NavigationPropertySegment>(expandedCountSelectItem.PathToNavigationProperty.Segments.First());
+            TypeSegment typeSegment = Assert.IsType<TypeSegment>(expandedCountSelectItem.PathToNavigationProperty.Segments.Last());
+            Assert.Equal("MyPeople", navPropSegment.Identifier);
+            Assert.Equal("Collection(Fully.Qualified.Namespace.Person)", navPropSegment.EdmType.FullTypeName());
+            Assert.Equal("Fully.Qualified.Namespace.Employee", typeSegment.EdmType.FullTypeName());
         }
 
         [Fact]

@@ -60,23 +60,19 @@ namespace Microsoft.OData.UriParser
             {
                 if (segment is TypeSegment)
                 {
-                    if (index == this.Count - 1)
-                    {
-                        throw new ODataException(ODataErrorStrings.ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty);
-                    }
                 }
                 else if (segment is PropertySegment)
                 {
                     if (index == this.Count - 1)
                     {
-                        throw new ODataException(ODataErrorStrings.ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty);
+                        throw new ODataException(ODataErrorStrings.ODataExpandPath_OnlyLastSegmentMustBeNavigationPropertyOrTypeSegment);
                     }
                 }
                 else if (segment is NavigationPropertySegment)
                 {
-                    if (index < this.Count - 1 || foundNavProp)
+                    if (foundNavProp)
                     {
-                        throw new ODataException(ODataErrorStrings.ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty);
+                        throw new ODataException(ODataErrorStrings.ODataExpandPath_OnlyLastSegmentMustBeNavigationPropertyOrTypeSegment);
                     }
 
                     foundNavProp = true;
