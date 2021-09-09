@@ -373,7 +373,6 @@ namespace Microsoft.OData.UriParser
             bool isCount = false;
             bool hasDerivedType = false;
             IEdmType derivedType = null;
-            TypeSegment derivedTypeSegment = null;
 
             // Handle $expand=Customer/Fully.Qualified.Namespace.VipCustomer
             // The deriveTypeToken is Fully.Qualified.Namespace.VipCustomer
@@ -381,6 +380,10 @@ namespace Microsoft.OData.UriParser
             {
                 hasDerivedType = true;
                 derivedType = UriEdmHelpers.FindTypeFromModel(this.Model, firstNonTypeToken.NextToken.Identifier, this.configuration.Resolver);
+
+                // In this example: $expand=Customer/Fully.Qualified.Namespace.VipCustomer
+                // We validate that the derived type Fully.Qualified.Namespace.VipCustomer is related to Navigation property Customer.
+                UriEdmHelpers.CheckRelatedTo(currentNavProp.ToEntityType(), derivedType);
             }
 
             // ensure that we're always dealing with proper V4 syntax
@@ -425,7 +428,7 @@ namespace Microsoft.OData.UriParser
 
             if (hasDerivedType)
             {
-                derivedTypeSegment = new TypeSegment(derivedType, targetNavigationSource);
+                TypeSegment derivedTypeSegment = new TypeSegment(derivedType, targetNavigationSource);
                 pathSoFar.Add(derivedTypeSegment);
                 parsedPath.Add(derivedTypeSegment);
             }
