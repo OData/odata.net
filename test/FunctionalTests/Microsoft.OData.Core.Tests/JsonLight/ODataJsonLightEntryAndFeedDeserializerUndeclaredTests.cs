@@ -87,7 +87,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             message.SetHeader("Content-Type", "application/json");
 
             using (var msgReader = readRequest ?
-                new ODataMessageReader((IODataResponseMessage)message, readerSettings, this.serverModel) :
+                new ODataMessageReader((IODataRequestMessage)message, readerSettings, this.serverModel) :
                 new ODataMessageReader((IODataResponseMessage)message, readerSettings, this.serverModel))
             {
                 var reader = msgReader.CreateODataResourceReader(entitySet, entityType);
