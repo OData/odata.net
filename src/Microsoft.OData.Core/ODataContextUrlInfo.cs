@@ -240,10 +240,7 @@ namespace Microsoft.OData
 
         private static string ComputeNavigationPath(EdmNavigationSourceKind kind, ODataUri odataUri, string navigationSource)
         {
-            bool isContained = kind == EdmNavigationSourceKind.ContainedEntitySet;
-            bool isUnknownEntitySet = kind == EdmNavigationSourceKind.UnknownEntitySet;
-
-            if (isUnknownEntitySet)
+            if (kind == EdmNavigationSourceKind.UnknownEntitySet)
             {
                 // If the navigation target is not specified, i.e., UnknownEntitySet,
                 // the navigation path should be null so that type name will be used
@@ -252,7 +249,7 @@ namespace Microsoft.OData
             }
 
             string navigationPath = null;
-            if (isContained && odataUri != null && odataUri.Path != null)
+            if (kind == EdmNavigationSourceKind.ContainedEntitySet && odataUri != null && odataUri.Path != null)
             {
                 ODataPath odataPath = odataUri.Path.TrimEndingTypeSegment().TrimEndingKeySegment();
                 if (!(odataPath.LastSegment is NavigationPropertySegment) && !(odataPath.LastSegment is OperationSegment))
