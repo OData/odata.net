@@ -58,10 +58,7 @@ namespace Microsoft.OData.UriParser
             bool foundNavProp = false;
             foreach (ODataPathSegment segment in this)
             {
-                if (segment is TypeSegment)
-                {
-                }
-                else if (segment is PropertySegment)
+                if (segment is PropertySegment)
                 {
                     if (index == this.Count - 1)
                     {
@@ -77,7 +74,7 @@ namespace Microsoft.OData.UriParser
 
                     foundNavProp = true;
                 }
-                else
+                else if (!(segment is TypeSegment))
                 {
                     throw new ODataException(ODataErrorStrings.ODataExpandPath_InvalidExpandPathSegment(segment.GetType().Name));
                 }

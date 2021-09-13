@@ -371,14 +371,14 @@ namespace Microsoft.OData.UriParser
 
             bool isRef = false;
             bool isCount = false;
-            bool hasDerivedType = false;
+            bool hasDerivedTypeSegment = false;
             IEdmType derivedType = null;
 
             // Handle $expand=Customer/Fully.Qualified.Namespace.VipCustomer
             // The deriveTypeToken is Fully.Qualified.Namespace.VipCustomer
             if (firstNonTypeToken.NextToken != null && firstNonTypeToken.NextToken.IsNamespaceOrContainerQualified())
             {
-                hasDerivedType = true;
+                hasDerivedTypeSegment = true;
                 derivedType = UriEdmHelpers.FindTypeFromModel(this.Model, firstNonTypeToken.NextToken.Identifier, this.configuration.Resolver);
 
                 // In this example: $expand=Customer/Fully.Qualified.Namespace.VipCustomer
@@ -387,15 +387,15 @@ namespace Microsoft.OData.UriParser
             }
 
             // ensure that we're always dealing with proper V4 syntax
-            if (firstNonTypeToken.NextToken != null && firstNonTypeToken.NextToken.NextToken != null && !hasDerivedType)
+            if (firstNonTypeToken?.NextToken?.NextToken != null && !hasDerivedTypeSegment)
             {
                 throw new ODataException(ODataErrorStrings.ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath);
             }
 
-            if ((firstNonTypeToken.NextToken != null && !hasDerivedType) || 
-                (firstNonTypeToken.NextToken != null && firstNonTypeToken.NextToken.NextToken != null && hasDerivedType))
+            if ((firstNonTypeToken.NextToken != null && !hasDerivedTypeSegment) || 
+                (firstNonTypeToken?.NextToken?.NextToken != null && hasDerivedTypeSegment))
             {
-                PathSegmentToken nextToken = hasDerivedType ? firstNonTypeToken.NextToken.NextToken : firstNonTypeToken.NextToken;
+                PathSegmentToken nextToken = hasDerivedTypeSegment ? firstNonTypeToken.NextToken.NextToken : firstNonTypeToken.NextToken;
 
                 // lastly... make sure that, since we're on a NavProp, that the next token isn't null.
                 if (nextToken.Identifier == UriQueryConstants.RefSegment)
@@ -426,7 +426,7 @@ namespace Microsoft.OData.UriParser
             pathSoFar.Add(navSegment);
             parsedPath.Add(navSegment); // Add the navigation property segment to parsed segments for future usage.
 
-            if (hasDerivedType)
+            if (hasDerivedTypeSegment)
             {
                 TypeSegment derivedTypeSegment = new TypeSegment(derivedType, targetNavigationSource);
                 pathSoFar.Add(derivedTypeSegment);
