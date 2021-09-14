@@ -425,15 +425,12 @@ namespace Microsoft.OData.JsonLight
                 ValidateExpandedNestedResourceInfoPropertyValue(this.JsonReader, isCollection, propertyName, payloadTypeReference);
                 if (isCollection)
                 {
-                    readerNestedResourceInfo = this.ReadingResponse
-                        ? ReadExpandedResourceSetNestedResourceInfo(resourceState, null, payloadTypeReference.ToStructuredType(), propertyName, /*isDeltaResourceSet*/ false)
-                        : ReadEntityReferenceLinksForCollectionNavigationLinkInRequest(resourceState, null, propertyName, /*isExpanded*/ true);
+                    readerNestedResourceInfo =
+                        ReadExpandedResourceSetNestedResourceInfo(resourceState, null, payloadTypeReference.ToStructuredType(), propertyName, /*isDeltaResourceSet*/ false);
                 }
                 else
                 {
-                    readerNestedResourceInfo = this.ReadingResponse
-                        ? ReadExpandedResourceNestedResourceInfo(resourceState, null, propertyName, payloadTypeReference.ToStructuredType(), this.MessageReaderSettings)
-                        : ReadEntityReferenceLinkForSingletonNavigationLinkInRequest(resourceState, null, propertyName, /*isExpanded*/ true);
+                    readerNestedResourceInfo = ReadExpandedResourceNestedResourceInfo(resourceState, null, propertyName, payloadTypeReference.ToStructuredType(), this.MessageReaderSettings);
                 }
 
                 resourceState.PropertyAndAnnotationCollector.ValidatePropertyUniquenessOnNestedResourceInfoStart(readerNestedResourceInfo.NestedResourceInfo);
