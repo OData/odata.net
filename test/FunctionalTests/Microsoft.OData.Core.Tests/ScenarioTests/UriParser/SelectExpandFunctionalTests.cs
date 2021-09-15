@@ -1667,6 +1667,34 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.NotNull(expandedCountSelectItem.SearchOption);
         }
 
+        // $expand=navProp/fully.qualified.type/$ref
+        [Fact]
+        public void ExpandWithNavigationPropRefWithFullyQualifiedTypeWorks()
+        {
+            // Arrange
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetDogType(), HardCodedTestModel.GetDogsSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$expand", "MyPeople/Fully.Qualified.Namespace.Employee/$ref"}
+                });
+
+            // Act
+            var selectExpandClause = odataQueryOptionParser.ParseSelectAndExpand();
+
+            // Assert
+            Assert.NotNull(selectExpandClause);
+            ExpandedReferenceSelectItem expandedRefSelectItem = Assert.IsType<ExpandedReferenceSelectItem>(Assert.Single(selectExpandClause.SelectedItems));
+            Assert.Same(HardCodedTestModel.GetPeopleSet(), expandedRefSelectItem.NavigationSource);
+            Assert.Equal(2, expandedRefSelectItem.PathToNavigationProperty.Count);
+
+            NavigationPropertySegment navPropSegment = Assert.IsType<NavigationPropertySegment>(expandedRefSelectItem.PathToNavigationProperty.Segments.First());
+            TypeSegment typeSegment = Assert.IsType<TypeSegment>(expandedRefSelectItem.PathToNavigationProperty.Segments.Last());
+            Assert.Equal("MyPeople", navPropSegment.Identifier);
+            Assert.Equal("Collection(Fully.Qualified.Namespace.Person)", navPropSegment.EdmType.FullTypeName());
+            Assert.Equal("Fully.Qualified.Namespace.Employee", typeSegment.EdmType.FullTypeName());
+        }
+
         // $expand=navProp/fully.qualified.type/$count
         [Fact]
         public void ExpandWithNavigationPropCountWithFullyQualifiedTypeWorks()
@@ -1755,6 +1783,31 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("MyPeople", navPropSegment.Identifier);
             Assert.Equal("Collection(Fully.Qualified.Namespace.Person)", navPropSegment.EdmType.FullTypeName());
             Assert.Equal("Fully.Qualified.Namespace.Employee", typeSegment.EdmType.FullTypeName());
+        }
+
+        [Theory]
+        [InlineData("MyPeople/Fully.Qualified.Namespace.UndefinedType")]
+        [InlineData("MyPeople/Fully.Qualified.Namespace.UndefinedType/$ref")]
+        [InlineData("MyPeople/Fully.Qualified.Namespace.UndefinedType/$count")]
+        [InlineData("MyPeople/Fully.Qualified.Namespace.UndefinedType/$count($search=blue)")]
+        [InlineData("MyPeople/Fully.Qualified.Namespace.UndefinedType/$count($filter=ID eq 1)")]
+        public void ExpandWithNavigationPropWithUndefinedTypeThrows(string query)
+        {
+            // Arrange
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetDogType(), HardCodedTestModel.GetDogsSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$expand", query}
+                });
+
+            // Act
+            Action action = () => odataQueryOptionParser.ParseSelectAndExpand();
+
+            // Assert
+
+            // Exception: The type Fully.Qualified.Namespace.UndefinedType is not defined in the model.
+            action.Throws<ODataException>(ODataErrorStrings.ExpandItemBinder_CannotFindType("Fully.Qualified.Namespace.UndefinedType"));
         }
 
         [Fact]

@@ -381,6 +381,12 @@ namespace Microsoft.OData.UriParser
                 hasDerivedTypeSegment = true;
                 derivedType = UriEdmHelpers.FindTypeFromModel(this.Model, firstNonTypeToken.NextToken.Identifier, this.configuration.Resolver);
 
+                if (derivedType == null)
+                {
+                    // Exception example: The type Fully.Qualified.Namespace.UndefinedType is not defined in the model.
+                    throw new ODataException(Strings.ExpandItemBinder_CannotFindType(firstNonTypeToken.NextToken.Identifier));
+                }
+
                 // In this example: $expand=Customer/Fully.Qualified.Namespace.VipCustomer
                 // We validate that the derived type Fully.Qualified.Namespace.VipCustomer is related to Navigation property Customer.
                 UriEdmHelpers.CheckRelatedTo(currentNavProp.ToEntityType(), derivedType);
