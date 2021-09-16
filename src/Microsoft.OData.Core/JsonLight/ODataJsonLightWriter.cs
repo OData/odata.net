@@ -1008,6 +1008,16 @@ namespace Microsoft.OData.JsonLight
 
             // A deferred nested resource info is just the link metadata, no value.
             this.jsonLightResourceSerializer.WriteNavigationLinkMetadata(nestedResourceInfo, this.DuplicatePropertyNameChecker);
+
+            // Only write count when the ODataNestedResourceInfo represents a collection.
+            if (!(bool)nestedResourceInfo.IsCollection)
+            {
+                // Write the inline count if it's available.
+                this.WriteResourceSetCount(nestedResourceInfo.Count, nestedResourceInfo.Name);
+            }
+
+            // Write custom instance annotations
+            this.instanceAnnotationWriter.WriteInstanceAnnotations(nestedResourceInfo.GetInstanceAnnotations(), nestedResourceInfo.Name);
         }
 
         /// <summary>

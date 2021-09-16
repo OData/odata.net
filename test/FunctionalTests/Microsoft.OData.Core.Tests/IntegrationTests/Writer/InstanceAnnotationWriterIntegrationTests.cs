@@ -555,6 +555,40 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
             testRequestOfSingleton.Throws<ODataException>(Strings.ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedResourceSet);
         }
 
+        [Fact]
+        public void WriteAnnotationAndCountAtStartExpandedFeedShouldPassInJsonLight()
+        {
+            string expectedPayload =
+            "{" +
+                "\"@odata.context\":\"http://www.example.com/$metadata#TestEntitySet/$entity\"," +
+                "\"ID\":1," +
+                "\"ResourceSetNavigationProperty@odata.navigationLink\":\"http://service/navLink\"," +
+                "\"ResourceSetNavigationProperty@odata.count\":10," +
+                "\"ResourceSetNavigationProperty@custom.StartFeedAnnotation\":123" +
+            "}";
+
+            this.WriteAnnotationAndCountAtStartExpandedFeedShouldPass(ODataFormat.Json, expectedPayload, EntitySet);
+        }
+
+        private void WriteAnnotationAndCountAtStartExpandedFeedShouldPass(ODataFormat format, string expectedPayload, IEdmNavigationSource navigationSource)
+        {
+            Action<ODataWriter> action = (odataWriter) =>
+            {
+                var entryToWrite = new ODataResource { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
+                odataWriter.WriteStart(entryToWrite);
+
+                ODataNestedResourceInfo navLink = new ODataNestedResourceInfo { Name = "ResourceSetNavigationProperty", Url = new Uri("http://service/navLink", UriKind.RelativeOrAbsolute), IsCollection = true };
+                navLink.Count = 10;
+                navLink.InstanceAnnotations.Add(new ODataInstanceAnnotation("custom.StartFeedAnnotation", PrimitiveValue1));
+                odataWriter.WriteStart(navLink);
+
+                odataWriter.WriteEnd();
+                odataWriter.WriteEnd();
+            };
+
+            this.WriteAnnotationsAndValidatePayload(action, navigationSource, format, expectedPayload, request: false, createFeedWriter: false);
+        }
+
         #endregion Writing instance annotations on expanded feeds
 
         #region Write Delta Feed

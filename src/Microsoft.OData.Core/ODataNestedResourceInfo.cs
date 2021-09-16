@@ -8,7 +8,9 @@ namespace Microsoft.OData
 {
     #region Namespaces
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using Microsoft.OData.Evaluation;
     #endregion Namespaces
 
@@ -90,6 +92,24 @@ namespace Microsoft.OData
                 this.associationLinkUrl = value;
                 this.hasAssociationUrl = true;
             }
+        }
+
+        /// <summary>Gets or sets the number of items in the resource set.</summary>
+        /// <returns>The number of items in the resource set.</returns>
+        public long? Count
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Collection of custom instance annotations.
+        /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "We want to allow the same instance annotation collection instance to be shared across ODataLib OM instances.")]
+        public ICollection<ODataInstanceAnnotation> InstanceAnnotations
+        {
+            get { return this.GetInstanceAnnotations(); }
+            set { this.SetInstanceAnnotations(value); }
         }
 
         /// <summary>Gets or sets the context url for this nested resource info.</summary>
