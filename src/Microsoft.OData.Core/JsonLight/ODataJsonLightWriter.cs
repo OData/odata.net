@@ -1010,7 +1010,7 @@ namespace Microsoft.OData.JsonLight
             this.jsonLightResourceSerializer.WriteNavigationLinkMetadata(nestedResourceInfo, this.DuplicatePropertyNameChecker);
 
             // Only write count when the ODataNestedResourceInfo represents a collection.
-            if (!(bool)nestedResourceInfo.IsCollection)
+            if (nestedResourceInfo.IsCollection != null && nestedResourceInfo.IsCollection == true)
             {
                 // Write the inline count if it's available.
                 this.WriteResourceSetCount(nestedResourceInfo.Count, nestedResourceInfo.Name);
