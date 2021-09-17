@@ -43,7 +43,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void ExpandPathShouldNotAllowMultipleNavigations()
         {
             Action createWithTypeSegmentLast = () => new ODataExpandPath(this.navigationSegment, this.navigationSegment);
-            createWithTypeSegmentLast.Throws<ODataException>(ODataErrorStrings.ODataExpandPath_OnlyLastSegmentMustBeNavigationPropertyOrTypeSegment);
+            createWithTypeSegmentLast.Throws<ODataException>(ODataErrorStrings.ODataExpandPath_OnlyLastSegmentCanBeNavigationProperty);
         }
 
         [Fact]

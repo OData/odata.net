@@ -384,7 +384,7 @@ namespace Microsoft.OData.UriParser
                 if (derivedType == null)
                 {
                     // Exception example: The type Fully.Qualified.Namespace.UndefinedType is not defined in the model.
-                    throw new ODataException(Strings.ExpandItemBinder_CannotFindType(firstNonTypeToken.NextToken.Identifier));
+                    throw new ODataException(ODataErrorStrings.ExpandItemBinder_CannotFindType(firstNonTypeToken.NextToken.Identifier));
                 }
 
                 // In this example: $expand=Customer/Fully.Qualified.Namespace.VipCustomer

@@ -62,14 +62,14 @@ namespace Microsoft.OData.UriParser
                 {
                     if (index == this.Count - 1)
                     {
-                        throw new ODataException(ODataErrorStrings.ODataExpandPath_OnlyLastSegmentMustBeNavigationPropertyOrTypeSegment);
+                        throw new ODataException(ODataErrorStrings.ODataExpandPath_LastSegmentMustBeNavigationPropertyOrTypeSegment);
                     }
                 }
                 else if (segment is NavigationPropertySegment)
                 {
                     if (foundNavProp)
                     {
-                        throw new ODataException(ODataErrorStrings.ODataExpandPath_OnlyLastSegmentMustBeNavigationPropertyOrTypeSegment);
+                        throw new ODataException(ODataErrorStrings.ODataExpandPath_OnlyLastSegmentCanBeNavigationProperty);
                     }
 
                     foundNavProp = true;
