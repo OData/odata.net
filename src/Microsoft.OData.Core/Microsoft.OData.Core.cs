@@ -736,7 +736,7 @@ namespace Microsoft.OData
         internal const string PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint = "PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint";
         internal const string ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink = "ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink";
         internal const string ODataExpandPath_OnlyLastSegmentCanBeNavigationProperty = "ODataExpandPath_OnlyLastSegmentCanBeNavigationProperty";
-        internal const string ODataExpandPath_LastSegmentMustBeNavigationPropertyOrTypeSegment = "ODataExpandPath_LastSegmentMustBeNavigationPropertyOrTypeSegment ";
+        internal const string ODataExpandPath_LastSegmentMustBeNavigationPropertyOrTypeSegment = "ODataExpandPath_LastSegmentMustBeNavigationPropertyOrTypeSegment";
         internal const string ODataExpandPath_InvalidExpandPathSegment = "ODataExpandPath_InvalidExpandPathSegment";
         internal const string ODataSelectPath_CannotOnlyHaveTypeSegment = "ODataSelectPath_CannotOnlyHaveTypeSegment";
         internal const string ODataSelectPath_InvalidSelectPathSegmentType = "ODataSelectPath_InvalidSelectPathSegmentType";
