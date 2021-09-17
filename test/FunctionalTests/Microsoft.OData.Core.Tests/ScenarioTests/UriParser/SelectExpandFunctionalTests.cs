@@ -1668,15 +1668,17 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         // $expand=navProp/fully.qualified.type/$ref
-        [Fact]
-        public void ExpandWithNavigationPropRefWithFullyQualifiedTypeWorks()
+        [Theory]
+        [InlineData("MyPeople/Fully.Qualified.Namespace.Employee/$ref")]
+        [InlineData("MyPeople/MainAlias.Employee/$ref")]
+        public void ExpandWithNavigationPropRefWithFullyQualifiedTypeWorks(string query)
         {
             // Arrange
             var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
                 HardCodedTestModel.GetDogType(), HardCodedTestModel.GetDogsSet(),
                 new Dictionary<string, string>()
                 {
-                    {"$expand", "MyPeople/Fully.Qualified.Namespace.Employee/$ref"}
+                    {"$expand", query}
                 });
 
             // Act
@@ -1696,15 +1698,17 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         // $expand=navProp/fully.qualified.type/$count
-        [Fact]
-        public void ExpandWithNavigationPropCountWithFullyQualifiedTypeWorks()
+        [Theory]
+        [InlineData("MyPeople/Fully.Qualified.Namespace.Employee/$count")]
+        [InlineData("MyPeople/MainAlias.Employee/$count")] // With schema alias
+        public void ExpandWithNavigationPropCountWithFullyQualifiedTypeWorks(string query)
         {
             // Arrange
             var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
                 HardCodedTestModel.GetDogType(), HardCodedTestModel.GetDogsSet(),
                 new Dictionary<string, string>()
                 {
-                    {"$expand", "MyPeople/Fully.Qualified.Namespace.Employee/$count"}
+                    {"$expand", query}
                 });
 
             // Act
@@ -1726,15 +1730,17 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         // $expand=navProp/fully.qualified.type/$count($filter=prop)
-        [Fact]
-        public void ExpandWithNavigationPropCountWithFilterAndFullyQualifiedTypeWorks()
+        [Theory]
+        [InlineData("MyPeople/Fully.Qualified.Namespace.Employee/$count($filter=ID eq 1)")]
+        [InlineData("MyPeople/MainAlias.Employee/$count($filter=ID eq 1)")] // With schema alias
+        public void ExpandWithNavigationPropCountWithFilterAndFullyQualifiedTypeWorks(string query)
         {
             // Arrange
             var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
                 HardCodedTestModel.GetDogType(), HardCodedTestModel.GetDogsSet(),
                 new Dictionary<string, string>()
                 {
-                    {"$expand", "MyPeople/Fully.Qualified.Namespace.Employee/$count($filter=ID eq 1)"}
+                    {"$expand", query}
                 });
 
             // Act
@@ -1756,15 +1762,17 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         // $expand=navProp/fully.qualified.type/$count($search=prop)
-        [Fact]
-        public void ExpandWithNavigationPropCountWithSearchAndFullyQualifiedTypeWorks()
+        [Theory]
+        [InlineData("MyPeople/Fully.Qualified.Namespace.Employee/$count($search=blue)")]
+        [InlineData("MyPeople/MainAlias.Employee/$count($search=blue)")] // With schema alias
+        public void ExpandWithNavigationPropCountWithSearchAndFullyQualifiedTypeWorks(string query)
         {
             // Arrange
             var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
                 HardCodedTestModel.GetDogType(), HardCodedTestModel.GetDogsSet(),
                 new Dictionary<string, string>()
                 {
-                    {"$expand", "MyPeople/Fully.Qualified.Namespace.Employee/$count($search=blue)"}
+                    {"$expand", query}
                 });
 
             // Act
