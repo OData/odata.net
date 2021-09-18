@@ -369,23 +369,46 @@ namespace Microsoft.OData.UriParser
                 currentNavProp = ParseComplexTypesBeforeNavigation(currentComplexProp, ref firstNonTypeToken, pathSoFar);
             }
 
+            bool isRef = false;
+            bool isCount = false;
+            bool hasDerivedTypeSegment = false;
+            IEdmType derivedType = null;
+
+            // Handle $expand=Customer/Fully.Qualified.Namespace.VipCustomer
+            // The deriveTypeToken is Fully.Qualified.Namespace.VipCustomer
+            if (firstNonTypeToken.NextToken != null && firstNonTypeToken.NextToken.IsNamespaceOrContainerQualified())
+            {
+                hasDerivedTypeSegment = true;
+                derivedType = UriEdmHelpers.FindTypeFromModel(this.Model, firstNonTypeToken.NextToken.Identifier, this.configuration.Resolver);
+
+                if (derivedType == null)
+                {
+                    // Exception example: The type Fully.Qualified.Namespace.UndefinedType is not defined in the model.
+                    throw new ODataException(ODataErrorStrings.ExpandItemBinder_CannotFindType(firstNonTypeToken.NextToken.Identifier));
+                }
+
+                // In this example: $expand=Customer/Fully.Qualified.Namespace.VipCustomer
+                // We validate that the derived type Fully.Qualified.Namespace.VipCustomer is related to Navigation property Customer.
+                UriEdmHelpers.CheckRelatedTo(currentNavProp.ToEntityType(), derivedType);
+            }
+
             // ensure that we're always dealing with proper V4 syntax
-            if (firstNonTypeToken.NextToken != null && firstNonTypeToken.NextToken.NextToken != null)
+            if (firstNonTypeToken?.NextToken?.NextToken != null && !hasDerivedTypeSegment)
             {
                 throw new ODataException(ODataErrorStrings.ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath);
             }
 
-            bool isRef = false;
-            bool isCount = false;
-
-            if (firstNonTypeToken.NextToken != null)
+            if ((firstNonTypeToken.NextToken != null && !hasDerivedTypeSegment) || 
+                (firstNonTypeToken?.NextToken?.NextToken != null && hasDerivedTypeSegment))
             {
+                PathSegmentToken nextToken = hasDerivedTypeSegment ? firstNonTypeToken.NextToken.NextToken : firstNonTypeToken.NextToken;
+
                 // lastly... make sure that, since we're on a NavProp, that the next token isn't null.
-                if (firstNonTypeToken.NextToken.Identifier == UriQueryConstants.RefSegment)
+                if (nextToken.Identifier == UriQueryConstants.RefSegment)
                 {
                     isRef = true;
                 }
-                else if (firstNonTypeToken.NextToken.Identifier == UriQueryConstants.CountSegment)
+                else if (nextToken.Identifier == UriQueryConstants.CountSegment)
                 {
                     isCount = true;
                 }
@@ -398,7 +421,6 @@ namespace Microsoft.OData.UriParser
             // Add the segments in select and expand to parsed segments
             List<ODataPathSegment> parsedPath = new List<ODataPathSegment>(this.parsedSegments);
             parsedPath.AddRange(pathSoFar);
-
             IEdmNavigationSource targetNavigationSource = null;
             if (this.NavigationSource != null)
             {
@@ -409,6 +431,14 @@ namespace Microsoft.OData.UriParser
             NavigationPropertySegment navSegment = new NavigationPropertySegment(currentNavProp, targetNavigationSource);
             pathSoFar.Add(navSegment);
             parsedPath.Add(navSegment); // Add the navigation property segment to parsed segments for future usage.
+
+            if (hasDerivedTypeSegment)
+            {
+                TypeSegment derivedTypeSegment = new TypeSegment(derivedType, targetNavigationSource);
+                pathSoFar.Add(derivedTypeSegment);
+                parsedPath.Add(derivedTypeSegment);
+            }
+
             ODataExpandPath pathToNavProp = new ODataExpandPath(pathSoFar);
 
             // $apply
