@@ -89,6 +89,20 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
             "\"@Custom.FeedEndAnnotation\":1" +
         "}";
 
+        const string JsonLightExpandedResourceSetPayloadWithCountAndCustomInstanceAnnotations =
+        "{" +
+            "\"@odata.context\":\"http://www.example.com/service.svc/$metadata#TestEntitySet\"," +
+            "\"value\":[" +
+                "{" +
+                    "\"ID\":1," +
+                    "\"ResourceSetNavigationProperty@odata.navigationLink\":\"http://example.com/multiple\"," +
+                    "\"ResourceSetNavigationProperty@odata.count\":10," +
+                    "\"ResourceSetNavigationProperty@custom.MyAnnotation\":\"123\"," +
+                    "\"ResourceSetNavigationProperty@custom.StartFeedAnnotation\":123" +
+                "}" +
+            "]" +
+        "}";
+
         [Fact]
         public void CustomInstanceAnnotationFromFeedAndEntryInJsonLightShouldBeSkippedByTheReaderByDefault()
         {
@@ -115,6 +129,48 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
                         case ODataReaderState.ResourceStart:
                         case ODataReaderState.ResourceEnd:
                             Assert.Empty((odataReader.Item as ODataResource).InstanceAnnotations);
+                            break;
+                    }
+                }
+            }
+        }
+
+        [Fact]
+        public void ShouldBeAbleToReadCountAndCustomInstanceAnnotationsFromExpandedResourceSetsInJsonLight()
+        {
+            var stream = new MemoryStream(Encoding.UTF8.GetBytes(JsonLightExpandedResourceSetPayloadWithCountAndCustomInstanceAnnotations));
+            var readerSettings = new ODataMessageReaderSettings { EnableMessageStreamDisposal = true };
+
+            IODataResponseMessage messageToRead = new InMemoryMessage { StatusCode = 200, Stream = stream };
+            messageToRead.SetHeader("Content-Type", "application/json;odata.streaming=true");
+
+            // Enable reading custom instance annotations.
+            //messageToRead.PreferenceAppliedHeader().AnnotationFilter = "Custom.*";
+            messageToRead.PreferenceAppliedHeader().AnnotationFilter = "*";
+
+            using (var messageReader = new ODataMessageReader(messageToRead, readerSettings, Model))
+            {
+                var odataReader = messageReader.CreateODataResourceSetReader(EntitySet, EntityType);
+                while (odataReader.Read())
+                {
+                    switch (odataReader.State)
+                    {
+                        case ODataReaderState.NestedResourceInfoStart:
+                            break;
+                        case ODataReaderState.NestedResourceInfoEnd:
+                            ODataNestedResourceInfo navigationLink = (ODataNestedResourceInfo)odataReader.Item;
+
+                            if (navigationLink.Name == "ResourceSetNavigationProperty")
+                            {
+                                Assert.Equal("ResourceSetNavigationProperty", navigationLink.Name);
+                                Assert.Equal(10, navigationLink.Count);
+                                Assert.Equal(2, navigationLink.InstanceAnnotations.Count);
+                                Assert.Equal("custom.MyAnnotation", navigationLink.InstanceAnnotations.First().Name);
+                                Assert.Equal("custom.StartFeedAnnotation", navigationLink.InstanceAnnotations.Last().Name);
+                                Assert.Equal(true, navigationLink.IsCollection);
+                                Assert.Equal(new Uri("http://example.com/multiple"), navigationLink.Url);
+                                Assert.Equal(new Uri("http://www.example.com/service.svc/TestEntitySet(1)/ResourceSetNavigationProperty/$ref"), navigationLink.AssociationLinkUrl);
+                            }
                             break;
                     }
                 }
