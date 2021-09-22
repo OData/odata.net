@@ -583,6 +583,26 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
 
             this.WriteAnnotationsAndValidatePayload(action, EntitySet, ODataFormat.Json, expectedPayload, request: false, createFeedWriter: false);
         }
+
+        [Fact]
+        public void WriteCountOnExpandedEntryShouldFail()
+        {
+            Action<ODataWriter> action = (odataWriter) =>
+            {
+                var entryToWrite = new ODataResource { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
+                odataWriter.WriteStart(entryToWrite);
+
+                ODataNestedResourceInfo navLink = new ODataNestedResourceInfo { Name = "ResourceNavigationProperty", IsCollection = false };
+                navLink.Count = 10;
+
+                odataWriter.WriteStart(navLink);
+                odataWriter.WriteEnd();
+                odataWriter.WriteEnd();
+            };
+
+            Action testResponse = () => this.WriteAnnotationsAndValidatePayload(action, EntitySet, ODataFormat.Json, null, request: false, createFeedWriter: false);
+            testResponse.Throws<ODataException>(Strings.ODataWriterCore_QueryCountInODataNestedResourceInfo);
+        }
         #endregion Writing instance annotations on expanded feeds
 
         #region Write Delta Feed

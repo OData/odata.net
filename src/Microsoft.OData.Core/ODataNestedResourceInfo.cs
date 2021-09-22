@@ -36,7 +36,7 @@ namespace Microsoft.OData
         private bool hasAssociationUrl;
 
         /// <summary>The number of items in the resource set.</summary>
-        private long count;
+        private long? count;
 
         /// <summary>Gets or sets a value that indicates whether the nested resource info represents a collection or a resource.</summary>
         /// <returns>true if the nested resource info represents a collection; false if the navigation represents a resource.</returns>
@@ -113,7 +113,7 @@ namespace Microsoft.OData
                     throw new ODataException(Strings.ODataWriterCore_QueryCountInODataNestedResourceInfo);
                 }
 
-                this.count = (long)value;
+                this.count = value;
             }
         }
 
