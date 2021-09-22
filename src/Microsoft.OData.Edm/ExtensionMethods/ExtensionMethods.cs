@@ -79,7 +79,12 @@ namespace Microsoft.OData.Edm
 
             string fullyQualifiedName = model.ReplaceAlias(qualifiedName);
 
-            return FindAcrossModels(model, fullyQualifiedName, findType, RegistrationHelper.CreateAmbiguousTypeBinding);  // search built-in EdmCoreModel and CoreVocabularyModel.
+            // search built-in EdmCoreModel and CoreVocabularyModel.
+            return FindAcrossModels(
+                model,
+                fullyQualifiedName,
+                findType,
+                (first, second) => RegistrationHelper.CreateAmbiguousTypeBinding(first, second));
         }
 
         /// <summary>
@@ -138,7 +143,11 @@ namespace Microsoft.OData.Edm
 
             string fullyQualifiedName = model.ReplaceAlias(qualifiedName);
 
-            return FindAcrossModels(model, fullyQualifiedName, findTerm, RegistrationHelper.CreateAmbiguousTermBinding);
+            return FindAcrossModels(
+                model,
+                fullyQualifiedName,
+                findTerm,
+                (first, second) => RegistrationHelper.CreateAmbiguousTermBinding(first, second));
         }
 
         /// <summary>
@@ -191,7 +200,11 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(qualifiedName, "qualifiedName");
 
-            return FindAcrossModels(model, qualifiedName, findEntityContainer, RegistrationHelper.CreateAmbiguousEntityContainerBinding);
+            return FindAcrossModels(
+                model,
+                qualifiedName,
+                findEntityContainer,
+                (first, second) => RegistrationHelper.CreateAmbiguousEntityContainerBinding(first, second));
         }
 
         /// <summary>
