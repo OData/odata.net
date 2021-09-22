@@ -305,6 +305,17 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The ODataNestedResourceInfo.Count must be null when ODataNestedResourceInfo.IsCollection is false."
+        /// </summary>
+        internal static string ODataWriterCore_QueryCountInODataNestedResourceInfo
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_QueryCountInODataNestedResourceInfo);
+            }
+        }
+
+        /// <summary>
         /// A string like "The NextPageLink must be null for request payloads. Next page links are only supported in responses."
         /// </summary>
         internal static string ODataWriterCore_QueryNextLinkInRequest

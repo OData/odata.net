@@ -35,6 +35,9 @@ namespace Microsoft.OData
         /// <summary>true if the association link has been set by the user or seen on the wire or computed by the metadata builder, false otherwise.</summary>
         private bool hasAssociationUrl;
 
+        /// <summary>The number of items in the resource set.</summary>
+        private long count;
+
         /// <summary>Gets or sets a value that indicates whether the nested resource info represents a collection or a resource.</summary>
         /// <returns>true if the nested resource info represents a collection; false if the navigation represents a resource.</returns>
         public bool? IsCollection
@@ -98,8 +101,20 @@ namespace Microsoft.OData
         /// <returns>The number of items in the resource set.</returns>
         public long? Count
         {
-            get;
-            set;
+            get
+            {
+                return this.count;
+            }
+
+            set
+            {
+                if (IsCollection != null && (bool)IsCollection == false)
+                {
+                    throw new ODataException(Strings.ODataWriterCore_QueryCountInODataNestedResourceInfo);
+                }
+
+                this.count = (long)value;
+            }
         }
 
         /// <summary>

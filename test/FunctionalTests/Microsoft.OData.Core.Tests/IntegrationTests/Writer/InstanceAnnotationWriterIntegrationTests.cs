@@ -567,11 +567,6 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
                 "\"ResourceSetNavigationProperty@custom.StartFeedAnnotation\":123" +
             "}";
 
-            this.WriteAnnotationAndCountAtStartExpandedFeedShouldPass(ODataFormat.Json, expectedPayload, EntitySet);
-        }
-
-        private void WriteAnnotationAndCountAtStartExpandedFeedShouldPass(ODataFormat format, string expectedPayload, IEdmNavigationSource navigationSource)
-        {
             Action<ODataWriter> action = (odataWriter) =>
             {
                 var entryToWrite = new ODataResource { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
@@ -586,9 +581,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
                 odataWriter.WriteEnd();
             };
 
-            this.WriteAnnotationsAndValidatePayload(action, navigationSource, format, expectedPayload, request: false, createFeedWriter: false);
+            this.WriteAnnotationsAndValidatePayload(action, EntitySet, ODataFormat.Json, expectedPayload, request: false, createFeedWriter: false);
         }
-
         #endregion Writing instance annotations on expanded feeds
 
         #region Write Delta Feed
