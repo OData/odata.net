@@ -2733,11 +2733,16 @@ namespace Microsoft.OData.Edm
             if (list != null && mappings != null && idx > 0)
             {
                 var typeAlias = name.Substring(0, idx);
-                var ns = list.FirstOrDefault(n =>
+                // this runs in a hot path, hence the use of for-loop instead of LINQ
+                string ns = null;
+                for (int i = 0; i < list.Count; i++)
                 {
-                    string alias;
-                    return mappings.TryGetValue(n, out alias) && alias == typeAlias;
-                });
+                    if (mappings.TryGetValue(list[i], out string alias) && alias == typeAlias)
+                    {
+                        ns = list[i];
+                        break;
+                    }
+                }
 
                 return (ns != null) ? string.Format(CultureInfo.InvariantCulture, "{0}{1}", ns, name.Substring(idx)) : name;
             }
