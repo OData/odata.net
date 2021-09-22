@@ -22,11 +22,12 @@ namespace SerializationBaselineTests
 
         public Benchmarks()
         {
+            var model = DataModel.GetEdmModel();
             jsonWriter = new JsonExperimentWriter();
-            odataWriter = new ODataExperimentWriter(DataModel.GetEdmModel());
-            odataSyncWriter = new ODataSyncExperimentWriter(DataModel.GetEdmModel());
-            odataCharPoolWriter = new ODataExperimentWriter(DataModel.GetEdmModel(), true);
-            odataSyncCharPoolWriter = new ODataSyncExperimentWriter(DataModel.GetEdmModel(), true);
+            odataWriter = new ODataExperimentWriter(model);
+            odataSyncWriter = new ODataSyncExperimentWriter(model);
+            odataCharPoolWriter = new ODataExperimentWriter(model, true);
+            odataSyncCharPoolWriter = new ODataSyncExperimentWriter(model, true);
         }
 
         [GlobalSetup]
