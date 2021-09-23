@@ -3613,14 +3613,12 @@ namespace Microsoft.OData
                 ODataNestedResourceInfo currentNestedResourceInfo = (ODataNestedResourceInfo)currentScope.Item;
 
                 this.InterceptException(
-                    (thisParam, contentPayloadKindParam) =>
+                    (thisParam, currentNestedResourceInfoParam, contentPayloadKindParam) =>
                     {
-                        // this var is redefined in the lambda to avoid capturing the enclosing context and subsequent memory allocations
-                        ODataNestedResourceInfo localCurrentNestedResourceInfo = (ODataNestedResourceInfo)currentScope.Item;
                         if (thisParam.ParentResourceType != null)
                         {
                             IEdmStructuralProperty structuralProperty = thisParam.ParentResourceType.FindProperty(
-                                localCurrentNestedResourceInfo.Name) as IEdmStructuralProperty;
+                                currentNestedResourceInfoParam.Name) as IEdmStructuralProperty;
                             if (structuralProperty != null)
                             {
                                 thisParam.CurrentScope.ItemType = structuralProperty.Type.Definition.AsElementType();
@@ -3631,7 +3629,7 @@ namespace Microsoft.OData
                             else
                             {
                                 IEdmNavigationProperty navigationProperty = thisParam.WriterValidator.ValidateNestedResourceInfo(
-                                    localCurrentNestedResourceInfo,
+                                    currentNestedResourceInfoParam,
                                     thisParam.ParentResourceType,
                                     contentPayloadKindParam);
                                 if (navigationProperty != null)
@@ -3651,7 +3649,7 @@ namespace Microsoft.OData
                                 }
                             }
                         }
-                    }, contentPayloadKind);
+                    }, currentNestedResourceInfo, contentPayloadKind);
 
                 if (currentScope.State == WriterState.NestedResourceInfoWithContent)
                 {
