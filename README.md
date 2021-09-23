@@ -184,6 +184,12 @@ The easiest way to run the perf benchmarks is to use the [Microsoft.Crank](https
     crank --config benchmarks.yml --scenario UriParser --profile local
     ```
 
+- Run tests that compare serialization performance of ODataWriter and System.Text.Json
+
+    ```text
+    crank --config benchmarks.yml --scenario SerializerBaselines --profile local
+    ```
+
 #### Run benchmarks on remote dedicated agents
 
 The `local` profile is provided for testing purposes, but it's not ideal for running benchmarks.
