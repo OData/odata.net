@@ -47,7 +47,7 @@ jobs:
      - "{{setSourceScript}}"
   serializationBaselines:
     source:
-      project: test/PerformanceTests/SerializationBaselineTets/SerializationBaselineTests.csproj
+      project: test/PerformanceTests/SerializationBaselineTests/SerializationBaselineTests.csproj
     variables:
       filter: "*"
       jobType: default
