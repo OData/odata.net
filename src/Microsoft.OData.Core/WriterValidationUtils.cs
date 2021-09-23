@@ -348,10 +348,18 @@ namespace Microsoft.OData
             }
 
             string fullTypeName = valueType.TypeReference.FullName();
-            if (propertySerializationInfo.MetadataType.DerivedTypeConstraints == null ||
-                propertySerializationInfo.MetadataType.DerivedTypeConstraints.Any(d => d == fullTypeName))
+            if (propertySerializationInfo.MetadataType.DerivedTypeConstraints == null)
             {
                 return;
+            }
+
+            // this runs in a hot path, hence the use of a loop instead of LINQ to avoid allocations
+            foreach (string d in propertySerializationInfo.MetadataType.DerivedTypeConstraints)
+            {
+                if (d == fullTypeName)
+                {
+                    return;
+                }
             }
 
             throw new ODataException(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, "property", propertySerializationInfo.PropertyName));
@@ -493,9 +501,13 @@ namespace Microsoft.OData
             }
 
             string fullTypeName = resourceType.FullTypeName();
-            if (derivedTypeConstraints.Any(c => c == fullTypeName))
+            // this runs in a hot path, hence the use of a loop instead of LINQ to avoid allocations
+            foreach (string c in derivedTypeConstraints)
             {
-                return;
+                if (c == fullTypeName)
+                {
+                    return;
+                }
             }
 
             throw new ODataException(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, itemKind, itemName));
