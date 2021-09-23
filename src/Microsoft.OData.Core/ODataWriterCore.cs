@@ -2197,11 +2197,11 @@ namespace Microsoft.OData
             {
                 ODataNestedResourceInfo currentNestedResourceInfo = (ODataNestedResourceInfo)currentScope.Item;
                 this.InterceptException(
-                    (thisParam, contentPayloadKindParam) =>
+                    (thisParam, currentNestedResourceInfoParam, contentPayloadKindParam) =>
                     {
                         if (thisParam.ParentResourceType != null)
                         {
-                            IEdmStructuralProperty structuralProperty = thisParam.ParentResourceType.FindProperty(currentNestedResourceInfo.Name) as IEdmStructuralProperty;
+                            IEdmStructuralProperty structuralProperty = thisParam.ParentResourceType.FindProperty(currentNestedResourceInfoParam.Name) as IEdmStructuralProperty;
                             if (structuralProperty != null)
                             {
                                 thisParam.CurrentScope.ItemType = structuralProperty.Type.Definition.AsElementType();
@@ -2212,7 +2212,7 @@ namespace Microsoft.OData
                             else
                             {
                                 IEdmNavigationProperty navigationProperty =
-                                     thisParam.WriterValidator.ValidateNestedResourceInfo(currentNestedResourceInfo, thisParam.ParentResourceType, contentPayloadKindParam);
+                                     thisParam.WriterValidator.ValidateNestedResourceInfo(currentNestedResourceInfoParam, thisParam.ParentResourceType, contentPayloadKindParam);
                                 if (navigationProperty != null)
                                 {
                                     thisParam.CurrentScope.ResourceType = navigationProperty.ToEntityType();
@@ -2228,7 +2228,7 @@ namespace Microsoft.OData
                                 }
                             }
                         }
-                    }, contentPayloadKind);
+                    }, currentNestedResourceInfo, contentPayloadKind);
 
                 if (currentScope.State == WriterState.NestedResourceInfoWithContent)
                 {
@@ -2404,6 +2404,36 @@ namespace Microsoft.OData
             try
             {
                 action(this, arg0);
+            }
+            catch
+            {
+                if (!IsErrorState(this.State))
+                {
+                    this.EnterScope(WriterState.Error, this.CurrentScope.Item);
+                }
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Catch any exception thrown by the action passed in; in the exception case move the writer into
+        /// state Error and then rethrow the exception.
+        /// </summary>
+        /// <typeparam name="TArg0">The delegate first argument type.</typeparam>
+        /// <typeparam name="TArg1">The delegate second argument type.</typeparam>
+        /// <param name="action">The action to execute.</param>
+        /// <param name="arg0">The argument value provided to the action.</param>
+        /// <param name="arg1">The argument value provided to the action.</param>
+        /// <remarks>
+        /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
+        /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
+        /// </remarks>
+        private void InterceptException<TArg0, TArg1>(Action<ODataWriterCore, TArg0, TArg1> action, TArg0 arg0, TArg1 arg1)
+        {
+            try
+            {
+                action(this, arg0, arg1);
             }
             catch
             {
