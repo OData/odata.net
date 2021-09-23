@@ -3615,10 +3615,12 @@ namespace Microsoft.OData
                 this.InterceptException(
                     (thisParam, contentPayloadKindParam) =>
                     {
+                        // this var is redefined in the lambda to avoid capturing the enclosing context and subsequent memory allocations
+                        ODataNestedResourceInfo localCurrentNestedResourceInfo = (ODataNestedResourceInfo)currentScope.Item;
                         if (thisParam.ParentResourceType != null)
                         {
                             IEdmStructuralProperty structuralProperty = thisParam.ParentResourceType.FindProperty(
-                                currentNestedResourceInfo.Name) as IEdmStructuralProperty;
+                                localCurrentNestedResourceInfo.Name) as IEdmStructuralProperty;
                             if (structuralProperty != null)
                             {
                                 thisParam.CurrentScope.ItemType = structuralProperty.Type.Definition.AsElementType();
@@ -3629,7 +3631,7 @@ namespace Microsoft.OData
                             else
                             {
                                 IEdmNavigationProperty navigationProperty = thisParam.WriterValidator.ValidateNestedResourceInfo(
-                                    currentNestedResourceInfo,
+                                    localCurrentNestedResourceInfo,
                                     thisParam.ParentResourceType,
                                     contentPayloadKindParam);
                                 if (navigationProperty != null)
