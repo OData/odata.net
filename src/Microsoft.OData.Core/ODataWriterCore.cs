@@ -3613,12 +3613,12 @@ namespace Microsoft.OData
                 ODataNestedResourceInfo currentNestedResourceInfo = (ODataNestedResourceInfo)currentScope.Item;
 
                 this.InterceptException(
-                    (thisParam, contentPayloadKindParam) =>
+                    (thisParam, currentNestedResourceInfoParam, contentPayloadKindParam) =>
                     {
                         if (thisParam.ParentResourceType != null)
                         {
                             IEdmStructuralProperty structuralProperty = thisParam.ParentResourceType.FindProperty(
-                                currentNestedResourceInfo.Name) as IEdmStructuralProperty;
+                                currentNestedResourceInfoParam.Name) as IEdmStructuralProperty;
                             if (structuralProperty != null)
                             {
                                 thisParam.CurrentScope.ItemType = structuralProperty.Type.Definition.AsElementType();
@@ -3629,7 +3629,7 @@ namespace Microsoft.OData
                             else
                             {
                                 IEdmNavigationProperty navigationProperty = thisParam.WriterValidator.ValidateNestedResourceInfo(
-                                    currentNestedResourceInfo,
+                                    currentNestedResourceInfoParam,
                                     thisParam.ParentResourceType,
                                     contentPayloadKindParam);
                                 if (navigationProperty != null)
@@ -3649,7 +3649,7 @@ namespace Microsoft.OData
                                 }
                             }
                         }
-                    }, contentPayloadKind);
+                    }, currentNestedResourceInfo, contentPayloadKind);
 
                 if (currentScope.State == WriterState.NestedResourceInfoWithContent)
                 {

@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.13.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
+    <ProjectReference Include="..\..\..\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
+  </ItemGroup>
+
+</Project>
