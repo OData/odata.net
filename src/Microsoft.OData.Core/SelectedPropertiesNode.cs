@@ -322,7 +322,7 @@ namespace Microsoft.OData
                 // try to find a child with a type segment before it that matches the current type.
                 // Note: the result of this aggregation will be either empty or a found child node.
                 return GetSelectePropertiesForTypeSegmentsNavigationProperties(this.GetMatchingTypeSegments(structuredType), structuredType, navigationPropertyName)
-                    .Aggregate(child, CombineNodes);
+                    .Aggregate(child, (left, right) => CombineNodes(left, right));
             }
 
             // $select=* will include Orders, but none of its properties
