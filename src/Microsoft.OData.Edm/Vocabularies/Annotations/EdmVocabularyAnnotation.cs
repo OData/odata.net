@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+
 namespace Microsoft.OData.Edm.Vocabularies
 {
     /// <summary>
@@ -15,6 +17,42 @@ namespace Microsoft.OData.Edm.Vocabularies
         private readonly IEdmTerm term;
         private readonly string qualifier;
         private readonly IEdmExpression value;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EdmVocabularyAnnotation"/> class without providing a value.
+        /// The given <see cref="IEdmTerm"/> should have the default value and can be translated to <see cref="IEdmExpression"/>.
+        /// </summary>
+        /// <param name="term">Term bound by the annotation.</param>
+        /// <param name="target">Element the annotation applies to.</param>
+        public EdmVocabularyAnnotation(IEdmTerm term, IEdmVocabularyAnnotatable target)
+            : this(term, target, null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EdmVocabularyAnnotation"/> class without providing a value.
+        /// The given <see cref="IEdmTerm"/> should have the default value and can be translated to <see cref="IEdmExpression"/>.
+        /// </summary>
+        /// <param name="term">Term bound by the annotation.</param>
+        /// <param name="target">Element the annotation applies to.</param>
+        /// <param name="qualifier">Qualifier used to discriminate between multiple bindings of the same property or type.</param>
+        /// <remarks>
+        /// The reason to use different order of parameters is because the constructors with three parameters are indistinguishable.
+        /// </remarks>
+        public EdmVocabularyAnnotation(IEdmTerm term, IEdmVocabularyAnnotatable target, string qualifier)
+        {
+            EdmUtil.CheckArgumentNull(term, "term");
+            EdmUtil.CheckArgumentNull(target, "target");
+
+            this.term = term;
+            this.target = target;
+            this.qualifier = qualifier;
+            this.value = term.GetDefaultValueExpression();
+            if (this.value == null)
+            {
+                throw new InvalidOperationException(Strings.EdmVocabularyAnnotations_DidNotFindDefaultValue(term.Type));
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmVocabularyAnnotation"/> class.
@@ -33,7 +71,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// <param name="target">Element the annotation applies to.</param>
         /// <param name="term">Term bound by the annotation.</param>
         /// <param name="qualifier">Qualifier used to discriminate between multiple bindings of the same property or type.</param>
-        /// <param name="value">Expression producing the value of the annotation.</param>
+        /// <param name="value">Expression producing the value of the annotation. It could be null.</param>
         public EdmVocabularyAnnotation(IEdmVocabularyAnnotatable target, IEdmTerm term, string qualifier, IEdmExpression value)
         {
             EdmUtil.CheckArgumentNull(target, "target");

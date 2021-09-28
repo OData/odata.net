@@ -126,6 +126,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         private IEdmExpression ComputeValue()
         {
+            if (this.Annotation.Expression == null)
+            {
+                return Term.GetDefaultValueExpression();
+            }
+
             IEdmTypeReference termType = Term is UnresolvedVocabularyTerm ? null : Term.Type;
             CsdlExpressionBase adjustedExpression = AdjustStringConstantUsingTermType((this.Annotation).Expression, termType);
 

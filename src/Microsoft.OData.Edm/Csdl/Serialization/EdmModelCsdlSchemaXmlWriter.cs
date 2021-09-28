@@ -436,6 +436,17 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
         }
 
+        internal static bool IsMatchTermDefaultValue(IEdmVocabularyAnnotation annotation)
+        {
+            if (annotation.Term.DefaultValue == null)
+            {
+                return false;
+            }
+
+            IEdmExpression termExpression = annotation.Term.GetDefaultValueExpression();
+            return annotation.Value.IsEqual(termExpression);
+        }
+
         internal override void WriteInlineExpression(IEdmExpression expression)
         {
             IEdmPathExpression pathExpression = expression as IEdmPathExpression;
@@ -502,8 +513,10 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_Annotation);
             this.WriteRequiredAttribute(CsdlConstants.Attribute_Term, annotation.Term, this.TermAsXml);
             this.WriteOptionalAttribute(CsdlConstants.Attribute_Qualifier, annotation.Qualifier, EdmValueWriter.StringAsXml);
-            if (isInline)
+
+            if (isInline && !IsMatchTermDefaultValue(annotation))
             {
+                // in xml format, we can (should) skip writing the expression value if it matches the term default value.
                 this.WriteInlineExpression(annotation.Value);
             }
         }
