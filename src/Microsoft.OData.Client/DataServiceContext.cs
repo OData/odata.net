@@ -173,6 +173,9 @@ namespace Microsoft.OData.Client
 
         private ConcurrentDictionary<string, Type> resolveTypesCache = new ConcurrentDictionary<string, Type>();
 
+        /// <summary>Used to specify the option for the form of Uri to be generated for a delete link request.</summary>
+        private DeleteLinkUriOption deleteLinkUriOption;
+
         #region Test hooks for header and payload verification
 
 #pragma warning disable 0169, 0649
@@ -285,6 +288,7 @@ namespace Microsoft.OData.Client
             this.UsingDataServiceCollection = false;
             this.UsePostTunneling = false;
             this.keyComparisonGeneratesFilterQuery = false;
+            this.deleteLinkUriOption = DeleteLinkUriOption.IdQueryParam;
         }
 
         #endregion
@@ -689,6 +693,14 @@ namespace Microsoft.OData.Client
             get { return this.keyComparisonGeneratesFilterQuery; }
             set { this.keyComparisonGeneratesFilterQuery = value; }
         }
+
+        /// <summary>Gets or sets the option for the form of Uri to be generated for a delete link request.</summary>
+        public virtual DeleteLinkUriOption DeleteLinkUriOption
+        {
+            get { return this.deleteLinkUriOption; }
+            set { this.deleteLinkUriOption = value; }
+        }
+
         /// <summary>Gets or sets whether to support undeclared properties.</summary>
         /// <returns>UndeclaredPropertyBehavior.</returns>
         internal UndeclaredPropertyBehavior UndeclaredPropertyBehavior
