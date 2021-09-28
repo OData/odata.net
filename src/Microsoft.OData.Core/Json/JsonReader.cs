@@ -502,7 +502,7 @@ namespace Microsoft.OData.Json
             }
 
             this.readingStream = true;
-            return new ODataTextStreamReader(this.ReadChars);
+            return new ODataTextStreamReader(new Func<char[], int, int, int>(this.ReadChars));
         }
 
         /// <summary>
