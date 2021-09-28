@@ -4,10 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.IO;
-
 namespace Microsoft.OData.Json
 {
+    using System.IO;
+
     /// <summary>
     /// Interface of the factory to create asynchronous JSON readers.
     /// </summary>
