@@ -74,7 +74,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
       <Annotation Term=""Core.Description"" String=""Link relation type, see [IANA Link Relations](http://www.iana.org/assignments/link-relations/link-relations.xhtml)"" />
     </Property>
     <Property Name=""href"" Type=""Edm.String"" Nullable=""false"">
-      <Annotation Term=""Core.IsURL"" Bool=""true"" />
+      <Annotation Term=""Core.IsURL"" />
       <Annotation Term=""Core.Description"" String=""URL of related information"" />
     </Property>
     <Annotation Term=""Core.Description"" String=""The Link term is inspired by the `atom:link` element, see [RFC4287](https://tools.ietf.org/html/rfc4287#section-4.2.7), and the `Link` HTTP header, see [RFC5988](https://tools.ietf.org/html/rfc5988)"" />
@@ -102,7 +102,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   <ComplexType Name=""ExternalExampleValue"" BaseType=""Core.ExampleValue"">
     <Property Name=""ExternalValue"" Type=""Edm.String"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Url reference to the value in its literal format"" />
-      <Annotation Term=""Core.IsURL"" Bool=""true"" />
+      <Annotation Term=""Core.IsURL"" />
     </Property>
   </ComplexType>
   <ComplexType Name=""MessageType"">
@@ -111,7 +111,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     </Property>
     <Property Name=""message"" Type=""Edm.String"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Human-readable, language-dependent message text"" />
-      <Annotation Term=""Core.IsLanguageDependent"" Bool=""true"" />
+      <Annotation Term=""Core.IsLanguageDependent"" />
     </Property>
     <Property Name=""severity"" Type=""Core.MessageSeverity"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Severity of the message"" />
@@ -136,7 +136,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   <ComplexType Name=""ResourceExceptionType"" BaseType=""Core.ExceptionType"">
     <Property Name=""retryLink"" Type=""Edm.String"">
       <Annotation Term=""Core.Description"" String=""A GET request to this URL retries retrieving the problematic instance"" />
-      <Annotation Term=""Core.IsURL"" Bool=""true"" />
+      <Annotation Term=""Core.IsURL"" />
     </Property>
   </ComplexType>
   <ComplexType Name=""DataModificationExceptionType"" BaseType=""Core.ExceptionType"">
@@ -234,11 +234,11 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   </Term>
   <Term Name=""Description"" Type=""Edm.String"">
     <Annotation Term=""Core.Description"" String=""A brief description of a model element"" />
-    <Annotation Term=""Core.IsLanguageDependent"" Bool=""true"" />
+    <Annotation Term=""Core.IsLanguageDependent"" />
   </Term>
   <Term Name=""LongDescription"" Type=""Edm.String"">
     <Annotation Term=""Core.Description"" String=""A lengthy description of a model element"" />
-    <Annotation Term=""Core.IsLanguageDependent"" Bool=""true"" />
+    <Annotation Term=""Core.IsLanguageDependent"" />
   </Term>
   <Term Name=""Links"" Type=""Collection(Core.Link)"" Nullable=""false"">
     <Annotation Term=""Core.Description"" String=""Link to related information"" />
@@ -272,7 +272,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   </Term>
   <Term Name=""ResourcePath"" Type=""Edm.String"" AppliesTo=""EntitySet Singleton ActionImport FunctionImport"">
     <Annotation Term=""Core.Description"" String=""Resource path for entity container child, can be relative to xml:base and the request URL"" />
-    <Annotation Term=""Core.IsUrl"" Bool=""true"" />
+    <Annotation Term=""Core.IsURL"" />
   </Term>
   <Term Name=""DereferenceableIDs"" Type=""Core.Tag"" DefaultValue=""true"" AppliesTo=""EntityContainer"" Nullable=""false"">
     <Annotation Term=""Core.Description"" String=""Entity-ids are URLs that locate the identified entity"" />
@@ -305,11 +305,11 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   </Term>
   <Term Name=""AcceptableMediaTypes"" Type=""Collection(Edm.String)"" AppliesTo=""EntityType Property"" Nullable=""false"">
     <Annotation Term=""Core.Description"" String=""Lists the MIME types acceptable for the annotated entity type marked with HasStream=&quot;true&quot; or the annotated stream property"" />
-    <Annotation Term=""Core.IsMediaType"" Bool=""true"" />
+    <Annotation Term=""Core.IsMediaType"" />
   </Term>
   <Term Name=""MediaType"" Type=""Edm.String"" AppliesTo=""Property"">
     <Annotation Term=""Core.Description"" String=""The media type of a binary resource"" />
-    <Annotation Term=""Core.IsMediaType"" Bool=""true"" />
+    <Annotation Term=""Core.IsMediaType"" />
     <Annotation Term=""Core.RequiresType"" String=""Edm.Binary"" />
   </Term>
   <Term Name=""IsMediaType"" Type=""Core.Tag"" DefaultValue=""true"" AppliesTo=""Property Term"" Nullable=""false"">

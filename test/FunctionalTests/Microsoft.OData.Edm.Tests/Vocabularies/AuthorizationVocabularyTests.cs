@@ -50,7 +50,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   <ComplexType Name=""OpenIDConnect"" BaseType=""Auth.Authorization"">
     <Property Name=""IssuerUrl"" Type=""Edm.String"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Issuer location for the OpenID Provider. Configuration information can be obtained by appending `/.well-known/openid-configuration` to this Url."" />
-      <Annotation Term=""Core.IsURL"" Bool=""true"" />
+      <Annotation Term=""Core.IsURL"" />
     </Property>
   </ComplexType>
   <ComplexType Name=""Http"" BaseType=""Auth.Authorization"">
@@ -67,35 +67,35 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     </Property>
     <Property Name=""RefreshUrl"" Type=""Edm.String"">
       <Annotation Term=""Core.Description"" String=""Refresh Url"" />
-      <Annotation Term=""Core.IsURL"" Bool=""true"" />
+      <Annotation Term=""Core.IsURL"" />
     </Property>
   </ComplexType>
   <ComplexType Name=""OAuth2ClientCredentials"" BaseType=""Auth.OAuthAuthorization"">
     <Property Name=""TokenUrl"" Type=""Edm.String"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Token Url"" />
-      <Annotation Term=""Core.IsURL"" Bool=""true"" />
+      <Annotation Term=""Core.IsURL"" />
     </Property>
   </ComplexType>
   <ComplexType Name=""OAuth2Implicit"" BaseType=""Auth.OAuthAuthorization"">
     <Property Name=""AuthorizationUrl"" Type=""Edm.String"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Authorization URL"" />
-      <Annotation Term=""Core.IsURL"" Bool=""true"" />
+      <Annotation Term=""Core.IsURL"" />
     </Property>
   </ComplexType>
   <ComplexType Name=""OAuth2Password"" BaseType=""Auth.OAuthAuthorization"">
     <Property Name=""TokenUrl"" Type=""Edm.String"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Token Url"" />
-      <Annotation Term=""Core.IsURL"" Bool=""true"" />
+      <Annotation Term=""Core.IsURL"" />
     </Property>
   </ComplexType>
   <ComplexType Name=""OAuth2AuthCode"" BaseType=""Auth.OAuthAuthorization"">
     <Property Name=""AuthorizationUrl"" Type=""Edm.String"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Authorization URL"" />
-      <Annotation Term=""Core.IsURL"" Bool=""true"" />
+      <Annotation Term=""Core.IsURL"" />
     </Property>
     <Property Name=""TokenUrl"" Type=""Edm.String"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Token Url"" />
-      <Annotation Term=""Core.IsURL"" Bool=""true"" />
+      <Annotation Term=""Core.IsURL"" />
     </Property>
   </ComplexType>
   <ComplexType Name=""AuthorizationScope"">
