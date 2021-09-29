@@ -109,14 +109,22 @@ namespace Microsoft.OData
             bool ignoreFilter = false,
             string propertyName = null)
         {
-            HashSet<string> instanceAnnotationNames = new HashSet<string>(StringComparer.Ordinal);
-            // this method runs in a hot path and is called with a List most of the time,
+            // this method runs in a hot path hence the optimizations
+            
+            HashSet<string> instanceAnnotationNames = null;
+            
+            // this method is called with a List most of the time
             // foreach against a List does not allocate the enumerator to the heap,
             // but foreach against an IEnumerable does
             if (instanceAnnotations is List<ODataInstanceAnnotation> instanceAnnotationsList)
             {
                 foreach (var annotation in instanceAnnotationsList)
                 {
+                    if (instanceAnnotationNames == null)
+                    {
+                        instanceAnnotationNames = new HashSet<string>(StringComparer.Ordinal);
+                    }
+
                     if (!instanceAnnotationNames.Add(annotation.Name))
                     {
                         throw new ODataException(ODataErrorStrings.JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection(annotation.Name));
@@ -134,6 +142,11 @@ namespace Microsoft.OData
             {
                 foreach (var annotation in instanceAnnotations)
                 {
+                    if (instanceAnnotationNames == null)
+                    {
+                        instanceAnnotationNames = new HashSet<string>(StringComparer.Ordinal);
+                    }
+
                     if (!instanceAnnotationNames.Add(annotation.Name))
                     {
                         throw new ODataException(ODataErrorStrings.JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection(annotation.Name));
