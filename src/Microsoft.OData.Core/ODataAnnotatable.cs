@@ -25,7 +25,7 @@ namespace Microsoft.OData
 #if ORCAS
         [NonSerialized]
 #endif
-        private ICollection<ODataInstanceAnnotation> instanceAnnotations = new Collection<ODataInstanceAnnotation>();
+        private ICollection<ODataInstanceAnnotation> instanceAnnotations = new List<ODataInstanceAnnotation>();
 
         /// <summary>
         /// The annotation for storing @odata.type.

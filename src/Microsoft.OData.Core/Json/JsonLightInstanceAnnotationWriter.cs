@@ -92,19 +92,85 @@ namespace Microsoft.OData
             Debug.Assert(instanceAnnotations != null, "instanceAnnotations should not be null if we called this");
             Debug.Assert(tracker != null, "tracker should not be null if we called this");
 
-            HashSet<string> instanceAnnotationNames = new HashSet<string>(StringComparer.Ordinal);
-            foreach (var annotation in instanceAnnotations)
-            {
-                if (!instanceAnnotationNames.Add(annotation.Name))
-                {
-                    throw new ODataException(ODataErrorStrings.JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection(annotation.Name));
-                }
+            WriteInstanceAnnotationsInternal(instanceAnnotations, tracker, ignoreFilter, propertyName);
+        }
 
-                if (!tracker.IsAnnotationWritten(annotation.Name)
-                    && (!ODataAnnotationNames.IsODataAnnotationName(annotation.Name) || ODataAnnotationNames.IsUnknownODataAnnotationName(annotation.Name)))
+        /// <summary>
+        /// Writes all the instance annotations specified in <paramref name="instanceAnnotations"/>
+        /// </summary>
+        /// <param name="instanceAnnotations">Collection of instance annotations to write</param>
+        /// <param name="tracker">The tracker that tracks if instance annotations are written</param>
+        /// <param name="instanceAnnotationNames">The set of nam</param>
+        /// <param name="ignoreFilter"></param>
+        /// <param name="propertyName"></param>
+        private void WriteInstanceAnnotationsInternal(
+            IEnumerable<ODataInstanceAnnotation> instanceAnnotations,
+            InstanceAnnotationWriteTracker tracker,
+            bool ignoreFilter = false,
+            string propertyName = null)
+        {
+            HashSet<string> instanceAnnotationNames = new HashSet<string>(StringComparer.Ordinal);
+            // this method runs in a hot path and is called with a List most of the time,
+            // foreach against a List does not allocate the enumerator to the heap,
+            // but foreach against an IEnumerable does
+            if (instanceAnnotations is List<ODataInstanceAnnotation> instanceAnnotationsList)
+            {
+                foreach (var annotation in instanceAnnotationsList)
                 {
-                    this.WriteInstanceAnnotation(annotation, ignoreFilter, propertyName);
-                    tracker.MarkAnnotationWritten(annotation.Name);
+                    if (!instanceAnnotationNames.Add(annotation.Name))
+                    {
+                        throw new ODataException(ODataErrorStrings.JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection(annotation.Name));
+                    }
+
+                    if (!tracker.IsAnnotationWritten(annotation.Name)
+                        && (!ODataAnnotationNames.IsODataAnnotationName(annotation.Name) || ODataAnnotationNames.IsUnknownODataAnnotationName(annotation.Name)))
+                    {
+                        this.WriteInstanceAnnotation(annotation, ignoreFilter, propertyName);
+                        tracker.MarkAnnotationWritten(annotation.Name);
+                    }
+                }
+            }
+            else
+            {
+                foreach (var annotation in instanceAnnotations)
+                {
+                    if (!instanceAnnotationNames.Add(annotation.Name))
+                    {
+                        throw new ODataException(ODataErrorStrings.JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection(annotation.Name));
+                    }
+
+                    if (!tracker.IsAnnotationWritten(annotation.Name)
+                        && (!ODataAnnotationNames.IsODataAnnotationName(annotation.Name) || ODataAnnotationNames.IsUnknownODataAnnotationName(annotation.Name)))
+                    {
+                        this.WriteInstanceAnnotation(annotation, ignoreFilter, propertyName);
+                        tracker.MarkAnnotationWritten(annotation.Name);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Write all the instance annotations specified in <paramref name="instanceAnnotations"/> for the
+        /// undecalared property called <paramref name="propertyName"/>
+        /// </summary>
+        /// <param name="instanceAnnotations">The collection of instance annotations</param>
+        /// <param name="propertyName">The name of the property the instance annotations apply to</param>
+        private void WriteInstanceAnnotationsForUndeclaredProperty(IEnumerable<ODataInstanceAnnotation> instanceAnnotations, string propertyName)
+        {
+            // write undeclared property's all annotations
+            // optimize the foreach when instanceAnnotations is a List
+            if (instanceAnnotations is List<ODataInstanceAnnotation> instanceAnnotationsList)
+            {
+                foreach (var annotation in instanceAnnotationsList)
+                {
+                    this.WriteInstanceAnnotation(annotation, true, propertyName);
+                }
+            }
+            else
+            {
+                foreach (var annotation in instanceAnnotations)
+                {
+                    this.WriteInstanceAnnotation(annotation, true, propertyName);
                 }
             }
         }
@@ -124,10 +190,7 @@ namespace Microsoft.OData
             if (isUndeclaredProperty)
             {
                 // write undeclared property's all annotations
-                foreach (var annotation in instanceAnnotations)
-                {
-                    this.WriteInstanceAnnotation(annotation, true, propertyName);
-                }
+                WriteInstanceAnnotationsForUndeclaredProperty(instanceAnnotations, propertyName);
             }
             else
             {
