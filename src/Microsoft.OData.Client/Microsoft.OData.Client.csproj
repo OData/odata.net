@@ -160,5 +160,14 @@
       <LastGenOutput>Microsoft.OData.Client.cs</LastGenOutput>
     </None>
   </ItemGroup>
+  
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection">
+      <Version>5.0.2</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Http">
+      <Version>5.0.0</Version>
+    </PackageReference>
+  </ItemGroup>
 
 </Project>

@@ -447,7 +447,7 @@ namespace Microsoft.OData.Client
                 }
             }
 
-            var clientRequestMessageArgs = new DataServiceClientRequestMessageArgs(requestMessageArgs.Method, requestMessageArgs.RequestUri, this.UseDefaultCredentials, this.UsePostTunneling, headersDictionary);
+            var clientRequestMessageArgs = new DataServiceClientRequestMessageArgs(requestMessageArgs.Method, requestMessageArgs.RequestUri, this.UseDefaultCredentials, this.UsePostTunneling, headersDictionary, this.Context.HttpClient);
             DataServiceClientRequestMessage clientRequestMessage;
             if (this.Configurations.RequestPipeline.OnMessageCreating != null)
             {

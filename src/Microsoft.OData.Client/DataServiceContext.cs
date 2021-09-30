@@ -22,6 +22,7 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Linq.Expressions;
     using System.Net;
+    using System.Net.Http;
     using System.Reflection;
     using System.Threading;
     using System.Threading.Tasks;
@@ -70,7 +71,7 @@ namespace Microsoft.OData.Client
     /// The <see cref="Microsoft.OData.Client.DataServiceContext" /> represents the runtime context of the data service.
     /// </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506", Justification = "Central class of the API, likely to have many cross-references")]
-    public class DataServiceContext
+    public class DataServiceContext : IDisposable
     {
         /// <summary>Same version as <see cref="maxProtocolVersion"/> but stored as instance of <see cref="Version"/> for easy comparisons.</summary>
         internal Version MaxProtocolVersionAsVersion;
@@ -168,6 +169,13 @@ namespace Microsoft.OData.Client
         /// <summary>Whether a Where clause that compares only the key property, will generate a $filter query option.</summary>
         private bool keyComparisonGeneratesFilterQuery;
 
+        /// <summary>
+        /// The HttpClient instance to use for requests
+        /// </summary>
+        private HttpClient httpClient;
+        private bool shouldDisposeClient;
+        private bool disposed;
+
         /// <summary>A factory class to use in selecting the the request message transport mode implementation </summary>
         private IDataServiceRequestMessageFactory requestMessageFactory = new DataServiceRequestMessageFactory();
 
@@ -237,6 +245,24 @@ namespace Microsoft.OData.Client
         {
         }
 
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceContext" /> class with the specified <paramref name="serviceRoot" /> and a <paramref name="clientFunc"/> that returns an instance of HttpClient.</summary>
+        /// <param name="serviceRoot">An absolute URI that identifies the root of a data service.</param>
+        /// <param name="httpClient">An instance of HttpClient</param>
+        /// <exception cref="System.ArgumentNullException">When the <paramref name="serviceRoot" /> is null.</exception>
+        /// <exception cref="System.ArgumentException">If the <paramref name="serviceRoot" /> is not an absolute URI -or-If the <paramref name="serviceRoot" /> is a well formed URI without a query or query fragment.</exception>
+        /// <remarks>
+        /// The library expects the Uri to point to the root of a data service,
+        /// but does not issue a request to validate it does indeed identify the root of a service.
+        /// If the Uri does not identify the root of the service, the behavior of the client library is undefined.
+        /// A Uri provided with a trailing slash is equivalent to one without such a trailing character.
+        /// With Silverlight, the <paramref name="serviceRoot"/> can be a relative Uri
+        /// that will be combined with System.Windows.Browser.HtmlPage.Document.DocumentUri.
+        /// </remarks>
+        public DataServiceContext(Uri serviceRoot, HttpClient httpClient)
+            : this(serviceRoot, ODataProtocolVersion.V4, ClientEdmModelCache.GetModel(ODataProtocolVersion.V4), httpClient)
+        {
+        }
+
         /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceContext" /> class with the specified <paramref name="serviceRoot" /> and targeting the specific <paramref name="maxProtocolVersion" />.</summary>
         /// <param name="serviceRoot">An absolute URI that identifies the root of a data service.</param>
         /// <param name="maxProtocolVersion">A <see cref="Microsoft.OData.Client.ODataProtocolVersion" /> value that is the maximum protocol version that the client understands.</param>
@@ -249,7 +275,24 @@ namespace Microsoft.OData.Client
         /// that will be combined with System.Windows.Browser.HtmlPage.Document.DocumentUri.
         /// </remarks>
         public DataServiceContext(Uri serviceRoot, ODataProtocolVersion maxProtocolVersion)
-            : this(serviceRoot, maxProtocolVersion, ClientEdmModelCache.GetModel(maxProtocolVersion))
+            : this(serviceRoot, maxProtocolVersion, ClientEdmModelCache.GetModel(maxProtocolVersion), null)
+        {
+        }
+
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceContext" /> class with the specified <paramref name="serviceRoot" /> and targeting the specific <paramref name="maxProtocolVersion" /> and a Func <paramref name="clientFunc"/> that returns an instance of HttpClient.</summary>
+        /// <param name="serviceRoot">An absolute URI that identifies the root of a data service.</param>
+        /// <param name="maxProtocolVersion">A <see cref="Microsoft.OData.Client.ODataProtocolVersion" /> value that is the maximum protocol version that the client understands.</param>
+        /// <param name="httpClient">An instance of HttpClient</param>
+        /// <remarks>
+        /// The library expects the Uri to point to the root of a data service,
+        /// but does not issue a request to validate it does indeed identify the root of a service.
+        /// If the Uri does not identify the root of the service, the behavior of the client library is undefined.
+        /// A Uri provided with a trailing slash is equivalent to one without such a trailing character.
+        /// With Silverlight, the <paramref name="serviceRoot"/> can be a relative Uri
+        /// that will be combined with System.Windows.Browser.HtmlPage.Document.DocumentUri.
+        /// </remarks>
+        public DataServiceContext(Uri serviceRoot, ODataProtocolVersion maxProtocolVersion, HttpClient httpClient)
+            : this(serviceRoot, maxProtocolVersion, ClientEdmModelCache.GetModel(maxProtocolVersion), httpClient)
         {
         }
 
@@ -265,12 +308,13 @@ namespace Microsoft.OData.Client
         /// </param>
         /// <param name="maxProtocolVersion">max protocol version that the client understands.</param>
         /// <param name="model">The client edm model to use. Provided for testability.</param>
+        /// <param name="httpClient">An instance of HttpClient</param>
         /// <exception cref="ArgumentOutOfRangeException">If the <paramref name="maxProtocolVersion"/> is not a valid value.</exception>
         /// <remarks>
         /// With Silverlight, the <paramref name="serviceRoot"/> can be a relative Uri
         /// that will be combined with System.Windows.Browser.HtmlPage.Document.DocumentUri.
         /// </remarks>
-        internal DataServiceContext(Uri serviceRoot, ODataProtocolVersion maxProtocolVersion, ClientEdmModel model)
+        internal DataServiceContext(Uri serviceRoot, ODataProtocolVersion maxProtocolVersion, ClientEdmModel model, HttpClient httpClient)
         {
             Debug.Assert(model != null, "model != null");
             this.model = model;
@@ -289,6 +333,15 @@ namespace Microsoft.OData.Client
             this.UsePostTunneling = false;
             this.keyComparisonGeneratesFilterQuery = false;
             this.deleteLinkUriOption = DeleteLinkUriOption.IdQueryParam;
+            this.httpClient = httpClient;
+            if (this.httpClient != null)
+            {
+                this.shouldDisposeClient = false;
+            }
+            else
+            {
+                this.shouldDisposeClient = true;
+            }
         }
 
         #endregion
@@ -672,6 +725,33 @@ namespace Microsoft.OData.Client
             set
             {
                 this.entityTracker = value;
+            }
+        }
+
+        /// <summary>
+        /// Returns the instance of HttpClient to use for making requests.
+        /// </summary>
+        public virtual HttpClient HttpClient
+        {
+            get
+            {
+                if (this.httpClient != null)
+                {
+                    if (!shouldDisposeClient)
+                    {
+                        shouldDisposeClient = false;
+                    }
+
+                    return this.httpClient;
+                }
+                else
+                {
+                    HttpClientHandler handler = new HttpClientHandler();
+                    this.httpClient = new HttpClient(handler, disposeHandler: true);
+                    shouldDisposeClient = true;
+                   // this.httpClient.BaseAddress = null;
+                    return this.httpClient;
+                }
             }
         }
 
@@ -4103,6 +4183,31 @@ namespace Microsoft.OData.Client
 
                 return cache;
             }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+                    if (shouldDisposeClient)
+                    {
+                        if (this.httpClient != null)
+                        {
+                            this.httpClient.Dispose();
+                        }
+                    }
+                }
+            }
+
+            disposed = true;
         }
     }
 }

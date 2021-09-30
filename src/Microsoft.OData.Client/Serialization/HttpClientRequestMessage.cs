@@ -14,6 +14,7 @@ namespace Microsoft.OData.Client
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
+    using System.Reflection;
     using System.Threading.Tasks;
     using Microsoft.OData;
 
@@ -71,25 +72,45 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Constructor for HttpClientRequestMessage.
         /// Initializes the <see cref="HttpClientRequestMessage"/> class.
-        /// The args.ActualMethod is the actual method. In post tunneling situations method will be POST instead of the specified verb method.
-        /// The args.method is the specified verb method
         /// </summary>
-        /// </summary>
-        public HttpClientRequestMessage(DataServiceClientRequestMessageArgs args) 
+        public HttpClientRequestMessage(DataServiceClientRequestMessageArgs args)
             : base(args.ActualMethod)
         {
             _messageStream = new MemoryStream();
-            _handler = new HttpClientHandler();
-            _client = new HttpClient(_handler, disposeHandler: true);
-            _contentHeaderValueCache = new Dictionary<string, string>();
-            _effectiveHttpMethod = args.Method;
-            _requestUrl = args.RequestUri;
-            _requestMessage = new HttpRequestMessage(new HttpMethod(this.ActualMethod), _requestUrl);
-
-            // Now set the headers.
-            foreach (KeyValuePair<string, string> keyValue in args.Headers)
+            _client = args.HttpClient;
+            try
             {
-                this.SetHeader(keyValue.Key, keyValue.Value);
+                if (_client == null)
+                {
+                    _handler = new HttpClientHandler();
+                    _client = new HttpClient(_handler, disposeHandler: true);
+                }
+                else
+                {
+                    try {
+                        _handler = _client.GetType().BaseType.GetField("handler", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(_client) as HttpClientHandler;
+                    } catch(NullReferenceException ex)
+                    {
+                        _handler = (HttpClientHandler)(_client.GetType().BaseType.GetField("_handler", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(_client) as HttpMessageHandler);
+                    }
+                    
+                }
+
+                _contentHeaderValueCache = new Dictionary<string, string>();
+                _effectiveHttpMethod = args.Method;
+                _requestUrl = args.RequestUri;
+                _requestMessage = new HttpRequestMessage(new HttpMethod(this.ActualMethod), _requestUrl);
+
+                // Now set the headers.
+                foreach (KeyValuePair<string, string> keyValue in args.Headers)
+                {
+                    this.SetHeader(keyValue.Key, keyValue.Value);
+                }
+            }
+            catch (NullReferenceException ex)
+            {
+                _messageStream.Dispose();
+                throw ex;
             }
         }
 

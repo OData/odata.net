@@ -10,6 +10,7 @@ namespace Microsoft.OData.Client
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Net.Http;
 
     /// <summary>
     /// Arguments for creating an instance of DataServiceClientRequestMessage.
@@ -47,6 +48,35 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="DataServiceClientRequestMessageArgs"/> class.
+        /// </summary>
+        /// <param name="method">Method of the request.</param>
+        /// <param name="requestUri">The Request Uri.</param>
+        /// <param name="useDefaultCredentials">True if the default credentials need to be sent with the request. Otherwise false.</param>
+        /// <param name="usePostTunneling">True if the request message must use POST verb for the request and pass the actual verb in X-HTTP-Method header, otherwise false.</param>
+        /// <param name="headers">The set of headers for the request.</param>
+        /// <param name="client">The HttpClient Instance for the request</param>
+        public DataServiceClientRequestMessageArgs(string method, Uri requestUri, bool useDefaultCredentials, bool usePostTunneling, IDictionary<string, string> headers, HttpClient client)
+        {
+            Debug.Assert(method != null, "method cannot be null");
+            Debug.Assert(requestUri != null, "requestUri cannot be null");
+            Debug.Assert(headers != null, "headers cannot be null");
+
+            this.Headers = headers;
+            this.Method = method;
+            this.RequestUri = requestUri;
+            this.UsePostTunneling = usePostTunneling;
+            this.UseDefaultCredentials = useDefaultCredentials;
+            this.HttpClient = client;
+
+            this.actualMethod = this.Method;
+            if (this.UsePostTunneling && this.Headers.ContainsKey(XmlConstants.HttpXMethod))
+            {
+                this.actualMethod = XmlConstants.HttpMethodPost;
+            }
+        }
+
+        /// <summary>
         /// Gets the method.
         /// </summary>
         public string Method { get; private set; }
@@ -75,6 +105,14 @@ namespace Microsoft.OData.Client
             {
                 return this.actualMethod;
             }
+        }
+
+        /// <summary>
+        /// Gets the httpclient instance for requests
+        /// </summary>
+        public HttpClient HttpClient
+        {
+            get;
         }
 
         /// <summary>
