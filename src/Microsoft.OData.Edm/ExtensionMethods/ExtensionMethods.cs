@@ -1160,7 +1160,7 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(model, "model");
 
             // it doesn't matter what value we store, so long as it's not null
-            model.SetAnnotationValue(model, EdmConstants.InternalUri, CsdlConstants.IsImmutable, new object);
+            model.SetAnnotationValue(model, EdmConstants.InternalUri, CsdlConstants.IsImmutable, new object());
         }
 
         /// <summary>
