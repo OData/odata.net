@@ -270,7 +270,9 @@ namespace Microsoft.OData.Edm
 
             if (isImmutable)
             {
-                cache.AddVocabularyAnnotations(element, result);
+                List<IEdmVocabularyAnnotation> cachedAnnotations = result.ToList();
+                cache.AddVocabularyAnnotations(element, cachedAnnotations);
+                return cachedAnnotations;
             }
 
             return result;
