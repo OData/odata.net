@@ -250,10 +250,27 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(element, "element");
 
+            VocabularyAnnotationCache cache = null;
+            bool isImmutable = model.IsImmutable();
+
+            if (isImmutable)
+            {
+                cache = model.GetVocabularyAnnotationCache();
+                if (cache.TryGetVocabularyAnnotations(element, out IEnumerable<IEdmVocabularyAnnotation> annotations))
+                {
+                    return annotations;
+                }
+            }
+
             IEnumerable<IEdmVocabularyAnnotation> result = model.FindVocabularyAnnotationsIncludingInheritedAnnotations(element);
             foreach (IEdmModel referencedModel in model.ReferencedModels)
             {
                 result = result.Concat(referencedModel.FindVocabularyAnnotationsIncludingInheritedAnnotations(element));
+            }
+
+            if (isImmutable)
+            {
+                cache.AddVocabularyAnnotations(element, result);
             }
 
             return result;
@@ -1129,6 +1146,56 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(converter, "converter");
 
             model.SetPrimitiveValueConverter(typeDefinition.Definition, converter);
+        }
+
+        /// <summary>
+        /// Marks the model as immutable. This may enable optimizations
+        /// that assume the model does not get modified. It is the responsibility
+        /// of the caller to ensure that the underlying EDM model is not modified after calling
+        /// this method.
+        /// </summary>
+        /// <param name="model"></param>
+        public static void MarkAsImmutable(this IEdmModel model)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+
+            // it doesn't matter what value we store, so long as it's not null
+            model.SetAnnotationValue(model, EdmConstants.InternalUri, CsdlConstants.IsImmutable, new object);
+        }
+
+        /// <summary>
+        /// Checks whether or not the model has been marked as immutable,
+        /// signifying that it does not change. The model is marked as
+        /// immutable by calling <see cref="MarkAsImmutable(IEdmModel)"/>
+        /// </summary>
+        /// <param name="model">The model involved</param>
+        /// <returns>Whether or not the model has been marked as immutable</returns>
+        public static bool IsImmutable(this IEdmModel model)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+
+            object value = model.GetAnnotationValue(model, EdmConstants.InternalUri, CsdlConstants.IsImmutable);
+            return value != null;
+        }
+
+        /// <summary>
+        /// Gets the cache used to store and retrieve vocabulary annotations
+        /// of elements in this model.
+        /// </summary>
+        /// <param name="model">The model for which to retrieve the cache</param>
+        /// <returns>The vocabulary annotations cache for the model</returns>
+        private static VocabularyAnnotationCache GetVocabularyAnnotationCache(this IEdmModel model)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+
+            VocabularyAnnotationCache cache = model.GetAnnotationValue<VocabularyAnnotationCache>(model);
+            if (cache == null)
+            {
+                cache = new VocabularyAnnotationCache();
+                model.SetAnnotationValue<VocabularyAnnotationCache>(model, cache);
+            }
+
+            return cache;
         }
 
         #endregion
