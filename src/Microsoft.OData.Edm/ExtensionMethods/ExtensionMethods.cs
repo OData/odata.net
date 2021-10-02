@@ -312,9 +312,10 @@ namespace Microsoft.OData.Edm
 
             List<T> result = null;
 
-            foreach (T annotation in model.FindVocabularyAnnotations(element).OfType<T>())
+            // this loop runs in a hot, we avoid using OfType<T>() to avoid the extra allocations of OfTypeIterator
+            foreach (IEdmVocabularyAnnotation item in model.FindVocabularyAnnotations(element))
             {
-                if (annotation.Term == term && (qualifier == null || qualifier == annotation.Qualifier))
+                if (item is T annotation && annotation.Term == term && (qualifier == null || qualifier == annotation.Qualifier))
                 {
                     if (result == null)
                     {
@@ -366,12 +367,16 @@ namespace Microsoft.OData.Edm
 
             if (EdmUtil.TryGetNamespaceNameFromQualifiedName(termName, out namespaceName, out name))
             {
-                foreach (T annotation in model.FindVocabularyAnnotations(element).OfType<T>())
+                // this loop runs in a hot, we avoid using OfType<T>() to avoid the extra allocations of OfTypeIterator
+                foreach (IEdmVocabularyAnnotation item in model.FindVocabularyAnnotations(element))
                 {
-                    IEdmTerm annotationTerm = annotation.Term;
-                    if (annotationTerm.Namespace == namespaceName && annotationTerm.Name == name && (qualifier == null || qualifier == annotation.Qualifier))
+                    if (item is T annotation)
                     {
-                        yield return annotation;
+                        IEdmTerm annotationTerm = annotation.Term;
+                        if (annotationTerm.Namespace == namespaceName && annotationTerm.Name == name && (qualifier == null || qualifier == annotation.Qualifier))
+                        {
+                            yield return annotation;
+                        }
                     }
                 }
             }
