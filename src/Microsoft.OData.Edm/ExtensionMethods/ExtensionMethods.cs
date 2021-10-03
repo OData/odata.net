@@ -1191,7 +1191,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="model">The model for which to retrieve the cache</param>
         /// <returns>The vocabulary annotations cache for the model</returns>
-        private static VocabularyAnnotationCache GetVocabularyAnnotationCache(this IEdmModel model)
+        internal static VocabularyAnnotationCache GetVocabularyAnnotationCache(this IEdmModel model)
         {
             EdmUtil.CheckArgumentNull(model, "model");
 
