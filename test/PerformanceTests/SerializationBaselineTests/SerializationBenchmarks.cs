@@ -101,6 +101,14 @@ namespace SerializationBaselineTests
         {
             tempFile = Path.GetTempFileName();
             fileStream = new FileStream(tempFile, FileMode.Create);
+
+            // for some reason the InitWriters() iteration setup is not
+            // being called for the file benchmarks. Not sure why.
+            // For now, manually call it if it has not been called
+            if (jsonWriter == null)
+            {
+                InitWriters();
+            }
         }
 
         [IterationCleanup(Targets = new[] {
@@ -147,6 +155,7 @@ namespace SerializationBaselineTests
 
         private void WriteToFile(IExperimentWriter writer)
         {
+            System.Console.WriteLine("WRITE TO FILE, writer is null {0}, fileStrem is null {1}, data null {2}",  writer == null, fileStream == null, data == null);
             writer.WriteCustomers(data, fileStream).Wait();
             fileStream.Close();
         }
