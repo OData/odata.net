@@ -16,11 +16,23 @@ namespace Microsoft.OData.Edm
         private readonly ConcurrentDictionary<IEdmVocabularyAnnotatable, IEnumerable<IEdmVocabularyAnnotation>> annotationsCache =
             new ConcurrentDictionary<IEdmVocabularyAnnotatable, IEnumerable<IEdmVocabularyAnnotation>>();
 
+        /// <summary>
+        /// Adds vocabulary annotations for the specified <paramref name="element"/> to the cache.
+        /// </summary>
+        /// <param name="element">The element for which to cache annotations.</param>
+        /// <param name="annotations">The vocabulary annotations to cache</param>
         public void AddVocabularyAnnotations(IEdmVocabularyAnnotatable element, IEnumerable<IEdmVocabularyAnnotation> annotations)
         {
             annotationsCache[element] = annotations;
         }
         
+        /// <summary>
+        /// Retrieves vocabulary annotations for the specified <paramref name="element"/> from the
+        /// cache if they exist in the cache.
+        /// </summary>
+        /// <param name="element">The element for which to retrieve the annotations.</param>
+        /// <param name="annotations">The vocabulary annotations retrieved from the cache.</param>
+        /// <returns>True if the element's annotations were found in the cache, false otherwise.</returns>
         public bool TryGetVocabularyAnnotations(IEdmVocabularyAnnotatable element, out IEnumerable<IEdmVocabularyAnnotation> annotations)
         {
             return annotationsCache.TryGetValue(element, out annotations);
