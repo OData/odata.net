@@ -8,6 +8,7 @@ namespace SerializationBaselineTests
 {
     [MemoryDiagnoser]
     [GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByCategory)]
+    [CategoriesColumn]
     public class SerializationBenchmarks
     {
         IExperimentWriter jsonWriter;
