@@ -367,7 +367,8 @@ namespace Microsoft.OData.Edm
 
             if (EdmUtil.TryGetNamespaceNameFromQualifiedName(termName, out namespaceName, out name))
             {
-                // this loop runs in a hot, we avoid using OfType<T>() to avoid the extra allocations of OfTypeIterator
+                // this loop runs in a hot path, we avoid using OfType<T>() to avoid the extra allocations of OfTypeIterator
+
                 foreach (IEdmVocabularyAnnotation item in model.FindVocabularyAnnotations(element))
                 {
                     if (item is T annotation)
