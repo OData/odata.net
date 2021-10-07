@@ -1162,7 +1162,7 @@ namespace Microsoft.OData.Edm
         /// of the caller to ensure that the underlying EDM model is not modified after calling
         /// this method.
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="model">The model involved</param>
         public static void MarkAsImmutable(this IEdmModel model)
         {
             EdmUtil.CheckArgumentNull(model, "model");

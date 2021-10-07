@@ -23,7 +23,9 @@ namespace Microsoft.OData.Edm
         /// <param name="annotations">The vocabulary annotations to cache</param>
         public void AddVocabularyAnnotations(IEdmVocabularyAnnotatable element, IEnumerable<IEdmVocabularyAnnotation> annotations)
         {
-            annotationsCache[element] = annotations;
+            // since the cache is used with immutable models, we don't
+            // bother updating the annotations if the key already exists
+            annotationsCache.TryAdd(element, annotations);
         }
         
         /// <summary>
