@@ -468,7 +468,7 @@ namespace Microsoft.OData.Json
 
             this.tokenStartIndex++;
             this.readingStream = true;
-            return new ODataBinaryStreamReader(this.ReadChars);
+            return new ODataBinaryStreamReader(new Func<char[], int, int, int>(this.ReadChars));
         }
 
         /// <summary>

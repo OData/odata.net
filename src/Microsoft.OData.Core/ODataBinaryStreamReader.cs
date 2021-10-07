@@ -11,6 +11,7 @@ namespace Microsoft.OData
     using System.IO;
     using System.Diagnostics;
     using System.Threading.Tasks;
+    using System.Threading;
 
     #endregion Namespaces
 
@@ -24,6 +25,12 @@ namespace Microsoft.OData
         /// a character array. Returns the actual number of characters read.
         /// </summary>
         private readonly Func<char[], int, int, int> reader;
+
+        /// <summary>
+        /// A function to read a specified number of characters into
+        /// a character array asynchronously. Returns the actual number of characters read.
+        /// </summary>
+        private readonly Func<char[], int, int, Task<int>> asyncReader;
 
         /// <summary>Size of character buffer.</summary>
         /// <remarks>
@@ -50,6 +57,18 @@ namespace Microsoft.OData
             Debug.Assert(reader != null, "reader cannot be null");
 
             this.reader = reader;
+            this.chars = new char[this.charLength];
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="reader">A function from which to read character values asynchronously.</param>
+        internal ODataBinaryStreamReader(Func<char[], int, int, Task<int>> reader)
+        {
+            Debug.Assert(reader != null, "reader cannot be null");
+
+            this.asyncReader = reader;
             this.chars = new char[this.charLength];
         }
 
@@ -96,6 +115,8 @@ namespace Microsoft.OData
 
         public override int Read(byte[] buffer, int offset, int count)
         {
+            AssertSynchronous();
+
             int bytesCopied = 0;
             int bytesRemaining = this.bytes.Length - this.bytesOffset;
 
@@ -110,6 +131,47 @@ namespace Microsoft.OData
                     }
 
                    // chars = chars.Select(c => c == '_' ? '/' : c == '-' ? '+' : c).ToArray();
+                    this.bytes = Convert.FromBase64CharArray(this.chars, 0, charsRead);
+
+                    bytesRemaining = this.bytes.Length;
+                    this.bytesOffset = 0;
+
+                    // If the remaining characters were padding characters then no bytes will be returned
+                    if (bytesRemaining < 1)
+                    {
+                        break;
+                    }
+                }
+
+                buffer[bytesCopied] = this.bytes[this.bytesOffset];
+                bytesCopied++;
+                this.bytesOffset++;
+                bytesRemaining--;
+            }
+
+            return bytesCopied;
+        }
+
+        /// <inheritdoc/>
+        public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        {
+            AssertAsynchronous();
+
+            int bytesCopied = 0;
+            int bytesRemaining = this.bytes.Length - this.bytesOffset;
+
+            while (bytesCopied < count)
+            {
+                if (bytesRemaining == 0)
+                {
+                    int charsRead = await this.asyncReader(this.chars, offset, this.charLength)
+                        .ConfigureAwait(false);
+                    if (charsRead < 1)
+                    {
+                        break;
+                    }
+
+                    // chars = chars.Select(c => c == '_' ? '/' : c == '-' ? '+' : c).ToArray();
                     this.bytes = Convert.FromBase64CharArray(this.chars, 0, charsRead);
 
                     bytesRemaining = this.bytes.Length;
@@ -168,6 +230,26 @@ namespace Microsoft.OData
         public override void Write(byte[] buffer, int offset, int count)
         {
             throw new NotSupportedException();
+        }
+
+        /// <summary>
+        /// Asserts that the stream reader was created for a synchronous operation.
+        /// </summary>
+        [DebuggerStepThrough]
+        [Conditional("DEBUG")]
+        private void AssertSynchronous()
+        {
+            Debug.Assert(this.reader != null, "The method should only be called on a synchronous stream reader.");
+        }
+
+        /// <summary>
+        /// Asserts that the stream reader was created for an asynchronous operation.
+        /// </summary>
+        [DebuggerStepThrough]
+        [Conditional("DEBUG")]
+        private void AssertAsynchronous()
+        {
+            Debug.Assert(this.asyncReader != null, "The method should only be called on an asynchronous stream reader.");
         }
     }
 }
