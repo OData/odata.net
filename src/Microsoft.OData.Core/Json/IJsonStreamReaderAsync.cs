@@ -18,13 +18,15 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Asynchronously creates a Stream for reading a binary value.
         /// </summary>
-        /// <returns>A Stream for reading the binary value.</returns>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains a <see cref="Stream"/> for reading the binary value.</returns>
         Task<Stream> CreateReadStreamAsync();
 
         /// <summary>
         /// Asynchronously creates a TextReader for reading a string value.
         /// </summary>
-        /// <returns>A TextReader for reading the string value.</returns>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains a <see cref="TextReader"/> for reading the string value.</returns>
         Task<TextReader> CreateTextReaderAsync();
     }
 }
