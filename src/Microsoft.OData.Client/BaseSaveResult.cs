@@ -1093,7 +1093,7 @@ namespace Microsoft.OData.Client
         /// <param name="binding">The binding.</param>
         /// <param name="targetResource">The target's entity descriptor.</param>
         /// <returns>The original link uri or one with the target entity key appended.</returns>
-        private static Uri AppendTargetEntityKeyIfNeeded(Uri linkUri, LinkDescriptor binding, EntityDescriptor targetResource)
+        private Uri AppendTargetEntityKeyIfNeeded(Uri linkUri, LinkDescriptor binding, EntityDescriptor targetResource)
         {
             // To delete from a collection, we need to append the key.
             // For example: if the navigation property name is "Purchases" and the resource type is Order with key '1', then this method will generate 'baseuri/Purchases(1)'
@@ -1104,8 +1104,26 @@ namespace Microsoft.OData.Client
 
             Debug.Assert(targetResource != null, "targetResource != null");
             StringBuilder builder = new StringBuilder();
-            builder.Append(UriUtil.UriToString(linkUri));
-            builder.Append(UriHelper.QUESTIONMARK + XmlConstants.HttpQueryStringId + UriHelper.EQUALSSIGN + targetResource.Identity);
+            string uriString = UriUtil.UriToString(linkUri);
+
+            if (this.RequestInfo.Context.DeleteLinkUriOption == DeleteLinkUriOption.RelatedKeyAsSegment)
+            {
+                // Related key segment should appear before /$ref
+                int indexOfLinkSegment = uriString.IndexOf(XmlConstants.UriLinkSegment, StringComparison.Ordinal);
+                builder.Append(indexOfLinkSegment > 0 ? uriString.Substring(0, indexOfLinkSegment - 1) : uriString);
+                this.RequestInfo.Context.UrlKeyDelimiter.AppendKeyExpression(targetResource.EdmValue, builder);
+                if (indexOfLinkSegment > 0)
+                {
+                    builder.Append('/');
+                    builder.Append(XmlConstants.UriLinkSegment);
+                }
+            }
+            else
+            {
+                builder.Append(uriString);
+                builder.Append(UriHelper.QUESTIONMARK + XmlConstants.HttpQueryStringId + UriHelper.EQUALSSIGN + targetResource.Identity);
+            }
+
             return UriUtil.CreateUri(builder.ToString(), UriKind.RelativeOrAbsolute);
         }
 
