@@ -285,7 +285,7 @@ namespace Microsoft.OData
             get
             {
                 Debug.Assert(this.scopeStack.Count > 1);
-                return this.scopeStack.Scopes.Skip(1).First();
+                return this.scopeStack.Parent;
             }
         }
 
@@ -3739,7 +3739,7 @@ namespace Microsoft.OData
             /// <summary>
             /// Use a list to store the scopes instead of a true stack so that parent/grandparent lookups will be fast.
             /// </summary>
-            private readonly Stack<Scope> scopes = new Stack<Scope>();
+            private readonly List<Scope> scopes = new List<Scope>();
 
             /// <summary>
             /// Initializes a new instance of the <see cref="ScopeStack"/> class.
@@ -3767,10 +3767,7 @@ namespace Microsoft.OData
                 get
                 {
                     Debug.Assert(this.scopes.Count > 1, "this.scopes.Count > 1");
-                    Scope current = this.scopes.Pop();
-                    Scope parent = this.scopes.Peek();
-                    this.scopes.Push(current);
-                    return parent;
+                    return this.scopes[this.scopes.Count - 2];
                 }
             }
 
@@ -3782,12 +3779,7 @@ namespace Microsoft.OData
                 get
                 {
                     Debug.Assert(this.scopes.Count > 2, "this.scopes.Count > 2");
-                    Scope current = this.scopes.Pop();
-                    Scope parent = this.scopes.Pop();
-                    Scope parentOfParent = this.scopes.Peek();
-                    this.scopes.Push(parent);
-                    this.scopes.Push(current);
-                    return parentOfParent;
+                    return this.scopes[this.scopes.Count - 3];
                 }
             }
 
@@ -3802,11 +3794,6 @@ namespace Microsoft.OData
                 }
             }
 
-            internal Stack<Scope> Scopes
-            {
-                get { return this.scopes; }
-            }
-
             /// <summary>
             /// Pushes the specified scope onto the stack.
             /// </summary>
@@ -3814,7 +3801,7 @@ namespace Microsoft.OData
             internal void Push(Scope scope)
             {
                 Debug.Assert(scope != null, "scope != null");
-                this.scopes.Push(scope);
+                this.scopes.Add(scope);
             }
 
             /// <summary>
@@ -3824,7 +3811,10 @@ namespace Microsoft.OData
             internal Scope Pop()
             {
                 Debug.Assert(this.scopes.Count > 0, "this.scopes.Count > 0");
-                return this.scopes.Pop();
+                int last = this.scopes.Count - 1;
+                Scope current = this.scopes[last];
+                this.scopes.RemoveAt(last);
+                return current;
             }
 
             /// <summary>
@@ -3834,7 +3824,7 @@ namespace Microsoft.OData
             internal Scope Peek()
             {
                 Debug.Assert(this.scopes.Count > 0, "this.scopes.Count > 0");
-                return this.scopes.Peek();
+                return this.scopes[this.scopes.Count - 1];
             }
         }
 
