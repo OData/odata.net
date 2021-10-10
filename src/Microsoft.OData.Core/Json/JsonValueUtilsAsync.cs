@@ -30,7 +30,7 @@ namespace Microsoft.OData.Json
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="value">The char value to write.</param>
         /// <param name="stringEscapeOption">The ODataStringEscapeOption to use in escaping the string.</param>
-        internal static async Task WriteValueAsync(this TextWriter writer, char value, ODataStringEscapeOption stringEscapeOption)
+        internal static Task WriteValueAsync(this TextWriter writer, char value, ODataStringEscapeOption stringEscapeOption)
         {
             Debug.Assert(writer != null, "writer != null");
 
@@ -39,12 +39,11 @@ namespace Microsoft.OData.Json
                 string escapedString = SpecialCharToEscapedStringMap[value];
                 if (escapedString != null)
                 {
-                    await writer.WriteAsync(escapedString).ConfigureAwait(false);
-                    return;
+	                return writer.WriteAsync(escapedString);
                 }
             }
 
-            await writer.WriteAsync(value).ConfigureAwait(false);
+            return writer.WriteAsync(value);
         }
 
         /// <summary>
@@ -122,27 +121,26 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="value">Double value to be written.</param>
-        internal static async Task WriteValueAsync(this TextWriter writer, double value)
+        internal static Task WriteValueAsync(this TextWriter writer, double value)
         {
             Debug.Assert(writer != null, "writer != null");
 
             if (JsonSharedUtils.IsDoubleValueSerializedAsString(value))
             {
-                await writer.WriteQuotedAsync(value.ToString(ODataNumberFormatInfo)).ConfigureAwait(false);
+	            return writer.WriteQuotedAsync(value.ToString(ODataNumberFormatInfo));
             }
-            else
-            {
-                // double.ToString() supports a max scale of 14,
-                // whereas double.MinValue and double.MaxValue have 16 digits scale. Hence we need
-                // to use XmlConvert in all other cases, except infinity
-                string valueToWrite = XmlConvert.ToString(value);
 
-                await writer.WriteAsync(valueToWrite).ConfigureAwait(false);
-                if (valueToWrite.IndexOfAny(DoubleIndicatingCharacters) < 0)
-                {
-                    await writer.WriteAsync(".0").ConfigureAwait(false);
-                }
+            // double.ToString() supports a max scale of 14,
+            // whereas double.MinValue and double.MaxValue have 16 digits scale. Hence we need
+            // to use XmlConvert in all other cases, except infinity
+            var valueToWrite = XmlConvert.ToString(value);
+
+            if (valueToWrite.IndexOfAny(DoubleIndicatingCharacters) < 0)
+            {
+	            valueToWrite += ".0";
             }
+
+            return writer.WriteAsync(valueToWrite);
         }
 
         /// <summary>
@@ -176,7 +174,7 @@ namespace Microsoft.OData.Json
         /// <param name="value">DateTimeOffset value to be written.</param>
         /// <param name="dateTimeFormat">The format to write out the DateTime value in.</param>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "Microsoft.OData.Json.JsonValueUtils.WriteQuotedAsync(System.IO.TextWriter,System.String)", Justification = "Constant defined by the JSON spec.")]
-        internal static async Task WriteValueAsync(this TextWriter writer, DateTimeOffset value, ODataJsonDateTimeFormat dateTimeFormat)
+        internal static Task WriteValueAsync(this TextWriter writer, DateTimeOffset value, ODataJsonDateTimeFormat dateTimeFormat)
         {
             Debug.Assert(writer != null, "writer != null");
 
@@ -192,10 +190,8 @@ namespace Microsoft.OData.Json
                         //
                         // offset = 4DIGIT
                         string textValue = XmlConvert.ToString(value);
-                        await writer.WriteQuotedAsync(textValue).ConfigureAwait(false);
+                        return writer.WriteQuotedAsync(textValue);
                     }
-
-                    break;
 
                 case ODataJsonDateTimeFormat.ODataDateTime:
                     {
@@ -210,11 +206,11 @@ namespace Microsoft.OData.Json
                         // ticks = *DIGIT
                         // offset = 4DIGIT
                         string textValue = FormatDateTimeAsJsonTicksString(value);
-                        await writer.WriteQuotedAsync(textValue).ConfigureAwait(false);
+                        return writer.WriteQuotedAsync(textValue);
                     }
-
-                    break;
             }
+
+            return TaskUtils.CompletedTask;
         }
 
         /// <summary>
@@ -321,7 +317,7 @@ namespace Microsoft.OData.Json
             }
             else
             {
-                await writer.WriteAsync(JsonConstants.QuoteCharacter).ConfigureAwait(false);
+	            await writer.WriteAsync(JsonConstants.QuoteCharacter).ConfigureAwait(false);
                 await writer.WriteBinaryStringAsync(value, buffer, arrayPool).ConfigureAwait(false);
                 await writer.WriteAsync(JsonConstants.QuoteCharacter).ConfigureAwait(false);
             }
@@ -451,7 +447,7 @@ namespace Microsoft.OData.Json
         /// <param name="stringEscapeOption">The string escape option.</param>
         /// <param name="buffer">Char buffer to use for streaming data.</param>
         /// <param name="bufferPool">Character buffer pool.</param>
-        internal static async Task WriteEscapedCharArrayAsync(
+        internal static Task WriteEscapedCharArrayAsync(
             this TextWriter writer,
             char[] inputArray,
             int inputArrayOffset, 
@@ -468,8 +464,10 @@ namespace Microsoft.OData.Json
             // write remaining bytes in buffer
             if (bufferIndex > 0)
             {
-                await writer.WriteAsync(buffer.Value, 0, bufferIndex).ConfigureAwait(false);
+	            return writer.WriteAsync(buffer.Value, 0, bufferIndex);
             }
+
+            return TaskUtils.CompletedTask;
         }
 
         /// <summary>

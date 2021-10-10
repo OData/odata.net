@@ -85,7 +85,7 @@ namespace Microsoft.OData
             this.listener = listener;
 
             this.scopeStack.Push(new Scope(WriterState.Start, /*item*/null, navigationSource, resourceType, /*skipWriting*/false, outputContext.MessageWriterSettings.SelectedProperties, odataUri));
-            this.CurrentScope.DerivedTypeConstraints = this.outputContext.Model.GetDerivedTypeConstraints(navigationSource);
+            this.CurrentScope.DerivedTypeConstraints = this.outputContext.Model.GetDerivedTypeConstraints(navigationSource)?.ToList();
         }
 
         /// <summary>
@@ -285,7 +285,7 @@ namespace Microsoft.OData
             get
             {
                 Debug.Assert(this.scopeStack.Count > 1);
-                return this.scopeStack.Scopes.Skip(1).First();
+                return this.scopeStack.Parent;
             }
         }
 
@@ -3183,7 +3183,7 @@ namespace Microsoft.OData
                     throw new ODataException(errorMessage);
             }
 
-            scope.DerivedTypeConstraints = derivedTypeConstraints;
+            scope.DerivedTypeConstraints = derivedTypeConstraints?.ToList();
             this.scopeStack.Push(scope);
         }
 
@@ -3991,7 +3991,7 @@ namespace Microsoft.OData
             }
 
             /// <summary>Gets or sets the derived type constraints for the current scope.</summary>
-            internal IEnumerable<string> DerivedTypeConstraints { get; set; }
+            internal List<string> DerivedTypeConstraints { get; set; }
         }
 
         /// <summary>

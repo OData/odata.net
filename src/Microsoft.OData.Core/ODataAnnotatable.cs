@@ -11,21 +11,22 @@ using System.Diagnostics;
 
 namespace Microsoft.OData
 {
-    /// <summary>
-    /// Base class for all annotatable types in OData library.
-    /// </summary>
+	/// <summary>
+	/// Base class for all annotatable types in OData library.
+	/// </summary>
 #if ORCAS
     [Serializable]
 #endif
-    public abstract class ODataAnnotatable
-    {
-        /// <summary>
-        /// Collection of custom instance annotations.
-        /// </summary>
+	public abstract class ODataAnnotatable
+	{
+		private static readonly ICollection<ODataInstanceAnnotation> Empty = new ODataInstanceAnnotation[0];
+	/// <summary>
+	    /// Collection of custom instance annotations.
+	    /// </summary>
 #if ORCAS
         [NonSerialized]
 #endif
-        private ICollection<ODataInstanceAnnotation> instanceAnnotations = new Collection<ODataInstanceAnnotation>();
+	    private ICollection<ODataInstanceAnnotation> instanceAnnotations;
 
         /// <summary>
         /// The annotation for storing @odata.type.
@@ -38,8 +39,8 @@ namespace Microsoft.OData
         /// <returns>The custom instance annotations.</returns>
         internal ICollection<ODataInstanceAnnotation> GetInstanceAnnotations()
         {
-            Debug.Assert(this.instanceAnnotations != null, "this.instanceAnnotations != null");
-            return this.instanceAnnotations;
+            //Debug.Assert(this.instanceAnnotations != null, "this.instanceAnnotations != null");
+            return this.instanceAnnotations ?? Empty;
         }
 
         /// <summary>

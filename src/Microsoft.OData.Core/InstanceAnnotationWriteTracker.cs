@@ -18,15 +18,7 @@ namespace Microsoft.OData
         /// Maintains the write status for each annotation using its key.
         /// If a key exists in the list then it is considered written.
         /// </summary>
-        private readonly HashSet<string> writeStatus;
-
-        /// <summary>
-        /// Creates a new <see cref="InstanceAnnotationWriteTracker"/> to hold write status for instance annotations.
-        /// </summary>
-        public InstanceAnnotationWriteTracker()
-        {
-            this.writeStatus = new HashSet<string>(StringComparer.Ordinal);
-        }
+        private readonly Lazy<HashSet<string>> writeStatus = new Lazy<HashSet<string>>(() => new HashSet<string>(StringComparer.Ordinal));
 
         /// <summary>
         /// Check if an annotation is already written.
@@ -35,7 +27,7 @@ namespace Microsoft.OData
         /// <param name="key">The key of the element to check if its written.</param>
         public bool IsAnnotationWritten(string key)
         {
-            return this.writeStatus.Contains(key);
+            return this.writeStatus.Value.Contains(key);
         }
 
         /// <summary>
@@ -45,7 +37,7 @@ namespace Microsoft.OData
         /// <param name="key">The key of the element to mark as written.</param>
         public bool MarkAnnotationWritten(string key)
         {
-            return this.writeStatus.Add(key);
+            return this.writeStatus.Value.Add(key);
         }
     }
 }
