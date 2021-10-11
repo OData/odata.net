@@ -69,6 +69,17 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Get the absolute uri
+        /// </summary>
+        internal string AbsoluteUri
+        {
+            get
+            {
+                return this.inputContext?.MessageReaderSettings?.BaseUri?.AbsoluteUri;
+            }
+        }
+
+        /// <summary>
         /// Creates a new instance of a duplicate property names checker.
         /// </summary>
         /// <returns>The newly created instance of duplicate property names checker.</returns>

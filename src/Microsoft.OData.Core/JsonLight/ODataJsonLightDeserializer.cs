@@ -18,6 +18,7 @@ namespace Microsoft.OData.JsonLight
     using Microsoft.OData;
     using Microsoft.OData.Evaluation;
     using Microsoft.OData.Json;
+    using System.IO;
     #endregion Namespaces
 
     /// <summary>
@@ -239,6 +240,15 @@ namespace Microsoft.OData.JsonLight
                 propertyAndAnnotationCollector,
                 isReadingNestedPayload,
                 allowEmptyPayload);
+
+            //https://github.com/OData/odata.net/issues/2132
+            //Relative URIs for @oData.context are not supported #2132
+            //Concate the absoluteUri with the contextUri, when the contextUri is arelativeUri. 
+            Uri contextUri;
+            if (!Uri.TryCreate(contextUriAnnotationValue, UriKind.Absolute, out contextUri))
+            {
+                contextUriAnnotationValue = Path.Combine(this.AbsoluteUri, contextUriAnnotationValue);
+            }
 
             ODataJsonLightContextUriParseResult parseResult = null;
 
