@@ -119,6 +119,14 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.valueCache.GetValue(this, ComputeValueFunc, null); }
         }
 
+        /// <summary>
+        /// Gets whether the annotation uses a default value
+        /// </summary>
+        internal bool UsesDefault
+        {
+            get { return this.Annotation.Expression == null; }
+        }
+
         protected IEdmTerm ComputeTerm()
         {
             return this.model.FindTerm(this.Annotation.Term) ?? new UnresolvedVocabularyTerm(this.model.ReplaceAlias(this.Annotation.Term));

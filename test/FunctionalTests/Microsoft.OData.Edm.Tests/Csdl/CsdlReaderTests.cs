@@ -515,7 +515,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                      "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
                        "<ComplexType Name=\"Complex\">" +
                          "<Annotation Term=\"NS.MyDefaultBoolTerm1\" />" + // does not specify value
-                         "<Annotation Term=\"NS.MyDefaultBoolTerm2\" />" + // will never write the default value again.
+                         "<Annotation Term=\"NS.MyDefaultBoolTerm2\" Bool=\"true\" />" + // for back compatiable, write the default value again.
                          "<Annotation Term=\"NS.MyDefaultBoolTerm3\" Bool=\"false\" />" + // specifies non-default
                        "</ComplexType>" +
                        "<Term Name=\"MyDefaultBoolTerm1\" Type=\"Edm.Boolean\" DefaultValue=\"true\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +

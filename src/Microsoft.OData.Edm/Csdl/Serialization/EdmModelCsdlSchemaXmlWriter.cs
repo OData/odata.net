@@ -436,15 +436,21 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
         }
 
-        internal static bool IsMatchTermDefaultValue(IEdmVocabularyAnnotation annotation)
+        internal static bool IsUsingDefaultValue(IEdmVocabularyAnnotation annotation)
         {
-            if (annotation.Term.DefaultValue == null)
+            EdmVocabularyAnnotation edmAnnotation = annotation as EdmVocabularyAnnotation;
+            if (edmAnnotation != null)
             {
-                return false;
+                return edmAnnotation.UseDefault;
             }
 
-            IEdmExpression termExpression = annotation.Term.GetDefaultValueExpression();
-            return annotation.Value.IsEqual(termExpression);
+            CsdlSemanticsVocabularyAnnotation csdlAnnotation = annotation as CsdlSemanticsVocabularyAnnotation;
+            if (csdlAnnotation != null)
+            {
+                return csdlAnnotation.UsesDefault;
+            }
+
+            return false;
         }
 
         internal override void WriteInlineExpression(IEdmExpression expression)
@@ -514,7 +520,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.WriteRequiredAttribute(CsdlConstants.Attribute_Term, annotation.Term, this.TermAsXml);
             this.WriteOptionalAttribute(CsdlConstants.Attribute_Qualifier, annotation.Qualifier, EdmValueWriter.StringAsXml);
 
-            if (isInline && !IsMatchTermDefaultValue(annotation))
+            if (isInline && !IsUsingDefaultValue(annotation))
             {
                 // in xml format, we can (should) skip writing the expression value if it matches the term default value.
                 this.WriteInlineExpression(annotation.Value);

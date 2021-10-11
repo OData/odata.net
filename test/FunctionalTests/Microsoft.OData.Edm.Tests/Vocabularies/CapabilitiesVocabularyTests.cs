@@ -69,7 +69,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     </Property>
     <Property Name=""DocumentationUrl"" Type=""Edm.String"">
       <Annotation Term=""Core.Description"" String=""Human readable description of the meaning of the URL Template parameters"" />
-      <Annotation Term=""Core.IsURL"" />
+      <Annotation Term=""Core.IsURL"" Bool=""true"" />
     </Property>
   </ComplexType>
   <ComplexType Name=""ChangeTrackingType"">
@@ -211,7 +211,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     </Property>
     <Property Name=""SupportedFormats"" Type=""Collection(Edm.String)"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Media types of supported formats for $batch"" />
-      <Annotation Term=""Core.IsMediaType"" />
+      <Annotation Term=""Core.IsMediaType"" Bool=""true"" />
       <Annotation Term=""Validation.AllowedValues"">
         <Collection>
           <Record>
@@ -325,11 +325,11 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     </Property>
     <Property Name=""Description"" Type=""Edm.String"">
       <Annotation Term=""Core.Description"" String=""A brief description of the request"" />
-      <Annotation Term=""Core.IsLanguageDependent"" />
+      <Annotation Term=""Core.IsLanguageDependent"" Bool=""true"" />
     </Property>
     <Property Name=""LongDescription"" Type=""Edm.String"">
       <Annotation Term=""Core.Description"" String=""A lengthy description of the request"" />
-      <Annotation Term=""Core.IsLanguageDependent"" />
+      <Annotation Term=""Core.IsLanguageDependent"" Bool=""true"" />
     </Property>
   </ComplexType>
   <ComplexType Name=""PermissionType"">
@@ -402,11 +402,11 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     </Property>
     <Property Name=""Description"" Type=""Edm.String"">
       <Annotation Term=""Core.Description"" String=""A brief description of the request"" />
-      <Annotation Term=""Core.IsLanguageDependent"" />
+      <Annotation Term=""Core.IsLanguageDependent"" Bool=""true"" />
     </Property>
     <Property Name=""LongDescription"" Type=""Edm.String"">
       <Annotation Term=""Core.Description"" String=""A lengthy description of the request"" />
-      <Annotation Term=""Core.IsLanguageDependent"" />
+      <Annotation Term=""Core.IsLanguageDependent"" Bool=""true"" />
     </Property>
   </ComplexType>
   <ComplexType Name=""DeepUpdateSupportType"">
@@ -444,11 +444,11 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     </Property>
     <Property Name=""Description"" Type=""Edm.String"">
       <Annotation Term=""Core.Description"" String=""A brief description of the request"" />
-      <Annotation Term=""Core.IsLanguageDependent"" />
+      <Annotation Term=""Core.IsLanguageDependent"" Bool=""true"" />
     </Property>
     <Property Name=""LongDescription"" Type=""Edm.String"">
       <Annotation Term=""Core.Description"" String=""A lengthy description of the request"" />
-      <Annotation Term=""Core.IsLanguageDependent"" />
+      <Annotation Term=""Core.IsLanguageDependent"" Bool=""true"" />
     </Property>
   </ComplexType>
   <ComplexType Name=""CollectionPropertyRestrictionsType"">
@@ -537,11 +537,11 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     </Property>
     <Property Name=""Description"" Type=""Edm.String"">
       <Annotation Term=""Core.Description"" String=""A brief description of the request"" />
-      <Annotation Term=""Core.IsLanguageDependent"" />
+      <Annotation Term=""Core.IsLanguageDependent"" Bool=""true"" />
     </Property>
     <Property Name=""LongDescription"" Type=""Edm.String"">
       <Annotation Term=""Core.Description"" String=""A lengthy description of the request"" />
-      <Annotation Term=""Core.IsLanguageDependent"" />
+      <Annotation Term=""Core.IsLanguageDependent"" Bool=""true"" />
     </Property>
   </ComplexType>
   <ComplexType Name=""ReadByKeyRestrictionsType"" BaseType=""Capabilities.ReadRestrictionsBase"">
@@ -561,7 +561,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
       <Annotation Term=""Core.Description"" String=""Description of the custom parameter"" />
     </Property>
     <Property Name=""DocumentationURL"" Type=""Edm.String"">
-      <Annotation Term=""Core.IsURL"" />
+      <Annotation Term=""Core.IsURL"" Bool=""true"" />
       <Annotation Term=""Core.Description"" String=""URL of related documentation"" />
     </Property>
     <Property Name=""Required"" Type=""Edm.Boolean"" DefaultValue=""false"" Nullable=""false"">
@@ -648,11 +648,11 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   </Term>
   <Term Name=""SupportedFormats"" Type=""Collection(Edm.String)"" AppliesTo=""EntityContainer"" Nullable=""false"">
     <Annotation Term=""Core.Description"" String=""Media types of supported formats, including format parameters"" />
-    <Annotation Term=""Core.IsMediaType"" />
+    <Annotation Term=""Core.IsMediaType"" Bool=""true"" />
   </Term>
   <Term Name=""SupportedMetadataFormats"" Type=""Collection(Edm.String)"" AppliesTo=""EntityContainer"" Nullable=""false"">
     <Annotation Term=""Core.Description"" String=""Media types of supported formats for $metadata, including format parameters"" />
-    <Annotation Term=""Core.IsMediaType"" />
+    <Annotation Term=""Core.IsMediaType"" Bool=""true"" />
   </Term>
   <Term Name=""AcceptableEncodings"" Type=""Collection(Edm.String)"" AppliesTo=""EntityContainer"" Nullable=""false"">
     <Annotation Term=""Core.Description"" String=""List of acceptable compression methods for ($batch) requests, e.g. gzip"" />

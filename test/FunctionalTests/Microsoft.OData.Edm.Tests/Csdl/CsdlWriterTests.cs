@@ -151,11 +151,11 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                           "<PropertyRef Name=\"Id\" />" +
                         "</Key>" +
                         "<Property Name=\"Id\" Type=\"Edm.Int32\" Nullable=\"false\">" +
-                          "<Annotation Term=\"Org.OData.Core.V1.Computed\" />" +
+                          "<Annotation Term=\"Org.OData.Core.V1.Computed\" Bool=\"true\" />" +
                         "</Property>" +
                         "<Property Name=\"Name\" Type=\"Edm.String\" Nullable=\"false\" />" +
                         "<Property Name=\"UpdatedTime\" Type=\"Edm.Date\" Nullable=\"false\">" +
-                          "<Annotation Term=\"Org.OData.Core.V1.Computed\" />" +
+                          "<Annotation Term=\"Org.OData.Core.V1.Computed\" Bool=\"true\" />" +
                         "</Property>" +
                       "</EntityType>" +
                       "<EntityContainer Name=\"Container\">" +
