@@ -75,7 +75,7 @@ namespace Microsoft.OData
         {
             get
             {
-                return this.inputContext?.MessageReaderSettings?.BaseUri?.AbsoluteUri;
+                return this.inputContext.MessageReaderSettings?.BaseUri?.AbsoluteUri;
             }
         }
 
