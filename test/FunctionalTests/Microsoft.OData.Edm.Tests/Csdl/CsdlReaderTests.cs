@@ -430,7 +430,12 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                    "</edmx:DataServices>" +
                  "</edmx:Edmx>";
             // Parse into CSDL
-            var model = CsdlReader.Parse(XElement.Parse(csdl).CreateReader());
+
+            IEdmModel model;
+            using (XmlReader xr = XElement.Parse(csdl).CreateReader())
+            {
+                model = CsdlReader.Parse(xr);
+            }
             IEdmTerm defaultTerm = model.FindTerm("NS.MyDefaultTerm");
             Assert.Equal("This is a test", defaultTerm.DefaultValue);
             IEdmVocabularyAnnotation[] annotations = model.VocabularyAnnotations.ToArray();
@@ -486,7 +491,11 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                    "</edmx:DataServices>" +
                  "</edmx:Edmx>";
             // Parse into CSDL
-            var model = CsdlReader.Parse(XElement.Parse(csdl).CreateReader());
+            IEdmModel model;
+            using (XmlReader xr = XElement.Parse(csdl).CreateReader())
+            {
+                model = CsdlReader.Parse(xr);
+            }
             IEdmTerm defaultTerm = model.FindTerm("NS.MyDefaultBoolTerm1");
             Assert.True(bool.Parse(defaultTerm.DefaultValue));
             IEdmVocabularyAnnotation[] annotations = model.VocabularyAnnotations.ToArray();
@@ -542,7 +551,11 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                    "</edmx:DataServices>" +
                  "</edmx:Edmx>";
             // Parse into CSDL
-            var model = CsdlReader.Parse(XElement.Parse(csdl).CreateReader());
+            IEdmModel model;
+            using (XmlReader xr = XElement.Parse(csdl).CreateReader())
+            {
+                model = CsdlReader.Parse(xr);
+            }
             // Validate model
             IEnumerable<EdmError> errors;
             bool validated = model.Validate(out errors);
@@ -588,7 +601,11 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                "</edmx:DataServices>" +
              "</edmx:Edmx>";
             // Parse into CSDL
-            var model = CsdlReader.Parse(XElement.Parse(csdl).CreateReader());
+            IEdmModel model;
+            using (XmlReader xr = XElement.Parse(csdl).CreateReader())
+            {
+                model = CsdlReader.Parse(xr);
+            }
             IEdmVocabularyAnnotation[] annotations = model.VocabularyAnnotations.ToArray();
             Assert.Equal(13, annotations.Length);
             for (int i = 0; i < annotations.Length; i++)
@@ -1506,7 +1523,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             string xml = "<?xml version=\"1.0\" encoding=\"utf-16\"?><edmx:Edmx Version=\"" + odataVersion + "\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\"><edmx:DataServices /></edmx:Edmx>";
 
             var stringReader = new StringReader(xml);
-            var xmlReader = System.Xml.XmlReader.Create(stringReader);
+            var xmlReader = System.Xml.XmlReader.Create(stringReader); 
 
             IEdmModel edmModel = null;
             IEnumerable<EdmError> edmErrors;
@@ -1731,10 +1748,9 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 return XmlReader.Create(stringReader);
             };
 
-
             var reader = XmlReader.Create(new StringReader(mainCsdl));
             IEdmModel model = CsdlReader.Parse(reader, getReferencedModelReaderFunc: getReferenceModelReader);
-            
+
             var entitySet = model.FindDeclaredEntitySet("Products");
             var entitySetAnnotations = model.FindVocabularyAnnotations(entitySet);
             Assert.Single(entitySetAnnotations);
@@ -1822,7 +1838,6 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 var stringReader = new StringReader(csdl);
                 return XmlReader.Create(stringReader);
             };
-
 
             var reader = XmlReader.Create(new StringReader(mainCsdl));
             IEdmModel model = CsdlReader.Parse(reader, getReferencedModelReaderFunc: getReferenceModelReader);
