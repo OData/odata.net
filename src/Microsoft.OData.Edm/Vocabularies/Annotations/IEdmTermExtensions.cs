@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.Linq;
 using Microsoft.OData.Edm.Csdl;
 
 namespace Microsoft.OData.Edm.Vocabularies
@@ -13,18 +12,53 @@ namespace Microsoft.OData.Edm.Vocabularies
     /// <summary>
     /// Contains extension methods for <see cref="IEdmTerm"/> interfaces.
     /// </summary>
-    internal static class IEdmTermExtensions
+    public static class IEdmTermExtensions
     {
+        /// <summary>
+        /// Creates <see cref="IEdmVocabularyAnnotation"/> using the <see cref="IEdmTerm"/> and its default value.
+        /// </summary>
+        /// <param name="term">Term bound by the annotation.</param>
+        /// <param name="target">Element the annotation applies to.</param>
+        /// <returns>The <see cref="IEdmVocabularyAnnotation"/> built.</returns>
+        public static IEdmVocabularyAnnotation CreateVocabularyAnnotation(this IEdmTerm term, IEdmVocabularyAnnotatable target)
+        {
+            return term.CreateVocabularyAnnotation(target, null);
+        }
+
+        /// <summary>
+        /// Creates <see cref="IEdmVocabularyAnnotation"/> using the <see cref="IEdmTerm"/> and its default value.
+        /// </summary>
+        /// <param name="term">Term bound by the annotation.</param>
+        /// <param name="target">Element the annotation applies to.</param>
+        /// <param name="qualifier">Qualifier used to discriminate between multiple bindings of the same property or type.</param>
+        /// <returns>The <see cref="IEdmVocabularyAnnotation"/> built.</returns>
+        public static IEdmVocabularyAnnotation CreateVocabularyAnnotation(this IEdmTerm term, IEdmVocabularyAnnotatable target, string qualifier)
+        {
+            EdmUtil.CheckArgumentNull(term, "term");
+            EdmUtil.CheckArgumentNull(target, "target");
+
+            IEdmExpression value = term.GetDefaultValueExpression();
+            if (value == null)
+            {
+                throw new InvalidOperationException(Strings.EdmVocabularyAnnotations_DidNotFindDefaultValue(term.Type));
+            }
+
+            return new EdmVocabularyAnnotation(target, term, qualifier, value)
+            {
+                UseDefault = true
+            };
+        }
+
         /// <summary>
         /// Gets the default value expression for the given <see cref="IEdmTerm"/>.
         /// </summary>
         /// <param name="term">The given term.</param>
         /// <returns>Null or the build Edm value expression.</returns>
-        public static IEdmExpression GetDefaultValueExpression(this IEdmTerm term)
+        internal static IEdmExpression GetDefaultValueExpression(this IEdmTerm term)
         {
             EdmUtil.CheckArgumentNull(term, "term");
 
-            if (term.DefaultValue == null)
+            if (string.IsNullOrEmpty(term.DefaultValue))
             {
                 return null;
             }
@@ -40,7 +74,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// <returns>
         /// An IEdmExpression of type <paramref name="edmType" /> or null if the type is not supported/implemented.
         /// </returns>
-        public static IEdmExpression BuildEdmExpression(IEdmType edmType, string value)
+        internal static IEdmExpression BuildEdmExpression(IEdmType edmType, string value)
         {
             EdmUtil.CheckArgumentNull(edmType, "edmType");
             EdmUtil.CheckArgumentNull(value, "value");
@@ -206,95 +240,6 @@ namespace Microsoft.OData.Edm.Vocabularies
                 default:
                     return new EdmPathExpression(value);
             }
-        }
-
-        public static bool IsEqual(this IEdmExpression left, IEdmExpression right)
-        {
-            if (left == null && right == null)
-            {
-                return true;
-            }
-            else if (left == null || right == null)
-            {
-                return false;
-            }
-
-            // now, we have "left != null and right != null"
-            if (left.ExpressionKind != right.ExpressionKind)
-            {
-                return false;
-            }
-
-            switch (left.ExpressionKind)
-            {
-                case EdmExpressionKind.BinaryConstant:
-                    IEdmBinaryConstantExpression leftBinary = (IEdmBinaryConstantExpression)left;
-                    IEdmBinaryConstantExpression rightBinary = (IEdmBinaryConstantExpression)right;
-                    return leftBinary.Value.SequenceEqual(rightBinary.Value);
-
-                case EdmExpressionKind.BooleanConstant:
-                    IEdmBooleanConstantExpression leftBoolean = (IEdmBooleanConstantExpression)left;
-                    IEdmBooleanConstantExpression rightBoolean = (IEdmBooleanConstantExpression)right;
-                    return leftBoolean.Value == rightBoolean.Value;
-
-                case EdmExpressionKind.DateTimeOffsetConstant:
-                    IEdmDateTimeOffsetConstantExpression leftDateTimeOffset = (IEdmDateTimeOffsetConstantExpression)left;
-                    IEdmDateTimeOffsetConstantExpression rightDateTimeOffset = (IEdmDateTimeOffsetConstantExpression)right;
-                    return leftDateTimeOffset.Value == rightDateTimeOffset.Value;
-
-                case EdmExpressionKind.DecimalConstant:
-                    IEdmDecimalConstantExpression leftDecimal = (IEdmDecimalConstantExpression)left;
-                    IEdmDecimalConstantExpression rightDecimal = (IEdmDecimalConstantExpression)right;
-                    return leftDecimal.Value == rightDecimal.Value;
-
-                case EdmExpressionKind.FloatingConstant:
-                    IEdmFloatingConstantExpression leftFloating = (IEdmFloatingConstantExpression)left;
-                    IEdmFloatingConstantExpression rightFloating = (IEdmFloatingConstantExpression)right;
-                    return leftFloating.Value.Equals(rightFloating.Value);
-
-                case EdmExpressionKind.GuidConstant:
-                    IEdmGuidConstantExpression leftGuid = (IEdmGuidConstantExpression)left;
-                    IEdmGuidConstantExpression rightGuid = (IEdmGuidConstantExpression)right;
-                    return leftGuid.Value == rightGuid.Value;
-
-                case EdmExpressionKind.IntegerConstant:
-                    IEdmIntegerConstantExpression leftInteger = (IEdmIntegerConstantExpression)left;
-                    IEdmIntegerConstantExpression rightInteger = (IEdmIntegerConstantExpression)right;
-                    return leftInteger.Value == rightInteger.Value;
-
-                case EdmExpressionKind.Path:
-                case EdmExpressionKind.PropertyPath:
-                case EdmExpressionKind.NavigationPropertyPath:
-                case EdmExpressionKind.AnnotationPath:
-                    IEdmPathExpression leftPath = (IEdmPathExpression)left;
-                    IEdmPathExpression rightPath = (IEdmPathExpression)right;
-                    return leftPath.Path == rightPath.Path;
-
-                case EdmExpressionKind.StringConstant:
-                    IEdmStringConstantExpression leftString = (IEdmStringConstantExpression)left;
-                    IEdmStringConstantExpression rightString = (IEdmStringConstantExpression)right;
-                    return leftString.Value == rightString.Value;
-
-                case EdmExpressionKind.DurationConstant:
-                    IEdmDurationConstantExpression leftDuration = (IEdmDurationConstantExpression)left;
-                    IEdmDurationConstantExpression rightDuration = (IEdmDurationConstantExpression)right;
-                    return leftDuration.Value == rightDuration.Value;
-
-                case EdmExpressionKind.DateConstant:
-                    IEdmDateConstantExpression leftDate = (IEdmDateConstantExpression)left;
-                    IEdmDateConstantExpression rightDate = (IEdmDateConstantExpression)right;
-                    return leftDate.Value == rightDate.Value;
-
-                case EdmExpressionKind.TimeOfDayConstant:
-                    IEdmTimeOfDayConstantExpression leftTimeOfDay = (IEdmTimeOfDayConstantExpression)left;
-                    IEdmTimeOfDayConstantExpression rightTimeOfDay = (IEdmTimeOfDayConstantExpression)right;
-                    return leftTimeOfDay.Value == rightTimeOfDay.Value;
-
-                default:
-                    break;
-            }
-
-            return false;
         }
     }
 }

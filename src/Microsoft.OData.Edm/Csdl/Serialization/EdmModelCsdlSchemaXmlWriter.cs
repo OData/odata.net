@@ -447,7 +447,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             CsdlSemanticsVocabularyAnnotation csdlAnnotation = annotation as CsdlSemanticsVocabularyAnnotation;
             if (csdlAnnotation != null)
             {
-                return csdlAnnotation.UsesDefault;
+                return csdlAnnotation.UseDefault;
             }
 
             return false;

@@ -2226,16 +2226,16 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             model.AddElements(new IEdmSchemaElement[] { complex, term1, term2, term3 });
 
             // annotation with value
-            EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(complex, term1, new EdmAnnotationPathExpression("abc/efg"));
+            IEdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(complex, term1, new EdmAnnotationPathExpression("abc/efg"));
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.SetVocabularyAnnotation(annotation);
 
             // annotation without value
-            annotation = new EdmVocabularyAnnotation(term2, complex);
+            annotation = term2.CreateVocabularyAnnotation(complex);
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.SetVocabularyAnnotation(annotation);
 
-            annotation = new EdmVocabularyAnnotation(term3, complex);
+            annotation = term3.CreateVocabularyAnnotation(complex);
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.SetVocabularyAnnotation(annotation);
 
@@ -2307,7 +2307,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 EdmTerm term = new EdmTerm("NS", name, EdmCoreModel.Instance.GetPrimitive(kind, false), null, value);
                 model.AddElement(term);
 
-                EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(term, complex);
+                IEdmVocabularyAnnotation annotation = term.CreateVocabularyAnnotation(complex);
                 annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
                 model.SetVocabularyAnnotation(annotation);
                 Assert.NotNull(annotation.Value);
