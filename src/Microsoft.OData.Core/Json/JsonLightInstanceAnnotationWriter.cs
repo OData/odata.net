@@ -330,7 +330,7 @@ namespace Microsoft.OData
         /// <param name="tracker">The tracker to track if instance annotations are written.</param>
         /// <param name="ignoreFilter">Whether to ignore the filter in settings.</param>
         /// <param name="propertyName">The name of the property this instance annotation applies to</param>
-        internal async Task WriteInstanceAnnotationsAsync(
+        internal Task WriteInstanceAnnotationsAsync(
             IEnumerable<ODataInstanceAnnotation> instanceAnnotations,
             InstanceAnnotationWriteTracker tracker,
             bool ignoreFilter = false,
@@ -339,22 +339,77 @@ namespace Microsoft.OData
             Debug.Assert(instanceAnnotations != null, "instanceAnnotations should not be null if we called this");
             Debug.Assert(tracker != null, "tracker should not be null if we called this");
 
-            HashSet<string> instanceAnnotationNames = new HashSet<string>(StringComparer.Ordinal);
-            foreach (ODataInstanceAnnotation annotation in instanceAnnotations)
+            return WriteInsanceAnnotationsInternalAsync(instanceAnnotations, tracker, ignoreFilter, propertyName);
+        }
+
+        /// <summary>
+        /// Asynchronously writes all the instance annotations specified in <paramref name="instanceAnnotations"/>.
+        /// </summary>
+        /// <param name="instanceAnnotations">Collection of instance annotations to write.</param>
+        /// <param name="tracker">The tracker to track if instance annotations are written.</param>
+        /// <param name="ignoreFilter">Whether to ignore the filter in settings.</param>
+        /// <param name="propertyName">The name of the property this instance annotation applies to</param>
+        /// <returns></returns>
+        private async Task WriteInsanceAnnotationsInternalAsync(
+            IEnumerable<ODataInstanceAnnotation> instanceAnnotations,
+            InstanceAnnotationWriteTracker tracker,
+            bool ignoreFilter = false,
+            string propertyName = null)
+        {
+            // this method runs in a hot path hence the optimizations
+
+            HashSet<string> instanceAnnotationNames = null;
+
+            if (instanceAnnotations is List<ODataInstanceAnnotation> instanceAnnotationsList)
             {
-                if (!instanceAnnotationNames.Add(annotation.Name))
+                // optimize foreach when instance annotations is a List to avoid enumerator boxing
+                foreach (ODataInstanceAnnotation annotation in instanceAnnotationsList)
                 {
-                    throw new ODataException(ODataErrorStrings.JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection(annotation.Name));
+
+                    if (instanceAnnotations == null)
+                    {
+                        instanceAnnotationNames = new HashSet<string>(StringComparer.Ordinal);
+                    }
+
+                    if (!instanceAnnotationNames.Add(annotation.Name))
+                    {
+                        throw new ODataException(ODataErrorStrings.JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection(annotation.Name));
+                    }
+
+                    if (!tracker.IsAnnotationWritten(annotation.Name)
+                        && (!ODataAnnotationNames.IsODataAnnotationName(annotation.Name) || ODataAnnotationNames.IsUnknownODataAnnotationName(annotation.Name)))
+                    {
+                        await this.WriteInstanceAnnotationAsync(annotation, ignoreFilter, propertyName)
+                            .ConfigureAwait(false);
+                        tracker.MarkAnnotationWritten(annotation.Name);
+                    }
                 }
 
-                if (!tracker.IsAnnotationWritten(annotation.Name)
-                    && (!ODataAnnotationNames.IsODataAnnotationName(annotation.Name) || ODataAnnotationNames.IsUnknownODataAnnotationName(annotation.Name)))
+            }
+            else
+            {
+                foreach (ODataInstanceAnnotation annotation in instanceAnnotations)
                 {
-                    await this.WriteInstanceAnnotationAsync(annotation, ignoreFilter, propertyName)
-                        .ConfigureAwait(false);
-                    tracker.MarkAnnotationWritten(annotation.Name);
+                    if (instanceAnnotations == null)
+                    {
+                        instanceAnnotationNames = new HashSet<string>(StringComparer.Ordinal);
+                    }
+
+                    if (!instanceAnnotationNames.Add(annotation.Name))
+                    {
+                        throw new ODataException(ODataErrorStrings.JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection(annotation.Name));
+                    }
+
+                    if (!tracker.IsAnnotationWritten(annotation.Name)
+                        && (!ODataAnnotationNames.IsODataAnnotationName(annotation.Name) || ODataAnnotationNames.IsUnknownODataAnnotationName(annotation.Name)))
+                    {
+                        await this.WriteInstanceAnnotationAsync(annotation, ignoreFilter, propertyName)
+                            .ConfigureAwait(false);
+                        tracker.MarkAnnotationWritten(annotation.Name);
+                    }
                 }
             }
+
         }
 
         /// <summary>
@@ -372,7 +427,30 @@ namespace Microsoft.OData
             if (isUndeclaredProperty)
             {
                 // write undeclared property's all annotations
-                foreach (var annotation in instanceAnnotations)
+                await WriteInstanceAnnotationsForUndeclaredPropertyAsync(instanceAnnotations, propertyName)
+                    .ConfigureAwait(false);
+            }
+            else
+            {
+                await this.WriteInstanceAnnotationsAsync(instanceAnnotations, new InstanceAnnotationWriteTracker(), false, propertyName)
+                        .ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously all the instance annotations specified in <paramref name="instanceAnnotations"/> for the
+        /// undecalared property called <paramref name="propertyName"/>
+        /// </summary>
+        /// <param name="instanceAnnotations">The collection of instance annotations</param>
+        /// <param name="propertyName">he name of the property the instance annotations apply to</param>
+        /// <returns></returns>
+        private async Task WriteInstanceAnnotationsForUndeclaredPropertyAsync(IEnumerable<ODataInstanceAnnotation> instanceAnnotations, string propertyName)
+        {
+            // write undeclared property's all annotations
+            // optimize the foreach when instanceAnnotations is a List to avoid enumerator allocations on the heap
+            if (instanceAnnotations is List<ODataInstanceAnnotation> instanceAnnotationsList)
+            {
+                foreach (var annotation in instanceAnnotationsList)
                 {
                     await this.WriteInstanceAnnotationAsync(annotation, true, propertyName)
                         .ConfigureAwait(false);
@@ -380,8 +458,11 @@ namespace Microsoft.OData
             }
             else
             {
-                await this.WriteInstanceAnnotationsAsync(instanceAnnotations, new InstanceAnnotationWriteTracker(), false, propertyName)
+                foreach (var annotation in instanceAnnotations)
+                {
+                    await this.WriteInstanceAnnotationAsync(annotation, true, propertyName)
                         .ConfigureAwait(false);
+                }
             }
         }
 
