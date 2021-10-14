@@ -110,7 +110,8 @@ namespace Microsoft.OData
             string propertyName = null)
         {
             // this method runs in a hot path hence the optimizations
-            
+
+            // initialize to null to avoid instatiating a HashSet if there are no annotations
             HashSet<string> instanceAnnotationNames = null;
             
             // this method is called with a List most of the time
@@ -358,6 +359,7 @@ namespace Microsoft.OData
         {
             // this method runs in a hot path hence the optimizations
 
+            // initialize to null to avoid instatiating a HashSet if there are no annotations
             HashSet<string> instanceAnnotationNames = null;
 
             if (instanceAnnotations is List<ODataInstanceAnnotation> instanceAnnotationsList)
@@ -366,7 +368,7 @@ namespace Microsoft.OData
                 foreach (ODataInstanceAnnotation annotation in instanceAnnotationsList)
                 {
 
-                    if (instanceAnnotations == null)
+                    if (instanceAnnotationNames == null)
                     {
                         instanceAnnotationNames = new HashSet<string>(StringComparer.Ordinal);
                     }
@@ -390,7 +392,7 @@ namespace Microsoft.OData
             {
                 foreach (ODataInstanceAnnotation annotation in instanceAnnotations)
                 {
-                    if (instanceAnnotations == null)
+                    if (instanceAnnotationNames == null)
                     {
                         instanceAnnotationNames = new HashSet<string>(StringComparer.Ordinal);
                     }
