@@ -244,7 +244,7 @@ namespace Microsoft.OData
 			#if NETSTANDARD1_1
             if (MessageStreamWrapper.IsNonDisposingStream(this.stream) || this.stream is AsyncBufferedStream)
 			#else
-            if (MessageStreamWrapper.IsNonDisposingStream(this.stream) || this.stream is BufferedStream)
+            if (MessageStreamWrapper.IsNonDisposingStream(this.stream))
 			#endif
             {
                 // AsyncBufferedStream ignores Dispose
