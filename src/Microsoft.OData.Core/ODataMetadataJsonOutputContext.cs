@@ -30,7 +30,7 @@ namespace Microsoft.OData
         private Utf8JsonWriter jsonWriter;
 
         /// <summary>The asynchronous output stream if we're writing asynchronously.</summary>
-        private AsyncBufferedStream asynchronousOutputStream;
+        private Stream asynchronousOutputStream;
 
         /// <summary>
         /// Constructor.
@@ -55,7 +55,7 @@ namespace Microsoft.OData
                 }
                 else
                 {
-                    this.asynchronousOutputStream = new AsyncBufferedStream(this.messageOutputStream);
+                    this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, 84000);
                     outputStream = this.asynchronousOutputStream;
                 }
 
