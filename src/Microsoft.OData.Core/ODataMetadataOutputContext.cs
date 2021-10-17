@@ -29,7 +29,7 @@ namespace Microsoft.OData
         private XmlWriter xmlWriter;
 
         /// <summary>The asynchronous output stream if we're writing asynchronously.</summary>
-		#if NETSTANDARD1_0
+		#if NETSTANDARD1_1
         private AsyncBufferedStream asynchronousOutputStream;
 		#else
         private Stream asynchronousOutputStream;

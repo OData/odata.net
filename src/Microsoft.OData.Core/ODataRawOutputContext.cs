@@ -31,7 +31,7 @@ namespace Microsoft.OData
         private Stream messageOutputStream;
 
         /// <summary>The asynchronous output stream if we're writing asynchronously.</summary>
-		#if NETSTANDARD1_0
+		#if NETSTANDARD1_1
         private AsyncBufferedStream asynchronousOutputStream;
 		#else
 		private Stream asynchronousOutputStream;
@@ -294,7 +294,7 @@ namespace Microsoft.OData
         {
             if (this.asynchronousOutputStream != null)
             {
-				#if NETSTANDARD1_0
+				#if NETSTANDARD1_1
                 this.asynchronousOutputStream.FlushSync();
 				#else
 				this.asynchronousOutputStream.Flush();
@@ -337,7 +337,7 @@ namespace Microsoft.OData
                     // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitly.
                     if (this.asynchronousOutputStream != null)
                     {
-#if NETSTANDARD1_0
+#if NETSTANDARD1_1
                         this.asynchronousOutputStream.FlushSync();
 						#else
 						this.asynchronousOutputStream.Flush();
