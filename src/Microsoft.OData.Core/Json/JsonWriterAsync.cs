@@ -328,7 +328,7 @@ namespace Microsoft.OData.Json
             if (currentScope.Type == ScopeType.Array)
             {
 	            currentScope.ObjectCount++;
-                if (currentScope.ObjectCount != 0)
+                if (currentScope.ObjectCount > 1)
                 {
 	                return this.writer.WriteAsync(JsonConstants.ArrayElementSeparator);
                 }

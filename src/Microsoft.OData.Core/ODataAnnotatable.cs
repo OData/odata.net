@@ -19,8 +19,7 @@ namespace Microsoft.OData
 #endif
 	public abstract class ODataAnnotatable
 	{
-		private static readonly ICollection<ODataInstanceAnnotation> Empty = new ODataInstanceAnnotation[0];
-	/// <summary>
+		/// <summary>
 	    /// Collection of custom instance annotations.
 	    /// </summary>
 #if ORCAS
@@ -39,8 +38,13 @@ namespace Microsoft.OData
         /// <returns>The custom instance annotations.</returns>
         internal ICollection<ODataInstanceAnnotation> GetInstanceAnnotations()
         {
-            //Debug.Assert(this.instanceAnnotations != null, "this.instanceAnnotations != null");
-            return this.instanceAnnotations ?? Empty;
+	        //Debug.Assert(this.instanceAnnotations != null, "this.instanceAnnotations != null");
+	        if (this.instanceAnnotations == null)
+	        {
+		        this.instanceAnnotations = new List<ODataInstanceAnnotation>();
+	        }
+
+	        return this.instanceAnnotations;
         }
 
         /// <summary>
