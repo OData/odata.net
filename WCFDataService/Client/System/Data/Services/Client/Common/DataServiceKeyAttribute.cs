@@ -28,7 +28,7 @@ namespace System.Data.Services.Common
 
     /// <summary>Denotes the key property or properties of an entity. </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1019:DefineAccessorsForAttributeArguments", Justification = "Accessors are available for processed input.")]
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = false)]
     public sealed class DataServiceKeyAttribute : System.Attribute
     {
         /// <summary>Name of the properties that form the key.</summary>
