@@ -7,6 +7,7 @@
 namespace Microsoft.OData.UriParser
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData.Edm;
@@ -16,7 +17,9 @@ namespace Microsoft.OData.UriParser
     /// </summary>
     public class UnqualifiedODataUriResolver : ODataUriResolver
     {
-         /// <summary>
+        private static readonly ConcurrentDictionary<IEdmModel, ConcurrentDictionary<string, IEnumerable<IEdmSchemaElement>>> schemaElementCache = new ConcurrentDictionary<IEdmModel, ConcurrentDictionary<string, IEnumerable<IEdmSchemaElement>>>();
+
+        /// <summary>
         /// Resolve unbound operations based on name.
         /// </summary>
         /// <param name="model">The model to be used.</param>
@@ -53,21 +56,49 @@ namespace Microsoft.OData.UriParser
                     && operation.Parameters.Any()
                     && operation.HasEquivalentBindingType(bindingType));
         }
-
+               
         private static IEnumerable<T> FindAcrossModels<T>(IEdmModel model, String qualifiedName, bool caseInsensitive) where T : IEdmSchemaElement
         {
-            Func<IEdmModel, IEnumerable<T>> finder = (refModel) =>
-                refModel.SchemaElements.OfType<T>()
-                .Where(e => string.Equals(qualifiedName, e.Name, caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal));
+            IList<T> results = new List<T>();
 
-            IEnumerable<T> results = finder(model);
+            ConcurrentDictionary<string, IEnumerable<IEdmSchemaElement>> nameDict;
+            IEnumerable<IEdmSchemaElement> nameResults;
+
+            if (schemaElementCache.TryGetValue(model, out nameDict) )
+            {
+                if (nameDict.TryGetValue(qualifiedName, out nameResults))
+                {
+                    return nameResults as IList<T>;
+                }                
+            }
+            else
+            {
+                schemaElementCache.TryAdd(model, new ConcurrentDictionary<string, IEnumerable<IEdmSchemaElement>>());
+            }
+            
+            StringComparison strComparison = caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+
+            GetSchemaElements(model, qualifiedName, results, strComparison);
 
             foreach (IEdmModel reference in model.ReferencedModels)
             {
-                results.Concat(finder(reference));
+                GetSchemaElements(reference, qualifiedName, results, strComparison);
             }
 
+            schemaElementCache[model].TryAdd(qualifiedName, results as IEnumerable<IEdmSchemaElement>);
+
             return results;
+        }
+
+        private static void GetSchemaElements<T>(IEdmModel model, string qualifiedName, IList<T> results, StringComparison strComparison) where T : IEdmSchemaElement
+        {
+            foreach (IEdmSchemaElement edmSchemaElement in model.SchemaElements)
+            {
+                if (string.Equals(qualifiedName, edmSchemaElement.Name, strComparison) && edmSchemaElement is T schemaElement)
+                {
+                    results.Add(schemaElement);
+                }
+            }
         }
     }
 }
