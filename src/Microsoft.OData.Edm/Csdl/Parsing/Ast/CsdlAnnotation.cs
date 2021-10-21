@@ -23,6 +23,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
             this.term = term;
         }
 
+        /// <summary>
+        /// Gets the expression, it could be null if the annotation uses the term's default.
+        /// </summary>
         public CsdlExpressionBase Expression
         {
             get { return this.expression; }

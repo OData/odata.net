@@ -1583,7 +1583,7 @@ namespace Microsoft.OData.Edm {
         /// A string like "Unknown Edm version '{0}'."
         /// </summary>
         internal static string Serializer_UnknownEdmVersion(object p0)
-		{
+        {
             return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.Serializer_UnknownEdmVersion, p0);
         }
 
@@ -1591,7 +1591,7 @@ namespace Microsoft.OData.Edm {
         /// A string like "Unknown Edmx version '{0}'."
         /// </summary>
         internal static string Serializer_UnknownEdmxVersion(object p0)
-		{
+        {
             return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.Serializer_UnknownEdmxVersion, p0);
         }
 
@@ -1955,77 +1955,88 @@ namespace Microsoft.OData.Edm {
         /// <summary>
         /// A string like "An unexpected '{0}' value kind was found when parsing the JSON path '{1}'. A '{2}' value kind was expected."
         /// </summary>
-        internal static string CsdlJsonParser_UnexpectedJsonValueKind(object p0, object p1, object p2) {
+        internal static string CsdlJsonParser_UnexpectedJsonValueKind(object p0, object p1, object p2)
+        {
             return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.CsdlJsonParser_UnexpectedJsonValueKind, p0, p1, p2);
         }
 
         /// <summary>
         /// A string like "A member '{0}' is missing when parsing the JSON path '{1}'."
         /// </summary>
-        internal static string CsdlJsonParser_MissingMemberInObject(object p0, object p1) {
+        internal static string CsdlJsonParser_MissingMemberInObject(object p0, object p1)
+        {
             return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.CsdlJsonParser_MissingMemberInObject, p0, p1);
         }
 
         /// <summary>
         /// A string like "A member '{0}' with value type '{1}' is unexpected."
         /// </summary>
-        internal static string CsdlJsonParser_UnexpectedJsonMember(object p0, object p1) {
+        internal static string CsdlJsonParser_UnexpectedJsonMember(object p0, object p1)
+        {
             return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.CsdlJsonParser_UnexpectedJsonMember, p0, p1);
         }
 
         /// <summary>
         /// A string like "Cannot read the value '{0}' at JSON path '{1}' as '{2}' numeric value."
         /// </summary>
-        internal static string CsdlJsonParser_CannotReadValueAsType(object p0, object p1, object p2) {
+        internal static string CsdlJsonParser_CannotReadValueAsType(object p0, object p1, object p2)
+        {
             return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.CsdlJsonParser_CannotReadValueAsType, p0, p1, p2);
         }
 
         /// <summary>
         /// A string like "A schema '{0}' object MUST contain the member '$Kind' with a string value of '{1}'."
         /// </summary>
-        internal static string CsdlJsonParser_MissingKindMember(object p0, object p1) {
+        internal static string CsdlJsonParser_MissingKindMember(object p0, object p1)
+        {
             return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.CsdlJsonParser_MissingKindMember, p0, p1);
         }
 
         /// <summary>
         /// A string like "A property '{0}' is missing when parsing the JSON path '{1}'."
         /// </summary>
-        internal static string CsdlJsonParser_MissingRequiredPropertyInObject(object p0, object p1) {
+        internal static string CsdlJsonParser_MissingRequiredPropertyInObject(object p0, object p1)
+        {
             return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.CsdlJsonParser_MissingRequiredPropertyInObject, p0, p1);
         }
 
         /// <summary>
         /// A string like "Found an unknown value kind '{0}' when parsing the JSON path '{1}'."
         /// </summary>
-        internal static string CsdlJsonParser_UnknownJsonElementValueKind(object p0, object p1) {
+        internal static string CsdlJsonParser_UnknownJsonElementValueKind(object p0, object p1)
+        {
             return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.CsdlJsonParser_UnknownJsonElementValueKind, p0, p1);
         }
 
         /// <summary>
         /// A string like "Cannot parse a JSON number '{0}' when parsing the JSON path '{1}'."
         /// </summary>
-        internal static string CsdlJsonParser_InvalidJsonNumberType(object p0, object p1) {
+        internal static string CsdlJsonParser_InvalidJsonNumberType(object p0, object p1)
+        {
             return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.CsdlJsonParser_InvalidJsonNumberType, p0, p1);
         }
 
         /// <summary>
         /// A string like "A member at JSON path '{0}' is not supported."
         /// </summary>
-        internal static string CsdlJsonParser_UnsupportedJsonMember(object p0) {
+        internal static string CsdlJsonParser_UnsupportedJsonMember(object p0)
+        {
             return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.CsdlJsonParser_UnsupportedJsonMember, p0);
         }
 
         /// <summary>
         /// A string like "The version specified at '{0}' is not valid. It should be a string containing either '4.0' or '4.01'."
         /// </summary>
-        internal static string CsdlJsonParser_InvalidCsdlVersion(object p0) {
+        internal static string CsdlJsonParser_InvalidCsdlVersion(object p0)
+        {
             return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.CsdlJsonParser_InvalidCsdlVersion, p0);
         }
 
         /// <summary>
         /// A string like "The schema object at '{0}' cannot have more than one entity container."
         /// </summary>
-        internal static string CsdlJsonParser_SchemaCannotHaveMoreThanOneEntityContainer(object p0) {
+        internal static string CsdlJsonParser_SchemaCannotHaveMoreThanOneEntityContainer(object p0)
+        {
             return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.CsdlJsonParser_SchemaCannotHaveMoreThanOneEntityContainer, p0);
         }
 
@@ -2592,6 +2603,22 @@ namespace Microsoft.OData.Edm {
         internal static string TimeOfDay_InvalidCompareToTarget(object p0)
         {
             return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.TimeOfDay_InvalidCompareToTarget, p0);
+        }
+
+        /// <summary>
+        /// A string like "Annotation expressions must specify a value or use a term with a specified default value. Cannot find a default value for the given annotation term, '{0}'."
+        /// </summary>
+        internal static string EdmVocabularyAnnotations_DidNotFindDefaultValue(object p0)
+        {
+            return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.EdmVocabularyAnnotations_DidNotFindDefaultValue, p0);
+        }
+
+        /// <summary>
+        /// A string like "Term type '{0}' is not supported for value retrieval."
+        /// </summary>
+        internal static string EdmVocabularyAnnotations_TermTypeNotSupported(object p0)
+        {
+            return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.EdmVocabularyAnnotations_TermTypeNotSupported, p0);
         }
 
     }
