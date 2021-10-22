@@ -17,7 +17,7 @@ namespace Microsoft.OData.UriParser
     /// </summary>
     public class UnqualifiedODataUriResolver : ODataUriResolver
     {
-        private static readonly ConcurrentDictionary<IEdmModel, ConcurrentDictionary<string, IEnumerable<IEdmSchemaElement>>> schemaElementCache = new ConcurrentDictionary<IEdmModel, ConcurrentDictionary<string, IEnumerable<IEdmSchemaElement>>>();
+        private static readonly ConcurrentDictionary<IEdmModel, ConcurrentDictionary<string, IList<IEdmOperation>>> operationCache = new ConcurrentDictionary<IEdmModel, ConcurrentDictionary<string, IList<IEdmOperation>>>();
 
         /// <summary>
         /// Resolve unbound operations based on name.
@@ -32,8 +32,7 @@ namespace Microsoft.OData.UriParser
                 return base.ResolveUnboundOperations(model, identifier);
             }
 
-            return FindAcrossModels<IEdmOperation>(model, identifier, this.EnableCaseInsensitive)
-                    .Where(operation => !operation.IsBound);
+            return FindOperations(model, identifier, this.EnableCaseInsensitive);
         }
 
         /// <summary>
@@ -50,55 +49,55 @@ namespace Microsoft.OData.UriParser
                 return base.ResolveBoundOperations(model, identifier, bindingType);
             }
 
-            return FindAcrossModels<IEdmOperation>(model, identifier, this.EnableCaseInsensitive)
-                .Where(operation =>
-                    operation.IsBound
-                    && operation.Parameters.Any()
-                    && operation.HasEquivalentBindingType(bindingType));
+            return FindOperations(model, identifier, this.EnableCaseInsensitive, true, bindingType);
         }
-               
-        private static IEnumerable<T> FindAcrossModels<T>(IEdmModel model, String qualifiedName, bool caseInsensitive) where T : IEdmSchemaElement
+
+        private static IEnumerable<IEdmOperation> FindOperations(IEdmModel model, string qualifiedName, bool caseInsensitive, bool isBound = false, IEdmType bindingType = null)
         {
-            IList<T> results = new List<T>();
+            IList<IEdmOperation> results;
+            ConcurrentDictionary<string, IList<IEdmOperation>> nameDict;
 
-            ConcurrentDictionary<string, IEnumerable<IEdmSchemaElement>> nameDict;
-            IEnumerable<IEdmSchemaElement> nameResults;
-
-            if (schemaElementCache.TryGetValue(model, out nameDict) )
+            if (!operationCache.TryGetValue(model, out nameDict))
             {
-                if (nameDict.TryGetValue(qualifiedName, out nameResults))
+                nameDict = new ConcurrentDictionary<string, IList<IEdmOperation>>();
+                operationCache.TryAdd(model, nameDict);
+            }
+
+            //Caching safely assuming, case sensitivity for all request will be the same
+            if (!nameDict.TryGetValue(qualifiedName, out results))
+            {
+                results = new List<IEdmOperation>();
+
+                StringComparison strComparison = caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+
+                GetOperationsForModel(model, qualifiedName, isBound, bindingType, results, strComparison);
+
+                foreach (IEdmModel reference in model.ReferencedModels)
                 {
-                    return nameResults as IList<T>;
-                }                
+                    GetOperationsForModel(reference, qualifiedName, isBound, bindingType, results, strComparison);
+                }
+
+                nameDict.TryAdd(qualifiedName, results);
+                operationCache[model] = nameDict;
             }
-            else
-            {
-                schemaElementCache.TryAdd(model, new ConcurrentDictionary<string, IEnumerable<IEdmSchemaElement>>());
-            }
-            
-            StringComparison strComparison = caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
-
-            GetSchemaElements(model, qualifiedName, results, strComparison);
-
-            foreach (IEdmModel reference in model.ReferencedModels)
-            {
-                GetSchemaElements(reference, qualifiedName, results, strComparison);
-            }
-
-            schemaElementCache[model].TryAdd(qualifiedName, results as IEnumerable<IEdmSchemaElement>);
-
+           
             return results;
         }
 
-        private static void GetSchemaElements<T>(IEdmModel model, string qualifiedName, IList<T> results, StringComparison strComparison) where T : IEdmSchemaElement
+        private static void GetOperationsForModel(IEdmModel model, string qualifiedName, bool isBound, IEdmType bindingType, IList<IEdmOperation> results, StringComparison strComparison)
         {
-            foreach (IEdmSchemaElement edmSchemaElement in model.SchemaElements)
+            foreach (IEdmSchemaElement schemaElement in model.SchemaElements)
             {
-                if (string.Equals(qualifiedName, edmSchemaElement.Name, strComparison) && edmSchemaElement is T schemaElement)
+                if (schemaElement is IEdmOperation operation)
                 {
-                    results.Add(schemaElement);
+                    if (string.Equals(qualifiedName, operation.Name, strComparison) && ((!isBound && !operation.IsBound) ||
+                        (isBound && operation.IsBound && operation.Parameters.Any() && operation.HasEquivalentBindingType(bindingType))))
+                    {
+                        results.Add(operation);
+                    }
                 }
             }
         }
+
     }
 }
