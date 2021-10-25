@@ -94,7 +94,7 @@ namespace Microsoft.OData
 
             // this method runs in a hot path hence the optimizations
 
-            // initialize to null to avoid instatiating a HashSet if there are no annotations
+            // initialize to null to avoid instantiating a HashSet if there are no annotations
             HashSet<string> instanceAnnotationNames = null;
 
             // this method is called with a List most of the time
@@ -334,7 +334,7 @@ namespace Microsoft.OData
 
             // this method runs in a hot path hence the optimizations
 
-            // initialize to null to avoid instatiating a HashSet if there are no annotations
+            // initialize to null to avoid instantiating a HashSet if there are no annotations
             HashSet<string> instanceAnnotationNames = null;
 
             // this method is called with a List most of the time
