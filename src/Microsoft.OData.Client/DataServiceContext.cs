@@ -749,7 +749,6 @@ namespace Microsoft.OData.Client
                     HttpClientHandler handler = new HttpClientHandler();
                     this.httpClient = new HttpClient(handler, disposeHandler: true);
                     shouldDisposeClient = true;
-                   // this.httpClient.BaseAddress = null;
                     return this.httpClient;
                 }
             }
