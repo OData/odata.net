@@ -72,7 +72,12 @@ namespace Microsoft.OData.Client.Tests.HttpClientTests
             Context.AddObject("Books", book);
             await SaveContextChangesAsync(new DataServiceContext[] { Context });
             Context.Dispose();
-            bool httpClientIsDisposed = (bool)Context.HttpClient.GetType().BaseType.GetField("disposed", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(Context.HttpClient);
+            bool httpClientIsDisposed = false;
+#if (NETCOREAPP || NETSTANDARD)
+            httpClientIsDisposed = (bool)Context.HttpClient.GetType().BaseType.GetField("_disposed", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(Context.HttpClient);
+#else
+            httpClientIsDisposed = (bool)Context.HttpClient.GetType().BaseType.GetField("disposed", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(Context.HttpClient);
+#endif
             Assert.True(httpClientIsDisposed);
         }
 
@@ -90,7 +95,12 @@ namespace Microsoft.OData.Client.Tests.HttpClientTests
             ODataServiceContext.AddObject("Books", book);
             await SaveContextChangesAsync(new DataServiceContext[] { ODataServiceContext });
             Context.Dispose();
-            bool httpClientIsDisposed = (bool)ODataServiceContext.HttpClient.GetType().BaseType.GetField("disposed", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(ODataServiceContext.HttpClient);
+            bool httpClientIsDisposed = true;
+#if (NETCOREAPP || NETSTANDARD)
+            httpClientIsDisposed = (bool)Context.HttpClient.GetType().BaseType.GetField("_disposed", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(Context.HttpClient);
+#else
+            httpClientIsDisposed = (bool)Context.HttpClient.GetType().BaseType.GetField("disposed", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(Context.HttpClient);
+#endif
             Assert.False(httpClientIsDisposed);
         }
 

@@ -87,13 +87,11 @@ namespace Microsoft.OData.Client
                 }
                 else
                 {
-                    try {
-                        _handler = _client.GetType().BaseType.GetField("handler", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(_client) as HttpClientHandler;
-                    } catch(NullReferenceException ex)
-                    {
-                        _handler = (HttpClientHandler)(_client.GetType().BaseType.GetField("_handler", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(_client) as HttpMessageHandler);
-                    }
-                    
+#if (NETCOREAPP || NETSTANDARD)
+                    _handler = (HttpClientHandler)(_client.GetType().BaseType.GetField("_handler", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(_client) as HttpMessageHandler);
+#else
+                    _handler = _client.GetType().BaseType.GetField("handler", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(_client) as HttpClientHandler;
+#endif
                 }
 
                 _contentHeaderValueCache = new Dictionary<string, string>();
