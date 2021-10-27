@@ -21,16 +21,16 @@ namespace Microsoft.OData
     internal sealed class ODataBinaryStreamReader : Stream
     {
         /// <summary>
-        /// A function to read a specified number of characters into
+        /// A delegate to invoke to read a specified number of characters into
         /// a character array. Returns the actual number of characters read.
         /// </summary>
-        private readonly Func<char[], int, int, int> reader;
+        private StreamReaderDelegate reader;
 
         /// <summary>
-        /// A function to read a specified number of characters into
+        /// An async delegate to invoke to read a specified number of characters into
         /// a character array asynchronously. Returns the actual number of characters read.
         /// </summary>
-        private readonly Func<char[], int, int, Task<int>> asyncReader;
+        private AsyncStreamReaderDelegate asyncReader;
 
         /// <summary>Size of character buffer.</summary>
         /// <remarks>
@@ -51,24 +51,30 @@ namespace Microsoft.OData
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="reader">A function from which to read character values.</param>
-        internal ODataBinaryStreamReader(Func<char[], int, int, int> reader)
+        /// <param name="reader">A delegate to invoke to read character values.</param>
+        internal ODataBinaryStreamReader(StreamReaderDelegate reader) : this()
         {
-            Debug.Assert(reader != null, "reader cannot be null");
+            Debug.Assert(reader != null, $"{nameof(reader)} cannot be null");
 
             this.reader = reader;
-            this.chars = new char[this.charLength];
         }
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="reader">A function from which to read character values asynchronously.</param>
-        internal ODataBinaryStreamReader(Func<char[], int, int, Task<int>> reader)
+        /// <param name="asyncReader">An async delegate to invoke to read character values asynchronously.</param>
+        internal ODataBinaryStreamReader(AsyncStreamReaderDelegate asyncReader) : this()
         {
-            Debug.Assert(reader != null, "reader cannot be null");
+            Debug.Assert(asyncReader != null, $"{nameof(asyncReader)} cannot be null");
 
-            this.asyncReader = reader;
+            this.asyncReader = asyncReader;
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        private ODataBinaryStreamReader()
+        {
             this.chars = new char[this.charLength];
         }
 

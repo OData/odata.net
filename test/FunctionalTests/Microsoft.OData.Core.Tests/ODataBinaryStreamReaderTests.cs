@@ -47,7 +47,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void ODataBinaryStreamReaderShouldRead()
         {
-            using (var reader = new ODataBinaryStreamReader(new Func<char[], int, int, int>(this.ReadChars)))
+            using (var reader = new ODataBinaryStreamReader(new StreamReaderDelegate(this.ReadChars)))
             {
                 var buffer = new byte[maxLength];
 
@@ -61,7 +61,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public async Task ODataBinaryStreamReaderShouldReadAsync()
         {
-            using (var reader = new ODataBinaryStreamReader(new Func<char[], int, int, Task<int>>(this.ReadCharsAsync)))
+            using (var reader = new ODataBinaryStreamReader(new AsyncStreamReaderDelegate(this.ReadCharsAsync)))
             {
                 var buffer = new byte[maxLength];
 
