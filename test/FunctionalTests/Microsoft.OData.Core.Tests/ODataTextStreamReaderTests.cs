@@ -47,7 +47,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void ODataTextStreamReaderShouldRead()
         {
-            using (var reader = new ODataTextStreamReader(new Func<char[], int, int, int>(this.ReadChars)))
+            using (var reader = new ODataTextStreamReader(new StreamReaderDelegate(this.ReadChars)))
             {
                 var charBuffer = new char[maxLength];
 
@@ -61,7 +61,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public async Task ODataTextStreamReaderShouldReadAsync()
         {
-            using (var reader = new ODataTextStreamReader(new Func<char[], int, int, Task<int>>(this.ReadCharsAsync)))
+            using (var reader = new ODataTextStreamReader(new AsyncStreamReaderDelegate(this.ReadCharsAsync)))
             {
                 var charBuffer = new char[maxLength];
 

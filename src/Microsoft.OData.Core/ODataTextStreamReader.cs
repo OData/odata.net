@@ -19,28 +19,30 @@ namespace Microsoft.OData
     /// </summary>
     internal sealed class ODataTextStreamReader : TextReader
     {
-        private Func<char[], int, int, int> reader;
+        /// <summary>A delegate to invoke to read character values.</summary>
+        private StreamReaderDelegate reader;
 
-        private Func<char[], int, int, Task<int>> asyncReader;
+        /// <summary>An async delegate to invoke to read character values.</summary>
+        private AsyncStreamReaderDelegate asyncReader;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="reader">A function from which to read character values.</param>
-        internal ODataTextStreamReader(Func<char[], int, int, int> reader)
+        /// <param name="reader">A delegate to invoke to read character values.</param>
+        internal ODataTextStreamReader(StreamReaderDelegate reader)
         {
-            Debug.Assert(reader != null, "reader cannot be null");
+            Debug.Assert(reader != null, $"{nameof(reader)} cannot be null");
             this.reader = reader;
         }
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="reader">An async delegate to invoke to read character values.</param>
-        internal ODataTextStreamReader(Func<char[], int, int, Task<int>> reader)
+        /// <param name="asyncReader">An async delegate to invoke to read character values.</param>
+        internal ODataTextStreamReader(AsyncStreamReaderDelegate asyncReader)
         {
-            Debug.Assert(reader != null, "reader cannot be null");
-            this.asyncReader = reader;
+            Debug.Assert(asyncReader != null, $"{nameof(asyncReader)} cannot be null");
+            this.asyncReader = asyncReader;
         }
 
         public override int Read(char[] buffer, int offset, int count)
