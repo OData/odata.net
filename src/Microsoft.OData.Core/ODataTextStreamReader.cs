@@ -38,7 +38,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="asyncReader">An async delegate to invoke to read character values.</param>
+        /// <param name="asyncReader">An async delegate to invoke to read character values asynchronously.</param>
         internal ODataTextStreamReader(AsyncStreamReaderDelegate asyncReader)
         {
             Debug.Assert(asyncReader != null, $"{nameof(asyncReader)} cannot be null");
