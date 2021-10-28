@@ -1906,6 +1906,62 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Finds a property from the definition of this reference.
         /// </summary>
+        /// <param name="structuredType">Reference to the calling object.</param>
+        /// <param name="propertyName">Name of the property to find.</param>
+        /// <param name="caseInsensitive">Property name case-sensitive or not.</param>
+        /// <returns>The requested property if it exists. Otherwise, null.</returns>
+        public static IEdmProperty FindProperty(this IEdmStructuredTypeReference structuredType, string propertyName, bool caseInsensitive)
+        {
+            EdmUtil.CheckArgumentNull(structuredType, "structuredType");
+            return structuredType.StructuredDefinition().FindProperty(propertyName, caseInsensitive);
+        }
+
+        /// <summary>
+        /// Finds a property from the definition of this reference.
+        /// </summary>
+        /// <param name="structuredType">Reference to the calling object.</param>
+        /// <param name="propertyName">Name of the property to find.</param>
+        /// <param name="caseInsensitive">Property name case-sensitive or not.</param>
+        /// <returns>The requested property if it exists. Otherwise, null.</returns>
+        public static IEdmProperty FindProperty(this IEdmStructuredType structuredType, string propertyName, bool caseInsensitive)
+        {
+            EdmUtil.CheckArgumentNull(structuredType, "structuredType");
+            EdmUtil.CheckArgumentNull(propertyName, "propertyName");
+
+            // For example: a structured type has two properties in difference case:
+            //  1) Name
+            //  2) naMe
+            //  3) Title
+            // if input "propertyName="Name", returns the #1 property.
+            // if input "propertyName="naMe", returns the #2 property.
+            // if input "propertyName="name", throw exception because multiple found.
+            // But for "Title", any property name, such as "tiTle", "Title", "title", etc returns #3 property.
+            IEdmProperty edmProperty = structuredType.FindProperty(propertyName);
+            if (edmProperty != null || !caseInsensitive)
+            {
+                return edmProperty;
+            }
+
+            // So, we can't find edm property whose name is exactly same as "propertyName"
+            // Seach again using case-insensitive
+            IEdmProperty[] foundProperties = structuredType.Properties()
+                .Where(p => p.Name.Equals(propertyName, StringComparison.OrdinalIgnoreCase)).ToArray();
+
+            if (foundProperties.Length < 1)
+            {
+                return null;
+            }
+            else if (foundProperties.Length == 1)
+            {
+                return foundProperties[0];
+            }
+
+            throw new InvalidOperationException(Edm.Strings.MultipleMatchingPropertiesFound(propertyName, structuredType.FullTypeName()));
+        }
+
+        /// <summary>
+        /// Finds a property from the definition of this reference.
+        /// </summary>
         /// <param name="type">Reference to the calling object.</param>
         /// <param name="name">Name of the property to find.</param>
         /// <returns>The requested property if it exists. Otherwise, null.</returns>
