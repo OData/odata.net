@@ -17,8 +17,6 @@ namespace Microsoft.OData.UriParser
     /// </summary>
     public class UnqualifiedODataUriResolver : ODataUriResolver
     {
-        private static readonly ConcurrentDictionary<IEdmModel, ConcurrentDictionary<string, IList<IEdmOperation>>> operationCache = new ConcurrentDictionary<IEdmModel, ConcurrentDictionary<string, IList<IEdmOperation>>>();
-
         /// <summary>
         /// Resolve unbound operations based on name.
         /// </summary>
@@ -52,40 +50,26 @@ namespace Microsoft.OData.UriParser
             return FindOperations(model, identifier, this.EnableCaseInsensitive, true, bindingType);
         }
 
-        private static IEnumerable<IEdmOperation> FindOperations(IEdmModel model, string qualifiedName, bool caseInsensitive, bool isBound = false, IEdmType bindingType = null)
+        private IEnumerable<IEdmOperation> FindOperations(IEdmModel model, string qualifiedName, bool caseInsensitive, bool isBound = false, IEdmType bindingType = null)
         {
-            IList<IEdmOperation> results;
-            ConcurrentDictionary<string, IList<IEdmOperation>> nameDict;
+            List<IEdmOperation> results = new List<IEdmOperation>();
 
-            if (!operationCache.TryGetValue(model, out nameDict))
+            StringComparison strComparison = caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+
+            results.AddRange(GetOperationsForModel(model, qualifiedName, isBound, bindingType, strComparison));
+
+            foreach (IEdmModel reference in model.ReferencedModels)
             {
-                nameDict = new ConcurrentDictionary<string, IList<IEdmOperation>>();
-                operationCache.TryAdd(model, nameDict);
+                results.AddRange(GetOperationsForModel(reference, qualifiedName, isBound, bindingType, strComparison));
             }
 
-            //Caching safely assuming, case sensitivity for all request will be the same
-            if (!nameDict.TryGetValue(qualifiedName, out results))
-            {
-                results = new List<IEdmOperation>();
-
-                StringComparison strComparison = caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
-
-                GetOperationsForModel(model, qualifiedName, isBound, bindingType, results, strComparison);
-
-                foreach (IEdmModel reference in model.ReferencedModels)
-                {
-                    GetOperationsForModel(reference, qualifiedName, isBound, bindingType, results, strComparison);
-                }
-
-                nameDict.TryAdd(qualifiedName, results);
-                operationCache[model] = nameDict;
-            }
-           
             return results;
         }
 
-        private static void GetOperationsForModel(IEdmModel model, string qualifiedName, bool isBound, IEdmType bindingType, IList<IEdmOperation> results, StringComparison strComparison)
+        private static IList<IEdmOperation> GetOperationsForModel(IEdmModel model, string qualifiedName, bool isBound, IEdmType bindingType, StringComparison strComparison)
         {
+            IList<IEdmOperation> results = new List<IEdmOperation>();
+
             foreach (IEdmSchemaElement schemaElement in model.SchemaElements)
             {
                 if (schemaElement is IEdmOperation operation)
@@ -97,6 +81,8 @@ namespace Microsoft.OData.UriParser
                     }
                 }
             }
+
+            return results;
         }
 
     }
