@@ -102,7 +102,7 @@ namespace Microsoft.OData.JsonLight
                 }
                 else
                 {
-#if NETSTANDARD1_1
+                    #if NETSTANDARD1_1
                     this.asynchronousOutputStream = new AsyncBufferedStream(this.messageOutputStream);
                     #else 
                     this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, 84000);
@@ -540,7 +540,7 @@ namespace Microsoft.OData.JsonLight
         {
             if (this.asynchronousOutputStream != null)
             {
-#if NETSTANDARD1_1
+                #if NETSTANDARD1_1
                 this.asynchronousOutputStream.FlushSync();
                 #else
                 this.asynchronousOutputStream.Flush();
@@ -556,7 +556,7 @@ namespace Microsoft.OData.JsonLight
         {
             if (this.asynchronousOutputStream != null)
             {
-#if NETSTANDARD1_1
+                #if NETSTANDARD1_1
                 return this.asynchronousOutputStream.FlushAsync();
                 #else
                 return this.asynchronousOutputStream.FlushAsync();
@@ -794,7 +794,7 @@ namespace Microsoft.OData.JsonLight
                     // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitly.
                     if (this.asynchronousOutputStream != null)
                     {
-#if NETSTANDARD1_1
+                        #if NETSTANDARD1_1
                         this.asynchronousOutputStream.FlushSync();
                         #else
                         this.asynchronousOutputStream.Flush();

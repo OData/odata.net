@@ -174,5 +174,4 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.InfrastructureTests
         }
     }
 }
-
 #endif

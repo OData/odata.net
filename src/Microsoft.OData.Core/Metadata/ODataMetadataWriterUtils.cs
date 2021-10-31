@@ -32,7 +32,7 @@ namespace Microsoft.OData.Metadata
 
             XmlWriterSettings xmlWriterSettings = CreateXmlWriterSettings(messageWriterSettings, encoding);
 
-#if NETSTANDARD1_1
+            #if NETSTANDARD1_1
             if (stream is AsyncBufferedStream)
             #else
             if (stream is BufferedStream)
