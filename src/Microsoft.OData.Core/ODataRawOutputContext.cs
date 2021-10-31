@@ -31,10 +31,10 @@ namespace Microsoft.OData
         private Stream messageOutputStream;
 
         /// <summary>The asynchronous output stream if we're writing asynchronously.</summary>
-		#if NETSTANDARD1_1
+        #if NETSTANDARD1_1
         private AsyncBufferedStream asynchronousOutputStream;
-		#else
-		private Stream asynchronousOutputStream;
+        #else
+        private Stream asynchronousOutputStream;
         #endif
 
         /// <summary>The output stream to write to (both sync and async cases).</summary>
@@ -70,8 +70,8 @@ namespace Microsoft.OData
                 {
 #if NETSTANDARD1_1
                     this.asynchronousOutputStream = new AsyncBufferedStream(this.messageOutputStream);
-					#else
-	                this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, 84000);
+                    #else
+                    this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, 84000);
                     #endif
                     this.outputStream = this.asynchronousOutputStream;
                 }
@@ -294,10 +294,10 @@ namespace Microsoft.OData
         {
             if (this.asynchronousOutputStream != null)
             {
-				#if NETSTANDARD1_1
+                #if NETSTANDARD1_1
                 this.asynchronousOutputStream.FlushSync();
-				#else
-				this.asynchronousOutputStream.Flush();
+                #else
+                this.asynchronousOutputStream.Flush();
                 #endif
             }
         }
@@ -310,7 +310,7 @@ namespace Microsoft.OData
         {
             if (this.asynchronousOutputStream != null)
             {
-	            return this.asynchronousOutputStream.FlushAsync();
+                return this.asynchronousOutputStream.FlushAsync();
             }
             else
             {
@@ -339,8 +339,8 @@ namespace Microsoft.OData
                     {
 #if NETSTANDARD1_1
                         this.asynchronousOutputStream.FlushSync();
-						#else
-						this.asynchronousOutputStream.Flush();
+                        #else
+                        this.asynchronousOutputStream.Flush();
                         #endif
                         this.asynchronousOutputStream.Dispose();
                     }

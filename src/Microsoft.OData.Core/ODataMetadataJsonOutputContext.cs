@@ -229,6 +229,7 @@ namespace Microsoft.OData
         private async Task DisposeOutputStreamAsync()
         {
             await this.asynchronousOutputStream.FlushAsync().ConfigureAwait(false);
+            this.asynchronousOutputStream.Dispose();
 
             await this.jsonWriter.FlushAsync().ConfigureAwait(false);
             await this.jsonWriter.DisposeAsync().ConfigureAwait(false);

@@ -46,9 +46,9 @@ namespace Microsoft.OData.JsonLight
         /// <summary>The asynchronous output stream if we're writing asynchronously.</summary>
         private AsyncBufferedStream asynchronousOutputStream;
         #else
-	    /// <summary>The asynchronous output stream if we're writing asynchronously.</summary>
-	    private Stream asynchronousOutputStream;
-		#endif
+        /// <summary>The asynchronous output stream if we're writing asynchronously.</summary>
+        private Stream asynchronousOutputStream;
+        #endif
 
         /// <summary>The text writer created for the output stream.</summary>
         private TextWriter textWriter;
@@ -104,8 +104,8 @@ namespace Microsoft.OData.JsonLight
                 {
 #if NETSTANDARD1_1
                     this.asynchronousOutputStream = new AsyncBufferedStream(this.messageOutputStream);
-					#else 
-					this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, 84000);
+                    #else 
+                    this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, 84000);
                     #endif
                     outputStream = this.asynchronousOutputStream;
                 }
@@ -542,8 +542,8 @@ namespace Microsoft.OData.JsonLight
             {
 #if NETSTANDARD1_1
                 this.asynchronousOutputStream.FlushSync();
-				#else
-				this.asynchronousOutputStream.Flush();
+                #else
+                this.asynchronousOutputStream.Flush();
                 #endif
             }
         }
@@ -554,16 +554,16 @@ namespace Microsoft.OData.JsonLight
         /// <returns>Task which represents the pending operation.</returns>
         internal Task FlushBuffersAsync()
         {
-	        if (this.asynchronousOutputStream != null)
+            if (this.asynchronousOutputStream != null)
             {
 #if NETSTANDARD1_1
                 return this.asynchronousOutputStream.FlushAsync();
-				#else
-	            return this.asynchronousOutputStream.FlushAsync();
+                #else
+                return this.asynchronousOutputStream.FlushAsync();
                 #endif
             }
 
-	        return TaskUtils.CompletedTask;
+            return TaskUtils.CompletedTask;
         }
 
         /// <summary>
@@ -796,7 +796,7 @@ namespace Microsoft.OData.JsonLight
                     {
 #if NETSTANDARD1_1
                         this.asynchronousOutputStream.FlushSync();
-						#else
+                        #else
                         this.asynchronousOutputStream.Flush();
                         #endif
                         this.asynchronousOutputStream.Dispose();

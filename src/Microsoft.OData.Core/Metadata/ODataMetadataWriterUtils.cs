@@ -34,9 +34,9 @@ namespace Microsoft.OData.Metadata
 
 #if NETSTANDARD1_1
             if (stream is AsyncBufferedStream)
-			#else
-	        if (stream is BufferedStream)
-			#endif
+            #else
+            if (stream is BufferedStream)
+            #endif
             {
                 xmlWriterSettings.Async = true;
             }

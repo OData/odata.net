@@ -29,9 +29,9 @@ namespace Microsoft.OData
         private XmlWriter xmlWriter;
 
         /// <summary>The asynchronous output stream if we're writing asynchronously.</summary>
-		#if NETSTANDARD1_1
+        #if NETSTANDARD1_1
         private AsyncBufferedStream asynchronousOutputStream;
-		#else
+        #else
         private Stream asynchronousOutputStream;
         #endif
 
@@ -58,10 +58,10 @@ namespace Microsoft.OData
                 }
                 else
                 {
-					#if NETSTANDARD1_1
+                    #if NETSTANDARD1_1
                     this.asynchronousOutputStream = new AsyncBufferedStream(this.messageOutputStream);
-					#else
-					this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, 84000);
+                    #else
+                    this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, 84000);
                     #endif
                     outputStream = this.asynchronousOutputStream;
                 }
