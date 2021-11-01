@@ -72,8 +72,8 @@ namespace Microsoft.OData.UriParser
             {
                 if (schemaElement is IEdmOperation operation)
                 {
-                    if (string.Equals(qualifiedName, operation.Name, strComparison) && ((!isBound && !operation.IsBound) ||
-                        (isBound && operation.IsBound && operation.Parameters.Any() && operation.HasEquivalentBindingType(bindingType))))
+                    if (((!isBound && !operation.IsBound) || (isBound && operation.IsBound && operation.Parameters.Any() && operation.HasEquivalentBindingType(bindingType))) &&
+                        string.Equals(qualifiedName, operation.Name, strComparison))
                     {
                         results.Add(operation);
                     }
