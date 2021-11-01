@@ -796,10 +796,12 @@ namespace Microsoft.OData.JsonLight
                     {
                         #if NETSTANDARD1_1
                         this.asynchronousOutputStream.FlushSync();
+                        this.asynchronousOutputStream.Dispose();
                         #else
                         this.asynchronousOutputStream.Flush();
+                        // We are working with a BufferedStream here. We flushed it already, so there is nothing else to dispose. And it would dispose the 
+                        // inner stream as well.
                         #endif
-                        this.asynchronousOutputStream.Dispose();
                     }
 
                     // Dispose the message stream (note that we OWN this stream, so we always dispose it).
