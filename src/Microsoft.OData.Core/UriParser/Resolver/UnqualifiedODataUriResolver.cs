@@ -50,26 +50,24 @@ namespace Microsoft.OData.UriParser
             return FindOperations(model, identifier, this.EnableCaseInsensitive, true, bindingType);
         }
 
-        private IEnumerable<IEdmOperation> FindOperations(IEdmModel model, string qualifiedName, bool caseInsensitive, bool isBound = false, IEdmType bindingType = null)
+        private static IEnumerable<IEdmOperation> FindOperations(IEdmModel model, string qualifiedName, bool caseInsensitive, bool isBound = false, IEdmType bindingType = null)
         {
-            List<IEdmOperation> results = new List<IEdmOperation>();
+            IList<IEdmOperation> results = new List<IEdmOperation>();
 
             StringComparison strComparison = caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
 
-            results.AddRange(GetOperationsForModel(model, qualifiedName, isBound, bindingType, strComparison));
+            GetOperationsForModel(model, qualifiedName, results, isBound, bindingType, strComparison);
 
             foreach (IEdmModel reference in model.ReferencedModels)
             {
-                results.AddRange(GetOperationsForModel(reference, qualifiedName, isBound, bindingType, strComparison));
+                GetOperationsForModel(reference, qualifiedName, results, isBound, bindingType, strComparison);
             }
 
             return results;
         }
 
-        private static IList<IEdmOperation> GetOperationsForModel(IEdmModel model, string qualifiedName, bool isBound, IEdmType bindingType, StringComparison strComparison)
+        private static void GetOperationsForModel(IEdmModel model, string qualifiedName, IList<IEdmOperation> results, bool isBound, IEdmType bindingType, StringComparison strComparison)
         {
-            IList<IEdmOperation> results = new List<IEdmOperation>();
-
             foreach (IEdmSchemaElement schemaElement in model.SchemaElements)
             {
                 if (schemaElement is IEdmOperation operation)
@@ -81,8 +79,6 @@ namespace Microsoft.OData.UriParser
                     }
                 }
             }
-
-            return results;
         }
 
     }
