@@ -576,70 +576,12 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return matchingOperations;
         }
 
-        private sealed class Wrapper<T> : IEnumerable<T>
-        {
-            private readonly IEnumerable<T> source;
-
-            private readonly List<T> enumerated;
-
-            private int atLeast;
-
-            public Wrapper(IEnumerable<T> source)
-            {
-                this.source = source;
-
-                this.enumerated = new List<T>();
-            }
-
-            public bool AtLeast(int n)
-            {
-                if (this.atLeast >= n)
-                {
-                    return true;
-                }
-
-                using (var enumerator = this.GetEnumerator())
-                {
-                    int i;
-                    for (i = 0; enumerator.MoveNext() && i < n; ++i)
-                    {
-                    }
-
-                    if (i == n)
-                    {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-
-            public IReadOnlyList<T> Enumerated
-            {
-                get
-                {
-                    return this.enumerated;
-                }
-            }
-
-            public IEnumerator<T> GetEnumerator()
-            {
-                foreach (var element in this.source)
-                {
-                    ++this.atLeast;
-                    this.enumerated.Add(element);
-                    yield return element;
-                }
-            }
-
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-            {
-                return this.GetEnumerator();
-            }
-        }
-
         private static int TryCount<T>(IEnumerable<T> source, out T value)
         {
+            //// TODO check build from https://github.com/OData/odata.net/pull/2237
+            //// TODO benchmark this
+            //// TODO ensure that there are existing tests covering this
+            //// TODO add prepend stuff so that you are sure to enumerate only once?
             using (var enumerator = source.GetEnumerator())
             {
                 int length;
@@ -653,7 +595,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 }
                 else
                 {
-                    value = default;
+                    value = default(T);
                 }
 
                 return length;
