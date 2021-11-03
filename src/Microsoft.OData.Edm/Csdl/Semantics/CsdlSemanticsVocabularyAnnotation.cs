@@ -456,19 +456,18 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private static IEdmOperationImport FindParameterizedOperationImport(string parameterizedName, Func<string, IEnumerable<IEdmOperationImport>> findFunctions, Func<IEnumerable<IEdmOperationImport>, IEdmOperationImport> ambiguityCreator)
         {
             IEnumerable<IEdmOperationImport> matchingFunctions = findFunctions(parameterizedName);
-            if (!matchingFunctions.Any())
+            var length = TryCount(matchingFunctions, out var value);
+            if (length == 0)
             {
                 return null;
             }
-
-            if (matchingFunctions.Count() == 1)
+            else if (length == 1)
             {
-                return matchingFunctions.First();
+                return value;
             }
             else
             {
-                IEdmOperationImport ambiguous = ambiguityCreator(matchingFunctions);
-                return ambiguous;
+                return ambiguityCreator(matchingFunctions);
             }
         }
 
@@ -484,19 +483,18 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             string name = parameterizedName.Substring(0, openParen);
             string[] parameters = parameterizedName.Substring(openParen + 1, closeParen - (openParen + 1)).Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
             IEnumerable<IEdmOperation> matchingFunctions = this.FindParameterizedOperationFromList(findFunctions(name).Cast<IEdmOperation>(), parameters);
-            if (!matchingFunctions.Any())
+            var length = TryCount(matchingFunctions, out var value);
+            if (length == 0)
             {
                 return null;
             }
-
-            if (matchingFunctions.Count() == 1)
+            else if (length == 1)
             {
-                return matchingFunctions.First();
+                return value;
             }
             else
             {
-                IEdmOperation ambiguous = ambiguityCreator(matchingFunctions);
-                return ambiguous;
+                return ambiguityCreator(matchingFunctions);
             }
         }
 
@@ -576,6 +574,90 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             }
 
             return matchingOperations;
+        }
+
+        private sealed class Wrapper<T> : IEnumerable<T>
+        {
+            private readonly IEnumerable<T> source;
+
+            private readonly List<T> enumerated;
+
+            private int atLeast;
+
+            public Wrapper(IEnumerable<T> source)
+            {
+                this.source = source;
+
+                this.enumerated = new List<T>();
+            }
+
+            public bool AtLeast(int n)
+            {
+                if (this.atLeast >= n)
+                {
+                    return true;
+                }
+
+                using (var enumerator = this.GetEnumerator())
+                {
+                    int i;
+                    for (i = 0; enumerator.MoveNext() && i < n; ++i)
+                    {
+                    }
+
+                    if (i == n)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            public IReadOnlyList<T> Enumerated
+            {
+                get
+                {
+                    return this.enumerated;
+                }
+            }
+
+            public IEnumerator<T> GetEnumerator()
+            {
+                foreach (var element in this.source)
+                {
+                    ++this.atLeast;
+                    this.enumerated.Add(element);
+                    yield return element;
+                }
+            }
+
+            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+            {
+                return this.GetEnumerator();
+            }
+        }
+
+        private static int TryCount<T>(IEnumerable<T> source, out T value)
+        {
+            using (var enumerator = source.GetEnumerator())
+            {
+                int length;
+                for (length = 0; length < 2 && enumerator.MoveNext(); ++length)
+                {
+                }
+
+                if (length == 1)
+                {
+                    value = enumerator.Current;
+                }
+                else
+                {
+                    value = default;
+                }
+
+                return length;
+            }
         }
     }
 }
