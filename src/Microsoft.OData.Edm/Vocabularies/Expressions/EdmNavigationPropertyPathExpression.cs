@@ -11,7 +11,7 @@ namespace Microsoft.OData.Edm.Vocabularies
     /// <summary>
     /// Represents an EDM navigation property path expression.
     /// </summary>
-    public class EdmNavigationPropertyPathExpression : EdmPathExpression
+    public class EdmNavigationPropertyPathExpression : EdmPathExpression, IEdmNavigationPropertyPath
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmNavigationPropertyPathExpression"/> class.

@@ -2441,6 +2441,44 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             WriteAndVerifyJson(edmModel, "{\"$Version\":\"" + odataVersion + "\"}", false);
         }
 
+
+        [Fact]
+        public void CanWriteNavigationPropertyPathAnnotation()
+        {
+            EdmModel model = new EdmModel();
+            const string schemaNamespace = "example.org";
+            var entity01= new EdmEntityType(schemaNamespace, "entity01");
+            entity01.AddKeys(entity01.AddStructuralProperty("key", EdmPrimitiveTypeKind.String));
+            model.AddElement(entity01);
+
+            var entity02 = new EdmEntityType(schemaNamespace, "entity02");
+            entity02.AddKeys(entity02.AddStructuralProperty("key", EdmPrimitiveTypeKind.String));
+            entity02.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo {Name = "other", Target = entity01, TargetMultiplicity=EdmMultiplicity.Many });
+            model.AddElement(entity02);
+
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, @"<?xml version=""1.0"" encoding=""utf-16""?>" +
+            @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">" +
+                @"<edmx:DataServices>"+
+                    @"<Schema Namespace=""example.org"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">" +
+                        @"<EntityType Name=""entity01"">" +
+                            @"<Key>" +
+                                @"<PropertyRef Name=""key"" />" +
+                            @"</Key>" +
+                            @"<Property Name=""key"" Type=""Edm.String"" />" +
+                        @"</EntityType>" +
+                        @"<EntityType Name=""entity02"">" +
+                            @"<Key>" +
+                                @"<PropertyRef Name=""key"" />" +
+                            @"</Key>" +
+                            @"<Property Name=""key"" Type=""Edm.String"" />" +
+                            @"<NavigationProperty Name=""other"" Type=""Collection(example.org.entity01)"" />" +
+                        @"</EntityType>" +
+                    @"</Schema>" +
+                @"</edmx:DataServices>" +
+            @"</edmx:Edmx>");
+        }
+
         private void WriteAndVerifyXml(IEdmModel model, string expected, CsdlTarget target = CsdlTarget.OData)
         {
             using (StringWriter sw = new StringWriter())

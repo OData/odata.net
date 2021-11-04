@@ -460,6 +460,7 @@ namespace Microsoft.OData.Edm
                     {
                         IEdmOperationReturn operationReturn;
                         IEdmEnumMember enumMember;
+                        IEdmNavigationPropertyPath edmNavigationPropertyPath;
                         IEdmOperationParameter parameter = element as IEdmOperationParameter;
                         if (parameter != null)
                         {
@@ -484,6 +485,10 @@ namespace Microsoft.OData.Edm
                             {
                                 return operationName + "/" + CsdlConstants.OperationReturnExternalTarget;
                             }
+                        }
+                        else if((edmNavigationPropertyPath = element as IEdmNavigationPropertyPath) != null)
+                        {
+                            return edmNavigationPropertyPath.Path;
                         }
                     }
                 }

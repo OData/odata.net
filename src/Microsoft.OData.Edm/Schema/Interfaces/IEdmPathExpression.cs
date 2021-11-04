@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm.Vocabularies;
 using System.Collections.Generic;
 
 namespace Microsoft.OData.Edm
@@ -22,5 +23,12 @@ namespace Microsoft.OData.Edm
         /// Gets the path string, like "A.B/C/D.E".
         /// </summary>
         string Path { get; }
+    }
+
+
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1040:Avoid empty interfaces", Justification = "marker interface")]
+    public interface IEdmNavigationPropertyPath : IEdmPathExpression, IEdmVocabularyAnnotatable
+    {
     }
 }
