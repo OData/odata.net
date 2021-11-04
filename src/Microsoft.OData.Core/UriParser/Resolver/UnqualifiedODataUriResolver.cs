@@ -46,39 +46,63 @@ namespace Microsoft.OData.UriParser
             {
                 return base.ResolveBoundOperations(model, identifier, bindingType);
             }
-
+          
             return FindOperations(model, identifier, this.EnableCaseInsensitive, true, bindingType);
         }
 
         private static IEnumerable<IEdmOperation> FindOperations(IEdmModel model, string qualifiedName, bool caseInsensitive, bool isBound = false, IEdmType bindingType = null)
         {
-            IList<IEdmOperation> results = new List<IEdmOperation>();
-
             StringComparison strComparison = caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
 
-            GetOperationsForModel(model, qualifiedName, results, isBound, bindingType, strComparison);
-
-            foreach (IEdmModel reference in model.ReferencedModels)
+            if (isBound)
             {
-                GetOperationsForModel(reference, qualifiedName, results, isBound, bindingType, strComparison);
+                return GetBoundOperationsForModel(model, qualifiedName, bindingType, strComparison);
             }
-
-            return results;
+            else
+            {
+                return GetUnBoundOperationsForModel(model, qualifiedName, strComparison);
+            }
         }
 
-        private static void GetOperationsForModel(IEdmModel model, string qualifiedName, IList<IEdmOperation> results, bool isBound, IEdmType bindingType, StringComparison strComparison)
+        private static IList<IEdmOperation> GetUnBoundOperationsForModel(IEdmModel model, string qualifiedName, StringComparison strComparison)
         {
+            IList<IEdmOperation> results = new List<IEdmOperation>();
+
             foreach (IEdmSchemaElement schemaElement in model.SchemaElements)
             {
-                if (schemaElement is IEdmOperation operation)
+                if (schemaElement is IEdmOperation operation && !operation.IsBound && string.Equals(qualifiedName, operation.Name, strComparison))
                 {
-                    if (((!isBound && !operation.IsBound) || (isBound && operation.IsBound && operation.Parameters.Any() && operation.HasEquivalentBindingType(bindingType))) &&
-                        string.Equals(qualifiedName, operation.Name, strComparison))
+                    results.Add(operation);
+                }
+            }
+
+            foreach(IEdmModel reference in model.ReferencedModels)
+            {
+                foreach (IEdmSchemaElement schemaElement in reference.SchemaElements)
+                {
+                    if (schemaElement is IEdmOperation operation && !operation.IsBound && string.Equals(qualifiedName, operation.Name, strComparison))
                     {
                         results.Add(operation);
                     }
                 }
             }
+
+            return results;
+        }
+
+        private static IList<IEdmOperation> GetBoundOperationsForModel(IEdmModel model, string qualifiedName, IEdmType bindingType, StringComparison strComparison)
+        {
+            IList<IEdmOperation> results = new List<IEdmOperation>();
+
+            foreach (IEdmOperation operation in model.FindDeclaredBoundOperationsAcrossModels(bindingType))
+            {
+                if (string.Equals(qualifiedName, operation.Name, strComparison))
+                {
+                    results.Add(operation);
+                }
+            }
+
+            return results;
         }
 
     }

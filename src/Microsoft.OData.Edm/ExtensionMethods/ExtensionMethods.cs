@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -33,6 +34,7 @@ namespace Microsoft.OData.Edm
 
         private static readonly IEnumerable<IEdmStructuralProperty> EmptyStructuralProperties = Enumerable.Empty<IEdmStructuralProperty>();
         private static readonly IEnumerable<IEdmNavigationProperty> EmptyNavigationProperties = Enumerable.Empty<IEdmNavigationProperty>();
+        private static readonly ConcurrentDictionary<string, IList<IEdmOperation>> bindableOperationsCache = new ConcurrentDictionary<string, IList<IEdmOperation>>();
 
         #region IEdmModel
 
@@ -98,6 +100,40 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(bindingType, "bindingType");
             return FindAcrossModels(model, bindingType, findBoundOperations, mergeFunctions);  // search built-in EdmCoreModel and CoreVocabularyModel.
+        }
+
+        /// Searches for bound operations based on the binding type, across models, returns an empty enumerable if no operation exists.
+        /// </summary>
+        /// <param name="model">The model to search.</param>
+        /// <param name="bindingType">Type of the binding.</param>
+        /// <returns>A set of operations that share the binding type or empty enumerable if no such operation exists.</returns>
+        public static IEnumerable<IEdmOperation> FindDeclaredBoundOperationsAcrossModels(this IEdmModel model, IEdmType bindingType)
+        {
+            IList<IEdmOperation> bindableOperations;
+
+            string bindingTypeName = bindingType.FullTypeName();
+
+            if (!bindableOperationsCache.TryGetValue(bindingTypeName, out bindableOperations))
+            {
+                bindableOperations = new List<IEdmOperation>();
+
+                foreach (IEdmOperation operation in model.FindDeclaredBoundOperations(bindingType))
+                {
+                    bindableOperations.Add(operation);
+                }
+
+                foreach (IEdmModel reference in model.ReferencedModels)
+                {
+                    foreach (IEdmOperation operation in reference.FindDeclaredBoundOperations(bindingType))
+                    {
+                        bindableOperations.Add(operation);
+                    }
+                }
+
+                bindableOperationsCache.TryAdd(bindingTypeName, bindableOperations);
+            }
+
+            return bindableOperations;
         }
 
         /// <summary>
