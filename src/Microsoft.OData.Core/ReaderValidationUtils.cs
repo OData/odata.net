@@ -116,8 +116,9 @@ namespace Microsoft.OData
         /// <returns>The <see cref="IEdmProperty"/> instance representing the property with name <paramref name="propertyName"/>
         /// or null if no metadata is available.</returns>
         internal static IEdmProperty ValidatePropertyDefined(string propertyName,
-                                                                  IEdmStructuredType owningStructuredType,
-                                                                  bool throwOnUndeclaredPropertyForNonOpenType)
+            IEdmStructuredType owningStructuredType,
+            bool throwOnUndeclaredPropertyForNonOpenType,
+            bool enablePropertyNameCaseInsensitive)
         {
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
@@ -126,7 +127,16 @@ namespace Microsoft.OData
                 return null;
             }
 
-            IEdmProperty property = owningStructuredType.FindProperty(propertyName);
+            IEdmProperty property = null;
+            try
+            {
+                property = owningStructuredType.FindProperty(propertyName, enablePropertyNameCaseInsensitive);
+            }
+            catch (InvalidOperationException)
+            {
+                // ODL should allow to read any undeclared property as dynamic property.
+            }
+
             if (property == null && !owningStructuredType.IsOpen)
             {
                 if (throwOnUndeclaredPropertyForNonOpenType)
