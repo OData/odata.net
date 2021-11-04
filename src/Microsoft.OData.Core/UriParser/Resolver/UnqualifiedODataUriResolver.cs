@@ -50,15 +50,13 @@ namespace Microsoft.OData.UriParser
             return GetBoundOperationsForModel(model, identifier, bindingType, this.EnableCaseInsensitive? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
         }
 
-        private static IList<IEdmOperation> GetUnBoundOperationsForModel(IEdmModel model, string qualifiedName, StringComparison strComparison)
+        private static IEnumerable<IEdmOperation> GetUnBoundOperationsForModel(IEdmModel model, string operationName, StringComparison strComparison)
         {
-            IList<IEdmOperation> results = new List<IEdmOperation>();
-
             foreach (IEdmSchemaElement schemaElement in model.SchemaElements)
             {
-                if (schemaElement is IEdmOperation operation && !operation.IsBound && string.Equals(qualifiedName, operation.Name, strComparison))
+                if (schemaElement is IEdmOperation operation && !operation.IsBound && string.Equals(operationName, operation.Name, strComparison))
                 {
-                    results.Add(operation);
+                    yield return operation;
                 }
             }
 
@@ -66,29 +64,23 @@ namespace Microsoft.OData.UriParser
             {
                 foreach (IEdmSchemaElement schemaElement in reference.SchemaElements)
                 {
-                    if (schemaElement is IEdmOperation operation && !operation.IsBound && string.Equals(qualifiedName, operation.Name, strComparison))
+                    if (schemaElement is IEdmOperation operation && !operation.IsBound && string.Equals(operationName, operation.Name, strComparison))
                     {
-                        results.Add(operation);
+                        yield return operation;
                     }
                 }
             }
-
-            return results;
         }
 
-        private static IList<IEdmOperation> GetBoundOperationsForModel(IEdmModel model, string qualifiedName, IEdmType bindingType, StringComparison strComparison)
+        private static IEnumerable<IEdmOperation> GetBoundOperationsForModel(IEdmModel model, string operationName, IEdmType bindingType, StringComparison strComparison)
         {
-            IList<IEdmOperation> results = new List<IEdmOperation>();
-
             foreach (IEdmOperation operation in model.FindDeclaredBoundOperationsAcrossModels(bindingType))
             {
-                if (string.Equals(qualifiedName, operation.Name, strComparison))
+                if (string.Equals(operationName, operation.Name, strComparison))
                 {
-                    results.Add(operation);
+                    yield return operation;
                 }
             }
-
-            return results;
         }
 
     }
