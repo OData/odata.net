@@ -2456,6 +2456,9 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             entity02.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo {Name = "other", Target = entity01, TargetMultiplicity=EdmMultiplicity.Many });
             model.AddElement(entity02);
 
+            var annotation = new EdmVocabularyAnnotation(new EdmNavigationPropertyPathExpression("foo/bar"), CoreVocabularyModel.DescriptionTerm, new EdmStringConstant("test"));
+            model.AddVocabularyAnnotation(annotation);
+
             // Act & Assert for XML
             WriteAndVerifyXml(model, @"<?xml version=""1.0"" encoding=""utf-16""?>" +
             @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">" +
