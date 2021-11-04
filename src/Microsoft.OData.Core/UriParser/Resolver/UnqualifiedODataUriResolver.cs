@@ -30,7 +30,7 @@ namespace Microsoft.OData.UriParser
                 return base.ResolveUnboundOperations(model, identifier);
             }
 
-            return FindOperations(model, identifier, this.EnableCaseInsensitive);
+            return GetUnBoundOperationsForModel(model, identifier, this.EnableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
         }
 
         /// <summary>
@@ -47,21 +47,7 @@ namespace Microsoft.OData.UriParser
                 return base.ResolveBoundOperations(model, identifier, bindingType);
             }
           
-            return FindOperations(model, identifier, this.EnableCaseInsensitive, true, bindingType);
-        }
-
-        private static IEnumerable<IEdmOperation> FindOperations(IEdmModel model, string qualifiedName, bool caseInsensitive, bool isBound = false, IEdmType bindingType = null)
-        {
-            StringComparison strComparison = caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
-
-            if (isBound)
-            {
-                return GetBoundOperationsForModel(model, qualifiedName, bindingType, strComparison);
-            }
-            else
-            {
-                return GetUnBoundOperationsForModel(model, qualifiedName, strComparison);
-            }
+            return GetBoundOperationsForModel(model, identifier, bindingType, this.EnableCaseInsensitive? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
         }
 
         private static IList<IEdmOperation> GetUnBoundOperationsForModel(IEdmModel model, string qualifiedName, StringComparison strComparison)
