@@ -1945,7 +1945,7 @@ namespace Microsoft.OData.Edm
             // So, we can't find edm property whose name is exactly same as "propertyName"
             // Seach again using case-insensitive
             IEdmProperty[] foundProperties = structuredType.Properties()
-                .Where(p => p.Name.Equals(propertyName, StringComparison.OrdinalIgnoreCase)).ToArray();
+                .Where(p => string.Equals(p.Name, propertyName, StringComparison.OrdinalIgnoreCase)).ToArray();
 
             if (foundProperties.Length < 1)
             {
