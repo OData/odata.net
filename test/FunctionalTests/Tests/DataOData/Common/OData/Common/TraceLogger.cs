@@ -21,9 +21,6 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// <param name="text">Formatted log message</param>
         protected override void WriteToOutput(LogLevel logLevel, string text)
         {
-#if SILVERLIGHT
-            // do nothing, no trace log to write to.
-#else
             switch (logLevel)
             {
                 case LogLevel.Error:
@@ -39,7 +36,6 @@ namespace Microsoft.Test.Taupo.OData.Common
                     Trace.WriteLine(text);
                     break;
             }
-#endif
         }
     }
 }

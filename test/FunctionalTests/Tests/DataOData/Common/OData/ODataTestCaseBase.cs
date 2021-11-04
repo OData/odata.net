@@ -37,12 +37,10 @@ namespace Microsoft.Test.Taupo.OData
         [InjectDependency(IsRequired = true)]
         public EdmDataTypeResolver EdmDataTypeResolver { get; set; }
 
-#if !SILVERLIGHT
         /// <summary>
         /// Gets or sets MSTest Context
         /// </summary>
         public TestContext TestContext { get; set; }
-#endif
 
         /// <summary>
         /// This will kick in the dependency injection and provide default values for Properties that have 

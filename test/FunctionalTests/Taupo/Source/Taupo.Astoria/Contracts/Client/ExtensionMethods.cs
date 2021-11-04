@@ -69,9 +69,6 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Client
         /// <returns>The response from SaveChanges</returns>
         public static DSClient.DataServiceResponse VerifySaveChanges(this ISaveChangesVerifier verifier, DataServiceContextData contextData, DSClient.DataServiceContext context, SaveChangesOptions? options)
         {
-#if SILVERLIGHT
-            throw new TaupoNotSupportedException("Not supported in Silverlight");
-#else
             ExceptionUtilities.CheckArgumentNotNull(verifier, "verifier");
             ExceptionUtilities.CheckArgumentNotNull(contextData, "contextData");
             ExceptionUtilities.CheckArgumentNotNull(context, "context");
@@ -79,7 +76,6 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Client
             DSClient.DataServiceResponse response = null;
             SyncHelpers.ExecuteActionAndWait(c1 => verifier.VerifySaveChanges(c1, contextData, context, options, (c2, r) => { response = r; c2.Continue(); }));
             return response;
-#endif
         }
 
         /// <summary>
@@ -179,7 +175,6 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Client
             return Contracts.ExtensionMethods.ConvertEnum<SaveChangesOptions, DSClient.SaveChangesOptions>(option);
         }
 
-#if !WINDOWS_PHONE
         /// <summary>
         /// Converts the DataServiceResponsePreference product enum value to the equivalent test enum value
         /// </summary>
@@ -200,7 +195,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Client
             ExceptionUtilities.Assert(preference != DataServiceResponsePreference.Unspecified, "Cannot convert unspecified preference value");
             return Contracts.ExtensionMethods.ConvertEnum<DataServiceResponsePreference, DSClient.DataServiceResponsePreference>(preference);
         }
-#endif
+
         private static DataServiceContextData CheckParametersAndGetDataServiceContextData(ISaveChangesVerifier verifier, WrappedDataServiceContext context)
         {
             ExceptionUtilities.CheckArgumentNotNull(verifier, "verifier");

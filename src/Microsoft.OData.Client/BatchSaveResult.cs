@@ -150,7 +150,6 @@ namespace Microsoft.OData.Client
             Debug.Assert((this.CompletedSynchronously && this.IsCompleted) || !this.CompletedSynchronously, "sync without complete");
         }
 
-#if !PORTABLELIB  // Synchronous methods not available
         /// <summary>
         /// Synchronous batch request
         /// </summary>
@@ -185,7 +184,6 @@ namespace Microsoft.OData.Client
                 }
             }
         }
-#endif
 
         /// <summary>Read and store response data for the current change</summary>
         /// <param name="pereq">The completed per request object</param>

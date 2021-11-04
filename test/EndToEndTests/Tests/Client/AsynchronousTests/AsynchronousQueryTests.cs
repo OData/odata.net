@@ -12,9 +12,6 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
     using System.Net;
     using System.Reflection;
     using Microsoft.OData.Client;
-#if SILVERLIGHT
-    using Microsoft.Silverlight.Testing;
-#endif
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference;
     using Xunit.Abstractions;
@@ -39,9 +36,6 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         //The timeout attribute makes test failed when run in VS. 
         //So apply the timeout attribute only for silverlight case.
         //ToDo: figure out why this case is failed in silverlight test run later.
-#if SILVERLIGHT
-        [Timeout(30000)]
-#endif
         public void AddQueryOption_Custom()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
@@ -835,7 +829,6 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             this.EnqueueTestComplete();
         }
 
-#if !SILVERLIGHT
         /// <summary>
         /// LINQ query Order By Canonical Fuctions
         /// </summary>
@@ -850,7 +843,6 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             var value1 = q1.EndExecute(ar1).ToList();
             Assert.True(value1.First().Dimensions.Depth > value1.Last().Dimensions.Depth);
         }
-#endif
 
         /// <summary>
         /// LINQ query Order By Canonical Fuctions
@@ -904,7 +896,6 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
 
             this.EnqueueTestComplete();
         }
-#if !SILVERLIGHT
 
         /// <summary>
         /// LINQ query Order By Canonical Fuctions
@@ -920,7 +911,6 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             var value1 = q1.EndExecute(ar1).ToList();
             Assert.Equal(4, value1.Count);
         }
-#endif
 
         /// <summary>
         /// LINQ query Order By Canonical Fuctions
@@ -955,39 +945,6 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
 
             this.EnqueueTestComplete();
         }
-
-#if PORTABLE || SILVERLIGHT
-        /// <summary>
-        /// LoadAsync and LoadNextPartialSetAsync Test
-        /// </summary>
-        [Fact, Asynchronous]
-        public void LoadAsyncTest()
-        {
-            var context = this.CreateWrappedContext<DefaultContainer>().Context;
-            var query = context.Customer;
-            var dataServiceCollection = new DataServiceCollection<Customer>();
-
-            dataServiceCollection.LoadCompleted +=
-                (sender, e) =>
-                {
-                    if (e.Error == null)
-                    {
-                        if (dataServiceCollection.Continuation != null)
-                        {
-                            dataServiceCollection.LoadNextPartialSetAsync();
-                        }
-                        else
-                        {
-                            this.EnqueueTestComplete();
-                            Assert.Equal(10, dataServiceCollection.Count);
-                        }
-                    }
-                };
-
-            dataServiceCollection.LoadAsync(query);
-            this.WaitForTestToComplete();
-        }
-#endif
 
         /// <summary>
         /// LINQ - project a primitive property from a single entity into a custom entity

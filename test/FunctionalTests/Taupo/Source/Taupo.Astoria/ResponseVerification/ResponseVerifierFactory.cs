@@ -168,29 +168,17 @@ namespace Microsoft.Test.Taupo.Astoria.ResponseVerification
 
         private IResponseVerifier BuildDeleteVerifier()
         {
-#if !SILVERLIGHT
             return new DeleteResponseVerifier();
-#else
-            throw new TaupoNotSupportedException("Not supported on SL");
-#endif
         }
 
         private IResponseVerifier BuildETagHeaderVerifier()
         {
-#if !SILVERLIGHT
             return new ETagHeaderVerifier();
-#else
-            throw new TaupoNotSupportedException("Not supported on SL");
-#endif
         }
 
         private IResponseVerifier BuildUpdateVerifier()
         {
-#if !SILVERLIGHT
             return new UpdateResponseVerifier(this.MaxProtocolVersion);
-#else
-            throw new TaupoNotSupportedException("Not supported on SL");
-#endif
         }
 
         private IResponseVerifier BuildServiceOperationVerifier()
@@ -200,11 +188,7 @@ namespace Microsoft.Test.Taupo.Astoria.ResponseVerification
 
         private IResponseVerifier BuildActionResponseVerifier()
         {
-#if !SILVERLIGHT
             return new ActionResponseVerifier(this.Model, this.MaxProtocolVersion);
-#else
-            throw new TaupoNotSupportedException("Not supported on SL");
-#endif
         }
 
         private IResponseVerifier BuildNextLinkVerifier()

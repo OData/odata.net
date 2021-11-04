@@ -383,10 +383,8 @@ namespace Microsoft.OData.Client
             RegisterKnownType(typeof(UInt64), null, EdmPrimitiveTypeKind.String, new UInt64TypeConverter(), false);
             RegisterKnownType(typeof(DateTime), null, EdmPrimitiveTypeKind.DateTimeOffset, new DateTimeTypeConverter(), false);
 
-#if !PORTABLELIB
             // There is no static dependency on System.Data.Linq so we use a substitute type for the Binary type
             RegisterKnownType(typeof(BinaryTypeSub), XmlConstants.EdmBinaryTypeName, EdmPrimitiveTypeKind.Binary, new BinaryTypeConverter(), false);
-#endif
         }
 
         /// <summary>
@@ -402,19 +400,16 @@ namespace Microsoft.OData.Client
             ptype = null;
             if (!clrMapping.TryGetValue(clrType, out ptype))
             {
-#if !PORTABLELIB
                 if (IsBinaryType(clrType))
                 {
                     Debug.Assert(clrMapping.ContainsKey(typeof(BinaryTypeSub)), "BinaryTypeSub missing from the dictionary");
                     ptype = clrMapping[typeof(BinaryTypeSub)];
                 }
-#endif
             }
 
             return ptype != null;
         }
 
-#if !PORTABLELIB// System.Data.Linq not available
         /// <summary>
         /// Whether the <paramref name="type"/> is System.Data.Linq.Binary.
         /// </summary>
@@ -444,7 +439,6 @@ namespace Microsoft.OData.Client
         private sealed class BinaryTypeSub
         {
         }
-#endif
 
         /// <summary>
         /// Represents a definition of an EDM primitive type.

@@ -245,7 +245,7 @@ namespace Microsoft.OData
             }
             else
             {
-                readerSettings = container.GetRequiredService<ODataMessageReaderSettings>();
+                readerSettings = container.GetRequiredService<ODataMessageReaderSettings>().Clone();
             }
 
             if (other != null)

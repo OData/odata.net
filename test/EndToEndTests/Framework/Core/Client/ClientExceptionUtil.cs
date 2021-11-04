@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !PORTABLELIB && !SILVERLIGHT
 namespace Microsoft.Test.OData.Framework.Client
 {
     using System;
@@ -83,4 +82,3 @@ namespace Microsoft.Test.OData.Framework.Client
         }        
     }
 }
-#endif

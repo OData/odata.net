@@ -292,17 +292,6 @@
     <Compile Include="Workspaces\CustomServiceHost\HttpListenerHost.cs" />
     <Compile Include="Workspaces\CustomServiceHost\TestServiceHostCustom.cs" />
     <Compile Include="Workspaces\CustomServiceHost\BaseTestWebRequest.cs" />
-    <EmbeddedResource Include="Workspaces\Silverlight\App.g.cs" />
-    <EmbeddedResource Include="Workspaces\Silverlight\App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Workspaces\Silverlight\AstoriaTestSilverlightService.cs" />
-    <EmbeddedResource Include="Workspaces\Silverlight\CommonTypes.cs" />
-    <EmbeddedResource Include="Workspaces\Silverlight\Page.g.cs" />
-    <EmbeddedResource Include="Workspaces\Silverlight\Page.xaml.cs">
-      <DependentUpon>Page.xaml</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Workspaces\Silverlight\RemoteClient.cs" />
     <Compile Include="Workspaces\NonClrWorkspaces\Aruba.NonClr.Workspace.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -352,11 +341,6 @@
     <Compile Include="Workspaces\WorkspaceLibrary\CodeGeneratingDataInserter.cs" />
     <EmbeddedResource Include="Workspaces\ServiceHost\TestServiceHost.cs" />
     <None Include="AstoriaFramework.snk" />
-    <EmbeddedResource Include="Workspaces\Silverlight\ClientAccessPolicyTemplates\CallerAnyDomain.xml" />
-    <EmbeddedResource Include="Workspaces\Silverlight\ClientAccessPolicyTemplates\CallerDifferentDomain.xml" />
-    <EmbeddedResource Include="Workspaces\Silverlight\ClientAccessPolicyTemplates\HeadersBlocked.xml" />
-    <EmbeddedResource Include="Workspaces\Silverlight\ClientAccessPolicyTemplates\OnlyServiceRequestAllowed.xml" />
-    <EmbeddedResource Include="Workspaces\Silverlight\ClientAccessPolicyTemplates\SubPathsNotallowed.xml" />
     <Content Include="Workspaces\Databases\Aruba.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -366,16 +350,6 @@
     <Content Include="Workspaces\Databases\PicturesTags.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Workspaces\Silverlight\SilverlightAstoriaTestUI.csproj.user" />
-    <Content Include="Workspaces\Silverlight\VBDispatch.vbproj.user" />
-    <EmbeddedResource Include="Workspaces\Silverlight\AppManifest.xml" />
-    <EmbeddedResource Include="Workspaces\Silverlight\AstoriaTestSilverlight.svc" />
-    <EmbeddedResource Include="Workspaces\Silverlight\CommonTypes.csproj" />
-    <Content Include="Workspaces\Silverlight\SilverlightAstoriaTestPage.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <EmbeddedResource Include="Workspaces\Silverlight\SilverlightAstoriaTestUI.csproj" />
-    <EmbeddedResource Include="Workspaces\Silverlight\VBDispatch.vbproj" />
     <EmbeddedResource Include="Workspaces\Databases\Aruba.csdl" />
     <EmbeddedResource Include="Workspaces\Databases\Aruba.msl" />
     <EmbeddedResource Include="Workspaces\Databases\Aruba.ssdl" />
@@ -392,18 +366,6 @@
     <EmbeddedResource Include="Workspaces\Databases\PicturesTags.ssdl" />
     <EmbeddedResource Include="Workspaces\Generic.Web.config" />
     <EmbeddedResource Include="Workspaces\app.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Workspaces\Silverlight\App.xaml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Workspaces\Silverlight\AppManifest.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Workspaces\Silverlight\Page.xaml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

@@ -468,7 +468,7 @@ namespace Microsoft.OData.Json
 
             this.tokenStartIndex++;
             this.readingStream = true;
-            return new ODataBinaryStreamReader(this.ReadChars);
+            return new ODataBinaryStreamReader(new StreamReaderDelegate(this.ReadChars));
         }
 
         /// <summary>
@@ -502,7 +502,7 @@ namespace Microsoft.OData.Json
             }
 
             this.readingStream = true;
-            return new ODataTextStreamReader(this.ReadChars);
+            return new ODataTextStreamReader(new StreamReaderDelegate(this.ReadChars));
         }
 
         /// <summary>

@@ -68,7 +68,6 @@ namespace Microsoft.OData.Client
         internal static bool TryConvertBinaryToByteArray(object binaryValue, out byte[] converted)
         {
             Debug.Assert(binaryValue != null, "binaryValue != null");
-#if !PORTABLELIB
             Type valueType = binaryValue.GetType();
             PrimitiveType ptype;
             if (PrimitiveType.TryGetPrimitiveType(valueType, out ptype) && valueType == BinaryTypeConverter.BinaryType)
@@ -77,7 +76,7 @@ namespace Microsoft.OData.Client
                 converted = (byte[])valueType.InvokeMember("ToArray", Flags, null, binaryValue, null, CultureInfo.InvariantCulture);
                 return true;
             }
-#endif
+
             converted = null;
             return false;
         }

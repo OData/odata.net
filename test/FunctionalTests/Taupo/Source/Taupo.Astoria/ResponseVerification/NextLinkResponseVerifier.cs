@@ -17,9 +17,6 @@ namespace Microsoft.Test.Taupo.Astoria.ResponseVerification
     using Microsoft.Test.Taupo.Astoria.Contracts.ResponseVerification;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
-#if WINDOWS_PHONE
-    using Microsoft.Test.Taupo.Platforms; // for Enum.HasFlag
-#endif
     using Microsoft.Test.Taupo.Query.Contracts;
 
     /// <summary>

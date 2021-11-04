@@ -4,9 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-// Async APIs are not supported in the Product for Silverlight and WP7. 
-// TODO: Enable async Tests on Phone and Silverlight when Product Supports them 
-#if !SILVERLIGHT && !WINDOWS_PHONE
 namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 {
     using System;
@@ -137,4 +134,3 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
     }
 }
-#endif

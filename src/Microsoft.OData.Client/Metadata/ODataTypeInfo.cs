@@ -353,12 +353,10 @@ namespace Microsoft.OData.Client.Metadata
             {
                 keyKind = KeyKind.AttributedKey;
             }
-#if !PORTABLELIB
             else if (propertyInfo.GetCustomAttributes().OfType<System.ComponentModel.DataAnnotations.KeyAttribute>().Any())
             {
                 keyKind = KeyKind.AttributedKey;
             }
-#endif
             else if (propertyName.EndsWith("ID", StringComparison.Ordinal))
             {
                 string declaringTypeName = propertyInfo.DeclaringType.Name;

@@ -7,7 +7,6 @@
 namespace Microsoft.Test.OData.Services.TestServices
 {
     using Microsoft.Test.OData.Framework.Server;
-#if !SILVERLIGHT && !PORTABLELIB
     using Microsoft.Test.OData.Services.ActionOverloadingService;
     using Microsoft.Test.OData.Services.KeyAsSegmentService;
     using Microsoft.Test.OData.Services.ODataWCFService;
@@ -15,7 +14,6 @@ namespace Microsoft.Test.OData.Services.TestServices
     using Microsoft.Test.OData.Services.PublicProvider;
     using Microsoft.Test.OData.Services.UrlModifyingService;
     using Microsoft.Test.OData.Services.ODataOperationService;
-#endif
 
     /// <summary>
     /// Service Descriptors for OData Test Services
@@ -25,9 +23,7 @@ namespace Microsoft.Test.OData.Services.TestServices
         private static readonly ServiceDescriptor astoriaDefaultServiceDescriptor =
             new ServiceDescriptor
             {
-#if !SILVERLIGHT && !PORTABLELIB
                 ServiceType = typeof(AstoriaDefaultService.Service),
-#endif
                 CreateServiceUri = () => TestServiceUtil.GenerateServiceUri("AstoriaDefault"),
                 CreateDataServiceContext = (uri) => new AstoriaDefaultServiceReference.DefaultContainer(uri),
             };
@@ -35,9 +31,7 @@ namespace Microsoft.Test.OData.Services.TestServices
         private static readonly ServiceDescriptor astoriaDefaultModifiedClientTypesServiceDescriptor =
             new ServiceDescriptor
             {
-#if !SILVERLIGHT && !PORTABLELIB
                 ServiceType = typeof(AstoriaDefaultService.Service),
-#endif
                 CreateServiceUri = () => TestServiceUtil.GenerateServiceUri("AstoriaDefault"),
                 CreateDataServiceContext = (uri) => new AstoriaDefaultServiceReferenceModifiedClientTypes.DefaultContainer(uri),
             };
@@ -45,9 +39,7 @@ namespace Microsoft.Test.OData.Services.TestServices
         private static readonly ServiceDescriptor astoriaDefaultWithAccessRestrictionsServiceDescriptor =
             new ServiceDescriptor
             {
-#if !SILVERLIGHT && !PORTABLELIB
                 ServiceType = typeof(AstoriaDefaultService.ServiceWithAccessRestrictions),
-#endif
                 CreateServiceUri = () => TestServiceUtil.GenerateServiceUri("AstoriaDefaultWithAccessRestrictions"),
                 CreateDataServiceContext = (uri) => new AstoriaDefaultWithAccessRestrictionsServiceReference.DefaultContainer(uri),
             };
@@ -55,9 +47,7 @@ namespace Microsoft.Test.OData.Services.TestServices
         private static readonly ServiceDescriptor keyAsSegmentServiceDescriptor =
             new ServiceDescriptor
             {
-#if !SILVERLIGHT && !PORTABLELIB
                 ServiceType = typeof(KeyAsSegmentService),
-#endif
                 CreateServiceUri = () => TestServiceUtil.GenerateServiceUri("KeyAsSegment"),
                 CreateDataServiceContext = (uri) => new KeyAsSegmentServiceReference.DefaultContainer(uri),
             };
@@ -65,9 +55,7 @@ namespace Microsoft.Test.OData.Services.TestServices
         private static readonly ServiceDescriptor primitiveKeysServiceDescriptor =
             new ServiceDescriptor
             {
-#if !SILVERLIGHT && !PORTABLELIB
                 ServiceType = typeof(PrimitiveKeysService.ReflectionService),
-#endif
                 CreateServiceUri = () => TestServiceUtil.GenerateServiceUri("PrimitiveKeys"),
                 CreateDataServiceContext = (uri) => new PrimitiveKeysServiceReference.TestContext(uri),
             };
@@ -75,9 +63,7 @@ namespace Microsoft.Test.OData.Services.TestServices
         private static readonly ServiceDescriptor odataWriterDefaultServiceDescriptor =
             new ServiceDescriptor
             {
-#if !SILVERLIGHT && !PORTABLELIB
                 ServiceType = typeof(ODataWriterDefaultService),
-#endif
                 CreateServiceUri = () => TestServiceUtil.GenerateServiceUri("ODataWriterDefault"),
                 CreateDataServiceContext = (uri) => new ODataWriterDefaultServiceReference.DefaultContainer(uri),
             };
@@ -85,9 +71,7 @@ namespace Microsoft.Test.OData.Services.TestServices
         private static readonly ServiceDescriptor urlModifyingServiceDescriptor =
             new ServiceDescriptor
             {
-#if !SILVERLIGHT && !PORTABLELIB
                 ServiceType = typeof(UrlModifyingService),
-#endif
                 CreateServiceUri = () => TestServiceUtil.GenerateServiceUri("UrlModifying"),
                 CreateDataServiceContext = (uri) => new AstoriaDefaultServiceReference.DefaultContainer(uri),
             };
@@ -95,9 +79,7 @@ namespace Microsoft.Test.OData.Services.TestServices
         private static readonly ServiceDescriptor openTypesServiceDescriptor =
             new ServiceDescriptor
             {
-#if !SILVERLIGHT && !PORTABLELIB
                 ServiceType = typeof(OpenTypesService.OpenTypeService),
-#endif
                 CreateServiceUri = () => TestServiceUtil.GenerateServiceUri("OpenTypes"),
                 CreateDataServiceContext = (uri) => new OpenTypesServiceReference.DefaultContainer(uri),
             };
@@ -105,9 +87,7 @@ namespace Microsoft.Test.OData.Services.TestServices
         private static readonly ServiceDescriptor actionOverloadingServiceDescriptor =
             new ServiceDescriptor
             {
-#if !SILVERLIGHT && !PORTABLELIB
                 ServiceType = typeof(ActionOverloadingService),
-#endif
                 CreateServiceUri = () => TestServiceUtil.GenerateServiceUri("ActionOverloading"),
                 CreateDataServiceContext = (uri) => new ActionOverloadingServiceReference.DefaultContainer(uri),
             };
@@ -115,9 +95,7 @@ namespace Microsoft.Test.OData.Services.TestServices
         private static readonly ServiceDescriptor publicProviderHybridServiceDescriptor =
             new ServiceDescriptor
             {
-#if !SILVERLIGHT && !PORTABLELIB
                 ServiceType = typeof(HybridService),
-#endif
                 CreateServiceUri = () => TestServiceUtil.GenerateServiceUri("Hybrid"),
                 CreateDataServiceContext = uri => new PublicProviderHybridServiceReference.HybridService.AstoriaDefaultServiceDBEntities(uri),
             };
@@ -125,9 +103,7 @@ namespace Microsoft.Test.OData.Services.TestServices
         private static readonly ServiceDescriptor publicProviderReflectionServiceDescriptor =
             new ServiceDescriptor
             {
-#if !SILVERLIGHT && !PORTABLELIB
                 ServiceType = typeof(ReflectionService),
-#endif
                 CreateServiceUri = () => TestServiceUtil.GenerateServiceUri("Reflection"),
                 CreateDataServiceContext = uri => new PublicProviderReflectionServiceReference.DefaultContainer(uri),
             };
@@ -135,9 +111,7 @@ namespace Microsoft.Test.OData.Services.TestServices
         private static readonly ServiceDescriptor publicProviderEFServiceDescriptor =
             new ServiceDescriptor
             {
-#if !SILVERLIGHT && !PORTABLELIB
                 ServiceType = typeof(EFService),
-#endif
                 CreateServiceUri = () => TestServiceUtil.GenerateServiceUri("EF"),
                 CreateDataServiceContext = uri => new PublicProviderEFServiceReference.Microsoft.Test.OData.Services.Astoria.AstoriaDefaultServiceDBEntities(uri)
             };
@@ -145,9 +119,7 @@ namespace Microsoft.Test.OData.Services.TestServices
         private static readonly ServiceDescriptor oDataWCFServiceDescriptor =
             new ServiceDescriptor
             {
-#if !SILVERLIGHT && !PORTABLELIB
                 ServiceType = typeof(DefaultWCFService),
-#endif
                 CreateServiceUri = () => TestServiceUtil.GenerateServiceUri("ODL"),
                 CreateDataServiceContext = uri => new ODataWCFServiceReference.InMemoryEntities(uri),
             };
@@ -155,9 +127,7 @@ namespace Microsoft.Test.OData.Services.TestServices
         private static readonly ServiceDescriptor oDataWCFServicePlusDescriptor =
             new ServiceDescriptor
             {
-#if !SILVERLIGHT && !PORTABLELIB
                 ServiceType = typeof(DefaultWCFService),
-#endif
                 CreateServiceUri = () => TestServiceUtil.GenerateServiceUri("ODL"),
                 CreateDataServiceContext = uri => new ODataWCFServiceReferencePlus.InMemoryEntitiesPlus(uri),
             };
@@ -165,9 +135,7 @@ namespace Microsoft.Test.OData.Services.TestServices
         private static readonly ServiceDescriptor tripPinServiceDescriptor =
             new ServiceDescriptor
             {
-#if !SILVERLIGHT && !PORTABLELIB
                 ServiceType = typeof(TripPinService),
-#endif
                 CreateServiceUri = () => TestServiceUtil.GenerateServiceUri("TripPin"),
                 CreateDataServiceContext = uri => new ODataWCFServiceReference.InMemoryEntities(uri) //TODO-jiajyu: update generated code
             };
@@ -175,9 +143,7 @@ namespace Microsoft.Test.OData.Services.TestServices
         private static readonly ServiceDescriptor operationServiceDescriptor =
            new ServiceDescriptor
            {
-#if !SILVERLIGHT && !PORTABLELIB
                ServiceType = typeof(OperationService),
-#endif
                CreateServiceUri = () => TestServiceUtil.GenerateServiceUri("OperationService"),
                CreateDataServiceContext = uri => new  ODataWCFServiceReference.InMemoryEntities(uri) //TODO-jiajyu: update generated code
            };
@@ -185,9 +151,7 @@ namespace Microsoft.Test.OData.Services.TestServices
         private static readonly ServiceDescriptor modelRefServiceDescriptor =
            new ServiceDescriptor
            {
-#if !SILVERLIGHT && !PORTABLELIB
                ServiceType = typeof(ModelRefService),
-#endif
                CreateServiceUri = () => TestServiceUtil.GenerateServiceUri("ModelRef"),
                CreateDataServiceContext = uri => new ODataWCFServiceReference.InMemoryEntities(uri) //TODO-lianw: update generated code
            };
@@ -195,9 +159,7 @@ namespace Microsoft.Test.OData.Services.TestServices
         private static readonly ServiceDescriptor typeDefinitionServiceDescriptor =
            new ServiceDescriptor
            {
-#if !SILVERLIGHT && !PORTABLELIB
                ServiceType = typeof(TypeDefinitionService),
-#endif
                CreateServiceUri = () => TestServiceUtil.GenerateServiceUri("TypeDefinition"),
                CreateDataServiceContext = uri => new ODataWCFServiceReference.InMemoryEntities(uri) //TODO-tiano: update generated code
            };
@@ -205,9 +167,7 @@ namespace Microsoft.Test.OData.Services.TestServices
         private static readonly ServiceDescriptor pluggableFormatServiceDescriptor =
             new ServiceDescriptor
             {
-#if !SILVERLIGHT && !PORTABLELIB
                 ServiceType = typeof(PluggableFormat.PluggableFormatService),
-#endif
                 CreateServiceUri = () => TestServiceUtil.GenerateServiceUri("PluggableFormat"),
                 CreateDataServiceContext = (uri) => new PluggableFormatServiceReference.PluggableFormatService(uri)
             };
@@ -215,9 +175,7 @@ namespace Microsoft.Test.OData.Services.TestServices
         private static readonly ServiceDescriptor payloadValueConverterServiceDescriptor =
             new ServiceDescriptor
             {
-#if !SILVERLIGHT && !PORTABLELIB
                 ServiceType = typeof(PluggableFormat.PayloadValueConverterService),
-#endif
                 CreateServiceUri = () => TestServiceUtil.GenerateServiceUri("PayloadValueConverter"),
                 // Share PluggableFormatService's client code.
                 CreateDataServiceContext = (uri) => new PluggableFormatServiceReference.PluggableFormatService(uri)
@@ -226,9 +184,7 @@ namespace Microsoft.Test.OData.Services.TestServices
         private static readonly ServiceDescriptor odataSimplifiedServiceDescriptor =
             new ServiceDescriptor
             {
-        #if !SILVERLIGHT && !PORTABLELIB
                 ServiceType = typeof(ODataSimplifiedService),
-        #endif
                 CreateServiceUri = () => TestServiceUtil.GenerateServiceUri("ODataSimplifiedService"),
                 CreateDataServiceContext = uri => new ODataSimplifiedServiceReference.ODataSimplifiedService(uri)
             };

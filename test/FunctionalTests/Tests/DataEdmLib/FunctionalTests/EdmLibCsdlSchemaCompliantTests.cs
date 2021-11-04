@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !WINDOWS_PHONE && !SILVERLIGHT
 namespace EdmLibTests.FunctionalTests
 {
     using System;
@@ -516,4 +515,3 @@ namespace EdmLibTests.FunctionalTests
         }
     }
 }
-#endif

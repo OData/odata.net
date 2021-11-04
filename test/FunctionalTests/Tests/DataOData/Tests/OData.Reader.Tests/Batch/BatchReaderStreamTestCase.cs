@@ -15,7 +15,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
     using Microsoft.Test.Taupo.OData.Common;
     #endregion Namespaces
 
-#if !SILVERLIGHT && !WINDOWS_PHONE
     // Batch stream buffer tests use private reflection and thus cannot run on Silverlight or the phone.
 
     /// <summary>
@@ -115,5 +114,4 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
             }
         }
     }
-#endif
 }

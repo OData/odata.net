@@ -9,9 +9,7 @@ namespace Microsoft.Test.Taupo.OData.Common
     #region Namespaces
     using System;
     using System.Threading;
-#if !SILVERLIGHT
     using System.Threading.Tasks;
-#endif
     #endregion Namespaces
 
     /// <summary>
@@ -209,14 +207,10 @@ namespace Microsoft.Test.Taupo.OData.Common
                 this.AsyncWaitEvent.Set();
                 this.CompletedSynchronouslyValue = false;
                 this.IsCompletedValue = true;
-#if SILVERLIGHT
-                this.InvokeCallback();
-#else
                 Task.Factory.StartNew(() =>
                 {
                     this.InvokeCallback();
                 }).Wait();
-#endif
             }
         }
 

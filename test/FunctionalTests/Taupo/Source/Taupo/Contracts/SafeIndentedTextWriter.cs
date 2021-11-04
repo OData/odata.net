@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !SILVERLIGHT
-
 namespace Microsoft.Test.Taupo.Contracts
 {
     using System;
@@ -544,5 +542,3 @@ namespace Microsoft.Test.Taupo.Contracts
         }
     }
 }
-
-#endif

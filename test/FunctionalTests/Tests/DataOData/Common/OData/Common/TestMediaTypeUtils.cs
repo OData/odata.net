@@ -19,15 +19,9 @@ namespace Microsoft.Test.Taupo.OData.Common
         public static readonly UTF8Encoding EncodingUtf8NoPreamble = new UTF8Encoding(false, true);
 
         /// <summary>Western European DOS encoding</summary>
-#if !SILVERLIGHT && !WINDOWS_PHONE   // Encoding not supported on these platforms
         public static readonly Encoding Ibm850Encoding = Encoding.GetEncoding("ibm850", new EncoderExceptionFallback(), new DecoderExceptionFallback());
-#endif
 
-#if SILVERLIGHT || WINDOWS_PHONE   // ISO-8859-1 not available
-        private static readonly Encoding Latin1Encoding = Encoding.UTF8;
-#else
         public static readonly Encoding Latin1Encoding = Encoding.GetEncoding("ISO-8859-1", new EncoderExceptionFallback(), new DecoderExceptionFallback());
-#endif
 
         /// <summary>
         /// An array that maps stores the supported media types for all <see cref="ODataPayloadKind"/> .

@@ -31,13 +31,11 @@ namespace Microsoft.Test.Taupo.Contracts
         /// <value>The language.</value>
         public IProgrammingLanguageStrategy Language { get; set; }
 
-#if !SILVERLIGHT
         /// <summary>
         /// Gets or sets the workspace directory.
         /// </summary>
         /// <value>The workspace directory.</value>
         public string WorkspaceDirectory { get; set; }
-#endif
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.

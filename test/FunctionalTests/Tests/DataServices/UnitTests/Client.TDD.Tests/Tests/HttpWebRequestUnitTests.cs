@@ -19,18 +19,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     /// </summary>
     public class HttpWebRequestMessageUnitTests
     {
-#if PORTABLELIB || SILVERLIGHT
-        [Fact]
-        public void IsRunningOnSilverlightShouldReturnTrueWhenRunningOnSilverlightOnly()
-        {
-#if SILVERLIGHT
-            HttpWebRequestMessage.IsRunningOnSilverlight.Should().BeTrue();
-#else
-            HttpWebRequestMessage.IsRunningOnSilverlight.Should().BeFalse();
-#endif
-        }
-#endif
-
         [Fact]
         public void SetUserAgentShouldSucceed()
         {

@@ -71,8 +71,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         [InjectDependency(IsRequired = true)]
         public PayloadWriterTestDescriptor.Settings Settings { get; set; }
 
-        // This test only runs on async which is not supported on Phone and Silverlight
-#if !SILVERLIGHT && !WINDOWS_PHONE
         [Ignore] // Remove Atom
         // [TestMethod, Variation(Description = "Test single property JSON payloads from payload Generator.")]
         [MethodImplAttribute(MethodImplOptions.NoOptimization)]
@@ -111,7 +109,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         baselineLogger: this.Logger);
                 });
         }
-#endif
 
         #region Primitive properties
         private IEnumerable<PayloadWriterTestDescriptor<ODataProperty>> CreatePrimitiveTopLevelPropertyDescriptors()

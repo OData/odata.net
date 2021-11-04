@@ -14,9 +14,7 @@ namespace Microsoft.Test.OData.Framework.Common
     /// <summary>
     /// Exception raised wherever there's data miscompare in the test.
     /// </summary>
-#if !SILVERLIGHT && !PORTABLELIB
     [Serializable]
-#endif
     public class DataComparisonException : TestFailedException
     {
         /// <summary>
@@ -43,7 +41,6 @@ namespace Microsoft.Test.OData.Framework.Common
         {
         }
 
-#if !SILVERLIGHT && !PORTABLELIB
         /// <summary>
         /// Initializes a new instance of the DataComparisonException class based on 
         /// <see cref="SerializationInfo"/>
@@ -64,7 +61,6 @@ namespace Microsoft.Test.OData.Framework.Common
             this.ExpectedValue = info.GetString("ExpectedValue");
             this.ActualValue = info.GetString("ActualValue");
         }
-#endif
 
         /// <summary>
         /// Gets or sets actual value.
@@ -98,7 +94,6 @@ namespace Microsoft.Test.OData.Framework.Common
             }
         }
 
-#if !SILVERLIGHT && !PORTABLELIB
         /// <summary>
         /// Adds exception data to <see cref="SerializationInfo"/>.
         /// </summary>
@@ -111,6 +106,5 @@ namespace Microsoft.Test.OData.Framework.Common
             info.AddValue("ExpectedValue", ToStringConverter.ConvertObjectToString(this.ExpectedValue));
             info.AddValue("ActualValue", ToStringConverter.ConvertObjectToString(this.ActualValue));
         }
-#endif
     }
 }

@@ -12,9 +12,7 @@ namespace Microsoft.Test.Taupo.Common
     /// <summary>
     /// Exception thrown when an infrastructure failure is detected.
     /// </summary>
-#if !SILVERLIGHT
     [Serializable]
-#endif
     public class TaupoInfrastructureException : TaupoException
     {
         /// <summary>
@@ -43,7 +41,6 @@ namespace Microsoft.Test.Taupo.Common
         {
         }
 
-#if !SILVERLIGHT
         /// <summary>
         /// Initializes a new instance of the TaupoInfrastructureException class based on 
         /// <see cref="SerializationInfo"/>
@@ -54,6 +51,5 @@ namespace Microsoft.Test.Taupo.Common
             : base(info, context)
         {
         }
-#endif
     }
 }

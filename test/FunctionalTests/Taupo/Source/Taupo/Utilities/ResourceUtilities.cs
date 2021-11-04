@@ -8,16 +8,12 @@ namespace Microsoft.Test.Taupo.Utilities
 {
     using System;
     using System.IO;
-#if !SILVERLIGHT
     using System.IO.Compression;
-#endif
     using System.Linq;
     using System.Reflection;
     using System.Resources;
     using System.Security;
-#if !WIN8
     using System.Security.Permissions;
-#endif
     using Microsoft.Test.Taupo.Common;
 
     /// <summary>
@@ -25,7 +21,6 @@ namespace Microsoft.Test.Taupo.Utilities
     /// </summary>
     public static class ResourceUtilities
     {
-#if !WIN8
         /// <summary>
         /// Extracts the specified resource to a given directory
         /// </summary>
@@ -48,11 +43,9 @@ namespace Microsoft.Test.Taupo.Utilities
         /// <param name="fileName">The name of the file.</param>
         /// <remarks>The method prefixes the actual resource with unqualified assembly name + '.Resources.' (
         /// so you should put all your resources under 'Resources' directory within a project)</remarks>
-#if !SILVERLIGHT
         [SecuritySafeCritical]
         [PermissionSet(SecurityAction.Assert, Unrestricted = true)]
         [AssertJustification("Calling File.Create demands FileIOPermission (Write flag) for the file path to which the resource is extracted.")]
-#endif
         public static void ExtractResourceToDirectory(string outputDirectory, Assembly assembly, string resourceName, string fileName)
         {
             ValidateCommonArguments(outputDirectory, assembly, resourceName);
@@ -72,9 +65,7 @@ namespace Microsoft.Test.Taupo.Utilities
                 }
             }
         }
-#endif
 
-#if !SILVERLIGHT
         /// <summary>
         /// Extracts the specified compressed resource to a given directory
         /// </summary>
@@ -110,7 +101,6 @@ namespace Microsoft.Test.Taupo.Utilities
                 }
             }
         }
-#endif
 
         /// <summary>
         /// Builds a resource manager for the given assembly.
@@ -119,15 +109,10 @@ namespace Microsoft.Test.Taupo.Utilities
         /// <returns>The resource manager.</returns>
         public static ResourceManager BuildResourceManager(Assembly assembly)
         {
-#if WIN8
-            return null;
-#else
             ExceptionUtilities.CheckArgumentNotNull(assembly, "assembly");
             return new ResourceManager(FindSingleResourceTable(assembly), assembly);
-#endif
         }
 
-#if !WIN8
         private static void ValidateCommonArguments(string outputDirectory, Assembly assembly, string resourceName)
         {
             ExceptionUtilities.CheckArgumentNotNull(outputDirectory, "outputDirectory");
@@ -139,7 +124,6 @@ namespace Microsoft.Test.Taupo.Utilities
                 throw new TaupoInfrastructureException("Output directory '" + outputDirectory + "' does not exist.");
             }
         }
-#endif
 
         private static string FindSingleResourceTable(Assembly assembly)
         {

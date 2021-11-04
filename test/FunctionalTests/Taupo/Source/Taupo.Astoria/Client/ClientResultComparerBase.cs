@@ -11,9 +11,6 @@ namespace Microsoft.Test.Taupo.Astoria.Client
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
-#if WIN8
-    using System.Reflection;
-#endif
     using System.Runtime.CompilerServices;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Query.Contracts;
@@ -196,16 +193,9 @@ namespace Microsoft.Test.Taupo.Astoria.Client
         {
             if (actual != null && !actual.GetType().GetCustomAttributes(typeof(CompilerGeneratedAttribute), false).Any())
             {
-#if WIN8
-                if (!IsAnonymousType(actual.GetType()))
-                {
-#endif
-                    this.ThrowOrLogError(shouldThrow, "Expecting anonymous type in '{0}'. Got: {1}.", path, actual.GetType());
+                this.ThrowOrLogError(shouldThrow, "Expecting anonymous type in '{0}'. Got: {1}.", path, actual.GetType());
 
-                    return ComparisonResult.Failure;
-#if WIN8
-                }
-#endif
+                return ComparisonResult.Failure;
             }
 
             return this.CompareStructural(expected, actual, path, shouldThrow);
@@ -289,18 +279,9 @@ namespace Microsoft.Test.Taupo.Astoria.Client
 
             IEnumerable<string> propertyNames = expected.MemberNames;
 
-#if WIN8
-            bool isAnonymousType = IsAnonymousType(actual.GetType());
-            int i = 0;
-#endif
             foreach (string expectedName in propertyNames)
             {
-#if WIN8
-                // In WIN8 we are using CSharpGenericTypeBuilder. Properties have fixed names such as Field1, Field2,...
-                var actualProperty = isAnonymousType ? properties.ToArray()[i++] : properties.Where(p => p.Name == expectedName).SingleOrDefault();
-#else
                 var actualProperty = properties.Where(p => p.Name == expectedName).SingleOrDefault();
-#endif
 
                 if (actualProperty == null)
                 {
@@ -309,19 +290,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                     return ComparisonResult.Failure;
                 }
 
-                object actualValue = null;
-
- #if SILVERLIGHT
-                CoreLinq.Expressions.ParameterExpression param = CoreLinq.Expressions.Expression.Parameter(typeof(Object), "param");
-                CoreLinq.Expressions.Expression convertedParam = CoreLinq.Expressions.Expression.Convert(param, actual.GetType());
-                CoreLinq.Expressions.LambdaExpression GetPropertyValueExp = CoreLinq.Expressions.Expression.Lambda(System.Linq.Expressions.Expression.Property(convertedParam, actualProperty), param);
-
-                Delegate dynamicGetter = GetPropertyValueExp.Compile();
-
-                actualValue = dynamicGetter.DynamicInvoke(actual);
-#else
-                actualValue = actualProperty.GetValue(actual, null);
-#endif
+                object actualValue = actualProperty.GetValue(actual, null);
                 QueryType expectedPropertyType = expected.Type.Properties.Where(p => p.Name == expectedName).Single().PropertyType;
 
                 string newPath = path + "." + expectedName;
@@ -479,10 +448,8 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                 bool matchFound = false;
                 object foundElement = null;
                 List<object> filteredActualElements = new List<object>(actualElements);
-#if !SILVERLIGHT
                 // This was added for debugging purposes, on Silverlight it fails due to reflection calls so commenting it out
                 filteredActualElements = this.FilterOutNonEqualActualElements(expectedElement, actualElements);
-#endif
       
                 // foreaching instead of LINQ for easier debugging
                 foreach (var actualElement in filteredActualElements)
@@ -630,13 +597,6 @@ namespace Microsoft.Test.Taupo.Astoria.Client
             }
         }
 
-#if WIN8
-        private static bool IsAnonymousType(Type type)
-        {
-            return type.FullName.Contains("CSharpGenericTypeBuilder");
-        }
-
-#endif
         private List<object> FilterOutNonEqualActualElements(QueryValue expectedValue, IEnumerable<object> actualObjects)
         {
             var expectedStructuralValue = expectedValue as QueryStructuralValue;

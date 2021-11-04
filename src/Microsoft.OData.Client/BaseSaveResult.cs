@@ -18,9 +18,6 @@ namespace Microsoft.OData.Client
     using System.Net;
     using System.Text;
     using System.Threading;
-#if PORTABLELIB
-    using System.Threading.Tasks;
-#endif
     using Microsoft.OData;
     using Microsoft.OData.Client.Metadata;
 
@@ -514,11 +511,7 @@ namespace Microsoft.OData.Client
                     do
                     {
                         Util.DebugInjectFault("SaveAsyncResult::AsyncEndGetResponse_BeforeBeginRead");
-#if PORTABLELIB
-                        asyncResult = BaseAsyncResult.InvokeTask(httpResponseStream.ReadAsync, this.buildBatchBuffer, 0, this.buildBatchBuffer.Length, this.AsyncEndRead, new AsyncReadState(pereq));
-#else
                         asyncResult = InvokeAsync(httpResponseStream.BeginRead, this.buildBatchBuffer, 0, this.buildBatchBuffer.Length, this.AsyncEndRead, new AsyncReadState(pereq));
-#endif
                         pereq.SetRequestCompletedSynchronously(asyncResult.CompletedSynchronously); // BeginRead
                     }
                     while (asyncResult.CompletedSynchronously && !pereq.RequestCompleted && !this.IsCompletedInternally && httpResponseStream.CanRead);
@@ -1100,7 +1093,7 @@ namespace Microsoft.OData.Client
         /// <param name="binding">The binding.</param>
         /// <param name="targetResource">The target's entity descriptor.</param>
         /// <returns>The original link uri or one with the target entity key appended.</returns>
-        private static Uri AppendTargetEntityKeyIfNeeded(Uri linkUri, LinkDescriptor binding, EntityDescriptor targetResource)
+        private Uri AppendTargetEntityKeyIfNeeded(Uri linkUri, LinkDescriptor binding, EntityDescriptor targetResource)
         {
             // To delete from a collection, we need to append the key.
             // For example: if the navigation property name is "Purchases" and the resource type is Order with key '1', then this method will generate 'baseuri/Purchases(1)'
@@ -1111,8 +1104,26 @@ namespace Microsoft.OData.Client
 
             Debug.Assert(targetResource != null, "targetResource != null");
             StringBuilder builder = new StringBuilder();
-            builder.Append(UriUtil.UriToString(linkUri));
-            builder.Append(UriHelper.QUESTIONMARK + XmlConstants.HttpQueryStringId + UriHelper.EQUALSSIGN + targetResource.Identity);
+            string uriString = UriUtil.UriToString(linkUri);
+
+            if (this.RequestInfo.Context.DeleteLinkUriOption == DeleteLinkUriOption.RelatedKeyAsSegment)
+            {
+                // Related key segment should appear before /$ref
+                int indexOfLinkSegment = uriString.IndexOf(XmlConstants.UriLinkSegment, StringComparison.Ordinal);
+                builder.Append(indexOfLinkSegment > 0 ? uriString.Substring(0, indexOfLinkSegment - 1) : uriString);
+                this.RequestInfo.Context.UrlKeyDelimiter.AppendKeyExpression(targetResource.EdmValue, builder);
+                if (indexOfLinkSegment > 0)
+                {
+                    builder.Append('/');
+                    builder.Append(XmlConstants.UriLinkSegment);
+                }
+            }
+            else
+            {
+                builder.Append(uriString);
+                builder.Append(UriHelper.QUESTIONMARK + XmlConstants.HttpQueryStringId + UriHelper.EQUALSSIGN + targetResource.Identity);
+            }
+
             return UriUtil.CreateUri(builder.ToString(), UriKind.RelativeOrAbsolute);
         }
 
@@ -1326,29 +1337,13 @@ namespace Microsoft.OData.Client
             }
         }
 
-#if PORTABLELIB
-        /// <summary>Handle responseStream.ReadAsync and complete the read operation.</summary>
-        /// <param name="task">Task that has completed.</param>
-        /// <param name="asyncState">State associated with the Task.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "required for this feature")]
-        private void AsyncEndRead(Task task, object asyncState)
-#else
-
         /// <summary>handle responseStream.BeginRead with responseStream.EndRead</summary>
         /// <param name="asyncResult">async result</param>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "required for this feature")]
         private void AsyncEndRead(IAsyncResult asyncResult)
-#endif
         {
-#if PORTABLELIB
-            IAsyncResult asyncResult = (IAsyncResult)task;
-#endif
             Debug.Assert(asyncResult != null && asyncResult.IsCompleted, "asyncResult.IsCompleted");
-#if PORTABLELIB
-            AsyncReadState state = (AsyncReadState)asyncState;
-#else
             AsyncReadState state = (AsyncReadState)asyncResult.AsyncState;
-#endif
             PerRequest pereq = state.Pereq;
             int count = 0;
             try
@@ -1360,11 +1355,7 @@ namespace Microsoft.OData.Client
                 Stream httpResponseStream = Util.NullCheck(pereq.ResponseStream, InternalError.InvalidEndReadStream);
 
                 Util.DebugInjectFault("SaveAsyncResult::AsyncEndRead_BeforeEndRead");
-#if PORTABLELIB
-                count = ((Task<int>)task).Result;
-#else
                 count = httpResponseStream.EndRead(asyncResult);
-#endif
                 if (count > 0)
                 {
                     Stream outputResponse = Util.NullCheck(this.ResponseStream, InternalError.InvalidEndReadCopy);
@@ -1376,11 +1367,7 @@ namespace Microsoft.OData.Client
                         // if CompletedSynchronously then caller will call and we reduce risk of stack overflow
                         do
                         {
-#if PORTABLELIB
-                            asyncResult = BaseAsyncResult.InvokeTask(httpResponseStream.ReadAsync, this.buildBatchBuffer, 0, this.buildBatchBuffer.Length, this.AsyncEndRead, new AsyncReadState(pereq));
-#else
                             asyncResult = InvokeAsync(httpResponseStream.BeginRead, this.buildBatchBuffer, 0, this.buildBatchBuffer.Length, this.AsyncEndRead, state);
-#endif
                             pereq.SetRequestCompletedSynchronously(asyncResult.CompletedSynchronously); // BeginRead
                         }
                         while (asyncResult.CompletedSynchronously && !pereq.RequestCompleted && !this.IsCompletedInternally && httpResponseStream.CanRead);

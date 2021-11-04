@@ -54,6 +54,7 @@ namespace Microsoft.OData.Edm.Csdl
         internal const string UsedNamespacesAnnotation = "UsedNamespaces";
         internal const string ReferencesAnnotation = "References";
         internal const string PrimitiveValueConverterMapAnnotation = "PrimitiveValueConverterMap";
+        internal const string IsImmutable = "IsImmutable";
 
         internal const string Attribute_Abstract = "Abstract";
         internal const string Attribute_Action = "Action";

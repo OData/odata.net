@@ -9,10 +9,8 @@ namespace Microsoft.Test.Taupo.Astoria.Client
     using System;
     using System.Globalization;
     using System.Linq.Expressions;
-#if !SILVERLIGHT
     using System.Security;
     using System.Security.Permissions;
-#endif
     using Microsoft.OData.Client;
     using Microsoft.Test.Taupo.Common;
 
@@ -56,7 +54,6 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                 linkDescriptor.Target == null ? "null" : linkDescriptor.Target);
         }
 
-#if !WINDOWS_PHONE
         /// <summary>
         /// Gets string representation of the specified stream descriptor.
         /// </summary>
@@ -76,17 +73,15 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                 streamDescriptor.StreamLink.ContentType,
                 streamDescriptor.StreamLink.ETag);
         }
-#endif
+
         /// <summary>
         /// Gets the change order for the descriptor via reflection
         /// </summary>
         /// <param name="descriptor">The descriptor to get the change order for</param>
         /// <returns>The change order</returns>
-#if !SILVERLIGHT
         [SecuritySafeCritical]
         [AssertJustification("Need get internal property for sanity check and for cases where it cannot be predicted")]
         [PermissionSet(SecurityAction.Assert, Unrestricted = true)]
-#endif
         public static long GetChangeOrder(this Descriptor descriptor)
         {
             ExceptionUtilities.CheckArgumentNotNull(descriptor, "descriptor");
@@ -94,12 +89,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
             var changeOrderProperty = typeof(Descriptor).GetProperty("ChangeOrder", false, false);
             ExceptionUtilities.CheckObjectNotNull(changeOrderProperty, "Could not find property 'ChangeOrder' on type 'Descriptor'");
 
-#if !SILVERLIGHT
             uint actualChangeOrder = (uint)changeOrderProperty.GetValue(descriptor, null);
-#else
-            var propertyExpression = Expression.Property(Expression.Constant(descriptor), changeOrderProperty);
-            uint actualChangeOrder = Expression.Lambda<Func<uint>>(propertyExpression).Compile().Invoke();
-#endif
             return Convert.ToInt64(actualChangeOrder);
         }
     }

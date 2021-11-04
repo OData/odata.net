@@ -16,7 +16,6 @@ namespace Microsoft.Test.Taupo.OData.Common
     using Microsoft.OData.Edm;
     #endregion Namespaces
 
-#if !SILVERLIGHT
     /// <summary>
     /// ExpressionTreeToXmlSerializer
     /// </summary>
@@ -71,7 +70,6 @@ namespace Microsoft.Test.Taupo.OData.Common
             return outputText.ToString();
         }
 
-#if !SILVERLIGHT
         /// <summary>
         /// Serialize the <paramref name="expression"/> into an XML document
         /// </summary>
@@ -84,7 +82,7 @@ namespace Microsoft.Test.Taupo.OData.Common
             xdoc.LoadXml(xml);
             return xdoc;
         }
-#endif
+
         /// <summary>
         /// Serialize the <paramref name="expression"/> into an XLinq document
         /// </summary>
@@ -559,5 +557,4 @@ namespace Microsoft.Test.Taupo.OData.Common
             }
         }
     }
-#endif
 }

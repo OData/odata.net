@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !SILVERLIGHT
 namespace Microsoft.Test.Taupo.Astoria.ResponseVerification
 {
     using System.Globalization;
@@ -215,4 +214,3 @@ namespace Microsoft.Test.Taupo.Astoria.ResponseVerification
         }
     }
 }
-#endif

@@ -846,7 +846,8 @@ PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint=Type cast segment '{0}' on
 
 ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink=A resource set may contain a next page link, a delta link or neither, but must not contain both.
 
-ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty=The last segment, and only the last segment, must be a navigation property in $expand.
+ODataExpandPath_OnlyLastSegmentCanBeNavigationProperty =The last segment, and only the last segment, can be a navigation property in $expand.
+ODataExpandPath_LastSegmentMustBeNavigationPropertyOrTypeSegment =The last segment must be a navigation property or type segment in $expand.
 ODataExpandPath_InvalidExpandPathSegment=Found a segment of type '{0} in an expand path, but only NavigationProperty, Property and Type segments are allowed.
 
 ODataSelectPath_CannotOnlyHaveTypeSegment=TypeSegment cannot be the only segment in a $select.

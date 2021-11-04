@@ -61,18 +61,12 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
             ExceptionUtilities.CheckArgumentNotNull(contextType, "contextType");
 
             object dataServiceContext = null;
-#if !WINDOWS_PHONE && !WIN8
             if (maxProtocolVersion != DataServiceProtocolVersion.Unspecified)
             {
                 dataServiceContext = Activator.CreateInstance(contextType, serviceUri, maxProtocolVersion.ToProductEnum());
             }
             else
-#endif
             {
-#if WIN8
-                // In win8 CreateInstance fails to find container constructor taking serviceRoot and DataServiceProtocolVersion, add this to ensure that the tests that need to specify non-V3 version work around the issue
-                ExceptionUtilities.Assert(maxProtocolVersion == DataServiceProtocolVersion.V4, "Win8 DataServiceProtocolVersion");
-#endif
                 dataServiceContext = Activator.CreateInstance(contextType, serviceUri);
             }
 

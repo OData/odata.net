@@ -372,7 +372,7 @@ namespace Microsoft.OData
         {
             this.VerifyCanFlush(true);
 
-            // make sure we switch to state FatalExceptionThrown if an exception is thrown during flushing.
+            // make sure we switch to state Error if an exception is thrown during flushing.
             try
             {
                 this.FlushSynchronously();
@@ -499,7 +499,7 @@ namespace Microsoft.OData
         /// <param name="newState">The writer state to transition into.</param>
         protected void SetState(BatchWriterState newState)
         {
-            this.InterceptException(() => this.ValidateTransition(newState));
+            this.InterceptException((thisParam, newStateParam) => thisParam.ValidateTransition(newStateParam), newState);
 
             this.state = newState;
         }
@@ -666,14 +666,46 @@ namespace Microsoft.OData
 
         /// <summary>
         /// Catch any exception thrown by the action passed in; in the exception case move the writer into
-        /// state ExceptionThrown and then re-throw the exception.
+        /// state Error and then re-throw the exception.
         /// </summary>
         /// <param name="action">The action to execute.</param>
-        private void InterceptException(Action action)
+        /// <remarks>
+        /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
+        /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
+        /// </remarks>
+        private void InterceptException(Action<ODataBatchWriter> action)
         {
             try
             {
-                action();
+                action(this);
+            }
+            catch
+            {
+                if (!IsErrorState(this.state))
+                {
+                    this.SetState(BatchWriterState.Error);
+                }
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Catch any exception thrown by the action passed in; in the exception case move the writer into
+        /// state Error and then rethrow the exception.
+        /// </summary>
+        /// <typeparam name="TArg0">The action argument type.</typeparam>
+        /// <param name="action">The action to execute.</param>
+        /// <param name="arg0">The argument value provided to the action.</param>
+        /// <remarks>
+        /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
+        /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
+        /// </remarks>
+        private void InterceptException<TArg0>(Action<ODataBatchWriter, TArg0> action, TArg0 arg0)
+        {
+            try
+            {
+                action(this, arg0);
             }
             catch
             {
@@ -716,11 +748,11 @@ namespace Microsoft.OData
         {
             if (!this.isInChangeset)
             {
-                this.InterceptException(this.IncreaseBatchSize);
+                this.InterceptException((thisParam) => thisParam.IncreaseBatchSize());
             }
             else
             {
-                this.InterceptException(this.IncreaseChangeSetSize);
+                this.InterceptException((thisParam) => thisParam.IncreaseChangeSetSize());
             }
 
             // Add a potential Content-ID header to the URL resolver so that it will be available
@@ -733,8 +765,9 @@ namespace Microsoft.OData
                 this.payloadUriConverter.AddContentId(this.currentOperationContentId);
             }
 
-            this.InterceptException(() =>
-                uri = ODataBatchUtils.CreateOperationRequestUri(uri, this.outputContext.MessageWriterSettings.BaseUri, this.payloadUriConverter));
+            // This action delegate is capturing state from the enclosing context, to re-assign the 'uri', hence allocations are incurred here.
+            this.InterceptException((thisParam) =>
+                uri = ODataBatchUtils.CreateOperationRequestUri(uri, thisParam.outputContext.MessageWriterSettings.BaseUri, thisParam.payloadUriConverter));
 
             this.CurrentOperationRequestMessage = this.CreateOperationRequestMessageImplementation(
                 method, uri, contentId, payloadUriOption, dependsOnIds);
@@ -774,11 +807,11 @@ namespace Microsoft.OData
         {
             if (!this.isInChangeset)
             {
-                this.InterceptException(this.IncreaseBatchSize);
+                this.InterceptException((thisParam) => thisParam.IncreaseBatchSize());
             }
             else
             {
-                this.InterceptException(this.IncreaseChangeSetSize);
+                this.InterceptException((thisParam) => thisParam.IncreaseChangeSetSize());
             }
 
             // Add a potential Content-ID header to the URL resolver so that it will be available
@@ -791,8 +824,9 @@ namespace Microsoft.OData
                 this.payloadUriConverter.AddContentId(this.currentOperationContentId);
             }
 
-            this.InterceptException(() =>
-                uri = ODataBatchUtils.CreateOperationRequestUri(uri, this.outputContext.MessageWriterSettings.BaseUri, this.payloadUriConverter));
+            // This action delegate is capturing state from the enclosing context, to re-assign the 'uri', hence allocations are incurred here.
+            this.InterceptException((thisParam) =>
+                uri = ODataBatchUtils.CreateOperationRequestUri(uri, thisParam.outputContext.MessageWriterSettings.BaseUri, thisParam.payloadUriConverter));
 
             this.CurrentOperationRequestMessage = await this.CreateOperationRequestMessageImplementationAsync(
                 method, uri, contentId, payloadUriOption, dependsOnIds).ConfigureAwait(false);
@@ -823,7 +857,7 @@ namespace Microsoft.OData
 
             // reset the size of the current changeset and increase the size of the batch.
             this.ResetChangeSetSize();
-            this.InterceptException(this.IncreaseBatchSize);
+            this.InterceptException((thisParam) => thisParam.IncreaseBatchSize());
             this.isInChangeset = true;
         }
 

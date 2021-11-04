@@ -13,9 +13,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
     using System.IO;
     using System.Linq;
     using System.Text;
-#if !SILVERLIGHT
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData;
     using Microsoft.Test.Taupo.Astoria.Contracts.Http;
     using Microsoft.Test.Taupo.Common;
@@ -666,10 +664,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
             {
                 WriteStringPayloadToStream(
                     () => operationResponseMessage.GetStream(),
-#if !SILVERLIGHT && !WINDOWS_PHONE
- () => operationResponseMessage.GetStreamAsync(),
-#endif
- !testConfiguration.Synchronous,
+                    () => operationResponseMessage.GetStreamAsync(),
+                    !testConfiguration.Synchronous,
                     stringPayload,
                     assert);
             }
@@ -685,10 +681,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
             {
                 WriteStringPayloadToStream(
                     () => operationRequestMessage.GetStream(),
-#if !SILVERLIGHT && !WINDOWS_PHONE
- () => operationRequestMessage.GetStreamAsync(),
-#endif
- !testConfiguration.Synchronous,
+                    () => operationRequestMessage.GetStreamAsync(),
+                    !testConfiguration.Synchronous,
                     stringPayload, assert);
             }
             else if (odataPayload != null)
@@ -699,24 +693,17 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
 
         private static void WriteStringPayloadToStream(
             Func<Stream> syncStreamFunc,
-#if !SILVERLIGHT && !WINDOWS_PHONE
- Func<Task<Stream>> asyncStreamFunc,
-#endif
- bool isAsync,
+            Func<Task<Stream>> asyncStreamFunc,
+             bool isAsync,
             string stringPayload,
             AssertionHandler assert)
         {
             Stream stream;
             if (isAsync)
             {
-                // TODO: Enable async Tests on Phone and Silverlight when Product Supports them 
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new TaupoNotSupportedException("ASync is not supported in either Silverlight or Phone");
-#else
                 var t = asyncStreamFunc();
                 t.Wait();
                 stream = t.Result;
-#endif
             }
             else
             {

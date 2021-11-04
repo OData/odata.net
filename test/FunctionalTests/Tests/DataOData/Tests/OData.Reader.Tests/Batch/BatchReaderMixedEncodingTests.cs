@@ -207,11 +207,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
         // We decided to not support multi-byte encodings other than UTF8 for now.
         private static Encoding AsUnsupportedEncoding(Encoding encoding)
         {
-#if SILVERLIGHT || WINDOWS_PHONE
-            if (string.CompareOrdinal(Encoding.UTF8.WebName, encoding.WebName) == 0)
-#else
             if (encoding.IsSingleByte || Encoding.UTF8.CodePage == encoding.CodePage)
-#endif
             {
                 return null;
             }

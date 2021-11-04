@@ -186,12 +186,10 @@ namespace Microsoft.Test.Taupo.Common
         /// </returns>
         public static bool IsCatchable(Exception exception)
         {
-#if !WIN8
             if (exception is ThreadAbortException)
             {
                 return false;
             }
-#endif
 
             return true;
         }

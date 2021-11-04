@@ -24,10 +24,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     {
         private static readonly Uri ServiceDocumentUri = new Uri("http://odata.org");
 
-        // These tests and helpers are disabled on Silverlight and Phone because they  
-        // use private reflection not available on Silverlight and Phone. Private reflection is used in ODataWriterCoreInspector IsInState() method.
-#if !SILVERLIGHT && !WINDOWS_PHONE
-
         [TestMethod, Variation(Description = "Test that a writer behaves as expected in the presence of (non-fatal) OData exceptions.")]
         public void DisposeAfterExceptionTest()
         {
@@ -126,16 +122,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         // write the payload and call FlushAsync() to trigger a fatal exception
                         Exception ex = TestExceptionUtils.RunCatching(() => TestWriterUtils.WritePayload(messageWriter, writer, true, entry));
                         this.Assert.IsNotNull(ex, "Expected exception but none was thrown.");
-                        NotSupportedException notSupported = null;
-#if SILVERLIGHT || WINDOWS_PHONE
-                        var baseEx = ex.GetBaseException();
-                        this.Assert.IsNotNull(baseEx, "BaseException of exception:" + ex.ToString() + " should not be null");
-                        notSupported = baseEx as NotSupportedException;
-                        this.Assert.IsNotNull(notSupported, "Expected NotSupportedException but " + baseEx.GetType().FullName + " was reported.");
-#else
-                        notSupported = TestExceptionUtils.UnwrapAggregateException(ex, this.Assert) as NotSupportedException;
+                        NotSupportedException notSupported = TestExceptionUtils.UnwrapAggregateException(ex, this.Assert) as NotSupportedException;
                         this.Assert.IsNotNull(notSupported, "Expected NotSupportedException but " + ex.ToString() + " was reported.");
-#endif
 
                         this.Assert.AreEqual("Stream does not support writing.", notSupported.Message, "Did not find expected error message.");
                         this.Assert.IsTrue(inspector.IsInErrorState, "Writer is not in expected 'Error' state.");
@@ -195,7 +183,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     }
                 });
         }
-#endif
 
         [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test that a writer can successfully dispose itself when nothing was written out.")]

@@ -59,7 +59,6 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Client
                 onCompletion);
         }
 
-#if !WINDOWS_PHONE
         /// <summary>
         /// Extension method to perform sync/async version of DataServiceContext.Execute dynamically
         /// </summary>
@@ -118,7 +117,6 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Client
                r => (QueryOperationResponse<TResult>)context.EndExecute<TResult>(r),
                onCompletion);
         }
-#endif
 
         /// <summary>
         /// Extension method to perform sync/async version of DataServiceContext.Execute dynamically
@@ -189,133 +187,8 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Client
             }
             else
             {
-#if WINDOWS_PHONE
-                throw new TaupoNotSupportedException("Named streams are not supported on Windows Phone yet");
-#else
                 AsyncHelpers.InvokeSyncOrAsyncMethodCall<DataServiceStreamResponse>(continuation, async, () => context.GetReadStream(entity, streamName, args), c => context.BeginGetReadStream(entity, streamName, args, c, null), r => context.EndGetReadStream(r), onCompletion);
-#endif
             }
         }
-
-#if SILVERLIGHT
-        /// <summary>
-        /// Helper extension method to stand in for DataServiceQuery.Execute in Silverlight. Always throws.
-        /// </summary>
-        /// <typeparam name="TElement">The element type</typeparam>
-        /// <param name="query">The query</param>
-        /// <returns>Always throws</returns>
-        private static IEnumerable<TElement> Execute<TElement>(this DataServiceQuery<TElement> query)
-        {
-            throw new TaupoInvalidOperationException("Sync API not supported in Silverlight");
-        }
-
-        /// <summary>
-        /// Helper extension method to stand in for DataServiceContext.LoadProperty in Silverlight. Always throws.
-        /// </summary>
-        /// <param name="entity">The entity to load a property on</param>
-        /// <param name="propertyName">The property name to load</param>
-        /// <returns>Always throws</returns>
-        private static QueryOperationResponse LoadProperty(this DataServiceContext context, object entity, string propertyName)
-        {
-            throw new TaupoInvalidOperationException("Sync API not supported in Silverlight");
-        }
-
-        /// <summary>
-        /// Helper extension method to stand in for DataServiceContext.Execute in Silverlight. Always throws.
-        /// </summary>
-        /// <typeparam name="TElement">The element type</typeparam>
-        /// <param name="uri">The uri to query</param>
-        /// <returns>Always throws</returns>
-        private static IEnumerable<TElement> Execute<TElement>(this DataServiceContext context, Uri uri)
-        {
-            throw new TaupoInvalidOperationException("Sync API not supported in Silverlight");
-        }
-        
-#if !WINDOWS_PHONE
-        /// <summary>
-        /// Helper extension method to stand in for DataServiceContext.Execute in Silverlight. Always throws.
-        /// </summary>
-        /// <param name="context">The DataServiceContext</param>
-        /// <param name="requestUri">The request uri</param>
-        /// <param name="method">The http method</param>
-        /// <param name="inputParameters">The operation parameters</param>
-        /// <returns>Always throws</returns>
-        private static OperationResponse Execute(this DataServiceContext context, Uri requestUri, string method, OperationParameter[] inputParameters)
-        {
-            throw new TaupoInvalidOperationException("Sync API not supported in Silverlight");
-        }
-
-        /// <summary>
-        /// Helper extension method to stand in for DataServiceContext.Execute in Silverlight. Always throws.
-        /// </summary>
-        /// <typeparam name="TElement">The element type</typeparam>
-        /// <param name="context">The DataServiceContext</param>
-        /// <param name="requestUri">The request uri</param>
-        /// <param name="method">The http method</param>
-        /// <param name="singleResult">Whether to expect single result</param>
-        /// <param name="inputParameters">The operation parameters</param>
-        /// <returns>Always throws</returns>
-        private static QueryOperationResponse<TElement> Execute<TElement>(this DataServiceContext context, Uri requestUri, string method, bool singleResult, OperationParameter[] inputParameters)
-        {
-            throw new TaupoInvalidOperationException("Sync API not supported in Silverlight");
-        }
-#endif
-        
-        /// <summary>
-        /// Helper extension method to stand in for DataServiceContext.SaveChanges in Silverlight. Always throws.
-        /// </summary>
-        /// <param name="context">The context to save changes on</param>
-        /// <returns>Always throws</returns>
-        private static DataServiceResponse SaveChanges(this DataServiceContext context)
-        {
-            throw new TaupoInvalidOperationException("Sync API not supported in Silverlight");
-        }
-
-        /// <summary>
-        /// Helper extension method to stand in for DataServiceContext.SaveChanges in Silverlight. Always throws.
-        /// </summary>
-        /// <param name="context">The context to save changes on</param>
-        /// <param name="options">The save changes options</param>
-        /// <returns>Always throws</returns>
-        private static DataServiceResponse SaveChanges(this DataServiceContext context, SaveChangesOptions options)
-        {
-            throw new TaupoInvalidOperationException("Sync API not supported in Silverlight");
-        }
-
-        /// <summary>
-        /// Helper extension method to stand in for DataServiceContext.ExecuteBatch in Silverlight. Always throws.
-        /// </summary>
-        /// <param name="requests">The requests to execute</param>
-        /// <returns>Always throws</returns>
-        private static DataServiceResponse ExecuteBatch(this DataServiceContext context, DataServiceRequest[] requests)
-        {
-            throw new TaupoInvalidOperationException("Sync API not supported in Silverlight");
-        }
-
-        /// <summary>
-        /// Helper extension method to stand in for DataServiceContext.GetReadStream in Silverlight. Always throws.
-        /// </summary>
-        /// <param name="context">The data service context</param>
-        /// <param name="entity">The entity to get the stream for</param>
-        /// <param name="args">The request args</param>
-        /// <returns>Always throws</returns>
-        private static DataServiceStreamResponse GetReadStream(this DataServiceContext context, object entity, DataServiceRequestArgs args)
-        {
-            throw new TaupoInvalidOperationException("Sync API not supported in Silverlight");
-        }
-
-        /// <summary>
-        /// Helper extension method to stand in for DataServiceContext.GetReadStream in Silverlight. Always throws.
-        /// </summary>
-        /// <param name="context">The data service context</param>
-        /// <param name="entity">The entity to get the stream for</param>
-        /// <param name="name">The stream name</param>
-        /// <param name="args">The request args</param>
-        /// <returns>Always throws</returns>
-        private static DataServiceStreamResponse GetReadStream(this DataServiceContext context, object entity, string name, DataServiceRequestArgs args)
-        {
-            throw new TaupoInvalidOperationException("Sync API not supported in Silverlight");
-        }
-#endif
     }
 }

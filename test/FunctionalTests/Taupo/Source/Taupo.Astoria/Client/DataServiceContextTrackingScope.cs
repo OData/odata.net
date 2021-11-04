@@ -85,13 +85,11 @@ namespace Microsoft.Test.Taupo.Astoria.Client
         [InjectDependency]
         public IClientDataContextFormatApplier ClientDataContextFormatApplier { get; set; }
 
-#if !WINDOWS_PHONE
         /// <summary>
         /// Gets or sets the http tracker to use
         /// </summary>
         [InjectDependency(IsRequired = true)]
         public IDataServiceContextHttpTracker HttpTracker { get; set; }
-#endif
 
         /// <summary>
         /// Gets or sets a value indicating whether to use the product event for reading entities instead of the test hook
@@ -153,9 +151,8 @@ namespace Microsoft.Test.Taupo.Astoria.Client
             if (context != null)
             {
                 DataServiceProtocolVersion maxProtocolVersion = DataServiceProtocolVersion.Unspecified;
-#if !WINDOWS_PHONE
                 maxProtocolVersion = context.MaxProtocolVersion.ToTestEnum();
-#endif
+
                 var contextData = DataServiceContextData.CreateDataServiceContextDataFromDataServiceContext(context, maxProtocolVersion);
 
                 this.contextDatas.Add(context, contextData);
@@ -265,9 +262,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
 
                 if (ContextMethodsThatSendRequests.Contains(methodInfo.Name))
                 {
-#if !WINDOWS_PHONE
                     this.HttpTracker.TryCompleteCurrentRequest(context);
-#endif
                 }
             }
 
@@ -278,9 +273,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                 {
                     if (QueryMethodsThatSendRequests.Contains(methodInfo.Name))
                     {
-#if !WINDOWS_PHONE
                         this.HttpTracker.TryCompleteCurrentRequest(context);
-#endif
                     }
                 }
             }
@@ -319,9 +312,8 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                     this.DescriptorDataChangeTracker.ApplyUpdatesImmediately = true;
                     this.saveChangesInfos.Remove(context);
                 }
-#if !WINDOWS_PHONE
+
                 this.HttpTracker.TryCompleteCurrentRequest(context);
-#endif
             }
         }
 

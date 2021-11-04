@@ -130,11 +130,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             }
             catch (DataServiceRequestException e)
             {
-#if !PORTABLELIB && !SILVERLIGHT
                 StringResourceUtil.VerifyDataServicesClientString(e.Message, "DataServiceException_GeneralError");
-#else
-                Assert.NotNull(e);
-#endif
             }
         }
 

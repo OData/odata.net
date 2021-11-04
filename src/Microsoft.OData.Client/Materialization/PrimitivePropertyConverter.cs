@@ -61,14 +61,12 @@ namespace Microsoft.OData.Client.Materialization
                     return primitiveType.TypeConverter.Parse(stringValue);
                 }
 
-#if !PORTABLELIB
                 if (propertyType == BinaryTypeConverter.BinaryType)
                 {
                     byte[] byteArray = (byte[])this.ConvertValueIfNeeded(value, typeof(byte[]));
                     Debug.Assert(byteArray != null, "If the property is of type System.Data.Linq.Binary then ODataLib should have read it as byte[].");
                     return Activator.CreateInstance(BinaryTypeConverter.BinaryType, byteArray);
                 }
-#endif
             }
 
             return this.ConvertValueIfNeeded(value, propertyType);

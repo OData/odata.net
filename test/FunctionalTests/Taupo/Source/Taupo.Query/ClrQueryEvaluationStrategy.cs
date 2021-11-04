@@ -799,14 +799,14 @@ namespace Microsoft.Test.Taupo.Query
             {
                 result = Convert.ToBoolean(value, CultureInfo.InvariantCulture);
             }
-#if !SILVERLIGHT
+
             if (targetType.ClrType == typeof(byte[]))
             {
                 // TODO: figure out what's the intended behavior here
                 ////result = Convert.ToBase64String(value as byte[], Base64FormattingOptions.None);                
                 result = value as byte[];
             }
-#endif
+
             if (targetType.ClrType == typeof(byte))
             {
                 result = Convert.ToByte(value, CultureInfo.InvariantCulture);

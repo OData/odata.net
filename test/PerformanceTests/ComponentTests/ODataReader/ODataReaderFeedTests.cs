@@ -18,14 +18,25 @@ namespace Microsoft.OData.Performance
     [MemoryDiagnoser]
     public class ODataReaderFeedTests
     {
-        private static readonly IEdmModel Model = TestUtils.GetAdventureWorksModel();
-        private static readonly IEdmEntitySet TestEntitySet = Model.EntityContainer.FindEntitySet("Product");
-        private static readonly IEdmEntityType TestEntityType = Model.FindDeclaredType("PerformanceServices.Edm.AdventureWorks.Product") as IEdmEntityType;
+        private IEdmModel Model;
+        private IEdmEntitySet TestEntitySet;
+        private IEdmEntityType TestEntityType;
 
         [Params(true, false)]
         public bool _isFullValidation;
 
+        [Params(true, false)]
+        public bool _isModelImmutable;
+
         public Stream _stream;
+
+        [IterationSetup]
+        public void InitModel()
+        {
+            Model = TestUtils.GetAdventureWorksModel(_isModelImmutable);
+            TestEntitySet = Model.EntityContainer.FindEntitySet("Product");
+            TestEntityType = Model.FindDeclaredType("PerformanceServices.Edm.AdventureWorks.Product") as IEdmEntityType;
+        }
 
         [IterationCleanup]
         public void Cleanup()

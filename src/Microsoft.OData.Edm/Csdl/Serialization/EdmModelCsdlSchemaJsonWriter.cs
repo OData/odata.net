@@ -841,6 +841,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
             if (isInline)
             {
+                // In JSON, we always write the annotation value.
                 this.WriteInlineExpression(annotation.Value);
             }
         }

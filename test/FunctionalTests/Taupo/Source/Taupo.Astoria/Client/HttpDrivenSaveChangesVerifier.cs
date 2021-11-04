@@ -20,13 +20,12 @@ namespace Microsoft.Test.Taupo.Astoria.Client
     {
         private IList<KeyValuePair<HttpRequestData, HttpResponseData>> httpLog;
 
-#if !WINDOWS_PHONE
         /// <summary>
         /// Gets or sets the http tracker to use
         /// </summary>
         [InjectDependency(IsRequired = true)]
         public IDataServiceContextHttpTracker HttpTracker { get; set; }
-#endif
+
         /// <summary>
         /// Gets or sets the http validating SaveChanges-emulator to use
         /// </summary>
@@ -49,9 +48,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
         protected override void SetupBeforeProductCall()
         {
             base.SetupBeforeProductCall();
-#if !WINDOWS_PHONE
             this.HttpTracker.RegisterHandler(this.Input.Context, this.HandleRequestResponsePair);
-#endif
             this.DescriptorDataChangeTracker.IgnoreAllUpdates = true;
         }
 
@@ -61,9 +58,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
         protected override void CleanupAfterProductCall()
         {
             base.CleanupAfterProductCall();
-#if !WINDOWS_PHONE
             this.HttpTracker.UnregisterHandler(this.Input.Context, this.HandleRequestResponsePair, this.State.Response != null);
-#endif
             this.DescriptorDataChangeTracker.IgnoreAllUpdates = false;
         }
 

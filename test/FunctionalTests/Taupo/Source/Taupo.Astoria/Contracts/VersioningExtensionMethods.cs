@@ -37,7 +37,6 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts
             return request.GetProtocolVersionFromHeader(HttpHeaders.MaxDataServiceVersion);
         }
 
-#if !WINDOWS_PHONE
         /// <summary>
         /// Converts the given product enum value to the equivalent test enum value
         /// </summary>
@@ -59,7 +58,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts
             ExceptionUtilities.Assert(version != DataServiceProtocolVersion.LatestVersionPlusOne, "Cannot convert latest +1 version value");
             return ExtensionMethods.ConvertEnum<DataServiceProtocolVersion, DC.ODataProtocolVersion>(version);
         }
-#endif
+
         /// <summary>
         /// Gets the value of the given header for the given request or response and converts it into a DataServiceProtocolVersion
         /// </summary>

@@ -13,9 +13,6 @@ namespace Microsoft.Test.Taupo.Astoria.Client
     using System.Net;
     using System.Net.Http;
     using System.Text;
-#if !WINDOWS_PHONE
-
-#endif
     using Microsoft.OData.Client;
     using Microsoft.Test.Taupo.Astoria.Contracts.Client;
     using Microsoft.Test.Taupo.Astoria.Contracts.EntityModel;
@@ -26,7 +23,6 @@ namespace Microsoft.Test.Taupo.Astoria.Client
     using Microsoft.Test.Taupo.Contracts.EntityModel;
     using ReferenceEqualityComparer = Taupo.Common.ReferenceEqualityComparer;
 
-#if !WINDOWS_PHONE
     /// <summary>
     /// Implementation of the sending request event verifier contract
     /// </summary>
@@ -237,14 +233,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                         var httpRequestMessage = requestMessage.HttpRequestMessage as HttpRequestMessage;
                         this.assert.IsNotNull(httpRequestMessage, "RequestMessage.HttpRequestMessage should be of type HttpRequestMessage");
 
-#if WIN8
-                    if (this.expectedContext.Credentials != null)
-                    {
-                        this.assert.AreSame(this.expectedContext.Credentials, httpWebRequest.Credentials, "Request credentials were not set");
-                    }
-#else
                         this.assert.AreSame(this.expectedContext.Credentials, requestMessage.Credentials, "Request credentials were not set");
-#endif
 
                         this.assert.IsNull(this.uriFromEvent, "Last uri unexpectedly not null. Test hook did not fire");
                         this.assert.AreEqual(requestMessage.Url, httpRequestMessage.RequestUri, "Request Uri does not match RequestUri from HttpWebRequest");
@@ -470,5 +459,4 @@ namespace Microsoft.Test.Taupo.Astoria.Client
             }
         }
     }
-#endif
 }

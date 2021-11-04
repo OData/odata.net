@@ -71,18 +71,7 @@ namespace Microsoft.Test.Taupo.Common
         /// <returns>The hash code of the object</returns>
         internal static int DefaultGetHashCodeFunc(TObject obj)
         {
-#if WIN8
-            if (obj == null)
-            {
-                return 0;
-            }
-            else
-            {
-                return obj.GetHashCode();
-            }
-#else
             return RuntimeHelpers.GetHashCode(obj);
-#endif
         }
     }
 }

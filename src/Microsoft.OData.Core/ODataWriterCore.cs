@@ -411,7 +411,7 @@ namespace Microsoft.OData
         {
             this.VerifyCanFlush(true);
 
-            // Make sure we switch to writer state FatalExceptionThrown if an exception is thrown during flushing.
+            // Make sure we switch to writer state Error if an exception is thrown during flushing.
             try
             {
                 this.FlushSynchronously();
@@ -1583,22 +1583,23 @@ namespace Microsoft.OData
 
             if (!this.SkipWriting)
             {
-                this.InterceptException(() =>
-                {
-                    // Verify query count
-                    if (resourceSet.Count.HasValue)
+                this.InterceptException(
+                    (thisParam, resourceSetParam) =>
                     {
-                        // Check that Count is not set for requests
-                        if (!this.outputContext.WritingResponse)
+                        // Verify query count
+                        if (resourceSetParam.Count.HasValue)
                         {
-                            this.ThrowODataException(Strings.ODataWriterCore_QueryCountInRequest, resourceSet);
+                            // Check that Count is not set for requests
+                            if (!thisParam.outputContext.WritingResponse)
+                            {
+                                thisParam.ThrowODataException(Strings.ODataWriterCore_QueryCountInRequest, resourceSetParam);
+                            }
+
+                            // Verify version requirements
                         }
 
-                        // Verify version requirements
-                    }
-
-                    this.StartResourceSet(resourceSet);
-                });
+                        thisParam.StartResourceSet(resourceSetParam);
+                    }, resourceSet);
             }
         }
 
@@ -1626,24 +1627,25 @@ namespace Microsoft.OData
             this.CheckForNestedResourceInfoWithContent(ODataPayloadKind.ResourceSet, deltaResourceSet);
             this.EnterScope(WriterState.DeltaResourceSet, deltaResourceSet);
 
-            this.InterceptException(() =>
-            {
-                // Check that links are not set for requests
-                if (!this.outputContext.WritingResponse)
+            this.InterceptException(
+                (thisParam, deltaResourceSetParam) =>
                 {
-                    if (deltaResourceSet.NextPageLink != null)
+                    // Check that links are not set for requests
+                    if (!thisParam.outputContext.WritingResponse)
                     {
-                        this.ThrowODataException(Strings.ODataWriterCore_QueryNextLinkInRequest, deltaResourceSet);
+                        if (deltaResourceSetParam.NextPageLink != null)
+                        {
+                            thisParam.ThrowODataException(Strings.ODataWriterCore_QueryNextLinkInRequest, deltaResourceSetParam);
+                        }
+
+                        if (deltaResourceSetParam.DeltaLink != null)
+                        {
+                            thisParam.ThrowODataException(Strings.ODataWriterCore_QueryDeltaLinkInRequest, deltaResourceSetParam);
+                        }
                     }
 
-                    if (deltaResourceSet.DeltaLink != null)
-                    {
-                        this.ThrowODataException(Strings.ODataWriterCore_QueryDeltaLinkInRequest, deltaResourceSet);
-                    }
-                }
-
-                this.StartDeltaResourceSet(deltaResourceSet);
-            });
+                    thisParam.StartDeltaResourceSet(deltaResourceSetParam);
+                }, deltaResourceSet);
         }
 
         /// <summary>
@@ -1683,21 +1685,22 @@ namespace Microsoft.OData
             if (!this.SkipWriting)
             {
                 this.IncreaseResourceDepth();
-                this.InterceptException(() =>
-                {
-                    if (resource != null)
+                this.InterceptException(
+                    (thisParam, resourceParam) =>
                     {
-                        ResourceScope resourceScope = (ResourceScope)this.CurrentScope;
-                        this.ValidateResourceForResourceSet(resource, resourceScope);
-                        this.PrepareResourceForWriteStart(
-                            resourceScope,
-                            resource,
-                            this.outputContext.WritingResponse,
-                            resourceScope.SelectedProperties);
-                    }
+                        if (resourceParam != null)
+                        {
+                            ResourceScope resourceScope = (ResourceScope)thisParam.CurrentScope;
+                            thisParam.ValidateResourceForResourceSet(resourceParam, resourceScope);
+                            thisParam.PrepareResourceForWriteStart(
+                                resourceScope,
+                                resourceParam,
+                                thisParam.outputContext.WritingResponse,
+                                resourceScope.SelectedProperties);
+                        }
 
-                    this.StartResource(resource);
-                });
+                        thisParam.StartResource(resourceParam);
+                    }, resource);
             }
         }
 
@@ -1714,17 +1717,18 @@ namespace Microsoft.OData
             this.EnterScope(WriterState.DeletedResource, resource);
             this.IncreaseResourceDepth();
 
-            this.InterceptException(() =>
-            {
-                DeletedResourceScope resourceScope = this.CurrentScope as DeletedResourceScope;
-                this.ValidateResourceForResourceSet(resource, resourceScope);
-                this.PrepareDeletedResourceForWriteStart(
-                    resourceScope,
-                    resource,
-                    this.outputContext.WritingResponse,
-                    resourceScope.SelectedProperties);
-                this.StartDeletedResource(resource);
-            });
+            this.InterceptException(
+                (thisParam, resourceParam) =>
+                {
+                    DeletedResourceScope resourceScope = thisParam.CurrentScope as DeletedResourceScope;
+                    thisParam.ValidateResourceForResourceSet(resourceParam, resourceScope);
+                    thisParam.PrepareDeletedResourceForWriteStart(
+                        resourceScope,
+                        resourceParam,
+                        thisParam.outputContext.WritingResponse,
+                        resourceScope.SelectedProperties);
+                    thisParam.StartDeletedResource(resourceParam);
+                }, resource);
         }
 
         /// <summary>
@@ -1749,16 +1753,17 @@ namespace Microsoft.OData
             this.EnterScope(WriterState.Property, property);
             if (!this.SkipWriting)
             {
-                this.InterceptException(() =>
-                {
-                    this.StartProperty(property);
-                    if (property is ODataProperty)
+                this.InterceptException(
+                    (thisParam, propertyParam) =>
                     {
-                        PropertyInfoScope scope = this.CurrentScope as PropertyInfoScope;
-                        Debug.Assert(scope != null, "Scope for ODataPropertyInfo is not ODataPropertyInfoScope");
-                        scope.ValueWritten = true;
-                    }
-                });
+                        thisParam.StartProperty(propertyParam);
+                        if (propertyParam is ODataProperty)
+                        {
+                            PropertyInfoScope scope = thisParam.CurrentScope as PropertyInfoScope;
+                            Debug.Assert(scope != null, "Scope for ODataPropertyInfo is not ODataPropertyInfoScope");
+                            scope.ValueWritten = true;
+                        }
+                    }, property);
             }
         }
 
@@ -1835,19 +1840,20 @@ namespace Microsoft.OData
         /// <param name="primitiveValue">Primitive value to write.</param>
         private void WritePrimitiveValueImplementation(ODataPrimitiveValue primitiveValue)
         {
-            this.InterceptException(() =>
-            {
-                this.EnterScope(WriterState.Primitive, primitiveValue);
-                if (!(this.CurrentResourceSetValidator == null) && primitiveValue != null)
+            this.InterceptException(
+                (thisParam, primitiveValueParam) =>
                 {
-                    Debug.Assert(primitiveValue.Value != null, "PrimitiveValue.Value should never be null!");
-                    IEdmType itemType = EdmLibraryExtensions.GetPrimitiveTypeReference(primitiveValue.Value.GetType()).Definition;
-                    this.CurrentResourceSetValidator.ValidateResource(itemType);
-                }
+                    thisParam.EnterScope(WriterState.Primitive, primitiveValueParam);
+                    if (!(thisParam.CurrentResourceSetValidator == null) && primitiveValueParam != null)
+                    {
+                        Debug.Assert(primitiveValueParam.Value != null, "PrimitiveValue.Value should never be null!");
+                        IEdmType itemType = EdmLibraryExtensions.GetPrimitiveTypeReference(primitiveValueParam.Value.GetType()).Definition;
+                        thisParam.CurrentResourceSetValidator.ValidateResource(itemType);
+                    }
 
-                this.WritePrimitiveValue(primitiveValue);
-                this.WriteEnd();
-            });
+                    thisParam.WritePrimitiveValue(primitiveValueParam);
+                    thisParam.WriteEnd();
+                }, primitiveValue);
         }
 
         /// <summary>
@@ -1859,20 +1865,21 @@ namespace Microsoft.OData
         {
             EnterScope(WriterState.Primitive, primitiveValue);
 
-            await InterceptExceptionAsync(async () =>
-            {
-                if (!(CurrentResourceSetValidator == null) && primitiveValue != null)
+            await InterceptExceptionAsync(
+                async (thisParam, primiteValueParam) =>
                 {
-                    Debug.Assert(primitiveValue.Value != null, "PrimitiveValue.Value should never be null!");
-                    IEdmType itemType = EdmLibraryExtensions.GetPrimitiveTypeReference(primitiveValue.Value.GetType()).Definition;
-                    CurrentResourceSetValidator.ValidateResource(itemType);
-                }
+                    if (!(CurrentResourceSetValidator == null) && primiteValueParam != null)
+                    {
+                        Debug.Assert(primiteValueParam.Value != null, "PrimitiveValue.Value should never be null!");
+                        IEdmType itemType = EdmLibraryExtensions.GetPrimitiveTypeReference(primiteValueParam.Value.GetType()).Definition;
+                        CurrentResourceSetValidator.ValidateResource(itemType);
+                    }
 
-                await WritePrimitiveValueAsync(primitiveValue)
-                    .ConfigureAwait(false);
-                await this.WriteEndAsync()
-                    .ConfigureAwait(false);
-            }).ConfigureAwait(false);
+                    await thisParam.WritePrimitiveValueAsync(primiteValueParam)
+                        .ConfigureAwait(false);
+                    await thisParam.WriteEndAsync()
+                        .ConfigureAwait(false);
+                }, primitiveValue).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1930,102 +1937,103 @@ namespace Microsoft.OData
         /// </summary>
         private void WriteEndImplementation()
         {
-            this.InterceptException(() =>
-            {
-                Scope currentScope = this.CurrentScope;
-
-                switch (currentScope.State)
+            this.InterceptException(
+                (thisParam) =>
                 {
-                    case WriterState.Resource:
-                        if (!this.SkipWriting)
-                        {
-                            ODataResource resource = (ODataResource)currentScope.Item;
+                    Scope currentScope = thisParam.CurrentScope;
 
-                            this.EndResource(resource);
-                            this.DecreaseResourceDepth();
-                        }
+                    switch (currentScope.State)
+                    {
+                        case WriterState.Resource:
+                            if (!thisParam.SkipWriting)
+                            {
+                                ODataResource resource = (ODataResource)currentScope.Item;
 
-                        break;
-                    case WriterState.DeletedResource:
-                        if (!this.SkipWriting)
-                        {
-                            ODataDeletedResource resource = (ODataDeletedResource)currentScope.Item;
+                                thisParam.EndResource(resource);
+                                thisParam.DecreaseResourceDepth();
+                            }
 
-                            this.EndDeletedResource(resource);
-                            this.DecreaseResourceDepth();
-                        }
+                            break;
+                        case WriterState.DeletedResource:
+                            if (!thisParam.SkipWriting)
+                            {
+                                ODataDeletedResource resource = (ODataDeletedResource)currentScope.Item;
 
-                        break;
-                    case WriterState.ResourceSet:
-                        if (!this.SkipWriting)
-                        {
-                            ODataResourceSet resourceSet = (ODataResourceSet)currentScope.Item;
-                            WriterValidationUtils.ValidateResourceSetAtEnd(resourceSet, !this.outputContext.WritingResponse);
-                            this.EndResourceSet(resourceSet);
-                        }
+                                thisParam.EndDeletedResource(resource);
+                                thisParam.DecreaseResourceDepth();
+                            }
 
-                        break;
-                    case WriterState.DeltaLink:
-                    case WriterState.DeltaDeletedLink:
-                        break;
-                    case WriterState.DeltaResourceSet:
-                        if (!this.SkipWriting)
-                        {
-                            ODataDeltaResourceSet deltaResourceSet = (ODataDeltaResourceSet)currentScope.Item;
-                            WriterValidationUtils.ValidateDeltaResourceSetAtEnd(deltaResourceSet, !this.outputContext.WritingResponse);
-                            this.EndDeltaResourceSet(deltaResourceSet);
-                        }
+                            break;
+                        case WriterState.ResourceSet:
+                            if (!thisParam.SkipWriting)
+                            {
+                                ODataResourceSet resourceSet = (ODataResourceSet)currentScope.Item;
+                                WriterValidationUtils.ValidateResourceSetAtEnd(resourceSet, !thisParam.outputContext.WritingResponse);
+                                thisParam.EndResourceSet(resourceSet);
+                            }
 
-                        break;
-                    case WriterState.NestedResourceInfo:
-                        if (!this.outputContext.WritingResponse)
-                        {
-                            throw new ODataException(Strings.ODataWriterCore_DeferredLinkInRequest);
-                        }
+                            break;
+                        case WriterState.DeltaLink:
+                        case WriterState.DeltaDeletedLink:
+                            break;
+                        case WriterState.DeltaResourceSet:
+                            if (!thisParam.SkipWriting)
+                            {
+                                ODataDeltaResourceSet deltaResourceSet = (ODataDeltaResourceSet)currentScope.Item;
+                                WriterValidationUtils.ValidateDeltaResourceSetAtEnd(deltaResourceSet, !thisParam.outputContext.WritingResponse);
+                                thisParam.EndDeltaResourceSet(deltaResourceSet);
+                            }
 
-                        if (!this.SkipWriting)
-                        {
-                            ODataNestedResourceInfo link = (ODataNestedResourceInfo)currentScope.Item;
-                            this.DuplicatePropertyNameChecker.ValidatePropertyUniqueness(link);
-                            this.WriteDeferredNestedResourceInfo(link);
+                            break;
+                        case WriterState.NestedResourceInfo:
+                            if (!thisParam.outputContext.WritingResponse)
+                            {
+                                throw new ODataException(Strings.ODataWriterCore_DeferredLinkInRequest);
+                            }
 
-                            this.MarkNestedResourceInfoAsProcessed(link);
-                        }
+                            if (!thisParam.SkipWriting)
+                            {
+                                ODataNestedResourceInfo link = (ODataNestedResourceInfo)currentScope.Item;
+                                thisParam.DuplicatePropertyNameChecker.ValidatePropertyUniqueness(link);
+                                thisParam.WriteDeferredNestedResourceInfo(link);
 
-                        break;
-                    case WriterState.NestedResourceInfoWithContent:
-                        if (!this.SkipWriting)
-                        {
-                            ODataNestedResourceInfo link = (ODataNestedResourceInfo)currentScope.Item;
-                            this.EndNestedResourceInfoWithContent(link);
+                                thisParam.MarkNestedResourceInfoAsProcessed(link);
+                            }
 
-                            this.MarkNestedResourceInfoAsProcessed(link);
-                        }
+                            break;
+                        case WriterState.NestedResourceInfoWithContent:
+                            if (!thisParam.SkipWriting)
+                            {
+                                ODataNestedResourceInfo link = (ODataNestedResourceInfo)currentScope.Item;
+                                thisParam.EndNestedResourceInfoWithContent(link);
 
-                        break;
-                    case WriterState.Property:
-                        {
-                            ODataPropertyInfo property = (ODataPropertyInfo)currentScope.Item;
-                            this.EndProperty(property);
-                        }
+                                thisParam.MarkNestedResourceInfoAsProcessed(link);
+                            }
 
-                        break;
-                    case WriterState.Primitive:
-                        // WriteEnd for WriterState.Primitive is a no-op; just leave scope
-                        break;
-                    case WriterState.Stream:
-                    case WriterState.String:
-                        throw new ODataException(Strings.ODataWriterCore_StreamNotDisposed);
-                    case WriterState.Start:                 // fall through
-                    case WriterState.Completed:             // fall through
-                    case WriterState.Error:                 // fall through
-                        throw new ODataException(Strings.ODataWriterCore_WriteEndCalledInInvalidState(currentScope.State.ToString()));
-                    default:
-                        throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_WriteEnd_UnreachableCodePath));
-                }
+                            break;
+                        case WriterState.Property:
+                            {
+                                ODataPropertyInfo property = (ODataPropertyInfo)currentScope.Item;
+                                thisParam.EndProperty(property);
+                            }
 
-                this.LeaveScope();
-            });
+                            break;
+                        case WriterState.Primitive:
+                            // WriteEnd for WriterState.Primitive is a no-op; just leave scope
+                            break;
+                        case WriterState.Stream:
+                        case WriterState.String:
+                            throw new ODataException(Strings.ODataWriterCore_StreamNotDisposed);
+                        case WriterState.Start:                 // fall through
+                        case WriterState.Completed:             // fall through
+                        case WriterState.Error:                 // fall through
+                            throw new ODataException(Strings.ODataWriterCore_WriteEndCalledInInvalidState(currentScope.State.ToString()));
+                        default:
+                            throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_WriteEnd_UnreachableCodePath));
+                    }
+
+                    thisParam.LeaveScope();
+                });
         }
 
         /// <summary>
@@ -2087,20 +2095,21 @@ namespace Microsoft.OData
 
             if (!this.SkipWriting)
             {
-                this.InterceptException(() =>
-                {
-                    WriterValidationUtils.ValidateEntityReferenceLink(entityReferenceLink);
-
-                    ODataNestedResourceInfo nestedInfo = this.CurrentScope.Item as ODataNestedResourceInfo;
-                    if (nestedInfo == null)
+                this.InterceptException(
+                    (thisParam, entityReferenceLinkParam) =>
                     {
-                        NestedResourceInfoScope nestedResourceInfoScope = this.ParentNestedResourceInfoScope;
-                        Debug.Assert(nestedResourceInfoScope != null);
-                        nestedInfo = (ODataNestedResourceInfo)nestedResourceInfoScope.Item;
-                    }
+                        WriterValidationUtils.ValidateEntityReferenceLink(entityReferenceLinkParam);
 
-                    this.WriteEntityReferenceInNavigationLinkContent(nestedInfo, entityReferenceLink);
-                });
+                        ODataNestedResourceInfo nestedInfo = thisParam.CurrentScope.Item as ODataNestedResourceInfo;
+                        if (nestedInfo == null)
+                        {
+                            NestedResourceInfoScope nestedResourceInfoScope = thisParam.ParentNestedResourceInfoScope;
+                            Debug.Assert(nestedResourceInfoScope != null);
+                            nestedInfo = (ODataNestedResourceInfo)nestedResourceInfoScope.Item;
+                        }
+
+                        thisParam.WriteEntityReferenceInNavigationLinkContent(nestedInfo, entityReferenceLinkParam);
+                    }, entityReferenceLink);
             }
         }
 
@@ -2148,10 +2157,10 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Enters the 'ExceptionThrown' state and then throws an ODataException with the specified error message.
+        /// Enters the 'Error' state and then throws an ODataException with the specified error message.
         /// </summary>
         /// <param name="errorMessage">The error message for the exception.</param>
-        /// <param name="item">The OData item to associate with the 'ExceptionThrown' state.</param>
+        /// <param name="item">The OData item to associate with the 'Error' state.</param>
         private void ThrowODataException(string errorMessage, ODataItem item)
         {
             this.EnterScope(WriterState.Error, item);
@@ -2165,7 +2174,7 @@ namespace Microsoft.OData
         {
             if (this.State == WriterState.Start)
             {
-                this.InterceptException(this.StartPayload);
+                this.InterceptException((thisParam) => thisParam.StartPayload());
             }
         }
 
@@ -2187,38 +2196,39 @@ namespace Microsoft.OData
             if (currentScope.State == WriterState.NestedResourceInfo || currentScope.State == WriterState.NestedResourceInfoWithContent)
             {
                 ODataNestedResourceInfo currentNestedResourceInfo = (ODataNestedResourceInfo)currentScope.Item;
-                this.InterceptException(() =>
-                {
-                    if (this.ParentResourceType != null)
+                this.InterceptException(
+                    (thisParam, currentNestedResourceInfoParam, contentPayloadKindParam) =>
                     {
-                        IEdmStructuralProperty structuralProperty = this.ParentResourceType.FindProperty(currentNestedResourceInfo.Name) as IEdmStructuralProperty;
-                        if (structuralProperty != null)
+                        if (thisParam.ParentResourceType != null)
                         {
-                            this.CurrentScope.ItemType = structuralProperty.Type.Definition.AsElementType();
-                            IEdmNavigationSource parentNavigationSource = this.ParentResourceNavigationSource;
-
-                            this.CurrentScope.NavigationSource = parentNavigationSource;
-                        }
-                        else
-                        {
-                            IEdmNavigationProperty navigationProperty =
-                                 this.WriterValidator.ValidateNestedResourceInfo(currentNestedResourceInfo, this.ParentResourceType, contentPayloadKind);
-                            if (navigationProperty != null)
+                            IEdmStructuralProperty structuralProperty = thisParam.ParentResourceType.FindProperty(currentNestedResourceInfoParam.Name) as IEdmStructuralProperty;
+                            if (structuralProperty != null)
                             {
-                                this.CurrentScope.ResourceType = navigationProperty.ToEntityType();
-                                IEdmNavigationSource parentNavigationSource = this.ParentResourceNavigationSource;
+                                thisParam.CurrentScope.ItemType = structuralProperty.Type.Definition.AsElementType();
+                                IEdmNavigationSource parentNavigationSource = thisParam.ParentResourceNavigationSource;
 
-                                if (this.CurrentScope.NavigationSource == null)
+                                thisParam.CurrentScope.NavigationSource = parentNavigationSource;
+                            }
+                            else
+                            {
+                                IEdmNavigationProperty navigationProperty =
+                                     thisParam.WriterValidator.ValidateNestedResourceInfo(currentNestedResourceInfoParam, thisParam.ParentResourceType, contentPayloadKindParam);
+                                if (navigationProperty != null)
                                 {
-                                    IEdmPathExpression bindingPath;
-                                    this.CurrentScope.NavigationSource = parentNavigationSource == null ?
-                                        null :
-                                        parentNavigationSource.FindNavigationTarget(navigationProperty, BindingPathHelper.MatchBindingPath, this.CurrentScope.ODataUri.Path.Segments, out bindingPath);
+                                    thisParam.CurrentScope.ResourceType = navigationProperty.ToEntityType();
+                                    IEdmNavigationSource parentNavigationSource = thisParam.ParentResourceNavigationSource;
+
+                                    if (thisParam.CurrentScope.NavigationSource == null)
+                                    {
+                                        IEdmPathExpression bindingPath;
+                                        thisParam.CurrentScope.NavigationSource = parentNavigationSource == null ?
+                                            null :
+                                            parentNavigationSource.FindNavigationTarget(navigationProperty, BindingPathHelper.MatchBindingPath, thisParam.CurrentScope.ODataUri.Path.Segments, out bindingPath);
+                                    }
                                 }
                             }
                         }
-                    }
-                });
+                    }, currentNestedResourceInfo, contentPayloadKind);
 
                 if (currentScope.State == WriterState.NestedResourceInfoWithContent)
                 {
@@ -2241,15 +2251,16 @@ namespace Microsoft.OData
 
                     if (!this.SkipWriting)
                     {
-                        this.InterceptException(() =>
-                        {
-                            if (!(currentNestedResourceInfo.SerializationInfo != null && currentNestedResourceInfo.SerializationInfo.IsComplex)
-                                && (this.CurrentScope.ItemType == null || this.CurrentScope.ItemType.IsEntityOrEntityCollectionType()))
+                        this.InterceptException(
+                            (thisParam, currentNestedResourceInfoParam) =>
                             {
-                                this.DuplicatePropertyNameChecker.ValidatePropertyUniqueness(currentNestedResourceInfo);
-                                this.StartNestedResourceInfoWithContent(currentNestedResourceInfo);
-                            }
-                        });
+                                if (!(currentNestedResourceInfoParam.SerializationInfo != null && currentNestedResourceInfoParam.SerializationInfo.IsComplex)
+                                    && (thisParam.CurrentScope.ItemType == null || thisParam.CurrentScope.ItemType.IsEntityOrEntityCollectionType()))
+                                {
+                                    thisParam.DuplicatePropertyNameChecker.ValidatePropertyUniqueness(currentNestedResourceInfoParam);
+                                    thisParam.StartNestedResourceInfoWithContent(currentNestedResourceInfoParam);
+                                }
+                            }, currentNestedResourceInfo);
                     }
                 }
             }
@@ -2353,14 +2364,18 @@ namespace Microsoft.OData
 
         /// <summary>
         /// Catch any exception thrown by the action passed in; in the exception case move the writer into
-        /// state ExceptionThrown and then rethrow the exception.
+        /// state Error and then rethrow the exception.
         /// </summary>
         /// <param name="action">The action to execute.</param>
-        private void InterceptException(Action action)
+        /// <remarks>
+        /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
+        /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
+        /// </remarks>
+        private void InterceptException(Action<ODataWriterCore> action)
         {
             try
             {
-                action();
+                action(this);
             }
             catch
             {
@@ -2373,18 +2388,108 @@ namespace Microsoft.OData
             }
         }
 
-
         /// <summary>
         /// Catch any exception thrown by the action passed in; in the exception case move the writer into
-        /// state ExceptionThrown and then rethrow the exception.
+        /// state Error and then rethrow the exception.
         /// </summary>
+        /// <typeparam name="TArg0">The action argument type.</typeparam>
         /// <param name="action">The action to execute.</param>
-        /// <returns>The task.</returns>
-        private async Task InterceptExceptionAsync(Func<Task> action)
+        /// <param name="arg0">The argument value provided to the action.</param>
+        /// <remarks>
+        /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
+        /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
+        /// </remarks>
+        private void InterceptException<TArg0>(Action<ODataWriterCore, TArg0> action, TArg0 arg0)
         {
             try
             {
-                await action().ConfigureAwait(false);
+                action(this, arg0);
+            }
+            catch
+            {
+                if (!IsErrorState(this.State))
+                {
+                    this.EnterScope(WriterState.Error, this.CurrentScope.Item);
+                }
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Catch any exception thrown by the action passed in; in the exception case move the writer into
+        /// state Error and then rethrow the exception.
+        /// </summary>
+        /// <typeparam name="TArg0">The delegate first argument type.</typeparam>
+        /// <typeparam name="TArg1">The delegate second argument type.</typeparam>
+        /// <param name="action">The action to execute.</param>
+        /// <param name="arg0">The argument value provided to the action.</param>
+        /// <param name="arg1">The argument value provided to the action.</param>
+        /// <remarks>
+        /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
+        /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
+        /// </remarks>
+        private void InterceptException<TArg0, TArg1>(Action<ODataWriterCore, TArg0, TArg1> action, TArg0 arg0, TArg1 arg1)
+        {
+            try
+            {
+                action(this, arg0, arg1);
+            }
+            catch
+            {
+                if (!IsErrorState(this.State))
+                {
+                    this.EnterScope(WriterState.Error, this.CurrentScope.Item);
+                }
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Catch any exception thrown by the action passed in; in the exception case move the writer into
+        /// state Error and then rethrow the exception.
+        /// </summary>
+        /// <param name="action">The action to execute.</param>
+        /// <returns>The task.</returns>
+        /// <remarks>
+        /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
+        /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
+        /// </remarks>
+        private async Task InterceptExceptionAsync(Func<ODataWriterCore, Task> action)
+        {
+            try
+            {
+                await action(this).ConfigureAwait(false);
+            }
+            catch
+            {
+                if (!IsErrorState(this.State))
+                {
+                    this.EnterScope(WriterState.Error, this.CurrentScope.Item);
+                }
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Catch any exception thrown by the action passed in; in the exception case move the writer into
+        /// state Error and then rethrow the exception.
+        /// </summary>
+        /// <typeparam name="TArg0">The action argument type.</typeparam>
+        /// <param name="action">The action to execute.</param>
+        /// <param name="arg0">The argument value provided to the action.</param>
+        /// <returns>The task.</returns>
+        /// <remarks>
+        /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
+        /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
+        /// </remarks>
+        private async Task InterceptExceptionAsync<TArg0>(Func<ODataWriterCore, TArg0, Task> action, TArg0 arg0)
+        {
+            try
+            {
+                await action(this, arg0).ConfigureAwait(false);
             }
             catch
             {
@@ -2449,7 +2554,7 @@ namespace Microsoft.OData
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Debug only cast.")]
         private void EnterScope(WriterState newState, ODataItem item)
         {
-            this.InterceptException(() => this.ValidateTransition(newState));
+            this.InterceptException((thisParam, newStateParam) => thisParam.ValidateTransition(newStateParam), newState);
 
             // If the parent scope was marked for skipping content, the new child scope should be as well.
             bool skipWriting = this.SkipWriting;
@@ -2809,7 +2914,7 @@ namespace Microsoft.OData
                 Scope startScope = this.scopeStack.Pop();
                 Debug.Assert(startScope.State == WriterState.Start, "startScope.State == WriterState.Start");
                 this.PushScope(WriterState.Completed, /*item*/null, startScope.NavigationSource, startScope.ResourceType, /*skipWriting*/false, startScope.SelectedProperties, startScope.ODataUri, null);
-                this.InterceptException(this.EndPayload);
+                this.InterceptException((thisParam) => thisParam.EndPayload());
                 this.NotifyListener(WriterState.Completed);
             }
         }
@@ -3131,21 +3236,22 @@ namespace Microsoft.OData
 
             if (!this.SkipWriting)
             {
-                await this.InterceptExceptionAsync(async () =>
-                {
-                    // Verify query count
-                    if (resourceSet.Count.HasValue)
+                await this.InterceptExceptionAsync(
+                    async (thisParam, resourceSetParam) =>
                     {
-                        // Check that Count is not set for requests
-                        if (!this.outputContext.WritingResponse)
+                        // Verify query count
+                        if (resourceSetParam.Count.HasValue)
                         {
-                            this.ThrowODataException(Strings.ODataWriterCore_QueryCountInRequest, resourceSet);
+                            // Check that Count is not set for requests
+                            if (!thisParam.outputContext.WritingResponse)
+                            {
+                                thisParam.ThrowODataException(Strings.ODataWriterCore_QueryCountInRequest, resourceSetParam);
+                            }
                         }
-                    }
 
-                    await this.StartResourceSetAsync(resourceSet)
-                        .ConfigureAwait(false);
-                }).ConfigureAwait(false);
+                        await thisParam.StartResourceSetAsync(resourceSetParam)
+                            .ConfigureAwait(false);
+                    }, resourceSet).ConfigureAwait(false);
             }
         }
 
@@ -3178,25 +3284,26 @@ namespace Microsoft.OData
                 .ConfigureAwait(false);
             this.EnterScope(WriterState.DeltaResourceSet, deltaResourceSet);
 
-            await this.InterceptExceptionAsync(async () =>
-            {
-                if (!this.outputContext.WritingResponse)
+            await this.InterceptExceptionAsync(
+                async (thisParam, deltaResourceSetParam) =>
                 {
-                    // Check that links are not set for requests
-                    if (deltaResourceSet.NextPageLink != null)
+                    if (!thisParam.outputContext.WritingResponse)
                     {
-                        this.ThrowODataException(Strings.ODataWriterCore_QueryNextLinkInRequest, deltaResourceSet);
+                        // Check that links are not set for requests
+                        if (deltaResourceSetParam.NextPageLink != null)
+                        {
+                            thisParam.ThrowODataException(Strings.ODataWriterCore_QueryNextLinkInRequest, deltaResourceSetParam);
+                        }
+
+                        if (deltaResourceSetParam.DeltaLink != null)
+                        {
+                            thisParam.ThrowODataException(Strings.ODataWriterCore_QueryDeltaLinkInRequest, deltaResourceSetParam);
+                        }
                     }
 
-                    if (deltaResourceSet.DeltaLink != null)
-                    {
-                        this.ThrowODataException(Strings.ODataWriterCore_QueryDeltaLinkInRequest, deltaResourceSet);
-                    }
-                }
-
-                await this.StartDeltaResourceSetAsync(deltaResourceSet)
-                    .ConfigureAwait(false);
-            }).ConfigureAwait(false);
+                    await thisParam.StartDeltaResourceSetAsync(deltaResourceSetParam)
+                        .ConfigureAwait(false);
+                }, deltaResourceSet).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -3215,22 +3322,23 @@ namespace Microsoft.OData
             if (!this.SkipWriting)
             {
                 this.IncreaseResourceDepth();
-                await this.InterceptExceptionAsync(async () =>
-                {
-                    if (resource != null)
+                await this.InterceptExceptionAsync(
+                    async (thisParam, resourceParam) =>
                     {
-                        ResourceScope resourceScope = (ResourceScope)this.CurrentScope;
-                        this.ValidateResourceForResourceSet(resource, resourceScope);
-                        await this.PrepareResourceForWriteStartAsync(
-                            resourceScope,
-                            resource,
-                            this.outputContext.WritingResponse,
-                            resourceScope.SelectedProperties).ConfigureAwait(false);
-                    }
+                        if (resourceParam != null)
+                        {
+                            ResourceScope resourceScope = (ResourceScope)thisParam.CurrentScope;
+                            thisParam.ValidateResourceForResourceSet(resourceParam, resourceScope);
+                            await thisParam.PrepareResourceForWriteStartAsync(
+                                resourceScope,
+                                resourceParam,
+                                thisParam.outputContext.WritingResponse,
+                                resourceScope.SelectedProperties).ConfigureAwait(false);
+                        }
 
-                    await this.StartResourceAsync(resource)
-                        .ConfigureAwait(false);
-                }).ConfigureAwait(false);
+                        await thisParam.StartResourceAsync(resourceParam)
+                            .ConfigureAwait(false);
+                    }, resource).ConfigureAwait(false);
             }
         }
 
@@ -3250,19 +3358,20 @@ namespace Microsoft.OData
             this.EnterScope(WriterState.DeletedResource, resource);
             this.IncreaseResourceDepth();
 
-            await this.InterceptExceptionAsync(async () =>
-            {
-                DeletedResourceScope resourceScope = this.CurrentScope as DeletedResourceScope;
-                this.ValidateResourceForResourceSet(resource, resourceScope);
+            await this.InterceptExceptionAsync(
+                async (thisParam, resourceParam) =>
+                {
+                    DeletedResourceScope resourceScope = thisParam.CurrentScope as DeletedResourceScope;
+                    this.ValidateResourceForResourceSet(resourceParam, resourceScope);
 
-                await this.PrepareDeletedResourceForWriteStartAsync(
-                    resourceScope,
-                    resource,
-                    this.outputContext.WritingResponse,
-                    resourceScope.SelectedProperties).ConfigureAwait(false);
-                await this.StartDeletedResourceAsync(resource)
-                    .ConfigureAwait(false);
-            }).ConfigureAwait(false);
+                    await this.PrepareDeletedResourceForWriteStartAsync(
+                        resourceScope,
+                        resourceParam,
+                        thisParam.outputContext.WritingResponse,
+                        resourceScope.SelectedProperties).ConfigureAwait(false);
+                    await thisParam.StartDeletedResourceAsync(resource)
+                        .ConfigureAwait(false);
+                }, resource).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -3276,18 +3385,19 @@ namespace Microsoft.OData
 
             if (!this.SkipWriting)
             {
-                await this.InterceptExceptionAsync(async () =>
-                {
-                    await this.StartPropertyAsync(property)
-                        .ConfigureAwait(false);
-
-                    if (property is ODataProperty)
+                await this.InterceptExceptionAsync(
+                    async (thisParam, propertyParam) =>
                     {
-                        PropertyInfoScope scope = this.CurrentScope as PropertyInfoScope;
-                        Debug.Assert(scope != null, "Scope for ODataPropertyInfo is not ODataPropertyInfoScope");
-                        scope.ValueWritten = true;
-                    }
-                }).ConfigureAwait(false);
+                        await thisParam.StartPropertyAsync(propertyParam)
+                            .ConfigureAwait(false);
+
+                        if (propertyParam is ODataProperty)
+                        {
+                            PropertyInfoScope scope = thisParam.CurrentScope as PropertyInfoScope;
+                            Debug.Assert(scope != null, "Scope for ODataPropertyInfo is not ODataPropertyInfoScope");
+                            scope.ValueWritten = true;
+                        }
+                    }, property).ConfigureAwait(false);
             }
         }
 
@@ -3325,110 +3435,111 @@ namespace Microsoft.OData
         /// <returns>A task that represents the asynchronous write operation.</returns>
         private Task WriteEndImplementationAsync()
         {
-            return this.InterceptExceptionAsync(async () =>
-            {
-                Scope currentScope = this.CurrentScope;
-
-                switch (currentScope.State)
+            return this.InterceptExceptionAsync(
+                async (thisParam) =>
                 {
-                    case WriterState.Resource:
-                        if (!this.SkipWriting)
-                        {
-                            ODataResource resource = (ODataResource)currentScope.Item;
+                    Scope currentScope = thisParam.CurrentScope;
 
-                            await this.EndResourceAsync(resource)
-                                .ConfigureAwait(false);
-                            this.DecreaseResourceDepth();
-                        }
+                    switch (currentScope.State)
+                    {
+                        case WriterState.Resource:
+                            if (!thisParam.SkipWriting)
+                            {
+                                ODataResource resource = (ODataResource)currentScope.Item;
 
-                        break;
-                    case WriterState.DeletedResource:
-                        if (!this.SkipWriting)
-                        {
-                            ODataDeletedResource resource = (ODataDeletedResource)currentScope.Item;
+                                await thisParam.EndResourceAsync(resource)
+                                    .ConfigureAwait(false);
+                                thisParam.DecreaseResourceDepth();
+                            }
 
-                            await this.EndDeletedResourceAsync(resource)
-                                .ConfigureAwait(false);
-                            this.DecreaseResourceDepth();
-                        }
+                            break;
+                        case WriterState.DeletedResource:
+                            if (!thisParam.SkipWriting)
+                            {
+                                ODataDeletedResource resource = (ODataDeletedResource)currentScope.Item;
 
-                        break;
-                    case WriterState.ResourceSet:
-                        if (!this.SkipWriting)
-                        {
-                            ODataResourceSet resourceSet = (ODataResourceSet)currentScope.Item;
-                            WriterValidationUtils.ValidateResourceSetAtEnd(resourceSet, !this.outputContext.WritingResponse);
-                            await this.EndResourceSetAsync(resourceSet)
-                                .ConfigureAwait(false);
-                        }
+                                await thisParam.EndDeletedResourceAsync(resource)
+                                    .ConfigureAwait(false);
+                                thisParam.DecreaseResourceDepth();
+                            }
 
-                        break;
-                    case WriterState.DeltaLink:
-                    case WriterState.DeltaDeletedLink:
-                        break;
-                    case WriterState.DeltaResourceSet:
-                        if (!this.SkipWriting)
-                        {
-                            ODataDeltaResourceSet deltaResourceSet = (ODataDeltaResourceSet)currentScope.Item;
-                            WriterValidationUtils.ValidateDeltaResourceSetAtEnd(deltaResourceSet, !this.outputContext.WritingResponse);
-                            await this.EndDeltaResourceSetAsync(deltaResourceSet)
-                                .ConfigureAwait(false);
-                        }
+                            break;
+                        case WriterState.ResourceSet:
+                            if (!thisParam.SkipWriting)
+                            {
+                                ODataResourceSet resourceSet = (ODataResourceSet)currentScope.Item;
+                                WriterValidationUtils.ValidateResourceSetAtEnd(resourceSet, !thisParam.outputContext.WritingResponse);
+                                await thisParam.EndResourceSetAsync(resourceSet)
+                                    .ConfigureAwait(false);
+                            }
 
-                        break;
-                    case WriterState.NestedResourceInfo:
-                        if (!this.outputContext.WritingResponse)
-                        {
-                            throw new ODataException(Strings.ODataWriterCore_DeferredLinkInRequest);
-                        }
+                            break;
+                        case WriterState.DeltaLink:
+                        case WriterState.DeltaDeletedLink:
+                            break;
+                        case WriterState.DeltaResourceSet:
+                            if (!thisParam.SkipWriting)
+                            {
+                                ODataDeltaResourceSet deltaResourceSet = (ODataDeltaResourceSet)currentScope.Item;
+                                WriterValidationUtils.ValidateDeltaResourceSetAtEnd(deltaResourceSet, !thisParam.outputContext.WritingResponse);
+                                await thisParam.EndDeltaResourceSetAsync(deltaResourceSet)
+                                    .ConfigureAwait(false);
+                            }
 
-                        if (!this.SkipWriting)
-                        {
-                            ODataNestedResourceInfo link = (ODataNestedResourceInfo)currentScope.Item;
-                            this.DuplicatePropertyNameChecker.ValidatePropertyUniqueness(link);
-                            await this.WriteDeferredNestedResourceInfoAsync(link)
-                                .ConfigureAwait(false);
+                            break;
+                        case WriterState.NestedResourceInfo:
+                            if (!thisParam.outputContext.WritingResponse)
+                            {
+                                throw new ODataException(Strings.ODataWriterCore_DeferredLinkInRequest);
+                            }
 
-                            this.MarkNestedResourceInfoAsProcessed(link);
-                        }
+                            if (!thisParam.SkipWriting)
+                            {
+                                ODataNestedResourceInfo link = (ODataNestedResourceInfo)currentScope.Item;
+                                thisParam.DuplicatePropertyNameChecker.ValidatePropertyUniqueness(link);
+                                await thisParam.WriteDeferredNestedResourceInfoAsync(link)
+                                    .ConfigureAwait(false);
 
-                        break;
-                    case WriterState.NestedResourceInfoWithContent:
-                        if (!this.SkipWriting)
-                        {
-                            ODataNestedResourceInfo link = (ODataNestedResourceInfo)currentScope.Item;
-                            await this.EndNestedResourceInfoWithContentAsync(link)
-                                .ConfigureAwait(false);
+                                thisParam.MarkNestedResourceInfoAsProcessed(link);
+                            }
 
-                            this.MarkNestedResourceInfoAsProcessed(link);
-                        }
+                            break;
+                        case WriterState.NestedResourceInfoWithContent:
+                            if (!thisParam.SkipWriting)
+                            {
+                                ODataNestedResourceInfo link = (ODataNestedResourceInfo)currentScope.Item;
+                                await thisParam.EndNestedResourceInfoWithContentAsync(link)
+                                    .ConfigureAwait(false);
 
-                        break;
-                    case WriterState.Property:
-                        {
-                            ODataPropertyInfo property = (ODataPropertyInfo)currentScope.Item;
-                            await this.EndPropertyAsync(property)
-                                .ConfigureAwait(false);
-                        }
+                                thisParam.MarkNestedResourceInfoAsProcessed(link);
+                            }
 
-                        break;
-                    case WriterState.Primitive:
-                        // WriteEnd for WriterState.Primitive is a no-op; just leave scope
-                        break;
-                    case WriterState.Stream:
-                    case WriterState.String:
-                        throw new ODataException(Strings.ODataWriterCore_StreamNotDisposed);
-                    case WriterState.Start:                 // fall through
-                    case WriterState.Completed:             // fall through
-                    case WriterState.Error:                 // fall through
-                        throw new ODataException(Strings.ODataWriterCore_WriteEndCalledInInvalidState(currentScope.State.ToString()));
-                    default:
-                        throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_WriteEnd_UnreachableCodePath));
-                }
+                            break;
+                        case WriterState.Property:
+                            {
+                                ODataPropertyInfo property = (ODataPropertyInfo)currentScope.Item;
+                                await thisParam.EndPropertyAsync(property)
+                                    .ConfigureAwait(false);
+                            }
 
-                await this.LeaveScopeAsync()
-                    .ConfigureAwait(false);
-            });
+                            break;
+                        case WriterState.Primitive:
+                            // WriteEnd for WriterState.Primitive is a no-op; just leave scope
+                            break;
+                        case WriterState.Stream:
+                        case WriterState.String:
+                            throw new ODataException(Strings.ODataWriterCore_StreamNotDisposed);
+                        case WriterState.Start:                 // fall through
+                        case WriterState.Completed:             // fall through
+                        case WriterState.Error:                 // fall through
+                            throw new ODataException(Strings.ODataWriterCore_WriteEndCalledInInvalidState(currentScope.State.ToString()));
+                        default:
+                            throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_WriteEnd_UnreachableCodePath));
+                    }
+
+                    await thisParam.LeaveScopeAsync()
+                        .ConfigureAwait(false);
+                });
         }
 
         /// <summary>
@@ -3448,21 +3559,22 @@ namespace Microsoft.OData
 
             if (!this.SkipWriting)
             {
-                await this.InterceptExceptionAsync(async () =>
-                {
-                    WriterValidationUtils.ValidateEntityReferenceLink(entityReferenceLink);
-
-                    ODataNestedResourceInfo nestedInfo = this.CurrentScope.Item as ODataNestedResourceInfo;
-                    if (nestedInfo == null)
+                await this.InterceptExceptionAsync(
+                    async (thisParam, entityReferenceLinkParam) =>
                     {
-                        NestedResourceInfoScope nestedResourceInfoScope = this.ParentNestedResourceInfoScope;
-                        Debug.Assert(nestedResourceInfoScope != null);
-                        nestedInfo = (ODataNestedResourceInfo)nestedResourceInfoScope.Item;
-                    }
+                        WriterValidationUtils.ValidateEntityReferenceLink(entityReferenceLinkParam);
 
-                    await this.WriteEntityReferenceInNavigationLinkContentAsync(nestedInfo, entityReferenceLink)
-                        .ConfigureAwait(false);
-                }).ConfigureAwait(false);
+                        ODataNestedResourceInfo nestedInfo = thisParam.CurrentScope.Item as ODataNestedResourceInfo;
+                        if (nestedInfo == null)
+                        {
+                            NestedResourceInfoScope nestedResourceInfoScope = thisParam.ParentNestedResourceInfoScope;
+                            Debug.Assert(nestedResourceInfoScope != null);
+                            nestedInfo = (ODataNestedResourceInfo)nestedResourceInfoScope.Item;
+                        }
+
+                        await thisParam.WriteEntityReferenceInNavigationLinkContentAsync(nestedInfo, entityReferenceLinkParam)
+                            .ConfigureAwait(false);
+                    }, entityReferenceLink).ConfigureAwait(false);
             }
         }
 
@@ -3474,7 +3586,7 @@ namespace Microsoft.OData
         {
             if (this.State == WriterState.Start)
             {
-                return this.InterceptExceptionAsync(this.StartPayloadAsync);
+                return this.InterceptExceptionAsync((thisParam) => thisParam.StartPayloadAsync());
             }
 
             return TaskUtils.CompletedTask;
@@ -3500,43 +3612,44 @@ namespace Microsoft.OData
             {
                 ODataNestedResourceInfo currentNestedResourceInfo = (ODataNestedResourceInfo)currentScope.Item;
 
-                this.InterceptException(() =>
-                {
-                    if (this.ParentResourceType != null)
+                this.InterceptException(
+                    (thisParam, currentNestedResourceInfoParam, contentPayloadKindParam) =>
                     {
-                        IEdmStructuralProperty structuralProperty = this.ParentResourceType.FindProperty(
-                            currentNestedResourceInfo.Name) as IEdmStructuralProperty;
-                        if (structuralProperty != null)
+                        if (thisParam.ParentResourceType != null)
                         {
-                            this.CurrentScope.ItemType = structuralProperty.Type.Definition.AsElementType();
-                            IEdmNavigationSource parentNavigationSource = this.ParentResourceNavigationSource;
-
-                            this.CurrentScope.NavigationSource = parentNavigationSource;
-                        }
-                        else
-                        {
-                            IEdmNavigationProperty navigationProperty = this.WriterValidator.ValidateNestedResourceInfo(
-                                currentNestedResourceInfo,
-                                this.ParentResourceType,
-                                contentPayloadKind);
-                            if (navigationProperty != null)
+                            IEdmStructuralProperty structuralProperty = thisParam.ParentResourceType.FindProperty(
+                                currentNestedResourceInfoParam.Name) as IEdmStructuralProperty;
+                            if (structuralProperty != null)
                             {
-                                this.CurrentScope.ResourceType = navigationProperty.ToEntityType();
-                                IEdmNavigationSource parentNavigationSource = this.ParentResourceNavigationSource;
+                                thisParam.CurrentScope.ItemType = structuralProperty.Type.Definition.AsElementType();
+                                IEdmNavigationSource parentNavigationSource = thisParam.ParentResourceNavigationSource;
 
-                                if (this.CurrentScope.NavigationSource == null)
+                                thisParam.CurrentScope.NavigationSource = parentNavigationSource;
+                            }
+                            else
+                            {
+                                IEdmNavigationProperty navigationProperty = thisParam.WriterValidator.ValidateNestedResourceInfo(
+                                    currentNestedResourceInfoParam,
+                                    thisParam.ParentResourceType,
+                                    contentPayloadKindParam);
+                                if (navigationProperty != null)
                                 {
-                                    IEdmPathExpression bindingPath;
-                                    this.CurrentScope.NavigationSource = parentNavigationSource?.FindNavigationTarget(
-                                        navigationProperty,
-                                        BindingPathHelper.MatchBindingPath,
-                                        this.CurrentScope.ODataUri.Path.Segments,
-                                        out bindingPath);
+                                    thisParam.CurrentScope.ResourceType = navigationProperty.ToEntityType();
+                                    IEdmNavigationSource parentNavigationSource = thisParam.ParentResourceNavigationSource;
+
+                                    if (thisParam.CurrentScope.NavigationSource == null)
+                                    {
+                                        IEdmPathExpression bindingPath;
+                                        thisParam.CurrentScope.NavigationSource = parentNavigationSource?.FindNavigationTarget(
+                                            navigationProperty,
+                                            BindingPathHelper.MatchBindingPath,
+                                            thisParam.CurrentScope.ODataUri.Path.Segments,
+                                            out bindingPath);
+                                    }
                                 }
                             }
                         }
-                    }
-                });
+                    }, currentNestedResourceInfo, contentPayloadKind);
 
                 if (currentScope.State == WriterState.NestedResourceInfoWithContent)
                 {
@@ -3559,16 +3672,17 @@ namespace Microsoft.OData
 
                     if (!this.SkipWriting)
                     {
-                        await this.InterceptExceptionAsync(async () =>
-                        {
-                            if (!(currentNestedResourceInfo.SerializationInfo != null && currentNestedResourceInfo.SerializationInfo.IsComplex)
-                                && (this.CurrentScope.ItemType == null || this.CurrentScope.ItemType.IsEntityOrEntityCollectionType()))
+                        await this.InterceptExceptionAsync(
+                            async (thisParam, currentNestedResourceInfoParam) =>
                             {
-                                this.DuplicatePropertyNameChecker.ValidatePropertyUniqueness(currentNestedResourceInfo);
-                                await this.StartNestedResourceInfoWithContentAsync(currentNestedResourceInfo)
-                                    .ConfigureAwait(false);
-                            }
-                        }).ConfigureAwait(false);
+                                if (!(currentNestedResourceInfoParam.SerializationInfo != null && currentNestedResourceInfoParam.SerializationInfo.IsComplex)
+                                    && (thisParam.CurrentScope.ItemType == null || thisParam.CurrentScope.ItemType.IsEntityOrEntityCollectionType()))
+                                {
+                                    thisParam.DuplicatePropertyNameChecker.ValidatePropertyUniqueness(currentNestedResourceInfoParam);
+                                    await thisParam.StartNestedResourceInfoWithContentAsync(currentNestedResourceInfoParam)
+                                        .ConfigureAwait(false);
+                                }
+                            }, currentNestedResourceInfo).ConfigureAwait(false);
                     }
                 }
             }
@@ -3611,7 +3725,7 @@ namespace Microsoft.OData
                     startScope.SelectedProperties,
                     startScope.ODataUri,
                     /*derivedTypeConstraints*/ null);
-                await this.InterceptExceptionAsync(this.EndPayloadAsync)
+                await this.InterceptExceptionAsync((thisParam) => thisParam.EndPayloadAsync())
                     .ConfigureAwait(false);
                 this.NotifyListener(WriterState.Completed);
             }

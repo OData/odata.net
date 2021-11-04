@@ -10,9 +10,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.OData
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
-#if !SILVERLIGHT
     using System.Net.Mime;
-#endif
     using System.Xml.Linq;
     using Microsoft.Test.Taupo.Astoria.Contracts;
     using Microsoft.Test.Taupo.Astoria.Contracts.EntityModel;
@@ -25,7 +23,6 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.OData
     /// </summary>
     public static class ODataExtensions
     {
-#if !SILVERLIGHT // System.Net.Mime is not present in SL
         /// <summary>
         /// Randomizes the capitalization of the media-type portion of the given content type
         /// </summary>
@@ -43,7 +40,6 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.OData
             type.MediaType = random.RandomizeCapitalization(type.MediaType);
             return type.ToString();
         }
-#endif
 
         /// <summary>
         /// Replaces the given element, storing the original in an annotation and copying the other annotations over.

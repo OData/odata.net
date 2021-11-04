@@ -12,9 +12,6 @@ using System.Threading.Tasks;
 using Microsoft.OData.Client;
 using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus;
 using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
-#if SILVERLIGHT
-    using Microsoft.Silverlight.Testing;
-#endif
 using Microsoft.Test.OData.Services.TestServices;
 using Xunit;
 using Xunit.Abstractions;

@@ -86,11 +86,7 @@ namespace Microsoft.Test.Taupo.Runners
             ITestModuleRunner runner = null;
             try
             {
-#if SILVERLIGHT
-                runner = Activator.CreateInstance(runnerType) as ITestModuleRunner;
-#else
                 runner = new RunnerBridge(runnerType);
-#endif
                 dependencyInjectionContainer = new LightweightDependencyInjectionContainer();
                 var implementationSelector = new ImplementationSelector();
                 implementationSelector.AddAssembly(typeof(TestItem).GetAssembly());
@@ -140,7 +136,6 @@ namespace Microsoft.Test.Taupo.Runners
         /// <param name="continuation">The function to call after the suite is loaded</param>
         public virtual void LoadTestSuite(string suiteName, Action<TestSuite, TestModuleData> continuation)
         {
-#if !WIN8
             string suiteFileName = Path.GetFullPath(suiteName);
 
             TestSuite suite;
@@ -159,9 +154,6 @@ namespace Microsoft.Test.Taupo.Runners
 
             string assemblyDirectory = Path.GetDirectoryName(suiteFileName);
             LoadTestSuite(suite, continuation, assemblyDirectory);
-#else
-            throw new NotImplementedException("TODO: load the suite ahead of time from public documents, then call the overload of LoadTestSuite that takes a TestSuite argument");
-#endif
         }
 
         /// <summary>
@@ -172,7 +164,6 @@ namespace Microsoft.Test.Taupo.Runners
         /// <param name="assemblyDirectory">The folder containing the test assemblies</param>
         public virtual void LoadTestSuite(TestSuite suite, Action<TestSuite, TestModuleData> continuation, string assemblyDirectory)
         {
-#if !WIN8
             // Copy the parameters from the suite into our current cache of parameters.
             // This is useful for parameters that are used much earlier than normal
             // in the pipeline, like TestExplorationSeed.
@@ -186,17 +177,12 @@ namespace Microsoft.Test.Taupo.Runners
             foreach (string asm in suite.Assemblies)
             {
                 string fullPath = Path.Combine(assemblyDirectory, asm + ".dll");
-#if !SILVERLIGHT
                 var assembly = AssemblyHelpers.LoadAssembly(fullPath, assemblyDirectory);
                 assemblies.Add(assembly);
-#endif
             }
 
             var module = this.FindTestModule(assemblies);
             continuation(suite, module);
-#else
-            throw new NotImplementedException("TODO: Win8 version needs to work without loading assemblies");
-#endif
         }
 
         /// <summary>
@@ -207,11 +193,7 @@ namespace Microsoft.Test.Taupo.Runners
         public virtual TextWriter CreateLogTextWriter(string logName)
         {
             ExceptionUtilities.CheckStringArgumentIsNotNullOrEmpty(logName, "logName");
-#if !WIN8
             return File.CreateText(logName);
-#else   
-            throw new NotImplementedException();
-#endif
         }
 
         /// <summary>
@@ -333,30 +315,9 @@ namespace Microsoft.Test.Taupo.Runners
             return null;
         }
 
-#if !WINDOWS_PHONE
         private bool TryParseEnumValue<TEnum>(string value, out TEnum result) where TEnum : struct
         {
             return Enum.TryParse<TEnum>(value, true, out result);
         }
-#else
-        private bool TryParseEnumValue<TEnum>(string value, out TEnum result)
-        {
-            result = default(TEnum);
-            try
-            {
-                result = (TEnum)Enum.Parse(typeof(TEnum), value, true);
-            }
-            catch (ArgumentException)
-            {
-                return false;
-            }
-            catch (OverflowException)
-            {
-                return false;
-            }
-
-            return true;
-        }
-#endif
     }
 }

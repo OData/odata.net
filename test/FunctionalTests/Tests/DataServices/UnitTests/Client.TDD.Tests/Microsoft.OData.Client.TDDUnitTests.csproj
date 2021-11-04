@@ -58,6 +58,7 @@
     <Compile Include="DateTimePrimitiveTypeReference.cs" />
     <Compile Include="Tests\Annotation\AnnotationTargetingOperationTestsProxy.cs" />
     <Compile Include="Tests\Annotation\ClientAnnotationTests.cs" />
+    <Compile Include="Tests\DeleteLinkTests.cs" />
     <Compile Include="Tests\CustomizedHttpWebRequestMessage.cs" />
     <Compile Include="Tests\Annotation\AnnotationTestsProxy.cs" />
     <Compile Include="Tests\Annotation\ClientMetadataAnnotationTests.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Tests\Materialization\EntryMaterializationPolicyForComplexResourceTests.cs" />
     <Compile Include="Tests\Materialization\CollectionValueMaterializationPolicyTests.cs" />
     <Compile Include="Tests\Materialization\EntryValueMaterializationPolicyUnitTests.cs" />
+    <Compile Include="Tests\Materialization\CamelCasedTypeMaterializationTests.cs" />
     <Compile Include="Tests\Materialization\ODataMaterializerTests.cs" />
     <Compile Include="Tests\Materialization\ODataMaterializerTestsProxy.cs" />
     <Compile Include="Tests\Materialization\PrimitiveValueMaterializationPolicyTests.cs" />

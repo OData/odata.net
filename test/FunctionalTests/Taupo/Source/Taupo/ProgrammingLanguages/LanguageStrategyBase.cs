@@ -13,22 +13,11 @@ namespace Microsoft.Test.Taupo.ProgrammingLanguages
     using System.Linq;
     using System.Reflection;
     using System.Security;
-#if !WIN8
     using System.Security.Permissions;
-#endif
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts;
-#if SILVERLIGHT
-#if WIN8
-    using Microsoft.Test.Taupo.Contracts.WebServices.CompilerService.Win8;
-    using Microsoft.Test.Taupo.Utilities;
-#else
-    using Microsoft.Test.Taupo.Contracts.WebServices.CompilerService.Silverlight;
-#endif
-#else
     using Microsoft.Test.Taupo.Contracts.WebServices.CompilerService.DotNet;
     using Microsoft.Test.Taupo.Utilities;
-#endif
 
     /// <summary>
     /// Base class for <see cref="CSharpLanguageStrategy"/> and <see cref="VisualBasicLanguageStrategy"/>.
@@ -47,21 +36,10 @@ namespace Microsoft.Test.Taupo.ProgrammingLanguages
             this.LanguageName = languageName;
             this.FileExtension = fileExtension;
             this.ProjectFileExtension = projectFileExtension;
-#if SILVERLIGHT && !WIN8
-            this.RemoteCompilerType = "Silverlight4";
-#else
-#if WIN8
-            this.TempSourceFileDirectory = @"C:\Users\mfrintu\Documents\SourcesToCompile";
-            this.TempAssemblyDirectory = @"C:\Users\mfrintu\Documents\CompiledAssemblies";
-            this.RemoteCompilerType = "DotNet40";
-            this.AssemblyPathResolver = new AssemblyPathResolver();
-#else
             this.TempSourceFileDirectory = IOHelpers.CreateTempDirectory("SourcesToCompile");
             this.TempAssemblyDirectory = IOHelpers.CreateTempDirectory("CompiledAsemblies");
             this.RemoteCompilerType = "DotNet40";
             this.AssemblyPathResolver = new AssemblyPathResolver();
-#endif
-#endif
         }
 
         /// <summary>
@@ -82,13 +60,11 @@ namespace Microsoft.Test.Taupo.ProgrammingLanguages
         [InjectDependency]
         public ICompilerService CompilerService { get; set; }
 
-#if !SILVERLIGHT || WIN8
         /// <summary>
         /// Gets or sets the assembly Path Resolver
         /// </summary>
         [InjectDependency(IsRequired = true)]
         public IAssemblyPathResolver AssemblyPathResolver { get; set; }
-#endif
 
         /// <summary>
         /// Gets or sets the type of the remote compiler.
@@ -111,7 +87,6 @@ namespace Microsoft.Test.Taupo.ProgrammingLanguages
         /// </summary>
         public string ProjectFileExtension { get; private set; }
 
-#if !SILVERLIGHT || WIN8
         /// <summary>
         /// Gets or sets the directory where temporary source files should be stored.
         /// </summary>
@@ -123,7 +98,6 @@ namespace Microsoft.Test.Taupo.ProgrammingLanguages
         /// </summary>
         [InjectTestParameter("TempAssemblyDirectory", DefaultValueDescription = @".\tmp\assemblies", HelpText = "Directory where temporary assembly files should be stored.")]
         public string TempAssemblyDirectory { get; set; }
-#endif
 
         /// <summary>
         /// Creates the code generator based on CodeDOM.
@@ -145,10 +119,6 @@ namespace Microsoft.Test.Taupo.ProgrammingLanguages
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Need to catch all exceptions here.")]
         public void CompileAssemblyAsync(string outputAssemblyName, string[] sourceContent, string[] referenceAssemblies, Action<Assembly, Exception> callback, params string[] resourceFiles)
         {
-#if WINDOWS_PHONE
-            throw new TaupoNotSupportedException("This method is not supported on the Windows Phone platform");
-#endif
-#if !SILVERLIGHT
             if (this.CompilerService == null)
             {
                 try
@@ -178,8 +148,7 @@ namespace Microsoft.Test.Taupo.ProgrammingLanguages
 
                 return;
             }
-#endif
-#if !WINDOWS_PHONE
+
             try
             {
                 if (resourceFiles != null && resourceFiles.Length > 0)
@@ -196,30 +165,6 @@ namespace Microsoft.Test.Taupo.ProgrammingLanguages
                     this.Logger.WriteLine(LogLevel.Trace, "   {0}", refAsm);
                 }
 
-#if WIN8
-                var compileAssemblyRequest = new CompileAssemblyRequest
-                {
-                    outputAssemblyName = outputAssemblyName,
-                    projectFileExtension = this.ProjectFileExtension,
-                    projectType = this.RemoteCompilerType,
-                    referenceAssemblies = new System.Collections.ObjectModel.ObservableCollection<string>(referenceAssemblies),
-                    sourceFileExtension = this.FileExtension,
-                    sources = new System.Collections.ObjectModel.ObservableCollection<string>(sourceContent),
-                };
-
-                var compileAssemblyTask = client.CompileAssemblyAsync(compileAssemblyRequest);
-                compileAssemblyTask.Wait();
-                var compileAssemblyResponse = compileAssemblyTask.Result;
-                byte[] assemblyBytes = compileAssemblyResponse.CompileAssemblyResult;
-                if (assemblyBytes == null)
-                {
-                    callback(null, new TaupoInvalidOperationException("Error compiling assembly: " + compileAssemblyResponse.errorLog));
-                    return;
-                }
-
-                Assembly clientTypesAssembly = this.LoadDynamicAssembly(assemblyBytes);
-                callback(clientTypesAssembly, null);
-#else
                 client.BeginCompileAssembly(
                     this.RemoteCompilerType,
                     this.FileExtension,
@@ -239,20 +184,12 @@ namespace Microsoft.Test.Taupo.ProgrammingLanguages
                                 return;
                             }
 
-#if SILVERLIGHT
-                            System.Windows.Deployment.Current.Dispatcher.BeginInvoke(() =>
-                            {
-                                Assembly clientTypesAssembly = this.LoadDynamicAssembly(assemblyBytes);
-                                callback(clientTypesAssembly, null);
-                            });
-#else
                             string cachePath = Path.Combine(this.TempAssemblyDirectory, outputAssemblyName + ".dll");
                             this.EnsureTempDirectoriesExist();
 
                             File.WriteAllBytes(cachePath, assemblyBytes);
                             var assembly = AssemblyHelpers.LoadAssembly(cachePath, this.TempAssemblyDirectory);
                             callback(assembly, null);
-#endif
                         }
                         catch (Exception ex)
                         {
@@ -260,16 +197,13 @@ namespace Microsoft.Test.Taupo.ProgrammingLanguages
                         }
                     },
                     null);
-#endif
             }
             catch (Exception ex)
             {
                 callback(null, ex);
             }
-#endif
         }
 
-#if !SILVERLIGHT
         /// <summary>
         /// Compiles given set of source files to an assembly (dll).
         /// </summary>
@@ -395,19 +329,7 @@ namespace Microsoft.Test.Taupo.ProgrammingLanguages
         {
             return "Compilation Failed:" + Environment.NewLine + Environment.NewLine + string.Join(Environment.NewLine, results.Errors.Cast<CompilerError>().Select(c => GetErrorMessageText(c)).ToArray());
         }
-#endif
-#if SILVERLIGHT
-        private Assembly LoadDynamicAssembly(byte[] assemblyBytes)
-        {
-#if WINDOWS_PHONE || WIN8
-            throw new TaupoNotSupportedException("This method is not supported on the Windows Phone platform");
-#else
-            var ms = new MemoryStream(assemblyBytes);
-             Assembly clientTypesAssembly = new System.Windows.AssemblyPart().Load(ms);
-            return clientTypesAssembly;
-#endif
-        }
-#endif
+
         private ICompilerService CreateRemoteCompiler()
         {
             return this.CompilerService;

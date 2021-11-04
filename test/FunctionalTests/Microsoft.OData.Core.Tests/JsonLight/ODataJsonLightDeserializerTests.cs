@@ -832,6 +832,17 @@ namespace Microsoft.OData.Tests.JsonLight
             TestUtils.AssertODataValueAreEqual(new ODataNullValue(), property.ODataValue);
         }
 
+        [Fact]
+        public void ReadPayloadStartAsyncTestForDetla()
+        {
+            var model = this.CreateEdmModelWithEntity();
+            var primitiveTypeRef = ((IEdmEntityType)model.SchemaElements.First()).Properties().First().Type;
+            this.messageReaderSettings = new ODataMessageReaderSettings();
+            ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(this.CreateJsonLightInputContext("{\"@odata.context\":\"http://odata.org/test/$metadata#Customers/$delta\",\"value\":\"Joe\"}", model));
+            deserializer.ReadPayloadStartAsync(ODataPayloadKind.Delta, null, false, true);
+            Assert.Equal(ODataDeltaKind.ResourceSet, deserializer.ContextUriParseResult.DeltaKind);
+        }
+
         public static IEnumerable<object[]> PrimitiveData => new List<object[]>
         {
             new object[] { 42,                     "\"@odata.type\":\"#Int32\",\"value\":42" },

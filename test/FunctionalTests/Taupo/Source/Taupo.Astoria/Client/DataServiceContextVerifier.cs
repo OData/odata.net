@@ -63,11 +63,9 @@ namespace Microsoft.Test.Taupo.Astoria.Client
             /// </summary>
             public void Verify()
             {
-#if !WINDOWS_PHONE
                 VerifyExpectedVsActual(this.contextData.ResolveEntitySet, this.context.ResolveEntitySet, "Context entity set resolver did not match");
                 VerifyExpectedVsActual(this.contextData.MaxProtocolVersion, this.context.MaxProtocolVersion.ToTestEnum(), "Context max protocol version did not match");
                 VerifyExpectedVsActual(this.contextData.AddAndUpdateResponsePreference.ToProductEnum(), this.context.AddAndUpdateResponsePreference, "Context response preference did not match");
-#endif
                 VerifyExpectedVsActual(this.contextData.BaseUri, this.context.BaseUri, "Context base uri did not match");
                 VerifyExpectedVsActual(this.contextData.ResolveType, this.context.ResolveType, "Context type resolver did not match");
                 VerifyExpectedVsActual(this.contextData.ResolveName, this.context.ResolveName, "Context type name resolver did not match");
@@ -222,7 +220,6 @@ namespace Microsoft.Test.Taupo.Astoria.Client
 
                 // Check that the internal StreamDescriptor for the default stream is in the correct state, if we can do the reflection safely.
                 // Note that if the descriptor is not an MLE, we don't check whether the internal value is null, since that is very much an implementation detail
-#if !SILVERLIGHT
                 if (expectedDescriptorData.IsMediaLinkEntry && AppDomain.CurrentDomain.IsFullyTrusted)
                  {
                     var defaultStreamDescriptorProperty = typeof(EntityDescriptor).GetProperty("DefaultStreamDescriptor", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -234,9 +231,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                     var defaultStreamState = defaultStreamDescriptor.State;
                     VerifyExpectedVsActual(expectedDescriptorData.DefaultStreamState, defaultStreamState.ToTestEnum(), expectedDescriptorData, "DefaultStreamDesciptor.State");
                 }
-#endif
 
-#if !WINDOWS_PHONE
                 VerifyExpectedVsActual(expectedDescriptorData.LinkInfos.Count, actualDescriptor.LinkInfos.Count, expectedDescriptorData, "LinkInfos.Count");
 
                 for (int i = 0; i < expectedDescriptorData.LinkInfos.Count; i++)
@@ -276,7 +271,6 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                     ExceptionUtilities.Assert(object.ReferenceEquals(expectedDescriptorData, expectedStreamDescriptor.EntityDescriptor), "Stream descriptor data had unexpected entity descriptor data");
                     VerifyExpectedVsActual(actualDescriptor, actualStreamDescriptor.EntityDescriptor, expectedDescriptorData, "StreamDescriptors[" + i + "].EntityDescriptor");
                 }
-#endif
             }
 
             private EntityDescriptor GetEntityDescriptor(EntityDescriptorData entityDescriptorData)

@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !SILVERLIGHT
 namespace Microsoft.Test.Taupo.Astoria.ResponseVerification
 {
     using Microsoft.Test.Taupo.Astoria.Contracts;
@@ -33,4 +32,3 @@ namespace Microsoft.Test.Taupo.Astoria.ResponseVerification
         }
     }
 }
-#endif

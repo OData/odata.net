@@ -19,7 +19,6 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Client
     [ImplementationSelector("ClientQueryResultComparer", DefaultImplementation = "Default")]
     public interface IClientQueryResultComparer
     {
-#if !WINDOWS_PHONE
         /// <summary>
         /// Executes an action
         /// </summary>
@@ -50,7 +49,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Client
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings", MessageId = "2#", Justification = "Need string as a parameter.")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string", Justification = "uriString is a common naming convention.")]
         void ExecuteUriAndCompare<TResult>(IAsyncContinuation continuation, bool isAsync, string uriString, HttpVerb verb, OperationParameter[] inputParameters, bool singleResult, DataServiceContext dataContext, ExpectedClientErrorBaseline clientExpectedError);
-#endif
+
         /// <summary>
         /// Executes the given expression asynchronously and compares the result to a given expected value.
         /// </summary>

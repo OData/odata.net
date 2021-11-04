@@ -12,9 +12,6 @@ namespace Microsoft.Test.Taupo.Astoria.Common
     using System.IO;
     using System.Linq;
     using System.Threading;
-#if WIN8
-    using System.Threading.Tasks;
-#endif
     using Microsoft.Test.Taupo.Astoria.Contracts;
     using Microsoft.Test.Taupo.Common;
 
@@ -129,7 +126,6 @@ namespace Microsoft.Test.Taupo.Astoria.Common
             base.Write(buffer, offset, count);
         }
 
-#if !WIN8
         /// <summary>
         /// Begins an async write and logs the bytes written.
         /// </summary>
@@ -144,21 +140,6 @@ namespace Microsoft.Test.Taupo.Astoria.Common
             this.AddWriteBuffer(buffer, offset, count);
             return base.BeginWrite(buffer, offset, count, callback, state);
         }
-#else
-        /// <summary>
-        /// Asynchronously writes and logs the bytes written.
-        /// </summary>
-        /// <param name="buffer">The buffer to write from</param>
-        /// <param name="offset">The offset into the buffer</param>
-        /// <param name="count">The number of bytes to write</param>
-        /// <param name="cancellationToken">The cancelation toekn.</param>
-        /// <returns>The resulting Task</returns>
-        public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
-        {
-            this.AddWriteBuffer(buffer, offset, count);
-            return base.WriteAsync(buffer, offset, count, cancellationToken);
-        }
-#endif
 
         /// <summary>
         /// Reads from the stream and logs the bytes read
@@ -174,7 +155,6 @@ namespace Microsoft.Test.Taupo.Astoria.Common
             return readCount;
         }
 
-#if !WIN8
         /// <summary>
         /// Begins an async read.
         /// </summary>
@@ -214,35 +194,6 @@ namespace Microsoft.Test.Taupo.Astoria.Common
             this.IsClosed = true;
             base.Close();
         }
-#else
-        /// <summary>
-        /// Asynchronous read.
-        /// </summary>
-        /// <param name="buffer">The buffer to read into</param>
-        /// <param name="offset">The offset into the buffer</param>
-        /// <param name="count">The number of bytes to read</param>
-        /// <param name="cancellationToken">The cancelation token</param>
-        /// <returns>The resulting task</returns>
-        public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
-        {
-            return base.ReadAsync(buffer, offset, count, cancellationToken)
-                .ContinueWith(t => 
-                { 
-                    this.AddReadBuffer(buffer, 0, t.Result); 
-                    return t.Result; 
-                }, 
-                TaskContinuationOptions.OnlyOnRanToCompletion);
-        }
-
-        /// <summary>
-        /// Disposes of the given object.
-        /// </summary>
-        /// <param name="disposing">Whether to dispose a managed resource.</param>
-        protected override void Dispose(bool disposing)
-        {
-            this.IsClosed = true;
-        }
-#endif
 
         internal WrappedBeginReadResult CreateWrappedResult(byte[] buffer, int offset, IAsyncResult realResult)
         {
