@@ -84,7 +84,7 @@ namespace Microsoft.OData
         /// <param name="ignoreFilter">Whether to ignore the filter in settings.</param>
         /// <param name="propertyName">The name of the property this instance annotation applies to</param>
         internal void WriteInstanceAnnotations(
-            IEnumerable<ODataInstanceAnnotation> instanceAnnotations,
+            ICollection<ODataInstanceAnnotation> instanceAnnotations,
             InstanceAnnotationWriteTracker tracker,
             bool ignoreFilter = false,
             string propertyName = null)
@@ -95,7 +95,15 @@ namespace Microsoft.OData
             // this method runs in a hot path hence the optimizations
 
             // initialize to null to avoid instantiating a HashSet if there are no annotations
-            HashSet<string> instanceAnnotationNames = null;
+            HashSet<string> instanceAnnotationNames;
+            if (instanceAnnotations?.Count > 0)
+            {
+                instanceAnnotationNames = new HashSet<string>(StringComparer.Ordinal);
+            }
+            else
+            {
+                return;
+            }
 
             // this method is called with a List most of the time
             // foreach against a List does not allocate the enumerator to the heap,
@@ -104,11 +112,6 @@ namespace Microsoft.OData
             {
                 foreach (var annotation in instanceAnnotationsList)
                 {
-                    if (instanceAnnotationNames == null)
-                    {
-                        instanceAnnotationNames = new HashSet<string>(StringComparer.Ordinal);
-                    }
-
                     this.WriteAndTrackInstanceAnnotation(annotation, tracker, instanceAnnotationNames, ignoreFilter, propertyName);
                 }
             }
@@ -116,11 +119,6 @@ namespace Microsoft.OData
             {
                 foreach (var annotation in instanceAnnotations)
                 {
-                    if (instanceAnnotationNames == null)
-                    {
-                        instanceAnnotationNames = new HashSet<string>(StringComparer.Ordinal);
-                    }
-
                     this.WriteAndTrackInstanceAnnotation(annotation, tracker, instanceAnnotationNames, ignoreFilter, propertyName);
                 }
             }
@@ -161,7 +159,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="instanceAnnotations">The collection of instance annotations</param>
         /// <param name="propertyName">The name of the property the instance annotations apply to</param>
-        private void WriteInstanceAnnotationsForUndeclaredProperty(IEnumerable<ODataInstanceAnnotation> instanceAnnotations, string propertyName)
+        private void WriteInstanceAnnotationsForUndeclaredProperty(ICollection<ODataInstanceAnnotation> instanceAnnotations, string propertyName)
         {
             // write undeclared property's all annotations
             // optimize the foreach when instanceAnnotations is a List
@@ -188,7 +186,7 @@ namespace Microsoft.OData
         /// <param name="propertyName">The name of the property this instance annotation applies to</param>
         /// <param name="isUndeclaredProperty">If writing an undeclared property.</param>
         internal void WriteInstanceAnnotations(
-            IEnumerable<ODataInstanceAnnotation> instanceAnnotations,
+            ICollection<ODataInstanceAnnotation> instanceAnnotations,
             string propertyName = null,
             bool isUndeclaredProperty = false)
         {
@@ -208,7 +206,7 @@ namespace Microsoft.OData
         /// Writes all the instance annotations specified in <paramref name="instanceAnnotations"/> of error.
         /// </summary>
         /// <param name="instanceAnnotations">Collection of instance annotations to write.</param>
-        internal void WriteInstanceAnnotationsForError(IEnumerable<ODataInstanceAnnotation> instanceAnnotations)
+        internal void WriteInstanceAnnotationsForError(ICollection<ODataInstanceAnnotation> instanceAnnotations)
         {
             Debug.Assert(instanceAnnotations != null, "instanceAnnotations should not be null if we called this");
             this.WriteInstanceAnnotations(instanceAnnotations, new InstanceAnnotationWriteTracker(), true);
@@ -324,7 +322,7 @@ namespace Microsoft.OData
         /// <param name="ignoreFilter">Whether to ignore the filter in settings.</param>
         /// <param name="propertyName">The name of the property this instance annotation applies to</param>
         internal async Task WriteInstanceAnnotationsAsync(
-            IEnumerable<ODataInstanceAnnotation> instanceAnnotations,
+            ICollection<ODataInstanceAnnotation> instanceAnnotations,
             InstanceAnnotationWriteTracker tracker,
             bool ignoreFilter = false,
             string propertyName = null)
@@ -335,7 +333,15 @@ namespace Microsoft.OData
             // this method runs in a hot path hence the optimizations
 
             // initialize to null to avoid instantiating a HashSet if there are no annotations
-            HashSet<string> instanceAnnotationNames = null;
+            HashSet<string> instanceAnnotationNames;
+            if (instanceAnnotations?.Count >0)
+            {
+                instanceAnnotationNames = new HashSet<string>(StringComparer.Ordinal);
+            }
+            else
+            {
+                return;
+            }
 
             // this method is called with a List most of the time
             // foreach against a List does not allocate the enumerator to the heap,
@@ -344,12 +350,6 @@ namespace Microsoft.OData
             {
                 foreach (ODataInstanceAnnotation annotation in instanceAnnotationsList)
                 {
-
-                    if (instanceAnnotationNames == null)
-                    {
-                        instanceAnnotationNames = new HashSet<string>(StringComparer.Ordinal);
-                    }
-
                     await this.WriteAndTrackInstanceAnnotationAsync(annotation, tracker, instanceAnnotationNames, ignoreFilter, propertyName)
                         .ConfigureAwait(false);
                 }
@@ -359,11 +359,6 @@ namespace Microsoft.OData
             {
                 foreach (ODataInstanceAnnotation annotation in instanceAnnotations)
                 {
-                    if (instanceAnnotationNames == null)
-                    {
-                        instanceAnnotationNames = new HashSet<string>(StringComparer.Ordinal);
-                    }
-
                     await this.WriteAndTrackInstanceAnnotationAsync(annotation, tracker, instanceAnnotationNames, ignoreFilter, propertyName)
                         .ConfigureAwait(false);
                 }
@@ -407,7 +402,7 @@ namespace Microsoft.OData
         /// <param name="propertyName">The name of the property this instance annotation applies to</param>
         /// <param name="isUndeclaredProperty">If writing an undeclared property.</param>
         internal async Task WriteInstanceAnnotationsAsync(
-            IEnumerable<ODataInstanceAnnotation> instanceAnnotations,
+            ICollection<ODataInstanceAnnotation> instanceAnnotations,
             string propertyName = null,
             bool isUndeclaredProperty = false)
         {
@@ -432,7 +427,7 @@ namespace Microsoft.OData
         /// <param name="instanceAnnotations">The collection of instance annotations</param>
         /// <param name="propertyName">he name of the property the instance annotations apply to</param>
         /// <returns></returns>
-        private async Task WriteInstanceAnnotationsForUndeclaredPropertyAsync(IEnumerable<ODataInstanceAnnotation> instanceAnnotations, string propertyName)
+        private async Task WriteInstanceAnnotationsForUndeclaredPropertyAsync(ICollection<ODataInstanceAnnotation> instanceAnnotations, string propertyName)
         {
             // write undeclared property's all annotations
             // optimize the foreach when instanceAnnotations is a List to avoid enumerator allocations on the heap
@@ -458,7 +453,7 @@ namespace Microsoft.OData
         /// Asynchronously writes all the instance annotations specified in <paramref name="instanceAnnotations"/> of error.
         /// </summary>
         /// <param name="instanceAnnotations">Collection of instance annotations to write.</param>
-        internal Task WriteInstanceAnnotationsForErrorAsync(IEnumerable<ODataInstanceAnnotation> instanceAnnotations)
+        internal Task WriteInstanceAnnotationsForErrorAsync(ICollection<ODataInstanceAnnotation> instanceAnnotations)
         {
             Debug.Assert(instanceAnnotations != null, "instanceAnnotations should not be null if we called this");
             return this.WriteInstanceAnnotationsAsync(instanceAnnotations, new InstanceAnnotationWriteTracker(), true);
