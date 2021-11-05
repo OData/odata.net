@@ -8,10 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
-
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
@@ -33,11 +31,10 @@ namespace Microsoft.OData.Edm
 
         private static readonly IEnumerable<IEdmStructuralProperty> EmptyStructuralProperties = Enumerable.Empty<IEdmStructuralProperty>();
         private static readonly IEnumerable<IEdmNavigationProperty> EmptyNavigationProperties = Enumerable.Empty<IEdmNavigationProperty>();
-
+        
         #region IEdmModel
 
         private static readonly Func<IEdmModel, string, IEdmSchemaType> findType = (model, qualifiedName) => model.FindDeclaredType(qualifiedName);
-        private static readonly Func<IEdmModel, IEdmType, IEnumerable<IEdmOperation>> findBoundOperations = (model, bindingType) => model.FindDeclaredBoundOperations(bindingType);
         private static readonly Func<IEdmModel, string, IEdmTerm> findTerm = (model, qualifiedName) => model.FindDeclaredTerm(qualifiedName);
         private static readonly Func<IEdmModel, string, IEnumerable<IEdmOperation>> findOperations = (model, qualifiedName) => model.FindDeclaredOperations(qualifiedName);
         private static readonly Func<IEdmModel, string, IEdmEntityContainer> findEntityContainer = (model, qualifiedName) => { return model.ExistsContainer(qualifiedName) ? model.EntityContainer : null; };
@@ -97,7 +94,23 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(bindingType, "bindingType");
-            return FindAcrossModels(model, bindingType, findBoundOperations, mergeFunctions);  // search built-in EdmCoreModel and CoreVocabularyModel.
+       
+            IList<IEdmOperation> bindableOperations = new List<IEdmOperation>();
+
+            foreach (IEdmOperation operation in model.FindDeclaredBoundOperations(bindingType))
+            {
+                bindableOperations.Add(operation);
+            }
+
+            foreach (IEdmModel reference in model.ReferencedModels)
+            {
+                foreach (IEdmOperation operation in reference.FindDeclaredBoundOperations(bindingType))
+                {
+                    bindableOperations.Add(operation);
+                }
+            }
+
+            return bindableOperations;
         }
 
         /// <summary>
