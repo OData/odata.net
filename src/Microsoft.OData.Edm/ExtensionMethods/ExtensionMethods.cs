@@ -1942,21 +1942,22 @@ namespace Microsoft.OData.Edm
                 return edmProperty;
             }
 
-            // So, we can't find edm property whose name is exactly same as "propertyName"
-            // Seach again using case-insensitive
-            IEdmProperty[] foundProperties = structuredType.Properties()
-                .Where(p => string.Equals(p.Name, propertyName, StringComparison.OrdinalIgnoreCase)).ToArray();
-
-            if (foundProperties.Length < 1)
+            // Since we call "FindProperty" using case-sensitive, we don't miss the "right case" property.
+            // So, it's safety to throw exception if we meet second case.
+            foreach (IEdmProperty property in structuredType.Properties())
             {
-                return null;
-            }
-            else if (foundProperties.Length == 1)
-            {
-                return foundProperties[0];
+                if (string.Equals(property.Name, propertyName, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (edmProperty != null)
+                    {
+                        throw new InvalidOperationException(Edm.Strings.MultipleMatchingPropertiesFound(propertyName, structuredType.FullTypeName()));
+                    }
+
+                    edmProperty = property;
+                }
             }
 
-            throw new InvalidOperationException(Edm.Strings.MultipleMatchingPropertiesFound(propertyName, structuredType.FullTypeName()));
+            return edmProperty;
         }
 
         /// <summary>
