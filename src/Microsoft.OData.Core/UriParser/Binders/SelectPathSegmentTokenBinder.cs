@@ -178,24 +178,18 @@ namespace Microsoft.OData.UriParser
             }
 
             // Only filter if there is more than one and its needed.
-            if(possibleFunctions.HasAny())
+            if (possibleFunctions.Count() > 1)
             {
-                int functionsCount = possibleFunctions.Count();
+                possibleFunctions = possibleFunctions.FilterBoundOperationsWithSameTypeHierarchyToTypeClosestToBindingType(entityType);
 
-                if(functionsCount > 1)
+                // If more than one overload matches, try to select based on optional parameters
+                if (parameterNames.Count > 0 && possibleFunctions.Count() > 1)
                 {
-                    possibleFunctions = possibleFunctions.FilterBoundOperationsWithSameTypeHierarchyToTypeClosestToBindingType(entityType);
-
-                    int parameterNamesCount = parameterNames.Count;
-
-                    // If more than one overload matches, try to select based on optional parameters
-                    if (parameterNamesCount > 0)
-                    {
-                        possibleFunctions = possibleFunctions.FilterOverloadsBasedOnParameterCount(parameterNamesCount);
-                    }
+                    possibleFunctions = possibleFunctions.FilterOverloadsBasedOnParameterCount(parameterNames.Count);
                 }
             }
-            else
+
+            if (!possibleFunctions.HasAny())
             {
                 segment = null;
                 return false;
