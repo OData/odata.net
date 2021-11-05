@@ -35,7 +35,6 @@ namespace Microsoft.OData.Edm
         #region IEdmModel
 
         private static readonly Func<IEdmModel, string, IEdmSchemaType> findType = (model, qualifiedName) => model.FindDeclaredType(qualifiedName);
-        private static readonly Func<IEdmModel, IEdmType, IEnumerable<IEdmOperation>> findBoundOperations = (model, bindingType) => model.FindDeclaredBoundOperations(bindingType);
         private static readonly Func<IEdmModel, string, IEdmTerm> findTerm = (model, qualifiedName) => model.FindDeclaredTerm(qualifiedName);
         private static readonly Func<IEdmModel, string, IEnumerable<IEdmOperation>> findOperations = (model, qualifiedName) => model.FindDeclaredOperations(qualifiedName);
         private static readonly Func<IEdmModel, string, IEdmEntityContainer> findEntityContainer = (model, qualifiedName) => { return model.ExistsContainer(qualifiedName) ? model.EntityContainer : null; };
@@ -95,16 +94,7 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(bindingType, "bindingType");
-            return FindAcrossModels(model, bindingType, findBoundOperations, mergeFunctions);  // search built-in EdmCoreModel and CoreVocabularyModel.
-        }
-
-        /// Searches for bound operations based on the binding type, across models, returns an empty enumerable if no operation exists.
-        /// </summary>
-        /// <param name="model">The model to search.</param>
-        /// <param name="bindingType">Type of the binding.</param>
-        /// <returns>A set of operations that share the binding type or empty enumerable if no such operation exists.</returns>
-        public static IEnumerable<IEdmOperation> FindDeclaredBoundOperationsAcrossModels(this IEdmModel model, IEdmType bindingType)
-        {
+       
             IList<IEdmOperation> bindableOperations = new List<IEdmOperation>();
 
             foreach (IEdmOperation operation in model.FindDeclaredBoundOperations(bindingType))

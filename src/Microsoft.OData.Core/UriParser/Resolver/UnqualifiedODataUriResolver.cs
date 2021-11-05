@@ -74,7 +74,7 @@ namespace Microsoft.OData.UriParser
 
         private static IEnumerable<IEdmOperation> GetBoundOperationsForModel(IEdmModel model, string operationName, IEdmType bindingType, StringComparison strComparison)
         {
-            foreach (IEdmOperation operation in model.FindDeclaredBoundOperationsAcrossModels(bindingType))
+            foreach (IEdmOperation operation in model.FindBoundOperations(bindingType))
             {
                 if (string.Equals(operationName, operation.Name, strComparison))
                 {
