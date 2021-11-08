@@ -110,14 +110,14 @@ namespace Microsoft.OData
             // but foreach against an IEnumerable does
             if (instanceAnnotations is List<ODataInstanceAnnotation> instanceAnnotationsList)
             {
-                foreach (var annotation in instanceAnnotationsList)
+                foreach (ODataInstanceAnnotation annotation in instanceAnnotationsList)
                 {
                     this.WriteAndTrackInstanceAnnotation(annotation, tracker, instanceAnnotationNames, ignoreFilter, propertyName);
                 }
             }
             else
             {
-                foreach (var annotation in instanceAnnotations)
+                foreach (ODataInstanceAnnotation annotation in instanceAnnotations)
                 {
                     this.WriteAndTrackInstanceAnnotation(annotation, tracker, instanceAnnotationNames, ignoreFilter, propertyName);
                 }
@@ -165,14 +165,14 @@ namespace Microsoft.OData
             // optimize the foreach when instanceAnnotations is a List
             if (instanceAnnotations is List<ODataInstanceAnnotation> instanceAnnotationsList)
             {
-                foreach (var annotation in instanceAnnotationsList)
+                foreach (ODataInstanceAnnotation annotation in instanceAnnotationsList)
                 {
                     this.WriteInstanceAnnotation(annotation, true, propertyName);
                 }
             }
             else
             {
-                foreach (var annotation in instanceAnnotations)
+                foreach (ODataInstanceAnnotation annotation in instanceAnnotations)
                 {
                     this.WriteInstanceAnnotation(annotation, true, propertyName);
                 }
