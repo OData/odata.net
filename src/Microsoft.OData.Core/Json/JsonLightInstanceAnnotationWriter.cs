@@ -94,16 +94,16 @@ namespace Microsoft.OData
 
             // this method runs in a hot path hence the optimizations
 
-            // initialize to null to avoid instantiating a HashSet if there are no annotations
-            HashSet<string> instanceAnnotationNames;
-            if (instanceAnnotations?.Count > 0)
-            {
-                instanceAnnotationNames = new HashSet<string>(StringComparer.Ordinal);
-            }
-            else
+            if (instanceAnnotations.Count == 0)
             {
                 return;
             }
+
+#if NETSTANDARD2_1_OR_GREATER
+            HashSet<string> instanceAnnotationNames = new HashSet<string>(instanceAnnotations.Count, StringComparer.Ordinal);
+#else
+            HashSet<string> instanceAnnotationNames = new HashSet<string>(StringComparer.Ordinal);
+#endif
 
             // this method is called with a List most of the time
             // foreach against a List does not allocate the enumerator to the heap,
@@ -332,16 +332,16 @@ namespace Microsoft.OData
 
             // this method runs in a hot path hence the optimizations
 
-            // initialize to null to avoid instantiating a HashSet if there are no annotations
-            HashSet<string> instanceAnnotationNames;
-            if (instanceAnnotations?.Count >0)
-            {
-                instanceAnnotationNames = new HashSet<string>(StringComparer.Ordinal);
-            }
-            else
+            if (instanceAnnotations.Count == 0)
             {
                 return;
             }
+
+#if NETSTANDARD2_1_OR_GREATER
+            HashSet<string> instanceAnnotationNames = new HashSet<string>(instanceAnnotations.Count, StringComparer.Ordinal);
+#else
+            HashSet<string> instanceAnnotationNames = new HashSet<string>(StringComparer.Ordinal);
+#endif
 
             // this method is called with a List most of the time
             // foreach against a List does not allocate the enumerator to the heap,
