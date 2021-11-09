@@ -99,7 +99,7 @@ namespace Microsoft.OData
                 return;
             }
 
-#if NETSTANDARD2_1_OR_GREATER
+#if NETSTANDARD2_1
             HashSet<string> instanceAnnotationNames = new HashSet<string>(instanceAnnotations.Count, StringComparer.Ordinal);
 #else
             HashSet<string> instanceAnnotationNames = new HashSet<string>(StringComparer.Ordinal);
@@ -337,7 +337,7 @@ namespace Microsoft.OData
                 return;
             }
 
-#if NETSTANDARD2_1_OR_GREATER
+#if NETSTANDARD2_1
             HashSet<string> instanceAnnotationNames = new HashSet<string>(instanceAnnotations.Count, StringComparer.Ordinal);
 #else
             HashSet<string> instanceAnnotationNames = new HashSet<string>(StringComparer.Ordinal);
