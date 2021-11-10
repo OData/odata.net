@@ -463,7 +463,7 @@ namespace Microsoft.OData.Json
             
                 WriteEscapedCharArrayToBuffer(writer, inputArray, ref inputArrayOffset, inputArrayCount, buffer.Value, ref bufferIndex, stringEscapeOption);
             }
-            catch (Exception ex)
+            catch (ODataException ex)
             {
                 return TaskUtils.GetFaultedTask(ex);
             }
