@@ -39,7 +39,7 @@ namespace Microsoft.OData.Json
                 string escapedString = SpecialCharToEscapedStringMap[value];
                 if (escapedString != null)
                 {
-	                return writer.WriteAsync(escapedString);
+                    return writer.WriteAsync(escapedString);
                 }
             }
 
@@ -127,7 +127,7 @@ namespace Microsoft.OData.Json
 
             if (JsonSharedUtils.IsDoubleValueSerializedAsString(value))
             {
-	            return writer.WriteQuotedAsync(value.ToString(ODataNumberFormatInfo));
+                return writer.WriteQuotedAsync(value.ToString(ODataNumberFormatInfo));
             }
 
             // double.ToString() supports a max scale of 14,
@@ -137,7 +137,7 @@ namespace Microsoft.OData.Json
 
             if (valueToWrite.IndexOfAny(DoubleIndicatingCharacters) < 0)
             {
-	            valueToWrite += ".0";
+                valueToWrite += ".0";
             }
 
             return writer.WriteAsync(valueToWrite);
@@ -317,7 +317,7 @@ namespace Microsoft.OData.Json
             }
             else
             {
-	            await writer.WriteAsync(JsonConstants.QuoteCharacter).ConfigureAwait(false);
+                await writer.WriteAsync(JsonConstants.QuoteCharacter).ConfigureAwait(false);
                 await writer.WriteBinaryStringAsync(value, buffer, arrayPool).ConfigureAwait(false);
                 await writer.WriteAsync(JsonConstants.QuoteCharacter).ConfigureAwait(false);
             }
@@ -457,14 +457,21 @@ namespace Microsoft.OData.Json
             ICharArrayPool bufferPool)
         {
             int bufferIndex = 0;
-            buffer.Value = BufferUtils.InitializeBufferIfRequired(bufferPool, buffer.Value);
+            try
+            {
+                buffer.Value = BufferUtils.InitializeBufferIfRequired(bufferPool, buffer.Value);
             
-            WriteEscapedCharArrayToBuffer(writer, inputArray, ref inputArrayOffset, inputArrayCount, buffer.Value, ref bufferIndex, stringEscapeOption);
+                WriteEscapedCharArrayToBuffer(writer, inputArray, ref inputArrayOffset, inputArrayCount, buffer.Value, ref bufferIndex, stringEscapeOption);
+            }
+            catch (Exception ex)
+            {
+                return TaskUtils.GetFaultedTask(ex);
+            }
 
             // write remaining bytes in buffer
             if (bufferIndex > 0)
             {
-	            return writer.WriteAsync(buffer.Value, 0, bufferIndex);
+                return writer.WriteAsync(buffer.Value, 0, bufferIndex);
             }
 
             return TaskUtils.CompletedTask;

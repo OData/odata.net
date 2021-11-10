@@ -922,13 +922,14 @@ namespace Microsoft.OData.JsonLight
             {
                 if (isTopLevel)
                 {
-	                return this.InstanceAnnotationWriter.WriteInstanceAnnotationsAsync(property.InstanceAnnotations);
+                    return this.InstanceAnnotationWriter.WriteInstanceAnnotationsAsync(property.InstanceAnnotations);
                 }
                 else
                 {
-	                return this.InstanceAnnotationWriter.WriteInstanceAnnotationsAsync(property.InstanceAnnotations, property.Name, isUndeclaredProperty);
+                    return this.InstanceAnnotationWriter.WriteInstanceAnnotationsAsync(property.InstanceAnnotations, property.Name, isUndeclaredProperty);
                 }
             }
+
             return TaskUtils.CompletedTask;
         }
 
@@ -955,7 +956,7 @@ namespace Microsoft.OData.JsonLight
                     }
                     else
                     {
-	                    return this.AsynchronousODataAnnotationWriter.WriteODataTypePropertyAnnotationAsync(property.Name, typeName);
+                        return this.AsynchronousODataAnnotationWriter.WriteODataTypePropertyAnnotationAsync(property.Name, typeName);
 
                     }
                 }
@@ -1170,7 +1171,7 @@ namespace Microsoft.OData.JsonLight
                 // We write the type name as an instance annotation (named "odata.type") for top-level properties, but as a property annotation (e.g., "...@odata.type") if not top level.
                 if (this.currentPropertyInfo.IsTopLevel)
                 {
-	                return this.AsynchronousODataAnnotationWriter.WriteODataTypeInstanceAnnotationAsync(typeNameToWrite);
+                    return this.AsynchronousODataAnnotationWriter.WriteODataTypeInstanceAnnotationAsync(typeNameToWrite);
                 }
                 else
                 {

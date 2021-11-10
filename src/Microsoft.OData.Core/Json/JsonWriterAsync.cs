@@ -327,14 +327,15 @@ namespace Microsoft.OData.Json
             Scope currentScope = this.scopes.Peek();
             if (currentScope.Type == ScopeType.Array)
             {
-	            currentScope.ObjectCount++;
+                currentScope.ObjectCount++;
                 if (currentScope.ObjectCount > 1)
                 {
-	                return this.writer.WriteAsync(JsonConstants.ArrayElementSeparator);
+                    return this.writer.WriteAsync(JsonConstants.ArrayElementSeparator);
                 }
 
                 
             }
+
             return TaskUtils.CompletedTask;
         }
 
