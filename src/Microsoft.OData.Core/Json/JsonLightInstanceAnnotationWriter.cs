@@ -155,13 +155,13 @@ namespace Microsoft.OData
 
         /// <summary>
         /// Write all the instance annotations specified in <paramref name="instanceAnnotations"/> for the
-        /// undecalared property called <paramref name="propertyName"/>
+        /// undeclared property called <paramref name="propertyName"/>
         /// </summary>
         /// <param name="instanceAnnotations">The collection of instance annotations</param>
         /// <param name="propertyName">The name of the property the instance annotations apply to</param>
         private void WriteInstanceAnnotationsForUndeclaredProperty(ICollection<ODataInstanceAnnotation> instanceAnnotations, string propertyName)
         {
-            // write undeclared property's all annotations
+            // write all the annotations of the undeclared property
             // optimize the foreach when instanceAnnotations is a List
             if (instanceAnnotations is List<ODataInstanceAnnotation> instanceAnnotationsList)
             {
@@ -321,6 +321,7 @@ namespace Microsoft.OData
         /// <param name="tracker">The tracker to track if instance annotations are written.</param>
         /// <param name="ignoreFilter">Whether to ignore the filter in settings.</param>
         /// <param name="propertyName">The name of the property this instance annotation applies to</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
         internal async Task WriteInstanceAnnotationsAsync(
             ICollection<ODataInstanceAnnotation> instanceAnnotations,
             InstanceAnnotationWriteTracker tracker,
@@ -373,7 +374,7 @@ namespace Microsoft.OData
         /// <param name="instanceAnnotationNames">Set used to detect a duplicate annotation.</param>
         /// <param name="ignoreFilter">Whether to ignore the filter in settings.</param>
         /// <param name="propertyName">The name of the property this instance annotation applies to.</param>
-        /// <returns></returns>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
         private async Task WriteAndTrackInstanceAnnotationAsync(
             ODataInstanceAnnotation annotation,
             InstanceAnnotationWriteTracker tracker,
@@ -426,7 +427,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="instanceAnnotations">The collection of instance annotations</param>
         /// <param name="propertyName">he name of the property the instance annotations apply to</param>
-        /// <returns></returns>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
         private async Task WriteInstanceAnnotationsForUndeclaredPropertyAsync(ICollection<ODataInstanceAnnotation> instanceAnnotations, string propertyName)
         {
             // write undeclared property's all annotations
