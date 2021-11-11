@@ -447,7 +447,7 @@ namespace Microsoft.OData.Json
         /// <param name="stringEscapeOption">The string escape option.</param>
         /// <param name="buffer">Char buffer to use for streaming data.</param>
         /// <param name="bufferPool">Character buffer pool.</param>
-        internal static Task WriteEscapedCharArrayAsync(
+        internal static async Task WriteEscapedCharArrayAsync(
             this TextWriter writer,
             char[] inputArray,
             int inputArrayOffset, 
@@ -457,24 +457,15 @@ namespace Microsoft.OData.Json
             ICharArrayPool bufferPool)
         {
             int bufferIndex = 0;
-            try
-            {
-                buffer.Value = BufferUtils.InitializeBufferIfRequired(bufferPool, buffer.Value);
-            
-                WriteEscapedCharArrayToBuffer(writer, inputArray, ref inputArrayOffset, inputArrayCount, buffer.Value, ref bufferIndex, stringEscapeOption);
-            }
-            catch (ODataException ex)
-            {
-                return TaskUtils.GetFaultedTask(ex);
-            }
+            buffer.Value = BufferUtils.InitializeBufferIfRequired(bufferPool, buffer.Value);
+        
+            WriteEscapedCharArrayToBuffer(writer, inputArray, ref inputArrayOffset, inputArrayCount, buffer.Value, ref bufferIndex, stringEscapeOption);
 
             // write remaining bytes in buffer
             if (bufferIndex > 0)
             {
-                return writer.WriteAsync(buffer.Value, 0, bufferIndex);
+                await writer.WriteAsync(buffer.Value, 0, bufferIndex).ConfigureAwait(false);
             }
-
-            return TaskUtils.CompletedTask;
         }
 
         /// <summary>
