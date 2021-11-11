@@ -433,7 +433,7 @@ namespace Microsoft.OData
             // optimize the foreach when instanceAnnotations is a List to avoid enumerator allocations on the heap
             if (instanceAnnotations is List<ODataInstanceAnnotation> instanceAnnotationsList)
             {
-                foreach (var annotation in instanceAnnotationsList)
+                foreach (ODataInstanceAnnotation annotation in instanceAnnotationsList)
                 {
                     await this.WriteInstanceAnnotationAsync(annotation, true, propertyName)
                         .ConfigureAwait(false);
@@ -441,7 +441,7 @@ namespace Microsoft.OData
             }
             else
             {
-                foreach (var annotation in instanceAnnotations)
+                foreach (ODataInstanceAnnotation annotation in instanceAnnotations)
                 {
                     await this.WriteInstanceAnnotationAsync(annotation, true, propertyName)
                         .ConfigureAwait(false);
