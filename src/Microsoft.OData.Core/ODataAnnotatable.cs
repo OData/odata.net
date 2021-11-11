@@ -38,7 +38,6 @@ namespace Microsoft.OData
         /// <returns>The custom instance annotations.</returns>
         internal ICollection<ODataInstanceAnnotation> GetInstanceAnnotations()
         {
-            //Debug.Assert(this.instanceAnnotations != null, "this.instanceAnnotations != null");
             if (this.instanceAnnotations == null)
             {
                 this.instanceAnnotations = new List<ODataInstanceAnnotation>();
