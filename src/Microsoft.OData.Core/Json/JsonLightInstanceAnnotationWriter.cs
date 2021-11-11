@@ -99,11 +99,7 @@ namespace Microsoft.OData
                 return;
             }
 
-#if NETSTANDARD2_1
-            HashSet<string> instanceAnnotationNames = new HashSet<string>(instanceAnnotations.Count, StringComparer.Ordinal);
-#else
             HashSet<string> instanceAnnotationNames = new HashSet<string>(StringComparer.Ordinal);
-#endif
 
             // this method is called with a List most of the time
             // foreach against a List does not allocate the enumerator to the heap,
@@ -338,11 +334,7 @@ namespace Microsoft.OData
                 return;
             }
 
-#if NETSTANDARD2_1
-            HashSet<string> instanceAnnotationNames = new HashSet<string>(instanceAnnotations.Count, StringComparer.Ordinal);
-#else
             HashSet<string> instanceAnnotationNames = new HashSet<string>(StringComparer.Ordinal);
-#endif
 
             // this method is called with a List most of the time
             // foreach against a List does not allocate the enumerator to the heap,
@@ -426,7 +418,7 @@ namespace Microsoft.OData
         /// undecalared property called <paramref name="propertyName"/>
         /// </summary>
         /// <param name="instanceAnnotations">The collection of instance annotations</param>
-        /// <param name="propertyName">he name of the property the instance annotations apply to</param>
+        /// <param name="propertyName">The name of the property the instance annotations apply to</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
         private async Task WriteInstanceAnnotationsForUndeclaredPropertyAsync(ICollection<ODataInstanceAnnotation> instanceAnnotations, string propertyName)
         {
