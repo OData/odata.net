@@ -7,7 +7,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DataTransferContracts // generated with http://json2csharp.com/#
+namespace ResultsComparer.Bdn // generated with http://json2csharp.com/#
 {
     public class ChronometerFrequency
     {

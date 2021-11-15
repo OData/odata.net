@@ -14,9 +14,11 @@ using Perfolizer.Mathematics.Multimodality;
 using Perfolizer.Mathematics.SignificanceTesting;
 using Perfolizer.Mathematics.Thresholds;
 using CommandLine;
-using DataTransferContracts;
 using MarkdownLog;
 using Newtonsoft.Json;
+using ResultsComparer.Core;
+using ResultsComparer.Bdn;
+using System.Threading.Tasks;
 
 namespace ResultsComparer
 {
@@ -29,63 +31,48 @@ namespace ResultsComparer
             // we print a lot of numbers here and we want to make it always in invariant way
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 
-            Parser.Default.ParseArguments<CommandLineOptions>(args).WithParsed(Compare);
+            Parser.Default.ParseArguments<CommandLineOptions>(args).WithParsed((options) => Compare(options).Wait());
         }
 
-        private static void Compare(CommandLineOptions args)
+        private static async Task Compare(CommandLineOptions args)
         {
-            if (!Threshold.TryParse(args.StatisticalTestThreshold, out var testThreshold))
+            IResultsComparer comparer = new BdnComparer();
+
+            try
             {
-                Console.WriteLine($"Invalid Threshold {args.StatisticalTestThreshold}. Examples: 5%, 10ms, 100ns, 1s.");
-                return;
+                ComparerOptions options = new ComparerOptions
+                {
+                    StatisticalTestThreshold = args.StatisticalTestThreshold,
+                    NoiseThreshold = args.NoiseThreshold,
+                    FullId = args.FullId,
+                    TopCount = args.TopCount,
+                    Filters = args.Filters
+                };
+
+                var results = await comparer.CompareResults(args.BasePath, args.DiffPath, options);
+
+                if (results.NoDiff)
+                {
+                    return;
+                }
+
+                var resultsArray = results.Results.ToArray();
+                PrintSummary(resultsArray);
+
+                PrintTable(resultsArray, EquivalenceTestConclusion.Slower, args);
+                PrintTable(resultsArray, EquivalenceTestConclusion.Faster, args);
+
+
             }
-            if (!Threshold.TryParse(args.NoiseThreshold, out var noiseThreshold))
+            catch (Exception ex)
             {
-                Console.WriteLine($"Invalid Noise Threshold {args.NoiseThreshold}. Examples: 0.3ns 1ns.");
-                return;
-            }
-
-            var notSame = GetNotSameResults(args, testThreshold, noiseThreshold).ToArray();
-
-            if (!notSame.Any())
-            {
-                Console.WriteLine($"No differences found between the benchmark results with threshold {testThreshold}.");
-                return;
-            }
-
-            PrintSummary(notSame);
-
-            PrintTable(notSame, EquivalenceTestConclusion.Slower, args);
-            PrintTable(notSame, EquivalenceTestConclusion.Faster, args);
-
-            ExportToCsv(notSame, args.CsvPath);
-            ExportToXml(notSame, args.XmlPath);
-        }
-
-        private static IEnumerable<(string id, Benchmark baseResult, Benchmark diffResult, EquivalenceTestConclusion conclusion)> GetNotSameResults(CommandLineOptions args, Threshold testThreshold, Threshold noiseThreshold)
-        {
-            foreach ((string id, Benchmark baseResult, Benchmark diffResult) in ReadResults(args)
-                .Where(result => result.baseResult.Statistics != null && result.diffResult.Statistics != null)) // failures
-            {
-                var baseValues = baseResult.GetOriginalValues();
-                var diffValues = diffResult.GetOriginalValues();
-
-                var userTresholdResult = StatisticalTestHelper.CalculateTost(MannWhitneyTest.Instance, baseValues, diffValues, testThreshold);
-                if (userTresholdResult.Conclusion == EquivalenceTestConclusion.Same)
-                    continue;
-
-                var noiseResult = StatisticalTestHelper.CalculateTost(MannWhitneyTest.Instance, baseValues, diffValues, noiseThreshold);
-                if (noiseResult.Conclusion == EquivalenceTestConclusion.Same)
-                    continue;
-
-                yield return (id, baseResult, diffResult, userTresholdResult.Conclusion);
+                Console.Error.WriteLine($"Error: {ex.Message}");
             }
         }
-
-        private static void PrintSummary((string id, Benchmark baseResult, Benchmark diffResult, EquivalenceTestConclusion conclusion)[] notSame)
+        private static void PrintSummary(ComparerResult[] notSame)
         {
-            var better = notSame.Where(result => result.conclusion == EquivalenceTestConclusion.Faster);
-            var worse = notSame.Where(result => result.conclusion == EquivalenceTestConclusion.Slower);
+            var better = notSame.Where(result => result.Conclusion == EquivalenceTestConclusion.Faster);
+            var worse = notSame.Where(result => result.Conclusion == EquivalenceTestConclusion.Slower);
             var betterCount = better.Count();
             var worseCount = worse.Count();
 
@@ -112,19 +99,19 @@ namespace ResultsComparer
             Console.WriteLine();
         }
 
-        private static void PrintTable((string id, Benchmark baseResult, Benchmark diffResult, EquivalenceTestConclusion conclusion)[] notSame, EquivalenceTestConclusion conclusion, CommandLineOptions args)
+        private static void PrintTable(ComparerResult[] notSame, EquivalenceTestConclusion conclusion, CommandLineOptions args)
         {
             var data = notSame
-                .Where(result => result.conclusion == conclusion)
-                .OrderByDescending(result => GetRatio(conclusion, result.baseResult, result.diffResult))
+                .Where(result => result.Conclusion == conclusion)
+                .OrderByDescending(result => GetRatio(conclusion, result.BaseResult, result.DiffResult))
                 .Take(args.TopCount ?? int.MaxValue)
                 .Select(result => new
                 {
-                    Id = (result.id.Length <= 80 || args.FullId) ? result.id : result.id.Substring(0, 80),
-                    DisplayValue = GetRatio(conclusion, result.baseResult, result.diffResult),
-                    BaseMedian = result.baseResult.Statistics.Median,
-                    DiffMedian = result.diffResult.Statistics.Median,
-                    Modality = GetModalInfo(result.baseResult) ?? GetModalInfo(result.diffResult)
+                    Id = (result.Id.Length <= 80 || args.FullId) ? result.Id : result.Id.Substring(0, 80),
+                    DisplayValue = GetRatio(conclusion, result.BaseResult, result.DiffResult),
+                    BaseMedian = result.BaseResult.Statistics.Median,
+                    DiffMedian = result.DiffResult.Statistics.Median,
+                    Modality = GetModalInfo(result.BaseResult) ?? GetModalInfo(result.DiffResult)
                 })
                 .ToArray();
 
@@ -141,108 +128,6 @@ namespace ResultsComparer
                 Console.WriteLine($"| {line.TrimStart()}|"); // the table starts with \t and does not end with '|' and it looks bad so we fix it
 
             Console.WriteLine();
-        }
-
-        private static IEnumerable<(string id, Benchmark baseResult, Benchmark diffResult)> ReadResults(CommandLineOptions args)
-        {
-            var baseFiles = GetFilesToParse(args.BasePath);
-            var diffFiles = GetFilesToParse(args.DiffPath);
-
-            if (!baseFiles.Any() || !diffFiles.Any())
-                throw new ArgumentException($"Provided paths contained no {FullBdnJsonFileExtension} files.");
-
-            var baseResults = baseFiles.Select(ReadFromFile);
-            var diffResults = diffFiles.Select(ReadFromFile);
-
-            var filters = args.Filters.Select(pattern => new Regex(WildcardToRegex(pattern), RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)).ToArray();
-
-            var benchmarkIdToDiffResults = diffResults
-                .SelectMany(result => result.Benchmarks)
-                .Where(benchmarkResult => !filters.Any() || filters.Any(filter => filter.IsMatch(benchmarkResult.FullName)))
-                .ToDictionary(benchmarkResult => benchmarkResult.FullName, benchmarkResult => benchmarkResult);
-
-            return baseResults
-                .SelectMany(result => result.Benchmarks)
-                .ToDictionary(benchmarkResult => benchmarkResult.FullName, benchmarkResult => benchmarkResult) // we use ToDictionary to make sure the results have unique IDs
-                .Where(baseResult => benchmarkIdToDiffResults.ContainsKey(baseResult.Key))
-                .Select(baseResult => (baseResult.Key, baseResult.Value, benchmarkIdToDiffResults[baseResult.Key]));
-        }
-
-        private static void ExportToCsv((string id, Benchmark baseResult, Benchmark diffResult, EquivalenceTestConclusion conclusion)[] notSame, FileInfo csvPath)
-        {
-            if (csvPath == null)
-                return;
-
-            if (csvPath.Exists)
-                csvPath.Delete();
-
-            using (var textWriter = csvPath.CreateText())
-            {
-                foreach (var (id, baseResult, diffResult, conclusion) in notSame)
-                {
-                    textWriter.WriteLine($"\"{id.Replace("\"", "\"\"")}\";base;{conclusion};{string.Join(';', baseResult.GetOriginalValues())}");
-                    textWriter.WriteLine($"\"{id.Replace("\"", "\"\"")}\";diff;{conclusion};{string.Join(';', diffResult.GetOriginalValues())}");
-                }
-            }
-
-            Console.WriteLine($"CSV results exported to {csvPath.FullName}");
-        }
-
-        private static void ExportToXml((string id, Benchmark baseResult, Benchmark diffResult, EquivalenceTestConclusion conclusion)[] notSame, FileInfo xmlPath)
-        {
-            if (xmlPath == null)
-            {
-                Console.WriteLine("No file given");
-                return;
-            }
-
-             if (xmlPath.Exists)
-                xmlPath.Delete();
-
-            using (XmlWriter writer = XmlWriter.Create(xmlPath.Open(FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write)))
-            {
-                writer.WriteStartElement("performance-tests");
-                foreach (var (id, baseResult, diffResult, conclusion) in notSame.Where(x => x.conclusion == EquivalenceTestConclusion.Slower))
-                {
-                    writer.WriteStartElement("test");
-                    writer.WriteAttributeString("name", id);
-                    writer.WriteAttributeString("type", baseResult.Type);
-                    writer.WriteAttributeString("method", baseResult.Method);
-                    writer.WriteAttributeString("time", "0");
-                    writer.WriteAttributeString("result", "Fail");
-                    writer.WriteStartElement("failure");
-                    writer.WriteAttributeString("exception-type", "Regression");
-                    writer.WriteElementString("message", $"{id} has regressed, was {baseResult.Statistics.Median} is {diffResult.Statistics.Median}.");
-                    writer.WriteEndElement();
-                }
-
-                foreach (var (id, baseResult, diffResult, conclusion) in notSame.Where(x => x.conclusion == EquivalenceTestConclusion.Faster))
-                {
-                    writer.WriteStartElement("test");
-                    writer.WriteAttributeString("name", id);
-                    writer.WriteAttributeString("type", baseResult.Type);
-                    writer.WriteAttributeString("method", baseResult.Method);
-                    writer.WriteAttributeString("time", "0");
-                    writer.WriteAttributeString("result", "Skip");
-                    writer.WriteElementString("reason", $"{id} has improved, was {baseResult.Statistics.Median} is {diffResult.Statistics.Median}.");
-                    writer.WriteEndElement();
-                }
-
-                writer.WriteEndElement();
-                writer.Flush();
-            }
-
-            Console.WriteLine($"XML results exported to {xmlPath.FullName}");
-        }
-
-        private static string[] GetFilesToParse(string path)
-        {
-            if (Directory.Exists(path))
-                return Directory.GetFiles(path, $"*{FullBdnJsonFileExtension}", SearchOption.AllDirectories);
-            else if (File.Exists(path) || !path.EndsWith(FullBdnJsonFileExtension))
-                return new[] { path };
-            else
-                throw new FileNotFoundException($"Provided path does NOT exist or is not a {path} file", path);
         }
 
         // code and magic values taken from BenchmarkDotNet.Analysers.MultimodalDistributionAnalyzer
@@ -263,28 +148,11 @@ namespace ResultsComparer
             return null;
         }
 
-        private static double GetRatio((string id, Benchmark baseResult, Benchmark diffResult, EquivalenceTestConclusion conclusion) item) => GetRatio(item.conclusion, item.baseResult, item.diffResult);
+        private static double GetRatio(ComparerResult item) => GetRatio(item.Conclusion, item.BaseResult, item.DiffResult);
 
         private static double GetRatio(EquivalenceTestConclusion conclusion, Benchmark baseResult, Benchmark diffResult)
             => conclusion == EquivalenceTestConclusion.Faster
                 ? baseResult.Statistics.Median / diffResult.Statistics.Median
                 : diffResult.Statistics.Median / baseResult.Statistics.Median;
-
-        private static BdnResult ReadFromFile(string resultFilePath)
-        {
-            try
-            {
-                return JsonConvert.DeserializeObject<BdnResult>(File.ReadAllText(resultFilePath));
-            }
-            catch (JsonSerializationException)
-            {
-                Console.WriteLine($"Exception while reading the {resultFilePath} file.");
-
-                throw;
-            }
-        }
-
-        // https://stackoverflow.com/a/6907849/5852046 not perfect but should work for all we need
-        private static string WildcardToRegex(string pattern) => $"^{Regex.Escape(pattern).Replace(@"\*", ".*").Replace(@"\?", ".")}$";
     }
 }
