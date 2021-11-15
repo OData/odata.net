@@ -37,11 +37,6 @@ namespace Microsoft.OData.Performance
         {
             Model = TestUtils.GetAdventureWorksModel(isModelImmutable);
             TestEntitySet = Model.EntityContainer.FindEntitySet("Product");
-        }
-
-        [IterationSetup]
-        public void RewindStream()
-        {
             WriteStream.Seek(0, SeekOrigin.Begin);
         }
 

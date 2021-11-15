@@ -22,14 +22,14 @@ namespace Microsoft.OData.Tests.Json
         private StringWriter stringWriter;
         private IJsonWriterAsync jsonWriter;
         private ODataMessageWriterSettings settings;
-        private Func<IEnumerable<ODataInstanceAnnotation>, Task> writeInstanceAnnotationsDelegate;
+        private Func<ICollection<ODataInstanceAnnotation>, Task> writeInstanceAnnotationsDelegate;
 
         public ODataJsonWriterUtilsAsyncTests()
         {
             this.stringWriter = new StringWriter();
             this.jsonWriter = new JsonWriter(this.stringWriter, isIeee754Compatible: true);
             this.settings = new ODataMessageWriterSettings();
-            this.writeInstanceAnnotationsDelegate = async (IEnumerable<ODataInstanceAnnotation> instanceAnnotations) => await TaskUtils.CompletedTask;
+            this.writeInstanceAnnotationsDelegate = async (ICollection<ODataInstanceAnnotation> instanceAnnotations) => await TaskUtils.CompletedTask;
         }
 
         [Fact]
@@ -297,7 +297,7 @@ namespace Microsoft.OData.Tests.Json
 
             await ODataJsonWriterUtils.WriteErrorAsync(
                 this.jsonWriter,
-                async (IEnumerable<ODataInstanceAnnotation> instanceAnnotations) =>
+                async (ICollection<ODataInstanceAnnotation> instanceAnnotations) =>
                 {
                     foreach (var annotation in instanceAnnotations)
                     {
