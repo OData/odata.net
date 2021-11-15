@@ -2,10 +2,12 @@
 
 TODO:
 - [x] Support BenchmarkDotNet Json reports
-- [ ] Export comparison results to CSV
+- [ ] Export comparison results to CSV and markdown
+- [ ] Support generic CSV reports
 - [ ] Support profiler reports
+- [ ] Support comparing multiple files to summarize trends over time
 
-This tool is adapated from the results comparer in the [dotnet performance tools](https://github.com/dotnet/performance/tree/main/src/tools)
+This tool is adapated from the results comparer in the [dotnet performance tools](https://github.com/dotnet/performance/tree/main/src/tools/ResultsComparer)
 
 This simple tool allows for easy comparison of provided benchmark results.
 
