@@ -12,6 +12,9 @@ using Perfolizer.Mathematics.Thresholds;
 
 namespace ResultsComparer.Bdn
 {
+    /// <summary>
+    /// Results comparer for BenchmarkDotNet full JSON reports.
+    /// </summary>
     class BdnComparer : IResultsComparer
     {
         private const string FullBdnJsonFileExtension = "full.json";
