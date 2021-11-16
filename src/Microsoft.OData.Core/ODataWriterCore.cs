@@ -2976,7 +2976,7 @@ namespace Microsoft.OData
             switch (this.State)
             {
                 case WriterState.Start:
-                    if (newState != WriterState.ResourceSet && newState != WriterState.Resource && newState != WriterState.DeltaResourceSet)
+                    if (newState != WriterState.ResourceSet && newState != WriterState.Resource && newState != WriterState.DeltaResourceSet && newState != WriterState.DeletedResource)
                     {
                         throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromStart(this.State.ToString(), newState.ToString()));
                     }

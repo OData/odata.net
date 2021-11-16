@@ -788,7 +788,6 @@ namespace Microsoft.OData.JsonLight
         protected override void StartDeletedResource(ODataDeletedResource resource)
         {
             Debug.Assert(resource != null, "resource != null");
-            Debug.Assert(!this.IsTopLevel, "Delta resource cannot be on top level.");
             DeletedResourceScope resourceScope = this.CurrentDeletedResourceScope;
             Debug.Assert(resourceScope != null, "Writing deleted entry and scope is not DeltaResourceScope");
             ODataNestedResourceInfo parentNavLink = this.ParentNestedResourceInfo;
@@ -811,7 +810,7 @@ namespace Microsoft.OData.JsonLight
             {
                 // Writing a deleted resource within an entity set
                 DeltaResourceSetScope deltaResourceSetScope = this.ParentScope as DeltaResourceSetScope;
-                Debug.Assert(deltaResourceSetScope != null, "Writing child of delta set and parent scope is not DeltaResourceSetScope");
+                Debug.Assert(this.ParentScope.State == WriterState.Start || deltaResourceSetScope != null, "Writing child of delta set and parent scope is not DeltaResourceSetScope");
 
                 this.jsonWriter.StartObjectScope();
 
@@ -820,7 +819,7 @@ namespace Microsoft.OData.JsonLight
                     // Write ContextUrl
                     this.jsonLightResourceSerializer.WriteDeltaContextUri(
                             this.CurrentDeletedResourceScope.GetOrCreateTypeContext(this.writingResponse),
-                            ODataDeltaKind.DeletedEntry, deltaResourceSetScope.ContextUriInfo);
+                            ODataDeltaKind.DeletedEntry, deltaResourceSetScope?.ContextUriInfo);
                     this.WriteV4DeletedEntryContents(resource);
                 }
                 else
@@ -828,20 +827,20 @@ namespace Microsoft.OData.JsonLight
                     // Only write ContextUrl for V4.01 deleted resource if it is in a top level delta
                     // resource set and comes from a different entity set
                     string expectedNavigationSource =
-                        deltaResourceSetScope.NavigationSource == null ? null : deltaResourceSetScope.NavigationSource.Name;
+                        deltaResourceSetScope?.NavigationSource == null ? null : deltaResourceSetScope.NavigationSource.Name;
                     string currentNavigationSource =
                         resource.SerializationInfo != null ? resource.SerializationInfo.NavigationSourceName :
-                        resourceScope.NavigationSource == null ? null : resourceScope.NavigationSource.Name;
+                        resourceScope.NavigationSource?.Name;
 
                     if (String.IsNullOrEmpty(currentNavigationSource) || currentNavigationSource != expectedNavigationSource)
                     {
-                        Debug.Assert(this.ScopeLevel == 3, "Writing a nested deleted resource of the wrong type should already have been caught.");
+                        Debug.Assert(this.ScopeLevel <= 3, "Writing a nested deleted resource of the wrong type should already have been caught.");
 
                         // We are writing a deleted resource in a top level delta resource set
                         // from a different entity set, so include the context Url
                         this.jsonLightResourceSerializer.WriteDeltaContextUri(
                                 this.CurrentDeletedResourceScope.GetOrCreateTypeContext(this.writingResponse),
-                                ODataDeltaKind.DeletedEntry, deltaResourceSetScope.ContextUriInfo);
+                                ODataDeltaKind.DeletedEntry, deltaResourceSetScope?.ContextUriInfo);
                     }
 
                     this.WriteDeletedEntryContents(resource);
@@ -1822,7 +1821,6 @@ namespace Microsoft.OData.JsonLight
         protected override async Task StartDeletedResourceAsync(ODataDeletedResource resource)
         {
             Debug.Assert(resource != null, "resource != null");
-            Debug.Assert(!this.IsTopLevel, "Delta resource cannot be on top level.");
             DeletedResourceScope resourceScope = this.CurrentDeletedResourceScope;
             Debug.Assert(resourceScope != null, "Writing deleted entry and scope is not DeltaResourceScope");
 
@@ -1849,7 +1847,7 @@ namespace Microsoft.OData.JsonLight
             {
                 // Writing a deleted resource within an entity set
                 DeltaResourceSetScope deltaResourceSetScope = this.ParentScope as DeltaResourceSetScope;
-                Debug.Assert(deltaResourceSetScope != null, "Writing child of delta set and parent scope is not DeltaResourceSetScope");
+                Debug.Assert(this.ParentScope.State == WriterState.Start || deltaResourceSetScope != null, "Writing child of delta set and parent scope is not DeltaResourceSetScope");
 
                 await this.asynchronousJsonWriter.StartObjectScopeAsync()
                     .ConfigureAwait(false);
@@ -1860,7 +1858,7 @@ namespace Microsoft.OData.JsonLight
                     await this.jsonLightResourceSerializer.WriteDeltaContextUriAsync(
                             this.CurrentDeletedResourceScope.GetOrCreateTypeContext(this.writingResponse),
                             ODataDeltaKind.DeletedEntry,
-                            deltaResourceSetScope.ContextUriInfo).ConfigureAwait(false);
+                            deltaResourceSetScope?.ContextUriInfo).ConfigureAwait(false);
                     await this.WriteV4DeletedEntryContentsAsync(resource)
                         .ConfigureAwait(false);
                 }
@@ -1868,19 +1866,19 @@ namespace Microsoft.OData.JsonLight
                 {
                     // Only write ContextUrl for V4.01 deleted resource if it is in a top level delta
                     // resource set and comes from a different entity set
-                    string expectedNavigationSource = deltaResourceSetScope.NavigationSource?.Name;
+                    string expectedNavigationSource = deltaResourceSetScope?.NavigationSource?.Name;
                     string currentNavigationSource = resource.SerializationInfo?.NavigationSourceName ?? resourceScope.NavigationSource?.Name;
 
                     if (String.IsNullOrEmpty(currentNavigationSource) || currentNavigationSource != expectedNavigationSource)
                     {
-                        Debug.Assert(this.ScopeLevel == 3, "Writing a nested deleted resource of the wrong type should already have been caught.");
+                        Debug.Assert(this.ScopeLevel <= 3, "Writing a nested deleted resource of the wrong type should already have been caught.");
 
                         // We are writing a deleted resource in a top level delta resource set
                         // from a different entity set, so include the context Url
                         await this.jsonLightResourceSerializer.WriteDeltaContextUriAsync(
                                 this.CurrentDeletedResourceScope.GetOrCreateTypeContext(this.writingResponse),
                                 ODataDeltaKind.DeletedEntry,
-                                deltaResourceSetScope.ContextUriInfo).ConfigureAwait(false);
+                                deltaResourceSetScope?.ContextUriInfo).ConfigureAwait(false);
                     }
 
                     await this.WriteDeletedEntryContentsAsync(resource)

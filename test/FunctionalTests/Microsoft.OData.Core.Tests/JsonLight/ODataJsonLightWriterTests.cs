@@ -1318,6 +1318,27 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 result);
         }
 
+        [Fact]
+        public async Task WriteDeletedResourceAsync_WorksForDeletedResourceAtTopLevel()
+        {
+            var customerDeletedResource = CreateCustomerDeletedResource();
+
+            var result = await SetupJsonLightWriterAndRunTestAsync(
+                    async (jsonLightWriter) =>
+                    {
+                        await jsonLightWriter.WriteStartAsync(customerDeletedResource);
+                        await jsonLightWriter.WriteEndAsync();
+                    },
+                    this.customerEntitySet,
+                    this.customerEntityType,
+                    /*writingResourceSet*/ false,
+                    /*writingDelta*/ false);
+
+            Assert.Equal(
+                "{\"@odata.context\":\"http://tempuri.org/$metadata#Customers/$deletedEntity\",\"id\":\"http://tempuri.org/Customers(1)\",\"reason\":\"changed\"}",
+                result);
+        }
+
 
         #region Exception Cases
 
@@ -1334,24 +1355,6 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
             Assert.Equal(
                 Strings.ODataWriterCore_InvalidTransitionFromStart("Start", "NestedResourceInfo"),
-                exception.Message);
-        }
-
-        [Fact]
-        public async Task WriteDeletedResourceAsync_ThrowsExceptionForDeletedResourceAtTopLevel()
-        {
-            var customerDeletedResource = CreateCustomerDeletedResource();
-
-            var exception = await Assert.ThrowsAsync<ODataException>(
-                () => SetupJsonLightWriterAndRunTestAsync(
-                    (jsonLightWriter) => jsonLightWriter.WriteStartAsync(customerDeletedResource),
-                    this.customerEntitySet,
-                    this.customerEntityType,
-                    /*writingResourceSet*/ false,
-                    /*writingDelta*/ true));
-
-            Assert.Equal(
-                Strings.ODataWriterCore_InvalidTransitionFromStart("Start", "DeletedResource"),
                 exception.Message);
         }
 

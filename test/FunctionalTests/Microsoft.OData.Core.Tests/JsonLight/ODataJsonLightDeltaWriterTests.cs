@@ -2470,6 +2470,23 @@ namespace Microsoft.OData.Tests.JsonLight
         [InlineData(/*isResponse*/true)]
         [InlineData(/*isResponse*/false)]
         [Theory]
+        public void WriteTopLevelDeletedResource(bool isResponse)
+        {
+            this.TestInit(this.GetModel());
+
+            ODataJsonLightWriter writer = new ODataJsonLightWriter(GetV401OutputContext(isResponse), this.GetCustomers(), this.GetCustomerType(), false, false, true);
+            writer.WriteStart(customerDeleted);
+            writer.WriteEnd(); // deleted customer
+            writer.Flush();
+
+            Assert.Equal("{\"@context\":\"http://host/service/$metadata#Customers/$deletedEntity\",\"@removed\":{\"reason\":\"deleted\"},\"@id\":\"Customers('ANTON')\"}",
+                this.TestPayload()
+            );
+        }
+
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
         public void WriteTopLevelDeletedEntityFromDifferentSetWithoutInfo(bool isResponse)
         {
             this.TestInit(this.GetModel());
