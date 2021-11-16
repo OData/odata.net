@@ -33,7 +33,7 @@ namespace Microsoft.OData
         private readonly bool writingResourceSet;
 
         /// <summary>True if the writer was created for writing a delta response; false otherwise.</summary>
-        private readonly bool writingDelta;
+        private readonly Stack<bool> writingDelta = new Stack<bool>();
 
         /// <summary>If not null, the writer will notify the implementer of the interface of relevant state changes in the writer.</summary>
         private readonly IODataReaderWriterListener listener;
@@ -65,7 +65,7 @@ namespace Microsoft.OData
 
             this.outputContext = outputContext;
             this.writingResourceSet = writingResourceSet;
-            this.writingDelta = writingDelta || (!writingResourceSet && !outputContext.WritingResponse);
+            this.writingDelta.Push(true); // support writing a single top-level deleted resource
             this.WriterValidator = outputContext.WriterValidator;
             this.Version = outputContext.MessageWriterSettings.Version;
 
@@ -1580,6 +1580,7 @@ namespace Microsoft.OData
         {
             this.CheckForNestedResourceInfoWithContent(ODataPayloadKind.ResourceSet, resourceSet);
             this.EnterScope(WriterState.ResourceSet, resourceSet);
+            this.writingDelta.Push(false);
 
             if (!this.SkipWriting)
             {
@@ -1611,8 +1612,6 @@ namespace Microsoft.OData
         private void VerifyCanWriteStartDeltaResourceSet(bool synchronousCall, ODataDeltaResourceSet deltaResourceSet)
         {
             ExceptionUtils.CheckArgumentNotNull(deltaResourceSet, "deltaResourceSet");
-
-            this.VerifyWritingDelta();
             this.VerifyNotDisposed();
             this.VerifyCallAllowed(synchronousCall);
             this.StartPayloadInStartState();
@@ -1626,6 +1625,7 @@ namespace Microsoft.OData
         {
             this.CheckForNestedResourceInfoWithContent(ODataPayloadKind.ResourceSet, deltaResourceSet);
             this.EnterScope(WriterState.DeltaResourceSet, deltaResourceSet);
+            this.writingDelta.Push(true);
 
             this.InterceptException(
                 (thisParam, deltaResourceSetParam) =>
@@ -1940,6 +1940,7 @@ namespace Microsoft.OData
             this.InterceptException(
                 (thisParam) =>
                 {
+                    bool wasWritingDelta;
                     Scope currentScope = thisParam.CurrentScope;
 
                     switch (currentScope.State)
@@ -1972,6 +1973,9 @@ namespace Microsoft.OData
                                 thisParam.EndResourceSet(resourceSet);
                             }
 
+                            wasWritingDelta = this.writingDelta.Pop();
+                            Debug.Assert(!wasWritingDelta, "Expected to not be writing delta when calling WriteEnd() for ResourceSet");
+
                             break;
                         case WriterState.DeltaLink:
                         case WriterState.DeltaDeletedLink:
@@ -1983,6 +1987,9 @@ namespace Microsoft.OData
                                 WriterValidationUtils.ValidateDeltaResourceSetAtEnd(deltaResourceSet, !thisParam.outputContext.WritingResponse);
                                 thisParam.EndDeltaResourceSet(deltaResourceSet);
                             }
+
+                            wasWritingDelta = this.writingDelta.Pop();
+                            Debug.Assert(wasWritingDelta, "Expected to be writing delta when calling WriteEnd() for DeltaResourceSet");
 
                             break;
                         case WriterState.NestedResourceInfo:
@@ -2146,11 +2153,11 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Verifies that the writer is a delta writer.
+        /// Verifies that the writer is writing within a delta resource set.
         /// </summary>
         private void VerifyWritingDelta()
         {
-            if (!this.writingDelta)
+            if (!this.writingDelta.Peek())
             {
                 throw new ODataException(Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
             }
@@ -2688,107 +2695,104 @@ namespace Microsoft.OData
                 {
                     selectedProperties = currentScope.SelectedProperties.GetSelectedPropertiesForNavigationProperty(currentScope.ResourceType, nestedResourceInfo.Name);
 
-                    if (this.outputContext.WritingResponse || this.writingDelta)
-                    {
-                        ODataPath odataPath = odataUri.Path;
-                        IEdmStructuredType currentResourceType = currentScope.ResourceType;
+                    ODataPath odataPath = odataUri.Path;
+                    IEdmStructuredType currentResourceType = currentScope.ResourceType;
 
-                        ResourceBaseScope resourceScope = currentScope as ResourceBaseScope;
-                        TypeSegment resourceTypeCast = null;
-                        if (resourceScope.ResourceTypeFromMetadata != currentResourceType)
+                    ResourceBaseScope resourceScope = currentScope as ResourceBaseScope;
+                    TypeSegment resourceTypeCast = null;
+                    if (resourceScope.ResourceTypeFromMetadata != currentResourceType)
+                    {
+                        resourceTypeCast = new TypeSegment(currentResourceType, null);
+                    }
+
+                    IEdmStructuralProperty structuredProperty = this.WriterValidator.ValidatePropertyDefined(
+                        nestedResourceInfo.Name, currentResourceType)
+                        as IEdmStructuralProperty;
+
+                    // Handle primitive or complex type property.
+                    if (structuredProperty != null)
+                    {
+                        odataPath = AppendEntitySetKeySegment(odataPath, false);
+                        itemType = structuredProperty.Type == null ? null : structuredProperty.Type.Definition.AsElementType();
+                        navigationSource = null;
+
+                        if (resourceTypeCast != null)
                         {
-                            resourceTypeCast = new TypeSegment(currentResourceType, null);
+                            odataPath = odataPath.AddSegment(resourceTypeCast);
                         }
 
-                        IEdmStructuralProperty structuredProperty = this.WriterValidator.ValidatePropertyDefined(
-                            nestedResourceInfo.Name, currentResourceType)
-                            as IEdmStructuralProperty;
+                        odataPath = odataPath.AddPropertySegment(structuredProperty);
 
-                        // Handle primitive or complex type property.
-                        if (structuredProperty != null)
+                        derivedTypeConstraints = this.outputContext.Model.GetDerivedTypeConstraints(structuredProperty);
+                    }
+                    else
+                    {
+                        IEdmNavigationProperty navigationProperty = this.WriterValidator.ValidateNestedResourceInfo(nestedResourceInfo, currentResourceType, /*payloadKind*/null);
+                        if (navigationProperty != null)
                         {
-                            odataPath = AppendEntitySetKeySegment(odataPath, false);
-                            itemType = structuredProperty.Type == null ? null : structuredProperty.Type.Definition.AsElementType();
-                            navigationSource = null;
+                            derivedTypeConstraints = this.outputContext.Model.GetDerivedTypeConstraints(navigationProperty);
+
+                            itemType = navigationProperty.ToEntityType();
+                            if (!nestedResourceInfo.IsCollection.HasValue)
+                            {
+                                nestedResourceInfo.IsCollection = navigationProperty.Type.IsEntityCollectionType();
+                            }
+
+                            IEdmNavigationSource currentNavigationSource = currentScope.NavigationSource;
+                            IEdmPathExpression bindingPath;
 
                             if (resourceTypeCast != null)
                             {
                                 odataPath = odataPath.AddSegment(resourceTypeCast);
                             }
 
-                            odataPath = odataPath.AddPropertySegment(structuredProperty);
+                            navigationSource = currentNavigationSource == null
+                                ? null
+                                : currentNavigationSource.FindNavigationTarget(navigationProperty, BindingPathHelper.MatchBindingPath, odataPath.Segments, out bindingPath);
 
-                            derivedTypeConstraints = this.outputContext.Model.GetDerivedTypeConstraints(structuredProperty);
-                        }
-                        else
-                        {
-                            IEdmNavigationProperty navigationProperty = this.WriterValidator.ValidateNestedResourceInfo(nestedResourceInfo, currentResourceType, /*payloadKind*/null);
-                            if (navigationProperty != null)
+                            SelectExpandClause clause = odataUri.SelectAndExpand;
+                            TypeSegment typeCastFromExpand = null;
+                            if (clause != null)
                             {
-                                derivedTypeConstraints = this.outputContext.Model.GetDerivedTypeConstraints(navigationProperty);
+                                SelectExpandClause subClause;
+                                clause.GetSubSelectExpandClause(nestedResourceInfo.Name, out subClause, out typeCastFromExpand);
+                                odataUri.SelectAndExpand = subClause;
+                            }
 
-                                itemType = navigationProperty.ToEntityType();
-                                if (!nestedResourceInfo.IsCollection.HasValue)
-                                {
-                                    nestedResourceInfo.IsCollection = navigationProperty.Type.IsEntityCollectionType();
-                                }
+                            switch (navigationSource.NavigationSourceKind())
+                            {
+                                case EdmNavigationSourceKind.ContainedEntitySet:
+                                    // Containment cannot be written alone without odata uri.
+                                    if (!odataPath.Any())
+                                    {
+                                        throw new ODataException(Strings.ODataWriterCore_PathInODataUriMustBeSetWhenWritingContainedElement);
+                                    }
 
-                                IEdmNavigationSource currentNavigationSource = currentScope.NavigationSource;
-                                IEdmPathExpression bindingPath;
+                                    odataPath = AppendEntitySetKeySegment(odataPath, true);
 
-                                if (resourceTypeCast != null)
-                                {
-                                    odataPath = odataPath.AddSegment(resourceTypeCast);
-                                }
+                                    if (odataPath != null && typeCastFromExpand != null)
+                                    {
+                                        odataPath = odataPath.AddSegment(typeCastFromExpand);
+                                    }
 
-                                navigationSource = currentNavigationSource == null
-                                    ? null
-                                    : currentNavigationSource.FindNavigationTarget(navigationProperty, BindingPathHelper.MatchBindingPath, odataPath.Segments, out bindingPath);
-
-                                SelectExpandClause clause = odataUri.SelectAndExpand;
-                                TypeSegment typeCastFromExpand = null;
-                                if (clause != null)
-                                {
-                                    SelectExpandClause subClause;
-                                    clause.GetSubSelectExpandClause(nestedResourceInfo.Name, out subClause, out typeCastFromExpand);
-                                    odataUri.SelectAndExpand = subClause;
-                                }
-
-                                switch (navigationSource.NavigationSourceKind())
-                                {
-                                    case EdmNavigationSourceKind.ContainedEntitySet:
-                                        // Containment cannot be written alone without odata uri.
-                                        if (!odataPath.Any())
-                                        {
-                                            throw new ODataException(Strings.ODataWriterCore_PathInODataUriMustBeSetWhenWritingContainedElement);
-                                        }
-
-                                        odataPath = AppendEntitySetKeySegment(odataPath, true);
-
-                                        if (odataPath != null && typeCastFromExpand != null)
-                                        {
-                                            odataPath = odataPath.AddSegment(typeCastFromExpand);
-                                        }
-
-                                        Debug.Assert(navigationSource is IEdmContainedEntitySet, "If the NavigationSourceKind is ContainedEntitySet, the navigationSource must be IEdmContainedEntitySet.");
-                                        IEdmContainedEntitySet containedEntitySet = (IEdmContainedEntitySet)navigationSource;
-                                        odataPath = odataPath.AddNavigationPropertySegment(containedEntitySet.NavigationProperty, containedEntitySet);
-                                        break;
-                                    case EdmNavigationSourceKind.EntitySet:
-                                        odataPath = new ODataPath(new EntitySetSegment(navigationSource as IEdmEntitySet));
-                                        break;
-                                    case EdmNavigationSourceKind.Singleton:
-                                        odataPath = new ODataPath(new SingletonSegment(navigationSource as IEdmSingleton));
-                                        break;
-                                    default:
-                                        odataPath = null;
-                                        break;
-                                }
+                                    Debug.Assert(navigationSource is IEdmContainedEntitySet, "If the NavigationSourceKind is ContainedEntitySet, the navigationSource must be IEdmContainedEntitySet.");
+                                    IEdmContainedEntitySet containedEntitySet = (IEdmContainedEntitySet)navigationSource;
+                                    odataPath = odataPath.AddNavigationPropertySegment(containedEntitySet.NavigationProperty, containedEntitySet);
+                                    break;
+                                case EdmNavigationSourceKind.EntitySet:
+                                    odataPath = new ODataPath(new EntitySetSegment(navigationSource as IEdmEntitySet));
+                                    break;
+                                case EdmNavigationSourceKind.Singleton:
+                                    odataPath = new ODataPath(new SingletonSegment(navigationSource as IEdmSingleton));
+                                    break;
+                                default:
+                                    odataPath = null;
+                                    break;
                             }
                         }
-
-                        odataUri.Path = odataPath;
                     }
+
+                    odataUri.Path = odataPath;
                 }
             }
             else if ((currentState == WriterState.ResourceSet || currentState == WriterState.DeltaResourceSet) && (newState == WriterState.Resource || newState == WriterState.Primitive || newState == WriterState.ResourceSet || newState == WriterState.DeletedResource))
@@ -3233,6 +3237,7 @@ namespace Microsoft.OData
             await this.CheckForNestedResourceInfoWithContentAsync(ODataPayloadKind.ResourceSet, resourceSet)
                 .ConfigureAwait(false);
             this.EnterScope(WriterState.ResourceSet, resourceSet);
+            this.writingDelta.Push(false);
 
             if (!this.SkipWriting)
             {
@@ -3264,8 +3269,6 @@ namespace Microsoft.OData
         private async Task VerifyCanWriteStartDeltaResourceSetAsync(bool synchronousCall, ODataDeltaResourceSet deltaResourceSet)
         {
             ExceptionUtils.CheckArgumentNotNull(deltaResourceSet, "deltaResourceSet");
-
-            this.VerifyWritingDelta();
             this.VerifyNotDisposed();
             this.VerifyCallAllowed(synchronousCall);
 
@@ -3283,6 +3286,7 @@ namespace Microsoft.OData
             await this.CheckForNestedResourceInfoWithContentAsync(ODataPayloadKind.ResourceSet, deltaResourceSet)
                 .ConfigureAwait(false);
             this.EnterScope(WriterState.DeltaResourceSet, deltaResourceSet);
+            this.writingDelta.Push(true);
 
             await this.InterceptExceptionAsync(
                 async (thisParam, deltaResourceSetParam) =>
@@ -3438,6 +3442,7 @@ namespace Microsoft.OData
             return this.InterceptExceptionAsync(
                 async (thisParam) =>
                 {
+                    bool wasWritingDelta;
                     Scope currentScope = thisParam.CurrentScope;
 
                     switch (currentScope.State)
@@ -3473,6 +3478,9 @@ namespace Microsoft.OData
                                     .ConfigureAwait(false);
                             }
 
+                            wasWritingDelta = this.writingDelta.Pop();
+                            Debug.Assert(!wasWritingDelta, "Expected to not be writing delta when calling WriteEndAsync() for ResourceSet");
+            
                             break;
                         case WriterState.DeltaLink:
                         case WriterState.DeltaDeletedLink:
@@ -3486,6 +3494,9 @@ namespace Microsoft.OData
                                     .ConfigureAwait(false);
                             }
 
+                            wasWritingDelta = this.writingDelta.Pop();
+                            Debug.Assert(wasWritingDelta, "Expected to be writing delta when calling WriteEndAsync() for DeltaResourceSet");
+            
                             break;
                         case WriterState.NestedResourceInfo:
                             if (!thisParam.outputContext.WritingResponse)

@@ -327,7 +327,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Cannot write a deleted resource, link, deleted link, or nested delta resource set to a non-delta payload. Please use a delta resource set writer, or a request resource writer."
+        /// A string like "Cannot write a deleted resource, link, deleted link, or nested delta resource set within a resource set; they must be written within a delta resource set."
         /// </summary>
         internal static string ODataWriterCore_CannotWriteDeltaWithResourceSetWriter
         {
