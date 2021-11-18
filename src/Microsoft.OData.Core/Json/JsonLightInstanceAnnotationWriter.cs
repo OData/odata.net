@@ -205,7 +205,7 @@ namespace Microsoft.OData
                 this.valueSerializer.WriteResourceValue(resourceValue,
                     expectedType,
                     treatLikeOpenProperty,
-                    this.valueSerializer.CreateDuplicatePropertyNameChecker());
+                    this.valueSerializer.JsonLightOutputContext.DuplicatePropertyNameChecker);
                 return;
             }
 
@@ -394,7 +394,7 @@ namespace Microsoft.OData
                 await this.valueSerializer.WriteResourceValueAsync(resourceValue,
                     expectedType,
                     treatLikeOpenProperty,
-                    this.valueSerializer.CreateDuplicatePropertyNameChecker()).ConfigureAwait(false);
+                    this.valueSerializer.JsonLightOutputContext.DuplicatePropertyNameChecker).ConfigureAwait(false);
                 return;
             }
 

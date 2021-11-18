@@ -57,6 +57,11 @@ namespace Microsoft.OData
         private readonly ODataSimplifiedOptions odataSimplifiedOptions;
 
         /// <summary>
+        /// Checker to detect duplicate property names.
+        /// </summary>
+        private readonly IDuplicatePropertyNameChecker duplicatePropertyNameChecker;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="format">The format for this output context.</param>
@@ -81,6 +86,7 @@ namespace Microsoft.OData
             this.payloadValueConverter = ODataPayloadValueConverter.GetPayloadValueConverter(this.container);
             this.writerValidator = messageWriterSettings.Validator;
             this.odataSimplifiedOptions = ODataSimplifiedOptions.GetODataSimplifiedOptions(this.container, messageWriterSettings.Version);
+            this.duplicatePropertyNameChecker = MessageWriterSettings.Validator.CreateDuplicatePropertyNameChecker();
         }
 
         /// <summary>
@@ -136,6 +142,17 @@ namespace Microsoft.OData
             get
             {
                 return this.payloadUriConverter;
+            }
+        }
+
+        /// <summary>
+        /// Checker to detect duplicate property names.
+        /// </summary>
+        internal IDuplicatePropertyNameChecker DuplicatePropertyNameChecker
+        {
+            get
+            {
+                return this.duplicatePropertyNameChecker;
             }
         }
 

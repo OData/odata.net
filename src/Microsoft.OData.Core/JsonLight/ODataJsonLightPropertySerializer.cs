@@ -82,7 +82,7 @@ namespace Microsoft.OData.JsonLight
                         property,
                         null /*owningType*/,
                         true /* isTopLevel */,
-                        this.CreateDuplicatePropertyNameChecker(),
+                        this.JsonLightOutputContext.DuplicatePropertyNameChecker,
                         null /* metadataBuilder */);
                     this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
 
@@ -280,7 +280,7 @@ namespace Microsoft.OData.JsonLight
                         property,
                         null /*owningType*/,
                         true /* isTopLevel */,
-                        this.CreateDuplicatePropertyNameChecker(),
+                        this.JsonLightOutputContext.DuplicatePropertyNameChecker,
                         null /* metadataBuilder */).ConfigureAwait(false);
                     this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
 
@@ -649,7 +649,7 @@ namespace Microsoft.OData.JsonLight
                 resourceValue,
                 this.currentPropertyInfo.MetadataType.TypeReference,
                 isOpenPropertyType,
-                this.CreateDuplicatePropertyNameChecker());
+                this.JsonLightOutputContext.DuplicatePropertyNameChecker);
         }
 
         /// <summary>
@@ -1074,7 +1074,7 @@ namespace Microsoft.OData.JsonLight
                 resourceValue,
                 this.currentPropertyInfo.MetadataType.TypeReference,
                 isOpenPropertyType,
-                this.CreateDuplicatePropertyNameChecker()).ConfigureAwait(false);
+                this.JsonLightOutputContext.DuplicatePropertyNameChecker).ConfigureAwait(false);
         }
 
         /// <summary>

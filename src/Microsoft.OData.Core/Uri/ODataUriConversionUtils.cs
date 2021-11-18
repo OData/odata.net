@@ -265,7 +265,7 @@ namespace Microsoft.OData
                         resourceValue, /* resourceValue */
                         null, /* metadataTypeReference */
                         true, /* isOpenPropertyType */
-                        serializer.CreateDuplicatePropertyNameChecker()));
+                        serializer.JsonLightOutputContext.DuplicatePropertyNameChecker));
             }
 
             return builder.ToString();

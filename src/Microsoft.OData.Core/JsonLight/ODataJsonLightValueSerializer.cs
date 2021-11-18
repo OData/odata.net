@@ -245,7 +245,7 @@ namespace Microsoft.OData.JsonLight
                     {
                         if (duplicatePropertyNamesChecker == null)
                         {
-                            duplicatePropertyNamesChecker = this.CreateDuplicatePropertyNameChecker();
+                            duplicatePropertyNamesChecker = this.JsonLightOutputContext.DuplicatePropertyNameChecker;
                         }
 
                         this.WriteResourceValue(
@@ -567,7 +567,7 @@ namespace Microsoft.OData.JsonLight
                     {
                         if (duplicatePropertyNamesChecker == null)
                         {
-                            duplicatePropertyNamesChecker = this.CreateDuplicatePropertyNameChecker();
+                            duplicatePropertyNamesChecker = this.JsonLightOutputContext.DuplicatePropertyNameChecker;
                         }
 
                         await this.WriteResourceValueAsync(
