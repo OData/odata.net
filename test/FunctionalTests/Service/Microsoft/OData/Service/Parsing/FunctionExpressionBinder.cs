@@ -73,7 +73,7 @@ namespace Microsoft.OData.Service.Parsing
                 bool argumentsMatch = true;
                 for (int i = 0; i < candidate.ParameterTypes.Length; i++)
                 {
-                    promotedArguments[i] = this.PromoteExpression(arguments[i], candidate.ParameterTypes[i], true);
+                    promotedArguments[i] = this.PromoteExpression(arguments[i], candidate.ParameterTypes[i], true, candidate.IsTypeCast);
                     if (promotedArguments[i] == null)
                     {
                         argumentsMatch = false;
@@ -769,7 +769,7 @@ namespace Microsoft.OData.Service.Parsing
         /// <param name="exact">Whether an exact type is required; false implies a compatible type is OK.</param>
         /// <returns>Expression with the promoted type.</returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Pending")]
-        private Expression PromoteExpression(Expression expr, Type type, bool exact)
+        private Expression PromoteExpression(Expression expr, Type type, bool exact, bool isTypeCast = false)
         {
             Debug.Assert(expr != null, "expr != null");
             Debug.Assert(type != null, "type != null");
@@ -816,7 +816,8 @@ namespace Microsoft.OData.Service.Parsing
                         object value = null;
                         if (ce.Type == typeof(string) && (target == typeof(Type) || target == typeof(ResourceType)))
                         {
-                            if (WebConvert.TryRemoveQuotes(ref text))
+                            // No qoutes required when the function is a cast
+                            if (isTypeCast || WebConvert.TryRemoveQuotes(ref text))
                             {
                                 ResourceType resourceType = this.tryResolveResourceType(text);
                                 if (resourceType != null)
@@ -887,7 +888,7 @@ namespace Microsoft.OData.Service.Parsing
             if (WebUtil.IsNullableType(expr.Type) && type.IsValueType)
             {
                 Expression valueAccessExpression = Expression.Property(expr, "Value");
-                valueAccessExpression = this.PromoteExpression(valueAccessExpression, type, exact);
+                valueAccessExpression = this.PromoteExpression(valueAccessExpression, type, exact, isTypeCast);
                 return valueAccessExpression;
             }
 

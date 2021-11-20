@@ -7,6 +7,7 @@
 namespace Microsoft.OData.UriParser
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData.Edm;
@@ -16,7 +17,7 @@ namespace Microsoft.OData.UriParser
     /// </summary>
     public class UnqualifiedODataUriResolver : ODataUriResolver
     {
-         /// <summary>
+        /// <summary>
         /// Resolve unbound operations based on name.
         /// </summary>
         /// <param name="model">The model to be used.</param>
@@ -29,8 +30,7 @@ namespace Microsoft.OData.UriParser
                 return base.ResolveUnboundOperations(model, identifier);
             }
 
-            return FindAcrossModels<IEdmOperation>(model, identifier, this.EnableCaseInsensitive)
-                    .Where(operation => !operation.IsBound);
+            return GetUnBoundOperationsForModel(model, identifier, this.EnableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
         }
 
         /// <summary>
@@ -46,28 +46,42 @@ namespace Microsoft.OData.UriParser
             {
                 return base.ResolveBoundOperations(model, identifier, bindingType);
             }
-
-            return FindAcrossModels<IEdmOperation>(model, identifier, this.EnableCaseInsensitive)
-                .Where(operation =>
-                    operation.IsBound
-                    && operation.Parameters.Any()
-                    && operation.HasEquivalentBindingType(bindingType));
+          
+            return GetBoundOperationsForModel(model, identifier, bindingType, this.EnableCaseInsensitive? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
         }
 
-        private static IEnumerable<T> FindAcrossModels<T>(IEdmModel model, String qualifiedName, bool caseInsensitive) where T : IEdmSchemaElement
+        private static IEnumerable<IEdmOperation> GetUnBoundOperationsForModel(IEdmModel model, string operationName, StringComparison strComparison)
         {
-            Func<IEdmModel, IEnumerable<T>> finder = (refModel) =>
-                refModel.SchemaElements.OfType<T>()
-                .Where(e => string.Equals(qualifiedName, e.Name, caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal));
-
-            IEnumerable<T> results = finder(model);
-
-            foreach (IEdmModel reference in model.ReferencedModels)
+            foreach (IEdmSchemaElement schemaElement in model.SchemaElements)
             {
-                results.Concat(finder(reference));
+                if (schemaElement is IEdmOperation operation && !operation.IsBound && string.Equals(operationName, operation.Name, strComparison))
+                {
+                    yield return operation;
+                }
             }
 
-            return results;
+            foreach(IEdmModel reference in model.ReferencedModels)
+            {
+                foreach (IEdmSchemaElement schemaElement in reference.SchemaElements)
+                {
+                    if (schemaElement is IEdmOperation operation && !operation.IsBound && string.Equals(operationName, operation.Name, strComparison))
+                    {
+                        yield return operation;
+                    }
+                }
+            }
         }
+
+        private static IEnumerable<IEdmOperation> GetBoundOperationsForModel(IEdmModel model, string operationName, IEdmType bindingType, StringComparison strComparison)
+        {
+            foreach (IEdmOperation operation in model.FindBoundOperations(bindingType))
+            {
+                if (string.Equals(operationName, operation.Name, strComparison))
+                {
+                    yield return operation;
+                }
+            }
+        }
+
     }
 }

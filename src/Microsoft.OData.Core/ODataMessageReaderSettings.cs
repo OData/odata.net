@@ -46,6 +46,7 @@ namespace Microsoft.OData
             this.EnableCharactersCheck = false;
             this.Version = odataVersion;
             this.LibraryCompatibility = ODataLibraryCompatibility.Latest;
+            this.EnablePropertyNameCaseInsensitive = false; // for back-compatible
 
             Validator = new ReaderValidator(this);
             if (odataVersion < ODataVersion.V401)
@@ -116,6 +117,11 @@ namespace Microsoft.OData
                 this.baseUri = UriUtils.EnsureTaillingSlash(value);
             }
         }
+
+        /// <summary>
+        /// Gets or sets a boolean value indicating whether or not supports property name case insensitive in reading.
+        /// </summary>
+        public bool EnablePropertyNameCaseInsensitive { get; set; }
 
         /// <summary>
         /// Gets or sets custom type resolver used by the Client.
@@ -288,6 +294,7 @@ namespace Microsoft.OData
             this.Version = other.Version;
             this.ReadAsStreamFunc = other.ReadAsStreamFunc;
             this.ArrayPool = other.ArrayPool;
+            this.EnablePropertyNameCaseInsensitive = other.EnablePropertyNameCaseInsensitive;
         }
     }
 }

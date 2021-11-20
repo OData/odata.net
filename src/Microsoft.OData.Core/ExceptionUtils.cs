@@ -34,6 +34,7 @@ namespace Microsoft.OData
         /// true if the specified exception can be caught and handled;
         /// false otherwise.
         /// </returns>
+        [DebuggerStepThrough]
         internal static bool IsCatchableExceptionType(Exception e)
         {
             Debug.Assert(e != null, "Unexpected null exception!");
@@ -51,6 +52,7 @@ namespace Microsoft.OData
         /// <param name="value">Argument whose value needs to be checked.</param>
         /// <param name="parameterName">Name of the argument, used for exception message.</param>
         /// <returns>The value</returns>
+        [DebuggerStepThrough]
         internal static T CheckArgumentNotNull<T>([ValidatedNotNull] T value, string parameterName) where T : class
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
@@ -70,6 +72,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="value">Argument whose value needs to be checked.</param>
         /// <param name="parameterName">Name of the argument, used for exception message.</param>
+        [DebuggerStepThrough]
         internal static void CheckArgumentStringNotEmpty(string value, string parameterName)
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
@@ -87,6 +90,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="value">Argument whose value needs to be checked.</param>
         /// <param name="parameterName">Name of the argument, used for exception message.</param>
+        [DebuggerStepThrough]
         internal static void CheckArgumentStringNotNullOrEmpty([ValidatedNotNull] string value, string parameterName)
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
@@ -104,6 +108,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="value">Argument whose value needs to be checked.</param>
         /// <param name="parameterName">Name of the argument, used for exception message.</param>
+        [DebuggerStepThrough]
         internal static void CheckIntegerNotNegative(int value, string parameterName)
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
@@ -121,6 +126,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="value">Argument whose value needs to be checked.</param>
         /// <param name="parameterName">Name of the argument, used for exception message.</param>
+        [DebuggerStepThrough]
         internal static void CheckIntegerPositive(int value, string parameterName)
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
@@ -138,6 +144,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="value">Argument whose value needs to be checked.</param>
         /// <param name="parameterName">Name of the argument, used for exception message.</param>
+        [DebuggerStepThrough]
         internal static void CheckLongPositive(long value, string parameterName)
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
@@ -156,6 +163,7 @@ namespace Microsoft.OData
         /// <param name="value">Argument whose value needs to be checked.</param>
         /// <param name="parameterName">Name of the argument, used for exception message.</param>
         /// <typeparam name="T">Type of the collection. It does not matter.</typeparam>
+        [DebuggerStepThrough]
         internal static void CheckArgumentCollectionNotNullOrEmpty<T>(ICollection<T> value, string parameterName)
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");

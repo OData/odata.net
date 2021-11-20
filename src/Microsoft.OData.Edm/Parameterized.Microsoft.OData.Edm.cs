@@ -179,6 +179,14 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
+        /// A string like "More than one properties match the name '{0}' were found in type '{1}'."
+        /// </summary>
+        internal static string MultipleMatchingPropertiesFound(object p0, object p1)
+        {
+            return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.MultipleMatchingPropertiesFound, p0, p1);
+        }
+
+        /// <summary>
         /// A string like "Type '{0}' must have a single type annotation with term type '{1}'."
         /// </summary>
         internal static string Edm_Evaluator_NoTermTypeAnnotationOnType(object p0, object p1)

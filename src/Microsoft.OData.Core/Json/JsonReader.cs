@@ -14,6 +14,7 @@ namespace Microsoft.OData.Json
     using System.Globalization;
     using System.IO;
     using System.Text;
+    using System.Threading.Tasks;
     using Microsoft.OData.Buffers;
     #endregion Namespaces
 
@@ -21,7 +22,7 @@ namespace Microsoft.OData.Json
     /// Reader for the JSON format. http://www.json.org
     /// </summary>
     [DebuggerDisplay("{NodeType}: {Value}")]
-    internal class JsonReader : IJsonStreamReader, IDisposable
+    internal class JsonReader : IJsonStreamReader, IJsonStreamReaderAsync, IDisposable
     {
         /// <summary>
         /// The initial size of the buffer of characters.
@@ -230,8 +231,7 @@ namespace Microsoft.OData.Json
                         }
                         else
                         {
-                            bool hasLeadingBackslash;
-                            this.nodeValue = this.ParseStringPrimitiveValue(out hasLeadingBackslash);
+                            this.nodeValue = this.ParseStringPrimitiveValue(out _);
                         }
                     }
                 }
@@ -506,6 +506,298 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
+        /// Asynchronously returns the value of the last reported node.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains the value of the last reported node.</returns>
+        /// <remarks>A non-null is returned only if the last node was a PrimitiveValue or Property.
+        /// If the last node was a PrimitiveValue this property returns the value:
+        /// - null if the null token was found.
+        /// - boolean if the true or false token was found.
+        /// - string if a string token was found.
+        /// - DateTime if a string token formatted as DateTime was found.
+        /// - Int32 if a number which fits into the Int32 was found.
+        /// - Double if a number which doesn't fit into Int32 was found.
+        /// If the last node is a Property this property returns a string which is the name of the property.
+        /// </remarks>
+        public virtual async Task<object> GetValueAsync()
+        {
+            if (this.readingStream)
+            {
+                throw JsonReaderExtensions.CreateException(Strings.JsonReader_CannotAccessValueInStreamState);
+            }
+
+            if (this.canStream)
+            {
+                if (this.nodeType != JsonNodeType.Property)
+                {
+                    this.canStream = false;
+                }
+
+                if (this.nodeType == JsonNodeType.PrimitiveValue)
+                {
+                    if (this.characterBuffer[this.tokenStartIndex] == 'n')
+                    {
+                        this.nodeValue = await this.ParseNullPrimitiveValueAsync()
+                            .ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        var parseResult = await this.ParseStringPrimitiveValueAsync()
+                            .ConfigureAwait(false);
+                        this.nodeValue = parseResult.Item1;
+                    }
+                }
+            }
+
+            return this.nodeValue;
+        }
+
+        /// <summary>
+        /// Asynchronously reads the next node from the input.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains true if a new node was found,
+        /// or false if end of input was reached.</returns>
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Not really feasible to extract code to methods without introducing unnecessary complexity.")]
+        public virtual async Task<bool> ReadAsync()
+        {
+            if (this.readingStream)
+            {
+                throw JsonReaderExtensions.CreateException(Strings.JsonReader_CannotCallReadInStreamState);
+            }
+
+            if (this.canStream)
+            {
+                this.canStream = false;
+                if (this.nodeType == JsonNodeType.PrimitiveValue)
+                {
+                    // caller is positioned on a string value that they haven't read, so skip it
+                    if (this.characterBuffer[this.tokenStartIndex] == 'n')
+                    {
+                        await this.ParseNullPrimitiveValueAsync().ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        await this.ParseStringPrimitiveValueAsync().ConfigureAwait(false);
+                    }
+                }
+            }
+
+            // Reset the node value.
+            this.nodeValue = null;
+
+#if DEBUG
+            // Reset the node type to None - so that we can verify that the Read method actually sets it.
+            this.nodeType = JsonNodeType.None;
+#endif
+
+            // Skip any whitespace characters.
+            // This also makes sure that we have at least one non-whitespace character available.
+            if (!await this.SkipWhitespacesAsync().ConfigureAwait(false))
+            {
+                return this.EndOfInput();
+            }
+
+            Debug.Assert(
+                this.tokenStartIndex < this.storedCharacterCount && !IsWhitespaceCharacter(this.characterBuffer[this.tokenStartIndex]),
+                "The SkipWhitespacesAsync didn't correctly skip all whitespace characters from the input.");
+
+            Scope currentScope = this.scopes.Peek();
+
+            bool commaFound = false;
+            if (this.characterBuffer[this.tokenStartIndex] == ',')
+            {
+                commaFound = true;
+                this.tokenStartIndex++;
+
+                // Note that validity of the comma is verified below depending on the current scope.
+                // Skip all whitespaces after comma.
+                // Note that this causes "Unexpected EOF" error if the comma is the last thing in the input.
+                // It might not be the best error message in certain cases, but it's still correct (a JSON payload can never end in comma).
+                if (!await this.SkipWhitespacesAsync().ConfigureAwait(false))
+                {
+                    return this.EndOfInput();
+                }
+
+                Debug.Assert(
+                    this.tokenStartIndex < this.storedCharacterCount && !IsWhitespaceCharacter(this.characterBuffer[this.tokenStartIndex]),
+                    "The SkipWhitespacesAsync didn't correctly skip all whitespace characters from the input.");
+            }
+
+            switch (currentScope.Type)
+            {
+                case ScopeType.Root:
+                    if (commaFound)
+                    {
+                        throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnexpectedComma(ScopeType.Root));
+                    }
+
+                    if (currentScope.ValueCount > 0)
+                    {
+                        // We already found the top-level value, so fail
+                        throw JsonReaderExtensions.CreateException(Strings.JsonReader_MultipleTopLevelValues);
+                    }
+
+                    // We expect a "value" - start array, start object or primitive value
+                    this.nodeType = await this.ParseValueAsync()
+                        .ConfigureAwait(false);
+                    break;
+
+                case ScopeType.Array:
+                    if (commaFound && currentScope.ValueCount == 0)
+                    {
+                        throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnexpectedComma(ScopeType.Array));
+                    }
+
+                    // We might see end of array here
+                    if (this.characterBuffer[this.tokenStartIndex] == ']')
+                    {
+                        this.tokenStartIndex++;
+
+                        // End of array is only valid when there was no comma before it.
+                        if (commaFound)
+                        {
+                            throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnexpectedComma(ScopeType.Array));
+                        }
+
+                        this.PopScope();
+                        this.nodeType = JsonNodeType.EndArray;
+                        break;
+                    }
+
+                    if (!commaFound && currentScope.ValueCount > 0)
+                    {
+                        throw JsonReaderExtensions.CreateException(Strings.JsonReader_MissingComma(ScopeType.Array));
+                    }
+
+                    // We expect element which is a "value" - start array, start object or primitive value
+                    this.nodeType = await this.ParseValueAsync()
+                        .ConfigureAwait(false);
+                    break;
+
+                case ScopeType.Object:
+                    if (commaFound && currentScope.ValueCount == 0)
+                    {
+                        throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnexpectedComma(ScopeType.Object));
+                    }
+
+                    // We might see end of object here
+                    if (this.characterBuffer[this.tokenStartIndex] == '}')
+                    {
+                        this.tokenStartIndex++;
+
+                        // End of object is only valid when there was no comma before it.
+                        if (commaFound)
+                        {
+                            throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnexpectedComma(ScopeType.Object));
+                        }
+
+                        this.PopScope();
+                        this.nodeType = JsonNodeType.EndObject;
+                        break;
+                    }
+                    else
+                    {
+                        if (!commaFound && currentScope.ValueCount > 0)
+                        {
+                            throw JsonReaderExtensions.CreateException(Strings.JsonReader_MissingComma(ScopeType.Object));
+                        }
+
+                        // We expect a property here
+                        this.nodeType = await this.ParsePropertyAsync()
+                            .ConfigureAwait(false);
+                        break;
+                    }
+
+                case ScopeType.Property:
+                    if (commaFound)
+                    {
+                        throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnexpectedComma(ScopeType.Property));
+                    }
+
+                    // We expect the property value, which is a "value" - start array, start object or primitive value
+                    this.nodeType = await this.ParseValueAsync()
+                        .ConfigureAwait(false);
+                    break;
+
+                default:
+                    throw JsonReaderExtensions.CreateException(Strings.General_InternalError(InternalErrorCodes.JsonReader_Read));
+            }
+
+            Debug.Assert(
+                this.nodeType != JsonNodeType.None && this.nodeType != JsonNodeType.EndOfInput,
+                "Read should never go back to None and EndOfInput should be reported by directly returning.");
+
+            return true;
+        }
+
+        /// <summary>
+        /// Asynchronously creates a stream for reading a base64 binary value.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains a <see cref="Stream"/> for reading a base64 URL encoded binary value.</returns>
+        public async Task<Stream> CreateReadStreamAsync()
+        {
+            if (!this.canStream)
+            {
+                throw JsonReaderExtensions.CreateException(Strings.JsonReader_CannotCreateReadStream);
+            }
+
+            this.canStream = false;
+            if ((this.streamOpeningQuoteCharacter = characterBuffer[this.tokenStartIndex]) == 'n')
+            {
+                await this.ParseNullPrimitiveValueAsync()
+                    .ConfigureAwait(false);
+                this.scopes.Peek().ValueCount++;
+                await this.ReadAsync()
+                    .ConfigureAwait(false);
+                return new ODataBinaryStreamReader((a, b, c) => { return Task.FromResult(0); });
+            }
+
+            this.tokenStartIndex++;
+            this.readingStream = true;
+            return new ODataBinaryStreamReader(new AsyncStreamReaderDelegate(this.ReadCharsAsync));
+        }
+
+        /// <summary>
+        /// Asynchronously creates a TextReader for reading text values.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains a <see cref="TextReader"/> for reading a text value.</returns>
+        public async Task<TextReader> CreateTextReaderAsync()
+        {
+            if (!this.canStream)
+            {
+                throw JsonReaderExtensions.CreateException(Strings.JsonReader_CannotCreateTextReader);
+            }
+
+            this.canStream = false;
+            await this.SkipWhitespacesAsync().ConfigureAwait(false);
+
+            Debug.Assert(this.NodeType == JsonNodeType.PrimitiveValue || this.NodeType == JsonNodeType.Property, "Streaming in an unknown state");
+            if ((this.streamOpeningQuoteCharacter = characterBuffer[this.tokenStartIndex]) == 'n')
+            {
+                // value is null
+                await this.ParseNullPrimitiveValueAsync()
+                    .ConfigureAwait(false);
+                this.scopes.Peek().ValueCount++;
+                await this.ReadAsync()
+                    .ConfigureAwait(false);
+                return new ODataTextStreamReader((a, b, c) => { return Task.FromResult(0); });
+            }
+
+            // skip over the opening quote character for a string value
+            if (this.NodeType == JsonNodeType.PrimitiveValue)
+            {
+                this.tokenStartIndex++;
+            }
+
+            this.readingStream = true;
+            return new ODataTextStreamReader(new AsyncStreamReaderDelegate(this.ReadCharsAsync));
+        }
+
+        /// <summary>
         /// Dispose the reader
         /// </summary>
         public void Dispose()
@@ -525,6 +817,7 @@ namespace Microsoft.OData.Json
         /// <remarks>Note that the behavior of this method is different from Char.IsWhitespace, since that method
         /// returns true for all characters defined as whitespace by the Unicode spec (which is a lot of characters),
         /// this one on the other hand recognizes just the whitespaces as defined by the JSON spec.</remarks>
+        [DebuggerStepThrough]
         private static bool IsWhitespaceCharacter(char character)
         {
             // The whitespace characters are 0x20 (space), 0x09 (tab), 0x0A (new line), 0x0D (carriage return)
@@ -657,8 +950,7 @@ namespace Microsoft.OData.Json
         /// So it can either return a string successfully or fail.</remarks>
         private string ParseStringPrimitiveValue()
         {
-            bool hasLeadingBackslash;
-            return this.ParseStringPrimitiveValue(out hasLeadingBackslash);
+            return this.ParseStringPrimitiveValue(out _);
         }
 
         /// <summary>
@@ -944,10 +1236,7 @@ namespace Microsoft.OData.Json
                 char character = this.characterBuffer[this.tokenStartIndex + currentCharacterTokenRelativeIndex];
 
                 // COMPAT 46: JSON property names don't require quotes and they allow any letter, digit, underscore or dollar sign in them.
-                if (character == '_' ||
-                    Char.IsLetterOrDigit(character) ||
-                    character == '$' ||
-                    (this.allowAnnotations && (character == '.' || character == '@')))
+                if (IsCharacterAllowedInPropertyName(character))
                 {
                     currentCharacterTokenRelativeIndex++;
                 }
@@ -1057,13 +1346,7 @@ namespace Microsoft.OData.Json
                                 throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnrecognizedEscapeSequence("\\uXXXX"));
                             }
 
-                            string unicodeHexValue = this.ConsumeTokenToString(4);
-                            int characterValue;
-                            if (!Int32.TryParse(unicodeHexValue, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out characterValue))
-                            {
-                                throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnrecognizedEscapeSequence("\\u" + unicodeHexValue));
-                            }
-
+                            int characterValue = ParseUnicodeHexValue();
                             character = (char)characterValue;
 
                             // We are already positioned on the next character, so don't advance at the end
@@ -1261,6 +1544,674 @@ namespace Microsoft.OData.Json
                 return false;
             }
 
+            this.CopyInputToBuffer();
+
+            // Read more characters from the input.
+            // Use the Read method which returns any character as soon as it's available
+            // we don't want to wait for the entire buffer to fill if the input doesn't have
+            // the characters ready.
+            int readCount = this.reader.Read(
+                this.characterBuffer,
+                this.storedCharacterCount,
+                this.characterBuffer.Length - this.storedCharacterCount);
+
+            if (readCount == 0)
+            {
+                // No more characters available, end of input.
+                this.endOfInputReached = true;
+                return false;
+            }
+
+            this.storedCharacterCount += readCount;
+            return true;
+        }
+
+        /// <summary>
+        /// Asynchronously parses a "value", that is an array, object or primitive value.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains the node type to report to the user.</returns>
+        private async Task<JsonNodeType> ParseValueAsync()
+        {
+            Debug.Assert(
+                this.tokenStartIndex < this.storedCharacterCount && !IsWhitespaceCharacter(this.characterBuffer[this.tokenStartIndex]),
+                "The SkipWhitespaces wasn't called or it didn't correctly skip all whitespace characters from the input.");
+            Debug.Assert(this.scopes.Count >= 1 && this.scopes.Peek().Type != ScopeType.Object, "Value can only occur at the root, in array or as a property value.");
+
+            // Increase the count of values under the current scope.
+            this.scopes.Peek().ValueCount++;
+
+            char currentCharacter = this.characterBuffer[this.tokenStartIndex];
+            switch (currentCharacter)
+            {
+                case '{':
+                    // Start of object
+                    this.PushScope(ScopeType.Object);
+                    this.tokenStartIndex++;
+                    return JsonNodeType.StartObject;
+
+                case '[':
+                    // Start of array
+                    this.PushScope(ScopeType.Array);
+                    this.tokenStartIndex++;
+                    await this.SkipWhitespacesAsync().ConfigureAwait(false);
+                    this.canStream =
+                        this.characterBuffer[this.tokenStartIndex] == '"' ||
+                        this.characterBuffer[this.tokenStartIndex] == '\'' ||
+                        this.characterBuffer[this.tokenStartIndex] == 'n';
+                    return JsonNodeType.StartArray;
+
+                case '"':
+                case '\'':
+                    // String primitive value
+                    // Don't parse yet, as it may be a stream. Defer parsing until .Value is called.
+                    this.canStream = true;
+                    break;
+
+                case 'n':
+                    // Null value
+                    // Don't parse yet, as user may be streaming a stream. Defer parsing until .Value is called.
+                    this.canStream = true;
+                    break;
+
+                case 't':
+                case 'f':
+                    this.nodeValue = await this.ParseBooleanPrimitiveValueAsync()
+                        .ConfigureAwait(false);
+                    break;
+
+                case '-':
+                case '.':
+                    // COMPAT 47: JSON number can start with dot.
+                    // The JSON spec doesn't allow numbers to start with ., but WCF DS does. We will follow the WCF DS behavior for compatibility.
+                    this.nodeValue = this.ParseNumberPrimitiveValue();
+                    break;
+
+                default:
+                    if (Char.IsDigit(currentCharacter))
+                    {
+                        this.nodeValue = await this.ParseNumberPrimitiveValueAsync()
+                            .ConfigureAwait(false);
+                        break;
+                    }
+                    else
+                    {
+                        // Unknown token - fail.
+                        throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnrecognizedToken);
+                    }
+            }
+
+            this.TryPopPropertyScope();
+            return JsonNodeType.PrimitiveValue;
+        }
+
+        /// <summary>
+        /// Asynchronously parses a property name and the colon after it.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains the node type to report to the user.</returns>
+        private async Task<JsonNodeType> ParsePropertyAsync()
+        {
+            // Increase the count of values under the object (the number of properties).
+            Debug.Assert(this.scopes.Count >= 1 && this.scopes.Peek().Type == ScopeType.Object, "Property can only occur in an object.");
+            this.scopes.Peek().ValueCount++;
+
+            this.PushScope(ScopeType.Property);
+
+            // Parse the name of the property
+            this.nodeValue = await this.ParseNameAsync().ConfigureAwait(false);
+
+            if (string.IsNullOrEmpty((string)this.nodeValue))
+            {
+                // The name can't be empty.
+                throw JsonReaderExtensions.CreateException(Strings.JsonReader_InvalidPropertyNameOrUnexpectedComma((string)this.nodeValue));
+            }
+
+            if (!await this.SkipWhitespacesAsync().ConfigureAwait(false) || this.characterBuffer[this.tokenStartIndex] != ':')
+            {
+                // We need the colon character after the property name
+                throw JsonReaderExtensions.CreateException(Strings.JsonReader_MissingColon((string)this.nodeValue));
+            }
+
+            // Consume the colon.
+            Debug.Assert(this.characterBuffer[this.tokenStartIndex] == ':', "The above should verify that there's a colon.");
+            this.tokenStartIndex++;
+            await this.SkipWhitespacesAsync().ConfigureAwait(false);
+
+            // if the content is nested json, we can stream
+            this.canStream = this.characterBuffer[this.tokenStartIndex] == '{' || this.characterBuffer[this.tokenStartIndex] == '[';
+            return JsonNodeType.Property;
+        }
+
+        /// <summary>
+        /// Asynchronously parses a primitive string value.
+        /// </summary>
+        /// <param name="hasLeadingBackslash">Set to true if the first character in the string was a backslash. This is used when parsing DateTime values
+        /// since they must start with an escaped slash character (\/).</param>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains a tuple comprising of the value of the string primitive value 
+        /// and a value of true if the first character in the string has a backlash; otherwise false.</returns>
+        /// <remarks>
+        /// Assumes that the current token position points to the opening quote.
+        /// Note that the string parsing can never end with EndOfInput, since we're already seen the quote.
+        /// So it can either return a string successfully or fail.</remarks>
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Splitting the function would make it hard to understand.")]
+        private async Task<Tuple<string, bool>> ParseStringPrimitiveValueAsync()
+        {
+            Debug.Assert(this.tokenStartIndex < this.storedCharacterCount, "At least the quote must be present.");
+
+            bool hasLeadingBackslash = false;
+
+            // COMPAT 45: We allow both double and single quotes around a primitive string
+            // Even though JSON spec only allows double quotes.
+            char openingQuoteCharacter = this.characterBuffer[this.tokenStartIndex];
+            Debug.Assert(openingQuoteCharacter == '"' || openingQuoteCharacter == '\'', "The quote character must be the current character when this method is called.");
+
+            // Consume the quote character
+            this.tokenStartIndex++;
+
+            // String builder to be used if we need to resolve escape sequences.
+            StringBuilder valueBuilder = null;
+
+            int currentCharacterTokenRelativeIndex = 0;
+            while ((this.tokenStartIndex + currentCharacterTokenRelativeIndex) < this.storedCharacterCount || await this.ReadInputAsync().ConfigureAwait(false))
+            {
+                Debug.Assert((this.tokenStartIndex + currentCharacterTokenRelativeIndex) < this.storedCharacterCount, "ReadInputAsync didn't read more data but returned true.");
+
+                char character = this.characterBuffer[this.tokenStartIndex + currentCharacterTokenRelativeIndex];
+                if (character == '\\')
+                {
+                    // If we're at the beginning of the string
+                    // (means that relative token index must be 0 and we must not have consumed anything into our value builder yet)
+                    if (currentCharacterTokenRelativeIndex == 0 && valueBuilder == null)
+                    {
+                        hasLeadingBackslash = true;
+                    }
+
+                    // We will need the stringbuilder to resolve the escape sequences.
+                    if (valueBuilder == null)
+                    {
+                        if (this.stringValueBuilder == null)
+                        {
+                            this.stringValueBuilder = new StringBuilder();
+                        }
+                        else
+                        {
+                            this.stringValueBuilder.Length = 0;
+                        }
+
+                        valueBuilder = this.stringValueBuilder;
+                    }
+
+                    // Append everything up to the \ character to the value.
+                    this.ConsumeTokenAppendToBuilder(valueBuilder, currentCharacterTokenRelativeIndex);
+                    currentCharacterTokenRelativeIndex = 0;
+                    Debug.Assert(this.characterBuffer[this.tokenStartIndex] == '\\', "We should have consumed everything up to the escape character.");
+
+                    // Escape sequence - we need at least two characters, the backslash and the one character after it.
+                    if (!await this.EnsureAvailableCharactersAsync(2).ConfigureAwait(false))
+                    {
+                        throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnrecognizedEscapeSequence("\\"));
+                    }
+
+                    // To simplify the code, consume the character after the \ as well, since that is the start of the escape sequence.
+                    character = this.characterBuffer[this.tokenStartIndex + 1];
+                    this.tokenStartIndex += 2;
+
+                    switch (character)
+                    {
+                        case 'b':
+                            valueBuilder.Append('\b');
+                            break;
+                        case 'f':
+                            valueBuilder.Append('\f');
+                            break;
+                        case 'n':
+                            valueBuilder.Append('\n');
+                            break;
+                        case 'r':
+                            valueBuilder.Append('\r');
+                            break;
+                        case 't':
+                            valueBuilder.Append('\t');
+                            break;
+                        case '\\':
+                        case '\"':
+                        case '\'':
+                        case '/':
+                            valueBuilder.Append(character);
+                            break;
+                        case 'u':
+                            Debug.Assert(currentCharacterTokenRelativeIndex == 0, "The token should be starting at the first character after the \\u");
+
+                            // We need 4 hex characters
+                            if (!await this.EnsureAvailableCharactersAsync(4).ConfigureAwait(false))
+                            {
+                                throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnrecognizedEscapeSequence("\\uXXXX"));
+                            }
+
+                            string unicodeHexValue = this.ConsumeTokenToString(4);
+                            int characterValue;
+                            if (!Int32.TryParse(unicodeHexValue, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out characterValue))
+                            {
+                                throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnrecognizedEscapeSequence("\\u" + unicodeHexValue));
+                            }
+
+                            valueBuilder.Append((char)characterValue);
+                            break;
+                        default:
+                            throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnrecognizedEscapeSequence("\\" + character));
+                    }
+                }
+                else if (character == openingQuoteCharacter)
+                {
+                    // Consume everything up to the quote character
+                    string result;
+                    if (valueBuilder != null)
+                    {
+                        this.ConsumeTokenAppendToBuilder(valueBuilder, currentCharacterTokenRelativeIndex);
+                        result = valueBuilder.ToString();
+                    }
+                    else
+                    {
+                        result = this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+                    }
+
+                    Debug.Assert(this.characterBuffer[this.tokenStartIndex] == openingQuoteCharacter, "We should have consumed everything up to the quote character.");
+
+                    // Consume the quote character as well.
+                    this.tokenStartIndex++;
+
+                    return Tuple.Create(result, hasLeadingBackslash);
+                }
+                else
+                {
+                    // Normal character, just skip over it - it will become part of the value as is.
+                    currentCharacterTokenRelativeIndex++;
+                }
+            }
+
+            throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnexpectedEndOfString);
+        }
+
+        /// <summary>
+        /// Asynchronously parses the null primitive value.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains null if successful; otherwise throws.</returns>
+        /// <remarks>Assumes that the current token position points to the 'n' character.</remarks>
+        private async Task<object> ParseNullPrimitiveValueAsync()
+        {
+            Debug.Assert(
+                this.tokenStartIndex < this.storedCharacterCount && this.characterBuffer[this.tokenStartIndex] == 'n',
+                "The method should only be called when the 'n' character is the start of the token.");
+
+            // We can call ParseName since we know the first character is 'n' and thus it won't be quoted.
+            string token = await this.ParseNameAsync().ConfigureAwait(false);
+
+            if (!string.Equals(token, JsonConstants.JsonNullLiteral, StringComparison.Ordinal))
+            {
+                throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnexpectedToken(token));
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Asynchronously parses the true or false primitive values.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains true or false if successful; otherwise throws.</returns>
+        /// <remarks>Assumes that the current token position points to the 't' or 'f' character.</remarks>
+        private async Task<object> ParseBooleanPrimitiveValueAsync()
+        {
+            Debug.Assert(
+                this.tokenStartIndex < this.storedCharacterCount && (this.characterBuffer[this.tokenStartIndex] == 't' || this.characterBuffer[this.tokenStartIndex] == 'f'),
+                "The method should only be called when the 't' or 'f' character is the start of the token.");
+
+            // We can call ParseName since we know the first character is 't' or 'f' and thus it won't be quoted.
+            string token = await this.ParseNameAsync().ConfigureAwait(false);
+
+            if (string.Equals(token, JsonConstants.JsonFalseLiteral, StringComparison.Ordinal))
+            {
+                return false;
+            }
+
+            if (string.Equals(token, JsonConstants.JsonTrueLiteral, StringComparison.Ordinal))
+            {
+                return true;
+            }
+
+            throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnexpectedToken(token));
+        }
+
+        /// <summary>
+        /// Asynchronously parses the number primitive values.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains an Int32, Decimal or Double value; otherwise throws.</returns>
+        /// <remarks>Assumes that the current token position points to the first character of the number, so either digit, dot or dash.</remarks>
+        private async Task<object> ParseNumberPrimitiveValueAsync()
+        {
+            Debug.Assert(
+                this.tokenStartIndex < this.storedCharacterCount && (this.characterBuffer[this.tokenStartIndex] == '.' || this.characterBuffer[this.tokenStartIndex] == '-' || Char.IsDigit(this.characterBuffer[this.tokenStartIndex])),
+                "The method should only be called when a digit, dash or dot character is the start of the token.");
+
+            // Walk over all characters which might belong to the number
+            // Skip the first one since we already verified it belongs to the number.
+            int currentCharacterTokenRelativeIndex = 1;
+            while ((this.tokenStartIndex + currentCharacterTokenRelativeIndex) < this.storedCharacterCount || await this.ReadInputAsync().ConfigureAwait(false))
+            {
+                char character = this.characterBuffer[this.tokenStartIndex + currentCharacterTokenRelativeIndex];
+                if (Char.IsDigit(character) ||
+                    (character == '.') ||
+                    (character == 'E') ||
+                    (character == 'e') ||
+                    (character == '-') ||
+                    (character == '+'))
+                {
+                    currentCharacterTokenRelativeIndex++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            // We now have all the characters which belong to the number, consume it into a string.
+            string numberString = this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+            double doubleValue;
+            int intValue;
+            decimal decimalValue;
+
+            // We will first try and convert the value to Int32. If it succeeds, use that.
+            // And then, we will try Decimal, since it will lose precision while expected type is specified.
+            // Otherwise, we will try and convert the value into a double.
+            if (Int32.TryParse(numberString, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out intValue))
+            {
+                return intValue;
+            }
+
+            // if it is not Ieee754Compatible, decimal will be parsed before double to keep precision
+            if (!isIeee754Compatible && Decimal.TryParse(numberString, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out decimalValue))
+            {
+                return decimalValue;
+            }
+
+            if (Double.TryParse(numberString, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out doubleValue))
+            {
+                return doubleValue;
+            }
+
+            throw JsonReaderExtensions.CreateException(Strings.JsonReader_InvalidNumberFormat(numberString));
+        }
+
+        /// <summary>
+        /// Asynchronously parses a name token.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains the name token value.</returns>
+        /// <remarks>Name tokens are (for backward compat reasons) either
+        /// - string value quoted with double quotes.
+        /// - string value quoted with single quotes.
+        /// - sequence of letters, digits, underscores and dollar signs (without quoted and in any order).</remarks>
+        private async Task<string> ParseNameAsync()
+        {
+            Debug.Assert(this.tokenStartIndex < this.storedCharacterCount, "Must have at least one character available.");
+
+            char firstCharacter = this.characterBuffer[this.tokenStartIndex];
+            if ((firstCharacter == '"') || (firstCharacter == '\''))
+            {
+                var parseResult = await this.ParseStringPrimitiveValueAsync()
+                    .ConfigureAwait(false);
+                return parseResult.Item1;
+            }
+
+            int currentCharacterTokenRelativeIndex = 0;
+            do
+            {
+                Debug.Assert(this.tokenStartIndex < this.storedCharacterCount, "Must have at least one character available.");
+
+                char character = this.characterBuffer[this.tokenStartIndex + currentCharacterTokenRelativeIndex];
+
+                // COMPAT 46: JSON property names don't require quotes and they allow any letter, digit, underscore or dollar sign in them.
+                if (IsCharacterAllowedInPropertyName(character))
+                {
+                    currentCharacterTokenRelativeIndex++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            while ((this.tokenStartIndex + currentCharacterTokenRelativeIndex) < this.storedCharacterCount || await this.ReadInputAsync().ConfigureAwait(false));
+
+            return this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+        }
+
+        /// <summary>
+        /// Asynchronously reads bytes from the current string value.
+        /// </summary>
+        /// <param name="chars">The character buffer to populate</param>
+        /// <param name="offset">The number of characters offset into the buffer to read</param>
+        /// <param name="maxLength">The maximum number of characters to read into the buffer</param>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains the number of characters read.</returns>
+        /// <remarks>
+        /// Assumes that the current token position points to the opening quote.
+        /// Note that the string parsing can never end with EndOfInput, since we're already seen the quote.
+        /// So it can either return a string successfully or fail.</remarks>
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Splitting the function would make it hard to understand.")]
+        private async Task<int> ReadCharsAsync(char[] chars, int offset, int maxLength)
+        {
+            if (!readingStream)
+            {
+                return 0;
+            }
+
+            int charsRead = 0;
+
+            while (charsRead < maxLength && (this.tokenStartIndex < this.storedCharacterCount || await this.ReadInputAsync().ConfigureAwait(false)))
+            {
+                char character = this.characterBuffer[this.tokenStartIndex];
+                bool advance = true;
+
+                if (character == GetClosingQuoteCharacter(this.streamOpeningQuoteCharacter) && --this.balancedQuoteCount < 1)
+                {
+                    if (character != '"')
+                    {
+                        // The character is part of the JSON stream; copy it to the output buffer
+                        chars[charsRead + offset] = character;
+                        charsRead++;
+                        this.scopes.Pop();
+                    }
+
+                    // Consume the closing quote character.
+                    this.tokenStartIndex++;
+                    readingStream = false;
+                    this.scopes.Peek().ValueCount++;
+
+                    // move to next node
+                    await this.ReadAsync().ConfigureAwait(false);
+                    return charsRead;
+                }
+
+                if (character == this.streamOpeningQuoteCharacter)
+                {
+                    this.balancedQuoteCount++;
+                }
+
+                if (character == '\\')
+                {
+                    // Consume the escape
+                    this.tokenStartIndex++;
+                    if (!await this.EnsureAvailableCharactersAsync(1).ConfigureAwait(false))
+                    {
+                        throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnrecognizedEscapeSequence("\\uXXXX"));
+                    }
+
+                    character = this.characterBuffer[this.tokenStartIndex];
+
+                    switch (character)
+                    {
+                        case 'b':
+                            character = '\b';
+                            break;
+                        case 'f':
+                            character = '\f';
+                            break;
+                        case 'n':
+                            character = '\n';
+                            break;
+                        case 'r':
+                            character = '\r';
+                            break;
+                        case 't':
+                            character = '\t';
+                            break;
+                        case '\\':
+                        case '\"':
+                        case '\'':
+                        case '/':
+                            // Use the (now unescaped) character from reader;
+                            break;
+                        case 'u':
+
+                            // Consume the "u"
+                            tokenStartIndex++;
+
+                            // We need 4 hex characters
+                            if (!await this.EnsureAvailableCharactersAsync(4).ConfigureAwait(false))
+                            {
+                                throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnrecognizedEscapeSequence("\\uXXXX"));
+                            }
+
+                            int characterValue = ParseUnicodeHexValue();
+                            character = (char)characterValue;
+
+                            // We are already positioned on the next character, so don't advance at the end
+                            advance = false;
+                            break;
+                        default:
+                            throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnrecognizedEscapeSequence("\\" + character));
+                    }
+                }
+
+                chars[charsRead + offset] = character;
+                charsRead++;
+
+                if (advance)
+                {
+                    this.tokenStartIndex++;
+                }
+            }
+
+            // we reached the end of the file without finding a closing quote character
+            if (charsRead < maxLength)
+            {
+                throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnexpectedEndOfString);
+            }
+
+            return charsRead;
+        }
+
+        /// <summary>
+        /// Asynchronously skips all whitespace characters in the input.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains true if a non-whitespace character was found,
+        /// in which case the <see cref="tokenStartIndex"/> is pointing at that character;
+        /// otherwise false if there are no non-whitespace characters left in the input.</returns>
+#if NETSTANDARD2_0
+        private async ValueTask<bool> SkipWhitespacesAsync()
+#else
+        private async Task<bool> SkipWhitespacesAsync()
+#endif
+        {
+            do
+            {
+                for (; this.tokenStartIndex < this.storedCharacterCount; this.tokenStartIndex++)
+                {
+                    if (!IsWhitespaceCharacter(this.characterBuffer[this.tokenStartIndex]))
+                    {
+                        return true;
+                    }
+                }
+            }
+            while (await this.ReadInputAsync().ConfigureAwait(false));
+
+            return false;
+        }
+
+        /// <summary>
+        /// Asynchronously ensures that a specified number of characters after the token start is available in the buffer.
+        /// </summary>
+        /// <param name="characterCountAfterTokenStart">The number of character after the token to make available.</param>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains true if at least the required number of characters is available; 
+        /// otherwise false if end of input was reached.</returns>
+#if NETSTANDARD2_0
+        private async ValueTask<bool> EnsureAvailableCharactersAsync(int characterCountAfterTokenStart)
+#else
+        private async Task<bool> EnsureAvailableCharactersAsync(int characterCountAfterTokenStart)
+#endif
+        {
+            while (this.tokenStartIndex + characterCountAfterTokenStart > this.storedCharacterCount)
+            {
+                if (!await this.ReadInputAsync().ConfigureAwait(false))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Asynchronously reads more characters from the input asynchronously.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains true if more characters are available;
+        /// otherwise false if end of input was reached.</returns>
+        /// <remarks>This may move characters in the <see cref="characterBuffer"/>, so after this is called
+        /// all indices to the <see cref="characterBuffer"/> are invalid except for <see cref="tokenStartIndex"/>.</remarks>
+#if NETSTANDARD2_0
+        private async ValueTask<bool> ReadInputAsync()
+#else
+        private async Task<bool> ReadInputAsync()
+#endif
+        {
+            Debug.Assert(this.tokenStartIndex >= 0 && this.tokenStartIndex <= this.storedCharacterCount, "The token start is out of stored characters range.");
+
+            if (this.endOfInputReached)
+            {
+                return false;
+            }
+
+            this.CopyInputToBuffer();
+
+            // Read more characters from the input.
+            // Use the Read method which returns any character as soon as it's available
+            // we don't want to wait for the entire buffer to fill if the input doesn't have
+            // the characters ready.
+            int readCount = await this.reader.ReadAsync(
+                this.characterBuffer,
+                this.storedCharacterCount,
+                this.characterBuffer.Length - this.storedCharacterCount).ConfigureAwait(false);
+
+            if (readCount == 0)
+            {
+                // No more characters available, end of input.
+                this.endOfInputReached = true;
+                return false;
+            }
+
+            this.storedCharacterCount += readCount;
+            return true;
+        }
+
+        private void CopyInputToBuffer()
+        {
             // initialize the buffer
             if (this.characterBuffer == null)
             {
@@ -1316,25 +2267,35 @@ namespace Microsoft.OData.Json
             Debug.Assert(
                 this.storedCharacterCount < this.characterBuffer.Length,
                 "We should have more room in the buffer by now.");
+        }
 
-            // Read more characters from the input.
-            // Use the Read method which returns any character as soon as it's available
-            // we don't want to wait for the entire buffer to fill if the input doesn't have
-            // the characters ready.
-            int readCount = this.reader.Read(
-                this.characterBuffer,
-                this.storedCharacterCount,
-                this.characterBuffer.Length - this.storedCharacterCount);
-
-            if (readCount == 0)
+        /// <summary>
+        /// Parses a unicode hex value.
+        /// </summary>
+        /// <returns>32-bit signed integer equivalent.</returns>
+        private int ParseUnicodeHexValue()
+        {
+            string unicodeHexValue = this.ConsumeTokenToString(4);
+            int characterValue;
+            if (!Int32.TryParse(unicodeHexValue, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out characterValue))
             {
-                // No more characters available, end of input.
-                this.endOfInputReached = true;
-                return false;
+                throw JsonReaderExtensions.CreateException(Strings.JsonReader_UnrecognizedEscapeSequence("\\u" + unicodeHexValue));
             }
 
-            this.storedCharacterCount += readCount;
-            return true;
+            return characterValue;
+        }
+
+        /// <summary>
+        /// Determines if a given character is allowed in a JSON property name.
+        /// </summary>
+        /// <param name="character">The character to check.</param>
+        /// <returns>true if the character is allowed in a JSON property name; otherwise false.</returns>
+        private bool IsCharacterAllowedInPropertyName(char character)
+        {
+            return Char.IsLetterOrDigit(character) ||
+                character == '_' ||
+                character == '$' ||
+                (this.allowAnnotations && (character == '.' || character == '@'));
         }
 
         /// <summary>

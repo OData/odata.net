@@ -109,10 +109,10 @@ namespace Microsoft.Test.OData.Tests.Client
         [Fact]
         public void PrimitiveTypeInRequestUrlTest()
         {
-            const string stringOfCast = "cast(PersonId,'Edm.Byte')";
+            const string stringOfCast = "cast(PersonId,Edm.Byte)";
             var context = this.CreateContext().Context;
 
-            //GET http://jinfutanodata01:9090/AstoriaDefault635157546921762475/Person()?$filter=cast(cast(PersonId,'Edm.Byte'),'Edm.Int32')%20gt%200 HTTP/1.1
+            //GET http://jinfutanodata01:9090/AstoriaDefault635157546921762475/Person()?$filter=cast(cast(PersonId,Edm.Byte),Edm.Int32)%20gt%200 HTTP/1.1
             //all the IDs in [-10, 2] except 0 are counted in.
             var result = context.Person.Where(c => (Byte)c.PersonId > 0);
             var stringOfQuery = result.ToString();

@@ -57,7 +57,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
               "<edmx:Reference Uri=\"https://example.com/Org.OData.Authorization.V1.xml\">" +
                 "<edmx:Include Namespace=\"Org.OData.Authorization.V1\" Alias=\"Auth\">" +
-                  "<Annotation Term=\"Org.OData.Core.V1.LongDescription\" String=\"Include Description.\" />" +
+                  "<Annotation Term=\"Core.LongDescription\" String=\"Include Description.\" />" +
                 "</edmx:Include>" +
                 "<edmx:IncludeAnnotations TermNamespace=\"org.example.validation\" />" +
                 "<edmx:IncludeAnnotations TermNamespace=\"org.example.display\" Qualifier=\"Tablet\" />" +
@@ -66,7 +66,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 "<edmx:Include Namespace=\"Org.OData.Core.V1\" Alias=\"Core\" />" +
                 "<edmx:IncludeAnnotations TermNamespace=\"org.example.hcm\" TargetNamespace=\"com.example.Sales\" />" +
                 "<edmx:IncludeAnnotations TermNamespace=\"org.example.hcm\" Qualifier=\"Tablet\" TargetNamespace=\"com.example.Person\" />" +
-                "<Annotation Term=\"Org.OData.Core.V1.LongDescription\" String=\"EdmReference Description.\" />" +
+                "<Annotation Term=\"Core.LongDescription\" String=\"EdmReference Description.\" />" +
               "</edmx:Reference>" +
               "<edmx:DataServices />" +
             "</edmx:Edmx>");
@@ -80,7 +80,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         {
           ""$Namespace"": ""Org.OData.Authorization.V1"",
           ""$Alias"": ""Auth"",
-          ""@Org.OData.Core.V1.LongDescription"": ""Include Description.""
+          ""@Core.LongDescription"": ""Include Description.""
         }
       ],
       ""$IncludeAnnotations"": [
@@ -111,7 +111,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
           ""$TargetNamespace"": ""com.example.Person""
         }
       ],
-      ""@Org.OData.Core.V1.LongDescription"": ""EdmReference Description.""
+      ""@Core.LongDescription"": ""EdmReference Description.""
     }
   }
 }");
@@ -2772,6 +2772,86 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 Assert.Equal(expected, actual);
             }
 #endif
+        }
+
+        [Fact]
+        public void ShouldSubstituteFullyQualifiedNamespaceWithAliasIfAliasIsSet()
+        {
+            // Arrange
+            var stringTypeReference = new EdmStringTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), false);
+            var model = new EdmModel();
+            model.SetNamespaceAlias("Org.OData.Core.V1", "Core");
+            var function = new EdmFunction("test", "TestFunction", stringTypeReference);
+            var requiredParam = new EdmOperationParameter(function, "requiredParam", stringTypeReference);
+            var optionalParam = new EdmOptionalParameter(function, "optionalParam", stringTypeReference, null);
+            var optionalParamWithDefault = new EdmOptionalParameter(function, "optionalParamWithDefault", stringTypeReference, "Smith");
+            function.AddParameter(requiredParam);
+            function.AddParameter(optionalParam);
+            function.AddParameter(optionalParamWithDefault);
+            model.AddElement(function);
+            model.AddEntityContainer("test", "Default").AddFunctionImport("TestFunction", function);
+
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+              "<edmx:DataServices>" +
+                "<Schema Namespace=\"test\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                  "<Function Name=\"TestFunction\">" +
+                    "<Parameter Name=\"requiredParam\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                    "<Parameter Name=\"optionalParam\" Type=\"Edm.String\" Nullable=\"false\">" +
+                        "<Annotation Term=\"Core.OptionalParameter\" />" +
+                    "</Parameter>" +
+                    "<Parameter Name=\"optionalParamWithDefault\" Type=\"Edm.String\" Nullable=\"false\">" +
+                        "<Annotation Term=\"Core.OptionalParameter\">" +
+                          "<Record>" +
+                            "<PropertyValue Property=\"DefaultValue\" String=\"Smith\" />" +
+                          "</Record>" +
+                        "</Annotation>" +
+                    "</Parameter>" +
+                    "<ReturnType Type=\"Edm.String\" Nullable=\"false\" />" +
+                  "</Function>" +
+                  "<EntityContainer Name=\"Default\">" +
+                    "<FunctionImport Name=\"TestFunction\" Function=\"test.TestFunction\" />" +
+                  "</EntityContainer>" +
+                "</Schema>" +
+              "</edmx:DataServices>" +
+            "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""test.Default"",
+  ""test"": {
+    ""TestFunction"": [
+      {
+        ""$Kind"": ""Function"",
+        ""$Parameter"": [
+          {
+            ""$Name"": ""requiredParam""
+          },
+          {
+            ""$Name"": ""optionalParam"",
+            ""@Core.OptionalParameter"": {}
+          },
+          {
+            ""$Name"": ""optionalParamWithDefault"",
+            ""@Core.OptionalParameter"": {
+              ""DefaultValue"": ""Smith""
+            }
+          }
+        ],
+        ""$ReturnType"": {}
+      }
+    ],
+    ""Default"": {
+      ""$Kind"": ""EntityContainer"",
+      ""TestFunction"": {
+        ""$Kind"": ""FunctionImport"",
+        ""$Function"": ""test.TestFunction""
+      }
+    }
+  }
+}");
         }
     }
 }

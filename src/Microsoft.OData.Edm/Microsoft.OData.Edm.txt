@@ -19,6 +19,7 @@ PathSegmentMustNotContainSlash=Path segments must not contain '/' character.
 Constructable_DependentPropertyCountMustMatchNumberOfPropertiesOnPrincipalType=The number of dependent properties must match the number of key properties on the principal entity type. '{0}' principal properties were provided, but {1} dependent properties were provided.
 EdmType_UnexpectedEdmType=Unexpected Edm type.
 NavigationPropertyBinding_PathIsNotValid=The navigation property binding path is not valid.
+MultipleMatchingPropertiesFound=More than one properties match the name '{0}' were found in type '{1}'.
 
 ; Evaluation messages
 Edm_Evaluator_NoTermTypeAnnotationOnType=Type '{0}' must have a single type annotation with term type '{1}'.

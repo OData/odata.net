@@ -25,7 +25,7 @@ namespace Microsoft.OData
 #if ORCAS
         [NonSerialized]
 #endif
-        private ICollection<ODataInstanceAnnotation> instanceAnnotations = new Collection<ODataInstanceAnnotation>();
+        private ICollection<ODataInstanceAnnotation> instanceAnnotations;
 
         /// <summary>
         /// The annotation for storing @odata.type.
@@ -38,7 +38,11 @@ namespace Microsoft.OData
         /// <returns>The custom instance annotations.</returns>
         internal ICollection<ODataInstanceAnnotation> GetInstanceAnnotations()
         {
-            Debug.Assert(this.instanceAnnotations != null, "this.instanceAnnotations != null");
+            if (this.instanceAnnotations == null)
+            {
+                this.instanceAnnotations = new List<ODataInstanceAnnotation>();
+            }
+
             return this.instanceAnnotations;
         }
 
