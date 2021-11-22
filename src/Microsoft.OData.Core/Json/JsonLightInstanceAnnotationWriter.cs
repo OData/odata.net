@@ -206,6 +206,10 @@ namespace Microsoft.OData
                     expectedType,
                     treatLikeOpenProperty,
                     this.valueSerializer.JsonLightOutputContext.DuplicatePropertyNameChecker);
+
+                // Reset the PropertyState Dictionary in the DuplicatePropertyNameChecker
+                this.valueSerializer.JsonLightOutputContext.DuplicatePropertyNameChecker.Reset();
+
                 return;
             }
 
