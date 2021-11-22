@@ -39,16 +39,21 @@ namespace Microsoft.OData.UriParser
         /// <returns>The resolved key list.</returns>
         public override IEnumerable<KeyValuePair<string, object>> ResolveKeys(IEdmEntityType type, IDictionary<string, string> namedValues, Func<IEdmTypeReference, string, object> convertFunc)
         {
-            IEnumerable<KeyValuePair<string, object>> convertedPairs;
-            try
+            IEnumerable<KeyValuePair<string, object>> convertedPairs = null;
+            string[] keyNames = type.DeclaredKey.Select(keyProperty => keyProperty.Name).ToArray();
+
+            if (namedValues.Keys.Count == keyNames.Length)
             {
-                convertedPairs = base.ResolveKeys(type, namedValues, convertFunc);
+                if (namedValues.Keys.All(keyProperty => keyNames.Contains(keyProperty, StringComparer.OrdinalIgnoreCase)))
+                {
+                    convertedPairs = base.ResolveKeys(type, namedValues, convertFunc);
+                }
             }
-            catch (ODataException)
+            else
             {
                 if (!TryResolveAlternateKeys(type, namedValues, convertFunc, out convertedPairs))
                 {
-                    throw;
+                    throw ExceptionUtil.CreateSyntaxError();
                 }
             }
 
