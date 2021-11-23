@@ -241,9 +241,7 @@ namespace Microsoft.OData.JsonLight
                 isReadingNestedPayload,
                 allowEmptyPayload);
 
-            //https://github.com/OData/odata.net/issues/2132
-            //Relative URIs for @oData.context are not supported #2132
-            //Concate the absoluteUri with the contextUri, when the contextUri is arelativeUri. 
+            //Concate the absoluteUri with the contextUri, when the contextUri is a relativeUri. 
             Uri contextUri;
             if (!Uri.TryCreate(contextUriAnnotationValue, UriKind.Absolute, out contextUri))
             {
