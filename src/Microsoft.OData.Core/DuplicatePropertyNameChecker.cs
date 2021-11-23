@@ -120,7 +120,10 @@ namespace Microsoft.OData
         /// </summary>
         public void Reset()
         {
-            propertyState.Clear();
+            if (propertyState.Count > 0)
+            {
+                propertyState.Clear();
+            }
         }
     }
 
