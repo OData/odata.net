@@ -56,7 +56,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.2" />
   </ItemGroup>-->
   
-  <ItemGroup Condition="'$(BuildingInsideVisualStudio)' == 'true' and '$(TargetFramework)' == 'netcoreapp1.1'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp1.1'">
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.2" />
   </ItemGroup>
   
@@ -70,7 +70,7 @@
     <ProjectReference Include="..\Microsoft.OData.TestCommon\Microsoft.OData.TestCommon.csproj" />
   </ItemGroup>
   
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(TargetFramework)' == 'net452'">
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(BuildingInsideVisualStudio)' == 'true' and '$(TargetFramework)' == 'net452'">
     <Exec Command="&quot;$([System.Environment]::GetFolderPath(SpecialFolder.ProgramFilesX86))\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\sn.exe&quot; /Vr $(OutputPath)\Microsoft.Spatial.dll" />
   </Target>
 </Project>
