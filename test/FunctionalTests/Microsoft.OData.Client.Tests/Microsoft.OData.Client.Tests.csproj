@@ -35,15 +35,9 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.0" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net452'">
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.2" />
-  </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
-    <PackageReference Include="xunit.assert" Version="2.4.1" />
-    <PackageReference Include="xunit.core" Version="2.4.1" />
     <PackageReference Include="xunit.extensibility.core" Version="2.4.1" />
     <PackageReference Include="xunit.extensibility.execution" Version="2.4.1" />
   </ItemGroup>
@@ -55,4 +49,8 @@
     <ProjectReference Include="..\..\..\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />
 
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(TargetFramework)' == 'net452'">
+    <Exec Command="&quot;$([System.Environment]::GetFolderPath(SpecialFolder.ProgramFilesX86))\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\sn.exe&quot; /Vr $(OutputPath)\Microsoft.OData.Client.dll" />
+  </Target>
 </Project>
