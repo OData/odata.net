@@ -1291,7 +1291,8 @@ namespace Microsoft.OData.JsonLight
         /// <returns>The newly created JSON Light  nested resource info scope.</returns>
         protected override NestedResourceInfoScope CreateNestedResourceInfoScope(WriterState writerState, ODataNestedResourceInfo navLink, IEdmNavigationSource navigationSource, IEdmType itemType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
         {
-            return new JsonLightNestedResourceInfoScope(writerState, navLink, navigationSource, itemType, skipWriting, selectedProperties, odataUri);
+            Debug.Assert(this.CurrentScope != null, "Creating a nested resource info scope with a null parent scope.");
+            return new JsonLightNestedResourceInfoScope(writerState, navLink, navigationSource, itemType, skipWriting, selectedProperties, odataUri, this.CurrentScope);
         }
 
         /// <summary>
@@ -3577,8 +3578,9 @@ namespace Microsoft.OData.JsonLight
             /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            internal JsonLightNestedResourceInfoScope(WriterState writerState, ODataNestedResourceInfo navLink, IEdmNavigationSource navigationSource, IEdmType itemType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
-                : base(writerState, navLink, navigationSource, itemType, skipWriting, selectedProperties, odataUri)
+            /// <param name="parentScope">The scope of the parent.</param>
+            internal JsonLightNestedResourceInfoScope(WriterState writerState, ODataNestedResourceInfo navLink, IEdmNavigationSource navigationSource, IEdmType itemType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri, Scope parentScope)
+                : base(writerState, navLink, navigationSource, itemType, skipWriting, selectedProperties, odataUri, parentScope)
             {
             }
 
@@ -3621,7 +3623,7 @@ namespace Microsoft.OData.JsonLight
             /// <returns>The cloned nested resource info scope with the specified writer state.</returns>
             internal override NestedResourceInfoScope Clone(WriterState newWriterState)
             {
-                return new JsonLightNestedResourceInfoScope(newWriterState, (ODataNestedResourceInfo)this.Item, this.NavigationSource, this.ItemType, this.SkipWriting, this.SelectedProperties, this.ODataUri)
+                return new JsonLightNestedResourceInfoScope(newWriterState, (ODataNestedResourceInfo)this.Item, this.NavigationSource, this.ItemType, this.SkipWriting, this.SelectedProperties, this.ODataUri, this.parentScope)
                 {
                     EntityReferenceLinkWritten = this.entityReferenceLinkWritten,
                     ResourceSetWritten = this.resourceSetWritten,
