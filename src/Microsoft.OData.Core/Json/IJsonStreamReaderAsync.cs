@@ -28,5 +28,12 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains a <see cref="TextReader"/> for reading the string value.</returns>
         Task<TextReader> CreateTextReaderAsync();
+
+        /// <summary>
+        /// Asynchronously checks whether or not the current value can be streamed.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.
+        /// true if the current value can be streamed; otherwise false.</returns>
+        Task<bool> CanStreamAsync();
     }
 }
