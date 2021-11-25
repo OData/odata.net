@@ -40,7 +40,7 @@ namespace Microsoft.OData.UriParser
         public override IEnumerable<KeyValuePair<string, object>> ResolveKeys(IEdmEntityType type, IDictionary<string, string> namedValues, Func<IEdmTypeReference, string, object> convertFunc)
         {
             IEnumerable<KeyValuePair<string, object>> convertedPairs;
-            string[] keyNames = type.DeclaredKey.Select(keyProperty => keyProperty.Name).ToArray();
+            string[] keyNames = type.Key().Select(keyProperty => keyProperty.Name).ToArray();
 
             if (namedValues.Keys.Count == keyNames.Length)
             {
