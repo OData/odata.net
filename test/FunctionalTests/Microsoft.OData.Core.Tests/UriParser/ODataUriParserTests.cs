@@ -427,7 +427,7 @@ namespace Microsoft.OData.Tests.UriParser
                 Resolver = new AlternateKeysODataUriResolver(HardCodedTestModel.TestModel)
             }.ParsePath();
 
-            action.Throws<ODataException>(ODataErrorStrings.BadRequest_KeyCountMismatch(HardCodedTestModel.GetPersonType().FullTypeName()));
+            action.Throws<ODataException>(ODataErrorStrings.BadRequest_KeyOrAlternateKeyMismatch(HardCodedTestModel.GetPersonType().FullTypeName()));
         }
 
         [Fact]
