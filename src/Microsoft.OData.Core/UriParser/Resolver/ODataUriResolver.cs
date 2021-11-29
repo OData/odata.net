@@ -400,17 +400,12 @@ namespace Microsoft.OData.UriParser
             resolvedKeys = null;
             var convertedPairs = new Dictionary<string, object>(StringComparer.Ordinal);
 
-            // Throw an error if key size from url doesn't match that from model.
-            // Other derived ODataUriResolver intended for alternative key resolution, such as the built in AlternateKeysODataUriResolver,
-            // should override this ResolveKeys method.
             IEnumerable<IEdmStructuralProperty> keys = type.Key();
-            if (keys.Count() != namedValues.Count)
-            {
-                return false;
-            }
+            int keyCount = 0;
 
             foreach (IEdmStructuralProperty property in keys)
             {
+                keyCount++;
                 string valueText;
 
                 if (!namedValues.TryGetValue(property.Name, out valueText))
@@ -452,6 +447,14 @@ namespace Microsoft.OData.UriParser
                 }
 
                 convertedPairs[property.Name] = convertedValue;
+            }
+
+            // Fail if key size from url doesn't match that from model.
+            // Other derived ODataUriResolver intended for alternative key resolution, such as the built in AlternateKeysODataUriResolver,
+            // should override the ResolveKeys method.
+            if (keyCount != namedValues.Count)
+            {
+                return false;
             }
 
             resolvedKeys = convertedPairs;
