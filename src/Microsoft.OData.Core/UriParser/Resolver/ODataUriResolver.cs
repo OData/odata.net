@@ -378,6 +378,26 @@ namespace Microsoft.OData.UriParser
         /// <returns>The resolved key list.</returns>
         public virtual IEnumerable<KeyValuePair<string, object>> ResolveKeys(IEdmEntityType type, IDictionary<string, string> namedValues, Func<IEdmTypeReference, string, object> convertFunc)
         {
+            if (!TryResolveKeys(type, namedValues, convertFunc, out IEnumerable<KeyValuePair<string, object>> resolvedKeys))
+            {
+                throw ExceptionUtil.CreateBadRequestError(Strings.BadRequest_KeyMismatch(type.FullName()));
+            }
+
+            return resolvedKeys;
+        }
+
+        /// <summary>
+        /// Attempts to resolve keys for a certain entity set.
+        /// This function would be called when key is specified as name value pairs. E.g. EntitySet(ID='key')
+        /// </summary>
+        /// <param name="type">The type for the current EntitySet</param>
+        /// <param name="namedValues">The dictionary of name-value pairs.</param>
+        /// <param name="convertFunc">The converter function to be used for value conversion.</param>
+        /// <param name="resolvedKeys">If the resolution was successful, this will contain the list of resolved keys.</param>
+        /// <returns>True if the key resolution was successful, otherwise false.</returns>
+        internal bool TryResolveKeys(IEdmEntityType type, IDictionary<string, string> namedValues, Func<IEdmTypeReference, string, object> convertFunc, out IEnumerable<KeyValuePair<string, object>> resolvedKeys)
+        {
+            resolvedKeys = null;
             var convertedPairs = new Dictionary<string, object>(StringComparer.Ordinal);
 
             // Throw an error if key size from url doesn't match that from model.
@@ -386,7 +406,7 @@ namespace Microsoft.OData.UriParser
             IEnumerable<IEdmStructuralProperty> keys = type.Key();
             if (keys.Count() != namedValues.Count)
             {
-                throw ExceptionUtil.CreateBadRequestError(Strings.BadRequest_KeyCountMismatch(type.FullName()));
+                return false;
             }
 
             foreach (IEdmStructuralProperty property in keys)
@@ -405,7 +425,7 @@ namespace Microsoft.OData.UriParser
                         {
                             if (keyFound)
                             {
-                                throw new ODataException(Strings.UriParserMetadata_MultipleMatchingKeysFound(property.Name));
+                                return false;
                             }
 
                             caseInsensitiveKey = key;
@@ -414,27 +434,28 @@ namespace Microsoft.OData.UriParser
 
                         if (!keyFound)
                         {
-                            throw ExceptionUtil.CreateSyntaxError();
+                            return false;
                         }
 
                         valueText = namedValues[caseInsensitiveKey];
                     }
                     else
                     {
-                        throw ExceptionUtil.CreateSyntaxError();
+                        return false;
                     }
                 }
 
                 object convertedValue = convertFunc(property.Type, valueText);
                 if (convertedValue == null)
                 {
-                    throw ExceptionUtil.CreateSyntaxError();
+                    return false;
                 }
 
                 convertedPairs[property.Name] = convertedValue;
             }
 
-            return convertedPairs;
+            resolvedKeys = convertedPairs;
+            return true;
         }
 
         /// <summary>

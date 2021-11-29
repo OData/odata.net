@@ -6832,7 +6832,15 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The number or names of keys specified in the URI do not match the declared or alternate key properties for the resource '{0}'."
+        /// A string like "The key in the request URI is not valid for resource '{0}'. Ensure that the names and number of key properties match the declared key of the resource '{0}'."
+        /// </summary>
+        internal static string BadRequest_KeyMismatch(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.BadRequest_KeyMismatch, p0);
+        }
+
+        /// <summary>
+        /// A string like "The key in the request URI is not valid for resource '{0}'. Ensure that the names and number of key properties match the declared or alternate key properties for the resource '{0}'."
         /// </summary>
         internal static string BadRequest_KeyOrAlternateKeyMismatch(object p0)
         {
