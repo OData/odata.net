@@ -450,8 +450,8 @@ namespace Microsoft.OData.UriParser
             }
 
             // Fail if key size from url doesn't match that from model.
-            // Other derived ODataUriResolver intended for alternative key resolution, such as the built in AlternateKeysODataUriResolver,
-            // should override the ResolveKeys method.
+            // Classes that extend ODataUriResolver to provide alternative key-resolution logic
+            // should override the ResolveKeys method (e.g. the built-in AlternateKeysODataUriResolver)
             if (keyCount != namedValues.Count)
             {
                 return false;
