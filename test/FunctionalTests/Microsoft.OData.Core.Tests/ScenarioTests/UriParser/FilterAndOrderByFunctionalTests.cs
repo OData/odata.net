@@ -723,7 +723,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var result = ParseFilter("day(null)", HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
 
             var typeReference = result.Expression.ShouldBeSingleValueFunctionCallQueryNode("day")
-                .Parameters.Single().ShouldBeConstantQueryNode<object>(null).TypeReference;
+                .Parameters.Single().ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.DateTimeOffset)
+                .Source.ShouldBeConstantQueryNode<object>(null).TypeReference;
             Assert.Null(typeReference);
         }
 
