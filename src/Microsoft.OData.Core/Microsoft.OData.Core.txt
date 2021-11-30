@@ -900,6 +900,7 @@ RequestUriProcessor_InvalidTypeIdentifier_UnrelatedType=The type '{0}' specified
 OpenNavigationPropertiesNotSupportedOnOpenTypes=Open navigation properties are not supported on OpenTypes. Property name: '{0}'.
 BadRequest_ResourceCanBeCrossReferencedOnlyForBindOperation=Error processing request stream. In batch mode, a resource can be cross-referenced only for bind/unbind operations.
 DataServiceConfiguration_ResponseVersionIsBiggerThanProtocolVersion=The response requires that version {0} of the protocol be used, but the MaxProtocolVersion of the data service is set to {1}.
+BadRequest_KeyCountMismatch=The number of keys specified in the URI does not match number of key properties for the resource '{0}'.
 BadRequest_KeyMismatch=The key in the request URI is not valid for resource '{0}'. Ensure that the names and number of key properties match the declared key of the resource '{0}'.
 BadRequest_KeyOrAlternateKeyMismatch=The key in the request URI is not valid for resource '{0}'. Ensure that the names and number of key properties match the declared or alternate key properties for the resource '{0}'.
 RequestUriProcessor_KeysMustBeNamed=Segments with multiple key values must specify them in 'name=value' form.
