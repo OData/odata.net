@@ -1507,7 +1507,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void KeyOfIncompatibleTypeDefinitionShouldFail()
         {
             Action action = () => PathFunctionalTestsUtil.RunParsePath("Pet6Set(ID='abc')");
-            action.Throws<ODataException>(ODataErrorStrings.RequestUriProcessor_SyntaxError);
+            action.Throws<ODataException>(ODataErrorStrings.BadRequest_KeyMismatch(HardCodedTestModel.GetPet6Type().FullTypeName()));
         }
 
         [Fact]
