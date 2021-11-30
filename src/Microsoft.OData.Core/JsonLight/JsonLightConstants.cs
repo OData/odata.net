@@ -116,5 +116,20 @@ namespace Microsoft.OData.JsonLight
 
         /// <summary>The simplified Removed property name.</summary>
         internal const string SimplifiedODataRemovedPropertyName = "@removed";
+
+        /// <summary>The prefixed OData Context property name.</summary>
+        internal const string PrefixedODataContextPropertyName = "@odata.context";
+
+        /// <summary>The prefixed OData Type property name.</summary>
+        internal const string PrefixedODataTypePropertyName = "@odata.type";
+
+        /// <summary>The prefixed OData Id property name.</summary>
+        internal const string PrefixedODataIdPropertyName = "@odata.id";
+
+        /// <summary>The prefixed OData Null property name.</summary>
+        internal const string PrefixedODataNullPropertyName = "@odata.null";
+
+        /// <summary>The prefixed OData Removed property name.</summary>
+        internal const string PrefixedODataRemovedPropertyName = "@odata.removed";
     }
 }

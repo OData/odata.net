@@ -1886,7 +1886,7 @@ namespace Microsoft.OData.JsonLight
             ODataDeletedResource deletedResource = null;
             if (this.ReadingDelta && (resourceKind == ODataDeltaKind.Resource || resourceKind == ODataDeltaKind.DeletedEntry))
             {
-                deletedResource = this.jsonLightResourceDeserializer.IsDeletedResource();
+                deletedResource = this.jsonLightResourceDeserializer.ReadDeletedResource();
                 if (deletedResource != null)
                 {
                     resourceKind = ODataDeltaKind.DeletedEntry;
