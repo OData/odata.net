@@ -780,7 +780,6 @@ namespace Microsoft.OData
         internal const string OpenNavigationPropertiesNotSupportedOnOpenTypes = "OpenNavigationPropertiesNotSupportedOnOpenTypes";
         internal const string BadRequest_ResourceCanBeCrossReferencedOnlyForBindOperation = "BadRequest_ResourceCanBeCrossReferencedOnlyForBindOperation";
         internal const string DataServiceConfiguration_ResponseVersionIsBiggerThanProtocolVersion = "DataServiceConfiguration_ResponseVersionIsBiggerThanProtocolVersion";
-        internal const string BadRequest_KeyCountMismatch = "BadRequest_KeyCountMismatch";
         internal const string BadRequest_KeyMismatch = "BadRequest_KeyMismatch";
         internal const string BadRequest_KeyOrAlternateKeyMismatch = "BadRequest_KeyOrAlternateKeyMismatch";
         internal const string RequestUriProcessor_KeysMustBeNamed = "RequestUriProcessor_KeysMustBeNamed";

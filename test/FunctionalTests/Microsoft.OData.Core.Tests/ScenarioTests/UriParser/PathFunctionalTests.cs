@@ -814,7 +814,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void IfKeyIsExplicitlySetToValueOfImplicitKeyThrowError()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("People(32)/MyLions(ID1=64)", ODataErrorStrings.BadRequest_KeyCountMismatch(HardCodedTestModel.GetLionType().FullName()));
+            PathFunctionalTestsUtil.RunParseErrorPath("People(32)/MyLions(ID1=64)", ODataErrorStrings.BadRequest_KeyMismatch(HardCodedTestModel.GetLionType().FullName()));
         }
 
         [Fact]
