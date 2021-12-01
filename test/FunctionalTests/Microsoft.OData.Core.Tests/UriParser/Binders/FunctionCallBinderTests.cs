@@ -51,7 +51,8 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var arguments = new List<QueryToken>() { new LiteralToken("ignored") };
             var token = new FunctionCallToken("year", arguments);
             var result = functionCallBinder.BindFunctionCall(token);
-            Assert.Null(result.ShouldBeSingleValueFunctionCallQueryNode("year").Parameters.Single().ShouldBeConstantQueryNode<object>(null).TypeReference);
+            var argumentNode = result.ShouldBeSingleValueFunctionCallQueryNode("year").Parameters.Single();
+            Assert.Null(argumentNode.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.DateTimeOffset).Source.ShouldBeConstantQueryNode<object>(null).TypeReference);
         }
 
         [Fact]
@@ -61,10 +62,10 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var arguments = new List<QueryToken>() { new LiteralToken("ignored"), new LiteralToken("ignored") };
             var token = new FunctionCallToken("substring", arguments);
             var result = functionCallBinder.BindFunctionCall(token);
-            var functionCallNode = result.ShouldBeSingleValueFunctionCallQueryNode("substring");
-            Assert.Equal(2, functionCallNode.Parameters.Count());
-            Assert.Null(functionCallNode.Parameters.First().ShouldBeConstantQueryNode<object>(null).TypeReference);
-            Assert.Null(functionCallNode.Parameters.Last().ShouldBeConstantQueryNode<object>(null).TypeReference);
+            var parameters = result.ShouldBeSingleValueFunctionCallQueryNode("substring").Parameters;
+            Assert.Equal(2, parameters.Count());
+            Assert.Null(parameters.First().ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.String).Source.ShouldBeConstantQueryNode<object>(null).TypeReference);
+            Assert.Null(parameters.Last().ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Int32).Source.ShouldBeConstantQueryNode<object>(null).TypeReference);
         }
 
         [Fact]
