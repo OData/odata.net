@@ -15,7 +15,7 @@ namespace ResultsComparer.Bdn
     /// <summary>
     /// Results comparer for BenchmarkDotNet full JSON reports.
     /// </summary>
-    class BdnComparer : IResultsComparer
+    internal class BdnComparer : IResultsComparer
     {
         private const string FullBdnJsonFileExtension = "full.json";
 
@@ -29,11 +29,11 @@ namespace ResultsComparer.Bdn
         {
             if (!Threshold.TryParse(options.StatisticalTestThreshold, out var testThreshold))
             {
-                throw new Exception($"Invalid Threshold {options.StatisticalTestThreshold}. Examples: 5%, 10ms, 100ns, 1s.");
+                throw new Exception($"Invalid statistical test threshold {options.StatisticalTestThreshold}. Examples: 5%, 10ms, 100ns, 1s.");
             }
             if (!Threshold.TryParse(options.NoiseThreshold, out var noiseThreshold))
             {
-                throw new Exception($"Invalid Noise Threshold {options.NoiseThreshold}. Examples: 0.3ns 1ns.");
+                throw new Exception($"Invalid noise threshold {options.NoiseThreshold}. Examples: 0.3ns 1ns.");
             }
 
             var notSame = GetNotSameResults(basePath, diffPath, options, testThreshold, noiseThreshold).ToArray();

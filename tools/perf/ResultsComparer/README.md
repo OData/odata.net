@@ -7,7 +7,7 @@ TODO:
 - [ ] Support profiler reports
 - [ ] Support comparing multiple files to summarize trends over time
 
-This tool is adapated from the results comparer in the [dotnet performance tools](https://github.com/dotnet/performance/tree/main/src/tools/ResultsComparer)
+This tool is adapted from the results comparer in the [dotnet performance tools](https://github.com/dotnet/performance/tree/main/src/tools/ResultsComparer)
 
 This simple tool allows for easy comparison of provided benchmark results.
 
