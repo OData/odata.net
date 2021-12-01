@@ -24,8 +24,6 @@ namespace ResultsComparer
 {
     public class Program
     {
-        private const string FullBdnJsonFileExtension = "full.json";
-
         public static void Main(string[] args)
         {
             // we print a lot of numbers here and we want to make it always in invariant way
