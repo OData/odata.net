@@ -1,7 +1,13 @@
+//---------------------------------------------------------------------
+// <copyright file="BdnModel.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ResultsComparer.Bdn // generated with http://json2csharp.com/#
+namespace ResultsComparer.Bdn
 {
     public class Statistics
     {
