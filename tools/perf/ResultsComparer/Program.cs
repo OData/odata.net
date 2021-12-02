@@ -66,7 +66,9 @@ namespace ResultsComparer
                 Console.Error.WriteLine($"Error: {ex.Message}");
             }
         }
+
         private static void PrintSummary(ComparerResult[] notSame)
+
         {
             var better = notSame.Where(result => result.Conclusion == EquivalenceTestConclusion.Faster);
             var worse = notSame.Where(result => result.Conclusion == EquivalenceTestConclusion.Slower);
