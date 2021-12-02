@@ -62,7 +62,7 @@ namespace ResultsComparer.Bdn
                 var baseValues = baseResult.GetOriginalValues();
                 var diffValues = diffResult.GetOriginalValues();
 
-                var userTresholdResult = StatisticalTestHelper.CalculateTost(MannWhitneyTest.Instance, baseValues, diffValues, testThreshold);
+                var userThresholdResult = StatisticalTestHelper.CalculateTost(MannWhitneyTest.Instance, baseValues, diffValues, testThreshold);
                 if (userTresholdResult.Conclusion == EquivalenceTestConclusion.Same)
                     continue;
 
