@@ -31,6 +31,7 @@ namespace ResultsComparer.Bdn
             {
                 throw new Exception($"Invalid statistical test threshold {options.StatisticalTestThreshold}. Examples: 5%, 10ms, 100ns, 1s.");
             }
+
             if (!Threshold.TryParse(options.NoiseThreshold, out var noiseThreshold))
             {
                 throw new Exception($"Invalid noise threshold {options.NoiseThreshold}. Examples: 0.3ns 1ns.");
