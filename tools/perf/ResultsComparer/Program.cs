@@ -1,21 +1,12 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
-using System.Xml;
 using Perfolizer.Mathematics.Multimodality;
 using Perfolizer.Mathematics.SignificanceTesting;
-using Perfolizer.Mathematics.Thresholds;
 using CommandLine;
 using MarkdownLog;
-using Newtonsoft.Json;
 using ResultsComparer.Core;
 using ResultsComparer.Bdn;
 using System.Threading.Tasks;
@@ -38,7 +29,7 @@ namespace ResultsComparer
 
             try
             {
-                ComparerOptions options = new ComparerOptions
+                ComparerOptions options = new()
                 {
                     StatisticalTestThreshold = args.StatisticalTestThreshold,
                     NoiseThreshold = args.NoiseThreshold,
@@ -47,14 +38,14 @@ namespace ResultsComparer
                     Filters = args.Filters
                 };
 
-                var results = await comparer.CompareResults(args.BasePath, args.DiffPath, options);
+                ComparerResults results = await comparer.CompareResults(args.BasePath, args.DiffPath, options);
 
                 if (results.NoDiff)
                 {
                     return;
                 }
 
-                var resultsArray = results.Results.ToArray();
+                ComparerResult[] resultsArray = results.Results.ToArray();
                 PrintSummary(resultsArray);
 
                 PrintTable(resultsArray, EquivalenceTestConclusion.Slower, args);
@@ -70,15 +61,18 @@ namespace ResultsComparer
         private static void PrintSummary(ComparerResult[] notSame)
 
         {
-            var better = notSame.Where(result => result.Conclusion == EquivalenceTestConclusion.Faster);
-            var worse = notSame.Where(result => result.Conclusion == EquivalenceTestConclusion.Slower);
-            var betterCount = better.Count();
-            var worseCount = worse.Count();
+            IEnumerable<ComparerResult> better = notSame.Where(result =>
+                result.Conclusion == EquivalenceTestConclusion.Faster).ToList();
+            IEnumerable<ComparerResult> worse = notSame.Where(result =>
+                result.Conclusion == EquivalenceTestConclusion.Slower).ToList();
+            int betterCount = better.Count();
+            int worseCount = worse.Count();
+            int totalCount = betterCount + worseCount;
 
             // If the baseline doesn't have the same set of tests, you wind up with Infinity in the list of diffs.
             // Exclude them for purposes of geomean.
-            worse = worse.Where(x => GetRatio(x) != double.PositiveInfinity);
-            better = better.Where(x => GetRatio(x) != double.PositiveInfinity);
+            worse = worse.Where(x => GetRatio(x) != double.PositiveInfinity).ToList();
+            better = better.Where(x => GetRatio(x) != double.PositiveInfinity).ToList();
 
             Console.WriteLine("summary:");
 
@@ -94,7 +88,7 @@ namespace ResultsComparer
                 Console.WriteLine($"worse: {worseCount}, geomean: {worseGeoMean:F3}");
             }
 
-            Console.WriteLine($"total diff: {notSame.Count()}");
+            Console.WriteLine($"total diff: {totalCount}");
             Console.WriteLine();
         }
 
@@ -121,9 +115,11 @@ namespace ResultsComparer
                 return;
             }
 
-            var table = data.ToMarkdownTable().WithHeaders(conclusion.ToString(), conclusion == EquivalenceTestConclusion.Faster ? "base/diff" : "diff/base", "Base Median (ns)", "Diff Median (ns)", "Modality");
+            Table table = data
+                .ToMarkdownTable()
+                .WithHeaders(conclusion.ToString(), conclusion == EquivalenceTestConclusion.Faster ? "base/diff" : "diff/base", "Base Median (ns)", "Diff Median (ns)", "Modality");
 
-            foreach (var line in table.ToMarkdown().Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string line in table.ToMarkdown().Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries))
                 Console.WriteLine($"| {line.TrimStart()}|"); // the table starts with \t and does not end with '|' and it looks bad so we fix it
 
             Console.WriteLine();

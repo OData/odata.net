@@ -21,7 +21,7 @@ namespace ResultsComparer.Bdn
 
         public Task<bool> CanReadFile(string path)
         {
-            bool isJson = path.EndsWith(".json");
+            bool isJson = path.EndsWith(".json", StringComparison.OrdinalIgnoreCase);
             return Task.FromResult(isJson);
         }
 
@@ -37,7 +37,8 @@ namespace ResultsComparer.Bdn
                 throw new Exception($"Invalid noise threshold {options.NoiseThreshold}. Examples: 0.3ns 1ns.");
             }
 
-            var notSame = GetNotSameResults(basePath, diffPath, options, testThreshold, noiseThreshold).ToArray();
+            IEnumerable<(string id, Benchmark baseResult, Benchmark diffResult, EquivalenceTestConclusion conclusion)> notSame =
+                GetNotSameResults(basePath, diffPath, options, testThreshold, noiseThreshold).ToArray();
 
             ComparerResults results = new();
 
@@ -58,37 +59,37 @@ namespace ResultsComparer.Bdn
             foreach ((string id, Benchmark baseResult, Benchmark diffResult) in ReadResults(basePath, diffPath, options)
                 .Where(result => result.baseResult.Statistics != null && result.diffResult.Statistics != null)) // failures
             {
-                var baseValues = baseResult.GetOriginalValues();
-                var diffValues = diffResult.GetOriginalValues();
+                double[] baseValues = baseResult.GetOriginalValues();
+                double[] diffValues = diffResult.GetOriginalValues();
 
-                var userThresholdResult = StatisticalTestHelper.CalculateTost(MannWhitneyTest.Instance, baseValues, diffValues, testThreshold);
-                if (userTresholdResult.Conclusion == EquivalenceTestConclusion.Same)
+                TostResult<MannWhitneyResult> userThresholdResult = StatisticalTestHelper.CalculateTost(MannWhitneyTest.Instance, baseValues, diffValues, testThreshold);
+                if (userThresholdResult.Conclusion == EquivalenceTestConclusion.Same)
                     continue;
 
-                var noiseResult = StatisticalTestHelper.CalculateTost(MannWhitneyTest.Instance, baseValues, diffValues, noiseThreshold);
+                TostResult<MannWhitneyResult> noiseResult = StatisticalTestHelper.CalculateTost(MannWhitneyTest.Instance, baseValues, diffValues, noiseThreshold);
                 if (noiseResult.Conclusion == EquivalenceTestConclusion.Same)
                     continue;
 
-                yield return (id, baseResult, diffResult, userTresholdResult.Conclusion);
+                yield return (id, baseResult, diffResult, userThresholdResult.Conclusion);
             }
         }
 
         private static IEnumerable<(string id, Benchmark baseResult, Benchmark diffResult)> ReadResults(string basePath, string diffPath, ComparerOptions options)
         {
-            var baseFiles = GetFilesToParse(basePath);
-            var diffFiles = GetFilesToParse(diffPath);
+            string[] baseFiles = GetFilesToParse(basePath);
+            string[] diffFiles = GetFilesToParse(diffPath);
 
             if (!baseFiles.Any() || !diffFiles.Any())
             {
                 throw new ArgumentException($"Provided paths contained no {FullBdnJsonFileExtension} files.");
             }
 
-            var baseResults = baseFiles.Select(ReadFromFile);
-            var diffResults = diffFiles.Select(ReadFromFile);
+            IEnumerable<BdnResult> baseResults = baseFiles.Select(ReadFromFile);
+            IEnumerable<BdnResult> diffResults = diffFiles.Select(ReadFromFile);
 
-            var filters = options.Filters.Select(pattern => new Regex(WildcardToRegex(pattern), RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)).ToArray();
+            Regex[] filters = options.Filters.Select(pattern => new Regex(WildcardToRegex(pattern), RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)).ToArray();
 
-            var benchmarkIdToDiffResults = diffResults
+            Dictionary<string, Benchmark> benchmarkIdToDiffResults = diffResults
                 .SelectMany(result => result.Benchmarks)
                 .Where(benchmarkResult => !filters.Any() || filters.Any(filter => filter.IsMatch(benchmarkResult.FullName)))
                 .ToDictionary(benchmarkResult => benchmarkResult.FullName, benchmarkResult => benchmarkResult);
