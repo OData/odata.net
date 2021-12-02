@@ -60,7 +60,6 @@ namespace ResultsComparer
                 PrintTable(resultsArray, EquivalenceTestConclusion.Slower, args);
                 PrintTable(resultsArray, EquivalenceTestConclusion.Faster, args);
 
-
             }
             catch (Exception ex)
             {
