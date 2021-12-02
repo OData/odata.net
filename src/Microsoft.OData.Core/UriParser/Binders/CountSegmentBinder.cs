@@ -49,7 +49,7 @@ namespace Microsoft.OData.UriParser
 
             if(node == null)
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_CountSegmentNextTokenNotCollectionValue());
+                throw new ODataException(ODataErrorStrings.MetadataBinder_CountSegmentNextTokenNotCollectionValue);
             }
 
             FilterClause filterClause = null;

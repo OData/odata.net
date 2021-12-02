@@ -430,14 +430,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilterWithEntityCollectionCountWithEmptyParenthesisThrows()
         {
             Action parse = () => ParseFilter("MyFriendsDogs/$count()", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parse.Throws<ODataException>(ODataErrorStrings.UriParser_EmptyParenthesis());
+            parse.Throws<ODataException>(ODataErrorStrings.UriParser_EmptyParenthesis);
         }
 
         [Fact]
         public void ParseFilterWithEntityCollectionCountWithIllegalQueryOptionThrows()
         {
             Action parse = () => ParseFilter("MyFriendsDogs/$count($orderby=Color) gt 1", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parse.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_IllegalQueryOptioninDollarCount());
+            parse.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_IllegalQueryOptioninDollarCount);
         }
 
         [Fact]
@@ -471,7 +471,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilterWithSingleValueCountWithFilterAndSearchOptionsThrows()
         {
             Action parse = () => ParseFilter("ID/$count($filter=Color eq 'Brown';$search=brown) gt 1", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_CountSegmentNextTokenNotCollectionValue());
+            parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_CountSegmentNextTokenNotCollectionValue);
         }
 
         [Fact]

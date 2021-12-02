@@ -27,8 +27,10 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
         protected static IEdmEntityType PersonType;
         protected static IEdmEntityType StarPencil;
         protected static IEdmEntityType PetType;
+        protected static IEdmEntityType PetCon;
         protected static IEdmEntitySet PeopleSet;
         protected static IEdmEntitySet PetSet;
+        protected static IEdmEntitySet PetSetCon;
         protected static IEdmOperation FindPencil2P;
         protected static IEdmOperation FindPencil1P;
         protected static IEdmOperation FindPencilCon;
@@ -180,11 +182,13 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             var petSet = container.AddEntitySet("PetSet", pet);
 
             var petCon = new EdmEntityType("TestNS", "PetCon");
+            PetCon = petCon;
             model.AddElement(petCon);
             var key1Con = pet.AddStructuralProperty("key", EdmCoreModel.Instance.GetInt32(false));
             var key2Con = pet.AddStructuralProperty("KEY", EdmCoreModel.Instance.GetString(false));
             petCon.AddKeys(key1Con, key2Con);
             var petSetCon = container.AddEntitySet("PetSetCon", petCon);
+            PetSetCon = petSetCon;
 
             EdmEnumType colorType = new EdmEnumType("TestNS", "Color");
             Color = colorType;
