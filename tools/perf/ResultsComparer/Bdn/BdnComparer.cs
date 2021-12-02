@@ -41,7 +41,6 @@ namespace ResultsComparer.Bdn
 
             ComparerResults results = new();
 
-
             if (!notSame.Any())
             {
                 results.NoDiff = true;
