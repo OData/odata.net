@@ -411,6 +411,18 @@ namespace Microsoft.OData.Tests.Json
             }
         }
 
+        [Theory]
+        [InlineData("13", false)]
+        [InlineData("null", true)]
+        [InlineData("\"The quick brown fox jumps over the lazy dog.\"", true)]
+        public async Task CanStreamAsync_ReturnsExpectedResult(string payload, bool expected)
+        {
+            using (var reader = await CreateJsonReaderAsync(string.Format("{{\"Data\":{0}}}", payload)))
+            {
+                Assert.Equal(expected, await reader.CanStreamAsync());
+            }
+        }
+
         [Fact]
         public async Task ReadStringValueThrowsExceptionForUnexpectedEndOfString()
         {

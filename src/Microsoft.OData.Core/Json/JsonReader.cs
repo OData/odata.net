@@ -554,6 +554,23 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
+        /// Asynchronously checks whether or not the current value can be streamed.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.
+        /// true if the current value can be streamed; otherwise false.</returns>
+        public Task<bool> CanStreamAsync()
+        {
+            if (this.canStream)
+            {
+                return Task.FromResult(true);
+            }
+            else
+            {
+                return Task.FromResult(false);
+            }
+        }
+
+        /// <summary>
         /// Asynchronously reads the next node from the input.
         /// </summary>
         /// <returns>A task that represents the asynchronous read operation.
