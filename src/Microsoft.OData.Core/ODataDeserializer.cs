@@ -69,9 +69,9 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Get the absolute uri
+        /// Get the base uri.
         /// </summary>
-        internal string AbsoluteUri
+        internal string BaseUri
         {
             get
             {
