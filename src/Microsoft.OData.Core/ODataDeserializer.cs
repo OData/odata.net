@@ -8,6 +8,7 @@ namespace Microsoft.OData
 {
     #region Namespaces
 
+    using System;
     using System.Diagnostics;
     using Microsoft.OData.Edm;
     #endregion Namespaces
@@ -65,6 +66,17 @@ namespace Microsoft.OData
             get
             {
                 return this.inputContext.Model;
+            }
+        }
+
+        /// <summary>
+        /// Get the base uri.
+        /// </summary>
+        internal Uri BaseUri
+        {
+            get
+            {
+                return this.inputContext.MessageReaderSettings?.BaseUri;
             }
         }
 
