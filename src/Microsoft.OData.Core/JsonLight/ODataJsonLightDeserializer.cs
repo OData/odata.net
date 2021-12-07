@@ -243,15 +243,15 @@ namespace Microsoft.OData.JsonLight
 
             //Concatenate the metadata uri with the contextUri, when the contextUri is a relativeUri. 
             Uri contextUri;
-            if (!string.IsNullOrEmpty(this.BaseUri) && 
-                !string.IsNullOrEmpty(contextUriAnnotationValue) &&                 
+            if (this.BaseUri != null &&
+                !string.IsNullOrEmpty(contextUriAnnotationValue) &&
                 !Uri.TryCreate(contextUriAnnotationValue, UriKind.Absolute, out contextUri))
             {
                 // If the Base uri string is http://odata.org/test
                 // The MetadataDocumentUri will be http://odata.org/test/$metadata
-                // If the contextUriAnnotation valie is Customers(1)/Name
+                // If the contextUriAnnotation value is Customers(1)/Name
                 // The generated context uri will be http://odata.org/test/$metadata#Customers(1)/Name
-                ODataUri oDataUri = new ODataUri() { ServiceRoot = new Uri(this.BaseUri) };
+                ODataUri oDataUri = new ODataUri() { ServiceRoot = this.BaseUri };
                 contextUriAnnotationValue = oDataUri.MetadataDocumentUri.ToString() + ODataConstants.ContextUriFragmentIndicator + contextUriAnnotationValue;
             }
 

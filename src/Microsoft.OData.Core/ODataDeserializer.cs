@@ -8,6 +8,7 @@ namespace Microsoft.OData
 {
     #region Namespaces
 
+    using System;
     using System.Diagnostics;
     using Microsoft.OData.Edm;
     #endregion Namespaces
@@ -71,11 +72,11 @@ namespace Microsoft.OData
         /// <summary>
         /// Get the base uri.
         /// </summary>
-        internal string BaseUri
+        internal Uri BaseUri
         {
             get
             {
-                return this.inputContext.MessageReaderSettings?.BaseUri?.AbsoluteUri;
+                return this.inputContext.MessageReaderSettings?.BaseUri;
             }
         }
 
