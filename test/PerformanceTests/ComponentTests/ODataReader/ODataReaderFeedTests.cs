@@ -44,49 +44,50 @@ namespace Microsoft.OData.Performance
             _stream.Dispose();
         }
 
-        [IterationSetup(Target = nameof(ReadFeed))]
+        ////[IterationSetup(Target = nameof(ReadFeed))]
         public void SetupForReadFeed()
         {
+            System.Console.WriteLine("gdebruin");
             SetupDataStream("Entry.json", 1000);
         }
 
-        [Benchmark]
+        ////[Benchmark]
         public void ReadFeed()
         {
             RunReadFeedTest(_isFullValidation);
         }
 
-        [IterationSetup(Target = nameof(ReadFeedIncludeSpatial))]
+        ////[IterationSetup(Target = nameof(ReadFeedIncludeSpatial))]
         public void SetupForReadFeedIncludeSpatial()
         {
             SetupDataStream("EntryIncludeSpatial.json", 1000);
         }
 
-        [Benchmark]
+        ////[Benchmark]
         public void ReadFeedIncludeSpatial()
         {
             RunReadFeedTest(_isFullValidation);
         }
 
-        [IterationSetup(Target = nameof(ReadFeedWithExpansions))]
+        ////[IterationSetup(Target = nameof(ReadFeedWithExpansions))]
         public void SetupForReadFeedWithExpansions()
         {
             SetupDataStream("EntryWithExpansions.json", 100);
         }
 
-        [Benchmark]
+        ////[Benchmark]
         public void ReadFeedWithExpansions()
         {
             RunReadFeedTest(_isFullValidation);
         }
 
-        [IterationSetup(Target = nameof(ReadFeedIncludeSpatialWithExpansions))]
+        ////[IterationSetup(Target = nameof(ReadFeedIncludeSpatialWithExpansions))]
         public void SetupForReadFeedIncludeSpatialWithExpansions()
         {
             SetupDataStream("EntryIncludeSpatialWithExpansions.json", 100);
         }
 
-        [Benchmark]
+        ////[Benchmark]
         public void ReadFeedIncludeSpatialWithExpansions()
         {
             RunReadFeedTest(_isFullValidation);

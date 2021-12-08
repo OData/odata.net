@@ -33,7 +33,7 @@ namespace Microsoft.OData.Performance
             serviceFixture.Dispose();
         }
 
-        [Benchmark]
+        ////[Benchmark]
         public void QuerySimpleEntitySet()
         {
             int RequestsPerIteration = 100;
@@ -44,13 +44,13 @@ namespace Microsoft.OData.Performance
             }
         }
 
-        [Benchmark]
+        ////[Benchmark]
         public void QueryLargeEntitySet()
         {
             QueryAndVerify("LargePeopleSet", "odata.maxpagesize=1000");
         }
 
-        [Benchmark]
+        ////[Benchmark]
         public void QuerySingleEntity()
         {
             int RequestsPerIteration = 100;
