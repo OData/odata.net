@@ -2007,7 +2007,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             // Act & Assert for Json
             VisitAndVerifyJson(v => v.VisitVocabularyAnnotation(annotation), @"{
   ""@Person.Employee"": {
-    ""$Type"": ""NS.Address"",
+    ""@type"": ""NS.Address"",
     ""Street"": ""148th ave"",
     ""City"": ""Redmond""
   }
