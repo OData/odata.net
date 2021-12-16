@@ -166,31 +166,43 @@ namespace Microsoft.OData.Evaluation
         /// <param name="resource">The resource instance.</param>
         /// <param name="serializationInfo">The serialization info of the resource for writing without model.</param>
         /// <param name="actualEntityType">The edm entity type of the resource</param>
+        /// <param name="requiresId">Whether key properties are required to be returned</param>
         /// <returns>Key value pair array</returns>
         internal static KeyValuePair<string, object>[] GetKeyProperties(
             ODataResourceBase resource,
             ODataResourceSerializationInfo serializationInfo,
-            IEdmEntityType actualEntityType)
+            IEdmEntityType actualEntityType,
+            bool requiresId)
         {
             KeyValuePair<string, object>[] keyProperties = null;
-            string actualEntityTypeName = null;
+            string actualEntityTypeName = resource.TypeName ?? actualEntityType.FullName();
 
+            // if we have serializationInfo, try that first
             if (serializationInfo != null)
             {
-                if (String.IsNullOrEmpty(resource.TypeName))
+                if (String.IsNullOrEmpty(actualEntityTypeName))
                 {
                     throw new ODataException(Strings.ODataResourceTypeContext_ODataResourceTypeNameMissing);
                 }
 
-                actualEntityTypeName = resource.TypeName;
                 keyProperties = ODataResourceMetadataContextWithoutModel.GetPropertiesBySerializationInfoPropertyKind(resource, ODataPropertyKind.Key, actualEntityTypeName);
             }
-            else
+
+            // if we didn't get any keys from serializationInfo, try using entity type
+            if ((keyProperties == null || keyProperties.Length == 0) && actualEntityType != null)
             {
-                keyProperties = GetPropertyValues(actualEntityType.Key(), resource, actualEntityType, /*isKeyProperty*/ true, /*isRequired*/ true).ToArray();
+                keyProperties = GetPropertyValues(actualEntityType.Key(), resource, actualEntityType, /*isKeyProperty*/ true, requiresId).ToArray();
             }
 
-            ValidateEntityTypeHasKeyProperties(keyProperties, actualEntityTypeName);
+            if (requiresId)
+            {
+                ValidateEntityTypeHasKeyProperties(keyProperties, actualEntityTypeName);
+            }
+            else if (keyProperties == null)
+            {
+                keyProperties = Enumerable.Empty<KeyValuePair<string, object>>().ToArray();
+            }
+
             return keyProperties;
         }
 
@@ -269,7 +281,6 @@ namespace Microsoft.OData.Evaluation
         /// <param name="actualEntityTypeName">The entity type name of the resource.</param>
         private static void ValidateEntityTypeHasKeyProperties(KeyValuePair<string, object>[] keyProperties, string actualEntityTypeName)
         {
-            Debug.Assert(keyProperties != null, "keyProperties != null");
             if (keyProperties == null || keyProperties.Length == 0)
             {
                 throw new ODataException(Strings.ODataResourceMetadataContext_EntityTypeWithNoKeyProperties(actualEntityTypeName));
@@ -288,7 +299,7 @@ namespace Microsoft.OData.Evaluation
             Debug.Assert(resource != null, "resource != null");
             Debug.Assert(propertyKind == ODataPropertyKind.Key || propertyKind == ODataPropertyKind.ETag, "propertyKind == ODataPropertyKind.Key || propertyKind == ODataPropertyKind.ETag");
 
-            List<KeyValuePair<string, object>> properties = new List<KeyValuePair<string, object>>(); ;
+            List<KeyValuePair<string, object>> properties = new List<KeyValuePair<string, object>>();
             if (resource.NonComputedProperties != null)
             {
                 foreach(ODataProperty property in resource.NonComputedProperties)
@@ -357,11 +368,8 @@ namespace Microsoft.OData.Evaluation
                 {
                     if (this.keyProperties == null)
                     {
-                        this.keyProperties = GetPropertiesBySerializationInfoPropertyKind(this.resource, ODataPropertyKind.Key, this.ActualResourceTypeName);
-                        if (this.requiresId)
-                        {
-                            ValidateEntityTypeHasKeyProperties(this.keyProperties, this.ActualResourceTypeName);
-                        }
+                        IEdmEntityType entityType = this.ActualResourceType as IEdmEntityType;
+                        this.keyProperties = GetKeyProperties(this.resource, this.serializationInfo, entityType, this.requiresId);
                     }
 
                     return this.keyProperties;

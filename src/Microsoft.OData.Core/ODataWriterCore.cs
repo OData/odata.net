@@ -1935,7 +1935,6 @@ namespace Microsoft.OData
             this.InterceptException(
                 (thisParam) =>
                 {
-                    bool wasenableDelta;
                     Scope currentScope = thisParam.CurrentScope;
 
                     switch (currentScope.State)
@@ -2868,7 +2867,7 @@ namespace Microsoft.OData
                 else 
                 {
                     KeyValuePair<string, object>[] keys = ODataResourceMetadataContext.GetKeyProperties(resource,
-                        this.GetResourceSerializationInfo(resource), currentEntityType);
+                        serializationInfo, currentEntityType, true);
 
                     path = path.AddKeySegment(keys, currentEntityType, this.CurrentScope.NavigationSource);
                 }                    

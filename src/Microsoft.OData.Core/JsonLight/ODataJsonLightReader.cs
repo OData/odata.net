@@ -2426,20 +2426,18 @@ namespace Microsoft.OData.JsonLight
         /// <returns>True if successfully append key segment.</returns>
         private bool TryAppendEntitySetKeySegment(ref ODataPath odataPath)
         {
-            try
+            if (EdmExtensionMethods.HasKey(this.CurrentScope.NavigationSource, this.CurrentScope.ResourceType as IEdmStructuredType))
             {
-                if (EdmExtensionMethods.HasKey(this.CurrentScope.NavigationSource, this.CurrentScope.ResourceType as IEdmStructuredType))
+                IEdmEntityType currentEntityType = this.CurrentScope.ResourceType as IEdmEntityType;
+                ODataResourceBase resource = this.CurrentScope.Item as ODataResourceBase;
+                KeyValuePair<string, object>[] keys = ODataResourceMetadataContext.GetKeyProperties(resource, null, currentEntityType, false);
+                if (keys.Length == 0)
                 {
-                    IEdmEntityType currentEntityType = this.CurrentScope.ResourceType as IEdmEntityType;
-                    ODataResourceBase resource = this.CurrentScope.Item as ODataResourceBase;
-                    KeyValuePair<string, object>[] keys = ODataResourceMetadataContext.GetKeyProperties(resource, null, currentEntityType);
-                    odataPath = odataPath.AddKeySegment(keys, currentEntityType, this.CurrentScope.NavigationSource);
+                    odataPath = null;
+                    return false;
                 }
-            }
-            catch (ODataException)
-            {
-                odataPath = null;
-                return false;
+
+                odataPath = odataPath.AddKeySegment(keys, currentEntityType, this.CurrentScope.NavigationSource);
             }
 
             return true;
