@@ -2810,7 +2810,7 @@ namespace Microsoft.OData
         /// <returns>The new odata path.</returns>
         private ODataPath AppendEntitySetKeySegment(ODataPath odataPath, bool throwIfFail)
         {
-            ODataPath path = odataPath;
+           ODataPath path = odataPath;
             
             if (EdmExtensionMethods.HasKey(this.CurrentScope.NavigationSource, this.CurrentScope.ResourceType))
             {
@@ -2821,72 +2821,13 @@ namespace Microsoft.OData
 
                 ODataResourceSerializationInfo serializationInfo = this.GetResourceSerializationInfo(resource);
 
-                if (!throwIfFail)
-                {
-                    if (resource.NonComputedProperties != null)
-                    {
-                        List<KeyValuePair<string, object>> keys = new List<KeyValuePair<string, object>>();
+                KeyValuePair<string, object>[] keys = ODataResourceMetadataContext.GetKeyProperties(resource,
+                        serializationInfo, currentEntityType, throwIfFail);
 
-                        if (serializationInfo != null)
-                        {
-                            foreach (ODataProperty property in resource.NonComputedProperties)
-                            {
-                                if (property.SerializationInfo != null && property.SerializationInfo.PropertyKind == ODataPropertyKind.Key)
-                                {
-                                    if(!CreateKeyValuePair(keys, property, property.Value))
-                                    {
-                                        return path;
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            HashSet<string> keySet = new HashSet<string>();
-
-                            foreach (IEdmStructuralProperty property in currentEntityType.Key())
-                            {
-                                keySet.Add(property.Name);
-                            }
-
-                            foreach (ODataProperty property in resource.NonComputedProperties)
-                            {
-                                if (keySet.Contains(property.Name))
-                                {
-                                    if (!CreateKeyValuePair(keys, property, property.Value))
-                                    {
-                                        return path;
-                                    }
-                                }
-                            }
-                        }
-
-                        path = path.AddKeySegment(keys.ToArray(), currentEntityType, this.CurrentScope.NavigationSource);
-                    }                        
-                }
-                else 
-                {
-                    KeyValuePair<string, object>[] keys = ODataResourceMetadataContext.GetKeyProperties(resource,
-                        serializationInfo, currentEntityType, true);
-
-                    path = path.AddKeySegment(keys, currentEntityType, this.CurrentScope.NavigationSource);
-                }                    
+                path = path.AddKeySegment(keys, currentEntityType, this.CurrentScope.NavigationSource);
             }
-
 
             return path;
-        }
-
-        private static bool CreateKeyValuePair(List<KeyValuePair<string, object>> keys, ODataProperty property, object propertyValue)
-        {
-            if (propertyValue == null || (propertyValue is ODataValue && !(propertyValue is ODataEnumValue)))
-            {
-                return false;
-            }
-
-            keys.Add(new KeyValuePair<string, object>(property.Name, propertyValue));
-
-            return true;
         }
 
         /// <summary>
@@ -3430,7 +3371,6 @@ namespace Microsoft.OData
             return this.InterceptExceptionAsync(
                 async (thisParam) =>
                 {
-                    bool wasenableDelta;
                     Scope currentScope = thisParam.CurrentScope;
 
                     switch (currentScope.State)
