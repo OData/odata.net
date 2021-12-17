@@ -19,7 +19,7 @@ namespace ResultsComparer.Core
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        Task<bool> CanReadFile(string path);
+        bool CanReadFile(string path);
         /// <summary>
         /// Compares two report files and returns the results of the comparisons.
         /// </summary>
@@ -27,6 +27,6 @@ namespace ResultsComparer.Core
         /// <param name="diffPath">The path to the measurements after the change.</param>
         /// <param name="options">Options and settings used by the comparer.</param>
         /// <returns>An object summarizing the improvements and regressions detected by the comparer.</returns>
-        Task<ComparerResults> CompareResults(string basePath, string diffPath, ComparerOptions options);
+        ComparerResults CompareResults(string basePath, string diffPath, ComparerOptions options);
     }
 }

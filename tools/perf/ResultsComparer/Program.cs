@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
-using Perfolizer.Mathematics.SignificanceTesting;
 using CommandLine;
 using MarkdownLog;
 using ResultsComparer.Core;
@@ -28,7 +27,7 @@ namespace ResultsComparer
             Parser.Default.ParseArguments<CommandLineOptions>(args).WithParsed((options) => Compare(options).Wait());
         }
 
-        private static async Task Compare(CommandLineOptions args)
+        private static void Compare(CommandLineOptions args)
         {
             IResultsComparer comparer = new BdnComparer();
 
@@ -43,7 +42,7 @@ namespace ResultsComparer
                     Filters = args.Filters
                 };
 
-                ComparerResults results = await comparer.CompareResults(args.BasePath, args.DiffPath, options);
+                ComparerResults results = comparer.CompareResults(args.BasePath, args.DiffPath, options);
 
                 if (results.NoDiff)
                 {
@@ -53,8 +52,8 @@ namespace ResultsComparer
                 ComparerResult[] resultsArray = results.Results.ToArray();
                 PrintSummary(resultsArray);
 
-                PrintTable(resultsArray, EquivalenceTestConclusion.Slower, args);
-                PrintTable(resultsArray, EquivalenceTestConclusion.Faster, args);
+                PrintTable(resultsArray, ComparisonConslusion.Worse, args);
+                PrintTable(resultsArray, ComparisonConslusion.Better, args);
 
             }
             catch (Exception ex)
@@ -67,9 +66,9 @@ namespace ResultsComparer
 
         {
             IEnumerable<ComparerResult> better = notSame.Where(result =>
-                result.Conclusion == EquivalenceTestConclusion.Faster).ToList();
+                result.Conclusion == ComparisonConslusion.Worse).ToList();
             IEnumerable<ComparerResult> worse = notSame.Where(result =>
-                result.Conclusion == EquivalenceTestConclusion.Slower).ToList();
+                result.Conclusion == ComparisonConslusion.Better).ToList();
             int betterCount = better.Count();
             int worseCount = worse.Count();
             int totalCount = betterCount + worseCount;
@@ -97,7 +96,7 @@ namespace ResultsComparer
             Console.WriteLine();
         }
 
-        private static void PrintTable(ComparerResult[] notSame, EquivalenceTestConclusion conclusion, CommandLineOptions args)
+        private static void PrintTable(ComparerResult[] notSame, ComparisonConslusion conclusion, CommandLineOptions args)
         {
             var data = notSame
                 .Where(result => result.Conclusion == conclusion)
@@ -122,7 +121,7 @@ namespace ResultsComparer
 
             Table table = data
                 .ToMarkdownTable()
-                .WithHeaders(conclusion.ToString(), conclusion == EquivalenceTestConclusion.Faster ? "base/diff" : "diff/base", "Base Median (ns)", "Diff Median (ns)", "Modality");
+                .WithHeaders(conclusion.ToString(), conclusion == ComparisonConslusion.Better ? "base/diff" : "diff/base", "Base Median (ns)", "Diff Median (ns)", "Modality");
 
             foreach (string line in table.ToMarkdown().Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries))
                 Console.WriteLine($"| {line.TrimStart()}|"); // the table starts with \t and does not end with '|' and it looks bad so we fix it
@@ -130,8 +129,6 @@ namespace ResultsComparer
             Console.WriteLine();
         }
 
-        // code and magic values taken from BenchmarkDotNet.Analysers.MultimodalDistributionAnalyzer
-        // See http://www.brendangregg.com/FrequencyTrails/modes.html
         private static string GetModalInfo(MeasurementResult benchmark)
         {
             if (benchmark.Modality == Modality.Unknown) // not enough data to tell
@@ -149,8 +146,8 @@ namespace ResultsComparer
 
         private static double GetRatio(ComparerResult item) => GetRatio(item.Conclusion, item.BaseResult, item.DiffResult);
 
-        private static double GetRatio(EquivalenceTestConclusion conclusion, MeasurementResult baseResult, MeasurementResult diffResult)
-            => conclusion == EquivalenceTestConclusion.Faster
+        private static double GetRatio(ComparisonConslusion conclusion, MeasurementResult baseResult, MeasurementResult diffResult)
+            => conclusion == ComparisonConslusion.Better
                 ? baseResult.Result / diffResult.Result
                 : diffResult.Result / baseResult.Result;
     }

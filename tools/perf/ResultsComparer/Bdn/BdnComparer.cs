@@ -25,13 +25,13 @@ namespace ResultsComparer.Bdn
     {
         private const string FullBdnJsonFileExtension = "full.json";
 
-        public Task<bool> CanReadFile(string path)
+        public bool CanReadFile(string path)
         {
             bool isJson = path.EndsWith(".json", StringComparison.OrdinalIgnoreCase);
-            return Task.FromResult(isJson);
+            return isJson;
         }
 
-        public Task<ComparerResults> CompareResults(string basePath, string diffPath, ComparerOptions options)
+        public ComparerResults CompareResults(string basePath, string diffPath, ComparerOptions options)
         {
             if (!Threshold.TryParse(options.StatisticalTestThreshold, out var testThreshold))
             {
@@ -51,7 +51,7 @@ namespace ResultsComparer.Bdn
             if (!notSame.Any())
             {
                 results.NoDiff = true;
-                return Task.FromResult(results);
+                return results;
             }
 
             results.Results = notSame.Select(r =>
@@ -62,7 +62,7 @@ namespace ResultsComparer.Bdn
                     Conclusion = TransformConclusion(r.conclusion)
                 });
 
-            return Task.FromResult(results);
+            return results;
         }
 
         private static IEnumerable<(string id, Benchmark baseResult, Benchmark diffResult, EquivalenceTestConclusion conclusion)> GetNotSameResults(string basePath, string diffPath, ComparerOptions options, Threshold testThreshold, Threshold noiseThreshold)
