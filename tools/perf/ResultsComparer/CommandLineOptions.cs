@@ -13,6 +13,9 @@ namespace ResultsComparer
 {
     public class CommandLineOptions
     {
+        [Option("reporter", HelpText = "The report comparer to use. Possible values are 'bdn' for BenchmarkDotNet, 'vsAllocs' for Visual Studio .NET Object Allocator")]
+        public string Comparer { get; set; }
+
         [Option("base", HelpText = "Path to the folder/file with base results.")]
         public string BasePath { get; set; }
 
@@ -46,13 +49,13 @@ namespace ResultsComparer
             get
             {
                 yield return new Example(@"Compare the results stored in 'C:\results\win' (base) vs 'C:\results\unix' (diff) using 5% threshold.",
-                    new CommandLineOptions { BasePath = @"C:\results\win", DiffPath = @"C:\results\unix", StatisticalTestThreshold = "5%" });
+                    new CommandLineOptions { Comparer = "bdn", BasePath = @"C:\results\win", DiffPath = @"C:\results\unix", StatisticalTestThreshold = "5%" });
                 yield return new Example(@"Compare the results stored in 'C:\results\win' (base) vs 'C:\results\unix' (diff) using 5% threshold and show only top/bottom 10 results.",
-                    new CommandLineOptions { BasePath = @"C:\results\win", DiffPath = @"C:\results\unix", StatisticalTestThreshold = "5%", TopCount = 10 });
+                    new CommandLineOptions { Comparer = "bdn", BasePath = @"C:\results\win", DiffPath = @"C:\results\unix", StatisticalTestThreshold = "5%", TopCount = 10 });
                 yield return new Example(@"Compare the results stored in 'C:\results\win' (base) vs 'C:\results\unix' (diff) using 5% threshold and 0.5ns noise filter.",
-                    new CommandLineOptions { BasePath = @"C:\results\win", DiffPath = @"C:\results\unix", StatisticalTestThreshold = "5%", NoiseThreshold = "0.5ns" });
+                    new CommandLineOptions { Comparer = "bdn", BasePath = @"C:\results\win", DiffPath = @"C:\results\unix", StatisticalTestThreshold = "5%", NoiseThreshold = "0.5ns" });
                 yield return new Example(@"Compare the System.Math benchmark results stored in 'C:\results\ubuntu16' (base) vs 'C:\results\ubuntu18' (diff) using 5% threshold.",
-                    new CommandLineOptions { Filters = new[] { "System.Math*" }, BasePath = @"C:\results\win", DiffPath = @"C:\results\unix", StatisticalTestThreshold = "5%" });
+                    new CommandLineOptions { Comparer = "bdn", Filters = new[] { "System.Math*" }, BasePath = @"C:\results\win", DiffPath = @"C:\results\unix", StatisticalTestThreshold = "5%" });
             }
         }
     }

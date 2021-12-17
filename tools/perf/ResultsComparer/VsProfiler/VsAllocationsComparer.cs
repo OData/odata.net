@@ -1,4 +1,10 @@
-﻿using ResultsComparer.Core;
+﻿//---------------------------------------------------------------------
+// <copyright file="CommandLineOptions.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using ResultsComparer.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +17,9 @@ namespace ResultsComparer.VsProfiler
     {
         public bool CanReadFile(string path)
         {
-            throw new NotImplementedException();
+            using var reader = new StreamReader(path);
+            string firstLine = reader.ReadLine();
+            return firstLine.Contains("Type");
         }
 
         public ComparerResults CompareResults(string basePath, string diffPath, ComparerOptions options)

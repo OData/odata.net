@@ -23,13 +23,17 @@ namespace ResultsComparer
         {
             // we print a lot of numbers here and we want to make it always in invariant way
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            IResultsComparerProvider comparerProvider = ComparerProviderFactory.CreateDefaultProvider();
 
-            Parser.Default.ParseArguments<CommandLineOptions>(args).WithParsed((options) => Compare(options).Wait());
+            Parser.Default.ParseArguments<CommandLineOptions>(args)
+                .WithParsed((options) => Compare(options, comparerProvider));
         }
 
-        private static void Compare(CommandLineOptions args)
+        private static void Compare(CommandLineOptions args, IResultsComparerProvider comparerProvider)
         {
-            IResultsComparer comparer = new BdnComparer();
+            IResultsComparer comparer = string.IsNullOrEmpty(args.Comparer) ?
+                comparerProvider.GetForFile(args.BasePath) : comparerProvider.GetById(args.Comparer);
+
 
             try
             {

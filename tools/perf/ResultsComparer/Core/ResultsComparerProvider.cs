@@ -1,0 +1,53 @@
+﻿//---------------------------------------------------------------------
+// <copyright file="CommandLineOptions.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+
+namespace ResultsComparer.Core
+{
+    public class ResultsComparerProvider : IResultsComparerProvider
+    {
+        Dictionary<string, IResultsComparer> comparers = new();
+        // the list is used to maintain the order of insertion of comparers
+        // because we want to test the comparers by order of priority
+        // when auto-detecting suitable comparers
+        List<IResultsComparer> comparersList = new();
+
+        public void RegisterComparer(string id, IResultsComparer comparer)
+        {
+            if (!comparers.TryAdd(id, comparer))
+            {
+                throw new Exception($"A comparer with id '{comparer}' has already been registered.");
+            }
+
+            comparersList.Add(comparer);
+        }
+
+        public IResultsComparer GetById(string comparerId)
+        {
+            if (comparers.TryGetValue(comparerId, out var comparer))
+            {
+                return comparer;
+            }
+
+            throw new Exception($"Unknown comparer '{comparerId}'.");
+        }
+
+        public IResultsComparer GetForFile(string filePath)
+        {
+            foreach (var comparer in comparersList)
+            {
+                if (comparer.CanReadFile(filePath))
+                {
+                    return comparer;
+                }
+            }
+
+            throw new Exception($"No suitable comparer found for file {filePath}");
+        }
+    }
+}

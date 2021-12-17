@@ -4,17 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using ResultsComparer.Core;
-
-namespace ResultsComparer.VsProfiler
+namespace ResultsComparer.Core
 {
-    class VsProfilerAllocations
+    public interface IResultsComparerProvider
     {
-        [FieldName("Type")]
-        public string Type { get; set; }
-        [FieldName("Allocations")]
-        public long Allocations { get; set; }
-        [FieldName("Bytes")]
-        public long Bytes { get; set; }
+        IResultsComparer GetForFile(string filePath);
+        IResultsComparer GetById(string comparerId);
     }
 }
