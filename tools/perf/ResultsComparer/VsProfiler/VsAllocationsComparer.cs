@@ -1,6 +1,7 @@
 ﻿using ResultsComparer.Core;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,27 +9,27 @@ namespace ResultsComparer.VsProfiler
 {
     class VsAllocationsComparer : IResultsComparer
     {
-        public Task<bool> CanReadFile(string path)
+        public bool CanReadFile(string path)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ComparerResults> CompareResults(string basePath, string diffPath, ComparerOptions options)
+        public ComparerResults CompareResults(string basePath, string diffPath, ComparerOptions options)
         {
-            using IReader<VsProfilerAllocation> baseReader = CreateReader(basePath);
-            using IReader<VsProfilerAllocation> diffReader = CreateReader(diffPath);
+            using IReader<VsProfilerAllocations> baseReader = CreateReader(basePath);
+            using IReader<VsProfilerAllocations> diffReader = CreateReader(diffPath);
 
             // since entries in the base and diff may be ordered differently,
             // let's store them in a dictionaries
-            Dictionary<string, VsProfilerAllocation> baseResults = new();
-            Dictionary<string, VsProfilerAllocation> diffResults = new();
+            Dictionary<string, VsProfilerAllocations> baseResults = new();
+            Dictionary<string, VsProfilerAllocations> diffResults = new();
 
-            foreach (VsProfilerAllocation allocation in baseReader)
+            foreach (VsProfilerAllocations allocation in baseReader)
             {
                 baseResults[allocation.Type] = allocation;
             }
 
-            foreach (VsProfilerAllocation allocation in diffReader)
+            foreach (VsProfilerAllocations allocation in diffReader)
             {
                 baseResults[allocation.Type] = allocation;
             }
@@ -36,13 +37,15 @@ namespace ResultsComparer.VsProfiler
             ComparerResults results = new();
             results.Results = GetResults(baseResults, diffResults).ToArray();
             results.NoDiff = results.Results.Any();
+
+            return results;
         }
 
-        private IEnumerable<ComparerResult> GetResults(Dictionary<string, VsProfilerAllocation> baseResults, Dictionary<string, VsProfilerAllocation> diffResults)
+        private IEnumerable<ComparerResult> GetResults(Dictionary<string, VsProfilerAllocations> baseResults, Dictionary<string, VsProfilerAllocations> diffResults)
         {
-            foreach ((string id, VsProfilerAllocation baseAlloc) in baseResults)
+            foreach ((string id, VsProfilerAllocations baseAlloc) in baseResults)
             {
-                VsProfilerAllocation diffAlloc = null;
+                VsProfilerAllocations diffAlloc = null;
                 diffResults.TryGetValue(id, out diffAlloc);
 
                 // TODO: now we're assuming "Allocations" are to be compared. We should allow user to configure
@@ -85,7 +88,7 @@ namespace ResultsComparer.VsProfiler
             }
 
             // find new entries in diff that are not in the base results
-            foreach ((string id, VsProfilerAllocation diffAllocs) in diffResults)
+            foreach ((string id, VsProfilerAllocations diffAllocs) in diffResults)
             {
                 if (baseResults.ContainsKey(id))
                 {
@@ -102,14 +105,10 @@ namespace ResultsComparer.VsProfiler
             }
         }
 
-        interface IReader<T>: IDisposable, IEnumerable<T>
+        static IReader<VsProfilerAllocations> CreateReader(string path)
         {
-            T ReadNext();
-        }
-
-        IReader<VsProfilerAllocation> CreateReader(string path)
-        {
-            return default(IReader<VsProfilerAllocation>);
+            var textReader = new StreamReader(File.OpenRead(path));
+            return new VsProfilerReader<VsProfilerAllocations>(textReader);
         }
     }
 }

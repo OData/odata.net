@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ResultsComparer.Core;
 
 namespace ResultsComparer.VsProfiler
 {
-    class VsProfilerAllocation
+    class VsProfilerAllocations
     {
+        [FieldName("Type")]
         public string Type { get; set; }
+        [FieldName("Allocations")]
         public long Allocations { get; set; }
+        [FieldName("Bytes")]
         public long Bytes { get; set; }
     }
 }
