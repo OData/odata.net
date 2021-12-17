@@ -59,7 +59,7 @@ namespace ResultsComparer.Bdn
                     Id = r.id,
                     BaseResult = TransformMeasurementResult(r.baseResult),
                     DiffResult = TransformMeasurementResult(r.diffResult),
-                    Conclusion = r.conclusion
+                    Conclusion = TransformConclusion(r.conclusion)
                 });
 
             return Task.FromResult(results);
@@ -162,6 +162,12 @@ namespace ResultsComparer.Bdn
             Result = benchmarkResult.Statistics.Median,
             Modality = GetModalInfo(benchmarkResult)
         };
+
+        private static ComparisonConslusion TransformConclusion(EquivalenceTestConclusion conclusion) =>
+            conclusion == EquivalenceTestConclusion.Same ? ComparisonConslusion.Same
+            : conclusion == EquivalenceTestConclusion.Faster ? ComparisonConslusion.Better
+            : conclusion == EquivalenceTestConclusion.Slower ? ComparisonConslusion.Worse
+            : ComparisonConslusion.Unkown;
 
     }
 }

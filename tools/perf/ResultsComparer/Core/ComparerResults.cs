@@ -49,7 +49,7 @@ namespace ResultsComparer.Core
         /// <summary>
         /// Conclusion specifying whether an improvement, regression, no difference, etc. was detected.
         /// </summary>
-        public EquivalenceTestConclusion Conclusion { get; set; }
+        public ComparisonConslusion Conclusion { get; set; }
     }
 
     public class MeasurementResult
@@ -65,5 +65,13 @@ namespace ResultsComparer.Core
         Several,
         Bimodal,
         Multimodal
+    }
+
+    public enum ComparisonConslusion
+    {
+        Same,
+        Better,
+        Worse,
+        Unkown
     }
 }
