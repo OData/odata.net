@@ -41,14 +41,29 @@ namespace ResultsComparer.Core
         /// <summary>
         /// The reference measurements for the given test.
         /// </summary>
-        public Benchmark BaseResult { get; set; }
+        public MeasurementResult BaseResult { get; set; }
         /// <summary>
         /// The diff measurements for the given test.
         /// </summary>
-        public Benchmark DiffResult { get; set; }
+        public MeasurementResult DiffResult { get; set; }
         /// <summary>
         /// Conclusion specifying whether an improvement, regression, no difference, etc. was detected.
         /// </summary>
         public EquivalenceTestConclusion Conclusion { get; set; }
+    }
+
+    public class MeasurementResult
+    {
+        public double Result { get; set; }
+        public Modality Modality { get; set; }
+    }
+
+    public enum Modality
+    {
+        Unknown,
+        Single,
+        Several,
+        Bimodal,
+        Multimodal
     }
 }

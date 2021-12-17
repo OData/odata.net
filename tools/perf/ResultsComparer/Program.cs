@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
-using Perfolizer.Mathematics.Multimodality;
 using Perfolizer.Mathematics.SignificanceTesting;
 using CommandLine;
 using MarkdownLog;
@@ -108,8 +107,8 @@ namespace ResultsComparer
                 {
                     Id = (result.Id.Length <= 80 || args.FullId) ? result.Id : result.Id.Substring(0, 80),
                     DisplayValue = GetRatio(conclusion, result.BaseResult, result.DiffResult),
-                    BaseMedian = result.BaseResult.Statistics.Median,
-                    DiffMedian = result.DiffResult.Statistics.Median,
+                    BaseMedian = result.BaseResult.Result,
+                    DiffMedian = result.DiffResult.Result,
                     Modality = GetModalInfo(result.BaseResult) ?? GetModalInfo(result.DiffResult)
                 })
                 .ToArray();
@@ -133,17 +132,16 @@ namespace ResultsComparer
 
         // code and magic values taken from BenchmarkDotNet.Analysers.MultimodalDistributionAnalyzer
         // See http://www.brendangregg.com/FrequencyTrails/modes.html
-        private static string GetModalInfo(Benchmark benchmark)
+        private static string GetModalInfo(MeasurementResult benchmark)
         {
-            if (benchmark.Statistics.N < 12) // not enough data to tell
+            if (benchmark.Modality == Modality.Unknown) // not enough data to tell
                 return null;
 
-            double mValue = MValueCalculator.Calculate(benchmark.GetOriginalValues());
-            if (mValue > 4.2)
+            if (benchmark.Modality == Modality.Multimodal)
                 return "multimodal";
-            else if (mValue > 3.2)
+            else if (benchmark.Modality == Modality.Bimodal)
                 return "bimodal";
-            else if (mValue > 2.8)
+            else if (benchmark.Modality == Modality.Several)
                 return "several?";
 
             return null;
@@ -151,9 +149,9 @@ namespace ResultsComparer
 
         private static double GetRatio(ComparerResult item) => GetRatio(item.Conclusion, item.BaseResult, item.DiffResult);
 
-        private static double GetRatio(EquivalenceTestConclusion conclusion, Benchmark baseResult, Benchmark diffResult)
+        private static double GetRatio(EquivalenceTestConclusion conclusion, MeasurementResult baseResult, MeasurementResult diffResult)
             => conclusion == EquivalenceTestConclusion.Faster
-                ? baseResult.Statistics.Median / diffResult.Statistics.Median
-                : diffResult.Statistics.Median / baseResult.Statistics.Median;
+                ? baseResult.Result / diffResult.Result
+                : diffResult.Result / baseResult.Result;
     }
 }

@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using ResultsComparer.Core;
 using Perfolizer.Mathematics.SignificanceTesting;
 using Perfolizer.Mathematics.Thresholds;
+using Perfolizer.Mathematics.Multimodality;
 
 namespace ResultsComparer.Bdn
 {
@@ -54,7 +55,12 @@ namespace ResultsComparer.Bdn
             }
 
             results.Results = notSame.Select(r =>
-                new ComparerResult { Id = r.id, BaseResult = r.baseResult, DiffResult = r.diffResult, Conclusion = r.conclusion });
+                new ComparerResult {
+                    Id = r.id,
+                    BaseResult = TransformMeasurementResult(r.baseResult),
+                    DiffResult = TransformMeasurementResult(r.diffResult),
+                    Conclusion = r.conclusion
+                });
 
             return Task.FromResult(results);
         }
@@ -132,5 +138,30 @@ namespace ResultsComparer.Bdn
 
         // https://stackoverflow.com/a/6907849/5852046 not perfect but should work for all we need
         private static string WildcardToRegex(string pattern) => $"^{Regex.Escape(pattern).Replace(@"\*", ".*").Replace(@"\?", ".")}$";
+
+        // code and magic values taken from BenchmarkDotNet.Analysers.MultimodalDistributionAnalyzer
+        // See http://www.brendangregg.com/FrequencyTrails/modes.html
+        private static Modality GetModalInfo(Benchmark benchmark)
+        {
+            if (benchmark.Statistics.N < 12) // not enough data to tell
+                return Modality.Single;
+
+            double mValue = MValueCalculator.Calculate(benchmark.GetOriginalValues());
+            if (mValue > 4.2)
+                return Modality.Multimodal;
+            else if (mValue > 3.2)
+                return Modality.Bimodal;
+            else if (mValue > 2.8)
+                return Modality.Several;
+
+            return Modality.Single;
+        }
+
+        private static MeasurementResult TransformMeasurementResult(Benchmark benchmarkResult) => new MeasurementResult()
+        {
+            Result = benchmarkResult.Statistics.Median,
+            Modality = GetModalInfo(benchmarkResult)
+        };
+
     }
 }
