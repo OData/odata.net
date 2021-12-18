@@ -8,6 +8,7 @@ using ResultsComparer.Core;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -15,7 +16,7 @@ using System.Text.RegularExpressions;
 
 namespace ResultsComparer.VsProfiler
 {
-    class VsProfilerReader<T>: IReader<T> where T : new()
+    public class VsProfilerReader<T>: IReader<T> where T : new()
     {
         private TextReader reader;
         private string[] columns;
@@ -167,23 +168,23 @@ namespace ResultsComparer.VsProfiler
                     object targetValue;
                     if (property.PropertyType == typeof(int))
                     {
-                        targetValue = int.Parse(rawValue);
+                        targetValue = int.Parse(rawValue, NumberStyles.AllowThousands);
                     }
                     else if (property.PropertyType == typeof(long))
                     {
-                        targetValue = long.Parse(rawValue);
+                        targetValue = long.Parse(rawValue, NumberStyles.AllowThousands);
                     }
                     else if (property.PropertyType == typeof(decimal))
                     {
-                        targetValue = decimal.Parse(rawValue);
+                        targetValue = decimal.Parse(rawValue, NumberStyles.AllowThousands|NumberStyles.AllowDecimalPoint);
                     }
                     else if (property.PropertyType == typeof(double))
                     {
-                        targetValue = double.Parse(rawValue);
+                        targetValue = double.Parse(rawValue, NumberStyles.AllowThousands | NumberStyles.AllowDecimalPoint);
                     }
                     else if (property.PropertyType == typeof(float))
                     {
-                        targetValue = float.Parse(rawValue);
+                        targetValue = float.Parse(rawValue, NumberStyles.AllowThousands | NumberStyles.AllowDecimalPoint);
                     }
                     else
                     {

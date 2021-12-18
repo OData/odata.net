@@ -1,0 +1,4 @@
+﻿Type	Allocations	Bytes
+ - System.Collections.Generic.List<>	237,933	7,613,856
+ - System.String	128,696	5,339,698
+ - System.Collections.ObjectModel.Collection<>	125,001	3,000,024
