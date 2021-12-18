@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace ResultsComparer.VsProfiler
 {
-    class VsAllocationsComparer : IResultsComparer
+    public class VsAllocationsComparer : IResultsComparer
     {
         public bool CanReadFile(string path)
         {
@@ -39,12 +39,12 @@ namespace ResultsComparer.VsProfiler
 
             foreach (VsProfilerAllocations allocation in diffReader)
             {
-                baseResults[allocation.Type] = allocation;
+                diffResults[allocation.Type] = allocation;
             }
 
             ComparerResults results = new();
             results.Results = GetResults(baseResults, diffResults).ToArray();
-            results.NoDiff = results.Results.Any();
+            results.NoDiff = !results.Results.Any();
 
             return results;
         }
@@ -53,8 +53,7 @@ namespace ResultsComparer.VsProfiler
         {
             foreach ((string id, VsProfilerAllocations baseAlloc) in baseResults)
             {
-                VsProfilerAllocations diffAlloc = null;
-                diffResults.TryGetValue(id, out diffAlloc);
+                diffResults.TryGetValue(id, out VsProfilerAllocations diffAlloc);
 
                 // TODO: now we're assuming "Allocations" are to be compared. We should allow user to configure
                 // which measurement to compare (i.e. bytes, allocations, etc.)
@@ -65,8 +64,11 @@ namespace ResultsComparer.VsProfiler
                     yield return new ComparerResult()
                     {
                         Id = id,
-                        BaseResult = new MeasurementResult { Result = baseResult }
+                        BaseResult = new MeasurementResult { Result = baseResult },
+                        Conclusion = ComparisonConslusion.Missing
                     };
+
+                    continue;
                 }
 
                 ComparisonConslusion conclusion;
@@ -108,7 +110,8 @@ namespace ResultsComparer.VsProfiler
                 yield return new ComparerResult
                 {
                     Id = id,
-                    DiffResult = new MeasurementResult { Result = diffResult }
+                    DiffResult = new MeasurementResult { Result = diffResult },
+                    Conclusion = ComparisonConslusion.New
                 };
             }
         }

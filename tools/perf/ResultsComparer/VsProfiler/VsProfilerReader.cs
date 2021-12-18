@@ -35,7 +35,7 @@ namespace ResultsComparer.VsProfiler
 
         public bool ReadNext(out T value)
         {
-            value = default(T);
+            value = default;
             rowNum++;
 
             if (rowNum == 1)
@@ -94,6 +94,11 @@ namespace ResultsComparer.VsProfiler
         private bool ReadLine(out string line)
         {
             line = reader.ReadLine();
+            while (line == "")
+            {
+                line = reader.ReadLine();
+            }
+
             return line != null;
         }
 
@@ -110,7 +115,7 @@ namespace ResultsComparer.VsProfiler
 
         private bool ReadRowValue(out T value)
         {
-            value = default(T);
+            value = default;
 
             if (!ReadLine(out string row))
             {
@@ -128,7 +133,7 @@ namespace ResultsComparer.VsProfiler
             this.columns = row.Split("\t");
         }
 
-        private string[] ExtractRowValues(string row)
+        private static string[] ExtractRowValues(string row)
         {
             string[] values = row.Split("\t");
             // the first column of data has characters used to represent the indentation of the

@@ -25,7 +25,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="VsProfiler\VsProfilerAllocationsSample.txt">
+    <None Update="Samples\VsProfiler\VsProfilerObjectAllocations.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Samples\VsProfiler\VsProfilerObjectAllocations2.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

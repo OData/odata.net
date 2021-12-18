@@ -57,21 +57,4 @@ namespace ResultsComparer.Core
         public double Result { get; set; }
         public Modality Modality { get; set; }
     }
-
-    public enum Modality
-    {
-        Unknown,
-        Single,
-        Several,
-        Bimodal,
-        Multimodal
-    }
-
-    public enum ComparisonConslusion
-    {
-        Same,
-        Better,
-        Worse,
-        Unkown
-    }
 }

@@ -1,10 +1,7 @@
 ﻿using ResultsComparer.VsProfiler;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using FluentAssertions;
 
@@ -37,34 +34,34 @@ namespace ResultsComparer.Tests.VsProfiler
                     Type = "System.Collections.ObjectModel.Collection<>",
                     Allocations = 125001,
                     Bytes = 3000024
+                },
+                new VsProfilerAllocations()
+                {
+                    Type = "System.Collections.Generic.List<>.Enumerator",
+                    Allocations = 124285,
+                    Bytes = 4971400
+                },
+                new VsProfilerAllocations()
+                {
+                    Type = "System.Int32",
+                    Allocations = 115446,
+                    Bytes = 2770704
+                },
+                new VsProfilerAllocations()
+                {
+                    Type = "System.Linq.Enumerable.EnumerablePartition<>",
+                    Allocations = 75002,
+                    Bytes = 4200112
                 }
             };
 
             List<VsProfilerAllocations> actualValues = new();
 
-            Assert.True(reader.ReadNext(out var value1));
-            value1.Should().BeEquivalentTo(new VsProfilerAllocations()
+            foreach (var expectedValue in expectedValues)
             {
-                Type = "System.Collections.Generic.List<>",
-                Allocations = 237933,
-                Bytes = 7613856
-            });
-
-            Assert.True(reader.ReadNext(out var value2));
-            value2.Should().BeEquivalentTo(new VsProfilerAllocations()
-            {
-                Type = "System.String",
-                Allocations = 128696,
-                Bytes = 5339698
-            });
-
-            Assert.True(reader.ReadNext(out var value3));
-            value3.Should().BeEquivalentTo(new VsProfilerAllocations()
-            {
-                Type = "System.Collections.ObjectModel.Collection<>",
-                Allocations = 125001,
-                Bytes = 3000024
-            });
+                Assert.True(reader.ReadNext(out var actualValue));
+                actualValue.Should().BeEquivalentTo(expectedValue);
+            }
 
             Assert.False(reader.ReadNext(out _));
         }
@@ -94,6 +91,24 @@ namespace ResultsComparer.Tests.VsProfiler
                     Type = "System.Collections.ObjectModel.Collection<>",
                     Allocations = 125001,
                     Bytes = 3000024
+                },
+                new VsProfilerAllocations()
+                {
+                    Type = "System.Collections.Generic.List<>.Enumerator",
+                    Allocations = 124285,
+                    Bytes = 4971400
+                },
+                new VsProfilerAllocations()
+                {
+                    Type = "System.Int32",
+                    Allocations = 115446,
+                    Bytes = 2770704
+                },
+                new VsProfilerAllocations()
+                {
+                    Type = "System.Linq.Enumerable.EnumerablePartition<>",
+                    Allocations = 75002,
+                    Bytes = 4200112
                 }
             };
 
