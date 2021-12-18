@@ -4,7 +4,7 @@ using ResultsComparer.VsProfiler;
 
 namespace ResultsComparer
 {
-    class ComparerProviderFactory
+    public class ComparerProviderFactory
     {
         public static IResultsComparerProvider CreateDefaultProvider()
         {

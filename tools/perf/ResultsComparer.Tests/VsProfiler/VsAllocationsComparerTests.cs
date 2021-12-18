@@ -2,6 +2,7 @@
 using ResultsComparer.VsProfiler;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,25 @@ namespace ResultsComparer.Tests.VsProfiler
 {
     public class VsAllocationsComparerTests
     {
+        [Theory]
+        [InlineData("Type  Allocations Bytes", true)]
+        [InlineData("Type   Allocations", true)]
+        [InlineData("Bytes  Type    Allocations", true)]
+        [InlineData("", false)]
+        [InlineData("Allocations    Bytes", false)]
+        [InlineData("sfdsfd1432-osfg=", false)]
+        public void CanReadFile_SupportsTextFileThatContainsTypeColumn(string contents, bool isSupported)
+        {
+            string path = Path.GetTempFileName();
+            File.WriteAllText(path, contents);
+
+            VsAllocationsComparer comparer = new();
+            Assert.Equal(isSupported, comparer.CanReadFile(path));
+
+            File.Delete(path);
+        }
+
+
         [Fact]
         public void ComparesObjectAllocationsReportFiles()
         {

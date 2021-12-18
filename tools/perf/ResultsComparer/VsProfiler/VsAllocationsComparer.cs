@@ -19,7 +19,7 @@ namespace ResultsComparer.VsProfiler
         {
             using var reader = new StreamReader(path);
             string firstLine = reader.ReadLine();
-            return firstLine.Contains("Type");
+            return firstLine != null && firstLine.Contains("Type");
         }
 
         public ComparerResults CompareResults(string basePath, string diffPath, ComparerOptions options)

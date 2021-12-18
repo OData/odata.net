@@ -21,7 +21,7 @@ namespace ResultsComparer.Bdn
     /// <summary>
     /// Results comparer for BenchmarkDotNet full JSON reports.
     /// </summary>
-    internal class BdnComparer : IResultsComparer
+    public class BdnComparer : IResultsComparer
     {
         private const string FullBdnJsonFileExtension = "full.json";
 
