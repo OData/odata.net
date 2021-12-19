@@ -65,25 +65,25 @@ namespace ResultsComparer.VsProfiler
                     {
                         Id = id,
                         BaseResult = new MeasurementResult { Result = baseResult },
-                        Conclusion = ComparisonConslusion.Missing
+                        Conclusion = ComparisonConclusion.Missing
                     };
 
                     continue;
                 }
 
-                ComparisonConslusion conclusion;
+                ComparisonConclusion conclusion;
 
                 // since allocations are exact values and consistent, and since we're dealing with single values
                 // we compute the difference directly instead of using statistics helper
                 // and we ignore the threshold for now
                 // TODO: test using statistical helper and see whether there's a difference
                 long diffResult = diffAlloc.Allocations;
-                conclusion = diffResult > baseResult ? ComparisonConslusion.Worse :
-                    diffResult < baseResult ? ComparisonConslusion.Better :
-                    ComparisonConslusion.Same;
+                conclusion = diffResult > baseResult ? ComparisonConclusion.Worse :
+                    diffResult < baseResult ? ComparisonConclusion.Better :
+                    ComparisonConclusion.Same;
           
                 // skip same results
-                if (conclusion == ComparisonConslusion.Same)
+                if (conclusion == ComparisonConclusion.Same)
                 {
                     continue;
                 }
@@ -111,7 +111,7 @@ namespace ResultsComparer.VsProfiler
                 {
                     Id = id,
                     DiffResult = new MeasurementResult { Result = diffResult },
-                    Conclusion = ComparisonConslusion.New
+                    Conclusion = ComparisonConclusion.New
                 };
             }
         }

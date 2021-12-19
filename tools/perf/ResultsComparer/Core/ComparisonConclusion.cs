@@ -4,7 +4,7 @@
     /// Represents the conclusion of a comparison between the base and diff reports
     /// for a single data point.
     /// </summary>
-    public enum ComparisonConslusion
+    public enum ComparisonConclusion
     {
         /// <summary>
         /// The base and diff reports have the same result or within the configured threshold

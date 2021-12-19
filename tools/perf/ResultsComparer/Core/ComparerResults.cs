@@ -49,7 +49,7 @@ namespace ResultsComparer.Core
         /// <summary>
         /// Conclusion specifying whether an improvement, regression, no difference, etc. was detected.
         /// </summary>
-        public ComparisonConslusion Conclusion { get; set; }
+        public ComparisonConclusion Conclusion { get; set; }
     }
 
     public class MeasurementResult

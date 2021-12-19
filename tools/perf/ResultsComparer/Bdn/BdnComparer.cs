@@ -163,11 +163,11 @@ namespace ResultsComparer.Bdn
             Modality = GetModalInfo(benchmarkResult)
         };
 
-        private static ComparisonConslusion TransformConclusion(EquivalenceTestConclusion conclusion) =>
-            conclusion == EquivalenceTestConclusion.Same ? ComparisonConslusion.Same
-            : conclusion == EquivalenceTestConclusion.Faster ? ComparisonConslusion.Better
-            : conclusion == EquivalenceTestConclusion.Slower ? ComparisonConslusion.Worse
-            : ComparisonConslusion.Unkown;
+        private static ComparisonConclusion TransformConclusion(EquivalenceTestConclusion conclusion) =>
+            conclusion == EquivalenceTestConclusion.Same ? ComparisonConclusion.Same
+            : conclusion == EquivalenceTestConclusion.Faster ? ComparisonConclusion.Better
+            : conclusion == EquivalenceTestConclusion.Slower ? ComparisonConclusion.Worse
+            : ComparisonConclusion.Unkown;
 
     }
 }

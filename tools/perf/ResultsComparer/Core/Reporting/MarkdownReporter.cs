@@ -1,0 +1,116 @@
+﻿using MarkdownLog;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+namespace ResultsComparer.Core.Reporting
+{
+    public class MarkdownReporter : IReporter
+    {
+        public void GenerateReport(ComparerResults results, Stream destination, ComparerOptions args)
+        {
+            ComparerResult[] resultsArray = results.Results.ToArray();
+
+            if (resultsArray.Length == 0)
+            {
+                return;
+            }
+
+            using StreamWriter writer = new(destination);
+            PrintSummary(resultsArray, writer);
+            PrintTable(resultsArray, ComparisonConclusion.Worse, writer, args);
+            PrintTable(resultsArray, ComparisonConclusion.Better, writer, args);
+            PrintTable(resultsArray, ComparisonConclusion.New, writer, args);
+            PrintTable(resultsArray, ComparisonConclusion.Missing, writer, args);
+        }
+
+        private static void PrintSummary(ComparerResult[] notSame, StreamWriter writer)
+
+        {
+            IEnumerable<ComparerResult> better = notSame.Where(result =>
+                result.Conclusion == ComparisonConclusion.Worse).ToList();
+            IEnumerable<ComparerResult> worse = notSame.Where(result =>
+                result.Conclusion == ComparisonConclusion.Better).ToList();
+            int betterCount = better.Count();
+            int worseCount = worse.Count();
+            int totalCount = betterCount + worseCount;
+
+            // If the baseline doesn't have the same set of tests, you wind up with Infinity in the list of diffs.
+            // Exclude them for purposes of geomean.
+            worse = worse.Where(x => Helpers.GetRatio(x) != double.PositiveInfinity).ToList();
+            better = better.Where(x => Helpers.GetRatio(x) != double.PositiveInfinity).ToList();
+
+            writer.WriteLine("summary:");
+
+            if (betterCount > 0)
+            {
+                var betterGeoMean = Math.Pow(10,
+                    better.Skip(1)
+                    .Aggregate(Math.Log10(Helpers.GetRatio(better.First())), (x, y) => x + Math.Log10(Helpers.GetRatio(y))) / better.Count());
+                writer.WriteLine($"better: {betterCount}, geomean: {betterGeoMean:F3}");
+            }
+
+            if (worseCount > 0)
+            {
+                var worseGeoMean = Math.Pow(10, worse.Skip(1).Aggregate(Math.Log10(Helpers.GetRatio(worse.First())), (x, y) => x + Math.Log10(Helpers.GetRatio(y))) / worse.Count());
+                writer.WriteLine($"worse: {worseCount}, geomean: {worseGeoMean:F3}");
+            }
+
+            writer.WriteLine($"total diff: {totalCount}");
+            writer.WriteLine();
+        }
+
+        private static void PrintTable(ComparerResult[] notSame, ComparisonConclusion conclusion, StreamWriter writer, ComparerOptions args)
+        {
+            var data = notSame
+                .Where(result => result.Conclusion == conclusion)
+                .OrderByDescending(result => conclusion.IsBetterOrWorse() ?
+                    Helpers.GetRatio(conclusion, result.BaseResult, result.DiffResult) : 0)
+                .Take(args.TopCount ?? int.MaxValue)
+                .Select(result => new
+                {
+                    Id = (result.Id.Length <= 80 || args.FullId) ? result.Id : result.Id.Substring(0, 80),
+                    DisplayValue = conclusion.IsBetterOrWorse() ? Helpers.GetRatio(conclusion, result.BaseResult, result.DiffResult).ToString() : "N/A",
+                    BaseMedian = result.BaseResult?.Result,
+                    DiffMedian = result.DiffResult?.Result,
+                    Modality = conclusion.IsBetterOrWorse() ? GetModalInfo(result.BaseResult) ?? GetModalInfo(result.DiffResult) : "N/A"
+                })
+                .ToArray();
+
+            if (!data.Any())
+            {
+                writer.WriteLine($"No {conclusion} results for the provided threshold = {args.StatisticalTestThreshold} and noise filter = {args.NoiseThreshold}.");
+                writer.WriteLine();
+                return;
+            }
+
+            Table table = data
+                .ToMarkdownTable()
+                .WithHeaders(conclusion.ToString(), conclusion == ComparisonConclusion.Better ? "base/diff" : "diff/base", "Base Median (ns)", "Diff Median (ns)", "Modality");
+
+            foreach (string line in table.ToMarkdown().Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries))
+                writer.WriteLine($"| {line.TrimStart()}|"); // the table starts with \t and does not end with '|' and it looks bad so we fix it
+
+            writer.WriteLine();
+        }
+
+        private static string GetModalInfo(MeasurementResult benchmark)
+        {
+            if (benchmark == null)
+                return null;
+
+            if (benchmark.Modality == Modality.Unknown) // not enough data to tell
+                return null;
+
+            if (benchmark.Modality == Modality.Multimodal)
+                return "multimodal";
+            else if (benchmark.Modality == Modality.Bimodal)
+                return "bimodal";
+            else if (benchmark.Modality == Modality.Several)
+                return "several?";
+
+            return null;
+        }
+    }
+}
