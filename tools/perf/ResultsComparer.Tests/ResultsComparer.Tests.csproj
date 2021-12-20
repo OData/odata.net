@@ -37,6 +37,9 @@
     <None Update="Samples\VsProfiler\ObjectAllocationsComparisonReport.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Samples\VsProfiler\ObjectAllocationsSizeComparisonReport.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Samples\VsProfiler\VsProfilerObjectAllocations.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

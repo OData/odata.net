@@ -19,10 +19,10 @@ namespace ResultsComparer.Core.Reporting
 
             using StreamWriter writer = new(destination, leaveOpen: true);
             PrintSummary(resultsArray, writer);
-            PrintTable(resultsArray, ComparisonConclusion.Worse, writer, args);
-            PrintTable(resultsArray, ComparisonConclusion.Better, writer, args);
-            PrintTable(resultsArray, ComparisonConclusion.New, writer, args);
-            PrintTable(resultsArray, ComparisonConclusion.Missing, writer, args);
+            PrintTable(resultsArray, results.MetricName, ComparisonConclusion.Worse, writer, args);
+            PrintTable(resultsArray, results.MetricName, ComparisonConclusion.Better, writer, args);
+            PrintTable(resultsArray, results.MetricName, ComparisonConclusion.New, writer, args);
+            PrintTable(resultsArray, results.MetricName, ComparisonConclusion.Missing, writer, args);
             writer.Flush();
         }
 
@@ -35,7 +35,9 @@ namespace ResultsComparer.Core.Reporting
                 result.Conclusion == ComparisonConclusion.Better).ToList();
             int betterCount = better.Count();
             int worseCount = worse.Count();
-            int totalCount = betterCount + worseCount;
+            int missingCount = notSame.Where(result => result.Conclusion == ComparisonConclusion.Missing).Count();
+            int newCount = notSame.Where(result => result.Conclusion == ComparisonConclusion.New).Count();
+            int totalCount = betterCount + worseCount + missingCount + newCount;
 
             // If the baseline doesn't have the same set of tests, you wind up with Infinity in the list of diffs.
             // Exclude them for purposes of geomean.
@@ -58,11 +60,21 @@ namespace ResultsComparer.Core.Reporting
                 writer.WriteLine($"worse: {worseCount}, geomean: {worseGeoMean:F3}");
             }
 
+            if (newCount > 0)
+            {
+                writer.WriteLine($"new (results in the diff that are not in the base): {newCount}");
+            }
+
+            if (missingCount > 0)
+            {
+                writer.WriteLine($"missing (results in the base that are not in the diff): {missingCount}");
+            }    
+
             writer.WriteLine($"total diff: {totalCount}");
             writer.WriteLine();
         }
 
-        private static void PrintTable(ComparerResult[] notSame, ComparisonConclusion conclusion, StreamWriter writer, ComparerOptions args)
+        private static void PrintTable(ComparerResult[] notSame, string metricName, ComparisonConclusion conclusion, StreamWriter writer, ComparerOptions args)
         {
             var data = notSame
                 .Where(result => result.Conclusion == conclusion)
@@ -88,7 +100,12 @@ namespace ResultsComparer.Core.Reporting
 
             Table table = data
                 .ToMarkdownTable()
-                .WithHeaders(conclusion.ToString(), conclusion == ComparisonConclusion.Better ? "base/diff" : "diff/base", "Base Median (ns)", "Diff Median (ns)", "Modality");
+                .WithHeaders(
+                    conclusion.ToString(),
+                    conclusion == ComparisonConclusion.Better ? "base/diff" : "diff/base",
+                    $"Base {metricName}",
+                    $"Diff {metricName}",
+                    "Modality");
 
             foreach (string line in table.ToMarkdown().Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries))
                 writer.WriteLine($"| {line.TrimStart()}|"); // the table starts with \t and does not end with '|' and it looks bad so we fix it

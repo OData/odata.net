@@ -13,7 +13,7 @@ namespace ResultsComparer
 {
     public class CommandLineOptions
     {
-        [Option("reporter", HelpText = "The report comparer to use. Possible values are 'bdn' for BenchmarkDotNet, 'vsAllocs' for Visual Studio .NET Object Allocator")]
+        [Option("type", HelpText = "The type of reports to compare. Possible values are 'bdn' for BenchmarkDotNet, 'vsAllocs' for Visual Studio .NET Object Allocator")]
         public string Comparer { get; set; }
 
         [Option("base", HelpText = "Path to the folder/file with base results.")]
@@ -27,6 +27,9 @@ namespace ResultsComparer
 
         [Option("noise", HelpText = "Noise threshold for Statistical Test. The difference for 1.0ns and 1.1ns is 10%, but it's just a noise. Examples: 0.5ns 1ns.", Default = "0.3ns" )]
         public string NoiseThreshold { get; set; }
+        
+        [Option("metric", HelpText = "The metric to compare from the reports. Optional.")]
+        public string Metric { get; set; }
 
         [Option("top", HelpText = "Filter the diff to top/bottom N results. Optional.")]
         public int? TopCount { get; set; }

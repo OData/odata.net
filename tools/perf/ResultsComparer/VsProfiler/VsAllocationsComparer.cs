@@ -42,22 +42,23 @@ namespace ResultsComparer.VsProfiler
                 diffResults[allocation.Type] = allocation;
             }
 
-            ComparerResults results = new();
-            results.Results = GetResults(baseResults, diffResults).ToArray();
-            results.NoDiff = !results.Results.Any();
+            string metric = string.IsNullOrEmpty(options.Metric) ? "Allocations" : options.Metric;
+
+            ComparerResults results = new() {
+                MetricName = GetMetricName(metric),
+                Results = GetResults(baseResults, diffResults, metric).ToArray()
+            };
 
             return results;
         }
 
-        private IEnumerable<ComparerResult> GetResults(Dictionary<string, VsProfilerAllocations> baseResults, Dictionary<string, VsProfilerAllocations> diffResults)
+        private IEnumerable<ComparerResult> GetResults(Dictionary<string, VsProfilerAllocations> baseResults, Dictionary<string, VsProfilerAllocations> diffResults, string metric)
         {
             foreach ((string id, VsProfilerAllocations baseAlloc) in baseResults)
             {
                 diffResults.TryGetValue(id, out VsProfilerAllocations diffAlloc);
 
-                // TODO: now we're assuming "Allocations" are to be compared. We should allow user to configure
-                // which measurement to compare (i.e. bytes, allocations, etc.)
-                long baseResult = baseAlloc.Allocations;
+                long baseResult = GetMetricValue(baseAlloc, metric);
 
                 if (diffAlloc == null)
                 {
@@ -77,7 +78,7 @@ namespace ResultsComparer.VsProfiler
                 // we compute the difference directly instead of using statistics helper
                 // and we ignore the threshold for now
                 // TODO: test using statistical helper and see whether there's a difference
-                long diffResult = diffAlloc.Allocations;
+                long diffResult = GetMetricValue(diffAlloc, metric);
                 conclusion = diffResult > baseResult ? ComparisonConclusion.Worse :
                     diffResult < baseResult ? ComparisonConclusion.Better :
                     ComparisonConclusion.Same;
@@ -105,7 +106,7 @@ namespace ResultsComparer.VsProfiler
                     continue;
                 }
 
-                long diffResult = diffAllocs.Allocations;
+                long diffResult = GetMetricValue(diffAllocs, metric);
 
                 yield return new ComparerResult
                 {
@@ -120,6 +121,34 @@ namespace ResultsComparer.VsProfiler
         {
             var textReader = new StreamReader(File.OpenRead(path));
             return new VsProfilerReader<VsProfilerAllocations>(textReader);
+        }
+
+        private static long GetMetricValue(VsProfilerAllocations allocations, string metric)
+        {
+            if (metric.Equals("Allocations", StringComparison.OrdinalIgnoreCase))
+            {
+                return allocations.Allocations;
+            }
+            else if (metric.Equals("Size", StringComparison.OrdinalIgnoreCase) || metric.Equals("Bytes", StringComparison.OrdinalIgnoreCase))
+            {
+                return allocations.Bytes;
+            }
+
+            throw new Exception($"Unsupported metric {metric} for VS Profiler Allocations Comparer");
+        }
+        
+        private static string GetMetricName(string metric)
+        {
+            if (metric.Equals("Allocations", StringComparison.OrdinalIgnoreCase))
+            {
+                return "Allocations";
+            }
+            else if (metric.Equals("Size", StringComparison.OrdinalIgnoreCase) || metric.Equals("Bytes", StringComparison.OrdinalIgnoreCase))
+            {
+                return "Size (bytes)";
+            }
+
+            return metric;
         }
     }
 }

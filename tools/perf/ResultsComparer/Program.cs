@@ -5,15 +5,10 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Threading;
 using CommandLine;
-using MarkdownLog;
 using ResultsComparer.Core;
-using ResultsComparer.Bdn;
-using System.Threading.Tasks;
 using System.IO;
 using ResultsComparer.Core.Reporting;
 
@@ -37,7 +32,6 @@ namespace ResultsComparer
             IResultsComparer comparer = string.IsNullOrEmpty(args.Comparer) ?
                 comparerProvider.GetForFile(args.BasePath) : comparerProvider.GetById(args.Comparer);
 
-
             try
             {
                 ComparerOptions options = new()
@@ -46,7 +40,8 @@ namespace ResultsComparer
                     NoiseThreshold = args.NoiseThreshold,
                     FullId = args.FullId,
                     TopCount = args.TopCount,
-                    Filters = args.Filters
+                    Filters = args.Filters,
+                    Metric = args.Metric
                 };
 
                 ComparerResults results = comparer.CompareResults(args.BasePath, args.DiffPath, options);

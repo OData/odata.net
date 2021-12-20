@@ -46,11 +46,13 @@ namespace ResultsComparer.Bdn
             IEnumerable<(string id, Benchmark baseResult, Benchmark diffResult, EquivalenceTestConclusion conclusion)> notSame =
                 GetNotSameResults(basePath, diffPath, options, testThreshold, noiseThreshold).ToArray();
 
-            ComparerResults results = new();
+            ComparerResults results = new()
+            {
+                MetricName = "Median (ns)"
+            };
 
             if (!notSame.Any())
             {
-                results.NoDiff = true;
                 return results;
             }
 

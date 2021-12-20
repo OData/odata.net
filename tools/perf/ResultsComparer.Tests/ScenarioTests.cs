@@ -19,6 +19,16 @@ namespace ResultsComparer.Tests
                     "Samples/VsProfiler/VsProfilerObjectAllocations2.txt",
                     "Samples/VsProfiler/ObjectAllocationsComparisonReport.md"
                 },
+                new object[] {
+                    "vsAllocs",
+                    new ComparerOptions()
+                    {
+                        Metric = "Bytes"
+                    },
+                    "Samples/VsProfiler/VsProfilerObjectAllocations.txt",
+                    "Samples/VsProfiler/VsProfilerObjectAllocations2.txt",
+                    "Samples/VsProfiler/ObjectAllocationsSizeComparisonReport.md"
+                },
                 new object[]
                 {
                     "bdn",

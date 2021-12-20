@@ -42,7 +42,7 @@ namespace ResultsComparer.Tests.VsProfiler
 
             ComparerResults results = comparer.CompareResults(basePath, diffPath, options);
 
-            Assert.False(results.NoDiff);
+            Assert.Equal("Allocations", results.MetricName);
             Dictionary<string, ComparerResult> comparisons = results.Results.ToDictionary(r => r.Id);
 
             Assert.Equal(6, comparisons.Count);

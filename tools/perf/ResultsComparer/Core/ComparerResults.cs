@@ -16,10 +16,10 @@ namespace ResultsComparer.Core
     public class ComparerResults
     {
         /// <summary>
-        /// Indicates that no statisically significant difference
-        /// was detected between the two files.
+        /// The name of the metric that was compared. This
+        /// will be used in the comparison report. E.g: Median (ns), Size (bytes), etc.
         /// </summary>
-        public bool NoDiff { get; set; }
+        public string MetricName { get; set; }
 
         /// <summary>
         /// The list of results from the comparison. Each item
