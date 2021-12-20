@@ -12,8 +12,12 @@ using System.Linq;
 
 namespace ResultsComparer.Core.Reporting
 {
+    /// <summary>
+    /// Generates comparison reports in markdown format.
+    /// </summary>
     public class MarkdownReporter : IReporter
     {
+        /// <inheritdoc/>
         public void GenerateReport(ComparerResults results, Stream destination, ComparerOptions args)
         {
             ComparerResult[] resultsArray = results.Results.ToArray();

@@ -9,6 +9,9 @@ using System.Collections.Generic;
 
 namespace ResultsComparer.Core
 {
+    /// <summary>
+    /// The default <see cref="IResultsComparerProvider"/>.
+    /// </summary>
     public class ResultsComparerProvider : IResultsComparerProvider
     {
         Dictionary<string, IResultsComparer> comparers = new();
@@ -17,6 +20,12 @@ namespace ResultsComparer.Core
         // when auto-detecting suitable comparers
         List<IResultsComparer> comparersList = new();
 
+        /// <summary>
+        /// Registers the specified <see cref="IResultsComparerer"/> with
+        /// the specified <paramref name="id"/>.
+        /// </summary>
+        /// <param name="id">The ID to associate with the comparer for later retrieval.</param>
+        /// <param name="comparer">The comparer to register.</param>
         public void RegisterComparer(string id, IResultsComparer comparer)
         {
             if (!comparers.TryAdd(id, comparer))
@@ -27,6 +36,7 @@ namespace ResultsComparer.Core
             comparersList.Add(comparer);
         }
 
+        /// <inheritdoc/>
         public IResultsComparer GetById(string comparerId)
         {
             if (comparers.TryGetValue(comparerId, out var comparer))
@@ -37,6 +47,7 @@ namespace ResultsComparer.Core
             throw new Exception($"Unknown comparer '{comparerId}'.");
         }
 
+        /// <inheritdoc/>
         public IResultsComparer GetForFile(string filePath)
         {
             foreach (var comparer in comparersList)

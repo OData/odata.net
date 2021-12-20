@@ -6,8 +6,16 @@
 
 namespace ResultsComparer.Core.Reporting
 {
+    /// <summary>
+    /// Retrieves registered <see cref="IReporter"/>s.
+    /// </summary>
     public interface IReporterProvider
     {
+        /// <summary>
+        /// Gets the default see <see cref="IReporter"/> used
+        /// to display comparison reports.
+        /// </summary>
+        /// <returns>The default reporter.</returns>
         IReporter GetDefault();
     }
 }

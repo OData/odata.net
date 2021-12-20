@@ -8,6 +8,10 @@ using ResultsComparer.Core;
 
 namespace ResultsComparer.VsProfiler.Models
 {
+    /// <summary>
+    /// Represents the type of entries from
+    /// VS .NET Object Allocation Profiler Function Allocations report.
+    /// </summary>
     public class VsProfilerFunctionAllocations
     {
         [FieldName("Name")]

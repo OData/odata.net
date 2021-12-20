@@ -8,6 +8,10 @@ using ResultsComparer.Core;
 
 namespace ResultsComparer.VsProfiler
 {
+    /// <summary>
+    /// Represents the type of entries in a
+    /// VS .NET Object Allocation Profiler Allocations report.
+    /// </summary>
     public class VsProfilerTypeAllocations
     {
         [FieldName("Type")]

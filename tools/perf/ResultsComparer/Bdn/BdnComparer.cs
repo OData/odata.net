@@ -23,14 +23,14 @@ namespace ResultsComparer.Bdn
     /// </summary>
     public class BdnComparer : IResultsComparer
     {
-        private const string FullBdnJsonFileExtension = "full.json";
-
+        /// <inheritdoc/>
         public bool CanReadFile(string path)
         {
             bool isJson = path.EndsWith(".json", StringComparison.OrdinalIgnoreCase);
             return isJson;
         }
 
+        /// <inheritdoc/>
         public ComparerResults CompareResults(string basePath, string diffPath, ComparerOptions options)
         {
             if (options.StatisticalTestThreshold == null || !Threshold.TryParse(options.StatisticalTestThreshold, out var testThreshold))

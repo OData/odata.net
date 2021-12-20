@@ -6,6 +6,9 @@
 
 namespace ResultsComparer.Core
 {
+    /// <summary>
+    /// Represens the modality of a dataset.
+    /// </summary>
     public enum Modality
     {
         Unknown,

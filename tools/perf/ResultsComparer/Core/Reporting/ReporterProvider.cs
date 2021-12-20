@@ -6,10 +6,14 @@
 
 namespace ResultsComparer.Core.Reporting
 {
+    /// <summary>
+    /// The default <see cref="IReporterProvider"/>.
+    /// </summary>
     public class ReporterProvider : IReporterProvider
     {
         private readonly IReporter _default = new MarkdownReporter();
 
+        /// <inheritdoc/>
         public IReporter GetDefault()
         {
             return _default;

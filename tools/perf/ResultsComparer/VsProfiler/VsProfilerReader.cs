@@ -16,6 +16,14 @@ using System.Text.RegularExpressions;
 
 namespace ResultsComparer.VsProfiler
 {
+    // TODO: Consider using a general-purpose CSV/TSV reader instead
+    // e.g.: https://github.com/JoshClose/CsvHelper
+
+    /// <summary>
+    /// And <see cref="IReader{T}"/> that can read
+    /// text files containing text reports copied from the Visual Studio profiler sessions.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class VsProfilerReader<T>: IReader<T> where T : new()
     {
         private TextReader reader;
