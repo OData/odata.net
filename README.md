@@ -233,6 +233,10 @@ You can specify a different branch, commit or tag using the `baseBranch` variabl
 crank --config benchmarks.yml --scenario Service --profile local --variable base=true --variable baseBranch=v7.6.4
 ```
 
+#### Comparing benchmarks
+
+You can use the [ResultsComparer](./tools/perf/ResultsComparer) tool to compare benchmark results.
+
 ## 4. Documentation
 
 Please visit the [ODataLib docs](https://docs.microsoft.com/en-us/odata/) on docs.microsoft.com. It has detailed descriptions on each feature provided by OData lib, how to use the OData .Net Client to consume OData service etc.
