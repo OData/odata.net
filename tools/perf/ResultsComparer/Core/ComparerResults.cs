@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Perfolizer.Mathematics.SignificanceTesting;
-using ResultsComparer.Bdn;
 using System.Collections.Generic;
 
 namespace ResultsComparer.Core

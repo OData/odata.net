@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿//---------------------------------------------------------------------
+// <copyright file="BdnComparer.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ResultsComparer.Core.Reporting
 {

@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Threading.Tasks;
-
 namespace ResultsComparer.Core
 {
     /// <summary>
