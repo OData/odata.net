@@ -1,50 +1,46 @@
-﻿//---------------------------------------------------------------------
-// <copyright file="CommandLineOptions.cs" company="Microsoft">
-//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
-// </copyright>
-//---------------------------------------------------------------------
-
-using ResultsComparer.Core;
+﻿using ResultsComparer.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ResultsComparer.VsProfiler
 {
-    public class VsAllocationsComparer : IResultsComparer
+    public abstract class VsAllocationsComparer<T> : IResultsComparer where T: new()
     {
-        public bool CanReadFile(string path)
-        {
-            using var reader = new StreamReader(path);
-            string firstLine = reader.ReadLine();
-            return firstLine != null && firstLine.Contains("Type");
-        }
+        protected abstract IDictionary<string, string> MetricNameMap { get; }
+        protected abstract string DefaultMetric { get; } 
+
+        protected abstract string GetItemId(T item);
+        protected abstract long GetMetricValue(T item, string metric);
+        public abstract bool CanReadFile(string filePath);
 
         public ComparerResults CompareResults(string basePath, string diffPath, ComparerOptions options)
         {
-            using IReader<VsProfilerAllocations> baseReader = CreateReader(basePath);
-            using IReader<VsProfilerAllocations> diffReader = CreateReader(diffPath);
+            using IReader<T> baseReader = CreateReader(basePath);
+            using IReader<T> diffReader = CreateReader(diffPath);
 
             // since entries in the base and diff may be ordered differently,
             // let's store them in a dictionaries
-            Dictionary<string, VsProfilerAllocations> baseResults = new();
-            Dictionary<string, VsProfilerAllocations> diffResults = new();
+            Dictionary<string, T> baseResults = new();
+            Dictionary<string, T> diffResults = new();
 
-            foreach (VsProfilerAllocations allocation in baseReader)
+            foreach (T allocation in baseReader)
             {
-                baseResults[allocation.Type] = allocation;
+                baseResults[GetItemId(allocation)] = allocation;
             }
 
-            foreach (VsProfilerAllocations allocation in diffReader)
+            foreach (T allocation in diffReader)
             {
-                diffResults[allocation.Type] = allocation;
+                diffResults[GetItemId(allocation)] = allocation;
             }
 
-            string metric = string.IsNullOrEmpty(options.Metric) ? "Allocations" : options.Metric;
+            string metric = string.IsNullOrEmpty(options.Metric) ? DefaultMetric : options.Metric;
 
-            ComparerResults results = new() {
+            ComparerResults results = new()
+            {
                 MetricName = GetMetricName(metric),
                 Results = GetResults(baseResults, diffResults, metric).ToArray()
             };
@@ -52,11 +48,11 @@ namespace ResultsComparer.VsProfiler
             return results;
         }
 
-        private IEnumerable<ComparerResult> GetResults(Dictionary<string, VsProfilerAllocations> baseResults, Dictionary<string, VsProfilerAllocations> diffResults, string metric)
+        private IEnumerable<ComparerResult> GetResults(Dictionary<string, T> baseResults, Dictionary<string, T> diffResults, string metric)
         {
-            foreach ((string id, VsProfilerAllocations baseAlloc) in baseResults)
+            foreach ((string id, T baseAlloc) in baseResults)
             {
-                diffResults.TryGetValue(id, out VsProfilerAllocations diffAlloc);
+                diffResults.TryGetValue(id, out T diffAlloc);
 
                 long baseResult = GetMetricValue(baseAlloc, metric);
 
@@ -82,7 +78,7 @@ namespace ResultsComparer.VsProfiler
                 conclusion = diffResult > baseResult ? ComparisonConclusion.Worse :
                     diffResult < baseResult ? ComparisonConclusion.Better :
                     ComparisonConclusion.Same;
-          
+
                 // skip same results
                 if (conclusion == ComparisonConclusion.Same)
                 {
@@ -99,7 +95,7 @@ namespace ResultsComparer.VsProfiler
             }
 
             // find new entries in diff that are not in the base results
-            foreach ((string id, VsProfilerAllocations diffAllocs) in diffResults)
+            foreach ((string id, T diffAllocs) in diffResults)
             {
                 if (baseResults.ContainsKey(id))
                 {
@@ -117,35 +113,22 @@ namespace ResultsComparer.VsProfiler
             }
         }
 
-        static IReader<VsProfilerAllocations> CreateReader(string path)
+        static IReader<T> CreateReader(string path)
         {
             var textReader = new StreamReader(File.OpenRead(path));
-            return new VsProfilerReader<VsProfilerAllocations>(textReader);
+            return new VsProfilerReader<T>(textReader);
         }
 
-        private static long GetMetricValue(VsProfilerAllocations allocations, string metric)
+        private string GetMetricName(string metric)
         {
-            if (metric.Equals("Allocations", StringComparison.OrdinalIgnoreCase))
+            if (MetricNameMap.TryGetValue(metric, out string displayName))
             {
-                return allocations.Allocations;
-            }
-            else if (metric.Equals("Size", StringComparison.OrdinalIgnoreCase) || metric.Equals("Bytes", StringComparison.OrdinalIgnoreCase))
-            {
-                return allocations.Bytes;
+                return displayName;
             }
 
-            throw new Exception($"Unsupported metric {metric} for VS Profiler Allocations Comparer");
-        }
-        
-        private static string GetMetricName(string metric)
-        {
-            if (metric.Equals("Allocations", StringComparison.OrdinalIgnoreCase))
+            if (MetricNameMap.TryGetValue(metric.ToLower(), out displayName))
             {
-                return "Allocations";
-            }
-            else if (metric.Equals("Size", StringComparison.OrdinalIgnoreCase) || metric.Equals("Bytes", StringComparison.OrdinalIgnoreCase))
-            {
-                return "Size (bytes)";
+                return displayName;
             }
 
             return metric;

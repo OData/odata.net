@@ -8,7 +8,7 @@ using ResultsComparer.Core;
 
 namespace ResultsComparer.VsProfiler
 {
-    public class VsProfilerAllocations
+    public class VsProfilerTypeAllocations
     {
         [FieldName("Type")]
         public string Type { get; set; }

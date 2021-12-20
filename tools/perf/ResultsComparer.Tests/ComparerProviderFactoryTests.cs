@@ -11,7 +11,8 @@ namespace ResultsComparer.Tests
     {
         [Theory]
         [InlineData("bdn", typeof(BdnComparer))]
-        [InlineData("vsAllocs", typeof(VsAllocationsComparer))]
+        [InlineData("vsAllocs", typeof(VsTypeAllocationsComparer))]
+        [InlineData("vsFuncAllocs", typeof(VsFunctionAllocationsComparer))]
         public void CreateDefaultPovider_GetById_ReturnsComparerWithSpecifiedId(string comparerId, Type comparerType)
         {
             IResultsComparerProvider provider = ComparerProviderFactory.CreateDefaultProvider();
@@ -28,7 +29,9 @@ namespace ResultsComparer.Tests
 
         [Theory]
         [InlineData(".json", "{}", typeof(BdnComparer))]
-        [InlineData(".txt", "Type\tAllocations\tBytes", typeof(VsAllocationsComparer))]
+        [InlineData(".txt", "Type\tAllocations\tBytes", typeof(VsTypeAllocationsComparer))]
+        [InlineData(".txt", "Name\tTotal (Allocations)\tSelf (Allocations)\tSelf Size Bytes)", typeof(VsFunctionAllocationsComparer))]
+
         public void CreateDefaultProvider_GetForFile_ReturnsSupportedComparerForFile(string extension, string contents, Type comparerType)
         {
             string path = Path.GetTempFileName();

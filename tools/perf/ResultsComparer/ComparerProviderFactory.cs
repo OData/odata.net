@@ -10,7 +10,8 @@ namespace ResultsComparer
         {
             ResultsComparerProvider provider = new();
             provider.RegisterComparer("bdn", new BdnComparer());
-            provider.RegisterComparer("vsAllocs", new VsAllocationsComparer());
+            provider.RegisterComparer("vsAllocs", new VsTypeAllocationsComparer());
+            provider.RegisterComparer("vsFuncAllocs", new VsFunctionAllocationsComparer());
             return provider;
         }
     }

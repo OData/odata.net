@@ -16,15 +16,17 @@ namespace ResultsComparer.Tests.VsProfiler
         [InlineData("Type  Allocations Bytes", true)]
         [InlineData("Type   Allocations", true)]
         [InlineData("Bytes  Type    Allocations", true)]
+        [InlineData("Type Bytes", true)]
         [InlineData("", false)]
         [InlineData("Allocations    Bytes", false)]
+        [InlineData("Type", false)]
         [InlineData("sfdsfd1432-osfg=", false)]
-        public void CanReadFile_SupportsTextFileThatContainsTypeColumn(string contents, bool isSupported)
+        public void CanReadFile_SupportsTextFileThatContainsAndAnAllocationsMetricTypeColumn(string contents, bool isSupported)
         {
             string path = Path.GetTempFileName();
             File.WriteAllText(path, contents);
 
-            VsAllocationsComparer comparer = new();
+            VsTypeAllocationsComparer comparer = new();
             Assert.Equal(isSupported, comparer.CanReadFile(path));
 
             File.Delete(path);
@@ -37,7 +39,7 @@ namespace ResultsComparer.Tests.VsProfiler
             string basePath = "Samples/VsProfiler/VsProfilerObjectAllocations.txt";
             string diffPath = "Samples/VsProfiler/VsProfilerObjectAllocations2.txt";
 
-            VsAllocationsComparer comparer = new();
+            VsTypeAllocationsComparer comparer = new();
             ComparerOptions options = new();
 
             ComparerResults results = comparer.CompareResults(basePath, diffPath, options);
