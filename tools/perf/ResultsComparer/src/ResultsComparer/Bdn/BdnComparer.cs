@@ -23,6 +23,8 @@ namespace ResultsComparer.Bdn
     /// </summary>
     public class BdnComparer : IResultsComparer
     {
+        private const string FullBdnJsonFileExtension = ".full.json";
+
         /// <inheritdoc/>
         public bool CanReadFile(string path)
         {
