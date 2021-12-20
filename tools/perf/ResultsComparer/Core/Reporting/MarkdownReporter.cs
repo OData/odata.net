@@ -17,12 +17,13 @@ namespace ResultsComparer.Core.Reporting
                 return;
             }
 
-            using StreamWriter writer = new(destination);
+            using StreamWriter writer = new(destination, leaveOpen: true);
             PrintSummary(resultsArray, writer);
             PrintTable(resultsArray, ComparisonConclusion.Worse, writer, args);
             PrintTable(resultsArray, ComparisonConclusion.Better, writer, args);
             PrintTable(resultsArray, ComparisonConclusion.New, writer, args);
             PrintTable(resultsArray, ComparisonConclusion.Missing, writer, args);
+            writer.Flush();
         }
 
         private static void PrintSummary(ComparerResult[] notSame, StreamWriter writer)

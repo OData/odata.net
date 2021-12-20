@@ -25,6 +25,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Samples\Bdn\ODataSerialization.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Samples\Bdn\ODataSerialization2.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Samples\Bdn\ODataSerializationCpuMarkdownReport.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Samples\VsProfiler\ObjectAllocationsComparisonReport.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Samples\VsProfiler\VsProfilerObjectAllocations.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

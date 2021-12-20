@@ -33,12 +33,12 @@ namespace ResultsComparer.Bdn
 
         public ComparerResults CompareResults(string basePath, string diffPath, ComparerOptions options)
         {
-            if (!Threshold.TryParse(options.StatisticalTestThreshold, out var testThreshold))
+            if (options.StatisticalTestThreshold == null || !Threshold.TryParse(options.StatisticalTestThreshold, out var testThreshold))
             {
                 throw new Exception($"Invalid statistical test threshold {options.StatisticalTestThreshold}. Examples: 5%, 10ms, 100ns, 1s.");
             }
 
-            if (!Threshold.TryParse(options.NoiseThreshold, out var noiseThreshold))
+            if (options.NoiseThreshold == null || !Threshold.TryParse(options.NoiseThreshold, out var noiseThreshold))
             {
                 throw new Exception($"Invalid noise threshold {options.NoiseThreshold}. Examples: 0.3ns 1ns.");
             }
@@ -98,7 +98,7 @@ namespace ResultsComparer.Bdn
             IEnumerable<BdnResult> baseResults = baseFiles.Select(ReadFromFile);
             IEnumerable<BdnResult> diffResults = diffFiles.Select(ReadFromFile);
 
-            Regex[] filters = options.Filters.Select(pattern => new Regex(WildcardToRegex(pattern), RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)).ToArray();
+            Regex[] filters = (options.Filters ?? Array.Empty<string>()).Select(pattern => new Regex(WildcardToRegex(pattern), RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)).ToArray();
 
             Dictionary<string, Benchmark> benchmarkIdToDiffResults = diffResults
                 .SelectMany(result => result.Benchmarks)

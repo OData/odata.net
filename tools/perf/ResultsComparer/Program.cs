@@ -54,7 +54,6 @@ namespace ResultsComparer
                 IReporter reporter = reporterProvider.GetDefault();
                 Stream output = Console.OpenStandardOutput();
                 reporter.GenerateReport(results, output, options);
-
             }
             catch (Exception ex)
             {
