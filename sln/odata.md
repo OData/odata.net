@@ -10,4 +10,4 @@
 10. Close Visual Studio, then re-open [odata.net/sln/odata.sln](OData.sln) from an administrator command prompt
 11. In Visual Studio, right click `Solution 'OData' -> Build Solution`
 12. Open the test explorer window from `Test -> Test Explorer`
-13. Select all of the tests and `right click -> Run`; NOTE: The `Microsoft.OData.PublicApi.Tests` tests will not run unless individually selected. They will also fail if run. This issue is currently being tracked [here](TODO)
+13. Select all of the tests and `right click -> Run`; NOTE: The `Microsoft.OData.PublicApi.Tests` tests will not run unless individually selected. They will also fail if run. This issue is currently being tracked [here](https://github.com/OData/odata.net/issues/2284)
