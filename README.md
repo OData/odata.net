@@ -245,6 +245,8 @@ cd tools/perf/ResultsComparer/src/ResultsComparer
 dotnet run -- --base=BenchmarkBefore.json --diff=BenchmarkAfter.json --threshold 1%
 ```
 
+Learn more about the benchmark results comparer [here](./tools/perf/ResultsComparer/README.md).
+
 ## 4. Documentation
 
 Please visit the [ODataLib docs](https://docs.microsoft.com/en-us/odata/) on docs.microsoft.com. It has detailed descriptions on each feature provided by OData lib, how to use the OData .Net Client to consume OData service etc.
