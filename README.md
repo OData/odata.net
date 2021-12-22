@@ -237,6 +237,14 @@ crank --config benchmarks.yml --scenario Service --profile local --variable base
 
 You can use the [ResultsComparer](./tools/perf/ResultsComparer) tool to compare benchmark results.
 
+Example:
+
+```cmd
+cd tools/perf/ResultsComparer/src/ResultsComparer
+
+dotnet run -- --base=BenchmarkBefore.json --diff=BenchmarkAfter.json --threshold 1%
+```
+
 ## 4. Documentation
 
 Please visit the [ODataLib docs](https://docs.microsoft.com/en-us/odata/) on docs.microsoft.com. It has detailed descriptions on each feature provided by OData lib, how to use the OData .Net Client to consume OData service etc.
