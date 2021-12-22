@@ -1,0 +1,4 @@
+1. Install Visual Studio 2019 Enterprise 16.11 configuring the installer with the `.vsconfig` file [here](./OData.CodeGen.vsconfig) (other versions and SKUs of Visual Studio 2019 should also work, but these instructions were tested with the version specified here). Continue through any prompts about components that are out-of-support. You can find more information about using `.vsconfig` files [here](https://docs.microsoft.com/en-us/visualstudio/install/import-export-installation-configurations?view=vs-2022)
+2. Create a local directory for the repository, then run `git clone https://github.com/OData/odata.net.git` from the command prompt in that directory
+3. Open [odata.net/sln/OData.CodeGen.sln](OData.CodeGen.sln) using the previously installed Visual Studio
+4. In Visual Studio, right click `Solution 'OData.CodeGen' -> Build Solution`
