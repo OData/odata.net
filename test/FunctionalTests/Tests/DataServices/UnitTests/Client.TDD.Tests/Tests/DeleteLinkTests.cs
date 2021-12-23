@@ -25,7 +25,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         }
 
         [Theory]
-        [InlineData(DeleteLinkUriOption.DollarIdQueryParam, "http://tempuri.svc/Customers(1)/Orders/$ref?$id=http://tempuri.svc/Orders(1)")]
+        [InlineData(DeleteLinkUriOption.IdQueryParam, "http://tempuri.svc/Customers(1)/Orders/$ref?$id=http://tempuri.svc/Orders(1)")]
         [InlineData(DeleteLinkUriOption.RelatedKeyAsSegment, "http://tempuri.svc/Customers(1)/Orders(1)/$ref")]
         public void ExpectedDeleteLinkUriShouldBeGenerated(DeleteLinkUriOption deleteLinkUriOption, string expectedUri)
         {
