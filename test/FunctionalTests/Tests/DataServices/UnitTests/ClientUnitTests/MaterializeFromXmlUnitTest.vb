@@ -18,7 +18,6 @@ Imports System.Text
 Imports System.Xml
 Imports System.Xml.Linq
 Imports Microsoft.VisualStudio.TestTools.UnitTesting
-Imports AstoriaClientUnitTests.AstoriaClientUnitTests.Stubs
 Imports AstoriaUnitTests
 
 Partial Public Class ClientModule
