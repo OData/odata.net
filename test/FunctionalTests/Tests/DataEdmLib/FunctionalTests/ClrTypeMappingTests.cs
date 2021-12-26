@@ -75,6 +75,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ClrTypeMappingVocabularyAnnotationConvertBetweenCollectionValueToCollectionType()
         {
+            Assert.Fail("gdebruin");
             var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.VocabularyAnnotationClassTypeBasicTest());
             this.VerifyThrowsException
                             (
