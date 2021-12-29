@@ -48,5 +48,21 @@ namespace Microsoft.OData.Edm.Tests
             var actual = EdmUtil.IsQualifiedName(name);
             Assert.Equal(expected, actual);
         }
+        
+        [Theory]
+        [InlineData("", false)]
+        [InlineData(" ", false)]
+        [InlineData("a.B", false)]
+        [InlineData("_abc", true)]
+        [InlineData("_ABC", true)]
+        [InlineData("AB/CD", false)]
+        [InlineData("ab_CD", true)]
+        [InlineData("AB12CD", true)]
+        [InlineData("12ABCD", false)]
+        public void IsValidUndottedName_Test(string name, bool expected)
+        {
+            var actual = EdmUtil.IsValidUndottedName(name);
+            Assert.Equal(expected, actual);
+        }
     }
 }
