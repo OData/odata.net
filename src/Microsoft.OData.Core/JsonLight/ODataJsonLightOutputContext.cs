@@ -540,11 +540,11 @@ namespace Microsoft.OData.JsonLight
         {
             if (this.asynchronousOutputStream != null)
             {
-                #if NETSTANDARD1_1
+#if NETSTANDARD1_1
                 this.asynchronousOutputStream.FlushSync();
-                #else
+#else
                 this.asynchronousOutputStream.Flush();
-                #endif
+#endif
             }
         }
 
@@ -556,11 +556,11 @@ namespace Microsoft.OData.JsonLight
         {
             if (this.asynchronousOutputStream != null)
             {
-                #if NETSTANDARD1_1
+#if NETSTANDARD1_1
                 return this.asynchronousOutputStream.FlushAsync();
-                #else
+#else
                 return this.asynchronousOutputStream.FlushAsync();
-                #endif
+#endif
             }
 
             return TaskUtils.CompletedTask;
@@ -794,14 +794,14 @@ namespace Microsoft.OData.JsonLight
                     // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitly.
                     if (this.asynchronousOutputStream != null)
                     {
-                        #if NETSTANDARD1_1
+#if NETSTANDARD1_1
                         this.asynchronousOutputStream.FlushSync();
                         this.asynchronousOutputStream.Dispose();
-                        #else
+#else
                         this.asynchronousOutputStream.Flush();
                         // We are working with a BufferedStream here. We flushed it already, so there is nothing else to dispose. And it would dispose the 
                         // inner stream as well.
-                        #endif
+#endif
                     }
 
                     // Dispose the message stream (note that we OWN this stream, so we always dispose it).

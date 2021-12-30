@@ -58,11 +58,11 @@ namespace Microsoft.OData
                 }
                 else
                 {
-                    #if NETSTANDARD1_1
+#if NETSTANDARD1_1
                     this.asynchronousOutputStream = new AsyncBufferedStream(this.messageOutputStream);
-                    #else
+#else
                     this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, 84000);
-                    #endif
+#endif
                     outputStream = this.asynchronousOutputStream;
                 }
 
