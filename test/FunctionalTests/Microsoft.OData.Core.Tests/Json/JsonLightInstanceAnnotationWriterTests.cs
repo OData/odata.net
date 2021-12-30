@@ -374,7 +374,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 verifierCalls++;
             };
-            this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotations(Enumerable.Empty<ODataInstanceAnnotation>());
+            this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotations(new List<ODataInstanceAnnotation>());
             Assert.Equal(0, verifierCalls);
         }
 

@@ -163,7 +163,9 @@ namespace Microsoft.OData.Edm
         {
             IList<IEdmOperation> bindableOperations;
 
-            if (!this.bindableOperationsCache.TryGetValue(bindingType.FullTypeName(), out bindableOperations))
+            string bindingTypeName = bindingType.FullTypeName();
+
+            if (!this.bindableOperationsCache.TryGetValue(bindingTypeName, out bindableOperations))
             {
                 HashSet<IList<IEdmOperation>> operationList = new HashSet<IList<IEdmOperation>>();
                 bindableOperations = new List<IEdmOperation>();
@@ -183,9 +185,9 @@ namespace Microsoft.OData.Edm
                     }
                 }
 
-                this.bindableOperationsCache.TryAdd(bindingType.FullTypeName(), bindableOperations);
+                this.bindableOperationsCache.TryAdd(bindingTypeName, bindableOperations);
             }
-
+            
             return bindableOperations;
         }
 

@@ -18,13 +18,10 @@ namespace SerializationBaselineTests
         IExperimentWriter odataSyncCharPoolWriter;
         IEnumerable<Customer> data;
 
-        [Params(1000, 5000, 10000)]
-        public int dataSize;
+        public int dataSize = 5000;
 
         [Params(true, false)]
         public bool isModelImmutable;
-
-        IEdmModel model;
 
         string tempFile;
         Stream fileStream;
@@ -33,9 +30,9 @@ namespace SerializationBaselineTests
         public void PrepareDataset()
         {
             data = DataSet.GetCustomers(dataSize);
+            InitWriters();
         }
 
-        [IterationSetup]
         public void InitWriters()
         {
             var model = DataModel.GetEdmModel();
@@ -101,14 +98,6 @@ namespace SerializationBaselineTests
         {
             tempFile = Path.GetTempFileName();
             fileStream = new FileStream(tempFile, FileMode.Create);
-
-            // for some reason the InitWriters() iteration setup is not
-            // being called for the file benchmarks. Not sure why.
-            // For now, manually call it if it has not been called
-            if (jsonWriter == null)
-            {
-                InitWriters();
-            }
         }
 
         [IterationCleanup(Targets = new[] {
@@ -155,7 +144,6 @@ namespace SerializationBaselineTests
 
         private void WriteToFile(IExperimentWriter writer)
         {
-            System.Console.WriteLine("WRITE TO FILE, writer is null {0}, fileStrem is null {1}, data null {2}",  writer == null, fileStream == null, data == null);
             writer.WriteCustomers(data, fileStream).Wait();
             fileStream.Close();
         }

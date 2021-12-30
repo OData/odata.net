@@ -981,14 +981,156 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             Assert.Equal(new DateTimeOffset(2012, 4, 12, 18, 43, 10, TimeSpan.Zero), birthday.Value);
         }
 
-        private void ReadEntryPayload(IEdmModel userModel, string payload, EdmEntitySet entitySet, IEdmEntityType entityType, Action<ODataReader> action, bool isIeee754Compatible = true, IServiceProvider container = null)
+        [Fact]
+        public void ReadDateTimeOffsetProperty_WithDifferentCase_WorksAsExpected()
+        {
+            EdmModel model = new EdmModel();
+
+            EdmEntityType entityType = new EdmEntityType("NS", "Person");
+            model.AddElement(entityType);
+            entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32);
+            entityType.AddStructuralProperty("Birthday", EdmPrimitiveTypeKind.DateTimeOffset);
+
+            EdmEntityContainer container = new EdmEntityContainer("NS", "MyContainer");
+            EdmEntitySet entitySet = container.AddEntitySet("People", entityType);
+            model.AddElement(container);
+
+            // Disable case-insensitive - read as untyped string
+            ReadDateTimeOffsetPayloadAndVerify(model, entitySet, entityType, "birthday", false, s =>
+            {
+                Assert.NotNull(s);
+                ODataProperty odataProperty = Assert.Single(s.Properties);
+                Assert.Equal("birthday", odataProperty.Name);
+                ODataUntypedValue untypedValue = Assert.IsType<ODataUntypedValue>(odataProperty.Value);
+                Assert.Equal("\"2021-10-28T21:33:26+08:00\"", untypedValue.RawValue);
+            },
+            /*readUntypedAsString*/ true);
+
+            // Disable case-insensitive - read as untyped value
+            ReadDateTimeOffsetPayloadAndVerify(model, entitySet, entityType, "birthday", false, s =>
+            {
+                Assert.NotNull(s);
+                ODataProperty odataProperty = Assert.Single(s.Properties);
+                Assert.Equal("birthday", odataProperty.Name);
+                string value = Assert.IsType<string>(odataProperty.Value);
+                Assert.Equal("2021-10-28T21:33:26+08:00", value);
+            },
+            /*readUntypedAsString*/ false);
+
+            // Enable case sensitive
+            ReadDateTimeOffsetPayloadAndVerify(model, entitySet, entityType, "birthday", true, s =>
+            {
+                Assert.NotNull(s);
+                ODataProperty odataProperty = Assert.Single(s.Properties);
+                Assert.Equal("Birthday", odataProperty.Name);
+                Assert.Equal(new DateTimeOffset(2021, 10, 28, 21, 33, 26, TimeSpan.FromHours(8)), odataProperty.Value);
+            });
+        }
+
+        private void ReadDateTimeOffsetPayloadAndVerify(IEdmModel model, EdmEntitySet entitySet, IEdmEntityType entityType, string propertyName, bool enablePropertyCaseInsensitive,
+            Action<ODataResource> verifyAction, bool readUntypedAsString = true)
+        {
+            string payloadFormat =
+                "{" +
+                "\"@odata.context\":\"http://www.example.com/$metadata#NS.MyContainer.People/$entity\"," +
+                "\"@odata.id\":\"http://mytest\"," +
+                "\"PROPERTYNAME\":\"2021-10-28T21:33:26+08:00\"" +
+                "}";
+            string payload = payloadFormat.Replace("PROPERTYNAME", propertyName);
+
+            ODataResource resource = null;
+            this.ReadEntryPayload(model, payload, entitySet, entityType,
+                reader => { resource = resource ?? reader.Item as ODataResource; }, true, null, enablePropertyCaseInsensitive, readUntypedAsString);
+
+            verifyAction(resource);
+        }
+
+        [Fact]
+        public void ReadPropertyWithCaseInsensitive_WorksAsExpected()
+        {
+            EdmModel model = new EdmModel();
+
+            EdmEntityType entityType = new EdmEntityType("NS", "Person");
+            model.AddElement(entityType);
+            entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32);
+            entityType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+            entityType.AddStructuralProperty("nAme", EdmPrimitiveTypeKind.Int32);
+            entityType.AddStructuralProperty("naMe", EdmPrimitiveTypeKind.Double);
+
+            EdmEntityContainer container = new EdmEntityContainer("NS", "MyContainer");
+            EdmEntitySet entitySet = container.AddEntitySet("People", entityType);
+            model.AddElement(container);
+
+            // Match - Edm.String
+            ReadPayloadAndVerify(model, entitySet, entityType, "\"Name\":\"abc\"", s =>
+            {
+                Assert.NotNull(s);
+                ODataProperty odataProperty = Assert.Single(s.Properties);
+                Assert.Equal("Name", odataProperty.Name);
+                Assert.Equal("abc", odataProperty.Value);
+            });
+
+            // Match - Edm.Int32
+            ReadPayloadAndVerify(model, entitySet, entityType, "\"nAme\":42", s =>
+            {
+                Assert.NotNull(s);
+                ODataProperty odataProperty = Assert.Single(s.Properties);
+                Assert.Equal("nAme", odataProperty.Name);
+                Assert.Equal(42, odataProperty.Value);
+            });
+
+            // Match - Edm.Double
+            ReadPayloadAndVerify(model, entitySet, entityType, "\"naMe\":3.14", s =>
+            {
+                Assert.NotNull(s);
+                ODataProperty odataProperty = Assert.Single(s.Properties);
+                Assert.Equal("naMe", odataProperty.Name);
+                Assert.Equal(3.14, odataProperty.Value);
+            });
+
+            // Doesn't match any property, read as untyped.
+            ReadPayloadAndVerify(model, entitySet, entityType, "\"name\":\"Dynamic Property\"", s =>
+            {
+                Assert.NotNull(s);
+                ODataProperty odataProperty = Assert.Single(s.Properties);
+                Assert.Equal("name", odataProperty.Name);
+                ODataUntypedValue untypedValue = Assert.IsType<ODataUntypedValue>(odataProperty.Value);
+                Assert.Equal("\"Dynamic Property\"", untypedValue.RawValue);
+            });
+        }
+
+        private void ReadPayloadAndVerify(IEdmModel model, EdmEntitySet entitySet, IEdmEntityType entityType, string propertyValue, Action<ODataResource> verifyAction)
+        {
+            string payloadFormat =
+                "{" +
+                "\"@odata.context\":\"http://www.example.com/$metadata#NS.MyContainer.People/$entity\"," +
+                "\"@odata.id\":\"http://mytest\"," +
+                "PROPERTYVALUE" +
+                "}";
+            string payload = payloadFormat.Replace("PROPERTYVALUE", propertyValue);
+
+            ODataResource resource = null;
+            this.ReadEntryPayload(model, payload, entitySet, entityType,
+                reader => { resource = resource ?? reader.Item as ODataResource; }, true, null, enablePropertyCaseInsensitive: true);
+
+            verifyAction(resource);
+        }
+
+        private void ReadEntryPayload(IEdmModel userModel, string payload, EdmEntitySet entitySet, IEdmEntityType entityType,
+            Action<ODataReader> action, bool isIeee754Compatible = true, IServiceProvider container = null,
+            bool enablePropertyCaseInsensitive = false, bool readUntypedAsString = true)
         {
             var message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)), Container = container};
             string contentType = isIeee754Compatible
                 ? "application/json;odata.metadata=minimal;IEEE754Compatible=true"
                 : "application/json;odata.metadata=minimal;IEEE754Compatible=false";
             message.SetHeader("Content-Type", contentType);
-            var readerSettings = new ODataMessageReaderSettings { EnableMessageStreamDisposal = true };
+            var readerSettings = new ODataMessageReaderSettings
+            {
+                EnableMessageStreamDisposal = true,
+                EnablePropertyNameCaseInsensitive = enablePropertyCaseInsensitive,
+                ReadUntypedAsString = readUntypedAsString
+            };
             readerSettings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
             using (var msgReader = new ODataMessageReader((IODataResponseMessage)message, readerSettings, userModel))
             {

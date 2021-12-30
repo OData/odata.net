@@ -272,7 +272,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   </Term>
   <Term Name=""ResourcePath"" Type=""Edm.String"" AppliesTo=""EntitySet Singleton ActionImport FunctionImport"">
     <Annotation Term=""Core.Description"" String=""Resource path for entity container child, can be relative to xml:base and the request URL"" />
-    <Annotation Term=""Core.IsUrl"" Bool=""true"" />
+    <Annotation Term=""Core.IsURL"" Bool=""true"" />
   </Term>
   <Term Name=""DereferenceableIDs"" Type=""Core.Tag"" DefaultValue=""true"" AppliesTo=""EntityContainer"" Nullable=""false"">
     <Annotation Term=""Core.Description"" String=""Entity-ids are URLs that locate the identified entity"" />

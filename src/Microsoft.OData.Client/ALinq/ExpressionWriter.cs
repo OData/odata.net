@@ -610,10 +610,7 @@ namespace Microsoft.OData.Client
                                 this.Visit(u.Operand);
                                 this.builder.Append(UriHelper.COMMA);
                             }
-
-                            this.builder.Append(UriHelper.QUOTE);
                             this.builder.Append(UriHelper.GetTypeNameForUri(u.Type, this.context));
-                            this.builder.Append(UriHelper.QUOTE);
                             this.builder.Append(UriHelper.RIGHTPAREN);
                         }
                     }

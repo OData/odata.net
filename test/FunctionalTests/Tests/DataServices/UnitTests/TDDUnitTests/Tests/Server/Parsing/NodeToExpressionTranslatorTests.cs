@@ -438,7 +438,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
         public void TranslatorShouldTranslateIsOfFunctionCallWithTwoParameters()
         {
             ConstantNode constantNode;
-            this.testSubject = this.CreateTestSubjectWithEdmStringLiteral(out constantNode);
+            this.testSubject = this.CreateTestSubjectWithEdmStringLiteral("isof", out constantNode);
             this.TestFunctionCall<object, bool>("isof", new[] { Parameter<object>("o"), constantNode }, o => o is string, this.testSubject);
         }
 
@@ -446,7 +446,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
         public void TranslatorShouldTranslateCastFunctionCallWithTwoParameters()
         {
             ConstantNode constantNode;
-            this.testSubject = this.CreateTestSubjectWithEdmStringLiteral(out constantNode);
+            this.testSubject = this.CreateTestSubjectWithEdmStringLiteral("cast", out constantNode);
             this.TestFunctionCall<object, string>("cast", new[] { Parameter<object>("o"), constantNode }, o => (string)o, this.testSubject);
         }
 
@@ -742,7 +742,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
                 verifyRequestVersion);
         }
 
-        private NodeToExpressionTranslator CreateTestSubjectWithEdmStringLiteral(out ConstantNode constantNode)
+        private NodeToExpressionTranslator CreateTestSubjectWithEdmStringLiteral(string functionName, out ConstantNode constantNode)
         {
             var binder = new FunctionExpressionBinder(t =>
             {
@@ -751,7 +751,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
             });
             var withSpecialExpressionBinder = this.CreateTestSubject(expressionBinder: binder);
 
-            constantNode = new ConstantNode("Edm.String", "'Edm.String'");
+            constantNode = new ConstantNode("Edm.String", functionName == "cast" ? "Edm.String" : "'Edm.String'");
 
             return withSpecialExpressionBinder;
         }

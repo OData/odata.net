@@ -327,7 +327,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Cannot write a deleted resource, link, deleted link, or nested delta resource set to a non-delta payload. Please use a delta resource set writer, or a request resource writer."
+        /// A string like "Cannot write a deleted resource, link, deleted link, or nested delta resource set within a resource set; they must be written within a delta resource set."
         /// </summary>
         internal static string ODataWriterCore_CannotWriteDeltaWithResourceSetWriter
         {
@@ -5215,9 +5215,12 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "Only $filter and $search query options are allowed within $count."
         /// </summary>
-        internal static string UriQueryExpressionParser_IllegalQueryOptioninDollarCount()
+        internal static string UriQueryExpressionParser_IllegalQueryOptioninDollarCount
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriQueryExpressionParser_IllegalQueryOptioninDollarCount);
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriQueryExpressionParser_IllegalQueryOptioninDollarCount);
+            }
         }
 
         /// <summary>
@@ -5506,9 +5509,12 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "The next token in a CountSegmentNode must be a collection."
         /// </summary>
-        internal static string MetadataBinder_CountSegmentNextTokenNotCollectionValue()
+        internal static string MetadataBinder_CountSegmentNextTokenNotCollectionValue
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.MetadataBinder_CountSegmentNextTokenNotCollectionValue);
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.MetadataBinder_CountSegmentNextTokenNotCollectionValue);
+            }
         }
 
         /// <summary>
@@ -6215,9 +6221,12 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "Empty parenthesis not allowed."
         /// </summary>
-        internal static string UriParser_EmptyParenthesis()
+        internal static string UriParser_EmptyParenthesis
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriParser_EmptyParenthesis);
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriParser_EmptyParenthesis);
+            }
         }
 
         /// <summary>
@@ -6823,6 +6832,22 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The key in the request URI is not valid for resource '{0}'. Ensure that the names and number of key properties match the declared key of the resource '{0}'."
+        /// </summary>
+        internal static string BadRequest_KeyMismatch(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.BadRequest_KeyMismatch, p0);
+        }
+
+        /// <summary>
+        /// A string like "The key in the request URI is not valid for resource '{0}'. Ensure that the names and number of key properties match the declared or alternate key properties for the resource '{0}'."
+        /// </summary>
+        internal static string BadRequest_KeyOrAlternateKeyMismatch(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.BadRequest_KeyOrAlternateKeyMismatch, p0);
+        }
+
+        /// <summary>
         /// A string like "Segments with multiple key values must specify them in 'name=value' form."
         /// </summary>
         internal static string RequestUriProcessor_KeysMustBeNamed
@@ -6953,13 +6978,13 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "No property is allowed after $ref segment."
+        /// A string like "$count is not allowed in $select option."
         /// </summary>
-        internal static string ExpressionToken_NoPropAllowedAfterRef
+        internal static string ExpressionToken_DollarCountNotAllowedInSelect
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ExpressionToken_NoPropAllowedAfterRef);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ExpressionToken_DollarCountNotAllowedInSelect);
             }
         }
 
@@ -6975,13 +7000,13 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "$count is not allowed in $select option."
+        /// A string like "No property is allowed after $ref segment."
         /// </summary>
-        internal static string ExpressionToken_DollarCountNotAllowedInSelect
+        internal static string ExpressionToken_NoPropAllowedAfterRef
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ExpressionToken_DollarCountNotAllowedInSelect);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ExpressionToken_NoPropAllowedAfterRef);
             }
         }
 

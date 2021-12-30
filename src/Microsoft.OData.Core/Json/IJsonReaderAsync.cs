@@ -11,7 +11,7 @@ namespace Microsoft.OData.Json
     /// <summary>
     /// Interface for a class that can read arbitrary JSON asynchronously.
     /// </summary>
-    public interface IJsonReaderAsync
+    public interface IJsonReaderAsync : IJsonReader
     {
         /// <summary>
         /// Asynchronously reads the next node from the input.

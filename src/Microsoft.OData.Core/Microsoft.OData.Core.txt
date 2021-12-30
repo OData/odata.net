@@ -48,7 +48,7 @@ ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties=No Id or key properties we
 ODataWriterCore_QueryCountInRequest=The ODataResourceSet.Count must be null for request payloads. Query counts are only supported in responses.
 ODataWriterCore_QueryNextLinkInRequest=The NextPageLink must be null for request payloads. Next page links are only supported in responses.
 ODataWriterCore_QueryDeltaLinkInRequest=The DeltaLink must be null for request payloads. Delta links are only supported in responses.
-ODataWriterCore_CannotWriteDeltaWithResourceSetWriter=Cannot write a deleted resource, link, deleted link, or nested delta resource set to a non-delta payload. Please use a delta resource set writer, or a request resource writer.
+ODataWriterCore_CannotWriteDeltaWithResourceSetWriter=Cannot write a deleted resource, link, deleted link, or nested delta resource set within a resource set; they must be written within a delta resource set.
 ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry=Nested content is not allowed in an OData 4.0 deleted entry. For content in deleted entries, please specify OData 4.01 or greater.
 ODataWriterCore_CannotWriteTopLevelResourceSetWithResourceWriter=Cannot write a top-level resource set with a writer that was created to write a top-level resource.
 ODataWriterCore_CannotWriteTopLevelResourceWithResourceSetWriter=Cannot write a top-level resource with a writer that was created to write a top-level resource set.
@@ -846,8 +846,8 @@ PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint=Type cast segment '{0}' on
 
 ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink=A resource set may contain a next page link, a delta link or neither, but must not contain both.
 
-ODataExpandPath_OnlyLastSegmentCanBeNavigationProperty =The last segment, and only the last segment, can be a navigation property in $expand.
-ODataExpandPath_LastSegmentMustBeNavigationPropertyOrTypeSegment =The last segment must be a navigation property or type segment in $expand.
+ODataExpandPath_OnlyLastSegmentCanBeNavigationProperty=The last segment, and only the last segment, can be a navigation property in $expand.
+ODataExpandPath_LastSegmentMustBeNavigationPropertyOrTypeSegment=The last segment must be a navigation property or type segment in $expand.
 ODataExpandPath_InvalidExpandPathSegment=Found a segment of type '{0} in an expand path, but only NavigationProperty, Property and Type segments are allowed.
 
 ODataSelectPath_CannotOnlyHaveTypeSegment=TypeSegment cannot be the only segment in a $select.
@@ -901,6 +901,8 @@ OpenNavigationPropertiesNotSupportedOnOpenTypes=Open navigation properties are n
 BadRequest_ResourceCanBeCrossReferencedOnlyForBindOperation=Error processing request stream. In batch mode, a resource can be cross-referenced only for bind/unbind operations.
 DataServiceConfiguration_ResponseVersionIsBiggerThanProtocolVersion=The response requires that version {0} of the protocol be used, but the MaxProtocolVersion of the data service is set to {1}.
 BadRequest_KeyCountMismatch=The number of keys specified in the URI does not match number of key properties for the resource '{0}'.
+BadRequest_KeyMismatch=The key in the request URI is not valid for resource '{0}'. Ensure that the names and number of key properties match the declared key of the resource '{0}'.
+BadRequest_KeyOrAlternateKeyMismatch=The key in the request URI is not valid for resource '{0}'. Ensure that the names and number of key properties match the declared or alternate key properties for the resource '{0}'.
 RequestUriProcessor_KeysMustBeNamed=Segments with multiple key values must specify them in 'name=value' form.
 RequestUriProcessor_ResourceNotFound=Resource not found for the segment '{0}'.
 RequestUriProcessor_BatchedActionOnEntityCreatedInSameChangeset=Batched service action '{0}' cannot be invoked because it was bound to an entity created in the same changeset.

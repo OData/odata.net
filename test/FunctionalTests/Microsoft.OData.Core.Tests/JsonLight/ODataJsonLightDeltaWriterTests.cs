@@ -1173,7 +1173,7 @@ namespace Microsoft.OData.Tests.JsonLight
                    writer.WriteDeltaDeletedEntry(orderDeletedEntry);
                });
 
-            writeAction.Throws<ODataException>(Strings.ODataWriterCore_InvalidTransitionFromResourceSet("ResourceSet", "DeletedResource"));
+            writeAction.Throws<ODataException>(Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
         }
 
         private static string V4_01DeltaResponse =
@@ -1304,7 +1304,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 writer.WriteDeltaDeletedEntry(customerDeletedEntry);
             };
 
-            writeAction.Throws<ODataException>(Strings.ODataWriterCore_InvalidTransitionFromResourceSet("ResourceSet", "DeletedResource"));
+            writeAction.Throws<ODataException>(Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -2252,6 +2252,81 @@ namespace Microsoft.OData.Tests.JsonLight
                 this.TestPayload());
         }
 
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void WriteNestedDeltasInResourceWriterIn41(bool isResponse)
+        {
+            this.TestInit(this.GetModel());
+
+            ODataJsonLightWriter writer = new ODataJsonLightWriter(GetV401OutputContext(isResponse), this.GetCustomers(), this.GetCustomerType(), false, false, true);
+            writer.WriteStart(customerUpdated);
+            writer.WriteStart(new ODataNestedResourceInfo()
+            {
+                Name = "Orders",
+                IsCollection = true,
+            });
+            writer.WriteStart(new ODataDeltaResourceSet());
+            writer.WriteStart(order10643);
+            writer.WriteEnd(); // order
+            writer.WriteStart(orderDeleted);
+            writer.WriteEnd(); // order
+            writer.WriteEnd(); // delta resourceSet
+            writer.WriteEnd(); // nestedInfo
+            writer.WriteEnd(); // customer
+            writer.Flush();
+
+            Assert.Equal(
+                "{\"@context\":\"http://host/service/$metadata#Customers/$entity\",\"@id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\",\"Orders@delta\":[{\"@id\":\"Orders(10643)\"},{\"@removed\":{\"reason\":\"deleted\"},\"@id\":\"Orders(10643)\"}]}",
+                this.TestPayload());
+        }
+
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void WriteNestedDeltasInResourceODataWriterIn41(bool isResponse)
+        {
+            var model = this.GetModel();
+            this.TestInit(model);
+
+            var settings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false, Version = ODataVersion.V401 };
+            settings.SetServiceDocumentUri(new Uri(@"http://host/service", UriKind.Absolute));
+            var message = new InMemoryMessage();
+            message.Stream = this.stream;
+            
+            ODataMessageWriter messageWriter;
+            if (isResponse)
+            {
+                messageWriter = new ODataMessageWriter((IODataResponseMessage)message, settings, model);
+            }
+            else
+            {
+                messageWriter = new ODataMessageWriter((IODataRequestMessage)message, settings, model);
+            }
+
+            var writer = messageWriter.CreateODataResourceWriter(this.GetCustomers(), this.GetCustomerType());
+//            ODataJsonLightWriter writer = new ODataJsonLightWriter(GetV401OutputContext(isResponse), this.GetCustomers(), this.GetCustomerType(), false, false, true);
+            writer.WriteStart(customerUpdated);
+            writer.WriteStart(new ODataNestedResourceInfo()
+            {
+                Name = "Orders",
+                IsCollection = true,
+            });
+            writer.WriteStart(new ODataDeltaResourceSet());
+            writer.WriteStart(order10643);
+            writer.WriteEnd(); // order
+            writer.WriteStart(orderDeleted);
+            writer.WriteEnd(); // order
+            writer.WriteEnd(); // delta resourceSet
+            writer.WriteEnd(); // nestedInfo
+            writer.WriteEnd(); // customer
+            writer.Flush();
+
+            Assert.Equal(
+                "{\"@context\":\"http://host/service/$metadata#Customers/$entity\",\"@id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\",\"Orders@delta\":[{\"@id\":\"Orders(10643)\"},{\"@removed\":{\"reason\":\"deleted\"},\"@id\":\"Orders(10643)\"}]}",
+                this.TestPayload());
+        }
+
         [Fact]
         public void WriteResourceWithNestedDeltaRequestIn41()
         {
@@ -2299,29 +2374,31 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
-        public void WriteResourceWithNestedDeltaResponseShouldFail()
+        public void WriteResourceWithNestedDeltaResponseShouldSucceed()
         {
             this.TestInit(this.GetModel());
 
-            Action writeAction = () =>
+            ODataJsonLightWriter writer = new ODataJsonLightWriter(GetV401OutputContext(true), this.GetCustomers(), this.GetCustomerType(), false);
+            writer.WriteStart(new ODataResource
             {
-                ODataJsonLightWriter writer = new ODataJsonLightWriter(GetV401OutputContext(true), this.GetCustomers(), this.GetCustomerType(), false);
-                writer.WriteStart(new ODataResource
+                Properties = new ODataProperty[]
                 {
-                    Properties = new ODataProperty[]
-                    {
-                        new ODataProperty{ Name = "Id", Value = 1}
-                    }
-                });
-                writer.WriteStart(new ODataNestedResourceInfo
-                {
-                    Name = "FavouriteProducts",
-                    IsCollection = true,
-                });
-                writer.WriteStart(new ODataDeltaResourceSet());
-            };
+                    new ODataProperty{ Name = "Id", Value = 1}
+                }
+            });
+            writer.WriteStart(new ODataNestedResourceInfo
+            {
+                Name = "FavouriteProducts",
+                IsCollection = true,
+            });
+            writer.WriteStart(new ODataDeltaResourceSet());
+            writer.WriteEnd();  // nested delta resource set
+            writer.WriteEnd();  // nested info
+            writer.WriteEnd();  // resource
+            writer.Flush();
 
-            writeAction.Throws<ODataException>(Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
+            Assert.Equal("{\"@context\":\"http://host/service/$metadata#Customers/$entity\",\"Id\":1,\"FavouriteProducts@delta\":[]}",
+    this.TestPayload());
         }
 
         [InlineData(/*isResponse*/true)]
@@ -2388,6 +2465,23 @@ namespace Microsoft.OData.Tests.JsonLight
                 "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"@count\":5,\"@deltaLink\":\"Customers?$expand=Orders&$deltatoken=8015\",\"value\":[{\"@id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\"},{\"@context\":\"http://host/service/$metadata#Orders/$deletedEntity\",\"@removed\":{\"reason\":\"deleted\"},\"@id\":\"Orders(10643)\"}]}" :
                 "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\"},{\"@context\":\"http://host/service/$metadata#Orders/$deletedEntity\",\"@removed\":{\"reason\":\"deleted\"},\"@id\":\"Orders(10643)\"}]}"
                 );
+        }
+
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void WriteTopLevelDeletedResource(bool isResponse)
+        {
+            this.TestInit(this.GetModel());
+
+            ODataJsonLightWriter writer = new ODataJsonLightWriter(GetV401OutputContext(isResponse), this.GetCustomers(), this.GetCustomerType(), false, false, true);
+            writer.WriteStart(customerDeleted);
+            writer.WriteEnd(); // deleted customer
+            writer.Flush();
+
+            Assert.Equal("{\"@context\":\"http://host/service/$metadata#Customers/$deletedEntity\",\"@removed\":{\"reason\":\"deleted\"},\"@id\":\"Customers('ANTON')\"}",
+                this.TestPayload()
+            );
         }
 
         [InlineData(/*isResponse*/true)]
@@ -2524,7 +2618,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 writer.WriteStart(customerDeleted);
             };
 
-            writeAction.Throws<ODataException>(Strings.ODataWriterCore_InvalidTransitionFromResourceSet("ResourceSet", "DeletedResource"));
+            writeAction.Throws<ODataException>(Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -2550,7 +2644,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 writer.WriteStart(customerUpdated);
             };
 
-            writeAction.Throws<ODataException>(Strings.ODataWriterCore_InvalidTransitionFromResourceSet("ResourceSet", "DeletedResource"));
+            writeAction.Throws<ODataException>(Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -2591,7 +2685,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 writer.Write(linkToOrder10645);
             };
 
-            writeAction.Throws<ODataException>(Strings.ODataWriterCore_InvalidTransitionFromResourceSet("ResourceSet", "DeltaLink"));
+            writeAction.Throws<ODataException>(Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -2615,7 +2709,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 writer.Write(linkToOrder10645);
             };
 
-            writeAction.Throws<ODataException>(Strings.ODataWriterCore_InvalidTransitionFromResourceSet("ResourceSet", "DeltaLink"));
+            writeAction.Throws<ODataException>(Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -2656,7 +2750,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 writer.Write(linkToOrder10643);
             };
 
-            writeAction.Throws<ODataException>(Strings.ODataWriterCore_InvalidTransitionFromResourceSet("ResourceSet", "DeltaDeletedLink"));
+            writeAction.Throws<ODataException>(Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -2680,7 +2774,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 writer.Write(linkToOrder10643);
             };
 
-            writeAction.Throws<ODataException>(Strings.ODataWriterCore_InvalidTransitionFromResourceSet("ResourceSet", "DeltaDeletedLink"));
+            writeAction.Throws<ODataException>(Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
         }
 
         #endregion 4.01 Tests

@@ -2784,8 +2784,11 @@ namespace Microsoft.OData.Client
                 (callback, state) =>
                 {
                     IAsyncResult asyncResult = beginMethod(callback, state);
-                    cancellationToken.Register(() => this.CancelRequest(asyncResult));
-                    cancellationToken.ThrowIfCancellationRequested();
+                    using (CancellationTokenRegistration cancellationTokenRegistration = cancellationToken.Register(() => this.CancelRequest(asyncResult)))
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+                    }
+
                     return asyncResult;
                 },
                 endMethod,
@@ -2814,8 +2817,11 @@ namespace Microsoft.OData.Client
                 (arg1, callback, state) =>
                 {
                     IAsyncResult asyncResult = beginMethod(arg1, callback, state);
-                    cancellationToken.Register(() => this.CancelRequest(asyncResult));
-                    cancellationToken.ThrowIfCancellationRequested();
+                    using (CancellationTokenRegistration cancellationTokenRegistration = cancellationToken.Register(() => this.CancelRequest(asyncResult)))
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+                    }
+
                     return asyncResult;
                 },
                 endMethod,
@@ -2845,8 +2851,11 @@ namespace Microsoft.OData.Client
                 (a1, a2, callback, state) =>
                 {
                     IAsyncResult asyncResult = beginMethod(a1, a2, callback, state);
-                    cancellationToken.Register(() => this.CancelRequest(asyncResult));
-                    cancellationToken.ThrowIfCancellationRequested();
+                    using (CancellationTokenRegistration cancellationTokenRegistration = cancellationToken.Register(() => this.CancelRequest(asyncResult)))
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+                    }
+
                     return asyncResult;
                 },
                 endMethod,
@@ -2880,8 +2889,11 @@ namespace Microsoft.OData.Client
                 (a1, a2, a3, callback, state) =>
                 {
                     IAsyncResult asyncResult = beginMethod(a1, a2, a3, callback, state);
-                    cancellationToken.Register(() => this.CancelRequest(asyncResult));
-                    cancellationToken.ThrowIfCancellationRequested();
+                    using (CancellationTokenRegistration cancellationTokenRegistration = cancellationToken.Register(() => this.CancelRequest(asyncResult)))
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+                    }
+
                     return asyncResult;
                 },
                 endMethod,
