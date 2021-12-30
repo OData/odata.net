@@ -38,7 +38,7 @@ namespace Microsoft.OData
         /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
         internal ODataMetadataJsonOutputContext(
-	        ODataMessageInfo messageInfo,
+            ODataMessageInfo messageInfo,
             ODataMessageWriterSettings messageWriterSettings)
             : base(ODataFormat.Metadata, messageInfo, messageWriterSettings)
         {
