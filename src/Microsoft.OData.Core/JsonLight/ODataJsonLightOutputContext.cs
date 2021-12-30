@@ -42,13 +42,13 @@ namespace Microsoft.OData.JsonLight
         /// <summary>The message output stream.</summary>
         private Stream messageOutputStream;
 
-        #if NETSTANDARD1_1
+#if NETSTANDARD1_1
         /// <summary>The asynchronous output stream if we're writing asynchronously.</summary>
         private AsyncBufferedStream asynchronousOutputStream;
-        #else
+#else
         /// <summary>The asynchronous output stream if we're writing asynchronously.</summary>
         private Stream asynchronousOutputStream;
-        #endif
+#endif
 
         /// <summary>The text writer created for the output stream.</summary>
         private TextWriter textWriter;
@@ -102,11 +102,11 @@ namespace Microsoft.OData.JsonLight
                 }
                 else
                 {
-                    #if NETSTANDARD1_1
+#if NETSTANDARD1_1
                     this.asynchronousOutputStream = new AsyncBufferedStream(this.messageOutputStream);
-                    #else 
+#else 
                     this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, 84000);
-                    #endif
+#endif
                     outputStream = this.asynchronousOutputStream;
                 }
 

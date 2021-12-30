@@ -31,11 +31,11 @@ namespace Microsoft.OData
         private Stream messageOutputStream;
 
         /// <summary>The asynchronous output stream if we're writing asynchronously.</summary>
-        #if NETSTANDARD1_1
+#if NETSTANDARD1_1
         private AsyncBufferedStream asynchronousOutputStream;
-        #else
+#else
         private Stream asynchronousOutputStream;
-        #endif
+#endif
 
         /// <summary>The output stream to write to (both sync and async cases).</summary>
         private Stream outputStream;
