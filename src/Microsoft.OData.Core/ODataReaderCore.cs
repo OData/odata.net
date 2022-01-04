@@ -83,8 +83,7 @@ namespace Microsoft.OData
             get
             {
                 this.inputContext.VerifyNotDisposed();
-                Debug.Assert(this.scopes != null && this.scopes.Count > 0, "A scope must always exist.");
-                return this.scopes.Peek().State;
+                return this.CurrentScope.State;
             }
         }
 
@@ -96,8 +95,7 @@ namespace Microsoft.OData
             get
             {
                 this.inputContext.VerifyNotDisposed();
-                Debug.Assert(this.scopes != null && this.scopes.Count > 0, "A scope must always exist.");
-                return this.scopes.Peek().Item;
+                return this.CurrentScope.Item;
             }
         }
 
@@ -212,8 +210,7 @@ namespace Microsoft.OData
         {
             get
             {
-                Debug.Assert(this.scopes != null && this.scopes.Count > 0, "A scope must always exist.");
-                IEdmTypeReference resourceTypeReference = this.scopes.Peek().ResourceTypeReference;
+                IEdmTypeReference resourceTypeReference = this.CurrentScope.ResourceTypeReference;
                 Debug.Assert(resourceTypeReference == null || this.inputContext.Model.IsUserModel(), "We can only have structured type if we also have metadata.");
 
                 return resourceTypeReference;
@@ -221,8 +218,7 @@ namespace Microsoft.OData
 
             set
             {
-                Debug.Assert(this.scopes != null && this.scopes.Count > 0, "A scope must always exist.");
-                this.scopes.Peek().ResourceTypeReference = value;
+                this.CurrentScope.ResourceTypeReference = value;
             }
         }
 
@@ -233,8 +229,7 @@ namespace Microsoft.OData
         {
             get
             {
-                Debug.Assert(this.scopes != null && this.scopes.Count > 0, "A scope must always exist.");
-                IEdmNavigationSource navigationSource = this.scopes.Peek().NavigationSource;
+                IEdmNavigationSource navigationSource = this.CurrentScope.NavigationSource;
                 Debug.Assert(navigationSource == null || this.inputContext.Model.IsUserModel(), "We can only have navigation source if we also have metadata.");
                 return navigationSource;
             }
@@ -252,6 +247,10 @@ namespace Microsoft.OData
             }
         }
 
+        /// <summary>
+        /// Returns the full scope stack. 
+        /// Callers should not modify the stack directly, but should use EnterScope(), PopScope(), and ReplaceScope() to safely add/remove/change scopes.
+        /// </summary>
         protected Stack<Scope> Scopes
         {
             get { return this.scopes; }
@@ -265,7 +264,9 @@ namespace Microsoft.OData
             get
             {
                 Debug.Assert(this.scopes != null && this.scopes.Count > 1, "We must have at least two scopes in the stack.");
-                return this.scopes.Skip(1).First();
+                Debug.Assert(this.CurrentScope.ParentScope == this.scopes.Skip(1).First(), "Current scopes parent is not the same as the parent in the stack.");
+
+                return this.CurrentScope.ParentScope;
             }
         }
 
@@ -294,7 +295,7 @@ namespace Microsoft.OData
                 Debug.Assert(this.scopes != null, "this.scopes != null");
                 if (this.scopes.Count > 1)
                 {
-                    Scope parentScope = this.scopes.Skip(1).First();
+                    Scope parentScope = this.ParentScope;
                     if (parentScope.State == ODataReaderState.NestedResourceInfoStart)
                     {
                         return parentScope;
@@ -676,6 +677,7 @@ namespace Microsoft.OData
             }
 
             // TODO: implement some basic validation that the transitions are ok
+            scope.ParentScope = this.scopes.FirstOrDefault();
             this.scopes.Push(scope);
             if (this.listener != null)
             {
@@ -741,8 +743,7 @@ namespace Microsoft.OData
         /// <param name="resourceTypeNameFromPayload">The entity type name found in the payload or null if no type was specified in the payload.</param>
         protected void ApplyResourceTypeNameFromPayload(string resourceTypeNameFromPayload)
         {
-            Debug.Assert(
-                this.scopes.Count > 0 && this.scopes.Peek().Item is ODataResourceBase,
+            Debug.Assert(this.Item is ODataResourceBase,
                 "Resource type can be applied only when in resource scope.");
 
             ODataTypeAnnotation typeAnnotation;
@@ -1095,6 +1096,11 @@ namespace Microsoft.OData
                     return this.item;
                 }
             }
+
+            /// <summary>
+            /// The scope that is the parent of this scope.
+            /// </summary>
+            internal Scope ParentScope { get; set; }
 
             /// <summary>
             /// The odataUri parsed based on the context url to this scope.
