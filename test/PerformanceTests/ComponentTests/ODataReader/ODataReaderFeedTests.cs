@@ -47,7 +47,6 @@ namespace Microsoft.OData.Performance
         ////[IterationSetup(Target = nameof(ReadFeed))]
         public void SetupForReadFeed()
         {
-            System.Console.WriteLine("gdebruin");
             SetupDataStream("Entry.json", 1000);
         }
 
