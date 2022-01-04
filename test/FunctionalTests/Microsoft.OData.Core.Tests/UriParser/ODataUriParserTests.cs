@@ -415,7 +415,7 @@ namespace Microsoft.OData.Tests.UriParser
                 Resolver = new AlternateKeysODataUriResolver(HardCodedTestModel.TestModel)
             }.ParsePath();
 
-            action.Throws<ODataException>("Bad Request - Error in query syntax.");
+            action.Throws<ODataException>(ODataErrorStrings.BadRequest_KeyOrAlternateKeyMismatch(HardCodedTestModel.GetPersonType().FullTypeName()));
         }
 
         [Fact]
@@ -427,7 +427,7 @@ namespace Microsoft.OData.Tests.UriParser
                 Resolver = new AlternateKeysODataUriResolver(HardCodedTestModel.TestModel)
             }.ParsePath();
 
-            action.Throws<ODataException>(ODataErrorStrings.BadRequest_KeyCountMismatch(HardCodedTestModel.GetPersonType().FullTypeName()));
+            action.Throws<ODataException>(ODataErrorStrings.BadRequest_KeyOrAlternateKeyMismatch(HardCodedTestModel.GetPersonType().FullTypeName()));
         }
 
         [Fact]
@@ -439,7 +439,7 @@ namespace Microsoft.OData.Tests.UriParser
                 Resolver = new ODataUriResolver()
             }.ParsePath();
 
-            action.Throws<ODataException>("Bad Request - Error in query syntax.");
+            action.Throws<ODataException>(ODataErrorStrings.BadRequest_KeyMismatch(HardCodedTestModel.GetPersonType().FullTypeName()));
         }
 
         [Fact]

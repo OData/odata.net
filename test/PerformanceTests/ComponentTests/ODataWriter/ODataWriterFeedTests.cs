@@ -32,7 +32,7 @@ namespace Microsoft.OData.Performance
         [Params(true, false)]
         public bool isModelImmutable;
 
-        [IterationSetup]
+        [GlobalSetup]
         public void InitModel()
         {
             Model = TestUtils.GetAdventureWorksModel(isModelImmutable);
@@ -40,7 +40,7 @@ namespace Microsoft.OData.Performance
         }
 
         [IterationSetup]
-        public void RewindStream()
+        public void ResetStream()
         {
             WriteStream.Seek(0, SeekOrigin.Begin);
         }

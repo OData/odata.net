@@ -8,10 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
-
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
@@ -33,11 +31,10 @@ namespace Microsoft.OData.Edm
 
         private static readonly IEnumerable<IEdmStructuralProperty> EmptyStructuralProperties = Enumerable.Empty<IEdmStructuralProperty>();
         private static readonly IEnumerable<IEdmNavigationProperty> EmptyNavigationProperties = Enumerable.Empty<IEdmNavigationProperty>();
-
+        
         #region IEdmModel
 
         private static readonly Func<IEdmModel, string, IEdmSchemaType> findType = (model, qualifiedName) => model.FindDeclaredType(qualifiedName);
-        private static readonly Func<IEdmModel, IEdmType, IEnumerable<IEdmOperation>> findBoundOperations = (model, bindingType) => model.FindDeclaredBoundOperations(bindingType);
         private static readonly Func<IEdmModel, string, IEdmTerm> findTerm = (model, qualifiedName) => model.FindDeclaredTerm(qualifiedName);
         private static readonly Func<IEdmModel, string, IEnumerable<IEdmOperation>> findOperations = (model, qualifiedName) => model.FindDeclaredOperations(qualifiedName);
         private static readonly Func<IEdmModel, string, IEdmEntityContainer> findEntityContainer = (model, qualifiedName) => { return model.ExistsContainer(qualifiedName) ? model.EntityContainer : null; };
@@ -97,7 +94,23 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(bindingType, "bindingType");
-            return FindAcrossModels(model, bindingType, findBoundOperations, mergeFunctions);  // search built-in EdmCoreModel and CoreVocabularyModel.
+       
+            IList<IEdmOperation> bindableOperations = new List<IEdmOperation>();
+
+            foreach (IEdmOperation operation in model.FindDeclaredBoundOperations(bindingType))
+            {
+                bindableOperations.Add(operation);
+            }
+
+            foreach (IEdmModel reference in model.ReferencedModels)
+            {
+                foreach (IEdmOperation operation in reference.FindDeclaredBoundOperations(bindingType))
+                {
+                    bindableOperations.Add(operation);
+                }
+            }
+
+            return bindableOperations;
         }
 
         /// <summary>
@@ -1901,6 +1914,63 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(type, "type");
             return type.StructuredDefinition().StructuralProperties();
+        }
+
+        /// <summary>
+        /// Finds a property from the definition of this reference.
+        /// </summary>
+        /// <param name="structuredType">Reference to the calling object.</param>
+        /// <param name="propertyName">Name of the property to find.</param>
+        /// <param name="caseInsensitive">Property name case-sensitive or not.</param>
+        /// <returns>The requested property if it exists. Otherwise, null.</returns>
+        public static IEdmProperty FindProperty(this IEdmStructuredTypeReference structuredType, string propertyName, bool caseInsensitive)
+        {
+            EdmUtil.CheckArgumentNull(structuredType, "structuredType");
+            return structuredType.StructuredDefinition().FindProperty(propertyName, caseInsensitive);
+        }
+
+        /// <summary>
+        /// Finds a property from the definition of this reference.
+        /// </summary>
+        /// <param name="structuredType">Reference to the calling object.</param>
+        /// <param name="propertyName">Name of the property to find.</param>
+        /// <param name="caseInsensitive">Property name case-sensitive or not.</param>
+        /// <returns>The requested property if it exists. Otherwise, null.</returns>
+        public static IEdmProperty FindProperty(this IEdmStructuredType structuredType, string propertyName, bool caseInsensitive)
+        {
+            EdmUtil.CheckArgumentNull(structuredType, "structuredType");
+            EdmUtil.CheckArgumentNull(propertyName, "propertyName");
+
+            // For example: a structured type has two properties in difference case:
+            //  1) Name
+            //  2) naMe
+            //  3) Title
+            // if input "propertyName="Name", returns the #1 property.
+            // if input "propertyName="naMe", returns the #2 property.
+            // if input "propertyName="name", throw exception because multiple found.
+            // But for "Title", any property name, such as "tiTle", "Title", "title", etc returns #3 property.
+            IEdmProperty edmProperty = structuredType.FindProperty(propertyName);
+            if (edmProperty != null || !caseInsensitive)
+            {
+                return edmProperty;
+            }
+
+            // Since we call "FindProperty" using case-sensitive, we don't miss the "right case" property.
+            // So, it's safety to throw exception if we meet second case.
+            foreach (IEdmProperty property in structuredType.Properties())
+            {
+                if (string.Equals(property.Name, propertyName, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (edmProperty != null)
+                    {
+                        throw new InvalidOperationException(Edm.Strings.MultipleMatchingPropertiesFound(propertyName, structuredType.FullTypeName()));
+                    }
+
+                    edmProperty = property;
+                }
+            }
+
+            return edmProperty;
         }
 
         /// <summary>

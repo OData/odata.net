@@ -39,6 +39,7 @@ namespace Microsoft.OData.Edm
         internal const string Constructable_DependentPropertyCountMustMatchNumberOfPropertiesOnPrincipalType = "Constructable_DependentPropertyCountMustMatchNumberOfPropertiesOnPrincipalType";
         internal const string EdmType_UnexpectedEdmType = "EdmType_UnexpectedEdmType";
         internal const string NavigationPropertyBinding_PathIsNotValid = "NavigationPropertyBinding_PathIsNotValid";
+        internal const string MultipleMatchingPropertiesFound = "MultipleMatchingPropertiesFound";
         internal const string Edm_Evaluator_NoTermTypeAnnotationOnType = "Edm_Evaluator_NoTermTypeAnnotationOnType";
         internal const string Edm_Evaluator_NoValueAnnotationOnType = "Edm_Evaluator_NoValueAnnotationOnType";
         internal const string Edm_Evaluator_NoValueAnnotationOnElement = "Edm_Evaluator_NoValueAnnotationOnElement";
@@ -324,6 +325,8 @@ namespace Microsoft.OData.Edm
         internal const string TimeOfDay_ConvertErrorFromTimeSpan = "TimeOfDay_ConvertErrorFromTimeSpan";
         internal const string TimeOfDay_InvalidParsingString = "TimeOfDay_InvalidParsingString";
         internal const string TimeOfDay_InvalidCompareToTarget = "TimeOfDay_InvalidCompareToTarget";
+        internal const string EdmVocabularyAnnotations_DidNotFindDefaultValue = "EdmVocabularyAnnotations_DidNotFindDefaultValue";
+        internal const string EdmVocabularyAnnotations_TermTypeNotSupported = "EdmVocabularyAnnotations_TermTypeNotSupported";
 
         static EdmRes loader = null;
         ResourceManager resources;

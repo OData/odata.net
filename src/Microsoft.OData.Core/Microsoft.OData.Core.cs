@@ -781,6 +781,8 @@ namespace Microsoft.OData
         internal const string BadRequest_ResourceCanBeCrossReferencedOnlyForBindOperation = "BadRequest_ResourceCanBeCrossReferencedOnlyForBindOperation";
         internal const string DataServiceConfiguration_ResponseVersionIsBiggerThanProtocolVersion = "DataServiceConfiguration_ResponseVersionIsBiggerThanProtocolVersion";
         internal const string BadRequest_KeyCountMismatch = "BadRequest_KeyCountMismatch";
+        internal const string BadRequest_KeyMismatch = "BadRequest_KeyMismatch";
+        internal const string BadRequest_KeyOrAlternateKeyMismatch = "BadRequest_KeyOrAlternateKeyMismatch";
         internal const string RequestUriProcessor_KeysMustBeNamed = "RequestUriProcessor_KeysMustBeNamed";
         internal const string RequestUriProcessor_ResourceNotFound = "RequestUriProcessor_ResourceNotFound";
         internal const string RequestUriProcessor_BatchedActionOnEntityCreatedInSameChangeset = "RequestUriProcessor_BatchedActionOnEntityCreatedInSameChangeset";
@@ -796,8 +798,8 @@ namespace Microsoft.OData
         internal const string ExceptionUtils_ArgumentStringNullOrEmpty = "ExceptionUtils_ArgumentStringNullOrEmpty";
         internal const string ExpressionToken_OnlyRefAllowWithStarInExpand = "ExpressionToken_OnlyRefAllowWithStarInExpand";
         internal const string ExpressionToken_DollarCountNotAllowedInSelect = "ExpressionToken_DollarCountNotAllowedInSelect";
-        internal const string ExpressionToken_NoPropAllowedAfterRef = "ExpressionToken_NoPropAllowedAfterRef";
         internal const string ExpressionToken_NoPropAllowedAfterDollarCount = "ExpressionToken_NoPropAllowedAfterDollarCount";
+        internal const string ExpressionToken_NoPropAllowedAfterRef = "ExpressionToken_NoPropAllowedAfterRef";
         internal const string ExpressionToken_NoSegmentAllowedBeforeStarInExpand = "ExpressionToken_NoSegmentAllowedBeforeStarInExpand";
         internal const string ExpressionToken_IdentifierExpected = "ExpressionToken_IdentifierExpected";
         internal const string ExpressionLexer_UnterminatedStringLiteral = "ExpressionLexer_UnterminatedStringLiteral";

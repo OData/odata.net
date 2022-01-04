@@ -264,7 +264,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                     Assert.Equal("id", keyInfo1.Key);
                     Assert.Equal(1, keyInfo1.Value);
                 },
-                Strings.RequestUriProcessor_SyntaxError);
+                Strings.BadRequest_KeyMismatch(MoonType2.FullTypeName()));
         }
         #endregion
 

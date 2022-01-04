@@ -24,40 +24,33 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         #region write IEdmModel.References for referenced models.
-        internal void VisitEdmReferences(IEdmModel model)
+        internal void VisitEdmReferences(IEdmModel model, IEdmReference reference)
         {
-            IEnumerable<IEdmReference> references = model.GetEdmReferences();
-            if (model != null && references != null)
+            this.schemaWriter.WriteReferenceElementHeader(reference);
+
+            if (reference.Includes != null)
             {
-                foreach (IEdmReference tmp in references)
+                foreach (IEdmInclude include in reference.Includes)
                 {
-                    this.schemaWriter.WriteReferenceElementHeader(tmp);
+                    this.schemaWriter.WritIncludeElementHeader(include);
 
-                    if (tmp.Includes != null)
-                    {
-                        foreach (IEdmInclude include in tmp.Includes)
-                        {
-                            this.schemaWriter.WritIncludeElementHeader(include);
+                    WriteAnnotations(model, include);
 
-                            WriteAnnotations(model, include);
-
-                            this.schemaWriter.WriteIncludeElementEnd(include);
-                        }
-                    }
-
-                    if (tmp.IncludeAnnotations != null)
-                    {
-                        foreach (IEdmIncludeAnnotations includeAnnotations in tmp.IncludeAnnotations)
-                        {
-                            this.schemaWriter.WriteIncludeAnnotationsElement(includeAnnotations);
-                        }
-                    }
-
-                    WriteAnnotations(model, tmp);
-
-                    this.schemaWriter.WriteReferenceElementEnd(tmp);
+                    this.schemaWriter.WriteIncludeElementEnd(include);
                 }
             }
+
+            if (reference.IncludeAnnotations != null)
+            {
+                foreach (IEdmIncludeAnnotations includeAnnotations in reference.IncludeAnnotations)
+                {
+                    this.schemaWriter.WriteIncludeAnnotationsElement(includeAnnotations);
+                }
+            }
+
+            WriteAnnotations(model, reference);
+            this.schemaWriter.WriteReferenceElementEnd(reference);
+
         }
 
         private void WriteAnnotations(IEdmModel model, IEdmVocabularyAnnotatable target)

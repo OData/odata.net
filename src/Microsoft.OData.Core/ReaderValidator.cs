@@ -121,7 +121,8 @@ namespace Microsoft.OData
         public IEdmProperty ValidatePropertyDefined(string propertyName,
             IEdmStructuredType owningStructuredType)
         {
-            return ReaderValidationUtils.ValidatePropertyDefined(propertyName, owningStructuredType, this.settings.ThrowOnUndeclaredPropertyForNonOpenType);
+            return ReaderValidationUtils.ValidatePropertyDefined(propertyName, owningStructuredType, this.settings.ThrowOnUndeclaredPropertyForNonOpenType,
+                this.settings.EnablePropertyNameCaseInsensitive);
         }
 
         /// <summary>

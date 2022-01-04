@@ -57,7 +57,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
               "<edmx:Reference Uri=\"https://example.com/Org.OData.Authorization.V1.xml\">" +
                 "<edmx:Include Namespace=\"Org.OData.Authorization.V1\" Alias=\"Auth\">" +
-                  "<Annotation Term=\"Org.OData.Core.V1.LongDescription\" String=\"Include Description.\" />" +
+                  "<Annotation Term=\"Core.LongDescription\" String=\"Include Description.\" />" +
                 "</edmx:Include>" +
                 "<edmx:IncludeAnnotations TermNamespace=\"org.example.validation\" />" +
                 "<edmx:IncludeAnnotations TermNamespace=\"org.example.display\" Qualifier=\"Tablet\" />" +
@@ -66,7 +66,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 "<edmx:Include Namespace=\"Org.OData.Core.V1\" Alias=\"Core\" />" +
                 "<edmx:IncludeAnnotations TermNamespace=\"org.example.hcm\" TargetNamespace=\"com.example.Sales\" />" +
                 "<edmx:IncludeAnnotations TermNamespace=\"org.example.hcm\" Qualifier=\"Tablet\" TargetNamespace=\"com.example.Person\" />" +
-                "<Annotation Term=\"Org.OData.Core.V1.LongDescription\" String=\"EdmReference Description.\" />" +
+                "<Annotation Term=\"Core.LongDescription\" String=\"EdmReference Description.\" />" +
               "</edmx:Reference>" +
               "<edmx:DataServices />" +
             "</edmx:Edmx>");
@@ -80,7 +80,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         {
           ""$Namespace"": ""Org.OData.Authorization.V1"",
           ""$Alias"": ""Auth"",
-          ""@Org.OData.Core.V1.LongDescription"": ""Include Description.""
+          ""@Core.LongDescription"": ""Include Description.""
         }
       ],
       ""$IncludeAnnotations"": [
@@ -111,7 +111,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
           ""$TargetNamespace"": ""com.example.Person""
         }
       ],
-      ""@Org.OData.Core.V1.LongDescription"": ""EdmReference Description.""
+      ""@Core.LongDescription"": ""EdmReference Description.""
     }
   }
 }");
@@ -1125,7 +1125,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       },
       ""NS.TestFunction(Edm.String, Edm.String, Edm.String)/optionalParamWithDefault"": {
         ""@Org.OData.Core.V1.OptionalParameter"": {
-          ""$Type"": ""Org.OData.Core.V1.OptionalParameterType"",
+          ""@type"": ""Org.OData.Core.V1.OptionalParameterType"",
           ""DefaultValue"": ""Smith""
         }
       }
@@ -1194,7 +1194,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
     ""$Annotations"": {
       ""NS.TestFunction(Edm.String)/optionalParamWithDefault"": {
         ""@Org.OData.Core.V1.OptionalParameter"": {
-          ""$Type"": ""Org.OData.Core.V1.OptionalParameterType"",
+          ""@type"": ""Org.OData.Core.V1.OptionalParameterType"",
           ""DefaultValue"": ""OutofLineValue""
         }
       }
@@ -2215,6 +2215,250 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 
         [Fact]
+        public void CanWriteAnnotationWithoutSpecifiedValue()
+        {
+            // Arrange
+            EdmModel model = new EdmModel();
+            EdmComplexType complex = new EdmComplexType("NS", "Complex");
+            EdmTerm term1 = new EdmTerm("NS", "MyAnnotationPathTerm", EdmCoreModel.Instance.GetAnnotationPath(false));
+            EdmTerm term2 = new EdmTerm("NS", "MyDefaultStringTerm", EdmCoreModel.Instance.GetString(false), "Property Term", "This is a test");
+            EdmTerm term3 = new EdmTerm("NS", "MyDefaultBoolTerm", EdmCoreModel.Instance.GetBoolean(false), "Property Term", "true");
+            model.AddElements(new IEdmSchemaElement[] { complex, term1, term2, term3 });
+
+            // annotation with value
+            IEdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(complex, term1, new EdmAnnotationPathExpression("abc/efg"));
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
+
+            // annotation without value
+            annotation = term2.CreateVocabularyAnnotation(complex);
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
+
+            annotation = term3.CreateVocabularyAnnotation(complex);
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
+
+            // Validate model
+            IEnumerable<EdmError> errors;
+            Assert.True(model.Validate(out errors));
+
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+               "<edmx:DataServices>" +
+                 "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                   "<ComplexType Name=\"Complex\">" +
+                     "<Annotation Term=\"NS.MyAnnotationPathTerm\" AnnotationPath=\"abc/efg\" />" +
+                     "<Annotation Term=\"NS.MyDefaultStringTerm\" />" + // no longer has value
+                     "<Annotation Term=\"NS.MyDefaultBoolTerm\" />" + // no longer has value
+                   "</ComplexType>" +
+                   "<Term Name=\"MyAnnotationPathTerm\" Type=\"Edm.AnnotationPath\" Nullable=\"false\" />" +
+                   "<Term Name=\"MyDefaultStringTerm\" Type=\"Edm.String\" DefaultValue=\"This is a test\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
+                   "<Term Name=\"MyDefaultBoolTerm\" Type=\"Edm.Boolean\" DefaultValue=\"true\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
+                 "</Schema>" +
+               "</edmx:DataServices>" +
+             "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""Complex"": {
+      ""$Kind"": ""ComplexType"",
+      ""@NS.MyAnnotationPathTerm"": ""abc/efg"",
+      ""@NS.MyDefaultStringTerm"": ""This is a test"",
+      ""@NS.MyDefaultBoolTerm"": true
+    },
+    ""MyAnnotationPathTerm"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""Edm.AnnotationPath""
+    },
+    ""MyDefaultStringTerm"": {
+      ""$Kind"": ""Term"",
+      ""$AppliesTo"": [
+        ""Property Term""
+      ],
+      ""$DefaultValue"": ""This is a test""
+    },
+    ""MyDefaultBoolTerm"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""Edm.Boolean"",
+      ""$AppliesTo"": [
+        ""Property Term""
+      ],
+      ""$DefaultValue"": ""true""
+    }
+  }
+}");
+        }
+
+        [Fact]
+        public void CanWriteAnnotationWithVariousPrimitiveDefaultValues()
+        {
+            // Arrange
+            EdmModel model = new EdmModel();
+            EdmComplexType complex = new EdmComplexType("NS", "Complex");
+            model.AddElement(complex);
+
+            Action<EdmPrimitiveTypeKind, string> registerAction = (kind, value) =>
+            {
+                string name = $"Default{kind}Term";
+                EdmTerm term = new EdmTerm("NS", name, EdmCoreModel.Instance.GetPrimitive(kind, false), null, value);
+                model.AddElement(term);
+
+                IEdmVocabularyAnnotation annotation = term.CreateVocabularyAnnotation(complex);
+                annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+                model.SetVocabularyAnnotation(annotation);
+                Assert.NotNull(annotation.Value);
+            };
+
+            registerAction(EdmPrimitiveTypeKind.Binary, "01");
+            registerAction(EdmPrimitiveTypeKind.Decimal, "0.34");
+            registerAction(EdmPrimitiveTypeKind.String, "This is a test");
+            registerAction(EdmPrimitiveTypeKind.Duration, "P11DT23H59M59.999999999999S");
+            registerAction(EdmPrimitiveTypeKind.TimeOfDay, "21:45:00");
+            registerAction(EdmPrimitiveTypeKind.Boolean, "true");
+            registerAction(EdmPrimitiveTypeKind.Single, "0.2");
+            registerAction(EdmPrimitiveTypeKind.Double, "3.94");
+            registerAction(EdmPrimitiveTypeKind.Guid, "21EC2020-3AEA-1069-A2DD-08002B30309D");
+            registerAction(EdmPrimitiveTypeKind.Int16, "4");
+            registerAction(EdmPrimitiveTypeKind.Int32, "4");
+            registerAction(EdmPrimitiveTypeKind.Int64, "4");
+            registerAction(EdmPrimitiveTypeKind.Date, "2000-12-10");
+
+            // Validate model
+            IEnumerable<EdmError> errors;
+            Assert.True(model.Validate(out errors));
+
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+               "<edmx:DataServices>" +
+                 "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                   "<ComplexType Name=\"Complex\">" +
+                     "<Annotation Term=\"NS.DefaultBinaryTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultDecimalTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultStringTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultDurationTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultTimeOfDayTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultBooleanTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultSingleTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultDoubleTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultGuidTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultInt16Term\" />" +
+                     "<Annotation Term=\"NS.DefaultInt32Term\" />" +
+                     "<Annotation Term=\"NS.DefaultInt64Term\" />" +
+                     "<Annotation Term=\"NS.DefaultDateTerm\" />" +
+                   "</ComplexType>" +
+                 "<Term Name=\"DefaultBinaryTerm\" Type=\"Edm.Binary\" DefaultValue=\"01\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultDecimalTerm\" Type=\"Edm.Decimal\" DefaultValue=\"0.34\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultStringTerm\" Type=\"Edm.String\" DefaultValue=\"This is a test\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultDurationTerm\" Type=\"Edm.Duration\" DefaultValue=\"P11DT23H59M59.999999999999S\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultTimeOfDayTerm\" Type=\"Edm.TimeOfDay\" DefaultValue=\"21:45:00\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultBooleanTerm\" Type=\"Edm.Boolean\" DefaultValue=\"true\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultSingleTerm\" Type=\"Edm.Single\" DefaultValue=\"0.2\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultDoubleTerm\" Type=\"Edm.Double\" DefaultValue=\"3.94\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultGuidTerm\" Type=\"Edm.Guid\" DefaultValue=\"21EC2020-3AEA-1069-A2DD-08002B30309D\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultInt16Term\" Type=\"Edm.Int16\" DefaultValue=\"4\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultInt32Term\" Type=\"Edm.Int32\" DefaultValue=\"4\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultInt64Term\" Type=\"Edm.Int64\" DefaultValue=\"4\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultDateTerm\" Type=\"Edm.Date\" DefaultValue=\"2000-12-10\" Nullable=\"false\" />" +
+                 "</Schema>" +
+               "</edmx:DataServices>" +
+             "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""Complex"": {
+      ""$Kind"": ""ComplexType"",
+      ""@NS.DefaultBinaryTerm"": ""AQ"",
+      ""@NS.DefaultDecimalTerm"": 0.34,
+      ""@NS.DefaultStringTerm"": ""This is a test"",
+      ""@NS.DefaultDurationTerm"": ""P11DT23H59M59.9999999S"",
+      ""@NS.DefaultTimeOfDayTerm"": ""21:45:00.0000000"",
+      ""@NS.DefaultBooleanTerm"": true,
+      ""@NS.DefaultSingleTerm"": 0.2,
+      ""@NS.DefaultDoubleTerm"": 3.94,
+      ""@NS.DefaultGuidTerm"": ""21ec2020-3aea-1069-a2dd-08002b30309d"",
+      ""@NS.DefaultInt16Term"": 4,
+      ""@NS.DefaultInt32Term"": 4,
+      ""@NS.DefaultInt64Term"": 4,
+      ""@NS.DefaultDateTerm"": ""2000-12-10""
+    },
+    ""DefaultBinaryTerm"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""Edm.Binary"",
+      ""$DefaultValue"": ""01""
+    },
+    ""DefaultDecimalTerm"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""Edm.Decimal"",
+      ""$DefaultValue"": ""0.34""
+    },
+    ""DefaultStringTerm"": {
+      ""$Kind"": ""Term"",
+      ""$DefaultValue"": ""This is a test""
+    },
+    ""DefaultDurationTerm"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""Edm.Duration"",
+      ""$DefaultValue"": ""P11DT23H59M59.999999999999S"",
+      ""$Precision"": 0
+    },
+    ""DefaultTimeOfDayTerm"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""Edm.TimeOfDay"",
+      ""$DefaultValue"": ""21:45:00"",
+      ""$Precision"": 0
+    },
+    ""DefaultBooleanTerm"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""Edm.Boolean"",
+      ""$DefaultValue"": ""true""
+    },
+    ""DefaultSingleTerm"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""Edm.Single"",
+      ""$DefaultValue"": ""0.2""
+    },
+    ""DefaultDoubleTerm"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""Edm.Double"",
+      ""$DefaultValue"": ""3.94""
+    },
+    ""DefaultGuidTerm"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""Edm.Guid"",
+      ""$DefaultValue"": ""21EC2020-3AEA-1069-A2DD-08002B30309D""
+    },
+    ""DefaultInt16Term"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""Edm.Int16"",
+      ""$DefaultValue"": ""4""
+    },
+    ""DefaultInt32Term"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""Edm.Int32"",
+      ""$DefaultValue"": ""4""
+    },
+    ""DefaultInt64Term"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""Edm.Int64"",
+      ""$DefaultValue"": ""4""
+    },
+    ""DefaultDateTerm"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""Edm.Date"",
+      ""$DefaultValue"": ""2000-12-10""
+    }
+  }
+}");
+        }
+
+        [Fact]
         public void CanWriteNavigationPropertyBindingTargetOnContainmentNavigationProperty()
         {
             EdmModel model = new EdmModel();
@@ -2441,7 +2685,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             WriteAndVerifyJson(edmModel, "{\"$Version\":\"" + odataVersion + "\"}", false);
         }
 
-        private void WriteAndVerifyXml(IEdmModel model, string expected, CsdlTarget target = CsdlTarget.OData)
+        internal static void WriteAndVerifyXml(IEdmModel model, string expected, CsdlTarget target = CsdlTarget.OData)
         {
             using (StringWriter sw = new StringWriter())
             {
@@ -2487,6 +2731,86 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 Assert.Equal(expected, actual);
             }
 #endif
+        }
+
+        [Fact]
+        public void ShouldSubstituteFullyQualifiedNamespaceWithAliasIfAliasIsSet()
+        {
+            // Arrange
+            var stringTypeReference = new EdmStringTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), false);
+            var model = new EdmModel();
+            model.SetNamespaceAlias("Org.OData.Core.V1", "Core");
+            var function = new EdmFunction("test", "TestFunction", stringTypeReference);
+            var requiredParam = new EdmOperationParameter(function, "requiredParam", stringTypeReference);
+            var optionalParam = new EdmOptionalParameter(function, "optionalParam", stringTypeReference, null);
+            var optionalParamWithDefault = new EdmOptionalParameter(function, "optionalParamWithDefault", stringTypeReference, "Smith");
+            function.AddParameter(requiredParam);
+            function.AddParameter(optionalParam);
+            function.AddParameter(optionalParamWithDefault);
+            model.AddElement(function);
+            model.AddEntityContainer("test", "Default").AddFunctionImport("TestFunction", function);
+
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+              "<edmx:DataServices>" +
+                "<Schema Namespace=\"test\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                  "<Function Name=\"TestFunction\">" +
+                    "<Parameter Name=\"requiredParam\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                    "<Parameter Name=\"optionalParam\" Type=\"Edm.String\" Nullable=\"false\">" +
+                        "<Annotation Term=\"Core.OptionalParameter\" />" +
+                    "</Parameter>" +
+                    "<Parameter Name=\"optionalParamWithDefault\" Type=\"Edm.String\" Nullable=\"false\">" +
+                        "<Annotation Term=\"Core.OptionalParameter\">" +
+                          "<Record>" +
+                            "<PropertyValue Property=\"DefaultValue\" String=\"Smith\" />" +
+                          "</Record>" +
+                        "</Annotation>" +
+                    "</Parameter>" +
+                    "<ReturnType Type=\"Edm.String\" Nullable=\"false\" />" +
+                  "</Function>" +
+                  "<EntityContainer Name=\"Default\">" +
+                    "<FunctionImport Name=\"TestFunction\" Function=\"test.TestFunction\" />" +
+                  "</EntityContainer>" +
+                "</Schema>" +
+              "</edmx:DataServices>" +
+            "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""test.Default"",
+  ""test"": {
+    ""TestFunction"": [
+      {
+        ""$Kind"": ""Function"",
+        ""$Parameter"": [
+          {
+            ""$Name"": ""requiredParam""
+          },
+          {
+            ""$Name"": ""optionalParam"",
+            ""@Core.OptionalParameter"": {}
+          },
+          {
+            ""$Name"": ""optionalParamWithDefault"",
+            ""@Core.OptionalParameter"": {
+              ""DefaultValue"": ""Smith""
+            }
+          }
+        ],
+        ""$ReturnType"": {}
+      }
+    ],
+    ""Default"": {
+      ""$Kind"": ""EntityContainer"",
+      ""TestFunction"": {
+        ""$Kind"": ""FunctionImport"",
+        ""$Function"": ""test.TestFunction""
+      }
+    }
+  }
+}");
         }
     }
 }

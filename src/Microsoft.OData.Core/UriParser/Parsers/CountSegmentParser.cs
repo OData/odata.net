@@ -75,7 +75,7 @@ namespace Microsoft.OData.UriParser
                 // Check for (), which is not allowed.
                 if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.CloseParen)
                 {
-                    throw new ODataException(ODataErrorStrings.UriParser_EmptyParenthesis());
+                    throw new ODataException(ODataErrorStrings.UriParser_EmptyParenthesis);
                 }
 
                 // Look for all the supported query options
@@ -103,7 +103,7 @@ namespace Microsoft.OData.UriParser
 
                         default:
                             {
-                                throw new ODataException(ODataErrorStrings.UriQueryExpressionParser_IllegalQueryOptioninDollarCount());
+                                throw new ODataException(ODataErrorStrings.UriQueryExpressionParser_IllegalQueryOptioninDollarCount);
                             }
                     }
                 }

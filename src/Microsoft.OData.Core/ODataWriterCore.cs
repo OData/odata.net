@@ -32,9 +32,6 @@ namespace Microsoft.OData
         /// <summary>True if the writer was created for writing a resourceSet; false when it was created for writing a resource.</summary>
         private readonly bool writingResourceSet;
 
-        /// <summary>True if the writer was created for writing a delta response; false otherwise.</summary>
-        private readonly bool writingDelta;
-
         /// <summary>If not null, the writer will notify the implementer of the interface of relevant state changes in the writer.</summary>
         private readonly IODataReaderWriterListener listener;
 
@@ -51,7 +48,7 @@ namespace Microsoft.OData
         /// <param name="navigationSource">The navigation source we are going to write resource set for.</param>
         /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <param name="writingResourceSet">True if the writer is created for writing a resourceSet; false when it is created for writing a resource.</param>
-        /// <param name="writingDelta">True if the writer is created for writing a delta response; false otherwise.</param>
+        /// <param name="writingDelta">True if the writer is created for writing a delta response; false otherwise. This parameter is ignored and will be removed in the next major release.</param>
         /// <param name="listener">If not null, the writer will notify the implementer of the interface of relevant state changes in the writer.</param>
         protected ODataWriterCore(
             ODataOutputContext outputContext,
@@ -65,7 +62,6 @@ namespace Microsoft.OData
 
             this.outputContext = outputContext;
             this.writingResourceSet = writingResourceSet;
-            this.writingDelta = writingDelta || (!writingResourceSet && !outputContext.WritingResponse);
             this.WriterValidator = outputContext.WriterValidator;
             this.Version = outputContext.MessageWriterSettings.Version;
 
@@ -84,7 +80,7 @@ namespace Microsoft.OData
 
             this.listener = listener;
 
-            this.scopeStack.Push(new Scope(WriterState.Start, /*item*/null, navigationSource, resourceType, /*skipWriting*/false, outputContext.MessageWriterSettings.SelectedProperties, odataUri));
+            this.scopeStack.Push(new Scope(WriterState.Start, /*item*/null, navigationSource, resourceType, /*skipWriting*/false, outputContext.MessageWriterSettings.SelectedProperties, odataUri, /*enableDelta*/ true));
             this.CurrentScope.DerivedTypeConstraints = this.outputContext.Model.GetDerivedTypeConstraints(navigationSource)?.ToList();
         }
 
@@ -1250,7 +1246,8 @@ namespace Microsoft.OData
             SelectedPropertiesNode selectedProperties,
             ODataUri odataUri)
         {
-            return new NestedResourceInfoScope(writerState, navLink, navigationSource, itemType, skipWriting, selectedProperties, odataUri);
+            Debug.Assert(this.CurrentScope != null, "Creating a nested resource info scope with a null parent scope.");
+            return new NestedResourceInfoScope(writerState, navLink, navigationSource, itemType, skipWriting, selectedProperties, odataUri, this.CurrentScope);
         }
 
         /// <summary>
@@ -1611,8 +1608,6 @@ namespace Microsoft.OData
         private void VerifyCanWriteStartDeltaResourceSet(bool synchronousCall, ODataDeltaResourceSet deltaResourceSet)
         {
             ExceptionUtils.CheckArgumentNotNull(deltaResourceSet, "deltaResourceSet");
-
-            this.VerifyWritingDelta();
             this.VerifyNotDisposed();
             this.VerifyCallAllowed(synchronousCall);
             this.StartPayloadInStartState();
@@ -1940,6 +1935,7 @@ namespace Microsoft.OData
             this.InterceptException(
                 (thisParam) =>
                 {
+                    bool wasenableDelta;
                     Scope currentScope = thisParam.CurrentScope;
 
                     switch (currentScope.State)
@@ -2146,11 +2142,11 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Verifies that the writer is a delta writer.
+        /// Verifies that the writer is writing within a delta resource set.
         /// </summary>
         private void VerifyWritingDelta()
         {
-            if (!this.writingDelta)
+            if (!this.CurrentScope.EnableDelta)
             {
                 throw new ODataException(Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
             }
@@ -2688,107 +2684,104 @@ namespace Microsoft.OData
                 {
                     selectedProperties = currentScope.SelectedProperties.GetSelectedPropertiesForNavigationProperty(currentScope.ResourceType, nestedResourceInfo.Name);
 
-                    if (this.outputContext.WritingResponse || this.writingDelta)
-                    {
-                        ODataPath odataPath = odataUri.Path;
-                        IEdmStructuredType currentResourceType = currentScope.ResourceType;
+                    ODataPath odataPath = odataUri.Path;
+                    IEdmStructuredType currentResourceType = currentScope.ResourceType;
 
-                        ResourceBaseScope resourceScope = currentScope as ResourceBaseScope;
-                        TypeSegment resourceTypeCast = null;
-                        if (resourceScope.ResourceTypeFromMetadata != currentResourceType)
+                    ResourceBaseScope resourceScope = currentScope as ResourceBaseScope;
+                    TypeSegment resourceTypeCast = null;
+                    if (resourceScope.ResourceTypeFromMetadata != currentResourceType)
+                    {
+                        resourceTypeCast = new TypeSegment(currentResourceType, null);
+                    }
+
+                    IEdmStructuralProperty structuredProperty = this.WriterValidator.ValidatePropertyDefined(
+                        nestedResourceInfo.Name, currentResourceType)
+                        as IEdmStructuralProperty;
+
+                    // Handle primitive or complex type property.
+                    if (structuredProperty != null)
+                    {
+                        odataPath = AppendEntitySetKeySegment(odataPath, false);
+                        itemType = structuredProperty.Type == null ? null : structuredProperty.Type.Definition.AsElementType();
+                        navigationSource = null;
+
+                        if (resourceTypeCast != null)
                         {
-                            resourceTypeCast = new TypeSegment(currentResourceType, null);
+                            odataPath = odataPath.AddSegment(resourceTypeCast);
                         }
 
-                        IEdmStructuralProperty structuredProperty = this.WriterValidator.ValidatePropertyDefined(
-                            nestedResourceInfo.Name, currentResourceType)
-                            as IEdmStructuralProperty;
+                        odataPath = odataPath.AddPropertySegment(structuredProperty);
 
-                        // Handle primitive or complex type property.
-                        if (structuredProperty != null)
+                        derivedTypeConstraints = this.outputContext.Model.GetDerivedTypeConstraints(structuredProperty);
+                    }
+                    else
+                    {
+                        IEdmNavigationProperty navigationProperty = this.WriterValidator.ValidateNestedResourceInfo(nestedResourceInfo, currentResourceType, /*payloadKind*/null);
+                        if (navigationProperty != null)
                         {
-                            odataPath = AppendEntitySetKeySegment(odataPath, false);
-                            itemType = structuredProperty.Type == null ? null : structuredProperty.Type.Definition.AsElementType();
-                            navigationSource = null;
+                            derivedTypeConstraints = this.outputContext.Model.GetDerivedTypeConstraints(navigationProperty);
+
+                            itemType = navigationProperty.ToEntityType();
+                            if (!nestedResourceInfo.IsCollection.HasValue)
+                            {
+                                nestedResourceInfo.IsCollection = navigationProperty.Type.IsEntityCollectionType();
+                            }
+
+                            IEdmNavigationSource currentNavigationSource = currentScope.NavigationSource;
+                            IEdmPathExpression bindingPath;
 
                             if (resourceTypeCast != null)
                             {
                                 odataPath = odataPath.AddSegment(resourceTypeCast);
                             }
 
-                            odataPath = odataPath.AddPropertySegment(structuredProperty);
+                            navigationSource = currentNavigationSource == null
+                                ? null
+                                : currentNavigationSource.FindNavigationTarget(navigationProperty, BindingPathHelper.MatchBindingPath, odataPath.Segments, out bindingPath);
 
-                            derivedTypeConstraints = this.outputContext.Model.GetDerivedTypeConstraints(structuredProperty);
-                        }
-                        else
-                        {
-                            IEdmNavigationProperty navigationProperty = this.WriterValidator.ValidateNestedResourceInfo(nestedResourceInfo, currentResourceType, /*payloadKind*/null);
-                            if (navigationProperty != null)
+                            SelectExpandClause clause = odataUri.SelectAndExpand;
+                            TypeSegment typeCastFromExpand = null;
+                            if (clause != null)
                             {
-                                derivedTypeConstraints = this.outputContext.Model.GetDerivedTypeConstraints(navigationProperty);
+                                SelectExpandClause subClause;
+                                clause.GetSubSelectExpandClause(nestedResourceInfo.Name, out subClause, out typeCastFromExpand);
+                                odataUri.SelectAndExpand = subClause;
+                            }
 
-                                itemType = navigationProperty.ToEntityType();
-                                if (!nestedResourceInfo.IsCollection.HasValue)
-                                {
-                                    nestedResourceInfo.IsCollection = navigationProperty.Type.IsEntityCollectionType();
-                                }
+                            switch (navigationSource.NavigationSourceKind())
+                            {
+                                case EdmNavigationSourceKind.ContainedEntitySet:
+                                    // Containment cannot be written alone without odata uri.
+                                    if (!odataPath.Any())
+                                    {
+                                        throw new ODataException(Strings.ODataWriterCore_PathInODataUriMustBeSetWhenWritingContainedElement);
+                                    }
 
-                                IEdmNavigationSource currentNavigationSource = currentScope.NavigationSource;
-                                IEdmPathExpression bindingPath;
+                                    odataPath = AppendEntitySetKeySegment(odataPath, true);
 
-                                if (resourceTypeCast != null)
-                                {
-                                    odataPath = odataPath.AddSegment(resourceTypeCast);
-                                }
+                                    if (odataPath != null && typeCastFromExpand != null)
+                                    {
+                                        odataPath = odataPath.AddSegment(typeCastFromExpand);
+                                    }
 
-                                navigationSource = currentNavigationSource == null
-                                    ? null
-                                    : currentNavigationSource.FindNavigationTarget(navigationProperty, BindingPathHelper.MatchBindingPath, odataPath.Segments, out bindingPath);
-
-                                SelectExpandClause clause = odataUri.SelectAndExpand;
-                                TypeSegment typeCastFromExpand = null;
-                                if (clause != null)
-                                {
-                                    SelectExpandClause subClause;
-                                    clause.GetSubSelectExpandClause(nestedResourceInfo.Name, out subClause, out typeCastFromExpand);
-                                    odataUri.SelectAndExpand = subClause;
-                                }
-
-                                switch (navigationSource.NavigationSourceKind())
-                                {
-                                    case EdmNavigationSourceKind.ContainedEntitySet:
-                                        // Containment cannot be written alone without odata uri.
-                                        if (!odataPath.Any())
-                                        {
-                                            throw new ODataException(Strings.ODataWriterCore_PathInODataUriMustBeSetWhenWritingContainedElement);
-                                        }
-
-                                        odataPath = AppendEntitySetKeySegment(odataPath, true);
-
-                                        if (odataPath != null && typeCastFromExpand != null)
-                                        {
-                                            odataPath = odataPath.AddSegment(typeCastFromExpand);
-                                        }
-
-                                        Debug.Assert(navigationSource is IEdmContainedEntitySet, "If the NavigationSourceKind is ContainedEntitySet, the navigationSource must be IEdmContainedEntitySet.");
-                                        IEdmContainedEntitySet containedEntitySet = (IEdmContainedEntitySet)navigationSource;
-                                        odataPath = odataPath.AddNavigationPropertySegment(containedEntitySet.NavigationProperty, containedEntitySet);
-                                        break;
-                                    case EdmNavigationSourceKind.EntitySet:
-                                        odataPath = new ODataPath(new EntitySetSegment(navigationSource as IEdmEntitySet));
-                                        break;
-                                    case EdmNavigationSourceKind.Singleton:
-                                        odataPath = new ODataPath(new SingletonSegment(navigationSource as IEdmSingleton));
-                                        break;
-                                    default:
-                                        odataPath = null;
-                                        break;
-                                }
+                                    Debug.Assert(navigationSource is IEdmContainedEntitySet, "If the NavigationSourceKind is ContainedEntitySet, the navigationSource must be IEdmContainedEntitySet.");
+                                    IEdmContainedEntitySet containedEntitySet = (IEdmContainedEntitySet)navigationSource;
+                                    odataPath = odataPath.AddNavigationPropertySegment(containedEntitySet.NavigationProperty, containedEntitySet);
+                                    break;
+                                case EdmNavigationSourceKind.EntitySet:
+                                    odataPath = new ODataPath(new EntitySetSegment(navigationSource as IEdmEntitySet));
+                                    break;
+                                case EdmNavigationSourceKind.Singleton:
+                                    odataPath = new ODataPath(new SingletonSegment(navigationSource as IEdmSingleton));
+                                    break;
+                                default:
+                                    odataPath = null;
+                                    break;
                             }
                         }
-
-                        odataUri.Path = odataPath;
                     }
+
+                    odataUri.Path = odataPath;
                 }
             }
             else if ((currentState == WriterState.ResourceSet || currentState == WriterState.DeltaResourceSet) && (newState == WriterState.Resource || newState == WriterState.Primitive || newState == WriterState.ResourceSet || newState == WriterState.DeletedResource))
@@ -2972,7 +2965,7 @@ namespace Microsoft.OData
             switch (this.State)
             {
                 case WriterState.Start:
-                    if (newState != WriterState.ResourceSet && newState != WriterState.Resource && newState != WriterState.DeltaResourceSet)
+                    if (newState != WriterState.ResourceSet && newState != WriterState.Resource && newState != WriterState.DeltaResourceSet && newState != WriterState.DeletedResource)
                     {
                         throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromStart(this.State.ToString(), newState.ToString()));
                     }
@@ -3169,13 +3162,15 @@ namespace Microsoft.OData
                 case WriterState.NestedResourceInfoWithContent:
                     scope = this.CreateNestedResourceInfoScope(state, (ODataNestedResourceInfo)item, navigationSource, itemType, skipWriting, selectedProperties, odataUri);
                     break;
+                case WriterState.Start:
+                    scope = new Scope(state, item, navigationSource, itemType, skipWriting, selectedProperties, odataUri, /*enableDelta*/ true);
+                    break;
                 case WriterState.Primitive:                 // fall through
                 case WriterState.Stream:                    // fall through
                 case WriterState.String:                    // fall through
-                case WriterState.Start:                     // fall through
                 case WriterState.Completed:                 // fall through
                 case WriterState.Error:
-                    scope = new Scope(state, item, navigationSource, itemType, skipWriting, selectedProperties, odataUri);
+                    scope = new Scope(state, item, navigationSource, itemType, skipWriting, selectedProperties, odataUri, /*enableDelta*/ false);
                     break;
                 default:
                     string errorMessage = Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_Scope_Create_UnreachableCodePath);
@@ -3264,8 +3259,6 @@ namespace Microsoft.OData
         private async Task VerifyCanWriteStartDeltaResourceSetAsync(bool synchronousCall, ODataDeltaResourceSet deltaResourceSet)
         {
             ExceptionUtils.CheckArgumentNotNull(deltaResourceSet, "deltaResourceSet");
-
-            this.VerifyWritingDelta();
             this.VerifyNotDisposed();
             this.VerifyCallAllowed(synchronousCall);
 
@@ -3438,6 +3431,7 @@ namespace Microsoft.OData
             return this.InterceptExceptionAsync(
                 async (thisParam) =>
                 {
+                    bool wasenableDelta;
                     Scope currentScope = thisParam.CurrentScope;
 
                     switch (currentScope.State)
@@ -3739,7 +3733,7 @@ namespace Microsoft.OData
             /// <summary>
             /// Use a list to store the scopes instead of a true stack so that parent/grandparent lookups will be fast.
             /// </summary>
-            private readonly Stack<Scope> scopes = new Stack<Scope>();
+            private readonly List<Scope> scopes = new List<Scope>();
 
             /// <summary>
             /// Initializes a new instance of the <see cref="ScopeStack"/> class.
@@ -3767,10 +3761,7 @@ namespace Microsoft.OData
                 get
                 {
                     Debug.Assert(this.scopes.Count > 1, "this.scopes.Count > 1");
-                    Scope current = this.scopes.Pop();
-                    Scope parent = this.scopes.Peek();
-                    this.scopes.Push(current);
-                    return parent;
+                    return this.scopes[this.scopes.Count - 2];
                 }
             }
 
@@ -3782,12 +3773,7 @@ namespace Microsoft.OData
                 get
                 {
                     Debug.Assert(this.scopes.Count > 2, "this.scopes.Count > 2");
-                    Scope current = this.scopes.Pop();
-                    Scope parent = this.scopes.Pop();
-                    Scope parentOfParent = this.scopes.Peek();
-                    this.scopes.Push(parent);
-                    this.scopes.Push(current);
-                    return parentOfParent;
+                    return this.scopes[this.scopes.Count - 3];
                 }
             }
 
@@ -3802,11 +3788,6 @@ namespace Microsoft.OData
                 }
             }
 
-            internal Stack<Scope> Scopes
-            {
-                get { return this.scopes; }
-            }
-
             /// <summary>
             /// Pushes the specified scope onto the stack.
             /// </summary>
@@ -3814,7 +3795,7 @@ namespace Microsoft.OData
             internal void Push(Scope scope)
             {
                 Debug.Assert(scope != null, "scope != null");
-                this.scopes.Push(scope);
+                this.scopes.Add(scope);
             }
 
             /// <summary>
@@ -3824,7 +3805,10 @@ namespace Microsoft.OData
             internal Scope Pop()
             {
                 Debug.Assert(this.scopes.Count > 0, "this.scopes.Count > 0");
-                return this.scopes.Pop();
+                int last = this.scopes.Count - 1;
+                Scope current = this.scopes[last];
+                this.scopes.RemoveAt(last);
+                return current;
             }
 
             /// <summary>
@@ -3834,7 +3818,7 @@ namespace Microsoft.OData
             internal Scope Peek()
             {
                 Debug.Assert(this.scopes.Count > 0, "this.scopes.Count > 0");
-                return this.scopes.Peek();
+                return this.scopes[this.scopes.Count - 1];
             }
         }
 
@@ -3868,6 +3852,9 @@ namespace Microsoft.OData
             /// <summary>The odata uri info for current scope.</summary>
             private ODataUri odataUri;
 
+            /// <summary>Whether we are in the context of writing a delta collection.</summary>
+            private bool enableDelta;
+
             /// <summary>
             /// Constructor creating a new writer scope.
             /// </summary>
@@ -3878,7 +3865,8 @@ namespace Microsoft.OData
             /// <param name="skipWriting">true if the content of this scope should not be written.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            internal Scope(WriterState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmType itemType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+            /// <param name="enableDelta">Whether we are in the context of writing a delta collection.</param>
+            internal Scope(WriterState state, ODataItem item, IEdmNavigationSource navigationSource, IEdmType itemType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri, bool enableDelta)
             {
                 this.state = state;
                 this.item = item;
@@ -3888,6 +3876,7 @@ namespace Microsoft.OData
                 this.skipWriting = skipWriting;
                 this.selectedProperties = selectedProperties;
                 this.odataUri = odataUri;
+                this.enableDelta = enableDelta;
             }
 
             /// <summary>
@@ -3990,6 +3979,22 @@ namespace Microsoft.OData
                 }
             }
 
+            /// <summary>
+            /// True if we are in the process of writing a delta collection.
+            /// </summary>
+            public bool EnableDelta
+            {
+                get
+                {
+                    return this.enableDelta;
+                }
+
+                protected set
+                {
+                    this.enableDelta = value;
+                }
+            }
+
             /// <summary>Gets or sets the derived type constraints for the current scope.</summary>
             internal List<string> DerivedTypeConstraints { get; set; }
         }
@@ -4027,7 +4032,7 @@ namespace Microsoft.OData
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
             internal ResourceSetBaseScope(WriterState writerState, ODataResourceSetBase resourceSet, IEdmNavigationSource navigationSource, IEdmType itemType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
-                : base(writerState, resourceSet, navigationSource, itemType, skipWriting, selectedProperties, odataUri)
+                : base(writerState, resourceSet, navigationSource, itemType, skipWriting, selectedProperties, odataUri, writerState == WriterState.DeltaResourceSet)
             {
                 this.serializationInfo = resourceSet.SerializationInfo;
             }
@@ -4183,7 +4188,7 @@ namespace Microsoft.OData
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
             internal ResourceBaseScope(WriterState state, ODataResourceBase resource, ODataResourceSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmType itemType, bool skipWriting, ODataMessageWriterSettings writerSettings, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
-                : base(state, resource, navigationSource, itemType, skipWriting, selectedProperties, odataUri)
+                : base(state, resource, navigationSource, itemType, skipWriting, selectedProperties, odataUri, /*enableDelta*/ true)
             {
                 Debug.Assert(writerSettings != null, "writerBehavior != null");
 
@@ -4343,7 +4348,7 @@ namespace Microsoft.OData
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
             protected DeltaLinkScope(WriterState state, ODataItem link, ODataResourceSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
-                : base(state, link, navigationSource, entityType, /*skipWriting*/false, selectedProperties, odataUri)
+                : base(state, link, navigationSource, entityType, /*skipWriting*/false, selectedProperties, odataUri, /*enableDelta*/ false)
             {
                 Debug.Assert(link != null, "link != null");
                 Debug.Assert(
@@ -4389,7 +4394,7 @@ namespace Microsoft.OData
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
             internal PropertyInfoScope(ODataPropertyInfo property, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
-                : base(WriterState.Property, property, navigationSource, resourceType, /*skipWriting*/ false, selectedProperties, odataUri)
+                : base(WriterState.Property, property, navigationSource, resourceType, /*skipWriting*/ false, selectedProperties, odataUri, /*enableDelta*/ true)
             {
                 ValueWritten = false;
             }
@@ -4421,10 +4426,15 @@ namespace Microsoft.OData
             /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            internal NestedResourceInfoScope(WriterState writerState, ODataNestedResourceInfo navLink, IEdmNavigationSource navigationSource, IEdmType itemType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
-                : base(writerState, navLink, navigationSource, itemType, skipWriting, selectedProperties, odataUri)
+            /// <param name="parentScope">The scope of the parent.</param>
+            internal NestedResourceInfoScope(WriterState writerState, ODataNestedResourceInfo navLink, IEdmNavigationSource navigationSource, IEdmType itemType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri, Scope parentScope)
+                : base(writerState, navLink, navigationSource, itemType, skipWriting, selectedProperties, odataUri, parentScope.EnableDelta)
             {
+                this.parentScope = parentScope;
             }
+
+            /// <summary>  Scope of the parent </summary>
+            protected Scope parentScope;
 
             /// <summary>
             /// Clones this nested resource info scope and sets a new writer state.
@@ -4433,9 +4443,9 @@ namespace Microsoft.OData
             /// <returns>The cloned nested resource info scope with the specified writer state.</returns>
             internal virtual NestedResourceInfoScope Clone(WriterState newWriterState)
             {
-                return new NestedResourceInfoScope(newWriterState, (ODataNestedResourceInfo)this.Item, this.NavigationSource, this.ItemType, this.SkipWriting, this.SelectedProperties, this.ODataUri)
+                return new NestedResourceInfoScope(newWriterState, (ODataNestedResourceInfo)this.Item, this.NavigationSource, this.ItemType, this.SkipWriting, this.SelectedProperties, this.ODataUri, parentScope)
                 {
-                    DerivedTypeConstraints = this.DerivedTypeConstraints
+                    DerivedTypeConstraints = this.DerivedTypeConstraints,
                 };
             }
         }
