@@ -107,7 +107,7 @@ Partial Public Class ClientModule
                 nse = e
             End Try
             TestUtil.AssertExceptionExpected(nse, True)
-            TestUtil.AssertContains(nse.ToString(), "System.NotSupportedException: Initializing instances of the entity type AstoriaClientUnitTests.ClientModule+MaterializeUnitTest+NarrowOrder with the expression new NarrowEmployee() {Name = o.Employees.FirstName} is not supported.")
+            TestUtil.AssertContains(nse.ToString(), "System.NotSupportedException: Initializing instances of the entity type Microsoft.Data.WebClient.UnitTests.ClientModule+MaterializeUnitTest+NarrowOrder with the expression new NarrowEmployee() {Name = o.Employees.FirstName} is not supported.")
         End Sub
         'Remove Atom
         ' <TestCategory("Partition2")> <TestMethod()>
