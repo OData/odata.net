@@ -411,7 +411,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Asynchronously finish writing an OData payload.
         /// </summary>
-		/// <returns>A task that represents the asynchronous write operation.</returns>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
         protected abstract Task EndPayloadAsync();
 
         /// <summary>
@@ -420,7 +420,7 @@ namespace Microsoft.OData
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <param name="parameterValue">The value of the parameter to write.</param>
         /// <param name="expectedTypeReference">The expected type reference of the parameter value.</param>
-		/// <returns>A task that represents the asynchronous write operation.</returns>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
         protected abstract Task WriteValueParameterAsync(string parameterName, object parameterValue, IEdmTypeReference expectedTypeReference);
 
         /// <summary>
@@ -428,25 +428,25 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="parameterName">The name of the collection parameter to write.</param>
         /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
-		/// <returns>A task that represents the asynchronous operation. 
+        /// <returns>A task that represents the asynchronous operation. 
         /// The value of the TResult parameter contains the newly created <see cref="ODataCollectionWriter"/>.</returns>
         protected abstract Task<ODataCollectionWriter> CreateFormatCollectionWriterAsync(string parameterName, IEdmTypeReference expectedItemType);
 
         /// <summary>
-		/// Asynchronously creates a format specific <see cref="ODataWriter"/> to write a resource.
-		/// </summary>
+        /// Asynchronously creates a format specific <see cref="ODataWriter"/> to write a resource.
+        /// </summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
-		/// <returns>A task that represents the asynchronous operation. 
+        /// <returns>A task that represents the asynchronous operation. 
         /// The value of the TResult parameter contains the newly created <see cref="ODataWriter"/>.</returns>
         protected abstract Task<ODataWriter> CreateFormatResourceWriterAsync(string parameterName, IEdmTypeReference expectedItemType);
 
         /// <summary>
-		/// Asynchronously creates a format specific <see cref="ODataWriter"/> to write a resource set.
-		/// </summary>
+        /// Asynchronously creates a format specific <see cref="ODataWriter"/> to write a resource set.
+        /// </summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
-		/// <returns>A task that represents the asynchronous operation. 
+        /// <returns>A task that represents the asynchronous operation. 
         /// The value of the TResult parameter contains the newly created <see cref="ODataWriter"/>.</returns>
         protected abstract Task<ODataWriter> CreateFormatResourceSetWriterAsync(string parameterName, IEdmTypeReference expectedItemType);
 
@@ -1025,7 +1025,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Asynchronously start writing a parameter payload - implementation of the actual functionality.
         /// </summary>
-		/// <returns>A task that represents the asynchronous write operation.</returns>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
         private async Task WriteStartImplementationAsync()
         {
             Debug.Assert(this.State == ParameterWriterState.Start, "this.State == ParameterWriterState.Start");
@@ -1041,7 +1041,7 @@ namespace Microsoft.OData
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <param name="parameterValue">The value of the parameter to write (null/ODataEnumValue/primitiveClrValue).</param>
         /// <param name="expectedTypeReference">The expected type reference of the parameter value.</param>
-		/// <returns>A task that represents the asynchronous write operation.</returns>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
         private Task WriteValueImplementationAsync(string parameterName, object parameterValue, IEdmTypeReference expectedTypeReference)
         {
             Debug.Assert(this.State == ParameterWriterState.CanWriteParameter, "this.State == ParameterWriterState.CanWriteParameter");
@@ -1054,7 +1054,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="parameterName">The name of the collection parameter to write.</param>
         /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
-		/// <returns>A task that represents the asynchronous operation. 
+        /// <returns>A task that represents the asynchronous operation. 
         /// The value of the TResult parameter contains the newly created <see cref="ODataCollectionWriter"/>.</returns>
         private async Task<ODataCollectionWriter> CreateCollectionWriterImplementationAsync(string parameterName, IEdmTypeReference expectedItemType)
         {
@@ -1071,7 +1071,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="parameterName">The name of the  parameter to write.</param>
         /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
-		/// <returns>A task that represents the asynchronous operation. 
+        /// <returns>A task that represents the asynchronous operation. 
         /// The value of the TResult parameter contains the newly created <see cref="ODataWriter"/>.</returns>
         private async Task<ODataWriter> CreateResourceWriterImplementationAsync(string parameterName, IEdmTypeReference expectedItemType)
         {
@@ -1089,7 +1089,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="parameterName">The name of the collection parameter to write.</param>
         /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
-		/// <returns>A task that represents the asynchronous operation. 
+        /// <returns>A task that represents the asynchronous operation. 
         /// The value of the TResult parameter contains the newly created <see cref="ODataWriter"/>.</returns>
         private async Task<ODataWriter> CreateResourceSetWriterImplementationAsync(string parameterName, IEdmTypeReference expectedItemType)
         {
@@ -1105,7 +1105,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Asynchronously finish writing a parameter payload - implementation of the actual functionality.
         /// </summary>
-		/// <returns>A task that represents the asynchronous write operation.</returns>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
         private async Task WriteEndImplementationAsync()
         {
             await this.InterceptExceptionAsync((thisParam) => thisParam.EndPayloadAsync())
