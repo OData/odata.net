@@ -196,12 +196,13 @@ namespace AstoriaUnitTests.Tests
         [TestMethod]
         public void RequestQueryParserIdentifiersAmbiguous()
         {
+            Assert.Fail("gdebruin");
             string[] predicates = new string[]
             {
-                "ID eq 0",
+                /*"ID eq 0",
                 "length(length) eq 1",
-                "length('length') gt 1",
-                "cast(cast, 'Edm.Byte') lt 100",
+                "length('length') gt 1",*/
+                "cast(cast, Edm.Byte) lt 100",
             };
             var contextType = typeof(TypedCustomDataContext<AllTypes>);
             TypedCustomDataContext<AmbiguousNameType>.ClearHandlers();
