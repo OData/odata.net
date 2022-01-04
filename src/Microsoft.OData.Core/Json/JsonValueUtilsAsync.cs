@@ -133,7 +133,7 @@ namespace Microsoft.OData.Json
             // double.ToString() supports a max scale of 14,
             // whereas double.MinValue and double.MaxValue have 16 digits scale. Hence we need
             // to use XmlConvert in all other cases, except infinity
-            var valueToWrite = XmlConvert.ToString(value);
+            string valueToWrite = XmlConvert.ToString(value);
 
             if (valueToWrite.IndexOfAny(DoubleIndicatingCharacters) < 0)
             {
