@@ -2455,6 +2455,76 @@ POST http://tempuri.org/Customers HTTP/1.1
             Assert.Equal(expected, syncResult);
         }
 
+        [Fact]
+        public async Task WriteTopLevelDeltaResourceSet_WorksForResourceSetWriter()
+        {
+            var customerDeltaResourceSet = CreateDeltaResourceSet("Customers", "NS.Customer", new Uri($"{ServiceUri}/Customers/deltaLink"));
+
+            IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
+            using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
+            {
+                var writer = await messageWriter.CreateODataResourceSetWriterAsync(this.customerEntitySet, this.customerEntityType);
+
+                await writer.WriteStartAsync(customerDeltaResourceSet);
+                await writer.WriteEndAsync();
+
+            }
+
+            this.asyncStream.Position = 0;
+            var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
+
+            IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+            {
+                var writer = messageWriter.CreateODataResourceSetWriter(this.customerEntitySet, this.customerEntityType);
+
+                writer.WriteStart(customerDeltaResourceSet);
+                writer.WriteEnd();
+            }
+
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
+
+            var expected = "{\"@odata.context\":\"http://tempuri.org/$metadata#Customers/$delta\",\"@odata.deltaLink\":\"http://tempuri.org/Customers/deltaLink\",\"value\":[]}";
+
+            Assert.Equal(expected, asyncResult);
+            Assert.Equal(expected, syncResult);
+        }
+
+        [Fact]
+        public async Task WriteResponsePayload_APIsThrowExceptionForDeletedResourceAtTopLevel()
+        {
+            var customerDeletedResource = CreateCustomerDeletedResource();
+
+
+            IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
+            using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
+            {
+                var writer = await messageWriter.CreateODataDeltaResourceSetWriterAsync(this.customerEntitySet, this.customerEntityType);
+
+                await writer.WriteStartAsync(customerDeletedResource);
+            }
+
+            this.asyncStream.Position = 0;
+            var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
+
+            IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+            {
+                var writer = messageWriter.CreateODataDeltaResourceSetWriter(this.customerEntitySet, this.customerEntityType);
+
+                writer.WriteStart(customerDeletedResource);
+            }
+
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
+
+            var expected = "{\"@odata.context\":\"http://tempuri.org/$metadata#Customers/$deletedEntity\",\"id\":\"http://tempuri.org/Customers(7)\"";
+
+            Assert.Equal(expected, asyncResult);
+            Assert.Equal(expected, syncResult);
+        }
+
         #region Exception Cases
 
         [Fact]
@@ -2640,42 +2710,6 @@ POST http://tempuri.org/Customers HTTP/1.1
         }
 
         [Fact]
-        public async Task WriteResponsePayload_APIsThrowExceptionForDeletedResourceAtTopLevel()
-        {
-            var customerDeletedResource = CreateCustomerDeletedResource();
-
-            var asyncException = await Assert.ThrowsAsync<ODataException>(
-                async () =>
-                {
-                    IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
-                    using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-                    {
-                        var writer = await messageWriter.CreateODataDeltaResourceSetWriterAsync(this.customerEntitySet, this.customerEntityType);
-
-                        await writer.WriteStartAsync(customerDeletedResource);
-                    }
-                });
-
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataDeltaResourceSetWriter(this.customerEntitySet, this.customerEntityType);
-
-                            writer.WriteStart(customerDeletedResource);
-                        }
-                    }));
-
-            var exceptionMessage = Strings.ODataWriterCore_InvalidTransitionFromStart("Start", "DeletedResource");
-
-            Assert.Equal(exceptionMessage, asyncException.Message);
-            Assert.Equal(exceptionMessage, syncException.Message);
-        }
-
-        [Fact]
         public async Task WriteProperty_APIsThrowExceptionForPropertyAtTopLevel()
         {
             var countProperty = new ODataPropertyInfo { Name = "Count" };
@@ -2833,40 +2867,6 @@ POST http://tempuri.org/Customers HTTP/1.1
 
             Assert.Equal(Strings.ODataWriterCore_CannotWriteTopLevelResourceSetWithResourceWriter, asyncException.Message);
             Assert.Equal(Strings.ODataWriterCore_CannotWriteTopLevelResourceSetWithResourceWriter, syncException.Message);
-        }
-
-        [Fact]
-        public async Task WriteTopLevelDeltaResourceSet_APIsThrowExceptionForResourceSetWriter()
-        {
-            var customerDeltaResourceSet = CreateDeltaResourceSet("Customers", "NS.Customer", new Uri($"{ServiceUri}/Customers/deltaLink"));
-
-            var asyncException = await Assert.ThrowsAsync<ODataException>(
-                async () =>
-                {
-                    IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
-                    using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-                    {
-                        var writer = await messageWriter.CreateODataResourceSetWriterAsync(this.customerEntitySet, this.customerEntityType);
-
-                        await writer.WriteStartAsync(customerDeltaResourceSet);
-                    }
-                });
-
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataResourceSetWriter(this.customerEntitySet, this.customerEntityType);
-
-                            writer.WriteStart(customerDeltaResourceSet);
-                        }
-                    }));
-
-            Assert.Equal(Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter, asyncException.Message);
-            Assert.Equal(Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter, syncException.Message);
         }
 
         [Fact]

@@ -148,7 +148,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var orderBy = ParseOrderBy("day(Genre)", HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
 
             var functionNode = orderBy.Expression.ShouldBeSingleValueFunctionCallQueryNode("day");
-            functionNode.Parameters.Single().ShouldBeSingleValueOpenPropertyAccessQueryNode("Genre");
+            functionNode.Parameters.Single().ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.DateTimeOffset)
+                .Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("Genre");
             Assert.Null(functionNode.TypeReference);
         }
 

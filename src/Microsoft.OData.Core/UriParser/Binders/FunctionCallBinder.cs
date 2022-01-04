@@ -315,7 +315,7 @@ namespace Microsoft.OData.UriParser
 
             string canonicalName = nameSignature.Key;
             FunctionSignatureWithReturnType signature = nameSignature.Value;
-            if (signature.ReturnType != null)
+            if (signature != null)
             {
                 TypePromoteArguments(signature, argumentNodes);
             }

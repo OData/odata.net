@@ -5,8 +5,10 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.OData.Buffers;
 using Microsoft.OData.Json;
@@ -409,6 +411,18 @@ namespace Microsoft.OData.Tests.Json
             }
         }
 
+        [Theory]
+        [InlineData("13", false)]
+        [InlineData("null", true)]
+        [InlineData("\"The quick brown fox jumps over the lazy dog.\"", true)]
+        public async Task CanStreamAsync_ReturnsExpectedResult(string payload, bool expected)
+        {
+            using (var reader = await CreateJsonReaderAsync(string.Format("{{\"Data\":{0}}}", payload)))
+            {
+                Assert.Equal(expected, await reader.CanStreamAsync());
+            }
+        }
+
         [Fact]
         public async Task ReadStringValueThrowsExceptionForUnexpectedEndOfString()
         {
@@ -780,13 +794,279 @@ namespace Microsoft.OData.Tests.Json
             }
         }
 
+        [Theory]
+        [InlineData("\"\"", typeof(string))]
+        [InlineData("\"foo\"", typeof(string))]
+        [InlineData("\"100\"", typeof(string))]
+        [InlineData("\"true\"", typeof(string))]
+        [InlineData("\"\\/Date(628318530718)\\/\"", typeof(string))]
+        [InlineData("\"2012-08-14T19:39Z\"", typeof(string))]
+        [InlineData("\"null\"", typeof(string))]
+        [InlineData("13", typeof(int))]
+        [InlineData("-13", typeof(int))]
+        [InlineData("13.0", typeof(decimal))]
+        [InlineData("-13.0", typeof(decimal))]
+        [InlineData("3.1428571428571428571428571428571", typeof(decimal), false)]
+        [InlineData("-3.1428571428571428571428571428571", typeof(decimal), false)]
+        [InlineData("3.1428571428571428571428571428571", typeof(double), true)]
+        [InlineData("-3.1428571428571428571428571428571", typeof(double), true)]
+        [InlineData("6.0221409e+23", typeof(double))]
+        [InlineData("-6.0221409e+23", typeof(double))]
+        [InlineData("6.0221409E+23", typeof(double))]
+        [InlineData("-6.0221409E+23", typeof(double))]
+        [InlineData("6.0221409e-23", typeof(double))]
+        [InlineData("-6.0221409e-23", typeof(double))]
+        [InlineData("6.0221409E-23", typeof(double))]
+        [InlineData("-6.0221409E-23", typeof(double))]
+        [InlineData("true", typeof(bool))]
+        [InlineData("false", typeof(bool))]
+        public async Task ReadPrimitiveValueAsync(string payload, Type expectedType, bool isIeee754Compatible = false)
+        {
+            using (var reader = await CreateJsonReaderAsync($"{{\"Data\":{payload}}}", isIeee754Compatible))
+            {
+                Assert.Equal(JsonNodeType.PrimitiveValue, reader.NodeType);
+                Assert.IsType(expectedType, await reader.ReadPrimitiveValueAsync());
+                await reader.ReadEndObjectAsync();
+            }
+        }
+
+        [Fact]
+        public async Task ReadPrimitiveArrayAsync()
+        {
+            using (var reader = await CreateJsonReaderAsync("{\"Colors\":[\"Black\",\"White\"]}"))
+            {
+                Assert.Equal(JsonNodeType.StartArray, reader.NodeType);
+                await reader.ReadStartArrayAsync();
+                Assert.Equal(JsonNodeType.PrimitiveValue, reader.NodeType);
+                Assert.Equal("Black", await reader.ReadPrimitiveValueAsync());
+                Assert.Equal("White", await reader.ReadPrimitiveValueAsync());
+                Assert.Equal(JsonNodeType.EndArray, reader.NodeType);
+                await reader.ReadEndArrayAsync();
+                await reader.ReadEndObjectAsync();
+            }
+        }
+
+        [Theory]
+        [InlineData("\"The quick brown fox jumps over the lazy dog.\"", "The quick brown fox jumps over the lazy dog.")]
+        [InlineData("null", null)]
+        public async Task ReadStringValueAsync(string data, string expected)
+        {
+            using (var reader = await CreateJsonReaderAsync($"{{\"Data\":{data}}}"))
+            {
+                Assert.Equal(JsonNodeType.PrimitiveValue, reader.NodeType);
+                Assert.Equal(expected, await reader.ReadStringValueAsync());
+            }
+        }
+
+        [Theory]
+        [InlineData("\"The quick brown fox jumps over the lazy dog.\"", "The quick brown fox jumps over the lazy dog.")]
+        [InlineData("null", null)]
+        public async Task ReadStringPropertyValueAsync(string data, string expected)
+        {
+            using (var reader = await CreateJsonReaderAsync($"{{\"Data\":{data}}}"))
+            {
+                Assert.Equal(JsonNodeType.PrimitiveValue, reader.NodeType);
+                Assert.Equal(expected, await reader.ReadStringValueAsync("Data"));
+            }
+        }
+
+        [Fact]
+        public async Task ReadUriValueAsync()
+        {
+            using (var reader = await CreateJsonReaderAsync(
+                $"{{\"@odata.context\":\"http://tempuri.org/$metadata#Customers/$entity\"}}",
+                isIeee754Compatible: false))
+            {
+                Assert.Equal(JsonNodeType.PrimitiveValue, reader.NodeType);
+                Assert.Equal(new Uri("http://tempuri.org/$metadata#Customers/$entity"), await reader.ReadUriValueAsync());
+            }
+        }
+
+        public static IEnumerable<object[]> GetReadDoubleValueTestData()
+        {
+            yield return new object[] { 13, 13D };
+            yield return new object[] { 4.2e199, 4.2e199 };
+            yield return new object[] { 2000.5M, 2000.5D };
+        }
+
+        [Theory]
+        [MemberData(nameof(GetReadDoubleValueTestData))]
+        public async Task ReadDoubleValueAsync(object data, double expected)
+        {
+            using (var reader = await CreateJsonReaderAsync($"{{\"Data\":{data}}}"))
+            {
+                Assert.Equal(JsonNodeType.PrimitiveValue, reader.NodeType);
+                Assert.Equal(expected, await reader.ReadDoubleValueAsync());
+            }
+        }
+
+        [Fact]
+        public async Task ReadUntypedValueAsync()
+        {
+            using (var reader = await CreateJsonReaderAsync(
+                $"{{\"Products\":[{{\"Id\":1,\"Name\":\"Pencil\"}},{{\"Id\":2,\"Name\":null}}]}}"))
+            {
+                var odataValue = await reader.ReadAsUntypedOrNullValueAsync();
+                var untypedValue = Assert.IsType<ODataUntypedValue>(odataValue);
+                Assert.Equal("[{\"Id\":1,\"Name\":\"Pencil\"},{\"Id\":2,\"Name\":null}]", untypedValue.RawValue);
+            }
+        }
+
+        [Fact]
+        public async Task ReadODataPrimitiveValueAsync()
+        {
+            using (var reader = await CreateJsonReaderAsync($"{{\"Data\":\"foo\"}}"))
+            {
+                var odataValue = await reader.ReadODataValueAsync();
+                var primitiveValue = Assert.IsType<ODataPrimitiveValue>(odataValue);
+                Assert.Equal("foo", primitiveValue.Value);
+            }
+        }
+
+        [Fact]
+        public async Task ReadNullValueAsync()
+        {
+            using (var reader = await CreateJsonReaderAsync($"{{\"Data\":null}}"))
+            {
+                var odataValue = await reader.ReadODataValueAsync();
+                Assert.IsType<ODataNullValue>(odataValue);
+            }
+        }
+
+        [Fact]
+        public async Task ReadODataResourceValueAsync()
+        {
+            using (var reader = await CreateJsonReaderAsync($"{{\"Customer\":{{\"Id\":1,\"Name\":\"Sue\"}}}}"))
+            {
+                var odataValue = await reader.ReadODataValueAsync();
+                var resourceValue = Assert.IsType<ODataResourceValue>(odataValue);
+                Assert.Equal(2, resourceValue.Properties.Count());
+                var prop1 = resourceValue.Properties.First();
+                var prop2 = resourceValue.Properties.Last();
+                Assert.Equal("Id", prop1.Name);
+                Assert.Equal(1, prop1.Value);
+                Assert.Equal("Name", prop2.Name);
+                Assert.Equal("Sue", prop2.Value);
+            }
+        }
+
+        [Fact]
+        public async Task ReadODataCollectionValueAsync()
+        {
+            using (var reader = await CreateJsonReaderAsync(
+                $"{{\"Orders\":[{{\"Id\":1,\"Amount\":65}},{{\"Id\":2,\"Amount\":80}}]}}"))
+            {
+                var odataValue = await reader.ReadODataValueAsync();
+                var collectionValue = Assert.IsType<ODataCollectionValue>(odataValue);
+                Assert.Equal(2, collectionValue.Items.Count());
+                var resourceValue1 = Assert.IsType<ODataResourceValue>(collectionValue.Items.First());
+                var resourceValue2 = Assert.IsType<ODataResourceValue>(collectionValue.Items.Last());
+
+                var prop11 = resourceValue1.Properties.First();
+                var prop12 = resourceValue1.Properties.Last();
+                Assert.Equal("Id", prop11.Name);
+                Assert.Equal(1, prop11.Value);
+                Assert.Equal("Amount", prop12.Name);
+                Assert.Equal(65, prop12.Value);
+
+                var prop21 = resourceValue2.Properties.First();
+                var prop22 = resourceValue2.Properties.Last();
+                Assert.Equal("Id", prop21.Name);
+                Assert.Equal(2, prop21.Value);
+                Assert.Equal("Amount", prop22.Name);
+                Assert.Equal(80, prop22.Value);
+            }
+        }
+
+        [Fact]
+        public async Task SkipValueAsync()
+        {
+            using (var reader = await CreateJsonReaderAsync(
+                $"{{\"Products\":[{{\"Id\":1,\"Name\":\"Pencil\"}},{{\"Id\":2,\"Name\":null}}]}}",
+                isIeee754Compatible: false))
+            {
+                await reader.SkipValueAsync();
+                Assert.Equal(JsonNodeType.EndObject, reader.NodeType);
+            }
+        }
+
+        [Fact]
+        public async Task ReadStringValueAsyncThrowsExceptionForNonStringValue()
+        {
+            using (var reader = await CreateJsonReaderAsync($"{{\"Data\":13}}"))
+            {
+                Assert.True(reader.IsOnValueNode());
+                var exception = await Assert.ThrowsAsync<ODataException>(() => reader.ReadStringValueAsync());
+                Assert.Equal(Strings.JsonReaderExtensions_CannotReadValueAsString(13), exception.Message);
+            }
+        }
+
+        [Fact]
+        public async Task ReadStringPropertyValueAsyncThrowsExceptionForNonStringValue()
+        {
+            using (var reader = await CreateJsonReaderAsync($"{{\"Data\":13}}"))
+            {
+                Assert.True(reader.IsOnValueNode());
+                var exception = await Assert.ThrowsAsync<ODataException>(() => reader.ReadStringValueAsync("Data"));
+                Assert.Equal(
+                    Strings.JsonReaderExtensions_CannotReadPropertyValueAsString(13, "Data"),
+                    exception.Message);
+            }
+        }
+
+        [Fact]
+        public async Task ReadDoubleValueAsyncThrowsExceptionForValueNotReadableAsDouble()
+        {
+            using (var reader = await CreateJsonReaderAsync($"{{\"Data\":\"Thirteen\"}}"))
+            {
+                Assert.True(reader.IsOnValueNode());
+                var exception = await Assert.ThrowsAsync<ODataException>(() => reader.ReadDoubleValueAsync());
+                Assert.Equal(
+                    Strings.JsonReaderExtensions_CannotReadValueAsDouble("Thirteen"),
+                    exception.Message);
+            }
+        }
+
+        [Fact]
+        public async Task SkipValueAsyncThrowsExceptionForUnbalancedScopes()
+        {
+            using (var reader = await CreateJsonReaderAsync($"{{\"Product\":{{\"Id\":1,\"Name\":\"Pencil\""))
+            {
+                var exception = await Assert.ThrowsAsync<ODataException>(() => reader.SkipValueAsync());
+                Assert.Equal(Strings.JsonReader_EndOfInputWithOpenScope, exception.Message);
+            }
+        }
+
+        [Fact]
+        public async Task SkipValueAsyncWithStringBuilderThrowsExceptionForUnbalancedScopes()
+        {
+            using (var reader = await CreateJsonReaderAsync($"{{\"Product\":{{\"Id\":1,\"Name\":\"Pencil\""))
+            {
+                var exception = await Assert.ThrowsAsync<ODataException>(() => reader.SkipValueAsync(new StringBuilder()));
+                Assert.Equal(Strings.JsonReader_EndOfInputWithOpenScope, exception.Message);
+            }
+        }
+
         private JsonReader CreateJsonLightReader(string jsonValue)
         {
-            JsonReader reader = new JsonReader(new StringReader(String.Format("{{ \"data\" : {0} }}", jsonValue)), isIeee754Compatible: false);
+            JsonReader reader = new JsonReader(
+                new StringReader(String.Format("{{ \"data\" : {0} }}", jsonValue)),
+                isIeee754Compatible: false);
             reader.Read();
             reader.ReadStartObject();
             reader.ReadPropertyName();
             Assert.Equal(JsonNodeType.PrimitiveValue, reader.NodeType);
+
+            return reader;
+        }
+
+        private async Task<JsonReader> CreateJsonReaderAsync(string payload, bool isIeee754Compatible = false)
+        {
+            JsonReader reader = new JsonReader(new StringReader(payload), isIeee754Compatible: isIeee754Compatible);
+
+            await reader.ReadAsync();
+            await reader.ReadStartObjectAsync();
+            await reader.ReadPropertyNameAsync();
 
             return reader;
         }

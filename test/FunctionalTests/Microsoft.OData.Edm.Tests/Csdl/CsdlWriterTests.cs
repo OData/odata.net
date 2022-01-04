@@ -1125,7 +1125,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       },
       ""NS.TestFunction(Edm.String, Edm.String, Edm.String)/optionalParamWithDefault"": {
         ""@Org.OData.Core.V1.OptionalParameter"": {
-          ""$Type"": ""Org.OData.Core.V1.OptionalParameterType"",
+          ""@type"": ""Org.OData.Core.V1.OptionalParameterType"",
           ""DefaultValue"": ""Smith""
         }
       }
@@ -1194,7 +1194,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
     ""$Annotations"": {
       ""NS.TestFunction(Edm.String)/optionalParamWithDefault"": {
         ""@Org.OData.Core.V1.OptionalParameter"": {
-          ""$Type"": ""Org.OData.Core.V1.OptionalParameterType"",
+          ""@type"": ""Org.OData.Core.V1.OptionalParameterType"",
           ""DefaultValue"": ""OutofLineValue""
         }
       }

@@ -867,6 +867,20 @@ namespace Microsoft.OData.Tests.JsonLight
             TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(value), property.ODataValue);
         }
 
+        [Fact]
+        public void TopLevelPropertyShouldReadContextUriAsRelativeUri()
+        {
+            var model = this.CreateEdmModelWithEntity();
+            var primitiveTypeRef = ((IEdmEntityType)model.SchemaElements.First()).Properties().First().Type;
+            this.messageReaderSettings = new ODataMessageReaderSettings() { BaseUri = new Uri("http://odata.org/test/")};
+            ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(this.CreateJsonLightInputContext("{\"@odata.context\":\"Customers(1)/Name\",\"value\":\"Joe\"}", model));
+            ODataProperty property = deserializer.ReadTopLevelProperty(primitiveTypeRef);
+
+            Assert.NotNull(property);
+            Assert.Equal("http://odata.org/test/$metadata#Customers(1)/Name", deserializer.ContextUriParseResult.ContextUri.ToString());
+        }
+
+
         #endregion
 
         #region Top level property instance annotation

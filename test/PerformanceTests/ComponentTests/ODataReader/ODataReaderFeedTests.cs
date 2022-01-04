@@ -30,7 +30,7 @@ namespace Microsoft.OData.Performance
 
         public Stream _stream;
 
-        [IterationSetup]
+        [GlobalSetup]
         public void InitModel()
         {
             Model = TestUtils.GetAdventureWorksModel(_isModelImmutable);

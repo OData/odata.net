@@ -1590,6 +1590,11 @@ namespace Microsoft.OData.Tests.UriParser
             return TestModel.FindType("Fully.Qualified.Namespace.Pet5") as IEdmEntityType;
         }
 
+        public static IEdmEntityType GetPet6Type()
+        {
+            return TestModel.FindType("Fully.Qualified.Namespace.Pet6") as IEdmEntityType;
+        }
+
         public static IEdmEntitySet GetPet1Set()
         {
             return TestModel.FindEntityContainer("Context").FindEntitySet("Pet1Set");
