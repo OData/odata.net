@@ -916,21 +916,21 @@ namespace Microsoft.OData.JsonLight
         /// <param name="isTopLevel">If writing top level property.</param>
         /// <param name="isUndeclaredProperty">If writing an undeclared property.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteInstanceAnnotationAsync(ODataPropertyInfo property, bool isTopLevel, bool isUndeclaredProperty)
+        private Task WriteInstanceAnnotationAsync(ODataPropertyInfo property, bool isTopLevel, bool isUndeclaredProperty)
         {
             if (property.InstanceAnnotations.Count != 0)
             {
                 if (isTopLevel)
                 {
-                    await this.InstanceAnnotationWriter.WriteInstanceAnnotationsAsync(property.InstanceAnnotations)
-                        .ConfigureAwait(false);
+                    return this.InstanceAnnotationWriter.WriteInstanceAnnotationsAsync(property.InstanceAnnotations);
                 }
                 else
                 {
-                    await this.InstanceAnnotationWriter.WriteInstanceAnnotationsAsync(property.InstanceAnnotations, property.Name, isUndeclaredProperty)
-                        .ConfigureAwait(false);
+                    return this.InstanceAnnotationWriter.WriteInstanceAnnotationsAsync(property.InstanceAnnotations, property.Name, isUndeclaredProperty);
                 }
             }
+
+            return TaskUtils.CompletedTask;
         }
 
         /// <summary>
@@ -939,7 +939,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="property">The property to handle.</param>
         /// <param name="isTopLevel">If writing top level property.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteODataTypeAnnotationAsync(ODataPropertyInfo property, bool isTopLevel)
+        private Task WriteODataTypeAnnotationAsync(ODataPropertyInfo property, bool isTopLevel)
         {
             if (property.TypeAnnotation != null && property.TypeAnnotation.TypeName != null)
             {
@@ -952,16 +952,17 @@ namespace Microsoft.OData.JsonLight
                 {
                     if (isTopLevel)
                     {
-                        await this.AsynchronousODataAnnotationWriter.WriteODataTypeInstanceAnnotationAsync(typeName)
-                            .ConfigureAwait(false);
+                        return this.AsynchronousODataAnnotationWriter.WriteODataTypeInstanceAnnotationAsync(typeName);
                     }
                     else
                     {
-                        await this.AsynchronousODataAnnotationWriter.WriteODataTypePropertyAnnotationAsync(property.Name, typeName)
-                            .ConfigureAwait(false);
+                        return this.AsynchronousODataAnnotationWriter.WriteODataTypePropertyAnnotationAsync(property.Name, typeName);
+
                     }
                 }
             }
+
+            return TaskUtils.CompletedTask;
         }
 
         /// <summary>
@@ -1162,7 +1163,7 @@ namespace Microsoft.OData.JsonLight
         /// Asynchronously writes the type name on the wire.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WritePropertyTypeNameAsync()
+        private Task WritePropertyTypeNameAsync()
         {
             string typeNameToWrite = this.currentPropertyInfo.TypeNameToWrite;
             if (typeNameToWrite != null)
@@ -1170,15 +1171,15 @@ namespace Microsoft.OData.JsonLight
                 // We write the type name as an instance annotation (named "odata.type") for top-level properties, but as a property annotation (e.g., "...@odata.type") if not top level.
                 if (this.currentPropertyInfo.IsTopLevel)
                 {
-                    await this.AsynchronousODataAnnotationWriter.WriteODataTypeInstanceAnnotationAsync(typeNameToWrite)
-                        .ConfigureAwait(false);
+                    return this.AsynchronousODataAnnotationWriter.WriteODataTypeInstanceAnnotationAsync(typeNameToWrite);
                 }
                 else
                 {
-                    await this.AsynchronousODataAnnotationWriter.WriteODataTypePropertyAnnotationAsync(this.currentPropertyInfo.PropertyName, typeNameToWrite)
-                        .ConfigureAwait(false);
+                    return this.AsynchronousODataAnnotationWriter.WriteODataTypePropertyAnnotationAsync(this.currentPropertyInfo.PropertyName, typeNameToWrite);
                 }
             }
+
+            return TaskUtils.CompletedTask;
         }
     }
 }
