@@ -32,11 +32,16 @@ namespace Microsoft.OData.Performance
         [Params(true, false)]
         public bool isModelImmutable;
 
-        [IterationSetup]
+        [GlobalSetup]
         public void InitModel()
         {
             Model = TestUtils.GetAdventureWorksModel(isModelImmutable);
             TestEntitySet = Model.EntityContainer.FindEntitySet("Product");
+        }
+
+        [IterationSetup]
+        public void ResetStream()
+        {
             WriteStream.Seek(0, SeekOrigin.Begin);
         }
 

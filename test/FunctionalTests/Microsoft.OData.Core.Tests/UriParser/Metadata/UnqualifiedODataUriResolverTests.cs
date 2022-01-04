@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -126,7 +127,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "PetSet(KeY1=1, KeY2='aStr')",
                 parser => parser.ParsePath(),
                 _ => { /*no-op*/ },
-                Strings.RequestUriProcessor_SyntaxError,
+                Strings.BadRequest_KeyMismatch(PetType.FullTypeName()),
                 Model,
                 parser => parser.Resolver = new UnqualifiedODataUriResolver() {EnableCaseInsensitive = true});
         }
@@ -140,7 +141,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 Resolver = new UnqualifiedODataUriResolver() {EnableCaseInsensitive = false}
             };
             Action action = () => parser.ParsePath();
-            action.Throws<ODataException>(Strings.BadRequest_KeyCountMismatch("TestNS.Pet"));
+            action.Throws<ODataException>(Strings.BadRequest_KeyMismatch("TestNS.Pet"));
         }
 
         [Fact]
@@ -149,7 +150,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             Uri uriUnmatchedKeysCount = new Uri("PetSet(key1=1, key2='aStr', nonExistingKey='bStr')", UriKind.Relative);
             ODataUriParser parser = new ODataUriParser(Model, uriUnmatchedKeysCount);
             Action action = () => parser.ParsePath();
-            action.Throws<ODataException>(Strings.BadRequest_KeyCountMismatch("TestNS.Pet"));
+            action.Throws<ODataException>(Strings.BadRequest_KeyMismatch("TestNS.Pet"));
         }
 
         private void TestUnqualified<TResult>(

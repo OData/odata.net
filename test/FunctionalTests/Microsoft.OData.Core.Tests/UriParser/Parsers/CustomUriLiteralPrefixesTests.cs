@@ -14,6 +14,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
     /// <summary>
     /// Tests the CustomUriLiteralPreix class public API
     /// </summary>
+    [Collection("CustomUriLiteralTests")] // these tests modify the shared CustomUriLiteralPrefixes
     public class CustomUriLiteralPrefixUnitsTests
     {
         #region AddCustomLiteralPrefix Method
@@ -311,6 +312,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             // Ensure the prefix under test is registered. Handle the exception gracefully if
             // the prefix is already registered.
             IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
+            //const string BOOLEAN_LITERAL_PREFIX = "booleanLiteralPrefix";
 
             try
             {

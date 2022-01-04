@@ -240,7 +240,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                "PetSet(key1=1, KEY2='stm')",
                parser => parser.ParsePath(),
                path => path.LastSegment.ShouldBeKeySegment(new KeyValuePair<string, object>("key1", 1), new KeyValuePair<string, object>("key2", "stm")),
-               Strings.RequestUriProcessor_SyntaxError);
+               Strings.BadRequest_KeyMismatch(PetType.FullTypeName()));
         }
 
         [Fact]
@@ -251,7 +251,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                "PetSetCon(KeY=1, kEy='stm')",
                parser => parser.ParsePath(),
                path => path.LastSegment.ShouldBeKeySegment(new KeyValuePair<string, object>("key", 1), new KeyValuePair<string, object>("KEY", "stm")),
-               "More than one keys match the name 'key' were found.");
+               Strings.BadRequest_KeyMismatch(PetCon.FullTypeName()));
         }
 
         [Fact]
@@ -260,7 +260,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             this.TestCaseInsensitiveNotExist(
                "PetSet(key1=1, key3='stm')",
                parser => parser.ParsePath(),
-               Strings.RequestUriProcessor_SyntaxError);
+               Strings.BadRequest_KeyMismatch(PetType.FullTypeName()));
         }
         #endregion
 

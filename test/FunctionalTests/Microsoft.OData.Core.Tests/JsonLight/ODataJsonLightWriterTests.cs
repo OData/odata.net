@@ -1296,6 +1296,50 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 result);
         }
 
+
+        [Fact]
+        public async Task WriteDeltaResourceSetAsync_NoLongerThrowsExceptionForWriterNotConfiguredForWritingDelta()
+        {
+            var customerDeltaResourceSet = CreateCustomerDeltaResourceSet();
+
+            var result = await SetupJsonLightWriterAndRunTestAsync(
+                    async (jsonLightWriter) =>
+                    {
+                        await jsonLightWriter.WriteStartAsync(customerDeltaResourceSet);
+                        await jsonLightWriter.WriteEndAsync();
+                    },
+                    this.customerEntitySet,
+                    this.customerEntityType,
+                    /*writingResourceSet*/ true,
+                    /*writingDelta*/ false);
+
+            Assert.Equal(
+               "{\"@odata.context\":\"http://tempuri.org/$metadata#Customers/$delta\",\"value\":[]}",
+                result);
+        }
+
+        [Fact]
+        public async Task WriteDeletedResourceAsync_WorksForDeletedResourceAtTopLevel()
+        {
+            var customerDeletedResource = CreateCustomerDeletedResource();
+
+            var result = await SetupJsonLightWriterAndRunTestAsync(
+                    async (jsonLightWriter) =>
+                    {
+                        await jsonLightWriter.WriteStartAsync(customerDeletedResource);
+                        await jsonLightWriter.WriteEndAsync();
+                    },
+                    this.customerEntitySet,
+                    this.customerEntityType,
+                    /*writingResourceSet*/ false,
+                    /*writingDelta*/ false);
+
+            Assert.Equal(
+                "{\"@odata.context\":\"http://tempuri.org/$metadata#Customers/$deletedEntity\",\"id\":\"http://tempuri.org/Customers(1)\",\"reason\":\"changed\"}",
+                result);
+        }
+
+
         #region Exception Cases
 
         [Fact]
@@ -1311,24 +1355,6 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
             Assert.Equal(
                 Strings.ODataWriterCore_InvalidTransitionFromStart("Start", "NestedResourceInfo"),
-                exception.Message);
-        }
-
-        [Fact]
-        public async Task WriteDeletedResourceAsync_ThrowsExceptionForDeletedResourceAtTopLevel()
-        {
-            var customerDeletedResource = CreateCustomerDeletedResource();
-
-            var exception = await Assert.ThrowsAsync<ODataException>(
-                () => SetupJsonLightWriterAndRunTestAsync(
-                    (jsonLightWriter) => jsonLightWriter.WriteStartAsync(customerDeletedResource),
-                    this.customerEntitySet,
-                    this.customerEntityType,
-                    /*writingResourceSet*/ false,
-                    /*writingDelta*/ true));
-
-            Assert.Equal(
-                Strings.ODataWriterCore_InvalidTransitionFromStart("Start", "DeletedResource"),
                 exception.Message);
         }
 
@@ -1442,22 +1468,6 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         }
 
         [Fact]
-        public async Task WriteDeltaResourceSetAsync_ThrowsExceptionForWriterNotConfiguredForWritingDelta()
-        {
-            var customerDeltaResourceSet = CreateCustomerDeltaResourceSet();
-
-            var exception = await Assert.ThrowsAsync<ODataException>(
-                () => SetupJsonLightWriterAndRunTestAsync(
-                    (jsonLightWriter) => jsonLightWriter.WriteStartAsync(customerDeltaResourceSet),
-                    this.customerEntitySet,
-                    this.customerEntityType,
-                    /*writingResourceSet*/ true,
-                    /*writingDelta*/ false));
-
-            Assert.Equal(Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter, exception.Message);
-        }
-
-        [Fact]
         public async Task WriteDeltaLinkAsync_ThrowsExceptionForWritedNotConfiguredForWritingDelta()
         {
             var deltaLink = new ODataDeltaLink(
@@ -1474,7 +1484,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     /*writingResourceSet*/ false,
                     /*writingDelta*/ false));
 
-            Assert.Equal(Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter, exception.Message);
+            Assert.Equal(Strings.ODataWriterCore_InvalidTransitionFromStart("Start", "DeltaLink"),
+                exception.Message);
         }
 
         [Fact]
@@ -1494,7 +1505,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     /*writingResourceSet*/ false,
                     /*writingDelta*/ false));
 
-            Assert.Equal(Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter, exception.Message);
+            Assert.Equal(Strings.ODataWriterCore_InvalidTransitionFromStart("Start", "DeltaDeletedLink"),
+                exception.Message);
         }
 
         [Fact]
@@ -1607,7 +1619,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     /*writingDelta*/ true));
 
             Assert.Equal(
-                Strings.ODataWriterCore_InvalidTransitionFromResourceSet("ResourceSet", "DeletedResource"),
+                Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter,
                 exception.Message);
         }
 

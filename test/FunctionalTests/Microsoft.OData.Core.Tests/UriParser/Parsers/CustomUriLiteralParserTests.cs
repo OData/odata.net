@@ -15,6 +15,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
     /// <summary>
     /// Test the public API of CustomUriLiteralParser class
     /// </summary>
+    [Collection("CustomUriLiteralTests")] // these tests modify the shared CustomUriLiteralPrefixes
     public class CustomUriLiteralParserUnitTests
     {
         #region Consts
@@ -861,6 +862,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
                 CustomUriLiteralPrefixes.AddCustomLiteralPrefix(BOOLEAN_LITERAL_PREFIX, booleanTypeReference);
                 CustomUriLiteralParsers.AddCustomUriLiteralParser(customBooleanAndIntUriLiteralParser);
+                
 
                 var fullUri = new Uri("http://www.odata.com/OData/Chimeras" + string.Format("?$filter=Upgraded eq {0}'{1}'", BOOLEAN_LITERAL_PREFIX, CUSTOM_PARSER_BOOLEAN_VALID_VALUE_TRUE));
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);

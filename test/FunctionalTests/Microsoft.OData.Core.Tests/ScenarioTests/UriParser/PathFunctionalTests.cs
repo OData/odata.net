@@ -814,7 +814,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void IfKeyIsExplicitlySetToValueOfImplicitKeyThrowError()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("People(32)/MyLions(ID1=64)", ODataErrorStrings.BadRequest_KeyCountMismatch(HardCodedTestModel.GetLionType().FullName()));
+            PathFunctionalTestsUtil.RunParseErrorPath("People(32)/MyLions(ID1=64)", ODataErrorStrings.BadRequest_KeyMismatch(HardCodedTestModel.GetLionType().FullName()));
         }
 
         [Fact]
@@ -1507,7 +1507,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void KeyOfIncompatibleTypeDefinitionShouldFail()
         {
             Action action = () => PathFunctionalTestsUtil.RunParsePath("Pet6Set(ID='abc')");
-            action.Throws<ODataException>(ODataErrorStrings.RequestUriProcessor_SyntaxError);
+            action.Throws<ODataException>(ODataErrorStrings.BadRequest_KeyMismatch(HardCodedTestModel.GetPet6Type().FullTypeName()));
         }
 
         [Fact]
