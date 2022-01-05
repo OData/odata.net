@@ -174,9 +174,10 @@ namespace Microsoft.OData.Evaluation
             IEdmEntityType actualEntityType,
             bool requiresId)
         {
+            Debug.Assert(resource != null, "GetKeyProperties called for a null resource.");
 
             KeyValuePair<string, object>[] keyProperties = null;
-            string actualEntityTypeName = resource.TypeName ?? actualEntityType?.FullName();
+            string actualEntityTypeName = string.IsNullOrEmpty(resource.TypeName) ? actualEntityType?.FullName() : resource.TypeName;
 
             // if we have serializationInfo, try that first
             if (serializationInfo != null)
@@ -288,7 +289,8 @@ namespace Microsoft.OData.Evaluation
 
             for (int keyProperty = 0; keyProperty < keyProperties.Length; keyProperty++)
             {
-                if (keyProperties[keyProperty].Value == null || (keyProperties[keyProperty].Value is ODataValue && !(keyProperties[keyProperty].Value is ODataEnumValue)))
+                object keyValue = keyProperties[keyProperty].Value;
+                if (keyValue == null || (keyValue is ODataValue && !(keyValue is ODataEnumValue)))
                 {
                     if (throwOnError)
                     {

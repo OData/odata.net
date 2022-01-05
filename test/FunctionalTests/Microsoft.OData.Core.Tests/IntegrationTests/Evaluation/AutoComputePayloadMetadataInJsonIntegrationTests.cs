@@ -533,12 +533,13 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             var entityType = new EdmEntityType("NS", "entityType");
             entityType.AddKeys(
                 entityType.AddStructuralProperty("keyProperty", EdmPrimitiveTypeKind.Int64));
-            
+
             var nestedEntityType = new EdmEntityType("NS", "nestedEntityType");
             nestedEntityType.AddKeys(
                 nestedEntityType.AddStructuralProperty("keyProperty", EdmPrimitiveTypeKind.Int64));
 
-            entityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo {
+            entityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
                 Name = "nestedEntities",
                 Target = nestedEntityType,
                 TargetMultiplicity = EdmMultiplicity.Many,
@@ -551,28 +552,30 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             model.AddElements(new IEdmSchemaElement[] { entityType, nestedEntityType, container });
 
             // setup writer
-            var stream = new MemoryStream();
-            var message = new InMemoryMessage { Stream = stream };
-            message.SetHeader("Content-Type", fullMetadata ? "application/json;odata.metadata=full" : "application/json");
-            var settings = new ODataMessageWriterSettings
+            string str;
+            using (var stream = new MemoryStream())
             {
-                ODataUri = new ODataUri
+                var message = new InMemoryMessage { Stream = stream };
+                message.SetHeader("Content-Type", fullMetadata ? "application/json;odata.metadata=full" : "application/json");
+                var settings = new ODataMessageWriterSettings
                 {
-                    ServiceRoot = new Uri("http://svc/"),
-                    Path = new ODataUriParser(model, new Uri("EntitySet",UriKind.Relative)).ParsePath()
-                },
-            };
-            var writer = new ODataMessageWriter((IODataResponseMessage)message, settings, model);
-
-            // write payload
-            var entitySetWriter = writer.CreateODataResourceSetWriter(entitySet, entitySet.EntityType());
-            entitySetWriter.WriteStart(new ODataResourceSet());
-            var resource = new ODataResource
-            {
-                Properties = new[]
+                    ODataUri = new ODataUri
                     {
-                        new ODataProperty { 
-                            Name = "keyProperty", 
+                        ServiceRoot = new Uri("http://svc/"),
+                        Path = new ODataUriParser(model, new Uri("EntitySet", UriKind.Relative)).ParsePath()
+                    },
+                };
+                var writer = new ODataMessageWriter((IODataResponseMessage)message, settings, model);
+
+                // write payload
+                var entitySetWriter = writer.CreateODataResourceSetWriter(entitySet, entitySet.EntityType());
+                entitySetWriter.WriteStart(new ODataResourceSet());
+                var resource = new ODataResource
+                {
+                    Properties = new[]
+                        {
+                        new ODataProperty {
+                            Name = "keyProperty",
                             Value = 1L,
                             SerializationInfo = serializationType == SerializationType.ResourceAndPropertySerializationInfo ?
                                 new ODataPropertySerializationInfo {
@@ -580,44 +583,45 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                                 } : null
                         }
                     },
-                TypeName = serializationType == SerializationType.NoSerializationInfo ? null : entityType.FullName
-            };
-
-            if (serializationType != SerializationType.NoSerializationInfo)
-            {
-                resource.SerializationInfo = new ODataResourceSerializationInfo
-                {
-                    NavigationSourceName = "EntitySet",
-                    NavigationSourceKind = EdmNavigationSourceKind.EntitySet,
-                    NavigationSourceEntityTypeName = entityType.FullName,
-                    ExpectedTypeName = entityType.FullName,
-                    IsFromCollection = true
+                    TypeName = serializationType == SerializationType.NoSerializationInfo ? null : entityType.FullName
                 };
-            }
 
-            entitySetWriter.WriteStart( resource );
-            entitySetWriter.WriteStart(
-                new ODataNestedResourceInfo
+                if (serializationType != SerializationType.NoSerializationInfo)
                 {
-                    Name = "nestedEntities",
+                    resource.SerializationInfo = new ODataResourceSerializationInfo
+                    {
+                        NavigationSourceName = "EntitySet",
+                        NavigationSourceKind = EdmNavigationSourceKind.EntitySet,
+                        NavigationSourceEntityTypeName = entityType.FullName,
+                        ExpectedTypeName = entityType.FullName,
+                        IsFromCollection = true
+                    };
                 }
-            );
-            entitySetWriter.WriteStart(new ODataResourceSet());
-            var entityValue = new ODataResource
-            {
-                TypeName = "NS.nestedEntityType",
-                Properties = new[]
+
+                entitySetWriter.WriteStart(resource);
+                entitySetWriter.WriteStart(
+                    new ODataNestedResourceInfo
+                    {
+                        Name = "nestedEntities",
+                    }
+                );
+                entitySetWriter.WriteStart(new ODataResourceSet());
+                var entityValue = new ODataResource
                 {
+                    TypeName = "NS.nestedEntityType",
+                    Properties = new[]
+                    {
                     new ODataProperty { Name = "keyProperty", Value = 1L }
                 }
-            };
-            entitySetWriter.WriteStart(entityValue);
-            entitySetWriter.WriteEnd(); // nestedEntity
-            entitySetWriter.WriteEnd(); // nested resourceSet
-            entitySetWriter.WriteEnd(); // nestedInfo
-            entitySetWriter.WriteEnd(); // entity
-            entitySetWriter.WriteEnd(); // resourceSet
-            var str = Encoding.UTF8.GetString(stream.ToArray());
+                };
+                entitySetWriter.WriteStart(entityValue);
+                entitySetWriter.WriteEnd(); // nestedEntity
+                entitySetWriter.WriteEnd(); // nested resourceSet
+                entitySetWriter.WriteEnd(); // nestedInfo
+                entitySetWriter.WriteEnd(); // entity
+                entitySetWriter.WriteEnd(); // resourceSet
+                str = Encoding.UTF8.GetString(stream.ToArray());
+            }
 
             var typeAnnotation =
                 serializationType == SerializationType.NoSerializationInfo ? "" :
