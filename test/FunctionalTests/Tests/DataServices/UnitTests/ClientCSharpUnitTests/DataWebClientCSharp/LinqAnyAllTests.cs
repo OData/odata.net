@@ -136,7 +136,6 @@ namespace AstoriaUnitTests.Tests
         [TestMethod]
         public void FilterNavigationWithAnyAll()
         {
-            Assert.Fail();
             DataServiceContext ctx = new DataServiceContext(new Uri("http://localhost"), ODataProtocolVersion.V4);
             ctx.ResolveName = (type) =>
                                   {

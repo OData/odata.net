@@ -177,7 +177,7 @@ Public Class AnyAllFilterTests
             },
             New With {
                 .q = movies.Where(Function(m) m.Awards.All(Function(aw) TypeOf m.Director Is MegaStar And CType(m.Director, MegaStar).MegaStartProp.StartsWith("Hus") And aw.Recepient.Equals(m.Director))),
-                .url = "Movies?$filter=Awards/all(aw:isof($it/Director, 'NS.MegaStar') and startswith(cast($it/Director,'NS.MegaStar')/MegaStartProp,'Hus') and aw/Recepient eq $it/Director)"
+                .url = "Movies?$filter=Awards/all(aw:isof($it/Director, 'NS.MegaStar') and startswith(cast($it/Director,NS.MegaStar)/MegaStartProp,'Hus') and aw/Recepient eq $it/Director)"
             },
             New With {
                 .q = movies.Where(Function(m) m.Actors.OfType(Of MegaStar).Any()),

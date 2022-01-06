@@ -110,7 +110,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [Theory]
         public void RequestInfoShouldCreateTunneledDeleteRequestMessageDeleteMethodAndDeleteInHttpXMethodHeader(HttpRequestTransportMode requestTransportMode)
         {
-            Assert.True(false, "gdebruin");
             bool previousPostTunnelingValue = ctx.UsePostTunneling;
             ctx.UsePostTunneling = true;
             ctx.HttpRequestTransportMode = requestTransportMode;
@@ -122,7 +121,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             requestMessage.GetHeader(XmlConstants.HttpXMethod).Should().Be("DELETE");
             requestMessage.GetHeader(XmlConstants.HttpContentLength).Should().Be("0");
-            requestMessage.GetHeader(XmlConstants.HttpContentType).Should().BeEmpty();
+            requestMessage.GetHeader(XmlConstants.HttpContentType).Should().BeNullOrEmpty();
             requestMessage.Method.Should().Be("DELETE");
 
             if (requestTransportMode == HttpRequestTransportMode.HttpClient)

@@ -757,7 +757,7 @@ namespace Microsoft.OData.Service.Providers
                     "The current cache state is '{0}' but expected at least '{1}'.",
                     this.materializationState.ToString(),
                     state.ToString());
-                Debug.Assert(false, message);
+                //// TODO Debug.Assert(false, message);
             }
 #endif
         }

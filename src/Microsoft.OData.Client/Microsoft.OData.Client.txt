@@ -177,6 +177,7 @@ ALinq_CantAddDuplicateQueryOption=Can't add duplicate query option '{0}'.
 ALinq_CantAddAstoriaQueryOption=Can't add query option '{0}' because it would conflict with the query options from the translated Linq expression.
 ALinq_CantAddQueryOptionStartingWithDollarSign=Can't add query option '{0}' because it begins with reserved character '$'.
 ALinq_CantReferToPublicField=Referencing public field '{0}' not supported in query option expression.  Use public property instead.
+ALinq_QueryOptionNotSupported=The query option '{0}' is not supported or is controlled by the OData service.
 ALinq_QueryOptionsOnlyAllowedOnSingletons=Cannot specify query options (orderby, where, take, skip, count) on single resource.
 ALinq_QueryOptionOutOfOrder=The {0} query option cannot be specified after the {1} query option.
 ALinq_CannotAddCountOption=Cannot add count option to the resource set.
