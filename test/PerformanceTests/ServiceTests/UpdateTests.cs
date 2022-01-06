@@ -48,7 +48,7 @@ namespace Microsoft.OData.Performance
             Assert.Equal(204, responseMessage.StatusCode);
         }
 
-        [Benchmark]
+        ////[Benchmark]
         public void PostEntity()
         {
             int RequestsPerIteration = 100;
@@ -92,7 +92,7 @@ namespace Microsoft.OData.Performance
             }
         }
 
-        [Benchmark]
+        ////[Benchmark]
         public void DeleteEntity()
         {
             int RequestsPerIteration = 100;
@@ -110,7 +110,7 @@ namespace Microsoft.OData.Performance
             }
         }
 
-        [Benchmark]
+        ////[Benchmark]
         public void PutEntity()
         {
             int RequestsPerIteration = 100;
@@ -145,7 +145,7 @@ namespace Microsoft.OData.Performance
             }
         }
 
-        [Benchmark]
+        ////[Benchmark]
         public void PatchEntity()
         {
             int RequestsPerIteration = 100;

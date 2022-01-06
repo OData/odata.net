@@ -33,7 +33,7 @@ namespace Microsoft.OData.Performance
             serviceFixture.Dispose();
         }
 
-        [Benchmark]
+        ////[Benchmark]
         public void QueryOptionsWithoutExpand()
         {
             int RequestsPerIteration = 20;
@@ -44,13 +44,13 @@ namespace Microsoft.OData.Performance
             }
         }
 
-        [Benchmark]
+        ////[Benchmark]
         public void QueryOptionsWithExpand()
         {
             QueryAndVerify("CompanySet?$filter=Revenue gt 500&$select=Name&$orderby=Revenue&$expand=Employees", "odata.maxpagesize=100");
         }
 
-        [Benchmark]
+        ////[Benchmark]
         public void NestedQueryOptionsWithExpand()
         {
             QueryAndVerify("CompanySet?$orderby=Name&$expand=Employees($filter=Age gt 40;$select=FirstName,Age;$orderby=Age)", "odata.maxpagesize=1000");
