@@ -196,8 +196,8 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             this.entry.Properties = new[]
             {
-                new ODataProperty { Name = "ID1", Value = 1, SerializationInfo = new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.Key } },
-                new ODataProperty { Name = "ID2", Value = 2, SerializationInfo = new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.Key } },
+                new ODataProperty { Name = "ID1", Value = 1 },
+                new ODataProperty { Name = "ID2", Value = 2 },
                 new ODataProperty { Name = "ID3", Value = 3 },
             };
 
@@ -206,6 +206,7 @@ namespace Microsoft.OData.Tests.Evaluation
             Assert.Contains(keys, p => p.Key == "ID2");
             Assert.Contains(keys, p => p.Key == "ID3");
         }
+
         #endregion KeyProperties
 
         #region ETagProperties

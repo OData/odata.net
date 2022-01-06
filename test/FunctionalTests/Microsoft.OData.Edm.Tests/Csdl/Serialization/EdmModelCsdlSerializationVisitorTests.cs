@@ -2026,7 +2026,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             {
                 Indent = indent,
                 ConformanceLevel = ConformanceLevel.Auto
-            }); ;
+            });
             var schemaWriter = new EdmModelCsdlSchemaXmlWriter(model, xmlWriter, edmxVersion);
             var visitor = new EdmModelCsdlSerializationVisitor(model, schemaWriter);
 
