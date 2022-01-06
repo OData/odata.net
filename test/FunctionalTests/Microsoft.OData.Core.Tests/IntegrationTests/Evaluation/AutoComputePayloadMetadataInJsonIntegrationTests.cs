@@ -512,6 +512,150 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             Model.AddElement(function4);
         }
 
+        public enum SerializationType
+        {
+            NoSerializationInfo,
+            ResourceSerializationInfo,
+            ResourceAndPropertySerializationInfo
+        }
+
+        [Theory]
+        [InlineData(SerializationType.NoSerializationInfo, /*fullMetadata*/ false)]
+        [InlineData(SerializationType.ResourceAndPropertySerializationInfo, /*fullMetadata*/ false)]
+        [InlineData(SerializationType.ResourceSerializationInfo, /*fullMetadata*/ false)]
+        [InlineData(SerializationType.NoSerializationInfo, /*fullMetadata*/ true)]
+        [InlineData(SerializationType.ResourceAndPropertySerializationInfo, /*fullMetadata*/ true)]
+        [InlineData(SerializationType.ResourceSerializationInfo, /*fullMetadata*/ true)]
+        public void WritingNestedResourceInfoWithVariousSerializationInfoSucceeds(SerializationType serializationType, bool fullMetadata)
+        {
+            // setup model
+            var model = new EdmModel();
+            var entityType = new EdmEntityType("NS", "entityType");
+            entityType.AddKeys(
+                entityType.AddStructuralProperty("keyProperty", EdmPrimitiveTypeKind.Int64));
+
+            var nestedEntityType = new EdmEntityType("NS", "nestedEntityType");
+            nestedEntityType.AddKeys(
+                nestedEntityType.AddStructuralProperty("keyProperty", EdmPrimitiveTypeKind.Int64));
+
+            entityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "nestedEntities",
+                Target = nestedEntityType,
+                TargetMultiplicity = EdmMultiplicity.Many,
+                ContainsTarget = true
+            });
+
+            var container = new EdmEntityContainer("NS", "Container");
+            var entitySet = container.AddEntitySet("EntitySet", entityType);
+
+            model.AddElements(new IEdmSchemaElement[] { entityType, nestedEntityType, container });
+
+            // setup writer
+            string str;
+            using (var stream = new MemoryStream())
+            {
+                var message = new InMemoryMessage { Stream = stream };
+                message.SetHeader("Content-Type", fullMetadata ? "application/json;odata.metadata=full" : "application/json");
+                var settings = new ODataMessageWriterSettings
+                {
+                    ODataUri = new ODataUri
+                    {
+                        ServiceRoot = new Uri("http://svc/"),
+                        Path = new ODataUriParser(model, new Uri("EntitySet", UriKind.Relative)).ParsePath()
+                    },
+                };
+                var writer = new ODataMessageWriter((IODataResponseMessage)message, settings, model);
+
+                // write payload
+                var entitySetWriter = writer.CreateODataResourceSetWriter(entitySet, entitySet.EntityType());
+                entitySetWriter.WriteStart(new ODataResourceSet());
+                var resource = new ODataResource
+                {
+                    Properties = new[]
+                        {
+                        new ODataProperty {
+                            Name = "keyProperty",
+                            Value = 1L,
+                            SerializationInfo = serializationType == SerializationType.ResourceAndPropertySerializationInfo ?
+                                new ODataPropertySerializationInfo {
+                                    PropertyKind = ODataPropertyKind.Key
+                                } : null
+                        }
+                    },
+                    TypeName = serializationType == SerializationType.NoSerializationInfo ? null : entityType.FullName
+                };
+
+                if (serializationType != SerializationType.NoSerializationInfo)
+                {
+                    resource.SerializationInfo = new ODataResourceSerializationInfo
+                    {
+                        NavigationSourceName = "EntitySet",
+                        NavigationSourceKind = EdmNavigationSourceKind.EntitySet,
+                        NavigationSourceEntityTypeName = entityType.FullName,
+                        ExpectedTypeName = entityType.FullName,
+                        IsFromCollection = true
+                    };
+                }
+
+                entitySetWriter.WriteStart(resource);
+                entitySetWriter.WriteStart(
+                    new ODataNestedResourceInfo
+                    {
+                        Name = "nestedEntities",
+                    }
+                );
+                entitySetWriter.WriteStart(new ODataResourceSet());
+                var entityValue = new ODataResource
+                {
+                    TypeName = "NS.nestedEntityType",
+                    Properties = new[]
+                    {
+                    new ODataProperty { Name = "keyProperty", Value = 1L }
+                }
+                };
+                entitySetWriter.WriteStart(entityValue);
+                entitySetWriter.WriteEnd(); // nestedEntity
+                entitySetWriter.WriteEnd(); // nested resourceSet
+                entitySetWriter.WriteEnd(); // nestedInfo
+                entitySetWriter.WriteEnd(); // entity
+                entitySetWriter.WriteEnd(); // resourceSet
+                str = Encoding.UTF8.GetString(stream.ToArray());
+            }
+
+            var typeAnnotation =
+                serializationType == SerializationType.NoSerializationInfo ? "" :
+                "\"@odata.type\":\"#NS.entityType\",";
+
+            var expected = fullMetadata ?
+             "{\"@odata.context\":\"http://svc/$metadata#EntitySet\"," +
+                "\"value\":[{" +
+                typeAnnotation +
+                    "\"@odata.id\":\"EntitySet(1)\"," +
+                    "\"@odata.editLink\":\"EntitySet(1)\"," +
+                    "\"keyProperty@odata.type\":\"#Int64\"," +
+                    "\"keyProperty\":1," +
+                    "\"nestedEntities@odata.associationLink\":\"http://svc/EntitySet(1)/nestedEntities/$ref\"," +
+                    "\"nestedEntities@odata.navigationLink\":\"http://svc/EntitySet(1)/nestedEntities\"," +
+                    "\"nestedEntities\":[{" +
+                        "\"@odata.type\":\"#NS.nestedEntityType\"," +
+                        "\"@odata.id\":\"EntitySet(1)/nestedEntities(1)\"," +
+                        "\"@odata.editLink\":\"EntitySet(1)/nestedEntities(1)\"," +
+                        "\"keyProperty@odata.type\":\"#Int64\"," +
+                        "\"keyProperty\":1" +
+                    "}]" +
+                   "}]}" :
+             "{\"@odata.context\":\"http://svc/$metadata#EntitySet\"," +
+                "\"value\":[{" +
+                    "\"keyProperty\":1," +
+                    "\"nestedEntities\":[{" +
+                        "\"keyProperty\":1" +
+                    "}]" +
+                   "}]}";
+
+            Assert.Equal(expected, str);
+        }
+
         [Fact]
         public void WritingDynamicComplexPropertyWithModelSpecifiedInFullMetadataMode()
         {
