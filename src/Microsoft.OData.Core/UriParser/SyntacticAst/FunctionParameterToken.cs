@@ -18,6 +18,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// get an empty list of parameters
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
         public static FunctionParameterToken[] EmptyParameterList = new FunctionParameterToken[0];
 
         /// <summary>

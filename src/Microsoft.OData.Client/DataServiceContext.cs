@@ -96,7 +96,7 @@ namespace Microsoft.OData.Client
         {
             RemoveCollectedEntriesRules = new List<Func<object, bool>>
             {
-                InstanceAnnotationDictWeakKeyComparer.Default.RemoveRule
+                InstanceAnnotationDictWeakKeyComparer.RemoveRule
             },
             CreateWeakKey = InstanceAnnotationDictWeakKeyComparer.Default.CreateKey
         };
@@ -2932,13 +2932,15 @@ namespace Microsoft.OData.Client
             return LoadPropertyAllPagesAsync(entity, propertyName, CancellationToken.None);
         }
 
+
         /// <summary>
         /// Asynchronously loads all pages of related entities for a specified property from the data service.
         /// </summary>
         /// <param name="entity">The entity that contains the property to load.</param>
         /// <param name="propertyName">The name of the property of the specified entity to load.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        /// <returns>An object representing an asynchronous operation resulting in an instance of <see cref="T:Microsoft.OData.Client.QueryOperationResponse`1" /> that contains the results of the last page request.</returns>
+        /// <returns>An object representing an asynchronous operation resulting in an instance of <see cref="Microsoft.OData.Client.QueryOperationResponse{T}" /> that contains the results of the last page request.</returns>
+        [SuppressMessage("Reliability", "CA2008:Do not create tasks without passing a TaskScheduler", Justification = "<Pending>")]
         internal Task<QueryOperationResponse> LoadPropertyAllPagesAsync(object entity, string propertyName, CancellationToken cancellationToken)
         {
             var currentTask = this.FromAsync(this.BeginLoadProperty, this.EndLoadProperty, entity, propertyName, cancellationToken);
@@ -3310,6 +3312,7 @@ namespace Microsoft.OData.Client
             return null;
         }
 
+
         /// <summary>
         /// Continue to asynchronously loads the next page of related entities for a specified property from the data service.
         /// </summary>
@@ -3317,6 +3320,7 @@ namespace Microsoft.OData.Client
         /// <param name="entity">The entity that contains the property to load.</param>
         /// <param name="propertyName">The name of the property of the specified entity to load.</param>
         /// <returns>An instance of <see cref="Microsoft.OData.Client.QueryOperationResponse{T}" /> that contains the results of the request.</returns>
+        [SuppressMessage("Reliability", "CA2008:Do not create tasks without passing a TaskScheduler", Justification = "<Pending>")]
         private QueryOperationResponse ContinuePage(QueryOperationResponse response, object entity, string propertyName)
         {
             var continuation = response.GetContinuation();
@@ -3331,6 +3335,7 @@ namespace Microsoft.OData.Client
             return response;
         }
 
+        [SuppressMessage("Reliability", "CA2008:Do not create tasks without passing a TaskScheduler", Justification = "<Pending>")]
         private Task<QueryOperationResponse> ContinuePageAsync(QueryOperationResponse response, object entity, string propertyName, CancellationToken cancellationToken)
         {
             var continuation = response.GetContinuation();

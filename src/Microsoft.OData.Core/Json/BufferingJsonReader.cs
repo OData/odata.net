@@ -187,10 +187,12 @@ namespace Microsoft.OData.Json
             }
         }
 
+
         /// <summary>
         /// Creates a stream for reading a stream value
         /// </summary>
         /// <returns>A Stream used to read a stream value</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
         public virtual Stream CreateReadStream()
         {
             IJsonStreamReader streamReader = this.innerReader as IJsonStreamReader;
@@ -317,6 +319,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <returns>A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains a <see cref="Stream"/> used to read a stream value.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
         public virtual async Task<Stream> CreateReadStreamAsync()
         {
             this.AssertAsynchronous();

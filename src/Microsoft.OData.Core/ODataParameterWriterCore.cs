@@ -998,8 +998,9 @@ namespace Microsoft.OData
         /// Asynchronously catch any exception thrown by the action passed in; in the exception case move the writer into
         /// state Error and then rethrow the exception.
         /// </summary>
-        /// <typeparam name="TArg0">The delegate first argument type.</typeparam>
-        /// <typeparam name="TArg1">The delegate second argument type.</typeparam>
+        /// <typeparam name="T">The delegate first argument type.</typeparam>
+        /// <typeparam name="TArg0">The delegate second argument type.</typeparam>
+        /// <typeparam name="TArg1">The delegate third argument type.</typeparam>
         /// <param name="func">The delegate to execute asynchronously.</param>
         /// <param name="arg0">The first argument value provided to the action.</param>
         /// <param name="arg1">The second argument value provided to the action.</param>

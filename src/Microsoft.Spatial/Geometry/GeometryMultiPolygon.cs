@@ -15,6 +15,7 @@ namespace Microsoft.Spatial
         /// <summary>Initializes a new instance of the <see cref="Microsoft.Spatial.GeometryMultiPolygon" /> class.</summary>
         /// <param name="coordinateSystem">The coordinate system of this instance.</param>
         /// <param name="creator">The implementation that created this instance.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ApiDesign", "RS0022:Constructor make noninheritable base class inheritable", Justification = "<Pending>")]
         protected GeometryMultiPolygon(CoordinateSystem coordinateSystem, SpatialImplementation creator)
             : base(coordinateSystem, creator)
         {

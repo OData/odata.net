@@ -26,6 +26,7 @@ namespace Microsoft.OData.UriParser
         /// Empty list of arguments.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2105:ArrayFieldsShouldNotBeReadOnly", Justification = "Modeled after Type.EmptyTypes")]
+        [SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
         public static readonly QueryToken[] EmptyTokens = new QueryToken[0];
 
         /// <summary>

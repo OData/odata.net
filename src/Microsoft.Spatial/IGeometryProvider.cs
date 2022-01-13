@@ -12,8 +12,7 @@ namespace Microsoft.Spatial
     public interface IGeometryProvider
     {
         /// <summary>Fires when the provider constructs a geometry object.</summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1009:DeclareEventHandlersCorrectly", Justification = "Not following the event-handler pattern")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Justification = "Not following the event-handler pattern")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1003:Use generic event handler instances", Justification = "<Pending>")]
         event Action<Geometry> ProduceGeometry;
 
         /// <summary>Gets the geometry object that was constructed most recently.</summary>

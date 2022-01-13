@@ -24,6 +24,7 @@ namespace Microsoft.OData.Client
     /// <summary>
     /// Class with utility methods for working with and implementing Task based APIs
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2008:Do not create tasks without passing a TaskScheduler", Justification = "<Pending>")]
     internal static class TaskUtils
     {
 #region Completed task
@@ -268,7 +269,7 @@ namespace Microsoft.OData.Client
         }
         #endregion
 
-#region FollowOnSuccessWithTask
+        #region FollowOnSuccessWithTask
         /// <summary>
         /// Returns a new task which will consist of the <paramref name="antecedentTask"/> followed by a call to the <paramref name="operation"/>
         /// which will only be invoked if the antecedent task succeeded.

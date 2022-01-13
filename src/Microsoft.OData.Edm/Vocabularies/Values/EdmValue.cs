@@ -38,6 +38,7 @@ namespace Microsoft.OData.Edm.Vocabularies
             get;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1033:Interface methods should be callable by child types", Justification = "<Pending>")]
         IEdmValue IEdmDelayedValue.Value
         {
             get { return this; }

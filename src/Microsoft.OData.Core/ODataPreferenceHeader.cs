@@ -9,6 +9,7 @@ namespace Microsoft.OData
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
+    using System.Linq;
 
     /// <summary>
     /// Class to set the "Prefer" header on an <see cref="IODataRequestMessage"/> or
@@ -74,7 +75,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Empty header parameters
         /// </summary>
-        private static readonly KeyValuePair<string, string>[] EmptyParameters = new KeyValuePair<string, string>[0];
+        private static readonly IEnumerable<KeyValuePair<string, string>> EmptyParameters = Enumerable.Empty<KeyValuePair<string, string>>();
 
         /// <summary>
         /// The odata.continue-on-error preference.

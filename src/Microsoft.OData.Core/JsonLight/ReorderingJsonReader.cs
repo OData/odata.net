@@ -31,10 +31,12 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(innerReader != null, "innerReader != null");
         }
 
+
         /// <summary>
         /// Creates a stream for reading a stream value.
         /// </summary>
         /// <returns>A Stream used to read a stream value.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
         public override Stream CreateReadStream()
         {
             Stream result;
@@ -62,7 +64,7 @@ namespace Microsoft.OData.JsonLight
             if (this.NodeType == JsonNodeType.Property)
             {
                 // reading JSON
-                throw new ODataException("Reading JSON Streams not supported for beta.");
+                throw new ODataException(Strings.JsonReader_CannotCreateTextReader);
             }
 
             TextReader result = new StringReader(this.Value == null ? "" : (string)this.Value);

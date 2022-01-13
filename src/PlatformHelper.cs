@@ -32,6 +32,7 @@ namespace Microsoft.OData.Edm
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Reflection;
     using System.Xml;
@@ -39,6 +40,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Helper methods that provide a common API surface on all platforms.
     /// </summary>
+    [SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
     internal static class PlatformHelper
     {
         /// <summary>

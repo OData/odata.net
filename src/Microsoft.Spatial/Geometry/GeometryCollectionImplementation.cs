@@ -7,6 +7,7 @@
 namespace Microsoft.Spatial
 {
     using System.Collections.ObjectModel;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Geometry Collection
@@ -24,6 +25,7 @@ namespace Microsoft.Spatial
         /// <param name="coordinateSystem">The CoordinateSystem</param>
         /// <param name="creator">The implementation that created this instance.</param>
         /// <param name="geometry">Collection of Geometry instances</param>
+        [SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
         internal GeometryCollectionImplementation(CoordinateSystem coordinateSystem, SpatialImplementation creator, params Geometry[] geometry)
             : base(coordinateSystem, creator)
         {

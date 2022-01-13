@@ -46,6 +46,7 @@ namespace Microsoft.OData.Client.Metadata
     internal static class ClientTypeUtil
     {
         /// <summary>A static empty PropertyInfo array.</summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
         internal static readonly PropertyInfo[] EmptyPropertyInfoArray = new PropertyInfo[0];
 
         internal static ConcurrentDictionary<Type, ODataTypeInfo> ODataTypeInfoCache { get; set; } = new ConcurrentDictionary<Type, ODataTypeInfo>();
@@ -587,6 +588,7 @@ namespace Microsoft.OData.Client.Metadata
             return clientTypeAnnotation.EdmType.IsOpen();
         }
 
+
         /// <summary>
         /// Returns true if the <paramref name="instance"/> contains a non-null dictionary property of string and object
         /// The dictionary should also not be decorated with IgnoreClientPropertyAttribute
@@ -594,6 +596,7 @@ namespace Microsoft.OData.Client.Metadata
         /// <param name="instance">Object with expected container property</param>
         /// <param name="containerProperty">Reference to the container property</param>
         /// <returns>true if expected container property is found</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
         internal static bool TryGetContainerProperty(object instance, out IDictionary<string, object> containerProperty)
         {
             Debug.Assert(instance != null, "instance != null");

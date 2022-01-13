@@ -45,7 +45,9 @@ namespace Microsoft.OData
         /// <summary>Current offset into buffer.</summary>
         private int bytesOffset = 0;
 
+
         /// <summary>Buffer for reading the stream content.</summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
         private byte[] bytes = new byte[0];
 
         /// <summary>

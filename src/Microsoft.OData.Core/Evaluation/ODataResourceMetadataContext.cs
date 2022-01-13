@@ -22,7 +22,7 @@ namespace Microsoft.OData.Evaluation
         /// <summary>
         /// Empty array of properties.
         /// </summary>
-        private static readonly KeyValuePair<string, object>[] EmptyProperties = new KeyValuePair<string, object>[0];
+        private static readonly IEnumerable<KeyValuePair<string, object>> EmptyProperties = Enumerable.Empty<KeyValuePair<string, object>>();
 
         /// <summary>
         /// The resource instance.
@@ -341,7 +341,7 @@ namespace Microsoft.OData.Evaluation
             /// <summary>
             /// Empty array of navigation properties.
             /// </summary>
-            private static readonly IEdmNavigationProperty[] EmptyNavigationProperties = new IEdmNavigationProperty[0];
+            private static readonly IEnumerable<IEdmNavigationProperty> EmptyNavigationProperties = Enumerable.Empty<IEdmNavigationProperty>();
 
             /// <summary>
             /// Empty dictionary of stream properties.
@@ -351,7 +351,7 @@ namespace Microsoft.OData.Evaluation
             /// <summary>
             /// Empty array of operations.
             /// </summary>
-            private static readonly IEdmOperation[] EmptyOperations = new IEdmOperation[0];
+            private static readonly IEnumerable<IEdmOperation> EmptyOperations = Enumerable.Empty<IEdmOperation>();
 
             /// <summary>
             /// True if the resource requires an id, false if it is a non-deleted resource in a delta request payload.

@@ -63,10 +63,6 @@ namespace Microsoft.OData.Client
 
         /// <summary>True if SendingRequest2Event is currently invoked, otherwise false.</summary>
         private bool inSendingRequest2Event;
-#if DEBUG
-        /// <summary>True if the sendingRequest2 event is already fired.</summary>
-        private bool sendingRequest2Fired;
-#endif
 
         /// <summary>
         /// Constructor for HttpClientRequestMessage.
@@ -180,7 +176,9 @@ namespace Microsoft.OData.Client
         /// It is retained for backward compatibility and will be dropped in a future major release.
         /// </summary>
         [Obsolete("Use Timeout property instead. Read and write timeout not supported by HttpClient used internally.")]
+#pragma warning disable CS0809 // Obsolete member overrides non-obsolete member
         public override int ReadWriteTimeout
+#pragma warning restore CS0809 // Obsolete member overrides non-obsolete member
         {
             get
             {
@@ -502,9 +500,6 @@ namespace Microsoft.OData.Client
         internal void AfterSendingRequest2Event()
         {
             this.inSendingRequest2Event = false;
-#if DEBUG
-            this.sendingRequest2Fired = true;
-#endif
         }
 
         public void Dispose()
@@ -535,9 +530,6 @@ namespace Microsoft.OData.Client
         void ISendingRequest2.AfterSendingRequest2Event()
         {
             this.inSendingRequest2Event = false;
-#if DEBUG
-            this.sendingRequest2Fired = true;
-#endif
         }
     }
 }

@@ -26,7 +26,9 @@ namespace Microsoft.OData
         /// <summary>The writer to write to the underlying stream.</summary>
         private readonly TextWriter Writer;
 
+
         /// <summary>Trailing bytes from a previous write to be prepended to the next write.</summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
         private byte[] trailingBytes = new byte[0];
 
         /// <summary>
@@ -39,7 +41,9 @@ namespace Microsoft.OData
         /// </summary>
         private ICharArrayPool bufferPool;
 
+
         /// <summary>An empty byte[].</summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
         private static byte[] emptyByteArray = new byte[0];
 
         /// <summary>

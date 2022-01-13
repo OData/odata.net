@@ -25,6 +25,7 @@ namespace Microsoft.OData.Client
         /// <param name="self">The ConcurrentDictionary to which to add the item.</param>
         /// <param name="key">The key to use in adding the item to the ConcurrentDictionary.</param>
         /// <param name="value">The value to add to the ConcurrentDictionary.</param>
+        [SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "<Pending>")]
         public static void Add<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> self, TKey key, TValue value)
         {
             if (!self.TryAdd(key, value))

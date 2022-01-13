@@ -1103,9 +1103,11 @@ namespace Microsoft.OData.Client
             }
         }
 
+
         /// <summary>
         /// Edge between two vertices of graph, directed and labeled
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1067:Override Object.Equals(object) when implementing IEquatable<T>", Justification = "<Pending>")]
         internal sealed class Edge : IEquatable<Edge>
         {
             /// <summary>Source vertex</summary>
