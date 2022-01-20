@@ -2818,7 +2818,19 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal(new object[] {null},
                 Assert.IsType<CollectionConstantNode>(inNode.Right).Collection.Select(x => x.Value));
         }
-#endregion
+
+        [Fact]
+        public void FilterWithInOperationWithOpenTypes()
+        {
+            FilterClause filter = ParseFilter("example in ('examplepainting')",
+                HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+            Assert.Equal("example", Assert.IsType<SingleValueOpenPropertyAccessNode>(inNode.Left).Name);
+            Assert.Equal("('examplepainting')",
+                Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
+        }
+        #endregion
 
         private static FilterClause ParseFilter(string text, IEdmModel edmModel, IEdmType edmType, IEdmNavigationSource edmEntitySet = null)
         {

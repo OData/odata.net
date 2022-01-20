@@ -46,8 +46,17 @@ namespace Microsoft.OData.UriParser
             ExceptionUtils.CheckArgumentNotNull(inToken, "inToken");
 
             SingleValueNode left = this.GetSingleValueOperandFromToken(inToken.Left);
-            CollectionNode right = this.GetCollectionOperandFromToken(
-                inToken.Right, new EdmCollectionTypeReference(new EdmCollectionType(left.TypeReference)), state.Model);
+            CollectionNode right = null;
+            if (left.TypeReference != null)
+            {
+                right = this.GetCollectionOperandFromToken(
+                    inToken.Right, new EdmCollectionTypeReference(new EdmCollectionType(left.TypeReference)), state.Model);
+            }
+            else 
+            {
+                right = this.GetCollectionOperandFromToken(
+                    inToken.Right, new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetUntyped())), state.Model);
+            }
 
             return new InNode(left, right);
         }
