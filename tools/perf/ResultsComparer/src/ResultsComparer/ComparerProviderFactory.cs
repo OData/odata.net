@@ -16,6 +16,7 @@ namespace ResultsComparer
         {
             ResultsComparerProvider provider = new();
             provider.RegisterComparer("bdn", new BdnComparer());
+            provider.RegisterComparer("vsMem", new VsMemoryUsageComparer());
             provider.RegisterComparer("vsAllocs", new VsTypeAllocationsComparer());
             provider.RegisterComparer("vsFuncAllocs", new VsFunctionAllocationsComparer());
             return provider;
