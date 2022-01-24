@@ -1818,6 +1818,39 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             action.Throws<ODataException>(ODataErrorStrings.ExpandItemBinder_CannotFindType("Fully.Qualified.Namespace.UndefinedType"));
         }
 
+        // $expand=navProp/fully.qualified.type($filter=prop)
+        [Theory]
+        [InlineData("MyPeople/Fully.Qualified.Namespace.Employee($filter=ID eq 1)")]
+        [InlineData("MyPeople/Fully.Qualified.Namespace.Employee($filter=WorkEmail eq 'xyz@wp.com')")]
+        [InlineData("MyPeople/MainAlias.Employee($filter=ID eq 1)")] // With schema alias
+        [InlineData("MyPeople/MainAlias.Employee($filter=WorkEmail eq 'xyz@wp.com')")] // With schema alias
+        public void ExpandWithNavigationPropWithFilterAndFullyQualifiedTypeWorks(string query)
+        {
+            // Arrange
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetDogType(), HardCodedTestModel.GetDogsSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$expand", query}
+                });
+
+            // Act
+            var selectExpandClause = odataQueryOptionParser.ParseSelectAndExpand();
+
+            // Assert
+            Assert.NotNull(selectExpandClause);
+            ExpandedNavigationSelectItem expandedNavigationSelectItem = Assert.IsType<ExpandedNavigationSelectItem>(Assert.Single(selectExpandClause.SelectedItems));
+            Assert.Same(HardCodedTestModel.GetPeopleSet(), expandedNavigationSelectItem.NavigationSource);
+            Assert.NotNull(expandedNavigationSelectItem.FilterOption);
+            Assert.Equal(2, expandedNavigationSelectItem.PathToNavigationProperty.Count);
+
+            NavigationPropertySegment navPropSegment = Assert.IsType<NavigationPropertySegment>(expandedNavigationSelectItem.PathToNavigationProperty.Segments.First());
+            TypeSegment typeSegment = Assert.IsType<TypeSegment>(expandedNavigationSelectItem.PathToNavigationProperty.Segments.Last());
+            Assert.Equal("MyPeople", navPropSegment.Identifier);
+            Assert.Equal("Collection(Fully.Qualified.Namespace.Person)", navPropSegment.EdmType.FullTypeName());
+            Assert.Equal("Fully.Qualified.Namespace.Employee", typeSegment.EdmType.FullTypeName());
+        }
+
         [Fact]
         public void SelectWithNestedSelectWorks()
         {

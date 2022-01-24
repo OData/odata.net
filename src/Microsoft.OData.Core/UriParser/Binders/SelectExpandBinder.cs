@@ -451,7 +451,7 @@ namespace Microsoft.OData.UriParser
             bool collapsed = applyOption?.Transformations.Any(t => t.Kind == TransformationNodeKind.Aggregate || t.Kind == TransformationNodeKind.GroupBy) ?? false;
 
             // $filter
-            FilterClause filterOption = BindFilter(tokenIn.FilterOption, this.ResourcePathNavigationSource, targetNavigationSource, null, generatedProperties, collapsed);
+            FilterClause filterOption = BindFilter(tokenIn.FilterOption, this.ResourcePathNavigationSource, targetNavigationSource, hasDerivedTypeSegment ? derivedType.ToTypeReference() : null, generatedProperties, collapsed);
 
             // $orderby
             OrderByClause orderbyOption = BindOrderby(tokenIn.OrderByOptions, this.ResourcePathNavigationSource, targetNavigationSource, null, generatedProperties, collapsed);
