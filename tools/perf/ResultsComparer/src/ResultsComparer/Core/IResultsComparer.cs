@@ -13,6 +13,11 @@ namespace ResultsComparer.Core
     public interface IResultsComparer
     {
         /// <summary>
+        /// The name of the comparer. Used for logging and debugging.
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
         /// Whether this comparer supports reading the specified file.
         /// </summary>
         /// <param name="path"></param>

@@ -1,4 +1,10 @@
-﻿using ResultsComparer.Bdn;
+﻿//---------------------------------------------------------------------
+// <copyright file="ComparerProviderFactoryTests.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using ResultsComparer.Bdn;
 using ResultsComparer.Core;
 using ResultsComparer.VsProfiler;
 using System;
@@ -13,6 +19,7 @@ namespace ResultsComparer.Tests
         [InlineData("bdn", typeof(BdnComparer))]
         [InlineData("vsAllocs", typeof(VsTypeAllocationsComparer))]
         [InlineData("vsFuncAllocs", typeof(VsFunctionAllocationsComparer))]
+        [InlineData("vsMem",typeof(VsMemoryUsageComparer))]
         public void CreateDefaultPovider_GetById_ReturnsComparerWithSpecifiedId(string comparerId, Type comparerType)
         {
             IResultsComparerProvider provider = ComparerProviderFactory.CreateDefaultProvider();
@@ -31,6 +38,7 @@ namespace ResultsComparer.Tests
         [InlineData(".json", "{}", typeof(BdnComparer))]
         [InlineData(".txt", "Type\tAllocations\tBytes", typeof(VsTypeAllocationsComparer))]
         [InlineData(".txt", "Name\tTotal (Allocations)\tSelf (Allocations)\tSelf Size Bytes)", typeof(VsFunctionAllocationsComparer))]
+        [InlineData(".txt", "Object Type\tCount	Size (Bytes)\tInclusive Size (Bytes)\tModule", typeof(VsMemoryUsageComparer))]
 
         public void CreateDefaultProvider_GetForFile_ReturnsSupportedComparerForFile(string extension, string contents, Type comparerType)
         {

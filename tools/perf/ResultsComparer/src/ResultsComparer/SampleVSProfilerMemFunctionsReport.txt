@@ -1,0 +1,214 @@
+Name	Total (Allocations)	Self (Allocations)	Self Size (Bytes)
+ + ODataWriterVsSystemTextJson (PID: 24864)	1,710,817	32	11,420
+| + microsoft.odata.core.dll	1,295,668	767,068	38,363,306
+|| - Microsoft.OData.ODataUri.Clone()	35,017	35,005	6,440,688
+|| - Microsoft.OData.JsonLight.ODataJsonLightWriter.CreateResourceScope(Microsoft.OData.ODataResource, Microsoft.OData.Edm.IEdmNavigationSource, Microsoft.OData.Edm.IEdmStructuredType, bool, Microsoft.OData.SelectedPropertiesNode, Microsoft.OData.ODataUri, bool)	60,006	20,005	2,560,248
+|| - Microsoft.OData.JsonLightInstanceAnnotationWriter.WriteInstanceAnnotations(System.Collections.Generic.IEnumerable<Microsoft.OData.ODataInstanceAnnotation>, Microsoft.OData.InstanceAnnotationWriteTracker, bool, string)	80,004	40,002	2,560,128
+|| - Microsoft.OData.ODataResourceBase.ctor()	80,000	80,000	2,400,000
+|| - Microsoft.OData.ODataPrimitiveValue.ctor(object)	80,003	80,001	2,240,080
+|| - Microsoft.OData.Json.JsonValueUtils.CreateSpecialCharToEscapedStringMap()	130,884	65,441	2,094,872
+|| - Microsoft.OData.ODataResourceTypeContext.Create(Microsoft.OData.ODataResourceSerializationInfo, Microsoft.OData.Edm.IEdmNavigationSource, Microsoft.OData.Edm.IEdmEntityType, Microsoft.OData.Edm.IEdmStructuredType, bool)	25,003	25,002	2,000,128
+|| - Microsoft.OData.WriterValidator.CreateDuplicatePropertyNameChecker()	40,001	40,001	1,920,080
+|| - Microsoft.OData.ODataValueUtils.ToODataValue(object)	120,009	40,006	1,600,352
+|| - Microsoft.OData.UriParser.ODataPathExtensions.AddKeySegment(Microsoft.OData.UriParser.ODataPath, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string, object>>, Microsoft.OData.Edm.IEdmEntityType, Microsoft.OData.Edm.IEdmNavigationSource)	140,011	40,008	1,520,342
+|| - Microsoft.OData.InstanceAnnotationWriteTracker.ctor()	20,001	20,001	1,280,064
+|| - Microsoft.OData.Json.JsonWriter.StartScope(ScopeType)	30,060	30,014	1,200,688
+|| - Microsoft.OData.JsonLight.ODataJsonLightResourceSerializer.WriteResourceStartMetadataProperties(Microsoft.OData.JsonLight.IODataJsonLightWriterResourceState)	20,012	20,010	960,616
+|| - Microsoft.OData.ODataWriterCore.AppendEntitySetKeySegment(Microsoft.OData.UriParser.ODataPath, bool)	220,019	20,007	960,480
+|| - Microsoft.OData.UriParser.ODataPath.ctor(System.Collections.Generic.IEnumerable<Microsoft.OData.UriParser.ODataPathSegment>)	70,014	30,002	960,112
+|| - Microsoft.OData.ODataWriterCore.EnterScope(WriterState, Microsoft.OData.ODataItem)	405,215	20,035	801,974
+|| - Microsoft.OData.UriParser.SplitEndingSegmentOfTypeHandler<T>.ctor()	20,000	20,000	800,000
+|| - Microsoft.OData.JsonLight.ODataJsonLightWriter+JsonLightNestedResourceInfoScope.Clone(WriterState)	10,000	10,000	800,000
+|| - Microsoft.OData.JsonLight.ODataJsonLightWriter.CreateNestedResourceInfoScope(WriterState, Microsoft.OData.ODataNestedResourceInfo, Microsoft.OData.Edm.IEdmNavigationSource, Microsoft.OData.Edm.IEdmType, bool, Microsoft.OData.SelectedPropertiesNode, Microsoft.OData.ODataUri)	10,000	10,000	800,000
+|| - Microsoft.OData.ODataResourceBase.get_NonComputedActions()	20,000	20,000	640,000
+|| - Microsoft.OData.ODataResourceBase.get_NonComputedFunctions()	20,000	20,000	640,000
+|| - Microsoft.OData.SelectedPropertiesNode.GetSelectedPropertiesForNavigationProperty(Microsoft.OData.Edm.IEdmStructuredType, string)	10,000	10,000	640,000
+|| - Microsoft.OData.ODataResourceSet.ctor()	20,007	20,004	600,120
+|| - Microsoft.OData.JsonLight.ODataJsonLightWriter.CreateResourceSetScope(Microsoft.OData.ODataResourceSet, Microsoft.OData.Edm.IEdmNavigationSource, Microsoft.OData.Edm.IEdmType, bool, Microsoft.OData.SelectedPropertiesNode, Microsoft.OData.ODataUri, bool)	5,001	5,001	600,120
+|| - Microsoft.OData.JsonLight.ODataJsonLightWriter.StartResource(Microsoft.OData.ODataResource)	237,982	20,038	482,644
+|| - Microsoft.OData.UriParser.ODataPath.GetEnumerator()	10,000	10,000	400,000
+|| - Microsoft.OData.UriParser.KeySegment.ctor(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string, object>>, Microsoft.OData.Edm.IEdmEntityType, Microsoft.OData.Edm.IEdmNavigationSource)	30,000	10,000	240,000
+|| - Microsoft.OData.ODataWriterCore.PushScope(WriterState, Microsoft.OData.ODataItem, Microsoft.OData.Edm.IEdmNavigationSource, Microsoft.OData.Edm.IEdmType, bool, Microsoft.OData.SelectedPropertiesNode, Microsoft.OData.ODataUri, System.Collections.Generic.IEnumerable<string>)	80,108	5,019	120,936
+|| - Microsoft.OData.ODataWriterCore.InterceptException<T>(System.Action<Microsoft.OData.ODataWriterCore, T>, T)	514,373	37	9,316
+|| - Microsoft.OData.SimpleLazy<T>.CreateValue()	48	14	5,000
+|| - Microsoft.OData.ODataMediaTypeResolver.SetJsonLightMediaTypes()	114	108	4,664
+|| - Microsoft.OData.JsonLight.ODataJsonLightWriter.StartResourceSet(Microsoft.OData.ODataResourceSet)	146,283	70	4,482
+|| - Microsoft.OData.ODataMessageWriter.EnsureODataFormatAndContentType()	104	29	3,954
+|| - Microsoft.OData.ODataWriterCore.WriteStartResourceSetImplementation(Microsoft.OData.ODataResourceSet)	20,185	57	3,004
+|| - Microsoft.OData.ODataMessageWriterSettings.CopyFrom(Microsoft.OData.ODataMessageWriterSettings)	52	37	2,800
+|| - Microsoft.OData.JsonLight.ODataJsonLightSerializer.ctor(Microsoft.OData.JsonLight.ODataJsonLightOutputContext, bool)	48	46	2,544
+|| - Microsoft.OData.JsonLight.ODataJsonLightWriter.ctor(Microsoft.OData.JsonLight.ODataJsonLightOutputContext, Microsoft.OData.Edm.IEdmNavigationSource, Microsoft.OData.Edm.IEdmStructuredType, bool, bool, bool, Microsoft.OData.IODataReaderWriterListener)	224	32	2,264
+|| - Microsoft.OData.ODataMessageWriterSettings.CreateWriterSettings(System.IServiceProvider, Microsoft.OData.ODataMessageWriterSettings)	84	31	2,256
+|| - Microsoft.OData.JsonLight.ODataJsonLightPropertySerializer.WriteCollectionProperty(Microsoft.OData.ODataCollectionValue, bool)	10,459	28	2,144
+|| - Microsoft.OData.ODataWriterCore.WriteStartResourceImplementation.AnonymousMethod__147_0(Microsoft.OData.ODataWriterCore, Microsoft.OData.ODataResource)	130,048	32	1,888
+|| - Microsoft.OData.ODataWriterCore.WriteEndImplementation.AnonymousMethod__163_0(Microsoft.OData.ODataWriterCore)	120,090	29	1,864
+|| - Microsoft.OData.JsonLight.ODataJsonLightPropertySerializer.WriteProperties(Microsoft.OData.Edm.IEdmStructuredType, System.Collections.Generic.IEnumerable<Microsoft.OData.ODataProperty>, bool, Microsoft.OData.IDuplicatePropertyNameChecker, Microsoft.OData.Evaluation.ODataResourceMetadataBuilder)	77,730	28	1,816
+|| - Microsoft.OData.ODataMediaTypeResolver.cctor()	188	40	1,660
+|| - Microsoft.OData.ODataWriterCore.InterceptException(System.Action<Microsoft.OData.ODataWriterCore>)	120,106	16	1,568
+|| - Microsoft.OData.Metadata.EdmLibraryExtensions.cctor()	82	36	1,536
+|| - Microsoft.OData.PropertyCache.GetProperty(Microsoft.OData.Edm.IEdmModel, int, string, Microsoft.OData.Edm.IEdmStructuredType)	89	16	1,480
+|| - Microsoft.OData.JsonLight.ODataJsonLightOutputContext.ctor(Microsoft.OData.ODataMessageInfo, Microsoft.OData.ODataMessageWriterSettings)	68	25	1,376
+|| - Microsoft.OData.ODataContextUriBuilder.BuildContextUri(Microsoft.OData.ODataPayloadKind, Microsoft.OData.ODataContextUrlInfo)	51	22	1,306
+|| - Microsoft.OData.JsonLight.ODataJsonLightPropertySerializer.WritePrimitiveProperty(Microsoft.OData.ODataPrimitiveValue, bool)	1,004	20	1,280
+|| - Microsoft.OData.JsonLight.ODataJsonLightValueSerializer.WritePrimitiveValue(object, Microsoft.OData.Edm.IEdmTypeReference, Microsoft.OData.Edm.IEdmTypeReference)	10	5	1,256
+|| - Microsoft.OData.JsonLight.ODataJsonLightPropertySerializer.ResolvePrimitiveValueTypeName(Microsoft.OData.ODataPrimitiveValue, bool)	111	25	1,160
+|| - Microsoft.OData.ODataWriterCore.WriteStartResourceSetImplementation.AnonymousMethod__142_0(Microsoft.OData.ODataWriterCore, Microsoft.OData.ODataResourceSet)	146,306	23	1,152
+|| - Microsoft.OData.Metadata.EdmLibraryExtensions.ToTypeReference(Microsoft.OData.Edm.IEdmPrimitiveType, bool)	32	32	1,144
+|| - Microsoft.OData.PropertySerializationInfo.ctor(Microsoft.OData.Edm.IEdmModel, string, Microsoft.OData.Edm.IEdmStructuredType)	55	20	1,096
+|| - Microsoft.OData.Json.JsonValueUtils.cctor()	130,920	16	1,090
+|| - Microsoft.OData.Json.ODataJsonFormat.CreateOutputContext(Microsoft.OData.ODataMessageInfo, Microsoft.OData.ODataMessageWriterSettings)	85	17	1,016
+|| - Microsoft.OData.ODataMessageWriter.WriteToOutput<T>(Microsoft.OData.ODataPayloadKind, System.Func<Microsoft.OData.ODataOutputContext, T>)	246	21	1,004
+|| - Microsoft.OData.JsonLight.ODataJsonLightPropertySerializer.WritePropertyInfo(Microsoft.OData.ODataPropertyInfo, Microsoft.OData.Edm.IEdmStructuredType, bool, Microsoft.OData.IDuplicatePropertyNameChecker, Microsoft.OData.Evaluation.ODataResourceMetadataBuilder)	40,127	16	952
+|| - Microsoft.OData.ODataMessageWriter.ctor(Microsoft.OData.IODataResponseMessage, Microsoft.OData.ODataMessageWriterSettings, Microsoft.OData.Edm.IEdmModel)	310	20	894
+|| - Microsoft.OData.ODataWriterCore.InterceptException<T>(System.Action<Microsoft.OData.ODataWriterCore, T>, T)	17	17	832
+|| - Microsoft.OData.JsonLight.ODataJsonLightResourceSerializer.WriteResourceSetContextUri(Microsoft.OData.ODataResourceTypeContext)	131,040	14	824
+|| - Microsoft.OData.MediaTypeUtils.GetContentTypeFromSettings(Microsoft.OData.ODataMessageWriterSettings, Microsoft.OData.ODataPayloadKind, Microsoft.OData.ODataMediaTypeResolver, ref Microsoft.OData.ODataMediaType, ref System.Text.Encoding)	62	13	798
+|| - Microsoft.OData.ODataWriterCore.PromoteNestedResourceInfoScope(Microsoft.OData.ODataItem)	10,012	12	792
+|| - Microsoft.OData.ODataMessageWriter.SetOrVerifyHeaders(Microsoft.OData.ODataPayloadKind)	131	15	776
+|| - Microsoft.OData.Metadata.MetadataUtils.ResolveTypeName(Microsoft.OData.Edm.IEdmModel, Microsoft.OData.Edm.IEdmType, string, System.Func<Microsoft.OData.Edm.IEdmType, string, Microsoft.OData.Edm.IEdmType>, ref Microsoft.OData.Edm.EdmTypeKind)	51	15	764
+|| - Microsoft.OData.ODataWriterCore.WriteStart(Microsoft.OData.ODataResourceSet)	21	6	764
+|| - Microsoft.OData.JsonLight.ODataJsonLightSerializer.WriteContextUriProperty(Microsoft.OData.ODataPayloadKind, System.Func<Microsoft.OData.ODataContextUrlInfo>, Microsoft.OData.ODataContextUrlInfo, string)	131,026	10	736
+|| - Microsoft.OData.JsonLight.ODataJsonLightSerializer..ctor.AnonymousMethod__0()	25	12	696
+|| - Microsoft.OData.ODataWriterCore.InterceptException<T1, T2>(System.Action<Microsoft.OData.ODataWriterCore, T1, T2>, T1, T2)	11	10	688
+|| - Microsoft.OData.JsonLight.ODataJsonLightOutputContext.CreateODataResourceSetWriter(Microsoft.OData.Edm.IEdmEntitySetBase, Microsoft.OData.Edm.IEdmStructuredType)	237	13	656
+|| - Microsoft.OData.JsonLight.ODataJsonLightValueSerializer.WriteCollectionValue(Microsoft.OData.ODataCollectionValue, Microsoft.OData.Edm.IEdmTypeReference, Microsoft.OData.Edm.IEdmTypeReference, bool, bool, bool)	10,277	9	624
+|| - Microsoft.OData.JsonLight.ODataJsonLightPropertySerializer.WriteProperty(Microsoft.OData.ODataProperty, Microsoft.OData.Edm.IEdmStructuredType, bool, Microsoft.OData.IDuplicatePropertyNameChecker, Microsoft.OData.Evaluation.ODataResourceMetadataBuilder)	40,138	11	608
+|| - Microsoft.OData.ODataContextUriBuilder.CreateFromContextUrlInfo(Microsoft.OData.ODataContextUrlInfo)	13	9	584
+|| - Microsoft.OData.Json.JsonValueUtils.WriteEscapedJsonString(System.IO.TextWriter, string, Microsoft.OData.Json.ODataStringEscapeOption, Microsoft.OData.Ref<wchar[]>, Microsoft.OData.Buffers.ICharArrayPool)	133,136	7	560
+|| - Microsoft.OData.PropertyValueTypeInfo.ctor(string, Microsoft.OData.Edm.IEdmTypeReference)	12	11	552
+|| - Microsoft.OData.ODataWriterCore.CheckForNestedResourceInfoWithContent(Microsoft.OData.ODataPayloadKind, Microsoft.OData.ODataItem)	10,036	9	520
+|| - Microsoft.OData.JsonLight.ODataJsonLightPropertySerializer.ValidatePropertyInfo(Microsoft.OData.ODataPropertyInfo, Microsoft.OData.Edm.IEdmStructuredType, bool, Microsoft.OData.IDuplicatePropertyNameChecker)	111	12	512
+|| - Microsoft.OData.ODataMessage.GetStream(System.Func<System.IO.Stream>, bool)	7	7	506
+|| - Microsoft.OData.TypeNameOracle.ResolveAndValidateTypeName(Microsoft.OData.Edm.IEdmModel, string, Microsoft.OData.Edm.EdmTypeKind, System.Nullable<bool>, Microsoft.OData.IWriterValidator)	46	8	488
+|| - Microsoft.OData.ODataContextUrlInfo.Create(Microsoft.OData.ODataResourceTypeContext, Microsoft.OData.ODataVersion, bool, Microsoft.OData.ODataUri)	14	8	488
+|| - Microsoft.OData.ODataWriterCore.ValidateResourceForResourceSet(Microsoft.OData.ODataResourceBase, ResourceBaseScope)	110,012	8	480
+|| - Microsoft.OData.JsonLight.ODataJsonLightPropertySerializer.ResolveCollectionValueTypeName(Microsoft.OData.ODataCollectionValue, bool)	63	5	480
+|| - Microsoft.OData.JsonLight.ODataJsonLightResourceSerializer.WriteResourceSetContextUri.AnonymousMethod__0()	26	12	480
+|| - Microsoft.OData.Json.JsonWriterExtensions.WritePrimitiveValue(Microsoft.OData.Json.IJsonWriter, object)	6,366	5	470
+|| - Microsoft.OData.ODataContextUriBuilder.cctor()	13	7	456
+|| - Microsoft.OData.ODataSimplifiedOptions.GetODataSimplifiedOptions(System.IServiceProvider, System.Nullable<Microsoft.OData.ODataVersion>)	7	7	440
+|| - Microsoft.OData.ODataPreferenceHeader.ParsePreferences()	10	6	424
+|| - Microsoft.OData.ODataWriterCore.VerifyCanWriteStartResourceSet(bool, Microsoft.OData.ODataResourceSet)	6	6	424
+|| - Microsoft.OData.ODataUri.get_ParameterAliasValueAccessor()	12	7	418
+|| - Microsoft.OData.JsonLight.ODataJsonLightWriter.EndResource(Microsoft.OData.ODataResource)	120,011	7	408
+|| - Microsoft.OData.JsonLight.ODataJsonLightOutputContext.CreateJsonWriter(System.IServiceProvider, System.IO.TextWriter, bool, Microsoft.OData.ODataMessageWriterSettings)	12	8	408
+|| - Microsoft.OData.TypeNameOracle.ResolveAndValidateTypeForCollectionValue(Microsoft.OData.Edm.IEdmModel, Microsoft.OData.Edm.IEdmTypeReference, Microsoft.OData.ODataCollectionValue, bool, Microsoft.OData.IWriterValidator)	57	7	368
+|| - Microsoft.OData.JsonLight.ODataJsonLightSerializer..ctor.AnonymousMethod__1()	7	7	368
+|| - Microsoft.OData.ODataUri.set_ServiceRoot(System.Uri)	43	6	360
+|| - Microsoft.OData.JsonLight.JsonMinimalMetadataTypeNameOracle.GetValueTypeNameForWriting(Microsoft.OData.ODataValue, Microsoft.OData.PropertySerializationInfo, bool)	7	7	360
+|| - Microsoft.OData.JsonLight.JsonMinimalMetadataTypeNameOracle.GetResourceSetTypeNameForWriting(string, Microsoft.OData.ODataResourceSet, bool)	5,005	5	304
+|| - Microsoft.OData.ODataWriterCore.ctor(Microsoft.OData.ODataOutputContext, Microsoft.OData.Edm.IEdmNavigationSource, Microsoft.OData.Edm.IEdmStructuredType, bool, bool, Microsoft.OData.IODataReaderWriterListener)	106	7	304
+|| - Microsoft.OData.ODataFormat.cctor()	8	8	304
+|| - Microsoft.OData.UriParser.ParameterAliasValueAccessor.ctor(System.Collections.Generic.IDictionary<string, string>)	5	4	280
+|| - Microsoft.OData.Buffers.BufferUtils.RentFromBuffer(Microsoft.OData.Buffers.ICharArrayPool, int)	1	1	280
+|| - Microsoft.OData.JsonLight.ODataJsonLightWriter.PrepareResourceForWriteStart(ResourceScope, Microsoft.OData.ODataResource, bool, Microsoft.OData.SelectedPropertiesNode)	20,004	4	264
+|| - Microsoft.OData.MediaTypeUtils.cctor()	24	5	264
+|| - Microsoft.OData.ODataMediaType.SelectEncoding()	16	4	264
+|| - Microsoft.OData.Json.JsonWriter.WriteValue(string)	1,283	4	256
+|| - Microsoft.OData.ODataMessageWriter.CreateODataResourceSetWriter(Microsoft.OData.Edm.IEdmEntitySetBase, Microsoft.OData.Edm.IEdmStructuredType)	7	5	248
+|| - Microsoft.OData.ODataUtilsInternal.SetODataVersion(Microsoft.OData.ODataMessage, Microsoft.OData.ODataMessageWriterSettings)	10	5	242
+|| - Microsoft.OData.UriUtils.EnsureTaillingSlash(System.Uri)	7	4	232
+|| - Microsoft.OData.Metadata.EdmLibraryExtensions.GetCollectionItemTypeName(string, bool)	4	3	224
+|| - Microsoft.OData.Metadata.EdmLibraryExtensions.AsCollectionOrNull(Microsoft.OData.Edm.IEdmTypeReference)	2	2	216
+|| - Microsoft.OData.HttpUtils.IsMetadataParameter(string)	3	3	200
+|| - Microsoft.OData.ODataResponseMessage.SetHeader(string, string)	3	3	200
+|| - Microsoft.OData.ODataResourceTypeContext+ODataResourceTypeContextWithModel.get_NavigationSourceFullTypeName()	6	4	196
+|| - Microsoft.OData.ODataMessageExtensions.PreferenceAppliedHeader(Microsoft.OData.IODataResponseMessage)	5	4	194
+|| - Microsoft.OData.PropertyCacheHandler.EnterResourceSetScope(Microsoft.OData.Edm.IEdmStructuredType, int)	16	4	192
+|| - Microsoft.OData.MediaTypeUtils.MediaTypeHasParameterWithValue(Microsoft.OData.ODataMediaType, string, string)	4	4	192
+|| - Microsoft.OData.JsonLight.ODataJsonLightResourceSerializer.WriteResourceEndMetadataProperties(Microsoft.OData.JsonLight.IODataJsonLightWriterResourceState, Microsoft.OData.IDuplicatePropertyNameChecker)	80,004	4	176
+|| - Microsoft.OData.HttpUtils.EncodingFromAcceptableCharsets(string, Microsoft.OData.ODataMediaType, System.Text.Encoding, System.Text.Encoding)	20	4	168
+|| - Microsoft.OData.ODataMessageWriterSettings.ctor()	5	5	168
+|| - Microsoft.OData.ValidationUtils.ValidatePropertyName(string)	10	3	160
+|| - Microsoft.OData.ODataMediaTypeResolver.GetMediaTypeFormats(Microsoft.OData.ODataPayloadKind)	3	2	160
+|| - Microsoft.OData.ODataWriterCore.WriteStartResourceImplementation(Microsoft.OData.ODataResource)	85,055	3	152
+|| - Microsoft.OData.PropertyCacheHandler.ctor()	5	3	136
+|| - Microsoft.OData.JsonLight.ODataJsonLightResourceSerializer.WriteResourceSetStartMetadataProperties(Microsoft.OData.ODataResourceSet, string, string, bool)	5,007	2	128
+|| - Microsoft.OData.ODataWriterCore+ResourceSetBaseScope.GetOrCreateTypeContext(bool)	5,006	3	120
+|| - Microsoft.OData.ODataPreferenceHeader.get_Preferences()	13	3	120
+|| - Microsoft.OData.ODataWriterCore.Flush()	4	2	120
+|| - Microsoft.OData.JsonLight.ODataJsonLightOutputContext.get_TypeNameOracle()	4	3	120
+|| - Microsoft.OData.JsonLight.ODataJsonLightResourceSerializer.WriteResourceMetadataProperties(Microsoft.OData.JsonLight.IODataJsonLightWriterResourceState)	3	3	120
+|| - Microsoft.OData.ODataMessageWriter.VerifyWriterNotDisposedAndNotUsed()	2	2	120
+|| - Microsoft.OData.ValidationUtils.ValidateIsExpectedPrimitiveType(object, Microsoft.OData.Edm.IEdmPrimitiveTypeReference, Microsoft.OData.Edm.IEdmTypeReference)	2	2	118
+|| - Microsoft.OData.HttpHeaderValueLexer.ToHttpHeaderValue()	4	2	112
+|| - Microsoft.OData.ODataResourceBase.VerifyProperties(System.Collections.Generic.IEnumerable<Microsoft.OData.ODataProperty>)	25,003	2	104
+|| - Microsoft.OData.WriterValidator.ValidateTypeKind(Microsoft.OData.Edm.EdmTypeKind, Microsoft.OData.Edm.EdmTypeKind, System.Nullable<bool>, Microsoft.OData.Edm.IEdmType)	4	2	104
+|| - Microsoft.OData.Json.JsonWriter.ctor(System.IO.TextWriter, bool, Microsoft.OData.Json.ODataStringEscapeOption)	4	3	104
+|| - Microsoft.OData.HttpHeaderValueLexer+HttpHeaderEnd.cctor()	2	2	104
+|| - Microsoft.OData.Json.JsonValueUtils.WriteEscapedJsonStringValue(System.IO.TextWriter, string, Microsoft.OData.Json.ODataStringEscapeOption, Microsoft.OData.Ref<wchar[]>, Microsoft.OData.Buffers.ICharArrayPool)	132,863	2	96
+|| - Microsoft.OData.ODataMessageWriter.EnsureODataVersion()	12	2	96
+|| - Microsoft.OData.ODataWriterCore.CheckForNestedResourceInfoWithContent.AnonymousMethod__173_0(Microsoft.OData.ODataWriterCore, Microsoft.OData.ODataNestedResourceInfo, Microsoft.OData.ODataPayloadKind)	1	1	96
+|| - Microsoft.OData.ValidationUtils.cctor()	2	2	94
+|| - Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder.TryGetIdForSerialization(ref System.Uri)	2	2	88
+|| - Microsoft.OData.ODataWriterCore.get_ParentScope()	75,004	2	80
+|| - Microsoft.OData.JsonLight.ODataJsonLightSerializer..ctor.AnonymousMethod__2()	2	2	80
+|| - Microsoft.OData.Metadata.EdmLibraryExtensions.IsPrimitiveType(System.Type)	2	2	80
+|| - Microsoft.OData.ResourceSetWithoutExpectedTypeValidator.ValidateResource(Microsoft.OData.Edm.IEdmType)	2	2	80
+|| - Microsoft.OData.WriterValidationUtils.ValidateNestedResource(Microsoft.OData.Edm.IEdmStructuredType, Microsoft.OData.Edm.IEdmStructuredType)	2	2	80
+|| - Microsoft.OData.ODataMessageWriter.GetOrCreateMessageInfo(System.IO.Stream, bool)	1	1	72
+|| - Microsoft.OData.ODataUri.cctor()	1	1	72
+|| - Microsoft.OData.ODataWriterCore.LeaveScope()	6	1	64
+|| - Microsoft.OData.ODataWriterCore.StartPayloadInStartState()	2	1	64
+|| - Microsoft.OData.Metadata.EdmTypeWriterResolver.cctor()	2	2	64
+|| - Microsoft.OData.ODataContextUriBuilder.Create(System.Uri, bool)	2	2	64
+|| - Microsoft.OData.ODataMessageWriterSettings.get_SelectedProperties()	1	1	64
+|| - Microsoft.OData.ODataResponseMessage.GetStream()	1	1	64
+|| - Microsoft.OData.ODataWriterCore.WriteEndImplementation()	1	1	64
+|| - Microsoft.OData.ODataWriterCore.WriteStart(Microsoft.OData.ODataNestedResourceInfo)	1	1	58
+|| - Microsoft.OData.ODataPreferenceHeader.ctor(Microsoft.OData.IODataResponseMessage)	1	1	56
+|| - Microsoft.OData.ValidationUtils.ValidateMetadataPrimitiveType(Microsoft.OData.Edm.IEdmTypeReference, Microsoft.OData.Edm.IEdmTypeReference)	1	1	56
+|| - Microsoft.OData.ODataMediaType.ToText(System.Text.Encoding)	13	1	48
+|| - Microsoft.OData.MediaTypeUtils+MatchInfoConcurrentCache.ctor(int)	17	1	40
+|| - Microsoft.OData.PropertyMetadataTypeInfo.ctor(Microsoft.OData.Edm.IEdmModel, string, Microsoft.OData.Edm.IEdmStructuredType)	35	1	40
+|| - Microsoft.OData.HttpUtils.CompareMediaTypeParameterNames(string, string)	4	1	40
+|| - Microsoft.OData.ODataResourceTypeContext+ODataResourceTypeContextWithModel.ctor(Microsoft.OData.Edm.IEdmNavigationSource, Microsoft.OData.Edm.IEdmEntityType, Microsoft.OData.Edm.IEdmStructuredType)	1	1	40
+|| - Microsoft.OData.UriParser.ExceptionUtil.ThrowIfTypesUnrelated(Microsoft.OData.Edm.IEdmType, Microsoft.OData.Edm.IEdmType, string)	1	1	40
+|| - Microsoft.OData.Metadata.EdmLibraryExtensions.ToTypeReference(Microsoft.OData.Edm.IEdmType, bool)	1	1	32
+|| - Microsoft.OData.Metadata.EdmLibraryExtensions.ConvertToUnderlyingTypeIfUIntValue(Microsoft.OData.Edm.IEdmModel, object, Microsoft.OData.Edm.IEdmTypeReference)	2	1	30
+|| - Microsoft.OData.JsonLight.JsonLightMetadataLevel.Create(Microsoft.OData.ODataMediaType, System.Uri, bool, Microsoft.OData.Edm.IEdmModel, bool)	2	1	24
+|| - Microsoft.OData.JsonLight.JsonMinimalMetadataLevel.GetTypeNameOracle()	1	1	24
+|| - Microsoft.OData.ODataMediaType.cctor()	1	1	24
+|| - Microsoft.OData.ODataPayloadValueConverter.cctor()	1	1	24
+|| - Microsoft.OData.ODataResourceBase.cctor()	1	1	24
+|| - Microsoft.OData.ODataWriterCore.cctor()	1	1	24
+|| - Microsoft.OData.ODataWriterCore.WriteStartNestedResourceInfoImplementation(Microsoft.OData.ODataNestedResourceInfo)	310,071	0	0
+|| - Microsoft.OData.ODataWriterCore.WriteEnd()	120,096	0	0
+|| - Microsoft.OData.Json.JsonWriter.WriteName(string)	132,135	0	0
+|| - Microsoft.OData.Json.JsonValueUtils.CheckIfStringHasSpecialChars(string, Microsoft.OData.Json.ODataStringEscapeOption, ref int)	130,920	0	0
+|| - Microsoft.OData.DuplicatePropertyNameChecker.ValidatePropertyUniqueness(Microsoft.OData.ODataPropertyInfo)	40,000	0	0
+|| - Microsoft.OData.ODataWriterCore+ResourceBaseScope.GetOrCreateTypeContext(bool)	20,000	0	0
+|| - Microsoft.OData.ODataWriterCore.get_CurrentResourceSetValidator()	20,000	0	0
+|| - Microsoft.OData.ODataWriterCore.CreateKeyValuePair(System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<string, object>>, Microsoft.OData.ODataProperty, object)	10,000	0	0
+|| - Microsoft.OData.Metadata.EdmLibraryExtensions.GetCollectionTypeName(string)	5,000	0	0
+|| - Microsoft.OData.Json.JsonValueUtils.WriteValue(System.IO.TextWriter, int)	5,078	0	0
+|| - Microsoft.OData.SimpleLazy<T>.get_Value()	48	0	0
+|| - Microsoft.OData.MediaTypeUtils.GetEncoding(string, Microsoft.OData.ODataPayloadKind, Microsoft.OData.ODataMediaType, bool)	24	0	0
+|| - Microsoft.OData.ODataPreferenceHeader.get_AnnotationFilter()	13	0	0
+|| - Microsoft.OData.Json.JsonValueUtils.InitializeODataNumberFormatInfo()	7	0	0
+|| - Microsoft.OData.ODataOutputContext.ctor(Microsoft.OData.ODataFormat, Microsoft.OData.ODataMessageInfo, Microsoft.OData.ODataMessageWriterSettings)	10	0	0
+|| - Microsoft.OData.JsonLight.ODataJsonLightWriter.EndResourceSet(Microsoft.OData.ODataResourceSet)	8	0	0
+|| - Microsoft.OData.ODataFormat.get_Batch()	8	0	0
+|| - Microsoft.OData.ODataMediaType.SelectEncoding.AnonymousMethod__14_0(System.Collections.Generic.KeyValuePair<string, string>)	4	0	0
+|| - Microsoft.OData.ValidationUtils.ValidateCollectionType(Microsoft.OData.Edm.IEdmTypeReference)	2	0	0
+|| - Microsoft.OData.HttpHeaderValueLexer+HttpHeaderStart.ReadNext()	2	0	0
+|| - Microsoft.OData.JsonLightInstanceAnnotationWriter.ctor(Microsoft.OData.JsonLight.ODataJsonLightValueSerializer, Microsoft.OData.JsonLight.JsonLightTypeNameOracle)	2	0	0
+|| - Microsoft.OData.Json.JsonWriter.WriteValueSeparator()	2	0	0
+|| - Microsoft.OData.JsonLight.ODataJsonLightWriterUtils.WriteInstanceAnnotationName(Microsoft.OData.Json.IJsonWriter, string)	1	0	0
+| - system.private.corelib.il.dll	1,710,780	402,079	18,642,311
+| - odatawritervssystemtextjson.dll	1,710,217	305,336	13,670,322
+| - system.linq.il.dll	226,682	92,765	4,978,448
+| - system.collections.il.dll	115,068	115,016	4,881,364
+| - microsoft.odata.edm.dll	62,680	23,382	1,087,756
+| - system.private.xml.il.dll	7,790	1,613	302,265
+| - system.net.httplistener.il.dll	1,527,442	730	81,318
+| - system.text.regularexpressions.il.dll	983	903	71,296
+| - system.net.nameresolution.il.dll	1,322	1,264	51,984
+| - system.private.uri.il.dll	256	217	16,368
+| - system.collections.concurrent.il.dll	256	231	14,416
+| - system.console.il.dll	158	72	4,092
+| - system.net.webheadercollection.il.dll	91	47	2,714
+| - system.net.primitives.il.dll	28	28	1,264
+| - system.collections.specialized.il.dll	24	16	968
+| - system.security.cryptography.algorithms.il.dll	12	12	522
+| - system.runtime.extensions.il.dll	144	6	342

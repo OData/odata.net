@@ -26,6 +26,9 @@ namespace ResultsComparer.Bdn
         private const string FullBdnJsonFileExtension = ".full.json";
 
         /// <inheritdoc/>
+        public string Name => "BenchmarkDotNet Benchmarks";
+
+        /// <inheritdoc/>
         public bool CanReadFile(string path)
         {
             bool isJson = path.EndsWith(".json", StringComparison.OrdinalIgnoreCase);

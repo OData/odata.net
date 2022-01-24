@@ -1,11 +1,14 @@
-﻿using ResultsComparer.Core;
+﻿//---------------------------------------------------------------------
+// <copyright file="VsAllocationsComparerTests.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using ResultsComparer.Core;
 using ResultsComparer.VsProfiler;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace ResultsComparer.Tests.VsProfiler
