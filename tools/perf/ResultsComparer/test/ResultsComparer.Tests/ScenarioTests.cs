@@ -53,6 +53,14 @@ namespace ResultsComparer.Tests
                     "Samples/Bdn/ODataSerialization.json",
                     "Samples/Bdn/ODataSerialization2.json",
                     "Samples/Bdn/ODataSerializationCpuMarkdownReport.md"
+                },
+                new object[]
+                {
+                    "vsMem",
+                    new ComparerOptions(),
+                    "Samples/VsProfiler/VsProfilerMemoryUsage.txt",
+                    "Samples/VsProfiler/VsProfilerMemoryUsage2.txt",
+                    "Samples/VsProfiler/MemoryUsageComparisonReport.md"
                 }
             };
 

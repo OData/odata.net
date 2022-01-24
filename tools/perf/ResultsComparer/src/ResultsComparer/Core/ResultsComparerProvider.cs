@@ -58,7 +58,7 @@ namespace ResultsComparer.Core
                 }
             }
 
-            throw new Exception($"No suitable comparer found for file {filePath}");
+            throw new Exception($"No suitable comparer found for file \"{filePath}\"");
         }
     }
 }

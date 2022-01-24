@@ -29,11 +29,14 @@ namespace ResultsComparer
 
         private static void Compare(CommandLineOptions args, IResultsComparerProvider comparerProvider, IReporterProvider reporterProvider)
         {
-            IResultsComparer comparer = string.IsNullOrEmpty(args.Comparer) ?
-                comparerProvider.GetForFile(args.BasePath) : comparerProvider.GetById(args.Comparer);
-
             try
             {
+                IResultsComparer comparer = string.IsNullOrEmpty(args.Comparer) ?
+                   comparerProvider.GetForFile(args.BasePath) : comparerProvider.GetById(args.Comparer);
+
+                Console.WriteLine($"Comparer selected: {comparer.Name}\n");
+
+
                 ComparerOptions options = new()
                 {
                     StatisticalTestThreshold = args.StatisticalTestThreshold,

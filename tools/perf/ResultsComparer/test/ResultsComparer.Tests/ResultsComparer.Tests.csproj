@@ -37,6 +37,9 @@
     <None Update="Samples\VsProfiler\FunctionAllocationsComparisonReport.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Samples\VsProfiler\MemoryUsageComparisonReport.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Samples\VsProfiler\ObjectAllocationsComparisonReport.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
