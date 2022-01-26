@@ -366,6 +366,7 @@ namespace Microsoft.OData.Tests
             ODataEntityReferenceLinks links = deserializer.ReadEntityReferenceLinks();
             SameEntityReferenceLinks(referencelinks, links);
         }
+
         [Fact]
         public void WriteTopLevelEntityReferenceLinks()
         {
