@@ -1732,7 +1732,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         // $expand=navProp/fully.qualified.type/$count($filter=prop)
         [Theory]
         [InlineData("MyPeople/Fully.Qualified.Namespace.Employee/$count($filter=ID eq 1)")]
+        [InlineData("MyPeople/Fully.Qualified.Namespace.Employee/$count($filter=WorkEmail eq 'xyz@wp.com')")]
         [InlineData("MyPeople/MainAlias.Employee/$count($filter=ID eq 1)")] // With schema alias
+        [InlineData("MyPeople/MainAlias.Employee/$count($filter=WorkEmail eq 'xyz@wp.com')")] // With schema alias
         public void ExpandWithNavigationPropCountWithFilterAndFullyQualifiedTypeWorks(string query)
         {
             // Arrange
@@ -1820,8 +1822,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
         // $expand=navProp/fully.qualified.type($filter=prop)
         [Theory]
-        [InlineData("MyPeople/Fully.Qualified.Namespace.Employee($filter=ID eq 1)")]
-        [InlineData("MyPeople/Fully.Qualified.Namespace.Employee($filter=WorkEmail eq 'xyz@wp.com')")]
+        [InlineData("MyPeople/Fully.Qualified.Namespace.Employee($filter=ID eq 1)")] // ID is a property in the base type Person.
+        [InlineData("MyPeople/Fully.Qualified.Namespace.Employee($filter=WorkEmail eq 'xyz@wp.com')")] // WorkEmail is a property in the derived type Employee.
         [InlineData("MyPeople/MainAlias.Employee($filter=ID eq 1)")] // With schema alias
         [InlineData("MyPeople/MainAlias.Employee($filter=WorkEmail eq 'xyz@wp.com')")] // With schema alias
         public void ExpandWithNavigationPropWithFilterAndFullyQualifiedTypeWorks(string query)
@@ -1842,6 +1844,42 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             ExpandedNavigationSelectItem expandedNavigationSelectItem = Assert.IsType<ExpandedNavigationSelectItem>(Assert.Single(selectExpandClause.SelectedItems));
             Assert.Same(HardCodedTestModel.GetPeopleSet(), expandedNavigationSelectItem.NavigationSource);
             Assert.NotNull(expandedNavigationSelectItem.FilterOption);
+            Assert.Equal(2, expandedNavigationSelectItem.PathToNavigationProperty.Count);
+
+            NavigationPropertySegment navPropSegment = Assert.IsType<NavigationPropertySegment>(expandedNavigationSelectItem.PathToNavigationProperty.Segments.First());
+            TypeSegment typeSegment = Assert.IsType<TypeSegment>(expandedNavigationSelectItem.PathToNavigationProperty.Segments.Last());
+            Assert.Equal("MyPeople", navPropSegment.Identifier);
+            Assert.Equal("Collection(Fully.Qualified.Namespace.Person)", navPropSegment.EdmType.FullTypeName());
+            Assert.Equal("Fully.Qualified.Namespace.Employee", typeSegment.EdmType.FullTypeName());
+
+            FilterClause filterClause = expandedNavigationSelectItem.FilterOption;
+            Assert.Equal("Fully.Qualified.Namespace.Employee", filterClause.RangeVariable.TypeReference.FullName());
+        }
+
+        // $expand=navProp/fully.qualified.type($select=prop)
+        [Theory]
+        [InlineData("MyPeople/Fully.Qualified.Namespace.Employee($select=Name)")] // Name is a property in the base type Person.
+        [InlineData("MyPeople/Fully.Qualified.Namespace.Employee($select=WorkEmail)")] // WorkEmail is a property in the derived type Employee.
+        [InlineData("MyPeople/MainAlias.Employee($select=Name)")] // With schema alias
+        [InlineData("MyPeople/MainAlias.Employee($select=WorkEmail)")] // With schema alias
+        public void ExpandWithNavigationPropWithSelectAndFullyQualifiedTypeWorks(string query)
+        {
+            // Arrange
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetDogType(), HardCodedTestModel.GetDogsSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$expand", query}
+                });
+
+            // Act
+            var selectExpandClause = odataQueryOptionParser.ParseSelectAndExpand();
+
+            // Assert
+            Assert.NotNull(selectExpandClause);
+            ExpandedNavigationSelectItem expandedNavigationSelectItem = Assert.IsType<ExpandedNavigationSelectItem>(Assert.Single(selectExpandClause.SelectedItems));
+            Assert.Same(HardCodedTestModel.GetPeopleSet(), expandedNavigationSelectItem.NavigationSource);
+            Assert.NotNull(expandedNavigationSelectItem.SelectAndExpand);
             Assert.Equal(2, expandedNavigationSelectItem.PathToNavigationProperty.Count);
 
             NavigationPropertySegment navPropSegment = Assert.IsType<NavigationPropertySegment>(expandedNavigationSelectItem.PathToNavigationProperty.Segments.First());

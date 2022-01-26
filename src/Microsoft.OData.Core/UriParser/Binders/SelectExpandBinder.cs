@@ -441,6 +441,8 @@ namespace Microsoft.OData.UriParser
 
             ODataExpandPath pathToNavProp = new ODataExpandPath(pathSoFar);
 
+            IEdmTypeReference elementTypeReference = hasDerivedTypeSegment ? derivedType.ToTypeReference() : null;
+
             // $apply
             ApplyClause applyOption = BindApply(tokenIn.ApplyOptions, this.ResourcePathNavigationSource, targetNavigationSource);
 
@@ -451,13 +453,13 @@ namespace Microsoft.OData.UriParser
             bool collapsed = applyOption?.Transformations.Any(t => t.Kind == TransformationNodeKind.Aggregate || t.Kind == TransformationNodeKind.GroupBy) ?? false;
 
             // $filter
-            FilterClause filterOption = BindFilter(tokenIn.FilterOption, this.ResourcePathNavigationSource, targetNavigationSource, hasDerivedTypeSegment ? derivedType.ToTypeReference() : null, generatedProperties, collapsed);
+            FilterClause filterOption = BindFilter(tokenIn.FilterOption, this.ResourcePathNavigationSource, targetNavigationSource, elementTypeReference, generatedProperties, collapsed);
 
             // $orderby
-            OrderByClause orderbyOption = BindOrderby(tokenIn.OrderByOptions, this.ResourcePathNavigationSource, targetNavigationSource, null, generatedProperties, collapsed);
+            OrderByClause orderbyOption = BindOrderby(tokenIn.OrderByOptions, this.ResourcePathNavigationSource, targetNavigationSource, elementTypeReference, generatedProperties, collapsed);
 
             // $search
-            SearchClause searchOption = BindSearch(tokenIn.SearchOption, this.ResourcePathNavigationSource, targetNavigationSource, null);
+            SearchClause searchOption = BindSearch(tokenIn.SearchOption, this.ResourcePathNavigationSource, targetNavigationSource, elementTypeReference);
 
             if (isRef)
             {
@@ -470,7 +472,7 @@ namespace Microsoft.OData.UriParser
             }
 
             // $select & $expand
-            SelectExpandClause subSelectExpand = BindSelectExpand(tokenIn.ExpandOption, tokenIn.SelectOption, parsedPath, this.ResourcePathNavigationSource, targetNavigationSource, null, generatedProperties, collapsed);
+            SelectExpandClause subSelectExpand = BindSelectExpand(tokenIn.ExpandOption, tokenIn.SelectOption, parsedPath, this.ResourcePathNavigationSource, targetNavigationSource, elementTypeReference, generatedProperties, collapsed);
 
             // $levels
             LevelsClause levelsOption = ParseLevels(tokenIn.LevelsOption, currentLevelEntityType, currentNavProp);
@@ -659,7 +661,26 @@ namespace Microsoft.OData.UriParser
             Debug.Assert(tokenIn != null, "tokenIn != null");
 
             List<ODataPathSegment> pathSoFar = new List<ODataPathSegment>();
+
             IEdmStructuredType currentLevelType = this.edmType;
+
+            IEdmStructuredType implicitRangeVariableType = null;
+
+            if (this.state != null)
+            {
+                implicitRangeVariableType = (IEdmStructuredType)this.state.ImplicitRangeVariable.TypeReference.Definition;
+            }
+
+            // When we have a derived type, the current edmType is different from the edmType of the RangeVariable type reference.
+            // e.g /Orders?$expand=Customer/Model.VipCustomer($select=VipCustomerName)
+            // We need to use the edmType of the RangeVariable type reference so that we can get the VipCustomerName property
+            // from the Model.VipCustomer.
+            if (implicitRangeVariableType != null && implicitRangeVariableType != this.edmType)
+            {
+                // Validate that the derived type and the base type are related.
+                UriEdmHelpers.CheckRelatedTo(this.state.ImplicitRangeVariable.TypeReference.Definition, this.edmType);
+                currentLevelType = implicitRangeVariableType;
+            }
 
             // first, walk through all type segments in a row, converting them from tokens into segments.
             if (tokenIn.IsNamespaceOrContainerQualified() && !UriParserHelper.IsAnnotation(tokenIn.Identifier))
