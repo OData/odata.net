@@ -6,7 +6,7 @@
     <OutputType>Library</OutputType>
     <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net472</TargetFrameworks>
     <RestorePackages>true</RestorePackages>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
@@ -50,15 +50,14 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FxCopSdk">
-      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\PrivateAssemblies\FxCopSdk.dll</HintPath>
+      <HintPath>$(MSBuildExtensionsPath)\..\Common7\IDE\PrivateAssemblies\FxCopSdk.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Cci">
-      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\PrivateAssemblies\Microsoft.Cci.dll</HintPath>
+      <HintPath>$(MSBuildExtensionsPath)\..\Common7\IDE\PrivateAssemblies\Microsoft.Cci.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
-    <Reference Include="$(VS140COMNTOOLS)..\IDE\PrivateAssemblies\Microsoft.Cci.dll" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="DataWebRules.ruleset">

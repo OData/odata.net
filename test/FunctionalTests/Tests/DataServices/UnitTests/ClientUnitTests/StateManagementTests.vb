@@ -679,7 +679,7 @@ Partial Public Class ClientModule
             End Try
 
             For i As Int32 = 0 To 1
-                For Each entity In ctx.Entities
+                For Each entity As EntityDescriptor In ctx.Entities
                     Assert.IsTrue(ctx.Detach(entity.Entity))
                 Next
                 Assert.AreEqual(0, ctx.Links.Count)
