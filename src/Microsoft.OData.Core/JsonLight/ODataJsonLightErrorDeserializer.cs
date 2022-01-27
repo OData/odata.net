@@ -80,13 +80,13 @@ namespace Microsoft.OData.JsonLight
         /// Pre-Condition:  JsonNodeType.None       - The reader must not have been used yet.
         /// Post-Condition: JsonNodeType.EndOfInput
         /// </remarks>
-        internal Task<ODataError> ReadTopLevelErrorAsync()
+        internal async Task<ODataError> ReadTopLevelErrorAsync()
         {
             Debug.Assert(this.JsonReader.NodeType == JsonNodeType.None, "Pre-Condition: expected JsonNodeType.None, the reader must not have been used yet.");
             Debug.Assert(!this.JsonReader.DisableInStreamErrorDetection, "!JsonReader.DisableInStreamErrorDetection");
             this.JsonReader.AssertNotBuffering();
 
-            // prevent the buffering JSON reader from detecting in-stream errors - we read the error ourselves
+            // Prevent the buffering JSON reader from detecting in-stream errors - we read the error ourselves
             // to throw proper exceptions
             this.JsonReader.DisableInStreamErrorDetection = true;
 
@@ -94,26 +94,21 @@ namespace Microsoft.OData.JsonLight
             PropertyAndAnnotationCollector propertyAndAnnotationCollector = this.CreatePropertyAndAnnotationCollector();
 
             // Position the reader on the first node
-            return this.ReadPayloadStartAsync(
+            await this.ReadPayloadStartAsync(
                 ODataPayloadKind.Error,
                 propertyAndAnnotationCollector,
-                /*isReadingNestedPayload*/false,
-                /*allowEmptyPayload*/false)
+                isReadingNestedPayload: false,
+                allowEmptyPayload: false).ConfigureAwait(false);
 
-                .FollowOnSuccessWith(t =>
-                {
-                    ODataError result = this.ReadTopLevelErrorImplementation();
+            ODataError error = await this.ReadTopLevelErrorImplementationAsync()
+                .ConfigureAwait(false);
 
-                    Debug.Assert(this.JsonReader.NodeType == JsonNodeType.EndOfInput, "Post-Condition: JsonNodeType.EndOfInput");
-                    this.JsonReader.AssertNotBuffering();
+            Debug.Assert(this.JsonReader.NodeType == JsonNodeType.EndOfInput, "Post-Condition: JsonNodeType.EndOfInput");
+            this.JsonReader.AssertNotBuffering();
 
-                    return result;
-                })
+            this.JsonReader.DisableInStreamErrorDetection = false;
 
-                .FollowAlwaysWith(t =>
-                {
-                    this.JsonReader.DisableInStreamErrorDetection = false;
-                });
+            return error;
         }
 
         /// <summary>
@@ -133,7 +128,7 @@ namespace Microsoft.OData.JsonLight
             while (this.JsonReader.NodeType == JsonNodeType.Property)
             {
                 string propertyName = this.JsonReader.ReadPropertyName();
-                if (string.CompareOrdinal(JsonLightConstants.ODataErrorPropertyName, propertyName) != 0)
+                if (!string.Equals(JsonLightConstants.ODataErrorPropertyName, propertyName, StringComparison.Ordinal))
                 {
                     // we only allow a single 'error' property for a top-level error object
                     throw new ODataException(Strings.ODataJsonErrorDeserializer_TopLevelErrorWithInvalidProperty(propertyName));
@@ -242,7 +237,7 @@ namespace Microsoft.OData.JsonLight
                 "The method should only be called with OData. annotations");
             this.AssertJsonCondition(JsonNodeType.PrimitiveValue, JsonNodeType.StartObject, JsonNodeType.StartArray);
 
-            if (string.CompareOrdinal(propertyAnnotationName, ODataAnnotationNames.ODataType) == 0)
+            if (string.Equals(propertyAnnotationName, ODataAnnotationNames.ODataType, StringComparison.Ordinal))
             {
                 string typeName = ReaderUtils.AddEdmPrefixOfTypeName(ReaderUtils.RemovePrefixOfTypeName(this.JsonReader.ReadStringValue()));
                 if (typeName == null)
@@ -460,6 +455,404 @@ namespace Microsoft.OData.JsonLight
 
                 default:
                     this.JsonReader.SkipValue();
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously read a top-level error.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains an <see cref="ODataError"/> representing the read error.
+        /// </returns>
+        /// <remarks>
+        /// Pre-Condition:  JsonNodeType.Property       - The first property of the top level object.
+        ///                 JsonNodeType.EndObject      - If there are no properties in the top level object.
+        ///                 any                         - Will throw if anything else.
+        /// Post-Condition: JsonNodeType.EndOfInput
+        /// </remarks>
+        private async Task<ODataError> ReadTopLevelErrorImplementationAsync()
+        {
+            ODataError error = null;
+
+            while (this.JsonReader.NodeType == JsonNodeType.Property)
+            {
+                string propertyName = await this.JsonReader.ReadPropertyNameAsync()
+                    .ConfigureAwait(false);
+
+                if (!string.Equals(JsonLightConstants.ODataErrorPropertyName, propertyName, StringComparison.Ordinal))
+                {
+                    // We only allow a single 'error' property for a top-level error object
+                    throw new ODataException(Strings.ODataJsonErrorDeserializer_TopLevelErrorWithInvalidProperty(propertyName));
+                }
+
+                if (error != null)
+                {
+                    throw new ODataException(Strings.ODataJsonReaderUtils_MultipleErrorPropertiesWithSameName(JsonLightConstants.ODataErrorPropertyName));
+                }
+
+                error = new ODataError();
+
+                await this.ReadODataErrorObjectAsync(error)
+                    .ConfigureAwait(false);
+            }
+
+            // Read the end of the error object
+            await this.JsonReader.ReadEndObjectAsync()
+                .ConfigureAwait(false);
+
+            // Read the end of the response.
+            await this.ReadPayloadEndAsync(isReadingNestedPayload: false)
+                .ConfigureAwait(false);
+
+            Debug.Assert(this.JsonReader.NodeType == JsonNodeType.EndOfInput, "Post-Condition: JsonNodeType.EndOfInput");
+
+            return error;
+        }
+
+        /// <summary>
+        /// Asynchronously reads all the properties in a single JSON object scope,
+        /// calling <paramref name="readPropertyWithValueDelegate"/> for each non-annotation property encountered.
+        /// </summary>
+        /// <param name="readPropertyWithValueDelegate">
+        /// A delegate which takes the name of the current property and processes the property value as necessary.
+        /// At the start of this delegate, the reader is positioned at the property value node.
+        /// The action should leave the reader positioned on the node after the property value.
+        /// </param>
+        /// <returns>A task that represents the asynchronous read operation.</returns>
+        /// <remarks>
+        /// This method should only be used for scopes where we allow (and ignore) annotations in a custom namespace,
+        /// i.e. scopes which directly correspond to a class in the OM.
+        ///
+        /// Pre-Condition:  JsonNodeType.StartObject    - The start of the JSON object being processed.
+        ///                 any                         - Will throw if not StartObject.
+        /// Post-Condition: any                         - The node after the EndObject node for the JSON object being processed.
+        /// </remarks>
+        private async Task ReadJsonObjectInErrorPayloadAsync(Func<string, PropertyAndAnnotationCollector, Task> readPropertyWithValueDelegate)
+        {
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector = this.CreatePropertyAndAnnotationCollector();
+
+            await this.JsonReader.ReadStartObjectAsync()
+                .ConfigureAwait(false);
+
+            while (this.JsonReader.NodeType == JsonNodeType.Property)
+            {
+                await this.ProcessPropertyAsync(
+                    propertyAndAnnotationCollector,
+                    this.ReadErrorPropertyAnnotationValueAsync,
+                    async (propertyParsingResult, propertyName) =>
+                    {
+                        if (this.JsonReader.NodeType == JsonNodeType.Property)
+                        {
+                            // Read over property name
+                            await this.JsonReader.ReadAsync()
+                                .ConfigureAwait(false);
+                        }
+
+                        switch (propertyParsingResult)
+                        {
+                            case PropertyParsingResult.ODataInstanceAnnotation:
+                                throw new ODataException(Strings.ODataJsonLightErrorDeserializer_InstanceAnnotationNotAllowedInErrorPayload(propertyName));
+                            case PropertyParsingResult.CustomInstanceAnnotation:
+                                await readPropertyWithValueDelegate(propertyName, propertyAndAnnotationCollector)
+                                    .ConfigureAwait(false);
+                                break;
+                            case PropertyParsingResult.PropertyWithoutValue:
+                                throw new ODataException(Strings.ODataJsonLightErrorDeserializer_PropertyAnnotationWithoutPropertyForError(propertyName));
+                            case PropertyParsingResult.PropertyWithValue:
+                                await readPropertyWithValueDelegate(propertyName, propertyAndAnnotationCollector)
+                                    .ConfigureAwait(false);
+                                break;
+                            case PropertyParsingResult.EndOfObject:
+                                break;
+
+                            case PropertyParsingResult.MetadataReferenceProperty:
+                                throw new ODataException(Strings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(propertyName));
+                        }
+                    }).ConfigureAwait(false);
+            }
+
+            await this.JsonReader.ReadEndObjectAsync()
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Asynchronously reads a value of property annotation on an error payload.
+        /// </summary>
+        /// <param name="propertyAnnotationName">The name of the property annotation to read.</param>
+        /// <returns>
+        /// A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains the value of the property annotation.
+        /// </returns>
+        /// <remarks>
+        /// This method should read the property annotation value and return a representation of the value which will be later
+        /// consumed by the resource reading code, or throw if there is something unexpected.
+        ///
+        /// Pre-Condition:  JsonNodeType.PrimitiveValue         The value of the property annotation property
+        ///                 JsonNodeType.StartObject
+        ///                 JsonNodeType.StartArray
+        /// Post-Condition: JsonNodeType.EndObject              The end of the error object
+        ///                 JsonNodeType.Property               The next property after the property annotation
+        /// </remarks>
+        private async Task<object> ReadErrorPropertyAnnotationValueAsync(string propertyAnnotationName)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(propertyAnnotationName), "!string.IsNullOrEmpty(propertyAnnotationName)");
+            Debug.Assert(
+                propertyAnnotationName.StartsWith(JsonLightConstants.ODataAnnotationNamespacePrefix, StringComparison.Ordinal),
+                "The method should only be called with OData. annotations");
+            this.AssertJsonCondition(JsonNodeType.PrimitiveValue, JsonNodeType.StartObject, JsonNodeType.StartArray);
+
+            if (string.Equals(propertyAnnotationName, ODataAnnotationNames.ODataType, StringComparison.Ordinal))
+            {
+                string typeName = ReaderUtils.AddEdmPrefixOfTypeName(
+                    ReaderUtils.RemovePrefixOfTypeName(
+                        await this.JsonReader.ReadStringValueAsync().ConfigureAwait(false)));
+
+                if (typeName == null)
+                {
+                    throw new ODataException(Strings.ODataJsonLightPropertyAndValueDeserializer_InvalidTypeName(propertyAnnotationName));
+                }
+
+                this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+
+
+                return typeName;
+            }
+
+            throw new ODataException(Strings.ODataJsonLightErrorDeserializer_PropertyAnnotationNotAllowedInErrorPayload(propertyAnnotationName));
+        }
+
+        /// <summary>
+        /// Asynchronously reads the JSON object which is the value of the "error" property.
+        /// </summary>
+        /// <param name="error">The <see cref="ODataError"/> object to update with data from the payload.</param>
+        /// <returns>A task that represents the asynchronous read operation.</returns>
+        /// <remarks>
+        /// Pre-Condition:  JsonNodeType.StartObject    - The start of the "error" object.
+        ///                 any                         - Will throw if not StartObject.
+        /// Post-Condition: any                         - The node after the "error" object's EndNode.
+        /// </remarks>
+        private Task ReadODataErrorObjectAsync(ODataError error)
+        {
+            return this.ReadJsonObjectInErrorPayloadAsync(
+                (propertyName, duplicationPropertyNameChecker) => this.ReadPropertyValueInODataErrorObjectAsync(error, propertyName, duplicationPropertyNameChecker));
+        }
+
+        /// <summary>
+        /// Asynchronously reads an inner error object.
+        /// </summary>
+        /// <param name="recursionDepth">The number of times this method has been called recursively.</param>
+        /// <returns>
+        /// A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains an <see cref="ODataInnerError"/> representing the read inner error.
+        /// </returns>
+        /// <remarks>
+        /// Pre-Condition:  JsonNodeType.StartObject    - The start of the "innererror" object.
+        ///                 any                         - will throw if not StartObject.
+        /// Post-Condition: any                         - The node after the "innererror" object's EndNode.
+        /// </remarks>
+        private async Task<ODataInnerError> ReadInnerErrorAsync(int recursionDepth)
+        {
+            Debug.Assert(this.JsonReader.DisableInStreamErrorDetection, "JsonReader.DisableInStreamErrorDetection");
+            this.JsonReader.AssertNotBuffering();
+
+            ValidationUtils.IncreaseAndValidateRecursionDepth(ref recursionDepth, this.MessageReaderSettings.MessageQuotas.MaxNestingDepth);
+
+            ODataInnerError innerError = new ODataInnerError();
+
+            await this.ReadJsonObjectInErrorPayloadAsync(
+                (propertyName, propertyAndAnnotationCollector) => this.ReadPropertyValueInInnerErrorAsync(recursionDepth, innerError, propertyName)).ConfigureAwait(false);
+
+            this.JsonReader.AssertNotBuffering();
+
+            return innerError;
+        }
+
+        /// <summary>
+        /// Asynchronously reads a property value which occurs in the "innererror" object scope.
+        /// </summary>
+        /// <param name="recursionDepth">The number of parent inner errors for this inner error.</param>
+        /// <param name="innerError">The <see cref="ODataError"/> object to update with the data from this property value.</param>
+        /// <param name="propertyName">The name of the property whose value is to be read.</param>
+        /// <returns>A task that represents the asynchronous read operation.</returns>
+        /// <remarks>
+        /// Pre-Condition:  any                         - The value of the property being read.
+        /// Post-Condition: JsonNodeType.Property       - The property after the one being read.
+        ///                 JsonNodeType.EndObject      - The end of the "innererror" object.
+        ///                 any                         - Anything else after the property value is an invalid payload (but won't fail in this method).
+        /// </remarks>
+        private async Task ReadPropertyValueInInnerErrorAsync(int recursionDepth, ODataInnerError innerError, string propertyName)
+        {
+            switch (propertyName)
+            {
+                case JsonConstants.ODataErrorInnerErrorMessageName:
+                    innerError.Message = await this.JsonReader.ReadStringValueAsync(JsonConstants.ODataErrorInnerErrorMessageName)
+                        .ConfigureAwait(false);
+                    break;
+
+                case JsonConstants.ODataErrorInnerErrorTypeNameName:
+                    innerError.TypeName = await this.JsonReader.ReadStringValueAsync(JsonConstants.ODataErrorInnerErrorTypeNameName)
+                        .ConfigureAwait(false);
+                    break;
+
+                case JsonConstants.ODataErrorInnerErrorStackTraceName:
+                    innerError.StackTrace = await this.JsonReader.ReadStringValueAsync(JsonConstants.ODataErrorInnerErrorStackTraceName)
+                        .ConfigureAwait(false);
+                    break;
+
+                case JsonConstants.ODataErrorInnerErrorInnerErrorName:
+                    innerError.InnerError = await this.ReadInnerErrorAsync(recursionDepth)
+                        .ConfigureAwait(false);
+                    break;
+
+                default:
+                    if (!innerError.Properties.ContainsKey(propertyName))
+                    {
+                        innerError.Properties.Add(propertyName, await this.JsonReader.ReadODataValueAsync().ConfigureAwait(false));
+                    }
+                    else
+                    {
+                        innerError.Properties[propertyName] = await this.JsonReader.ReadODataValueAsync()
+                            .ConfigureAwait(false);
+                    }
+
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously reads a property value which occurs in the "error" object scope.
+        /// </summary>
+        /// <param name="error">The <see cref="ODataError"/> object to update with the data from this property value.</param>
+        /// <param name="propertyName">The name of the property whose value is to be read.</param>
+        /// <param name="duplicationPropertyNameChecker"><see cref="PropertyAndAnnotationCollector"/> to use for extracting property annotations
+        /// targeting any custom instance annotations on the error.</param>
+        /// <returns>A task that represents the asynchronous read operation.</returns>
+        /// <remarks>
+        /// Pre-Condition:  any                         - The value of the property being read.
+        /// Post-Condition: JsonNodeType.Property       - The property after the one being read.
+        ///                 JsonNodeType.EndObject      - The end of the "error" object.
+        ///                 any                         - Anything else after the property value is an invalid payload (but won't fail in this method).
+        /// </remarks>
+        private async Task ReadPropertyValueInODataErrorObjectAsync(ODataError error, string propertyName, PropertyAndAnnotationCollector duplicationPropertyNameChecker)
+        {
+            switch (propertyName)
+            {
+                case JsonConstants.ODataErrorCodeName:
+                    error.ErrorCode = await this.JsonReader.ReadStringValueAsync(JsonConstants.ODataErrorCodeName)
+                        .ConfigureAwait(false);
+                    break;
+
+                case JsonConstants.ODataErrorMessageName:
+                    error.Message = await this.JsonReader.ReadStringValueAsync(JsonConstants.ODataErrorMessageName)
+                        .ConfigureAwait(false);
+                    break;
+
+                case JsonConstants.ODataErrorTargetName:
+                    error.Target = await this.JsonReader.ReadStringValueAsync(JsonConstants.ODataErrorTargetName)
+                        .ConfigureAwait(false);
+                    break;
+
+                case JsonConstants.ODataErrorDetailsName:
+                    error.Details = await this.ReadErrorDetailsAsync()
+                        .ConfigureAwait(false);
+                    break;
+
+                case JsonConstants.ODataErrorInnerErrorName:
+                    error.InnerError = await this.ReadInnerErrorAsync(recursionDepth: 0)
+                        .ConfigureAwait(false);
+                    break;
+
+                default:
+                    // See if it's an instance annotation
+                    if (ODataJsonLightReaderUtils.IsAnnotationProperty(propertyName))
+                    {
+                        ODataJsonLightPropertyAndValueDeserializer propertyAndValueDeserializer = new ODataJsonLightPropertyAndValueDeserializer(this.JsonLightInputContext);
+                        object typeName;
+
+                        duplicationPropertyNameChecker.GetODataPropertyAnnotations(propertyName).TryGetValue(ODataAnnotationNames.ODataType, out typeName);
+
+                        var value = await propertyAndValueDeserializer.ReadNonEntityValueAsync(
+                            payloadTypeName: typeName as string,
+                            expectedValueTypeReference: null,
+                            propertyAndAnnotationCollector: null,
+                            collectionValidator: null,
+                            validateNullValue: false,
+                            isTopLevelPropertyValue: false,
+                            insideResourceValue: false,
+                            propertyName: propertyName).ConfigureAwait(false);
+
+                        error.GetInstanceAnnotations().Add(new ODataInstanceAnnotation(propertyName, value.ToODataValue()));
+                    }
+                    else
+                    {
+                        // We only allow a 'code', 'message', 'target', 'details, and 'innererror' properties
+                        // in the value of the 'error' property or custom instance annotations
+                        throw new ODataException(Strings.ODataJsonLightErrorDeserializer_TopLevelErrorValueWithInvalidProperty(propertyName));
+                    }
+
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously reads an error details array.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous read operation.</returns>
+        private async Task<ICollection<ODataErrorDetail>> ReadErrorDetailsAsync()
+        {
+            var details = new List<ODataErrorDetail>();
+
+            // [
+            await this.JsonReader.ReadStartArrayAsync()
+                .ConfigureAwait(false);
+
+            while (JsonReader.NodeType == JsonNodeType.StartObject)
+            {
+                var detail = new ODataErrorDetail();
+
+                await ReadJsonObjectInErrorPayloadAsync(
+                    (propertyName, duplicationPropertyNameChecker) => ReadPropertyValueInODataErrorDetailObjectAsync(detail, propertyName)).ConfigureAwait(false);
+
+                details.Add(detail);
+            }
+
+            // ]
+            await this.JsonReader.ReadEndArrayAsync()
+                .ConfigureAwait(false);
+
+            return details;
+        }
+
+        /// <summary>
+        /// Asynchronously reads a property value which occurs in the error detail object scope.
+        /// </summary>
+        /// <param name="errorDetail">The <see cref="ODataErrorDetail"/> object to update with the data from this property value.</param>
+        /// <param name="propertyName">The name of the property whose value is to be read.</param>
+        /// <returns>A task that represents the asynchronous read operation.</returns>
+        private async Task ReadPropertyValueInODataErrorDetailObjectAsync(ODataErrorDetail errorDetail, string propertyName)
+        {
+            switch (propertyName)
+            {
+                case JsonConstants.ODataErrorCodeName:
+                    errorDetail.ErrorCode = await this.JsonReader.ReadStringValueAsync(JsonConstants.ODataErrorCodeName)
+                        .ConfigureAwait(false);
+                    break;
+
+                case JsonConstants.ODataErrorMessageName:
+                    errorDetail.Message = await this.JsonReader.ReadStringValueAsync(JsonConstants.ODataErrorMessageName)
+                        .ConfigureAwait(false);
+                    break;
+
+                case JsonConstants.ODataErrorTargetName:
+                    errorDetail.Target = await this.JsonReader.ReadStringValueAsync(JsonConstants.ODataErrorTargetName)
+                        .ConfigureAwait(false);
+                    break;
+
+                default:
+                    await this.JsonReader.SkipValueAsync()
+                        .ConfigureAwait(false);
                     break;
             }
         }
