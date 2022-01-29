@@ -57,23 +57,9 @@ namespace Microsoft.OData.Client
         /// <param name="headers">The set of headers for the request.</param>
         /// <param name="client">The HttpClient Instance for the request</param>
         public DataServiceClientRequestMessageArgs(string method, Uri requestUri, bool useDefaultCredentials, bool usePostTunneling, IDictionary<string, string> headers, HttpClient client)
+            : this(method, requestUri, useDefaultCredentials, usePostTunneling, headers)
         {
-            Debug.Assert(method != null, "method cannot be null");
-            Debug.Assert(requestUri != null, "requestUri cannot be null");
-            Debug.Assert(headers != null, "headers cannot be null");
-
-            this.Headers = headers;
-            this.Method = method;
-            this.RequestUri = requestUri;
-            this.UsePostTunneling = usePostTunneling;
-            this.UseDefaultCredentials = useDefaultCredentials;
             this.HttpClient = client;
-
-            this.actualMethod = this.Method;
-            if (this.UsePostTunneling && this.Headers.ContainsKey(XmlConstants.HttpXMethod))
-            {
-                this.actualMethod = XmlConstants.HttpMethodPost;
-            }
         }
 
         /// <summary>
