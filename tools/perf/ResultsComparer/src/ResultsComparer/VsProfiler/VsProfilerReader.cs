@@ -20,7 +20,7 @@ namespace ResultsComparer.VsProfiler
     // e.g.: https://github.com/JoshClose/CsvHelper
 
     /// <summary>
-    /// And <see cref="IReader{T}"/> that can read
+    /// An <see cref="IReader{T}"/> that can read
     /// text files containing text reports copied from the Visual Studio profiler sessions.
     /// </summary>
     /// <typeparam name="T"></typeparam>
