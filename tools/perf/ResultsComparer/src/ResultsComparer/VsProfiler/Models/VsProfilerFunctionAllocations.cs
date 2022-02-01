@@ -9,7 +9,7 @@ using ResultsComparer.Core;
 namespace ResultsComparer.VsProfiler.Models
 {
     /// <summary>
-    /// Represents the type of entries from
+    /// Represents the type of entries in a
     /// VS .NET Object Allocation Profiler Function Allocations report.
     /// </summary>
     public class VsProfilerFunctionAllocations
