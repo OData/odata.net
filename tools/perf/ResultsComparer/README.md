@@ -213,7 +213,7 @@ For this type of report, use **`vsMem`** as the `--type` option:
 dotnet run -- --type vsFuncAllocs --base C:\reports\MemoryUsageBefore.txt --diff C:\reports\MemoryUsageAfter.txt
 ```
 
-By default the "Count" metric is used for the comparison, but you can change the metric used by passing one of the following to the `--metric` option:
+By default the "Count" metric is used for the comparison, but you can change the metric used by passing one of the following to the `--metric` options:
 - `Count`: Count of instances in memory
 - `Size`: Size in bytes
 - `Bytes`: Size in bytes (same as previous)
