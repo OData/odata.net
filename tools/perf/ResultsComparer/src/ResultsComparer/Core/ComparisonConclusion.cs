@@ -22,7 +22,7 @@ namespace ResultsComparer.Core
         /// </summary>
         Better,
         /// <summary>
-        /// The diff measurement is better than the base.
+        /// The diff measurement is worse than the base.
         /// </summary>
         Worse,
         /// <summary>
