@@ -51,8 +51,8 @@ namespace ResultsComparer
         {
             get
             {
-                yield return new Example(@"Compare the results stored in 'C:\results\win' (base) vs 'C:\results\unix' (diff) using 5% threshold.",
-                    new CommandLineOptions { Comparer = "bdn", BasePath = @"C:\results\win", DiffPath = @"C:\results\unix", StatisticalTestThreshold = "5%" });
+                yield return new Example(@"Compare the results stored in 'C:\results\ODataWriterBenchmarksBefore.json' (base) vs 'C:\results\ODataWriterBenchmarksAfter.json' (diff) using 5% threshold.",
+                    new CommandLineOptions { Comparer = "bdn", BasePath = @"C:\results\ODataWriterBenchmarksBefore.json", DiffPath = @"C:\results\ODataWriterBenchmarksAfter.json", StatisticalTestThreshold = "5%" });
                 yield return new Example(@"Compare the results stored in 'C:\results\win' (base) vs 'C:\results\unix' (diff) using 5% threshold and show only top/bottom 10 results.",
                     new CommandLineOptions { Comparer = "bdn", BasePath = @"C:\results\win", DiffPath = @"C:\results\unix", StatisticalTestThreshold = "5%", TopCount = 10 });
                 yield return new Example(@"Compare the results stored in 'C:\results\win' (base) vs 'C:\results\unix' (diff) using 5% threshold and 0.5ns noise filter.",

@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "ResultsComparer": {
-      "commandName": "Project",
-      "commandLineArgs": "--base C:\\Users\\clhabins\\source\\repos\\odata.net\\SerializerBeforeBench.json --diff  C:\\Users\\clhabins\\source\\repos\\odata.net\\SerializerAfterBench.json --threshold 1%"
-    }
-  }
-}

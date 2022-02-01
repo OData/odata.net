@@ -18,8 +18,9 @@ namespace ResultsComparer.Core.Reporting
         /// and outputs the report to the specified <paramref name="destination"/>.
         /// </summary>
         /// <param name="results">The comparison results for which to generate a report.</param>
-        /// <param name="destination">Where the report should be written. This stream should not be closed by the reporter.</param>
+        /// <param name="destination">Where the report should be written</param>
         /// <param name="options">The options used when making the comparison.</param>
-        void GenerateReport(ComparerResults results, Stream destination, ComparerOptions options);
+        /// <param name="leaveStreamOpen">`true` to leave the <paramref name="destination"/> stream open after writing the report, otherwise `false`.</param>
+        void GenerateReport(ComparerResults results, Stream destination, ComparerOptions options, bool leaveStreamOpen = false);
     }
 }

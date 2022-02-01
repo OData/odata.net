@@ -46,5 +46,5 @@ total diff: 33
 | CtorDelegate                              | N/A       |            |       2.00 | N/A     |
 | ObjectEqualityComparer<WorkStealingQueue> | N/A       |            |       1.00 | N/A     |
 
-No Missing results for the provided threshold =  and noise filter = 0.3ns.
+No Missing results for the provided threshold =  and noise filter = .
 

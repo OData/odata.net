@@ -18,7 +18,7 @@ namespace ResultsComparer.Core.Reporting
     public class MarkdownReporter : IReporter
     {
         /// <inheritdoc/>
-        public void GenerateReport(ComparerResults results, Stream destination, ComparerOptions args)
+        public void GenerateReport(ComparerResults results, Stream destination, ComparerOptions options, bool leaveStreamOpen = false)
         {
             ComparerResult[] resultsArray = results.Results.ToArray();
 
@@ -27,12 +27,12 @@ namespace ResultsComparer.Core.Reporting
                 return;
             }
 
-            using StreamWriter writer = new(destination, leaveOpen: true);
+            using StreamWriter writer = new(destination, leaveOpen: leaveStreamOpen);
             PrintSummary(resultsArray, writer);
-            PrintTable(resultsArray, results.MetricName, ComparisonConclusion.Worse, writer, args);
-            PrintTable(resultsArray, results.MetricName, ComparisonConclusion.Better, writer, args);
-            PrintTable(resultsArray, results.MetricName, ComparisonConclusion.New, writer, args);
-            PrintTable(resultsArray, results.MetricName, ComparisonConclusion.Missing, writer, args);
+            PrintTable(resultsArray, results.MetricName, ComparisonConclusion.Worse, writer, options);
+            PrintTable(resultsArray, results.MetricName, ComparisonConclusion.Better, writer, options);
+            PrintTable(resultsArray, results.MetricName, ComparisonConclusion.New, writer, options);
+            PrintTable(resultsArray, results.MetricName, ComparisonConclusion.Missing, writer, options);
             writer.Flush();
         }
 
@@ -125,18 +125,25 @@ namespace ResultsComparer.Core.Reporting
 
         private static string GetModalInfo(MeasurementResult benchmark)
         {
-            if (benchmark == null)
+            if (benchmark == null || benchmark.Modality == Modality.Unknown) // not enough data to tell
+            {
                 return null;
-
-            if (benchmark.Modality == Modality.Unknown) // not enough data to tell
-                return null;
+            }
 
             if (benchmark.Modality == Modality.Multimodal)
+            {
                 return "multimodal";
-            else if (benchmark.Modality == Modality.Bimodal)
+            }
+
+            if (benchmark.Modality == Modality.Bimodal)
+            {
                 return "bimodal";
-            else if (benchmark.Modality == Modality.Several)
+            }
+
+            if (benchmark.Modality == Modality.Several)
+            {
                 return "several?";
+            }
 
             return null;
         }

@@ -32,17 +32,17 @@ namespace ResultsComparer.VsProfiler
         public abstract string Name { get; }
 
         /// <summary>
-        /// Retrieves the id of the given result entry.
+        /// Retrieves the id of the given result record.
         /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
+        /// <param name="item">The record for which we want to retrieve the id.</param>
+        /// <returns>The value of the id field for the specified <paramref name="item"/>.</returns>
         protected abstract string GetItemId(T item);
         /// <summary>
-        /// Retrieves the metric value for the specified entry.
+        /// Retrieves the metric value for the specified record.
         /// </summary>
-        /// <param name="item">The result entry for which to retrieve the value</param>
+        /// <param name="item">The result record entry for which to retrieve the value</param>
         /// <param name="metric">The metric for which to retrieve the value.</param>
-        /// <returns></returns>
+        /// <returns>The metric value retrieved from the field <paramref name="metric"/> of the <paramref name="item"/></returns>
         protected abstract long GetMetricValue(T item, string metric);
 
         /// <inheritdoc/>

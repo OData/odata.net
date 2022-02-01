@@ -74,7 +74,7 @@ namespace ResultsComparer.Tests
             ComparerResults results = comparer.CompareResults(basePath, diffPath, options);
             MarkdownReporter reporter = new();
             using MemoryStream output = new();
-            reporter.GenerateReport(results, output, options);
+            reporter.GenerateReport(results, output, options, leaveStreamOpen: true);
 
             output.Seek(0, SeekOrigin.Begin);
             string expectedReport = File.ReadAllText(reportPath);
