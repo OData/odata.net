@@ -21,7 +21,7 @@ namespace ResultsComparer.Core
         List<IResultsComparer> comparersList = new();
 
         /// <summary>
-        /// Registers the specified <see cref="IResultsComparerer"/> with
+        /// Registers the specified <see cref="IResultsComparer"/> with
         /// the specified <paramref name="id"/>.
         /// </summary>
         /// <param name="id">The ID to associate with the comparer for later retrieval.</param>
