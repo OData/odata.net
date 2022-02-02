@@ -32,7 +32,7 @@ It can be used to compare:
 * results for different target frameworks (eg. .NET Core 3.1 vs 5.0)
 
 All you need to provide is:
-* `--type` - the type of reports to compare, Examples `bdn`, `vsAllocs`, `vsFuncAllocs` (learn more below). If not provided, the tool will attempt to auto-detect based on the input files.
+* `--type` - the type of reports to compare, Examples `bdn`, `vsTypeAllocs`, `vsFuncAllocs` (learn more below). If not provided, the tool will attempt to auto-detect based on the input files.
 * `--base` - path to folder/file with baseline results
 * `--diff` - path to folder/file with diff results
 * `--threshold`  - threshold for Statistical Test. Examples: 5%, 10ms, 100ns, 1s
@@ -115,10 +115,10 @@ With the files ready, you can run the command. We currently support data from th
 ### .NET Object Allocation Tracker - Type Allocations
 
 This is the **Allocations** tab of the profiler.This report shows the number and size of allocations for each data type.
-For this type of report, use **`vsAllocs`** as the `--type` option:
+For this type of report, use **`vsTypeAllocs`** as the `--type` option:
 
 ```
-dotnet run -- --type vsAllocs --base C:\reports\AllocationsReportBefore.txt --diff C:\reports\AllocationsReportAfter.txt
+dotnet run -- --type vsTypeAllocs --base C:\reports\AllocationsReportBefore.txt --diff C:\reports\AllocationsReportAfter.txt
 ```
 
 By default, the **Allocations** column is compared, but you can configure which metric to use for the comparison by using the `--metric` option. Possible values are (case-insensitive):

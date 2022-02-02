@@ -17,7 +17,7 @@ namespace ResultsComparer.Tests
     {
         [Theory]
         [InlineData("bdn", typeof(BdnComparer))]
-        [InlineData("vsAllocs", typeof(VsTypeAllocationsComparer))]
+        [InlineData("vsTypeAllocs", typeof(VsTypeAllocationsComparer))]
         [InlineData("vsFuncAllocs", typeof(VsFunctionAllocationsComparer))]
         [InlineData("vsMem",typeof(VsMemoryUsageComparer))]
         public void CreateDefaultPovider_GetById_ReturnsComparerWithSpecifiedId(string comparerId, Type comparerType)

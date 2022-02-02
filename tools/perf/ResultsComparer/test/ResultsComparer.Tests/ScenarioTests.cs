@@ -19,14 +19,14 @@ namespace ResultsComparer.Tests
             new List<object[]>
             {
                 new object[] {
-                    "vsAllocs",
+                    "vsTypeAllocs",
                     new ComparerOptions(),
                     "Samples/VsProfiler/VsProfilerObjectAllocations.txt",
                     "Samples/VsProfiler/VsProfilerObjectAllocations2.txt",
                     "Samples/VsProfiler/ObjectAllocationsComparisonReport.md"
                 },
                 new object[] {
-                    "vsAllocs",
+                    "vsTypeAllocs",
                     new ComparerOptions()
                     {
                         Metric = "Bytes"
