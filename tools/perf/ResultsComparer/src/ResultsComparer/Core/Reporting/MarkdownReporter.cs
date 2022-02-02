@@ -40,9 +40,9 @@ namespace ResultsComparer.Core.Reporting
 
         {
             IEnumerable<ComparerResult> better = notSame.Where(result =>
-                result.Conclusion == ComparisonConclusion.Worse).ToList();
-            IEnumerable<ComparerResult> worse = notSame.Where(result =>
                 result.Conclusion == ComparisonConclusion.Better).ToList();
+            IEnumerable<ComparerResult> worse = notSame.Where(result =>
+                result.Conclusion == ComparisonConclusion.Worse).ToList();
             int betterCount = better.Count();
             int worseCount = worse.Count();
             int missingCount = notSame.Where(result => result.Conclusion == ComparisonConclusion.Missing).Count();

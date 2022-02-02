@@ -1,6 +1,6 @@
 ﻿summary:
-better: 1, geomean: 1.087
-worse: 2, geomean: 1.014
+better: 2, geomean: 1.014
+worse: 1, geomean: 1.087
 new (results in the diff that are not in the base): 2
 missing (results in the base that are not in the diff): 1
 total diff: 6

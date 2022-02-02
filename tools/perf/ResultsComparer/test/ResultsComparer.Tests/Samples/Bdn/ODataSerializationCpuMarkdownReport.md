@@ -1,6 +1,6 @@
 ﻿summary:
-better: 5, geomean: 1.033
-worse: 49, geomean: 1.147
+better: 49, geomean: 1.147
+worse: 5, geomean: 1.033
 total diff: 54
 
 | Worse                                                                            |          diff/base | Base Median (ns) | Diff Median (ns) | Modality|
