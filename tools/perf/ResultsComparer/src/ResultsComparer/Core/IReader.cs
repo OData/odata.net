@@ -10,9 +10,9 @@ using System.Collections.Generic;
 namespace ResultsComparer.Core
 {
     /// <summary>
-    /// Represents of a sequential forward reader for objects of type <typeparamref name="T"/>.
+    /// Represents a sequential forward reader for objects of type <typeparamref name="T"/>.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">The type of values returned by the reader.</typeparam>
     interface IReader<T> : IDisposable, IEnumerable<T> where T : new()
     {
         /// <summary>
