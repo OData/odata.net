@@ -36,6 +36,6 @@ namespace ResultsComparer.Core
         /// <summary>
         /// Unknown conclusion.
         /// </summary>
-        Unkown
+        Unknown
     }
 }
