@@ -174,7 +174,7 @@ namespace ResultsComparer.Bdn
             conclusion == EquivalenceTestConclusion.Same ? ComparisonConclusion.Same
             : conclusion == EquivalenceTestConclusion.Faster ? ComparisonConclusion.Better
             : conclusion == EquivalenceTestConclusion.Slower ? ComparisonConclusion.Worse
-            : ComparisonConclusion.Unkown;
+            : ComparisonConclusion.Unknown;
 
     }
 }

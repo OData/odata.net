@@ -23,7 +23,7 @@ namespace ResultsComparer.Core
         /// <param name="conclusion"></param>
         /// <returns></returns>
         public static bool IsDifferent(this ComparisonConclusion conclusion) =>
-            conclusion != ComparisonConclusion.Same && conclusion != ComparisonConclusion.Unkown;
+            conclusion != ComparisonConclusion.Same && conclusion != ComparisonConclusion.Unknown;
 
         /// <summary>
         /// Gets the diff/base or base/diff ratio from the <see cref="ComparerResult"/>
