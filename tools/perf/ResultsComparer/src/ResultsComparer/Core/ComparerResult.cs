@@ -15,6 +15,7 @@ namespace ResultsComparer.Core
         /// The identifier of the test.
         /// </summary>
         public string Id { get; set; }
+
         /// <summary>
         /// The reference measurements for the given test.
         /// </summary>
