@@ -20,6 +20,7 @@ namespace ResultsComparer.Core
         /// The reference measurements for the given test.
         /// </summary>
         public MeasurementResult BaseResult { get; set; }
+
         /// <summary>
         /// The diff measurements for the given test.
         /// </summary>
