@@ -16,6 +16,12 @@ namespace EdmLibTests.FunctionalUtilities.UnitTests
     public class EdmLibTestModelExtractorTests
     {
         [TestMethod]
+        public void Test()
+        {
+            Assert.Fail();
+        }
+
+        [TestMethod]
         public void GetModelsTest()
         {
             EdmLibTestModelExtractor extractor = new EdmLibTestModelExtractor();
