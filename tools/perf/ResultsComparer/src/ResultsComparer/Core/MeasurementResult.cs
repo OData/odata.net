@@ -16,6 +16,7 @@ namespace ResultsComparer.Core
         /// The measured result of the test.
         /// </summary>
         public double Result { get; set; }
+
         /// <summary>
         /// The modality of the distribution in case the <see cref="Result"/> is the average
         /// of multiple measurement iterations.
