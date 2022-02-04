@@ -23,6 +23,7 @@ namespace ResultsComparer.Core
         /// <param name="path"></param>
         /// <returns></returns>
         bool CanReadFile(string path);
+
         /// <summary>
         /// Compares two report files and returns the results of the comparisons.
         /// </summary>
