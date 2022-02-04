@@ -25,6 +25,7 @@ namespace ResultsComparer.Core
         /// The diff measurements for the given test.
         /// </summary>
         public MeasurementResult DiffResult { get; set; }
+
         /// <summary>
         /// Conclusion specifying whether an improvement, regression, no difference, etc. was detected.
         /// </summary>
