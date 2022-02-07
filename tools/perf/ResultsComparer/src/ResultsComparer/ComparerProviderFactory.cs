@@ -10,8 +10,17 @@ using ResultsComparer.VsProfiler;
 
 namespace ResultsComparer
 {
+    /// <summary>
+    /// A class that provides helpers to set up and create
+    /// instances of <see cref="IResultsComparerProvider"/>
+    /// </summary>
     public class ComparerProviderFactory
     {
+        /// <summary>
+        /// This creates the default <see cref="IResultsComparerProvider"/>
+        /// initialized with the default supported <see cref="IResultsComparer"/>.
+        /// </summary>
+        /// <returns>The default <see cref="IResultsComparerProvider"/></returns>
         public static IResultsComparerProvider CreateDefaultProvider()
         {
             ResultsComparerProvider provider = new();

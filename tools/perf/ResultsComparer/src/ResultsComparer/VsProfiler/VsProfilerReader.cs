@@ -31,6 +31,11 @@ namespace ResultsComparer.VsProfiler
         private int rowNum = 0;
         private bool disposedValue;
 
+        /// <summary>
+        /// Creates an instance of the <see cref="VsProfilerReader{T}"/> that
+        /// reads entries from the specified <paramref name="reader"/>
+        /// </summary>
+        /// <param name="reader">The reader that wraps the source text file to read data from.</param>
         public VsProfilerReader(TextReader reader)
         {
             this.reader = reader;

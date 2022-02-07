@@ -6,6 +6,9 @@
 
 namespace ResultsComparer.Core
 {
+    /// <summary>
+    /// Contains static helper methods for working with comparison results.
+    /// </summary>
     public static class Helpers
     {
         /// <summary>

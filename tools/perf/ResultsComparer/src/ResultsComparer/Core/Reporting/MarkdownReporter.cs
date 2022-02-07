@@ -118,7 +118,9 @@ namespace ResultsComparer.Core.Reporting
                     "Modality");
 
             foreach (string line in table.ToMarkdown().Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries))
+            {
                 writer.WriteLine($"| {line.TrimStart()}|"); // the table starts with \t and does not end with '|' and it looks bad so we fix it
+            }
 
             writer.WriteLine();
         }

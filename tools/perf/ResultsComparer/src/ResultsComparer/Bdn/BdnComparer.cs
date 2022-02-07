@@ -151,15 +151,23 @@ namespace ResultsComparer.Bdn
         private static Modality GetModalInfo(Benchmark benchmark)
         {
             if (benchmark.Statistics.N < 12) // not enough data to tell
+            {
                 return Modality.Single;
+            }
 
             double mValue = MValueCalculator.Calculate(benchmark.GetOriginalValues());
             if (mValue > 4.2)
+            {
                 return Modality.Multimodal;
+            }
             else if (mValue > 3.2)
+            {
                 return Modality.Bimodal;
+            }
             else if (mValue > 2.8)
+            {
                 return Modality.Several;
+            }
 
             return Modality.Single;
         }
