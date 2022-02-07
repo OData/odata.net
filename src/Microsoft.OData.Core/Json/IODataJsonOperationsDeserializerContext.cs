@@ -21,6 +21,11 @@ namespace Microsoft.OData.Json
         IJsonReader JsonReader { get; }
 
         /// <summary>
+        /// The asynchronous JSON reader to read the operations value from.
+        /// </summary>
+        IJsonReaderAsync AsynchronousJsonReader { get; }
+
+        /// <summary>
         /// Given a URI from the payload, this method will try to make it absolute, or fail otherwise.
         /// </summary>
         /// <param name="uriFromPayload">The URI string from the payload to process.</param>

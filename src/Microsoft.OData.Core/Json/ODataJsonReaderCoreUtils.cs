@@ -194,7 +194,11 @@ namespace Microsoft.OData.Json
         /// <returns>true if a null value could be read from the JSON reader; otherwise false.</returns>
         /// <remarks>If the method detects a null value it will read it (position the reader after the null value);
         /// otherwise the reader does not move.</remarks>
+#if NETSTANDARD2_0
+        internal static async ValueTask<bool> TryReadNullValueAsync(
+#else
         internal static async Task<bool> TryReadNullValueAsync(
+#endif
             IJsonReaderAsync jsonReader,
             ODataInputContext inputContext,
             IEdmTypeReference expectedTypeReference,

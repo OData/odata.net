@@ -4132,6 +4132,14 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The property with name '{0}' was found with a value node of type '{1}'; however, a resource value of type '{2}' was expected."
+        /// </summary>
+        internal static string ODataJsonLightPropertyAndValueDeserializer_ODataResourceExpectedForProperty(object p0, object p1, object p2)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueDeserializer_ODataResourceExpectedForProperty, p0, p1, p2);
+        }
+
+        /// <summary>
         /// A string like "The value specified for the spatial property was not valid. You must specify a valid spatial value."
         /// </summary>
         internal static string ODataJsonReaderCoreUtils_CannotReadSpatialPropertyValue
