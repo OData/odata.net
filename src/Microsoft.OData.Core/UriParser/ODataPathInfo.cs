@@ -35,10 +35,7 @@ namespace Microsoft.OData.UriParser
                 }
 
                 this.targetNavigationSource = lastSegment.TargetEdmNavigationSource;
-
-                // If the last segment is a TypeSegment, we should assign the targetEdmType as lastSegment.EdmType
-                // instead of lastSegment.TargetEdmType which references the Base Type EdmType.
-                this.targetEdmType = lastSegment is TypeSegment ? lastSegment.EdmType : lastSegment.TargetEdmType;
+                this.targetEdmType = lastSegment.TargetEdmType;
                 if (this.targetEdmType != null)
                 {
                     IEdmCollectionType collectionType = this.targetEdmType as IEdmCollectionType;

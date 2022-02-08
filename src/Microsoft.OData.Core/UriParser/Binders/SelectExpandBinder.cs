@@ -343,6 +343,16 @@ namespace Microsoft.OData.UriParser
             PathSegmentToken currentToken = tokenIn.PathToNavigationProp;
 
             IEdmStructuredType currentLevelEntityType = this.EdmType;
+
+            // If we have a previous level binding with the last segment as a Type segment,
+            // The currentLevelEntityType should be the Type of the TypeSegment
+            // E.g Books?$expand=Authors/Ns.PrimaryAuthor($expand=Awards)
+            // If we are Binding the expanded property Awards, currentLevelEntityType should be the type of the PrimaryAuthor
+            if (this.parsedSegments.Count > 0 && this.parsedSegments.Last() is TypeSegment)
+            {
+                currentLevelEntityType = this.parsedSegments.Last().EdmType as IEdmStructuredType;
+            }
+
             List<ODataPathSegment> pathSoFar = new List<ODataPathSegment>();
             PathSegmentToken firstNonTypeToken = currentToken;
 
