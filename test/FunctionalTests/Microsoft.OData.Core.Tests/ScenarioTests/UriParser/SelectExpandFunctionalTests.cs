@@ -1961,6 +1961,31 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("Fully.Qualified.Namespace.Employee", typeSegment.EdmType.FullTypeName());
         }
 
+        // $expand=navProp/fully.qualified.type($compute=prop as ComputedProp)
+        [Theory]
+        [InlineData("MyPeople/Fully.Qualified.Namespace.Employee($compute=Name as CustomDetails)")] // Name is a property in the base type Person.
+        [InlineData("MyPeople/Fully.Qualified.Namespace.Employee($compute=WorkEmail as CustomDetails)")] // WorkEmail is a property in the derived type Employee.
+        [InlineData("MyPeople/MainAlias.Employee($compute=Name as CustomDetails)")] // With schema alias
+        [InlineData("MyPeople/MainAlias.Employee($compute=WorkEmail as CustomDetails)")] // With schema alias
+        public void ExpandWithNavigationPropWithComputeAndFullyQualifiedTypeWorks(string query)
+        {
+            // Arrange
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetDogType(), HardCodedTestModel.GetDogsSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$expand", query}
+                });
+
+            // Act
+            var expandClause = odataQueryOptionParser.ParseSelectAndExpand();
+
+            // Assert
+            var expandedSelectionItem = expandClause.SelectedItems.OfType<ExpandedNavigationSelectItem>().Single();
+            Assert.NotNull(expandedSelectionItem.ComputeOption);
+            Assert.Equal("CustomDetails", expandedSelectionItem.ComputeOption.ComputedItems.Single().Alias);
+        }
+
         [Fact]
         public void SelectWithNestedSelectWorks()
         {
