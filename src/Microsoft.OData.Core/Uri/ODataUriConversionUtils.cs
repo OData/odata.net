@@ -625,6 +625,7 @@ namespace Microsoft.OData
         {
             ODataMessageReaderSettings settings = new ODataMessageReaderSettings();
             settings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
+            settings.ReadUntypedAsString = false;
 
             using (StringReader reader = new StringReader(value))
             {
