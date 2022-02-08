@@ -1860,8 +1860,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Theory]
         [InlineData("MyPeople/Fully.Qualified.Namespace.Employee($select=Name)")] // Name is a property in the base type Person.
         [InlineData("MyPeople/Fully.Qualified.Namespace.Employee($select=WorkEmail)")] // WorkEmail is a property in the derived type Employee.
+        [InlineData("MyPeople/Fully.Qualified.Namespace.Employee($select=WorkAddress)")] // WorkAddress is a structured property in the derived type Employee.
         [InlineData("MyPeople/MainAlias.Employee($select=Name)")] // With schema alias
         [InlineData("MyPeople/MainAlias.Employee($select=WorkEmail)")] // With schema alias
+        [InlineData("MyPeople/MainAlias.Employee($select=WorkAddress)")] // With schema alias
         public void ExpandWithNavigationPropWithSelectAndFullyQualifiedTypeWorks(string query)
         {
             // Arrange
