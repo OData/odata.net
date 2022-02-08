@@ -216,6 +216,7 @@ namespace Microsoft.OData.Tests.UriParser
             model.AddElement(FullyQualifiedNamespacePerson);
 
             FullyQualifiedNamespaceEmployee.AddStructuralProperty("WorkEmail", EdmCoreModel.Instance.GetString(true));
+            FullyQualifiedNamespaceEmployee.AddStructuralProperty("WorkID", EdmCoreModel.Instance.GetInt32(false));
             var FullyQualifiedNamespaceEmployee_PaintingsInOffice = FullyQualifiedNamespaceEmployee.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "PaintingsInOffice", TargetMultiplicity = EdmMultiplicity.Many, Target = FullyQualifiedNamespacePainting });
             var FullyQualifiedNamespaceEmployee_Manager = FullyQualifiedNamespaceEmployee.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "Manager", TargetMultiplicity = EdmMultiplicity.ZeroOrOne, Target = FullyQualifiedNamespaceManager });
             var FullyQualifiedNamespaceEmployee_OfficeDog = FullyQualifiedNamespaceDog.AddBidirectionalNavigation
@@ -1059,6 +1060,7 @@ namespace Microsoft.OData.Tests.UriParser
       </EntityType>
       <EntityType Name=""Employee"" BaseType=""Fully.Qualified.Namespace.Person"">
         <Property Name=""WorkEmail"" Type=""Edm.String"" />
+        <Property Name=""WorkID"" Type=""Edm.Int32"" />
         <NavigationProperty Name=""PaintingsInOffice"" Type=""Collection(Fully.Qualified.Namespace.Painting)"" />
         <NavigationProperty Name=""Manager"" Type=""Fully.Qualified.Namespace.Manager"" />
         <NavigationProperty Name=""OfficeDog"" Type=""Fully.Qualified.Namespace.Dog"" Nullable=""false"" Partner=""EmployeeOwner"" />

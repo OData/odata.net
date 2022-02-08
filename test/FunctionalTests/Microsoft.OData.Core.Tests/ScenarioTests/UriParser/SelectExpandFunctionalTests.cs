@@ -1986,6 +1986,31 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("CustomDetails", expandedSelectionItem.ComputeOption.ComputedItems.Single().Alias);
         }
 
+        // $expand=navProp/fully.qualified.type($apply=aggregate({aggregateQuery}))
+        [Theory]
+        [InlineData("MyPeople/Fully.Qualified.Namespace.Employee($apply=aggregate(ID with max as MaxID))")] // ID is a property in the base type Person.
+        [InlineData("MyPeople/Fully.Qualified.Namespace.Employee($apply=aggregate(WorkID with max as MaxID))")] // WorkID is a property in the derived type Employee.
+        [InlineData("MyPeople/MainAlias.Employee($apply=aggregate(ID with max as MaxID))")] // With schema alias
+        [InlineData("MyPeople/MainAlias.Employee($apply=aggregate(WorkID with max as MaxID))")] // With schema alias
+        public void ExpandWithNavigationPropWithApplyAndFullyQualifiedTypeWorks(string query)
+        {
+            // Arrange
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetDogType(), HardCodedTestModel.GetDogsSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$expand", query}
+                });
+
+            // Act
+            var expandClause = odataQueryOptionParser.ParseSelectAndExpand();
+
+            // Assert
+            var expandedSelectionItem = expandClause.SelectedItems.OfType<ExpandedNavigationSelectItem>().Single();
+            Assert.NotNull(expandedSelectionItem.ApplyOption);
+            Assert.Equal("MaxID", (expandedSelectionItem.ApplyOption.Transformations.Single() as AggregateTransformationNode).AggregateExpressions.Single().Alias);
+        }
+
         [Fact]
         public void SelectWithNestedSelectWorks()
         {
