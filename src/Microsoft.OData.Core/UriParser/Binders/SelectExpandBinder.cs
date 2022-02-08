@@ -444,10 +444,10 @@ namespace Microsoft.OData.UriParser
             IEdmTypeReference elementTypeReference = hasDerivedTypeSegment ? derivedType.ToTypeReference() : null;
 
             // $apply
-            ApplyClause applyOption = BindApply(tokenIn.ApplyOptions, this.ResourcePathNavigationSource, targetNavigationSource);
+            ApplyClause applyOption = BindApply(tokenIn.ApplyOptions, this.ResourcePathNavigationSource, targetNavigationSource, elementTypeReference);
 
             // $compute
-            ComputeClause computeOption = BindCompute(tokenIn.ComputeOption, this.ResourcePathNavigationSource, targetNavigationSource);
+            ComputeClause computeOption = BindCompute(tokenIn.ComputeOption, this.ResourcePathNavigationSource, targetNavigationSource, elementTypeReference);
 
             var generatedProperties = GetGeneratedProperties(computeOption, applyOption);
             bool collapsed = applyOption?.Transformations.Any(t => t.Kind == TransformationNodeKind.Aggregate || t.Kind == TransformationNodeKind.GroupBy) ?? false;
@@ -487,12 +487,13 @@ namespace Microsoft.OData.UriParser
         /// <param name="applyToken">The apply tokens to visit.</param>
         /// <param name="resourcePathNavigationSource">The navigation source at the resource path.</param>
         /// <param name="targetNavigationSource">The target navigation source at the current level.</param>
+        /// <param name="elementType">The Edm element type.</param>
         /// <returns>The null or the built apply clause.</returns>
-        private ApplyClause BindApply(IEnumerable<QueryToken> applyToken, IEdmNavigationSource resourcePathNavigationSource, IEdmNavigationSource targetNavigationSource)
+        private ApplyClause BindApply(IEnumerable<QueryToken> applyToken, IEdmNavigationSource resourcePathNavigationSource, IEdmNavigationSource targetNavigationSource, IEdmTypeReference elementType = null)
         {
             if (applyToken != null && applyToken.Any())
             {
-                MetadataBinder binder = BuildNewMetadataBinder(this.Configuration, resourcePathNavigationSource, targetNavigationSource, null);
+                MetadataBinder binder = BuildNewMetadataBinder(this.Configuration, resourcePathNavigationSource, targetNavigationSource, elementType);
                 ApplyBinder applyBinder = new ApplyBinder(binder.Bind, binder.BindingState);
                 return applyBinder.BindApply(applyToken);
             }
