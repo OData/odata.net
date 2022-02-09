@@ -11,6 +11,7 @@ namespace Microsoft.OData.JsonLight
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
+    using System.Threading.Tasks;
     using Microsoft.OData.Json;
     #endregion Namespaces
 
@@ -82,10 +83,91 @@ namespace Microsoft.OData.JsonLight
             return (this.Value is string || this.Value == null);
         }
 
+
+        /// <summary>
+        /// Asynchronously creates a <see cref="Stream"/> for reading a stream value.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains a <see cref="Stream"/> used to read a stream value.
+        /// </returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
+        public override async Task<Stream> CreateReadStreamAsync()
+        {
+            Stream result;
+            object value = null;
+
+            try
+            {
+                value = await this.GetValueAsync()
+                    .ConfigureAwait(false);
+
+                if (value == null)
+                {
+                    result = new MemoryStream(new byte[0]);
+                }
+                else
+                {
+                    result = new MemoryStream(Convert.FromBase64String((string)value));
+                }
+            }
+            catch (FormatException)
+            {
+                throw new ODataException(Strings.JsonReader_InvalidBinaryFormat(value));
+            }
+
+            await this.ReadAsync()
+                .ConfigureAwait(false);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Asynchronously creates a <see cref="TextReader"/> for reading a text value.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains a <see cref="TextReader"/> for reading the text value.
+        /// </returns>
+        public override async Task<TextReader> CreateTextReaderAsync()
+        {
+            if (this.NodeType == JsonNodeType.Property)
+            {
+                // reading JSON
+                throw new ODataException(Strings.JsonReader_CannotCreateTextReader);
+            }
+
+            TextReader result;
+            object value = await this.GetValueAsync()
+                .ConfigureAwait(false);
+
+            result = new StringReader(value == null ? "" : (string)value);
+            await this.ReadAsync()
+                .ConfigureAwait(false);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Asynchronously checks whether or not the current value can be streamed.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains true if the current value can be streamed; otherwise false.
+        /// </returns>
+        public override async Task<bool> CanStreamAsync()
+        {
+            object value = await this.GetValueAsync()
+                .ConfigureAwait(false);
+
+            return value is string || value == null;
+        }
+
         /// <summary>
         /// Called whenever we find a new object value in the payload.
         /// Buffers and re-orders an object value for later consumption by the JsonLight reader.
         /// </summary>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         /// <remarks>
         /// This method is called when the reader is in the buffering mode and can read ahead (buffering) as much as it needs to
         /// once it returns the reader will be returned to the position before the method was called.
@@ -180,6 +262,111 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
+        /// Asynchronously called whenever we find a new object value in the payload.
+        /// Buffers and re-orders an object value for later consumption by the JsonLight reader.
+        /// </summary>
+        /// <remarks>
+        /// This method is called when the reader is in the buffering mode and can read ahead (buffering) as much as it needs to
+        /// once it returns the reader will be returned to the position before the method was called.
+        /// The reader is always positioned on a start object when this method is called.
+        /// </remarks>
+        protected override async Task ProcessObjectValueAsync()
+        {
+            Debug.Assert(this.currentBufferedNode.NodeType == JsonNodeType.StartObject, "this.currentBufferedNode.NodeType == JsonNodeType.StartObject");
+            this.AssertBuffering();
+
+            Stack<BufferedObject> bufferedObjectStack = new Stack<BufferedObject>();
+
+            while (true)
+            {
+                switch (this.currentBufferedNode.NodeType)
+                {
+                    case JsonNodeType.StartObject:
+                        {
+                            // New object record - add the node to our stack
+                            BufferedObject bufferedObject = new BufferedObject { ObjectStart = this.currentBufferedNode };
+                            bufferedObjectStack.Push(bufferedObject);
+
+                            // See if it's an in-stream error
+                            await base.ProcessObjectValueAsync()
+                                .ConfigureAwait(false);
+                            this.currentBufferedNode = bufferedObject.ObjectStart;
+
+                            await this.ReadInternalAsync()
+                                .ConfigureAwait(false);
+                        }
+
+                        break;
+                    case JsonNodeType.EndObject:
+                        {
+                            // End of object record
+                            // Pop the node from our stack
+                            BufferedObject bufferedObject = bufferedObjectStack.Pop();
+
+                            // If there is a previous property record, mark its last value node.
+                            if (bufferedObject.CurrentProperty != null)
+                            {
+                                bufferedObject.CurrentProperty.EndOfPropertyValueNode = this.currentBufferedNode.Previous;
+                            }
+
+                            // Now perform the re-ordering on the buffered nodes
+                            bufferedObject.Reorder();
+
+                            if (bufferedObjectStack.Count == 0)
+                            {
+                                // No more objects to process - we're done.
+                                return;
+                            }
+
+                            await this.ReadInternalAsync()
+                                .ConfigureAwait(false);
+                        }
+
+                        break;
+                    case JsonNodeType.Property:
+                        {
+                            BufferedObject bufferedObject = bufferedObjectStack.Peek();
+
+                            // If there is a current property, mark its last value node.
+                            if (bufferedObject.CurrentProperty != null)
+                            {
+                                bufferedObject.CurrentProperty.EndOfPropertyValueNode = this.currentBufferedNode.Previous;
+                            }
+
+                            BufferedProperty bufferedProperty = new BufferedProperty();
+                            bufferedProperty.PropertyNameNode = this.currentBufferedNode;
+
+                            string propertyName, annotationName;
+                            Tuple<string, string> readPropertyNameResult = await this.ReadPropertyNameAsync()
+                                .ConfigureAwait(false);
+                            propertyName = readPropertyNameResult.Item1;
+                            annotationName = readPropertyNameResult.Item2;
+
+                            bufferedProperty.PropertyAnnotationName = annotationName;
+                            bufferedObject.AddBufferedProperty(propertyName, annotationName, bufferedProperty);
+
+                            if (annotationName != null)
+                            {
+                                // Instance-level property annotation - no reordering in its value
+                                // or instance-level annotation - no reordering in its value either
+                                // So skip its value while buffering.
+                                await this.BufferValueAsync()
+                                    .ConfigureAwait(false);
+                            }
+                        }
+
+                        break;
+
+                    default:
+                        // Read over (buffer) everything else
+                        await this.ReadInternalAsync()
+                            .ConfigureAwait(false);
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
         /// Reads a property name from the JSON reader and determines if it's a regular property, an instance annotation or a property annotation.
         /// </summary>
         /// <param name="propertyName">The name of the regular property which the reader is positioned on or which a property annotation belongs to.</param>
@@ -191,6 +378,107 @@ namespace Microsoft.OData.JsonLight
 
             this.ReadInternal();
 
+            ProcessProperty(jsonPropertyName, out propertyName, out annotationName);
+        }
+
+        /// <summary>
+        /// Reads over a value buffering it.
+        /// </summary>
+        private void BufferValue()
+        {
+            this.AssertBuffering();
+
+            // Skip the value buffering it in the process.
+            int depth = 0;
+            do
+            {
+                switch (this.NodeType)
+                {
+                    case JsonNodeType.PrimitiveValue:
+                        break;
+                    case JsonNodeType.StartArray:
+                    case JsonNodeType.StartObject:
+                        depth++;
+                        break;
+                    case JsonNodeType.EndArray:
+                    case JsonNodeType.EndObject:
+                        Debug.Assert(depth > 0, "Seen too many scope ends.");
+                        depth--;
+                        break;
+                    default:
+                        break;
+                }
+
+                this.ReadInternal();
+            }
+            while (depth > 0);
+        }
+
+        /// <summary>
+        /// Asynchronously reads a property name from the JSON reader and determines if it's a regular property, an instance annotation or a property annotation.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains a tuple comprising of:
+        /// 1). The name of the regular property which the reader is positioned on or which a property annotation belongs to.
+        /// 2). The name of the instance or property annotation, or null if the reader is on a regular property.
+        /// </returns>
+        private async Task<Tuple<string, string>> ReadPropertyNameAsync()
+        {
+            string propertyName, annotationName;
+            string jsonPropertyName = await this.GetPropertyNameAsync()
+                .ConfigureAwait(false);
+            Debug.Assert(!string.IsNullOrEmpty(jsonPropertyName), "The JSON reader guarantees that property names are not null or empty.");
+
+            await this.ReadInternalAsync()
+                .ConfigureAwait(false);
+
+            ProcessProperty(jsonPropertyName, out propertyName, out annotationName);
+
+            return Tuple.Create(propertyName, annotationName);
+        }
+
+        /// <summary>
+        /// Asynchronously reads over a value buffering it.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        private async Task BufferValueAsync()
+        {
+            this.AssertBuffering();
+
+            // Skip the value buffering it in the process.
+            int depth = 0;
+            do
+            {
+                switch (this.NodeType)
+                {
+                    case JsonNodeType.PrimitiveValue:
+                        break;
+                    case JsonNodeType.StartArray:
+                    case JsonNodeType.StartObject:
+                        depth++;
+                        break;
+                    case JsonNodeType.EndArray:
+                    case JsonNodeType.EndObject:
+                        Debug.Assert(depth > 0, "Seen too many scope ends.");
+                        depth--;
+                        break;
+                    default:
+                        break;
+                }
+
+                await this.ReadInternalAsync()
+                    .ConfigureAwait(false);
+            }
+            while (depth > 0);
+        }
+
+        /// <summary>
+        /// Processes a property name and determines if it's a regular property, an instance annotation or a property annotation.
+        /// </summary>
+        /// <param name="propertyName">The name of the regular property which the reader is positioned on or which a property annotation belongs to.</param>
+        /// <param name="annotationName">The name of the instance or property annotation, or null if the reader is on a regular property.</param>
+        private static void ProcessProperty(string jsonPropertyName, out string propertyName, out string annotationName)
+        {
             if (jsonPropertyName.StartsWith("@", StringComparison.Ordinal))
             {
                 // Instance-level annotation for the instance itself; not property name.
@@ -236,39 +524,6 @@ namespace Microsoft.OData.JsonLight
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Reads over a value buffering it.
-        /// </summary>
-        private void BufferValue()
-        {
-            this.AssertBuffering();
-
-            // Skip the value bufferring it in the process.
-            int depth = 0;
-            do
-            {
-                switch (this.NodeType)
-                {
-                    case JsonNodeType.PrimitiveValue:
-                        break;
-                    case JsonNodeType.StartArray:
-                    case JsonNodeType.StartObject:
-                        depth++;
-                        break;
-                    case JsonNodeType.EndArray:
-                    case JsonNodeType.EndObject:
-                        Debug.Assert(depth > 0, "Seen too many scope ends.");
-                        depth--;
-                        break;
-                    default:
-                        break;
-                }
-
-                this.ReadInternal();
-            }
-            while (depth > 0);
         }
 
         /// <summary>
@@ -465,7 +720,7 @@ namespace Microsoft.OData.JsonLight
             private static bool IsODataContextAnnotation(string annotationName)
             {
                 Debug.Assert(annotationName != null, "annotationName != null");
-                return string.CompareOrdinal(ODataAnnotationNames.ODataContext, annotationName) == 0;
+                return string.Equals(ODataAnnotationNames.ODataContext, annotationName, StringComparison.Ordinal);
             }
 
             /// <summary>
@@ -476,7 +731,7 @@ namespace Microsoft.OData.JsonLight
             private static bool IsODataRemovedAnnotation(string annotationName)
             {
                 Debug.Assert(annotationName != null, "annotationName != null");
-                return string.CompareOrdinal(ODataAnnotationNames.ODataRemoved, annotationName) == 0;
+                return string.Equals(ODataAnnotationNames.ODataRemoved, annotationName, StringComparison.Ordinal);
             }
 
             /// <summary>
@@ -487,7 +742,7 @@ namespace Microsoft.OData.JsonLight
             private static bool IsODataTypeAnnotation(string annotationName)
             {
                 Debug.Assert(annotationName != null, "annotationName != null");
-                return string.CompareOrdinal(ODataAnnotationNames.ODataType, annotationName) == 0;
+                return string.Equals(ODataAnnotationNames.ODataType, annotationName, StringComparison.Ordinal);
             }
 
             /// <summary>
@@ -498,7 +753,7 @@ namespace Microsoft.OData.JsonLight
             private static bool IsODataIdAnnotation(string annotationName)
             {
                 Debug.Assert(annotationName != null, "annotationName != null");
-                return string.CompareOrdinal(ODataAnnotationNames.ODataId, annotationName) == 0;
+                return string.Equals(ODataAnnotationNames.ODataId, annotationName, StringComparison.Ordinal);
             }
 
             /// <summary>
@@ -509,7 +764,7 @@ namespace Microsoft.OData.JsonLight
             private static bool IsODataETagAnnotation(string annotationName)
             {
                 Debug.Assert(annotationName != null, "annotationName != null");
-                return string.CompareOrdinal(ODataAnnotationNames.ODataETag, annotationName) == 0;
+                return string.Equals(ODataAnnotationNames.ODataETag, annotationName, StringComparison.Ordinal);
             }
 
             /// <summary>

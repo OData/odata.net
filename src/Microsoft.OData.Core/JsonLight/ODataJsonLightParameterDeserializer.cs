@@ -245,6 +245,7 @@ namespace Microsoft.OData.JsonLight
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
 
             bool parameterRead = false;
+
             if (this.JsonReader.NodeType == JsonNodeType.Property)
             {
                 bool foundCustomInstanceAnnotation = false;
@@ -289,10 +290,12 @@ namespace Microsoft.OData.JsonLight
                                 ODataParameterReaderState state;
                                 object parameterValue;
                                 EdmTypeKind parameterTypeKind = parameterTypeReference.TypeKind();
+
                                 switch (parameterTypeKind)
                                 {
                                     case EdmTypeKind.Primitive:
                                         IEdmPrimitiveTypeReference primitiveTypeReference = parameterTypeReference.AsPrimitive();
+
                                         if (primitiveTypeReference.PrimitiveKind() == EdmPrimitiveTypeKind.Stream)
                                         {
                                             throw new ODataException(ODataErrorStrings.ODataJsonLightParameterDeserializer_UnsupportedPrimitiveParameterType(parameterName, primitiveTypeReference.PrimitiveKind()));
