@@ -131,6 +131,13 @@ steps:
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj          
           
     
+- task: DotNetCoreCLI@2
+  displayName: 'Build edmlibtests'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration Debug --no-incremental'
+    projects: |
+      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataEdmLib\EdmLibTests.csproj
 
 - task: DotNetCoreCLI@2
   displayName: 'Build E2E Test'  
@@ -153,7 +160,6 @@ steps:
       $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataWCFLibrary\ODataSamples.Services.Core.csproj
       $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataTripPinService\ODataSamples.Services.TripPin.csproj
       $(Build.SourcesDirectory)\test\EndToEndTests\Services\ServiceWrapperApp\ServiceWrapperApp.csproj
-      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataEdmLib\EdmLibTests.csproj
       $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
 
 - task: DotNetCoreCLI@2
@@ -172,7 +178,6 @@ steps:
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\DesignT4UnitTests\Microsoft.OData.Service.Design.T4.UnitTests.csproj
      $(Build.SourcesDirectory)\src\CodeGen\Microsoft.Data.Web.Design.T4.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Common.Tests\Microsoft.Test.Taupo.OData.Common.Tests.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataEdmLib\EdmLibTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Query.Tests\Microsoft.Test.Taupo.OData.Query.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Reader.Tests\Microsoft.Test.Taupo.OData.Reader.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Writer.Tests\Microsoft.Test.Taupo.OData.Writer.Tests.csproj
@@ -286,7 +291,17 @@ steps:
     arguments: '--configuration $(BuildConfiguration) --no-build --collect "Code coverage"'
     projects: |      
      $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
-
+     
+- task: DotNetCoreCLI@2
+  timeoutInMinutes: 100
+  displayName: 'Test edmlibtests'
+  inputs:
+    command: 'test'
+    arguments: '--configuration Debug --no-build'
+    projects: |           
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataEdmLib\EdmLibTests.csproj
+  enabled: true
+  
 - task: DotNetCoreCLI@2
   timeoutInMinutes: 100
   displayName: 'Test - Regression Test Suite --collect "Code coverage"'
@@ -296,7 +311,6 @@ steps:
     projects: |           
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\ddbasics\Microsoft.Test.Data.Services.DDBasics.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataEdmLib\EdmLibTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Common.Tests\Microsoft.Test.Taupo.OData.Common.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Query.Tests\Microsoft.Test.Taupo.OData.Query.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Reader.Tests\Microsoft.Test.Taupo.OData.Reader.Tests.csproj
