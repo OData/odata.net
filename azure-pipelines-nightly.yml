@@ -578,12 +578,3 @@ steps:
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)\Nuget'
     ArtifactName: Nuget
-
-- task: NuGetCommand@2
-  displayName: 'NuGet push - Nightly packages to MyGet'
-  inputs:
-    command: push
-    packagesToPush: '$(Build.ArtifactStagingDirectory)\Nuget\*Nightly*.nupkg'
-    nuGetFeedType: external
-    publishFeedCredentials: 'MyGet.org - OData.net Nightly Feed'
-  enabled: true
