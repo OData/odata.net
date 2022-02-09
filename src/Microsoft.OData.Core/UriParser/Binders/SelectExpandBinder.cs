@@ -346,8 +346,8 @@ namespace Microsoft.OData.UriParser
 
             // If we have a previous level binding with the last segment as a Type segment,
             // The currentLevelEntityType should be the Type of the TypeSegment
-            // E.g Books?$expand=Authors/Ns.PrimaryAuthor($expand=Awards)
-            // If we are Binding the expanded property Awards, currentLevelEntityType should be the type of the PrimaryAuthor
+            // E.g /Orders?$expand=Customer/NS.VipCustomer($expand=Trips)
+            // If we are Binding the expanded property Trips, currentLevelEntityType should be the type of the VipCustomer
             if (this.parsedSegments.Count > 0 && this.parsedSegments.Last() is TypeSegment)
             {
                 currentLevelEntityType = this.parsedSegments.Last().EdmType as IEdmStructuredType;
@@ -497,7 +497,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="applyToken">The apply tokens to visit.</param>
         /// <param name="resourcePathNavigationSource">The navigation source at the resource path.</param>
         /// <param name="targetNavigationSource">The target navigation source at the current level.</param>
-        /// <param name="elementType">The Edm element type.</param>
+        /// <param name="elementType">The target element type if different from the type of the target navigation source.</param>
         /// <returns>The null or the built apply clause.</returns>
         private ApplyClause BindApply(IEnumerable<QueryToken> applyToken, IEdmNavigationSource resourcePathNavigationSource, IEdmNavigationSource targetNavigationSource, IEdmTypeReference elementType = null)
         {
@@ -517,7 +517,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="computeToken">The compute token to visit.</param>
         /// <param name="resourcePathNavigationSource">The navigation source at the resource path.</param>
         /// <param name="targetNavigationSource">The target navigation source at the current level.</param>
-        /// <param name="elementType">The target element type.</param>
+        /// <param name="elementType">The target element type if different from the type of the target navigation source.</param>
         /// <returns>The null or the built compute clause.</returns>
         private ComputeClause BindCompute(ComputeToken computeToken, IEdmNavigationSource resourcePathNavigationSource, IEdmNavigationSource targetNavigationSource, IEdmTypeReference elementType = null)
         {
@@ -537,7 +537,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="filterToken">The filter token to visit.</param>
         /// <param name="resourcePathNavigationSource">The navigation source at the resource path.</param>
         /// <param name="targetNavigationSource">The target navigation source at the current level.</param>
-        /// <param name="elementType">The Edm element type.</param>
+        /// <param name="elementType">The target element type if different from the type of the target navigation source.</param>
         /// <param name="generatedProperties">The generated properties.</param>
         /// <param name="collapsed">The collapsed boolean value.</param>
         /// <returns>The null or the built filter clause.</returns>
@@ -560,7 +560,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="orderByToken">The orderby token to visit.</param>
         /// <param name="resourcePathNavigationSource">The navigation source at the resource path.</param>
         /// <param name="targetNavigationSource">The target navigation source at the current level.</param>
-        /// <param name="elementType">The Edm element type.</param>
+        /// <param name="elementType">The target element type if different from the type of the target navigation source.</param>
         /// <param name="generatedProperties">The generated properties.</param>
         /// <param name="collapsed">The collapsed boolean value.</param>
         /// <returns>The null or the built filter clause.</returns>
@@ -584,7 +584,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="searchToken">The search token to visit.</param>
         /// <param name="resourcePathNavigationSource">The navigation source at the resource path.</param>
         /// <param name="targetNavigationSource">The target navigation source at the current level.</param>
-        /// <param name="elementType">The Edm element type.</param>
+        /// <param name="elementType">The target element type if different from the type of the target navigation source.</param>
         /// <returns>The null or the built search clause.</returns>
         private SearchClause BindSearch(QueryToken searchToken, IEdmNavigationSource resourcePathNavigationSource, IEdmNavigationSource targetNavigationSource, IEdmTypeReference elementType)
         {
@@ -606,7 +606,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="segments">The parsed segments to visit.</param>
         /// <param name="resourcePathNavigationSource">The navigation source at the resource path.</param>
         /// <param name="targetNavigationSource">The target navigation source at the current level.</param>
-        /// <param name="elementType">The Edm element type.</param>
+        /// <param name="elementType">The target element type if different from the type of the target navigation source.</param>
         /// <param name="generatedProperties">The generated properties.</param>
         /// <param name="collapsed">The collapsed boolean value.</param>
         /// <returns>The null or the built select and expand clause.</returns>
@@ -675,22 +675,13 @@ namespace Microsoft.OData.UriParser
 
             IEdmStructuredType currentLevelType = this.edmType;
 
-            IEdmStructuredType implicitRangeVariableType = null;
-
-            if (this.state != null)
+            // If we have a previous level binding with the last segment as a Type segment,
+            // The currentLevelEntityType should be the Type of the TypeSegment
+            // E.g /Orders?$expand=Customer/NS.VipCustomer($select=VipCustomerName)
+            // If we are Binding the selected property VipCustomerName, currentLevelEntityType should be the type of the VipCustomer
+            if (this.parsedSegments.Count > 0 && this.parsedSegments.Last() is TypeSegment)
             {
-                implicitRangeVariableType = (IEdmStructuredType)this.state.ImplicitRangeVariable.TypeReference.Definition;
-            }
-
-            // When we have a derived type, the current edmType is different from the edmType of the RangeVariable type reference.
-            // e.g /Orders?$expand=Customer/Model.VipCustomer($select=VipCustomerName)
-            // We need to use the edmType of the RangeVariable type reference so that we can get the VipCustomerName property
-            // from the Model.VipCustomer.
-            if (implicitRangeVariableType != null && implicitRangeVariableType != this.edmType)
-            {
-                // Validate that the derived type and the base type are related.
-                UriEdmHelpers.CheckRelatedTo(this.state.ImplicitRangeVariable.TypeReference.Definition, this.edmType);
-                currentLevelType = implicitRangeVariableType;
+                currentLevelType = this.parsedSegments.Last().EdmType as IEdmStructuredType;
             }
 
             // first, walk through all type segments in a row, converting them from tokens into segments.
