@@ -253,7 +253,7 @@ namespace Microsoft.OData.JsonLight
                 // The generated context uri will be http://odata.org/test/$metadata#Customers(1)/Name
                 ODataUri oDataUri = new ODataUri() { ServiceRoot = this.BaseUri };
                 contextUriAnnotationValue = contextUriAnnotationValue.StartsWith("$metadata", StringComparison.OrdinalIgnoreCase)
-                    ? new Uri(this.BaseUri, contextUriAnnotationValue).ToString()
+                    ? this.BaseUri + contextUriAnnotationValue
                     : oDataUri.MetadataDocumentUri.ToString() + ODataConstants.ContextUriFragmentIndicator + contextUriAnnotationValue;
             }
 
