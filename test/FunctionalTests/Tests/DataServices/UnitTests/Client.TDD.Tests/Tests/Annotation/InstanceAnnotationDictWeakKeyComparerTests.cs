@@ -359,7 +359,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
             {
                 RemoveCollectedEntriesRules = new List<Func<object, bool>>
                 {
-                    InstanceAnnotationDictWeakKeyComparer.Default.RemoveRule
+                    InstanceAnnotationDictWeakKeyComparer.RemoveRule
                 },
                 CreateWeakKey = InstanceAnnotationDictWeakKeyComparer.Default.CreateKey
             };
