@@ -14,30 +14,36 @@ using System.Threading.Tasks;
 using ResultsComparer.Core;
 using Perfolizer.Mathematics.SignificanceTesting;
 using Perfolizer.Mathematics.Thresholds;
+using Perfolizer.Mathematics.Multimodality;
 
 namespace ResultsComparer.Bdn
 {
     /// <summary>
     /// Results comparer for BenchmarkDotNet full JSON reports.
     /// </summary>
-    internal class BdnComparer : IResultsComparer
+    public class BdnComparer : IResultsComparer
     {
-        private const string FullBdnJsonFileExtension = "full.json";
+        private const string FullBdnJsonFileExtension = ".full.json";
 
-        public Task<bool> CanReadFile(string path)
+        /// <inheritdoc/>
+        public string Name => "BenchmarkDotNet Benchmarks";
+
+        /// <inheritdoc/>
+        public bool CanReadFile(string path)
         {
             bool isJson = path.EndsWith(".json", StringComparison.OrdinalIgnoreCase);
-            return Task.FromResult(isJson);
+            return isJson;
         }
 
-        public Task<ComparerResults> CompareResults(string basePath, string diffPath, ComparerOptions options)
+        /// <inheritdoc/>
+        public ComparerResults CompareResults(string basePath, string diffPath, ComparerOptions options)
         {
-            if (!Threshold.TryParse(options.StatisticalTestThreshold, out var testThreshold))
+            if (options.StatisticalTestThreshold == null || !Threshold.TryParse(options.StatisticalTestThreshold, out var testThreshold))
             {
                 throw new Exception($"Invalid statistical test threshold {options.StatisticalTestThreshold}. Examples: 5%, 10ms, 100ns, 1s.");
             }
 
-            if (!Threshold.TryParse(options.NoiseThreshold, out var noiseThreshold))
+            if (options.NoiseThreshold == null || !Threshold.TryParse(options.NoiseThreshold, out var noiseThreshold))
             {
                 throw new Exception($"Invalid noise threshold {options.NoiseThreshold}. Examples: 0.3ns 1ns.");
             }
@@ -45,18 +51,25 @@ namespace ResultsComparer.Bdn
             IEnumerable<(string id, Benchmark baseResult, Benchmark diffResult, EquivalenceTestConclusion conclusion)> notSame =
                 GetNotSameResults(basePath, diffPath, options, testThreshold, noiseThreshold).ToArray();
 
-            ComparerResults results = new();
+            ComparerResults results = new()
+            {
+                MetricName = "Median (ns)"
+            };
 
             if (!notSame.Any())
             {
-                results.NoDiff = true;
-                return Task.FromResult(results);
+                return results;
             }
 
             results.Results = notSame.Select(r =>
-                new ComparerResult { Id = r.id, BaseResult = r.baseResult, DiffResult = r.diffResult, Conclusion = r.conclusion });
+                new ComparerResult {
+                    Id = r.id,
+                    BaseResult = TransformMeasurementResult(r.baseResult),
+                    DiffResult = TransformMeasurementResult(r.diffResult),
+                    Conclusion = TransformConclusion(r.conclusion)
+                });
 
-            return Task.FromResult(results);
+            return results;
         }
 
         private static IEnumerable<(string id, Benchmark baseResult, Benchmark diffResult, EquivalenceTestConclusion conclusion)> GetNotSameResults(string basePath, string diffPath, ComparerOptions options, Threshold testThreshold, Threshold noiseThreshold)
@@ -92,7 +105,7 @@ namespace ResultsComparer.Bdn
             IEnumerable<BdnResult> baseResults = baseFiles.Select(ReadFromFile);
             IEnumerable<BdnResult> diffResults = diffFiles.Select(ReadFromFile);
 
-            Regex[] filters = options.Filters.Select(pattern => new Regex(WildcardToRegex(pattern), RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)).ToArray();
+            Regex[] filters = (options.Filters ?? Array.Empty<string>()).Select(pattern => new Regex(WildcardToRegex(pattern), RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)).ToArray();
 
             Dictionary<string, Benchmark> benchmarkIdToDiffResults = diffResults
                 .SelectMany(result => result.Benchmarks)
@@ -132,5 +145,44 @@ namespace ResultsComparer.Bdn
 
         // https://stackoverflow.com/a/6907849/5852046 not perfect but should work for all we need
         private static string WildcardToRegex(string pattern) => $"^{Regex.Escape(pattern).Replace(@"\*", ".*").Replace(@"\?", ".")}$";
+
+        // code and magic values taken from BenchmarkDotNet.Analysers.MultimodalDistributionAnalyzer
+        // See http://www.brendangregg.com/FrequencyTrails/modes.html
+        private static Modality GetModalInfo(Benchmark benchmark)
+        {
+            if (benchmark.Statistics.N < 12) // not enough data to tell
+            {
+                return Modality.Single;
+            }
+
+            double mValue = MValueCalculator.Calculate(benchmark.GetOriginalValues());
+            if (mValue > 4.2)
+            {
+                return Modality.Multimodal;
+            }
+            else if (mValue > 3.2)
+            {
+                return Modality.Bimodal;
+            }
+            else if (mValue > 2.8)
+            {
+                return Modality.Several;
+            }
+
+            return Modality.Single;
+        }
+
+        private static MeasurementResult TransformMeasurementResult(Benchmark benchmarkResult) => new MeasurementResult()
+        {
+            Result = benchmarkResult.Statistics.Median,
+            Modality = GetModalInfo(benchmarkResult)
+        };
+
+        private static ComparisonConclusion TransformConclusion(EquivalenceTestConclusion conclusion) =>
+            conclusion == EquivalenceTestConclusion.Same ? ComparisonConclusion.Same
+            : conclusion == EquivalenceTestConclusion.Faster ? ComparisonConclusion.Better
+            : conclusion == EquivalenceTestConclusion.Slower ? ComparisonConclusion.Worse
+            : ComparisonConclusion.Unknown;
+
     }
 }

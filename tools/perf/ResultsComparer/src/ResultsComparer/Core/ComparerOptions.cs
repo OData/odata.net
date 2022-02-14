@@ -15,6 +15,12 @@ namespace ResultsComparer.Core
     public class ComparerOptions
     {
         /// <summary>
+        /// The metric to compare. If this is not set,
+        /// the comparer will pick a default metric for that report type.
+        /// </summary>
+        public string Metric { get; set; }
+
+        /// <summary>
         /// Threshold for Statistical Test. Examples: 5%, 10ms, 100ns, 1s.
         /// </summary>
         public string StatisticalTestThreshold { get; set; }
