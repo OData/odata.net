@@ -618,6 +618,8 @@ namespace Microsoft.OData.Tests.JsonLight
 
             var result = await SetupJsonLightParameterWriterAndRunTestAsync(
                 (jsonLightParameterWriter) => jsonLightParameterWriter.WriteValueAsync("FavoriteColor", favoriteColor));
+
+            Assert.Equal("{\"FavoriteColor\":\"Black\"}", result);
         }
 
         [Fact]

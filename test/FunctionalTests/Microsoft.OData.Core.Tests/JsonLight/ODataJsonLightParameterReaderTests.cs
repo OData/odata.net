@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ParameterReaderTests.cs" company="Microsoft">
+// <copyright file="ODataJsonLightParameterReaderTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -16,7 +16,7 @@ using Xunit;
 namespace Microsoft.OData.Tests.JsonLight
 {
     /// <summary>
-    /// Tests the use of ODataParameterReader class when the payload is JSON.
+    /// Tests the use of ODataJsonLightParameterReader class when the payload is JSON.
     ///
     /// TODO: For error tests, see Microsoft.Test.Taupo.OData.Reader.Tests.Reader.ParameterReaderTests.
     /// These should eventually be migrated here.
