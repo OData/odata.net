@@ -350,7 +350,16 @@ namespace Microsoft.OData.UriParser
             // If we are Binding the expanded property Trips, currentLevelEntityType should be the type of the VipCustomer
             if (this.parsedSegments.Count > 0 && this.parsedSegments.Last() is TypeSegment)
             {
-                currentLevelEntityType = this.parsedSegments.Last().EdmType as IEdmStructuredType;
+                IEdmType typeSegmentType = this.parsedSegments.Last().EdmType;
+
+                if (typeSegmentType.IsStructuredCollectionType())
+                {
+                    currentLevelEntityType = (typeSegmentType as IEdmCollectionType).ElementType.Definition as IEdmStructuredType;
+                }
+                else
+                {
+                    currentLevelEntityType = typeSegmentType as IEdmStructuredType;
+                }
             }
 
             List<ODataPathSegment> pathSoFar = new List<ODataPathSegment>();
@@ -681,7 +690,16 @@ namespace Microsoft.OData.UriParser
             // If we are Binding the selected property VipCustomerName, currentLevelEntityType should be the type of the VipCustomer
             if (this.parsedSegments.Count > 0 && this.parsedSegments.Last() is TypeSegment)
             {
-                currentLevelType = this.parsedSegments.Last().EdmType as IEdmStructuredType;
+                IEdmType typeSegmentType = this.parsedSegments.Last().EdmType;
+
+                if (typeSegmentType.IsStructuredCollectionType())
+                {
+                    currentLevelType = (typeSegmentType as IEdmCollectionType).ElementType.Definition as IEdmStructuredType;
+                }
+                else
+                {
+                    currentLevelType = typeSegmentType as IEdmStructuredType;
+                }
             }
 
             // first, walk through all type segments in a row, converting them from tokens into segments.
