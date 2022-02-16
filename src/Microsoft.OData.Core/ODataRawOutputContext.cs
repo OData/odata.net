@@ -71,7 +71,7 @@ namespace Microsoft.OData
 #if NETSTANDARD1_1
                     this.asynchronousOutputStream = new AsyncBufferedStream(this.messageOutputStream);
 #else
-                    this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, 84000);
+	                this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, 84000);
 #endif
                     this.outputStream = this.asynchronousOutputStream;
                 }
@@ -342,7 +342,6 @@ namespace Microsoft.OData
 #else
                         this.asynchronousOutputStream.Flush();
 #endif
-                        this.asynchronousOutputStream.Dispose();
                     }
 
                     // Dispose the message stream (note that we OWN this stream, so we always dispose it).
