@@ -31,6 +31,8 @@ namespace Microsoft.OData
         /// </summary>
         private readonly IServiceProvider container;
 
+        private byte[] byteBuffer = new byte[1];
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -69,7 +71,7 @@ namespace Microsoft.OData
         {
             this.VerifyCanCreateResponseMessage(false);
 
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResponseMessageImplementation());
+            return this.CreateResponseMessageImplementationAsync();
         }
 
         /// <summary>
@@ -301,6 +303,161 @@ namespace Microsoft.OData
         private int ReadByte()
         {
             return this.rawInputContext.Stream.ReadByte();
+        }
+
+        /// <summary>
+        /// Returns an <see cref="ODataAsynchronousResponseMessage"/> for reading the content of an async response - implementation of the actual functionality.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains the message that can be used to read the response.
+        /// </returns>
+        private async Task<ODataAsynchronousResponseMessage> CreateResponseMessageImplementationAsync()
+        {
+            Tuple<int, Dictionary<string, string>> readInnerEnvelopeResult = await this.ReadInnerEnvelopeAsync()
+                .ConfigureAwait(false);
+
+            int statusCode = readInnerEnvelopeResult.Item1;
+            Dictionary<string, string> headers = readInnerEnvelopeResult.Item2;
+
+            return ODataAsynchronousResponseMessage.CreateMessageForReading(this.rawInputContext.Stream, statusCode, headers, this.container);
+        }
+
+        /// <summary>
+        /// Asynchronously reads the envelope from the inner HTTP message.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains a tuple comprising of:
+        /// 1). The status code to use for the async response message.
+        /// 2). The headers to use for the async response message.
+        /// </returns>
+        private async Task<Tuple<int, Dictionary<string, string>>> ReadInnerEnvelopeAsync()
+        {
+            string responseLine = await this.ReadFirstNonEmptyLineAsync()
+                .ConfigureAwait(false);
+
+            Debug.Assert(this.rawInputContext.ReadingResponse, "Must only be called for responses.");
+            int statusCode = ParseResponseLine(responseLine);
+            Dictionary<string, string>  headers = await this.ReadHeadersAsync()
+                .ConfigureAwait(false);
+
+            return Tuple.Create(statusCode, headers);
+        }
+
+        /// <summary>
+        /// Asynchronously read and return the next line from the stream, skipping all empty lines.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains the text of the first non-empty line
+        /// (not including any terminating newline characters).
+        /// </returns>
+        private async Task<string> ReadFirstNonEmptyLineAsync()
+        {
+            string line = await this.ReadLineAsync()
+                .ConfigureAwait(false);
+
+            while (line.Length == 0)
+            {
+                line = await this.ReadLineAsync()
+                    .ConfigureAwait(false);
+            }
+
+            return line;
+        }
+
+        /// <summary>
+        /// Asynchronously reads the headers of an async response.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains a dictionary of header names to header values; never null.
+        /// </returns>
+        private async Task<Dictionary<string, string>> ReadHeadersAsync()
+        {
+            var headers = new Dictionary<string, string>(StringComparer.Ordinal);
+
+            // Read all the headers
+            string headerLine = await this.ReadLineAsync()
+                .ConfigureAwait(false);
+
+            while (!string.IsNullOrEmpty(headerLine))
+            {
+                string headerName, headerValue;
+                ValidateHeaderLine(headerLine, out headerName, out headerValue);
+
+                if (headers.ContainsKey(headerName))
+                {
+                    throw new ODataException(Strings.ODataAsyncReader_DuplicateHeaderFound(headerName));
+                }
+
+                headers.Add(headerName, headerValue);
+                headerLine = await this.ReadLineAsync()
+                    .ConfigureAwait(false);
+            }
+
+            return headers;
+        }
+
+        /// <summary>
+        /// Asynchronously reads a line from the underlying stream.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains the line read from the stream.
+        /// </returns>
+        private async Task<string> ReadLineAsync()
+        {
+            StringBuilder lineBuilder = new StringBuilder();
+
+            int ch = await this.ReadByteAsync()
+                .ConfigureAwait(false);
+
+            while (ch != -1)
+            {
+                if (ch == '\n')
+                {
+                    throw new ODataException(Strings.ODataAsyncReader_InvalidNewLineEncountered('\n'));
+                }
+
+                if (ch == '\r')
+                {
+                    ch = await this.ReadByteAsync()
+                        .ConfigureAwait(false);
+
+                    if (ch != '\n')
+                    {
+                        throw new ODataException(Strings.ODataAsyncReader_InvalidNewLineEncountered('\r'));
+                    }
+
+                    return lineBuilder.ToString();
+                }
+
+                lineBuilder.Append((char)ch);
+                ch = await this.ReadByteAsync()
+                    .ConfigureAwait(false);
+            }
+
+            throw new ODataException(Strings.ODataAsyncReader_UnexpectedEndOfInput);
+        }
+
+        /// <summary>
+        /// Asynchronously reads a byte from the underlying stream.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains the byte read from the stream.
+        /// </returns>
+        private async Task<int> ReadByteAsync()
+        {
+            // Stream does not support ReadByteAsync - Improvise
+            if (await this.rawInputContext.Stream.ReadAsync(byteBuffer, 0, 1).ConfigureAwait(false) != 0)
+            {
+                return byteBuffer[0];
+            }
+
+            return -1;
         }
     }
 }
