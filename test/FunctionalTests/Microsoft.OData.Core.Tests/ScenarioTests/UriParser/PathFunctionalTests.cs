@@ -40,6 +40,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void SimpleEntitySetWithDecimalKeyWithSuffix()
+        {
+            var path = PathFunctionalTestsUtil.RunParsePath("Pet4Set(261210.08m)");
+            path.LastSegment.ShouldBeSimpleKeySegment(261210.08m);
+            Assert.Same(HardCodedTestModel.GetPet4Set(), path.NavigationSource());
+        }
+
+        [Fact]
         public void SimpleSingleton()
         {
             var path = PathFunctionalTestsUtil.RunParsePath("Boss");
