@@ -32,7 +32,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void SimpleEntitySetWithDecimalKey()
+        public void SimpleKeySegmentWithDecimalKey()
         {
             var path = PathFunctionalTestsUtil.RunParsePath("Pet4Set(261210.08)");
             path.LastSegment.ShouldBeSimpleKeySegment((decimal)261210.08);
@@ -40,7 +40,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void SimpleEntitySetWithDecimalKeyWithSuffix()
+        public void SimpleKeySegmentWithDecimalKeyWithSuffix()
         {
             var path = PathFunctionalTestsUtil.RunParsePath("Pet4Set(261210.08m)");
             path.LastSegment.ShouldBeSimpleKeySegment(261210.08m);
