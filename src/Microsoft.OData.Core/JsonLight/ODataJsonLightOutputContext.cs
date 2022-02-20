@@ -105,7 +105,7 @@ namespace Microsoft.OData.JsonLight
 #if NETSTANDARD1_1
                     this.asynchronousOutputStream = new AsyncBufferedStream(this.messageOutputStream);
 #else 
-                    this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, 84000);
+                    this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, ODataConstants.DefaultOutputBufferSize);
 #endif
                     outputStream = this.asynchronousOutputStream;
                 }

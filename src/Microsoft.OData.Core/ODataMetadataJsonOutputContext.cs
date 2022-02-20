@@ -55,7 +55,7 @@ namespace Microsoft.OData
                 }
                 else
                 {
-                    this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, 84000);
+                    this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, ODataConstants.DefaultOutputBufferSize);
                     outputStream = this.asynchronousOutputStream;
                 }
 
