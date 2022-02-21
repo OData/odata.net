@@ -873,6 +873,12 @@ namespace Microsoft.OData.Tests.JsonLight
 
             Assert.NotNull(property);
             Assert.Equal("http://odata.org/test/$metadata#Customers(1)/Name", deserializer.ContextUriParseResult.ContextUri.ToString());
+
+            deserializer = new ODataJsonLightPropertyAndValueDeserializer(this.CreateJsonLightInputContext("{\"@odata.context\":\"$metadata#Customers(1)/Name\",\"value\":\"Joe\"}", model));
+            property = deserializer.ReadTopLevelProperty(primitiveTypeRef);
+
+            Assert.NotNull(property);
+            Assert.Equal("http://odata.org/test/$metadata#Customers(1)/Name", deserializer.ContextUriParseResult.ContextUri.ToString());
         }
 
 
