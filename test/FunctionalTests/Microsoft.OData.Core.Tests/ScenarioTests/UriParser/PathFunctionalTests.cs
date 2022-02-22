@@ -32,6 +32,22 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void SimpleKeySegmentWithDecimalKey()
+        {
+            var path = PathFunctionalTestsUtil.RunParsePath("Pet4Set(261210.08)");
+            path.LastSegment.ShouldBeSimpleKeySegment((decimal)261210.08);
+            Assert.Same(HardCodedTestModel.GetPet4Set(), path.NavigationSource());
+        }
+
+        [Fact]
+        public void SimpleKeySegmentWithDecimalKeyWithSuffix()
+        {
+            var path = PathFunctionalTestsUtil.RunParsePath("Pet4Set(261210.08m)");
+            path.LastSegment.ShouldBeSimpleKeySegment(261210.08m);
+            Assert.Same(HardCodedTestModel.GetPet4Set(), path.NavigationSource());
+        }
+
+        [Fact]
         public void SimpleSingleton()
         {
             var path = PathFunctionalTestsUtil.RunParsePath("Boss");
