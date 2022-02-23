@@ -546,7 +546,7 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         /// <summary>
-        /// Sets up an ODataJsonLightCollectionSerializer,
+        /// Sets up an ODataJsonLightCollectionWriter,
         /// then runs the given test code asynchronously,
         /// then flushes and reads the stream back as a string for customized verification.
         /// </summary>
