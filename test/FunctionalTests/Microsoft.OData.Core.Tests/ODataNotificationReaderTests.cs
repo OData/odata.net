@@ -6,22 +6,25 @@
 
 using System;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.OData.Tests
 {
-    public class ODataNotificationReaderTests
+    public class ODataNotificationReaderTests : IDisposable
     {
         private MemoryStream stream;
         private TextReader reader;
+        private TextWriter streamListenerWriter;
         private IODataStreamListener streamListener;
 
         public ODataNotificationReaderTests()
         {
             this.stream = new MemoryStream();
-            this.reader = new StreamReader(this.stream);
-            this.streamListener = new MockODataStreamListener(new StreamWriter(this.stream));
+            this.reader = new StreamReader(this.stream, encoding: Encoding.UTF8, detectEncodingFromByteOrderMarks: true, bufferSize: 1024, leaveOpen: true);
+            this.streamListenerWriter = new StreamWriter(this.stream, encoding: Encoding.UTF8, bufferSize: 1024, leaveOpen: true);
+            this.streamListener = new MockODataStreamListener(this.streamListenerWriter);
         }
 
         [Theory]
@@ -114,16 +117,49 @@ namespace Microsoft.OData.Tests
         }
 #endif
 
-        private string ReadStreamContents()
+        public void Dispose() // Fired after every test is ran
         {
-            this.stream.Position = 0;
-            return new StreamReader(this.stream).ReadToEnd();
+            this.streamListenerWriter.Dispose();
+            this.reader.Dispose();
+            this.stream.Dispose();
         }
 
-        private Task<string> ReadStreamContentsAsync()
+        private string ReadStreamContents()
         {
-            this.stream.Position = 0;
-            return new StreamReader(this.stream).ReadToEndAsync();
+            string streamContents;
+
+            using (var reader = new StreamReader(
+                this.stream,
+                encoding: Encoding.UTF8,
+                detectEncodingFromByteOrderMarks: true,
+                bufferSize: 1024,
+                leaveOpen: true))
+            {
+
+                this.stream.Position = 0;
+                streamContents = reader.ReadToEnd();
+            }
+
+            return streamContents;
+        }
+
+        private async Task<string> ReadStreamContentsAsync()
+        {
+            string  streamContents;
+
+            using (var reader = new StreamReader(
+                this.stream,
+                encoding: Encoding.UTF8,
+                detectEncodingFromByteOrderMarks: true,
+                bufferSize: 1024,
+                leaveOpen: true))
+            {
+
+                this.stream.Position = 0;
+                streamContents = await reader.ReadToEndAsync();
+            }
+
+            return streamContents;
         }
 
         private class MockODataStreamListener : IODataStreamListener

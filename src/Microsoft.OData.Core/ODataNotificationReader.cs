@@ -20,15 +20,24 @@ namespace Microsoft.OData
     internal sealed class ODataNotificationReader : TextReader
 #endif
     {
-        private TextReader textReader;
-        private IODataStreamListener listener;
-        private bool disposed = false;
+        private readonly TextReader textReader;
+        private readonly IODataStreamListener listener;
         private readonly bool synchronous;
+        private bool disposed = false;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ODataNotificationReader"/> class.
+        /// </summary>
+        /// <param name="textReader">The wrapped text reader.</param>
+        /// <param name="listener">Listener to notify when the text reader is being disposed.</param>
+        /// <param name="synchronous">true if execution context is synchronous; otherwise false.</param>
+        /// <remarks>
+        /// When an instance of this class is disposed, it in turn disposes the wrapped text reader.
+        /// </remarks>
         internal ODataNotificationReader(TextReader textReader, IODataStreamListener listener, bool synchronous = true)
         {
             Debug.Assert(textReader != null, "Creating a notification reader for a null textReader.");
-            Debug.Assert(listener != null, "Creating a notification reader with a null textReader.");
+            Debug.Assert(listener != null, "Creating a notification reader with a null listener.");
 
             this.textReader = textReader;
             this.listener = listener;
@@ -126,33 +135,26 @@ namespace Microsoft.OData
                 // Tell the listener that the stream is being disposed.
                 if (synchronous)
                 {
-                    this.listener?.StreamDisposed();
+                    this.listener.StreamDisposed();
                 }
                 else
                 {
-                    this.listener?.StreamDisposedAsync().Wait();
+                    this.listener.StreamDisposedAsync().Wait();
                 }
-
-                this.listener = null;
-                // NOTE: Do not dispose the text reader since this instance does not own it.
-                this.textReader = null;
             }
 
             this.disposed = true;
+            this.textReader?.Dispose();
             base.Dispose(disposing);
         }
 
 #if NETSTANDARD2_0
         public async ValueTask DisposeAsync()
         {
-            if (!this.disposed && this.listener != null)
+            if (!this.disposed)
             {
                 await this.listener.StreamDisposedAsync()
                     .ConfigureAwait(false);
-
-                this.listener = null;
-                // NOTE: Do not dispose the text reader since this instance does not own it.
-                this.textReader = null;
             }
 
             // Dispose unmanaged resources
