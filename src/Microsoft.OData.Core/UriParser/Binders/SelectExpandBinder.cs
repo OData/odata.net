@@ -352,7 +352,9 @@ namespace Microsoft.OData.UriParser
             {
                 IEdmType typeSegmentType = this.parsedSegments.Last().EdmType;
 
-                if (typeSegmentType.IsStructuredCollectionType())
+                IEdmCollectionType collection = typeSegmentType as IEdmCollectionType;
+
+                if (collection != null)
                 {
                     currentLevelEntityType = (typeSegmentType as IEdmCollectionType).ElementType.Definition as IEdmStructuredType;
                 }
@@ -692,7 +694,9 @@ namespace Microsoft.OData.UriParser
             {
                 IEdmType typeSegmentType = this.parsedSegments.Last().EdmType;
 
-                if (typeSegmentType.IsStructuredCollectionType())
+                IEdmCollectionType collection = typeSegmentType as IEdmCollectionType;
+
+                if (collection != null)
                 {
                     currentLevelType = (typeSegmentType as IEdmCollectionType).ElementType.Definition as IEdmStructuredType;
                 }
