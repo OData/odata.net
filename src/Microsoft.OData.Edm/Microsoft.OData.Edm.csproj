@@ -34,14 +34,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Microsoft.OData.Edm.tt">
+    <Content Include="Microsoft.OData.Edm.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Microsoft.OData.Edm.cs</LastGenOutput>
-    </Resource>
-    <Resource Include="Parameterized.Microsoft.OData.Edm.tt">
+    </Content>
+    <Content Include="Parameterized.Microsoft.OData.Edm.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Parameterized.Microsoft.OData.Edm.cs</LastGenOutput>
-    </Resource>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
