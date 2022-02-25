@@ -71,8 +71,6 @@ namespace Microsoft.OData.Service.Providers
         {
             get 
             {
-                this.model.AssertCacheState(MetadataProviderState.Full);
-
                 foreach (IEdmEntitySet entitySet in this.entitySetCache.Values)
                 {
                     yield return entitySet;

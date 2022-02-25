@@ -89,7 +89,6 @@ namespace Microsoft.OData.Service.Providers
             get
             {
                 // This should be called only in $metadata scenarios
-                this.model.AssertCacheState(MetadataProviderState.Full);
                 List<IEdmNavigationPropertyBinding> result = new List<IEdmNavigationPropertyBinding>();
                 foreach (KeyValuePair<IEdmNavigationProperty, Dictionary<string, IEdmNavigationPropertyBinding>> mapping in this.navigationBindingMappings)
                 {

@@ -179,7 +179,6 @@ namespace Microsoft.OData.Service.Providers
         {
             get
             {
-                this.AssertCacheState(MetadataProviderState.Full);
                 return this.AnnotationsCache.VocabularyAnnotations;
             }
         }
@@ -204,9 +203,6 @@ namespace Microsoft.OData.Service.Providers
         {
             get
             {
-                // This should be called only in $metadata scenarios
-                this.AssertCacheState(MetadataProviderState.Full);
-
                 // returns the entity types and complex types
                 foreach (IEdmSchemaType schemaType in this.schemaTypeCache.Values)
                 {
@@ -403,7 +399,6 @@ namespace Microsoft.OData.Service.Providers
         /// </remarks>
         public IEnumerable<IEdmVocabularyAnnotation> FindDeclaredVocabularyAnnotations(IEdmVocabularyAnnotatable element)
         {
-            this.AssertCacheState(MetadataProviderState.Full);
             return this.AnnotationsCache.FindDeclaredVocabularyAnnotations(element);
         }
 
@@ -419,9 +414,6 @@ namespace Microsoft.OData.Service.Providers
         /// </remarks>
         public IEnumerable<IEdmStructuredType> FindDirectlyDerivedTypes(IEdmStructuredType baseType)
         {
-            // This should be called only in $metadata scenarios
-            this.AssertCacheState(MetadataProviderState.Full);
-
             List<IEdmStructuredType> types;
             if (this.derivedTypeMappings.TryGetValue(baseType, out types))
             {
@@ -737,29 +729,6 @@ namespace Microsoft.OData.Service.Providers
         internal void EnsureFullMetadataLoaded()
         {
             this.RunInState(this.EnsureFullMetadata, MetadataProviderState.Full);
-        }
-
-        /// <summary>
-        /// Assert that the specified cache state has been reached (or exceeded).
-        /// </summary>
-        /// <param name="state">The <see cref="MetadataProviderState"/> that has to be reached.</param>
-        [Conditional("DEBUG")]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Instance fields are used in debug; this method will not be called in retail.")]
-        internal void AssertCacheState(MetadataProviderState state)
-        {
-#if DEBUG
-            Debug.Assert(state != MetadataProviderState.Incremental, "Should never attempt to assert the 'Incremental' state.");
-
-            if (this.cacheState < state)
-            {
-                string message = string.Format(
-                    CultureInfo.InvariantCulture,
-                    "The current cache state is '{0}' but expected at least '{1}'.",
-                    this.materializationState.ToString(),
-                    state.ToString());
-                Debug.Assert(false, message);
-            }
-#endif
         }
 
         /// <summary>
@@ -1801,7 +1770,6 @@ namespace Microsoft.OData.Service.Providers
             this.SetMaterializationState(state);
             action();
             this.SetMaterializationState(MetadataProviderState.Incremental);
-            this.AssertCacheState(state);
         }
 
         /// <summary>
