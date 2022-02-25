@@ -34,19 +34,29 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Microsoft.OData.Edm.tt">
+    <Content Include="Microsoft.OData.Edm.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Microsoft.OData.Edm.cs</LastGenOutput>
-    </None>
-    <None Include="Parameterized.Microsoft.OData.Edm.tt">
+    </Content>
+    <Content Include="Parameterized.Microsoft.OData.Edm.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Parameterized.Microsoft.OData.Edm.cs</LastGenOutput>
-    </None>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
     <Compile Include="..\AssemblyInfo\AssemblyKeys.cs" Link="AssemblyKeys.cs" />
     <Compile Include="..\PlatformHelper.cs" Link="PlatformHelper.cs" />
+    <Compile Update="Microsoft.OData.Edm.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Microsoft.OData.Edm.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Parameterized.Microsoft.OData.Edm.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Parameterized.Microsoft.OData.Edm.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
