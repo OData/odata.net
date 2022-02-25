@@ -645,11 +645,14 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(!this.currentPropertyInfo.IsTopLevel, "Resource property should not be top level");
             this.JsonWriter.WriteName(property.Name);
 
+            IDuplicatePropertyNameChecker duplicatePropertyNameChecker = this.CreateDuplicatePropertyNameChecker();
+
             this.JsonLightValueSerializer.WriteResourceValue(
                 resourceValue,
                 this.currentPropertyInfo.MetadataType.TypeReference,
                 isOpenPropertyType,
-                this.CreateDuplicatePropertyNameChecker());
+                duplicatePropertyNameChecker);
+            this.ReleaseDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
         }
 
         /// <summary>

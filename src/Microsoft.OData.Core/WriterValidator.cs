@@ -21,12 +21,31 @@ namespace Microsoft.OData
         private readonly ODataMessageWriterSettings settings;
 
         /// <summary>
+        /// Object pool that stores instances of the IDuplicatePropertyNameChecker.
+        /// </summary>
+        private ObjectPool<IDuplicatePropertyNameChecker> duplicatePropertyNameCheckerObjectPool;
+
+        /// <summary>
         /// Creates a WriterValidator instance and binds it to settings.
         /// </summary>
         /// <param name="settings">The ODataMessageWriterSettings instance to bind to.</param>
         internal WriterValidator(ODataMessageWriterSettings settings)
         {
             this.settings = settings;
+            this.duplicatePropertyNameCheckerObjectPool = settings.ThrowOnDuplicatePropertyNames ?
+                new ObjectPool<IDuplicatePropertyNameChecker>(() => new DuplicatePropertyNameChecker()) :
+                new ObjectPool<IDuplicatePropertyNameChecker>(() => new NullDuplicatePropertyNameChecker());
+        }
+
+        /// <summary>
+        /// Object pool that stores instances of the IDuplicatePropertyNameChecker.
+        /// </summary>
+        internal ObjectPool<IDuplicatePropertyNameChecker> DuplicatePropertyNameCheckerObjectPool
+        {
+            get
+            {
+                return this.duplicatePropertyNameCheckerObjectPool;
+            }
         }
 
         /// <summary>
@@ -35,9 +54,16 @@ namespace Microsoft.OData
         /// <returns>The created instance.</returns>
         public IDuplicatePropertyNameChecker CreateDuplicatePropertyNameChecker()
         {
-            return settings.ThrowOnDuplicatePropertyNames
-                   ? (IDuplicatePropertyNameChecker)new DuplicatePropertyNameChecker()
-                   : (IDuplicatePropertyNameChecker)new NullDuplicatePropertyNameChecker();
+            return this.duplicatePropertyNameCheckerObjectPool.GetObject();
+        }
+
+        /// <summary>
+        /// Release a DuplicatePropertyNameChecker instance.
+        /// </summary>
+        /// <returns>The created instance.</returns>
+        public void ReleaseDuplicatePropertyNameChecker(IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
+        {
+            this.duplicatePropertyNameCheckerObjectPool.ReleaseObject(duplicatePropertyNameChecker);
         }
 
         /// <summary>

@@ -21,6 +21,12 @@ namespace Microsoft.OData
         IDuplicatePropertyNameChecker CreateDuplicatePropertyNameChecker();
 
         /// <summary>
+        /// Release a DuplicatePropertyNameChecker instance.
+        /// </summary>
+        /// <returns>The created instance.</returns>
+        void ReleaseDuplicatePropertyNameChecker(IDuplicatePropertyNameChecker duplicatePropertyNameChecker);
+
+        /// <summary>
         /// Validates a resource in an expanded link to make sure that the types match.
         /// </summary>
         /// <param name="resourceType">The <see cref="IEdmStructuredType"/> of the resource.</param>

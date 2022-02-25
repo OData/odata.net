@@ -286,6 +286,11 @@ namespace Microsoft.OData.JsonLight
                         }
                     }
                 }
+
+                if (duplicatePropertyNamesChecker != null)
+                {
+                    this.ReleaseDuplicatePropertyNameChecker(duplicatePropertyNamesChecker);
+                }
             }
 
             // End the array scope which holds the items

@@ -201,11 +201,13 @@ namespace Microsoft.OData
             ODataResourceValue resourceValue = value as ODataResourceValue;
             if (resourceValue != null)
             {
+                IDuplicatePropertyNameChecker duplicatePropertyNameChecker = this.valueSerializer.CreateDuplicatePropertyNameChecker();
                 this.WriteInstanceAnnotationName(propertyName, name);
                 this.valueSerializer.WriteResourceValue(resourceValue,
                     expectedType,
                     treatLikeOpenProperty,
-                    this.valueSerializer.CreateDuplicatePropertyNameChecker());
+                    duplicatePropertyNameChecker);
+                this.valueSerializer.ReleaseDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
                 return;
             }
 
