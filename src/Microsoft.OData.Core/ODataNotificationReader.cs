@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData
 {
+    using System;
     using System.Diagnostics;
     using System.IO;
     using System.Threading.Tasks;
@@ -13,18 +14,34 @@ namespace Microsoft.OData
     /// <summary>
     /// Wrapper for TextReader to listen for dispose.
     /// </summary>
+#if NETSTANDARD2_0
+    internal sealed class ODataNotificationReader : TextReader, IAsyncDisposable
+#else
     internal sealed class ODataNotificationReader : TextReader
+#endif
     {
         private readonly TextReader textReader;
-        private IODataStreamListener listener;
+        private readonly IODataStreamListener listener;
+        private readonly bool synchronous;
+        private bool disposed = false;
 
-        internal ODataNotificationReader(TextReader textReader, IODataStreamListener listener)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ODataNotificationReader"/> class.
+        /// </summary>
+        /// <param name="textReader">The wrapped text reader.</param>
+        /// <param name="listener">Listener to notify when the text reader is being disposed.</param>
+        /// <param name="synchronous">true if execution context is synchronous; otherwise false.</param>
+        /// <remarks>
+        /// When an instance of this class is disposed, it in turn disposes the wrapped text reader.
+        /// </remarks>
+        internal ODataNotificationReader(TextReader textReader, IODataStreamListener listener, bool synchronous = true)
         {
             Debug.Assert(textReader != null, "Creating a notification reader for a null textReader.");
-            Debug.Assert(listener != null, "Creating a notification reader with a null textReader.");
+            Debug.Assert(listener != null, "Creating a notification reader with a null listener.");
 
             this.textReader = textReader;
             this.listener = listener;
+            this.synchronous = synchronous;
         }
 
         /// <inheritdoc/>
@@ -113,18 +130,37 @@ namespace Microsoft.OData
         /// <param name="disposing">True if called from Dispose; false if called from the finalizer.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
+            if (!this.disposed && disposing)
             {
-                if (this.listener != null)
+                // Tell the listener that the stream is being disposed.
+                if (synchronous)
                 {
-                    // Tell the listener that the stream is being disposed.
                     this.listener.StreamDisposed();
-                    this.listener = null;
+                }
+                else
+                {
+                    this.listener.StreamDisposedAsync().Wait();
                 }
             }
 
-            this.textReader.Dispose();
+            this.disposed = true;
+            this.textReader?.Dispose();
             base.Dispose(disposing);
         }
+
+#if NETSTANDARD2_0
+        public async ValueTask DisposeAsync()
+        {
+            if (!this.disposed)
+            {
+                await this.listener.StreamDisposedAsync()
+                    .ConfigureAwait(false);
+            }
+
+            // Dispose unmanaged resources
+            // Pass `false` to ensure functional equivalence with the synchronous dispose pattern
+            this.Dispose(false);
+        }
+#endif
     }
 }
