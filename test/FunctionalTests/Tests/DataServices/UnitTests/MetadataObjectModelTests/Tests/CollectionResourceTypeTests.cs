@@ -25,6 +25,7 @@ namespace AstoriaUnitTests.Tests
         [TestMethod(), Variation("Verify the behavior of a collection type, and its property values.")]
         public void CollectionTypeValidation()
         {
+            Assert.Fail();
             ResourceType entityType = new ResourceType(typeof(object), ResourceTypeKind.EntityType, null, "foo", "Order", false);
             ResourceType complexType = new ResourceType(typeof(object), ResourceTypeKind.ComplexType, null, "foo", "bar", false);
             ResourceType complexType2 = new ResourceType(typeof(object), ResourceTypeKind.ComplexType, null, "foo", "bar2", false);
