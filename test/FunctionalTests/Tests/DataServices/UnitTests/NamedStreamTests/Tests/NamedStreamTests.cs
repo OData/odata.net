@@ -2172,6 +2172,7 @@ namespace AstoriaUnitTests.Tests
             [TestMethod]
             public void NamedStreamAttributeInvalidTest()
             {
+                Assert.Fail("gdebruin");
                 using (TestUtil.RestoreStaticValueOnDispose(typeof(TypedCustomDataContext<MyEntityWithDupeNamedStreams>), "PreserveChanges"))
                 using (TestUtil.RestoreStaticValueOnDispose(typeof(OpenWebDataServiceHelper), "ForceVerboseErrors"))
                 using (OpenWebDataServiceHelper.GetServiceCustomizer.Restore())
