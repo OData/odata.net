@@ -133,11 +133,12 @@ steps:
     
 
 - task: DotNetCoreCLI@2
-  displayName: 'Build E2E Test'  
+  displayName: 'Build E2E Test with Release'  
   inputs:
     command: 'build'
-    arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    arguments: '--configuration Release --no-incremental'
     projects: |
+      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataEdmLib\EdmLibTests.csproj
       $(Build.SourcesDirectory)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj
       $(Build.SourcesDirectory)\test\EndToEndTests\Services\Astoria\Microsoft.Test.OData.Services.Astoria.csproj
       $(Build.SourcesDirectory)\test\EndToEndTests\Services\CSDSCReferences\Microsoft.Test.OData.Services.CSDSCReferences.csproj
@@ -153,18 +154,26 @@ steps:
       $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataWCFLibrary\ODataSamples.Services.Core.csproj
       $(Build.SourcesDirectory)\test\EndToEndTests\Services\ODataTripPinService\ODataSamples.Services.TripPin.csproj
       $(Build.SourcesDirectory)\test\EndToEndTests\Services\ServiceWrapperApp\ServiceWrapperApp.csproj
-      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataEdmLib\EdmLibTests.csproj
       $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
 
 - task: DotNetCoreCLI@2
-  displayName: 'Build Regression Test'  
+  displayName: 'Build E2E Test with Debug'  
   inputs:
     command: 'build'
-    arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    arguments: '--configuration Debug --no-incremental'
+    projects: |
+      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataEdmLib\EdmLibTests.csproj
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build Regression Test with Release'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration Release --no-incremental'
     projects: |     
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\MetadataObjectModelTests\Microsoft.Data.MetadataObjectModel.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\NamedStreamTests\Microsoft.Data.NamedStream.UnitTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Framework\AstoriaTestFramework.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\RegressionUnitTests\Microsoft.Data.Web.RegressionUnitTests.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\MetadataObjectModelTests\Microsoft.Data.MetadataObjectModel.UnitTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ClientCSharpUnitTests\Microsoft.Data.WebClientCSharp.UnitTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests\Microsoft.Data.Web.UnitTests.csproj
@@ -177,12 +186,21 @@ steps:
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Reader.Tests\Microsoft.Test.Taupo.OData.Reader.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Writer.Tests\Microsoft.Test.Taupo.OData.Writer.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Scenario.Tests\Microsoft.Test.Taupo.OData.Scenario.Tests.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\NamedStreamTests\Microsoft.Data.NamedStream.UnitTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat.Tests\Microsoft.Test.OData.PluggableFormat.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests1\Microsoft.Data.ServerUnitTests1.UnitTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests2\Microsoft.Data.ServerUnitTests2.UnitTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\RegressionUnitTests\Microsoft.Data.Web.RegressionUnitTests.csproj
                
+  enabled: true
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build Regression Test with Debug'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration Debug --no-incremental'
+    projects: |     
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\MetadataObjectModelTests\Microsoft.Data.MetadataObjectModel.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\NamedStreamTests\Microsoft.Data.NamedStream.UnitTests.csproj
   enabled: true
 
 - task: Powershell@2
@@ -289,28 +307,40 @@ steps:
 
 - task: DotNetCoreCLI@2
   timeoutInMinutes: 100
-  displayName: 'Test - Regression Test Suite --collect "Code coverage"'
+  displayName: 'Test - Regression Test Suite --collect "Code coverage" with Release'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --no-build'
+    arguments: '--configuration Release --no-build'
     projects: |           
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataEdmLib\EdmLibTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\MetadataObjectModelTests\Microsoft.Data.MetadataObjectModel.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\NamedStreamTests\Microsoft.Data.NamedStream.UnitTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\ddbasics\Microsoft.Test.Data.Services.DDBasics.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataEdmLib\EdmLibTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Common.Tests\Microsoft.Test.Taupo.OData.Common.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Query.Tests\Microsoft.Test.Taupo.OData.Query.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Reader.Tests\Microsoft.Test.Taupo.OData.Reader.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Writer.Tests\Microsoft.Test.Taupo.OData.Writer.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Scenario.Tests\Microsoft.Test.Taupo.OData.Scenario.Tests.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\NamedStreamTests\Microsoft.Data.NamedStream.UnitTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat.Tests\Microsoft.Test.OData.PluggableFormat.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests1\Microsoft.Data.ServerUnitTests1.UnitTests.csproj     
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests2\Microsoft.Data.ServerUnitTests2.UnitTests.csproj  
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\RegressionUnitTests\Microsoft.Data.Web.RegressionUnitTests.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\MetadataObjectModelTests\Microsoft.Data.MetadataObjectModel.UnitTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ClientCSharpUnitTests\Microsoft.Data.WebClientCSharp.UnitTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests\Microsoft.Data.Web.UnitTests.csproj
+  enabled: true
+
+- task: DotNetCoreCLI@2
+  timeoutInMinutes: 100
+  displayName: 'Test - Regression Test Suite --collect "Code coverage" with Debug'
+  inputs:
+    command: 'test'
+    arguments: '--configuration Debug --no-build'
+    projects: |           
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataEdmLib\EdmLibTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\MetadataObjectModelTests\Microsoft.Data.MetadataObjectModel.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\NamedStreamTests\Microsoft.Data.NamedStream.UnitTests.csproj
   enabled: true
 
 
