@@ -342,7 +342,7 @@ namespace Microsoft.OData.UriParser
 
             PathSegmentToken currentToken = tokenIn.PathToNavigationProp;
 
-            IEdmStructuredType currentLevelEntityType = this.edmType;
+            IEdmStructuredType currentLevelEntityType = this.EdmType;
             List<ODataPathSegment> pathSoFar = new List<ODataPathSegment>();
             PathSegmentToken firstNonTypeToken = currentToken;
 
