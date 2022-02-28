@@ -284,7 +284,7 @@ namespace Microsoft.OData.UriParser
 
             IEdmNavigationSource targetNavigationSource = null;
             ODataPathSegment lastSegment = selectedPath.Last();
-            IEdmType targetElementType = lastSegment.TargetEdmType;
+            IEdmType targetElementType = lastSegment.EdmType;
             IEdmCollectionType collection = targetElementType as IEdmCollectionType;
             if (collection != null)
             {
@@ -341,13 +341,7 @@ namespace Microsoft.OData.UriParser
             ExceptionUtils.CheckArgumentNotNull(tokenIn, "tokenIn");
 
             PathSegmentToken currentToken = tokenIn.PathToNavigationProp;
-
-            // If we have a previous level binding with the last segment as a Type segment,
-            // The currentLevelEntityType should be the Type of the TypeSegment
-            // E.g /Orders?$expand=Customer/NS.VipCustomer($expand=Trips)
-            // If we are Binding the expanded property Trips, currentLevelEntityType should be the type of the VipCustomer
-            IEdmStructuredType lastTypeSegmentType = GetLastTypeSegmentType(this.parsedSegments);
-            IEdmStructuredType currentLevelEntityType = lastTypeSegmentType != null ? lastTypeSegmentType : this.edmType;
+            IEdmStructuredType currentLevelEntityType = this.edmType;
 
             List<ODataPathSegment> pathSoFar = new List<ODataPathSegment>();
             PathSegmentToken firstNonTypeToken = currentToken;
@@ -668,13 +662,7 @@ namespace Microsoft.OData.UriParser
             Debug.Assert(tokenIn != null, "tokenIn != null");
 
             List<ODataPathSegment> pathSoFar = new List<ODataPathSegment>();
-
-            // If we have a previous level binding with the last segment as a Type segment,
-            // The currentLevelEntityType should be the Type of the TypeSegment
-            // E.g /Orders?$expand=Customer/NS.VipCustomer($select=VipCustomerName)
-            // If we are Binding the selected property VipCustomerName, currentLevelEntityType should be the type of the VipCustomer
-            IEdmStructuredType lastTypeSegmentType = GetLastTypeSegmentType(this.parsedSegments);
-            IEdmStructuredType currentLevelType = lastTypeSegmentType != null ? lastTypeSegmentType : this.edmType;
+            IEdmStructuredType currentLevelType = this.edmType;
 
             // first, walk through all type segments in a row, converting them from tokens into segments.
             if (tokenIn.IsNamespaceOrContainerQualified() && !UriParserHelper.IsAnnotation(tokenIn.Identifier))
@@ -804,29 +792,6 @@ namespace Microsoft.OData.UriParser
             }
 
             return pathSoFar;
-        }
-
-        private IEdmStructuredType GetLastTypeSegmentType(List<ODataPathSegment> pathSegments)
-        {
-            ODataPathSegment lastSegment = this.parsedSegments.Count > 0 ? this.parsedSegments[this.parsedSegments.Count - 1] : null;
-
-            if (lastSegment != null && lastSegment is TypeSegment)
-            {
-                IEdmType typeSegmentType = lastSegment.EdmType;
-
-                IEdmCollectionType collection = typeSegmentType as IEdmCollectionType;
-
-                if (collection != null)
-                {
-                    return collection.ElementType.Definition as IEdmStructuredType;
-                }
-                else
-                {
-                    return typeSegmentType as IEdmStructuredType;
-                }
-            }
-
-            return null;
         }
 
         private static HashSet<EndPathToken> GetGeneratedProperties(ComputeClause computeOption, ApplyClause applyOption)
