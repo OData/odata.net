@@ -217,6 +217,47 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
+        public void WritingResourceValueAndNestedResourceValueWithSimilarPropertiesShouldWrite()
+        {
+            var complexType = new EdmComplexType("NS", "Address");
+            complexType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+            complexType.AddStructuralProperty("City", EdmPrimitiveTypeKind.String);
+            model.AddElement(complexType);
+
+            var entityType = new EdmEntityType("NS", "Customer");
+            entityType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+            entityType.AddStructuralProperty("Location", new EdmComplexTypeReference(complexType, false));
+            model.AddElement(entityType);
+
+            settings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
+            var result = this.SetupSerializerAndRunTest(serializer =>
+            {
+                var resourceValue = new ODataResourceValue
+                {
+                    TypeName = "NS.Customer",
+                    Properties = new[]
+                    {
+                        new ODataProperty { Name = "Name", Value = "MyName" },
+                        new ODataProperty { Name = "Location", Value = new ODataResourceValue
+                            {
+                                TypeName = "NS.Address",
+                                Properties = new [] {
+                                    new ODataProperty {  Name = "Name", Value = "AddressName" },
+                                    new ODataProperty {  Name = "City", Value = "MyCity" }
+                                }
+                            }
+                        }
+                    }
+                };
+
+                var entityTypeRef = new EdmEntityTypeReference(entityType, false);
+                serializer.WriteResourceValue(resourceValue, entityTypeRef, false, serializer.CreateDuplicatePropertyNameChecker());
+            });
+
+            Assert.Equal(@"{""Name"":""MyName"",""Location"":{""Name"":""AddressName"",""City"":""MyCity""}}", result);
+        }
+
+        [Fact]
         public void WritingInstanceAnnotationInResourceValueShouldWrite()
         {
             var complexType = new EdmComplexType("TestNamespace", "Address");

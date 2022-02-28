@@ -261,11 +261,11 @@ namespace Microsoft.OData
                     model,
                     messageWriterSettings,
                     textWriter,
-                    (serializer) => serializer.WriteResourceValue(
+                    (serializer, duplicatePropertyNameChecker) => serializer.WriteResourceValue(
                         resourceValue, /* resourceValue */
                         null, /* metadataTypeReference */
                         true, /* isOpenPropertyType */
-                        serializer.CreateDuplicatePropertyNameChecker()));
+                        duplicatePropertyNameChecker));
             }
 
             return builder.ToString();
@@ -313,13 +313,14 @@ namespace Microsoft.OData
                     model,
                     messageWriterSettings,
                     textWriter,
-                    (serializer) => serializer.WriteCollectionValue(
+                    (serializer, duplicatePropertyNameChecker) => serializer.WriteCollectionValue(
                         collectionValue,
                         null /*metadataTypeReference*/,
                         null /*valueTypeReference*/,
                         false /*isTopLevelProperty*/,
                         true /*isInUri*/,
-                        false /*isOpenPropertyType*/));
+                        false /*isOpenPropertyType*/),
+                    true /*ignoreDuplicatePropertyNameChecker*/);
             }
 
             return builder.ToString();
@@ -554,7 +555,8 @@ namespace Microsoft.OData
         /// <param name="messageWriterSettings">Settings to use when writing.</param>
         /// <param name="textWriter">TextWriter to use as the output for the value.</param>
         /// <param name="writeValue">Delegate to use to actually write the value.</param>
-        private static void WriteJsonLightLiteral(IEdmModel model, ODataMessageWriterSettings messageWriterSettings, TextWriter textWriter, Action<ODataJsonLightValueSerializer> writeValue)
+        /// <param name="ignoreDuplicatePropertyNameChecker">True when we don't want to pass the <see cref="IDuplicatePropertyNameChecker"/> instance to the Action delegate.</param>
+        private static void WriteJsonLightLiteral(IEdmModel model, ODataMessageWriterSettings messageWriterSettings, TextWriter textWriter, Action<ODataJsonLightValueSerializer, IDuplicatePropertyNameChecker> writeValue, bool ignoreDuplicatePropertyNameChecker = false)
         {
             IEnumerable<KeyValuePair<string, string>> parameters = new Dictionary<string, string>
             {
@@ -577,7 +579,17 @@ namespace Microsoft.OData
                 new ODataJsonLightOutputContext(textWriter, messageInfo, messageWriterSettings))
             {
                 ODataJsonLightValueSerializer jsonLightValueSerializer = new ODataJsonLightValueSerializer(jsonOutputContext);
-                writeValue(jsonLightValueSerializer);
+                if (ignoreDuplicatePropertyNameChecker)
+                {
+                    writeValue(jsonLightValueSerializer, null);
+                }
+                else
+                {
+                    IDuplicatePropertyNameChecker duplicatePropertyNameChecker = jsonLightValueSerializer.CreateDuplicatePropertyNameChecker();
+                    writeValue(jsonLightValueSerializer, duplicatePropertyNameChecker);
+                    jsonLightValueSerializer.ReleaseDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
+                }
+
                 jsonLightValueSerializer.AssertRecursionDepthIsZero();
             }
         }
