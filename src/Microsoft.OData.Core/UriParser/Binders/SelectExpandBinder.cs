@@ -341,8 +341,8 @@ namespace Microsoft.OData.UriParser
             ExceptionUtils.CheckArgumentNotNull(tokenIn, "tokenIn");
 
             PathSegmentToken currentToken = tokenIn.PathToNavigationProp;
-            IEdmStructuredType currentLevelEntityType = this.edmType;
 
+            IEdmStructuredType currentLevelEntityType = this.edmType;
             List<ODataPathSegment> pathSoFar = new List<ODataPathSegment>();
             PathSegmentToken firstNonTypeToken = currentToken;
 
