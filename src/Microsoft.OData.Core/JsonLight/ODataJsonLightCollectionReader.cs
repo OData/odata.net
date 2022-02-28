@@ -6,9 +6,9 @@
 
 namespace Microsoft.OData.JsonLight
 {
-    using System;
     #region Namespaces
 
+    using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
