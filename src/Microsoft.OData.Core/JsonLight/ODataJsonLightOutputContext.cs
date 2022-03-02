@@ -42,8 +42,13 @@ namespace Microsoft.OData.JsonLight
         /// <summary>The message output stream.</summary>
         private Stream messageOutputStream;
 
+#if NETSTANDARD1_1
         /// <summary>The asynchronous output stream if we're writing asynchronously.</summary>
         private AsyncBufferedStream asynchronousOutputStream;
+#else
+        /// <summary>The asynchronous output stream if we're writing asynchronously.</summary>
+        private Stream asynchronousOutputStream;
+#endif
 
         /// <summary>The text writer created for the output stream.</summary>
         private TextWriter textWriter;
@@ -97,7 +102,11 @@ namespace Microsoft.OData.JsonLight
                 }
                 else
                 {
+#if NETSTANDARD1_1
                     this.asynchronousOutputStream = new AsyncBufferedStream(this.messageOutputStream);
+#else 
+                    this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, ODataConstants.DefaultOutputBufferSize);
+#endif
                     outputStream = this.asynchronousOutputStream;
                 }
 
@@ -531,7 +540,11 @@ namespace Microsoft.OData.JsonLight
         {
             if (this.asynchronousOutputStream != null)
             {
+#if NETSTANDARD1_1
                 this.asynchronousOutputStream.FlushSync();
+#else
+                this.asynchronousOutputStream.Flush();
+#endif
             }
         }
 
@@ -543,12 +556,14 @@ namespace Microsoft.OData.JsonLight
         {
             if (this.asynchronousOutputStream != null)
             {
+#if NETSTANDARD1_1
                 return this.asynchronousOutputStream.FlushAsync();
+#else
+                return this.asynchronousOutputStream.FlushAsync();
+#endif
             }
-            else
-            {
-                return TaskUtils.CompletedTask;
-            }
+
+            return TaskUtils.CompletedTask;
         }
 
         /// <summary>
@@ -779,8 +794,14 @@ namespace Microsoft.OData.JsonLight
                     // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitly.
                     if (this.asynchronousOutputStream != null)
                     {
+#if NETSTANDARD1_1
                         this.asynchronousOutputStream.FlushSync();
                         this.asynchronousOutputStream.Dispose();
+#else
+                        this.asynchronousOutputStream.Flush();
+                        // We are working with a BufferedStream here. We flushed it already, so there is nothing else to dispose. And it would dispose the 
+                        // inner stream as well.
+#endif
                     }
 
                     // Dispose the message stream (note that we OWN this stream, so we always dispose it).

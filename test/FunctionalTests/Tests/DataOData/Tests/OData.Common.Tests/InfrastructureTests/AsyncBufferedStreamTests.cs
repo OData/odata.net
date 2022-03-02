@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+#if NETSTANDARD1_1
 namespace Microsoft.Test.Taupo.OData.Common.Tests.InfrastructureTests
 {
     #region Namespaces
@@ -173,3 +174,4 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.InfrastructureTests
         }
     }
 }
+#endif

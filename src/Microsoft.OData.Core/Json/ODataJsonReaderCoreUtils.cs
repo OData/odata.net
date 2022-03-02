@@ -338,7 +338,7 @@ namespace Microsoft.OData.Json
         /// <param name="inputContext">The input context with all the settings.</param>
         /// <param name="recursionDepth">The recursion depth to start with.</param>
         /// <returns>A task that represents the asynchronous read operation.
-		/// The value of the TResult parameter contains an instance of IDictionary containing the spatial value.</returns>
+        /// The value of the TResult parameter contains an instance of IDictionary containing the spatial value.</returns>
         private static async Task<Dictionary<string, object>> ReadObjectValueAsync(
             IJsonReaderAsync jsonReader,
             bool insideJsonObjectValue,
@@ -407,7 +407,7 @@ namespace Microsoft.OData.Json
         /// <param name="inputContext">The input context with all the settings.</param>
         /// <param name="recursionDepth">The recursion depth to start with.</param>
         /// <returns>A task that represents the asynchronous read operation.
-		/// The value of the TResult parameter contains a lit of JSON objects.</returns>
+        /// The value of the TResult parameter contains a lit of JSON objects.</returns>
         /// <returns>a list of json objects.</returns>
         private static async Task<List<object>> ReadArrayValueAsync(IJsonReaderAsync jsonReader, ODataInputContext inputContext, int recursionDepth)
         {
