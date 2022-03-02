@@ -63,6 +63,7 @@ namespace Microsoft.OData
         /// <returns>The created instance.</returns>
         public void ReleaseDuplicatePropertyNameChecker(IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
         {
+            duplicatePropertyNameChecker.Reset();
             this.duplicatePropertyNameCheckerObjectPool.ReleaseObject(duplicatePropertyNameChecker);
         }
 
