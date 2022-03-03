@@ -7,8 +7,10 @@
 namespace Microsoft.OData
 {
     #region Namespaces
+
+    using System;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
+    using System.IO;
     using System.Threading.Tasks;
 
     #endregion Namespaces
@@ -175,95 +177,216 @@ namespace Microsoft.OData
         /// <returns>A task that when completed indicates whether more items were read.</returns>
         /// <remarks>The base class already implements this but only for fully synchronous readers, the implementation here
         /// allows fully asynchronous readers.</remarks>
-        protected override Task<bool> ReadAsynchronously()
+        protected override async Task<bool> ReadAsynchronously()
         {
-            Task<bool> result;
+            bool result;
+
             switch (this.State)
             {
                 case ODataReaderState.Start:
-                    result = this.ReadAtStartImplementationAsync();
+                    result = await this.ReadAtStartImplementationAsync()
+                        .ConfigureAwait(false);
                     break;
 
                 case ODataReaderState.ResourceSetStart:
-                    result = this.ReadAtResourceSetStartImplementationAsync();
+                    result = await this.ReadAtResourceSetStartImplementationAsync()
+                        .ConfigureAwait(false);
                     break;
 
                 case ODataReaderState.ResourceSetEnd:
-                    result = this.ReadAtResourceSetEndImplementationAsync();
+                    result = await this.ReadAtResourceSetEndImplementationAsync()
+                        .ConfigureAwait(false);
                     break;
 
                 case ODataReaderState.ResourceStart:
-                    result = TaskUtils.GetTaskForSynchronousOperation(() => this.IncreaseResourceDepth())
-                        .FollowOnSuccessWithTask(t => this.ReadAtResourceStartImplementationAsync());
+                    this.IncreaseResourceDepth();
+                    result = await this.ReadAtResourceStartImplementationAsync()
+                        .ConfigureAwait(false);
                     break;
 
                 case ODataReaderState.ResourceEnd:
-                    result = TaskUtils.GetTaskForSynchronousOperation(() => this.DecreaseResourceDepth())
-                        .FollowOnSuccessWithTask(t => this.ReadAtResourceEndImplementationAsync());
+                    this.DecreaseResourceDepth();
+                    result = await this.ReadAtResourceEndImplementationAsync()
+                        .ConfigureAwait(false);
                     break;
 
                 case ODataReaderState.Primitive:
-                    result = this.ReadAtPrimitiveImplementationAsync();
+                    result = await this.ReadAtPrimitiveImplementationAsync()
+                        .ConfigureAwait(false);
                     break;
 
                 case ODataReaderState.Stream:
-                    result = this.ReadAtStreamImplementationAsync();
+                    result = await this.ReadAtStreamImplementationAsync()
+                        .ConfigureAwait(false);
                     break;
 
                 case ODataReaderState.NestedProperty:
-                    result = this.ReadAtNestedPropertyInfoImplementationAsync();
+                    result = await this.ReadAtNestedPropertyInfoImplementationAsync()
+                        .ConfigureAwait(false);
                     break;
 
                 case ODataReaderState.NestedResourceInfoStart:
-                    result = this.ReadAtNestedResourceInfoStartImplementationAsync();
+                    result = await this.ReadAtNestedResourceInfoStartImplementationAsync()
+                        .ConfigureAwait(false);
                     break;
 
                 case ODataReaderState.NestedResourceInfoEnd:
-                    result = this.ReadAtNestedResourceInfoEndImplementationAsync();
+                    result = await this.ReadAtNestedResourceInfoEndImplementationAsync()
+                        .ConfigureAwait(false);
                     break;
 
                 case ODataReaderState.EntityReferenceLink:
-                    result = this.ReadAtEntityReferenceLinkAsync();
+                    result = await this.ReadAtEntityReferenceLinkAsync()
+                        .ConfigureAwait(false);
                     break;
 
                 case ODataReaderState.DeltaResourceSetStart:
-                    result = this.ReadAtDeltaResourceSetStartImplementationAsync();
+                    result = await this.ReadAtDeltaResourceSetStartImplementationAsync()
+                        .ConfigureAwait(false);
                     break;
 
                 case ODataReaderState.DeltaResourceSetEnd:
-                    result = this.ReadAtDeltaResourceSetEndImplementationAsync();
+                    result = await this.ReadAtDeltaResourceSetEndImplementationAsync()
+                        .ConfigureAwait(false);
                     break;
 
                 case ODataReaderState.DeletedResourceStart:
-                    result = TaskUtils.GetTaskForSynchronousOperation(() => this.IncreaseResourceDepth())
-                        .FollowOnSuccessWithTask(t => this.ReadAtDeletedResourceStartImplementationAsync());
+                    this.IncreaseResourceDepth();
+                    result = await this.ReadAtDeletedResourceStartImplementationAsync()
+                        .ConfigureAwait(false);
                     break;
 
                 case ODataReaderState.DeletedResourceEnd:
-                    result = TaskUtils.GetTaskForSynchronousOperation(() => this.DecreaseResourceDepth())
-                        .FollowOnSuccessWithTask(t => this.ReadAtDeletedResourceEndImplementationAsync());
+                    this.DecreaseResourceDepth();
+                    result = await this.ReadAtDeletedResourceEndImplementationAsync()
+                        .ConfigureAwait(false);
                     break;
 
                 case ODataReaderState.DeltaLink:
-                    result = this.ReadAtDeltaLinkImplementationAsync();
+                    result = await this.ReadAtDeltaLinkImplementationAsync()
+                        .ConfigureAwait(false);
                     break;
 
                 case ODataReaderState.DeltaDeletedLink:
-                    result = this.ReadAtDeltaDeletedLinkImplementationAsync();
+                    result = await this.ReadAtDeltaDeletedLinkImplementationAsync()
+                        .ConfigureAwait(false);
                     break;
 
                 case ODataReaderState.Exception:    // fall through
                 case ODataReaderState.Completed:
-                    result = TaskUtils.GetFaultedTask<bool>(new ODataException(Strings.ODataReaderCore_NoReadCallsAllowed(this.State)));
-                    break;
+                    throw new ODataException(Strings.ODataReaderCore_NoReadCallsAllowed(this.State));
 
                 default:
                     Debug.Assert(false, "Unsupported reader state " + this.State + " detected.");
-                    result = TaskUtils.GetFaultedTask<bool>(new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataReaderCoreAsync_ReadAsynchronously)));
-                    break;
+                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataReaderCoreAsync_ReadAsynchronously));
             }
 
-            return result.FollowOnSuccessWith(t => t.Result);
+            return result;
+        }
+
+        /// <summary>
+        /// Asynchronously creates a <see cref="Stream"/> for reading a stream property
+        /// when reader in state <see cref="ODataReaderState.Stream"/>.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains a <see cref="Stream"/> for reading the stream property.
+        /// </returns>
+        protected virtual Task<Stream> CreateReadStreamImplementationAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Asynchronously creates a <see cref="TextReader"/> for reading a string property
+        /// when reader in state <see cref="ODataReaderState.Stream"/>.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains a <see cref="TextReader"/> for reading the string property..
+        /// </returns>
+        protected virtual Task<TextReader> CreateTextReaderImplementationAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>Asynchronously creates a <see cref="Stream"/> for reading an inline stream property.</summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains a <see cref="Stream"/> for reading the stream property.
+        /// </returns>
+        public override async Task<Stream> CreateReadStreamAsync()
+        {
+            if (this.State != ODataReaderState.Stream)
+            {
+                throw new ODataException(Strings.ODataReaderCore_CreateReadStreamCalledInInvalidState);
+            }
+
+            StreamScope scope = this.CurrentScope as StreamScope;
+            Debug.Assert(scope != null, "ODataReaderState.Stream when Scope is not a StreamScope");
+            if (scope.StreamingState != StreamingState.None)
+            {
+                throw new ODataException(Strings.ODataReaderCore_CreateReadStreamCalledInInvalidState);
+            }
+
+            scope.StreamingState = StreamingState.Streaming;
+            return new ODataNotificationStream(
+                underlyingStream: await this.InterceptExceptionAsync(thisParam => thisParam.CreateReadStreamImplementationAsync()).ConfigureAwait(false),
+                listener: this,
+                synchronous: false);
+        }
+
+        /// <summary>Asynchronously creates a <see cref="TextReader"/> for reading an inline string property.</summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains a <see cref="TextReader"/> for reading the string property.
+        /// </returns>
+        public override async Task<TextReader> CreateTextReaderAsync()
+        {
+            if (this.State != ODataReaderState.Stream)
+            {
+                throw new ODataException(Strings.ODataReaderCore_CreateTextReaderCalledInInvalidState);
+            }
+
+            StreamScope scope = this.CurrentScope as StreamScope;
+            Debug.Assert(scope != null, "ODataReaderState.Stream when Scope is not a StreamScope");
+            if (scope.StreamingState != StreamingState.None)
+            {
+                throw new ODataException(Strings.ODataReaderCore_CreateReadStreamCalledInInvalidState);
+            }
+
+            scope.StreamingState = StreamingState.Streaming;
+            return new ODataNotificationReader(
+                textReader: await this.InterceptExceptionAsync(thisParam => thisParam.CreateTextReaderImplementationAsync()).ConfigureAwait(false),
+                listener: this,
+                synchronous: false);
+        }
+
+        /// <summary>
+        /// Catch any exception thrown by the action passed in; in the exception case move the reader into
+        /// state <see cref="ODataReaderState.Exception"/> and then rethrow the exception.
+        /// </summary>
+        /// <typeparam name="TResult">The action return type.</typeparam>
+        /// <param name="action">The action to execute.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains the result of executing the <paramref name="action"/>.
+        /// </returns>
+        private async Task<TResult> InterceptExceptionAsync<TResult>(Func<ODataReaderCoreAsync, Task<TResult>> action)
+        {
+            try
+            {
+                return await action(this).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                if (ExceptionUtils.IsCatchableExceptionType(e))
+                {
+                    this.EnterScope(new Scope(ODataReaderState.Exception, null, null));
+                }
+
+                throw;
+            }
         }
     }
 }
