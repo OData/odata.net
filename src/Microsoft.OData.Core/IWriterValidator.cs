@@ -23,7 +23,6 @@ namespace Microsoft.OData
         /// <summary>
         /// Release a DuplicatePropertyNameChecker instance.
         /// </summary>
-        /// <returns>The created instance.</returns>
         void ReleaseDuplicatePropertyNameChecker(IDuplicatePropertyNameChecker duplicatePropertyNameChecker);
 
         /// <summary>
