@@ -241,7 +241,11 @@ namespace Microsoft.OData
             // We must create the text writer over a stream which will ignore Dispose, since we need to be able to Dispose
             // the writer without disposing the underlying message stream.
             Stream nonDisposingStream;
+#if NETSTANDARD1_1
             if (MessageStreamWrapper.IsNonDisposingStream(this.stream) || this.stream is AsyncBufferedStream)
+#else
+            if (MessageStreamWrapper.IsNonDisposingStream(this.stream))
+#endif
             {
                 // AsyncBufferedStream ignores Dispose
                 nonDisposingStream = this.stream;

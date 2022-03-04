@@ -35,7 +35,7 @@ namespace Microsoft.OData.UriParser
                 }
 
                 this.targetNavigationSource = lastSegment.TargetEdmNavigationSource;
-                this.targetEdmType = lastSegment.TargetEdmType;
+                this.targetEdmType = lastSegment.EdmType;
                 if (this.targetEdmType != null)
                 {
                     IEdmCollectionType collectionType = this.targetEdmType as IEdmCollectionType;
