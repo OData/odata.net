@@ -345,6 +345,19 @@ steps:
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests1\Microsoft.Data.ServerUnitTests1.UnitTests.csproj    
   enabled: true
 
+- script: |
+   mkdir $(Build.ArtifactStagingDirectory)\sbom
+  displayName: 'Create $(Build.ArtifactStagingDirectory)\sbom'
+
+- task: AzureArtifacts.manifest-generator-task.manifest-generator-task.ManifestGeneratorTask@0
+  displayName: 'Manifest Generator '
+  inputs:
+    BuildDropPath: '$(Build.ArtifactStagingDirectory)\sbom'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish SBOM'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)\sbom'
 
 # CredScan
 - task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@2

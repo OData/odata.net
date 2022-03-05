@@ -284,7 +284,7 @@ namespace Microsoft.OData.UriParser
 
             IEdmNavigationSource targetNavigationSource = null;
             ODataPathSegment lastSegment = selectedPath.Last();
-            IEdmType targetElementType = lastSegment.TargetEdmType;
+            IEdmType targetElementType = lastSegment.EdmType;
             IEdmCollectionType collection = targetElementType as IEdmCollectionType;
             if (collection != null)
             {
@@ -441,23 +441,25 @@ namespace Microsoft.OData.UriParser
 
             ODataExpandPath pathToNavProp = new ODataExpandPath(pathSoFar);
 
+            IEdmTypeReference elementTypeReference = hasDerivedTypeSegment ? derivedType.ToTypeReference() : null;
+
             // $apply
-            ApplyClause applyOption = BindApply(tokenIn.ApplyOptions, this.ResourcePathNavigationSource, targetNavigationSource);
+            ApplyClause applyOption = BindApply(tokenIn.ApplyOptions, this.ResourcePathNavigationSource, targetNavigationSource, elementTypeReference);
 
             // $compute
-            ComputeClause computeOption = BindCompute(tokenIn.ComputeOption, this.ResourcePathNavigationSource, targetNavigationSource);
+            ComputeClause computeOption = BindCompute(tokenIn.ComputeOption, this.ResourcePathNavigationSource, targetNavigationSource, elementTypeReference);
 
             var generatedProperties = GetGeneratedProperties(computeOption, applyOption);
             bool collapsed = applyOption?.Transformations.Any(t => t.Kind == TransformationNodeKind.Aggregate || t.Kind == TransformationNodeKind.GroupBy) ?? false;
 
             // $filter
-            FilterClause filterOption = BindFilter(tokenIn.FilterOption, this.ResourcePathNavigationSource, targetNavigationSource, null, generatedProperties, collapsed);
+            FilterClause filterOption = BindFilter(tokenIn.FilterOption, this.ResourcePathNavigationSource, targetNavigationSource, elementTypeReference, generatedProperties, collapsed);
 
             // $orderby
-            OrderByClause orderbyOption = BindOrderby(tokenIn.OrderByOptions, this.ResourcePathNavigationSource, targetNavigationSource, null, generatedProperties, collapsed);
+            OrderByClause orderbyOption = BindOrderby(tokenIn.OrderByOptions, this.ResourcePathNavigationSource, targetNavigationSource, elementTypeReference, generatedProperties, collapsed);
 
             // $search
-            SearchClause searchOption = BindSearch(tokenIn.SearchOption, this.ResourcePathNavigationSource, targetNavigationSource, null);
+            SearchClause searchOption = BindSearch(tokenIn.SearchOption, this.ResourcePathNavigationSource, targetNavigationSource, elementTypeReference);
 
             if (isRef)
             {
@@ -470,7 +472,7 @@ namespace Microsoft.OData.UriParser
             }
 
             // $select & $expand
-            SelectExpandClause subSelectExpand = BindSelectExpand(tokenIn.ExpandOption, tokenIn.SelectOption, parsedPath, this.ResourcePathNavigationSource, targetNavigationSource, null, generatedProperties, collapsed);
+            SelectExpandClause subSelectExpand = BindSelectExpand(tokenIn.ExpandOption, tokenIn.SelectOption, parsedPath, this.ResourcePathNavigationSource, targetNavigationSource, elementTypeReference, generatedProperties, collapsed);
 
             // $levels
             LevelsClause levelsOption = ParseLevels(tokenIn.LevelsOption, currentLevelEntityType, currentNavProp);
@@ -485,12 +487,13 @@ namespace Microsoft.OData.UriParser
         /// <param name="applyToken">The apply tokens to visit.</param>
         /// <param name="resourcePathNavigationSource">The navigation source at the resource path.</param>
         /// <param name="targetNavigationSource">The target navigation source at the current level.</param>
+        /// <param name="elementType">The target element type if different from the type of the target navigation source. Null indicates that the element type is the same as the target navigation source type.</param>
         /// <returns>The null or the built apply clause.</returns>
-        private ApplyClause BindApply(IEnumerable<QueryToken> applyToken, IEdmNavigationSource resourcePathNavigationSource, IEdmNavigationSource targetNavigationSource)
+        private ApplyClause BindApply(IEnumerable<QueryToken> applyToken, IEdmNavigationSource resourcePathNavigationSource, IEdmNavigationSource targetNavigationSource, IEdmTypeReference elementType = null)
         {
             if (applyToken != null && applyToken.Any())
             {
-                MetadataBinder binder = BuildNewMetadataBinder(this.Configuration, resourcePathNavigationSource, targetNavigationSource, null);
+                MetadataBinder binder = BuildNewMetadataBinder(this.Configuration, resourcePathNavigationSource, targetNavigationSource, elementType);
                 ApplyBinder applyBinder = new ApplyBinder(binder.Bind, binder.BindingState);
                 return applyBinder.BindApply(applyToken);
             }
@@ -504,7 +507,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="computeToken">The compute token to visit.</param>
         /// <param name="resourcePathNavigationSource">The navigation source at the resource path.</param>
         /// <param name="targetNavigationSource">The target navigation source at the current level.</param>
-        /// <param name="elementType">The target element type.</param>
+        /// <param name="elementType">The target element type if different from the type of the target navigation source. Null indicates that the element type is the same as the target navigation source type.</param>
         /// <returns>The null or the built compute clause.</returns>
         private ComputeClause BindCompute(ComputeToken computeToken, IEdmNavigationSource resourcePathNavigationSource, IEdmNavigationSource targetNavigationSource, IEdmTypeReference elementType = null)
         {
@@ -524,7 +527,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="filterToken">The filter token to visit.</param>
         /// <param name="resourcePathNavigationSource">The navigation source at the resource path.</param>
         /// <param name="targetNavigationSource">The target navigation source at the current level.</param>
-        /// <param name="elementType">The Edm element type.</param>
+        /// <param name="elementType">The target element type if different from the type of the target navigation source. Null indicates that the element type is the same as the target navigation source type.</param>
         /// <param name="generatedProperties">The generated properties.</param>
         /// <param name="collapsed">The collapsed boolean value.</param>
         /// <returns>The null or the built filter clause.</returns>
@@ -547,7 +550,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="orderByToken">The orderby token to visit.</param>
         /// <param name="resourcePathNavigationSource">The navigation source at the resource path.</param>
         /// <param name="targetNavigationSource">The target navigation source at the current level.</param>
-        /// <param name="elementType">The Edm element type.</param>
+        /// <param name="elementType">The target element type if different from the type of the target navigation source. Null indicates that the element type is the same as the target navigation source type.</param>
         /// <param name="generatedProperties">The generated properties.</param>
         /// <param name="collapsed">The collapsed boolean value.</param>
         /// <returns>The null or the built filter clause.</returns>
@@ -571,7 +574,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="searchToken">The search token to visit.</param>
         /// <param name="resourcePathNavigationSource">The navigation source at the resource path.</param>
         /// <param name="targetNavigationSource">The target navigation source at the current level.</param>
-        /// <param name="elementType">The Edm element type.</param>
+        /// <param name="elementType">The target element type if different from the type of the target navigation source. Null indicates that the element type is the same as the target navigation source type.</param>
         /// <returns>The null or the built search clause.</returns>
         private SearchClause BindSearch(QueryToken searchToken, IEdmNavigationSource resourcePathNavigationSource, IEdmNavigationSource targetNavigationSource, IEdmTypeReference elementType)
         {
@@ -593,7 +596,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="segments">The parsed segments to visit.</param>
         /// <param name="resourcePathNavigationSource">The navigation source at the resource path.</param>
         /// <param name="targetNavigationSource">The target navigation source at the current level.</param>
-        /// <param name="elementType">The Edm element type.</param>
+        /// <param name="elementType">The target element type if different from the type of the target navigation source. Null indicates that the element type is the same as the target navigation source type.</param>
         /// <param name="generatedProperties">The generated properties.</param>
         /// <param name="collapsed">The collapsed boolean value.</param>
         /// <returns>The null or the built select and expand clause.</returns>

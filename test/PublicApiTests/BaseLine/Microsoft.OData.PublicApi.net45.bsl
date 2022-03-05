@@ -2163,6 +2163,11 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
     [
     ExtensionAttribute(),
     ]
+    public static bool IsImmutable (Microsoft.OData.Edm.IEdmModel model)
+
+    [
+    ExtensionAttribute(),
+    ]
     public static bool IsKey (Microsoft.OData.Edm.IEdmProperty property)
 
     [
@@ -2194,6 +2199,11 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
     ExtensionAttribute(),
     ]
     public static Microsoft.OData.Edm.EdmLocation Location (Microsoft.OData.Edm.IEdmElement item)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static void MarkAsImmutable (Microsoft.OData.Edm.IEdmModel model)
 
     [
     ExtensionAttribute(),
@@ -5790,14 +5800,28 @@ public interface Microsoft.OData.Json.IJsonReader {
     bool Read ()
 }
 
+public interface Microsoft.OData.Json.IJsonReaderAsync {
+    System.Threading.Tasks.Task`1[[System.Object]] GetValueAsync ()
+    System.Threading.Tasks.Task`1[[System.Boolean]] ReadAsync ()
+}
+
 public interface Microsoft.OData.Json.IJsonReaderFactory {
     Microsoft.OData.Json.IJsonReader CreateJsonReader (System.IO.TextReader textReader, bool isIeee754Compatible)
+}
+
+public interface Microsoft.OData.Json.IJsonReaderFactoryAsync {
+    Microsoft.OData.Json.IJsonReaderAsync CreateAsynchronousJsonReader (System.IO.TextReader textReader, bool isIeee754Compatible)
 }
 
 public interface Microsoft.OData.Json.IJsonStreamReader : IJsonReader {
     bool CanStream ()
     System.IO.Stream CreateReadStream ()
     System.IO.TextReader CreateTextReader ()
+}
+
+public interface Microsoft.OData.Json.IJsonStreamReaderAsync : IJsonReaderAsync {
+    System.Threading.Tasks.Task`1[[System.IO.Stream]] CreateReadStreamAsync ()
+    System.Threading.Tasks.Task`1[[System.IO.TextReader]] CreateTextReaderAsync ()
 }
 
 [
@@ -7765,6 +7789,11 @@ public enum Microsoft.OData.Client.DataServiceResponsePreference : int {
     None = 0
 }
 
+public enum Microsoft.OData.Client.DeleteLinkUriOption : int {
+    IdQueryParam = 0
+    RelatedKeyAsSegment = 1
+}
+
 public enum Microsoft.OData.Client.EntityParameterSendOption : int {
     SendFullProperties = 0
     SendOnlySetProperties = 1
@@ -8044,6 +8073,7 @@ public class Microsoft.OData.Client.DataServiceContext {
     System.Uri BaseUri  { public virtual get; public virtual set; }
     Microsoft.OData.Client.DataServiceClientConfigurations Configurations  { public virtual get; }
     System.Net.ICredentials Credentials  { public virtual get; public virtual set; }
+    Microsoft.OData.Client.DeleteLinkUriOption DeleteLinkUriOption  { public virtual get; public virtual set; }
     bool DisableInstanceAnnotationMaterialization  { public virtual get; public virtual set; }
     bool EnableWritingODataAnnotationWithoutPrefix  { public virtual get; public virtual set; }
     System.Collections.ObjectModel.ReadOnlyCollection`1[[Microsoft.OData.Client.EntityDescriptor]] Entities  { public virtual get; }

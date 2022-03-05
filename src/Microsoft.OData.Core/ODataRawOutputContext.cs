@@ -31,7 +31,11 @@ namespace Microsoft.OData
         private Stream messageOutputStream;
 
         /// <summary>The asynchronous output stream if we're writing asynchronously.</summary>
+#if NETSTANDARD1_1
         private AsyncBufferedStream asynchronousOutputStream;
+#else
+        private Stream asynchronousOutputStream;
+#endif
 
         /// <summary>The output stream to write to (both sync and async cases).</summary>
         private Stream outputStream;
@@ -64,7 +68,11 @@ namespace Microsoft.OData
                 }
                 else
                 {
+#if NETSTANDARD1_1
                     this.asynchronousOutputStream = new AsyncBufferedStream(this.messageOutputStream);
+#else
+	                this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, ODataConstants.DefaultOutputBufferSize);
+#endif
                     this.outputStream = this.asynchronousOutputStream;
                 }
             }
@@ -286,7 +294,11 @@ namespace Microsoft.OData
         {
             if (this.asynchronousOutputStream != null)
             {
+#if NETSTANDARD1_1
                 this.asynchronousOutputStream.FlushSync();
+#else
+                this.asynchronousOutputStream.Flush();
+#endif
             }
         }
 
@@ -325,8 +337,11 @@ namespace Microsoft.OData
                     // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitly.
                     if (this.asynchronousOutputStream != null)
                     {
+#if NETSTANDARD1_1
                         this.asynchronousOutputStream.FlushSync();
-                        this.asynchronousOutputStream.Dispose();
+#else
+                        this.asynchronousOutputStream.Flush();
+#endif
                     }
 
                     // Dispose the message stream (note that we OWN this stream, so we always dispose it).
