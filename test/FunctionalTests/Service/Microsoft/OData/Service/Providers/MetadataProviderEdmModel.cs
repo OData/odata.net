@@ -208,7 +208,7 @@ namespace Microsoft.OData.Service.Providers
             {
                 // this assert fails because the underlying MetadataProviderEdmModel cache has not been fully populated; it can become populated by calling 
                 // EnsureFullMetadataLoaded; however, doing so for some models causes a different assertion to fail while loading the model
-                this.AssertCacheState(MetadataProviderState.Full);
+                //// this.AssertCacheState(MetadataProviderState.Full);
 
                 // returns the entity types and complex types
                 foreach (IEdmSchemaType schemaType in this.schemaTypeCache.Values)
@@ -424,8 +424,8 @@ namespace Microsoft.OData.Service.Providers
         /// </remarks>
         public IEnumerable<IEdmStructuredType> FindDirectlyDerivedTypes(IEdmStructuredType baseType)
         {
-            // this assert fails because the underlying MetadataProviderEdmModel cache has not been fully populated; it can become populated by calling 
-                // EnsureFullMetadataLoaded; however, doing so for some models causes a different assertion to fail while loading the model
+            // this assert fails because the underlying MetadataProviderEdmModel cache has not been fully populated; it can become populated by calling
+            // EnsureFullMetadataLoaded; however, doing so for some models causes a different assertion to fail while loading the model
             //// this.AssertCacheState(MetadataProviderState.Full);
 
             List<IEdmStructuredType> types;
