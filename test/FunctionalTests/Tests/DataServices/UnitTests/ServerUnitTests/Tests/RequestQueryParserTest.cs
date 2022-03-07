@@ -196,6 +196,7 @@ namespace AstoriaUnitTests.Tests
         [TestMethod]
         public void RequestQueryParserIdentifiersAmbiguous()
         {
+            Assert.Fail();
             string[] predicates = new string[]
             {
                 "ID eq 0",
