@@ -21,10 +21,11 @@ namespace Microsoft.OData
         }
         public T GetObject()
         {
-            if (_objectsAvailable.Count != 0)
+            int listSize = _objectsAvailable.Count;
+            if (listSize != 0)
             {
-                var obj = _objectsAvailable[0];
-                _objectsAvailable.RemoveAt(0);
+                var obj = _objectsAvailable[listSize - 1];
+                _objectsAvailable.RemoveAt(listSize - 1);
 
                 return obj;
             }
