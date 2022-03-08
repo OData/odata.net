@@ -8,11 +8,9 @@ namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
 
-    using System;
     using System.Diagnostics;
     using System.Threading.Tasks;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Metadata;
 
     #endregion Namespaces
 
@@ -44,7 +42,14 @@ namespace Microsoft.OData.JsonLight
             IEdmNavigationSource navigationSource,
             IEdmEntityType expectedEntityType)
         {
-            this.underlyingReader = new ODataJsonLightReader(jsonLightInputContext, navigationSource, expectedEntityType, /*readingResourceSet*/ true, /*readingParameter*/ false, /*readingDelta*/ true, /*listener*/ null);
+            this.underlyingReader = new ODataJsonLightReader(
+                jsonLightInputContext,
+                navigationSource,
+                expectedEntityType,
+                readingResourceSet: true,
+                readingParameter: false,
+                readingDelta: true,
+                listener: null);
         }
 
         #endregion
@@ -166,36 +171,32 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary> Asynchronously reads the next <see cref="Microsoft.OData.ODataItem" /> from the message payload. </summary>
-        /// <returns>A task that when completed indicates whether more items were read.</returns>
-        public override Task<bool> ReadAsync()
+        /// <returns>
+        /// A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains true if more items were read; otherwise false.
+        /// </returns>
+        public override async Task<bool> ReadAsync()
         {
-            return this.underlyingReader.ReadAsync().FollowOnSuccessWith(t =>
+            var result = await this.underlyingReader.ReadAsync()
+                .ConfigureAwait(false);
+
+            if (this.underlyingReader.State == ODataReaderState.DeletedResourceStart)
             {
-                if (this.underlyingReader.State == ODataReaderState.DeletedResourceStart)
+                while ((result = await this.underlyingReader.ReadAsync().ConfigureAwait(false)) && this.underlyingReader.State != ODataReaderState.DeletedResourceEnd)
                 {
-                    this.SkipToDeletedResourceEnd();
+                    // Skip to end of a deleted resource
+                    this.SetNestedLevel();
                 }
-
-                this.SetNestedLevel();
-                return t.Result;
-            });
-        }
-
-#endregion
-
-#region Private Methods
-
-        /// <summary> Sets nested level following a successful read. </summary>
-        private async void SkipToDeletedResourceEnd()
-        {
-            if (this.underlyingReader.State != ODataReaderState.DeletedResourceEnd)
-            {
-                await underlyingReader.ReadAsync().FollowOnSuccessWith(t =>
-                {
-                    SkipToDeletedResourceEnd();
-                }).ConfigureAwait(false);
             }
+
+            this.SetNestedLevel();
+
+            return result;
         }
+
+        #endregion
+
+        #region Private Methods
 
         /// <summary> Sets nested level following a successful read. </summary>
         private void SetNestedLevel()
