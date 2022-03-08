@@ -12,6 +12,7 @@ namespace Microsoft.OData
     {
         private readonly Func<T> objectGenerator;
         private readonly ObjectWrapper[] items;
+        private protected T firstItem;
 
         public ObjectPool(Func<T> objectGenerator)
         {
@@ -20,9 +21,18 @@ namespace Microsoft.OData
         }
         public T Get()
         {
+            T item = firstItem;
+
+            if (item != null)
+            {
+                firstItem = default(T);
+                return item;
+            }
+
             for (int i = 0; i < items.Length; i++)
             {
-                 T item = items[i].Element;
+                item = items[i].Element;
+
                 if (item != null)
                 {
                     items[i].Element = default(T);
@@ -35,12 +45,19 @@ namespace Microsoft.OData
 
         public void Return(T obj)
         {
-            for (var i = 0; i < items.Length; ++i)
+            if (firstItem == null)
             {
-                if(items[i].Element == null)
+                firstItem = obj;
+            }
+            else
+            {
+                for (var i = 0; i < items.Length; ++i)
                 {
-                    items[i].Element = obj;
-                    break;
+                    if (items[i].Element == null)
+                    {
+                        items[i].Element = obj;
+                        break;
+                    }
                 }
             }
         }
@@ -49,8 +66,6 @@ namespace Microsoft.OData
         private struct ObjectWrapper
         {
             public T Element;
-            public ObjectWrapper(T item) => Element = item;
-            public static implicit operator T(ObjectWrapper wrapper) => wrapper.Element;
         }
     }
 }
