@@ -28,6 +28,7 @@ namespace AstoriaUnitTests.Tests
         [TestCategory("Partition2"), TestMethod]
         public void CallbackAndFormatSuccessSmokeTest()
         {
+            Assert.Fail("Gdebruin");
             using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
             {
                 request.DataServiceType = typeof(CustomDataContext);
