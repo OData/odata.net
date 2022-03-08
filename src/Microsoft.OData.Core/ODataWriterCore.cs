@@ -4133,7 +4133,7 @@ namespace Microsoft.OData
 
                 if (resource != null)
                 {
-                    duplicatePropertyNameChecker = writerSettings.Validator.CreateDuplicatePropertyNameChecker();
+                    duplicatePropertyNameChecker = writerSettings.Validator.GetDuplicatePropertyNameChecker();
                 }
 
                 this.serializationInfo = serializationInfo;

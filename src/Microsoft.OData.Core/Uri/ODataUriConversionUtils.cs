@@ -585,9 +585,9 @@ namespace Microsoft.OData
                 }
                 else
                 {
-                    IDuplicatePropertyNameChecker duplicatePropertyNameChecker = jsonLightValueSerializer.CreateDuplicatePropertyNameChecker();
+                    IDuplicatePropertyNameChecker duplicatePropertyNameChecker = jsonLightValueSerializer.GetDuplicatePropertyNameChecker();
                     writeValue(jsonLightValueSerializer, duplicatePropertyNameChecker);
-                    jsonLightValueSerializer.ReleaseDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
+                    jsonLightValueSerializer.ReturnDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
                 }
 
                 jsonLightValueSerializer.AssertRecursionDepthIsZero();

@@ -5,41 +5,52 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 
 namespace Microsoft.OData
 {
     internal class ObjectPool<T>
     {
-        private readonly List<T> _objectsAvailable;
-        private readonly Func<T> _objectGenerator;
+        private readonly Func<T> objectGenerator;
+        private readonly ObjectWrapper[] items;
 
         public ObjectPool(Func<T> objectGenerator)
         {
-            _objectGenerator = objectGenerator ?? throw new ArgumentNullException(nameof(objectGenerator));
-            _objectsAvailable = new List<T>();
+            this.objectGenerator = objectGenerator ?? throw new ArgumentNullException(nameof(objectGenerator));
+            items = new ObjectWrapper[32];
         }
-        public T GetObject()
+        public T Get()
         {
-            int listSize = _objectsAvailable.Count;
-            if (listSize != 0)
+            for (int i = 0; i < items.Length; i++)
             {
-                var obj = _objectsAvailable[listSize - 1];
-                _objectsAvailable.RemoveAt(listSize - 1);
-
-                return obj;
+                 T item = items[i].Element;
+                if (item != null)
+                {
+                    items[i].Element = default(T);
+                    return item;
+                }
             }
-            else
-            {
-                T obj = _objectGenerator();
 
-                return obj;
-            }
+            return objectGenerator();
         }
 
-        public void ReleaseObject(T obj)
+        public void Return(T obj)
         {
-            _objectsAvailable.Add(obj);
+            for (var i = 0; i < items.Length; ++i)
+            {
+                if(items[i].Element == null)
+                {
+                    items[i].Element = obj;
+                    break;
+                }
+            }
+        }
+
+        // PERF: the struct wrapper avoids array-covariance-checks from the runtime when assigning to elements of the array.
+        private struct ObjectWrapper
+        {
+            public T Element;
+            public ObjectWrapper(T item) => Element = item;
+            public static implicit operator T(ObjectWrapper wrapper) => wrapper.Element;
         }
     }
 }

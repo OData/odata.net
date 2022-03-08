@@ -201,13 +201,13 @@ namespace Microsoft.OData
             ODataResourceValue resourceValue = value as ODataResourceValue;
             if (resourceValue != null)
             {
-                IDuplicatePropertyNameChecker duplicatePropertyNameChecker = this.valueSerializer.CreateDuplicatePropertyNameChecker();
+                IDuplicatePropertyNameChecker duplicatePropertyNameChecker = this.valueSerializer.GetDuplicatePropertyNameChecker();
                 this.WriteInstanceAnnotationName(propertyName, name);
                 this.valueSerializer.WriteResourceValue(resourceValue,
                     expectedType,
                     treatLikeOpenProperty,
                     duplicatePropertyNameChecker);
-                this.valueSerializer.ReleaseDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
+                this.valueSerializer.ReturnDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
                 return;
             }
 
@@ -396,7 +396,7 @@ namespace Microsoft.OData
                 await this.valueSerializer.WriteResourceValueAsync(resourceValue,
                     expectedType,
                     treatLikeOpenProperty,
-                    this.valueSerializer.CreateDuplicatePropertyNameChecker()).ConfigureAwait(false);
+                    this.valueSerializer.GetDuplicatePropertyNameChecker()).ConfigureAwait(false);
                 return;
             }
 

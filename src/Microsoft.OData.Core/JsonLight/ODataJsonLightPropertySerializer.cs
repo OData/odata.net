@@ -82,7 +82,7 @@ namespace Microsoft.OData.JsonLight
                         property,
                         null /*owningType*/,
                         true /* isTopLevel */,
-                        this.CreateDuplicatePropertyNameChecker(),
+                        this.GetDuplicatePropertyNameChecker(),
                         null /* metadataBuilder */);
                     this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
 
@@ -280,7 +280,7 @@ namespace Microsoft.OData.JsonLight
                         property,
                         null /*owningType*/,
                         true /* isTopLevel */,
-                        this.CreateDuplicatePropertyNameChecker(),
+                        this.GetDuplicatePropertyNameChecker(),
                         null /* metadataBuilder */).ConfigureAwait(false);
                     this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
 
@@ -645,14 +645,14 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(!this.currentPropertyInfo.IsTopLevel, "Resource property should not be top level");
             this.JsonWriter.WriteName(property.Name);
 
-            IDuplicatePropertyNameChecker duplicatePropertyNameChecker = this.CreateDuplicatePropertyNameChecker();
+            IDuplicatePropertyNameChecker duplicatePropertyNameChecker = this.GetDuplicatePropertyNameChecker();
 
             this.JsonLightValueSerializer.WriteResourceValue(
                 resourceValue,
                 this.currentPropertyInfo.MetadataType.TypeReference,
                 isOpenPropertyType,
                 duplicatePropertyNameChecker);
-            this.ReleaseDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
+            this.ReturnDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
         }
 
         /// <summary>
@@ -1078,7 +1078,7 @@ namespace Microsoft.OData.JsonLight
                 resourceValue,
                 this.currentPropertyInfo.MetadataType.TypeReference,
                 isOpenPropertyType,
-                this.CreateDuplicatePropertyNameChecker()).ConfigureAwait(false);
+                this.GetDuplicatePropertyNameChecker()).ConfigureAwait(false);
         }
 
         /// <summary>

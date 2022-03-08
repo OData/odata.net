@@ -488,7 +488,7 @@ namespace Microsoft.OData.JsonLight
             this.jsonLightResourceSerializer.WriteResourceEndMetadataProperties(resourceScope, resourceScope.DuplicatePropertyNameChecker);
 
             // Release the DuplicatePropertyNameChecker to the ObjectPool since an instance in removed from the ObjectPool each time we create a ResourceScope.
-            this.jsonLightResourceSerializer.ReleaseDuplicatePropertyNameChecker(resourceScope.DuplicatePropertyNameChecker);
+            this.jsonLightResourceSerializer.ReturnDuplicatePropertyNameChecker(resourceScope.DuplicatePropertyNameChecker);
 
             // Close the object scope
             this.jsonWriter.EndObjectScope();

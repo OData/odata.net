@@ -175,7 +175,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 };
 
                 var entityTypeRef = new EdmEntityTypeReference(entityType, false);
-                serializer.WriteResourceValue(resourceValue, entityTypeRef, false, serializer.CreateDuplicatePropertyNameChecker());
+                serializer.WriteResourceValue(resourceValue, entityTypeRef, false, serializer.GetDuplicatePropertyNameChecker());
             });
 
             Assert.Equal(@"{""Name"":""MyName"",""Location"":{""City"":""MyCity""}}", result);
@@ -251,7 +251,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 };
 
                 var entityTypeRef = new EdmEntityTypeReference(entityType, false);
-                serializer.WriteResourceValue(resourceValue, entityTypeRef, false, serializer.CreateDuplicatePropertyNameChecker());
+                serializer.WriteResourceValue(resourceValue, entityTypeRef, false, serializer.GetDuplicatePropertyNameChecker());
             });
 
             Assert.Equal(@"{""Name"":""MyName"",""Location"":{""Name"":""AddressName"",""City"":""MyCity""}}", result);
@@ -275,7 +275,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 };
 
                 var complexTypeRef = new EdmComplexTypeReference(complexType, false);
-                serializer.WriteResourceValue(resourceValue, complexTypeRef, false, serializer.CreateDuplicatePropertyNameChecker());
+                serializer.WriteResourceValue(resourceValue, complexTypeRef, false, serializer.GetDuplicatePropertyNameChecker());
             });
 
             Assert.Equal(@"{""@Is.ReadOnly"":true}", result);
@@ -307,7 +307,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 };
 
                 var complexTypeRef = new EdmComplexTypeReference(complexType, false);
-                serializer.WriteResourceValue(resourceValue, complexTypeRef, false, serializer.CreateDuplicatePropertyNameChecker());
+                serializer.WriteResourceValue(resourceValue, complexTypeRef, false, serializer.GetDuplicatePropertyNameChecker());
             });
 
             Assert.Equal(expect, result);

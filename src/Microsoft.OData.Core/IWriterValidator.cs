@@ -18,12 +18,12 @@ namespace Microsoft.OData
         /// Creates a DuplicatePropertyNameChecker instance.
         /// </summary>
         /// <returns>The created instance.</returns>
-        IDuplicatePropertyNameChecker CreateDuplicatePropertyNameChecker();
+        IDuplicatePropertyNameChecker GetDuplicatePropertyNameChecker();
 
         /// <summary>
         /// Release a DuplicatePropertyNameChecker instance.
         /// </summary>
-        void ReleaseDuplicatePropertyNameChecker(IDuplicatePropertyNameChecker duplicatePropertyNameChecker);
+        void ReturnDuplicatePropertyNameChecker(IDuplicatePropertyNameChecker duplicatePropertyNameChecker);
 
         /// <summary>
         /// Validates a resource in an expanded link to make sure that the types match.
