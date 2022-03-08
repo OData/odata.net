@@ -1766,6 +1766,7 @@ static readonly Microsoft.OData.Edm.Validation.ValidationRules.EntitySetTypeMust
 static readonly Microsoft.OData.Edm.Validation.ValidationRules.EntityTypeBoundEscapeFunctionMustBeUnique -> Microsoft.OData.Edm.Validation.ValidationRule<Microsoft.OData.Edm.IEdmEntityType>
 static readonly Microsoft.OData.Edm.Validation.ValidationRules.EntityTypeDuplicatePropertyNameSpecifiedInEntityKey -> Microsoft.OData.Edm.Validation.ValidationRule<Microsoft.OData.Edm.IEdmEntityType>
 static readonly Microsoft.OData.Edm.Validation.ValidationRules.EntityTypeEntityKeyMustBeScalar -> Microsoft.OData.Edm.Validation.ValidationRule<Microsoft.OData.Edm.IEdmEntityType>
+static readonly Microsoft.OData.Edm.Validation.ValidationRules.EntityTypeInvalidKeyKeyDefinedInAncestor -> Microsoft.OData.Edm.Validation.ValidationRule<Microsoft.OData.Edm.IEdmEntityType>
 static readonly Microsoft.OData.Edm.Validation.ValidationRules.EntityTypeInvalidKeyKeyDefinedInBaseClass -> Microsoft.OData.Edm.Validation.ValidationRule<Microsoft.OData.Edm.IEdmEntityType>
 static readonly Microsoft.OData.Edm.Validation.ValidationRules.EntityTypeInvalidKeyNullablePart -> Microsoft.OData.Edm.Validation.ValidationRule<Microsoft.OData.Edm.IEdmEntityType>
 static readonly Microsoft.OData.Edm.Validation.ValidationRules.EntityTypeKeyMissingOnEntityType -> Microsoft.OData.Edm.Validation.ValidationRule<Microsoft.OData.Edm.IEdmEntityType>

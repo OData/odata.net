@@ -924,28 +924,62 @@ namespace Microsoft.OData.Edm.Validation
                     }
                 });
 
+        // Remove this in 8.x. It is superseded by EntityTypeInvalidKeyKeyDefinedInAncestor
         /// <summary>
         /// Validates that a key is not defined if there is already a key in the base type.
         /// </summary>
+        [Obsolete("Please use EntityTypeInvalidKeyKeyDefinedInAncestor")]
         public static readonly ValidationRule<IEdmEntityType> EntityTypeInvalidKeyKeyDefinedInBaseClass =
+            new ValidationRule<IEdmEntityType>(
+               (context, entityType) =>
+               {
+                   if (entityType.BaseType != null &&
+                       entityType.DeclaredKey != null &&
+                       entityType.BaseType.TypeKind == EdmTypeKind.Entity &&
+                       entityType.BaseEntityType().DeclaredKey != null)
+                   {
+                       context.AddError(
+                       entityType.Location(),
+                       EdmErrorCode.InvalidKey,
+                       Strings.EdmModel_Validator_Semantic_InvalidKeyKeyDefinedInBaseClass(entityType.Name, entityType.BaseEntityType().Name));
+                   }
+               });
+
+        /// <summary>
+        /// Validates that a key is not more than once in a type hierarchy
+        /// </summary>
+        public static readonly ValidationRule<IEdmEntityType> EntityTypeInvalidKeyKeyDefinedInAncestor =
             new ValidationRule<IEdmEntityType>(
                 (context, entityType) =>
                 {
-                    if (entityType.BaseType != null &&
-                        entityType.DeclaredKey != null &&
-                        entityType.BaseType.TypeKind == EdmTypeKind.Entity &&
-                        entityType.BaseEntityType().DeclaredKey != null)
+                    bool foundKey = entityType.DeclaredKey != null;
+                    IEdmEntityType baseType = entityType;
+                    while ((baseType = baseType.BaseEntityType()) != null)
                     {
-                        context.AddError(
-                        entityType.Location(),
-                        EdmErrorCode.InvalidKey,
-                        Strings.EdmModel_Validator_Semantic_InvalidKeyKeyDefinedInBaseClass(entityType.Name, entityType.BaseEntityType().Name));
+                        if (baseType.DeclaredKey != null)
+                        {
+                            if(foundKey)
+                            {
+                                context.AddError(
+                                entityType.Location(),
+                                EdmErrorCode.InvalidKey,
+                                Strings.EdmModel_Validator_Semantic_InvalidKeyKeyDefinedInBaseClass(entityType.Name, baseType.Name));
+                                break;
+                            }
+
+                            foundKey = true;
+                        }
                     }
                 });
 
+        // Remove this rule in 8.x.
         /// <summary>
         /// Validates that the entity type has a key.
+        /// This rule is deprecated as non-abstract entity types no longer require keys if they are only used in singletons
+        /// or single-valued navigation properties.  Use NavigationSourceTypeHasNoKeys to validate that
+        /// any entity type used in a collection has an entity key defined.
         /// </summary>
+        [Obsolete("Entities only used in singletons/single-valued navigation properties do not require keys. Use NavigationSourceTypeHasNoKeys instead.")]
         public static readonly ValidationRule<IEdmEntityType> EntityTypeKeyMissingOnEntityType =
             new ValidationRule<IEdmEntityType>(
                 (context, entityType) =>
