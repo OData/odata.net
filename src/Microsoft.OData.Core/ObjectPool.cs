@@ -12,7 +12,7 @@ namespace Microsoft.OData
     {
         private readonly Func<T> objectGenerator;
         private readonly ObjectWrapper[] items;
-        private protected T firstItem;
+        private T firstItem;
 
         public ObjectPool(Func<T> objectGenerator)
         {
