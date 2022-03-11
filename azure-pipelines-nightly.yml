@@ -60,10 +60,21 @@ steps:
       $publish.GacInstall("$(gacUtil)")
 
 - task: DotNetCoreCLI@2
-  displayName: 'Build Product'  
+  displayName: 'Build Product with Release'  
   inputs:
     command: 'build'
-    arguments: '--configuration $(BuildConfiguration)'
+    arguments: '--configuration Release'
+    projects: |
+     $(Build.SourcesDirectory)\src\Microsoft.Spatial\Microsoft.Spatial.csproj
+     $(Build.SourcesDirectory)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj
+     $(Build.SourcesDirectory)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj
+     $(Build.SourcesDirectory)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build Product with Debug'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration Debug'
     projects: |
      $(Build.SourcesDirectory)\src\Microsoft.Spatial\Microsoft.Spatial.csproj
      $(Build.SourcesDirectory)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj
@@ -96,39 +107,71 @@ steps:
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.TestCommon\Microsoft.OData.TestCommon.csproj
      
 - task: DotNetCoreCLI@2
-  displayName: 'Build Unit Test - EDM'  
+  displayName: 'Build Unit Test - EDM with Release'  
   inputs:
     command: 'build'
-    arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    arguments: '--configuration Release --no-incremental'
+    projects: |
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj
+     
+- task: DotNetCoreCLI@2
+  displayName: 'Build Unit Test - EDM with Debug'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration Debug --no-incremental'
     projects: |
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj
       
      
 - task: DotNetCoreCLI@2
-  displayName: 'Build Unit Test - Spatial'  
+  displayName: 'Build Unit Test - Spatial with Release'  
   inputs:
     command: 'build'
-    arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    arguments: '--configuration Release --no-incremental'
+    projects: |
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
+      
+     
+- task: DotNetCoreCLI@2
+  displayName: 'Build Unit Test - Spatial with Debug'  
+  inputs:
+    command: 'build'
+    arguments: '--configuration Debug --no-incremental'
     projects: |
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
        
      
 - task: DotNetCoreCLI@2
-  displayName: 'Build Unit Test - Core'  
+  displayName: 'Build Unit Test - Core with Release'
   inputs:
     command: 'build'
-    arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    arguments: '--configuration Release --no-incremental'
     projects: |
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
      
+- task: DotNetCoreCLI@2
+  displayName: 'Build Unit Test - Core With Debug'
+  inputs:
+    command: 'build'
+    arguments: '--configuration Debug --no-incremental'
+    projects: |
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
      
 - task: DotNetCoreCLI@2
   displayName: 'Build Unit Test - Client'  
   inputs:
     command: 'build'
-    arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    arguments: '--configuration Release --no-incremental'
     projects: |
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj          
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build Unit Test - Client'
+  inputs:
+    command: 'build'
+    arguments: '--configuration Debug --no-incremental'
+    projects: |
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj
           
     
 
@@ -178,6 +221,8 @@ steps:
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests\Microsoft.Data.Web.UnitTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ClientUnitTests\Microsoft.Data.WebClient.UnitTests.vbproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ClientCSharpUnitTests\Microsoft.Data.WebClientCSharp.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\Client.TDD.Tests\Microsoft.OData.Client.TDDUnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat.Tests\Microsoft.Test.OData.PluggableFormat.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Framework\AstoriaTestFramework.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\ddbasics\Microsoft.Test.Data.Services.DDBasics.csproj
@@ -189,7 +234,6 @@ steps:
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Reader.Tests\Microsoft.Test.Taupo.OData.Reader.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Writer.Tests\Microsoft.Test.Taupo.OData.Writer.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Scenario.Tests\Microsoft.Test.Taupo.OData.Scenario.Tests.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat.Tests\Microsoft.Test.OData.PluggableFormat.Tests.csproj
                
   enabled: true
 
@@ -207,6 +251,8 @@ steps:
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests\Microsoft.Data.Web.UnitTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ClientUnitTests\Microsoft.Data.WebClient.UnitTests.vbproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ClientCSharpUnitTests\Microsoft.Data.WebClientCSharp.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\Client.TDD.Tests\Microsoft.OData.Client.TDDUnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat.Tests\Microsoft.Test.OData.PluggableFormat.Tests.csproj
   enabled: true
 
 - task: Powershell@2
@@ -270,36 +316,67 @@ steps:
      popd
     preferredAzurePowerShellVersion: 5.1.1
 
-
 - task: DotNetCoreCLI@2
-  displayName: 'Spatial Test'
+  displayName: 'Spatial Test with Release'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --no-build --collect "Code coverage"'
+    arguments: '--configuration Release --no-build --collect "Code coverage"'
     projects: |      
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
 
 - task: DotNetCoreCLI@2
-  displayName: 'EDM Test'
+  displayName: 'Spatial Test with Debug'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --no-build --collect "Code coverage"'
+    arguments: '--configuration Debug --no-build --collect "Code coverage"'
+    projects: |      
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj
+
+- task: DotNetCoreCLI@2
+  displayName: 'EDM Test with Release'
+  inputs:
+    command: 'test'
+    arguments: '--configuration Release --no-build --collect "Code coverage"'
     projects: |      
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj
 
 - task: DotNetCoreCLI@2
-  displayName: 'Core Test'
+  displayName: 'EDM Test with Debug'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --no-build --collect "Code coverage"'
+    arguments: '--configuration Debug --no-build --collect "Code coverage"'
+    projects: |      
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj
+
+- task: DotNetCoreCLI@2
+  displayName: 'Core Test With Release'
+  inputs:
+    command: 'test'
+    arguments: '--configuration Release --no-build --collect "Code coverage"'
     projects: |      
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
 
 - task: DotNetCoreCLI@2
-  displayName: 'Client Test'
+  displayName: 'Core Test With Debug'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --no-build --collect "Code coverage"'
+    arguments: '--configuration Debug --no-build --collect "Code coverage"'
+    projects: |      
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj
+
+- task: DotNetCoreCLI@2
+  displayName: 'Client Test with Release'
+  inputs:
+    command: 'test'
+    arguments: '--configuration Release --no-build --collect "Code coverage"'
+    projects: |      
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj
+
+- task: DotNetCoreCLI@2
+  displayName: 'Client Test with Debug'
+  inputs:
+    command: 'test'
+    arguments: '--configuration Debug --no-build --collect "Code coverage"'
     projects: |      
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj
 
@@ -328,6 +405,8 @@ steps:
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests\Microsoft.Data.Web.UnitTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ClientUnitTests\Microsoft.Data.WebClient.UnitTests.vbproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ClientCSharpUnitTests\Microsoft.Data.WebClientCSharp.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\Client.TDD.Tests\Microsoft.OData.Client.TDDUnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat.Tests\Microsoft.Test.OData.PluggableFormat.Tests.csproj  
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\ddbasics\Microsoft.Test.Data.Services.DDBasics.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Common.Tests\Microsoft.Test.Taupo.OData.Common.Tests.csproj
@@ -335,7 +414,6 @@ steps:
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Reader.Tests\Microsoft.Test.Taupo.OData.Reader.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Writer.Tests\Microsoft.Test.Taupo.OData.Writer.Tests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.Scenario.Tests\Microsoft.Test.Taupo.OData.Scenario.Tests.csproj
-     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat.Tests\Microsoft.Test.OData.PluggableFormat.Tests.csproj  
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj
   enabled: true
 
@@ -355,6 +433,8 @@ steps:
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests\Microsoft.Data.Web.UnitTests.csproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ClientUnitTests\Microsoft.Data.WebClient.UnitTests.vbproj
      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\ClientCSharpUnitTests\Microsoft.Data.WebClientCSharp.UnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\Client.TDD.Tests\Microsoft.OData.Client.TDDUnitTests.csproj
+     $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat.Tests\Microsoft.Test.OData.PluggableFormat.Tests.csproj  
   enabled: true
 
 - script: |
