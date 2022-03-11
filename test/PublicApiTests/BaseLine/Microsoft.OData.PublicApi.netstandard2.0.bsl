@@ -1903,6 +1903,16 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
     [
     ExtensionAttribute(),
     ]
+    public static Microsoft.OData.Edm.IEdmProperty FindProperty (Microsoft.OData.Edm.IEdmStructuredType structuredType, string propertyName, bool caseInsensitive)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static Microsoft.OData.Edm.IEdmProperty FindProperty (Microsoft.OData.Edm.IEdmStructuredTypeReference structuredType, string propertyName, bool caseInsensitive)
+
+    [
+    ExtensionAttribute(),
+    ]
     public static Microsoft.OData.Edm.Vocabularies.IEdmTerm FindTerm (Microsoft.OData.Edm.IEdmModel model, string qualifiedName)
 
     [
@@ -2163,6 +2173,11 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
     [
     ExtensionAttribute(),
     ]
+    public static bool IsImmutable (Microsoft.OData.Edm.IEdmModel model)
+
+    [
+    ExtensionAttribute(),
+    ]
     public static bool IsKey (Microsoft.OData.Edm.IEdmProperty property)
 
     [
@@ -2194,6 +2209,11 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
     ExtensionAttribute(),
     ]
     public static Microsoft.OData.Edm.EdmLocation Location (Microsoft.OData.Edm.IEdmElement item)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static void MarkAsImmutable (Microsoft.OData.Edm.IEdmModel model)
 
     [
     ExtensionAttribute(),
@@ -3411,9 +3431,18 @@ public sealed class Microsoft.OData.Edm.Validation.ValidationRules {
     public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEntityType]] EntityTypeBoundEscapeFunctionMustBeUnique = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEntityType]
     public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEntityType]] EntityTypeDuplicatePropertyNameSpecifiedInEntityKey = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEntityType]
     public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEntityType]] EntityTypeEntityKeyMustBeScalar = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEntityType]
+    public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEntityType]] EntityTypeInvalidKeyKeyDefinedInAncestor = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEntityType]
+    [
+    ObsoleteAttribute(),
+    ]
     public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEntityType]] EntityTypeInvalidKeyKeyDefinedInBaseClass = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEntityType]
+
     public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEntityType]] EntityTypeInvalidKeyNullablePart = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEntityType]
+    [
+    ObsoleteAttribute(),
+    ]
     public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEntityType]] EntityTypeKeyMissingOnEntityType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEntityType]
+
     public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEntityType]] EntityTypeKeyPropertyMustBelongToEntity = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEntityType]
     public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEntityType]] EntityTypeKeyTypeCannotBeEdmPrimitiveType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEntityType]
     public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEnumMember]] EnumMemberValueMustHaveSameTypeAsUnderlyingType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEnumMember]
@@ -3763,6 +3792,21 @@ public abstract class Microsoft.OData.Edm.Vocabularies.EdmValue : IEdmElement, I
 
     Microsoft.OData.Edm.IEdmTypeReference Type  { public virtual get; }
     Microsoft.OData.Edm.Vocabularies.EdmValueKind ValueKind  { public abstract get; }
+}
+
+[
+ExtensionAttribute(),
+]
+public sealed class Microsoft.OData.Edm.Vocabularies.IEdmTermExtensions {
+    [
+    ExtensionAttribute(),
+    ]
+    public static Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation CreateVocabularyAnnotation (Microsoft.OData.Edm.Vocabularies.IEdmTerm term, Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable target)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation CreateVocabularyAnnotation (Microsoft.OData.Edm.Vocabularies.IEdmTerm term, Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable target, string qualifier)
 }
 
 public class Microsoft.OData.Edm.Vocabularies.EdmAnnotationPathExpression : Microsoft.OData.Edm.EdmPathExpression, IEdmElement, IEdmExpression, IEdmPathExpression {
@@ -5504,6 +5548,7 @@ public sealed class Microsoft.OData.ODataMessageReaderSettings {
     bool EnableCharactersCheck  { public get; public set; }
     bool EnableMessageStreamDisposal  { public get; public set; }
     bool EnablePrimitiveTypeConversion  { public get; public set; }
+    bool EnablePropertyNameCaseInsensitive  { public get; public set; }
     Microsoft.OData.ODataLibraryCompatibility LibraryCompatibility  { public get; public set; }
     Microsoft.OData.ODataVersion MaxProtocolVersion  { public get; public set; }
     Microsoft.OData.ODataMessageQuotas MessageQuotas  { public get; public set; }
@@ -5822,14 +5867,29 @@ public interface Microsoft.OData.Json.IJsonReader {
     bool Read ()
 }
 
+public interface Microsoft.OData.Json.IJsonReaderAsync : IJsonReader {
+    System.Threading.Tasks.Task`1[[System.Object]] GetValueAsync ()
+    System.Threading.Tasks.Task`1[[System.Boolean]] ReadAsync ()
+}
+
 public interface Microsoft.OData.Json.IJsonReaderFactory {
     Microsoft.OData.Json.IJsonReader CreateJsonReader (System.IO.TextReader textReader, bool isIeee754Compatible)
+}
+
+public interface Microsoft.OData.Json.IJsonReaderFactoryAsync {
+    Microsoft.OData.Json.IJsonReaderAsync CreateAsynchronousJsonReader (System.IO.TextReader textReader, bool isIeee754Compatible)
 }
 
 public interface Microsoft.OData.Json.IJsonStreamReader : IJsonReader {
     bool CanStream ()
     System.IO.Stream CreateReadStream ()
     System.IO.TextReader CreateTextReader ()
+}
+
+public interface Microsoft.OData.Json.IJsonStreamReaderAsync : IJsonReader, IJsonReaderAsync {
+    System.Threading.Tasks.Task`1[[System.Boolean]] CanStreamAsync ()
+    System.Threading.Tasks.Task`1[[System.IO.Stream]] CreateReadStreamAsync ()
+    System.Threading.Tasks.Task`1[[System.IO.TextReader]] CreateTextReaderAsync ()
 }
 
 [
@@ -7797,6 +7857,11 @@ public enum Microsoft.OData.Client.DataServiceResponsePreference : int {
     None = 0
 }
 
+public enum Microsoft.OData.Client.DeleteLinkUriOption : int {
+    IdQueryParam = 0
+    RelatedKeyAsSegment = 1
+}
+
 public enum Microsoft.OData.Client.EntityParameterSendOption : int {
     SendFullProperties = 0
     SendOnlySetProperties = 1
@@ -8076,6 +8141,7 @@ public class Microsoft.OData.Client.DataServiceContext {
     System.Uri BaseUri  { public virtual get; public virtual set; }
     Microsoft.OData.Client.DataServiceClientConfigurations Configurations  { public virtual get; }
     System.Net.ICredentials Credentials  { public virtual get; public virtual set; }
+    Microsoft.OData.Client.DeleteLinkUriOption DeleteLinkUriOption  { public virtual get; public virtual set; }
     bool DisableInstanceAnnotationMaterialization  { public virtual get; public virtual set; }
     bool EnableWritingODataAnnotationWithoutPrefix  { public virtual get; public virtual set; }
     System.Collections.ObjectModel.ReadOnlyCollection`1[[Microsoft.OData.Client.EntityDescriptor]] Entities  { public virtual get; }
