@@ -8044,9 +8044,26 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
+            {
+                var queryableUnsupportedApply = ((DataServiceQuery<League>)from l in context.CreateQuery<League>("Leagues")
+                                                                           select l)
+                                                            .AddQueryOption("$apply", 1);
+                try
+                {
+                    queryableUnsupportedApply.GetEnumerator();
+                }
+                catch (Exception e)
+                {
+                    if (!e.InnerException.Message.Contains($"The query parameter '$apply' begins with a system-reserved '$' character but is not recognized."))
+                    {
+                        throw new Exception("Test Failed");
+                    }
+                }
+            }
+
             Trace.WriteLine("known, but unsupported query  options");
 
-            foreach (var option in new string[] { "$apply", "$skiptoken", "$delta"})
+            foreach (var option in new string[] { "$skiptoken", "$delta"})
             {
                 var queryableUnsupportedOption = ((DataServiceQuery<League>)from l in context.CreateQuery<League>("Leagues")
                                                                             select l)
