@@ -705,8 +705,8 @@ namespace Microsoft.OData.Client
                     contentHeaders.TryGetHeader(XmlConstants.HttpResponseLocation, out location);
                     contentHeaders.TryGetHeader(XmlConstants.HttpODataEntityId, out odataEntityId);
 
-                    Debug.Assert(location == null || location == entityDescriptor.GetLatestEditLink().AbsoluteUri, "edit link must already be set to location header");
-                    Debug.Assert((location == null && odataEntityId == null) || (odataEntityId ?? location) == UriUtil.UriToString(entityDescriptor.GetLatestIdentity()), "Identity must already be set");
+                    Debug.Assert(location == null || new Uri(location).AbsoluteUri == entityDescriptor.GetLatestEditLink().AbsoluteUri, "edit link must already be set to location header");
+                    Debug.Assert((location == null && odataEntityId == null) || (odataEntityId ?? new Uri(location).AbsoluteUri) == UriUtil.UriToString(entityDescriptor.GetLatestIdentity()), "Identity must already be set");
                 }
 #endif
             }
