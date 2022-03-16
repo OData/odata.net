@@ -9,17 +9,21 @@ using System;
 namespace Microsoft.OData
 {
     /// <summary>
-    /// A pool of objects.
+    /// Manages a pool of reusable objects. An object retrieved from the pool should be returned when it's no longer being used so that it can be later recycled.
     /// </summary>
     /// <typeparam name="T">The type of objects to pool.</typeparam>
     /// <remarks>This object pool is not thread-safe and not intended to be shared across concurrent requests.
     /// Consider using the DefaultObjectPool in 8.x once we drop support for netstandard 1.1
     /// </remarks>
-    internal class ObjectPool<T>
+    internal class ObjectPool<T> where T : class
     {
         private readonly Func<T> objectGenerator;
-        private readonly ObjectWrapper[] items;
+        private ObjectWrapper[] items;
         private T firstItem;
+
+        // The pool size is equal to the level of nesting in the response.
+        // 32 is an arbitrary figure. Could be adjusted appropriately.
+        private const int POOL_SIZE = 32;
 
         /// <summary>
         /// To initialize the object pool.
@@ -28,13 +32,12 @@ namespace Microsoft.OData
         public ObjectPool(Func<T> objectGenerator)
         {
             this.objectGenerator = objectGenerator ?? throw new ArgumentNullException(nameof(objectGenerator));
-            items = new ObjectWrapper[32];
         }
 
         /// <summary>
-        /// Gets an object from the pool if one is available, otherwise creates one.
+        /// Gets an object from the pool if one is available, otherwise creates one. The object will need to be return to the pool when no longer in use.
         /// </summary>
-        /// <returns>A <typeparamref name="T"/>.</returns>
+        /// <returns>An object of type <typeparamref name="T"/> from the pool.</returns>
         public T Get()
         {
             T item = firstItem;
@@ -43,6 +46,11 @@ namespace Microsoft.OData
             {
                 firstItem = default(T);
                 return item;
+            }
+
+            if (items == null)
+            {
+                items = new ObjectWrapper[POOL_SIZE];
             }
 
             for (int i = 0; i < items.Length; i++)
@@ -62,7 +70,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Return an object to the pool.
         /// </summary>
-        /// <param name="obj">The object to add to the pool.</param>
+        /// <param name="obj">The object to return to the pool.</param>
         public void Return(T obj)
         {
             if (firstItem == null)
@@ -71,7 +79,7 @@ namespace Microsoft.OData
             }
             else
             {
-                for (var i = 0; i < items.Length; ++i)
+                for (int i = 0; i < items.Length; ++i)
                 {
                     if (items[i].Element == null)
                     {

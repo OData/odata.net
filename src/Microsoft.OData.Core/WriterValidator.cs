@@ -48,19 +48,13 @@ namespace Microsoft.OData
             }
         }
 
-        /// <summary>
-        /// Creates a DuplicatePropertyNameChecker instance.
-        /// </summary>
-        /// <returns>The created instance.</returns>
+        /// <inheritdoc/>
         public IDuplicatePropertyNameChecker GetDuplicatePropertyNameChecker()
         {
             return this.duplicatePropertyNameCheckerObjectPool.Get();
         }
 
-        /// <summary>
-        /// Release a DuplicatePropertyNameChecker instance.
-        /// </summary>
-        /// <returns>The created instance.</returns>
+        /// <inheritdoc/>
         public void ReturnDuplicatePropertyNameChecker(IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
         {
             duplicatePropertyNameChecker.Reset();

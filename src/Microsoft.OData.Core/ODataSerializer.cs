@@ -81,7 +81,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Creates a new instance of a duplicate property names checker.
+        /// Get an instance of a duplicate property names checker from the object pool.
         /// </summary>
         /// <returns>The newly created instance of duplicate property names checker.</returns>
         internal IDuplicatePropertyNameChecker GetDuplicatePropertyNameChecker()
@@ -90,7 +90,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Releases a new instance of a duplicate property names checker.
+        /// Returns an instance of a duplicate property names checker to the object pool.
         /// </summary>
         internal void ReturnDuplicatePropertyNameChecker(IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
         {

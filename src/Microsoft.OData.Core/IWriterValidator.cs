@@ -15,13 +15,13 @@ namespace Microsoft.OData
     internal interface IWriterValidator
     {
         /// <summary>
-        /// Creates a DuplicatePropertyNameChecker instance.
+        /// Get a DuplicatePropertyNameChecker instance from the object pool.
         /// </summary>
         /// <returns>The created instance.</returns>
         IDuplicatePropertyNameChecker GetDuplicatePropertyNameChecker();
 
         /// <summary>
-        /// Release a DuplicatePropertyNameChecker instance.
+        /// Return a DuplicatePropertyNameChecker instance to the object pool.
         /// </summary>
         void ReturnDuplicatePropertyNameChecker(IDuplicatePropertyNameChecker duplicatePropertyNameChecker);
 

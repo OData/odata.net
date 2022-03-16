@@ -262,9 +262,9 @@ namespace Microsoft.OData
                     messageWriterSettings,
                     textWriter,
                     (serializer, duplicatePropertyNameChecker) => serializer.WriteResourceValue(
-                        resourceValue, /* resourceValue */
-                        null, /* metadataTypeReference */
-                        true, /* isOpenPropertyType */
+                        resourceValue,
+                        metadataTypeReference : null,
+                        isOpenPropertyType : true,
                         duplicatePropertyNameChecker));
             }
 
@@ -315,12 +315,12 @@ namespace Microsoft.OData
                     textWriter,
                     (serializer, duplicatePropertyNameChecker) => serializer.WriteCollectionValue(
                         collectionValue,
-                        null /*metadataTypeReference*/,
-                        null /*valueTypeReference*/,
-                        false /*isTopLevelProperty*/,
-                        true /*isInUri*/,
-                        false /*isOpenPropertyType*/),
-                    true /*ignoreDuplicatePropertyNameChecker*/);
+                        metadataTypeReference : null,
+                        valueTypeReference : null,
+                        isTopLevelProperty: false,
+                        isInUri: true,
+                        isOpenPropertyType: false),
+                        ignoreDuplicatePropertyNameChecker: true);
             }
 
             return builder.ToString();
@@ -579,6 +579,7 @@ namespace Microsoft.OData
                 new ODataJsonLightOutputContext(textWriter, messageInfo, messageWriterSettings))
             {
                 ODataJsonLightValueSerializer jsonLightValueSerializer = new ODataJsonLightValueSerializer(jsonOutputContext);
+
                 if (ignoreDuplicatePropertyNameChecker)
                 {
                     writeValue(jsonLightValueSerializer, null);
