@@ -261,11 +261,11 @@ namespace Microsoft.OData
                     model,
                     messageWriterSettings,
                     textWriter,
-                    (serializer, duplicatePropertyNameChecker) => serializer.WriteResourceValue(
+                    (serializer, duplicatePropertyNamesChecker) => serializer.WriteResourceValue(
                         resourceValue,
                         metadataTypeReference : null,
                         isOpenPropertyType : true,
-                        duplicatePropertyNameChecker));
+                        duplicatePropertyNamesChecker: duplicatePropertyNamesChecker));
             }
 
             return builder.ToString();
