@@ -83,6 +83,19 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Get the segment in the path at the specified index.
+        /// </summary>
+        /// <param name="i">The index.</param>
+        /// <returns>The segment corresponding to the index.</returns>
+        public ODataPathSegment this[int i]
+        {
+            get
+            {
+                return this.segments[i];
+            }
+        }
+
+        /// <summary>
         /// Get the List of ODataPathSegments.
         /// </summary>
         internal IList<ODataPathSegment> Segments
@@ -94,9 +107,18 @@ namespace Microsoft.OData.UriParser
         /// Get the segments enumerator
         /// </summary>
         /// <returns>The segments enumerator</returns>
-        public IEnumerator<ODataPathSegment> GetEnumerator()
+        public Enumerator GetEnumerator()
         {
-            return this.segments.GetEnumerator();
+            return new Enumerator(this.segments);
+        }
+
+        /// <summary>
+        /// Get the segments enumerator
+        /// </summary>
+        /// <returns>The segments enumerator</returns>
+        IEnumerator<ODataPathSegment> IEnumerable<ODataPathSegment>.GetEnumerator()
+        {
+            return this.GetEnumerator();
         }
 
         /// <summary>
@@ -170,6 +192,39 @@ namespace Microsoft.OData.UriParser
         internal void AddRange(ODataPath oDataPath)
         {
             this.segments.AddRange(oDataPath.segments);
+        }
+
+        public struct Enumerator : IEnumerator<ODataPathSegment>
+        {
+            private List<ODataPathSegment>.Enumerator enumerator;
+
+            internal Enumerator(List<ODataPathSegment> list)
+            {
+                this.enumerator = list.GetEnumerator();
+            }
+
+            public ODataPathSegment Current => this.enumerator.Current;
+
+            object IEnumerator.Current => this.enumerator.Current;
+
+            public void Dispose()
+            {
+                this.enumerator.Dispose();
+            }
+
+            public bool MoveNext()
+            {
+                return this.enumerator.MoveNext();
+            }
+
+            public void Reset()
+            {
+                // Unfortunately "Reset" is implemented explicitly and so we need to box IEnumerable<ODataPathSegment>, call "Reset",
+                // and then unbox it in order to get the desired result.
+                IEnumerator<ODataPathSegment> boxedEnumerator = this.enumerator;
+                boxedEnumerator.Reset();
+                this.enumerator = (List<ODataPathSegment>.Enumerator)boxedEnumerator;
+            }
         }
     }
 }

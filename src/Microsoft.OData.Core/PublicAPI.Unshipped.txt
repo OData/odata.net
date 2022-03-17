@@ -1535,11 +1535,18 @@ Microsoft.OData.UriParser.ODataExpandPath.ODataExpandPath(params Microsoft.OData
 Microsoft.OData.UriParser.ODataExpandPath.ODataExpandPath(System.Collections.Generic.IEnumerable<Microsoft.OData.UriParser.ODataPathSegment> segments) -> void
 Microsoft.OData.UriParser.ODataPath
 Microsoft.OData.UriParser.ODataPath.Count.get -> int
+Microsoft.OData.UriParser.ODataPath.Enumerator
+Microsoft.OData.UriParser.ODataPath.Enumerator.Current.get -> Microsoft.OData.UriParser.ODataPathSegment
+Microsoft.OData.UriParser.ODataPath.Enumerator.Dispose() -> void
+Microsoft.OData.UriParser.ODataPath.Enumerator.Enumerator() -> void
+Microsoft.OData.UriParser.ODataPath.Enumerator.MoveNext() -> bool
+Microsoft.OData.UriParser.ODataPath.Enumerator.Reset() -> void
 Microsoft.OData.UriParser.ODataPath.FirstSegment.get -> Microsoft.OData.UriParser.ODataPathSegment
-Microsoft.OData.UriParser.ODataPath.GetEnumerator() -> System.Collections.Generic.IEnumerator<Microsoft.OData.UriParser.ODataPathSegment>
+Microsoft.OData.UriParser.ODataPath.GetEnumerator() -> Microsoft.OData.UriParser.ODataPath.Enumerator
 Microsoft.OData.UriParser.ODataPath.LastSegment.get -> Microsoft.OData.UriParser.ODataPathSegment
 Microsoft.OData.UriParser.ODataPath.ODataPath(params Microsoft.OData.UriParser.ODataPathSegment[] segments) -> void
 Microsoft.OData.UriParser.ODataPath.ODataPath(System.Collections.Generic.IEnumerable<Microsoft.OData.UriParser.ODataPathSegment> segments) -> void
+Microsoft.OData.UriParser.ODataPath.this[int i].get -> Microsoft.OData.UriParser.ODataPathSegment
 Microsoft.OData.UriParser.ODataPath.WalkWith(Microsoft.OData.UriParser.PathSegmentHandler handler) -> void
 Microsoft.OData.UriParser.ODataPath.WalkWith<T>(Microsoft.OData.UriParser.PathSegmentTranslator<T> translator) -> System.Collections.Generic.IEnumerable<T>
 Microsoft.OData.UriParser.ODataPathSegment
@@ -1800,7 +1807,7 @@ Microsoft.OData.UriParser.SearchTermNode.SearchTermNode(string text) -> void
 Microsoft.OData.UriParser.SearchTermNode.Text.get -> string
 Microsoft.OData.UriParser.SelectExpandClause
 Microsoft.OData.UriParser.SelectExpandClause.AllSelected.get -> bool
-Microsoft.OData.UriParser.SelectExpandClause.SelectedItems.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.UriParser.SelectItem>
+Microsoft.OData.UriParser.SelectExpandClause.SelectedItems.get -> System.Collections.Generic.IList<Microsoft.OData.UriParser.SelectItem>
 Microsoft.OData.UriParser.SelectExpandClause.SelectExpandClause(System.Collections.Generic.IEnumerable<Microsoft.OData.UriParser.SelectItem> selectedItems, bool allSelected) -> void
 Microsoft.OData.UriParser.SelectExpandTermToken
 Microsoft.OData.UriParser.SelectExpandTermToken.ComputeOption.get -> Microsoft.OData.UriParser.ComputeToken
