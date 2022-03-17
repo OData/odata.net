@@ -126,7 +126,16 @@ steps:
     command: 'build'
     arguments: '--configuration $(BuildConfiguration) --no-incremental'
     projects: |
-     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj          
+     $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj        
+
+     
+- task: DotNetCoreCLI@2
+  displayName: 'Build Unit Test - PublicApi'
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    projects: |
+     $(Build.SourcesDirectory)\test\PublicApiTests\Microsoft.OData.PublicApi.Tests.csproj
           
 
 - task: DotNetCoreCLI@2
@@ -275,6 +284,14 @@ steps:
     arguments: '--configuration $(BuildConfiguration) --no-build --collect "Code coverage"'
     projects: |      
      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj
+
+- task: DotNetCoreCLI@2
+  displayName: 'PublicApi Test'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(BuildConfiguration) --no-build --collect "Code coverage"'
+    projects: |
+     $(Build.SourcesDirectory)\test\PublicApiTests\Microsoft.OData.PublicApi.Tests.csproj
 
 - task: DotNetCoreCLI@2  
   displayName: 'Test - E2E Test Suite'
