@@ -613,6 +613,11 @@ namespace Microsoft.OData.JsonLight
                         }
                     }
                 }
+
+                if (duplicatePropertyNamesChecker != null)
+                {
+                    this.ReturnDuplicatePropertyNameChecker(duplicatePropertyNamesChecker);
+                }
             }
 
             // End the array scope which holds the items

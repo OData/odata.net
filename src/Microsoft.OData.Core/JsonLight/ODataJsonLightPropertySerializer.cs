@@ -78,14 +78,17 @@ namespace Microsoft.OData.JsonLight
 
                     // Note we do not allow named stream properties to be written as top level property.
                     this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
+                    IDuplicatePropertyNameChecker duplicatePropertyNameChecker = this.GetDuplicatePropertyNameChecker();
+
                     this.WriteProperty(
                         property,
-                        null /*owningType*/,
-                        true /* isTopLevel */,
-                        this.GetDuplicatePropertyNameChecker(),
-                        null /* metadataBuilder */);
-                    this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
+                        owningType: null,
+                        isTopLevel: true,
+                        duplicatePropertyNameChecker: duplicatePropertyNameChecker,
+                        metadataBuilder : null);
 
+                    this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
+                    this.ReturnDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
                     this.JsonWriter.EndObjectScope();
                 });
         }
@@ -276,14 +279,17 @@ namespace Microsoft.OData.JsonLight
 
                     // Note we do not allow named stream properties to be written as top level property.
                     this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
+                    IDuplicatePropertyNameChecker duplicatePropertyNameChecker = this.GetDuplicatePropertyNameChecker();
+
                     await this.WritePropertyAsync(
                         property,
-                        null /*owningType*/,
-                        true /* isTopLevel */,
-                        this.GetDuplicatePropertyNameChecker(),
-                        null /* metadataBuilder */).ConfigureAwait(false);
-                    this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
+                        owningType : null,
+                        isTopLevel : true,
+                        duplicatePropertyNameChecker : duplicatePropertyNameChecker,
+                        metadataBuilder : null).ConfigureAwait(false);
 
+                    this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
+                    this.ReturnDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
                     await this.AsynchronousJsonWriter.EndObjectScopeAsync().ConfigureAwait(false);
                 });
         }
@@ -652,6 +658,7 @@ namespace Microsoft.OData.JsonLight
                 this.currentPropertyInfo.MetadataType.TypeReference,
                 isOpenPropertyType,
                 duplicatePropertyNameChecker);
+
             this.ReturnDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
         }
 
@@ -1074,11 +1081,15 @@ namespace Microsoft.OData.JsonLight
             await this.AsynchronousJsonWriter.WriteNameAsync(property.Name)
                 .ConfigureAwait(false);
 
+            IDuplicatePropertyNameChecker duplicatePropertyNameChecker = this.GetDuplicatePropertyNameChecker();
+
             await this.JsonLightValueSerializer.WriteResourceValueAsync(
                 resourceValue,
                 this.currentPropertyInfo.MetadataType.TypeReference,
                 isOpenPropertyType,
-                this.GetDuplicatePropertyNameChecker()).ConfigureAwait(false);
+                duplicatePropertyNameChecker).ConfigureAwait(false);
+
+            this.ReturnDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
         }
 
         /// <summary>
