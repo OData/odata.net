@@ -391,12 +391,14 @@ namespace Microsoft.OData
             ODataResourceValue resourceValue = annotationValue as ODataResourceValue;
             if (resourceValue != null)
             {
+                IDuplicatePropertyNameChecker duplicatePropertyNameChecker = this.valueSerializer.GetDuplicatePropertyNameChecker();
                 await this.WriteInstanceAnnotationNameAsync(propertyName, annotationName)
                     .ConfigureAwait(false);
                 await this.valueSerializer.WriteResourceValueAsync(resourceValue,
                     expectedType,
                     treatLikeOpenProperty,
-                    this.valueSerializer.GetDuplicatePropertyNameChecker()).ConfigureAwait(false);
+                    duplicatePropertyNameChecker).ConfigureAwait(false);
+                this.valueSerializer.ReturnDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
                 return;
             }
 
