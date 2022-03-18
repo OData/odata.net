@@ -288,5 +288,15 @@ namespace Microsoft.OData.UriParser
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Visits a CaseParameterToken
+        /// </summary>
+        /// <param name="tokenIn">The CaseParameterToken to bind</param>
+        /// <returns>A user defined value</returns>
+        public virtual T Visit(CaseParameterToken tokenIn)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

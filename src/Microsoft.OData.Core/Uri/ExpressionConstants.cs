@@ -120,8 +120,11 @@ namespace Microsoft.OData
         /// <summary> "cast" function </summary>
         internal const string UnboundFunctionCast = "cast";
 
-        /// <summary> "isof function </summary>
+        /// <summary> "isof" function </summary>
         internal const string UnboundFunctionIsOf = "isof";
+
+        /// <summary> "case" function </summary>
+        internal const string UnboundFunctionCase = "case";
 
         /// <summary> Spatial length function </summary>
         internal const string UnboundFunctionLength = "geo.length";

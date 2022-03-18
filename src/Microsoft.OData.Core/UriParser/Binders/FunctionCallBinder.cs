@@ -30,6 +30,7 @@ namespace Microsoft.OData.UriParser
         {
             ExpressionConstants.UnboundFunctionCast,
             ExpressionConstants.UnboundFunctionIsOf,
+            ExpressionConstants.UnboundFunctionCase
         };
 
         /// <summary>
@@ -677,6 +678,9 @@ namespace Microsoft.OData.UriParser
 
                         break;
                     }
+
+                case ExpressionConstants.UnboundFunctionCase:
+                    break;
 
                 default:
                     {

@@ -752,6 +752,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void IsOfFunctionWorksWithSingleQuotesOnType222()
+        {
+            ComputeClause compute = ParseCompute("case(ID gt 0 :1,ID lt 0 :-1,true :0) as IDValue", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            //  var singleValueFunctionCallNode = filter.Expression.ShouldBeSingleValueFunctionCallQueryNode("isof");
+            //singleValueFunctionCallNode.Parameters.ElementAt(0).ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonShoeProp());
+            //singleValueFunctionCallNode.Parameters.ElementAt(1).ShouldBeConstantQueryNode("Edm.String");
+            Assert.NotNull(compute);
+        }
+
+        [Fact]
         public void IsOfFunctionWorksWithSingleQuotesOnType()
         {
             FilterClause filter = ParseFilter("isof(Shoe, 'Edm.String')", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
@@ -2840,6 +2850,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         private static OrderByClause ParseOrderBy(string text, IEdmModel edmModel, IEdmType edmType, IEdmNavigationSource edmEntitySet = null)
         {
             return new ODataQueryOptionParser(edmModel, edmType, edmEntitySet, new Dictionary<string, string>() { { "$orderby", text } }).ParseOrderBy();
+        }
+
+        private static ComputeClause ParseCompute(string text, IEdmModel edmModel, IEdmType edmType, IEdmNavigationSource edmEntitySet = null)
+        {
+            return new ODataQueryOptionParser(edmModel, edmType, edmEntitySet, new Dictionary<string, string>() { { "$compute", text } }) { Resolver = new ODataUriResolver() { EnableCaseInsensitive = false } }.ParseCompute();
         }
     }
 }

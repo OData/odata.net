@@ -183,6 +183,11 @@ namespace Microsoft.OData.UriParser
         /// Node that represents a collection of constants.
         /// </summary>
         CollectionConstant = InternalQueryNodeKind.CollectionConstant,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        CaseParameter = InternalQueryNodeKind.CaseParameter
     }
 
     /// <summary>
@@ -359,5 +364,10 @@ namespace Microsoft.OData.UriParser
         /// Node that represents a collection of constants.
         /// </summary>
         CollectionConstant = 33,
+
+        /// <summary>
+        /// Parameter node used to represent a binary operator.
+        /// </summary>
+        CaseParameter = 34,
     }
 }
