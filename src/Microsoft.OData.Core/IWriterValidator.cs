@@ -17,7 +17,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Get a DuplicatePropertyNameChecker instance from the object pool.
         /// </summary>
-        /// <returns>The created instance.</returns>
+        /// <returns>The instance retrieved from the object pool.</returns>
         IDuplicatePropertyNameChecker GetDuplicatePropertyNameChecker();
 
         /// <summary>

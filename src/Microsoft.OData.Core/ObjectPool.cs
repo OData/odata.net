@@ -23,7 +23,7 @@ namespace Microsoft.OData
 
         // The pool size is equal to the level of nesting in the response.
         // 32 is an arbitrary figure. Could be adjusted appropriately.
-        private const int POOL_SIZE = 32;
+        private const int POOL_SIZE = 8;
 
         /// <summary>
         /// To initialize the object pool.
@@ -71,26 +71,27 @@ namespace Microsoft.OData
         /// Return an object to the pool.
         /// </summary>
         /// <param name="obj">The object to return to the pool.</param>
+        /// <remarks>It's the responsibility of the caller to clean up the object before returning it to the pool.</remarks>
         public void Return(T obj)
         {
             if (firstItem == null)
             {
                 firstItem = obj;
+                return;
             }
-            else
+
+            for (int i = 0; i < items.Length; ++i)
             {
-                for (int i = 0; i < items.Length; ++i)
+                if (items[i].Element == null)
                 {
-                    if (items[i].Element == null)
-                    {
-                        items[i].Element = obj;
-                        break;
-                    }
+                    items[i].Element = obj;
+                    break;
                 }
             }
         }
 
         // PERF: the struct wrapper avoids array-covariance-checks from the runtime when assigning to elements of the array.
+        // See comment in this PR https://github.com/dotnet/extensions/pull/314#discussion_r169390645
         private struct ObjectWrapper
         {
             public T Element;
