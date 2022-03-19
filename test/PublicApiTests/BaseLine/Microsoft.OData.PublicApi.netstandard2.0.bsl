@@ -6097,6 +6097,14 @@ public enum Microsoft.OData.UriParser.UnaryOperatorKind : int {
     Not = 1
 }
 
+public struct Microsoft.OData.UriParser.ODataPath+Enumerator : IDisposable, IEnumerator, IEnumerator`1 {
+    Microsoft.OData.UriParser.ODataPathSegment Current  { public virtual get; }
+
+    public virtual void Dispose ()
+    public virtual bool MoveNext ()
+    public virtual void Reset ()
+}
+
 public interface Microsoft.OData.UriParser.IPathSegmentTokenVisitor {
     void Visit (Microsoft.OData.UriParser.NonSystemToken tokenIn)
     void Visit (Microsoft.OData.UriParser.SystemToken tokenIn)
@@ -6446,15 +6454,20 @@ public class Microsoft.OData.UriParser.ODataExpandPath : Microsoft.OData.UriPars
     public ODataExpandPath (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.ODataPathSegment]] segments)
 }
 
+[
+DefaultMemberAttribute(),
+]
 public class Microsoft.OData.UriParser.ODataPath : IEnumerable, IEnumerable`1 {
     public ODataPath (Microsoft.OData.UriParser.ODataPathSegment[] segments)
     public ODataPath (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.ODataPathSegment]] segments)
 
     int Count  { public get; }
     Microsoft.OData.UriParser.ODataPathSegment FirstSegment  { public get; }
+    Microsoft.OData.UriParser.ODataPathSegment Item [int i] { public get; }
     Microsoft.OData.UriParser.ODataPathSegment LastSegment  { public get; }
 
-    public virtual System.Collections.Generic.IEnumerator`1[[Microsoft.OData.UriParser.ODataPathSegment]] GetEnumerator ()
+    public Microsoft.OData.UriParser.ODataPath+Enumerator GetEnumerator ()
+    System.Collections.Generic.IEnumerator`1[[Microsoft.OData.UriParser.ODataPathSegment]] System.Collections.Generic.IEnumerable<Microsoft.OData.UriParser.ODataPathSegment>.GetEnumerator ()
     System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
     public IEnumerable`1 WalkWith (PathSegmentTranslator`1 translator)
     public void WalkWith (Microsoft.OData.UriParser.PathSegmentHandler handler)
@@ -7375,7 +7388,7 @@ public sealed class Microsoft.OData.UriParser.SelectExpandClause {
     public SelectExpandClause (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.SelectItem]] selectedItems, bool allSelected)
 
     bool AllSelected  { public get; }
-    System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.SelectItem]] SelectedItems  { public get; }
+    System.Collections.Generic.IList`1[[Microsoft.OData.UriParser.SelectItem]] SelectedItems  { public get; }
 }
 
 public sealed class Microsoft.OData.UriParser.SelectTermToken : Microsoft.OData.UriParser.SelectExpandTermToken {
