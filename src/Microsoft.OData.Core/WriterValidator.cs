@@ -37,17 +37,6 @@ namespace Microsoft.OData
                 new ObjectPool<IDuplicatePropertyNameChecker>(() => new NullDuplicatePropertyNameChecker());
         }
 
-        /// <summary>
-        /// Object pool that stores instances of the IDuplicatePropertyNameChecker.
-        /// </summary>
-        internal ObjectPool<IDuplicatePropertyNameChecker> DuplicatePropertyNameCheckerObjectPool
-        {
-            get
-            {
-                return this.duplicatePropertyNameCheckerObjectPool;
-            }
-        }
-
         /// <inheritdoc/>
         public IDuplicatePropertyNameChecker GetDuplicatePropertyNameChecker()
         {
