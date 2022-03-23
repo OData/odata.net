@@ -276,6 +276,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
                 Console.WriteLine(customerByKey.ToString());
                 var entity = customerByKey.Single();
                 EntityDescriptor eDescriptor = TestClientContext.GetEntityDescriptor(entity);
+
                 //Self link was not read
                 Assert.NotNull(eDescriptor.SelfLink);
                 //Edit link was not read
