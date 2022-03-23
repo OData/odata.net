@@ -51,13 +51,15 @@ namespace Microsoft.OData
         /// <inheritdoc/>
         public IDuplicatePropertyNameChecker GetDuplicatePropertyNameChecker()
         {
-            return this.duplicatePropertyNameCheckerObjectPool.Get();
+            IDuplicatePropertyNameChecker duplicatePropertyNameChecker = this.duplicatePropertyNameCheckerObjectPool.Get();
+            duplicatePropertyNameChecker.Reset();
+
+            return duplicatePropertyNameChecker;
         }
 
         /// <inheritdoc/>
         public void ReturnDuplicatePropertyNameChecker(IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
         {
-            duplicatePropertyNameChecker.Reset();
             this.duplicatePropertyNameCheckerObjectPool.Return(duplicatePropertyNameChecker);
         }
 

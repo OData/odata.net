@@ -320,7 +320,7 @@ namespace Microsoft.OData
                         isTopLevelProperty: false,
                         isInUri: true,
                         isOpenPropertyType: false),
-                        ignoreDuplicatePropertyNameChecker: true);
+                        isResourceValue: false);
             }
 
             return builder.ToString();
@@ -555,8 +555,8 @@ namespace Microsoft.OData
         /// <param name="messageWriterSettings">Settings to use when writing.</param>
         /// <param name="textWriter">TextWriter to use as the output for the value.</param>
         /// <param name="writeValue">Delegate to use to actually write the value.</param>
-        /// <param name="ignoreDuplicatePropertyNameChecker">True when we don't want to pass the <see cref="IDuplicatePropertyNameChecker"/> instance to the Action delegate.</param>
-        private static void WriteJsonLightLiteral(IEdmModel model, ODataMessageWriterSettings messageWriterSettings, TextWriter textWriter, Action<ODataJsonLightValueSerializer, IDuplicatePropertyNameChecker> writeValue, bool ignoreDuplicatePropertyNameChecker = false)
+        /// <param name="isResourceValue">We want to pass the <see cref="IDuplicatePropertyNameChecker"/> instance to the Action delegate when writing Resource value but not Collection value.</param>
+        private static void WriteJsonLightLiteral(IEdmModel model, ODataMessageWriterSettings messageWriterSettings, TextWriter textWriter, Action<ODataJsonLightValueSerializer, IDuplicatePropertyNameChecker> writeValue, bool isResourceValue = true)
         {
             IEnumerable<KeyValuePair<string, string>> parameters = new Dictionary<string, string>
             {
@@ -580,7 +580,7 @@ namespace Microsoft.OData
             {
                 ODataJsonLightValueSerializer jsonLightValueSerializer = new ODataJsonLightValueSerializer(jsonOutputContext);
 
-                if (ignoreDuplicatePropertyNameChecker)
+                if (!isResourceValue)
                 {
                     writeValue(jsonLightValueSerializer, null);
                 }

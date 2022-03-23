@@ -35,9 +35,10 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Gets an object from the pool if one is available, otherwise creates one. The object will need to be return to the pool when no longer in use.
+        /// Gets an object from the pool if one is available, otherwise creates one. The object will need to be returned to the pool when no longer in use.
         /// </summary>
         /// <returns>An object of type <typeparamref name="T"/> from the pool.</returns>
+        /// <remarks>It's the responsibility of the caller to clean up the object before using it.</remarks>
         public T Get()
         {
             T item = firstItem;
@@ -70,8 +71,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Return an object to the pool.
         /// </summary>
-        /// <param name="obj">The object to return to the pool.</param>
-        /// <remarks>It's the responsibility of the caller to clean up the object before returning it to the pool.</remarks>
+        /// <param name="obj">The object to return to the pool.</param> 
         public void Return(T obj)
         {
             if (firstItem == null)
