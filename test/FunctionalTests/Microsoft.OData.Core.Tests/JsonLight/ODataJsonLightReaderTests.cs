@@ -52,51 +52,48 @@ namespace Microsoft.OData.Tests.JsonLight
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                async (jsonLightReader) =>
-                {
-                    await DoReadAsync(
-                        jsonLightReader,
-                        verifyResourceSetAction: (resourceSet) =>
-                        {
-                            Assert.NotNull(resourceSet);
-                            Assert.Equal(1, resourceSet.Count);
-                            Assert.Equal("http://tempuri.org/Customers/nextLink", resourceSet.NextPageLink.AbsoluteUri);
-                            var instanceAnnotation = Assert.Single(resourceSet.InstanceAnnotations);
-                            Assert.Equal("Is.ResourceSet", instanceAnnotation.Name);
-                            var annotationValue = Assert.IsType<ODataPrimitiveValue>(instanceAnnotation.Value);
-                            Assert.Equal(true, annotationValue.Value);
-                            var rateCustomersAction = Assert.Single(resourceSet.Actions);
-                            var top5CustomersFunction = Assert.Single(resourceSet.Functions);
-                            Assert.Equal("RateCustomers", rateCustomersAction.Title);
-                            Assert.Equal("http://tempuri.org/Customers/RateCustomers", rateCustomersAction.Target.AbsoluteUri);
-                            Assert.Equal("http://tempuri.org/$metadata#NS.RateCustomers", rateCustomersAction.Metadata.AbsoluteUri);
-                            Assert.Equal("Top5Customers", top5CustomersFunction.Title);
-                            Assert.Equal("http://tempuri.org/Customers/Top5Customers", top5CustomersFunction.Target.AbsoluteUri);
-                            Assert.Equal("http://tempuri.org/$metadata#NS.Top5Customers", top5CustomersFunction.Metadata.AbsoluteUri);
-                        },
-                        verifyResourceAction: (resource) =>
-                        {
-                            Assert.NotNull(resource);
-                            var properties = resource.Properties.ToArray();
-                            Assert.Equal(3, properties.Length);
-                            Assert.Equal("Id", properties[0].Name);
-                            Assert.Equal(1, properties[0].Value);
-                            Assert.Equal("Name", properties[1].Name);
-                            Assert.Equal("Sue", properties[1].Value);
-                            Assert.Equal("Type", properties[2].Name);
-                            var customerType = Assert.IsType<ODataEnumValue>(properties[2].Value);
-                            Assert.Equal("Retail", customerType.Value);
-                        },
-                        verifyNestedResourceInfoAction: (nestedResourceInfo) =>
-                        {
-                            Assert.NotNull(nestedResourceInfo);
-                            Assert.Equal("Orders", nestedResourceInfo.Name);
-                            Assert.NotNull(nestedResourceInfo.Url);
-                            Assert.Equal("http://tempuri.org/Customers(1)/Orders", nestedResourceInfo.Url.AbsoluteUri);
-                            Assert.NotNull(nestedResourceInfo.AssociationLinkUrl);
-                            Assert.Equal("http://tempuri.org/Customers(1)/Orders/$ref", nestedResourceInfo.AssociationLinkUrl.AbsoluteUri);
-                        });
-                },
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyResourceSetAction: (resourceSet) =>
+                    {
+                        Assert.NotNull(resourceSet);
+                        Assert.Equal(1, resourceSet.Count);
+                        Assert.Equal("http://tempuri.org/Customers/nextLink", resourceSet.NextPageLink.AbsoluteUri);
+                        var instanceAnnotation = Assert.Single(resourceSet.InstanceAnnotations);
+                        Assert.Equal("Is.ResourceSet", instanceAnnotation.Name);
+                        var annotationValue = Assert.IsType<ODataPrimitiveValue>(instanceAnnotation.Value);
+                        Assert.Equal(true, annotationValue.Value);
+                        var rateCustomersAction = Assert.Single(resourceSet.Actions);
+                        var top5CustomersFunction = Assert.Single(resourceSet.Functions);
+                        Assert.Equal("RateCustomers", rateCustomersAction.Title);
+                        Assert.Equal("http://tempuri.org/Customers/RateCustomers", rateCustomersAction.Target.AbsoluteUri);
+                        Assert.Equal("http://tempuri.org/$metadata#NS.RateCustomers", rateCustomersAction.Metadata.AbsoluteUri);
+                        Assert.Equal("Top5Customers", top5CustomersFunction.Title);
+                        Assert.Equal("http://tempuri.org/Customers/Top5Customers", top5CustomersFunction.Target.AbsoluteUri);
+                        Assert.Equal("http://tempuri.org/$metadata#NS.Top5Customers", top5CustomersFunction.Metadata.AbsoluteUri);
+                    },
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotNull(resource);
+                        var properties = resource.Properties.ToArray();
+                        Assert.Equal(3, properties.Length);
+                        Assert.Equal("Id", properties[0].Name);
+                        Assert.Equal(1, properties[0].Value);
+                        Assert.Equal("Name", properties[1].Name);
+                        Assert.Equal("Sue", properties[1].Value);
+                        Assert.Equal("Type", properties[2].Name);
+                        var customerType = Assert.IsType<ODataEnumValue>(properties[2].Value);
+                        Assert.Equal("Retail", customerType.Value);
+                    },
+                    verifyNestedResourceInfoAction: (nestedResourceInfo) =>
+                    {
+                        Assert.NotNull(nestedResourceInfo);
+                        Assert.Equal("Orders", nestedResourceInfo.Name);
+                        Assert.NotNull(nestedResourceInfo.Url);
+                        Assert.Equal("http://tempuri.org/Customers(1)/Orders", nestedResourceInfo.Url.AbsoluteUri);
+                        Assert.NotNull(nestedResourceInfo.AssociationLinkUrl);
+                        Assert.Equal("http://tempuri.org/Customers(1)/Orders/$ref", nestedResourceInfo.AssociationLinkUrl.AbsoluteUri);
+                    }),
                 readingResourceSet: true);
         }
 
@@ -112,18 +109,15 @@ namespace Microsoft.OData.Tests.JsonLight
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                async (jsonLightReader) =>
-                {
-                    await DoReadAsync(
-                        jsonLightReader,
-                        verifyResourceSetAction: (resourceSet) =>
-                        {
-                            Assert.NotNull(resourceSet);
-                            Assert.Equal(1, resourceSet.Count);
-                            Assert.NotNull(resourceSet.DeltaLink);
-                            Assert.Equal("http://tempuri.org/Customers/deltaLink", resourceSet.DeltaLink.AbsoluteUri);
-                        });
-                },
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyResourceSetAction: (resourceSet) =>
+                    {
+                        Assert.NotNull(resourceSet);
+                        Assert.Equal(1, resourceSet.Count);
+                        Assert.NotNull(resourceSet.DeltaLink);
+                        Assert.Equal("http://tempuri.org/Customers/deltaLink", resourceSet.DeltaLink.AbsoluteUri);
+                    }),
                 readingResourceSet: true);
         }
 
@@ -155,61 +149,58 @@ namespace Microsoft.OData.Tests.JsonLight
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                async (jsonLightReader) =>
-                {
-                    await DoReadAsync(
-                        jsonLightReader,
-                        verifyResourceSetAction: (nestedResourceSet) =>
-                        {
-                            Assert.Equal(0, nestedResourceSet.Count);
-                            Assert.NotNull(nestedResourceSet.NextPageLink);
-                            Assert.Equal("http://tempuri.org/Customers(1)/Orders/nextLink", nestedResourceSet.NextPageLink.AbsoluteUri);
-                        },
-                        verifyResourceAction: (resource) =>
-                        {
-                            Assert.NotNull(resource);
-                            var properties = resource.Properties.ToArray();
-                            Assert.Equal(3, properties.Length);
-                            Assert.Equal("Id", properties[0].Name);
-                            Assert.Equal(1, properties[0].Value);
-                            Assert.Equal("Name", properties[1].Name);
-                            Assert.Equal("Sue", properties[1].Value);
-                            Assert.Equal("Type", properties[2].Name);
-                            var customerType = Assert.IsType<ODataEnumValue>(properties[2].Value);
-                            Assert.Equal("Retail", customerType.Value);
-                            Assert.NotNull(resource.ReadLink);
-                            Assert.Equal("http://tempuri.org/Customers(1)", resource.ReadLink.AbsoluteUri);
-                            Assert.NotNull(resource.EditLink);
-                            Assert.Equal("http://tempuri.org/Customers(1)", resource.EditLink.AbsoluteUri);
-                            var streamReferenceValue = Assert.IsType<ODataStreamReferenceValue>(resource.MediaResource);
-                            Assert.Equal("http://tempuri.org/Customers(1)/Photo", streamReferenceValue.ReadLink.AbsoluteUri);
-                            Assert.NotNull(resource.EditLink);
-                            Assert.Equal("http://tempuri.org/Customers(1)/Photo", streamReferenceValue.EditLink.AbsoluteUri);
-                            Assert.Equal("image/png", streamReferenceValue.ContentType);
-                            Assert.Equal("media-etag", streamReferenceValue.ETag);
-                            var cancelOrderAction = Assert.Single(resource.Actions);
-                            Assert.Equal("CancelOrder", cancelOrderAction.Title);
-                            Assert.Equal("http://tempuri.org/Customers(1)/CancelOrder", cancelOrderAction.Target.AbsoluteUri);
-                            Assert.Equal("http://tempuri.org/$metadata#NS.CancelOrder", cancelOrderAction.Metadata.AbsoluteUri);
-                            var mostRecentOrderFunction = Assert.Single(resource.Functions);
-                            Assert.Equal("MostRecentOrder", mostRecentOrderFunction.Title);
-                            Assert.Equal("http://tempuri.org/Customers(1)/MostRecentOrder", mostRecentOrderFunction.Target.AbsoluteUri);
-                            Assert.Equal("http://tempuri.org/$metadata#NS.MostRecentOrder", mostRecentOrderFunction.Metadata.AbsoluteUri);
-                            var instanceAnnotation = Assert.Single(resource.InstanceAnnotations);
-                            Assert.Equal("Is.Resource", instanceAnnotation.Name);
-                            var annotationValue = Assert.IsType<ODataPrimitiveValue>(instanceAnnotation.Value);
-                            Assert.Equal(true, annotationValue.Value);
-                        },
-                        verifyNestedResourceInfoAction: (nestedResourceInfo) =>
-                        {
-                            Assert.NotNull(nestedResourceInfo);
-                            Assert.Equal("Orders", nestedResourceInfo.Name);
-                            Assert.NotNull(nestedResourceInfo.Url);
-                            Assert.Equal("http://tempuri.org/Customers(1)/Orders", nestedResourceInfo.Url.AbsoluteUri);
-                            Assert.NotNull(nestedResourceInfo.AssociationLinkUrl);
-                            Assert.Equal("http://tempuri.org/Customers(1)/Orders/$ref", nestedResourceInfo.AssociationLinkUrl.AbsoluteUri);
-                        });
-                });
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyResourceSetAction: (nestedResourceSet) =>
+                    {
+                        Assert.Equal(0, nestedResourceSet.Count);
+                        Assert.NotNull(nestedResourceSet.NextPageLink);
+                        Assert.Equal("http://tempuri.org/Customers(1)/Orders/nextLink", nestedResourceSet.NextPageLink.AbsoluteUri);
+                    },
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotNull(resource);
+                        var properties = resource.Properties.ToArray();
+                        Assert.Equal(3, properties.Length);
+                        Assert.Equal("Id", properties[0].Name);
+                        Assert.Equal(1, properties[0].Value);
+                        Assert.Equal("Name", properties[1].Name);
+                        Assert.Equal("Sue", properties[1].Value);
+                        Assert.Equal("Type", properties[2].Name);
+                        var customerType = Assert.IsType<ODataEnumValue>(properties[2].Value);
+                        Assert.Equal("Retail", customerType.Value);
+                        Assert.NotNull(resource.ReadLink);
+                        Assert.Equal("http://tempuri.org/Customers(1)", resource.ReadLink.AbsoluteUri);
+                        Assert.NotNull(resource.EditLink);
+                        Assert.Equal("http://tempuri.org/Customers(1)", resource.EditLink.AbsoluteUri);
+                        var streamReferenceValue = Assert.IsType<ODataStreamReferenceValue>(resource.MediaResource);
+                        Assert.Equal("http://tempuri.org/Customers(1)/Photo", streamReferenceValue.ReadLink.AbsoluteUri);
+                        Assert.NotNull(resource.EditLink);
+                        Assert.Equal("http://tempuri.org/Customers(1)/Photo", streamReferenceValue.EditLink.AbsoluteUri);
+                        Assert.Equal("image/png", streamReferenceValue.ContentType);
+                        Assert.Equal("media-etag", streamReferenceValue.ETag);
+                        var cancelOrderAction = Assert.Single(resource.Actions);
+                        Assert.Equal("CancelOrder", cancelOrderAction.Title);
+                        Assert.Equal("http://tempuri.org/Customers(1)/CancelOrder", cancelOrderAction.Target.AbsoluteUri);
+                        Assert.Equal("http://tempuri.org/$metadata#NS.CancelOrder", cancelOrderAction.Metadata.AbsoluteUri);
+                        var mostRecentOrderFunction = Assert.Single(resource.Functions);
+                        Assert.Equal("MostRecentOrder", mostRecentOrderFunction.Title);
+                        Assert.Equal("http://tempuri.org/Customers(1)/MostRecentOrder", mostRecentOrderFunction.Target.AbsoluteUri);
+                        Assert.Equal("http://tempuri.org/$metadata#NS.MostRecentOrder", mostRecentOrderFunction.Metadata.AbsoluteUri);
+                        var instanceAnnotation = Assert.Single(resource.InstanceAnnotations);
+                        Assert.Equal("Is.Resource", instanceAnnotation.Name);
+                        var annotationValue = Assert.IsType<ODataPrimitiveValue>(instanceAnnotation.Value);
+                        Assert.Equal(true, annotationValue.Value);
+                    },
+                    verifyNestedResourceInfoAction: (nestedResourceInfo) =>
+                    {
+                        Assert.NotNull(nestedResourceInfo);
+                        Assert.Equal("Orders", nestedResourceInfo.Name);
+                        Assert.NotNull(nestedResourceInfo.Url);
+                        Assert.Equal("http://tempuri.org/Customers(1)/Orders", nestedResourceInfo.Url.AbsoluteUri);
+                        Assert.NotNull(nestedResourceInfo.AssociationLinkUrl);
+                        Assert.Equal("http://tempuri.org/Customers(1)/Orders/$ref", nestedResourceInfo.AssociationLinkUrl.AbsoluteUri);
+                    }));
         }
 
         [Fact]
@@ -249,28 +240,25 @@ namespace Microsoft.OData.Tests.JsonLight
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                async (jsonLightReader) =>
-                {
-                    await DoReadAsync(
-                        jsonLightReader,
-                        verifyDeltaResourceSetAction: (deltaResourceSet) =>
-                        {
-                            Assert.NotNull(deltaResourceSet);
-                            Assert.Equal(2, deltaResourceSet.Count);
-                            Assert.Equal("http://tempuri.org/Customers/deltaLink", deltaResourceSet.DeltaLink.AbsoluteUri);
-                            var instanceAnnotation = Assert.Single(deltaResourceSet.InstanceAnnotations);
-                            Assert.Equal("Is.DeltaResourceSet", instanceAnnotation.Name);
-                            var annotationValue = Assert.IsType<ODataPrimitiveValue>(instanceAnnotation.Value);
-                            Assert.Equal(true, annotationValue.Value);
-                        },
-                        verifyDeletedResourceAction: (deletedResource) =>
-                        {
-                            Assert.True(verifyDeletedResourceActionStack.Count > 0);
-                            var innerVerifyDeletedResourceAction = verifyDeletedResourceActionStack.Pop();
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyDeltaResourceSetAction: (deltaResourceSet) =>
+                    {
+                        Assert.NotNull(deltaResourceSet);
+                        Assert.Equal(2, deltaResourceSet.Count);
+                        Assert.Equal("http://tempuri.org/Customers/deltaLink", deltaResourceSet.DeltaLink.AbsoluteUri);
+                        var instanceAnnotation = Assert.Single(deltaResourceSet.InstanceAnnotations);
+                        Assert.Equal("Is.DeltaResourceSet", instanceAnnotation.Name);
+                        var annotationValue = Assert.IsType<ODataPrimitiveValue>(instanceAnnotation.Value);
+                        Assert.Equal(true, annotationValue.Value);
+                    },
+                    verifyDeletedResourceAction: (deletedResource) =>
+                    {
+                        Assert.NotEmpty(verifyDeletedResourceActionStack);
+                        var innerVerifyDeletedResourceAction = verifyDeletedResourceActionStack.Pop();
 
-                            innerVerifyDeletedResourceAction(deletedResource);
-                        });
-                },
+                        innerVerifyDeletedResourceAction(deletedResource);
+                    }),
                 readingResourceSet: true,
                 readingDelta: true);
 
@@ -312,23 +300,20 @@ namespace Microsoft.OData.Tests.JsonLight
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                async (jsonLightReader) =>
-                {
-                    await DoReadAsync(
-                        jsonLightReader,
-                        verifyDeltaResourceSetAction: (deltaResourceSet) =>
-                        {
-                            Assert.NotNull(deltaResourceSet);
-                            Assert.Equal(2, deltaResourceSet.Count);
-                        },
-                        verifyDeletedResourceAction: (deletedResource) =>
-                        {
-                            Assert.True(verifyDeletedResourceActionStack.Count > 0);
-                            var innerVerifyDeletedResourceAction = verifyDeletedResourceActionStack.Pop();
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyDeltaResourceSetAction: (deltaResourceSet) =>
+                    {
+                        Assert.NotNull(deltaResourceSet);
+                        Assert.Equal(2, deltaResourceSet.Count);
+                    },
+                    verifyDeletedResourceAction: (deletedResource) =>
+                    {
+                        Assert.NotEmpty(verifyDeletedResourceActionStack);
+                        var innerVerifyDeletedResourceAction = verifyDeletedResourceActionStack.Pop();
 
-                            innerVerifyDeletedResourceAction(deletedResource);
-                        });
-                },
+                        innerVerifyDeletedResourceAction(deletedResource);
+                    }),
                 readingResourceSet: true,
                 readingDelta: true);
 
@@ -407,25 +392,22 @@ namespace Microsoft.OData.Tests.JsonLight
                 payload,
                 this.orderEntitySet,
                 this.orderEntityType,
-                async (jsonLightReader) =>
-                {
-                    await DoReadAsync(
-                        jsonLightReader,
-                        verifyResourceAction: (resource) =>
-                        {
-                            Assert.True(verifyResourceActionStack.Count > 0);
-                            var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var innerVerifyResourceAction = verifyResourceActionStack.Pop();
 
-                            innerVerifyResourceAction(resource);
-                        },
-                        verifyNestedResourceInfoAction: (nestedResourceInfo) =>
-                        {
-                            Assert.True(verifyNestedResourceInfoActionStack.Count > 0);
-                            var innerVerifyNestedResourceInfoAction = verifyNestedResourceInfoActionStack.Pop();
+                        innerVerifyResourceAction(resource);
+                    },
+                    verifyNestedResourceInfoAction: (nestedResourceInfo) =>
+                    {
+                        Assert.NotEmpty(verifyNestedResourceInfoActionStack);
+                        var innerVerifyNestedResourceInfoAction = verifyNestedResourceInfoActionStack.Pop();
 
-                            innerVerifyNestedResourceInfoAction(nestedResourceInfo);
-                        });
-                });
+                        innerVerifyNestedResourceInfoAction(nestedResourceInfo);
+                    }));
 
             Assert.Empty(verifyResourceActionStack);
             Assert.Empty(verifyNestedResourceInfoActionStack);
@@ -486,18 +468,15 @@ namespace Microsoft.OData.Tests.JsonLight
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                async (jsonLightReader) =>
-                {
-                    await DoReadAsync(
-                        jsonLightReader,
-                        verifyResourceAction: (resource) =>
-                        {
-                            Assert.True(verifyResourceActionStack.Count > 0);
-                            var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var innerVerifyResourceAction = verifyResourceActionStack.Pop();
 
-                            innerVerifyResourceAction(resource);
-                        });
-                });
+                        innerVerifyResourceAction(resource);
+                    }));
 
             Assert.Empty(verifyResourceActionStack);
         }
@@ -552,25 +531,22 @@ namespace Microsoft.OData.Tests.JsonLight
                 payload,
                 this.orderEntitySet,
                 this.orderEntityType,
-                async (jsonLightReader) =>
-                {
-                    await DoReadAsync(
-                        jsonLightReader,
-                        verifyResourceAction: (resource) =>
-                        {
-                            Assert.True(verifyResourceActionStack.Count > 0);
-                            var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var innerVerifyResourceAction = verifyResourceActionStack.Pop();
 
-                            innerVerifyResourceAction(resource);
-                        },
-                        verifyNestedResourceInfoAction: (nestedResourceInfo) =>
-                        {
-                            Assert.True(verifyNestedResourceInfoActionStack.Count > 0);
-                            var innerVerifyNestedResourceInfoAction = verifyNestedResourceInfoActionStack.Pop();
+                        innerVerifyResourceAction(resource);
+                    },
+                    verifyNestedResourceInfoAction: (nestedResourceInfo) =>
+                    {
+                        Assert.NotEmpty(verifyNestedResourceInfoActionStack);
+                        var innerVerifyNestedResourceInfoAction = verifyNestedResourceInfoActionStack.Pop();
 
-                            innerVerifyNestedResourceInfoAction(nestedResourceInfo);
-                        });
-                });
+                        innerVerifyNestedResourceInfoAction(nestedResourceInfo);
+                    }));
 
             Assert.Empty(verifyResourceActionStack);
             Assert.Empty(verifyNestedResourceInfoActionStack);
@@ -646,25 +622,22 @@ namespace Microsoft.OData.Tests.JsonLight
                 payload,
                 this.orderEntitySet,
                 this.orderEntityType,
-                async (jsonLightReader) =>
-                {
-                    await DoReadAsync(
-                        jsonLightReader,
-                        verifyResourceAction: (resource) =>
-                        {
-                            Assert.True(verifyResourceActionStack.Count > 0);
-                            var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var innerVerifyResourceAction = verifyResourceActionStack.Pop();
 
-                            innerVerifyResourceAction(resource);
-                        },
-                        verifyNestedResourceInfoAction: (nestedResourceInfo) =>
-                        {
-                            Assert.True(verifyNestedResourceInfoActionStack.Count > 0);
-                            var innerVerifyNestedResourceInfoAction = verifyNestedResourceInfoActionStack.Pop();
+                        innerVerifyResourceAction(resource);
+                    },
+                    verifyNestedResourceInfoAction: (nestedResourceInfo) =>
+                    {
+                        Assert.NotEmpty(verifyNestedResourceInfoActionStack);
+                        var innerVerifyNestedResourceInfoAction = verifyNestedResourceInfoActionStack.Pop();
 
-                            innerVerifyNestedResourceInfoAction(nestedResourceInfo);
-                        });
-                });
+                        innerVerifyNestedResourceInfoAction(nestedResourceInfo);
+                    }));
 
             Assert.Empty(verifyResourceActionStack);
             Assert.Empty(verifyNestedResourceInfoActionStack);
@@ -712,22 +685,19 @@ namespace Microsoft.OData.Tests.JsonLight
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                async (jsonLightReader) =>
-                {
-                    await DoReadAsync(
-                        jsonLightReader,
-                        verifyDeltaResourceSetAction: (deltaResourceSet) =>
-                        {
-                            Assert.NotNull(deltaResourceSet);
-                        },
-                        verifyResourceAction: (resource) =>
-                        {
-                            Assert.True(verifyResourceActionStack.Count > 0);
-                            var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyDeltaResourceSetAction: (deltaResourceSet) =>
+                    {
+                        Assert.NotNull(deltaResourceSet);
+                    },
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var innerVerifyResourceAction = verifyResourceActionStack.Pop();
 
-                            innerVerifyResourceAction(resource);
-                        });
-                },
+                        innerVerifyResourceAction(resource);
+                    }),
                 readingDelta: true);
         }
 
@@ -745,23 +715,20 @@ namespace Microsoft.OData.Tests.JsonLight
                 payload,
                 this.orderEntitySet,
                 this.orderEntityType,
-                async (jsonLightReader) =>
-                {
-                    await DoReadAsync(
-                        jsonLightReader,
-                        verifyDeltaResourceSetAction: (deltaResourceSet) =>
-                        {
-                            Assert.NotNull(deltaResourceSet);
-                        },
-                        verifyDeltaLinkAction: (deltaLink) =>
-                        {
-                            Assert.NotNull(deltaLink.Source);
-                            Assert.Equal("http://tempuri.org/Orders(1)", deltaLink.Source.AbsoluteUri);
-                            Assert.Equal("Customer", deltaLink.Relationship);
-                            Assert.NotNull(deltaLink.Target);
-                            Assert.Equal("http://tempuri.org/Customers(1)", deltaLink.Target.AbsoluteUri);
-                        });
-                },
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyDeltaResourceSetAction: (deltaResourceSet) =>
+                    {
+                        Assert.NotNull(deltaResourceSet);
+                    },
+                    verifyDeltaLinkAction: (deltaLink) =>
+                    {
+                        Assert.NotNull(deltaLink.Source);
+                        Assert.Equal("http://tempuri.org/Orders(1)", deltaLink.Source.AbsoluteUri);
+                        Assert.Equal("Customer", deltaLink.Relationship);
+                        Assert.NotNull(deltaLink.Target);
+                        Assert.Equal("http://tempuri.org/Customers(1)", deltaLink.Target.AbsoluteUri);
+                    }),
                 readingResourceSet: true,
                 readingDelta: true);
         }
@@ -780,23 +747,20 @@ namespace Microsoft.OData.Tests.JsonLight
                 payload,
                 this.orderEntitySet,
                 this.orderEntityType,
-                async (jsonLightReader) =>
-                {
-                    await DoReadAsync(
-                        jsonLightReader,
-                        verifyDeltaResourceSetAction: (deltaResourceSet) =>
-                        {
-                            Assert.NotNull(deltaResourceSet);
-                        },
-                        verifyDeltaLinkAction: (deltaDeletedLink) =>
-                        {
-                            Assert.NotNull(deltaDeletedLink.Source);
-                            Assert.Equal("http://tempuri.org/Orders(1)", deltaDeletedLink.Source.AbsoluteUri);
-                            Assert.Equal("Customer", deltaDeletedLink.Relationship);
-                            Assert.NotNull(deltaDeletedLink.Target);
-                            Assert.Equal("http://tempuri.org/Customers(1)", deltaDeletedLink.Target.AbsoluteUri);
-                        });
-                },
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyDeltaResourceSetAction: (deltaResourceSet) =>
+                    {
+                        Assert.NotNull(deltaResourceSet);
+                    },
+                    verifyDeltaLinkAction: (deltaDeletedLink) =>
+                    {
+                        Assert.NotNull(deltaDeletedLink.Source);
+                        Assert.Equal("http://tempuri.org/Orders(1)", deltaDeletedLink.Source.AbsoluteUri);
+                        Assert.Equal("Customer", deltaDeletedLink.Relationship);
+                        Assert.NotNull(deltaDeletedLink.Target);
+                        Assert.Equal("http://tempuri.org/Customers(1)", deltaDeletedLink.Target.AbsoluteUri);
+                    }),
                 readingResourceSet: true,
                 readingDelta: true);
         }
@@ -817,30 +781,27 @@ namespace Microsoft.OData.Tests.JsonLight
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                async (jsonLightReader) =>
-                {
-                    await DoReadAsync(
-                        jsonLightReader,
-                        verifyStreamPropertyInfoAction: (streamPropertyInfo) =>
-                        {
-                            Assert.NotNull(streamPropertyInfo);
-                            Assert.NotNull(streamPropertyInfo.EditLink);
-                            Assert.Equal("http://tempuri.org/Customers(1)/Photo", streamPropertyInfo.EditLink.AbsoluteUri);
-                            Assert.NotNull(streamPropertyInfo.ReadLink);
-                            Assert.Equal("http://tempuri.org/Customers(1)/Photo", streamPropertyInfo.ReadLink.AbsoluteUri);
-                            Assert.Equal("image/png", streamPropertyInfo.ContentType);
-                            Assert.Equal("media-etag", streamPropertyInfo.ETag);
-                        },
-                        verifyBinaryStreamAction: async (binaryStream) =>
-                        {
-                            var maxLength = 10;
-                            var buffer = new byte[maxLength];
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyStreamPropertyInfoAction: (streamPropertyInfo) =>
+                    {
+                        Assert.NotNull(streamPropertyInfo);
+                        Assert.NotNull(streamPropertyInfo.EditLink);
+                        Assert.Equal("http://tempuri.org/Customers(1)/Photo", streamPropertyInfo.EditLink.AbsoluteUri);
+                        Assert.NotNull(streamPropertyInfo.ReadLink);
+                        Assert.Equal("http://tempuri.org/Customers(1)/Photo", streamPropertyInfo.ReadLink.AbsoluteUri);
+                        Assert.Equal("image/png", streamPropertyInfo.ContentType);
+                        Assert.Equal("media-etag", streamPropertyInfo.ETag);
+                    },
+                    verifyBinaryStreamAction: async (binaryStream) =>
+                    {
+                        var maxLength = 10;
+                        var buffer = new byte[maxLength];
 
-                            var bytesRead = await binaryStream.ReadAsync(buffer, 0, maxLength);
-                            Assert.Equal(bytesRead, maxLength);
-                            Assert.Equal(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 }, buffer);
-                        });
-                });
+                        var bytesRead = await binaryStream.ReadAsync(buffer, 0, maxLength);
+                        Assert.Equal(bytesRead, maxLength);
+                        Assert.Equal(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 }, buffer);
+                    }));
         }
 
         [Fact]
@@ -857,20 +818,17 @@ namespace Microsoft.OData.Tests.JsonLight
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                async (jsonLightReader) =>
-                {
-                    await DoReadAsync(
-                        jsonLightReader,
-                        verifyStreamPropertyInfoAction: (streamPropertyInfo) =>
-                        {
-                            Assert.Null(streamPropertyInfo);
-                        },
-                        verifyTextStreamAction: async (textReader) =>
-                        {
-                            var result = await textReader.ReadToEndAsync();
-                            Assert.Equal("Sue", result);
-                        });
-                });
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyStreamPropertyInfoAction: (streamPropertyInfo) =>
+                    {
+                        Assert.Null(streamPropertyInfo);
+                    },
+                    verifyTextStreamAction: async (textReader) =>
+                    {
+                        var result = await textReader.ReadToEndAsync();
+                        Assert.Equal("Sue", result);
+                    }));
         }
 
         [Fact]
@@ -887,20 +845,17 @@ namespace Microsoft.OData.Tests.JsonLight
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                async (jsonLightReader) =>
-                {
-                    await DoReadAsync(
-                        jsonLightReader,
-                        verifyStreamPropertyInfoAction: (streamPropertyInfo) =>
-                        {
-                            Assert.Null(streamPropertyInfo);
-                        },
-                        verifyTextStreamAction: async (textReader) =>
-                        {
-                            var result = await textReader.ReadToEndAsync();
-                            Assert.Equal("", result);
-                        });
-                });
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyStreamPropertyInfoAction: (streamPropertyInfo) =>
+                    {
+                        Assert.Null(streamPropertyInfo);
+                    },
+                    verifyTextStreamAction: async (textReader) =>
+                    {
+                        var result = await textReader.ReadToEndAsync();
+                        Assert.Equal("", result);
+                    }));
         }
 
         [Fact]
@@ -944,18 +899,15 @@ namespace Microsoft.OData.Tests.JsonLight
                 payload,
                 this.orderEntitySet,
                 this.orderEntityType,
-                async (jsonLightReader) =>
-                {
-                    await DoReadAsync(
-                        jsonLightReader,
-                        verifyResourceAction: (resource) =>
-                        {
-                            Assert.True(verifyResourceActionStack.Count > 0);
-                            var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var innerVerifyResourceAction = verifyResourceActionStack.Pop();
 
-                            innerVerifyResourceAction(resource);
-                        });
-                },
+                        innerVerifyResourceAction(resource);
+                    }),
                 isResponse: false);
 
             Assert.Empty(verifyResourceActionStack);
@@ -978,18 +930,15 @@ namespace Microsoft.OData.Tests.JsonLight
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                async (jsonLightReader) =>
-                {
-                    await DoReadAsync(
-                        jsonLightReader,
-                        verifyEntityReferenceLinkAction: (entityReferenceLink) =>
-                        {
-                            Assert.NotNull(entityReferenceLink);
-                            Assert.True(entityReferenceLinksStack.Count > 0);
-                            var entityReferenceLinkUrl = entityReferenceLinksStack.Pop();
-                            Assert.Equal(entityReferenceLinkUrl, entityReferenceLink.Url.AbsoluteUri);
-                        });
-                },
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyEntityReferenceLinkAction: (entityReferenceLink) =>
+                    {
+                        Assert.NotNull(entityReferenceLink);
+                        Assert.NotEmpty(entityReferenceLinksStack);
+                        var entityReferenceLinkUrl = entityReferenceLinksStack.Pop();
+                        Assert.Equal(entityReferenceLinkUrl, entityReferenceLink.Url.AbsoluteUri);
+                    }),
                 isResponse: false);
 
             Assert.Empty(entityReferenceLinksStack);
@@ -1051,18 +1000,15 @@ namespace Microsoft.OData.Tests.JsonLight
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                async (jsonLightReader) =>
-                {
-                    await DoReadAsync(
-                        jsonLightReader,
-                        verifyResourceAction: (resource) =>
-                        {
-                            Assert.True(verifyResourceActionStack.Count > 0);
-                            var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var innerVerifyResourceAction = verifyResourceActionStack.Pop();
 
-                            innerVerifyResourceAction(resource);
-                        });
-                },
+                        innerVerifyResourceAction(resource);
+                    }),
                 isResponse: false);
 
             Assert.Empty(verifyResourceActionStack);
@@ -1110,18 +1056,15 @@ namespace Microsoft.OData.Tests.JsonLight
                 payload,
                 this.orderEntitySet,
                 this.orderEntityType,
-                async (jsonLightReader) =>
-                {
-                    await DoReadAsync(
-                        jsonLightReader,
-                        verifyResourceAction: (resource) =>
-                        {
-                            Assert.True(verifyResourceActionStack.Count > 0);
-                            var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var innerVerifyResourceAction = verifyResourceActionStack.Pop();
 
-                            innerVerifyResourceAction(resource);
-                        });
-                });
+                        innerVerifyResourceAction(resource);
+                    }));
 
             Assert.Empty(verifyResourceActionStack);
         }
@@ -1169,18 +1112,15 @@ namespace Microsoft.OData.Tests.JsonLight
                 payload,
                 this.orderEntitySet,
                 this.orderEntityType,
-                async (jsonLightReader) =>
-                {
-                    await DoReadAsync(
-                        jsonLightReader,
-                        verifyResourceAction: (resource) =>
-                        {
-                            Assert.True(verifyResourceActionStack.Count > 0);
-                            var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var innerVerifyResourceAction = verifyResourceActionStack.Pop();
 
-                            innerVerifyResourceAction(resource);
-                        });
-                });
+                        innerVerifyResourceAction(resource);
+                    }));
 
             Assert.Empty(verifyResourceActionStack);
         }
@@ -1196,23 +1136,20 @@ namespace Microsoft.OData.Tests.JsonLight
                 payload,
                 this.orderEntitySet,
                 this.orderEntityType,
-                async (jsonLightReader) =>
-                {
-                    await DoReadAsync(
-                        jsonLightReader,
-                        verifyResourceAction: (resource) =>
-                        {
-                            Assert.NotNull(resource);
-                            Assert.Equal("NS.Customer", resource.TypeName);
-                            var properties = resource.Properties.ToArray();
-                            Assert.Equal(2, properties.Length);
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotNull(resource);
+                        Assert.Equal("NS.Customer", resource.TypeName);
+                        var properties = resource.Properties.ToArray();
+                        Assert.Equal(2, properties.Length);
 
-                            Assert.Equal("Id", properties[0].Name);
-                            Assert.Equal(1, properties[0].Value);
-                            Assert.Equal("Name", properties[1].Name);
-                            Assert.Equal("Sue", properties[1].Value);
-                        });
-                },
+                        Assert.Equal("Id", properties[0].Name);
+                        Assert.Equal(1, properties[0].Value);
+                        Assert.Equal("Name", properties[1].Name);
+                        Assert.Equal("Sue", properties[1].Value);
+                    }),
                 readingResourceSet: true,
                 readingDelta: true);
         }
@@ -1258,18 +1195,15 @@ namespace Microsoft.OData.Tests.JsonLight
                 payload,
                 this.orderEntitySet,
                 this.orderEntityType,
-                async (jsonLightReader) =>
-                {
-                    await DoReadAsync(
-                        jsonLightReader,
-                        verifyResourceAction: (resource) =>
-                        {
-                            Assert.True(verifyResourceActionStack.Count > 0);
-                            var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var innerVerifyResourceAction = verifyResourceActionStack.Pop();
 
-                            innerVerifyResourceAction(resource);
-                        });
-                },
+                        innerVerifyResourceAction(resource);
+                    }),
                 readingResourceSet: true,
                 isResponse: false);
         }
@@ -1315,18 +1249,15 @@ namespace Microsoft.OData.Tests.JsonLight
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                async (jsonLightReader) =>
-                {
-                    await DoReadAsync(
-                        jsonLightReader,
-                        verifyResourceAction: (resource) =>
-                        {
-                            Assert.True(verifyResourceActionStack.Count > 0);
-                            var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var innerVerifyResourceAction = verifyResourceActionStack.Pop();
 
-                            innerVerifyResourceAction(resource);
-                        });
-                },
+                        innerVerifyResourceAction(resource);
+                    }),
                 readingResourceSet: true,
                 isResponse: false);
         }
@@ -1373,18 +1304,15 @@ namespace Microsoft.OData.Tests.JsonLight
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                async (jsonLightReader) =>
-                {
-                    await DoReadAsync(
-                        jsonLightReader,
-                        verifyResourceAction: (resource) =>
-                        {
-                            Assert.True(verifyResourceActionStack.Count > 0);
-                            var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var innerVerifyResourceAction = verifyResourceActionStack.Pop();
 
-                            innerVerifyResourceAction(resource);
-                        });
-                },
+                        innerVerifyResourceAction(resource);
+                    }),
                 isResponse: false);
 
             Assert.Empty(verifyResourceActionStack);
@@ -1402,32 +1330,29 @@ namespace Microsoft.OData.Tests.JsonLight
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                async (jsonLightReader) =>
-                {
-                    await DoReadAsync(
-                        jsonLightReader,
-                        verifyResourceAction: (resource) =>
-                        {
-                            Assert.NotNull(resource);
-                            Assert.Equal("NS.Customer", resource.TypeName);
-                            var properties = resource.Properties.ToArray();
-                            Assert.Equal(2, properties.Length);
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotNull(resource);
+                        Assert.Equal("NS.Customer", resource.TypeName);
+                        var properties = resource.Properties.ToArray();
+                        Assert.Equal(2, properties.Length);
 
-                            Assert.Equal("Id", properties[0].Name);
-                            Assert.Equal(1, properties[0].Value);
-                            Assert.Equal("Name", properties[1].Name);
-                            Assert.Equal("Sue", properties[1].Value);
-                        },
-                        verifyNestedResourceInfoAction: (nestedResourceInfo) =>
-                        {
-                            Assert.NotNull(nestedResourceInfo);
-                            Assert.Equal("Orders", nestedResourceInfo.Name);
-                            Assert.NotNull(nestedResourceInfo.Url);
-                            Assert.Equal("http://tempuri.org/Customers(1)/Orders", nestedResourceInfo.Url.AbsoluteUri);
-                            Assert.NotNull(nestedResourceInfo.AssociationLinkUrl);
-                            Assert.Equal("http://tempuri.org/Customers(1)/Orders/$ref", nestedResourceInfo.AssociationLinkUrl.AbsoluteUri);
-                        });
-                });
+                        Assert.Equal("Id", properties[0].Name);
+                        Assert.Equal(1, properties[0].Value);
+                        Assert.Equal("Name", properties[1].Name);
+                        Assert.Equal("Sue", properties[1].Value);
+                    },
+                    verifyNestedResourceInfoAction: (nestedResourceInfo) =>
+                    {
+                        Assert.NotNull(nestedResourceInfo);
+                        Assert.Equal("Orders", nestedResourceInfo.Name);
+                        Assert.NotNull(nestedResourceInfo.Url);
+                        Assert.Equal("http://tempuri.org/Customers(1)/Orders", nestedResourceInfo.Url.AbsoluteUri);
+                        Assert.NotNull(nestedResourceInfo.AssociationLinkUrl);
+                        Assert.Equal("http://tempuri.org/Customers(1)/Orders/$ref", nestedResourceInfo.AssociationLinkUrl.AbsoluteUri);
+                    }));
         }
 
         [Fact]
@@ -1443,29 +1368,26 @@ namespace Microsoft.OData.Tests.JsonLight
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                async (jsonLightReader) =>
-                {
-                    await DoReadAsync(
-                        jsonLightReader,
-                        verifyResourceAction: (resource) =>
-                        {
-                            Assert.NotNull(resource);
-                            Assert.Equal("NS.Customer", resource.TypeName);
-                            var properties = resource.Properties.ToArray();
-                            Assert.Equal(3, properties.Length);
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotNull(resource);
+                        Assert.Equal("NS.Customer", resource.TypeName);
+                        var properties = resource.Properties.ToArray();
+                        Assert.Equal(3, properties.Length);
 
-                            Assert.Equal("Id", properties[0].Name);
-                            Assert.Equal(1, properties[0].Value);
-                            Assert.Equal("Name", properties[1].Name);
-                            Assert.Equal("Sue", properties[1].Value);
-                            Assert.Equal("UndeclaredCollectionProp", properties[2].Name);
-                            var collectionValue = Assert.IsType<ODataCollectionValue>(properties[2].Value);
-                            var collectionItems = collectionValue.Items.ToArray();
-                            Assert.Equal("Foo", collectionItems[0]);
-                            Assert.Equal("Bar", collectionItems[1]);
-                            Assert.Null(collectionItems[2]);
-                        });
-                });
+                        Assert.Equal("Id", properties[0].Name);
+                        Assert.Equal(1, properties[0].Value);
+                        Assert.Equal("Name", properties[1].Name);
+                        Assert.Equal("Sue", properties[1].Value);
+                        Assert.Equal("UndeclaredCollectionProp", properties[2].Name);
+                        var collectionValue = Assert.IsType<ODataCollectionValue>(properties[2].Value);
+                        var collectionItems = collectionValue.Items.ToArray();
+                        Assert.Equal("Foo", collectionItems[0]);
+                        Assert.Equal("Bar", collectionItems[1]);
+                        Assert.Null(collectionItems[2]);
+                    }));
         }
 
         [Fact]
@@ -1486,27 +1408,24 @@ namespace Microsoft.OData.Tests.JsonLight
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                async (jsonLightReader) =>
-                {
-                    await DoReadAsync(
-                        jsonLightReader,
-                        verifyResourceAction: (resource) =>
-                        {
-                            Assert.NotNull(resource);
-                            var idProperty = Assert.Single<ODataProperty>(resource.Properties);
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotNull(resource);
+                        var idProperty = Assert.Single<ODataProperty>(resource.Properties);
 
-                            Assert.Equal("Id", idProperty.Name);
-                            Assert.Equal(1, idProperty.Value);
-                        },
-                        verifyTextStreamAction: async (textReader) =>
-                        {
-                            Assert.True(readAsStreamStack.Count > 0);
-                            var readAsStream = readAsStreamStack.Pop();
+                        Assert.Equal("Id", idProperty.Name);
+                        Assert.Equal(1, idProperty.Value);
+                    },
+                    verifyTextStreamAction: async (textReader) =>
+                    {
+                        Assert.NotEmpty(readAsStreamStack);
+                        var readAsStream = readAsStreamStack.Pop();
 
-                            var result = await textReader.ReadToEndAsync();
-                            Assert.Equal(readAsStream, result);
-                        });
-                });
+                        var result = await textReader.ReadToEndAsync();
+                        Assert.Equal(readAsStream, result);
+                    }));
 
             Assert.Empty(readAsStreamStack);
         }
@@ -1524,29 +1443,26 @@ namespace Microsoft.OData.Tests.JsonLight
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                async (jsonLightReader) =>
-                {
-                    await DoReadAsync(
-                        jsonLightReader,
-                        verifyResourceAction: (resource) =>
-                        {
-                            Assert.NotNull(resource);
-                            Assert.Equal("NS.Customer", resource.TypeName);
-                            var properties = resource.Properties.ToArray();
-                            Assert.Equal(3, properties.Length);
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotNull(resource);
+                        Assert.Equal("NS.Customer", resource.TypeName);
+                        var properties = resource.Properties.ToArray();
+                        Assert.Equal(3, properties.Length);
 
-                            Assert.Equal("Id", properties[0].Name);
-                            Assert.Equal(1, properties[0].Value);
-                            Assert.Equal("Name", properties[1].Name);
-                            Assert.Equal("Sue", properties[1].Value);
-                            Assert.Equal("EnumCollectionProp", properties[2].Name);
-                            var collectionValue = Assert.IsType<ODataCollectionValue>(properties[2].Value);
-                            var collectionItems = collectionValue.Items.ToArray();
-                            Assert.Equal(2, collectionItems.Length);
-                            Assert.Equal("Retail", Assert.IsType<ODataEnumValue>(collectionItems[0]).Value);
-                            Assert.Equal("Wholesale", Assert.IsType<ODataEnumValue>(collectionItems[1]).Value);
-                        });
-                });
+                        Assert.Equal("Id", properties[0].Name);
+                        Assert.Equal(1, properties[0].Value);
+                        Assert.Equal("Name", properties[1].Name);
+                        Assert.Equal("Sue", properties[1].Value);
+                        Assert.Equal("EnumCollectionProp", properties[2].Name);
+                        var collectionValue = Assert.IsType<ODataCollectionValue>(properties[2].Value);
+                        var collectionItems = collectionValue.Items.ToArray();
+                        Assert.Equal(2, collectionItems.Length);
+                        Assert.Equal("Retail", Assert.IsType<ODataEnumValue>(collectionItems[0]).Value);
+                        Assert.Equal("Wholesale", Assert.IsType<ODataEnumValue>(collectionItems[1]).Value);
+                    }));
         }
 
         [Fact]
@@ -1561,32 +1477,29 @@ namespace Microsoft.OData.Tests.JsonLight
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                async (jsonLightReader) =>
-                {
-                    await DoReadAsync(
-                        jsonLightReader,
-                        verifyResourceAction: (resource) =>
-                        {
-                            Assert.NotNull(resource);
-                            Assert.Equal("NS.Customer", resource.TypeName);
-                            var properties = resource.Properties.ToArray();
-                            Assert.Equal(2, properties.Length);
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotNull(resource);
+                        Assert.Equal("NS.Customer", resource.TypeName);
+                        var properties = resource.Properties.ToArray();
+                        Assert.Equal(2, properties.Length);
 
-                            Assert.Equal("Id", properties[0].Name);
-                            Assert.Equal(1, properties[0].Value);
-                            Assert.Equal("Name", properties[1].Name);
-                            Assert.Equal("Sue", properties[1].Value);
-                        },
-                        verifyBinaryStreamAction: async (binaryStream) =>
-                        {
-                            var maxLength = 10;
-                            var buffer = new byte[maxLength];
+                        Assert.Equal("Id", properties[0].Name);
+                        Assert.Equal(1, properties[0].Value);
+                        Assert.Equal("Name", properties[1].Name);
+                        Assert.Equal("Sue", properties[1].Value);
+                    },
+                    verifyBinaryStreamAction: async (binaryStream) =>
+                    {
+                        var maxLength = 10;
+                        var buffer = new byte[maxLength];
 
-                            var bytesRead = await binaryStream.ReadAsync(buffer, 0, maxLength);
-                            Assert.Equal(bytesRead, maxLength);
-                            Assert.Equal(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 }, buffer);
-                        });
-                });
+                        var bytesRead = await binaryStream.ReadAsync(buffer, 0, maxLength);
+                        Assert.Equal(bytesRead, maxLength);
+                        Assert.Equal(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 }, buffer);
+                    }));
         }
 
         [Fact]
@@ -1667,25 +1580,22 @@ namespace Microsoft.OData.Tests.JsonLight
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                async (jsonLightReader) =>
-                {
-                    await DoReadAsync(
-                        jsonLightReader,
-                        verifyResourceAction: (resource) =>
-                        {
-                            Assert.True(verifyResourceActionStack.Count > 0);
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
 
-                            var innerVerifyResourceAction = verifyResourceActionStack.Pop();
-                            innerVerifyResourceAction(resource);
-                        },
-                        verifyPrimitiveAction: (primitiveValue) =>
-                        {
-                            Assert.True(primitiveValueStack.Count > 0);
+                        var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                        innerVerifyResourceAction(resource);
+                    },
+                    verifyPrimitiveAction: (primitiveValue) =>
+                    {
+                        Assert.NotEmpty(primitiveValueStack);
 
-                            var expectedPrimitiveValue = primitiveValueStack.Pop();
-                            Assert.Equal(expectedPrimitiveValue, primitiveValue.Value);
-                        });
-                });
+                        var expectedPrimitiveValue = primitiveValueStack.Pop();
+                        Assert.Equal(expectedPrimitiveValue, primitiveValue.Value);
+                    }));
 
             Assert.Empty(primitiveValueStack);
             Assert.Empty(verifyResourceActionStack);
