@@ -26,22 +26,44 @@ namespace Microsoft.OData
         private ObjectPool<IDuplicatePropertyNameChecker> duplicatePropertyNameCheckerObjectPool;
 
         /// <summary>
+        /// Instances of the NullDuplicatePropertyNameChecker.
+        /// </summary>
+        private IDuplicatePropertyNameChecker nullDuplicatePropertyNameChecker;
+
+        /// <summary>
         /// Creates a WriterValidator instance and binds it to settings.
         /// </summary>
         /// <param name="settings">The ODataMessageWriterSettings instance to bind to.</param>
         internal WriterValidator(ODataMessageWriterSettings settings)
         {
             this.settings = settings;
-            this.duplicatePropertyNameCheckerObjectPool = settings.ThrowOnDuplicatePropertyNames ?
-                new ObjectPool<IDuplicatePropertyNameChecker>(() => new DuplicatePropertyNameChecker()) :
-                new ObjectPool<IDuplicatePropertyNameChecker>(() => new NullDuplicatePropertyNameChecker());
         }
 
         /// <inheritdoc/>
         public IDuplicatePropertyNameChecker GetDuplicatePropertyNameChecker()
         {
-            IDuplicatePropertyNameChecker duplicatePropertyNameChecker = this.duplicatePropertyNameCheckerObjectPool.Get();
-            duplicatePropertyNameChecker.Reset();
+            IDuplicatePropertyNameChecker duplicatePropertyNameChecker;
+
+            if (settings.ThrowOnDuplicatePropertyNames)
+            {
+                if (this.duplicatePropertyNameCheckerObjectPool == null)
+                {
+                    this.duplicatePropertyNameCheckerObjectPool = new ObjectPool<IDuplicatePropertyNameChecker>(() => new DuplicatePropertyNameChecker());
+                }
+
+                duplicatePropertyNameChecker = this.duplicatePropertyNameCheckerObjectPool.Get();
+                duplicatePropertyNameChecker.Reset();
+            }
+            else
+            {
+                if (this.nullDuplicatePropertyNameChecker == null)
+                {
+                    // NullDuplicatePropertyNameChecker does nothing, so we can use a single instance during the writing process.
+                    this.nullDuplicatePropertyNameChecker = new NullDuplicatePropertyNameChecker();
+                }
+
+                duplicatePropertyNameChecker = this.nullDuplicatePropertyNameChecker;
+            }
 
             return duplicatePropertyNameChecker;
         }
@@ -49,7 +71,11 @@ namespace Microsoft.OData
         /// <inheritdoc/>
         public void ReturnDuplicatePropertyNameChecker(IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
         {
-            this.duplicatePropertyNameCheckerObjectPool.Return(duplicatePropertyNameChecker);
+            // We only return the DuplicatePropertyNameChecker to the object pool and ignore the NullDuplicatePropertyNameChecker.
+            if (settings.ThrowOnDuplicatePropertyNames)
+            {
+                this.duplicatePropertyNameCheckerObjectPool.Return(duplicatePropertyNameChecker);
+            }
         }
 
         /// <summary>
