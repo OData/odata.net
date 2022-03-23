@@ -4749,8 +4749,11 @@ public abstract class Microsoft.OData.ODataParameterReader {
     object Value  { public abstract get; }
 
     public abstract Microsoft.OData.ODataCollectionReader CreateCollectionReader ()
+    public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataCollectionReader]] CreateCollectionReaderAsync ()
     public abstract Microsoft.OData.ODataReader CreateResourceReader ()
+    public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataReader]] CreateResourceReaderAsync ()
     public abstract Microsoft.OData.ODataReader CreateResourceSetReader ()
+    public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataReader]] CreateResourceSetReaderAsync ()
     public abstract bool Read ()
     public abstract System.Threading.Tasks.Task`1[[System.Boolean]] ReadAsync ()
 }
