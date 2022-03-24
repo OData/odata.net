@@ -66,34 +66,24 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Resource Include="Microsoft.OData.Core.tt">
+    <Content Include="Microsoft.OData.Core.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Microsoft.OData.Core.cs</LastGenOutput>
-    </Resource>
-    <Resource Include="Parameterized.Microsoft.OData.Core.tt">
+    </Content>
+    <Content Include="Parameterized.Microsoft.OData.Core.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Parameterized.Microsoft.OData.Core.cs</LastGenOutput>
-    </Resource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Microsoft.OData.Core.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Microsoft.OData.Core.tt</DependentUpon>
-    </Compile>
-
-    <Compile Update="Parameterized.Microsoft.OData.Core.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Parameterized.Microsoft.OData.Core.tt</DependentUpon>
-    </Compile>
+    </Content>
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces">
       <Version>5.0.0</Version>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
 </Project>
