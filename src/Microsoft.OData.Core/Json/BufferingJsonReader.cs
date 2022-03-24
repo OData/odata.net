@@ -201,8 +201,8 @@ namespace Microsoft.OData.Json
                 return streamReader.CreateReadStream();
             }
 
-            Stream result = new MemoryStream(this.Value == null ? new byte[0] :
-                           Convert.FromBase64String((string)this.Value));
+            Stream result = this.Value == null ? Stream.Null :
+                new MemoryStream(Convert.FromBase64String((string)this.Value));
             this.innerReader.Read();
             return result;
         }
@@ -338,7 +338,7 @@ namespace Microsoft.OData.Json
 
             if (value == null)
             {
-                result = new MemoryStream(new byte[0]);
+                result = Stream.Null;
             }
             else
             {
