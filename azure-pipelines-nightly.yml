@@ -15,7 +15,7 @@ schedules:
     - master
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'windows-2019'
 
 variables:
   buildPlatform: 'Any CPU'
