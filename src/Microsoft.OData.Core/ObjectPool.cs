@@ -23,15 +23,16 @@ namespace Microsoft.OData
 
         // The pool size is equal to the level of nesting in the response.
         // 32 is an arbitrary figure. Could be adjusted appropriately.
-        private const int POOL_SIZE = 8;
+        private int poolSize;
 
         /// <summary>
         /// To initialize the object pool.
         /// </summary>
         /// <param name="objectGenerator">Used to create an instance of a <typeparamref name="T"/>.</param>
-        public ObjectPool(Func<T> objectGenerator)
+        public ObjectPool(Func<T> objectGenerator, int poolSize)
         {
             this.objectGenerator = objectGenerator ?? throw new ArgumentNullException(nameof(objectGenerator));
+            this.poolSize = poolSize;
         }
 
         /// <summary>
@@ -51,7 +52,7 @@ namespace Microsoft.OData
 
             if (items == null)
             {
-                items = new ObjectWrapper[POOL_SIZE];
+                items = new ObjectWrapper[poolSize - 1]; // -1 since one element is in the firstItem variable.
             }
 
             for (int i = 0; i < items.Length; i++)

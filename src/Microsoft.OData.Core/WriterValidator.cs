@@ -48,7 +48,7 @@ namespace Microsoft.OData
             {
                 if (this.duplicatePropertyNameCheckerObjectPool == null)
                 {
-                    this.duplicatePropertyNameCheckerObjectPool = new ObjectPool<IDuplicatePropertyNameChecker>(() => new DuplicatePropertyNameChecker());
+                    this.duplicatePropertyNameCheckerObjectPool = new ObjectPool<IDuplicatePropertyNameChecker>(() => new DuplicatePropertyNameChecker(), 8);
                 }
 
                 duplicatePropertyNameChecker = this.duplicatePropertyNameCheckerObjectPool.Get();
