@@ -6,19 +6,12 @@
 
 using System;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-#if ORCAS
-using System.Runtime.Serialization;
-#endif
 
 namespace Microsoft.OData
 {
     /// <summary>
     /// Exception type representing exceptions in the OData library.
     /// </summary>
-#if ORCAS
-    [Serializable]
-#endif
     [DebuggerDisplay("{Message}")]
     public class ODataException : InvalidOperationException
     {
@@ -47,17 +40,5 @@ namespace Microsoft.OData
             : base(message, innerException)
         {
         }
-
-#if ORCAS
-        /// <summary>Creates a new instance of the <see cref="Microsoft.OData.ODataException" /> class from the specified <see cref="System.Runtime.Serialization.SerializationInfo" /> and <see cref="System.Runtime.Serialization.StreamingContext" /> instances.</summary>
-        /// <param name="info"> A <see cref="System.Runtime.Serialization.SerializationInfo" /> containing the information required to serialize  the new <see cref="Microsoft.OData.ODataException" />. </param>
-        /// <param name="context"> A <see cref="System.Runtime.Serialization.StreamingContext" /> containing the source of the serialized stream  associated with the new <see cref="Microsoft.OData.ODataException" />. </param>
-        [SuppressMessage("Microsoft.Design", "CA1047", Justification = "Follows serialization info pattern.")]
-        [SuppressMessage("Microsoft.Design", "CA1032", Justification = "Follows serialization info pattern.")]
-        protected ODataException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
-#endif
     }
 }

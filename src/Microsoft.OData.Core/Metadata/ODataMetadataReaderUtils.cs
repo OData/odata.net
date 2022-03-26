@@ -61,11 +61,7 @@ namespace Microsoft.OData.Metadata
             settings.CloseInput = true;
 
             // We do not allow DTDs - this is the default
-#if ORCAS
-            settings.ProhibitDtd = true;
-#else
             settings.DtdProcessing = DtdProcessing.Prohibit;
-#endif
 
             return settings;
         }

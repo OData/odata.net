@@ -53,9 +53,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
                 ConformanceLevel = ConformanceLevel.Auto,
                 IgnoreComments = true,
                 IgnoreProcessingInstructions = true,
-#if !ORCAS
                 DtdProcessing = DtdProcessing.Prohibit
-#endif
             };
 
             // user specified a stream to read from, read from it.

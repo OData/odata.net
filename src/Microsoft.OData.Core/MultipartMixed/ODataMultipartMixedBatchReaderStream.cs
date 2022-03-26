@@ -744,13 +744,8 @@ namespace Microsoft.OData.MultipartMixed
             {
                 Debug.Assert(this.underlyingStreamExhausted, "Underlying stream must be exhausted if we have less than 2 bytes in the buffer after refilling.");
 
-                // If we cannot read any of the known preambles we fall back to the default encoding, which is US-ASCII.
-#if !ORCAS
-                // ASCII not available; use UTF8 without preamble
+                // If we cannot read any of the known preambles we fall back to the default encoding, which is UTF8 without preamble
                 return MediaTypeUtils.FallbackEncoding;
-#else
-                return Encoding.ASCII;
-#endif
             }
             else if (this.BatchBuffer[this.BatchBuffer.CurrentReadPosition] == 0xFE && this.BatchBuffer[this.BatchBuffer.CurrentReadPosition + 1] == 0xFF)
             {
@@ -764,12 +759,8 @@ namespace Microsoft.OData.MultipartMixed
                     this.BatchBuffer[this.BatchBuffer.CurrentReadPosition + 2] == 0 &&
                     this.BatchBuffer[this.BatchBuffer.CurrentReadPosition + 3] == 0)
                 {
-#if !ORCAS
                     // Little Endian UTF32 not available
                     throw Error.NotSupported();
-#else
-                    return new UTF32Encoding(/*bigEndian*/ false, /*byteOrderMark*/ true);
-#endif
                 }
                 else
                 {
@@ -790,22 +781,13 @@ namespace Microsoft.OData.MultipartMixed
                      this.BatchBuffer[this.BatchBuffer.CurrentReadPosition + 2] == 0xFE &&
                      this.BatchBuffer[this.BatchBuffer.CurrentReadPosition + 3] == 0xFF)
             {
-                // Big Endian UTF32
-#if !ORCAS
                 // Big Endian UTF32 not available
                 throw Error.NotSupported();
-#else
-                return new UTF32Encoding(/*bigEndian*/ true, /*byteOrderMark*/ true);
-#endif
             }
             else
             {
-#if !ORCAS
                 // ASCII not available; use UTF8 without preamble
                 return MediaTypeUtils.FallbackEncoding;
-#else
-                return Encoding.ASCII;
-#endif
             }
         }
     }

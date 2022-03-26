@@ -20,12 +20,10 @@ namespace Microsoft.OData.Edm.Vocabularies
         private readonly IDictionary<IEdmOperation, Func<IEdmValue[], IEdmValue>> builtInFunctions;
         private readonly Dictionary<IEdmLabeledExpression, DelayedValue> labeledValues = new Dictionary<IEdmLabeledExpression, DelayedValue>();
         private readonly Func<string, IEdmValue[], IEdmValue> lastChanceOperationApplier;
-#if !ORCAS
         private readonly Func<IEdmModel, IEdmType, string, string, IEdmExpression> getAnnotationExpressionForType;
         private readonly Func<IEdmModel, IEdmType, string, string, string, IEdmExpression> getAnnotationExpressionForProperty;
 
         private readonly IEdmModel edmModel;
-#endif
         private Func<string, IEdmModel, IEdmType> resolveTypeFromName = (typeName, edmModel) => FindEdmType(typeName, edmModel);
 
         /// <summary>
@@ -48,7 +46,6 @@ namespace Microsoft.OData.Edm.Vocabularies
             this.lastChanceOperationApplier = lastChanceOperationApplier;
         }
 
-#if !ORCAS
         /// <summary>
         /// Initializes a new instance of the EdmExpressionEvaluator class.
         /// </summary>
@@ -69,7 +66,6 @@ namespace Microsoft.OData.Edm.Vocabularies
             this.getAnnotationExpressionForProperty = getAnnotationExpressionForProperty;
             this.edmModel = edmModel;
         }
-#endif
 
         /// <summary>
         /// Function used to get edm type based on <see cref="IEdmModel"/> and the type name.
@@ -414,18 +410,6 @@ namespace Microsoft.OData.Edm.Vocabularies
 
                         IEdmPathExpression pathExpression = (IEdmPathExpression)expression;
                         IEdmValue result = context;
-#if ORCAS
-                        // [EdmLib] Need to handle paths that bind to things other than properties.
-                        foreach (string hop in pathExpression.PathSegments)
-                        {
-                            result = FindProperty(hop, result);
-
-                            if (result == null)
-                            {
-                                throw new InvalidOperationException(Edm.Strings.Edm_Evaluator_UnboundPath(hop));
-                            }
-                        }
-#else
                         // Only Support Annotation in EntityType or ComplexType or Property or NavigationProperty.
                         // Empty Path is not supported.
                         foreach (string hop in pathExpression.PathSegments)
@@ -527,7 +511,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                                 }
                             }
                         }
-#endif
+
                         return result;
                     }
 
