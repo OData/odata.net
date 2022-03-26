@@ -12,7 +12,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Represents an EDM contained entity set.
     /// </summary>
-    internal class EdmContainedEntitySet : EdmEntitySetBase, IEdmContainedEntitySet
+    public class EdmContainedEntitySet : EdmEntitySetBase, IEdmContainedEntitySet
     {
         private readonly IEdmPathExpression navigationPath;
         private readonly IEdmNavigationSource parentNavigationSource;

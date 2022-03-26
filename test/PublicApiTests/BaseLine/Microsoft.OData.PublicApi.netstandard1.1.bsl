@@ -2494,6 +2494,19 @@ public class Microsoft.OData.Edm.EdmComplexTypeReference : Microsoft.OData.Edm.E
     public EdmComplexTypeReference (Microsoft.OData.Edm.IEdmComplexType complexType, bool isNullable)
 }
 
+public class Microsoft.OData.Edm.EdmContainedEntitySet : Microsoft.OData.Edm.EdmEntitySetBase, IEdmContainedEntitySet, IEdmElement, IEdmEntitySetBase, IEdmNamedElement, IEdmNavigationSource {
+    public EdmContainedEntitySet (Microsoft.OData.Edm.IEdmNavigationSource parentNavigationSource, Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty)
+    public EdmContainedEntitySet (Microsoft.OData.Edm.IEdmNavigationSource parentNavigationSource, Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmPathExpression navigationPath)
+
+    Microsoft.OData.Edm.IEdmNavigationProperty NavigationProperty  { public virtual get; }
+    Microsoft.OData.Edm.IEdmNavigationSource ParentNavigationSource  { public virtual get; }
+    Microsoft.OData.Edm.IEdmPathExpression Path  { public virtual get; }
+
+    public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmNavigationPropertyBinding]] FindNavigationPropertyBindings (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty)
+    public virtual Microsoft.OData.Edm.IEdmNavigationSource FindNavigationTarget (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty)
+    public virtual Microsoft.OData.Edm.IEdmNavigationSource FindNavigationTarget (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmPathExpression bindingPath)
+}
+
 public class Microsoft.OData.Edm.EdmCoreModel : Microsoft.OData.Edm.EdmElement, IEdmCoreModelElement, IEdmElement, IEdmModel {
     public static readonly Microsoft.OData.Edm.EdmCoreModel Instance = Microsoft.OData.Edm.EdmCoreModel
 
