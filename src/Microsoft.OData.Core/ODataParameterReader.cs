@@ -80,6 +80,7 @@ namespace Microsoft.OData
         /// <summary>
         /// This method asynchronously creates an <see cref="ODataReader"/> to read the resource value when the state is ODataParameterReaderState.Resource.
         /// </summary>
+        /// <returns>
         /// A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains an <see cref="ODataReader"/> to read the resource value when the state is ODataParameterReaderState.Resource.
         /// </returns>
@@ -108,7 +109,9 @@ namespace Microsoft.OData
             throw new NotImplementedException();
         }
 
-        /// <summary>Asynchronously creates an <see cref="Microsoft.OData.ODataCollectionReader" /> to read the collection value when the state is ODataParameterReaderState.Collection. </summary>
+        /// <summary>
+        /// Asynchronously creates an <see cref="Microsoft.OData.ODataCollectionReader" /> to read the collection value when the state is ODataParameterReaderState.Collection.
+        /// </summary>
         /// <returns>
         /// A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains an <see cref="ODataCollectionReader"/> to read the collection value when the state is ODataParameterReaderState.Collection.

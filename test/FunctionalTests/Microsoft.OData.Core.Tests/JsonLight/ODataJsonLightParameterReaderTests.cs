@@ -1843,6 +1843,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 }
             }
         }
+
         private async Task DoReadAsync(
            ODataJsonLightReader jsonLightReader,
            Action<ODataResourceSet> verifyResourceSetAction = null,

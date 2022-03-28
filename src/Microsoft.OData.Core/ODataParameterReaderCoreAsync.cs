@@ -34,6 +34,7 @@ namespace Microsoft.OData
         /// <summary>
         /// This method asynchronously creates an <see cref="ODataReader"/> to read the resource value when the state is ODataParameterReaderState.Resource.
         /// </summary>
+        /// <returns>
         /// A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains an <see cref="ODataReader"/> to read the resource value when the state is ODataParameterReaderState.Resource.
         /// </returns>
@@ -41,7 +42,6 @@ namespace Microsoft.OData
         /// When the state is ODataParameterReaderState.Resource, the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
         /// and the Value property of the <see cref="ODataParameterReader"/> returns null. Calling this method in any other state will cause an ODataException to be thrown.
         /// </remarks>
-        /// <returns>
         public override async Task<ODataReader> CreateResourceReaderAsync()
         {
             this.VerifyCanCreateSubReader(ODataParameterReaderState.Resource);
