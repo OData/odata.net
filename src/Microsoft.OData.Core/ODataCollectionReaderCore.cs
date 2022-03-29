@@ -143,7 +143,8 @@ namespace Microsoft.OData
         public override sealed bool Read()
         {
             this.VerifyCanRead(true);
-            return this.InterceptException(this.ReadSynchronously);
+
+            return this.InterceptException((thisParam) => thisParam.ReadSynchronously());
         }
 
         /// <summary>
@@ -153,7 +154,8 @@ namespace Microsoft.OData
         public override sealed Task<bool> ReadAsync()
         {
             this.VerifyCanRead(false);
-            return this.ReadAsynchronously().FollowOnFaultWith(t => this.EnterScope(ODataCollectionReaderState.Exception, null));
+
+            return this.InterceptExceptionAsync((thisParam) => thisParam.ReadAsynchronously());
         }
 
         /// <summary>
@@ -228,9 +230,7 @@ namespace Microsoft.OData
         /// <returns>A task that when completed indicates whether more items were read.</returns>
         protected virtual Task<bool> ReadAsynchronously()
         {
-            // We are reading from the fully buffered read stream here; thus it is ok
-            // to use synchronous reads and then return a completed task
-            // NOTE: once we switch to fully async reading this will have to change
+            // Use synchronous read and then return a completed task
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadImplementation);
         }
 
@@ -313,11 +313,38 @@ namespace Microsoft.OData
         /// <typeparam name="T">The type returned from the <paramref name="action"/> to execute.</typeparam>
         /// <param name="action">The action to execute.</param>
         /// <returns>The result of executing the <paramref name="action"/>.</returns>
-        private T InterceptException<T>(Func<T> action)
+        private T InterceptException<T>(Func<ODataCollectionReaderCore, T> action)
         {
             try
             {
-                return action();
+                return action(this);
+            }
+            catch (Exception e)
+            {
+                if (ExceptionUtils.IsCatchableExceptionType(e))
+                {
+                    this.EnterScope(ODataCollectionReaderState.Exception, null);
+                }
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Catch any exception thrown by the action passed in; in the exception case move the reader into
+        /// state Exception and then rethrow the exception.
+        /// </summary>
+        /// <typeparam name="TResult">The type returned from the <paramref name="action"/></typeparam>
+        /// <param name="action">The action to execute.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains the result of executing the <paramref name="action"/>.
+        /// </returns>
+        private async Task<TResult> InterceptExceptionAsync<TResult>(Func<ODataCollectionReaderCore, Task<TResult>> action)
+        {
+            try
+            {
+                return await action(this).ConfigureAwait(false);
             }
             catch (Exception e)
             {
