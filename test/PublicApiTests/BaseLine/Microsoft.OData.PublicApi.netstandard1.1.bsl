@@ -4497,11 +4497,7 @@ public abstract class Microsoft.OData.ODataBatchWriter : IODataOutputInStreamErr
     protected abstract Microsoft.OData.ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation (string contentId)
     protected virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataBatchOperationResponseMessage]] CreateOperationResponseMessageImplementationAsync (string contentId)
     public void Flush ()
-    [
-    AsyncStateMachineAttribute(),
-    ]
     public System.Threading.Tasks.Task FlushAsync ()
-
     protected abstract System.Threading.Tasks.Task FlushAsynchronously ()
     protected abstract void FlushSynchronously ()
     protected abstract System.Collections.Generic.IEnumerable`1[[System.String]] GetDependsOnRequestIds (System.Collections.Generic.IEnumerable`1[[System.String]] dependsOnIds)
