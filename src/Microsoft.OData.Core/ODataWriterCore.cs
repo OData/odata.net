@@ -2446,6 +2446,7 @@ namespace Microsoft.OData
         /// state Error and then rethrow the exception.
         /// </summary>
         /// <param name="action">The action to execute.</param>
+        /// <param name="currentScopeItem">The item to associate with the new scope if transitioning to state Error.</param>
         /// <returns>The task.</returns>
         /// <remarks>
         /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
