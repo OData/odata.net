@@ -147,6 +147,7 @@ namespace Microsoft.OData
             catch
             {
                 this.ReplaceScope(CollectionWriterState.Error, null);
+
                 throw;
             }
         }
@@ -159,8 +160,7 @@ namespace Microsoft.OData
         {
             this.VerifyCanFlush(false);
 
-            // make sure we switch to writer state Error if an exception is thrown during flushing.
-            return this.FlushAsynchronously().FollowOnFaultWith(t => this.ReplaceScope(CollectionWriterState.Error, null));
+            return this.FlushImplementationAsync();
         }
 
         /// <summary>
@@ -857,6 +857,26 @@ namespace Microsoft.OData
                 await this.InterceptExceptionAsync((thisParam) => thisParam.EndPayloadAsync())
                     .ConfigureAwait(false);
                 this.NotifyListener(CollectionWriterState.Completed);
+            }
+        }
+
+        /// <summary>
+        /// Flush asynchronously - actual implementation
+        /// </summary>
+        /// <returns>A task instance that represents the asynchronous operation.</returns>
+        private async Task FlushImplementationAsync()
+        {
+            // Make sure we switch to writer state Error if an exception is thrown during flushing.
+            try
+            {
+                await this.FlushAsynchronously()
+                    .ConfigureAwait(false);
+            }
+            catch
+            {
+                this.ReplaceScope(CollectionWriterState.Error, null);
+
+                throw;
             }
         }
 

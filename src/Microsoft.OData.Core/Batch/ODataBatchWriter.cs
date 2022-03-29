@@ -380,20 +380,19 @@ namespace Microsoft.OData
             catch
             {
                 this.SetState(BatchWriterState.Error);
+
                 throw;
             }
         }
 
         /// <summary>Flushes the write buffer to the underlying stream asynchronously.</summary>
         /// <returns>A task instance that represents the asynchronous operation.</returns>
-        public async Task FlushAsync()
+        public Task FlushAsync()
         {
             this.VerifyCanFlush(false);
 
             // Make sure we switch to writer state Error if an exception is thrown during flushing.
-            await this.FlushAsynchronously()
-                .FollowOnFaultWith(t => this.SetState(BatchWriterState.Error))
-                .ConfigureAwait(false);
+            return this.InterceptExceptionAsync((thisParam) => thisParam.FlushAsynchronously());
         }
 
         /// <summary>
@@ -706,6 +705,29 @@ namespace Microsoft.OData
             try
             {
                 action(this, arg0);
+            }
+            catch
+            {
+                if (!IsErrorState(this.state))
+                {
+                    this.SetState(BatchWriterState.Error);
+                }
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Catch any exception thrown by the action passed in; in the exception case move the reader into
+        /// state Error and then rethrow the exception.
+        /// </summary>
+        /// <param name="action">The action to execute.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        private async Task InterceptExceptionAsync(Func<ODataBatchWriter, Task> action)
+        {
+            try
+            {
+                await action(this).ConfigureAwait(false);
             }
             catch
             {
