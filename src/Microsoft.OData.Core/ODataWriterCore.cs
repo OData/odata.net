@@ -428,7 +428,7 @@ namespace Microsoft.OData
             this.VerifyCanFlush(false);
 
             // Make sure we switch to writer state Error if an exception is thrown during flushing.
-            return this.FlushAsynchronously().FollowOnFaultWith(t => this.EnterScope(WriterState.Error, null));
+            return this.InterceptExceptionAsync((thisParam) => thisParam.FlushAsynchronously(), null);
         }
 
         /// <summary>
@@ -2451,7 +2451,7 @@ namespace Microsoft.OData
         /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
         /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
         /// </remarks>
-        private async Task InterceptExceptionAsync(Func<ODataWriterCore, Task> action)
+        private async Task InterceptExceptionAsync(Func<ODataWriterCore, Task> action, ODataItem currentScopeItem)
         {
             try
             {
@@ -2461,7 +2461,7 @@ namespace Microsoft.OData
             {
                 if (!IsErrorState(this.State))
                 {
-                    this.EnterScope(WriterState.Error, this.CurrentScope.Item);
+                    this.EnterScope(WriterState.Error, currentScopeItem);
                 }
 
                 throw;
@@ -3472,7 +3472,8 @@ namespace Microsoft.OData
 
                     await thisParam.LeaveScopeAsync()
                         .ConfigureAwait(false);
-                });
+                },
+                this.CurrentScope.Item);
         }
 
         /// <summary>
@@ -3519,7 +3520,7 @@ namespace Microsoft.OData
         {
             if (this.State == WriterState.Start)
             {
-                return this.InterceptExceptionAsync((thisParam) => thisParam.StartPayloadAsync());
+                return this.InterceptExceptionAsync((thisParam) => thisParam.StartPayloadAsync(), this.CurrentScope.Item);
             }
 
             return TaskUtils.CompletedTask;
@@ -3658,7 +3659,7 @@ namespace Microsoft.OData
                     startScope.SelectedProperties,
                     startScope.ODataUri,
                     /*derivedTypeConstraints*/ null);
-                await this.InterceptExceptionAsync((thisParam) => thisParam.EndPayloadAsync())
+                await this.InterceptExceptionAsync((thisParam) => thisParam.EndPayloadAsync(), this.CurrentScope.Item)
                     .ConfigureAwait(false);
                 this.NotifyListener(WriterState.Completed);
             }
