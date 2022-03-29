@@ -779,6 +779,7 @@ namespace Microsoft.OData
             catch
             {
                 this.EnterErrorScope();
+
                 throw;
             }
         }
@@ -807,6 +808,7 @@ namespace Microsoft.OData
             catch
             {
                 this.EnterErrorScope();
+
                 throw;
             }
         }
@@ -835,6 +837,7 @@ namespace Microsoft.OData
             catch
             {
                 this.EnterErrorScope();
+
                 throw;
             }
         }
@@ -961,6 +964,7 @@ namespace Microsoft.OData
             catch
             {
                 this.EnterErrorScope();
+
                 throw;
             }
         }
@@ -990,6 +994,7 @@ namespace Microsoft.OData
             catch
             {
                 this.EnterErrorScope();
+
                 throw;
             }
         }
@@ -1019,6 +1024,7 @@ namespace Microsoft.OData
             catch
             {
                 this.EnterErrorScope();
+
                 throw;
             }
         }
@@ -1042,6 +1048,7 @@ namespace Microsoft.OData
             catch
             {
                 this.EnterErrorScope();
+
                 throw;
             }
         }

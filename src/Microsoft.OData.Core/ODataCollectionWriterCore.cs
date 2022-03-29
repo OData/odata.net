@@ -147,6 +147,7 @@ namespace Microsoft.OData
             catch
             {
                 this.ReplaceScope(CollectionWriterState.Error, null);
+
                 throw;
             }
         }

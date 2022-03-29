@@ -380,6 +380,7 @@ namespace Microsoft.OData
             catch
             {
                 this.SetState(BatchWriterState.Error);
+
                 throw;
             }
         }

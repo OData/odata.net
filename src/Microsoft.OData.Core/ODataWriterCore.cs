@@ -415,6 +415,7 @@ namespace Microsoft.OData
             catch
             {
                 this.EnterScope(WriterState.Error, null);
+
                 throw;
             }
         }
