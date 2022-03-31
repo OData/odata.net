@@ -15,7 +15,7 @@ namespace Microsoft.OData
     /// <remarks>This object pool is not thread-safe and not intended to be shared across concurrent requests.
     /// Consider using the DefaultObjectPool in 8.x once we drop support for netstandard 1.1
     /// </remarks>
-    internal class ObjectPool<T> where T : class
+    internal class ObjectPool<T> : IDisposable where T : class
     {
         private readonly Func<T> objectGenerator;
         private ObjectWrapper[] items;
@@ -24,6 +24,7 @@ namespace Microsoft.OData
         // The pool size is equal to the level of nesting in the response.
         // 32 is an arbitrary figure. Could be adjusted appropriately.
         private int poolSize;
+        private bool isDisposed;
 
         /// <summary>
         /// To initialize the object pool.
@@ -42,6 +43,11 @@ namespace Microsoft.OData
         /// <remarks>It's the responsibility of the caller to clean up the object before using it.</remarks>
         public T Get()
         {
+            if (isDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+
             T item = firstItem;
 
             if (item != null)
@@ -75,10 +81,20 @@ namespace Microsoft.OData
         /// <param name="obj">The object to return to the pool.</param> 
         public void Return(T obj)
         {
+            // When the pool is disposed or the obj is not returned to the pool, dispose it
+            if (isDisposed || !ReturnImplementation(obj))
+            {
+                DisposeItem(obj);
+            }
+        }
+
+        private bool ReturnImplementation(T obj)
+        {
             if (firstItem == null)
             {
                 firstItem = obj;
-                return;
+
+                return true;
             }
 
             for (int i = 0; i < items.Length; ++i)
@@ -86,9 +102,13 @@ namespace Microsoft.OData
                 if (items[i].Element == null)
                 {
                     items[i].Element = obj;
-                    break;
+
+                    return true;
                 }
             }
+
+            // There is no empty slot in the array.
+            return false;
         }
 
         // PERF: the struct wrapper avoids array-covariance-checks from the runtime when assigning to elements of the array.
@@ -96,6 +116,40 @@ namespace Microsoft.OData
         private struct ObjectWrapper
         {
             public T Element;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!isDisposed)
+            {
+                if (disposing)
+                {
+                    DisposeItem(firstItem);
+                    firstItem = null;
+
+                    for (var i = 0; i < items.Length; i++)
+                    {
+                        DisposeItem(items[i].Element);
+                        items[i].Element = null;
+                    }
+                }
+
+                isDisposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        private static void DisposeItem(T item)
+        {
+            if (item is IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
         }
     }
 }

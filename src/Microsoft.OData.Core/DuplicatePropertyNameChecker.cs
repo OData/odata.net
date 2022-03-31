@@ -15,12 +15,13 @@ namespace Microsoft.OData
     ///   2) No duplicate "@odata.associationLink" on a property.
     ///   3) "@odata.associationLink"s are put on navigation properties.
     /// </summary>
-    internal class DuplicatePropertyNameChecker : IDuplicatePropertyNameChecker
+    internal class DuplicatePropertyNameChecker : IDuplicatePropertyNameChecker, IDisposable
     {
         /// <summary>
         /// Caches property processing state.
         /// </summary>
         private IDictionary<string, State> propertyState = new Dictionary<string, State>();
+        private bool disposedValue;
 
         /// <summary>
         /// Property processing state.
@@ -121,6 +122,33 @@ namespace Microsoft.OData
         public void Reset()
         {
             propertyState.Clear();
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    Reset();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+        // ~DuplicatePropertyNameChecker()
+        // {
+        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        //     Dispose(disposing: false);
+        // }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 
