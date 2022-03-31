@@ -4,15 +4,19 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Threading.Tasks;
-
 namespace Microsoft.OData
 {
+    #region Namespaces
+
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
+    using System.IO;
+    using System.Threading.Tasks;
+
+    #endregion Namespaces
+
     /// <summary>
     /// Abstract class for reading OData batch messages; also verifies the proper sequence of read calls on the reader.
     /// </summary>
@@ -135,7 +139,7 @@ namespace Microsoft.OData
         public bool Read()
         {
             this.VerifyCanRead(true);
-            return this.InterceptException((Func<bool>)this.ReadSynchronously);
+            return this.InterceptException((thisParam) => thisParam.ReadSynchronously());
         }
 
         /// <summary>Asynchronously reads the next part from the batch message payload.</summary>
@@ -143,63 +147,56 @@ namespace Microsoft.OData
         public Task<bool> ReadAsync()
         {
             this.VerifyCanRead(false);
-            return this.ReadAsynchronously().FollowOnFaultWith(t => this.State = ODataBatchReaderState.Exception);
+            return this.InterceptExceptionAsync((thisParam) => thisParam.ReadAsynchronously());
         }
 
-        /// <summary>Returns an <see cref="Microsoft.OData.ODataBatchOperationRequestMessage" /> for reading the content of a batch operation.</summary>
+        /// <summary>Returns an <see cref="ODataBatchOperationRequestMessage" /> for reading the content of a batch operation.</summary>
         /// <returns>A request message for reading the content of a batch operation.</returns>
         public ODataBatchOperationRequestMessage CreateOperationRequestMessage()
         {
-            this.VerifyCanCreateOperationRequestMessage(/*synchronousCall*/ true);
+            this.VerifyCanCreateOperationRequestMessage(synchronousCall: true);
             ODataBatchOperationRequestMessage result =
-                this.InterceptException((Func<ODataBatchOperationRequestMessage>)this.CreateOperationRequestMessageImplementation);
+                this.InterceptException((thisParam) => thisParam.CreateOperationRequestMessageImplementation());
             this.ReaderOperationState = OperationState.MessageCreated;
             this.contentIdToAddOnNextRead = result.ContentId;
             return result;
         }
 
-        /// <summary>Asynchronously returns an <see cref="Microsoft.OData.ODataBatchOperationRequestMessage" /> for reading the content of a batch operation.</summary>
+        /// <summary>Asynchronously returns an <see cref="ODataBatchOperationRequestMessage" /> for reading the content of a batch operation.</summary>
         /// <returns>A task that when completed returns a request message for reading the content of a batch operation.</returns>
-        public Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageAsync()
+        public async Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageAsync()
         {
-            this.VerifyCanCreateOperationRequestMessage(/*synchronousCall*/ false);
-            return TaskUtils.GetTaskForSynchronousOperation<ODataBatchOperationRequestMessage>(
-                this.CreateOperationRequestMessageImplementation)
-                .FollowOnSuccessWithTask(
-                    t =>
-                    {
-                        this.ReaderOperationState = OperationState.MessageCreated;
-                        this.contentIdToAddOnNextRead = t.Result.ContentId;
-                        return t;
-                    })
-                .FollowOnFaultWith(t => this.State = ODataBatchReaderState.Exception);
+            this.VerifyCanCreateOperationRequestMessage(synchronousCall: false);
+            ODataBatchOperationRequestMessage result = await this.InterceptExceptionAsync(
+                (thisParam) => thisParam.CreateOperationRequestMessageImplementationAsync()).ConfigureAwait(false);
+            this.ReaderOperationState = OperationState.MessageCreated;
+            this.contentIdToAddOnNextRead = result.ContentId;
+
+            return result;
         }
 
-        /// <summary>Returns an <see cref="Microsoft.OData.ODataBatchOperationResponseMessage" /> for reading the content of a batch operation.</summary>
+        /// <summary>Returns an <see cref="ODataBatchOperationResponseMessage" /> for reading the content of a batch operation.</summary>
         /// <returns>A response message for reading the content of a batch operation.</returns>
         public ODataBatchOperationResponseMessage CreateOperationResponseMessage()
         {
-            this.VerifyCanCreateOperationResponseMessage(/*synchronousCall*/ true);
+            this.VerifyCanCreateOperationResponseMessage(synchronousCall: true);
             ODataBatchOperationResponseMessage result =
-                this.InterceptException((Func<ODataBatchOperationResponseMessage>)this.CreateOperationResponseMessageImplementation);
+                this.InterceptException((thisParam) => thisParam.CreateOperationResponseMessageImplementation());
             this.ReaderOperationState = OperationState.MessageCreated;
             return result;
         }
 
-        /// <summary>Asynchronously returns an <see cref="Microsoft.OData.ODataBatchOperationResponseMessage" /> for reading the content of a batch operation.</summary>
+        /// <summary>Asynchronously returns an <see cref="ODataBatchOperationResponseMessage" /> for reading the content of a batch operation.</summary>
         /// <returns>A task that when completed returns a response message for reading the content of a batch operation.</returns>
-        public Task<ODataBatchOperationResponseMessage> CreateOperationResponseMessageAsync()
+        public async Task<ODataBatchOperationResponseMessage> CreateOperationResponseMessageAsync()
         {
-            this.VerifyCanCreateOperationResponseMessage(/*synchronousCall*/ false);
-            return TaskUtils.GetTaskForSynchronousOperation<ODataBatchOperationResponseMessage>(
-                this.CreateOperationResponseMessageImplementation)
-                .FollowOnSuccessWithTask(
-                    t =>
-                    {
-                        this.ReaderOperationState = OperationState.MessageCreated;
-                        return t;
-                    })
-                .FollowOnFaultWith(t => this.State = ODataBatchReaderState.Exception);
+            this.VerifyCanCreateOperationResponseMessage(synchronousCall: false);
+            ODataBatchOperationResponseMessage result = await this.InterceptExceptionAsync(
+                (thisParam) => thisParam.CreateOperationResponseMessageImplementationAsync()).ConfigureAwait(false);
+
+            this.ReaderOperationState = OperationState.MessageCreated;
+
+            return result;
         }
 
         /// <summary>
@@ -270,10 +267,10 @@ namespace Microsoft.OData
         protected abstract ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation();
 
         /// <summary>
-        /// Returns the cached <see cref="ODataBatchOperationRequestMessage"/> for reading the content of an operation
+        /// Returns the cached <see cref="ODataBatchOperationResponseMessage"/> for reading the content of an operation
         /// in a batch request.
         /// </summary>
-        /// <returns>The message that can be used to read the content of the batch request operation from.</returns>
+        /// <returns>The message that can be used to read the content of the batch response operation from.</returns>
         protected abstract ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation();
 
         /// <summary>
@@ -375,6 +372,82 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Returns the cached <see cref="ODataBatchOperationRequestMessage"/> for reading the content of an operation
+        /// in a batch request.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains an <see cref="ODataBatchOperationRequestMessage"/>
+        /// that can be used to read the content of the batch request operation from.
+        /// </returns>
+        protected virtual Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageImplementationAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(this.CreateOperationRequestMessageImplementation);
+        }
+
+        /// <summary>
+        /// Returns the cached <see cref="ODataBatchOperationResponseMessage"/> for reading the content of an operation
+        /// in a batch response.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains an <see cref="ODataBatchOperationResponseMessage"/>
+        /// that can be used to read the content of the batch response operation from.
+        /// </returns>
+        protected virtual Task<ODataBatchOperationResponseMessage> CreateOperationResponseMessageImplementationAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(this.CreateOperationResponseMessageImplementation);
+        }
+
+        /// <summary>
+        /// Asynchronous implementation of the reader logic when in state 'Start'.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains the batch reader state after the read.
+        /// </returns>
+        protected virtual Task<ODataBatchReaderState> ReadAtStartImplementationAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(this.ReadAtStartImplementation);
+        }
+
+        /// <summary>
+        /// Asynchronous implementation of the reader logic when in state 'Operation'.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains the batch reader state after the read.
+        /// </returns>
+        protected virtual Task<ODataBatchReaderState> ReadAtOperationImplementationAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(this.ReadAtOperationImplementation);
+        }
+
+        /// <summary>
+        /// Asynchronous implementation of the reader logic when in state 'ChangesetStart'.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains the batch reader state after the read.
+        /// </returns>
+        protected virtual Task<ODataBatchReaderState> ReadAtChangesetStartImplementationAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(this.ReadAtChangesetStartImplementation);
+        }
+
+        /// <summary>
+        /// Asynchronous implementation of the reader logic when in state 'ChangesetEnd'.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains the batch reader state after the read.
+        /// </returns>
+        protected virtual Task<ODataBatchReaderState> ReadAtChangesetEndImplementationAsync()
+        {
+            return TaskUtils.GetTaskForSynchronousOperation(this.ReadAtChangesetEndImplementation);
+        }
+
+        /// <summary>
         /// Increases the size of the current batch message; throws if the allowed limit is exceeded.
         /// </summary>
         private void IncreaseBatchSize()
@@ -424,10 +497,7 @@ namespace Microsoft.OData
         [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
         private Task<bool> ReadAsynchronously()
         {
-            // We are reading from the fully buffered read stream here; thus it is ok
-            // to use synchronous reads and then return a completed task
-            // NOTE: once we switch to fully async reading this will have to change
-            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadImplementation);
+            return this.ReadImplementationAsync();
         }
 
         /// <summary>
@@ -522,6 +592,120 @@ namespace Microsoft.OData
                     this.ResetChangesetSize();
                     this.isInChangeset = false;
                     this.State = this.ReadAtChangesetEndImplementation();
+                    break;
+
+                case ODataBatchReaderState.Exception:    // fall through
+                case ODataBatchReaderState.Completed:
+                    Debug.Assert(false, "Should have checked in VerifyCanRead that we are not in one of these states.");
+                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchReader_ReadImplementation));
+
+                default:
+                    Debug.Assert(false, "Unsupported reader state " + this.State + " detected.");
+                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchReader_ReadImplementation));
+            }
+
+            return this.State != ODataBatchReaderState.Completed && this.State != ODataBatchReaderState.Exception;
+        }
+
+        /// <summary>
+        /// Asynchronously continues reading from the batch message payload.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains true if more items were read; otherwise false.
+        /// </returns>
+        private async Task<bool> ReadImplementationAsync()
+        {
+            Debug.Assert(this.ReaderOperationState != OperationState.StreamRequested, "Should have verified that no operation stream is still active.");
+
+            switch (this.State)
+            {
+                case ODataBatchReaderState.Initial:
+                    // The stream should be positioned at the beginning of the batch content,
+                    // that is before the first boundary (or the preamble if there is one).
+                    this.State = await this.ReadAtStartImplementationAsync()
+                        .ConfigureAwait(false);
+                    break;
+
+                case ODataBatchReaderState.Operation:
+                    // When reaching this state we already read the MIME headers of the operation.
+                    // Clients MUST call CreateOperationRequestMessageAsync
+                    // or CreateOperationResponseMessageAsync to read at least the headers of the operation.
+                    // This is important since we need to read the ContentId header (if present) and
+                    // add it to the URL resolver.
+                    if (this.ReaderOperationState == OperationState.None)
+                    {
+                        // No message was created; fail
+                        throw new ODataException(Strings.ODataBatchReader_NoMessageWasCreatedForOperation);
+                    }
+
+                    // Reset the operation state; the operation state only
+                    // tracks the state of a batch operation while in state Operation.
+                    this.ReaderOperationState = OperationState.None;
+
+                    // Also add a pending ContentId header to the URL resolver now. We ensured above
+                    // that a message has been created for this operation and thus the headers (incl.
+                    // a potential content ID header) have been read.
+                    if (this.contentIdToAddOnNextRead != null)
+                    {
+                        if (this.PayloadUriConverter.ContainsContentId(this.contentIdToAddOnNextRead))
+                        {
+                            throw new ODataException(
+                                Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(this.contentIdToAddOnNextRead));
+                        }
+
+                        this.PayloadUriConverter.AddContentId(this.contentIdToAddOnNextRead);
+                        this.contentIdToAddOnNextRead = null;
+                    }
+
+                    // When we are done with an operation, we have to skip ahead to the next part
+                    // when ReadAsync is called again. Note that if the operation stream was never requested
+                    // and the content of the operation has not been read, we'll skip it here.
+                    Debug.Assert(this.ReaderOperationState == OperationState.None, "Operation state must be 'None' at the end of the operation.");
+
+                    if (this.isInChangeset)
+                    {
+                        this.IncreaseChangesetSize();
+                    }
+                    else
+                    {
+                        this.IncreaseBatchSize();
+                    }
+
+                    this.State = await this.ReadAtOperationImplementationAsync()
+                        .ConfigureAwait(false);
+
+                    break;
+
+                case ODataBatchReaderState.ChangesetStart:
+                    // When at the start of a changeset, skip ahead to the first operation in the
+                    // changeset (or the end boundary of the changeset).
+                    if (this.isInChangeset)
+                    {
+                        ThrowODataException(Strings.ODataBatchReaderStream_NestedChangesetsAreNotSupported);
+                    }
+
+                    // Increment the batch size at the start of the changeset since we haven't counted it yet
+                    // when this state was transitioned into upon detection of this sub-batch.
+                    this.IncreaseBatchSize();
+
+                    this.State = await this.ReadAtChangesetStartImplementationAsync()
+                        .ConfigureAwait(false);
+                    if (this.inputContext.MessageReaderSettings.Version <= ODataVersion.V4)
+                    {
+                        this.PayloadUriConverter.Reset();
+                    }
+
+                    this.isInChangeset = true;
+                    break;
+
+                case ODataBatchReaderState.ChangesetEnd:
+                    // When at the end of a changeset, reset the changeset boundary and the
+                    // changeset size and then skip to the next part.
+                    this.ResetChangesetSize();
+                    this.isInChangeset = false;
+                    this.State = await this.ReadAtChangesetEndImplementationAsync()
+                        .ConfigureAwait(false);
                     break;
 
                 case ODataBatchReaderState.Exception:    // fall through
@@ -645,11 +829,38 @@ namespace Microsoft.OData
         /// <typeparam name="T">The type of the result returned from the <paramref name="action"/>.</typeparam>
         /// <param name="action">The action to execute.</param>
         /// <returns>The result of the <paramref name="action"/>.</returns>
-        private T InterceptException<T>(Func<T> action)
+        private T InterceptException<T>(Func<ODataBatchReader, T> action)
         {
             try
             {
-                return action();
+                return action(this);
+            }
+            catch (Exception e)
+            {
+                if (ExceptionUtils.IsCatchableExceptionType(e))
+                {
+                    this.State = ODataBatchReaderState.Exception;
+                }
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Catch any exception thrown by the action passed in; in the exception case move the writer into
+        /// state Exception and then rethrow the exception.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result returned from the <paramref name="action"/>.</typeparam>
+        /// <param name="action">The action to execute.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains the result of executing the <paramref name="action"/>.
+        /// </returns>
+        private async Task<TResult> InterceptExceptionAsync<TResult>(Func<ODataBatchReader, Task<TResult>> action)
+        {
+            try
+            {
+                return await action(this).ConfigureAwait(false);
             }
             catch (Exception e)
             {

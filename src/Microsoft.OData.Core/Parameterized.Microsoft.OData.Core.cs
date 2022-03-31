@@ -1618,6 +1618,30 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "Unknown property name '{0}' for message in batch."
+        /// </summary>
+        internal static string ODataJsonLightBatchPayloadItemPropertiesCache_UnknownPropertyForMessageInBatch(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightBatchPayloadItemPropertiesCache_UnknownPropertyForMessageInBatch, p0);
+        }
+
+        /// <summary>
+        /// A string like "Unexpected reader.NodeType: {0}."
+        /// </summary>
+        internal static string ODataJsonLightBatchBodyContentReaderStream_UnexpectedNodeType(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightBatchBodyContentReaderStream_UnexpectedNodeType, p0);
+        }
+
+        /// <summary>
+        /// A string like "Unknown/undefined type, new type that needs to be supported: {0}?"
+        /// </summary>
+        internal static string ODataJsonLightBatchBodyContentReaderStream_UnsupportedContentTypeInHeader(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightBatchBodyContentReaderStream_UnsupportedContentTypeInHeader, p0);
+        }
+
+        /// <summary>
         /// A string like "When not writing an async response, you cannot create an async response message."
         /// </summary>
         internal static string ODataAsyncWriter_CannotCreateResponseWhenNotWritingResponse

@@ -2302,7 +2302,13 @@ static readonly Microsoft.OData.UriParser.QueryToken.EmptyTokens -> Microsoft.OD
 virtual Microsoft.OData.Evaluation.ODataMetadataSelector.SelectBindableOperations(Microsoft.OData.Edm.IEdmStructuredType type, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation> bindableOperations) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
 virtual Microsoft.OData.Evaluation.ODataMetadataSelector.SelectNavigationProperties(Microsoft.OData.Edm.IEdmStructuredType type, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmNavigationProperty> navigationProperties) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmNavigationProperty>
 virtual Microsoft.OData.Evaluation.ODataMetadataSelector.SelectStreamProperties(Microsoft.OData.Edm.IEdmStructuredType type, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmStructuralProperty> selectedStreamProperties) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmStructuralProperty>
+virtual Microsoft.OData.ODataBatchReader.CreateOperationRequestMessageImplementationAsync() -> System.Threading.Tasks.Task<Microsoft.OData.ODataBatchOperationRequestMessage>
+virtual Microsoft.OData.ODataBatchReader.CreateOperationResponseMessageImplementationAsync() -> System.Threading.Tasks.Task<Microsoft.OData.ODataBatchOperationResponseMessage>
 virtual Microsoft.OData.ODataBatchReader.GetCurrentGroupIdImplementation() -> string
+virtual Microsoft.OData.ODataBatchReader.ReadAtChangesetEndImplementationAsync() -> System.Threading.Tasks.Task<Microsoft.OData.ODataBatchReaderState>
+virtual Microsoft.OData.ODataBatchReader.ReadAtChangesetStartImplementationAsync() -> System.Threading.Tasks.Task<Microsoft.OData.ODataBatchReaderState>
+virtual Microsoft.OData.ODataBatchReader.ReadAtOperationImplementationAsync() -> System.Threading.Tasks.Task<Microsoft.OData.ODataBatchReaderState>
+virtual Microsoft.OData.ODataBatchReader.ReadAtStartImplementationAsync() -> System.Threading.Tasks.Task<Microsoft.OData.ODataBatchReaderState>
 virtual Microsoft.OData.ODataBatchWriter.OnInStreamErrorAsync() -> System.Threading.Tasks.Task
 virtual Microsoft.OData.ODataBatchWriter.StreamDisposedAsync() -> System.Threading.Tasks.Task
 virtual Microsoft.OData.ODataInputContext.CreateCollectionReader(Microsoft.OData.Edm.IEdmTypeReference expectedItemTypeReference) -> Microsoft.OData.ODataCollectionReader

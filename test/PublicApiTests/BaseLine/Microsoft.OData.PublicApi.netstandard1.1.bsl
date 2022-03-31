@@ -4449,11 +4449,21 @@ public abstract class Microsoft.OData.ODataBatchReader : IODataStreamListener {
     protected Microsoft.OData.ODataBatchOperationRequestMessage BuildOperationRequestMessage (System.Func`1[[System.IO.Stream]] streamCreatorFunc, string method, System.Uri requestUri, Microsoft.OData.ODataBatchOperationHeaders headers, string contentId, string groupId, System.Collections.Generic.IEnumerable`1[[System.String]] dependsOnRequestIds, bool dependsOnIdsValidationRequired)
     protected Microsoft.OData.ODataBatchOperationResponseMessage BuildOperationResponseMessage (System.Func`1[[System.IO.Stream]] streamCreatorFunc, int statusCode, Microsoft.OData.ODataBatchOperationHeaders headers, string contentId, string groupId)
     public Microsoft.OData.ODataBatchOperationRequestMessage CreateOperationRequestMessage ()
+    [
+    AsyncStateMachineAttribute(),
+    ]
     public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataBatchOperationRequestMessage]] CreateOperationRequestMessageAsync ()
+
     protected abstract Microsoft.OData.ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation ()
+    protected virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataBatchOperationRequestMessage]] CreateOperationRequestMessageImplementationAsync ()
     public Microsoft.OData.ODataBatchOperationResponseMessage CreateOperationResponseMessage ()
+    [
+    AsyncStateMachineAttribute(),
+    ]
     public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataBatchOperationResponseMessage]] CreateOperationResponseMessageAsync ()
+
     protected abstract Microsoft.OData.ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation ()
+    protected virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataBatchOperationResponseMessage]] CreateOperationResponseMessageImplementationAsync ()
     protected virtual string GetCurrentGroupIdImplementation ()
     void Microsoft.OData.IODataStreamListener.StreamDisposed ()
     System.Threading.Tasks.Task Microsoft.OData.IODataStreamListener.StreamDisposedAsync ()
@@ -4462,9 +4472,13 @@ public abstract class Microsoft.OData.ODataBatchReader : IODataStreamListener {
     public bool Read ()
     public System.Threading.Tasks.Task`1[[System.Boolean]] ReadAsync ()
     protected abstract Microsoft.OData.ODataBatchReaderState ReadAtChangesetEndImplementation ()
+    protected virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataBatchReaderState]] ReadAtChangesetEndImplementationAsync ()
     protected abstract Microsoft.OData.ODataBatchReaderState ReadAtChangesetStartImplementation ()
+    protected virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataBatchReaderState]] ReadAtChangesetStartImplementationAsync ()
     protected abstract Microsoft.OData.ODataBatchReaderState ReadAtOperationImplementation ()
+    protected virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataBatchReaderState]] ReadAtOperationImplementationAsync ()
     protected abstract Microsoft.OData.ODataBatchReaderState ReadAtStartImplementation ()
+    protected virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataBatchReaderState]] ReadAtStartImplementationAsync ()
     protected void ThrowODataException (string errorMessage)
     protected abstract void ValidateDependsOnIds (string contentId, System.Collections.Generic.IEnumerable`1[[System.String]] dependsOnIds)
 }
