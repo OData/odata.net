@@ -426,6 +426,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
         [TestMethod, Variation]
         public void ConvertToUriLiteralCollectionTest()
         {
+            Assert.Fail("gdebruin");
             List<ConvertToUriLiteralTestCase> testCases = new List<ConvertToUriLiteralTestCase>();
 
             #region Collection
