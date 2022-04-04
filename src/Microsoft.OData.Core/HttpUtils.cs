@@ -379,15 +379,11 @@ namespace Microsoft.OData
         {
             try
             {
-#if !ORCAS
                 // The default behavior without the fallbacks is to use either replacement or best-fit for unencodable characters.
                 // That would be the wrong behavior for us. On the other hand in Silverlight the only supported encodings
                 // are UTF-8 and UTF-16 (LE and BE), all of which can encode any character, so the fallbacks are never used.
                 // Thus it's OK to use the default behavior here.
                 return Encoding.GetEncoding(charsetName);
-#else
-                return Encoding.GetEncoding(charsetName, new EncoderExceptionFallback(), new DecoderExceptionFallback());
-#endif
             }
             catch (ArgumentException)
             {

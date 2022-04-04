@@ -38,17 +38,5 @@ namespace Microsoft.OData
             : base(message, innerException)
         {
         }
-
-#if ORCAS
-        /// <summary>Creates a new instance of the <see cref="Microsoft.OData.ODataContentTypeException" /> class from the  specified SerializationInfo and StreamingContext instances.</summary>
-        /// <param name="info"> A SerializationInfo containing the information required to serialize  the new ODataException. </param>
-        /// <param name="context"> A StreamingContext containing the source of the serialized stream  associated with the new ODataException. </param>
-        [SuppressMessage("Microsoft.Design", "CA1047", Justification = "Follows serialization info pattern.")]
-        [SuppressMessage("Microsoft.Design", "CA1032", Justification = "Follows serialization info pattern.")]
-        protected ODataContentTypeException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
-#endif
     }
 }

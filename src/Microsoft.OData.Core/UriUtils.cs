@@ -260,11 +260,7 @@ namespace Microsoft.OData
         {
             Debug.Assert(uri != null, "uri != null");
 
-#if !ORCAS
             uri = new Uri(UriUtils.UriToString(uri).ToUpperInvariant(), UriKind.RelativeOrAbsolute);
-#else
-            uri = new Uri(UriUtils.UriToString(uri).ToUpper(CultureInfo.InvariantCulture), UriKind.RelativeOrAbsolute);
-#endif
 
             UriBuilder builder = new UriBuilder(uri);
             builder.Host = "h";
