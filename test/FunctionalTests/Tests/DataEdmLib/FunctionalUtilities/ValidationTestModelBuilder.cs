@@ -2026,7 +2026,7 @@ namespace EdmLibTests.FunctionalUtilities
     <Property Name=""Decimal1"" Type=""Decimal"" Nullable=""false"" Precision=""1""/>
     <Property Name=""Decimal2"" Type=""Decimal"" Nullable=""false"" Precision=""2""/>
     <Property Name=""Decimal3"" Type=""Decimal"" Nullable=""false"" Precision=""3""/>
-    <Property Name=""Decimal4"" Type=""Decimal"" Nullable=""false"" Precision=""-1""/>
+    <Property Name=""Decimal4"" Type=""Decimal"" Nullable=""false"" Precision=""-1""  Scale=""0""/>
     <Property Name=""Decimal5"" Type=""Decimal"" Nullable=""false"" Precision=""0""/>
     <Property Name=""Decimal6"" Type=""Decimal"" Nullable=""false"" Precision=""4""/>
   </EntityType>
