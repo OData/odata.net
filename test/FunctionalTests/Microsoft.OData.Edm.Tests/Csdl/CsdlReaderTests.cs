@@ -975,6 +975,126 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 
         [Fact]
+        public void ParsingPropertyWithDecimalTypeWorks()
+        {
+            string decimalProperty =
+                @"<Property Name=""DecimalProperty"" Type=""Edm.Decimal"" Precision=""6"" Scale=""2"" Nullable=""false"" />";
+
+            IEdmModel model = GetEdmModel(properties: decimalProperty);
+            IEnumerable<EdmError> errors;
+            Assert.True(model.Validate(out errors));
+
+            var customer = model.SchemaElements.OfType<IEdmEntityType>().FirstOrDefault(c => c.Name == "Customer");
+            Assert.NotNull(customer);
+            var property = customer.DeclaredProperties.FirstOrDefault(c => c.Name == "DecimalProperty");
+            Assert.NotNull(property);
+            Assert.False(property.Type.IsNullable);
+            Assert.Same(EdmCoreModel.Instance.GetDecimal(false).Definition, property.Type.Definition);
+            Assert.Equal(6, property.Type.AsDecimal().Precision);
+            Assert.Equal(2, property.Type.AsDecimal().Scale);
+
+            var address = model.SchemaElements.OfType<IEdmComplexType>().FirstOrDefault(c => c.Name == "Address");
+            Assert.NotNull(address);
+            property = address.DeclaredProperties.FirstOrDefault(c => c.Name == "DecimalProperty");
+            Assert.NotNull(property);
+            Assert.False(property.Type.IsNullable);
+            Assert.Same(EdmCoreModel.Instance.GetDecimal(false).Definition, property.Type.Definition);
+            Assert.Equal(6, property.Type.AsDecimal().Precision);
+            Assert.Equal(2, property.Type.AsDecimal().Scale);
+        }
+
+        [Fact]
+        public void ParsingPropertyWithZeroScaleDecimalTypeWorks()
+        {
+            string decimalProperty =
+                @"<Property Name=""DecimalProperty"" Type=""Edm.Decimal"" Precision=""6"" Scale=""0"" Nullable=""false"" />";
+
+            IEdmModel model = GetEdmModel(properties: decimalProperty);
+            IEnumerable<EdmError> errors;
+            Assert.True(model.Validate(out errors));
+
+            var customer = model.SchemaElements.OfType<IEdmEntityType>().FirstOrDefault(c => c.Name == "Customer");
+            Assert.NotNull(customer);
+            var property = customer.DeclaredProperties.FirstOrDefault(c => c.Name == "DecimalProperty");
+            Assert.NotNull(property);
+            Assert.False(property.Type.IsNullable);
+            Assert.Same(EdmCoreModel.Instance.GetDecimal(false).Definition, property.Type.Definition);
+            Assert.Equal(6, property.Type.AsDecimal().Precision);
+            Assert.Equal(0, property.Type.AsDecimal().Scale);
+
+            var address = model.SchemaElements.OfType<IEdmComplexType>().FirstOrDefault(c => c.Name == "Address");
+            Assert.NotNull(address);
+            property = address.DeclaredProperties.FirstOrDefault(c => c.Name == "DecimalProperty");
+            Assert.NotNull(property);
+            Assert.False(property.Type.IsNullable);
+            Assert.Same(EdmCoreModel.Instance.GetDecimal(false).Definition, property.Type.Definition);
+            Assert.Equal(6, property.Type.AsDecimal().Precision);
+            Assert.Equal(0, property.Type.AsDecimal().Scale);
+        }
+
+        [Fact]
+        public void ParsingPropertyWithDecimalTypeDefaultsToNullScale()
+        {
+            string decimalProperty =
+                @"<Property Name=""DecimalProperty"" Type=""Edm.Decimal"" Precision=""6"" Nullable=""false"" />";
+
+            IEdmModel model = GetEdmModel(properties: decimalProperty);
+            IEnumerable<EdmError> errors;
+            Assert.True(model.Validate(out errors));
+
+            var customer = model.SchemaElements.OfType<IEdmEntityType>().FirstOrDefault(c => c.Name == "Customer");
+            Assert.NotNull(customer);
+            var property = customer.DeclaredProperties.FirstOrDefault(c => c.Name == "DecimalProperty");
+            Assert.NotNull(property);
+            Assert.False(property.Type.IsNullable);
+            Assert.Same(EdmCoreModel.Instance.GetDecimal(false).Definition, property.Type.Definition);
+            Assert.Equal(6, property.Type.AsDecimal().Precision);
+            Assert.Null(property.Type.AsDecimal().Scale);
+            Assert.False((property.Type.AsDecimal() as CsdlSemanticsDecimalTypeReference).ShouldWriteDefaultScale);
+
+            var address = model.SchemaElements.OfType<IEdmComplexType>().FirstOrDefault(c => c.Name == "Address");
+            Assert.NotNull(address);
+            property = address.DeclaredProperties.FirstOrDefault(c => c.Name == "DecimalProperty");
+            Assert.NotNull(property);
+            Assert.False(property.Type.IsNullable);
+            Assert.Same(EdmCoreModel.Instance.GetDecimal(false).Definition, property.Type.Definition);
+            Assert.Equal(6, property.Type.AsDecimal().Precision);
+            Assert.Null(property.Type.AsDecimal().Scale);
+            Assert.False((property.Type.AsDecimal() as CsdlSemanticsDecimalTypeReference).ShouldWriteDefaultScale);
+        }
+
+        [Fact]
+        public void ParsingPropertyWithVariableScaleDecimalTypeWorks()
+        {
+            string decimalProperty =
+                @"<Property Name=""DecimalProperty"" Type=""Edm.Decimal"" Precision=""6"" Scale=""Variable"" Nullable=""false"" />";
+
+            IEdmModel model = GetEdmModel(properties: decimalProperty);
+            IEnumerable<EdmError> errors;
+            Assert.True(model.Validate(out errors));
+
+            var customer = model.SchemaElements.OfType<IEdmEntityType>().FirstOrDefault(c => c.Name == "Customer");
+            Assert.NotNull(customer);
+            var property = customer.DeclaredProperties.FirstOrDefault(c => c.Name == "DecimalProperty");
+            Assert.NotNull(property);
+            Assert.False(property.Type.IsNullable);
+            Assert.Same(EdmCoreModel.Instance.GetDecimal(false).Definition, property.Type.Definition);
+            Assert.Equal(6, property.Type.AsDecimal().Precision);
+            Assert.Null(property.Type.AsDecimal().Scale);
+            Assert.True((property.Type.AsDecimal() as CsdlSemanticsDecimalTypeReference).ShouldWriteDefaultScale);
+
+            var address = model.SchemaElements.OfType<IEdmComplexType>().FirstOrDefault(c => c.Name == "Address");
+            Assert.NotNull(address);
+            property = address.DeclaredProperties.FirstOrDefault(c => c.Name == "DecimalProperty");
+            Assert.NotNull(property);
+            Assert.False(property.Type.IsNullable);
+            Assert.Same(EdmCoreModel.Instance.GetDecimal(false).Definition, property.Type.Definition);
+            Assert.Equal(6, property.Type.AsDecimal().Precision);
+            Assert.Null(property.Type.AsDecimal().Scale);
+            Assert.True((property.Type.AsDecimal() as CsdlSemanticsDecimalTypeReference).ShouldWriteDefaultScale);
+        }
+
+        [Fact]
         public void ParsingTermPropertyWithEdmPathTypeWorks()
         {
             string termTypes =

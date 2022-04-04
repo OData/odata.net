@@ -12,6 +12,8 @@ using System.Text.Encodings.Web;
 #endif
 using System.Xml;
 using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.Csdl.CsdlSemantics;
+using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Csdl.Serialization;
 using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
@@ -77,6 +79,59 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
       ""$Precision"": 6,
       ""$Scale"": 2
   }
+}");
+        }
+
+        [Fact]
+        public void VerifyDecimalPropertyWritesDefaultScaleForXMLWhenPropertySet()
+        {
+            // Arrange
+            EdmComplexType complexType = new EdmComplexType("NS", "Dimensions");
+            complexType.AddStructuralProperty("Height",
+                new CsdlSemanticsDecimalTypeReference(
+                    schema: null,
+                    reference: new CsdlDecimalTypeReference(
+                        precision: 6, scale: null,
+                        typeName: "Edm.Decimal",
+                        isNullable: true,
+                        location: new CsdlLocation(0, 0),
+                        shouldWriteDefaultScale: false)));
+            complexType.AddStructuralProperty("Weight",
+                new CsdlSemanticsDecimalTypeReference(
+                    schema: null,
+                    reference: new CsdlDecimalTypeReference(
+                        precision: 6,
+                        scale: null,
+                        typeName: "Edm.Decimal",
+                        isNullable: true,
+                        location: new CsdlLocation(0, 0),
+                        shouldWriteDefaultScale: true)));
+
+            // Act & Assert for XML
+            VisitAndVerifyXml(v => v.VisitSchemaType(complexType),
+                @"<ComplexType Name=""Dimensions"">
+  <Property Name=""Height"" Type=""Edm.Decimal"" Precision=""6"" />
+  <Property Name=""Weight"" Type=""Edm.Decimal"" Precision=""6"" Scale=""Variable"" />
+</ComplexType>");
+
+            // Act & Assert for JSON
+            // The `shouldWriteDefaultScale` does not affect JSON CSDL
+            VisitAndVerifyJson(v => v.VisitSchemaType(complexType), @"{
+  ""Dimensions"": {
+    ""$Kind"": ""ComplexType"",
+    ""Height"": {
+      ""$Type"": ""Edm.Decimal"",
+      ""$Nullable"": true,
+      ""$Precision"": 6,
+    },
+    ""Weight"": {
+      ""$Type"": ""Edm.Decimal"",
+      ""$Nullable"": true,
+      ""$Precision"": 6
+    },
+    ""Length"": {
+      ""$Type"": ""Edm.Decimal""
+    }
 }");
         }
 
