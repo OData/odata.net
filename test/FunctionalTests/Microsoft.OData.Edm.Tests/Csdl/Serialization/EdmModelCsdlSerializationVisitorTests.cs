@@ -80,6 +80,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
       ""$Precision"": 6,
       ""$Scale"": 0
     }
+  }
 }");
         }
 
@@ -130,6 +131,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
       ""$Nullable"": true,
       ""$Precision"": 6
     }
+  }
 }");
         }
 
