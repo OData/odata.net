@@ -1694,7 +1694,7 @@ namespace EdmLibTests.FunctionalTests
             IEdmStructuralProperty stringProp = (IEdmStructuralProperty)typeDefinition.FindProperty("myString");
             Assert.IsNull(stringProp.Type.AsString().MaxLength, "Maxlength should default to null");
             IEdmStructuralProperty decimalProp = (IEdmStructuralProperty)typeDefinition.FindProperty("myDecimal");
-            Assert.AreEqual(decimalProp.Type.AsDecimal().Scale, 0, "Scale should default to 0");
+            Assert.IsNull(decimalProp.Type.AsDecimal().Scale, "Scale should default to null");
             Assert.IsNull(decimalProp.Type.AsDecimal().Precision, "Precision should default to null");
             IEdmStructuralProperty datetimeProp = (IEdmStructuralProperty)typeDefinition.FindProperty("myDateTime");
             Assert.AreEqual(0, datetimeProp.Type.AsTemporal().Precision, "Temporal precision should default to 0");
