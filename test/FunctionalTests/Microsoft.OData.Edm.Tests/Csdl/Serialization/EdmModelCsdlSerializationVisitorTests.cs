@@ -76,6 +76,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
     },
     ""Breadth"": {
       ""$Type"": ""Edm.Decimal"",
+      ""$Nullable"": true,
       ""$Precision"": 6,
       ""$Scale"": 2
   }
@@ -115,22 +116,19 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
 </ComplexType>");
 
             // Act & Assert for JSON
-            // The `shouldWriteDefaultScale` does not affect JSON CSDL
+            // The `ShouldWriteDefaultScale` flag should not affect JSON CSDL
             VisitAndVerifyJson(v => v.VisitSchemaType(complexType), @"{
   ""Dimensions"": {
     ""$Kind"": ""ComplexType"",
     ""Height"": {
       ""$Type"": ""Edm.Decimal"",
       ""$Nullable"": true,
-      ""$Precision"": 6,
+      ""$Precision"": 6
     },
     ""Weight"": {
       ""$Type"": ""Edm.Decimal"",
       ""$Nullable"": true,
       ""$Precision"": 6
-    },
-    ""Length"": {
-      ""$Type"": ""Edm.Decimal""
     }
 }");
         }
