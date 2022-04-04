@@ -78,8 +78,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
       ""$Type"": ""Edm.Decimal"",
       ""$Nullable"": true,
       ""$Precision"": 6,
-      ""$Scale"": 2
-  }
+      ""$Scale"": 0
+    }
 }");
         }
 
