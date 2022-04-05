@@ -11,7 +11,7 @@ FilterQueryOption
 	Expression = 
 			SingleValueFunctionCallNode
 				Name = fractionalseconds
-				Return Type = [Edm.Decimal Nullable=False Scale=0]
+				Return Type = [Edm.Decimal Nullable=False]
 				Function = 
 				Arguments = 
 					SingleValuePropertyAccessNode
@@ -24,7 +24,7 @@ FilterQueryOption
 							TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
 							Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 		LessThan
-			0.1(Type: [Edm.Decimal Nullable=False Scale=0])
+			0.1(Type: [Edm.Decimal Nullable=False])
 	And
 			ConvertNode
 				TypeReference = [Edm.Single Nullable=False]
