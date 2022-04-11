@@ -8,6 +8,9 @@ namespace Microsoft.OData
 {
     using System;
     using System.Collections.Generic;
+#if NETSTANDARD2_0_OR_GREATER
+    using Microsoft.Extensions.ObjectPool;
+#endif
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
 
@@ -21,10 +24,12 @@ namespace Microsoft.OData
         /// </summary>
         private readonly ODataMessageWriterSettings settings;
 
+#if NETSTANDARD2_0_OR_GREATER
         /// <summary>
-        /// Object pool that stores instances of the IDuplicatePropertyNameChecker.
+        /// Object pool that stores instances of the DuplicatePropertyNameChecker.
         /// </summary>
-        private ObjectPool<IDuplicatePropertyNameChecker> duplicatePropertyNameCheckerObjectPool;
+        private ObjectPool<DuplicatePropertyNameChecker> duplicatePropertyNameCheckerObjectPool;
+#endif
 
         /// <summary>
         /// Instances of the NullDuplicatePropertyNameChecker.
@@ -47,13 +52,18 @@ namespace Microsoft.OData
 
             if (settings.ThrowOnDuplicatePropertyNames)
             {
+#if NETSTANDARD2_0_OR_GREATER
                 if (this.duplicatePropertyNameCheckerObjectPool == null)
                 {
-                    this.duplicatePropertyNameCheckerObjectPool = new ObjectPool<IDuplicatePropertyNameChecker>(() => new DuplicatePropertyNameChecker(), 8);
+                    DefaultObjectPoolProvider poolProvider = new DefaultObjectPoolProvider { MaximumRetained = 8 };
+                    this.duplicatePropertyNameCheckerObjectPool = poolProvider.Create<DuplicatePropertyNameChecker>();
                 }
 
                 duplicatePropertyNameChecker = this.duplicatePropertyNameCheckerObjectPool.Get();
                 duplicatePropertyNameChecker.Reset();
+#else
+                duplicatePropertyNameChecker = new DuplicatePropertyNameChecker();
+#endif
             }
             else
             {
@@ -72,11 +82,13 @@ namespace Microsoft.OData
         /// <inheritdoc/>
         public void ReturnDuplicatePropertyNameChecker(IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
         {
+#if NETSTANDARD2_0_OR_GREATER
             // We only return the DuplicatePropertyNameChecker to the object pool and ignore the NullDuplicatePropertyNameChecker.
             if (settings.ThrowOnDuplicatePropertyNames)
             {
-                this.duplicatePropertyNameCheckerObjectPool.Return(duplicatePropertyNameChecker);
+                this.duplicatePropertyNameCheckerObjectPool.Return(duplicatePropertyNameChecker as DuplicatePropertyNameChecker);
             }
+#endif
         }
 
         /// <summary>
@@ -308,7 +320,9 @@ namespace Microsoft.OData
 
         public void Dispose()
         {
+#if NETSTANDARD2_0_OR_GREATER
             ((IDisposable)duplicatePropertyNameCheckerObjectPool).Dispose();
+#endif
         }
     }
 }
