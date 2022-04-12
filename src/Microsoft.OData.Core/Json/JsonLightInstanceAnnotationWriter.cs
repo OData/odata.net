@@ -399,6 +399,7 @@ namespace Microsoft.OData
                     treatLikeOpenProperty,
                     duplicatePropertyNameChecker).ConfigureAwait(false);
                 this.valueSerializer.ReturnDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
+
                 return;
             }
 

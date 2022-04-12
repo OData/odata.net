@@ -83,7 +83,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Get an instance of a duplicate property names checker from the object pool.
         /// </summary>
-        /// <returns>The newly created instance of duplicate property names checker.</returns>
+        /// <returns>The instance retrieved from the object pool.</returns>
         internal IDuplicatePropertyNameChecker GetDuplicatePropertyNameChecker()
         {
             return MessageWriterSettings.Validator.GetDuplicatePropertyNameChecker();
