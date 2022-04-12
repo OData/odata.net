@@ -100,27 +100,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Microsoft.OData.Client.tt">
+    <Content Include="Microsoft.OData.Client.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Microsoft.OData.Client.cs</LastGenOutput>
-    </Resource>
-    <Resource Include="Parameterized.Microsoft.OData.Client.tt">
+    </Content>
+    <Content Include="Parameterized.Microsoft.OData.Client.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Parameterized.Microsoft.OData.Client.cs</LastGenOutput>
-    </Resource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Microsoft.OData.Client.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Microsoft.OData.Client.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Parameterized.Microsoft.OData.Client.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Parameterized.Microsoft.OData.Client.tt</DependentUpon>
-    </Compile>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -163,6 +150,9 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Microsoft.OData.Client.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
 </Project>

@@ -40,6 +40,10 @@
     <Reference Include="..\..\..\CommonAssemblies\Microsoft.MadMan.3.1.112712.0\lib\net40\Microsoft.Test.Validation.dll">
       <Private>true</Private>
     </Reference>
+    <!--needed for use with the Microsoft.MadMan package-->
+    <Reference Include="..\..\..\..\CommonAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll">
+      <Private>true</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />
