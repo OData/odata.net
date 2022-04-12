@@ -17,7 +17,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Writer validator that binds to an ODataMessageWriterSettings instance.
     /// </summary>
-    internal class WriterValidator : IWriterValidator, IDisposable
+    internal class WriterValidator : IWriterValidator
     {
         /// <summary>
         /// References the bound ODataMessageWriterSettings instance.
@@ -316,13 +316,6 @@ namespace Microsoft.OData
             IEdmStructuredType metadataType, IEnumerable<string> derivedTypeConstraints, string itemKind, string itemName)
         {
             WriterValidationUtils.ValidateDerivedTypeConstraint(resourceType, metadataType, derivedTypeConstraints, itemKind, itemName);
-        }
-
-        public void Dispose()
-        {
-#if NETSTANDARD2_0_OR_GREATER
-            ((IDisposable)duplicatePropertyNameCheckerObjectPool).Dispose();
-#endif
         }
     }
 }
