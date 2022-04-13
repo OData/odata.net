@@ -1482,12 +1482,12 @@ namespace EdmLibTests.FunctionalTests
       <PropertyRef Name=""Id"" />
     </Key>
     <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
-    <Property Name=""Weight"" Type=""MyNS.Weight"" />
+    <Property Name=""Weight"" Type=""MyNS.Weight"" Scale=""Variable"" />
     <Property Name=""Address"" Type=""MyNS.Address"" />
   </EntityType>
   <Function Name=""GetWeightByLength"">
     <Parameter Name=""length"" Type=""MyNS.Length"" />
-    <ReturnType Type=""MyNS.Weight"" />
+    <ReturnType Type=""MyNS.Weight"" Scale=""Variable"" />
   </Function>
   <EntityContainer Name=""Container"">
     <EntitySet Name=""People"" EntityType=""MyNS.Person"" />
