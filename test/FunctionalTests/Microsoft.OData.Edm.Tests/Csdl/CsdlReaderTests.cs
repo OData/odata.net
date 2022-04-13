@@ -585,7 +585,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                      "<Annotation Term=\"NS.DefaultDateTerm\" />" +
                    "</ComplexType>" +
                  "<Term Name=\"DefaultBinaryTerm\" Type=\"Edm.Binary\" DefaultValue=\"01\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
-                 "<Term Name=\"DefaultDecimalTerm\" Type=\"Edm.Decimal\" DefaultValue=\"0.34\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultDecimalTerm\" Type=\"Edm.Decimal\" DefaultValue=\"0.34\" AppliesTo=\"Property Term\" Nullable=\"false\" Scale=\"Variable\" />" +
                  "<Term Name=\"DefaultStringTerm\" Type=\"Edm.String\" DefaultValue=\"This is a test\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
                  "<Term Name=\"DefaultDurationTerm\" Type=\"Edm.Duration\" DefaultValue=\"P11DT23H59M59.999999999999S\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
                  "<Term Name=\"DefaultTODTerm\" Type=\"Edm.TimeOfDay\" DefaultValue=\"21:45:00\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
@@ -640,7 +640,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                      "<Annotation Term=\"NS.DefaultDateTerm\" />" +
                    "</ComplexType>" +
                  "<Term Name=\"DefaultBinaryTerm\" Type=\"Edm.Binary\" DefaultValue=\"01\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
-                 "<Term Name=\"DefaultDecimalTerm\" Type=\"Edm.Decimal\" DefaultValue=\"0.34\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultDecimalTerm\" Type=\"Edm.Decimal\" DefaultValue=\"0.34\" AppliesTo=\"Property Term\" Nullable=\"false\" Scale=\"Variable\" />" +
                  "<Term Name=\"DefaultStringTerm\" Type=\"Edm.String\" DefaultValue=\"This is a test\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
                  "<Term Name=\"DefaultDurationTerm\" Type=\"Edm.Duration\" DefaultValue=\"P11DT23H59M59.999999999999S\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
                  "<Term Name=\"DefaultTODTerm\" Type=\"Edm.TimeOfDay\" DefaultValue=\"21:45:00\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
@@ -1050,7 +1050,6 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Same(EdmCoreModel.Instance.GetDecimal(false).Definition, property.Type.Definition);
             Assert.Equal(6, property.Type.AsDecimal().Precision);
             Assert.Null(property.Type.AsDecimal().Scale);
-            Assert.False((property.Type.AsDecimal() as CsdlSemanticsDecimalTypeReference).ShouldWriteDefaultScale);
 
             var address = model.SchemaElements.OfType<IEdmComplexType>().FirstOrDefault(c => c.Name == "Address");
             Assert.NotNull(address);
@@ -1060,7 +1059,6 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Same(EdmCoreModel.Instance.GetDecimal(false).Definition, property.Type.Definition);
             Assert.Equal(6, property.Type.AsDecimal().Precision);
             Assert.Null(property.Type.AsDecimal().Scale);
-            Assert.False((property.Type.AsDecimal() as CsdlSemanticsDecimalTypeReference).ShouldWriteDefaultScale);
         }
 
         [Fact]
@@ -1081,7 +1079,6 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Same(EdmCoreModel.Instance.GetDecimal(false).Definition, property.Type.Definition);
             Assert.Equal(6, property.Type.AsDecimal().Precision);
             Assert.Null(property.Type.AsDecimal().Scale);
-            Assert.True((property.Type.AsDecimal() as CsdlSemanticsDecimalTypeReference).ShouldWriteDefaultScale);
 
             var address = model.SchemaElements.OfType<IEdmComplexType>().FirstOrDefault(c => c.Name == "Address");
             Assert.NotNull(address);
@@ -1091,7 +1088,6 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Same(EdmCoreModel.Instance.GetDecimal(false).Definition, property.Type.Definition);
             Assert.Equal(6, property.Type.AsDecimal().Precision);
             Assert.Null(property.Type.AsDecimal().Scale);
-            Assert.True((property.Type.AsDecimal() as CsdlSemanticsDecimalTypeReference).ShouldWriteDefaultScale);
         }
 
         [Fact]

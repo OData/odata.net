@@ -170,14 +170,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
         /// Parses the scale attribute if it's set.
         /// </summary>
         /// <param name="attributeName">The name of the attribute.</param>
-        /// <param name="scaleIsVariable">Whether the scale was explicitly set to the default "variable" value.
-        /// This helps distinguishes between the scale was set to null by default or explicitly via Scale="variable".
-        /// See: https://github.com/OData/odata.net/pull/2346
-        /// </param>
         /// <returns>The parsed scale value.</returns>
-        protected int? OptionalScale(string attributeName, out bool scaleIsVariable)
+        protected int? OptionalScale(string attributeName)
         {
-            scaleIsVariable = false;
             XmlAttributeInfo attr = GetOptionalAttribute(this.currentElement, attributeName);
             if (!attr.IsMissing)
             {
@@ -185,7 +180,6 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
                 if (attr.Value.EqualsOrdinalIgnoreCase(CsdlConstants.Value_ScaleVariable))
                 {
                     scale = null;
-                    scaleIsVariable = true;
                 }
                 else
                 {

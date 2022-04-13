@@ -279,19 +279,11 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         {
             this.WriteOptionalAttribute(CsdlConstants.Attribute_Precision, reference.Precision, EdmValueWriter.IntAsXml);
 
-            // This is for backwards compatibility
-            // If the type reference was parsed from an XML CSDL where the scale was explicitly set to "variable"
-            // We also want to explicitly set it when we serialize the XML CSDL
-            // If we don't do this, it will not be written since the default scale is "variable" starting with in versions > 7.10.0
+            // Starting with versions > 7.10.0 we always write the scale even if it's the default scale.
+            // This is because we changed default scale from 0 to null/variable and wanted
+            // to preserve backwards compatibility with code which expected null scale to be written out to the CSDL by default
             // see PR: https://github.com/OData/odata.net/pull/2346
-            if (reference is CsdlSemanticsDecimalTypeReference csdlDecimalReference && csdlDecimalReference.ShouldWriteDefaultScale)
-            {
-                this.WriteRequiredAttribute(CsdlConstants.Attribute_Scale, reference.Scale, ScaleAsXml);
-            }
-            else
-            {
-                this.WriteOptionalAttribute(CsdlConstants.Attribute_Scale, reference.Scale, CsdlConstants.Default_Scale, ScaleAsXml);
-            }
+            this.WriteRequiredAttribute(CsdlConstants.Attribute_Scale, reference.Scale, ScaleAsXml);
         }
 
         internal override void WriteSpatialTypeAttributes(IEdmSpatialTypeReference reference)

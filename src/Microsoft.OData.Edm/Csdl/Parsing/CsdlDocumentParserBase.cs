@@ -63,14 +63,13 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     return new CsdlTemporalTypeReference(kind, precision, typeName, isNullable, parentLocation);
 
                 case EdmPrimitiveTypeKind.Decimal:
-                    this.ParseDecimalFacets(out precision, out scale, out bool scaleIsVariable);
+                    this.ParseDecimalFacets(out precision, out scale);
                     return new CsdlDecimalTypeReference(
                         precision,
                         scale,
                         typeName,
                         isNullable,
-                        parentLocation,
-                        shouldWriteDefaultScale: scaleIsVariable);
+                        parentLocation);
 
                 case EdmPrimitiveTypeKind.String:
                     this.ParseStringFacets(out isUnbounded, out maxLength, out unicode);
@@ -727,10 +726,10 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             this.ParseMaxLength(out Unbounded, out maxLength);
         }
 
-        private void ParseDecimalFacets(out int? precision, out int? scale, out bool scaleIsVariable)
+        private void ParseDecimalFacets(out int? precision, out int? scale)
         {
             precision = OptionalInteger(CsdlConstants.Attribute_Precision);
-            scale = OptionalScale(CsdlConstants.Attribute_Scale, out scaleIsVariable);
+            scale = OptionalScale(CsdlConstants.Attribute_Scale);
         }
 
         private void ParseStringFacets(out bool Unbounded, out int? maxLength, out bool? unicode)
@@ -760,7 +759,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             this.ParseMaxLength(out isUnbounded, out maxLength);
             unicode = OptionalBoolean(CsdlConstants.Attribute_Unicode);
             precision = OptionalInteger(CsdlConstants.Attribute_Precision);
-            scale = OptionalScale(CsdlConstants.Attribute_Scale, out bool _);
+            scale = OptionalScale(CsdlConstants.Attribute_Scale);
             srid = OptionalSrid(CsdlConstants.Attribute_Srid, CsdlConstants.Default_UnspecifiedSrid);
         }
 

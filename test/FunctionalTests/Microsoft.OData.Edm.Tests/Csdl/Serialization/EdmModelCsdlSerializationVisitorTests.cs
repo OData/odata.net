@@ -51,8 +51,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             VisitAndVerifyXml(v => v.VisitSchemaType(complexType),
                 @"<ComplexType Name=""Dimensions"">
   <Property Name=""Height"" Type=""Edm.Decimal"" Precision=""6"" Scale=""2"" />
-  <Property Name=""Weight"" Type=""Edm.Decimal"" Precision=""6"" />
-  <Property Name=""Length"" Type=""Edm.Decimal"" Nullable=""false"" />
+  <Property Name=""Weight"" Type=""Edm.Decimal"" Precision=""6"" Scale=""Variable"" />
+  <Property Name=""Length"" Type=""Edm.Decimal"" Nullable=""false"" Scale=""Variable"" />
   <Property Name=""Breadth"" Type=""Edm.Decimal"" Precision=""6"" Scale=""0"" />
 </ComplexType>");
 
@@ -79,57 +79,6 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
       ""$Nullable"": true,
       ""$Precision"": 6,
       ""$Scale"": 0
-    }
-  }
-}");
-        }
-
-        [Fact]
-        public void VerifyDecimalPropertyWritesDefaultScaleForXMLWhenPropertySet()
-        {
-            // Arrange
-            EdmComplexType complexType = new EdmComplexType("NS", "Dimensions");
-            complexType.AddStructuralProperty("Height",
-                new CsdlSemanticsDecimalTypeReference(
-                    schema: null,
-                    reference: new CsdlDecimalTypeReference(
-                        precision: 6, scale: null,
-                        typeName: "Edm.Decimal",
-                        isNullable: true,
-                        location: new CsdlLocation(0, 0),
-                        shouldWriteDefaultScale: false)));
-            complexType.AddStructuralProperty("Weight",
-                new CsdlSemanticsDecimalTypeReference(
-                    schema: null,
-                    reference: new CsdlDecimalTypeReference(
-                        precision: 6,
-                        scale: null,
-                        typeName: "Edm.Decimal",
-                        isNullable: true,
-                        location: new CsdlLocation(0, 0),
-                        shouldWriteDefaultScale: true)));
-
-            // Act & Assert for XML
-            VisitAndVerifyXml(v => v.VisitSchemaType(complexType),
-                @"<ComplexType Name=""Dimensions"">
-  <Property Name=""Height"" Type=""Edm.Decimal"" Precision=""6"" />
-  <Property Name=""Weight"" Type=""Edm.Decimal"" Precision=""6"" Scale=""Variable"" />
-</ComplexType>");
-
-            // Act & Assert for JSON
-            // The `ShouldWriteDefaultScale` flag should not affect JSON CSDL
-            VisitAndVerifyJson(v => v.VisitSchemaType(complexType), @"{
-  ""Dimensions"": {
-    ""$Kind"": ""ComplexType"",
-    ""Height"": {
-      ""$Type"": ""Edm.Decimal"",
-      ""$Nullable"": true,
-      ""$Precision"": 6
-    },
-    ""Weight"": {
-      ""$Type"": ""Edm.Decimal"",
-      ""$Nullable"": true,
-      ""$Precision"": 6
     }
   }
 }");
