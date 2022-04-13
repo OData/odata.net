@@ -217,7 +217,7 @@
     </Key>
     <Property Name="BagOfBytes" Type="Collection(Edm.Byte)" Nullable="false" />
     <Property Name="BagOfComplexToCategories" Type="Collection(DefaultNamespace.ComplexToCategory)" Nullable="false" />
-    <Property Name="BagOfDecimals" Type="Collection(Edm.Decimal)" Nullable="false" />
+    <Property Name="BagOfDecimals" Type="Collection(Edm.Decimal)" Nullable="false" Scale="Variable" />
     <Property Name="BagOfDoubles" Type="Collection(Edm.Double)" Nullable="false" />
     <Property Name="BagOfGuids" Type="Collection(Edm.Guid)" Nullable="false" />
     <Property Name="BagOfInt16s" Type="Collection(Edm.Int16)" Nullable="false" />
