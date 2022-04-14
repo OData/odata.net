@@ -85,6 +85,7 @@ namespace Microsoft.OData.JsonLight
         protected override void EndPayload()
         {
             // NOTE: we are always writing a request payload here.
+            this.jsonLightValueSerializer.ReturnDuplicatePropertyNameChecker(this.DuplicatePropertyNameChecker);
             this.jsonLightOutputContext.JsonWriter.EndObjectScope();
             this.jsonLightValueSerializer.WritePayloadEnd();
         }
@@ -174,6 +175,7 @@ namespace Microsoft.OData.JsonLight
         protected override async Task EndPayloadAsync()
         {
             // NOTE: we are always writing a request payload here.
+            this.jsonLightValueSerializer.ReturnDuplicatePropertyNameChecker(this.DuplicatePropertyNameChecker);
             await this.jsonLightOutputContext.AsynchronousJsonWriter.EndObjectScopeAsync()
                 .ConfigureAwait(false);
             await this.jsonLightValueSerializer.WritePayloadEndAsync()

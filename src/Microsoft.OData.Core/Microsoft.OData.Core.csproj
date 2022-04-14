@@ -90,4 +90,10 @@
       <DependentUpon>Parameterized.Microsoft.OData.Core.tt</DependentUpon>
     </Compile>
   </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="Microsoft.Extensions.ObjectPool">
+      <Version>6.0.3</Version>
+    </PackageReference>
+  </ItemGroup>
 </Project>

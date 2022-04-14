@@ -81,12 +81,20 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Creates a new instance of a duplicate property names checker.
+        /// Get an instance of a duplicate property names checker from the object pool.
         /// </summary>
-        /// <returns>The newly created instance of duplicate property names checker.</returns>
-        internal IDuplicatePropertyNameChecker CreateDuplicatePropertyNameChecker()
+        /// <returns>The instance retrieved from the object pool.</returns>
+        internal IDuplicatePropertyNameChecker GetDuplicatePropertyNameChecker()
         {
-            return MessageWriterSettings.Validator.CreateDuplicatePropertyNameChecker();
+            return MessageWriterSettings.Validator.GetDuplicatePropertyNameChecker();
+        }
+
+        /// <summary>
+        /// Returns an instance of a duplicate property names checker to the object pool.
+        /// </summary>
+        internal void ReturnDuplicatePropertyNameChecker(IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
+        {
+            MessageWriterSettings.Validator.ReturnDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
         }
     }
 }

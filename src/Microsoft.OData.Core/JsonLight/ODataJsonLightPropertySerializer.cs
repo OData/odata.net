@@ -78,14 +78,17 @@ namespace Microsoft.OData.JsonLight
 
                     // Note we do not allow named stream properties to be written as top level property.
                     this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
+                    IDuplicatePropertyNameChecker duplicatePropertyNameChecker = this.GetDuplicatePropertyNameChecker();
+
                     this.WriteProperty(
                         property,
-                        null /*owningType*/,
-                        true /* isTopLevel */,
-                        this.CreateDuplicatePropertyNameChecker(),
-                        null /* metadataBuilder */);
-                    this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
+                        owningType: null,
+                        isTopLevel: true,
+                        duplicatePropertyNameChecker: duplicatePropertyNameChecker,
+                        metadataBuilder : null);
 
+                    this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
+                    this.ReturnDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
                     this.JsonWriter.EndObjectScope();
                 });
         }
@@ -276,14 +279,17 @@ namespace Microsoft.OData.JsonLight
 
                     // Note we do not allow named stream properties to be written as top level property.
                     this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
+                    IDuplicatePropertyNameChecker duplicatePropertyNameChecker = this.GetDuplicatePropertyNameChecker();
+
                     await this.WritePropertyAsync(
                         property,
-                        null /*owningType*/,
-                        true /* isTopLevel */,
-                        this.CreateDuplicatePropertyNameChecker(),
-                        null /* metadataBuilder */).ConfigureAwait(false);
-                    this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
+                        owningType : null,
+                        isTopLevel : true,
+                        duplicatePropertyNameChecker : duplicatePropertyNameChecker,
+                        metadataBuilder : null).ConfigureAwait(false);
 
+                    this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
+                    this.ReturnDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
                     await this.AsynchronousJsonWriter.EndObjectScopeAsync().ConfigureAwait(false);
                 });
         }
@@ -645,11 +651,15 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(!this.currentPropertyInfo.IsTopLevel, "Resource property should not be top level");
             this.JsonWriter.WriteName(property.Name);
 
+            IDuplicatePropertyNameChecker duplicatePropertyNameChecker = this.GetDuplicatePropertyNameChecker();
+
             this.JsonLightValueSerializer.WriteResourceValue(
                 resourceValue,
                 this.currentPropertyInfo.MetadataType.TypeReference,
                 isOpenPropertyType,
-                this.CreateDuplicatePropertyNameChecker());
+                duplicatePropertyNameChecker);
+
+            this.ReturnDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
         }
 
         /// <summary>
@@ -1071,11 +1081,15 @@ namespace Microsoft.OData.JsonLight
             await this.AsynchronousJsonWriter.WriteNameAsync(property.Name)
                 .ConfigureAwait(false);
 
+            IDuplicatePropertyNameChecker duplicatePropertyNameChecker = this.GetDuplicatePropertyNameChecker();
+
             await this.JsonLightValueSerializer.WriteResourceValueAsync(
                 resourceValue,
                 this.currentPropertyInfo.MetadataType.TypeReference,
                 isOpenPropertyType,
-                this.CreateDuplicatePropertyNameChecker()).ConfigureAwait(false);
+                duplicatePropertyNameChecker).ConfigureAwait(false);
+
+            this.ReturnDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
         }
 
         /// <summary>

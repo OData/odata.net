@@ -114,6 +114,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         protected override void EndCollection()
         {
+            this.jsonLightCollectionSerializer.ReturnDuplicatePropertyNameChecker(this.DuplicatePropertyNameChecker);
             this.jsonLightCollectionSerializer.WriteCollectionEnd();
         }
 
@@ -199,6 +200,8 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task that represents the asynchronous write operation.</returns>
         protected override Task EndCollectionAsync()
         {
+            this.jsonLightCollectionSerializer.ReturnDuplicatePropertyNameChecker(this.DuplicatePropertyNameChecker);
+
             return this.jsonLightCollectionSerializer.WriteCollectionEndAsync();
         }
 

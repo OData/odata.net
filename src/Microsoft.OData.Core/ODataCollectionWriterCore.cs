@@ -106,7 +106,7 @@ namespace Microsoft.OData
             {
                 return duplicatePropertyNameChecker
                        ?? (duplicatePropertyNameChecker
-                           = outputContext.MessageWriterSettings.Validator.CreateDuplicatePropertyNameChecker());
+                           = outputContext.MessageWriterSettings.Validator.GetDuplicatePropertyNameChecker());
             }
         }
 
