@@ -84,9 +84,9 @@ namespace Microsoft.OData
         {
 #if NETSTANDARD2_0_OR_GREATER
             // We only return the DuplicatePropertyNameChecker to the object pool and ignore the NullDuplicatePropertyNameChecker.
-            if (settings.ThrowOnDuplicatePropertyNames)
+            if (duplicatePropertyNameChecker is DuplicatePropertyNameChecker duplicateChecker)
             {
-                this.duplicatePropertyNameCheckerObjectPool.Return(duplicatePropertyNameChecker as DuplicatePropertyNameChecker);
+                this.duplicatePropertyNameCheckerObjectPool.Return(duplicateChecker);
             }
 #endif
         }
