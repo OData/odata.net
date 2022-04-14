@@ -1422,7 +1422,7 @@ namespace EdmLibTests.FunctionalTests
       <PropertyRef Name=""Id"" />
     </Key>
     <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
-    <Property Name=""Weight"" Type=""MyNS.Weight"" />
+    <Property Name=""Weight"" Type=""MyNS.Weight"" Scale=""Variable"" />
     <Property Name=""Address"" Type=""MyNS.Address"" />
   </EntityType>
   <EntityContainer Name=""Container"">
