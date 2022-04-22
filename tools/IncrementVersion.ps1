@@ -39,7 +39,7 @@ $changedFiles = git diff --name-only HEAD $lastReleaseCommit
 $apiChanges = $false
 $breaks = @()
 # for each changed file
-ForEach ($line in $($changedFiles -split "`r`n"))
+ForEach ($line in $($changedFiles -split [System.Environment]::NewLine))
 {
   $fileName = [System.IO.Path]::GetFileName($line)
   if ($fileName -eq "PublicAPI.Shipped.txt")
