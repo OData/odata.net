@@ -6110,14 +6110,6 @@ public enum Microsoft.OData.UriParser.UnaryOperatorKind : int {
     Not = 1
 }
 
-public struct Microsoft.OData.UriParser.ODataPath+Enumerator : IDisposable, IEnumerator, IEnumerator`1 {
-    Microsoft.OData.UriParser.ODataPathSegment Current  { public virtual get; }
-
-    public virtual void Dispose ()
-    public virtual bool MoveNext ()
-    public virtual void Reset ()
-}
-
 public interface Microsoft.OData.UriParser.IPathSegmentTokenVisitor {
     void Visit (Microsoft.OData.UriParser.NonSystemToken tokenIn)
     void Visit (Microsoft.OData.UriParser.SystemToken tokenIn)
@@ -6462,7 +6454,7 @@ public class Microsoft.OData.UriParser.NamedFunctionParameterNode : Microsoft.OD
     public virtual T Accept (QueryNodeVisitor`1 visitor)
 }
 
-public class Microsoft.OData.UriParser.ODataExpandPath : Microsoft.OData.UriParser.ODataPath, IEnumerable, IEnumerable`1 {
+public class Microsoft.OData.UriParser.ODataExpandPath : Microsoft.OData.UriParser.ODataPath, IEnumerable, IEnumerable`1, IReadOnlyCollection`1, IReadOnlyList`1 {
     public ODataExpandPath (Microsoft.OData.UriParser.ODataPathSegment[] segments)
     public ODataExpandPath (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.ODataPathSegment]] segments)
 }
@@ -6470,17 +6462,16 @@ public class Microsoft.OData.UriParser.ODataExpandPath : Microsoft.OData.UriPars
 [
 DefaultMemberAttribute(),
 ]
-public class Microsoft.OData.UriParser.ODataPath : IEnumerable, IEnumerable`1 {
+public class Microsoft.OData.UriParser.ODataPath : IEnumerable, IEnumerable`1, IReadOnlyCollection`1, IReadOnlyList`1 {
     public ODataPath (Microsoft.OData.UriParser.ODataPathSegment[] segments)
     public ODataPath (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.ODataPathSegment]] segments)
 
-    int Count  { public get; }
+    int Count  { public virtual get; }
     Microsoft.OData.UriParser.ODataPathSegment FirstSegment  { public get; }
-    Microsoft.OData.UriParser.ODataPathSegment Item [int i] { public get; }
+    Microsoft.OData.UriParser.ODataPathSegment Item [int i] { public virtual get; }
     Microsoft.OData.UriParser.ODataPathSegment LastSegment  { public get; }
 
-    public Microsoft.OData.UriParser.ODataPath+Enumerator GetEnumerator ()
-    System.Collections.Generic.IEnumerator`1[[Microsoft.OData.UriParser.ODataPathSegment]] System.Collections.Generic.IEnumerable<Microsoft.OData.UriParser.ODataPathSegment>.GetEnumerator ()
+    public virtual System.Collections.Generic.IEnumerator`1[[Microsoft.OData.UriParser.ODataPathSegment]] GetEnumerator ()
     System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
     public IEnumerable`1 WalkWith (PathSegmentTranslator`1 translator)
     public void WalkWith (Microsoft.OData.UriParser.PathSegmentHandler handler)
@@ -6510,7 +6501,7 @@ public class Microsoft.OData.UriParser.ODataQueryOptionParser {
     public System.Nullable`1[[System.Int64]] ParseTop ()
 }
 
-public class Microsoft.OData.UriParser.ODataSelectPath : Microsoft.OData.UriParser.ODataPath, IEnumerable, IEnumerable`1 {
+public class Microsoft.OData.UriParser.ODataSelectPath : Microsoft.OData.UriParser.ODataPath, IEnumerable, IEnumerable`1, IReadOnlyCollection`1, IReadOnlyList`1 {
     public ODataSelectPath (Microsoft.OData.UriParser.ODataPathSegment[] segments)
     public ODataSelectPath (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.ODataPathSegment]] segments)
 }

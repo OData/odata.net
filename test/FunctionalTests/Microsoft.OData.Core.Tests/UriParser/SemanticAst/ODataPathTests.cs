@@ -97,34 +97,5 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             Assert.False(new ODataPath().Equals(new ODataPath(BatchSegment.Instance)));
         }
-
-        [Fact]
-        public void Enumerator()
-        {
-            ODataPath path = new ODataPath(BatchSegment.Instance, CountSegment.Instance);
-
-            ODataPath.Enumerator enumerator = path.GetEnumerator();
-            Assert.True(enumerator.MoveNext());
-            enumerator.Current.ShouldBeBatchSegment();
-            Assert.True(enumerator.MoveNext());
-            enumerator.Current.ShouldBeCountSegment();
-            Assert.False(enumerator.MoveNext());
-        }
-
-        [Fact]
-        public void Enumerator_Reset()
-        {
-            ODataPath path = new ODataPath(BatchSegment.Instance, CountSegment.Instance);
-
-            ODataPath.Enumerator enumerator = path.GetEnumerator();
-            Assert.True(enumerator.MoveNext());
-            enumerator.Current.ShouldBeBatchSegment();
-            enumerator.Reset();
-            Assert.True(enumerator.MoveNext());
-            enumerator.Current.ShouldBeBatchSegment();
-            Assert.True(enumerator.MoveNext());
-            enumerator.Current.ShouldBeCountSegment();
-            Assert.False(enumerator.MoveNext());
-        }
     }
 }
