@@ -124,7 +124,7 @@ namespace EdmLibTests.FunctionalTests
     <Property Name=""myPrecision"" Type=""Edm.Duration"" Precision=""3"" />
     <Property Name=""myDateTimeOffset"" Type=""Edm.DateTimeOffset"" Precision=""1"" />
     <Property Name=""myDecimal"" Type=""Edm.Decimal"" DefaultValue=""3.5"" Precision=""3"" Scale=""2"" />
-    <Property Name=""myFacetlessDecimal"" Type=""Edm.Decimal"" />
+    <Property Name=""myFacetlessDecimal"" Type=""Edm.Decimal"" Scale=""Variable"" />
     <Property Name=""mySingle"" Type=""Edm.Single"" Nullable=""false"" />
     <Property Name=""myDouble"" Type=""Edm.Double"" Nullable=""false"" />
     <Property Name=""myGuid"" Type=""Edm.Guid"" />
@@ -1422,7 +1422,7 @@ namespace EdmLibTests.FunctionalTests
       <PropertyRef Name=""Id"" />
     </Key>
     <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
-    <Property Name=""Weight"" Type=""MyNS.Weight"" />
+    <Property Name=""Weight"" Type=""MyNS.Weight"" Scale=""Variable"" />
     <Property Name=""Address"" Type=""MyNS.Address"" />
   </EntityType>
   <EntityContainer Name=""Container"">
@@ -1482,12 +1482,12 @@ namespace EdmLibTests.FunctionalTests
       <PropertyRef Name=""Id"" />
     </Key>
     <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
-    <Property Name=""Weight"" Type=""MyNS.Weight"" />
+    <Property Name=""Weight"" Type=""MyNS.Weight"" Scale=""Variable"" />
     <Property Name=""Address"" Type=""MyNS.Address"" />
   </EntityType>
   <Function Name=""GetWeightByLength"">
     <Parameter Name=""length"" Type=""MyNS.Length"" />
-    <ReturnType Type=""MyNS.Weight"" />
+    <ReturnType Type=""MyNS.Weight"" Scale=""Variable"" />
   </Function>
   <EntityContainer Name=""Container"">
     <EntitySet Name=""People"" EntityType=""MyNS.Person"" />

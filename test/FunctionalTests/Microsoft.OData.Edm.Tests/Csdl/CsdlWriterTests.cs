@@ -2352,7 +2352,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                      "<Annotation Term=\"NS.DefaultDateTerm\" />" +
                    "</ComplexType>" +
                  "<Term Name=\"DefaultBinaryTerm\" Type=\"Edm.Binary\" DefaultValue=\"01\" Nullable=\"false\" />" +
-                 "<Term Name=\"DefaultDecimalTerm\" Type=\"Edm.Decimal\" DefaultValue=\"0.34\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultDecimalTerm\" Type=\"Edm.Decimal\" DefaultValue=\"0.34\" Nullable=\"false\" Scale=\"Variable\" />" +
                  "<Term Name=\"DefaultStringTerm\" Type=\"Edm.String\" DefaultValue=\"This is a test\" Nullable=\"false\" />" +
                  "<Term Name=\"DefaultDurationTerm\" Type=\"Edm.Duration\" DefaultValue=\"P11DT23H59M59.999999999999S\" Nullable=\"false\" />" +
                  "<Term Name=\"DefaultTimeOfDayTerm\" Type=\"Edm.TimeOfDay\" DefaultValue=\"21:45:00\" Nullable=\"false\" />" +

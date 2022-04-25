@@ -570,7 +570,7 @@ namespace EdmLibTests.FunctionalUtilities
     </Key>
     <Property Name=""BagOfBytes"" Nullable=""false"" Type=""Collection(Edm.Byte)"" />
     <Property Name=""BagOfComplexToCategories"" Nullable=""false"" Type=""Collection(DefaultNamespace.ComplexToCategory)"" />
-    <Property Name=""BagOfDecimals"" Nullable=""false"" Type=""Collection(Edm.Decimal)"" />
+    <Property Name=""BagOfDecimals"" Nullable=""false"" Type=""Collection(Edm.Decimal)"" Scale=""Variable"" />
     <Property Name=""BagOfDoubles"" Nullable=""false"" Type=""Collection(Edm.Double)"" />
     <Property Name=""BagOfGuids"" Nullable=""false"" Type=""Collection(Edm.Guid)"" />
     <Property Name=""BagOfInt16s"" Nullable=""false"" Type=""Collection(Edm.Int16)"" />

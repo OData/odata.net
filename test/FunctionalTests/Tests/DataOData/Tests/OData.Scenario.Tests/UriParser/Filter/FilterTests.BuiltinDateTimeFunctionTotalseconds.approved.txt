@@ -11,7 +11,7 @@ FilterQueryOption
 	Expression = 
 		SingleValueFunctionCallNode
 			Name = totalseconds
-			Return Type = [Edm.Decimal Nullable=False Scale=0]
+			Return Type = [Edm.Decimal Nullable=False]
 			Function = 
 			Arguments = 
 				SingleValuePropertyAccessNode
@@ -24,4 +24,4 @@ FilterQueryOption
 						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.DurationInKey Nullable=False]
 						Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 	Equal
-		9.8(Type: [Edm.Decimal Nullable=False Scale=0])
+		9.8(Type: [Edm.Decimal Nullable=False])

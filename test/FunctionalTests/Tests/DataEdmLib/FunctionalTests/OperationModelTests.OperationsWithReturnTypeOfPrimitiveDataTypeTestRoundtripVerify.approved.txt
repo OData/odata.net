@@ -12,7 +12,7 @@
     <ReturnType Type="Edm.DateTimeOffset" Nullable="false" />
   </Function>
   <Function Name="FunctionsWithReturnTypePrimitiveDataType5">
-    <ReturnType Type="Edm.Decimal" Nullable="false" />
+    <ReturnType Type="Edm.Decimal" Nullable="false" Scale="Variable" />
   </Function>
   <Function Name="FunctionsWithReturnTypePrimitiveDataType6">
     <ReturnType Type="Edm.Double" Nullable="false" />
