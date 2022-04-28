@@ -86,6 +86,8 @@ namespace Microsoft.OData.Client
             {
                 case ODataProtocolVersion.V4:
                     return Util.ODataVersion4;
+                case ODataProtocolVersion.V401:
+                    return Util.ODataVersion401;
                 default:
                     Debug.Assert(false, "Unexpected max protocol version values.");
                     return Util.ODataVersion4;
@@ -230,6 +232,8 @@ namespace Microsoft.OData.Client
             switch (value)
             {
                 case ODataProtocolVersion.V4:
+                    return value;
+                case ODataProtocolVersion.V401:
                     return value;
                 default:
                     throw Error.ArgumentOutOfRange(parameterName);
