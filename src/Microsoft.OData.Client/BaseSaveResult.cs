@@ -905,7 +905,7 @@ namespace Microsoft.OData.Client
 
             HeaderCollection headers = new HeaderCollection();
 
-            headers.SetRequestVersion(Util.ODataVersion4, this.RequestInfo.MaxProtocolVersionAsVersion);
+            headers.SetRequestVersion(this.RequestInfo.MaxProtocolVersionAsVersion, this.RequestInfo.MaxProtocolVersionAsVersion);
             this.RequestInfo.Format.SetRequestAcceptHeader(headers);
 
             // if (EntityStates.Deleted || (EntityState.Modifed && null == TargetResource))

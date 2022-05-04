@@ -3648,7 +3648,7 @@ namespace Microsoft.OData.Client
                 }
             }
 
-            requestVersion = Util.ODataVersion4;
+            requestVersion = this.MaxProtocolVersionAsVersion;
 
             HeaderCollection headers = new HeaderCollection();
 
@@ -3812,7 +3812,7 @@ namespace Microsoft.OData.Client
             }
             else
             {
-                version = Util.ODataVersion4;
+                version = this.MaxProtocolVersionAsVersion;
                 if (!entityDescriptor.TryGetNamedStreamInfo(name, out streamDescriptor))
                 {
                     throw new ArgumentException(Strings.Context_EntityDoesNotContainNamedStream(name), nameof(name));
