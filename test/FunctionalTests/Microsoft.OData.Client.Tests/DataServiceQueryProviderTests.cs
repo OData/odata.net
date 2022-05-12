@@ -62,6 +62,22 @@ namespace Microsoft.OData.Client.Tests
         }
 
         [Fact]
+        public void TranslatesEnumerableContainsWithSpecialCharactersToInOperator()
+        {
+            // Arrange
+            var sut = new DataServiceQueryProvider(dsc);
+            var productNames = new[] { "Mac & Cheese" };
+            var products = dsc.CreateQuery<Product>("Products")
+                .Where(product => productNames.Contains(product.Name));
+
+            // Act
+            var queryComponents = sut.Translate(products.Expression);
+
+            // Assert
+            Assert.Equal(@"http://root/Products?$filter=Name in ('Mac %26 Cheese')", queryComponents.Uri.ToString());
+        }
+
+        [Fact]
         public void ThrowsForEnumerableContainsWithEmptyCollection()
         {
             // Arrange
