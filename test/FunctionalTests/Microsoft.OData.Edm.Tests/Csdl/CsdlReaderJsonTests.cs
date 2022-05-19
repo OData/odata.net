@@ -1858,6 +1858,54 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Equal("Collection(Edm.Untyped)", dataProperty.Type.FullName());
         }
 
+        [Fact]
+        public void ReadJsonKeyAlias()
+        {
+            var csdl = @"{
+""$Version"": ""4.0"",
+""$EntityContainer"": ""NS1.Container"",
+  ""NS1"": {
+    ""Product"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        {
+          ""ExampleObjectName"": ""ExampleObject/Name""
+        }
+      ],
+      ""ExampleObject"": {
+        ""$Type"": ""NS1.ExampleComplexObject""
+      },
+      ""Name"": {},
+      ""UpdatedTime"": {
+        ""$Type"": ""Edm.Date""
+      }
+    },
+    ""ExampleComplexObject"": {
+      ""$Kind"":""ComplexType"",
+      ""Name"":{}
+    },
+    ""Container"": {
+      ""$Kind"": ""EntityContainer"",
+      ""Products"": {
+        ""$Collection"": true,
+        ""$Type"": ""NS1.Product""
+      }
+    }
+  }
+}"
+;
+            IEdmModel model = Parse(csdl);
+            Assert.NotNull(model);
+            var productType = model.FindType("NS1.Product") as IEdmEntityType;
+            var declaredKey = productType.DeclaredKey.FirstOrDefault() as IEdmStructuralPropertyAlias;
+            var expectedDeclaredKeyType = EdmCoreModel.Instance.GetString(false);
+            var expectedDeclaredKeyDeclaringType = new EdmComplexType("NS1", "ExampleComplexObject");
+            Assert.Equal("ExampleObject/Name", string.Join("/", declaredKey.Path));
+            Assert.Equal("ExampleObjectName", declaredKey.PropertyAlias);
+            Assert.Equal(expectedDeclaredKeyType.Definition, declaredKey.Type.Definition);
+            Assert.Equal(expectedDeclaredKeyDeclaringType.FullTypeName(), declaredKey.DeclaringType.FullTypeName());
+        }
+
         private static Utf8JsonReader GetMeasureJsonReader(Uri uri, out bool skip)
         {
             string measures = @"{

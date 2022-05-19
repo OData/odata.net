@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Microsoft.OData.Edm
 {
@@ -157,7 +158,28 @@ namespace Microsoft.OData.Edm
                     this.declaredKey = new List<IEdmStructuralProperty>();
                 }
 
-                this.declaredKey.Add(property);
+                IEdmStructuralPropertyAlias structuralPropertyAlias = property as IEdmStructuralPropertyAlias;
+                if (!string.IsNullOrEmpty(structuralPropertyAlias?.PropertyAlias))
+                {
+                    string[] keyPropertySegments = structuralPropertyAlias.Path.ToArray();
+                    IEdmStructuralProperty structuralProperty = property.DeclaringType.FindProperty(keyPropertySegments[0]) as IEdmStructuralProperty;
+                    if (structuralProperty != null)
+                    {
+                        IEdmStructuralProperty prop = PropertyAliasHelpers.GetKeyProperty(structuralProperty, keyPropertySegments, structuralPropertyAlias.PropertyAlias);
+                        if (prop != null)
+                        {
+                            this.declaredKey.Add(prop);
+                        }
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException(Strings.Bad_UnresolvedType(structuralProperty));
+                    }
+                }
+                else 
+                {
+                    this.declaredKey.Add(property);
+                }
             }
         }
 

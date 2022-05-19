@@ -2812,5 +2812,84 @@ namespace Microsoft.OData.Edm.Tests.Csdl
   }
 }");
         }
+
+        [Fact]
+        public void VerifyKeyAliasForComplexPropertiesIsSupported()
+        {
+            // Arrange
+            var model = new EdmModel();
+            var entity = new EdmEntityType("NS1", "Product");
+            var complexType = new EdmComplexType("NS1", "ExampleComplexObject");
+            complexType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false));
+            var keyProperty = entity.AddStructuralPropertyAlias(new EdmComplexTypeReference(complexType, isNullable: false), "ExampleObjectName", new List<string> { "ExampleObject", "Name" });
+            entity.AddKeys(keyProperty);
+            entity.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false));
+            entity.AddStructuralProperty("UpdatedTime", EdmCoreModel.Instance.GetDate(false));
+
+            model.AddElement(entity);
+            model.AddElement(complexType);
+
+            var entityContainer = new EdmEntityContainer("NS1", "Container");
+            model.AddElement(entityContainer);
+            EdmEntitySet set1 = new EdmEntitySet(entityContainer, "Products", entity);
+            entityContainer.AddElement(set1);
+
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+                "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                  "<edmx:DataServices>" +
+                    "<Schema Namespace=\"NS1\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                      "<EntityType Name=\"Product\">" +
+                        "<Key>" +
+                          "<PropertyRef Name=\"ExampleObject/Name\" Alias=\"ExampleObjectName\" />" +
+                        "</Key>" +
+                        "<Property Name=\"ExampleObject\" Type=\"NS1.ExampleComplexObject\" Nullable=\"false\" />" +
+                        "<Property Name=\"Name\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                        "<Property Name=\"UpdatedTime\" Type=\"Edm.Date\" Nullable=\"false\" />" +
+                      "</EntityType>" +
+                      "<ComplexType Name=\"ExampleComplexObject\">"+
+                        "<Property Name=\"Name\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                      "</ComplexType>" +
+                      "<EntityContainer Name=\"Container\">" +
+                        "<EntitySet Name=\"Products\" EntityType=\"NS1.Product\" />" +
+                      "</EntityContainer>" +
+                    "</Schema>" +
+                  "</edmx:DataServices>" +
+                "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""NS1.Container"",
+  ""NS1"": {
+    ""Product"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        {
+          ""ExampleObjectName"": ""ExampleObject/Name""
+        }
+      ],
+      ""ExampleObject"": {
+        ""$Type"": ""NS1.ExampleComplexObject""
+      },
+      ""Name"": {},
+      ""UpdatedTime"": {
+        ""$Type"": ""Edm.Date""
+      }
+    },
+    ""ExampleComplexObject"": {
+      ""$Kind"": ""ComplexType"",
+      ""Name"": {}
+    },
+    ""Container"": {
+      ""$Kind"": ""EntityContainer"",
+      ""Products"": {
+        ""$Collection"": true,
+        ""$Type"": ""NS1.Product""
+      }
+    }
+  }
+}");
+        }
     }
 }

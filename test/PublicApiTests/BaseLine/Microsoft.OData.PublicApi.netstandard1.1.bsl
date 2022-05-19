@@ -1043,6 +1043,11 @@ public interface Microsoft.OData.Edm.IEdmStructuralProperty : IEdmElement, IEdmN
     string DefaultValueString  { public abstract get; }
 }
 
+public interface Microsoft.OData.Edm.IEdmStructuralPropertyAlias : IEdmElement, IEdmNamedElement, IEdmProperty, IEdmStructuralProperty, IEdmVocabularyAnnotatable {
+    System.Collections.Generic.IEnumerable`1[[System.String]] Path  { public abstract get; }
+    string PropertyAlias  { public abstract get; }
+}
+
 public interface Microsoft.OData.Edm.IEdmStructuredType : IEdmElement, IEdmType {
     Microsoft.OData.Edm.IEdmStructuredType BaseType  { public abstract get; }
     System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmProperty]] DeclaredProperties  { public abstract get; }
@@ -1208,6 +1213,7 @@ public abstract class Microsoft.OData.Edm.EdmStructuredType : Microsoft.OData.Ed
     public Microsoft.OData.Edm.EdmStructuralProperty AddStructuralProperty (string name, Microsoft.OData.Edm.IEdmTypeReference type)
     public Microsoft.OData.Edm.EdmStructuralProperty AddStructuralProperty (string name, Microsoft.OData.Edm.EdmPrimitiveTypeKind type, bool isNullable)
     public Microsoft.OData.Edm.EdmStructuralProperty AddStructuralProperty (string name, Microsoft.OData.Edm.IEdmTypeReference type, string defaultValue)
+    public Microsoft.OData.Edm.EdmStructuralPropertyAlias AddStructuralPropertyAlias (Microsoft.OData.Edm.IEdmTypeReference type, string alias, System.Collections.Generic.IEnumerable`1[[System.String]] path)
     public Microsoft.OData.Edm.EdmNavigationProperty AddUnidirectionalNavigation (Microsoft.OData.Edm.EdmNavigationPropertyInfo propertyInfo)
     public virtual Microsoft.OData.Edm.IEdmProperty FindProperty (string name)
 }
@@ -2823,6 +2829,15 @@ public class Microsoft.OData.Edm.EdmStructuralProperty : Microsoft.OData.Edm.Edm
     public EdmStructuralProperty (Microsoft.OData.Edm.IEdmStructuredType declaringType, string name, Microsoft.OData.Edm.IEdmTypeReference type, string defaultValueString)
 
     string DefaultValueString  { public virtual get; }
+    Microsoft.OData.Edm.EdmPropertyKind PropertyKind  { public virtual get; }
+}
+
+public class Microsoft.OData.Edm.EdmStructuralPropertyAlias : Microsoft.OData.Edm.EdmProperty, IEdmElement, IEdmNamedElement, IEdmProperty, IEdmStructuralProperty, IEdmStructuralPropertyAlias, IEdmVocabularyAnnotatable {
+    public EdmStructuralPropertyAlias (Microsoft.OData.Edm.IEdmStructuredType declaringType, string name, Microsoft.OData.Edm.IEdmTypeReference type, string propertyAlias, System.Collections.Generic.IEnumerable`1[[System.String]] path)
+
+    string DefaultValueString  { public virtual get; }
+    System.Collections.Generic.IEnumerable`1[[System.String]] Path  { public virtual get; }
+    string PropertyAlias  { public virtual get; }
     Microsoft.OData.Edm.EdmPropertyKind PropertyKind  { public virtual get; }
 }
 

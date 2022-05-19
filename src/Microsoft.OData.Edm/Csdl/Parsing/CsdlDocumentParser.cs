@@ -364,7 +364,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
         private CsdlPropertyReference OnPropertyRefElement(XmlElementInfo element, XmlElementValueCollection childValues)
         {
-            return new CsdlPropertyReference(Required(CsdlConstants.Attribute_Name), element.Location);
+            return new CsdlPropertyReference(Required(CsdlConstants.Attribute_Name), Optional(CsdlConstants.Attribute_Alias), element.Location);
         }
 
         private CsdlEnumType OnEnumTypeElement(XmlElementInfo element, XmlElementValueCollection childValues)
