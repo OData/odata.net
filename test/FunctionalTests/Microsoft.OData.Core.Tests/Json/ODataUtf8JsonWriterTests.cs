@@ -1,39 +1,40 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="JsonWriterTests.cs" company="Microsoft">
+// <copyright file="ODataUtf8JsonWriterTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
+#if NETCOREAPP3_1_OR_GREATER
+using Microsoft.OData.Edm;
+using Microsoft.OData.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
-using Microsoft.OData.Edm;
-using Microsoft.OData.Json;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.OData.Tests.Json
 {
     /// <summary>
-    /// Unit tests for the JsonWriter class.
-    /// TODO: write unit tests for the remaining functions on JsonWriter.
+    /// Unit tests for the ODataUtf8JsonWriter class
     /// </summary>
-    public class JsonWriterTests
+    public class ODataUtf8JsonWriterTests
     {
-        private StringBuilder builder;
         private IJsonWriter writer;
+        private MemoryStream stream = new MemoryStream();
 
-        public JsonWriterTests()
+        public ODataUtf8JsonWriterTests()
         {
-            this.builder = new StringBuilder();
-            this.writer = new JsonWriter(new StringWriter(builder), isIeee754Compatible: true);
+            this.writer = new ODataUtf8JsonWriter(stream, isIeee754Compatible: true, leaveStreamOpen: true);
         }
 
         [Fact]
         public void StartPaddingFunctionScopeWritesParenthesis()
         {
             this.writer.StartPaddingFunctionScope();
-            Assert.Equal("(", this.builder.ToString());
+            Assert.Equal("(", this.ReadStream());
         }
 
         [Fact]
@@ -41,14 +42,14 @@ namespace Microsoft.OData.Tests.Json
         {
             this.writer.StartPaddingFunctionScope();
             this.writer.EndPaddingFunctionScope();
-            Assert.Equal("()", this.builder.ToString());
+            Assert.Equal("()", this.ReadStream());
         }
 
         [Fact]
         public void WritePaddingFunctionNameWritesName()
         {
             this.writer.WritePaddingFunctionName("example");
-            Assert.Equal("example", this.builder.ToString());
+            Assert.Equal("example", this.ReadStream());
         }
 
         #region WritePrimitiveValue
@@ -126,9 +127,11 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Theory]
-        [InlineData("Foo \uD800\udc05 \u00e4", "\"Foo \\ud800\\udc05 \\u00e4\"")]
-        [InlineData("Foo \nBar\t\"Baz\"", "\"Foo \\nBar\\t\\\"Baz\\\"\"")]
-        [InlineData("Foo ия", "\"Foo \\u0438\\u044f\"")]
+        // Utf8JsonWriter uses uppercase character in unicode literals, i.e. uD800 instead of ud800
+        [InlineData("Foo \uD800\udc05 \u00e4", "\"Foo \\uD800\\uDC05 \\u00E4\"")]
+        // Utf8JsonWriter escapes double-quotes using \u0022
+        [InlineData("Foo \nBar\t\"Baz\"", "\"Foo \\nBar\\t\\u0022Baz\\u0022\"")]
+        [InlineData("Foo ия", "\"Foo \\u0438\\u044F\"")]
         public void WritePrimitiveValueStringEscapesStrings(string input, string expectedOutput)
         {
             this.VerifyWritePrimitiveValue(input, expectedOutput);
@@ -170,27 +173,46 @@ namespace Microsoft.OData.Tests.Json
             this.VerifyWritePrimitiveValue(new TimeOfDay(12, 30, 5, 10), "\"12:30:05.0100000\"");
         }
 
-        [Fact]
-        public void WriteRawValueWritesValue()
-        {
-            this.writer.WriteRawValue("Raw\tValue");
-            Assert.Equal("Raw\tValue", this.builder.ToString());
-        }
-
         private void VerifyWritePrimitiveValue<T>(T parameter, string expected)
         {
             this.writer.WritePrimitiveValue(parameter);
-            Assert.Equal(expected, this.builder.ToString());
+            Assert.Equal(expected, this.ReadStream());
         }
 
         private void VerifyWriterPrimitiveValueWithIeee754Compatible<T>(T parameter, string expected, bool isIeee754Compatible)
         {
-            this.writer = new JsonWriter(new StringWriter(builder), isIeee754Compatible);
+            this.writer = new ODataUtf8JsonWriter(this.stream, isIeee754Compatible);
             this.writer.WritePrimitiveValue(parameter);
-            Assert.Equal(expected, this.builder.ToString());
+            Assert.Equal(expected, this.ReadStream());
         }
 
         #endregion
+
+        [Fact]
+        public void WriteRawValueWritesValue()
+        {
+            this.writer.WriteRawValue("Raw\tValue");
+            Assert.Equal("Raw\tValue", this.ReadStream());
+        }
+
+        [Fact]
+        public void WriteNameWritesName()
+        {
+            this.writer.StartObjectScope();
+            this.writer.WriteName("Name");
+            Assert.Equal("{\"Name\":", this.ReadStream());
+        }
+
+        [Fact]
+        public void WriteNameWritesNameWithObjectMemberSeparator()
+        {
+            this.writer.StartObjectScope();
+            this.writer.WriteName("Name");
+            this.writer.WritePrimitiveValue("Sue");
+            this.writer.WriteName("Age");
+            Assert.Equal("{\"Name\":\"Sue\",\"Age\":", this.ReadStream());
+        }
+
 
         #region JsonWriter Extension Methods
 
@@ -209,7 +231,7 @@ namespace Microsoft.OData.Tests.Json
                 }
             };
             this.writer.WriteJsonObjectValue(properties, null);
-            Assert.Equal("{\"Name\":\"Sue\",\"Attributes\":{\"Height\":1.77,\"Weight\":80.7}}", this.builder.ToString());
+            Assert.Equal("{\"Name\":\"Sue\",\"Attributes\":{\"Height\":1.77,\"Weight\":80.7}}", this.ReadStream());
         }
 
         [Fact]
@@ -223,7 +245,7 @@ namespace Microsoft.OData.Tests.Json
             };
 
             this.writer.WriteJsonObjectValue(properties, injectPropertyDelegate);
-            Assert.Equal("{\"Id\":7,\"Name\":\"Sue\"}", this.builder.ToString());
+            Assert.Equal("{\"Id\":7,\"Name\":\"Sue\"}", this.ReadStream());
         }
 
         [Fact]
@@ -235,7 +257,7 @@ namespace Microsoft.OData.Tests.Json
             };
 
             this.writer.WriteJsonObjectValue(properties, null);
-            Assert.Equal("{\"Names\":[\"Sue\",\"Joe\",null]}", this.builder.ToString());
+            Assert.Equal("{\"Names\":[\"Sue\",\"Joe\",null]}", this.ReadStream());
         }
 
         [Fact]
@@ -243,7 +265,7 @@ namespace Microsoft.OData.Tests.Json
         {
             var value = new ODataPrimitiveValue(3.14);
             this.writer.WriteODataValue(value);
-            Assert.Equal("3.14", this.builder.ToString());
+            Assert.Equal("3.14", this.ReadStream());
         }
 
         [Fact]
@@ -251,7 +273,7 @@ namespace Microsoft.OData.Tests.Json
         {
             var value = new ODataNullValue();
             this.writer.WriteODataValue(value);
-            Assert.Equal("null", this.builder.ToString());
+            Assert.Equal("null", this.ReadStream());
         }
 
         [Fact]
@@ -265,9 +287,9 @@ namespace Microsoft.OData.Tests.Json
                     new ODataProperty { Name = "Age", Value = 19 }
                 }
             };
-            
+
             this.writer.WriteODataValue(resourceValue);
-            Assert.Equal("{\"Name\":\"Sue\",\"Age\":19}", this.builder.ToString());
+            Assert.Equal("{\"Name\":\"Sue\",\"Age\":19}", this.ReadStream());
         }
 
         [Fact]
@@ -297,39 +319,20 @@ namespace Microsoft.OData.Tests.Json
             };
 
             this.writer.WriteODataValue(collectionValue);
-            Assert.Equal("[{\"Name\":\"Sue\",\"Age\":19},{\"Name\":\"Joe\",\"Age\":23}]", this.builder.ToString());
+            Assert.Equal("[{\"Name\":\"Sue\",\"Age\":19},{\"Name\":\"Joe\",\"Age\":23}]", this.ReadStream());
         }
 
         #endregion JsonWriter Extension Methods
 
-        [Fact]
-        public void WriteNameUsesProvidedCharArrayPool()
+
+        private string ReadStream()
         {
-            // Note: CharArrayPool is used if string has special chars
-            // This test is mostly theoretical since special characters are not allowed in names
-            SetupJsonWriterRunTestAndVerifyRent(
-                (jsonWriter) => jsonWriter.WriteName("foo\tbar"));
-        }
-
-        [Fact]
-        public void WriteStringValueUsesProvidedCharArrayPool()
-        {
-            SetupJsonWriterRunTestAndVerifyRent(
-                (jsonWriter) => jsonWriter.WriteValue("foo\tbar"));
-        }
-
-        private void SetupJsonWriterRunTestAndVerifyRent(Action<JsonWriter> action)
-        {
-            var jsonWriter = new JsonWriter(new StringWriter(builder), isIeee754Compatible: true);
-            bool rentVerified = false;
-
-            Action<int> rentVerifier = (minSize) => { rentVerified = true; };
-            jsonWriter.ArrayPool = new MockCharArrayPool { RentVerifier = rentVerifier };
-
-            jsonWriter.StartObjectScope();
-            action(jsonWriter);
-
-            Assert.True(rentVerified);
+            this.writer.Flush();
+            this.stream.Seek(0, SeekOrigin.Begin);
+            StreamReader reader = new StreamReader(this.stream, Encoding.UTF8);
+            return reader.ReadToEnd();
         }
     }
 }
+
+#endif

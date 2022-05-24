@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;netstandard2.0;netstandard1.1</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard2.0;netstandard1.1;netcoreapp3.1;net5.0</TargetFrameworks>
     <AssemblyName>Microsoft.OData.Core</AssemblyName>
     <RootNamespace>Microsoft.OData.Core</RootNamespace>
 

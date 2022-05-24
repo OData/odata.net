@@ -186,6 +186,40 @@ namespace Microsoft.OData.Tests
             write.Throws<ODataException>("The value of type 'System.UInt16' could not be converted to a raw string.");
         }
 
+#if NETCOREAPP3_1_OR_GREATER
+        [Fact]
+        public void SupportsStreamBasedJsonWriter()
+        {
+            ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
+
+            var request = new InMemoryMessage() { Stream = new MemoryStream() };
+
+            var containerBuilder = new Test.OData.DependencyInjection.TestContainerBuilder();
+            containerBuilder.AddDefaultODataServices();
+            containerBuilder.AddService<IJsonWriterFromStreamFactory>(
+                ServiceLifetime.Singleton, sp => new DefaultJsonWriterFromStreamFactory());
+            request.Container = containerBuilder.BuildContainer();
+
+            IJsonWriterFromStreamFactory factory = request.Container.GetService<IJsonWriterFromStreamFactory>();
+            Assert.IsType<DefaultJsonWriterFromStreamFactory>(factory);
+
+            settings.ODataUri.ServiceRoot = new Uri("http://host/service");
+            settings.SetContentType(ODataFormat.Json);
+            var model = new EdmModel();
+            var writer = new ODataMessageWriter((IODataRequestMessage)request, settings, model);
+            Action write = () => writer.WriteProperty(new ODataProperty()
+            {
+                Name = "Name",
+                Value = "This is a test ия"
+            });
+            write.DoesNotThrow();
+            request.GetStream().Position = 0;
+            var reader = new StreamReader(request.GetStream());
+            string output = reader.ReadToEnd();
+            Assert.Equal("{\"@odata.context\":\"http://host/service/$metadata#Edm.String\",\"value\":\"This is a test \\u0438\\u044F\"}", output);
+        }
+#endif
+
         [Fact]
         public void WriteMetadataDocument_WorksForJsonCsdl()
         {
