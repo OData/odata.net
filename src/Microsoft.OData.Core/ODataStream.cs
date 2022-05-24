@@ -82,7 +82,7 @@ namespace Microsoft.OData
             base.Dispose(disposing);
         }
 
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP2_1_OR_GREATER
         public async ValueTask DisposeAsync()
         {
             await DisposeAsyncCore()
