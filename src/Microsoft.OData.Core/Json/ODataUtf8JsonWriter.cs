@@ -112,7 +112,6 @@ namespace Microsoft.OData.Json
 
         public void WriteValue(float value)
         {
-            // TODO: review number formatting implementation notes
             this.writer.WriteNumberValue(value);
             this.FlushIfBufferThresholdReached();
         }
@@ -139,7 +138,6 @@ namespace Microsoft.OData.Json
 
         public void WriteValue(double value)
         {
-            // TODO: see notes on number formatting
             this.writer.WriteNumberValue(value);
             this.FlushIfBufferThresholdReached();
         }
@@ -166,7 +164,6 @@ namespace Microsoft.OData.Json
 
         public void WriteValue(DateTimeOffset value)
         {
-            // TODO: see notes on dates and times
             this.writer.WriteStringValue(value);
             this.FlushIfBufferThresholdReached();
         }
