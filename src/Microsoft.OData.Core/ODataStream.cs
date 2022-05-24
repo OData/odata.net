@@ -18,7 +18,7 @@ namespace Microsoft.OData
     /// or representing a stream value.
     /// This stream communicates status changes to an IODataStreamListener instance.
     /// </summary>
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP2_1_OR_GREATER
     internal abstract class ODataStream : Stream, IAsyncDisposable
 #else
     internal abstract class ODataStream : Stream
