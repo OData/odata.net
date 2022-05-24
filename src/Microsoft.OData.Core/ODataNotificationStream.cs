@@ -15,7 +15,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Wrapper to listen for dispose on a <see cref="Stream"/>.
     /// </summary>
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP2_1_OR_GREATER
     internal sealed class ODataNotificationStream : Stream, IAsyncDisposable
 #else
     internal sealed class ODataNotificationStream : Stream
@@ -227,7 +227,7 @@ namespace Microsoft.OData
             base.Dispose(disposing);
         }
 
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP2_1_OR_GREATER
         public async ValueTask DisposeAsync()
         {
             if (!this.disposed && this.listener != null)

@@ -132,6 +132,7 @@ namespace Microsoft.OData.Tests.Json
         // Utf8JsonWriter escapes double-quotes using \u0022
         [InlineData("Foo \nBar\t\"Baz\"", "\"Foo \\nBar\\t\\u0022Baz\\u0022\"")]
         [InlineData("Foo ия", "\"Foo \\u0438\\u044F\"")]
+        [InlineData("<script>", "\"\\u003Cscript\\u003E\"")]
         public void WritePrimitiveValueStringEscapesStrings(string input, string expectedOutput)
         {
             this.VerifyWritePrimitiveValue(input, expectedOutput);

@@ -196,12 +196,12 @@ namespace Microsoft.OData.Tests
 
             var containerBuilder = new Test.OData.DependencyInjection.TestContainerBuilder();
             containerBuilder.AddDefaultODataServices();
-            containerBuilder.AddService<IJsonWriterFromStreamFactory>(
-                ServiceLifetime.Singleton, sp => new DefaultJsonWriterFromStreamFactory());
+            containerBuilder.AddService<IStreamBasedJsonWriterFactory>(
+                ServiceLifetime.Singleton, sp => new DefaultStreamBasedJsonWriterFactory());
             request.Container = containerBuilder.BuildContainer();
 
-            IJsonWriterFromStreamFactory factory = request.Container.GetService<IJsonWriterFromStreamFactory>();
-            Assert.IsType<DefaultJsonWriterFromStreamFactory>(factory);
+            IStreamBasedJsonWriterFactory factory = request.Container.GetService<IStreamBasedJsonWriterFactory>();
+            Assert.IsType<DefaultStreamBasedJsonWriterFactory>(factory);
 
             settings.ODataUri.ServiceRoot = new Uri("http://host/service");
             settings.SetContentType(ODataFormat.Json);

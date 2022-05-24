@@ -12,7 +12,7 @@ namespace Microsoft.OData.Json
     /// that write directly to a <see cref="Stream"/> rather than a <see cref="TextWriter"/>.
     /// </summary>
     [CLSCompliant(false)]
-    public interface IJsonWriterFromStreamFactory
+    public interface IStreamBasedJsonWriterFactory
     {
         /// <summary>
         /// Creates a new JSON writer of <see cref="IJsonWriter"/>. Returns null

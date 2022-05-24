@@ -905,7 +905,7 @@ namespace Microsoft.OData.JsonLight
         /// directly to the output stream. Returns null if unable to create
         /// such a writer with the given constraints.
         /// </summary>
-        /// <param name="container">The dependency injection container to get related services like <see cref="IJsonWriterFromStreamFactory"/>.</param>
+        /// <param name="container">The dependency injection container to get related services like <see cref="IStreamBasedJsonWriterFactory"/>.</param>
         /// <param name="outputStream">The output stream to write to.</param>
         /// <param name="isIeee754Compatible">True if the writer should writer decimals and longs as strings.</param>
         /// <param name="encoding">The text encoding of the output data.</param>
@@ -921,13 +921,13 @@ namespace Microsoft.OData.JsonLight
                 return null;
             }
 
-            IJsonWriterFromStreamFactory jsonWriterStreamBasedFactory = container.GetService<IJsonWriterFromStreamFactory>();
-            if (jsonWriterStreamBasedFactory == null)
+            IStreamBasedJsonWriterFactory factory = container.GetService<IStreamBasedJsonWriterFactory>();
+            if (factory == null)
             {
                 return null;
             }
 
-            IJsonWriter jsonWriter = jsonWriterStreamBasedFactory.CreateJsonWriter(outputStream, isIeee754Compatible, encoding);
+            IJsonWriter jsonWriter = factory.CreateJsonWriter(outputStream, isIeee754Compatible, encoding);
 
             return jsonWriter;
         }

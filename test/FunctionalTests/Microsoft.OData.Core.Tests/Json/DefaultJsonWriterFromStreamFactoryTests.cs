@@ -18,7 +18,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void CreatesJsonWriterWithUtf8Support()
         {
-            DefaultJsonWriterFromStreamFactory factory = new DefaultJsonWriterFromStreamFactory();
+            DefaultStreamBasedJsonWriterFactory factory = new DefaultStreamBasedJsonWriterFactory();
             MemoryStream stream = new MemoryStream();
             IJsonWriter jsonWriter = factory.CreateJsonWriter(stream, isIeee754Compatible: false, encoding: Encoding.UTF8);
 
@@ -39,7 +39,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void CreatesJsonWriterWithIeee754Compatibility()
         {
-            DefaultJsonWriterFromStreamFactory factory = new DefaultJsonWriterFromStreamFactory();
+            DefaultStreamBasedJsonWriterFactory factory = new DefaultStreamBasedJsonWriterFactory();
             MemoryStream stream = new MemoryStream();
 
             IJsonWriter jsonWriter = factory.CreateJsonWriter(stream, isIeee754Compatible: true, encoding: Encoding.UTF8);
@@ -72,7 +72,7 @@ namespace Microsoft.OData.Tests.Json
         [MemberData(nameof(UnsupportedEncodings))]
         public void ReturnsNullForUnsupportedEncodings(Encoding encoding)
         {
-            DefaultJsonWriterFromStreamFactory factory = new DefaultJsonWriterFromStreamFactory();
+            DefaultStreamBasedJsonWriterFactory factory = new DefaultStreamBasedJsonWriterFactory();
             MemoryStream stream = new MemoryStream();
 
             IJsonWriter jsonWriter = factory.CreateJsonWriter(stream, false, encoding);

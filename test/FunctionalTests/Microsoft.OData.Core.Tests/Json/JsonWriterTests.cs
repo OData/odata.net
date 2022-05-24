@@ -129,6 +129,7 @@ namespace Microsoft.OData.Tests.Json
         [InlineData("Foo \uD800\udc05 \u00e4", "\"Foo \\ud800\\udc05 \\u00e4\"")]
         [InlineData("Foo \nBar\t\"Baz\"", "\"Foo \\nBar\\t\\\"Baz\\\"\"")]
         [InlineData("Foo ия", "\"Foo \\u0438\\u044f\"")]
+        [InlineData("<script>", "\"<script>\"")]
         public void WritePrimitiveValueStringEscapesStrings(string input, string expectedOutput)
         {
             this.VerifyWritePrimitiveValue(input, expectedOutput);

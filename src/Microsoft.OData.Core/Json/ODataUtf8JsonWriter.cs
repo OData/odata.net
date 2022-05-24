@@ -9,12 +9,16 @@ using System;
 using System.IO;
 using System.Text;
 using System.Text.Json;
-using Microsoft.OData.Edm;
-using System.Buffers;
 using System.Globalization;
+using System.Text.Encodings.Web;
+using Microsoft.OData.Edm;
 
 namespace Microsoft.OData.Json
 {
+    /// <summary>
+    /// Implement of <see cref="IJsonWriter"/> that is based on
+    /// <see cref="Utf8JsonWriter"/>.
+    /// </summary>
     internal class ODataUtf8JsonWriter : IJsonWriter, IDisposable
     {
         private const int DefaultBufferSize = 16 * 1024;
@@ -34,7 +38,11 @@ namespace Microsoft.OData.Json
             this.outputStream = outputStream;
             this.isIeee754Compatible = isIeee754Compatible;
             this.bufferSize = bufferSize;
-            this.writer = new Utf8JsonWriter(outputStream, new JsonWriterOptions { SkipValidation = true });
+            this.writer = new Utf8JsonWriter(
+                outputStream,
+                // we don't need to perform validation here since the higher-level
+                // writers already perform validation
+                new JsonWriterOptions { SkipValidation = true });
             this.leaveStreamOpen = leaveStreamOpen;
         }
 
@@ -48,6 +56,8 @@ namespace Microsoft.OData.Json
 
         public void FlushIfBufferThresholdReached()
         {
+            // flush when we're close to the buffer capacity to avoid
+            // allocating bigger buffers
             if (this.writer.BytesPending >= 0.9f * this.bufferSize)
             {
                 this.Flush();
