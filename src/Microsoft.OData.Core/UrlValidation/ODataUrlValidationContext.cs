@@ -18,7 +18,7 @@ namespace Microsoft.OData.UriParser.Validation
         /// <summary>
         /// List of <see cref="ODataUrlValidationMessage"/>s discovered while validating the OData Url.
         /// </summary>
-        public IList<ODataUrlValidationMessage> Messages { get; private set; }
+        public List<ODataUrlValidationMessage> Messages { get; private set; }
 
         /// <summary>
         /// The model against which the OData Url is to be validated.

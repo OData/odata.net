@@ -5974,6 +5974,13 @@ public interface Microsoft.OData.Json.IJsonWriterFactoryAsync {
 [
 CLSCompliantAttribute(),
 ]
+public interface Microsoft.OData.Json.IStreamBasedJsonWriterFactory {
+    Microsoft.OData.Json.IJsonWriter CreateJsonWriter (System.IO.Stream stream, bool isIeee754Compatible, System.Text.Encoding encoding)
+}
+
+[
+CLSCompliantAttribute(),
+]
 public sealed class Microsoft.OData.Json.DefaultJsonWriterFactory : IJsonWriterFactory, IJsonWriterFactoryAsync {
     public DefaultJsonWriterFactory ()
     public DefaultJsonWriterFactory (Microsoft.OData.Json.ODataStringEscapeOption stringEscapeOption)
