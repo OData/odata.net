@@ -495,6 +495,7 @@ Microsoft.OData.Client.HasStreamAttribute
 Microsoft.OData.Client.HasStreamAttribute.HasStreamAttribute() -> void
 Microsoft.OData.Client.HttpClientRequestMessage
 Microsoft.OData.Client.HttpClientRequestMessage.Dispose() -> void
+Microsoft.OData.Client.HttpClientRequestMessage.HttpClientHandler.get -> System.Net.Http.HttpClientHandler
 Microsoft.OData.Client.HttpClientRequestMessage.HttpClientRequestMessage(Microsoft.OData.Client.DataServiceClientRequestMessageArgs args) -> void
 Microsoft.OData.Client.HttpRequestTransportMode
 Microsoft.OData.Client.HttpRequestTransportMode.HttpClient = 1 -> Microsoft.OData.Client.HttpRequestTransportMode

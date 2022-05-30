@@ -207,6 +207,17 @@ namespace Microsoft.OData.Client
 #endif
 
         /// <summary>
+        /// Returns the underlying <see cref="HttpClientHandler"/>.
+        /// </summary>
+        public HttpClientHandler HttpClientHandler
+        {
+            get
+            {
+                return _handler;
+            }
+        }
+
+        /// <summary>
         /// Returns the value of the header with the given name.
         /// </summary>
         /// <param name="headerName">Name of the header.</param>
