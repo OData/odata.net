@@ -64,7 +64,7 @@ namespace Microsoft.OData.Tests
             Assert.Equal(expected, result);
         }
 
-#if NETCOREAPP3_1
+#if NETCOREAPP
         [Fact]
         public async Task NotificationStreamDisposeShouldInvokeStreamDisposedAsync()
         {
