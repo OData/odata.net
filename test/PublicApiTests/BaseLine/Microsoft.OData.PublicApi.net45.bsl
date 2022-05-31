@@ -8371,6 +8371,8 @@ public class Microsoft.OData.Client.HttpClientRequestMessage : Microsoft.OData.C
 
     System.Net.ICredentials Credentials  { public virtual get; public virtual set; }
     System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] Headers  { public virtual get; }
+    System.Net.Http.HttpClientHandler HttpClientHandler  { public get; }
+    System.Net.Http.HttpRequestMessage HttpRequestMessage  { public get; }
     string Method  { public virtual get; public virtual set; }
     [
     ObsoleteAttribute(),
