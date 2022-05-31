@@ -9,6 +9,10 @@
     <DefineConstants>$(DefineConstants);ODATA_CORE;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE;DelaySignKeys</DefineConstants>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+    <DefineConstants>$(DefineConstants);NETCOREAPP3_1_OR_GREATER</DefineConstants>
+  </ItemGroup>
  
   <Import Project="..\Build.props" />
   
