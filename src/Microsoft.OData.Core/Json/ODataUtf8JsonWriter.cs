@@ -22,7 +22,8 @@ namespace Microsoft.OData.Json
     internal class ODataUtf8JsonWriter : IJsonWriter, IDisposable
     {
         private const int DefaultBufferSize = 16 * 1024;
-        private readonly byte[] parentheses = new byte[] { (byte)'(', (byte)')' };
+        private const float BufferFlushThreshold = 0.9f;
+        private readonly static byte[] Parentheses = new byte[] { (byte)'(', (byte)')' };
 
         private readonly Stream outputStream;
         private readonly Utf8JsonWriter writer;
@@ -57,7 +58,7 @@ namespace Microsoft.OData.Json
         {
             // flush when we're close to the buffer capacity to avoid
             // allocating bigger buffers
-            if (this.writer.BytesPending >= 0.9f * this.bufferSize)
+            if (this.writer.BytesPending >= BufferFlushThreshold * this.bufferSize)
             {
                 this.Flush();
             }
@@ -66,7 +67,7 @@ namespace Microsoft.OData.Json
         public void StartPaddingFunctionScope()
         {
             this.Flush();
-            this.outputStream.Write(parentheses, 0, 1);
+            this.outputStream.Write(Parentheses, 0, 1);
         }
 
         public void WritePaddingFunctionName(string functionName)
@@ -78,7 +79,7 @@ namespace Microsoft.OData.Json
         public void EndPaddingFunctionScope()
         {
             this.Flush();
-            this.outputStream.Write(parentheses, 1, 1);
+            this.outputStream.Write(Parentheses, 1, 1);
         }
 
         public void StartObjectScope()
