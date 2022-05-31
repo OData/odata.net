@@ -23,7 +23,7 @@ namespace Microsoft.OData.Json
         {
             // TODO: only supports Utf8-encoding for now. Support for other encodings
             // to be added later.
-            if (encoding.EncodingName != Encoding.UTF8.EncodingName)
+            if (encoding.WebName != Encoding.UTF8.WebName)
             {
                 return null;
             }

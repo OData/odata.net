@@ -11,6 +11,8 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Xunit;
 using System.Threading.Tasks;
+using Microsoft.OData.Tests.Json;
+using System.Text;
 
 namespace Microsoft.OData.Tests
 {
@@ -207,17 +209,108 @@ namespace Microsoft.OData.Tests
             settings.SetContentType(ODataFormat.Json);
             var model = new EdmModel();
             var writer = new ODataMessageWriter((IODataRequestMessage)request, settings, model);
-            Action write = () => writer.WriteProperty(new ODataProperty()
+            Action writePropertyAction = () => writer.WriteProperty(new ODataProperty()
             {
                 Name = "Name",
                 Value = "This is a test ия"
             });
 
-            write.DoesNotThrow();
+            writePropertyAction.DoesNotThrow();
             request.GetStream().Position = 0;
             var reader = new StreamReader(request.GetStream());
             string output = reader.ReadToEnd();
             Assert.Equal("{\"@odata.context\":\"http://host/service/$metadata#Edm.String\",\"value\":\"This is a test \\u0438\\u044F\"}", output);
+        }
+
+        [Fact]
+        public void WhenInjectingStreamBasedJsonWriterFactory_UseStreamBasedJsonWriter_IfEncodingIsSupported()
+        {
+            // Arrange
+            ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
+            MockStreamBasedJsonWriterFactoryWrapper writerFactory =
+                new MockStreamBasedJsonWriterFactoryWrapper(new DefaultStreamBasedJsonWriterFactory());
+
+            var request = new InMemoryMessage() { Stream = new MemoryStream() };
+
+            var containerBuilder = new Test.OData.DependencyInjection.TestContainerBuilder();
+            containerBuilder.AddDefaultODataServices();
+
+            containerBuilder.AddService<IStreamBasedJsonWriterFactory>(
+                ServiceLifetime.Singleton, sp => writerFactory);
+            request.Container = containerBuilder.BuildContainer();
+
+            IStreamBasedJsonWriterFactory factory = request.Container.GetService<IStreamBasedJsonWriterFactory>();
+            Assert.IsType<MockStreamBasedJsonWriterFactoryWrapper>(factory);
+
+            settings.ODataUri.ServiceRoot = new Uri("http://host/service");
+            settings.SetContentType("application/json", "utf-8");
+            var model = new EdmModel();
+            var writer = new ODataMessageWriter((IODataRequestMessage)request, settings, model);
+
+            // Act
+            Action writePropertyAction = () => writer.WriteProperty(new ODataProperty()
+            {
+                Name = "Name",
+                Value = "This is a test ия"
+            });
+
+            writePropertyAction.DoesNotThrow();
+            request.GetStream().Position = 0;
+            var reader = new StreamReader(request.GetStream());
+            string output = reader.ReadToEnd();
+
+            // Assert
+            Assert.IsType<ODataUtf8JsonWriter>(writerFactory.CreatedWriter);
+            Assert.Equal(Encoding.UTF8.WebName, writerFactory.Encoding.WebName);
+            Assert.Equal(1, writerFactory.NumCalls);
+            Assert.Equal("{\"@odata.context\":\"http://host/service/$metadata#Edm.String\",\"value\":\"This is a test \\u0438\\u044F\"}", output);
+        }
+
+        [Theory]
+        [InlineData("utf-16")]
+        [InlineData("utf-16BE")]
+        [InlineData("utf-32")]
+        public void WhenInjectingStreamBasedJsonWriterFactory_UsesDefaultJsonWriter_IfEncodingIsNotSupported(string encodingCharset)
+        {
+            // Arrange
+            ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
+            MockStreamBasedJsonWriterFactoryWrapper writerFactory =
+                new MockStreamBasedJsonWriterFactoryWrapper(new DefaultStreamBasedJsonWriterFactory());
+
+            var request = new InMemoryMessage() { Stream = new MemoryStream() };
+
+            var containerBuilder = new Test.OData.DependencyInjection.TestContainerBuilder();
+            containerBuilder.AddDefaultODataServices();
+
+            containerBuilder.AddService<IStreamBasedJsonWriterFactory>(
+                ServiceLifetime.Singleton, sp => writerFactory);
+            request.Container = containerBuilder.BuildContainer();
+
+            IStreamBasedJsonWriterFactory factory = request.Container.GetService<IStreamBasedJsonWriterFactory>();
+            Assert.IsType<MockStreamBasedJsonWriterFactoryWrapper>(factory);
+
+            settings.ODataUri.ServiceRoot = new Uri("http://host/service");
+            settings.SetContentType("application/json", encodingCharset);
+            var model = new EdmModel();
+            var writer = new ODataMessageWriter((IODataRequestMessage)request, settings, model);
+
+            // Act
+            Action writePropertyAction = () => writer.WriteProperty(new ODataProperty()
+            {
+                Name = "Name",
+                Value = "This is a test ия"
+            });
+
+            writePropertyAction.DoesNotThrow();
+            request.GetStream().Position = 0;
+            var reader = new StreamReader(request.GetStream(), Encoding.GetEncoding(encodingCharset));
+            string output = reader.ReadToEnd();
+
+            // Assert
+            Assert.Null(writerFactory.CreatedWriter);
+            Assert.Equal(encodingCharset, writerFactory.Encoding.WebName);
+            Assert.Equal(1, writerFactory.NumCalls);
+            Assert.Equal("{\"@odata.context\":\"http://host/service/$metadata#Edm.String\",\"value\":\"This is a test \\u0438\\u044f\"}", output);
         }
 #endif
 
