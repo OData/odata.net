@@ -62,7 +62,7 @@ namespace Microsoft.OData
 
             bool isJson = IsJsonMetadata(messageInfo.MediaType);
 
-#if NETSTANDARD2_0 || NETCOREAPP2_1_OR_GREATER
+#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
             if (isJson)
             {
                 return new ODataMetadataJsonInputContext(messageInfo, messageReaderSettings);
@@ -94,7 +94,7 @@ namespace Microsoft.OData
 
             bool isJson = IsJsonMetadata(messageInfo.MediaType);
 
-#if NETSTANDARD2_0 || NETCOREAPP2_1_OR_GREATER
+#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
             if (isJson)
             {
                 return new ODataMetadataJsonOutputContext(messageInfo, messageWriterSettings);
@@ -159,7 +159,7 @@ namespace Microsoft.OData
 
             bool isJson = IsJsonMetadata(messageInfo.MediaType);
 
-#if NETSTANDARD2_0 || NETCOREAPP2_1_OR_GREATER
+#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
             if (isJson)
             {
                 return Task.FromResult<ODataOutputContext>(new ODataMetadataJsonOutputContext(messageInfo, messageWriterSettings));

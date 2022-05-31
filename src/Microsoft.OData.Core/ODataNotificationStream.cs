@@ -15,7 +15,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Wrapper to listen for dispose on a <see cref="Stream"/>.
     /// </summary>
-#if NETSTANDARD2_0 || NETCOREAPP
+#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
     internal sealed class ODataNotificationStream : Stream, IAsyncDisposable
 #else
     internal sealed class ODataNotificationStream : Stream

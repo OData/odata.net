@@ -10,9 +10,9 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-    <DefineConstants>$(DefineConstants);NETCOREAPP3_1_OR_GREATER</DefineConstants>
-  </ItemGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+    <DefineConstants>$(DefineConstants);NETCOREAPP3_1_OR_GREATER;NETCOREAPP;NETCOREAPP3_1</DefineConstants>
+  </PropertyGroup>
  
   <Import Project="..\Build.props" />
   
