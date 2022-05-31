@@ -32,7 +32,6 @@ namespace Microsoft.OData.Json
         private readonly Encoding encoding = Encoding.UTF8;
         private bool disposed;
 
-
         public ODataUtf8JsonWriter(Stream outputStream, bool isIeee754Compatible, int bufferSize = DefaultBufferSize, bool leaveStreamOpen = false)
         {
             this.outputStream = outputStream;
@@ -228,7 +227,6 @@ namespace Microsoft.OData.Json
             this.FlushIfBufferThresholdReached();
         }
 
-        
         public void WriteRawValue(string rawValue)
         {
             // TODO: Utf8JsonWriter.WriteRawValue supported from .NET 6

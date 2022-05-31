@@ -212,6 +212,7 @@ namespace Microsoft.OData.Tests
                 Name = "Name",
                 Value = "This is a test ия"
             });
+
             write.DoesNotThrow();
             request.GetStream().Position = 0;
             var reader = new StreamReader(request.GetStream());
