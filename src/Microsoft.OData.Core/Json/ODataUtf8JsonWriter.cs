@@ -6,11 +6,11 @@
 
 #if NETCOREAPP3_1_OR_GREATER
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Globalization;
-using System.Text.Encodings.Web;
 using Microsoft.OData.Edm;
 
 namespace Microsoft.OData.Json
@@ -19,11 +19,10 @@ namespace Microsoft.OData.Json
     /// Implement of <see cref="IJsonWriter"/> that is based on
     /// <see cref="Utf8JsonWriter"/>.
     /// </summary>
-    internal class ODataUtf8JsonWriter : IJsonWriter, IDisposable
+    internal sealed class ODataUtf8JsonWriter : IJsonWriter, IDisposable
     {
         private const int DefaultBufferSize = 16 * 1024;
-        private const float BufferFlushThreshold = 0.9f;
-        private readonly static byte[] Parentheses = new byte[] { (byte)'(', (byte)')' };
+        private readonly float bufferFlushThreshold;
 
         private readonly Stream outputStream;
         private readonly Utf8JsonWriter writer;
@@ -35,9 +34,12 @@ namespace Microsoft.OData.Json
 
         public ODataUtf8JsonWriter(Stream outputStream, bool isIeee754Compatible, int bufferSize = DefaultBufferSize, bool leaveStreamOpen = false)
         {
+            Debug.Assert(outputStream != null, "outputStream != null");
             this.outputStream = outputStream;
             this.isIeee754Compatible = isIeee754Compatible;
             this.bufferSize = bufferSize;
+            // flush when we're close to the buffer capacity to avoid allocating bigger buffers
+            this.bufferFlushThreshold = 0.9f * this.bufferSize;
             this.writer = new Utf8JsonWriter(
                 outputStream,
                 // we don't need to perform validation here since the higher-level
@@ -56,9 +58,7 @@ namespace Microsoft.OData.Json
 
         public void FlushIfBufferThresholdReached()
         {
-            // flush when we're close to the buffer capacity to avoid
-            // allocating bigger buffers
-            if (this.writer.BytesPending >= BufferFlushThreshold * this.bufferSize)
+            if (this.writer.BytesPending >= this.bufferFlushThreshold)
             {
                 this.Flush();
             }
@@ -67,19 +67,19 @@ namespace Microsoft.OData.Json
         public void StartPaddingFunctionScope()
         {
             this.Flush();
-            this.outputStream.Write(Parentheses, 0, 1);
+            this.outputStream.WriteByte((byte)'(');
         }
 
         public void WritePaddingFunctionName(string functionName)
         {
             this.Flush();
-            this.outputStream.Write(encoding.GetBytes(functionName));
+            this.outputStream.Write(this.encoding.GetBytes(functionName));
         }
 
         public void EndPaddingFunctionScope()
         {
             this.Flush();
-            this.outputStream.Write(Parentheses, 1, 1);
+            this.outputStream.WriteByte((byte)')');
         }
 
         public void StartObjectScope()
@@ -224,21 +224,31 @@ namespace Microsoft.OData.Json
 
         public void WriteValue(byte[] value)
         {
-            this.writer.WriteBase64StringValue(value);
+            if (value == null)
+            {
+                this.writer.WriteNullValue();
+            }
+            else
+            {
+                this.writer.WriteBase64StringValue(value);
+            }
+            
             this.FlushIfBufferThresholdReached();
         }
 
         public void WriteRawValue(string rawValue)
         {
-            // TODO: Utf8JsonWriter.WriteRawValue supported from .NET 6
-            // fallback to write to buffer directly as UTF8-encoded bytes
+            if (rawValue == null)
+            {
+                return;
+            }
 
             this.Flush(); // ensure we don't write to the stream while there are still pending data in the buffer
-            this.outputStream.Write(encoding.GetBytes(rawValue));
+            this.outputStream.Write(this.encoding.GetBytes(rawValue));
             this.FlushIfBufferThresholdReached();
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (this.disposed)
             {
@@ -247,18 +257,20 @@ namespace Microsoft.OData.Json
 
             if (disposing)
             {
+                this.writer.Dispose();
+
                 if (!this.leaveStreamOpen)
                 {
                     this.outputStream.Dispose();
                 }
             }
 
-            disposed = true;
+            this.disposed = true;
         }
 
         public void Dispose()
         {
-            Dispose(disposing: true);
+            this.Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
     }

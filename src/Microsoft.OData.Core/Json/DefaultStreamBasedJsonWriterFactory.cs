@@ -19,6 +19,16 @@ namespace Microsoft.OData.Json
     [CLSCompliant(false)]
     public sealed class DefaultStreamBasedJsonWriterFactory : IStreamBasedJsonWriterFactory
     {
+
+        private DefaultStreamBasedJsonWriterFactory()
+        {
+        }
+
+        /// <summary>
+        /// The default instance of the <see cref="DefaultStreamBasedJsonWriterFactory"/>.
+        /// </summary>
+        public static DefaultStreamBasedJsonWriterFactory Instance { get; } = new DefaultStreamBasedJsonWriterFactory();
+
         public IJsonWriter CreateJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding)
         {
             if (stream == null)
@@ -30,8 +40,7 @@ namespace Microsoft.OData.Json
             {
                 throw new ArgumentNullException(nameof(encoding));
             }
-            // TODO: only supports Utf8-encoding for now. Support for other encodings
-            // to be added later.
+
             if (encoding.WebName != Encoding.UTF8.WebName)
             {
                 return null;

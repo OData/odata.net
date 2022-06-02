@@ -126,6 +126,13 @@ namespace Microsoft.OData.Tests.Json
             this.VerifyWritePrimitiveValue("string", "\"string\"");
         }
 
+        [Fact]
+        public void WritePrimitiveValueStringWritesNullIfArgumentIsNull()
+        {
+            this.writer.WriteValue((string)null);
+            Assert.Equal("null", this.ReadStream());
+        }
+
         [Theory]
         // Utf8JsonWriter uses uppercase character in unicode literals, i.e. uD800 instead of ud800
         [InlineData("Foo \uD800\udc05 \u00e4", "\"Foo \\uD800\\uDC05 \\u00E4\"")]
@@ -139,9 +146,16 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
-        public void WritePrimitiveValueByteArray()
+        public void WritePrimitiveValueEmptyByteArray()
         {
             this.VerifyWritePrimitiveValue(new byte[] { 0 }, "\"" + Convert.ToBase64String(new byte[] { 0 }) + "\"");
+        }
+
+        [Fact]
+        public void WritePrimitiveValueByteArrayWritesNullIfArgumentIsNull()
+        {
+            this.writer.WriteValue((byte[])null);
+            Assert.Equal("null", this.ReadStream());
         }
 
         [Fact]
@@ -194,6 +208,13 @@ namespace Microsoft.OData.Tests.Json
         {
             this.writer.WriteRawValue("Raw\tValue");
             Assert.Equal("Raw\tValue", this.ReadStream());
+        }
+
+        [Fact]
+        public void WriteRawValueWritesNothingWhenNull()
+        {
+            this.writer.WriteRawValue(null);
+            Assert.Equal("", this.ReadStream());
         }
 
         [Fact]

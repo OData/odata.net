@@ -1,9 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿//---------------------------------------------------------------------
+// <copyright file="IStreamBasedJsonWriterFactory.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using System;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Microsoft.OData.Json
 {
@@ -18,7 +21,7 @@ namespace Microsoft.OData.Json
         /// Creates a new JSON writer of <see cref="IJsonWriter"/>. Returns null
         /// if it cannot create a writer with the specified constraints.
         /// </summary>
-        /// <param name="stream">Output stream to which data should be written.</param>
+        /// <param name="stream">Output stream to which the resulting <see cref="IJsonWriter"/> should write data.</param>
         /// <param name="isIeee754Compatible">True if it is IEEE754Compatible.</param>
         /// <param name="encoding">The text encoding of the output data.</param>
         /// <returns>The JSON writer created.</returns>

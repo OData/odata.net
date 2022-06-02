@@ -125,6 +125,14 @@ namespace Microsoft.OData.Tests.Json
             this.VerifyWritePrimitiveValue("string", "\"string\"");
         }
 
+        [Fact]
+        public void WritePrimitiveValueStringWritesNullIfArgumentIsNull()
+        {
+            this.writer.WriteValue((string)null);
+            Assert.Equal("null", this.builder.ToString());
+
+        }
+
         [Theory]
         [InlineData("Foo \uD800\udc05 \u00e4", "\"Foo \\ud800\\udc05 \\u00e4\"")]
         [InlineData("Foo \nBar\t\"Baz\"", "\"Foo \\nBar\\t\\\"Baz\\\"\"")]
@@ -139,6 +147,13 @@ namespace Microsoft.OData.Tests.Json
         public void WritePrimitiveValueByteArray()
         {
             this.VerifyWritePrimitiveValue(new byte[] { 0 }, "\"" + Convert.ToBase64String(new byte[] { 0 }) + "\"");
+        }
+
+        [Fact]
+        public void WritePrimitiveValueByteArrayWritesNullIfArgumentIsNull()
+        {
+            this.writer.WriteValue((byte[])null);
+            Assert.Equal("null", this.builder.ToString());
         }
 
         [Fact]
@@ -176,6 +191,13 @@ namespace Microsoft.OData.Tests.Json
         {
             this.writer.WriteRawValue("Raw\tValue");
             Assert.Equal("Raw\tValue", this.builder.ToString());
+        }
+
+        [Fact]
+        public void WriteRawValueWritesNothingWhenNull()
+        {
+            this.writer.WriteRawValue(null);
+            Assert.Equal("", this.builder.ToString());
         }
 
         private void VerifyWritePrimitiveValue<T>(T parameter, string expected)

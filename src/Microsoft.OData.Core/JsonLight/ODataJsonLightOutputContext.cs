@@ -123,7 +123,7 @@ namespace Microsoft.OData.JsonLight
                 // fallback to a TextWriter-based JSON writer
                 if (this.jsonWriter == null)
                 {
-                    this.jsonWriter = CreateJsonWriter(this.Container, this.textWriter, messageInfo.MediaType.HasIeee754CompatibleSetToTrue(), messageWriterSettings);
+                    this.jsonWriter = CreateJsonWriter(this.Container, this.textWriter, isIeee754Compatible, messageWriterSettings);
                 }
 
                 this.asynchronousJsonWriter = CreateAsynchronousJsonWriter(
