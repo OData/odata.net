@@ -21,6 +21,15 @@ namespace Microsoft.OData.Json
     {
         public IJsonWriter CreateJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding)
         {
+            if (stream == null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+        
+            if (encoding == null)
+            {
+                throw new ArgumentNullException(nameof(encoding));
+            }
             // TODO: only supports Utf8-encoding for now. Support for other encodings
             // to be added later.
             if (encoding.WebName != Encoding.UTF8.WebName)
