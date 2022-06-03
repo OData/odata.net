@@ -6373,6 +6373,86 @@ public sealed class Microsoft.OData.UriParser.CustomUriLiteralPrefixes {
     public static bool RemoveCustomLiteralPrefix (string literalPrefix)
 }
 
+[
+ExtensionAttribute(),
+]
+public sealed class Microsoft.OData.UriParser.ODataPathExtensions {
+    [
+    ExtensionAttribute(),
+    ]
+    public static Microsoft.OData.UriParser.ODataPath AddKeySegment (Microsoft.OData.UriParser.ODataPath path, System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.Object]]]] keys, Microsoft.OData.Edm.IEdmEntityType edmType, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static Microsoft.OData.UriParser.ODataPath AddNavigationPropertySegment (Microsoft.OData.UriParser.ODataPath path, Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static Microsoft.OData.UriParser.ODataPath AddPropertySegment (Microsoft.OData.UriParser.ODataPath path, Microsoft.OData.Edm.IEdmStructuralProperty property)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static Microsoft.OData.UriParser.ODataPath AddSegment (Microsoft.OData.UriParser.ODataPath path, Microsoft.OData.UriParser.ODataPathSegment segment)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static Microsoft.OData.Edm.IEdmTypeReference EdmType (Microsoft.OData.UriParser.ODataPath path)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static bool IsCollection (Microsoft.OData.UriParser.ODataPath path)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static bool IsIndividualProperty (Microsoft.OData.UriParser.ODataPath path)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static bool IsUndeclared (Microsoft.OData.UriParser.ODataPath path)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static Microsoft.OData.Edm.IEdmNavigationSource NavigationSource (Microsoft.OData.UriParser.ODataPath path)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static string ToContextUrlPathString (Microsoft.OData.UriParser.ODataPath path)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static Microsoft.OData.UriParser.ODataExpandPath ToExpandPath (Microsoft.OData.UriParser.ODataSelectPath path)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static string ToResourcePathString (Microsoft.OData.UriParser.ODataPath path, Microsoft.OData.ODataUrlKeyDelimiter urlKeyDelimiter)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static Microsoft.OData.UriParser.ODataSelectPath ToSelectPath (Microsoft.OData.UriParser.ODataExpandPath path)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static Microsoft.OData.UriParser.ODataPath TrimEndingKeySegment (Microsoft.OData.UriParser.ODataPath path)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static Microsoft.OData.UriParser.ODataPath TrimEndingTypeSegment (Microsoft.OData.UriParser.ODataPath path)
+}
+
 public sealed class Microsoft.OData.UriParser.RangeVariableKind {
     public static int NonResource = 1
     public static int Resource = 0

@@ -21,7 +21,7 @@ namespace Microsoft.OData.UriParser
     /// <remarks>
     /// The values that these methods compute are not cached.
     /// </remarks>
-    internal static class ODataPathExtensions
+    public static class ODataPathExtensions
     {
         /// <summary>
         /// Computes the <see cref="IEdmTypeReference"/> of the resource identified by this <see cref="ODataPath"/>.
@@ -179,6 +179,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="path">Path to perform the computation on.</param>
         /// <returns>The string representation of the Context Url path.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1055:UriReturnValuesShouldNotBeStrings", Justification = "Extension method aims to return a string.")]
         public static string ToContextUrlPathString(this ODataPath path)
         {
             StringBuilder pathString = new StringBuilder();
