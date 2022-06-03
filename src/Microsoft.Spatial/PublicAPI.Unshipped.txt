@@ -200,10 +200,12 @@ Microsoft.Spatial.IShapeProvider
 Microsoft.Spatial.ISpatial
 Microsoft.Spatial.ISpatial.CoordinateSystem.get -> Microsoft.Spatial.CoordinateSystem
 Microsoft.Spatial.ISpatial.IsEmpty.get -> bool
+Microsoft.Spatial.OrderedQueryableExtensions
 Microsoft.Spatial.ParseErrorException
 Microsoft.Spatial.ParseErrorException.ParseErrorException() -> void
 Microsoft.Spatial.ParseErrorException.ParseErrorException(string message) -> void
 Microsoft.Spatial.ParseErrorException.ParseErrorException(string message, System.Exception innerException) -> void
+Microsoft.Spatial.QueryableExtensions
 Microsoft.Spatial.SpatialBuilder
 Microsoft.Spatial.SpatialBuilder.ConstructedGeography.get -> Microsoft.Spatial.Geography
 Microsoft.Spatial.SpatialBuilder.ConstructedGeometry.get -> Microsoft.Spatial.Geometry
@@ -349,6 +351,8 @@ static Microsoft.Spatial.GeometryPoint.Create(Microsoft.Spatial.CoordinateSystem
 static Microsoft.Spatial.GeometryPosition.operator !=(Microsoft.Spatial.GeometryPosition left, Microsoft.Spatial.GeometryPosition right) -> bool
 static Microsoft.Spatial.GeometryPosition.operator ==(Microsoft.Spatial.GeometryPosition left, Microsoft.Spatial.GeometryPosition right) -> bool
 static Microsoft.Spatial.GmlFormatter.Create() -> Microsoft.Spatial.GmlFormatter
+static Microsoft.Spatial.OrderedQueryableExtensions.AsOrderedQueryable<T>(this System.Linq.IOrderedQueryable<T> queryable) -> System.Linq.IOrderedQueryable<T>
+static Microsoft.Spatial.QueryableExtensions.AsQueryable<T>(this System.Linq.IQueryable<T> queryable) -> System.Linq.IQueryable<T>
 static Microsoft.Spatial.SpatialBuilder.Create() -> Microsoft.Spatial.SpatialBuilder
 static Microsoft.Spatial.SpatialImplementation.CurrentImplementation.get -> Microsoft.Spatial.SpatialImplementation
 static Microsoft.Spatial.SpatialPipeline.implicit operator Microsoft.Spatial.GeographyPipeline(Microsoft.Spatial.SpatialPipeline spatialPipeline) -> Microsoft.Spatial.GeographyPipeline

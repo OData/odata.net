@@ -453,6 +453,26 @@ public sealed class Microsoft.Spatial.GeometryOperationsExtensions {
 [
 ExtensionAttribute(),
 ]
+public sealed class Microsoft.Spatial.OrderedQueryableExtensions {
+    [
+    ExtensionAttribute(),
+    ]
+    public static IOrderedQueryable`1 AsOrderedQueryable (IOrderedQueryable`1 queryable)
+}
+
+[
+ExtensionAttribute(),
+]
+public sealed class Microsoft.Spatial.QueryableExtensions {
+    [
+    ExtensionAttribute(),
+    ]
+    public static IQueryable`1 AsQueryable (IQueryable`1 queryable)
+}
+
+[
+ExtensionAttribute(),
+]
 public sealed class Microsoft.Spatial.SpatialTypeExtensions {
     [
     ExtensionAttribute(),
@@ -8005,6 +8025,246 @@ public sealed class Microsoft.OData.Client.DataServiceExtensions {
     ExtensionAttribute(),
     ]
     public static int CountDistinct (IQueryable`1 source, Expression`1 selector)
+}
+
+[
+ExtensionAttribute(),
+]
+public sealed class Microsoft.OData.Client.DataServiceQueryExtensions {
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 Concat (DataServiceQuery`1 source1, IEnumerable`1 source2)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 DefaultIfEmpty (DataServiceQuery`1 source)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 DefaultIfEmpty (DataServiceQuery`1 source, TSource defaultValue)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 Distinct (DataServiceQuery`1 source)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 Distinct (DataServiceQuery`1 source, IEqualityComparer`1 comparer)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 Except (DataServiceQuery`1 source1, IEnumerable`1 source2)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 Except (DataServiceQuery`1 source1, IEnumerable`1 source2, IEqualityComparer`1 comparer)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 GroupBy (DataServiceQuery`1 source, Expression`1 keySelector)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 GroupBy (DataServiceQuery`1 source, Expression`1 keySelector, Expression`1 resultSelector)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 GroupBy (DataServiceQuery`1 source, Expression`1 keySelector, Expression`1 elementSelector)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 GroupBy (DataServiceQuery`1 source, Expression`1 keySelector, IEqualityComparer`1 comparer)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 GroupBy (DataServiceQuery`1 source, Expression`1 keySelector, Expression`1 elementSelector, Expression`1 resultSelector)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 GroupBy (DataServiceQuery`1 source, Expression`1 keySelector, Expression`1 resultSelector, IEqualityComparer`1 comparer)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 GroupBy (DataServiceQuery`1 source, Expression`1 keySelector, Expression`1 elementSelector, IEqualityComparer`1 comparer)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 GroupBy (DataServiceQuery`1 source, Expression`1 keySelector, Expression`1 elementSelector, Expression`1 resultSelector, IEqualityComparer`1 comparer)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 GroupJoin (DataServiceQuery`1 outer, IEnumerable`1 inner, Expression`1 outerKeySelector, Expression`1 innerKeySelector, Expression`1 resultSelector)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 GroupJoin (DataServiceQuery`1 outer, IEnumerable`1 inner, Expression`1 outerKeySelector, Expression`1 innerKeySelector, Expression`1 resultSelector, IEqualityComparer`1 comparer)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 Intersect (DataServiceQuery`1 source1, IEnumerable`1 source2)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 Intersect (DataServiceQuery`1 source1, IEnumerable`1 source2, IEqualityComparer`1 comparer)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 Join (DataServiceQuery`1 outer, IEnumerable`1 inner, Expression`1 outerKeySelector, Expression`1 innerKeySelector, Expression`1 resultSelector)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 Join (DataServiceQuery`1 outer, IEnumerable`1 inner, Expression`1 outerKeySelector, Expression`1 innerKeySelector, Expression`1 resultSelector, IEqualityComparer`1 comparer)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceOrderedQuery OrderBy (DataServiceQuery`1 source, Expression`1 keySelector)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceOrderedQuery OrderBy (DataServiceQuery`1 source, Expression`1 keySelector, IComparer`1 comparer)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceOrderedQuery OrderByDescending (DataServiceQuery`1 source, Expression`1 keySelector)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceOrderedQuery OrderByDescending (DataServiceQuery`1 source, Expression`1 keySelector, IComparer`1 comparer)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 Reverse (DataServiceQuery`1 source)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 Select (DataServiceQuery`1 source, Expression`1 selector)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 Select (DataServiceQuery`1 source, Expression`1 selector)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 SelectMany (DataServiceQuery`1 source, Expression`1 selector)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 SelectMany (DataServiceQuery`1 source, Expression`1 selector)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 SelectMany (DataServiceQuery`1 source, Expression`1 collectionSelector, Expression`1 resultSelector)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 SelectMany (DataServiceQuery`1 source, Expression`1 collectionSelector, Expression`1 resultSelector)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 Skip (DataServiceQuery`1 source, int count)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 SkipWhile (DataServiceQuery`1 source, Expression`1 predicate)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 SkipWhile (DataServiceQuery`1 source, Expression`1 predicate)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 Take (DataServiceQuery`1 source, int count)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 TakeWhile (DataServiceQuery`1 source, Expression`1 predicate)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 TakeWhile (DataServiceQuery`1 source, Expression`1 predicate)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceOrderedQuery ThenBy (DataServiceOrderedQuery source, Expression`1 keySelector)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceOrderedQuery ThenBy (DataServiceOrderedQuery source, Expression`1 keySelector, IComparer`1 comparer)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceOrderedQuery ThenByDescending (DataServiceOrderedQuery source, Expression`1 keySelector)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceOrderedQuery ThenByDescending (DataServiceOrderedQuery source, Expression`1 keySelector, IComparer`1 comparer)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 Union (DataServiceQuery`1 source1, IEnumerable`1 source2)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 Union (DataServiceQuery`1 source1, IEnumerable`1 source2, IEqualityComparer`1 comparer)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 Where (DataServiceQuery`1 source, Expression`1 predicate)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 Where (DataServiceQuery`1 source, Expression`1 predicate)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static DataServiceQuery`1 Zip (DataServiceQuery`1 source1, IEnumerable`1 source2, Expression`1 resultSelector)
 }
 
 [

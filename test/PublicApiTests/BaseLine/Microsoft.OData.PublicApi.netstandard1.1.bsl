@@ -453,6 +453,26 @@ public sealed class Microsoft.Spatial.GeometryOperationsExtensions {
 [
 ExtensionAttribute(),
 ]
+public sealed class Microsoft.Spatial.OrderedQueryableExtensions {
+    [
+    ExtensionAttribute(),
+    ]
+    public static IOrderedQueryable`1 AsOrderedQueryable (IOrderedQueryable`1 queryable)
+}
+
+[
+ExtensionAttribute(),
+]
+public sealed class Microsoft.Spatial.QueryableExtensions {
+    [
+    ExtensionAttribute(),
+    ]
+    public static IQueryable`1 AsQueryable (IQueryable`1 queryable)
+}
+
+[
+ExtensionAttribute(),
+]
 public sealed class Microsoft.Spatial.SpatialTypeExtensions {
     [
     ExtensionAttribute(),

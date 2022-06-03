@@ -1319,6 +1319,188 @@ Partial Public Class ClientModule
             Assert.AreEqual(7, Me.ctx.Entities.Count)
         End Sub
 
+        Private NotInheritable Class CustomerComparer
+            Implements IComparer(Of NorthwindBindingModel.Customers)
+
+            Private Sub New()
+            End Sub
+
+            Private Shared ReadOnly _instance As CustomerComparer = New CustomerComparer()
+
+            Public Shared ReadOnly Property Instance() As CustomerComparer
+                Get
+                    Return _instance
+                End Get
+            End Property
+
+            Public Function Compare(x As NorthwindBindingModel.Customers, y As NorthwindBindingModel.Customers) As Integer Implements IComparer(Of NorthwindBindingModel.Customers).Compare
+                Return 0
+            End Function
+        End Class
+
+        Private NotInheritable Class CustomerEqualityComparer
+            Implements IEqualityComparer(Of NorthwindBindingModel.Customers)
+
+            Private Sub New()
+            End Sub
+
+            Private Shared ReadOnly _instance As CustomerEqualityComparer = New CustomerEqualityComparer()
+
+            Public Shared ReadOnly Property Instance() As CustomerEqualityComparer
+                Get
+                    Return _instance
+                End Get
+            End Property
+
+            Function Equals(x As NorthwindBindingModel.Customers, y As NorthwindBindingModel.Customers) As Boolean Implements IEqualityComparer(Of NorthwindBindingModel.Customers).Equals
+                Return False
+            End Function
+
+            Function GetHashCode(obj As NorthwindBindingModel.Customers) As Integer Implements IEqualityComparer(Of NorthwindBindingModel.Customers).GetHashCode
+                Return 0
+            End Function
+        End Class
+
+        <TestCategory("Partition2")> <TestMethod()> Public Sub DataServiceQueryBatch()
+            Dim allCustomersQuery = Me.ctx.CreateQuery(Of NorthwindBindingModel.Customers)("Customers")
+
+            Dim orderByQuery = allCustomersQuery.OrderBy(Function(customer As NorthwindBindingModel.Customers) customer.PostalCode)
+            Dim orderByDescendingQuery = allCustomersQuery.OrderByDescending(Function(customer As NorthwindBindingModel.Customers) customer.PostalCode)
+            Dim selectQuery = allCustomersQuery.Select(Function(customer As NorthwindBindingModel.Customers) New String(customer.PostalCode))
+            Dim selectManyQuery = allCustomersQuery.Where(Function(customer As NorthwindBindingModel.Customers) customer.CustomerID = "ALFKI").SelectMany(Function(customer As NorthwindBindingModel.Customers) customer.Orders)
+            Dim skipQuery = allCustomersQuery.Skip(10)
+            Dim takeQuery = allCustomersQuery.Take(10)
+            Dim thenByQuery = orderByQuery.ThenBy(Function(customer As NorthwindBindingModel.Customers) customer.Phone)
+            Dim thenByDescendingQuery = orderByQuery.ThenByDescending(Function(customer As NorthwindBindingModel.Customers) customer.Phone)
+            Dim whereQuery = allCustomersQuery.Where(Function(customer As NorthwindBindingModel.Customers) customer.CustomerID.StartsWith("M"))
+
+            Dim dataServiceResponse = Me.ctx.ExecuteBatch(
+                allCustomersQuery,
+                orderByQuery,
+                orderByDescendingQuery,
+                selectQuery,
+                selectManyQuery,
+                skipQuery,
+                takeQuery,
+                thenByQuery,
+                thenByDescendingQuery,
+                whereQuery
+                ).ToArray()
+
+            Dim allCustomers = DirectCast(dataServiceResponse(0), IEnumerable(Of NorthwindBindingModel.Customers)).ToArray()
+            Assert.AreNotEqual(0, allCustomers.Length)
+
+            Dim orderByCustomers = DirectCast(dataServiceResponse(1), IEnumerable(Of NorthwindBindingModel.Customers)).ToArray()
+            CollectionAssert.AreNotEqual(allCustomers, orderByCustomers)
+            CollectionAssert.AreEquivalent(allCustomers, orderByCustomers)
+
+            Dim orderByDescendingCustomers = DirectCast(dataServiceResponse(2), IEnumerable(Of NorthwindBindingModel.Customers)).ToArray()
+            CollectionAssert.AreNotEqual(allCustomers, orderByDescendingCustomers)
+            CollectionAssert.AreNotEqual(orderByCustomers, orderByDescendingCustomers)
+            CollectionAssert.AreEquivalent(allCustomers, orderByDescendingCustomers)
+
+            Dim selectCustomers = DirectCast(dataServiceResponse(3), IEnumerable(Of String)).ToArray()
+            CollectionAssert.AreEquivalent(allCustomers.Select(Function(customer As NorthwindBindingModel.Customers) If(customer.PostalCode, String.Empty)).ToArray(), selectCustomers)
+
+            Dim selectManyCustomers = DirectCast(dataServiceResponse(4), IEnumerable(Of NorthwindBindingModel.Orders)).ToArray()
+            Assert.AreNotEqual(allCustomers.Length, selectManyCustomers.Length)
+            Assert.AreEqual(6, selectManyCustomers.Length)
+
+            Dim skipCustomers = DirectCast(dataServiceResponse(5), IEnumerable(Of NorthwindBindingModel.Customers)).ToArray()
+            CollectionAssert.AreEqual(allCustomers.Skip(10).ToArray(), skipCustomers)
+
+            Dim takeCustomers = DirectCast(dataServiceResponse(6), IEnumerable(Of NorthwindBindingModel.Customers)).ToArray()
+            CollectionAssert.AreEqual(allCustomers.Take(10).ToArray(), takeCustomers)
+
+            Dim thenByCustomers = DirectCast(dataServiceResponse(7), IEnumerable(Of NorthwindBindingModel.Customers)).ToArray()
+            CollectionAssert.AreNotEqual(allCustomers, thenByCustomers)
+            CollectionAssert.AreNotEqual(orderByCustomers, thenByCustomers)
+            CollectionAssert.AreEquivalent(allCustomers, thenByCustomers)
+
+            Dim thenByDescendingCustomers = DirectCast(dataServiceResponse(8), IEnumerable(Of NorthwindBindingModel.Customers)).ToArray()
+            CollectionAssert.AreNotEqual(allCustomers, thenByDescendingCustomers)
+            CollectionAssert.AreNotEqual(orderByCustomers, thenByDescendingCustomers)
+            CollectionAssert.AreNotEqual(thenByCustomers, thenByDescendingCustomers)
+            CollectionAssert.AreEquivalent(allCustomers, thenByCustomers)
+
+            Dim filterCustomers = DirectCast(dataServiceResponse(9), IEnumerable(Of NorthwindBindingModel.Customers)).ToArray()
+            Assert.AreNotEqual(allCustomers.Length, filterCustomers.Length)
+        End Sub
+
+        <TestCategory("Partition2")> <TestMethod()> Public Sub DataServiceQueryUnsupportedBatch()
+            Dim allCustomersQuery = Me.ctx.CreateQuery(Of NorthwindBindingModel.Customers)("Customers")
+            Dim orderByQuery = allCustomersQuery.OrderBy(Function(customer As NorthwindBindingModel.Customers) customer.PostalCode)
+
+            Dim queries =
+            {
+                Tuple.Create("concat", allCustomersQuery.Concat(New NorthwindBindingModel.Customers() {NorthwindBindingModel.Customers.CreateCustomers("xyzzy", "company")})),
+                Tuple.Create("defaultifempty", allCustomersQuery.DefaultIfEmpty()),
+                Tuple.Create("defaultifempty", allCustomersQuery.DefaultIfEmpty(New NorthwindBindingModel.Customers())),
+                Tuple.Create("distinct", allCustomersQuery.Distinct()),
+                Tuple.Create("distinct", allCustomersQuery.Distinct(CustomerEqualityComparer.Instance)),
+                Tuple.Create("except", allCustomersQuery.Except(New NorthwindBindingModel.Customers() {NorthwindBindingModel.Customers.CreateCustomers("xyzzy", "company")})),
+                Tuple.Create("except", allCustomersQuery.Except(New NorthwindBindingModel.Customers() {NorthwindBindingModel.Customers.CreateCustomers("xyzzy", "company")}, CustomerEqualityComparer.Instance)),
+                Tuple.Create("groupby", allCustomersQuery.GroupBy(Function(customer As NorthwindBindingModel.Customers) customer.PostalCode)),
+                Tuple.Create("groupby", allCustomersQuery.GroupBy(Function(customer As NorthwindBindingModel.Customers) customer.PostalCode, Function(customer As NorthwindBindingModel.Customers) customer, Function(postalCode As String, customer As NorthwindBindingModel.Customers) customer)),
+                Tuple.Create("groupby", allCustomersQuery.GroupBy(Function(customer As NorthwindBindingModel.Customers) customer.PostalCode, Function(postalCode As String, customer As NorthwindBindingModel.Customers) customer)),
+                Tuple.Create("groupby", allCustomersQuery.GroupBy(Function(customer As NorthwindBindingModel.Customers) customer.PostalCode, Function(customer As NorthwindBindingModel.Customers) customer)),
+                Tuple.Create("groupby", allCustomersQuery.GroupBy(Function(customer As NorthwindBindingModel.Customers) customer.PostalCode, Function(customer As NorthwindBindingModel.Customers) customer, Function(postalCode As String, customer As NorthwindBindingModel.Customers) customer, StringComparer.OrdinalIgnoreCase)),
+                Tuple.Create("groupby", allCustomersQuery.GroupBy(Function(customer As NorthwindBindingModel.Customers) customer.PostalCode, Function(postalCode As String, customer As NorthwindBindingModel.Customers) customer, StringComparer.OrdinalIgnoreCase)),
+                Tuple.Create("groupby", allCustomersQuery.GroupBy(Function(customer As NorthwindBindingModel.Customers) customer.PostalCode, Function(customer As NorthwindBindingModel.Customers) customer, StringComparer.OrdinalIgnoreCase)),
+                Tuple.Create("groupby", allCustomersQuery.GroupBy(Function(customer As NorthwindBindingModel.Customers) customer.PostalCode, StringComparer.OrdinalIgnoreCase)),
+                Tuple.Create("groupjoin", allCustomersQuery.GroupJoin(
+                    New NorthwindBindingModel.Customers() {NorthwindBindingModel.Customers.CreateCustomers("xyzzy", "company")},
+                    Function(customer As NorthwindBindingModel.Customers) customer.PostalCode,
+                    Function(customer As NorthwindBindingModel.Customers) customer.PostalCode,
+                    Function(outer As NorthwindBindingModel.Customers, inners As NorthwindBindingModel.Customers()) inners.Count + 1,
+                    StringComparer.OrdinalIgnoreCase)),
+                Tuple.Create("groupjoin", allCustomersQuery.GroupJoin(
+                    New NorthwindBindingModel.Customers() {NorthwindBindingModel.Customers.CreateCustomers("xyzzy", "company")},
+                    Function(customer As NorthwindBindingModel.Customers) customer.PostalCode,
+                    Function(customer As NorthwindBindingModel.Customers) customer.PostalCode,
+                    Function(outer As NorthwindBindingModel.Customers, inners As NorthwindBindingModel.Customers()) inners.Count + 1)),
+                    Tuple.Create("intersect", allCustomersQuery.Intersect(New NorthwindBindingModel.Customers() {NorthwindBindingModel.Customers.CreateCustomers("xyzzy", "company")}, CustomerEqualityComparer.Instance)),
+                Tuple.Create("intersect", allCustomersQuery.Intersect(New NorthwindBindingModel.Customers() {NorthwindBindingModel.Customers.CreateCustomers("xyzzy", "company")})),
+                Tuple.Create("join", allCustomersQuery.Join(
+                    New NorthwindBindingModel.Customers() {NorthwindBindingModel.Customers.CreateCustomers("xyzzy", "company")},
+                    Function(customer As NorthwindBindingModel.Customers) customer.PostalCode,
+                    Function(customer As NorthwindBindingModel.Customers) customer.PostalCode,
+                    Function(outer As NorthwindBindingModel.Customers, inner As NorthwindBindingModel.Customers) outer.Phone = inner.Phone,
+                    StringComparer.OrdinalIgnoreCase)),
+                Tuple.Create("join", allCustomersQuery.Join(
+                    New NorthwindBindingModel.Customers() {NorthwindBindingModel.Customers.CreateCustomers("xyzzy", "company")},
+                    Function(customer As NorthwindBindingModel.Customers) customer.PostalCode,
+                    Function(customer As NorthwindBindingModel.Customers) customer.PostalCode,
+                    Function(outer As NorthwindBindingModel.Customers, inner As NorthwindBindingModel.Customers) outer.Phone = inner.Phone)),
+                Tuple.Create("orderby", allCustomersQuery.OrderBy(Function(customer As NorthwindBindingModel.Customers) customer, CustomerComparer.Instance)),
+                Tuple.Create("orderbydescending", allCustomersQuery.OrderByDescending(Function(customer As NorthwindBindingModel.Customers) customer, CustomerComparer.Instance)),
+                Tuple.Create("reverse", allCustomersQuery.Reverse()),
+                Tuple.Create("select", allCustomersQuery.Select(Function(customer As NorthwindBindingModel.Customers, i As Integer) i)),
+                Tuple.Create("selectmany", allCustomersQuery.SelectMany(Function(customer As NorthwindBindingModel.Customers) New DataServiceCollection(Of NorthwindBindingModel.Orders)(customer.Orders))),
+                Tuple.Create("selectmany", allCustomersQuery.SelectMany(Function(customer As NorthwindBindingModel.Customers, i As Integer) New DataServiceCollection(Of NorthwindBindingModel.Orders)(customer.Orders))),
+                Tuple.Create("selectmany", allCustomersQuery.SelectMany(Function(customer As NorthwindBindingModel.Customers, i As Integer) New DataServiceCollection(Of NorthwindBindingModel.Orders)(customer.Orders), Function(customer As NorthwindBindingModel.Customers, order As NorthwindBindingModel.Orders) order.OrderID)),
+                Tuple.Create("skipwhile", allCustomersQuery.SkipWhile(Function(customer As NorthwindBindingModel.Customers) customer.PostalCode <> Nothing)),
+                Tuple.Create("skipwhile", allCustomersQuery.SkipWhile(Function(customer As NorthwindBindingModel.Customers, i As Integer) customer.Orders.Count > i)),
+                Tuple.Create("takewhile", allCustomersQuery.TakeWhile(Function(customer As NorthwindBindingModel.Customers) customer.PostalCode <> Nothing)),
+                Tuple.Create("takewhile", allCustomersQuery.TakeWhile(Function(customer As NorthwindBindingModel.Customers, i As Integer) customer.Orders.Count > i)),
+                Tuple.Create("thenby", orderByQuery.ThenBy(Function(customer As NorthwindBindingModel.Customers) customer, CustomerComparer.Instance)),
+                Tuple.Create("thenbydescending", orderByQuery.ThenByDescending(Function(customer As NorthwindBindingModel.Customers) customer, CustomerComparer.Instance)),
+                Tuple.Create("union", allCustomersQuery.Union(New NorthwindBindingModel.Customers() {NorthwindBindingModel.Customers.CreateCustomers("xyzzy", "company")})),
+                Tuple.Create("union", allCustomersQuery.Union(New NorthwindBindingModel.Customers() {NorthwindBindingModel.Customers.CreateCustomers("xyzzy", "company")}, CustomerEqualityComparer.Instance)),
+                Tuple.Create("where", allCustomersQuery.Where(Function(customer As NorthwindBindingModel.Customers, i As Integer) customer.CustomerID.StartsWith(i.ToString()))),
+                Tuple.Create("zip", allCustomersQuery.Zip(New NorthwindBindingModel.Customers() {NorthwindBindingModel.Customers.CreateCustomers("xyzzy", "company")}, Function(customer1 As NorthwindBindingModel.Customers, customer2 As NorthwindBindingModel.Customers) customer1.PostalCode = customer2.PostalCode))
+            }
+
+            For Each query In queries
+                Try
+                    Me.ctx.ExecuteBatch(query.Item2)
+                    Assert.Fail(String.Format("Expected exception for query '{0}'", query.Item1))
+                Catch ex As NotSupportedException
+                    Assert.IsTrue(ex.Message.IndexOf(query.Item1, StringComparison.OrdinalIgnoreCase) <> -1)
+                End Try
+            Next
+        End Sub
+
         <TestCategory("Partition2")> <TestMethod(), Variation("Unable to cast results to MaterializeAtom in DataServiceCollection extension methods.")> Public Sub CastResultsToMaterializeAtom()
             Try
                 Me.ctx.IgnoreResourceNotFoundException = True
