@@ -13,13 +13,13 @@ using Xunit;
 
 namespace Microsoft.OData.Tests.Json
 {
-    public class DefaultJsonWriterFromStreamFactoryTests
+    public sealed class DefaultJsonWriterFromStreamFactoryTests
     {
         [Fact]
         public void CreatesJsonWriterWithUtf8Support()
         {
             DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Instance;
-            MemoryStream stream = new MemoryStream();
+            using MemoryStream stream = new MemoryStream();
             IJsonWriter jsonWriter = factory.CreateJsonWriter(stream, isIeee754Compatible: false, encoding: Encoding.UTF8);
 
             jsonWriter.StartObjectScope();
@@ -30,7 +30,7 @@ namespace Microsoft.OData.Tests.Json
             jsonWriter.EndObjectScope();
 
             jsonWriter.Flush();
-            StreamReader reader = new StreamReader(stream);
+            using StreamReader reader = new StreamReader(stream);
             stream.Seek(0, SeekOrigin.Begin);
             string contents = reader.ReadToEnd();
             Assert.Equal(@"{""Foo"":""Bar"",""Fizz"":15.0}", contents);
@@ -40,7 +40,7 @@ namespace Microsoft.OData.Tests.Json
         public void CreatesJsonWriterWithIeee754Compatibility()
         {
             DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Instance;
-            MemoryStream stream = new MemoryStream();
+            using MemoryStream stream = new MemoryStream();
 
             IJsonWriter jsonWriter = factory.CreateJsonWriter(stream, isIeee754Compatible: true, encoding: Encoding.UTF8);
 
@@ -52,7 +52,7 @@ namespace Microsoft.OData.Tests.Json
             jsonWriter.EndObjectScope();
 
             jsonWriter.Flush();
-            StreamReader reader = new StreamReader(stream);
+            using StreamReader reader = new StreamReader(stream);
             stream.Seek(0, SeekOrigin.Begin);
             string contents = reader.ReadToEnd();
             Assert.Equal(@"{""Foo"":""Bar"",""Fizz"":""15.0""}", contents);
@@ -73,7 +73,7 @@ namespace Microsoft.OData.Tests.Json
         public void ReturnsNullForUnsupportedEncodings(Encoding encoding)
         {
             DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Instance;
-            MemoryStream stream = new MemoryStream();
+            using MemoryStream stream = new MemoryStream();
 
             IJsonWriter jsonWriter = factory.CreateJsonWriter(stream, false, encoding);
 

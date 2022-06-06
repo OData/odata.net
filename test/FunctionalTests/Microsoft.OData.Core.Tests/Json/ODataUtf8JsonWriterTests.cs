@@ -10,9 +10,7 @@ using Microsoft.OData.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.OData.Tests.Json
@@ -20,14 +18,40 @@ namespace Microsoft.OData.Tests.Json
     /// <summary>
     /// Unit tests for the ODataUtf8JsonWriter class
     /// </summary>
-    public class ODataUtf8JsonWriterTests
+    public sealed class ODataUtf8JsonWriterTests: IDisposable
     {
         private IJsonWriter writer;
-        private MemoryStream stream = new MemoryStream();
+        private MemoryStream stream;
+        private bool disposed;
 
         public ODataUtf8JsonWriterTests()
         {
-            this.writer = new ODataUtf8JsonWriter(stream, isIeee754Compatible: true, leaveStreamOpen: true);
+            this.stream = new MemoryStream();
+
+            try
+            {
+                this.writer = new ODataUtf8JsonWriter(stream, isIeee754Compatible: true, leaveStreamOpen: true);
+            }
+            catch
+            {
+                this.stream.Dispose();
+                throw;
+            }
+
+            this.disposed = false;
+        }
+
+        public void Dispose()
+        {
+            if (this.disposed)
+            {
+                return;
+            }
+
+            this.stream.Dispose();
+            (this.writer as ODataUtf8JsonWriter).Dispose();
+
+            this.disposed = true;
         }
 
         [Fact]
@@ -351,7 +375,8 @@ namespace Microsoft.OData.Tests.Json
         {
             this.writer.Flush();
             this.stream.Seek(0, SeekOrigin.Begin);
-            StreamReader reader = new StreamReader(this.stream, Encoding.UTF8);
+            // leave open since the this.stream is disposed separately
+            using StreamReader reader = new StreamReader(this.stream, Encoding.UTF8, leaveOpen: true);
             return reader.ReadToEnd();
         }
     }
