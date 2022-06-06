@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="microsoft.graph" Alias="graph" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="recommendation">
+        <Key>
+          <PropertyRef Name="id" />
+        </Key>
+        <Property Name="id" Type="Edm.String" Nullable="false" />
+        <Property Name="displayName" Type="Edm.String" Nullable="false" />
+        <NavigationProperty Name="recommendationResources" Type="Collection(graph.recommendationResource)" />
+      </EntityType>
+      <EntityType Name="recommendationResource">
+        <Key>
+          <PropertyRef Name="id" />
+        </Key>
+        <Property Name="id" Type="Edm.String" Nullable="false" />
+        <Property Name="type" Type="Edm.String" Nullable="false" />
+      </EntityType>
+      <Action Name="foo" IsBound="true">
+        <Parameter Name="bindingParameter" Type="Collection(graph.recommendationResource)" />
+      </Action>
+      <EntityContainer Name="GraphService">
+        <EntitySet Name="recommendations" EntityType="microsoft.graph.recommendation" />
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
