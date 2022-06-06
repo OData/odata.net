@@ -27,7 +27,7 @@ namespace Microsoft.OData.Tests.Json
 
         public ODataUtf8JsonWriterTests()
         {
-            this.writer = new ODataUtf8JsonWriter(stream, isIeee754Compatible: true, leaveStreamOpen: true);
+            this.writer = new ODataUtf8JsonWriter(stream, isIeee754Compatible: true, encoding: Encoding.UTF8, leaveStreamOpen: true);
         }
 
         [Fact]
@@ -196,7 +196,7 @@ namespace Microsoft.OData.Tests.Json
 
         private void VerifyWriterPrimitiveValueWithIeee754Compatible<T>(T parameter, string expected, bool isIeee754Compatible)
         {
-            this.writer = new ODataUtf8JsonWriter(this.stream, isIeee754Compatible);
+            this.writer = new ODataUtf8JsonWriter(this.stream, isIeee754Compatible, Encoding.UTF8);
             this.writer.WritePrimitiveValue(parameter);
             Assert.Equal(expected, this.ReadStream());
         }
@@ -346,12 +346,63 @@ namespace Microsoft.OData.Tests.Json
 
         #endregion JsonWriter Extension Methods
 
+        #region support for other encodings
+
+        public static IEnumerable<object[]> Encodings
+           => new object[][]
+           {
+                new object[] { Encoding.UTF8 },
+                new object[] { Encoding.Unicode },
+                new object[] { Encoding.UTF32 },
+                new object[] { Encoding.BigEndianUnicode },
+                new object[] { Encoding.ASCII }
+           };
+
+        [Theory]
+        [MemberData(nameof(Encodings))]
+        public void SupportsOtherEncodings(Encoding encoding)
+        {
+            var collectionValue = new ODataCollectionValue
+            {
+                Items = new List<ODataResourceValue>
+                {
+                    new ODataResourceValue
+                    {
+                        Properties = new List<ODataProperty>
+                        {
+                            new ODataProperty { Name = "Name", Value = "Sue\uD800\udc05 \u00e4" },
+                            new ODataProperty { Name = "Age", Value = 19 }
+                        }
+                    },
+                    new ODataResourceValue
+                    {
+                        Properties = new List<ODataProperty>
+                        {
+                            new ODataProperty { Name = "Name", Value = "Joe" },
+                            new ODataProperty { Name = "Age", Value = 23 }
+                        }
+                    }
+                }
+            };
+
+            this.writer = new ODataUtf8JsonWriter(this.stream, false, encoding);
+            this.writer.WriteODataValue(collectionValue);
+            Assert.Equal("[{\"Name\":\"Sue\\uD800\\uDC05 \\u00E4\",\"Age\":19},{\"Name\":\"Joe\",\"Age\":23}]", this.ReadStream(encoding));
+        }
+
+        #endregion
+
 
         private string ReadStream()
         {
+            return this.ReadStream(Encoding.UTF8);
+        }
+
+        private string ReadStream(Encoding encoding)
+        {
             this.writer.Flush();
             this.stream.Seek(0, SeekOrigin.Begin);
-            StreamReader reader = new StreamReader(this.stream, Encoding.UTF8);
+            StreamReader reader = new StreamReader(this.stream, encoding);
             return reader.ReadToEnd();
         }
     }

@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="DefaultJsonWriterFromStreamFactoryTests.cs" company="Microsoft">
+// <copyright file="DefaultStreamBasedJsonWriterFactoryTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -13,14 +13,25 @@ using Xunit;
 
 namespace Microsoft.OData.Tests.Json
 {
-    public class DefaultJsonWriterFromStreamFactoryTests
+    public class DefaultStreamBasedJsonWriterFactoryTests
     {
-        [Fact]
-        public void CreatesJsonWriterWithUtf8Support()
+        public static IEnumerable<object[]> Encodings
+           => new object[][]
+           {
+                new object[] { Encoding.UTF8 },
+                new object[] { Encoding.Unicode },
+                new object[] { Encoding.UTF32 },
+                new object[] { Encoding.BigEndianUnicode },
+                new object[] { Encoding.ASCII }
+           };
+
+        [Theory]
+        [MemberData(nameof(Encodings))]
+        public void CreatesJsonWriterWithSpecifiedEncoding(Encoding encoding)
         {
             DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Instance;
             MemoryStream stream = new MemoryStream();
-            IJsonWriter jsonWriter = factory.CreateJsonWriter(stream, isIeee754Compatible: false, encoding: Encoding.UTF8);
+            IJsonWriter jsonWriter = factory.CreateJsonWriter(stream, isIeee754Compatible: false, encoding: encoding);
 
             jsonWriter.StartObjectScope();
             jsonWriter.WriteName("Foo");
@@ -30,19 +41,20 @@ namespace Microsoft.OData.Tests.Json
             jsonWriter.EndObjectScope();
 
             jsonWriter.Flush();
-            StreamReader reader = new StreamReader(stream);
+            StreamReader reader = new StreamReader(stream, encoding);
             stream.Seek(0, SeekOrigin.Begin);
             string contents = reader.ReadToEnd();
             Assert.Equal(@"{""Foo"":""Bar"",""Fizz"":15.0}", contents);
         }
 
-        [Fact]
-        public void CreatesJsonWriterWithIeee754Compatibility()
+        [Theory]
+        [MemberData(nameof(Encodings))]
+        public void CreatesJsonWriterWithIeee754Compatibility(Encoding encoding)
         {
             DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Instance;
             MemoryStream stream = new MemoryStream();
 
-            IJsonWriter jsonWriter = factory.CreateJsonWriter(stream, isIeee754Compatible: true, encoding: Encoding.UTF8);
+            IJsonWriter jsonWriter = factory.CreateJsonWriter(stream, isIeee754Compatible: true, encoding: encoding);
 
             jsonWriter.StartObjectScope();
             jsonWriter.WriteName("Foo");
@@ -52,32 +64,10 @@ namespace Microsoft.OData.Tests.Json
             jsonWriter.EndObjectScope();
 
             jsonWriter.Flush();
-            StreamReader reader = new StreamReader(stream);
+            StreamReader reader = new StreamReader(stream, encoding);
             stream.Seek(0, SeekOrigin.Begin);
             string contents = reader.ReadToEnd();
             Assert.Equal(@"{""Foo"":""Bar"",""Fizz"":""15.0""}", contents);
-        }
-
-        public static IEnumerable<object[]> UnsupportedEncodings
-            => new object[][]
-            {
-                new object[] { Encoding.Unicode },
-                new object[] { Encoding.UTF32 },
-                new object[] { Encoding.UTF7 },
-                new object[] { Encoding.BigEndianUnicode },
-                new object[] { Encoding.ASCII }
-            };
-
-        [Theory]
-        [MemberData(nameof(UnsupportedEncodings))]
-        public void ReturnsNullForUnsupportedEncodings(Encoding encoding)
-        {
-            DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Instance;
-            MemoryStream stream = new MemoryStream();
-
-            IJsonWriter jsonWriter = factory.CreateJsonWriter(stream, false, encoding);
-
-            Assert.Null(jsonWriter);
         }
     }
 }

@@ -25,14 +25,24 @@ namespace Microsoft.OData.Json
         private readonly float bufferFlushThreshold;
 
         private readonly Stream outputStream;
+        private readonly Stream writeStream;
         private readonly Utf8JsonWriter writer;
         private readonly int bufferSize;
         private readonly bool isIeee754Compatible;
         private readonly bool leaveStreamOpen;
-        private readonly Encoding encoding = Encoding.UTF8;
+        private readonly Encoding utf8Encoding = Encoding.UTF8;
+        private readonly Encoding outputEncoding;
         private bool disposed;
 
-        public ODataUtf8JsonWriter(Stream outputStream, bool isIeee754Compatible, int bufferSize = DefaultBufferSize, bool leaveStreamOpen = false)
+        /// <summary>
+        /// Creates an instance of <see cref="ODataUtf8JsonWriter"/>.
+        /// </summary>
+        /// <param name="outputStream">The stream to write to.</param>
+        /// <param name="isIeee754Compatible">When true, longs and decimals will be written out as strings.</param>
+        /// <param name="encoding">The text encoding to write to.</param>
+        /// <param name="bufferSize">The internal buffer size.</param>
+        /// <param name="leaveStreamOpen">Whether to leave the <paramref name="outputStream"/> open when this writer gets disposed.</param>
+        public ODataUtf8JsonWriter(Stream outputStream, bool isIeee754Compatible, Encoding encoding, int bufferSize = DefaultBufferSize, bool leaveStreamOpen = false)
         {
             Debug.Assert(outputStream != null, "outputStream != null");
             this.outputStream = outputStream;
@@ -40,12 +50,27 @@ namespace Microsoft.OData.Json
             this.bufferSize = bufferSize;
             // flush when we're close to the buffer capacity to avoid allocating bigger buffers
             this.bufferFlushThreshold = 0.9f * this.bufferSize;
+            this.leaveStreamOpen = leaveStreamOpen;
+            this.outputEncoding = encoding;
+
+            if (this.outputEncoding.CodePage == Encoding.UTF8.CodePage)
+            {
+                this.writeStream = this.outputStream;
+            }
+            else
+            {
+                this.writeStream = new TranscodingWriteStream(
+                    this.outputStream,
+                    outputEncoding,
+                    Encoding.UTF8,
+                    leaveOpen: true); // leave open because we manually dispose the output stream if necessary
+            }
+
             this.writer = new Utf8JsonWriter(
-                outputStream,
+                this.writeStream,
                 // we don't need to perform validation here since the higher-level
                 // writers already perform validation
                 new JsonWriterOptions { SkipValidation = true });
-            this.leaveStreamOpen = leaveStreamOpen;
         }
 
         public void Flush()
@@ -67,19 +92,19 @@ namespace Microsoft.OData.Json
         public void StartPaddingFunctionScope()
         {
             this.Flush();
-            this.outputStream.WriteByte((byte)'(');
+            this.writeStream.WriteByte((byte)'(');
         }
 
         public void WritePaddingFunctionName(string functionName)
         {
             this.Flush();
-            this.outputStream.Write(this.encoding.GetBytes(functionName));
+            this.writeStream.Write(this.utf8Encoding.GetBytes(functionName));
         }
 
         public void EndPaddingFunctionScope()
         {
             this.Flush();
-            this.outputStream.WriteByte((byte)')');
+            this.writeStream.WriteByte((byte)')');
         }
 
         public void StartObjectScope()
@@ -243,8 +268,11 @@ namespace Microsoft.OData.Json
                 return;
             }
 
+            // Consider using Utf8JsonWriter.WriteRawValue() in .NET 6+
+            // see: https://github.com/OData/odata.net/issues/2420
+
             this.Flush(); // ensure we don't write to the stream while there are still pending data in the buffer
-            this.outputStream.Write(this.encoding.GetBytes(rawValue));
+            this.writeStream.Write(this.utf8Encoding.GetBytes(rawValue));
             this.FlushIfBufferThresholdReached();
         }
 
@@ -258,6 +286,11 @@ namespace Microsoft.OData.Json
             if (disposing)
             {
                 this.writer.Dispose();
+
+                if (this.outputStream != this.writeStream)
+                {
+                    this.writeStream.Dispose();
+                }
 
                 if (!this.leaveStreamOpen)
                 {

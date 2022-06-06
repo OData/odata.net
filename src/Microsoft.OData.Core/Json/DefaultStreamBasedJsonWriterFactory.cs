@@ -41,12 +41,7 @@ namespace Microsoft.OData.Json
                 throw new ArgumentNullException(nameof(encoding));
             }
 
-            if (encoding.WebName != Encoding.UTF8.WebName)
-            {
-                return null;
-            }
-
-            return new ODataUtf8JsonWriter(stream, isIeee754Compatible);
+            return new ODataUtf8JsonWriter(stream, isIeee754Compatible, encoding);
         }
     }
 }

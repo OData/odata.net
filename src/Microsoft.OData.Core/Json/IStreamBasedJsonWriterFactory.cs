@@ -18,8 +18,7 @@ namespace Microsoft.OData.Json
     public interface IStreamBasedJsonWriterFactory
     {
         /// <summary>
-        /// Creates a new JSON writer of <see cref="IJsonWriter"/>. Returns null
-        /// if it cannot create a writer with the specified constraints.
+        /// Creates a new JSON writer of <see cref="IJsonWriter"/>.
         /// </summary>
         /// <param name="stream">Output stream to which the resulting <see cref="IJsonWriter"/> should write data.</param>
         /// <param name="isIeee754Compatible">True if it is IEEE754Compatible.</param>
