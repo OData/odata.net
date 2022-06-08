@@ -89,6 +89,10 @@ namespace Microsoft.OData.Client
             }
         }
 
+#if NETSTANDARD2_0_OR_GREATER
+        public string Foo { get; set; }
+#endif
+
         /// <summary>
         /// Returns the collection of request headers.
         /// </summary>
