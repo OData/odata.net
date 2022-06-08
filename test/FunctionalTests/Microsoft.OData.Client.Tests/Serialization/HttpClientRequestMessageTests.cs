@@ -27,12 +27,16 @@ namespace Microsoft.OData.Client.Tests.Serialization
             var httpClientRequestMessage = new HttpClientRequestMessage(
                 new DataServiceClientRequestMessageArgs("GET", new Uri("http://localhost"), false, false, new Dictionary<string, string>()));
 
+            // set a predicate that is always true
             httpClientRequestMessage.ServerCertificateCustomValidationCallback = (_, __, ___, ____) => true;
             Assert.True(httpClientRequestMessage.ServerCertificateCustomValidationCallback(null, null, null, SslPolicyErrors.None));
 
+            // set a predicate that is always false
             httpClientRequestMessage.ServerCertificateCustomValidationCallback = (_, __, ___, ____) => false;
             Assert.False(httpClientRequestMessage.ServerCertificateCustomValidationCallback(null, null, null, SslPolicyErrors.None));
 
+    
+            // aggregate an always true predicate with an always false predicate
             httpClientRequestMessage.ServerCertificateCustomValidationCallback = (_, __, ___, ____) => true;
             Assert.True(httpClientRequestMessage.ServerCertificateCustomValidationCallback(null, null, null, SslPolicyErrors.None));
             httpClientRequestMessage.ServerCertificateCustomValidationCallback += (_, __, ___, ____) => false;
