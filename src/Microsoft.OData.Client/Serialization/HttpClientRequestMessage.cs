@@ -14,8 +14,10 @@ namespace Microsoft.OData.Client
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
+#if NETSTANDARD2_0_OR_GREATER
     using System.Net.Security;
     using System.Security.Cryptography.X509Certificates;
+#endif
     using System.Threading.Tasks;
     using Microsoft.OData;
 
