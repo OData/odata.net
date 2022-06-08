@@ -14,6 +14,8 @@ namespace Microsoft.OData.Client
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
+    using System.Net.Security;
+    using System.Security.Cryptography.X509Certificates;
     using System.Threading.Tasks;
     using Microsoft.OData;
 
@@ -88,6 +90,24 @@ namespace Microsoft.OData.Client
                 this.SetHeader(keyValue.Key, keyValue.Value);
             }
         }
+
+#if NETSTANDARD2_0_OR_GREATER
+        /// <summary>
+        /// Gets the underlying <see cref="HttpClientHandler.ServerCertificateCustomValidationCallback"/> so that callers can customize their certificate valiation
+        /// during OData requests
+        /// </summary>
+        public Func<HttpRequestMessage, X509Certificate2, X509Chain, SslPolicyErrors, bool> ServerCertificateCustomValidationCallback
+        {
+            get
+            {
+                return this._handler.ServerCertificateCustomValidationCallback;
+            }
+            set
+            {
+                this._handler.ServerCertificateCustomValidationCallback = value;
+            }
+        }
+#endif
 
         /// <summary>
         /// Returns the collection of request headers.
