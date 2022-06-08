@@ -95,7 +95,7 @@ namespace Microsoft.OData.Client
 
 #if NETSTANDARD2_0_OR_GREATER
         /// <summary>
-        /// Gets the underlying <see cref="HttpClientHandler.ServerCertificateCustomValidationCallback"/> so that callers can customize their certificate valiation
+        /// Gets or sets the underlying <see cref="HttpClientHandler.ServerCertificateCustomValidationCallback"/> so that callers can customize their certificate valiation
         /// during OData requests
         /// </summary>
         public Func<HttpRequestMessage, X509Certificate2, X509Chain, SslPolicyErrors, bool> ServerCertificateCustomValidationCallback
