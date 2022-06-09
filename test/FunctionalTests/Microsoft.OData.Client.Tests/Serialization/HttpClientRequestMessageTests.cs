@@ -34,7 +34,6 @@ namespace Microsoft.OData.Client.Tests.Serialization
             // set a predicate that is always false
             httpClientRequestMessage.ServerCertificateCustomValidationCallback = (_, __, ___, ____) => false;
             Assert.False(httpClientRequestMessage.ServerCertificateCustomValidationCallback(null, null, null, SslPolicyErrors.None));
-
     
             // aggregate an always true predicate with an always false predicate
             httpClientRequestMessage.ServerCertificateCustomValidationCallback = (_, __, ___, ____) => true;
