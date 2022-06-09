@@ -194,9 +194,10 @@ namespace Microsoft.OData.Tests
         {
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
 
-            var request = new InMemoryMessage() { Stream = new MemoryStream() };
+            using MemoryStream stream = new MemoryStream();
+            InMemoryMessage request = new InMemoryMessage() { Stream = stream };
 
-            var containerBuilder = new Test.OData.DependencyInjection.TestContainerBuilder();
+            IContainerBuilder containerBuilder = new Test.OData.DependencyInjection.TestContainerBuilder();
             containerBuilder.AddDefaultODataServices();
             containerBuilder.AddService<IStreamBasedJsonWriterFactory>(
                 ServiceLifetime.Singleton, sp => DefaultStreamBasedJsonWriterFactory.Instance);
@@ -207,8 +208,8 @@ namespace Microsoft.OData.Tests
 
             settings.ODataUri.ServiceRoot = new Uri("http://host/service");
             settings.SetContentType(ODataFormat.Json);
-            var model = new EdmModel();
-            var writer = new ODataMessageWriter((IODataRequestMessage)request, settings, model);
+            EdmModel model = new EdmModel();
+            using ODataMessageWriter writer = new ODataMessageWriter((IODataRequestMessage)request, settings, model);
             Action writePropertyAction = () => writer.WriteProperty(new ODataProperty()
             {
                 Name = "Name",
@@ -217,7 +218,7 @@ namespace Microsoft.OData.Tests
 
             writePropertyAction.DoesNotThrow();
             request.GetStream().Position = 0;
-            var reader = new StreamReader(request.GetStream());
+            using StreamReader reader = new StreamReader(request.GetStream());
             string output = reader.ReadToEnd();
             Assert.Equal("{\"@odata.context\":\"http://host/service/$metadata#Edm.String\",\"value\":\"This is a test \\u0438\\u044F\"}", output);
         }
@@ -234,9 +235,10 @@ namespace Microsoft.OData.Tests
             MockStreamBasedJsonWriterFactoryWrapper writerFactory =
                 new MockStreamBasedJsonWriterFactoryWrapper(DefaultStreamBasedJsonWriterFactory.Instance);
 
-            var request = new InMemoryMessage() { Stream = new MemoryStream() };
+            using MemoryStream stream = new MemoryStream();
+            InMemoryMessage request = new InMemoryMessage() { Stream = stream };
 
-            var containerBuilder = new Test.OData.DependencyInjection.TestContainerBuilder();
+            IContainerBuilder containerBuilder = new Test.OData.DependencyInjection.TestContainerBuilder();
             containerBuilder.AddDefaultODataServices();
 
             containerBuilder.AddService<IStreamBasedJsonWriterFactory>(
@@ -248,8 +250,8 @@ namespace Microsoft.OData.Tests
 
             settings.ODataUri.ServiceRoot = new Uri("http://host/service");
             settings.SetContentType("application/json", encodingCharset);
-            var model = new EdmModel();
-            var writer = new ODataMessageWriter((IODataRequestMessage)request, settings, model);
+            EdmModel model = new EdmModel();
+            using ODataMessageWriter writer = new ODataMessageWriter((IODataRequestMessage)request, settings, model);
 
             // Act
             Action writePropertyAction = () => writer.WriteProperty(new ODataProperty()
@@ -260,7 +262,7 @@ namespace Microsoft.OData.Tests
 
             writePropertyAction.DoesNotThrow();
             request.GetStream().Position = 0;
-            var reader = new StreamReader(request.GetStream(), Encoding.GetEncoding(encodingCharset));
+            using StreamReader reader = new StreamReader(request.GetStream(), Encoding.GetEncoding(encodingCharset));
             string output = reader.ReadToEnd();
 
             // Assert

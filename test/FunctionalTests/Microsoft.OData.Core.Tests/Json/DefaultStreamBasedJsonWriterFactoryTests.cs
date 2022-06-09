@@ -13,7 +13,7 @@ using Xunit;
 
 namespace Microsoft.OData.Tests.Json
 {
-    public class DefaultStreamBasedJsonWriterFactoryTests
+    public sealed class DefaultJsonWriterFromStreamFactoryTests
     {
         public static IEnumerable<object[]> Encodings
            => new object[][]
@@ -30,8 +30,8 @@ namespace Microsoft.OData.Tests.Json
         public void CreatesJsonWriterWithSpecifiedEncoding(Encoding encoding)
         {
             DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Instance;
-            MemoryStream stream = new MemoryStream();
-            IJsonWriter jsonWriter = factory.CreateJsonWriter(stream, isIeee754Compatible: false, encoding: encoding);
+            using MemoryStream stream = new MemoryStream();
+            IJsonWriter jsonWriter = factory.CreateJsonWriter(stream, isIeee754Compatible: false, encoding);
 
             jsonWriter.StartObjectScope();
             jsonWriter.WriteName("Foo");
@@ -41,7 +41,7 @@ namespace Microsoft.OData.Tests.Json
             jsonWriter.EndObjectScope();
 
             jsonWriter.Flush();
-            StreamReader reader = new StreamReader(stream, encoding);
+            using StreamReader reader = new StreamReader(stream, encoding);
             stream.Seek(0, SeekOrigin.Begin);
             string contents = reader.ReadToEnd();
             Assert.Equal(@"{""Foo"":""Bar"",""Fizz"":15.0}", contents);
@@ -52,7 +52,7 @@ namespace Microsoft.OData.Tests.Json
         public void CreatesJsonWriterWithIeee754Compatibility(Encoding encoding)
         {
             DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Instance;
-            MemoryStream stream = new MemoryStream();
+            using MemoryStream stream = new MemoryStream();
 
             IJsonWriter jsonWriter = factory.CreateJsonWriter(stream, isIeee754Compatible: true, encoding: encoding);
 
@@ -64,7 +64,7 @@ namespace Microsoft.OData.Tests.Json
             jsonWriter.EndObjectScope();
 
             jsonWriter.Flush();
-            StreamReader reader = new StreamReader(stream, encoding);
+            using StreamReader reader = new StreamReader(stream, encoding);
             stream.Seek(0, SeekOrigin.Begin);
             string contents = reader.ReadToEnd();
             Assert.Equal(@"{""Foo"":""Bar"",""Fizz"":""15.0""}", contents);

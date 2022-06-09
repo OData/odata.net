@@ -20,21 +20,26 @@ namespace Microsoft.OData.Tests.Json
     /// intercept calls made to create a writer in order to allow
     /// testing code paths around JSON writer construction.
     /// </summary>
-    internal class MockStreamBasedJsonWriterFactoryWrapper : IStreamBasedJsonWriterFactory
+    internal sealed class MockStreamBasedJsonWriterFactoryWrapper : IStreamBasedJsonWriterFactory
     {
         private readonly IStreamBasedJsonWriterFactory innerFactory;
 
         public MockStreamBasedJsonWriterFactoryWrapper(IStreamBasedJsonWriterFactory wrappedFactory)
         {
-            innerFactory = wrappedFactory;
+            if (wrappedFactory == null)
+            {
+                throw new ArgumentNullException(nameof(wrappedFactory));
+            }
+
+            this.innerFactory = wrappedFactory;
         }
 
         public IJsonWriter CreateJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding)
         {
-            NumCalls++;
-            Encoding = encoding;
+            this.NumCalls++;
+            this.Encoding = encoding;
             IJsonWriter writer = innerFactory.CreateJsonWriter(stream, isIeee754Compatible, encoding);
-            CreatedWriter = writer;
+            this.CreatedWriter = writer;
 
             return writer;
         }
