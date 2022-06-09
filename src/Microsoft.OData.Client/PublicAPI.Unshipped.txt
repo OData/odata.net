@@ -496,6 +496,8 @@ Microsoft.OData.Client.HasStreamAttribute.HasStreamAttribute() -> void
 Microsoft.OData.Client.HttpClientRequestMessage
 Microsoft.OData.Client.HttpClientRequestMessage.Dispose() -> void
 Microsoft.OData.Client.HttpClientRequestMessage.HttpClientRequestMessage(Microsoft.OData.Client.DataServiceClientRequestMessageArgs args) -> void
+Microsoft.OData.Client.HttpClientRequestMessage.ServerCertificateCustomValidationCallback.get -> System.Func<System.Net.Http.HttpRequestMessage, System.Security.Cryptography.X509Certificates.X509Certificate2, System.Security.Cryptography.X509Certificates.X509Chain, System.Net.Security.SslPolicyErrors, bool>
+Microsoft.OData.Client.HttpClientRequestMessage.ServerCertificateCustomValidationCallback.set -> void
 Microsoft.OData.Client.HttpRequestTransportMode
 Microsoft.OData.Client.HttpRequestTransportMode.HttpClient = 1 -> Microsoft.OData.Client.HttpRequestTransportMode
 Microsoft.OData.Client.HttpRequestTransportMode.HttpWebRequest = 0 -> Microsoft.OData.Client.HttpRequestTransportMode
