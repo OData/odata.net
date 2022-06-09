@@ -8,12 +8,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.Encodings.Web;
 using Microsoft.OData.Json;
 using Xunit;
 
 namespace Microsoft.OData.Tests.Json
 {
-    public sealed class DefaultJsonWriterFromStreamFactoryTests
+    public sealed class DefaultStreamBasedJsonWriterFactoryTests
     {
         public static IEnumerable<object[]> Encodings
            => new object[][]
@@ -29,7 +30,7 @@ namespace Microsoft.OData.Tests.Json
         [MemberData(nameof(Encodings))]
         public void CreatesJsonWriterWithSpecifiedEncoding(Encoding encoding)
         {
-            DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Instance;
+            DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Default;
             using MemoryStream stream = new MemoryStream();
             IJsonWriter jsonWriter = factory.CreateJsonWriter(stream, isIeee754Compatible: false, encoding);
 
@@ -38,20 +39,22 @@ namespace Microsoft.OData.Tests.Json
             jsonWriter.WriteValue("Bar");
             jsonWriter.WriteName("Fizz");
             jsonWriter.WriteValue(15.0m);
+            jsonWriter.WriteName("Buzz");
+            jsonWriter.WriteValue("<\"\n");
             jsonWriter.EndObjectScope();
 
             jsonWriter.Flush();
             using StreamReader reader = new StreamReader(stream, encoding);
             stream.Seek(0, SeekOrigin.Begin);
             string contents = reader.ReadToEnd();
-            Assert.Equal(@"{""Foo"":""Bar"",""Fizz"":15.0}", contents);
+            Assert.Equal(@"{""Foo"":""Bar"",""Fizz"":15.0,""Buzz"":""\u003C\u0022\n""}", contents);
         }
 
         [Theory]
         [MemberData(nameof(Encodings))]
         public void CreatesJsonWriterWithIeee754Compatibility(Encoding encoding)
         {
-            DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Instance;
+            DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Default;
             using MemoryStream stream = new MemoryStream();
 
             IJsonWriter jsonWriter = factory.CreateJsonWriter(stream, isIeee754Compatible: true, encoding: encoding);
@@ -61,13 +64,40 @@ namespace Microsoft.OData.Tests.Json
             jsonWriter.WriteValue("Bar");
             jsonWriter.WriteName("Fizz");
             jsonWriter.WriteValue(15.0m);
+            jsonWriter.WriteName("Buzz");
+            jsonWriter.WriteValue("<\"\n");
             jsonWriter.EndObjectScope();
 
             jsonWriter.Flush();
             using StreamReader reader = new StreamReader(stream, encoding);
             stream.Seek(0, SeekOrigin.Begin);
             string contents = reader.ReadToEnd();
-            Assert.Equal(@"{""Foo"":""Bar"",""Fizz"":""15.0""}", contents);
+            Assert.Equal(@"{""Foo"":""Bar"",""Fizz"":""15.0"",""Buzz"":""\u003C\u0022\n""}", contents);
+        }
+
+        [Theory]
+        [MemberData(nameof(Encodings))]
+        public void CreateJsonWriterWithCustomEncoder(Encoding encoding)
+        {
+            DefaultStreamBasedJsonWriterFactory factory = new DefaultStreamBasedJsonWriterFactory(JavaScriptEncoder.UnsafeRelaxedJsonEscaping);
+            using MemoryStream stream = new MemoryStream();
+
+            IJsonWriter jsonWriter = factory.CreateJsonWriter(stream, isIeee754Compatible: false, encoding: encoding);
+
+            jsonWriter.StartObjectScope();
+            jsonWriter.WriteName("Foo");
+            jsonWriter.WriteValue("Bar");
+            jsonWriter.WriteName("Fizz");
+            jsonWriter.WriteValue(15.0m);
+            jsonWriter.WriteName("Buzz");
+            jsonWriter.WriteValue("<\"\n");
+            jsonWriter.EndObjectScope();
+
+            jsonWriter.Flush();
+            using StreamReader reader = new StreamReader(stream, encoding);
+            stream.Seek(0, SeekOrigin.Begin);
+            string contents = reader.ReadToEnd();
+            Assert.Equal(@"{""Foo"":""Bar"",""Fizz"":15.0,""Buzz"":""<\""\n""}", contents);
         }
     }
 }

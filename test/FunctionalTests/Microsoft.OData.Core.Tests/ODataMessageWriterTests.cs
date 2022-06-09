@@ -200,7 +200,7 @@ namespace Microsoft.OData.Tests
             IContainerBuilder containerBuilder = new Test.OData.DependencyInjection.TestContainerBuilder();
             containerBuilder.AddDefaultODataServices();
             containerBuilder.AddService<IStreamBasedJsonWriterFactory>(
-                ServiceLifetime.Singleton, sp => DefaultStreamBasedJsonWriterFactory.Instance);
+                ServiceLifetime.Singleton, sp => DefaultStreamBasedJsonWriterFactory.Default);
             request.Container = containerBuilder.BuildContainer();
 
             IStreamBasedJsonWriterFactory factory = request.Container.GetService<IStreamBasedJsonWriterFactory>();
@@ -233,7 +233,7 @@ namespace Microsoft.OData.Tests
             // Arrange
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
             MockStreamBasedJsonWriterFactoryWrapper writerFactory =
-                new MockStreamBasedJsonWriterFactoryWrapper(DefaultStreamBasedJsonWriterFactory.Instance);
+                new MockStreamBasedJsonWriterFactoryWrapper(DefaultStreamBasedJsonWriterFactory.Default);
 
             using MemoryStream stream = new MemoryStream();
             InMemoryMessage request = new InMemoryMessage() { Stream = stream };

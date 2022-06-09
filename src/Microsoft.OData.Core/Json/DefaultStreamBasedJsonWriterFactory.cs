@@ -8,6 +8,7 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Text.Encodings.Web;
 
 namespace Microsoft.OData.Json
 {
@@ -19,15 +20,21 @@ namespace Microsoft.OData.Json
     [CLSCompliant(false)]
     public sealed class DefaultStreamBasedJsonWriterFactory : IStreamBasedJsonWriterFactory
     {
+        private readonly JavaScriptEncoder encoder = null;
 
-        private DefaultStreamBasedJsonWriterFactory()
+        /// <summary>
+        /// Creates a new instance of <see cref="DefaultStreamBasedJsonWriterFactory"/>.
+        /// </summary>
+        /// <param name="encoder">The <see cref="JavaScriptEncoder"/> to use for escaping characters.</param>
+        public DefaultStreamBasedJsonWriterFactory(JavaScriptEncoder encoder = null)
         {
+            this.encoder = encoder;
         }
 
         /// <summary>
         /// The default instance of the <see cref="DefaultStreamBasedJsonWriterFactory"/>.
         /// </summary>
-        public static DefaultStreamBasedJsonWriterFactory Instance { get; } = new DefaultStreamBasedJsonWriterFactory();
+        public static DefaultStreamBasedJsonWriterFactory Default { get; } = new DefaultStreamBasedJsonWriterFactory();
 
         public IJsonWriter CreateJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding)
         {
@@ -41,7 +48,7 @@ namespace Microsoft.OData.Json
                 throw new ArgumentNullException(nameof(encoding));
             }
 
-            return new ODataUtf8JsonWriter(stream, isIeee754Compatible, encoding);
+            return new ODataUtf8JsonWriter(stream, isIeee754Compatible, encoding, encoder: this.encoder);
         }
     }
 }

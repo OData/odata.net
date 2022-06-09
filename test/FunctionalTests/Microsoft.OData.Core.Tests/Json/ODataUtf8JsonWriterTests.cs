@@ -5,12 +5,13 @@
 //---------------------------------------------------------------------
 
 #if NETCOREAPP3_1_OR_GREATER
-using Microsoft.OData.Edm;
-using Microsoft.OData.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.Encodings.Web;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Json;
 using Xunit;
 
 namespace Microsoft.OData.Tests.Json
@@ -230,8 +231,8 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void WriteRawValueWritesValue()
         {
-            this.writer.WriteRawValue("Raw\tValue");
-            Assert.Equal("Raw\tValue", this.ReadStream());
+            this.writer.WriteRawValue("Raw\t\"Value ия");
+            Assert.Equal("Raw\t\"Value ия", this.ReadStream());
         }
 
         [Fact]
@@ -370,7 +371,7 @@ namespace Microsoft.OData.Tests.Json
 
         #endregion JsonWriter Extension Methods
 
-        #region support for other encodings
+        #region Support for other encodings
 
         public static IEnumerable<object[]> Encodings
            => new object[][]
@@ -414,7 +415,23 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal("[{\"Name\":\"Sue\\uD800\\uDC05 \\u00E4\",\"Age\":19},{\"Name\":\"Joe\",\"Age\":23}]", this.ReadStream(encoding));
         }
 
-        #endregion
+        #endregion Support for other Encodings
+
+        #region Custom JavaScriptEncoder
+
+        [Fact]
+        public void AllowsCustomJavaScriptEncoder()
+        {
+            string input = "test<>\"ия\n\t";
+            string expected = "\"test<>\\\"ия\\n\\t\"";
+
+            this.writer = new ODataUtf8JsonWriter(this.stream, false, Encoding.UTF8, encoder: JavaScriptEncoder.UnsafeRelaxedJsonEscaping);
+            this.writer.WritePrimitiveValue(input);
+
+            Assert.Equal(expected, this.ReadStream());
+        }
+
+        #endregion Custom JavaScriptEncoder
 
 
         private string ReadStream()

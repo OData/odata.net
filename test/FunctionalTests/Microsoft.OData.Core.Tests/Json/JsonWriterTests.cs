@@ -189,9 +189,11 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void WriteRawValueWritesValue()
         {
-            this.writer.WriteRawValue("Raw\tValue");
-            Assert.Equal("Raw\tValue", this.builder.ToString());
+            this.writer.WriteRawValue("Raw\t\"Value ия");
+            Assert.Equal("Raw\t\"Value ия", this.builder.ToString());
         }
+
+
 
         [Fact]
         public void WriteRawValueWritesNothingWhenNull()

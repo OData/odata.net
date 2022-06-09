@@ -7,11 +7,13 @@
 #if NETCOREAPP3_1_OR_GREATER
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.Json;
-using System.Globalization;
+using System.Text.Encodings.Web;
 using Microsoft.OData.Edm;
+
 
 namespace Microsoft.OData.Json
 {
@@ -42,7 +44,7 @@ namespace Microsoft.OData.Json
         /// <param name="encoding">The text encoding to write to.</param>
         /// <param name="bufferSize">The internal buffer size.</param>
         /// <param name="leaveStreamOpen">Whether to leave the <paramref name="outputStream"/> open when this writer gets disposed.</param>
-        public ODataUtf8JsonWriter(Stream outputStream, bool isIeee754Compatible, Encoding encoding, int bufferSize = DefaultBufferSize, bool leaveStreamOpen = false)
+        public ODataUtf8JsonWriter(Stream outputStream, bool isIeee754Compatible, Encoding encoding, JavaScriptEncoder encoder = null, int bufferSize = DefaultBufferSize, bool leaveStreamOpen = false)
         {
             Debug.Assert(outputStream != null, "outputStream != null");
             this.outputStream = outputStream;
@@ -68,9 +70,12 @@ namespace Microsoft.OData.Json
 
             this.writer = new Utf8JsonWriter(
                 this.writeStream,
-                // we don't need to perform validation here since the higher-level
-                // writers already perform validation
-                new JsonWriterOptions { SkipValidation = true });
+                new JsonWriterOptions {
+                    // we don't need to perform validation here since the higher-level
+                    // writers already perform validation
+                    SkipValidation = true,
+                    Encoder = encoder ?? JavaScriptEncoder.Default
+                });
         }
 
         public void Flush()
