@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 #if NETCOREAPP3_1_OR_GREATER
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -16,6 +17,28 @@ namespace Microsoft.OData.Tests.Json
 {
     public sealed class DefaultStreamBasedJsonWriterFactoryTests
     {
+
+        #region Argument validation
+
+        [Fact]
+        public void CreateJsonWriter_ThrowsIfStreamIsNull()
+        {
+            DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Default;
+
+            Assert.Throws<ArgumentNullException>(() => factory.CreateJsonWriter(null, false, Encoding.UTF8));
+        }
+
+        [Fact]
+        public void CreateJsonWriter_ThrowsIfEncodingIsNull()
+        {
+            DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Default;
+            using MemoryStream stream = new MemoryStream();
+
+            Assert.Throws<ArgumentNullException>(() => factory.CreateJsonWriter(stream, false, null));
+        }
+
+        #endregion
+
         public static IEnumerable<object[]> Encodings
            => new object[][]
            {
@@ -28,7 +51,7 @@ namespace Microsoft.OData.Tests.Json
 
         [Theory]
         [MemberData(nameof(Encodings))]
-        public void CreatesJsonWriterWithSpecifiedEncoding(Encoding encoding)
+        public void CreateJsonWriterWithSpecifiedEncoding(Encoding encoding)
         {
             DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Default;
             using MemoryStream stream = new MemoryStream();
@@ -52,7 +75,7 @@ namespace Microsoft.OData.Tests.Json
 
         [Theory]
         [MemberData(nameof(Encodings))]
-        public void CreatesJsonWriterWithIeee754Compatibility(Encoding encoding)
+        public void CreateJsonWriterWithIeee754Compatibility(Encoding encoding)
         {
             DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Default;
             using MemoryStream stream = new MemoryStream();
