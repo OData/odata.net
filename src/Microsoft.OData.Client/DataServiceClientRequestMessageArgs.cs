@@ -28,6 +28,20 @@ namespace Microsoft.OData.Client
         /// <param name="usePostTunneling">True if the request message must use POST verb for the request and pass the actual verb in X-HTTP-Method header, otherwise false.</param>
         /// <param name="headers">The set of headers for the request.</param>
         public DataServiceClientRequestMessageArgs(string method, Uri requestUri, bool useDefaultCredentials, bool usePostTunneling, IDictionary<string, string> headers)
+            : this(method, requestUri, useDefaultCredentials, usePostTunneling, headers, null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataServiceClientRequestMessageArgs"/> class.
+        /// </summary>
+        /// <param name="method">Method of the request.</param>
+        /// <param name="requestUri">The Request Uri.</param>
+        /// <param name="useDefaultCredentials">True if the default credentials need to be sent with the request. Otherwise false.</param>
+        /// <param name="usePostTunneling">True if the request message must use POST verb for the request and pass the actual verb in X-HTTP-Method header, otherwise false.</param>
+        /// <param name="headers">The set of headers for the request.</param>
+        /// <param name="httpClientFactory">Function that returns the <see cref="HttpClient"/> that should be used to send the request message.</param>
+        public DataServiceClientRequestMessageArgs(string method, Uri requestUri, bool useDefaultCredentials, bool usePostTunneling, IDictionary<string, string> headers, IHttpClientProvider httpClientFactory)
         {
             Debug.Assert(method != null, "method cannot be null");
             Debug.Assert(requestUri != null, "requestUri cannot be null");
@@ -38,6 +52,7 @@ namespace Microsoft.OData.Client
             this.RequestUri = requestUri;
             this.UsePostTunneling = usePostTunneling;
             this.UseDefaultCredentials = useDefaultCredentials;
+            this.HttpClientFactory = httpClientFactory;
 
             this.actualMethod = this.Method;
             if (this.UsePostTunneling && this.Headers.ContainsKey(XmlConstants.HttpXMethod))
@@ -81,5 +96,10 @@ namespace Microsoft.OData.Client
         /// Gets a System.Boolean value that controls whether default credentials are sent with requests.
         /// </summary>
         public bool UseDefaultCredentials { get; private set; }
+
+        /// <summary>
+        /// Returns the HttpClient that should be used to send the request message.
+        /// </summary>
+        public IHttpClientProvider HttpClientFactory { get; private set; }
     }
 }

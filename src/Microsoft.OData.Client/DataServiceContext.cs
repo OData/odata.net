@@ -22,6 +22,7 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Linq.Expressions;
     using System.Net;
+    using System.Net.Http;
     using System.Reflection;
     using System.Threading;
     using System.Threading.Tasks;
@@ -271,6 +272,31 @@ namespace Microsoft.OData.Client
         /// that will be combined with System.Windows.Browser.HtmlPage.Document.DocumentUri.
         /// </remarks>
         internal DataServiceContext(Uri serviceRoot, ODataProtocolVersion maxProtocolVersion, ClientEdmModel model)
+            : this(serviceRoot, maxProtocolVersion, model, httpClientProvider: null)
+        {
+        }
+
+        /// <summary>
+        /// Instantiates a new context with the specified <paramref name="serviceRoot"/> Uri.
+        /// The library expects the Uri to point to the root of a data service,
+        /// but does not issue a request to validate it does indeed identify the root of a service.
+        /// If the Uri does not identify the root of the service, the behavior of the client library is undefined.
+        /// </summary>
+        /// <param name="serviceRoot">
+        /// An absolute, well formed http or https URI without a query or fragment which identifies the root of a data service.
+        /// A Uri provided with a trailing slash is equivalent to one without such a trailing character
+        /// </param>
+        /// <param name="maxProtocolVersion">max protocol version that the client understands.</param>
+        /// <param name="model">The client edm model to use. Provided for testability.</param>
+        /// <param name="httpClientProvider">The provider used to get an instance of <see cref="HttpClient"/> to use when making a request
+        /// under the <see cref="HttpRequestTransportMode.HttpClient"/>. If no <see cref="HttpClientProvider"/> is specified, a new <see cref="HttpClient"/>
+        /// will created for each request.</param>
+        /// <exception cref="ArgumentOutOfRangeException">If the <paramref name="maxProtocolVersion"/> is not a valid value.</exception>
+        /// <remarks>
+        /// With Silverlight, the <paramref name="serviceRoot"/> can be a relative Uri
+        /// that will be combined with System.Windows.Browser.HtmlPage.Document.DocumentUri.
+        /// </remarks>
+        internal DataServiceContext(Uri serviceRoot, ODataProtocolVersion maxProtocolVersion, ClientEdmModel model, IHttpClientProvider httpClientProvider)
         {
             Debug.Assert(model != null, "model != null");
             this.model = model;
@@ -289,6 +315,7 @@ namespace Microsoft.OData.Client
             this.UsePostTunneling = false;
             this.keyComparisonGeneratesFilterQuery = false;
             this.deleteLinkUriOption = DeleteLinkUriOption.IdQueryParam;
+            this.HttpClientProvider = httpClientProvider;
         }
 
         #endregion
@@ -717,13 +744,21 @@ namespace Microsoft.OData.Client
             set { this.httpRequestTransportMode = value; }
         }
 
-        /// <summary>Gets or sets the HttpRequest mode to use in making Http Requests.</summary>
-        /// <returns>TransportModeFactory.</returns>
+        /// <summary>
+        /// Gets or sets the provider used to get the HttpClient to use for a particular request message
+        /// under the <see cref="HttpRequestTransportMode.HttpClient"/>.
+        /// If this is not set, a new <see cref="HttpClient"/> instance will be created for each request.
+        /// </summary>
+        public IHttpClientProvider HttpClientProvider { get; set; }
+
+        /// <summary>Gets or sets the <see cref="IDataServiceRequestMessageFactory"/> used to build request messages.</summary>
+        /// <returns>RequestMessageFactory</returns>
         internal IDataServiceRequestMessageFactory RequestMessageFactory
         {
             get { return this.requestMessageFactory; }
             set { this.requestMessageFactory = value; }
         }
+
 
         /// <summary>
         /// Gets or sets a System.Boolean value that controls whether default credentials are sent with requests.

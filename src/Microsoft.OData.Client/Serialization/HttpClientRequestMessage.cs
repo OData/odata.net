@@ -14,6 +14,7 @@ namespace Microsoft.OData.Client
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
+    using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.OData;
 
@@ -50,7 +51,9 @@ namespace Microsoft.OData.Client
         private readonly HttpRequestMessage _requestMessage;
         private readonly HttpClient _client;
         private readonly HttpClientHandler _handler;
+        private readonly IHttpClientProvider _clientProvider;
         private readonly MemoryStream _messageStream;
+        private TimeSpan _timeout;
 
         /// <summary>
         /// This will be used to cache content headers to be retrieved later. 
@@ -63,6 +66,9 @@ namespace Microsoft.OData.Client
 
         /// <summary>True if SendingRequest2Event is currently invoked, otherwise false.</summary>
         private bool inSendingRequest2Event;
+        private bool shouldDisposeClient = false;
+        private bool _disposed = false;
+        private CancellationTokenSource _cancellationSource;
 
         /// <summary>
         /// Constructor for HttpClientRequestMessage.
@@ -70,13 +76,19 @@ namespace Microsoft.OData.Client
         /// The args.ActualMethod is the actual method. In post tunneling situations method will be POST instead of the specified verb method.
         /// The args.method is the specified verb method
         /// </summary>
-        /// </summary>
         public HttpClientRequestMessage(DataServiceClientRequestMessageArgs args) 
             : base(args.ActualMethod)
         {
             _messageStream = new MemoryStream();
-            _handler = new HttpClientHandler();
-            _client = new HttpClient(_handler, disposeHandler: true);
+
+            _clientProvider = args.HttpClientFactory;
+            if (_clientProvider == null)
+            {
+                _handler = new HttpClientHandler();
+                _client = new HttpClient(_handler, disposeHandler: true);
+                shouldDisposeClient = true;
+            }
+            
             _contentHeaderValueCache = new Dictionary<string, string>();
             _effectiveHttpMethod = args.Method;
             _requestUrl = args.RequestUri;
@@ -142,10 +154,20 @@ namespace Microsoft.OData.Client
         {
             get
             {
+                if (_handler == null)
+                {
+                    throw new InvalidOperationException("Cannot get credentials if HttpClient was injected via a factory.");
+                }
+
                 return _handler.Credentials;
             }
             set
             {
+                if (_handler == null)
+                {
+                    throw new InvalidOperationException("Cannot set credentials if HttpClient was injected via a factory.");
+                }
+
                 _handler.Credentials = value;
             }
         }
@@ -160,11 +182,11 @@ namespace Microsoft.OData.Client
         {
             get
             {
-                return (int)_client.Timeout.TotalSeconds;
+                return (int)_timeout.TotalSeconds;
             }
             set
             {
-               _client.Timeout = new TimeSpan(0, 0, value);
+               _timeout = new TimeSpan(0, 0, value);
             }
         }
 
@@ -335,7 +357,10 @@ namespace Microsoft.OData.Client
         /// </summary>
         public override void Abort()
         {
-            _client.CancelPendingRequests();
+            if (_cancellationSource != null)
+            {
+                _cancellationSource.Cancel();
+            }
         }
 
         /// <summary>
@@ -427,7 +452,16 @@ namespace Microsoft.OData.Client
 
             _requestMessage.Method = new HttpMethod(_effectiveHttpMethod);
 
-            return _client.SendAsync(_requestMessage);
+            if (_timeout == default)
+            {
+                _cancellationSource = new CancellationTokenSource();
+            }
+            else
+            {
+                _cancellationSource = new CancellationTokenSource(_timeout);
+            }
+
+            return _client.SendAsync(_requestMessage, _cancellationSource.Token);
         }
 
         private static IDictionary<string, string> HttpHeadersToStringDictionary(HttpHeaders headers)
@@ -514,11 +548,37 @@ namespace Microsoft.OData.Client
         /// <param name="disposing">If 'true' this method is called from user code; if 'false' it is called by the runtime.</param>
         protected virtual void Dispose(bool disposing)
         {
-            HttpResponseMessage response = _httpResponseMessage;
-            _httpResponseMessage = null;
-            if (response != null)
+            if (_disposed)
             {
-                ((IDisposable)response).Dispose();
+                return;
+            }
+
+            _disposed = true;
+
+            if (disposing)
+            {
+                HttpResponseMessage response = _httpResponseMessage;
+                _httpResponseMessage = null;
+                if (response != null)
+                {
+                    ((IDisposable)response).Dispose();
+                }
+
+                if (_cancellationSource != null)
+                {
+                    _cancellationSource.Cancel();
+                    _cancellationSource.Dispose();
+                }
+
+                if (shouldDisposeClient && _client != null)
+                {
+                    _client.Dispose();
+
+                    if (_handler != null)
+                    {
+                        _handler.Dispose();
+                    }
+                }
             }
         }
 
