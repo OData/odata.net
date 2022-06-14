@@ -84,6 +84,11 @@ namespace Microsoft.OData.UriParser
                 throw Error.ArgumentNull(nameof(path));
             }
 
+            if (urlKeyDelimiter == null)
+            {
+                throw Error.ArgumentNull(nameof(urlKeyDelimiter));
+            }
+
             return string.Concat(path.WalkWith(new PathSegmentToResourcePathTranslator(urlKeyDelimiter)).ToArray()).TrimStart('/');
         }
 
