@@ -71,6 +71,66 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Get the string representation of <see cref="ODataPath"/>.
+        /// mainly translate Query Url path.
+        /// </summary>
+        /// <param name="path">Path to perform the computation on.</param>
+        /// <param name="urlKeyDelimiter">Mark whether key is segment</param>
+        /// <returns>The string representation of the Query Url path.</returns>
+        public static string ToResourcePathString(this ODataPath path, ODataUrlKeyDelimiter urlKeyDelimiter)
+        {
+            if (path == null)
+            {
+                throw Error.ArgumentNull(nameof(path));
+            }
+
+            return string.Concat(path.WalkWith(new PathSegmentToResourcePathTranslator(urlKeyDelimiter)).ToArray()).TrimStart('/');
+        }
+
+        /// <summary>
+        /// Remove the key segment in the end of ODataPath, the method does not modify current ODataPath instance,
+        /// it returns a new ODataPath without ending type segment.
+        /// If last segment is type cast, the key before type cast segment would be removed.
+        /// </summary>
+        /// <param name="path">Path to perform the computation on.</param>
+        /// <returns>The ODataPath without key segment removed</returns>
+        public static ODataPath TrimEndingKeySegment(this ODataPath path)
+        {
+            if (path == null)
+            {
+                throw Error.ArgumentNull(nameof(path));
+            }
+
+            var typeHandler = new SplitEndingSegmentOfTypeHandler<TypeSegment>();
+            var keyHandler = new SplitEndingSegmentOfTypeHandler<KeySegment>();
+            path.WalkWith(typeHandler);
+            typeHandler.FirstPart.WalkWith(keyHandler);
+            ODataPath newPath = keyHandler.FirstPart;
+            AppendLastSegment(typeHandler, newPath);
+
+            return newPath;
+        }
+
+        /// <summary>
+        /// Remove the type-cast segment in the end of ODataPath, the method does not modify current ODataPath instance,
+        /// it returns a new ODataPath without ending type segment.
+        /// </summary>
+        /// <param name="path">Path to perform the computation on.</param>
+        /// <returns>The ODataPath without type-cast in the end</returns>
+        public static ODataPath TrimEndingTypeSegment(this ODataPath path)
+        {
+            if (path == null)
+            {
+                throw Error.ArgumentNull(nameof(path));
+            }
+
+            var handler = new SplitEndingSegmentOfTypeHandler<TypeSegment>();
+            path.WalkWith(handler);
+
+            return handler.FirstPart;
+        }
+
+        /// <summary>
         /// Creates a new ODataPath with the specified segment added.
         /// </summary>
         /// <param name="path">The path against which the segment should be applied.</param>
@@ -133,49 +193,6 @@ namespace Microsoft.OData.UriParser
         private static void AppendLastSegment(SplitEndingSegmentOfTypeHandler<TypeSegment> handler, ODataPath newPath)
         {
            newPath.AddRange(handler.LastPart);
-        }
-
-        /// <summary>
-        /// Remove the key segment in the end of ODataPath, the method does not modify current ODataPath instance,
-        /// it returns a new ODataPath without ending type segment.
-        /// If last segment is type cast, the key before type cast segment would be removed.
-        /// </summary>
-        /// <param name="path">Path to perform the computation on.</param>
-        /// <returns>The ODataPath without key segment removed</returns>
-        public static ODataPath TrimEndingKeySegment(this ODataPath path)
-        {
-            if (path == null)
-            {
-                throw Error.ArgumentNull(nameof(path));
-            }
-
-            var typeHandler = new SplitEndingSegmentOfTypeHandler<TypeSegment>();
-            var keyHandler = new SplitEndingSegmentOfTypeHandler<KeySegment>();
-            path.WalkWith(typeHandler);
-            typeHandler.FirstPart.WalkWith(keyHandler);
-            ODataPath newPath = keyHandler.FirstPart;
-            AppendLastSegment(typeHandler, newPath);
-
-            return newPath;
-        }
-
-        /// <summary>
-        /// Remove the type-cast segment in the end of ODataPath, the method does not modify current ODataPath instance,
-        /// it returns a new ODataPath without ending type segment.
-        /// </summary>
-        /// <param name="path">Path to perform the computation on.</param>
-        /// <returns>The ODataPath without type-cast in the end</returns>
-        public static ODataPath TrimEndingTypeSegment(this ODataPath path)
-        {
-            if (path == null)
-            {
-                throw Error.ArgumentNull(nameof(path));
-            }
-
-            var handler = new SplitEndingSegmentOfTypeHandler<TypeSegment>();
-            path.WalkWith(handler);
-
-            return handler.FirstPart;
         }
 
         /// <summary>
@@ -286,23 +303,6 @@ namespace Microsoft.OData.UriParser
             }
 
             return pathString.ToString().TrimStart('/');
-        }
-
-        /// <summary>
-        /// Get the string representation of <see cref="ODataPath"/>.
-        /// mainly translate Query Url path.
-        /// </summary>
-        /// <param name="path">Path to perform the computation on.</param>
-        /// <param name="urlKeyDelimiter">Mark whether key is segment</param>
-        /// <returns>The string representation of the Query Url path.</returns>
-        public static string ToResourcePathString(this ODataPath path, ODataUrlKeyDelimiter urlKeyDelimiter)
-        {
-            if (path == null)
-            {
-                throw Error.ArgumentNull(nameof(path));
-            }
-
-            return string.Concat(path.WalkWith(new PathSegmentToResourcePathTranslator(urlKeyDelimiter)).ToArray()).TrimStart('/');
         }
 
         /// <summary>
