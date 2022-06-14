@@ -254,6 +254,25 @@ namespace Microsoft.OData.Client
         {
         }
 
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceContext" /> class with the specified <paramref name="serviceRoot" /> and targeting the specific <paramref name="maxProtocolVersion" />.</summary>
+        /// <param name="serviceRoot">An absolute URI that identifies the root of a data service.</param>
+        /// <param name="maxProtocolVersion">A <see cref="Microsoft.OData.Client.ODataProtocolVersion" /> value that is the maximum protocol version that the client understands.</param>
+        /// <param name="httpClientProvider">The provider used to get an instance of <see cref="HttpClient"/> to use when making a request
+        /// under the <see cref="HttpRequestTransportMode.HttpClient"/>. If no <see cref="HttpClientProvider"/> is specified, a new <see cref="HttpClient"/>
+        /// will created for each request.</param>
+        /// <remarks>
+        /// The library expects the Uri to point to the root of a data service,
+        /// but does not issue a request to validate it does indeed identify the root of a service.
+        /// If the Uri does not identify the root of the service, the behavior of the client library is undefined.
+        /// A Uri provided with a trailing slash is equivalent to one without such a trailing character.
+        /// With Silverlight, the <paramref name="serviceRoot"/> can be a relative Uri
+        /// that will be combined with System.Windows.Browser.HtmlPage.Document.DocumentUri.
+        /// </remarks>
+        public DataServiceContext(Uri serviceRoot, ODataProtocolVersion maxProtocolVersion, IHttpClientProvider httpClientProvider)
+            : this(serviceRoot, maxProtocolVersion, ClientEdmModelCache.GetModel(maxProtocolVersion), httpClientProvider: httpClientProvider)
+        {
+        }
+
         /// <summary>
         /// Instantiates a new context with the specified <paramref name="serviceRoot"/> Uri.
         /// The library expects the Uri to point to the root of a data service,
@@ -749,7 +768,10 @@ namespace Microsoft.OData.Client
         /// under the <see cref="HttpRequestTransportMode.HttpClient"/>.
         /// If this is not set, a new <see cref="HttpClient"/> instance will be created for each request.
         /// </summary>
-        public IHttpClientProvider HttpClientProvider { get; set; }
+        /// <remarks>
+        /// This setting is ignored if the request transport mode is not <see cref="HttpRequestTransportMode.HttpClient"/>.
+        /// </remarks>
+        public IHttpClientProvider HttpClientProvider { get; private set; }
 
         /// <summary>Gets or sets the <see cref="IDataServiceRequestMessageFactory"/> used to build request messages.</summary>
         /// <returns>RequestMessageFactory</returns>

@@ -81,7 +81,7 @@ namespace Microsoft.OData.Client
         {
             _messageStream = new MemoryStream();
 
-            _clientProvider = args.HttpClientFactory;
+            _clientProvider = args.HttpClientProvider;
             if (_clientProvider == null)
             {
                 _handler = new HttpClientHandler();
