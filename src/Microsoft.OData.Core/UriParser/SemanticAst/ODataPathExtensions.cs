@@ -42,7 +42,7 @@ namespace Microsoft.OData.UriParser
         /// resource that is part of a set.</returns>
         public static IEdmNavigationSource NavigationSource(this ODataPath path)
         {
-            return path.LastSegment.TranslateWith(new DetermineNavigationSourceTranslator());
+            return path.LastSegment.TranslateWith(DetermineNavigationSourceTranslator.Instance);
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>True if the resource if a resource set or collection of primitive or complex types. False otherwise.</returns>
         public static bool IsCollection(this ODataPath path)
         {
-            return path.LastSegment.TranslateWith(new IsCollectionTranslator());
+            return path.LastSegment.TranslateWith(IsCollectionTranslator.Instance);
         }
 
         /// <summary>
