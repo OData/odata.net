@@ -8141,7 +8141,7 @@ public class Microsoft.OData.Client.DataServiceContext {
     Microsoft.OData.Client.EntityParameterSendOption EntityParameterSendOption  { public virtual get; public virtual set; }
     Microsoft.OData.Client.EntityTracker EntityTracker  { public virtual get; public virtual set; }
     Microsoft.OData.Client.DataServiceClientFormat Format  { public virtual get; }
-    Microsoft.OData.Client.IHttpClientHandlerProvider HttpClientHandlerProvider  { public get; }
+    Microsoft.OData.Client.IHttpClientHandlerProvider HttpClientHandlerProvider  { public get; public set; }
     Microsoft.OData.Client.HttpRequestTransportMode HttpRequestTransportMode  { public get; public set; }
     bool IgnoreResourceNotFoundException  { public virtual get; public virtual set; }
     bool KeyComparisonGeneratesFilterQuery  { public virtual get; public virtual set; }
