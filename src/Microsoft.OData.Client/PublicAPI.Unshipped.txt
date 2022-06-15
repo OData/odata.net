@@ -307,9 +307,9 @@ Microsoft.OData.Client.DataServiceClientRequestMessage.DataServiceClientRequestM
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.ActualMethod.get -> string
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.DataServiceClientRequestMessageArgs(string method, System.Uri requestUri, bool useDefaultCredentials, bool usePostTunneling, System.Collections.Generic.IDictionary<string, string> headers) -> void
-Microsoft.OData.Client.DataServiceClientRequestMessageArgs.DataServiceClientRequestMessageArgs(string method, System.Uri requestUri, bool useDefaultCredentials, bool usePostTunneling, System.Collections.Generic.IDictionary<string, string> headers, Microsoft.OData.Client.IHttpClientProvider httpClientProvider) -> void
+Microsoft.OData.Client.DataServiceClientRequestMessageArgs.DataServiceClientRequestMessageArgs(string method, System.Uri requestUri, bool useDefaultCredentials, bool usePostTunneling, System.Collections.Generic.IDictionary<string, string> headers, Microsoft.OData.Client.IHttpClientHandlerProvider httpClientHandlerProvider) -> void
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.Headers.get -> System.Collections.Generic.IDictionary<string, string>
-Microsoft.OData.Client.DataServiceClientRequestMessageArgs.HttpClientProvider.get -> Microsoft.OData.Client.IHttpClientProvider
+Microsoft.OData.Client.DataServiceClientRequestMessageArgs.HttpClientHandlerProvider.get -> Microsoft.OData.Client.IHttpClientHandlerProvider
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.Method.get -> string
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.RequestUri.get -> System.Uri
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.UseDefaultCredentials.get -> bool
@@ -357,10 +357,11 @@ Microsoft.OData.Client.DataServiceCollection<T>.LoadNextPartialSetAsync() -> boo
 Microsoft.OData.Client.DataServiceContext
 Microsoft.OData.Client.DataServiceContext.DataServiceContext() -> void
 Microsoft.OData.Client.DataServiceContext.DataServiceContext(System.Uri serviceRoot) -> void
+Microsoft.OData.Client.DataServiceContext.DataServiceContext(System.Uri serviceRoot, Microsoft.OData.Client.IHttpClientHandlerProvider httpClientHandlerProvider) -> void
 Microsoft.OData.Client.DataServiceContext.DataServiceContext(System.Uri serviceRoot, Microsoft.OData.Client.ODataProtocolVersion maxProtocolVersion) -> void
-Microsoft.OData.Client.DataServiceContext.DataServiceContext(System.Uri serviceRoot, Microsoft.OData.Client.ODataProtocolVersion maxProtocolVersion, Microsoft.OData.Client.IHttpClientProvider httpClientProvider) -> void
+Microsoft.OData.Client.DataServiceContext.DataServiceContext(System.Uri serviceRoot, Microsoft.OData.Client.ODataProtocolVersion maxProtocolVersion, Microsoft.OData.Client.IHttpClientHandlerProvider httpClientHandlerProvider) -> void
 Microsoft.OData.Client.DataServiceContext.DefaultResolveType(string typeName, string fullNamespace, string languageDependentNamespace) -> System.Type
-Microsoft.OData.Client.DataServiceContext.HttpClientProvider.get -> Microsoft.OData.Client.IHttpClientProvider
+Microsoft.OData.Client.DataServiceContext.HttpClientHandlerProvider.get -> Microsoft.OData.Client.IHttpClientHandlerProvider
 Microsoft.OData.Client.DataServiceContext.HttpRequestTransportMode.get -> Microsoft.OData.Client.HttpRequestTransportMode
 Microsoft.OData.Client.DataServiceContext.HttpRequestTransportMode.set -> void
 Microsoft.OData.Client.DataServiceExtensions
@@ -518,8 +519,8 @@ Microsoft.OData.Client.IBaseEntityType.EntityDescriptor.get -> Microsoft.OData.C
 Microsoft.OData.Client.IBaseEntityType.EntityDescriptor.set -> void
 Microsoft.OData.Client.IgnoreClientPropertyAttribute
 Microsoft.OData.Client.IgnoreClientPropertyAttribute.IgnoreClientPropertyAttribute() -> void
-Microsoft.OData.Client.IHttpClientProvider
-Microsoft.OData.Client.IHttpClientProvider.GetHttpClient(System.Net.Http.HttpRequestMessage request, out bool disposeClient) -> System.Net.Http.HttpClient
+Microsoft.OData.Client.IHttpClientHandlerProvider
+Microsoft.OData.Client.IHttpClientHandlerProvider.GetHttpClientHandler() -> System.Net.Http.HttpClientHandler
 Microsoft.OData.Client.InvokeResponse
 Microsoft.OData.Client.InvokeResponse.InvokeResponse(System.Collections.Generic.Dictionary<string, string> headers) -> void
 Microsoft.OData.Client.KeyAttribute

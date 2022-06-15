@@ -453,7 +453,7 @@ namespace Microsoft.OData.Client
                 this.UseDefaultCredentials,
                 this.UsePostTunneling,
                 headersDictionary,
-                this.Context.HttpClientProvider);
+                this.Context.HttpClientHandlerProvider);
 
             DataServiceClientRequestMessage clientRequestMessage;
             if (this.Configurations.RequestPipeline.OnMessageCreating != null)

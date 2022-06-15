@@ -28,7 +28,7 @@ namespace Microsoft.OData.Client
         /// <param name="usePostTunneling">True if the request message must use POST verb for the request and pass the actual verb in X-HTTP-Method header, otherwise false.</param>
         /// <param name="headers">The set of headers for the request.</param>
         public DataServiceClientRequestMessageArgs(string method, Uri requestUri, bool useDefaultCredentials, bool usePostTunneling, IDictionary<string, string> headers)
-            : this(method, requestUri, useDefaultCredentials, usePostTunneling, headers, httpClientProvider: null)
+            : this(method, requestUri, useDefaultCredentials, usePostTunneling, headers, httpClientHandlerProvider: null)
         {
         }
 
@@ -40,8 +40,8 @@ namespace Microsoft.OData.Client
         /// <param name="useDefaultCredentials">True if the default credentials need to be sent with the request. Otherwise false.</param>
         /// <param name="usePostTunneling">True if the request message must use POST verb for the request and pass the actual verb in X-HTTP-Method header, otherwise false.</param>
         /// <param name="headers">The set of headers for the request.</param>
-        /// <param name="httpClientProvider">Function that returns the <see cref="HttpClient"/> that should be used to send the request message.</param>
-        public DataServiceClientRequestMessageArgs(string method, Uri requestUri, bool useDefaultCredentials, bool usePostTunneling, IDictionary<string, string> headers, IHttpClientProvider httpClientProvider)
+        /// <param name="httpClientProvider">Function that returns the <see cref="HttpClientHandler"/> that should be used to send the request message.</param>
+        public DataServiceClientRequestMessageArgs(string method, Uri requestUri, bool useDefaultCredentials, bool usePostTunneling, IDictionary<string, string> headers, IHttpClientHandlerProvider httpClientHandlerProvider)
         {
             Debug.Assert(method != null, "method cannot be null");
             Debug.Assert(requestUri != null, "requestUri cannot be null");
@@ -52,7 +52,7 @@ namespace Microsoft.OData.Client
             this.RequestUri = requestUri;
             this.UsePostTunneling = usePostTunneling;
             this.UseDefaultCredentials = useDefaultCredentials;
-            this.HttpClientProvider = httpClientProvider;
+            this.HttpClientHandlerProvider = httpClientHandlerProvider;
 
             this.actualMethod = this.Method;
             if (this.UsePostTunneling && this.Headers.ContainsKey(XmlConstants.HttpXMethod))
@@ -100,6 +100,6 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Returns the HttpClient that should be used to send the request message.
         /// </summary>
-        public IHttpClientProvider HttpClientProvider { get; private set; }
+        public IHttpClientHandlerProvider HttpClientHandlerProvider { get; private set; }
     }
 }
