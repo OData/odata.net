@@ -14,6 +14,20 @@ namespace Microsoft.OData.UriParser
     /// </summary>
     internal sealed class IsCollectionTranslator : PathSegmentTranslator<bool>
     {
+        private static IsCollectionTranslator instance;
+
+        public static IsCollectionTranslator Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new IsCollectionTranslator();
+                }
+                return instance;
+            }
+        }
+
         /// <summary>
         /// Translate a NavigationPropertySegment
         /// </summary>

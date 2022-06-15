@@ -13,6 +13,20 @@ namespace Microsoft.OData.UriParser
     /// </summary>
     internal sealed class DetermineNavigationSourceTranslator : PathSegmentTranslator<IEdmNavigationSource>
     {
+        private static DetermineNavigationSourceTranslator instance;
+
+        public static DetermineNavigationSourceTranslator Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new DetermineNavigationSourceTranslator();
+                }
+                return instance;
+            }
+        }
+
         /// <summary>
         /// Determine the NavigationSource of a NavigationPropertyLinkSegment
         /// </summary>

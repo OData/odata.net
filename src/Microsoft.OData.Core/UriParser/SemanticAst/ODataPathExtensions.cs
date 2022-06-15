@@ -36,7 +36,7 @@ namespace Microsoft.OData.UriParser
                 throw Error.ArgumentNull(nameof(path));
             }
 
-            return path.LastSegment.EdmType.ToTypeReference();
+            return path.LastSegment?.EdmType?.ToTypeReference();
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace Microsoft.OData.UriParser
                 throw Error.ArgumentNull(nameof(path));
             }
 
-            return path.LastSegment.TranslateWith(new DetermineNavigationSourceTranslator());
+            return path.LastSegment?.TranslateWith(DetermineNavigationSourceTranslator.Instance);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Microsoft.OData.UriParser
                 throw Error.ArgumentNull(nameof(path));
             }
 
-            return path.LastSegment.TranslateWith(new IsCollectionTranslator());
+            return (bool)path.LastSegment?.TranslateWith(IsCollectionTranslator.Instance);
         }
 
         /// <summary>
