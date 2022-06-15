@@ -8125,9 +8125,7 @@ public class Microsoft.OData.Client.DataServiceCollection`1 : ObservableCollecti
 public class Microsoft.OData.Client.DataServiceContext {
     public DataServiceContext ()
     public DataServiceContext (System.Uri serviceRoot)
-    public DataServiceContext (System.Uri serviceRoot, Microsoft.OData.Client.IHttpClientHandlerProvider httpClientHandlerProvider)
     public DataServiceContext (System.Uri serviceRoot, Microsoft.OData.Client.ODataProtocolVersion maxProtocolVersion)
-    public DataServiceContext (System.Uri serviceRoot, Microsoft.OData.Client.ODataProtocolVersion maxProtocolVersion, Microsoft.OData.Client.IHttpClientHandlerProvider httpClientHandlerProvider)
 
     Microsoft.OData.Client.DataServiceResponsePreference AddAndUpdateResponsePreference  { public virtual get; public virtual set; }
     bool ApplyingChanges  { public virtual get; }

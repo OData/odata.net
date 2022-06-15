@@ -16,9 +16,9 @@ namespace Microsoft.OData.Client
     {
         /// <summary>
         /// Returns an <see cref="HttpClientHandler"/> instance that OData Client should
-        /// used to eecute a request. This method is called per request.
+        /// used to execute a request. This method is called per request.
         /// </summary>
-        /// <returns>The <see cref="HttpClientHandler"/> instanced that will be used to execute the request.</returns>
+        /// <returns>The <see cref="HttpClientHandler"/> instance that will be used to execute the request.</returns>
         /// <remarks>
         /// It's possible that the returned <see cref="HttpClientHandler"/> may be mutated inside a request hook
         /// e.g. via <see cref="HttpClientRequestMessage.Credentials"/>.

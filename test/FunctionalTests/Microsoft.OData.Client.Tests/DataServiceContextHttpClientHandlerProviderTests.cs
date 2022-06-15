@@ -41,28 +41,6 @@ namespace Microsoft.OData.Client.Tests
             {
                 var provider = new MockHttpClientHandlerProvider(handler);
 
-                var context = new DataServiceContext(new Uri(BaseUri), provider);
-                context.HttpRequestTransportMode = HttpRequestTransportMode.HttpClient;
-
-                var nameQuery = new DataServiceQuerySingle<string>(context, "People(1)/Name/$value");
-                string personName = await nameQuery.GetValueAsync();
-
-                Assert.Equal(2, handler.Requests.Count);
-                Assert.Equal(2, provider.NumCalls);
-                Assert.Equal($"GET {BaseUri}/$metadata", handler.Requests[0]);
-                Assert.Equal($"GET {BaseUri}/People(1)/Name/$value", handler.Requests[1]);
-                Assert.Equal(PersonNameValue, personName);
-                Assert.Same(provider, context.HttpClientHandlerProvider);
-            }
-        }
-
-        [Fact]
-        public async Task CanSetClientHandlerProviderProperty()
-        {
-            using (var handler = new MockHttpClientHandler(HandleRequest))
-            {
-                var provider = new MockHttpClientHandlerProvider(handler);
-
                 var context = new DataServiceContext(new Uri(BaseUri));
                 context.HttpClientHandlerProvider = provider;
                 context.HttpRequestTransportMode = HttpRequestTransportMode.HttpClient;

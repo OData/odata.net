@@ -357,9 +357,7 @@ Microsoft.OData.Client.DataServiceCollection<T>.LoadNextPartialSetAsync() -> boo
 Microsoft.OData.Client.DataServiceContext
 Microsoft.OData.Client.DataServiceContext.DataServiceContext() -> void
 Microsoft.OData.Client.DataServiceContext.DataServiceContext(System.Uri serviceRoot) -> void
-Microsoft.OData.Client.DataServiceContext.DataServiceContext(System.Uri serviceRoot, Microsoft.OData.Client.IHttpClientHandlerProvider httpClientHandlerProvider) -> void
 Microsoft.OData.Client.DataServiceContext.DataServiceContext(System.Uri serviceRoot, Microsoft.OData.Client.ODataProtocolVersion maxProtocolVersion) -> void
-Microsoft.OData.Client.DataServiceContext.DataServiceContext(System.Uri serviceRoot, Microsoft.OData.Client.ODataProtocolVersion maxProtocolVersion, Microsoft.OData.Client.IHttpClientHandlerProvider httpClientHandlerProvider) -> void
 Microsoft.OData.Client.DataServiceContext.DefaultResolveType(string typeName, string fullNamespace, string languageDependentNamespace) -> System.Type
 Microsoft.OData.Client.DataServiceContext.HttpClientHandlerProvider.get -> Microsoft.OData.Client.IHttpClientHandlerProvider
 Microsoft.OData.Client.DataServiceContext.HttpClientHandlerProvider.set -> void

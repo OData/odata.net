@@ -238,26 +238,6 @@ namespace Microsoft.OData.Client
         {
         }
 
-        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceContext" /> class with the specified <paramref name="serviceRoot" />.</summary>
-        /// <param name="serviceRoot">An absolute URI that identifies the root of a data service.</param>
-        /// <param name="httpClientHandlerProvider">Provides an instance of <see cref="HttpClientHandler"/> to use when making a request
-        /// under the <see cref="HttpRequestTransportMode.HttpClient"/>. If no <see cref="IHttpClientHandlerProvider"/> is specified, a new <see cref="HttpClientHandler"/>
-        /// will created for each request.</param>
-        /// <exception cref="System.ArgumentNullException">When the <paramref name="serviceRoot" /> is null.</exception>
-        /// <exception cref="System.ArgumentException">If the <paramref name="serviceRoot" /> is not an absolute URI -or-If the <paramref name="serviceRoot" /> is a well formed URI without a query or query fragment.</exception>
-        /// <remarks>
-        /// The library expects the Uri to point to the root of a data service,
-        /// but does not issue a request to validate it does indeed identify the root of a service.
-        /// If the Uri does not identify the root of the service, the behavior of the client library is undefined.
-        /// A Uri provided with a trailing slash is equivalent to one without such a trailing character.
-        /// With Silverlight, the <paramref name="serviceRoot"/> can be a relative Uri
-        /// that will be combined with System.Windows.Browser.HtmlPage.Document.DocumentUri.
-        /// </remarks>
-        public DataServiceContext(Uri serviceRoot, IHttpClientHandlerProvider httpClientHandlerProvider)
-            : this(serviceRoot, ODataProtocolVersion.V4, httpClientHandlerProvider)
-        { 
-        }
-
         /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceContext" /> class with the specified <paramref name="serviceRoot" /> and targeting the specific <paramref name="maxProtocolVersion" />.</summary>
         /// <param name="serviceRoot">An absolute URI that identifies the root of a data service.</param>
         /// <param name="maxProtocolVersion">A <see cref="Microsoft.OData.Client.ODataProtocolVersion" /> value that is the maximum protocol version that the client understands.</param>
@@ -271,25 +251,6 @@ namespace Microsoft.OData.Client
         /// </remarks>
         public DataServiceContext(Uri serviceRoot, ODataProtocolVersion maxProtocolVersion)
             : this(serviceRoot, maxProtocolVersion, ClientEdmModelCache.GetModel(maxProtocolVersion))
-        {
-        }
-
-        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceContext" /> class with the specified <paramref name="serviceRoot" /> and targeting the specific <paramref name="maxProtocolVersion" />.</summary>
-        /// <param name="serviceRoot">An absolute URI that identifies the root of a data service.</param>
-        /// <param name="maxProtocolVersion">A <see cref="Microsoft.OData.Client.ODataProtocolVersion" /> value that is the maximum protocol version that the client understands.</param>
-        /// <param name="httpClientHandlerProvider" > Provides an instance of<see cref="HttpClientHandler"/> to use when making a request
-        /// under the <see cref="HttpRequestTransportMode.HttpClient"/>. If no <see cref="IHttpClientHandlerProvider"/> is specified, a new <see cref="HttpClientHandler"/>
-        /// will created for each request.</param>
-        /// <remarks>
-        /// The library expects the Uri to point to the root of a data service,
-        /// but does not issue a request to validate it does indeed identify the root of a service.
-        /// If the Uri does not identify the root of the service, the behavior of the client library is undefined.
-        /// A Uri provided with a trailing slash is equivalent to one without such a trailing character.
-        /// With Silverlight, the <paramref name="serviceRoot"/> can be a relative Uri
-        /// that will be combined with System.Windows.Browser.HtmlPage.Document.DocumentUri.
-        /// </remarks>
-        public DataServiceContext(Uri serviceRoot, ODataProtocolVersion maxProtocolVersion, IHttpClientHandlerProvider httpClientHandlerProvider)
-            : this(serviceRoot, maxProtocolVersion, ClientEdmModelCache.GetModel(maxProtocolVersion), httpClientHandlerProvider: httpClientHandlerProvider)
         {
         }
 
@@ -311,31 +272,6 @@ namespace Microsoft.OData.Client
         /// that will be combined with System.Windows.Browser.HtmlPage.Document.DocumentUri.
         /// </remarks>
         internal DataServiceContext(Uri serviceRoot, ODataProtocolVersion maxProtocolVersion, ClientEdmModel model)
-            : this(serviceRoot, maxProtocolVersion, model, httpClientHandlerProvider: null)
-        {
-        }
-
-        /// <summary>
-        /// Instantiates a new context with the specified <paramref name="serviceRoot"/> Uri.
-        /// The library expects the Uri to point to the root of a data service,
-        /// but does not issue a request to validate it does indeed identify the root of a service.
-        /// If the Uri does not identify the root of the service, the behavior of the client library is undefined.
-        /// </summary>
-        /// <param name="serviceRoot">
-        /// An absolute, well formed http or https URI without a query or fragment which identifies the root of a data service.
-        /// A Uri provided with a trailing slash is equivalent to one without such a trailing character
-        /// </param>
-        /// <param name="maxProtocolVersion">max protocol version that the client understands.</param>
-        /// <param name="model">The client edm model to use. Provided for testability.</param>
-        /// <param name="httpClientHandlerProvider" > Provides an instance of<see cref="HttpClientHandler"/> to use when making a request
-        /// under the <see cref="HttpRequestTransportMode.HttpClient"/>. If no <see cref="IHttpClientHandlerProvider"/> is specified, a new <see cref="HttpClientHandler"/>
-        /// will created for each request.</param>
-        /// <exception cref="ArgumentOutOfRangeException">If the <paramref name="maxProtocolVersion"/> is not a valid value.</exception>
-        /// <remarks>
-        /// With Silverlight, the <paramref name="serviceRoot"/> can be a relative Uri
-        /// that will be combined with System.Windows.Browser.HtmlPage.Document.DocumentUri.
-        /// </remarks>
-        internal DataServiceContext(Uri serviceRoot, ODataProtocolVersion maxProtocolVersion, ClientEdmModel model, IHttpClientHandlerProvider httpClientHandlerProvider)
         {
             Debug.Assert(model != null, "model != null");
             this.model = model;
@@ -354,7 +290,6 @@ namespace Microsoft.OData.Client
             this.UsePostTunneling = false;
             this.keyComparisonGeneratesFilterQuery = false;
             this.deleteLinkUriOption = DeleteLinkUriOption.IdQueryParam;
-            this.HttpClientHandlerProvider = httpClientHandlerProvider;
         }
 
         #endregion
@@ -784,9 +719,9 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Provides an instance of<see cref="HttpClientHandler"/> to use when making a request
+        /// Gets or sets the <see cref="IHttpClientHandlerProvider"/> that provides the <see cref="HttpClientHandler"/> to use when making a request
         /// under the <see cref="HttpRequestTransportMode.HttpClient"/>.
-        /// If this property is set to null, a new <see cref="HttpClientHandler"/> instance will be created for each request.
+        /// If <see cref="HttpClientHandlerProvider"/> is null, a new <see cref="HttpClientHandler"/> instance will be created for each request.
         /// </summary>
         /// <remarks>
         /// This setting is ignored if the request transport mode is not <see cref="HttpRequestTransportMode.HttpClient"/>.
