@@ -14,11 +14,10 @@ using System.Text.Json;
 using System.Text.Encodings.Web;
 using Microsoft.OData.Edm;
 
-
 namespace Microsoft.OData.Json
 {
     /// <summary>
-    /// Implement of <see cref="IJsonWriter"/> that is based on
+    /// Implementation of <see cref="IJsonWriter"/> that is based on
     /// <see cref="Utf8JsonWriter"/>.
     /// </summary>
     internal sealed class ODataUtf8JsonWriter : IJsonWriter, IDisposable
@@ -224,6 +223,7 @@ namespace Microsoft.OData.Json
         public void WriteValue(TimeOfDay value)
         {
             this.writer.WriteStringValue(value.ToString());
+            this.FlushIfBufferThresholdReached();
         }
 
         public void WriteValue(byte value)
@@ -290,6 +290,9 @@ namespace Microsoft.OData.Json
 
             if (disposing)
             {
+                // We don't need to manually flush the pending writes to the output stream.
+                // The Utf8JsonWriter will do that when disposed since we passed the stream
+                // to the constructor.
                 this.writer.Dispose();
 
                 if (this.outputStream != this.writeStream)

@@ -130,7 +130,6 @@ namespace Microsoft.OData.Tests.Json
         {
             this.writer.WriteValue((string)null);
             Assert.Equal("null", this.builder.ToString());
-
         }
 
         [Theory]
@@ -192,8 +191,6 @@ namespace Microsoft.OData.Tests.Json
             this.writer.WriteRawValue("Raw\t\"Value ия");
             Assert.Equal("Raw\t\"Value ия", this.builder.ToString());
         }
-
-
 
         [Fact]
         public void WriteRawValueWritesNothingWhenNull()

@@ -906,7 +906,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="factory">The factory used to create the <see cref="IJsonWriter"/> instance.</param>
         /// <param name="outputStream">The output stream to write to.</param>
-        /// <param name="isIeee754Compatible">True if the writer should writer decimals and longs as strings.</param>
+        /// <param name="isIeee754Compatible">True if the writer should write decimals and longs as strings.</param>
         /// <param name="encoding">The text encoding of the output data.</param>
         /// <returns>The JSON writer instance, or null if none could be created.</returns>
         private static IJsonWriter CreateJsonWriter(

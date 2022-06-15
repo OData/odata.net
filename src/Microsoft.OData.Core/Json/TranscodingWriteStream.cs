@@ -6,11 +6,11 @@
 
 #if NETCOREAPP3_1_OR_GREATER
 using System;
-using System.Text;
-using System.Threading.Tasks;
 using System.Buffers;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
+using System.Threading.Tasks;
 using System.Threading;
 
 namespace Microsoft.OData.Json
@@ -41,11 +41,8 @@ namespace Microsoft.OData.Json
         private Stream _innerStream; // null if the wrapper has been disposed
         private readonly bool _leaveOpen;
 
-        /*
-            * Fields used for writing bytes [this] -> chars -> bytes [inner]
-            * Lazily initialized the first time we need to write
-            */
-
+        // Fields used for writing bytes [this] -> chars -> bytes [inner]
+        // Lazily initialized the first time we need to write
         private Encoder _innerEncoder;
         private Decoder _thisDecoder;
 
@@ -91,6 +88,7 @@ namespace Microsoft.OData.Json
                 throw new NotSupportedException();
             }
         }
+
         protected override void Dispose(bool disposing)
         {
             Debug.Assert(disposing, "This type isn't finalizable.");
@@ -148,6 +146,7 @@ namespace Microsoft.OData.Json
             // Slower path; need to perform an async write followed by an async dispose.
 
             return DisposeAsyncCore(pendingData);
+
             async ValueTask DisposeAsyncCore(ArraySegment<byte> pendingData)
             {
                 Debug.Assert(pendingData.Count != 0);
@@ -164,13 +163,8 @@ namespace Microsoft.OData.Json
             }
         }
 
-
-#pragma warning disable CS3016 // Arrays as attribute arguments is not CLS-compliant
-#pragma warning disable CS8774 // Member must have a non-null value when exiting.
-
         // Sets up the data structures that are necessary before any write operation takes place,
         // throwing if the object is in a state where writes are not possible.
-        //[MemberNotNull(nameof(_thisDecoder), nameof(_innerEncoder))]
         private void EnsurePreWriteConditions()
         {
             ThrowIfDisposed();
@@ -181,14 +175,10 @@ namespace Microsoft.OData.Json
 
             void InitializeWriteDataStructures()
             {
-
                 _innerEncoder = _innerEncoding.GetEncoder();
                 _thisDecoder = _thisEncoding.GetDecoder();
             }
         }
-
-#pragma warning restore CS8774 // Member must have a non-null value when exiting.
-#pragma warning restore CS3016 // Arrays as attribute arguments is not CLS-compliant
 
         // returns any pending data that needs to be flushed to the inner stream before disposal
         private ArraySegment<byte> FinalFlushWriteBuffers()
@@ -205,10 +195,9 @@ namespace Microsoft.OData.Json
             // occur if the end of the stream contains an incomplete multi-byte sequence.
             // Let's not bother complicating this logic with array pool rentals or allocation-
             // avoiding loops.
-
-
             char[] chars = Array.Empty<char>();
             int charCount = _thisDecoder.GetCharCount(Array.Empty<byte>(), 0, 0, flush: true);
+
             if (charCount > 0)
             {
                 chars = new char[charCount];
@@ -221,6 +210,7 @@ namespace Microsoft.OData.Json
 
             byte[] bytes = Array.Empty<byte>();
             int byteCount = _innerEncoder.GetByteCount(chars, 0, charCount, flush: true);
+
             if (byteCount > 0)
             {
                 bytes = new byte[byteCount];
@@ -362,6 +352,7 @@ namespace Microsoft.OData.Json
             }
 
             return WriteAsyncCore(buffer, cancellationToken);
+
             async ValueTask WriteAsyncCore(ReadOnlyMemory<byte> remainingOuterEncodedBytes, CancellationToken cancellationToken)
             {
                 int rentalLength = Math.Clamp(remainingOuterEncodedBytes.Length, MinWriteRentedArraySize, MaxWriteRentedArraySize);

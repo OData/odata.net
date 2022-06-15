@@ -53,7 +53,6 @@ namespace Microsoft.OData.Tests.Json
             return WriteAsyncTest(Encoding.UTF8, targetEncoding, message);
         }
 
-
         [Theory]
         [MemberData(nameof(WriteAsyncInputLatin))]
         public Task WriteAsync_Works_WhenOutputIs_ASCII(string message)
@@ -71,10 +70,6 @@ namespace Microsoft.OData.Tests.Json
 
             using var transcodingStream = new TranscodingWriteStream(stream, targetEncoding, inputEncoding);
             await transcodingStream.WriteAsync(inputEncoding.GetBytes(JavaScriptEncoder.Default.Encode(message)), default);
-            // The transcoding streams use Encoders and Decoders that have internal buffers. We need to flush these
-            // when there is no more data to be written. Stream.FlushAsync isn't suitable since it's
-            // acceptable to Flush a Stream (multiple times) prior to completion.
-            //await transcodingStream.FinalWriteAsync(default);
             await transcodingStream.FlushAsync();
 
             string actual = targetEncoding.GetString(stream.ToArray());

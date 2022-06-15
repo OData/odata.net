@@ -260,7 +260,6 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal("{\"Name\":\"Sue\",\"Age\":", this.ReadStream());
         }
 
-
         #region JsonWriter Extension Methods
 
         [Fact]

@@ -25,7 +25,7 @@ namespace Microsoft.OData.Tests.Json
         {
             DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Default;
 
-            Assert.Throws<ArgumentNullException>(() => factory.CreateJsonWriter(null, false, Encoding.UTF8));
+            Assert.Throws<ArgumentNullException>("stream",() => factory.CreateJsonWriter(null, false, Encoding.UTF8));
         }
 
         [Fact]
@@ -34,7 +34,7 @@ namespace Microsoft.OData.Tests.Json
             DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Default;
             using MemoryStream stream = new MemoryStream();
 
-            Assert.Throws<ArgumentNullException>(() => factory.CreateJsonWriter(stream, false, null));
+            Assert.Throws<ArgumentNullException>("encoding", () => factory.CreateJsonWriter(stream, false, null));
         }
 
         #endregion
