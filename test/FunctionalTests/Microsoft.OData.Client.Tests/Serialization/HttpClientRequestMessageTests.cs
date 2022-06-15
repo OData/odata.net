@@ -61,7 +61,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
                     // Assert
                     Assert.Equal(expectedResponse, contents);
                     Assert.Equal(1, handler.Requests.Count);
-                    Assert.Equal("GET http://localhost", handler.Requests[0]);
+                    Assert.Equal("GET http://localhost/", handler.Requests[0]);
                     Assert.Equal(1, httpClientHandlerProvider.NumCalls);
                 }
             }
@@ -102,8 +102,8 @@ namespace Microsoft.OData.Client.Tests.Serialization
                 var contents = await newResponse.Content.ReadAsStringAsync();
                 Assert.Equal(expectedResponse, contents);
                 Assert.Equal(2, handler.Requests.Count);
-                Assert.Equal("GET http://localhost", handler.Requests[0]);
-                Assert.Equal("GET http://foo", handler.Requests[1]);
+                Assert.Equal("GET http://localhost/", handler.Requests[0]);
+                Assert.Equal("GET http://foo/", handler.Requests[1]);
                 Assert.False(handler.Disposed);
             }
         }
