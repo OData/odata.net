@@ -786,12 +786,12 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Provides an instance of<see cref="HttpClientHandler"/> to use when making a request
         /// under the <see cref="HttpRequestTransportMode.HttpClient"/>.
-        /// If this property is null, a new <see cref="HttpClientHandler"/> instance will be created for each request.
+        /// If this property is set to null, a new <see cref="HttpClientHandler"/> instance will be created for each request.
         /// </summary>
         /// <remarks>
         /// This setting is ignored if the request transport mode is not <see cref="HttpRequestTransportMode.HttpClient"/>.
         /// </remarks>
-        public IHttpClientHandlerProvider HttpClientHandlerProvider { get; private set; }
+        public IHttpClientHandlerProvider HttpClientHandlerProvider { get; set; }
 
         /// <summary>Gets or sets the <see cref="IDataServiceRequestMessageFactory"/> used to build request messages.</summary>
         /// <returns>RequestMessageFactory</returns>
