@@ -240,7 +240,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceContext" /> class with the specified <paramref name="serviceRoot" />.</summary>
         /// <param name="serviceRoot">An absolute URI that identifies the root of a data service.</param>
-        /// <param name="httpClientProvider">The provider used to get an instance of <see cref="HttpClient"/> to use when making a request
+        /// <param name="httpClientHandlerProvider">Provides an instance of <see cref="HttpClientHandler"/> to use when making a request
         /// under the <see cref="HttpRequestTransportMode.HttpClient"/>. If no <see cref="IHttpClientHandlerProvider"/> is specified, a new <see cref="HttpClientHandler"/>
         /// will created for each request.</param>
         /// <exception cref="System.ArgumentNullException">When the <paramref name="serviceRoot" /> is null.</exception>
@@ -277,7 +277,7 @@ namespace Microsoft.OData.Client
         /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceContext" /> class with the specified <paramref name="serviceRoot" /> and targeting the specific <paramref name="maxProtocolVersion" />.</summary>
         /// <param name="serviceRoot">An absolute URI that identifies the root of a data service.</param>
         /// <param name="maxProtocolVersion">A <see cref="Microsoft.OData.Client.ODataProtocolVersion" /> value that is the maximum protocol version that the client understands.</param>
-        /// <param name="httpClientProvider">The provider used to get an instance of <see cref="HttpClient"/> to use when making a request
+        /// <param name="httpClientHandlerProvider" > Provides an instance of<see cref="HttpClientHandler"/> to use when making a request
         /// under the <see cref="HttpRequestTransportMode.HttpClient"/>. If no <see cref="IHttpClientHandlerProvider"/> is specified, a new <see cref="HttpClientHandler"/>
         /// will created for each request.</param>
         /// <remarks>
@@ -327,7 +327,7 @@ namespace Microsoft.OData.Client
         /// </param>
         /// <param name="maxProtocolVersion">max protocol version that the client understands.</param>
         /// <param name="model">The client edm model to use. Provided for testability.</param>
-        /// <param name="httpClientHandlerProvider">The provider used to get an instance of <see cref="HttpClientHandler"/> to use when making a request
+        /// <param name="httpClientHandlerProvider" > Provides an instance of<see cref="HttpClientHandler"/> to use when making a request
         /// under the <see cref="HttpRequestTransportMode.HttpClient"/>. If no <see cref="IHttpClientHandlerProvider"/> is specified, a new <see cref="HttpClientHandler"/>
         /// will created for each request.</param>
         /// <exception cref="ArgumentOutOfRangeException">If the <paramref name="maxProtocolVersion"/> is not a valid value.</exception>
@@ -784,9 +784,9 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Gets or sets the provider used to get the HttpClient to use for a particular request message
+        /// Provides an instance of<see cref="HttpClientHandler"/> to use when making a request
         /// under the <see cref="HttpRequestTransportMode.HttpClient"/>.
-        /// If this is not set, a new <see cref="HttpClientHandler"/> instance will be created for each request.
+        /// If this property is null, a new <see cref="HttpClientHandler"/> instance will be created for each request.
         /// </summary>
         /// <remarks>
         /// This setting is ignored if the request transport mode is not <see cref="HttpRequestTransportMode.HttpClient"/>.

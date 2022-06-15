@@ -52,7 +52,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
         /// <summary>
         /// List of requests handled by this handler.
         /// Each item is of the form: "[METHOD] [url]"
-        /// e.g.: "GET http://service/path".
+        /// e.g.: { "GET http://service/", "GET http://service/path" }.
         /// </summary>
         public IReadOnlyList<string> Requests => _requests;
 

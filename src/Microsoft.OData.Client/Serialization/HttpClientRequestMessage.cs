@@ -67,7 +67,6 @@ namespace Microsoft.OData.Client
         /// <summary>True if SendingRequest2Event is currently invoked, otherwise false.</summary>
         private bool inSendingRequest2Event;
 
-        private readonly bool _shouldDisposeHandler = false;
         private bool _disposed = false;
 
         /// <summary>
@@ -86,13 +85,11 @@ namespace Microsoft.OData.Client
             {
                 _handler = new HttpClientHandler();
                 _client = new HttpClient(_handler, disposeHandler: true);
-                _shouldDisposeHandler = true;
             }
             else
             {
                 _handler = _clientHandlerProvider.GetHttpClientHandler();
                 _client = new HttpClient(_handler, disposeHandler: false);
-                _shouldDisposeHandler = false;
             }
             
             _contentHeaderValueCache = new Dictionary<string, string>();
@@ -549,11 +546,6 @@ namespace Microsoft.OData.Client
                 }
 
                 _client.Dispose();
-
-                if (_shouldDisposeHandler)
-                {
-                    _handler.Dispose();
-                }
             }
         }
 

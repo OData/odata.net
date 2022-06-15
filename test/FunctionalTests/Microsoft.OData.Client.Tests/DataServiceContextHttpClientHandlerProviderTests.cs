@@ -48,7 +48,7 @@ namespace Microsoft.OData.Client.Tests
                 string personName = await nameQuery.GetValueAsync();
 
                 Assert.Equal(2, handler.Requests.Count);
-
+                Assert.Equal(2, provider.NumCalls);
                 Assert.Equal($"GET {BaseUri}/$metadata", handler.Requests[0]);
                 Assert.Equal($"GET {BaseUri}/People(1)/Name/$value", handler.Requests[1]);
                 Assert.Equal(PersonNameValue, personName);
