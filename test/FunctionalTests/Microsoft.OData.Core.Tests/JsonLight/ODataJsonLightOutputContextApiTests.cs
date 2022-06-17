@@ -3020,14 +3020,14 @@ POST http://tempuri.org/Customers HTTP/1.1
         }
 
         [Fact]
-        public async Task WriteNestedDeltaResourceSet_APIsThrowException()
+        public async Task WriteNestedDeltaResourceSet_APIsDoNotThrowException()
         {
             var customerDeltaResourceSet = CreateDeltaResourceSet("Customers", "NS.Customer", new Uri($"{ServiceUri}/Customers/deltaLink"));
             var customerResource = CreateCustomerResource();
             var ordersPropertyNestedResourceInfo = CreateNestedResourceInfo("Orders", isCollection: true);
             var orderDeltaResourceSet = CreateDeltaResourceSet("Orders", "NS.Order");
 
-            var asyncException = await Assert.ThrowsAsync<ODataException>(
+            var asyncException = await Record.ExceptionAsync(
                 async () =>
                 {
                     IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
@@ -3042,7 +3042,9 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
+            Assert.Null(asyncException);
+
+            var syncException = await Record.ExceptionAsync(
                 () => TaskUtils.GetTaskForSynchronousOperation(
                     () =>
                     {
@@ -3056,12 +3058,10 @@ POST http://tempuri.org/Customers HTTP/1.1
                             writer.WriteStart(ordersPropertyNestedResourceInfo);
                             writer.WriteStart(orderDeltaResourceSet);
                         }
-                    }));
+                    })
+                );
 
-            var expectedMessage = Strings.ODataWriterCore_InvalidTransitionFromExpandedLink("NestedResourceInfoWithContent", "DeltaResourceSet");
-
-            Assert.Equal(expectedMessage, asyncException.Message);
-            Assert.Equal(expectedMessage, syncException.Message);
+            Assert.Null(syncException);
         }
 
         [Theory]
@@ -3106,7 +3106,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                         }
                     }));
 
-            var expectedMessage = Strings.ODataWriterCore_InvalidTransitionFromExpandedLink("NestedResourceInfoWithContent", "DeletedResource");
+            var expectedMessage = Strings.ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry;
 
             Assert.Equal(expectedMessage, asyncException.Message);
             Assert.Equal(expectedMessage, syncException.Message);

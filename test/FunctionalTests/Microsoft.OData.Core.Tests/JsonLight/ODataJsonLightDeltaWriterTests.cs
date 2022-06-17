@@ -2097,7 +2097,7 @@ namespace Microsoft.OData.Tests.JsonLight
         [InlineData(/*isResponse*/true)]
         [InlineData(/*isResponse*/false)]
         [Theory]
-        public void WriteNestedDeltaResourceSetIn40ShouldFail(bool isResponse)
+        public void WriteNestedDeltaResourceSetIn40ShouldNotFail(bool isResponse)
         {
             this.TestInit(this.GetModel());
 
@@ -2114,7 +2114,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 writer.WriteStart(new ODataDeltaResourceSet());
             };
 
-            writeAction.Throws<ODataException>(Strings.ODataWriterCore_InvalidTransitionFromExpandedLink("NestedResourceInfoWithContent", "DeltaResourceSet"));
+            writeAction.DoesNotThrow();
         }
 
         [InlineData(/*isResponse*/true)]
@@ -2137,7 +2137,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 writer.WriteDeltaDeletedEntry(new ODataDeltaDeletedEntry("Products/1", DeltaDeletedEntryReason.Deleted));
             };
 
-            writeAction.Throws<ODataException>(Strings.ODataWriterCore_InvalidTransitionFromExpandedLink("NestedResourceInfoWithContent", "DeletedResource"));
+            writeAction.Throws<ODataException>(Strings.ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -2249,6 +2249,36 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.Equal(isResponse ?
                 "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"@count\":5,\"@deltaLink\":\"Customers?$expand=Orders&$deltatoken=8015\",\"value\":[{\"@id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\",\"Orders@delta\":[{\"@id\":\"Orders(10643)\"},{\"@removed\":{\"reason\":\"deleted\"},\"@id\":\"Orders(10643)\"}]}]}" :
                 "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\",\"Orders@delta\":[{\"@id\":\"Orders(10643)\"},{\"@removed\":{\"reason\":\"deleted\"},\"@id\":\"Orders(10643)\"}]}]}",
+                this.TestPayload());
+        }
+
+        [InlineData(/*isResponse*/true)]
+        [InlineData(/*isResponse*/false)]
+        [Theory]
+        public void WriteNestedDeltasIn40(bool isResponse)
+        {
+            this.TestInit(this.GetModel());
+
+            ODataJsonLightWriter writer = new ODataJsonLightWriter(GetV4OutputContext(isResponse), this.GetCustomers(), this.GetCustomerType(), true, false, true);
+            writer.WriteStart(isResponse ? feed : requestFeed);
+            writer.WriteStart(customerUpdated);
+            writer.WriteStart(new ODataNestedResourceInfo()
+            {
+                Name = "Orders",
+                IsCollection = true,
+            });
+            writer.WriteStart(new ODataDeltaResourceSet());
+            writer.WriteStart(order10643);
+            writer.WriteEnd(); // order
+            writer.WriteEnd(); // delta resourceSet
+            writer.WriteEnd(); // nestedInfo
+            writer.WriteEnd(); // customer
+            writer.WriteEnd(); // delta resource set
+            writer.Flush();
+
+            Assert.Equal(isResponse ?
+                "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\",\"@odata.count\":5,\"@odata.deltaLink\":\"Customers?$expand=Orders&$deltatoken=8015\",\"value\":[{\"@odata.id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\",\"Orders@delta\":[{\"@odata.id\":\"Orders(10643)\"}]}]}" :
+                "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@odata.id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\",\"Orders@delta\":[{\"@odata.id\":\"Orders(10643)\"}]}]}",
                 this.TestPayload());
         }
 

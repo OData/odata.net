@@ -2978,7 +2978,7 @@ namespace Microsoft.OData
 
                     break;
                 case WriterState.NestedResourceInfoWithContent:
-                    if (newState != WriterState.ResourceSet && newState != WriterState.Resource && newState != WriterState.Primitive && (this.Version < ODataVersion.V401 || (newState != WriterState.DeltaResourceSet && newState != WriterState.DeletedResource)))
+                    if (newState != WriterState.ResourceSet && newState != WriterState.Resource && newState != WriterState.Primitive && newState != WriterState.DeltaResourceSet && newState != WriterState.DeletedResource)
                     {
                         throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromExpandedLink(this.State.ToString(), newState.ToString()));
                     }

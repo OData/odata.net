@@ -1583,20 +1583,20 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             deletedResource.Reason = reason;
 
             var exception = await Assert.ThrowsAsync<ODataException>
-                (() => SetupJsonLightWriterAndRunTestAsync(
-                async (jsonLightWriter) =>
-                {
-                    await jsonLightWriter.WriteStartAsync(orderResource);
-                    await jsonLightWriter.WriteStartAsync(customerNestedResourceInfo);
-                    await jsonLightWriter.WriteStartAsync(deletedResource);
-                },
-                this.orderEntitySet,
-                this.orderEntityType,
-                writingResourceSet: false,
-                writingDelta: true));
+               (() => SetupJsonLightWriterAndRunTestAsync(
+               async (jsonLightWriter) =>
+               {
+                   await jsonLightWriter.WriteStartAsync(orderResource);
+                   await jsonLightWriter.WriteStartAsync(customerNestedResourceInfo);
+                   await jsonLightWriter.WriteStartAsync(deletedResource);
+               },
+               this.orderEntitySet,
+               this.orderEntityType,
+               writingResourceSet: false,
+               writingDelta: true));
 
             Assert.Equal(
-                Strings.ODataWriterCore_InvalidTransitionFromExpandedLink("NestedResourceInfoWithContent", "DeletedResource"),
+                Strings.ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry,
                 exception.Message);
         }
 
@@ -1624,13 +1624,13 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         }
 
         [Fact]
-        public async Task WriteNestedDeltaResourceSetAsync_ThrowsException()
+        public async Task WriteNestedDeltaResourceSetAsync_DoesNotThrowException()
         {
             var customerResource = CreateCustomerResource();
             var orderCollectionNestedResource = CreateOrderCollectionNestedResourceInfo();
             var orderDeltaResourceSet = CreateOrderDeltaResourceSet();
 
-            var exception = await Assert.ThrowsAsync<ODataException>(
+            var exception = await Record.ExceptionAsync(
                 () => SetupJsonLightWriterAndRunTestAsync(
                     async (jsonLightWriter) =>
                     {
@@ -1643,9 +1643,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     writingResourceSet: false,
                     writingDelta: true));
 
-            Assert.Equal(
-                Strings.ODataWriterCore_InvalidTransitionFromExpandedLink("NestedResourceInfoWithContent", "DeltaResourceSet"),
-                exception.Message);
+            Assert.Null(exception);
         }
 
         [Fact]
