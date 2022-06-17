@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System.Net.Http;
+using System.Threading;
 
 namespace Microsoft.OData.Client.Tests.Serialization
 {
@@ -19,8 +20,8 @@ namespace Microsoft.OData.Client.Tests.Serialization
         /// <summary>
         /// Creates a new instance of <see cref="MockHttpClientHandlerProvider"/>.
         /// </summary>
-        /// <param name="client">The <see cref="HttpClientHandler"/> to return.</param>
-        public MockHttpClientHandlerProvider(HttpClientHandler handler, bool requestClientDisposal = false)
+        /// <param name="handler">The <see cref="HttpClientHandler"/> to return.</param>
+        public MockHttpClientHandlerProvider(HttpClientHandler handler)
         {
             _handler = handler;
         }
