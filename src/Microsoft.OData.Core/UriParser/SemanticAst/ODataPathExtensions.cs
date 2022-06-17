@@ -191,13 +191,13 @@ namespace Microsoft.OData.UriParser
             ODataPath newPath = handler.FirstPart;
             newPath.Add(keySegment);
             AppendLastSegment(handler, newPath);
-            
+          
             return newPath;
         }
 
         private static void AppendLastSegment(SplitEndingSegmentOfTypeHandler<TypeSegment> handler, ODataPath newPath)
         {
-           newPath.AddRange(handler.LastPart);
+            newPath.AddRange(handler.LastPart);
         }
 
         /// <summary>
