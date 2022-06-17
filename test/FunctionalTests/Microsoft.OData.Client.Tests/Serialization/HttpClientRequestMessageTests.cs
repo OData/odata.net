@@ -51,8 +51,8 @@ namespace Microsoft.OData.Client.Tests.Serialization
                 {
                     // Act
                     IODataResponseMessage response = request.GetResponse();
-                    var stream = response.GetStream();
                     string contents = "";
+                    using (var stream = response.GetStream())
                     using (StreamReader reader = new StreamReader(stream))
                     {
                         contents = reader.ReadToEnd();
@@ -85,13 +85,18 @@ namespace Microsoft.OData.Client.Tests.Serialization
                     new Dictionary<string, string>(),
                     httpClientProvider);
 
-                var request = new HttpClientRequestMessage(args);
+                //var request = new HttpClientRequestMessage(args);
 
                 // Act
-                IODataResponseMessage response = request.GetResponse();
-                var stream = response.GetStream();
-                stream.Dispose();
-                request.Dispose();
+                using (var request = new HttpClientRequestMessage(args))
+                {
+                    IODataResponseMessage response = request.GetResponse();
+                    using (var stream = response.GetStream())
+                    {
+                        request.Dispose();
+                        stream.Dispose();
+                    }
+                }
 
                 // Re-use handler with a different HttpClient after initial request is disposed
                 var client = new HttpClient(handler, disposeHandler: false);

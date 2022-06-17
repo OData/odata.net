@@ -534,8 +534,6 @@ namespace Microsoft.OData.Client
                 return;
             }
 
-            _disposed = true;
-
             if (disposing)
             {
                 HttpResponseMessage response = _httpResponseMessage;
@@ -547,6 +545,8 @@ namespace Microsoft.OData.Client
 
                 _client.Dispose();
             }
+
+            _disposed = true;
         }
 
         void ISendingRequest2.BeforeSendingRequest2Event()

@@ -22,21 +22,19 @@ namespace Microsoft.OData.Client.Tests.Serialization
         private readonly Func<HttpRequestMessage, HttpResponseMessage> _requestHandler;
         private readonly List<string> _requests = new List<string>();
 
-        
-
         /// <summary>
         /// Creates an instance of <see cref="MockHttpClientHandler"/> that
         /// returns the specified response contents for any request.
         /// </summary>
         /// <param name="expectedResponse">The contents to return in each response.</param>
         public MockHttpClientHandler(string expectedResponse)
-        {
-            _requestHandler = (_) =>
+            : this((_) =>
             {
                 var response = new HttpResponseMessage(HttpStatusCode.OK);
                 response.Content = new StringContent(expectedResponse);
                 return response;
-            };
+            })
+        {
         }
 
         /// <summary>

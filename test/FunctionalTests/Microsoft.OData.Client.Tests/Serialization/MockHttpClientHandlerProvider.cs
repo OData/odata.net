@@ -16,6 +16,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
     internal sealed class MockHttpClientHandlerProvider: IHttpClientHandlerProvider
     {
         private readonly HttpClientHandler _handler;
+        private int _numCalls = 0;
 
         /// <summary>
         /// Creates a new instance of <see cref="MockHttpClientHandlerProvider"/>.
@@ -30,11 +31,11 @@ namespace Microsoft.OData.Client.Tests.Serialization
         /// Number of times <see cref="GetHttpClientHandler()"/> was
         /// called.
         /// </summary>
-        public int NumCalls { get; private set; } = 0;
+        public int NumCalls => _numCalls;
 
         public HttpClientHandler GetHttpClientHandler()
         {
-            NumCalls++;
+            Interlocked.Increment(ref _numCalls);
             return _handler;
         }
     }
