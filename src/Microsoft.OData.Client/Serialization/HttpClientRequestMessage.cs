@@ -87,8 +87,16 @@ namespace Microsoft.OData.Client
             }
             else
             {
-                _handler = clientHandlerProvider.GetHttpClientHandler();
-                _client = new HttpClient(_handler, disposeHandler: false);
+                try
+                {
+                    _handler = clientHandlerProvider.GetHttpClientHandler();
+                    _client = new HttpClient(_handler, disposeHandler: false);
+                }
+                catch
+                {
+                    _messageStream.Dispose();
+                    throw;
+                }
             }
             
             _contentHeaderValueCache = new Dictionary<string, string>();
