@@ -22,6 +22,7 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Linq.Expressions;
     using System.Net;
+    using System.Net.Http;
     using System.Reflection;
     using System.Threading;
     using System.Threading.Tasks;
@@ -717,13 +718,24 @@ namespace Microsoft.OData.Client
             set { this.httpRequestTransportMode = value; }
         }
 
-        /// <summary>Gets or sets the HttpRequest mode to use in making Http Requests.</summary>
-        /// <returns>TransportModeFactory.</returns>
+        /// <summary>
+        /// Gets or sets the <see cref="IHttpClientHandlerProvider"/> that provides the <see cref="HttpClientHandler"/> to use when making a request
+        /// under the <see cref="HttpRequestTransportMode.HttpClient"/>.
+        /// If <see cref="HttpClientHandlerProvider"/> is null, a new <see cref="HttpClientHandler"/> instance will be created for each request.
+        /// </summary>
+        /// <remarks>
+        /// This setting is ignored if the request transport mode is not <see cref="HttpRequestTransportMode.HttpClient"/>.
+        /// </remarks>
+        public IHttpClientHandlerProvider HttpClientHandlerProvider { get; set; }
+
+        /// <summary>Gets or sets the <see cref="IDataServiceRequestMessageFactory"/> used to build request messages.</summary>
+        /// <returns>RequestMessageFactory</returns>
         internal IDataServiceRequestMessageFactory RequestMessageFactory
         {
             get { return this.requestMessageFactory; }
             set { this.requestMessageFactory = value; }
         }
+
 
         /// <summary>
         /// Gets or sets a System.Boolean value that controls whether default credentials are sent with requests.

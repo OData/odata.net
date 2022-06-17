@@ -7900,11 +7900,19 @@ public interface Microsoft.OData.Client.IBaseEntityType {
     Microsoft.OData.Client.EntityDescriptor EntityDescriptor  { public abstract get; public abstract set; }
 }
 
+public interface Microsoft.OData.Client.IHttpClientHandlerProvider {
+    System.Net.Http.HttpClientHandler GetHttpClientHandler ()
+}
+
 public abstract class Microsoft.OData.Client.DataServiceClientRequestMessage : IODataRequestMessage {
     public DataServiceClientRequestMessage (string actualMethod)
 
     string ActualMethod  { protected virtual get; }
+    [
+    ObsoleteAttribute(),
+    ]
     System.Net.ICredentials Credentials  { public abstract get; public abstract set; }
+
     System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] Headers  { public abstract get; }
     string Method  { public abstract get; public abstract set; }
     int ReadWriteTimeout  { public abstract get; public abstract set; }
@@ -8054,9 +8062,11 @@ public class Microsoft.OData.Client.DataServiceClientConfigurations {
 
 public class Microsoft.OData.Client.DataServiceClientRequestMessageArgs {
     public DataServiceClientRequestMessageArgs (string method, System.Uri requestUri, bool useDefaultCredentials, bool usePostTunneling, System.Collections.Generic.IDictionary`2[[System.String],[System.String]] headers)
+    public DataServiceClientRequestMessageArgs (string method, System.Uri requestUri, bool useDefaultCredentials, bool usePostTunneling, System.Collections.Generic.IDictionary`2[[System.String],[System.String]] headers, Microsoft.OData.Client.IHttpClientHandlerProvider httpClientHandlerProvider)
 
     string ActualMethod  { public get; }
     System.Collections.Generic.IDictionary`2[[System.String],[System.String]] Headers  { public get; }
+    Microsoft.OData.Client.IHttpClientHandlerProvider HttpClientHandlerProvider  { public get; }
     string Method  { public get; }
     System.Uri RequestUri  { public get; }
     bool UseDefaultCredentials  { public get; }
@@ -8129,6 +8139,7 @@ public class Microsoft.OData.Client.DataServiceContext {
     Microsoft.OData.Client.EntityParameterSendOption EntityParameterSendOption  { public virtual get; public virtual set; }
     Microsoft.OData.Client.EntityTracker EntityTracker  { public virtual get; public virtual set; }
     Microsoft.OData.Client.DataServiceClientFormat Format  { public virtual get; }
+    Microsoft.OData.Client.IHttpClientHandlerProvider HttpClientHandlerProvider  { public get; public set; }
     Microsoft.OData.Client.HttpRequestTransportMode HttpRequestTransportMode  { public get; public set; }
     bool IgnoreResourceNotFoundException  { public virtual get; public virtual set; }
     bool KeyComparisonGeneratesFilterQuery  { public virtual get; public virtual set; }
@@ -8369,7 +8380,11 @@ public class Microsoft.OData.Client.EntityTracker : Microsoft.OData.Client.Entit
 public class Microsoft.OData.Client.HttpClientRequestMessage : Microsoft.OData.Client.DataServiceClientRequestMessage, IDisposable, IODataRequestMessage, ISendingRequest2 {
     public HttpClientRequestMessage (Microsoft.OData.Client.DataServiceClientRequestMessageArgs args)
 
+    [
+    ObsoleteAttribute(),
+    ]
     System.Net.ICredentials Credentials  { public virtual get; public virtual set; }
+
     System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] Headers  { public virtual get; }
     string Method  { public virtual get; public virtual set; }
     [
