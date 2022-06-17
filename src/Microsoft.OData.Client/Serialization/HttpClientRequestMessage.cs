@@ -52,7 +52,6 @@ namespace Microsoft.OData.Client
         private readonly HttpRequestMessage _requestMessage;
         private readonly HttpClient _client;
         private readonly HttpClientHandler _handler;
-        private readonly IHttpClientHandlerProvider _clientHandlerProvider;
         private readonly MemoryStream _messageStream;
 
         /// <summary>
@@ -80,15 +79,15 @@ namespace Microsoft.OData.Client
         {
             _messageStream = new MemoryStream();
 
-            _clientHandlerProvider = args.HttpClientHandlerProvider;
-            if (_clientHandlerProvider == null)
+            IHttpClientHandlerProvider clientHandlerProvider = args.HttpClientHandlerProvider;
+            if (clientHandlerProvider == null)
             {
                 _handler = new HttpClientHandler();
                 _client = new HttpClient(_handler, disposeHandler: true);
             }
             else
             {
-                _handler = _clientHandlerProvider.GetHttpClientHandler();
+                _handler = clientHandlerProvider.GetHttpClientHandler();
                 _client = new HttpClient(_handler, disposeHandler: false);
             }
             
