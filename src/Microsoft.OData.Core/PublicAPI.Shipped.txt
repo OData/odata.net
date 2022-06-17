@@ -1542,6 +1542,7 @@ Microsoft.OData.UriParser.ODataPath.ODataPath(params Microsoft.OData.UriParser.O
 Microsoft.OData.UriParser.ODataPath.ODataPath(System.Collections.Generic.IEnumerable<Microsoft.OData.UriParser.ODataPathSegment> segments) -> void
 Microsoft.OData.UriParser.ODataPath.WalkWith(Microsoft.OData.UriParser.PathSegmentHandler handler) -> void
 Microsoft.OData.UriParser.ODataPath.WalkWith<T>(Microsoft.OData.UriParser.PathSegmentTranslator<T> translator) -> System.Collections.Generic.IEnumerable<T>
+Microsoft.OData.UriParser.ODataPathExtensions
 Microsoft.OData.UriParser.ODataPathSegment
 Microsoft.OData.UriParser.ODataPathSegment.Identifier.get -> string
 Microsoft.OData.UriParser.ODataPathSegment.Identifier.set -> void
