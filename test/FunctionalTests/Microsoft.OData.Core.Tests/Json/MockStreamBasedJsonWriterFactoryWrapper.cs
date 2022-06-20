@@ -6,11 +6,8 @@
 
 #if NETCOREAPP3_1_OR_GREATER
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.OData.Json;
 
 namespace Microsoft.OData.Tests.Json

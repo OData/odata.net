@@ -271,6 +271,37 @@ namespace Microsoft.OData.Tests
             Assert.Equal(1, writerFactory.NumCalls);
             Assert.Equal("{\"@odata.context\":\"http://host/service/$metadata#Edm.String\",\"value\":\"This is a test \\u0438\\u044F\"}", output);
         }
+
+        [Fact]
+        public void WhenInjectingStreamBasedJsonWriterFactory_ThrowException_IfFactoryReturnsNull()
+        {
+            ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
+
+            using MemoryStream stream = new MemoryStream();
+            InMemoryMessage request = new InMemoryMessage() { Stream = stream };
+
+            IContainerBuilder containerBuilder = new Test.OData.DependencyInjection.TestContainerBuilder();
+            containerBuilder.AddDefaultODataServices();
+            containerBuilder.AddService<IStreamBasedJsonWriterFactory>(
+                ServiceLifetime.Singleton, sp => new MockStreamBasedJsonWriterFactory(null));
+            request.Container = containerBuilder.BuildContainer();
+
+            IStreamBasedJsonWriterFactory factory = request.Container.GetService<IStreamBasedJsonWriterFactory>();
+            Assert.IsType<MockStreamBasedJsonWriterFactory>(factory);
+
+            settings.ODataUri.ServiceRoot = new Uri("http://host/service");
+            settings.SetContentType(ODataFormat.Json);
+            EdmModel model = new EdmModel();
+            using ODataMessageWriter writer = new ODataMessageWriter((IODataRequestMessage)request, settings, model);
+            Action writePropertyAction = () => writer.WriteProperty(new ODataProperty()
+            {
+                Name = "Name",
+                Value = "This is a test ия"
+            });
+
+            writePropertyAction.Throws<ODataException>(Strings.ODataMessageWriter_ProvidedJsonWriterFactory_ReturnedNull);
+        }
+
 #endif
 
         [Fact]

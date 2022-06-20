@@ -19,7 +19,7 @@ namespace Microsoft.OData.Json
     /// A stream that allows converting from one encoding to another when writing to a stream.
     /// </summary>
     /// <remarks>
-    /// This is adapated from the .NET runtime's TranscodingStream available in .NET 5+
+    /// This is adapted from the .NET runtime's TranscodingStream available in .NET 5+
     /// see: https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Text/TranscodingStream.cs
     /// </remarks>
     internal sealed class TranscodingWriteStream : Stream

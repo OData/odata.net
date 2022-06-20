@@ -121,7 +121,7 @@ namespace Microsoft.OData.JsonLight
                 {
                     this.jsonWriter = CreateJsonWriter(streamBasedJsonWriterFactory, this.messageOutputStream, isIeee754Compatible, messageInfo.Encoding);
                 }
-                else
+                else 
                 {
                     // Then fallback to default
                     this.jsonWriter = CreateJsonWriter(this.Container, this.textWriter, isIeee754Compatible, messageWriterSettings);
@@ -916,7 +916,11 @@ namespace Microsoft.OData.JsonLight
             Encoding encoding)
         {
             IJsonWriter jsonWriter = factory.CreateJsonWriter(outputStream, isIeee754Compatible, encoding);
-            Debug.Assert(jsonWriter != null, "jsonWriter != null");
+
+            if (jsonWriter == null)
+            {
+                throw new ODataException(Strings.ODataMessageWriter_ProvidedJsonWriterFactory_ReturnedNull);
+            }
 
             return jsonWriter;
         }

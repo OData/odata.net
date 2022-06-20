@@ -31,7 +31,6 @@ namespace Microsoft.OData.Json
         private readonly int bufferSize;
         private readonly bool isIeee754Compatible;
         private readonly bool leaveStreamOpen;
-        private readonly Encoding utf8Encoding = Encoding.UTF8;
         private readonly Encoding outputEncoding;
         private bool disposed;
 
@@ -102,7 +101,7 @@ namespace Microsoft.OData.Json
         public void WritePaddingFunctionName(string functionName)
         {
             this.Flush();
-            this.writeStream.Write(this.utf8Encoding.GetBytes(functionName));
+            this.writeStream.Write(Encoding.UTF8.GetBytes(functionName));
         }
 
         public void EndPaddingFunctionScope()
@@ -277,7 +276,7 @@ namespace Microsoft.OData.Json
             // see: https://github.com/OData/odata.net/issues/2420
 
             this.Flush(); // ensure we don't write to the stream while there are still pending data in the buffer
-            this.writeStream.Write(this.utf8Encoding.GetBytes(rawValue));
+            this.writeStream.Write(Encoding.UTF8.GetBytes(rawValue));
             this.FlushIfBufferThresholdReached();
         }
 
