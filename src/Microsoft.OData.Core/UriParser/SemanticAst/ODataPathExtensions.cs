@@ -67,7 +67,9 @@ namespace Microsoft.OData.UriParser
                 throw Error.ArgumentNull(nameof(path));
             }
 
-            return (bool)path.LastSegment?.TranslateWith(IsCollectionTranslator.Instance);
+            bool? isCollection = path.LastSegment?.TranslateWith(IsCollectionTranslator.Instance);
+
+            return isCollection.GetValueOrDefault();
         }
 
         /// <summary>
