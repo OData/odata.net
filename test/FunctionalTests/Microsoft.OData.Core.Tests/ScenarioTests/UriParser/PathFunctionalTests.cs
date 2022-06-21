@@ -1208,7 +1208,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             Assert.Equal("$42", path.FirstSegment.ShouldBeBatchReferenceSegment(HardCodedTestModel.GetDogType()).ContentId);
             path.LastSegment.ShouldBeNavigationPropertySegment(HardCodedTestModel.GetDogMyPeopleNavProp());
-            Assert.Same(HardCodedTestModel.GetDogsSet(), path.FirstSegment.TranslateWith(new DetermineNavigationSourceTranslator()));
+            Assert.Same(HardCodedTestModel.GetDogsSet(), path.FirstSegment.TranslateWith(DetermineNavigationSourceTranslator.Instance));
         }
 
         //[Fact(Skip = "#833: Throw exception when $value appears after a stream.")]

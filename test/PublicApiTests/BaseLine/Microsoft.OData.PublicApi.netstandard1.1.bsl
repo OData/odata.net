@@ -6373,6 +6373,41 @@ public sealed class Microsoft.OData.UriParser.CustomUriLiteralPrefixes {
     public static bool RemoveCustomLiteralPrefix (string literalPrefix)
 }
 
+[
+ExtensionAttribute(),
+]
+public sealed class Microsoft.OData.UriParser.ODataPathExtensions {
+    [
+    ExtensionAttribute(),
+    ]
+    public static Microsoft.OData.Edm.IEdmTypeReference EdmType (Microsoft.OData.UriParser.ODataPath path)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static bool IsCollection (Microsoft.OData.UriParser.ODataPath path)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static Microsoft.OData.Edm.IEdmNavigationSource NavigationSource (Microsoft.OData.UriParser.ODataPath path)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static string ToResourcePathString (Microsoft.OData.UriParser.ODataPath path, Microsoft.OData.ODataUrlKeyDelimiter urlKeyDelimiter)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static Microsoft.OData.UriParser.ODataPath TrimEndingKeySegment (Microsoft.OData.UriParser.ODataPath path)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static Microsoft.OData.UriParser.ODataPath TrimEndingTypeSegment (Microsoft.OData.UriParser.ODataPath path)
+}
+
 public sealed class Microsoft.OData.UriParser.RangeVariableKind {
     public static int NonResource = 1
     public static int Resource = 0
