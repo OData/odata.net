@@ -28,7 +28,7 @@ namespace Microsoft.OData.Client
     /// <summary>
     /// This class provides a Bind method that analyzes an input <see cref="Expression"/> and returns a bound tree.
     /// </summary>
-    internal partial class ResourceBinder : DataServiceALinqExpressionVisitor
+    internal class ResourceBinder : DataServiceALinqExpressionVisitor
     {
         private const string AddQueryOptionMethodName = "AddQueryOption";
 
@@ -1601,28 +1601,8 @@ namespace Microsoft.OData.Client
                         case SequenceMethod.AverageNullableSingleSelector:
                             return AnalyzeAggregation(mce, AggregationMethod.Average);
                         case SequenceMethod.MinSelector:
-                        case SequenceMethod.MinIntSelector:
-                        case SequenceMethod.MinDoubleSelector:
-                        case SequenceMethod.MinDecimalSelector:
-                        case SequenceMethod.MinLongSelector:
-                        case SequenceMethod.MinSingleSelector:
-                        case SequenceMethod.MinNullableIntSelector:
-                        case SequenceMethod.MinNullableDoubleSelector:
-                        case SequenceMethod.MinNullableDecimalSelector:
-                        case SequenceMethod.MinNullableLongSelector:
-                        case SequenceMethod.MinNullableSingleSelector:
                             return AnalyzeAggregation(mce, AggregationMethod.Min);
                         case SequenceMethod.MaxSelector:
-                        case SequenceMethod.MaxIntSelector:
-                        case SequenceMethod.MaxDoubleSelector:
-                        case SequenceMethod.MaxDecimalSelector:
-                        case SequenceMethod.MaxLongSelector:
-                        case SequenceMethod.MaxSingleSelector:
-                        case SequenceMethod.MaxNullableIntSelector:
-                        case SequenceMethod.MaxNullableDoubleSelector:
-                        case SequenceMethod.MaxNullableDecimalSelector:
-                        case SequenceMethod.MaxNullableLongSelector:
-                        case SequenceMethod.MaxNullableSingleSelector:
                             return AnalyzeAggregation(mce, AggregationMethod.Max);
                         default:
                             throw Error.MethodNotSupported(mce);
