@@ -1071,32 +1071,6 @@ namespace Microsoft.OData.Client.Tests.ALinq
         }
 
         [Fact]
-        public void GroupByResultSelect_EdgeCase()
-        {
-            var queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
-
-            var aggregateQuery = queryable.GroupBy(
-                d1 => d1.Product.Category.Name,
-                (d1, d2) => new
-                {
-                    CategoryNameLength = d1.Length,
-                    AverageAmount = d2.Average(d3 => d3.Amount)
-                });
-
-            Assert.Equal(
-                string.Format("{0}/Sales?$apply=groupby((Product/Category/Name),aggregate(" +
-                "Amount with average as averageAmount))", serviceUri),
-                aggregateQuery.ToString());
-
-            MockGroupBy_ConstructorInitialization();
-
-            var aggregateResult = Assert.Single(aggregateQuery.ToArray());
-
-            Assert.Equal(4, aggregateResult.CategoryNameLength);
-            Assert.Equal(4M, aggregateResult.AverageAmount);
-        }
-
-        [Fact]
         public void GroupByResultSelector_OnFilteredInputSet_ExpressionTranslatedToExpectedUri()
         {
             // Arrange
