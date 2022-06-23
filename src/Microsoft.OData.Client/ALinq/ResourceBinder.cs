@@ -841,11 +841,16 @@ namespace Microsoft.OData.Client
         /// determine whether it can be satisfied with $apply.
         /// </summary>
         /// <param name="methodCallExpr">Expression to analyze.</param>
-        /// <returns><paramref name="methodCallExpr"/>, or a new resource set expression 
-        /// for the target resource in the analyzed expression.</returns>
-        private static Expression AnalyzeGroupBy(MethodCallExpression methodCallExpr)
+        /// <param name="expr">
+        /// <paramref name="methodCallExpr"/>, or a new resource set expression
+        /// for the target resource in the analyzed expression.
+        /// </param>
+        /// <returns>true if <paramref name="methodCallExpr"/> can be satisfied with $apply; false otherwise.</returns>
+        private bool AnalyzeGroupBy(MethodCallExpression methodCallExpr, out Expression expr)
         {
             Debug.Assert(methodCallExpr != null, "methodCallExpr != null");
+
+            expr = methodCallExpr;
 
             // Total 3 arguments expected
             // GroupBy<TSource, TKey, TResult>(
@@ -854,61 +859,33 @@ namespace Microsoft.OData.Client
             //     Expression<Func<TKey, IEnumerable<TSource>, TResult>> resultSelector)
             if (methodCallExpr.Arguments.Count != 3)
             {
-                return methodCallExpr;
+                return false;
             }
 
             SequenceMethod sequenceMethod;
             if (!ReflectionUtil.TryIdentifySequenceMethod(methodCallExpr.Method, out sequenceMethod) ||
                 sequenceMethod != SequenceMethod.GroupByResultSelector)
             {
-                return methodCallExpr;
+                return false;
             }
 
             // We expect a resource expression as the first argument.
-            QueryableResourceExpression source = methodCallExpr.Arguments[0] as QueryableResourceExpression;
+            QueryableResourceExpression source = this.Visit(methodCallExpr.Arguments[0]) as QueryableResourceExpression;
             if (source == null)
             {
-                return methodCallExpr;
+                return false;
             }
-
-            LambdaExpression keySelector;
-            // Key selector should be a single argument lambda: d1 => ...
-            if (!PatternRules.MatchSingleArgumentLambda(methodCallExpr.Arguments[1], out keySelector))
-            {
-                return methodCallExpr;
-            }
-
-            LambdaExpression resultSelector;
-            // Result selector should be a double argument lambda: (d2, d3) => ...
-            if (!PatternRules.MatchDoubleArgumentLambda(methodCallExpr.Arguments[2], out resultSelector))
-            {
-                return methodCallExpr;
-            }
-
-            // Analyze result selector - Must be a simple instantiation.
-            // A result selector where the body is a single argument lambda is also valid: (d2, d3) => d3.Average(d4 => d4.Amount)
-            // However, this presents a challenge since an alias is required in the aggregate transformation: aggregate(Amount with average as [alias])
-            // We could circumvent this by defaulting to [aggregate method]+[aggregate property], e.g., AverageAmount
-            // but this is deferred to a future release
-            if (resultSelector.Body.NodeType != ExpressionType.MemberInit && resultSelector.Body.NodeType != ExpressionType.New)
-            {
-                return methodCallExpr;
-            }
-
-            // Analyze key selector
-            if (!AnalyzeGroupByKeySelector(source, keySelector))
-            {
-                return methodCallExpr;
-            }
-
-            // Analyze result selector
-            GroupByResultSelectorAnalyzer.Analyze(source, resultSelector);
 
             ResourceExpression resourceExpr = source.CreateCloneWithNewType(methodCallExpr.Method.ReturnType);
 
-            resourceExpr.Projection = new ProjectionQueryOptionExpression(resultSelector.Body.Type, resultSelector, new List<string>());
+            if (!GroupByAnalyzer.Analyze(methodCallExpr, source, resourceExpr))
+            {
+                return false;
+            }
 
-            return resourceExpr;
+            expr = resourceExpr;
+
+            return true;
         }
 
         /// <summary>Ensures that there's a limit on the cardinality of a query.</summary>
@@ -1383,6 +1360,7 @@ namespace Microsoft.OData.Client
                 // since we could be adding query options to the root, create a new one which can be mutable.
                 return QueryableResourceExpression.CreateNavigationResourceExpression(rse.NodeType, rse.Type, rse.Source, rse.MemberExpression, rse.ResourceType, null /*expandPaths*/, CountOption.None, null /*customQueryOptions*/, null /*projection*/, rse.ResourceTypeAs, rse.UriVersion, rse.OperationName, rse.OperationParameters);
             }
+
             return rse;
         }
 
@@ -1448,7 +1426,7 @@ namespace Microsoft.OData.Client
             return rseCopy;
         }
 
-        private static void AddSequenceQueryOption(ResourceExpression target, QueryOptionExpression qoe)
+        internal static void AddSequenceQueryOption(ResourceExpression target, QueryOptionExpression qoe)
         {
             QueryableResourceExpression rse = (QueryableResourceExpression)target;
             rse.ConvertKeyToFilterExpression();
@@ -1539,13 +1517,16 @@ namespace Microsoft.OData.Client
             {
                 // The leaf projection can be one of Select(source, selector) or
                 // SelectMany(source, collectionSelector, resultSelector).
-                if (sequenceMethod == SequenceMethod.Select ||
-                    sequenceMethod == SequenceMethod.SelectManyResultSelector)
+                if ((sequenceMethod == SequenceMethod.Select ||
+                    sequenceMethod == SequenceMethod.SelectManyResultSelector) &&
+                    this.AnalyzeProjection(mce, sequenceMethod, out e))
                 {
-                    if (this.AnalyzeProjection(mce, sequenceMethod, out e))
-                    {
-                        return e;
-                    }
+                    return e;
+                }
+                else if (sequenceMethod == SequenceMethod.GroupByResultSelector &&
+                    this.AnalyzeGroupBy(mce, out e))
+                {
+                    return e;
                 }
             }
 
@@ -1643,8 +1624,6 @@ namespace Microsoft.OData.Client
                         case SequenceMethod.MaxNullableLongSelector:
                         case SequenceMethod.MaxNullableSingleSelector:
                             return AnalyzeAggregation(mce, AggregationMethod.Max);
-                        case SequenceMethod.GroupByResultSelector:
-                            return AnalyzeGroupBy(mce);
                         default:
                             throw Error.MethodNotSupported(mce);
                     }
@@ -1718,76 +1697,6 @@ namespace Microsoft.OData.Client
             }
 
             return expression;
-        }
-
-        /// <summary>
-        /// Analyzes a GroupBy key selector for property/ies that the input sequence is grouped by.
-        /// </summary>
-        /// <param name="input">The input expression.</param>
-        /// <param name="keySelector">Key selector expression to analyze.</param>
-        /// <returns>true if analyzed successfully; false otherwise</returns>
-        private static bool AnalyzeGroupByKeySelector(QueryableResourceExpression input, LambdaExpression keySelector)
-        {
-            Debug.Assert(input != null, "input != null");
-            Debug.Assert(keySelector != null, "keySelector != null");
-
-            EnsureApplyInitialized(input);
-            Debug.Assert(input.Apply != null, "input.Apply != null");
-
-            // Scenario 1: GroupBy(d1 => [Constant])
-            ConstantExpression constExpr = keySelector.Body as ConstantExpression;
-            if (constExpr != null)
-            {
-                input.Apply.KeySelectorMap.Add(constExpr.Value.ToString(), constExpr);
-
-                return true;
-            }
-
-            // Scenario 2: GroupBy(d1 => d1.Property) and GroupBy(d1 = d1.NavProperty...Property)
-            if (keySelector.Body.NodeType == ExpressionType.MemberAccess)
-            {
-                MemberExpression memberExpr = (MemberExpression)keySelector.Body;
-
-                // Validate grouping expression
-                ValidationRules.ValidateGroupingExpression(memberExpr);
-
-                Expression boundExpression;
-                if (!TryBindToInput(input, keySelector, out boundExpression))
-                {
-                    return false;
-                }
-
-                input.Apply.GroupingExpressions.Add(boundExpression);
-                input.Apply.KeySelectorMap.Add(memberExpr.Member.Name, memberExpr);
-
-                return true;
-            }
-
-            // Only proceed beyond here if key selector body is a simple instantiation.
-            if (keySelector.Body.NodeType != ExpressionType.MemberInit && keySelector.Body.NodeType != ExpressionType.New)
-            {
-                return false;
-            }
-
-            // Scenario 2: GroupBy(d1 => new { d1.Property1, ..., d1.PropertyN })
-            // Scenario 3: GroupBy(d1 => new Cls { ClsProperty1 = d1.Property1, ..., ClsPropertyN = d1.PropertyN }) - not common but possible
-            GroupByKeySelectorAnalyzer.Analyze(input, keySelector);
-
-            return true;
-        }
-
-        /// <summary>
-        /// Ensure apply query option for the resource set is initialized
-        /// </summary>
-        /// <param name="input">The resource expression</param>
-        private static void EnsureApplyInitialized(QueryableResourceExpression input)
-        {
-            Debug.Assert(input != null, "input != null");
-
-            if (input.Apply == null)
-            {
-                AddSequenceQueryOption(input, new ApplyQueryOptionExpression(input.Type));
-            }
         }
 
         /// <summary>Use this class to perform pattern-matching over expression trees.</summary>

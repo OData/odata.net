@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ResourceBinder.GroupByResultSelectorAnalyzer.cs" company="Microsoft">
+// <copyright file="GroupByAnalyzer.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -17,8 +17,231 @@ namespace Microsoft.OData.Client
 
     #endregion Namespaces
 
-    internal partial class ResourceBinder
+    /// <summary>
+    /// Analyzes an expression to check whether it can be satisfied with $apply.
+    /// </summary>
+    internal static class GroupByAnalyzer
     {
+        /// <summary>
+        /// Analyzes <paramref name="methodCallExpr"/> to check whether it can be satisfied with $apply.
+        /// </summary>
+        /// <param name="methodCallExpr">Expression to analyze.</param>
+        /// <param name="source">The resource set expression (source) for the GroupBy.</param>
+        /// <param name="resourceExpr">The resource expression in scope.</param>
+        /// <returns>true if <paramref name="methodCallExpr"/> can be satisfied with $apply; false otherwise.</returns>
+        internal static bool Analyze(MethodCallExpression methodCallExpr, QueryableResourceExpression source, ResourceExpression resourceExpr)
+        {
+            Debug.Assert(source != null, $"{nameof(source)} != null");
+            Debug.Assert(resourceExpr != null, $"{nameof(resourceExpr)} != null");
+            Debug.Assert(methodCallExpr != null, $"{nameof(methodCallExpr)} != null");
+            Debug.Assert(methodCallExpr.Arguments.Count == 3, $"{nameof(methodCallExpr)}.Arguments.Count == 3");
+
+            LambdaExpression keySelector;
+            // Key selector should be a single argument lambda: d1 => ...
+            if (!ResourceBinder.PatternRules.MatchSingleArgumentLambda(methodCallExpr.Arguments[1], out keySelector))
+            {
+                return false;
+            }
+
+            LambdaExpression resultSelector;
+            // Result selector should be a double argument lambda: (d2, d3) => ...
+            if (!ResourceBinder.PatternRules.MatchDoubleArgumentLambda(methodCallExpr.Arguments[2], out resultSelector))
+            {
+                return false;
+            }
+
+            // Analyze result selector - Must be a simple instantiation.
+            // A result selector where the body is a single argument lambda is also valid: (d2, d3) => d3.Average(d4 => d4.Amount)
+            // However, this presents a challenge since an alias is required in the aggregate transformation: aggregate(Amount with average as [alias])
+            // We could circumvent this by defaulting to [aggregate method]+[aggregate property], e.g., AverageAmount
+            // but this is deferred to a future release
+            if (resultSelector.Body.NodeType != ExpressionType.MemberInit && resultSelector.Body.NodeType != ExpressionType.New)
+            {
+                return false;
+            }
+
+            // Analyze key selector
+            if (!AnalyzeGroupByKeySelector(source, keySelector))
+            {
+                return false;
+            }
+
+            // Analyze result selector
+            GroupByResultSelectorAnalyzer.Analyze(source, resultSelector);
+
+            resourceExpr.Projection = new ProjectionQueryOptionExpression(resultSelector.Body.Type, resultSelector, new List<string>());
+
+            return true;
+        }
+
+        /// <summary>
+        /// Analyzes a GroupBy key selector for property/ies that the input sequence is grouped by.
+        /// </summary>
+        /// <param name="input">The input expression.</param>
+        /// <param name="keySelector">Key selector expression to analyze.</param>
+        /// <returns>true if analyzed successfully; false otherwise</returns>
+        private static bool AnalyzeGroupByKeySelector(QueryableResourceExpression input, LambdaExpression keySelector)
+        {
+            Debug.Assert(input != null, $"{nameof(input)} != null");
+            Debug.Assert(keySelector != null, $"{nameof(keySelector)} != null");
+
+            EnsureApplyInitialized(input);
+            Debug.Assert(input.Apply != null, $"{nameof(input)}.Apply != null");
+
+            // Scenario 1: GroupBy(d1 => [Constant])
+            ConstantExpression constExpr = keySelector.Body as ConstantExpression;
+            if (constExpr != null)
+            {
+                input.Apply.KeySelectorMap.Add(constExpr.Value.ToString(), constExpr);
+
+                return true;
+            }
+
+            // Scenario 2: GroupBy(d1 => d1.Property) and GroupBy(d1 = d1.NavProperty...Property)
+            if (keySelector.Body.NodeType == ExpressionType.MemberAccess)
+            {
+                MemberExpression memberExpr = (MemberExpression)keySelector.Body;
+
+                // Validate grouping expression
+                ResourceBinder.ValidationRules.ValidateGroupingExpression(memberExpr);
+
+                Expression boundExpression;
+                if (!TryBindToInput(input, keySelector, out boundExpression))
+                {
+                    return false;
+                }
+
+                input.Apply.GroupingExpressions.Add(boundExpression);
+                input.Apply.KeySelectorMap.Add(memberExpr.Member.Name, memberExpr);
+
+                return true;
+            }
+
+            // Only proceed beyond here if key selector body is a simple instantiation.
+            if (keySelector.Body.NodeType != ExpressionType.MemberInit && keySelector.Body.NodeType != ExpressionType.New)
+            {
+                return false;
+            }
+
+            // Scenario 2: GroupBy(d1 => new { d1.Property1, ..., d1.PropertyN })
+            // Scenario 3: GroupBy(d1 => new Cls { ClsProperty1 = d1.Property1, ..., ClsPropertyN = d1.PropertyN }) - not common but possible
+            GroupByKeySelectorAnalyzer.Analyze(input, keySelector);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Ensure apply query option for the resource set is initialized
+        /// </summary>
+        /// <param name="input">The resource expression</param>
+        private static void EnsureApplyInitialized(QueryableResourceExpression input)
+        {
+            Debug.Assert(input != null, $"{nameof(input)} != null");
+
+            if (input.Apply == null)
+            {
+                ResourceBinder.AddSequenceQueryOption(input, new ApplyQueryOptionExpression(input.Type));
+            }
+        }
+
+        private static bool TryBindToInput(ResourceExpression input, LambdaExpression le, out Expression bound)
+        {
+            List<ResourceExpression> referencedInputs = new List<ResourceExpression>();
+            bound = InputBinder.Bind(le.Body, input, le.Parameters[0], referencedInputs);
+            if (referencedInputs.Count > 1 || (referencedInputs.Count == 1 && referencedInputs[0] != input))
+            {
+                bound = null;
+            }
+
+            return bound != null;
+        }
+
+        /// <summary>
+        /// Analyzes a GroupBy key selector for property or properties that the input sequence is grouped by.
+        /// </summary>
+        private sealed class GroupByKeySelectorAnalyzer : DataServiceALinqExpressionVisitor
+        {
+            /// <summary>The input resource, as a queryable resource.</summary>
+            private readonly QueryableResourceExpression input;
+
+            /// <summary>The key selector lambda parameter.</summary>
+            private readonly ParameterExpression lambdaParameter;
+
+            /// <summary>
+            /// Creates an <see cref="GroupByKeySelectorAnalyzer"/> expression.
+            /// </summary>
+            /// <param name="source">The source expression.</param>
+            /// <param name="paramExpr">The parameter of the key selector expression, e.g., d1 => new { d1.ProductId, d1.CustomerId }.</param>
+            private GroupByKeySelectorAnalyzer(QueryableResourceExpression source, ParameterExpression paramExpr)
+            {
+                this.input = source;
+                this.lambdaParameter = paramExpr;
+            }
+
+            /// <summary>
+            /// Analyzes a GroupBy key selector for property or properties that the input sequence is grouped by. 
+            /// </summary>
+            /// <param name="input">The input resource expression.</param>
+            /// <param name="keySelector">Key selector expression to analyze.</param>
+            internal static void Analyze(QueryableResourceExpression input, LambdaExpression keySelector)
+            {
+                Debug.Assert(input != null, $"{nameof(input)} != null");
+                Debug.Assert(keySelector != null, $"{nameof(keySelector)} != null");
+
+                GroupByKeySelectorAnalyzer keySelectorAnalyzer = new GroupByKeySelectorAnalyzer(input, keySelector.Parameters[0]);
+
+                keySelectorAnalyzer.Visit(keySelector);
+            }
+
+            /// <inheritdoc/>
+            internal override NewExpression VisitNew(NewExpression nex)
+            {
+                // Maintain a mapping of grouping expression and respective member
+                // The mapping is cross-referenced if any of the grouping expression 
+                // is referenced in result selector
+                if (nex.Members != null && nex.Members.Count == nex.Arguments.Count)
+                {
+                    for (int i = 0; i < nex.Arguments.Count; i++)
+                    {
+                        this.input.Apply.KeySelectorMap.Add(nex.Members[i].Name, nex.Arguments[i]);
+                    }
+                }
+
+                return base.VisitNew(nex);
+            }
+
+            /// <inheritdoc/>
+            internal override MemberAssignment VisitMemberAssignment(MemberAssignment assignment)
+            {
+                // Maintain a mapping of grouping expression and respective member
+                // The mapping is cross-referenced if any of the grouping expression 
+                // is referenced in result selector
+                this.input.Apply.KeySelectorMap.Add(assignment.Member.Name, assignment.Expression);
+
+                return base.VisitMemberAssignment(assignment);
+            }
+
+            /// <inheritdoc/>
+            internal override Expression VisitMemberAccess(MemberExpression m)
+            {
+                // Validate the grouping expression
+                ResourceBinder.ValidationRules.ValidateGroupingExpression(m);
+
+                List<ResourceExpression> referencedInputs = new List<ResourceExpression>();
+                Expression boundExpression = InputBinder.Bind(m, this.input, this.lambdaParameter, referencedInputs);
+
+                if (referencedInputs.Count == 1 && referencedInputs[0] == this.input)
+                {
+                    EnsureApplyInitialized(this.input);
+                    Debug.Assert(input.Apply != null, $"{nameof(input)}.Apply != null");
+
+                    this.input.Apply.GroupingExpressions.Add(boundExpression);
+                }
+
+                return m;
+            }
+        }
+
         /// <summary>
         /// Analyzes expression for aggregate expresssions in the GroupBy result selector.
         /// </summary>
@@ -47,8 +270,8 @@ namespace Microsoft.OData.Client
             /// <param name="resultSelector">Result selector expression to analyze.</param>
             internal static void Analyze(QueryableResourceExpression input, LambdaExpression resultSelector)
             {
-                Debug.Assert(input != null, "input != null");
-                Debug.Assert(resultSelector != null, "resultSelector != null");
+                Debug.Assert(input != null, $"{nameof(input)} != null");
+                Debug.Assert(resultSelector != null, $"{nameof(resultSelector)} != null");
 
                 GroupByResultSelectorAnalyzer resultSelectorAnalyzer = new GroupByResultSelectorAnalyzer(input);
 
@@ -190,19 +413,20 @@ namespace Microsoft.OData.Client
             /// <returns>The analyzed aggregate expression.</returns>
             private Expression AnalyzeAggregation(MethodCallExpression methodCallExpr, AggregationMethod aggregationMethod)
             {
-                Debug.Assert(methodCallExpr != null, "methodCallExpr != null");
+                Debug.Assert(methodCallExpr != null, $"{nameof(methodCallExpr)} != null");
+
                 if (methodCallExpr.Arguments.Count != 2)
                 {
                     return methodCallExpr;
                 }
 
-                LambdaExpression lambdaExpr = StripTo<LambdaExpression>(methodCallExpr.Arguments[1]);
+                LambdaExpression lambdaExpr = ResourceBinder.StripTo<LambdaExpression>(methodCallExpr.Arguments[1]);
                 if (lambdaExpr == null)
                 {
                     return methodCallExpr;
                 }
 
-                ValidationRules.DisallowExpressionEndWithTypeAs(lambdaExpr.Body, methodCallExpr.Method.Name);
+                ResourceBinder.ValidationRules.DisallowExpressionEndWithTypeAs(lambdaExpr.Body, methodCallExpr.Method.Name);
 
                 Expression selector;
                 if (!TryBindToInput(input, lambdaExpr, out selector))
@@ -224,7 +448,7 @@ namespace Microsoft.OData.Client
             /// <returns>The analyzed count expression.</returns>
             private Expression AnalyzeCount(MethodCallExpression methodCallExpr)
             {
-                Debug.Assert(methodCallExpr != null, "methodCallExpr != null");
+                Debug.Assert(methodCallExpr != null, $"{nameof(methodCallExpr)} != null");
 
                 // Add aggregation to $apply aggregations
                 AddAggregation(methodCallExpr, null, AggregationMethod.VirtualPropertyCount);
