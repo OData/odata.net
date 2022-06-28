@@ -372,8 +372,7 @@ namespace Microsoft.OData.Tests.Json
 
         #region Support for other encodings
 
-        public static IEnumerable<object[]> Encodings
-           => new object[][]
+        public static IEnumerable<object[]> Encodings { get; } = new object[][]
            {
                 new object[] { Encoding.UTF8 },
                 new object[] { Encoding.Unicode },

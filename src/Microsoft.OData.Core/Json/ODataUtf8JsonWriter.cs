@@ -289,9 +289,7 @@ namespace Microsoft.OData.Json
 
             if (disposing)
             {
-                // We don't need to manually flush the pending writes to the output stream.
-                // The Utf8JsonWriter will do that when disposed since we passed the stream
-                // to the constructor.
+                this.writeStream.Flush();
                 this.writer.Dispose();
 
                 if (this.outputStream != this.writeStream)

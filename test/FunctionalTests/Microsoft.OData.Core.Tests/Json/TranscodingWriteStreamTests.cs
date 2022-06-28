@@ -16,6 +16,7 @@ using Xunit;
 
 namespace Microsoft.OData.Tests.Json
 {
+    // Tests adapted from: https://github.com/dotnet/runtime/blob/main/src/libraries/System.Net.Http.Json/tests/UnitTests/TranscodingWriteStreamTests.cs
     public class TranscodingWriteStreamTests
     {
         private const int BufferSize = 4 * 1024;
