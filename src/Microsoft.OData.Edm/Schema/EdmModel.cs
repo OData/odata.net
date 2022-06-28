@@ -39,6 +39,8 @@ namespace Microsoft.OData.Edm
         {
         }
 
+        public bool CaseInsensitive { get; set; }
+
         /// <summary>
         /// Gets the collection of schema elements that are contained in this model and referenced models.
         /// </summary>
