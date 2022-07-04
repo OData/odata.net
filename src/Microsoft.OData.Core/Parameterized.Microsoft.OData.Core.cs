@@ -755,11 +755,11 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The provided IJsonWriter factory returned null for arguments: isIeee754Compatible '{0}', encoding '{1}'. The factory should return a concrete IJsonWriter implementation."
+        /// A string like "The provided IStreamBasedJsonWriterFactory returned null for arguments: isIeee754Compatible '{0}', encoding '{1}'. The factory should return a concrete IJsonWriter implementation."
         /// </summary>
-        internal static string ODataMessageWriter_ProvidedJsonWriterFactory_ReturnedNull(object p0, object p1)
+        internal static string ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataMessageWriter_ProvidedJsonWriterFactory_ReturnedNull, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull, p0, p1);
         }
 
         /// <summary>

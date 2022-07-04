@@ -299,7 +299,7 @@ namespace Microsoft.OData.Tests
                 Value = "This is a test ия"
             });
 
-            writePropertyAction.Throws<ODataException>(Strings.ODataMessageWriter_ProvidedJsonWriterFactory_ReturnedNull(Encoding.UTF8.WebName, false));
+            writePropertyAction.Throws<ODataException>(Strings.ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull(Encoding.UTF8.WebName, false));
         }
 
 #endif

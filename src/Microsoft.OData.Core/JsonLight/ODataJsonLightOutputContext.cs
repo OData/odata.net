@@ -919,7 +919,7 @@ namespace Microsoft.OData.JsonLight
 
             if (jsonWriter == null)
             {
-                throw new ODataException(Strings.ODataMessageWriter_ProvidedJsonWriterFactory_ReturnedNull(encoding.WebName, isIeee754Compatible));
+                throw new ODataException(Strings.ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull(encoding.WebName, isIeee754Compatible));
             }
 
             return jsonWriter;
