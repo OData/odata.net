@@ -48,7 +48,7 @@ namespace Microsoft.OData.Client
         /// <summary>Whether the top level projection has been found.</summary>
         private bool topLevelProjectionFound;
 
-        private readonly Dictionary<Expression, KeyValuePair<string, Type>> resultSelectorMap;
+        private Dictionary<Expression, MappingInfo> resultSelectorMap;
 
         private readonly Dictionary<string, Expression> keySelectorMap;
 
@@ -70,7 +70,7 @@ namespace Microsoft.OData.Client
             this.materializerExpression = Expression.Parameter(typeof(object), "mat");
             this.normalizerRewrites = normalizerRewrites;
             this.pathBuilder = new GroupByProjectionPathBuilder();
-            this.resultSelectorMap = new Dictionary<Expression, KeyValuePair<string, Type>>(ReferenceEqualityComparer<Expression>.Instance);
+            this.resultSelectorMap = new Dictionary<Expression, MappingInfo>(ReferenceEqualityComparer<Expression>.Instance);
             this.keySelectorMap = projectionMapping;
         }
 
@@ -101,6 +101,8 @@ namespace Microsoft.OData.Client
                 "projection.Body.NodeType == Constant, MemberInit, MemberAccess, Convert(Checked) New");
 
             GroupByProjectionPlanCompiler rewriter = new GroupByProjectionPlanCompiler(normalizerRewrites, projectionMapping);
+            GroupByProjectionAnalyzer.Analyze(rewriter, projection);
+
             Expression plan = rewriter.Visit(projection);
 
             ProjectionPlan result = new ProjectionPlan();
@@ -137,12 +139,11 @@ namespace Microsoft.OData.Client
                 return this.RebindMemberAccess(m, annotation);
             }
 
-            Expression groupingExpression;
-            if (this.resultSelectorMap.TryGetValue(m, out _) && this.keySelectorMap.TryGetValue(m.Member.Name, out groupingExpression))
+            if (this.resultSelectorMap.TryGetValue(m, out MappingInfo mappingInfo))
             {
-                // return this.RebindGroupByKeyExpression(groupingExpression);
-                this.BindProjectedExpression(groupingExpression);
-                return this.Visit(groupingExpression);
+                this.BindProjectedExpression(mappingInfo.GroupingExpression);
+
+                return this.Visit(mappingInfo.GroupingExpression);
             }
 
             return Expression.MakeMemberAccess(baseTargetExpression, m.Member);
@@ -168,17 +169,15 @@ namespace Microsoft.OData.Client
             }
 
             // Scenario: GroupBy(d1 => d1.Prop, (d2, d3) => new { ProductId = d2, ... })
-            if (this.resultSelectorMap.TryGetValue(p, out _))
+            if (this.resultSelectorMap.TryGetValue(p, out MappingInfo mappingInfo))
             {
-                Debug.Assert(this.keySelectorMap != null && this.keySelectorMap.Count == 1,
-                    $"this.{nameof(keySelectorMap)} != null && this.{nameof(keySelectorMap)}.Count == 1");
+                Debug.Assert(mappingInfo.GroupingExpression != null, "mappingInfo.GroupingExpression != null");
 
-                Expression groupingExpression = this.keySelectorMap.ElementAt(0).Value;
-                this.BindProjectedExpression(groupingExpression);
+                this.BindProjectedExpression(mappingInfo.GroupingExpression);
 
-                return this.Visit(groupingExpression);
+                return this.Visit(mappingInfo.GroupingExpression);
             }
-            
+
             return base.VisitParameter(p);
         }
 
@@ -198,7 +197,7 @@ namespace Microsoft.OData.Client
             SequenceMethod sequenceMethod;
             ReflectionUtil.TryIdentifySequenceMethod(m.Method, out sequenceMethod);
 
-            switch(sequenceMethod)
+            switch (sequenceMethod)
             {
                 case SequenceMethod.SumIntSelector:
                 case SequenceMethod.SumDoubleSelector:
@@ -245,7 +244,7 @@ namespace Microsoft.OData.Client
                 case SequenceMethod.CountDistinctSelector:
                     return this.RebindMethodCallForAggregationMethod(m);
                 default:
-                    throw Error.MethodNotSupported(m);
+                    return base.VisitMethodCall(m);
             }
         }
 
@@ -312,41 +311,6 @@ namespace Microsoft.OData.Client
             }
 
             return result;
-        }
-
-        internal override NewExpression VisitNew(NewExpression nex)
-        {
-            ParameterInfo[] parameters;
-            if (nex.Members != null && nex.Members.Count == nex.Arguments.Count)
-            {
-                for (int i = 0; i < nex.Arguments.Count; i++)
-                {
-                    this.resultSelectorMap.Add(
-                        nex.Arguments[i],
-                        new KeyValuePair<string, Type>(nex.Members[i].Name, (nex.Members[i] as PropertyInfo).PropertyType));
-                }
-            }
-            else if ((parameters = nex.Constructor.GetParameters()).Length >= nex.Arguments.Count)
-            {
-                for (int i = 0; i < nex.Arguments.Count; i++)
-                {
-                    this.resultSelectorMap.Add(
-                        nex.Arguments[i],
-                        new KeyValuePair<string, Type>(parameters[i].Name, parameters[i].ParameterType));
-                }
-            }
-
-            return base.VisitNew(nex);
-        }
-
-        internal override MemberAssignment VisitMemberAssignment(MemberAssignment assignment)
-        {
-            // Maintain a mapping of expression argument and respective member
-            this.resultSelectorMap.Add(
-                assignment.Expression,
-                new KeyValuePair<string, Type>(assignment.Member.Name, (assignment.Member as PropertyInfo).PropertyType));
-
-            return base.VisitMemberAssignment(assignment);
         }
 
         #endregion Internal methods.
@@ -498,7 +462,7 @@ namespace Microsoft.OData.Client
         {
             ParameterExpression paramExpr;
 
-            switch(expr.NodeType)
+            switch (expr.NodeType)
             {
                 case ExpressionType.Parameter:
                     paramExpr = expr as ParameterExpression;
@@ -516,7 +480,7 @@ namespace Microsoft.OData.Client
                     paramExpr = null;
                     break;
                 default:
-                    throw new ODataException(); // TODO: 
+                    throw Error.NotSupported();
             }
 
             if (paramExpr != null && !this.annotations.TryGetValue(paramExpr, out _))
@@ -536,14 +500,15 @@ namespace Microsoft.OData.Client
             Debug.Assert(methodCallExpr.Arguments.Count == 1 || !(methodCallExpr.Method.Name == "Count" || methodCallExpr.Method.Name == "LongCount"),
                 $"{methodCallExpr.Method.Name} is not a supported aggregation method");
 
-            KeyValuePair<string, Type> target;
-            if (!this.resultSelectorMap.TryGetValue(methodCallExpr, out target))
+            if (!this.resultSelectorMap.TryGetValue(methodCallExpr, out MappingInfo mappingInfo))
             {
                 return methodCallExpr;
             }
 
-            string targetName = target.Key;
-            Type targetType = target.Value;
+            Debug.Assert(mappingInfo.Member != null, "mappingInfo.Member != null");
+            Debug.Assert(mappingInfo.Type != null, "mappingInfo.Type != null");
+            string targetName = mappingInfo.Member;
+            Type targetType = mappingInfo.Type;
 
             Expression baseSourceExpression = methodCallExpr.Arguments[0];
             Expression baseTargetExpression = this.Visit(baseSourceExpression);
@@ -582,6 +547,234 @@ namespace Microsoft.OData.Client
             {
                 get;
                 set;
+            }
+        }
+
+        private class MappingInfo
+        {
+            public string Member { get; set; }
+            public Type Type { get; set; }
+            public Expression GroupingExpression { get; set; }
+        }
+
+        /// <summary>
+        /// This class analyzes the GroupBy result selector to establish a mapping between 
+        /// the expressions and the property they correspond to in the JSON response.
+        /// </summary>
+        /// <remarks>
+        /// For example,
+        ///     CategoryName corresponds to Product/Category/Name,
+        ///     YearStr corresponds to Time/Year,
+        ///     d3.Average(d4 => d4.Amount) corresponds to AverageAmount,
+        ///     d3.Sum(d4 => d4.Amount) corresponds to SumAmount,
+        /// in the following GroupBy expression:
+        ///     dataServiceContext.Sales.GroupBy(
+        ///         d1 => new { CategoryName = d1.Product.Category.Name, d1.Time.Year },
+        ///         (d2, d3) => new
+        ///         {
+        ///             CategoryName = d2.CategoryName,
+        ///             YearStr = d2.Year.ToString(),
+        ///             AverageAmount = d3.Average(d4 => d4.Amount).ToString(),
+        ///             SumAmount = d4.Sum(d4 => d4.Amount)
+        ///         });
+        /// </remarks>
+        private class GroupByProjectionAnalyzer : ALinqExpressionVisitor
+        {
+            private GroupByProjectionPlanCompiler compiler;
+            private readonly Dictionary<Expression, KeyValuePair<string, Type>> memberMap;
+            private readonly Stack<string> memberInScope;
+
+            /// <summary>
+            /// Initializes a new <see cref="GroupByProjectionAnalyzer"/> instance.
+            /// </summary>
+            private GroupByProjectionAnalyzer()
+            {
+                this.memberMap = new Dictionary<Expression, KeyValuePair<string, Type>>(ReferenceEqualityComparer<Expression>.Instance);
+                this.memberInScope = new Stack<string>();
+            }
+
+            /// <summary>
+            /// Analyzes the GroupBy result selector to establish a mapping between 
+            /// the expressions and the property they correspond to in the JSON response.
+            /// </summary>
+            /// <param name="compiler">The parent <see cref="GroupByProjectionPlanCompiler"/> instance.</param>
+            /// <param name="resultSelector">The lambda expression to analyze.</param>
+            internal static void Analyze(GroupByProjectionPlanCompiler compiler, LambdaExpression resultSelector)
+            {
+                GroupByProjectionAnalyzer analyzer = new GroupByProjectionAnalyzer();
+                analyzer.compiler = compiler;
+
+                analyzer.Visit(resultSelector.Body);
+            }
+
+            /// <inheritdoc/>
+            internal override Expression VisitMemberAccess(MemberExpression m)
+            {
+                Debug.Assert(m != null, "m != null");
+
+                Expression baseSourceExpression = m.Expression;
+
+                // if primitive or nullable primitive, allow member access... i.e. calling Value on nullable<int>
+                if (PrimitiveType.IsKnownNullableType(baseSourceExpression.Type))
+                {
+                    return base.VisitMemberAccess(m);
+                }
+
+                if (compiler.keySelectorMap.TryGetValue(m.Member.Name, out Expression groupingExpression))
+                {
+                    compiler.resultSelectorMap.Add(
+                        m,
+                        new MappingInfo
+                        {
+                            GroupingExpression = groupingExpression
+                        });
+                }
+
+                return m;
+            }
+
+            /// <inheritdoc/>
+            internal override Expression VisitParameter(ParameterExpression p)
+            {
+                if (compiler.keySelectorMap.Count == 1)
+                {
+                    compiler.resultSelectorMap.Add(
+                        p,
+                        new MappingInfo
+                        {
+                            GroupingExpression = compiler.keySelectorMap.ElementAt(0).Value 
+                        });
+                }
+
+                return p;
+            }
+
+            /// <inheritdoc/>
+            internal override Expression VisitMethodCall(MethodCallExpression m)
+            {
+                Debug.Assert(m != null, "m != null");
+
+                if (this.memberMap.TryGetValue(m, out KeyValuePair<string, Type> member))
+                {
+                    this.memberInScope.Push(member.Key);
+                }
+
+                Expression original = compiler.GetExpressionBeforeNormalization(m);
+                if (original != m)
+                {
+                    return this.Visit(original);
+                }
+
+                Expression result;
+
+                SequenceMethod sequenceMethod;
+                ReflectionUtil.TryIdentifySequenceMethod(m.Method, out sequenceMethod);
+
+                switch (sequenceMethod)
+                {
+                    case SequenceMethod.SumIntSelector:
+                    case SequenceMethod.SumDoubleSelector:
+                    case SequenceMethod.SumDecimalSelector:
+                    case SequenceMethod.SumLongSelector:
+                    case SequenceMethod.SumSingleSelector:
+                    case SequenceMethod.SumNullableIntSelector:
+                    case SequenceMethod.SumNullableDoubleSelector:
+                    case SequenceMethod.SumNullableDecimalSelector:
+                    case SequenceMethod.SumNullableLongSelector:
+                    case SequenceMethod.SumNullableSingleSelector:
+                    case SequenceMethod.AverageIntSelector:
+                    case SequenceMethod.AverageDoubleSelector:
+                    case SequenceMethod.AverageDecimalSelector:
+                    case SequenceMethod.AverageLongSelector:
+                    case SequenceMethod.AverageSingleSelector:
+                    case SequenceMethod.AverageNullableIntSelector:
+                    case SequenceMethod.AverageNullableDoubleSelector:
+                    case SequenceMethod.AverageNullableDecimalSelector:
+                    case SequenceMethod.AverageNullableLongSelector:
+                    case SequenceMethod.AverageNullableSingleSelector:
+                    case SequenceMethod.MinIntSelector:
+                    case SequenceMethod.MinDoubleSelector:
+                    case SequenceMethod.MinDecimalSelector:
+                    case SequenceMethod.MinLongSelector:
+                    case SequenceMethod.MinSingleSelector:
+                    case SequenceMethod.MinNullableIntSelector:
+                    case SequenceMethod.MinNullableDoubleSelector:
+                    case SequenceMethod.MinNullableDecimalSelector:
+                    case SequenceMethod.MinNullableLongSelector:
+                    case SequenceMethod.MinNullableSingleSelector:
+                    case SequenceMethod.MaxIntSelector:
+                    case SequenceMethod.MaxDoubleSelector:
+                    case SequenceMethod.MaxDecimalSelector:
+                    case SequenceMethod.MaxLongSelector:
+                    case SequenceMethod.MaxSingleSelector:
+                    case SequenceMethod.MaxNullableIntSelector:
+                    case SequenceMethod.MaxNullableDoubleSelector:
+                    case SequenceMethod.MaxNullableDecimalSelector:
+                    case SequenceMethod.MaxNullableLongSelector:
+                    case SequenceMethod.MaxNullableSingleSelector:
+                    case SequenceMethod.Count:
+                    case SequenceMethod.LongCount:
+                    case SequenceMethod.CountDistinctSelector:
+                        compiler.resultSelectorMap.Add(
+                            m,
+                            new MappingInfo
+                            {
+                                GroupingExpression = null,
+                                Member = this.memberInScope.Peek(),
+                                Type = m.Type
+                            });
+                        result = m;
+
+                        break;
+                    default:
+                        result = base.VisitMethodCall(m);
+
+                        break;
+                }
+
+                if (this.memberMap.ContainsKey(m))
+                {
+                    this.memberInScope.Pop();
+                }
+
+                return result;
+            }
+
+            /// <inheritdoc/>
+            internal override NewExpression VisitNew(NewExpression nex)
+            {
+                ParameterInfo[] parameters;
+                if (nex.Members != null && nex.Members.Count == nex.Arguments.Count)
+                {
+                    for (int i = 0; i < nex.Arguments.Count; i++)
+                    {
+                        PropertyInfo property = nex.Members[i] as PropertyInfo;
+                        Debug.Assert(property != null, $"property != null");
+
+                        this.memberMap.Add(nex.Arguments[i], new KeyValuePair<string, Type>(property.Name, property.PropertyType));
+                    }
+                }
+                else if ((parameters = nex.Constructor.GetParameters()).Length >= nex.Arguments.Count)
+                {
+                    for (int i = 0; i < nex.Arguments.Count; i++)
+                    {
+                        this.memberMap.Add(nex.Arguments[i], new KeyValuePair<string, Type>(parameters[i].Name, parameters[i].ParameterType));
+                    }
+                }
+
+                return base.VisitNew(nex);
+            }
+
+            /// <inheritdoc/>
+            internal override MemberAssignment VisitMemberAssignment(MemberAssignment assignment)
+            {
+                // Maintain a mapping of expression argument and respective member
+                PropertyInfo property = assignment.Member as PropertyInfo;
+                Debug.Assert(property != null, $"property != null");
+
+                this.memberMap.Add(assignment.Expression, new KeyValuePair<string, Type>(property.Name, property.PropertyType));
+
+                return base.VisitMemberAssignment(assignment);
             }
         }
 

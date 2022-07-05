@@ -90,6 +90,12 @@ namespace Microsoft.OData.Client.Tests.ALinq
             currencyEntity.AddKeys(currencyEntity.AddStructuralProperty("Code", EdmCoreModel.Instance.GetString(false)));
             currencyEntity.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false));
 
+            var timeEntity = new EdmEntityType("NS", "Time");
+            timeEntity.AddKeys(timeEntity.AddStructuralProperty("Date", EdmCoreModel.Instance.GetString(false)));
+            timeEntity.AddStructuralProperty("Month", EdmCoreModel.Instance.GetString(false));
+            timeEntity.AddStructuralProperty("Quarter", EdmCoreModel.Instance.GetString(false));
+            timeEntity.AddStructuralProperty("Year", EdmCoreModel.Instance.GetInt32(false));
+
             // Associations
             saleEntity.AddBidirectionalNavigation(
                 new EdmNavigationPropertyInfo { Name = "Customer", Target = customerEntity, TargetMultiplicity = EdmMultiplicity.One },
@@ -99,6 +105,8 @@ namespace Microsoft.OData.Client.Tests.ALinq
                 new EdmNavigationPropertyInfo { Name = "Sales", Target = saleEntity, TargetMultiplicity = EdmMultiplicity.Many });
             saleEntity.AddUnidirectionalNavigation(
                 new EdmNavigationPropertyInfo { Name = "Currency", Target = currencyEntity, TargetMultiplicity = EdmMultiplicity.One });
+            saleEntity.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo { Name = "Time", Target = timeEntity, TargetMultiplicity = EdmMultiplicity.One });
 
             productEntity.AddBidirectionalNavigation(
                 new EdmNavigationPropertyInfo { Name = "Category", Target = categoryEntity, TargetMultiplicity = EdmMultiplicity.One },
@@ -112,6 +120,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
             model.AddElement(customerEntity);
             model.AddElement(categoryEntity);
             model.AddElement(currencyEntity);
+            model.AddElement(timeEntity);
             model.AddElement(entityContainer);
 
             entityContainer.AddEntitySet(numbersEntitySetName, numberEntity);
@@ -338,6 +347,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
             public string CustomerId { get; set; }
             public Customer Customer { get; set; }
             public string Date { get; set; }
+            public Time Time { get; set; }
             public string ProductId { get; set; }
             public Product Product { get; set; }
             public string CurrencyCode { get; set; }
@@ -375,6 +385,14 @@ namespace Microsoft.OData.Client.Tests.ALinq
         {
             public string Code { get; set; }
             public string Name { get; set; }
+        }
+
+        public class Time
+        {
+            public string Date { get; set; }
+            public string Month { get; set; }
+            public string Quarter { get; set; }
+            public int Year { get; set; }
         }
 
         #endregion

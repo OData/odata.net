@@ -29,7 +29,10 @@ namespace Microsoft.OData.Client
         /// <param name="source">The resource set expression (source) for the GroupBy.</param>
         /// <param name="resourceExpr">The resource expression in scope.</param>
         /// <returns>true if <paramref name="methodCallExpr"/> can be satisfied with $apply; false otherwise.</returns>
-        internal static bool Analyze(MethodCallExpression methodCallExpr, QueryableResourceExpression source, ResourceExpression resourceExpr)
+        internal static bool Analyze(
+            MethodCallExpression methodCallExpr,
+            QueryableResourceExpression source,
+            ResourceExpression resourceExpr)
         {
             Debug.Assert(source != null, $"{nameof(source)} != null");
             Debug.Assert(resourceExpr != null, $"{nameof(resourceExpr)} != null");
@@ -253,6 +256,9 @@ namespace Microsoft.OData.Client
             /// <summary>Expression to member mapping.</summary>
             private readonly IDictionary<Expression, KeyValuePair<string, Type>> resultSelectorMap;
 
+            /// <summary>Tracks the member a method call is mapped to when analyzing the GroupBy result selector.</summary>
+            private readonly Stack<string> memberInScope;
+
             /// <summary>
             /// Creates an <see cref="GroupByResultSelectorAnalyzer"/> expression.
             /// </summary>
@@ -261,6 +267,7 @@ namespace Microsoft.OData.Client
             {
                 this.input = input;
                 this.resultSelectorMap = new Dictionary<Expression, KeyValuePair<string, Type>>(ReferenceEqualityComparer<Expression>.Instance);
+                this.memberInScope = new Stack<string>();
             }
 
             /// <summary>
@@ -346,7 +353,32 @@ namespace Microsoft.OData.Client
             /// <inheritdoc/>
             internal override Expression VisitMethodCall(MethodCallExpression m)
             {
+                if (this.resultSelectorMap.TryGetValue(m, out KeyValuePair<string, Type> member))
+                {
+                    this.memberInScope.Push(member.Key);
+                }
+
+                // Caters for the following scenarios:
+                // 1).
+                // dataServiceContext.Sales.GroupBy(
+                //     d1 => d1.Time.Year,
+                //     (d2, d3) => new { YearStr = d2.ToString() });
+                // 2).
+                // dataServiceContext.Sales.GroupBy(
+                //     d1 => d1.ProductId,
+                //     (d2, d3) => new { AverageAmount = d3.Average(d4 => d4.Amount).ToString() });
+                if (m.Method.Name == "ToString")
+                {
+                    if (m.Object is MethodCallExpression)
+                    {
+                        return Expression.Call(this.VisitMethodCall(m.Object as MethodCallExpression), m.Method, m.Arguments);
+                    }
+
+                    return base.VisitMethodCall(m);
+                }
+
                 SequenceMethod sequenceMethod;
+                Expression result;
                 ReflectionUtil.TryIdentifySequenceMethod(m.Method, out sequenceMethod);
 
                 switch (sequenceMethod)
@@ -361,7 +393,9 @@ namespace Microsoft.OData.Client
                     case SequenceMethod.SumNullableDecimalSelector:
                     case SequenceMethod.SumNullableLongSelector:
                     case SequenceMethod.SumNullableSingleSelector:
-                        return this.AnalyzeAggregation(m, AggregationMethod.Sum);
+                        result = this.AnalyzeAggregation(m, AggregationMethod.Sum);
+
+                        break;
                     case SequenceMethod.AverageIntSelector:
                     case SequenceMethod.AverageDoubleSelector:
                     case SequenceMethod.AverageDecimalSelector:
@@ -372,7 +406,9 @@ namespace Microsoft.OData.Client
                     case SequenceMethod.AverageNullableDecimalSelector:
                     case SequenceMethod.AverageNullableLongSelector:
                     case SequenceMethod.AverageNullableSingleSelector:
-                        return this.AnalyzeAggregation(m, AggregationMethod.Average);
+                        result = this.AnalyzeAggregation(m, AggregationMethod.Average);
+
+                        break;
                     case SequenceMethod.MinIntSelector:
                     case SequenceMethod.MinDoubleSelector:
                     case SequenceMethod.MinDecimalSelector:
@@ -383,7 +419,9 @@ namespace Microsoft.OData.Client
                     case SequenceMethod.MinNullableDecimalSelector:
                     case SequenceMethod.MinNullableLongSelector:
                     case SequenceMethod.MinNullableSingleSelector:
-                        return this.AnalyzeAggregation(m, AggregationMethod.Min);
+                        result = this.AnalyzeAggregation(m, AggregationMethod.Min);
+
+                        break;
                     case SequenceMethod.MaxIntSelector:
                     case SequenceMethod.MaxDoubleSelector:
                     case SequenceMethod.MaxDecimalSelector:
@@ -394,15 +432,28 @@ namespace Microsoft.OData.Client
                     case SequenceMethod.MaxNullableDecimalSelector:
                     case SequenceMethod.MaxNullableLongSelector:
                     case SequenceMethod.MaxNullableSingleSelector:
-                        return this.AnalyzeAggregation(m, AggregationMethod.Max);
+                        result = this.AnalyzeAggregation(m, AggregationMethod.Max);
+
+                        break;
                     case SequenceMethod.Count:
                     case SequenceMethod.LongCount:
-                        return this.AnalyzeCount(m);
+                        result = this.AnalyzeCount(m);
+
+                        break;
                     case SequenceMethod.CountDistinctSelector:
-                        return this.AnalyzeAggregation(m, AggregationMethod.CountDistinct);
+                        result = this.AnalyzeAggregation(m, AggregationMethod.CountDistinct);
+
+                        break;
                     default:
                         throw Error.MethodNotSupported(m);
                 };
+
+                if (this.resultSelectorMap.ContainsKey(m))
+                {
+                    this.memberInScope.Pop();
+                }
+
+                return result;
             }
 
             /// <summary>
@@ -464,11 +515,9 @@ namespace Microsoft.OData.Client
             /// <param name="aggregationMethod">The aggregation method.</param>
             private void AddAggregation(MethodCallExpression methodCallExpr, Expression selector, AggregationMethod aggregationMethod)
             {
-                KeyValuePair<string, Type> target;
-
-                if (resultSelectorMap.TryGetValue(methodCallExpr, out target))
+                if (this.memberInScope.Count > 0)
                 {
-                    this.input.AddAggregation(selector, aggregationMethod, target.Key);
+                    this.input.AddAggregation(selector, aggregationMethod, this.memberInScope.Peek());
                 }
             }
         }

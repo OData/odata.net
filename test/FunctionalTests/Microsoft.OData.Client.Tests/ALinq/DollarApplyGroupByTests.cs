@@ -1071,6 +1071,157 @@ namespace Microsoft.OData.Client.Tests.ALinq
         }
 
         [Fact]
+        public void GroupByResultSelector_WithSupportedMemberAccessOnConstantGroupingExpression()
+        {
+            var queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            var aggregateQuery = queryable.GroupBy(
+                d1 => "foobar",
+                (d2, d3) => new
+                {
+                    FoobarLength = d2.Length,
+                    AverageAmount = d3.Average(d4 => d4.Amount)
+                });
+
+            Assert.Equal(
+                string.Format("{0}/Sales?$apply=aggregate(Amount with average as AverageAmount)", serviceUri),
+                aggregateQuery.ToString());
+
+            string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Sales" +
+                    "(AverageAmount)\"," +
+                    "\"value\":[{{\"@odata.id\":null,\"AverageAmount\":4.000000}}]}}", serviceUri);
+
+            InterceptRequestAndMockResponse(mockResponse);
+
+            var aggregateResultEnumerator = aggregateQuery.GetEnumerator();
+            aggregateResultEnumerator.MoveNext();
+            var aggregateResult = aggregateResultEnumerator.Current;
+
+            Assert.Equal(6, aggregateResult.FoobarLength);
+            Assert.Equal(4M, aggregateResult.AverageAmount);
+        }
+
+        [Fact]
+        public void GroupByResultSelector_WithSupportedMemberAccessOnSinglePropertyGroupingExpression()
+        {
+            var queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            var aggregateQuery = queryable.GroupBy(
+                d1 => d1.Time.Year,
+                (d2, d3) => new
+                {
+                    YearStr = d2.ToString(),
+                    AverageAmount = d3.Average(d4 => d4.Amount)
+                });
+
+            Assert.Equal(
+                string.Format("{0}/Sales?$apply=groupby((Time/Year),aggregate(Amount with average as AverageAmount))", serviceUri),
+                aggregateQuery.ToString());
+
+            string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Sales" +
+                    "(Time(Year),AverageAmount)\"," +
+                    "\"value\":[{{\"@odata.id\":null,\"Time\":{{\"@odata.id\":null,\"Year\":2012}},\"AverageAmount\":4.000000}}]}}", serviceUri);
+
+            InterceptRequestAndMockResponse(mockResponse);
+
+            var aggregateResultEnumerator = aggregateQuery.GetEnumerator();
+            aggregateResultEnumerator.MoveNext();
+            var aggregateResult = aggregateResultEnumerator.Current;
+
+            Assert.Equal("2012", aggregateResult.YearStr);
+            Assert.Equal(4M, aggregateResult.AverageAmount);
+        }
+
+        [Fact]
+        public void GroupByResultSelector_WithSupportedMethodCallOnKnownPrimitiveTypes()
+        {
+            var queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            var aggregateQuery = queryable.GroupBy(
+                d1 => new { d1.Time.Year, CategoryName = d1.Product.Category.Name, d1.CurrencyCode },
+                (d2, d3) => new
+                {
+                    FoobarLength = "foobar".Length,
+                    TenStr = 10.ToString(),
+                    YearStr = d2.Year.ToString(),
+                    CategoryNameLength = d2.CategoryName.Length,
+                    d2.CurrencyCode,
+                    AverageAmount = d3.Average(d4 => d4.Amount).ToString(),
+                    SumAmount = d3.Sum(d4 => d4.Amount),
+                    MinAmount = d3.Min(d4 => d4.Amount).ToString()
+                });
+
+            Assert.Equal(
+                string.Format("{0}/Sales?$apply=groupby((Time/Year,Product/Category/Name,CurrencyCode)," +
+                "aggregate(Amount with average as AverageAmount,Amount with sum as SumAmount,Amount with min as MinAmount))", serviceUri),
+                aggregateQuery.ToString());
+
+            string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Sales" +
+                    "(AverageAmount)\"," +
+                    "\"value\":[{{\"@odata.id\":null,\"CurrencyCode\":\"EUR\",\"AverageAmount\":1.500000,\"SumAmount\":3.00,\"MinAmount\":1.00," +
+                    "\"Time\":{{\"@odata.id\":null,\"Year\":2012}}," +
+                    "\"Product\":{{\"@odata.id\":null,\"Category\":{{\"@odata.id\":null,\"Name\":\"Non-Food\"}}}}}}]}}", serviceUri);
+
+            InterceptRequestAndMockResponse(mockResponse);
+
+            var aggregateResultEnumerator = aggregateQuery.GetEnumerator();
+            aggregateResultEnumerator.MoveNext();
+            var aggregateResult = aggregateResultEnumerator.Current;
+
+            Assert.Equal(6, aggregateResult.FoobarLength);
+            Assert.Equal("10", aggregateResult.TenStr);
+            Assert.Equal("2012", aggregateResult.YearStr);
+            Assert.Equal(8, aggregateResult.CategoryNameLength);
+            Assert.Equal("EUR", aggregateResult.CurrencyCode);
+            Assert.Equal("1.5", aggregateResult.AverageAmount);
+            Assert.Equal(3M, aggregateResult.SumAmount);
+            Assert.Equal("1", aggregateResult.MinAmount);
+        }
+
+        [Fact]
+        public void GroupByResultSelector_UsingConstructorAndMemberInitializationWithSupportedMethodCallOnKnownPrimitiveTypes()
+        {
+            var queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            var aggregateQuery = queryable.GroupBy(
+                d1 => new { d1.Time.Year, CategoryName = d1.Product.Category.Name, d1.CurrencyCode },
+                (d2, d3) => new SalesGroupedResult06(d2.CategoryName.Length, d2.CurrencyCode, d3.Average(d4 => d4.Amount).ToString())
+                {
+                    FoobarLength = "foobar".Length,
+                    TenStr = 10.ToString(),
+                    YearStr = d2.Year.ToString(),
+                    SumAmount = d3.Sum(d4 => d4.Amount),
+                    MinAmount = d3.Min(d4 => d4.Amount).ToString()
+                });
+
+            Assert.Equal(
+                string.Format("{0}/Sales?$apply=groupby((Time/Year,Product/Category/Name,CurrencyCode)," +
+                "aggregate(Amount with average as averageAmount,Amount with sum as SumAmount,Amount with min as MinAmount))", serviceUri),
+                aggregateQuery.ToString());
+
+            string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Sales" +
+                    "(AverageAmount)\"," +
+                    "\"value\":[{{\"@odata.id\":null,\"CurrencyCode\":\"EUR\",\"averageAmount\":1.500000,\"SumAmount\":3.00,\"MinAmount\":1.00," +
+                    "\"Time\":{{\"@odata.id\":null,\"Year\":2012}}," +
+                    "\"Product\":{{\"@odata.id\":null,\"Category\":{{\"@odata.id\":null,\"Name\":\"Non-Food\"}}}}}}]}}", serviceUri);
+
+            InterceptRequestAndMockResponse(mockResponse);
+
+            var aggregateResultEnumerator = aggregateQuery.GetEnumerator();
+            aggregateResultEnumerator.MoveNext();
+            var aggregateResult = aggregateResultEnumerator.Current;
+
+            Assert.Equal(6, aggregateResult.FoobarLength);
+            Assert.Equal("10", aggregateResult.TenStr);
+            Assert.Equal("2012", aggregateResult.YearStr);
+            Assert.Equal(8, aggregateResult.CategoryNameLength);
+            Assert.Equal("EUR", aggregateResult.CurrencyCode);
+            Assert.Equal("1.5", aggregateResult.AverageAmount);
+            Assert.Equal(3M, aggregateResult.SumAmount);
+            Assert.Equal("1", aggregateResult.MinAmount);
+        }
+
+        [Fact]
         public void GroupByResultSelector_OnFilteredInputSet_ExpressionTranslatedToExpectedUri()
         {
             // Arrange
@@ -1710,6 +1861,25 @@ namespace Microsoft.OData.Client.Tests.ALinq
 
             public string CategoryName { get; set; }
             public decimal AverageAmount { get; }
+        }
+
+        class SalesGroupedResult06
+        {
+            public SalesGroupedResult06(int categoryNameLength, string currencyCode, string averageAmount)
+            {
+                this.CategoryNameLength = categoryNameLength;
+                this.CurrencyCode = currencyCode;
+                this.AverageAmount = averageAmount;
+            }
+
+            public string TenStr { get; set; }
+            public int FoobarLength { get; set; }
+            public string YearStr { get; set; }
+            public int CategoryNameLength { get; }
+            public string CurrencyCode { get; }
+            public string AverageAmount { get; }
+            public decimal SumAmount { get; set; }
+            public string MinAmount { get; set; }
         }
 
         #endregion Helper Classes
