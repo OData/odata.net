@@ -25,7 +25,7 @@ namespace Microsoft.OData.Tests.Json
         {
             DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Default;
 
-            Assert.Throws<ArgumentNullException>("stream",() => factory.CreateJsonWriter(null, false, Encoding.UTF8));
+            Assert.Throws<ArgumentNullException>("stream", () => factory.CreateJsonWriter(null, false, Encoding.UTF8));
         }
 
         [Fact]

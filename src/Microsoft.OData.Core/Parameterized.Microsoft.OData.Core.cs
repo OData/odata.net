@@ -755,7 +755,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The provided IStreamBasedJsonWriterFactory returned null for arguments: isIeee754Compatible '{0}', encoding '{1}'. The factory should return a concrete IJsonWriter implementation."
+        /// A string like "The provided implementation of IStreamBasedJsonWriterFactory returned null for arguments: isIeee754Compatible '{0}', encoding '{1}'. The factory should return a concrete IJsonWriter implementation."
         /// </summary>
         internal static string ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull(object p0, object p1)
         {
