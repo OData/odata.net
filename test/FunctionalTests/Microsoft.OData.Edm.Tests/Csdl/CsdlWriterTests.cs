@@ -2891,5 +2891,114 @@ namespace Microsoft.OData.Edm.Tests.Csdl
   }
 }");
         }
+
+        [Fact]
+        public void VerifyKeyAliasForNavigationPropertiesIsSupported()
+        {
+            // Arrange
+            var model = new EdmModel();
+            var entity = new EdmEntityType("NS1", "Product");
+            var orderEntity = new EdmEntityType("NS1", "Order");
+            var key = orderEntity.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false));
+            orderEntity.AddKeys(key);
+            orderEntity.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false));
+            var complexType = new EdmComplexType("NS1", "ExampleComplexObject");
+            complexType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false));
+            var keyProperty = entity.AddStructuralPropertyAlias(new EdmEntityTypeReference(orderEntity, isNullable: false), "OrderId", new List<string> { "Order", "Id" });
+            entity.AddKeys(keyProperty);
+            entity.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false));
+            entity.AddStructuralProperty("UpdatedTime", EdmCoreModel.Instance.GetDate(false));
+
+            model.AddElement(entity);
+            model.AddElement(orderEntity);
+            model.AddElement(complexType);
+
+            var entityContainer = new EdmEntityContainer("NS1", "Container");
+            model.AddElement(entityContainer);
+            EdmEntitySet set1 = new EdmEntitySet(entityContainer, "Products", entity);
+            EdmEntitySet set2 = new EdmEntitySet(entityContainer, "Orders", orderEntity);
+            entityContainer.AddElement(set1);
+            entityContainer.AddElement(set2);
+
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+                "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                  "<edmx:DataServices>" +
+                    "<Schema Namespace=\"NS1\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                      "<EntityType Name=\"Product\">" +
+                        "<Key>" +
+                          "<PropertyRef Name=\"Order/Id\" Alias=\"OrderId\" />" +
+                        "</Key>" +
+                        "<Property Name=\"Order\" Type=\"NS1.Order\" Nullable=\"false\" />" +
+                        "<Property Name=\"Name\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                        "<Property Name=\"UpdatedTime\" Type=\"Edm.Date\" Nullable=\"false\" />" +
+                      "</EntityType>" +
+                      "<EntityType Name=\"Order\">" +
+                        "<Key>" +
+                          "<PropertyRef Name=\"Id\" />" +
+                        "</Key>" +
+                        "<Property Name=\"Id\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                        "<Property Name=\"Name\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                      "</EntityType>" +
+                      "<ComplexType Name=\"ExampleComplexObject\">" +
+                        "<Property Name=\"Name\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                      "</ComplexType>" +
+                      "<EntityContainer Name=\"Container\">" +
+                        "<EntitySet Name=\"Products\" EntityType=\"NS1.Product\" />" +
+                        "<EntitySet Name=\"Orders\" EntityType=\"NS1.Order\" />" +
+                      "</EntityContainer>" +
+                    "</Schema>" +
+                  "</edmx:DataServices>" +
+                "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""NS1.Container"",
+  ""NS1"": {
+    ""Product"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        {
+          ""OrderId"": ""Order/Id""
+        }
+      ],
+      ""Order"": {
+        ""$Type"": ""NS1.Order""
+      },
+      ""Name"": {},
+      ""UpdatedTime"": {
+        ""$Type"": ""Edm.Date""
+      }
+    },
+    ""Order"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {
+        ""$Type"": ""Edm.Int32""
+      },
+      ""Name"": {}
+    },
+    ""ExampleComplexObject"": {
+      ""$Kind"": ""ComplexType"",
+      ""Name"": {}
+    },
+    ""Container"": {
+      ""$Kind"": ""EntityContainer"",
+      ""Products"": {
+        ""$Collection"": true,
+        ""$Type"": ""NS1.Product""
+      },
+      ""Orders"": {
+        ""$Collection"": true,
+        ""$Type"": ""NS1.Order""
+      }
+    }
+  }
+}");
+        }
+
     }
 }
