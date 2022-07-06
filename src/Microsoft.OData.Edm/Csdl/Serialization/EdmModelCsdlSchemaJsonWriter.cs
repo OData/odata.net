@@ -208,17 +208,16 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         {
             // Key properties without a key alias are represented as strings containing the property name.
             // Key properties with a key alias are represented as objects with one member whose name is the key alias and whose value is a string containing the path to the property.
-            IEdmStructuralPropertyAlias prop = property as IEdmStructuralPropertyAlias;
-            if (prop == null)
-            {
-                this.jsonWriter.WriteStringValue(property.Name);
-            }
-            else
+            if (property is IEdmStructuralPropertyAlias propertyAlias)
             {
                 this.jsonWriter.WriteStartObject();
-                this.jsonWriter.WritePropertyName(prop.PropertyAlias);
-                this.jsonWriter.WriteStringValue(string.Join("/", prop.Path));
+                this.jsonWriter.WritePropertyName(propertyAlias.PropertyAlias);
+                this.jsonWriter.WriteStringValue(string.Join("/", propertyAlias.Path));
                 this.jsonWriter.WriteEndObject();
+            }
+            else 
+            {
+                this.jsonWriter.WriteStringValue(property.Name);
             }
         }
 
