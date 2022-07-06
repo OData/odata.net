@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Linq;
 using Xunit;
 
@@ -714,6 +715,12 @@ namespace Microsoft.OData.Client.Tests.ALinq
             var aggregateResult = aggregateQuery.ToArray();
 
             Assert.Equal(2, aggregateResult.Length);
+            Assert.Equal("Brown", aggregateResult[0].Color);
+            Assert.Equal(6M, aggregateResult[0].AvgAmount);
+            Assert.Equal(8M, aggregateResult[0].MaxAmount);
+            Assert.Equal("White", aggregateResult[1].Color);
+            Assert.Equal(12M, aggregateResult[1].SumAmount);
+            Assert.Equal(1M, aggregateResult[1].MinAmount);
         }
 
         [Fact]
@@ -743,6 +750,12 @@ namespace Microsoft.OData.Client.Tests.ALinq
             var aggregateResult = aggregateQuery.ToArray();
 
             Assert.Equal(2, aggregateResult.Length);
+            Assert.Equal("Brown", aggregateResult[0].Color);
+            Assert.Equal(6M, aggregateResult[0].AvgAmount);
+            Assert.Equal(8M, aggregateResult[0].MaxAmount);
+            Assert.Equal("Netherlands", aggregateResult[1].Country);
+            Assert.Equal(5M, aggregateResult[1].SumAmount);
+            Assert.Equal(1M, aggregateResult[1].MinAmount);
         }
 
         [Fact]
@@ -771,6 +784,12 @@ namespace Microsoft.OData.Client.Tests.ALinq
             var aggregateResult = aggregateQuery.ToArray();
 
             Assert.Equal(2, aggregateResult.Length);
+            Assert.Equal("EUR", aggregateResult[0].Currency);
+            Assert.Equal(0.113333M, aggregateResult[0].AvgTaxRate);
+            Assert.Equal(0.14M, aggregateResult[0].MaxTaxRate);
+            Assert.Equal("USD", aggregateResult[1].Currency);
+            Assert.Equal(0.46M, aggregateResult[1].SumTaxRate);
+            Assert.Equal(0.06M, aggregateResult[1].MinTaxRate);
         }
 
         [Fact]
@@ -800,6 +819,12 @@ namespace Microsoft.OData.Client.Tests.ALinq
             var aggregateResult = aggregateQuery.ToArray();
 
             Assert.Equal(2, aggregateResult.Length);
+            Assert.Equal("White", aggregateResult[0].Color);
+            Assert.Equal(0.113333M, aggregateResult[0].AvgTaxRate);
+            Assert.Equal(0.14M, aggregateResult[0].MaxTaxRate);
+            Assert.Equal("USA", aggregateResult[1].Country);
+            Assert.Equal(0.12M, aggregateResult[1].SumTaxRate);
+            Assert.Equal(0.06M, aggregateResult[1].MinTaxRate);
         }
 
         [Fact]
@@ -824,9 +849,10 @@ namespace Microsoft.OData.Client.Tests.ALinq
 
             MockGroupByConstant_AggregationsTargetingNavProperty();
 
-            var aggregateResult = aggregateQuery.ToArray();
+            var aggregateResult = Assert.Single(aggregateQuery.ToArray());
 
-            Assert.Single(aggregateResult);
+            Assert.Equal(0.8M, aggregateResult.SumTaxRate);
+            Assert.Equal(0.06M, aggregateResult.MinTaxRate);
         }
 
         [Fact]
@@ -856,9 +882,13 @@ namespace Microsoft.OData.Client.Tests.ALinq
 
             MockGroupByConstant_MixedScenarios();
 
-            var aggregateResult = aggregateQuery.ToArray();
+            var aggregateResult = Assert.Single(aggregateQuery.ToArray());
 
-            Assert.Single(aggregateResult);
+            Assert.Equal(1, aggregateResult.GroupingConstant);
+            Assert.Equal("dfksjfl", aggregateResult.GibberishConstant);
+            Assert.Equal(3M, aggregateResult.AvgAmount);
+            Assert.Equal(8M, aggregateResult.MaxAmount);
+            Assert.Equal(2, aggregateResult.DistinctCurrency);
         }
 
         [Fact]
@@ -891,6 +921,14 @@ namespace Microsoft.OData.Client.Tests.ALinq
             var aggregateResult = aggregateQuery.ToArray();
 
             Assert.Equal(2, aggregateResult.Length);
+            Assert.Equal("dfksjfl", aggregateResult[0].GibberishConstant);
+            Assert.Equal(4M, aggregateResult[0].AvgAmount);
+            Assert.Equal(8M, aggregateResult[0].MaxAmount);
+            Assert.Equal(2, aggregateResult[0].DistinctCurrency);
+            Assert.Equal("PG2", aggregateResult[1].CategoryId);
+            Assert.Equal(0.56M, aggregateResult[1].SumTaxRate);
+            Assert.Equal(0.14M, aggregateResult[1].MinTaxRate);
+            Assert.Equal(4, aggregateResult[1].GroupCount);
         }
 
         [Fact]
@@ -924,6 +962,15 @@ namespace Microsoft.OData.Client.Tests.ALinq
             var aggregateResult = aggregateQuery.ToArray();
 
             Assert.Equal(2, aggregateResult.Length);
+            Assert.Equal("dfksjfl", aggregateResult[0].GibberishConstant);
+            Assert.Equal("Netherlands", aggregateResult[0].Country);
+            Assert.Equal(2M, aggregateResult[0].AvgAmount);
+            Assert.Equal(2M, aggregateResult[0].MaxAmount);
+            Assert.Equal(1, aggregateResult[0].DistinctCurrency);
+            Assert.Equal("PG2", aggregateResult[1].CategoryId);
+            Assert.Equal(0.28M, aggregateResult[1].SumTaxRate);
+            Assert.Equal(0.14M, aggregateResult[1].MinTaxRate);
+            Assert.Equal(2, aggregateResult[1].GroupCount);
         }
 
         [Fact]
@@ -953,9 +1000,13 @@ namespace Microsoft.OData.Client.Tests.ALinq
 
             MockGroupByConstant_MixedScenarios();
 
-            var aggregateResult = aggregateQuery.ToArray();
+            var aggregateResult = Assert.Single(aggregateQuery.ToArray());
 
-            Assert.Single(aggregateResult);
+            Assert.Equal(1, aggregateResult.GroupingConstant);
+            Assert.Equal("dfksjfl", aggregateResult.GibberishConstant);
+            Assert.Equal(0.8M, aggregateResult.SumTaxRate);
+            Assert.Equal(0.06M, aggregateResult.MinTaxRate);
+            Assert.Equal(8, aggregateResult.GroupCount);
         }
 
         [Fact]
@@ -988,6 +1039,14 @@ namespace Microsoft.OData.Client.Tests.ALinq
             var aggregateResult = aggregateQuery.ToArray();
 
             Assert.Equal(2, aggregateResult.Length);
+            Assert.Equal("PG1", aggregateResult[0].CategoryId);
+            Assert.Equal(0.24M, aggregateResult[0].SumTaxRate);
+            Assert.Equal(0.06M, aggregateResult[0].MinTaxRate);
+            Assert.Equal(4, aggregateResult[0].GroupCount);
+            Assert.Equal("dfksjfl", aggregateResult[1].GibberishConstant);
+            Assert.Equal(2M, aggregateResult[1].AvgAmount);
+            Assert.Equal(4M, aggregateResult[1].MaxAmount);
+            Assert.Equal(2, aggregateResult[1].DistinctCurrency);
         }
 
         [Fact]
@@ -1021,6 +1080,15 @@ namespace Microsoft.OData.Client.Tests.ALinq
             var aggregateResult = aggregateQuery.ToArray();
 
             Assert.Equal(2, aggregateResult.Length);
+            Assert.Equal("dfksjfl", aggregateResult[0].GibberishConstant);
+            Assert.Equal("PG1", aggregateResult[0].CategoryId);
+            Assert.Equal(0.06M, aggregateResult[0].SumTaxRate);
+            Assert.Equal(0.06M, aggregateResult[0].MinTaxRate);
+            Assert.Equal(1, aggregateResult[0].GroupCount);
+            Assert.Equal("Netherlands", aggregateResult[1].Country);
+            Assert.Equal(1.5M, aggregateResult[1].AvgAmount);
+            Assert.Equal(2M, aggregateResult[1].MaxAmount);
+            Assert.Equal(1, aggregateResult[1].DistinctCurrency);
         }
 
         [Fact]
@@ -1219,6 +1287,62 @@ namespace Microsoft.OData.Client.Tests.ALinq
             Assert.Equal("1.5", aggregateResult.AverageAmount);
             Assert.Equal(3M, aggregateResult.SumAmount);
             Assert.Equal("1", aggregateResult.MinAmount);
+        }
+
+        [Fact]
+        public void GroupByResultSelector_UsingMemberInitializationInKeySelector()
+        {
+            var queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            var aggregateQuery = queryable.GroupBy(
+                d1 => new SalesGroupingKey01 { Color = d1.Product.Color, Country = d1.Customer.Country },
+                (d1, d2) => new
+                {
+                    d1.Color,
+                    d1.Country,
+                    SumAmount = d2.Sum(d3 => d3.Amount),
+                    AvgAmount = d2.Average(d3 => d3.Amount),
+                    MinAmount = d2.Min(d3 => d3.Amount),
+                    MaxAmount = d2.Max(d3 => d3.Amount)
+                });
+
+            Assert.Equal(
+                string.Format("{0}/Sales?$apply=groupby((Product/Color,Customer/Country),aggregate(" +
+                "Amount with sum as SumAmount,Amount with average as AvgAmount," +
+                "Amount with min as MinAmount,Amount with max as MaxAmount))", serviceUri),
+                aggregateQuery.ToString());
+
+            MockGroupByMultipleNavProperties();
+
+            var aggregateResult = aggregateQuery.ToArray();
+
+            Assert.Equal(2, aggregateResult.Length);
+            Assert.Equal("Brown", aggregateResult[0].Color);
+            Assert.Equal(6M, aggregateResult[0].AvgAmount);
+            Assert.Equal(8M, aggregateResult[0].MaxAmount);
+            Assert.Equal("Netherlands", aggregateResult[1].Country);
+            Assert.Equal(5M, aggregateResult[1].SumAmount);
+            Assert.Equal(1M, aggregateResult[1].MinAmount);
+        }
+
+        [Fact]
+        public void GroupByResultSelector_ConstructorInitializationInKeySelectorNotPermitted()
+        {
+            var queryable = this.dsContext.CreateQuery<Sale>(salesEntitySetName);
+
+            var aggregateQuery = queryable.GroupBy(
+                d1 => new SalesGroupingKey02(d1.Product.Color, d1.Customer.Country),
+                (d1, d2) => new
+                {
+                    d1.Color,
+                    d1.Country,
+                    AvgAmount = d2.Average(d3 => d3.Amount),
+                    SumAmount = d2.Sum(d3 => d3.Amount)
+                });
+
+            Assert.Equal(
+                "Error translating Linq expression to URI: " + Strings.ALinq_InvalidGroupByKeySelector("new SalesGroupingKey02(d1.Product.Color, d1.Customer.Country)"),
+                aggregateQuery.ToString());
         }
 
         [Fact]
@@ -1880,6 +2004,29 @@ namespace Microsoft.OData.Client.Tests.ALinq
             public string AverageAmount { get; }
             public decimal SumAmount { get; set; }
             public string MinAmount { get; set; }
+        }
+
+        class SalesGroupedResult07
+        {
+            public string CategoryName { get; set; }
+            public decimal AverageAmount { get; set; }
+        }
+
+        class SalesGroupingKey01
+        {
+            public string Color { get; set; }
+            public string Country { get; set; }
+        }
+
+        class SalesGroupingKey02
+        {
+            public SalesGroupingKey02(string color, string country)
+            {
+                this.Color = color;
+                this.Country = country;
+            }
+            public string Color { get; }
+            public string Country { get; }
         }
 
         #endregion Helper Classes

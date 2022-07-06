@@ -24,6 +24,8 @@ namespace Microsoft.OData.Client
     {
         /// <summary>
         /// Analyzes <paramref name="methodCallExpr"/> to check whether it can be satisfied with $apply.
+        /// The Projection property of <paramref name="resourceExpr"/> is set
+        /// when <paramref name="methodCallExpr"/> is analyzed successfully.
         /// </summary>
         /// <param name="methodCallExpr">Expression to analyze.</param>
         /// <param name="source">The resource set expression (source) for the GroupBy.</param>
@@ -126,8 +128,8 @@ namespace Microsoft.OData.Client
                 return false;
             }
 
-            // Scenario 2: GroupBy(d1 => new { d1.Property1, ..., d1.PropertyN })
-            // Scenario 3: GroupBy(d1 => new Cls { ClsProperty1 = d1.Property1, ..., ClsPropertyN = d1.PropertyN }) - not common but possible
+            // Scenario 3: GroupBy(d1 => new { d1.Property1, ..., d1.PropertyN })
+            // Scenario 4: GroupBy(d1 => new Cls { ClsProperty1 = d1.Property1, ..., ClsPropertyN = d1.PropertyN }) - not common but possible
             GroupByKeySelectorAnalyzer.Analyze(input, keySelector);
 
             return true;
@@ -190,6 +192,7 @@ namespace Microsoft.OData.Client
             {
                 Debug.Assert(input != null, $"{nameof(input)} != null");
                 Debug.Assert(keySelector != null, $"{nameof(keySelector)} != null");
+                Debug.Assert(keySelector.Parameters.Count == 1, $"{nameof(keySelector)}.Parameters.Count == 1");
 
                 GroupByKeySelectorAnalyzer keySelectorAnalyzer = new GroupByKeySelectorAnalyzer(input, keySelector.Parameters[0]);
 
@@ -200,14 +203,24 @@ namespace Microsoft.OData.Client
             internal override NewExpression VisitNew(NewExpression nex)
             {
                 // Maintain a mapping of grouping expression and respective member
-                // The mapping is cross-referenced if any of the grouping expression 
+                // The mapping is cross-referenced if any of the grouping expressions
                 // is referenced in result selector
                 if (nex.Members != null && nex.Members.Count == nex.Arguments.Count)
                 {
+                    // This block caters for the following scenario:
+                    //
+                    // dataServiceContext.Sales.GroupBy(
+                    //     d1 => new { d1.ProductId },
+                    //     (d2, d3) => new { AverageAmount = d3.Average(d4 => d4.Amount) })
                     for (int i = 0; i < nex.Arguments.Count; i++)
                     {
                         this.input.Apply.KeySelectorMap.Add(nex.Members[i].Name, nex.Arguments[i]);
                     }
+                }
+                else if (nex.Arguments.Count > 0 && nex.Constructor.GetParameters().Length > 0)
+                {
+                    // Constructor initialization in key selector not supported
+                    throw new NotSupportedException(Strings.ALinq_InvalidGroupByKeySelector(nex));
                 }
 
                 return base.VisitNew(nex);
@@ -217,7 +230,7 @@ namespace Microsoft.OData.Client
             internal override MemberAssignment VisitMemberAssignment(MemberAssignment assignment)
             {
                 // Maintain a mapping of grouping expression and respective member
-                // The mapping is cross-referenced if any of the grouping expression 
+                // The mapping is cross-referenced if any of the grouping expressions
                 // is referenced in result selector
                 this.input.Apply.KeySelectorMap.Add(assignment.Member.Name, assignment.Expression);
 
@@ -306,7 +319,7 @@ namespace Microsoft.OData.Client
                             new KeyValuePair<string, Type>(nex.Members[i].Name, (nex.Members[i] as PropertyInfo).PropertyType));
                     }
                 }
-                else if ((parameters = nex.Constructor.GetParameters()).Length >= nex.Arguments.Count)
+                else if (nex.Arguments.Count > 0 && (parameters = nex.Constructor.GetParameters()).Length >= nex.Arguments.Count)
                 {
                     // Use of >= in the above if statement caters for optional parameters
 
@@ -330,10 +343,6 @@ namespace Microsoft.OData.Client
                             nex.Arguments[i],
                             new KeyValuePair<string, Type>(parameters[i].Name, parameters[i].ParameterType));
                     }
-                }
-                else
-                {
-                    throw Error.NotSupported();
                 }
 
                 return base.VisitNew(nex);

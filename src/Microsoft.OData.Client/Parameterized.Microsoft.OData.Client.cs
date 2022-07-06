@@ -1840,6 +1840,14 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
+        /// A string like "The expression '{0}' in the GroupBy key selector is not supported."
+        /// </summary>
+        internal static string ALinq_InvalidGroupByKeySelector(object p0)
+        {
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ALinq_InvalidGroupByKeySelector, p0);
+        }
+
+        /// <summary>
         /// A string like "DataServiceKey attribute must specify at least one property name."
         /// </summary>
         internal static string DSKAttribute_MustSpecifyAtleastOnePropertyName

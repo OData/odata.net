@@ -754,7 +754,7 @@ namespace Microsoft.OData.Client
                         this.memberMap.Add(nex.Arguments[i], new KeyValuePair<string, Type>(property.Name, property.PropertyType));
                     }
                 }
-                else if ((parameters = nex.Constructor.GetParameters()).Length >= nex.Arguments.Count)
+                else if (nex.Arguments.Count > 0 && (parameters = nex.Constructor.GetParameters()).Length >= nex.Arguments.Count)
                 {
                     for (int i = 0; i < nex.Arguments.Count; i++)
                     {
