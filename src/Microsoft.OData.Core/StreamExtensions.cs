@@ -20,18 +20,18 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="inStream">The stream to read data from.</param>
         /// <returns>The byte array containing the read data.</returns>
-        public static byte[] ReadAllBytes(this Stream instream)
+        public static byte[] ReadAllBytes(this Stream inStream)
         {
-            Debug.Assert(instream != null, "instream != null");
+            Debug.Assert(inStream != null, "inStream != null");
 
-            if (instream is MemoryStream)
+            if (inStream is MemoryStream)
             {
-                return ((MemoryStream)instream).ToArray();
+                return ((MemoryStream)inStream).ToArray();
             }
 
             using (var memoryStream = new MemoryStream())
             {
-                instream.CopyTo(memoryStream);
+                inStream.CopyTo(memoryStream);
                 return memoryStream.ToArray();
             }
         }
@@ -49,8 +49,7 @@ namespace Microsoft.OData
 
             if (inStream is MemoryStream)
             {
-                byte[] contents = ((MemoryStream)inStream).ToArray();
-                return contents;
+                return ((MemoryStream)inStream).ToArray();
             }
 
             using (var memoryStream = new MemoryStream())
