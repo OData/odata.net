@@ -58,7 +58,19 @@ jobs:
       benchmarkDotNet: true
     onConfigure:
       - "{{setSourceScript}}"
-
+  serializationComparisons:
+    source:
+      project: test/PerformanceTests/SerializationComparisonsTests/JsonWriterBenchmarks/JsonWriterBenchmarks.csproj
+    variables:
+      filter: "*"
+      jobType: default
+      base: "{{base}}"
+      baseBranch: "{{baseBranch}}"
+    arguments: "--job {{jobType}} --filter {{filter}} --memory"
+    options:
+      benchmarkDotNet: true
+    onConfigure:
+      - "{{setSourceScript}}"
 scenarios:
   Reader:
     application:
@@ -90,6 +102,11 @@ scenarios:
       job: serializationBaselines
       variables:
         filter: "*"
+  SerializationComparisons:
+    application:
+      job: serializationComparisons
+      variables:
+        filterArg: "*File*"
 
 profiles:
   local:

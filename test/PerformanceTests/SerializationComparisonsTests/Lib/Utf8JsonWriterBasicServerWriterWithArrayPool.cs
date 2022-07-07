@@ -1,20 +1,19 @@
-﻿using Microsoft.OData;
-using System;
+﻿using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.OData;
 
 namespace ExperimentsLib
 {
     /// <summary>
     /// Writes Customers collection payload using <see cref="Utf8JsonWriter"/> directly.
     /// </summary>
-    public class Utf8JsonWriterBasicServerWriterWithArrayPool : IServerWriter<IEnumerable<Customer>>
+    public class Utf8JsonWriterBasicServerWriterWithArrayPool : IPayloadWriter<IEnumerable<Customer>>
     {
         Func<IBufferWriter<byte>, Utf8JsonWriter> _writerFactory;
         bool _simulateTypedResourceGeneration;

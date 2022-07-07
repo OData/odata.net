@@ -1,24 +1,16 @@
-﻿using BenchmarkDotNet.Attributes;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Order;
 using BenchmarkDotNet.Diagnosers;
-using BenchmarkDotNet.Diagnostics.Windows.Configs;
 using ExperimentsLib;
 using Microsoft.OData.Edm;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
-using BenchmarkDotNet.Order;
 
 namespace JsonWriterBenchmarks
 {
     [MemoryDiagnoser]
-    //[EtwProfiler]
-    //[InliningDiagnoser(false, allowedNamespaces: new string[] { "Microsoft.OData.Json", "ExperimentsLib", "Microsoft.OData.JsonLight" })]
-    //[HardwareCounters(HardwareCounter.BranchMispredictions, HardwareCounter.CacheMisses, HardwareCounter.BranchInstructions)]
     [Orderer(SummaryOrderPolicy.Method, MethodOrderPolicy.Declared)]
-    //[EventPipeProfiler(EventPipeProfile.CpuSampling)]
-    //[ShortRunJob]
     public class Benchmarks
     {
         IEnumerable<Customer> data;
@@ -27,21 +19,21 @@ namespace JsonWriterBenchmarks
         public Stream memoryStream;
         public Stream fileStream;
 
-        ServerCollection<IEnumerable<Customer>> writerCollection;
-        IServerWriter<IEnumerable<Customer>> writer;
+        WriterCollection<IEnumerable<Customer>> writerCollection;
+        IPayloadWriter<IEnumerable<Customer>> writer;
 
         [ParamsSource(nameof(WriterNames))]
         public string WriterName;
 
         public static IEnumerable<string> WriterNames() =>
-            DefaultServerCollection.Create(Enumerable.Empty<Customer>()).GetServerNames();
+            DefaultWriterCollection.Create().GetServerNames();
 
         public Benchmarks()
         {
             // the written output will be about 1.45MB of JSON text
             data = CustomerDataSet.GetCustomers(5000);
             model = DataModel.GetEdmModel();
-            writerCollection = DefaultServerCollection.Create(data);
+            writerCollection = DefaultWriterCollection.Create();
         }
 
         [IterationSetup]

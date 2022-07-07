@@ -1,10 +1,5 @@
-﻿using Microsoft.OData.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
+using Microsoft.OData.Json;
 
 namespace ExperimentsLib
 {
@@ -16,11 +11,6 @@ namespace ExperimentsLib
         }
 
         public IJsonWriter CreateJsonWriter(TextWriter textWriter, bool isIeee754Compatible)
-        {
-            return new NoopJsonWriter();
-        }
-
-        public IJsonWriter CreateJsonWriterFromStream(Stream stream, bool isIeee754Compatible)
         {
             return new NoopJsonWriter();
         }

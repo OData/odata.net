@@ -1,11 +1,7 @@
-﻿using Microsoft.OData;
-using Microsoft.OData.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Text;
-using System.Threading.Tasks;
+using Microsoft.OData;
+using Microsoft.OData.Json;
 
 namespace ExperimentsLib
 {
@@ -45,14 +41,14 @@ namespace ExperimentsLib
 
         public static IODataResponseMessage CreateUtf8Message(this Stream stream)
         {
-            InMemoryMessage message = new InMemoryMessage { Stream = stream };
+            ODataMessage message = new ODataMessage { Stream = stream };
             message.SetHeader("Content-Type", "application/json; charset=UTF-8");
             return message;
         }
 
         public static IODataResponseMessage CreateUtf16Message(this Stream stream)
         {
-            InMemoryMessage message = new InMemoryMessage { Stream = stream };
+            ODataMessage message = new ODataMessage { Stream = stream };
             message.SetHeader("Content-Type", "application/json; charset=UTF-16");
             return message;
         }
@@ -66,7 +62,7 @@ namespace ExperimentsLib
             services.AddService<IJsonWriterFactory>(ServiceLifetime.Singleton, _ => factory);
             services.AddService<IJsonWriterFactoryAsync>(ServiceLifetime.Singleton, _ => factory);
 
-            InMemoryMessage message = new InMemoryMessage
+            ODataMessage message = new ODataMessage
             {
                 Stream = stream,
                 Container = services.BuildContainer()
@@ -83,7 +79,7 @@ namespace ExperimentsLib
             services.AddDefaultODataServices();
             services.AddService<IStreamBasedJsonWriterFactory>(ServiceLifetime.Singleton, _ => factory);
 
-            InMemoryMessage message = new InMemoryMessage
+            ODataMessage message = new ODataMessage
             {
                 Stream = stream,
                 Container = services.BuildContainer()

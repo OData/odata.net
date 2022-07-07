@@ -20,6 +20,11 @@ namespace ExperimentsLib
 
     public static class DataModel
     {
+        /// <summary>
+        /// Gets an OData model for testing, defining
+        /// and entity set of Customer instances.
+        /// </summary>
+        /// <returns>The OData model.</returns>
         public static IEdmModel GetEdmModel()
         {
             EdmModel model = new EdmModel();

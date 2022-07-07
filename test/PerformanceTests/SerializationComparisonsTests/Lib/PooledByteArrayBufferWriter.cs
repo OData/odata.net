@@ -9,6 +9,8 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
+// This implementation was drawn from
+// https://github.com/dotnet/runtime/blob/main/src/libraries/Common/src/System/Text/Json/PooledByteBufferWriter.cs
 namespace System.Text.Json
 {
     public sealed class PooledByteBufferWriter : IBufferWriter<byte>, IDisposable

@@ -10,7 +10,7 @@ namespace ExperimentsLib
     /// given some input data of type <typeparamref name="T"/>.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IServerWriter<T>
+    public interface IPayloadWriter<T>
     {
         Task WritePayload(T payload, Stream stream);
     }

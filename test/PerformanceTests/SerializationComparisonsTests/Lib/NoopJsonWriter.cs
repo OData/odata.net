@@ -1,10 +1,7 @@
-﻿using Microsoft.OData.Edm;
-using Microsoft.OData.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Threading.Tasks;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Json;
 
 namespace ExperimentsLib
 {
@@ -15,11 +12,8 @@ namespace ExperimentsLib
     /// </summary>
     public class NoopJsonWriter : IJsonWriter, IJsonWriterAsync
     {
-        public bool x = false;
         public void EndArrayScope()
         {
-            // simulate work so that this method does not get optimized away
-            x = !x;
         }
 
         public Task EndArrayScopeAsync()
@@ -29,8 +23,6 @@ namespace ExperimentsLib
 
         public void EndObjectScope()
         {
-            // simulate work so that this method does not get optimized away
-            x = !x;
         }
 
         public Task EndObjectScopeAsync()
@@ -40,8 +32,6 @@ namespace ExperimentsLib
 
         public void EndPaddingFunctionScope()
         {
-            // simulate work so that this method does not get optimized away
-            x = !x;
         }
 
         public Task EndPaddingFunctionScopeAsync()
@@ -51,8 +41,6 @@ namespace ExperimentsLib
 
         public void Flush()
         {
-            // simulate work so that this method does not get optimized away
-            x = !x;
         }
 
         public Task FlushAsync()
@@ -62,8 +50,6 @@ namespace ExperimentsLib
 
         public void StartArrayScope()
         {
-            // simulate work so that this method does not get optimized away
-            x = !x;
         }
 
         public Task StartArrayScopeAsync()
@@ -73,8 +59,6 @@ namespace ExperimentsLib
 
         public void StartObjectScope()
         {
-            // simulate work so that this method does not get optimized away
-            x = !x;
         }
 
         public Task StartObjectScopeAsync()
@@ -84,8 +68,6 @@ namespace ExperimentsLib
 
         public void StartPaddingFunctionScope()
         {
-            // simulate work so that this method does not get optimized away
-            x = !x;
         }
 
         public Task StartPaddingFunctionScopeAsync()
@@ -95,8 +77,6 @@ namespace ExperimentsLib
 
         public void WriteName(string name)
         {
-            // simulate work so that this method does not get optimized away
-            x = !x;
         }
 
         public Task WriteNameAsync(string name)
@@ -106,8 +86,6 @@ namespace ExperimentsLib
 
         public void WritePaddingFunctionName(string functionName)
         {
-            // simulate work so that this method does not get optimized away
-            x = !x;
         }
 
         public Task WritePaddingFunctionNameAsync(string functionName)
@@ -117,8 +95,6 @@ namespace ExperimentsLib
 
         public void WriteRawValue(string rawValue)
         {
-            // simulate work so that this method does not get optimized away
-            x = !x;
         }
 
         public Task WriteRawValueAsync(string rawValue)
@@ -128,20 +104,14 @@ namespace ExperimentsLib
 
         public void WriteValue(bool value)
         {
-            // simulate work so that this method does not get optimized away
-            x = !x;
         }
 
         public void WriteValue(int value)
         {
-            // simulate work so that this method does not get optimized away
-            x = !x;
         }
 
         public void WriteValue(float value)
         {
-            // simulate work so that this method does not get optimized away
-            x = !x;
         }
 
         public void WriteValue(short value)
@@ -151,74 +121,50 @@ namespace ExperimentsLib
 
         public void WriteValue(long value)
         {
-            // simulate work so that this method does not get optimized away
-            x = !x;
         }
 
         public void WriteValue(double value)
         {
-            // simulate work so that this method does not get optimized away
-            x = !x;
         }
 
         public void WriteValue(Guid value)
         {
-            // simulate work so that this method does not get optimized away
-            x = !x;
         }
 
         public void WriteValue(decimal value)
         {
-            // simulate work so that this method does not get optimized away
-            x = !x;
         }
 
         public void WriteValue(DateTimeOffset value)
         {
-            // simulate work so that this method does not get optimized away
-            x = !x;
         }
 
         public void WriteValue(TimeSpan value)
         {
-            // simulate work so that this method does not get optimized away
-            x = !x;
         }
 
         public void WriteValue(byte value)
         {
-            // simulate work so that this method does not get optimized away
-            x = !x;
         }
 
         public void WriteValue(sbyte value)
         {
-            // simulate work so that this method does not get optimized away
-            x = !x;
         }
 
         public void WriteValue(string value)
         {
-            // simulate work so that this method does not get optimized away
-            x = !x;
         }
 
         public void WriteValue(byte[] value)
         {
-            // simulate work so that this method does not get optimized away
-            x = !x;
         }
 
         public void WriteValue(Date value)
         {
-            // simulate work so that this method does not get optimized away
-            x = !x;
         }
 
         public void WriteValue(TimeOfDay value)
         {
-            // simulate work so that this method does not get optimized away
-            x = !x;
         }
 
         public Task WriteValueAsync(bool value)

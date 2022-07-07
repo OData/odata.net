@@ -1,19 +1,17 @@
-﻿using Microsoft.OData;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.OData;
 
 namespace ExperimentsLib
 {
     /// <summary>
     /// Writes a Customers collection payload using <see cref="Utf8JsonODataWriter"/>.
     /// </summary>
-    public class Utf8JsonWriterServerWriter : IServerWriter<IEnumerable<Customer>>
+    public class Utf8JsonWriterServerWriter : IPayloadWriter<IEnumerable<Customer>>
     {
         Func<Stream, Utf8JsonWriter> _writerFactory;
 

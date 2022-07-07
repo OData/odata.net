@@ -8,6 +8,11 @@ namespace ExperimentsLib
 {
     public class CustomerDataSet
     {
+        /// <summary>
+        /// Generates a collection of <see cref="Customer"/> instances.
+        /// </summary>
+        /// <param name="count">The number of objects to generate.</param>
+        /// <returns>The generated collection.</returns>
         public static IEnumerable<Customer> GetCustomers(int count)
         {
             var data = new List<Customer>();

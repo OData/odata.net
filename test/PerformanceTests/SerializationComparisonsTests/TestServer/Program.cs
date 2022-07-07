@@ -1,6 +1,9 @@
+using System.Collections.Generic;
 using ExperimentsLib;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace TestServer
 {
@@ -11,7 +14,7 @@ namespace TestServer
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            ServerCollection<IEnumerable<Customer>> writers = DefaultServerCollection.Create(null);
+            WriterCollection<IEnumerable<Customer>> writers = DefaultWriterCollection.Create();
             builder.Services.AddSingleton(writers);
             builder.Services.AddControllers(options =>
             {

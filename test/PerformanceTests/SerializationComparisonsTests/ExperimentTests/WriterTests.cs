@@ -11,9 +11,8 @@ namespace ExperimentTests
     public class WriterTests
     {
         public static IEnumerable<Customer> data = CustomerDataSet.GetCustomers(4);
-        public static ServerCollection<IEnumerable<Customer>> writers = DefaultServerCollection.Create(data);
-        public static IEnumerable<object[]> writerNames () =>
-            writers.GetServerNames()
+        public static WriterCollection<IEnumerable<Customer>> writers = DefaultWriterCollection.Create();
+        public static IEnumerable<object[]> WriterNames { get; } = writers.GetServerNames()
             .Where(n => !n.Contains("NoOp"))
             .Select(n => new string[] { n });
 
@@ -23,7 +22,7 @@ namespace ExperimentTests
             .Select(n => new string[] { n });
 
         [Theory]
-        [MemberData(nameof(writerNames))]
+        [MemberData(nameof(WriterNames))]
         public async Task WriterWritesCustomersCollectionPayload(string writerName)
         {
             using var stream = new MemoryStream();

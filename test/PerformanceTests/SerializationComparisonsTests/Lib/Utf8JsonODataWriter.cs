@@ -1,11 +1,7 @@
-﻿using Microsoft.OData;
-using Microsoft.OData.Edm;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
+using Microsoft.OData;
 
 namespace ExperimentsLib
 {
@@ -43,6 +39,7 @@ namespace ExperimentsLib
             {
                 writer.WriteStartArray();
             }
+
             stateStack.Push(WriterState.ResourceSet);
         }
 

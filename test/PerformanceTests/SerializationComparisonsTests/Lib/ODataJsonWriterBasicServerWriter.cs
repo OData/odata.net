@@ -1,19 +1,17 @@
-﻿using Microsoft.OData;
-using Microsoft.OData.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.OData;
+using Microsoft.OData.Json;
 
 namespace ExperimentsLib
 {
     /// <summary>
     /// Writes Customer collection OData JSON format using <see cref="IJsonWriter"/> directly.
     /// </summary>
-    public class ODataJsonWriterBasicServerWriter : IServerWriter<IEnumerable<Customer>>
+    public class ODataJsonWriterBasicServerWriter : IPayloadWriter<IEnumerable<Customer>>
     {
         private readonly Func<Stream, IJsonWriter> jsonWriterFactory;
         private bool _simulateTypedResourceGeneration = true;
@@ -26,22 +24,17 @@ namespace ExperimentsLib
 
         public Task WritePayload(IEnumerable<Customer> payload, Stream stream)
         {
-            var sw = new Stopwatch();
-            sw.Start();
-
             var serviceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/");
             var jsonWriter = jsonWriterFactory(stream);
 
 
             var resourceSet = new ODataResourceSet();
-            //Console.WriteLine("Start writing resource set");
             jsonWriter.StartObjectScope();
             jsonWriter.WriteName("@odata.context");
             jsonWriter.WriteValue($"{serviceRoot}$metadata#Customers");
             jsonWriter.WriteName("value");
             jsonWriter.StartArrayScope();
 
-            //Console.WriteLine("About to write resources {0}", payload.Count());
             foreach (var _customer in payload)
             {
                 Customer customer = _customer;

@@ -1,23 +1,21 @@
-﻿using Microsoft.OData;
-using System;
+﻿using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.OData;
 
 namespace ExperimentsLib
 {
     /// <summary>
     /// Writes a Customers collection payload using <see cref="Utf8JsonODataWriter"/>.
     /// </summary>
-    public class Utf8JsonWriterServerWriterWithArrayPool : IServerWriter<IEnumerable<Customer>>
+    public class Utf8JsonWriterServerWriterWithArrayPool : IPayloadWriter<IEnumerable<Customer>>
     {
-        Func<IBufferWriter<byte>, Utf8JsonWriter> _writerFactory;
         const int BufferSize = 16 * 1024;
+        private Func<IBufferWriter<byte>, Utf8JsonWriter> _writerFactory;
 
         public Utf8JsonWriterServerWriterWithArrayPool(Func<IBufferWriter<byte>, Utf8JsonWriter> writerFactory)
         {
@@ -26,19 +24,14 @@ namespace ExperimentsLib
 
         public async Task WritePayload(IEnumerable<Customer> payload, Stream stream)
         {
-            var sw = new Stopwatch();
-            sw.Start();
-
             var serviceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/");
             using var bufferWriter = new PooledByteBufferWriter(BufferSize);
             using Utf8JsonWriter jsonWriter = _writerFactory(bufferWriter);
             var writer = new Utf8JsonODataWriter(jsonWriter, serviceRoot, "Customers");
 
             var resourceSet = new ODataResourceSet();
-            //Console.WriteLine("Start writing resource set");
             writer.WriteStart(resourceSet);
 
-            //Console.WriteLine("About to write resources {0}", payload.Count());
             int count = 0;
             foreach (var customer in payload)
             {
@@ -135,8 +128,6 @@ namespace ExperimentsLib
 
                 // end write resource
                 writer.WriteEnd();
-                //Console.WriteLine("Finish writing resource {0}", customer.Id);
-                //Console.WriteLine("Finised customer {0}", customer.Id);
 
                 // flush the inner writer periodically to prevent expanding the internal buffer indefinitely
                 // JSON writer does not commit data to output until it's flushed
@@ -155,7 +146,6 @@ namespace ExperimentsLib
             await jsonWriter.FlushAsync();
             await bufferWriter.WriteToStreamAsync(stream, default);
             bufferWriter.Clear();
-            //await jsonWriter.FlushAsync();
         }
     }
 }

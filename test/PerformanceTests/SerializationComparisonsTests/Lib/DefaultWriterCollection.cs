@@ -1,22 +1,25 @@
-﻿using Microsoft.OData.Edm;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Text.Json;
-using ExperimentsLib;
-using Microsoft.OData.Json;
+using Microsoft.OData.Edm;
 
 namespace ExperimentsLib
 {
-    public static class DefaultServerCollection
+    /// <summary>
+    /// Creates the default collection of <see cref="IPayloadWriter{T}"/>s used for testing.
+    /// </summary>
+    public static class DefaultWriterCollection
     {
-        const int BufferSize = 84000;
-        public static ServerCollection<IEnumerable<Customer>> Create(IEnumerable<Customer> data, string baseHost = "http://localhost")
+        /// <summary>
+        /// Creates a collection of <see cref="IPayloadWriter{Customer}"/>s for testing.
+        /// </summary>
+        /// <returns>A collection of <see cref="IPayloadWriter{Customer}"/>.</returns>
+        public static WriterCollection<IEnumerable<Customer>> Create()
         {
             IEdmModel model = DataModel.GetEdmModel();
             model.MarkAsImmutable();
-            ServerCollection<IEnumerable<Customer>> servers = new ServerCollection<IEnumerable<Customer>>(data, baseHost);
+            WriterCollection<IEnumerable<Customer>> servers = new WriterCollection<IEnumerable<Customer>>();
 
-            servers.AddServers(
+            servers.AddWriters(
                 //("JsonSerializer", "utf-8", new JsonSerializerServerWriter()),
 
                 //("Utf8JsonWriter-Direct", "utf-8", new Utf8JsonWriterBasicServerWriter(stream => new Utf8JsonWriter(stream))),

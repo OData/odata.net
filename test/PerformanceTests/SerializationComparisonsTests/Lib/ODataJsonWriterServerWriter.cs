@@ -1,19 +1,16 @@
-﻿using Microsoft.OData;
-using Microsoft.OData.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.OData;
+using Microsoft.OData.Json;
 
 namespace ExperimentsLib
 {
     /// <summary>
     /// Writes Customer collection OData JSON format using <see cref="IJsonWriter"/> directly.
     /// </summary>
-    public class ODataJsonWriterServerWriter : IServerWriter<IEnumerable<Customer>>
+    public class ODataJsonWriterServerWriter : IPayloadWriter<IEnumerable<Customer>>
     {
         private readonly Func<Stream, IJsonWriter> jsonWriterFactory;
 
@@ -23,19 +20,13 @@ namespace ExperimentsLib
         }
 
         public Task WritePayload(IEnumerable<Customer> payload, Stream stream)
-        {
-            var sw = new Stopwatch();
-            sw.Start();
-
-            var serviceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/");
+        {var serviceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/");
             var writer = new SimpleJsonODataWriter(this.jsonWriterFactory(stream), serviceRoot, "Customers");
 
 
             var resourceSet = new ODataResourceSet();
-            //Console.WriteLine("Start writing resource set");
             writer.WriteStart(resourceSet);
 
-            //Console.WriteLine("About to write resources {0}", payload.Count());
             foreach (var customer in payload)
             {
                 // await resourceSerializer.WriteObjectInlineAsync(item, elementType, writer, writeContext);
@@ -131,18 +122,6 @@ namespace ExperimentsLib
 
                 // end write resource
                 writer.WriteEnd();
-                //Console.WriteLine("Finish writing resource {0}", customer.Id);
-                //Console.WriteLine("Finised customer {0}", customer.Id);
-
-                //// flush the inner writer periodically to prevent expanding the internal buffer indefinitely
-                //// JSON writer does not commit data to output until it's flushed
-                //// each customer accounts for about 220 bytes, after 66 iterations we have about 14k pending
-                //// bytes in the buffer before flushing. I was trying to achieve similar behavior to JsonSerializer (0.9 * 16k)
-                //if (count % 66 == 0)
-                //{
-                //    await jsonWriter.FlushAsync();
-                //    count++;
-                //}
             }
 
             writer.WriteEnd();

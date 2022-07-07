@@ -1,36 +1,29 @@
-﻿using Microsoft.OData;
-using Microsoft.OData.Edm;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.OData;
+using Microsoft.OData.Edm;
 
 namespace ExperimentsLib
 {
     /// <summary>
     /// Writes Customer collection OData JSON format using <see cref="ODataMessageWriter"/> async version.
     /// </summary>
-    public class ODataAsyncServerWriter : IServerWriter<IEnumerable<Customer>>
+    public class ODataAsyncServerWriter : IPayloadWriter<IEnumerable<Customer>>
     {
         IEdmModel _model;
-        bool _useArrayPool = false;
         bool _enableValidation;
         Func<Stream, IODataResponseMessage> _messageFactory;
 
-        public ODataAsyncServerWriter(IEdmModel model, Func<Stream, IODataResponseMessage> messageFactory, bool enableValidation = true, bool useArrayPool = false)
+        public ODataAsyncServerWriter(IEdmModel model, Func<Stream, IODataResponseMessage> messageFactory, bool enableValidation = true)
         {
             _model = model;
-            _useArrayPool = useArrayPool;
             _enableValidation = enableValidation;
             _messageFactory = messageFactory;
         }
         public async Task WritePayload(IEnumerable<Customer> payload, Stream stream)
         {
-            var sw = new Stopwatch();
-            sw.Start();
             var settings = new ODataMessageWriterSettings();
             settings.ODataUri = new ODataUri
             {
@@ -52,9 +45,7 @@ namespace ExperimentsLib
             var writer = await messageWriter.CreateODataResourceSetWriterAsync(entitySet);
 
             var resourceSet = new ODataResourceSet();
-            //Console.WriteLine("Start writing resource set");
             await writer.WriteStartAsync(resourceSet);
-            //Console.WriteLine("About to write resources {0}", payload.Count());
 
             foreach (var customer in payload)
             {
@@ -148,8 +139,6 @@ namespace ExperimentsLib
 
                 // end write resource
                 await writer.WriteEndAsync();
-                //Console.WriteLine("Finish writing resource {0}", customer.Id);
-                //Console.WriteLine("Finised customer {0}", customer.Id);
             }
             await writer.WriteEndAsync();
             await writer.FlushAsync();

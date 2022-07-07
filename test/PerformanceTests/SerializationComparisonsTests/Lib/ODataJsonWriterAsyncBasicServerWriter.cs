@@ -1,12 +1,11 @@
-﻿using Microsoft.OData;
-using Microsoft.OData.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.OData;
+using Microsoft.OData.Json;
 
 namespace ExperimentsLib
 {
@@ -14,7 +13,7 @@ namespace ExperimentsLib
     /// Writes Customer collection OData JSON format using <see cref="IJsonWriterAsync"/> directly
     /// using the Async API.
     /// </summary>
-    public class ODataJsonWriterAsyncBasicServerWriter : IServerWriter<IEnumerable<Customer>>
+    public class ODataJsonWriterAsyncBasicServerWriter : IPayloadWriter<IEnumerable<Customer>>
     {
         private readonly Func<Stream, IJsonWriterAsync> jsonWriterFactory;
         private bool _simulateTypedResourceGeneration = true;

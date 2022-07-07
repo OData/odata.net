@@ -1,17 +1,24 @@
-﻿using ExperimentsLib;
-using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.Net.Http.Headers;
-using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
+using ExperimentsLib;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Net.Http.Headers;
 
 namespace TestServer;
 
+/// <summary>
+/// An output formatter that writes <see cref="IEnumerable{Customer}"/>
+/// payloads using the <see cref="IPayloadWriter{T}"/> specified
+/// in the request route.
+/// </summary>
 public class TestOutputFormatter : TextOutputFormatter
 {
     public TestOutputFormatter()
     {
         SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse("application/json"));
-
         SupportedEncodings.Add(Encoding.UTF8);
     }
 
@@ -23,25 +30,16 @@ public class TestOutputFormatter : TextOutputFormatter
         var httpContext = context.HttpContext;
         var services = httpContext.RequestServices;
 
-        //var logger = services.GetRequiredService<ILogger<TestOutputFormatter>>();
-        var writers = services.GetRequiredService<ServerCollection<IEnumerable<Customer>>>();
+        var writers = services.GetRequiredService<WriterCollection<IEnumerable<Customer>>>();
 
         // the writer is specified in the route: customers/{writer}
         var writerName = httpContext.Request.RouteValues["writer"] as string;
-        // disable logging because it seems to block CPU time
-        //logger.LogInformation($"Looking for requested writer '{writerName}'");
         var writer = writers.GetWriter(writerName);
 
-        //logger.LogInformation($"Using writer '{writerName}' for serialization");
         var customers = (IEnumerable<Customer>)context.Object!;
 
         var stream = httpContext.Response.Body;
-
-        //var sp = new Stopwatch();
-        //sp.Start();
         await writer.WritePayload(customers, stream);
-        //sp.Stop();
-        //logger.LogInformation($"Serialization took {sp.ElapsedMilliseconds} ms");
     }
 }
 

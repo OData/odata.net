@@ -1,28 +1,25 @@
-﻿using Microsoft.OData;
-using Microsoft.OData.Edm;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.OData;
+using Microsoft.OData.Edm;
 
 namespace ExperimentsLib
 {
     /// <summary>
     /// Writes Customer collection payload using <see cref="ODataMessageWriter"/>
     /// </summary>
-    public class ODataServerWriter : IServerWriter<IEnumerable<Customer>>
+    public class ODataServerWriter : IPayloadWriter<IEnumerable<Customer>>
     {
         IEdmModel model;
-        bool useArrayPool;
         bool enableValidation;
         Func<Stream, IODataResponseMessage> messageFactory;
 
-        public ODataServerWriter(IEdmModel model, Func<Stream, IODataResponseMessage> messageFactory, bool enableValidation = true, bool useArrayPool = false)
+        public ODataServerWriter(IEdmModel model, Func<Stream, IODataResponseMessage> messageFactory, bool enableValidation = true)
         {
             this.model = model;
             this.messageFactory = messageFactory;
-            this.useArrayPool = useArrayPool;
             this.enableValidation = enableValidation;
         }
 
@@ -43,11 +40,6 @@ namespace ExperimentsLib
                 settings.AlwaysAddTypeAnnotationsForDerivedTypes = false;
             }
 
-            //if (useArrayPool)
-            //{
-            //    settings.ArrayPool = CharArrayPool.Shared;
-            //}
-
             IODataResponseMessage message = messageFactory(stream);
 
             var messageWriter = new ODataMessageWriter(message, settings, model);
@@ -55,9 +47,7 @@ namespace ExperimentsLib
             var writer = messageWriter.CreateODataResourceSetWriter(entitySet);
 
             var resourceSet = new ODataResourceSet();
-            //Console.WriteLine("Start writing resource set");
             writer.WriteStart(resourceSet);
-            //Console.WriteLine("About to write resources {0}", payload.Count());
 
             foreach (var customer in payload)
             {
@@ -85,7 +75,6 @@ namespace ExperimentsLib
                     }
                 };
 
-                //Console.WriteLine("Start writing resource {0}", customer.Id);
                 writer.WriteStart(resource);
                 // skip WriterStreamPropertiesAsync
                 // WriteComplexPropertiesAsync
@@ -151,8 +140,6 @@ namespace ExperimentsLib
 
                 // end write resource
                 writer.WriteEnd();
-                //Console.WriteLine("Finish writing resource {0}", customer.Id);
-
             }
 
             writer.WriteEnd();
