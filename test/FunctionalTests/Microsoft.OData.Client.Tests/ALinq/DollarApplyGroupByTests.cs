@@ -1225,7 +1225,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
                 aggregateQuery.ToString());
 
             string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Sales" +
-                    "(AverageAmount)\"," +
+                    "(Time(Year),Product(Category(Name)),AverageAmount)\"," +
                     "\"value\":[{{\"@odata.id\":null,\"CurrencyCode\":\"EUR\",\"AverageAmount\":1.500000,\"SumAmount\":3.00,\"MinAmount\":1.00," +
                     "\"Time\":{{\"@odata.id\":null,\"Year\":2012}}," +
                     "\"Product\":{{\"@odata.id\":null,\"Category\":{{\"@odata.id\":null,\"Name\":\"Non-Food\"}}}}}}]}}", serviceUri);
@@ -1268,7 +1268,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
                 aggregateQuery.ToString());
 
             string mockResponse = string.Format("{{\"@odata.context\":\"{0}/$metadata#Sales" +
-                    "(AverageAmount)\"," +
+                    "(Time(Year),Product(Category(Name)),AverageAmount)\"," +
                     "\"value\":[{{\"@odata.id\":null,\"CurrencyCode\":\"EUR\",\"averageAmount\":1.500000,\"SumAmount\":3.00,\"MinAmount\":1.00," +
                     "\"Time\":{{\"@odata.id\":null,\"Year\":2012}}," +
                     "\"Product\":{{\"@odata.id\":null,\"Category\":{{\"@odata.id\":null,\"Name\":\"Non-Food\"}}}}}}]}}", serviceUri);
