@@ -597,14 +597,15 @@ namespace Microsoft.OData.Client
                 return;
             }
 
-            string applyExpression = string.Empty;
+            StringBuilder applyOptionBuilder = new StringBuilder();
             string aggregateTransformation = string.Empty;
 
             // E.g. filter(Amount gt 1)
             string filterTransformation = ConstructFilterTransformation(applyQueryOptionExpr);
             if (!string.IsNullOrEmpty(filterTransformation))
             {
-                applyExpression = filterTransformation + "/";
+                applyOptionBuilder.Append(filterTransformation);
+                applyOptionBuilder.Append("/");
             }
 
 
@@ -616,11 +617,11 @@ namespace Microsoft.OData.Client
 
             if (applyQueryOptionExpr.GroupingExpressions.Count == 0)
             {
-                applyExpression += aggregateTransformation;
+                applyOptionBuilder.Append(aggregateTransformation);
 
                 // E.g. $apply=aggregate(Prop with sum as SumProp, Prop with average as AverageProp)
                 // Or $apply=filter(Amount gt 1)/aggregate(Prop with sum as SumProp, Prop with average as AverageProp)
-                this.AddAsCachedQueryOption(UriHelper.DOLLARSIGN + UriHelper.OPTIONAPPLY, applyExpression);
+                this.AddAsCachedQueryOption(UriHelper.DOLLARSIGN + UriHelper.OPTIONAPPLY, applyOptionBuilder.ToString());
             }
             else
             {
@@ -628,7 +629,7 @@ namespace Microsoft.OData.Client
                 string groupingPropertiesExpr = ConstructGroupingExpression(applyQueryOptionExpr.GroupingExpressions);
 
                 StringBuilder groupByBuilder = new StringBuilder();
-                groupByBuilder.Append(applyExpression); // This should add filter transformation if any
+                groupByBuilder.Append(applyOptionBuilder.ToString()); // This should add filter transformation if any
                 groupByBuilder.Append(UriHelper.GROUPBY);
                 groupByBuilder.Append(UriHelper.LEFTPAREN);
                 groupByBuilder.Append(groupingPropertiesExpr);
