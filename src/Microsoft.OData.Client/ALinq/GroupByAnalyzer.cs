@@ -259,14 +259,22 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Analyzes expression for aggregate expresssions in the GroupBy result selector.
+        /// Analyzes expression for aggregate expressions in the GroupBy result selector.
         /// </summary>
         private sealed class GroupByResultSelectorAnalyzer : DataServiceALinqExpressionVisitor
         {
             /// <summary>The input resource, as a queryable resource</summary>
             private readonly QueryableResourceExpression input;
 
-            /// <summary>Expression to member mapping.</summary>
+            /// <summary>
+            /// Mapping of expressions in the GroupBy result selector to a key-value pair
+            /// of the respective member name and type.
+            /// </summary>
+            /// <remarks>
+            /// This property will contain a mapping of the expression {d3.Average(d4 => d4.Amount)} to a key-value pair
+            /// of the respective member name {AverageAmount} and type {decimal} given the following GroupBy expression:
+            /// dsc.CreateQuery&lt;Sale&gt;("Sales").GroupBy(d1 => d1.Product.Category.Name, (d2, d3) => new { CategoryName = d2, AverageAmount = d3.Average(d4 => d4.Amount) })
+            /// </remarks>
             private readonly IDictionary<Expression, KeyValuePair<string, Type>> resultSelectorMap;
 
             /// <summary>Tracks the member a method call is mapped to when analyzing the GroupBy result selector.</summary>
@@ -496,7 +504,7 @@ namespace Microsoft.OData.Client
                 }
 
                 // Add aggregation to $apply aggregations
-                AddAggregation(methodCallExpr, selector, aggregationMethod);
+                AddAggregation(selector, aggregationMethod);
 
                 return methodCallExpr;
             }
@@ -511,7 +519,7 @@ namespace Microsoft.OData.Client
                 Debug.Assert(methodCallExpr != null, $"{nameof(methodCallExpr)} != null");
 
                 // Add aggregation to $apply aggregations
-                AddAggregation(methodCallExpr, null, AggregationMethod.VirtualPropertyCount);
+                AddAggregation(null, AggregationMethod.VirtualPropertyCount);
 
                 return methodCallExpr;
             }
@@ -519,10 +527,9 @@ namespace Microsoft.OData.Client
             /// <summary>
             /// Adds aggregation to $apply aggregations.
             /// </summary>
-            /// <param name="methodCallExpr">The <see cref="MethodCallExpression"/> expression.</param>
             /// <param name="selector">The selector.</param>
             /// <param name="aggregationMethod">The aggregation method.</param>
-            private void AddAggregation(MethodCallExpression methodCallExpr, Expression selector, AggregationMethod aggregationMethod)
+            private void AddAggregation(Expression selector, AggregationMethod aggregationMethod)
             {
                 if (this.memberInScope.Count > 0)
                 {

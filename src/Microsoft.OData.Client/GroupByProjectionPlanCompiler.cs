@@ -48,8 +48,10 @@ namespace Microsoft.OData.Client
         /// <summary>Whether the top level projection has been found.</summary>
         private bool topLevelProjectionFound;
 
+        /// <summary>Mapping of expressions in the GroupBy result selector to info required during projection plan compilation.</summary>
         private Dictionary<Expression, MappingInfo> resultSelectorMap;
 
+        /// <summary>Mapping of member names in the GroupBy key selector to their respective expressions.</summary>
         private readonly Dictionary<string, Expression> keySelectorMap;
 
         #endregion Private fields
@@ -60,18 +62,17 @@ namespace Microsoft.OData.Client
         /// Initializes a new <see cref="GroupByProjectionPlanCompiler"/> instance.
         /// </summary>
         /// <param name="normalizerRewrites">Rewrites introduced by normalizer.</param>
-        /// <param name="projectionMapping">Mapping of members in the projection to the corresponding grouping 
-        /// expression from the key selector in aggregation scenarios.</param>
+        /// <param name="keySelectorMap">Mapping of member names in the GroupBy key selector to their respective expressions.</param>
         private GroupByProjectionPlanCompiler(
             Dictionary<Expression, Expression> normalizerRewrites,
-            Dictionary<string, Expression> projectionMapping)
+            Dictionary<string, Expression> keySelectorMap)
         {
             this.annotations = new Dictionary<Expression, ExpressionAnnotation>(ReferenceEqualityComparer<Expression>.Instance);
             this.materializerExpression = Expression.Parameter(typeof(object), "mat");
             this.normalizerRewrites = normalizerRewrites;
             this.pathBuilder = new GroupByProjectionPathBuilder();
             this.resultSelectorMap = new Dictionary<Expression, MappingInfo>(ReferenceEqualityComparer<Expression>.Instance);
-            this.keySelectorMap = projectionMapping;
+            this.keySelectorMap = keySelectorMap;
         }
 
         #endregion Constructors
@@ -81,13 +82,12 @@ namespace Microsoft.OData.Client
         /// <summary>Creates a projection plan from the specified <paramref name="projection"/>.</summary>
         /// <param name="projection">Projection expression.</param>
         /// <param name="normalizerRewrites">Tracks rewrite-to-source rewrites introduced by expression normalizer.</param>
-        /// <param name="projectionMapping">Mapping of members in the projection to the corresponding grouping 
-        /// expression from the key selector in aggregation scenarios.</param>
+        /// <param name="keySelectorMap">Mapping of member names in the GroupBy key selector to their respective expressions.</param>
         /// <returns>A new <see cref="ProjectionPlan"/> instance.</returns>
         internal static ProjectionPlan CompilePlan(
             LambdaExpression projection,
             Dictionary<Expression, Expression> normalizerRewrites,
-            Dictionary<string, Expression> projectionMapping)
+            Dictionary<string, Expression> keySelectorMap)
         {
             Debug.Assert(projection != null, "projection != null");
             Debug.Assert(projection.Parameters.Count >= 1, "projection.Parameters.Count >= 1");
@@ -100,7 +100,7 @@ namespace Microsoft.OData.Client
                 projection.Body.NodeType == ExpressionType.New,
                 "projection.Body.NodeType == Constant, MemberInit, MemberAccess, Convert(Checked) New");
 
-            GroupByProjectionPlanCompiler rewriter = new GroupByProjectionPlanCompiler(normalizerRewrites, projectionMapping);
+            GroupByProjectionPlanCompiler rewriter = new GroupByProjectionPlanCompiler(normalizerRewrites, keySelectorMap);
             GroupByProjectionAnalyzer.Analyze(rewriter, projection);
 
             Expression plan = rewriter.Visit(projection);
@@ -126,7 +126,7 @@ namespace Microsoft.OData.Client
 
             Expression baseSourceExpression = m.Expression;
 
-            // if primitive or nullable primitive, allow member access... i.e. calling Value on nullable<int>
+            // If primitive or nullable primitive, allow member access... i.e. calling Value on nullable<int>
             if (PrimitiveType.IsKnownNullableType(baseSourceExpression.Type))
             {
                 return base.VisitMemberAccess(m);

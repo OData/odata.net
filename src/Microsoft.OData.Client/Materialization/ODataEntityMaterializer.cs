@@ -969,8 +969,8 @@ namespace Microsoft.OData.Client.Materialization
             }
             else
             {
-                // GroupBy projection
-                if (queryComponents.GroupByKeySelectorMap != null && queryComponents.GroupByKeySelectorMap.Count > 0)
+                // The KeySelectorMap property is initialized and populated with a least one item if we're dealing with a GroupBy expression.
+                if (queryComponents.GroupByKeySelectorMap?.Count > 0)
                 {
                     result = GroupByProjectionPlanCompiler.CompilePlan(projection, queryComponents.NormalizerRewrites, queryComponents.GroupByKeySelectorMap);
                 }
@@ -978,6 +978,7 @@ namespace Microsoft.OData.Client.Materialization
                 {
                     result = ProjectionPlanCompiler.CompilePlan(projection, queryComponents.NormalizerRewrites);
                 }
+
                 result.LastSegmentType = queryComponents.LastSegmentType;
             }
 
