@@ -11,6 +11,7 @@ namespace Microsoft.OData.JsonLight
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
+    using System.Text;
     using System.Threading.Tasks;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Json;
@@ -112,13 +113,24 @@ namespace Microsoft.OData.JsonLight
 
                 this.textWriter = new StreamWriter(outputStream, messageInfo.Encoding);
 
-                // COMPAT 2: JSON indentation - WCFDS indents only partially, it inserts newlines but doesn't actually insert spaces for indentation
-                // in here we allow the user to specify if true indentation should be used or if the limited functionality is enough.
-                this.jsonWriter = CreateJsonWriter(this.Container, this.textWriter, messageInfo.MediaType.HasIeee754CompatibleSetToTrue(), messageWriterSettings);
+                bool isIeee754Compatible = messageInfo.MediaType.HasIeee754CompatibleSetToTrue();
+
+                IStreamBasedJsonWriterFactory streamBasedJsonWriterFactory = this.Container?.GetService<IStreamBasedJsonWriterFactory>();
+                // We first attempt to create a JSON writer which directly writes to the stream
+                if (streamBasedJsonWriterFactory != null)
+                {
+                    this.jsonWriter = CreateJsonWriter(streamBasedJsonWriterFactory, this.messageOutputStream, isIeee754Compatible, messageInfo.Encoding);
+                }
+                else 
+                {
+                    // Then fallback to default
+                    this.jsonWriter = CreateJsonWriter(this.Container, this.textWriter, isIeee754Compatible, messageWriterSettings);
+                }
+
                 this.asynchronousJsonWriter = CreateAsynchronousJsonWriter(
                     this.Container,
                     this.textWriter,
-                    messageInfo.MediaType.HasIeee754CompatibleSetToTrue(),
+                    isIeee754Compatible,
                     messageWriterSettings);
             }
             catch (Exception e)
@@ -781,14 +793,12 @@ namespace Microsoft.OData.JsonLight
             {
                 if (this.messageOutputStream != null)
                 {
-                    // JsonWriter.Flush will call the underlying TextWriter.Flush.
-                    // The TextWriter.Flush (Which is in fact StreamWriter.Flush) will call the underlying Stream.Flush.
+                    // The IJsonWriter will flush the underlying stream
                     this.jsonWriter.Flush();
 
-                    JsonWriter writer = this.jsonWriter as JsonWriter;
-                    if (writer != null)
+                    if (this.jsonWriter is IDisposable disposableWriter)
                     {
-                        writer.Dispose();
+                        disposableWriter.Dispose();
                     }
 
                     // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitly.
@@ -884,6 +894,32 @@ namespace Microsoft.OData.JsonLight
             if (this.concreteJsonWriter != null && writerSettings.ArrayPool != null)
             {
                 this.concreteJsonWriter.ArrayPool = writerSettings.ArrayPool;
+            }
+
+            return jsonWriter;
+        }
+
+        /// <summary>
+        /// Creates a new JSON writer of <see cref="IJsonWriter"/> that can write
+        /// directly to the output stream. Returns null if unable to create
+        /// such a writer with the given constraints.
+        /// </summary>
+        /// <param name="factory">The factory used to create the <see cref="IJsonWriter"/> instance.</param>
+        /// <param name="outputStream">The output stream to write to.</param>
+        /// <param name="isIeee754Compatible">True if the writer should write decimals and longs as strings.</param>
+        /// <param name="encoding">The text encoding of the output data.</param>
+        /// <returns>The JSON writer instance, or null if none could be created.</returns>
+        private static IJsonWriter CreateJsonWriter(
+            IStreamBasedJsonWriterFactory factory,
+            Stream outputStream,
+            bool isIeee754Compatible,
+            Encoding encoding)
+        {
+            IJsonWriter jsonWriter = factory.CreateJsonWriter(outputStream, isIeee754Compatible, encoding);
+
+            if (jsonWriter == null)
+            {
+                throw new ODataException(Strings.ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull(encoding.WebName, isIeee754Compatible));
             }
 
             return jsonWriter;

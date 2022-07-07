@@ -755,6 +755,14 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The provided implementation of IStreamBasedJsonWriterFactory returned null for arguments: isIeee754Compatible '{0}', encoding '{1}'. The factory should return a concrete IJsonWriter implementation."
+        /// </summary>
+        internal static string ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull(object p0, object p1)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull, p0, p1);
+        }
+
+        /// <summary>
         /// A string like "Both startResourceXmlCustomizationCallback and endResourceXmlCustomizationCallback must be either null or non-null."
         /// </summary>
         internal static string ODataMessageWriterSettings_MessageWriterSettingsXmlCustomizationCallbacksMustBeSpecifiedBoth

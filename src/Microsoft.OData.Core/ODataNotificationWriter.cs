@@ -15,7 +15,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Wrapper for TextWriter to listen for dispose.
     /// </summary>
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
     internal sealed class ODataNotificationWriter : TextWriter, IAsyncDisposable
 #else
     internal sealed class ODataNotificationWriter : TextWriter
@@ -348,7 +348,7 @@ namespace Microsoft.OData
             base.Dispose(disposing);
         }
 
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
         public async ValueTask DisposeAsync()
         {
             if (!this.disposed && this.listener != null)

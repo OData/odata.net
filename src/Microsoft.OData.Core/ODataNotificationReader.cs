@@ -148,7 +148,7 @@ namespace Microsoft.OData
             base.Dispose(disposing);
         }
 
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP3_1
         public async ValueTask DisposeAsync()
         {
             if (!this.disposed)

@@ -1,13 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;netstandard2.0;netstandard1.1</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard2.0;netstandard1.1;netcoreapp3.1</TargetFrameworks>
     <AssemblyName>Microsoft.OData.Core</AssemblyName>
     <RootNamespace>Microsoft.OData.Core</RootNamespace>
 
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <DefineConstants>$(DefineConstants);ODATA_CORE;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE;DelaySignKeys</DefineConstants>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+    <DefineConstants>$(DefineConstants);NETCOREAPP3_1_OR_GREATER;NETCOREAPP;NETCOREAPP3_1</DefineConstants>
   </PropertyGroup>
  
   <Import Project="..\Build.props" />
