@@ -153,6 +153,7 @@ namespace Microsoft.OData.Client
         {
             List<ResourceExpression> referencedInputs = new List<ResourceExpression>();
             bound = InputBinder.Bind(le.Body, input, le.Parameters[0], referencedInputs);
+
             if (referencedInputs.Count > 1 || (referencedInputs.Count == 1 && referencedInputs[0] != input))
             {
                 bound = null;
@@ -454,7 +455,9 @@ namespace Microsoft.OData.Client
                         break;
                     case SequenceMethod.Count:
                     case SequenceMethod.LongCount:
-                        result = this.AnalyzeCount(m);
+                        // Add aggregation to $apply aggregations
+                        AddAggregation(null, AggregationMethod.VirtualPropertyCount);
+                        result = m;
 
                         break;
                     case SequenceMethod.CountDistinctSelector:
@@ -505,21 +508,6 @@ namespace Microsoft.OData.Client
 
                 // Add aggregation to $apply aggregations
                 AddAggregation(selector, aggregationMethod);
-
-                return methodCallExpr;
-            }
-
-            /// <summary>
-            /// Analyzes count expression within a GroupBy result selector.
-            /// </summary>
-            /// <param name="methodCallExpr">Expression to analyze.</param>
-            /// <returns>The analyzed count expression.</returns>
-            private Expression AnalyzeCount(MethodCallExpression methodCallExpr)
-            {
-                Debug.Assert(methodCallExpr != null, $"{nameof(methodCallExpr)} != null");
-
-                // Add aggregation to $apply aggregations
-                AddAggregation(null, AggregationMethod.VirtualPropertyCount);
 
                 return methodCallExpr;
             }

@@ -863,6 +863,7 @@ namespace Microsoft.OData.Client
             }
 
             SequenceMethod sequenceMethod;
+
             if (!ReflectionUtil.TryIdentifySequenceMethod(methodCallExpr.Method, out sequenceMethod) ||
                 sequenceMethod != SequenceMethod.GroupByResultSelector)
             {
@@ -3106,15 +3107,15 @@ namespace Microsoft.OData.Client
                 // Disallow unsupported scenarios like the following:
                 // - GroupBy(d1 => d1.Property.Length)
                 // - GroupBy(d1 => d1.CollectionProperty.Count)
-                MemberExpression parentExpr = StripTo<MemberExpression>(memberExpr.Expression);
-                if (parentExpr != null)
+                MemberExpression containingExpr = StripTo<MemberExpression>(memberExpr.Expression);
+                if (containingExpr != null)
                 {
-                    if (PrimitiveType.IsKnownNullableType(parentExpr.Type))
+                    if (PrimitiveType.IsKnownNullableType(containingExpr.Type))
                     {
                         throw new NotSupportedException(Strings.ALinq_InvalidGroupingExpression(memberExpr));
                     }
 
-                    Type collectionType = ClientTypeUtil.GetImplementationType(parentExpr.Type, typeof(ICollection<>));
+                    Type collectionType = ClientTypeUtil.GetImplementationType(containingExpr.Type, typeof(ICollection<>));
                     if (collectionType != null)
                     {
                         throw new NotSupportedException(Strings.ALinq_InvalidGroupingExpression(memberExpr));

@@ -599,15 +599,14 @@ namespace Microsoft.OData.Client
 
             StringBuilder applyOptionBuilder = new StringBuilder();
             string aggregateTransformation = string.Empty;
-
             // E.g. filter(Amount gt 1)
             string filterTransformation = ConstructFilterTransformation(applyQueryOptionExpr);
+
             if (!string.IsNullOrEmpty(filterTransformation))
             {
                 applyOptionBuilder.Append(filterTransformation);
                 applyOptionBuilder.Append("/");
             }
-
 
             if (applyQueryOptionExpr.Aggregations.Count > 0)
             {
@@ -633,6 +632,7 @@ namespace Microsoft.OData.Client
                 groupByBuilder.Append(UriHelper.GROUPBY);
                 groupByBuilder.Append(UriHelper.LEFTPAREN);
                 groupByBuilder.Append(groupingPropertiesExpr);
+
                 if (!string.IsNullOrEmpty(aggregateTransformation))
                 {
                     // Scenario: GroupBy(d1 => d1.Prop, (d1, d2) => new { Prop = d1 })
