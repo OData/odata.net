@@ -8,29 +8,13 @@ jobs:
       project: test/PerformanceTests/SerializationComparisonsTests/TestServer/TestServer.csproj
     readyStateText: Application started.
     variables:
-      writer: 'ODataMessageWriter-Utf8'
       port: 5000
       host: "*"
     arguments: '--urls=http://{{host}}:{{port}}'
     
 
 scenarios:
-  highLoad:
-    application:
-      job: server
-      variables:
-        count: 1000
-    load:
-      job: bombardier
-      variables:
-        serverPort: 5000
-        connections: 512
-        duration: 30
-        timeout: 2
-        rate: 100
-        count: 1000
-        path: /customers/{{writer}}?count={{count}}
-  singleRequests:
+  Writer:
     application:
       job: server
     load:
@@ -39,19 +23,8 @@ scenarios:
         serverPort: 5000
         connections: 128
         duration: 30
-        rate: 1
         count: 50
-        path: /customers/{{writer}}?count={{count}}
-  mediumLoad:
-    application:
-      job: server
-    load:
-      job: bombardier
-      variables:
-        serverPort: 5000
-        connections: '{{numConnections}}'
-        duration: 30
-        count: 50
+        writer: 'ODataMessageWriter-Utf8'
         path: /customers/{{writer}}?count={{count}}
 
 profiles:

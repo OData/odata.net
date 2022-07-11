@@ -3,54 +3,35 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.OData;
-using Microsoft.OData.Edm;
+using Microsoft.OData.Json;
 
 namespace ExperimentsLib
 {
     /// <summary>
-    /// Writes Customer collection payload using <see cref="ODataMessageWriter"/>
+    /// Writes Customer collection OData JSON format using an <see cref="IJsonWriterAsync"/>
+    /// directly.
     /// </summary>
-    public class ODataServerWriter : IPayloadWriter<IEnumerable<Customer>>
+    public class ODataJsonWriterAsyncPayloadWriter : IPayloadWriter<IEnumerable<Customer>>
     {
-        IEdmModel model;
-        bool enableValidation;
-        Func<Stream, IODataResponseMessage> messageFactory;
+        private readonly Func<Stream, IJsonWriterAsync> jsonWriterFactory;
 
-        public ODataServerWriter(IEdmModel model, Func<Stream, IODataResponseMessage> messageFactory, bool enableValidation = true)
+        public ODataJsonWriterAsyncPayloadWriter(Func<Stream, IJsonWriterAsync> jsonWriterFactory)
         {
-            this.model = model;
-            this.messageFactory = messageFactory;
-            this.enableValidation = enableValidation;
+            this.jsonWriterFactory = jsonWriterFactory;
         }
 
-        public Task WritePayload(IEnumerable<Customer> payload, Stream stream)
+        public async Task WritePayload(IEnumerable<Customer> payload, Stream stream)
         {
-            var settings = new ODataMessageWriterSettings();
+            var serviceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/");
+            var writer = new SimpleAsyncJsonODataWriter(this.jsonWriterFactory(stream), serviceRoot, "Customers");
 
-            settings.ODataUri = new ODataUri
-            {
-                ServiceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/"),
-                
-            };
-
-            if (!this.enableValidation)
-            {
-                settings.Validations = ValidationKinds.None;
-                settings.EnableCharactersCheck = false;
-                settings.AlwaysAddTypeAnnotationsForDerivedTypes = false;
-            }
-
-            IODataResponseMessage message = messageFactory(stream);
-
-            var messageWriter = new ODataMessageWriter(message, settings, model);
-            var entitySet = model.EntityContainer.FindEntitySet("Customers");
-            var writer = messageWriter.CreateODataResourceSetWriter(entitySet);
 
             var resourceSet = new ODataResourceSet();
-            writer.WriteStart(resourceSet);
+            await writer.WriteStartAsync(resourceSet);
 
             foreach (var customer in payload)
             {
+                // Serialization is modelled after the ODataResourceSerializer in AspNetCoreOData
                 // await resourceSerializer.WriteObjectInlineAsync(item, elementType, writer, writeContext);
                 // create resource with only primitive types
                 var resource = new ODataResource
@@ -75,7 +56,8 @@ namespace ExperimentsLib
                     }
                 };
 
-                writer.WriteStart(resource);
+                await writer.WriteStartAsync(resource);
+
                 // skip WriterStreamPropertiesAsync
                 // WriteComplexPropertiesAsync
                 // -- HomeAddress
@@ -85,7 +67,7 @@ namespace ExperimentsLib
                     IsCollection = false
                 };
                 // start write homeAddress
-                writer.WriteStart(homeAddressInfo);
+                await writer.WriteStartAsync(homeAddressInfo);
 
                 var homeAddressResource = new ODataResource
                 {
@@ -95,11 +77,12 @@ namespace ExperimentsLib
                         new ODataProperty { Name = "Street", Value = customer.HomeAddress.Street }
                     }
                 };
-                writer.WriteStart(homeAddressResource);
-                writer.WriteEnd();
+
+                await writer.WriteStartAsync(homeAddressResource);
+                await writer.WriteEndAsync();
 
                 // end write homeAddress
-                writer.WriteEnd();
+                await writer.WriteEndAsync();
                 // -- End HomeAddress
 
                 // -- Addresses
@@ -109,11 +92,13 @@ namespace ExperimentsLib
                     IsCollection = true
                 };
                 // start addressesInfo
-                writer.WriteStart(addressesInfo);
+                await writer.WriteStartAsync(addressesInfo);
+
 
                 var addressesResourceSet = new ODataResourceSet();
                 // start addressesResourceSet
-                writer.WriteStart(addressesResourceSet);
+                await writer.WriteStartAsync(addressesResourceSet);
+
                 foreach (var address in customer.Addresses)
                 {
                     var addressResource = new ODataResource
@@ -125,26 +110,25 @@ namespace ExperimentsLib
                         }
                     };
 
-                    writer.WriteStart(addressResource);
-                    writer.WriteEnd();
+                    await writer.WriteStartAsync(addressResource);
+                    await writer.WriteEndAsync();
                 }
 
                 // end addressesResourceSet
-                writer.WriteEnd();
+                await writer.WriteEndAsync();
 
 
                 // end addressesInfo
-                writer.WriteEnd();
+                await writer.WriteEndAsync();
 
                 // -- End Addresses
 
                 // end write resource
-                writer.WriteEnd();
+                await writer.WriteEndAsync();
             }
 
-            writer.WriteEnd();
-            writer.Flush();
-            return Task.CompletedTask;
+            await writer.WriteEndAsync();
+            await writer.FlushAsync();
         }
     }
 }

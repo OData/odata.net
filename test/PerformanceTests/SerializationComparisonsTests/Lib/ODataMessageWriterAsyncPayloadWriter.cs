@@ -1,40 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.OData;
+using Microsoft.OData.Edm;
 
 namespace ExperimentsLib
 {
     /// <summary>
-    /// Writes a Customers collection payload using <see cref="Utf8JsonODataWriter"/>.
+    /// Writes Customer collection OData JSON format using <see cref="ODataMessageWriter"/> async version.
     /// </summary>
-    public class Utf8JsonWriterServerWriter : IPayloadWriter<IEnumerable<Customer>>
+    public class ODataMessageWriterAsyncPayloadWriter : IPayloadWriter<IEnumerable<Customer>>
     {
-        Func<Stream, Utf8JsonWriter> _writerFactory;
+        IEdmModel _model;
+        bool _enableValidation;
+        Func<Stream, IODataResponseMessage> _messageFactory;
 
-        public Utf8JsonWriterServerWriter(Func<Stream, Utf8JsonWriter> writerFactory)
+        public ODataMessageWriterAsyncPayloadWriter(IEdmModel model, Func<Stream, IODataResponseMessage> messageFactory, bool enableValidation = true)
         {
-            _writerFactory = writerFactory;
+            _model = model;
+            _enableValidation = enableValidation;
+            _messageFactory = messageFactory;
         }
-
         public async Task WritePayload(IEnumerable<Customer> payload, Stream stream)
         {
-            var sw = new Stopwatch();
-            sw.Start();
+            var settings = new ODataMessageWriterSettings();
+            settings.ODataUri = new ODataUri
+            {
+                ServiceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/")
+            };
 
-            var serviceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/");
-            var jsonWriter = _writerFactory(stream);
-            var writer = new Utf8JsonODataWriter(jsonWriter, serviceRoot, "Customers");
+            if (!_enableValidation)
+            {
+                settings.Validations = ValidationKinds.None;
+                settings.EnableCharactersCheck = false;
+                settings.AlwaysAddTypeAnnotationsForDerivedTypes = false;
+            }
+            
+            var model = _model;
+            IODataResponseMessage message = _messageFactory(stream);
+
+            var messageWriter = new ODataMessageWriter(message, settings, model);
+            var entitySet = model.EntityContainer.FindEntitySet("Customers");
+            var writer = await messageWriter.CreateODataResourceSetWriterAsync(entitySet);
 
             var resourceSet = new ODataResourceSet();
-            //Console.WriteLine("Start writing resource set");
-            writer.WriteStart(resourceSet);
+            await writer.WriteStartAsync(resourceSet);
 
-            //Console.WriteLine("About to write resources {0}", payload.Count());
-            int count = 0;
             foreach (var customer in payload)
             {
                 // await resourceSerializer.WriteObjectInlineAsync(item, elementType, writer, writeContext);
@@ -61,8 +73,8 @@ namespace ExperimentsLib
                     }
                 };
 
-                writer.WriteStart(resource);
-
+                //Console.WriteLine("Start writing resource {0}", customer.Id);
+                await writer.WriteStartAsync(resource);
                 // skip WriterStreamPropertiesAsync
                 // WriteComplexPropertiesAsync
                 // -- HomeAddress
@@ -72,7 +84,7 @@ namespace ExperimentsLib
                     IsCollection = false
                 };
                 // start write homeAddress
-                writer.WriteStart(homeAddressInfo);
+                await writer.WriteStartAsync(homeAddressInfo);
 
                 var homeAddressResource = new ODataResource
                 {
@@ -82,12 +94,11 @@ namespace ExperimentsLib
                         new ODataProperty { Name = "Street", Value = customer.HomeAddress.Street }
                     }
                 };
-
-                writer.WriteStart(homeAddressResource);
-                writer.WriteEnd();
+                await writer.WriteStartAsync(homeAddressResource);
+                await writer.WriteEndAsync();
 
                 // end write homeAddress
-                writer.WriteEnd();
+                await writer.WriteEndAsync();
                 // -- End HomeAddress
 
                 // -- Addresses
@@ -97,13 +108,11 @@ namespace ExperimentsLib
                     IsCollection = true
                 };
                 // start addressesInfo
-                writer.WriteStart(addressesInfo);
-
+                await writer.WriteStartAsync(addressesInfo);
 
                 var addressesResourceSet = new ODataResourceSet();
                 // start addressesResourceSet
-                writer.WriteStart(addressesResourceSet);
-
+                await writer.WriteStartAsync(addressesResourceSet);
                 foreach (var address in customer.Addresses)
                 {
                     var addressResource = new ODataResource
@@ -115,38 +124,24 @@ namespace ExperimentsLib
                         }
                     };
 
-                    writer.WriteStart(addressResource);
-                    writer.WriteEnd();
+                    await writer.WriteStartAsync(addressResource);
+                    await writer.WriteEndAsync();
                 }
 
                 // end addressesResourceSet
-                writer.WriteEnd();
+                await writer.WriteEndAsync();
 
 
                 // end addressesInfo
-                writer.WriteEnd();
+                await writer.WriteEndAsync();
 
                 // -- End Addresses
 
                 // end write resource
-                writer.WriteEnd();
-                //Console.WriteLine("Finish writing resource {0}", customer.Id);
-                //Console.WriteLine("Finised customer {0}", customer.Id);
-
-                // flush the inner writer periodically to prevent expanding the internal buffer indefinitely
-                // JSON writer does not commit data to output until it's flushed
-                // each customer accounts for about 220 bytes, after 66 iterations we have about 14k pending
-                // bytes in the buffer before flushing. I was trying to achieve similar behavior to JsonSerializer (0.9 * 16k)
-                if (count % 66 == 0)
-                {
-                    await jsonWriter.FlushAsync();
-                }
-
-                count++;
+                await writer.WriteEndAsync();
             }
-
-            writer.WriteEnd();
-            await jsonWriter.FlushAsync();
+            await writer.WriteEndAsync();
+            await writer.FlushAsync();
         }
     }
 }

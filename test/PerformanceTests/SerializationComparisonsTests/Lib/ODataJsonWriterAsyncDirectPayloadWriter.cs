@@ -13,12 +13,12 @@ namespace ExperimentsLib
     /// Writes Customer collection OData JSON format using <see cref="IJsonWriterAsync"/> directly
     /// using the Async API.
     /// </summary>
-    public class ODataJsonWriterAsyncBasicServerWriter : IPayloadWriter<IEnumerable<Customer>>
+    public class ODataJsonWriterAsyncDirectPayloadWriter : IPayloadWriter<IEnumerable<Customer>>
     {
         private readonly Func<Stream, IJsonWriterAsync> jsonWriterFactory;
         private bool _simulateTypedResourceGeneration = true;
 
-        public ODataJsonWriterAsyncBasicServerWriter(Func<Stream, IJsonWriterAsync> jsonWriterFactory, bool simulateTypedResourceGeneration = true)
+        public ODataJsonWriterAsyncDirectPayloadWriter(Func<Stream, IJsonWriterAsync> jsonWriterFactory, bool simulateTypedResourceGeneration = true)
         {
             this.jsonWriterFactory = jsonWriterFactory;
             _simulateTypedResourceGeneration = simulateTypedResourceGeneration;

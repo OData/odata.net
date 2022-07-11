@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using System.Text.Json;
 using Microsoft.OData.Edm;
 
@@ -9,6 +11,8 @@ namespace ExperimentsLib
     /// </summary>
     public static class DefaultWriterCollection
     {
+        const int BufferSize = 84000;
+
         /// <summary>
         /// Creates a collection of <see cref="IPayloadWriter{Customer}"/>s for testing.
         /// </summary>
@@ -20,74 +24,68 @@ namespace ExperimentsLib
             WriterCollection<IEnumerable<Customer>> servers = new WriterCollection<IEnumerable<Customer>>();
 
             servers.AddWriters(
-                //("JsonSerializer", "utf-8", new JsonSerializerServerWriter()),
+                ("JsonSerializer", "utf-8", new JsonSerializerPayloadWriter()),
 
-                //("Utf8JsonWriter-Direct", "utf-8", new Utf8JsonWriterBasicServerWriter(stream => new Utf8JsonWriter(stream))),
-                ("Utf8JsonWriter-Direct-NoValidation", "utf-8", new Utf8JsonWriterBasicServerWriter(
+                ("Utf8JsonWriter-Direct-NoValidation", "utf-8", new Utf8JsonWriterDirectPayloadWriter(
                     stream => new Utf8JsonWriter(stream, new JsonWriterOptions { SkipValidation = true }))),
-                //("Utf8JsonWriter-Direct-ResourceGeneration-NoValidation", "utf-8", new Utf8JsonWriterBasicServerWriter(
-                //    stream => new Utf8JsonWriter(stream, new JsonWriterOptions { SkipValidation = true }), simulateResourceGeneration: true)),
-                //("Utf8JsonWriter-Direct-ArrayPool-NoValidation", "utf-8", new Utf8JsonWriterBasicServerWriterWithArrayPool(
-                //    bufferWriter => new Utf8JsonWriter(bufferWriter, new JsonWriterOptions { SkipValidation = true }))),
-                //("Utf8JsonWriter-Direct-ArrayPool-ResourceGeneration-NoValidation", "utf-8", new Utf8JsonWriterBasicServerWriterWithArrayPool(
-                //    bufferWriter => new Utf8JsonWriter(bufferWriter, new JsonWriterOptions { SkipValidation = true }), simulateResourceGeneration: true)),
+                ("Utf8JsonWriter-Direct-ArrayPool-NoValidation", "utf-8", new Utf8JsonWriterDirectPayloadWriterWithArrayPool(
+                    bufferWriter => new Utf8JsonWriter(bufferWriter, new JsonWriterOptions { SkipValidation = true }))),
 
-                //("Utf8JsonWriter", "utf-8", new Utf8JsonWriterServerWriter(stream => new Utf8JsonWriter(stream))),
-                //("Utf8JsonWriter-NoValidation", "utf-8", new Utf8JsonWriterServerWriter(stream =>
-                //    new Utf8JsonWriter(stream, new JsonWriterOptions { SkipValidation = true }))),
-                //("Utf8JsonWriter-ArrayPool", "utf-8", new Utf8JsonWriterServerWriterWithArrayPool(bufferWriter => new Utf8JsonWriter(bufferWriter))),
-                //("Utf8JsonWriter-ArrayPool-NoValidation", "utf-8", new Utf8JsonWriterServerWriterWithArrayPool(
-                //    bufferWriter => new Utf8JsonWriter(bufferWriter, new JsonWriterOptions { SkipValidation = true }))),
-
-                ("ODataUtf8JsonWriter-Direct", "utf-8", new ODataJsonWriterBasicServerWriter(
-                    stream => stream.CreateUtf8JsonWriterODataWriter())),
-
-                ("ODataJsonWriter-Direct", "utf-8", new ODataJsonWriterBasicServerWriter(
-                    stream => stream.CreateUtf8ODataJsonWriter())),
-                //("ODataJsonWriter-Direct-Buffered", "utf-8", new ODataJsonWriterBasicServerWriter(
-                //    stream => new BufferedStream(stream, BufferSize).CreateUtf8ODataJsonWriter())),
-                //("ODataJsonWriter-Direct-ResourceGeneration", "utf-8", new ODataJsonWriterBasicServerWriter(
-                //    stream => stream.CreateUtf8ODataJsonWriter(), simulateTypedResourceGeneration: true)),
-                //("ODataJsonWriter-Direct-ResourceGeneration-Buffered", "utf-8", new ODataJsonWriterBasicServerWriter(
-                //    stream => new BufferedStream(stream, BufferSize).CreateUtf8ODataJsonWriter(), simulateTypedResourceGeneration: true)),
-
-                //("ODataJsonWriter-Direct-Async", "utf-8", new ODataJsonWriterAsyncBasicServerWriter(
-                //    stream => stream.CreateUtf8ODataJsonWriterAsync())),
-                //("ODataJsonWriter-Direct-ResourceGeneration-Async", "utf-8", new ODataJsonWriterAsyncBasicServerWriter(
-                //    stream => stream.CreateUtf8ODataJsonWriterAsync(), simulateTypedResourceGeneration: false)),
-
-                //("ODataJsonWriter-Utf8", "utf-8", new ODataJsonWriterServerWriter(
-                //    stream => stream.CreateUtf8ODataJsonWriter())),
-                //("ODataJsonWriter-Utf16", "utf-16", new ODataJsonWriterServerWriter(stream => stream.CreateUtf16ODataJsonWriter())),
-                //("ODataJsonWriter-Utf8-Buffered", "utf-8", new ODataJsonWriterServerWriter(
-                //    stream => new BufferedStream(stream, BufferSize).CreateUtf8ODataJsonWriter())),
-
-                //("ODataJsonWriter-Utf8-Async", "utf-8", new ODataAsyncJsonWriterServerWriter(
-                //    stream => stream.CreateUtf8ODataJsonWriterAsync())),
-                //("ODataJsonWriter-Utf16-Async", "utf-16", new ODataAsyncJsonWriterServerWriter(
-                //    stream => stream.CreateUtf16ODataJsonWriterAsync())),
-                //("ODataJsonWriter-Utf8-Buffered-Async", "utf-8", new ODataAsyncJsonWriterServerWriter(
-                //    stream => new BufferedStream(stream, BufferSize).CreateUtf8ODataJsonWriterAsync())),
-
-                //("NoOpWriter", "utf-8", new ODataJsonWriterServerWriter(
-                //    stream => new NoopJsonWriter())),
-                ("NoOpWriter-Direct", "utf-8", new ODataJsonWriterBasicServerWriter(
+                ("NoOpWriter-Direct", "utf-8", new ODataJsonWriterDirectPayloadWriter(
                     stream => new NoopJsonWriter())),
-                //("NoOpWriter-Async", "utf-8", new ODataAsyncJsonWriterServerWriter(stream => new NoopJsonWriter())),
 
-                ("ODataMessageWriter-Utf8", "utf-8", new ODataServerWriter(model, stream => stream.CreateUtf8Message())),
-                //("ODataMessageWriter-Utf16", "utf-16", new ODataServerWriter(model, stream => stream.CreateUtf16Message())),
-                //("ODataMessageWriter-Utf8-Buffered", "utf-8", new ODataServerWriter(model, stream => new BufferedStream(stream, BufferSize).CreateUtf8Message())),
-                //("ODataMessageWriter-Utf8-NoValidation", "utf-8", new ODataServerWriter(model, stream => stream.CreateUtf8Message(), enableValidation: false)),
-                ("ODataMessageWriter-NoOp", "utf-8", new ODataServerWriter(model, stream => stream.CreateNoopMessage())),
-                //("ODataMessageWriter-NoOp-NoValidation", "utf-8", new ODataServerWriter(model, stream => stream.CreateNoopMessage(), enableValidation: false)),
-                ("ODataMessageWriter-Utf8JsonWriter", "utf8", new ODataServerWriter(model, stream => stream.CreateUtf8JsonWriterMessage()))
+                ("ODataUtf8JsonWriter-Direct", "utf-8", new ODataJsonWriterDirectPayloadWriter(
+                    stream => stream.CreateODataUtf8JsonWriter())),
+                ("ODataUtf8JsonWriter-Direct-Utf16", "utf-16", new ODataJsonWriterDirectPayloadWriter(
+                    stream => stream.CreateODataUtf8JsonWriter(Encoding.Unicode))),
 
-                //("ODataMessageWriter-Utf8-Async", "utf-8", new ODataAsyncServerWriter(model, stream => stream.CreateUtf8Message())),
-                //("ODataMessageWriter-Utf16-Async", "utf-16", new ODataAsyncServerWriter(model, stream => stream.CreateUtf16Message())),
-                //("ODataMessageWriter-Utf8-NoValidation-Async", "utf-8", new ODataAsyncServerWriter(model, stream => stream.CreateUtf8Message(), enableValidation: false)),
-                //("ODataMessageWriter-NoOp-Async", "utf-8", new ODataAsyncServerWriter(model, stream => stream.CreateNoopMessage())),
-                //("ODataMessageWriter-NoOp-NoValidation-Async", "utf-8", new ODataAsyncServerWriter(model, stream => stream.CreateNoopMessage(), enableValidation: false))
+                ("ODataJsonWriter-Direct", "utf-8", new ODataJsonWriterDirectPayloadWriter(
+                    stream => stream.CreateODataJsonWriter())),
+                ("ODataJsonWriter-Direct-Utf16", "utf-16", new ODataJsonWriterDirectPayloadWriter(
+                    stream => stream.CreateODataJsonWriter(Encoding.Unicode))),
+                ("ODataJsonWriter-Direct-Buffered", "utf-8", new ODataJsonWriterDirectPayloadWriter(
+                    stream => new BufferedStream(stream, BufferSize).CreateODataJsonWriter())),
+
+                ("ODataJsonWriter-Direct-Async", "utf-8", new ODataJsonWriterAsyncDirectPayloadWriter(
+                    stream => stream.CreateODataJsonWriterAsync())),
+
+                ("ODataUtf8JsonWriter", "utf-8", new ODataJsonWriterPayloadWriter(
+                    stream => stream.CreateODataUtf8JsonWriter())),
+                ("ODataUtf8JsonWriter-Utf16", "utf-16", new ODataJsonWriterPayloadWriter(
+                    stream => stream.CreateODataUtf8JsonWriter(Encoding.Unicode))),
+
+                ("ODataJsonWriter-Utf8", "utf-8", new ODataJsonWriterPayloadWriter(
+                    stream => stream.CreateODataJsonWriter())),
+                ("ODataJsonWriter-Utf16", "utf-16", new ODataJsonWriterPayloadWriter(
+                    stream => stream.CreateODataJsonWriter(Encoding.Unicode))),
+                ("ODataJsonWriter-Utf8-Buffered", "utf-8", new ODataJsonWriterPayloadWriter(
+                    stream => new BufferedStream(stream, BufferSize).CreateODataJsonWriter())),
+
+                ("ODataJsonWriter-Utf8-Async", "utf-8", new ODataJsonWriterAsyncPayloadWriter(
+                    stream => stream.CreateODataJsonWriterAsync())),
+                ("ODataJsonWriter-Utf16-Async", "utf-16", new ODataJsonWriterAsyncPayloadWriter(
+                    stream => stream.CreateODataJsonWriterAsync(Encoding.Unicode))),
+                ("ODataJsonWriter-Utf8-Buffered-Async", "utf-8", new ODataJsonWriterAsyncPayloadWriter(
+                    stream => new BufferedStream(stream, BufferSize).CreateODataJsonWriterAsync())),
+
+                ("NoOpWriter", "utf-8", new ODataJsonWriterPayloadWriter(
+                    stream => new NoopJsonWriter())),
+                ("NoOpWriter-Direct", "utf-8", new ODataJsonWriterDirectPayloadWriter(
+                    stream => new NoopJsonWriter())),
+                ("NoOpWriter-Async", "utf-8", new ODataJsonWriterPayloadWriter(stream => new NoopJsonWriter())),
+
+                ("ODataMessageWriter-Utf8", "utf-8", new ODataMessageWriterPayloadWriter(model, stream => stream.CreateUtf8Message())),
+                ("ODataMessageWriter-Utf16", "utf-16", new ODataMessageWriterPayloadWriter(model, stream => stream.CreateUtf16Message())),
+                ("ODataMessageWriter-Utf8-Buffered", "utf-8", new ODataMessageWriterPayloadWriter(model, stream => new BufferedStream(stream, BufferSize).CreateUtf8Message())),
+                ("ODataMessageWriter-Utf8-NoValidation", "utf-8", new ODataMessageWriterPayloadWriter(model, stream => stream.CreateUtf8Message(), enableValidation: false)),
+                ("ODataMessageWriter-NoOp", "utf-8", new ODataMessageWriterPayloadWriter(model, stream => stream.CreateNoopMessage())),
+                ("ODataMessageWriter-Utf8JsonWriter", "utf8", new ODataMessageWriterPayloadWriter(model, stream => stream.CreateUtf8JsonWriterMessage())),
+                ("ODataMessageWriter-Utf8JsonWriter-NoValidation", "utf8", new ODataMessageWriterPayloadWriter(model, stream => stream.CreateUtf8JsonWriterMessage(), enableValidation: false)),
+
+                ("ODataMessageWriter-Utf8-Async", "utf-8", new ODataMessageWriterAsyncPayloadWriter(model, stream => stream.CreateUtf8Message())),
+                ("ODataMessageWriter-Utf16-Async", "utf-16", new ODataMessageWriterAsyncPayloadWriter(model, stream => stream.CreateUtf16Message())),
+                ("ODataMessageWriter-Utf8-NoValidation-Async", "utf-8", new ODataMessageWriterAsyncPayloadWriter(model, stream => stream.CreateUtf8Message(), enableValidation: false)),
+                ("ODataMessageWriter-NoOp-Async", "utf-8", new ODataMessageWriterAsyncPayloadWriter(model, stream => stream.CreateNoopMessage()))
                 );
 
             return servers;

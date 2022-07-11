@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -33,7 +34,9 @@ namespace ExperimentTests
             using var expectedReader = new StreamReader("ExpectedOutput.txt");
             string expectedOutput = expectedReader.ReadToEnd();
             stream.Seek(0, SeekOrigin.Begin);
-            using var actualReader = new StreamReader(stream);
+            using var actualReader = writerName.Contains("Utf16") ?
+                new StreamReader(stream, Encoding.Unicode):
+                new StreamReader(stream);
             string actualOutput = actualReader.ReadToEnd();
             Assert.Equal(NormalizeJsonText(expectedOutput), NormalizeJsonText(actualOutput));
         }

@@ -9,14 +9,15 @@ using Microsoft.OData;
 namespace ExperimentsLib
 {
     /// <summary>
-    /// Writes Customers collection payload using <see cref="Utf8JsonWriter"/> directly.
+    /// Writes Customers collection payload using <see cref="Utf8JsonWriter"/> directly,
+    /// i.e. without creating intermediate <see cref="ODataResource"/> objects..
     /// </summary>
-    public class Utf8JsonWriterBasicServerWriter : IPayloadWriter<IEnumerable<Customer>>
+    public class Utf8JsonWriterDirectPayloadWriter : IPayloadWriter<IEnumerable<Customer>>
     {
         Func<Stream, Utf8JsonWriter> _writerFactory;
         bool _simulateTypedResourceGeneration;
 
-        public Utf8JsonWriterBasicServerWriter(Func<Stream, Utf8JsonWriter> writerFactory, bool simulateResourceGeneration = false)
+        public Utf8JsonWriterDirectPayloadWriter(Func<Stream, Utf8JsonWriter> writerFactory, bool simulateResourceGeneration = false)
         {
             _writerFactory = writerFactory;
             _simulateTypedResourceGeneration = simulateResourceGeneration;

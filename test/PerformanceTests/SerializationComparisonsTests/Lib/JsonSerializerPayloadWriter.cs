@@ -12,7 +12,7 @@ namespace ExperimentsLib
     /// <summary>
     /// Writes Customer collection payload using <see cref="JsonSerializer"/>.
     /// </summary>
-    public class JsonSerializerServerWriter : IPayloadWriter<IEnumerable<Customer>>
+    public class JsonSerializerPayloadWriter : IPayloadWriter<IEnumerable<Customer>>
     {
         public async Task WritePayload(IEnumerable<Customer> payload, Stream stream)
         {

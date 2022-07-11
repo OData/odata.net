@@ -13,13 +13,13 @@ namespace ExperimentsLib
     /// <summary>
     /// Writes Customers collection payload using <see cref="Utf8JsonWriter"/> directly.
     /// </summary>
-    public class Utf8JsonWriterBasicServerWriterWithArrayPool : IPayloadWriter<IEnumerable<Customer>>
+    public class Utf8JsonWriterDirectPayloadWriterWithArrayPool : IPayloadWriter<IEnumerable<Customer>>
     {
         Func<IBufferWriter<byte>, Utf8JsonWriter> _writerFactory;
         bool _simulateTypedResourceGeneration;
         const int BufferSize = 16 * 1024;
 
-        public Utf8JsonWriterBasicServerWriterWithArrayPool(Func<IBufferWriter<byte>, Utf8JsonWriter> writerFactory, bool simulateResourceGeneration = false)
+        public Utf8JsonWriterDirectPayloadWriterWithArrayPool(Func<IBufferWriter<byte>, Utf8JsonWriter> writerFactory, bool simulateResourceGeneration = false)
         {
             _writerFactory = writerFactory;
             _simulateTypedResourceGeneration = simulateResourceGeneration;
@@ -27,8 +27,6 @@ namespace ExperimentsLib
 
         public async Task WritePayload(IEnumerable<Customer> payload, Stream stream)
         {
-            var sw = new Stopwatch();
-            sw.Start();
             var serviceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/");
 
             using var bufferWriter = new PooledByteBufferWriter(BufferSize);

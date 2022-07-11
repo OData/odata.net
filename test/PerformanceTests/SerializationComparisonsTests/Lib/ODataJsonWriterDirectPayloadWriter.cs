@@ -9,14 +9,15 @@ using Microsoft.OData.Json;
 namespace ExperimentsLib
 {
     /// <summary>
-    /// Writes Customer collection OData JSON format using <see cref="IJsonWriter"/> directly.
+    /// Writes Customer collection OData JSON format using <see cref="IJsonWriter"/> directly,
+    /// i.e. without creating intermediate <see cref="ODataResource"/> objects.
     /// </summary>
-    public class ODataJsonWriterBasicServerWriter : IPayloadWriter<IEnumerable<Customer>>
+    public class ODataJsonWriterDirectPayloadWriter : IPayloadWriter<IEnumerable<Customer>>
     {
         private readonly Func<Stream, IJsonWriter> jsonWriterFactory;
         private bool _simulateTypedResourceGeneration = true;
 
-        public ODataJsonWriterBasicServerWriter(Func<Stream, IJsonWriter> jsonWriterFactory, bool simulateTypedResourceGeneration = false)
+        public ODataJsonWriterDirectPayloadWriter(Func<Stream, IJsonWriter> jsonWriterFactory, bool simulateTypedResourceGeneration = false)
         {
             this.jsonWriterFactory = jsonWriterFactory;
             _simulateTypedResourceGeneration = simulateTypedResourceGeneration;

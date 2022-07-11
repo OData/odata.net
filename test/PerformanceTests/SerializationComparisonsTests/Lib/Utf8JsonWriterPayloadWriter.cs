@@ -1,32 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.OData;
-using Microsoft.OData.Json;
 
 namespace ExperimentsLib
 {
     /// <summary>
-    /// Writes Customer collection OData JSON format using <see cref="IJsonWriter"/> directly.
+    /// Writes a Customers collection payload using <see cref="Utf8JsonODataWriter"/>.
     /// </summary>
-    public class ODataJsonWriterServerWriter : IPayloadWriter<IEnumerable<Customer>>
+    public class Utf8JsonWriterPayloadWriter : IPayloadWriter<IEnumerable<Customer>>
     {
-        private readonly Func<Stream, IJsonWriter> jsonWriterFactory;
+        Func<Stream, Utf8JsonWriter> _writerFactory;
 
-        public ODataJsonWriterServerWriter(Func<Stream, IJsonWriter> jsonWriterFactory)
+        public Utf8JsonWriterPayloadWriter(Func<Stream, Utf8JsonWriter> writerFactory)
         {
-            this.jsonWriterFactory = jsonWriterFactory;
+            _writerFactory = writerFactory;
         }
 
-        public Task WritePayload(IEnumerable<Customer> payload, Stream stream)
-        {var serviceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/");
-            var writer = new SimpleJsonODataWriter(this.jsonWriterFactory(stream), serviceRoot, "Customers");
+        public async Task WritePayload(IEnumerable<Customer> payload, Stream stream)
+        {
+            var sw = new Stopwatch();
+            sw.Start();
 
+            var serviceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/");
+            var jsonWriter = _writerFactory(stream);
+            var writer = new Utf8JsonODataWriter(jsonWriter, serviceRoot, "Customers");
 
             var resourceSet = new ODataResourceSet();
+            //Console.WriteLine("Start writing resource set");
             writer.WriteStart(resourceSet);
 
+            //Console.WriteLine("About to write resources {0}", payload.Count());
+            int count = 0;
             foreach (var customer in payload)
             {
                 // await resourceSerializer.WriteObjectInlineAsync(item, elementType, writer, writeContext);
@@ -122,12 +130,23 @@ namespace ExperimentsLib
 
                 // end write resource
                 writer.WriteEnd();
+                //Console.WriteLine("Finish writing resource {0}", customer.Id);
+                //Console.WriteLine("Finised customer {0}", customer.Id);
+
+                // flush the inner writer periodically to prevent expanding the internal buffer indefinitely
+                // JSON writer does not commit data to output until it's flushed
+                // each customer accounts for about 220 bytes, after 66 iterations we have about 14k pending
+                // bytes in the buffer before flushing. I was trying to achieve similar behavior to JsonSerializer (0.9 * 16k)
+                if (count % 66 == 0)
+                {
+                    await jsonWriter.FlushAsync();
+                }
+
+                count++;
             }
 
             writer.WriteEnd();
-            writer.Flush();
-
-            return Task.CompletedTask;
+            await jsonWriter.FlushAsync();
         }
     }
 }
