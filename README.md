@@ -161,12 +161,6 @@ The easiest way to run the perf benchmarks is to use the [Microsoft.Crank](https
     crank --config benchmarks.yml --scenario Components --profile local
     ```
 
-- Run benchmarks for end-to-end scenarios against a local OData service:
-    
-    ```text
-    crank --config benchmarks.yml --scenario Service --profile local
-    ```
-
 - Run only ODataReader tests:
 
     ```text
@@ -184,10 +178,10 @@ The easiest way to run the perf benchmarks is to use the [Microsoft.Crank](https
     crank --config benchmarks.yml --scenario UriParser --profile local
     ```
 
-- Run tests that compare serialization performance of ODataWriter and System.Text.Json
+- Run tests that compare different writer implementations and configurations
 
     ```text
-    crank --config benchmarks.yml --scenario SerializerBaselines --profile local
+    crank --config benchmarks.yml --scenario SerializationComparisons --profile local
     ```
 
 #### Run benchmarks on remote dedicated agents
@@ -222,7 +216,7 @@ To run benchmarks against the official repo instead of your local repo, pass
 the `base=true` variable to the command, e.g.:
 
 ```text
-crank --config benchmarks.yml --scenario Service --profile local --variable base=true
+crank --config benchmarks.yml --scenario ODataWriter --profile local --variable base=true
 ```
 
 This will cause the crank agent to clone the official repo and run the tests against the `master` branch.
@@ -230,8 +224,25 @@ This will cause the crank agent to clone the official repo and run the tests aga
 You can specify a different branch, commit or tag using the `baseBranch` variable:
 
 ```text
-crank --config benchmarks.yml --scenario Service --profile local --variable base=true --variable baseBranch=v7.6.4
+crank --config benchmarks.yml --scenario ODataWriter --profile local --variable base=true --variable baseBranch=v7.6.4
 ```
+
+#### Run load tests
+
+Besides benchmarks, we also have some load tests which measure request round-trips from a client to a server.
+These can be used to evaluate how OData libraries behave when handling multiple concurrent requests on the same server.
+
+We have tests that evaluate different writer implementations, serializing a simple a static collection response
+on each request:
+
+```text
+crank --config loadtests.yml --config lab-windows --scenario SerializationComparisons --application.options.counterProviders System.Runtime --variable writer=ODataMessageWriter
+```
+
+This scenario allows you to choose which writer implementation is used to process the response as well. It also allows yout to configure different aspects of the requests, e.g. number of connections, max request per second, etc.
+
+For more information about these tests, [read this doc](test/PerformanceTests/SerializationComparisonsTests/README.md).
+
 
 #### Comparing benchmarks
 
