@@ -1,10 +1,15 @@
-using ExperimentsLib;
-using System;
+//---------------------------------------------------------------------
+// <copyright file="WriterTests.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ExperimentsLib;
 using Xunit;
 
 namespace ExperimentTests
@@ -13,12 +18,12 @@ namespace ExperimentTests
     {
         public static IEnumerable<Customer> data = CustomerDataSet.GetCustomers(4);
         public static WriterCollection<IEnumerable<Customer>> writers = DefaultWriterCollection.Create();
-        public static IEnumerable<object[]> WriterNames { get; } = writers.GetServerNames()
+        public static IEnumerable<object[]> WriterNames { get; } = writers.GetWriterNames()
             .Where(n => !n.Contains("NoOp"))
             .Select(n => new string[] { n });
 
         public static IEnumerable<object[]> noOpWriterNames() =>
-            writers.GetServerNames()
+            writers.GetWriterNames()
             .Where(n => n.Contains("NoOp"))
             .Select(n => new string[] { n });
 

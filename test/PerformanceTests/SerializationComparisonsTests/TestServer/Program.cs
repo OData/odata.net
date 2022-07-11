@@ -1,3 +1,9 @@
+//---------------------------------------------------------------------
+// <copyright file="Program.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
 using System.Collections.Generic;
 using ExperimentsLib;
 using Microsoft.AspNetCore.Builder;
@@ -18,7 +24,7 @@ namespace TestServer
             builder.Services.AddSingleton(writers);
             builder.Services.AddControllers(options =>
             {
-                options.OutputFormatters.Insert(0, new TestOutputFormatter());
+                options.OutputFormatters.Insert(0, new CustomerCollectionOutputFormatter());
             });
 
             builder.Services.Configure<KestrelServerOptions>(options =>

@@ -1,7 +1,12 @@
-﻿using System;
+﻿//---------------------------------------------------------------------
+// <copyright file="ODataJsonWriterDirectPayloadWriter.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.OData;
 using Microsoft.OData.Json;
@@ -15,46 +20,25 @@ namespace ExperimentsLib
     public class ODataJsonWriterDirectPayloadWriter : IPayloadWriter<IEnumerable<Customer>>
     {
         private readonly Func<Stream, IJsonWriter> jsonWriterFactory;
-        private bool _simulateTypedResourceGeneration = true;
 
-        public ODataJsonWriterDirectPayloadWriter(Func<Stream, IJsonWriter> jsonWriterFactory, bool simulateTypedResourceGeneration = false)
+        public ODataJsonWriterDirectPayloadWriter(Func<Stream, IJsonWriter> jsonWriterFactory)
         {
             this.jsonWriterFactory = jsonWriterFactory;
-            _simulateTypedResourceGeneration = simulateTypedResourceGeneration;
         }
 
         public Task WritePayload(IEnumerable<Customer> payload, Stream stream)
         {
-            var serviceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/");
-            var jsonWriter = jsonWriterFactory(stream);
+            Uri serviceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/");
+            IJsonWriter jsonWriter = this.jsonWriterFactory(stream);
 
-
-            var resourceSet = new ODataResourceSet();
             jsonWriter.StartObjectScope();
             jsonWriter.WriteName("@odata.context");
             jsonWriter.WriteValue($"{serviceRoot}$metadata#Customers");
             jsonWriter.WriteName("value");
             jsonWriter.StartArrayScope();
 
-            foreach (var _customer in payload)
+            foreach (Customer customer in payload)
             {
-                Customer customer = _customer;
-                if (_simulateTypedResourceGeneration)
-                {
-                    customer = new Customer
-                    {
-                        Id = _customer.Id,
-                        Name = _customer.Name,
-                        Emails = new List<string>(_customer.Emails),
-                        HomeAddress = new Address
-                        {
-                            City = _customer.HomeAddress.City,
-                            Street = _customer.HomeAddress.Street
-                        },
-                        Addresses = _customer.Addresses.Select(a => new Address { City = a.City, Street = a.Street }).ToList()
-                    };
-                }
-
                 jsonWriter.StartObjectScope();
                 jsonWriter.WriteName("Id");
                 jsonWriter.WriteValue(customer.Id);

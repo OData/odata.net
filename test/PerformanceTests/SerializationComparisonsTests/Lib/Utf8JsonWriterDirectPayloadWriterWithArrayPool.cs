@@ -1,7 +1,12 @@
-﻿using System;
+﻿//---------------------------------------------------------------------
+// <copyright file="Utf8JsonWriterDirectPayloadWriterWithArrayPool.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using System;
 using System.Buffers;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -15,14 +20,12 @@ namespace ExperimentsLib
     /// </summary>
     public class Utf8JsonWriterDirectPayloadWriterWithArrayPool : IPayloadWriter<IEnumerable<Customer>>
     {
-        Func<IBufferWriter<byte>, Utf8JsonWriter> _writerFactory;
-        bool _simulateTypedResourceGeneration;
+        private Func<IBufferWriter<byte>, Utf8JsonWriter> writerFactory;
         const int BufferSize = 16 * 1024;
 
         public Utf8JsonWriterDirectPayloadWriterWithArrayPool(Func<IBufferWriter<byte>, Utf8JsonWriter> writerFactory, bool simulateResourceGeneration = false)
         {
-            _writerFactory = writerFactory;
-            _simulateTypedResourceGeneration = simulateResourceGeneration;
+            this.writerFactory = writerFactory;
         }
 
         public async Task WritePayload(IEnumerable<Customer> payload, Stream stream)
@@ -30,7 +33,7 @@ namespace ExperimentsLib
             var serviceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/");
 
             using var bufferWriter = new PooledByteBufferWriter(BufferSize);
-            using var jsonWriter = _writerFactory(bufferWriter);
+            using Utf8JsonWriter jsonWriter = this.writerFactory(bufferWriter);
 
             var resourceSet = new ODataResourceSet();
             //Console.WriteLine("Start writing resource set");
@@ -39,25 +42,8 @@ namespace ExperimentsLib
             jsonWriter.WriteStartArray("value");
 
             int count = 0;
-            foreach (var _customer in payload)
+            foreach (Customer customer in payload)
             {
-                Customer customer = _customer;
-                if (_simulateTypedResourceGeneration)
-                {
-                    customer = new Customer
-                    {
-                        Id = _customer.Id,
-                        Name = _customer.Name,
-                        Emails = new List<string>(_customer.Emails),
-                        HomeAddress = new Address
-                        {
-                            City = _customer.HomeAddress.City,
-                            Street = _customer.HomeAddress.Street
-                        },
-                        Addresses = _customer.Addresses.Select(a => new Address { City = a.City, Street = a.Street }).ToList()
-                    };
-                }
-
                 jsonWriter.WriteStartObject();
                 jsonWriter.WriteNumber("Id", customer.Id);
                 jsonWriter.WriteString("Name", customer.Name);

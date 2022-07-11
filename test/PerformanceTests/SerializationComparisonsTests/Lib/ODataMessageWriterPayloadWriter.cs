@@ -1,4 +1,10 @@
-﻿using System;
+﻿//---------------------------------------------------------------------
+// <copyright file="ODataMessageWriterPayloadWriter.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -42,7 +48,7 @@ namespace ExperimentsLib
 
             IODataResponseMessage message = messageFactory(stream);
 
-            var messageWriter = new ODataMessageWriter(message, settings, model);
+            using var messageWriter = new ODataMessageWriter(message, settings, model);
             var entitySet = model.EntityContainer.FindEntitySet("Customers");
             var writer = messageWriter.CreateODataResourceSetWriter(entitySet);
 

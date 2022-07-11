@@ -1,5 +1,8 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
+﻿//---------------------------------------------------------------------
+// <copyright file="PooledByteArrayBufferWriter.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
 
 using System.Buffers;
 using System.Diagnostics;
@@ -9,7 +12,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-// This implementation was drawn from
+// This implementation was copied from
 // https://github.com/dotnet/runtime/blob/main/src/libraries/Common/src/System/Text/Json/PooledByteBufferWriter.cs
 namespace System.Text.Json
 {

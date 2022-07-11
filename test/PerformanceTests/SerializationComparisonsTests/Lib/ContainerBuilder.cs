@@ -1,4 +1,10 @@
-﻿using System;
+﻿//---------------------------------------------------------------------
+// <copyright file="ContainerBuilder.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using System;
 using Microsoft.Extensions.DependencyInjection;
 using OData = Microsoft.OData;
 
@@ -18,13 +24,13 @@ namespace ExperimentsLib
             switch (lifetime)
             {
                 case OData.ServiceLifetime.Transient:
-                    services.AddTransient(serviceType, implementationType);
+                    this.services.AddTransient(serviceType, implementationType);
                     break;
                 case OData.ServiceLifetime.Singleton:
-                    services.AddSingleton(serviceType, implementationType);
+                    this.services.AddSingleton(serviceType, implementationType);
                     break;
                 case OData.ServiceLifetime.Scoped:
-                    services.AddScoped(serviceType, implementationType);
+                    this.services.AddScoped(serviceType, implementationType);
                     break;
             }
 
@@ -37,13 +43,13 @@ namespace ExperimentsLib
             switch (lifetime)
             {
                 case OData.ServiceLifetime.Transient:
-                    services.AddTransient(serviceType, implementationFactory);
+                    this.services.AddTransient(serviceType, implementationFactory);
                     break;
                 case OData.ServiceLifetime.Singleton:
-                    services.AddSingleton(serviceType, implementationFactory);
+                    this.services.AddSingleton(serviceType, implementationFactory);
                     break;
                 case OData.ServiceLifetime.Scoped:
-                    services.AddScoped(serviceType, implementationFactory);
+                    this.services.AddScoped(serviceType, implementationFactory);
                     break;
             }
 
@@ -53,7 +59,7 @@ namespace ExperimentsLib
         /// <inheritdoc/>
         public IServiceProvider BuildContainer()
         {
-            return services.BuildServiceProvider();
+            return this.services.BuildServiceProvider();
         }
     }
 }

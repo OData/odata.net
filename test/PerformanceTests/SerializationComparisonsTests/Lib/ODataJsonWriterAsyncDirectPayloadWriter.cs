@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+//---------------------------------------------------------------------
+// <copyright file="ODataJsonWriterAsyncDirectPayloadWriter.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.OData;
 using Microsoft.OData.Json;
 
 namespace ExperimentsLib
@@ -16,51 +20,25 @@ namespace ExperimentsLib
     public class ODataJsonWriterAsyncDirectPayloadWriter : IPayloadWriter<IEnumerable<Customer>>
     {
         private readonly Func<Stream, IJsonWriterAsync> jsonWriterFactory;
-        private bool _simulateTypedResourceGeneration = true;
 
-        public ODataJsonWriterAsyncDirectPayloadWriter(Func<Stream, IJsonWriterAsync> jsonWriterFactory, bool simulateTypedResourceGeneration = true)
+        public ODataJsonWriterAsyncDirectPayloadWriter(Func<Stream, IJsonWriterAsync> jsonWriterFactory)
         {
             this.jsonWriterFactory = jsonWriterFactory;
-            _simulateTypedResourceGeneration = simulateTypedResourceGeneration;
         }
 
         public async Task WritePayload(IEnumerable<Customer> payload, Stream stream)
         {
-            var sw = new Stopwatch();
-            sw.Start();
+            Uri serviceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/");
+            IJsonWriterAsync jsonWriter = this.jsonWriterFactory(stream);
 
-            var serviceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/");
-            var jsonWriter = jsonWriterFactory(stream);
-
-
-            var resourceSet = new ODataResourceSet();
-            //Console.WriteLine("Start writing resource set");
             await jsonWriter.StartObjectScopeAsync();
             await jsonWriter.WriteNameAsync("@odata.context");
             await jsonWriter.WriteValueAsync($"{serviceRoot}$metadata#Customers");
             await jsonWriter.WriteNameAsync("value");
             await jsonWriter.StartArrayScopeAsync();
 
-            //Console.WriteLine("About to write resources {0}", payload.Count());
-            foreach (var _customer in payload)
+            foreach (Customer customer in payload)
             {
-                Customer customer = _customer;
-                if (_simulateTypedResourceGeneration)
-                {
-                    customer = new Customer
-                    {
-                        Id = _customer.Id,
-                        Name = _customer.Name,
-                        Emails = new List<string>(_customer.Emails),
-                        HomeAddress = new Address
-                        {
-                            City = _customer.HomeAddress.City,
-                            Street = _customer.HomeAddress.Street
-                        },
-                        Addresses = _customer.Addresses.Select(a => new Address { City = a.City, Street = a.Street }).ToList()
-                    };
-                }
-
                 await jsonWriter.StartObjectScopeAsync();
                 await jsonWriter.WriteNameAsync("Id");
                 await jsonWriter.WriteValueAsync(customer.Id);
@@ -75,7 +53,6 @@ namespace ExperimentsLib
                 }
 
                 await jsonWriter.EndArrayScopeAsync();
-
 
                 // -- HomeAddress
                 // start write homeAddress

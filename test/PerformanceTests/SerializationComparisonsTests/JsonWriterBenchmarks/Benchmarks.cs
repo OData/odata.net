@@ -1,4 +1,10 @@
-﻿using System.Collections.Generic;
+﻿//---------------------------------------------------------------------
+// <copyright file="Benchmarks.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
@@ -26,7 +32,7 @@ namespace JsonWriterBenchmarks
         public string WriterName;
 
         public static IEnumerable<string> WriterNames() =>
-            DefaultWriterCollection.Create().GetServerNames();
+            DefaultWriterCollection.Create().GetWriterNames();
 
         public Benchmarks()
         {

@@ -1,4 +1,10 @@
-﻿using System;
+﻿//---------------------------------------------------------------------
+// <copyright file="CustomerCollectionOutputFormatter.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,9 +20,9 @@ namespace TestServer;
 /// payloads using the <see cref="IPayloadWriter{T}"/> specified
 /// in the request route.
 /// </summary>
-public class TestOutputFormatter : TextOutputFormatter
+public class CustomerCollectionOutputFormatter : TextOutputFormatter
 {
-    public TestOutputFormatter()
+    public CustomerCollectionOutputFormatter()
     {
         SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse("application/json"));
         SupportedEncodings.Add(Encoding.UTF8);

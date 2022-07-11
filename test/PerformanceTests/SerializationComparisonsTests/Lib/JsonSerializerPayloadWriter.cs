@@ -1,8 +1,12 @@
-﻿using System;
+﻿//---------------------------------------------------------------------
+// <copyright file="JsonSerializerPayloadWriter.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -27,7 +31,11 @@ namespace ExperimentsLib
             await JsonSerializer.SerializeAsync(stream, response);
         }
 
-        public class ResponseWrapper
+        /// <summary>
+        /// Wraps the response payload so that it gets the same shape
+        /// as an OData resource set response.
+        /// </summary>
+        private class ResponseWrapper
         {
             [JsonPropertyName("@odata.context")]
             public string Context { get; set; }

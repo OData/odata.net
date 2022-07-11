@@ -1,4 +1,10 @@
-﻿using System;
+﻿//---------------------------------------------------------------------
+// <copyright file="ODataMessage.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -16,7 +22,7 @@ namespace ExperimentsLib
 
         public ODataMessage()
         {
-            headers = new Dictionary<string, string>();
+            this.headers = new Dictionary<string, string>();
         }
 
         public IEnumerable<KeyValuePair<string, string>> Headers
@@ -36,13 +42,12 @@ namespace ExperimentsLib
 
         public string GetHeader(string headerName)
         {
-            string headerValue;
-            return this.headers.TryGetValue(headerName, out headerValue) ? headerValue : null;
+            return this.headers.TryGetValue(headerName, out string headerValue) ? headerValue : null;
         }
 
         public void SetHeader(string headerName, string headerValue)
         {
-            headers[headerName] = headerValue;
+            this.headers[headerName] = headerValue;
         }
 
         public Stream GetStream()

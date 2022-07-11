@@ -1,6 +1,11 @@
-﻿using System;
+﻿//---------------------------------------------------------------------
+// <copyright file="WriterCollection.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ExperimentsLib
 {
@@ -10,18 +15,18 @@ namespace ExperimentsLib
     /// <typeparam name="T"></typeparam>
     public class WriterCollection<T>
     {
-        private readonly List<(string name, IPayloadWriter<T> writer)> writers = new List<(string name, IPayloadWriter<T> writer)>();
+        private readonly Dictionary<string, IPayloadWriter<T>> writers = new Dictionary<string, IPayloadWriter<T>>();
 
-        public void AddWriter(string name, string charset, IPayloadWriter<T> serverWriter)
+        public void AddWriter(string name, IPayloadWriter<T> serverWriter)
         {
-            writers.Add((name, serverWriter));
+            this.writers[name] = serverWriter;
         }
 
-        public void AddWriters(params (string name, string charset, IPayloadWriter<T> serverWriter)[] servers)
+        public void AddWriters(params (string name, IPayloadWriter<T> serverWriter)[] servers)
         {
-            foreach (var (name, charset, serverWriter) in servers)
+            foreach (var (name, serverWriter) in servers)
             {
-                AddWriter(name, charset, serverWriter);
+                AddWriter(name, serverWriter);
             }
         }
 
@@ -30,29 +35,19 @@ namespace ExperimentsLib
             return FindWriter(name);
         }
 
-        public IEnumerable<string> GetServerNames()
+        public IEnumerable<string> GetWriterNames()
         {
-            var names = writers.Select(r => r.name);
-
-            foreach (var name in names)
-            {
-                Console.WriteLine(name);
-            }
-
-            return names;
+            return writers.Keys;
         }
 
         private IPayloadWriter<T> FindWriter(string name)
         {
-            var entry = writers
-                .FirstOrDefault(entry => entry.name.Equals(name, StringComparison.OrdinalIgnoreCase));
-
-            if (entry == default)
+            if (!this.writers.TryGetValue(name, out IPayloadWriter<T> writer))
             {
                 throw new Exception($"Server not found '{name}'");
             }
 
-            return entry.writer;
+            return writer;
         }
     }
 }

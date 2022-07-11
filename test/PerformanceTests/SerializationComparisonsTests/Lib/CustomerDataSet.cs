@@ -1,8 +1,10 @@
-﻿using System;
+﻿//---------------------------------------------------------------------
+// <copyright file="CustomerDataSet.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ExperimentsLib
 {

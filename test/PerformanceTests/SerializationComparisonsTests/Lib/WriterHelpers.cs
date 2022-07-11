@@ -1,4 +1,10 @@
-﻿using System;
+﻿//---------------------------------------------------------------------
+// <copyright file="WriterHelpers.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using System;
 using System.IO;
 using System.Text;
 using Microsoft.OData;
@@ -8,7 +14,7 @@ namespace ExperimentsLib
 {
     public static class WriterHelpers
     {
-        static DefaultJsonWriterFactory jsonWriterFactory = new DefaultJsonWriterFactory();
+        private static readonly DefaultJsonWriterFactory jsonWriterFactory = new DefaultJsonWriterFactory();
 
         public static IJsonWriter CreateODataJsonWriter(this Stream stream, Encoding encoding = null)
         {
@@ -28,11 +34,32 @@ namespace ExperimentsLib
             return factory.CreateJsonWriter(stream, false, encoding ?? Encoding.UTF8);
         }
 
-        public static IODataResponseMessage CreateUtf8Message(this Stream stream)
+        public static IODataResponseMessage CreateJsonWriterMessage(this Stream stream, string charset = "UTF-8")
         {
-            ODataMessage message = new ODataMessage { Stream = stream };
-            message.SetHeader("Content-Type", "application/json; charset=UTF-8");
-            return message;
+            return stream.CreateODataMessage(null, charset);
+        }
+
+        public static IODataResponseMessage CreateNoopMessage(this Stream stream)
+        {
+            NoopJsonWriterFactory factory = new NoopJsonWriterFactory();
+
+            return stream.CreateODataMessage(services =>
+            {
+                services.AddService<IJsonWriterFactory>(ServiceLifetime.Singleton, _ => factory);
+                services.AddService<IJsonWriterFactoryAsync>(ServiceLifetime.Singleton, _ => factory);
+            });
+        }
+
+        public static IODataResponseMessage CreateUtf8JsonWriterMessage(this Stream stream, string charset="UTF-8")
+        {
+            DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Default;
+
+            IContainerBuilder services = new ContainerBuilder();
+            services.AddDefaultODataServices();
+            return stream.CreateODataMessage(services =>
+            {
+                services.AddService<IStreamBasedJsonWriterFactory>(ServiceLifetime.Singleton, _ => factory);
+            }, charset);
         }
 
         public static IODataResponseMessage CreateODataMessage(this Stream stream, Action<IContainerBuilder> configure = null, string charset = "UTF-8")
@@ -52,34 +79,6 @@ namespace ExperimentsLib
             message.SetHeader("Content-Type", $"application/json; charset={charset}");
 
             return message;
-        }
-
-        public static IODataResponseMessage CreateUtf16Message(this Stream stream)
-        {
-            return stream.CreateODataMessage(null, charset: "UTF-16");
-        }
-
-        public static IODataResponseMessage CreateNoopMessage(this Stream stream)
-        {
-            NoopJsonWriterFactory factory = new NoopJsonWriterFactory();
-
-            return stream.CreateODataMessage(services =>
-            {
-                services.AddService<IJsonWriterFactory>(ServiceLifetime.Singleton, _ => factory);
-                services.AddService<IJsonWriterFactoryAsync>(ServiceLifetime.Singleton, _ => factory);
-            });
-        }
-
-        public static IODataResponseMessage CreateUtf8JsonWriterMessage(this Stream stream)
-        {
-            DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Default;
-
-            IContainerBuilder services = new ContainerBuilder();
-            services.AddDefaultODataServices();
-            return stream.CreateODataMessage(services =>
-            {
-                services.AddService<IStreamBasedJsonWriterFactory>(ServiceLifetime.Singleton, _ => factory);
-            });
         }
     }
 }

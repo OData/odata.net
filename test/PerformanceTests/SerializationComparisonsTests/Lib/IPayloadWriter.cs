@@ -1,4 +1,9 @@
-﻿using System.Collections.Generic;
+﻿//---------------------------------------------------------------------
+// <copyright file="IPayloadWriter.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
 using System.IO;
 using System.Threading.Tasks;
 
@@ -12,6 +17,12 @@ namespace ExperimentsLib
     /// <typeparam name="T"></typeparam>
     public interface IPayloadWriter<T>
     {
+        /// <summary>
+        /// Writes the payload to the specified stream.
+        /// </summary>
+        /// <param name="payload">The data to write.</param>
+        /// <param name="stream">The stream to write to.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         Task WritePayload(T payload, Stream stream);
     }
 }

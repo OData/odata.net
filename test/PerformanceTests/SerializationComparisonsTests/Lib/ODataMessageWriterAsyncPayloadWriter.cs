@@ -1,4 +1,10 @@
-﻿using System;
+﻿//---------------------------------------------------------------------
+// <copyright file="ODataMessageWriterAsyncPayloadWriter.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -12,37 +18,36 @@ namespace ExperimentsLib
     /// </summary>
     public class ODataMessageWriterAsyncPayloadWriter : IPayloadWriter<IEnumerable<Customer>>
     {
-        IEdmModel _model;
-        bool _enableValidation;
-        Func<Stream, IODataResponseMessage> _messageFactory;
+        private readonly IEdmModel model;
+        private readonly bool enableValidation;
+        private readonly Func<Stream, IODataResponseMessage> messageFactory;
 
         public ODataMessageWriterAsyncPayloadWriter(IEdmModel model, Func<Stream, IODataResponseMessage> messageFactory, bool enableValidation = true)
         {
-            _model = model;
-            _enableValidation = enableValidation;
-            _messageFactory = messageFactory;
+            this.model = model;
+            this.enableValidation = enableValidation;
+            this.messageFactory = messageFactory;
         }
         public async Task WritePayload(IEnumerable<Customer> payload, Stream stream)
         {
-            var settings = new ODataMessageWriterSettings();
+            ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
             settings.ODataUri = new ODataUri
             {
                 ServiceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/")
             };
 
-            if (!_enableValidation)
+            if (!this.enableValidation)
             {
                 settings.Validations = ValidationKinds.None;
                 settings.EnableCharactersCheck = false;
                 settings.AlwaysAddTypeAnnotationsForDerivedTypes = false;
             }
             
-            var model = _model;
-            IODataResponseMessage message = _messageFactory(stream);
+            IODataResponseMessage message = this.messageFactory(stream);
 
-            var messageWriter = new ODataMessageWriter(message, settings, model);
-            var entitySet = model.EntityContainer.FindEntitySet("Customers");
-            var writer = await messageWriter.CreateODataResourceSetWriterAsync(entitySet);
+            using var messageWriter = new ODataMessageWriter(message, settings, this.model);
+            var entitySet = this.model.EntityContainer.FindEntitySet("Customers");
+            ODataWriter writer = await messageWriter.CreateODataResourceSetWriterAsync(entitySet);
 
             var resourceSet = new ODataResourceSet();
             await writer.WriteStartAsync(resourceSet);
@@ -73,7 +78,6 @@ namespace ExperimentsLib
                     }
                 };
 
-                //Console.WriteLine("Start writing resource {0}", customer.Id);
                 await writer.WriteStartAsync(resource);
                 // skip WriterStreamPropertiesAsync
                 // WriteComplexPropertiesAsync
