@@ -295,58 +295,58 @@ crank --config .\loadtests.yml --scenario SerializationComparisons --profile rem
 | application                             |               |
 | --------------------------------------- | ------------- |
 | CPU Usage (%)                           | 98            |
-| Cores usage (%)                         | 393           |
-| Working Set (MB)                        | 169           |
-| Private Memory (MB)                     | 313           |
-| Build Time (ms)                         | 29,706        |
-| Start Time (ms)                         | 4,188         |
+| Cores usage (%)                         | 391           |
+| Working Set (MB)                        | 173           |
+| Private Memory (MB)                     | 316           |
+| Build Time (ms)                         | 28,287        |
+| Start Time (ms)                         | 4,173         |
 | Published Size (KB)                     | 101,575       |
 | .NET Core SDK Version                   | 6.0.301       |
 | ASP.NET Core Version                    | 6.0.6+68bb6fb |
 | .NET Runtime Version                    | 6.0.6+7cca709 |
-| Max CPU Usage (%)                       | 96            |
-| Max Working Set (MB)                    | 176           |
-| Max GC Heap Size (MB)                   | 99            |
-| Size of committed memory by the GC (MB) | 115           |
-| Max Number of Gen 0 GCs / sec           | 13.00         |
+| Max CPU Usage (%)                       | 99            |
+| Max Working Set (MB)                    | 180           |
+| Max GC Heap Size (MB)                   | 96            |
+| Size of committed memory by the GC (MB) | 119           |
+| Max Number of Gen 0 GCs / sec           | 15.00         |
 | Max Number of Gen 1 GCs / sec           | 4.00          |
 | Max Number of Gen 2 GCs / sec           | 1.00          |
-| Max Time in GC (%)                      | 3.00          |
-| Max Gen 0 Size (B)                      | 23,636,984    |
-| Max Gen 1 Size (B)                      | 2,613,352     |
-| Max Gen 2 Size (B)                      | 14,146,976    |
-| Max LOH Size (B)                        | 1,006,376     |
-| Max POH Size (B)                        | 4,304,072     |
-| Max Allocation Rate (B/sec)             | 1,148,348,664 |
+| Max Time in GC (%)                      | 6.00          |
+| Max Gen 0 Size (B)                      | 18,174,056    |
+| Max Gen 1 Size (B)                      | 3,217,984     |
+| Max Gen 2 Size (B)                      | 15,647,624    |
+| Max LOH Size (B)                        | 1,130,808     |
+| Max POH Size (B)                        | 6,343,472     |
+| Max Allocation Rate (B/sec)             | 1,308,268,920 |
 | Max GC Heap Fragmentation               | 60            |
 | # of Assemblies Loaded                  | 120           |
-| Max Exceptions (#/s)                    | 1,536         |
-| Max Lock Contention (#/s)               | 53            |
-| Max ThreadPool Threads Count            | 17            |
-| Max ThreadPool Queue Length             | 255           |
-| Max ThreadPool Items (#/s)              | 4,472         |
+| Max Exceptions (#/s)                    | 1,533         |
+| Max Lock Contention (#/s)               | 62            |
+| Max ThreadPool Threads Count            | 15            |
+| Max ThreadPool Queue Length             | 97            |
+| Max ThreadPool Items (#/s)              | 4,836         |
 | Max Active Timers                       | 0             |
-| IL Jitted (B)                           | 395,674       |
+| IL Jitted (B)                           | 395,907       |
 | Methods Jitted                          | 5,466         |
 
 
 | load                   |           |
 | ---------------------- | --------- |
-| CPU Usage (%)          | 9         |
-| Cores usage (%)        | 72        |
+| CPU Usage (%)          | 10        |
+| Cores usage (%)        | 78        |
 | Working Set (MB)       | 36        |
 | Private Memory (MB)    | 47        |
-| Start Time (ms)        | 958       |
-| First Request (ms)     | 1,263     |
-| Requests               | 28,027    |
+| Start Time (ms)        | 102       |
+| First Request (ms)     | 1,051     |
+| Requests               | 32,897    |
 | Bad responses          | 0         |
-| Latency 50th (ms)      | 262.65    |
-| Latency 75th (ms)      | 514.38    |
-| Latency 90th (ms)      | 1,253.45  |
-| Latency 95th (ms)      | 1,721.01  |
-| Latency 99th (ms)      | 3,228.29  |
-| Mean latency (ms)      | 556.23    |
-| Max latency (ms)       | 11,416.03 |
-| Requests/sec           | 949       |
-| Requests/sec (max)     | 5,529     |
-| Read throughput (MB/s) | 12.51     |
+| Latency 50th (ms)      | 240.17    |
+| Latency 75th (ms)      | 435.79    |
+| Latency 90th (ms)      | 944.92    |
+| Latency 95th (ms)      | 1,299.65  |
+| Latency 99th (ms)      | 4,036.39  |
+| Mean latency (ms)      | 462.74    |
+| Max latency (ms)       | 12,617.31 |
+| Requests/sec           | 1,223     |
+| Requests/sec (max)     | 9,497     |
+| Read throughput (MB/s) | 14.66     |
