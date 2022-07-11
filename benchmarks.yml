@@ -45,19 +45,6 @@ jobs:
       benchmarkDotNet: true
     onConfigure:
      - "{{setSourceScript}}"
-  serializationBaselines:
-    source:
-      project: test/PerformanceTests/SerializationBaselineTests/SerializationBaselineTests.csproj
-    variables:
-      filter: "*"
-      jobType: default
-      base: "{{base}}"
-      baseBranch: "{{baseBranch}}"
-    arguments: "--job {{jobType}} --filter {{filter}} --memory"
-    options:
-      benchmarkDotNet: true
-    onConfigure:
-      - "{{setSourceScript}}"
   serializationComparisons:
     source:
       project: test/PerformanceTests/SerializationComparisonsTests/JsonWriterBenchmarks/JsonWriterBenchmarks.csproj
@@ -97,16 +84,11 @@ scenarios:
       job: service
       variables:
         filter: "*"
-  SerializerBaselines:
-    application:
-      job: serializationBaselines
-      variables:
-        filter: "*"
   SerializationComparisons:
     application:
       job: serializationComparisons
       variables:
-        filter: "*File*"
+        filterArg: "*File*"
 
 profiles:
   local:

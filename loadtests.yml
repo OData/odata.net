@@ -14,7 +14,7 @@ jobs:
     
 
 scenarios:
-  Writer:
+  SerializationComparisons:
     application:
       job: server
     load:
@@ -24,7 +24,7 @@ scenarios:
         connections: 128
         duration: 30
         count: 50
-        writer: 'ODataMessageWriter-Utf8'
+        writer: 'ODataMessageWriter'
         path: /customers/{{writer}}?count={{count}}
 
 profiles:
@@ -62,12 +62,12 @@ profiles:
     jobs:
       application:
         endpoints:
-          - http://remote-server:5010
+          - http://enter-remote-server-address:5010
       load:
         endpoints:
           - http://localhost:5010
         variables:
-          serverAddress: 20.232.172.24
+          serverAddress: enter-remote-server-address
           serverPort: 5000
           numConnections: 128
 
