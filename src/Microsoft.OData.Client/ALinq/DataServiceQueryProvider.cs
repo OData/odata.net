@@ -178,7 +178,7 @@ namespace Microsoft.OData.Client
             // The KeySelectorMap property is initialized and populated with a least one item if we're dealing with a GroupBy expression.
             // In that case, the selector in the Projection will take the following form:
             // (d2, d3) => new <>f_AnonymousType13`2(CategoryName = d2, AverageAmount = d3.Average(d4 => d4))
-            // We interrogate the 2nd parameter to determine the type of values in the IGrouping<TKey, TElement>
+            // We examine the 2nd parameter to determine the type of values in the IGrouping<TKey, TElement>
             // The TElement type implements IEnumerable and the first generic argument should be our last segment type
             if (applyQueryOptionExpr?.KeySelectorMap?.Count > 0)
             {
