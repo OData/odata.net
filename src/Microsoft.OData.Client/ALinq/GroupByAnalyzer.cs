@@ -82,7 +82,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Analyzes a GroupBy key selector for property/ies that the input sequence is grouped by.
         /// </summary>
-        /// <param name="input">The input expression.</param>
+        /// <param name="input">The resource set expression (source) for the GroupBy.</param>
         /// <param name="keySelector">Key selector expression to analyze.</param>
         /// <returns>true if analyzed successfully; false otherwise</returns>
         private static bool AnalyzeGroupByKeySelector(QueryableResourceExpression input, LambdaExpression keySelector)
@@ -138,7 +138,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Ensure apply query option for the resource set is initialized
         /// </summary>
-        /// <param name="input">The resource expression</param>
+        /// <param name="input">The resource set expression (source) for the GroupBy.</param>
         private static void EnsureApplyInitialized(QueryableResourceExpression input)
         {
             Debug.Assert(input != null, $"{nameof(input)} != null");
@@ -187,7 +187,7 @@ namespace Microsoft.OData.Client
             /// <summary>
             /// Analyzes a GroupBy key selector for property or properties that the input sequence is grouped by. 
             /// </summary>
-            /// <param name="input">The input resource expression.</param>
+            /// <param name="input">The resource set expression (source) for the GroupBy.</param>
             /// <param name="keySelector">Key selector expression to analyze.</param>
             internal static void Analyze(QueryableResourceExpression input, LambdaExpression keySelector)
             {
@@ -284,7 +284,7 @@ namespace Microsoft.OData.Client
             /// <summary>
             /// Creates an <see cref="GroupByResultSelectorAnalyzer"/> expression.
             /// </summary>
-            /// <param name="input">The input resource expression.</param>
+            /// <param name="input">The resource set expression (source) for the GroupBy.</param>
             private GroupByResultSelectorAnalyzer(QueryableResourceExpression input)
             {
                 this.input = input;
@@ -295,7 +295,7 @@ namespace Microsoft.OData.Client
             /// <summary>
             /// Analyzes expression for aggregate expressions in the GroupBy result selector.
             /// </summary>
-            /// <param name="input">The input resource expression.</param>
+            /// <param name="input">The resource set expression (source) for the GroupBy.</param>
             /// <param name="resultSelector">Result selector expression to analyze.</param>
             internal static void Analyze(QueryableResourceExpression input, LambdaExpression resultSelector)
             {
