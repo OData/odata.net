@@ -93,20 +93,9 @@ namespace Microsoft.OData.Client
             EnsureApplyInitialized(input);
             Debug.Assert(input.Apply != null, $"{nameof(input)}.Apply != null");
 
-            // Scenario 1: GroupBy(d1 => [Constant])
-            ConstantExpression constExpr = keySelector.Body as ConstantExpression;
-            if (constExpr != null)
+            // Scenario 1: GroupBy(d1 => d1.Property) and GroupBy(d1 = d1.NavProperty...Property)
+            if (keySelector.Body is MemberExpression memberExpr)
             {
-                input.Apply.KeySelectorMap.Add(constExpr.Value.ToString(), constExpr);
-
-                return true;
-            }
-
-            // Scenario 2: GroupBy(d1 => d1.Property) and GroupBy(d1 = d1.NavProperty...Property)
-            if (keySelector.Body.NodeType == ExpressionType.MemberAccess)
-            {
-                MemberExpression memberExpr = (MemberExpression)keySelector.Body;
-
                 // Validate grouping expression
                 ResourceBinder.ValidationRules.ValidateGroupingExpression(memberExpr);
 
@@ -122,7 +111,15 @@ namespace Microsoft.OData.Client
                 return true;
             }
 
-            // Only proceed beyond here if key selector body is a simple instantiation.
+            // Scenario 2: GroupBy(d1 => [Constant])
+            if (keySelector.Body is ConstantExpression constExpr)
+            {
+                input.Apply.KeySelectorMap.Add(constExpr.Value.ToString(), constExpr);
+
+                return true;
+            }
+
+            // Check whether the key selector body is a simple instantiation
             if (keySelector.Body.NodeType != ExpressionType.MemberInit && keySelector.Body.NodeType != ExpressionType.New)
             {
                 return false;
