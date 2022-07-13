@@ -210,6 +210,8 @@ namespace Microsoft.OData.Client
         internal const string ALinq_ContainsNotValidOnEmptyCollection = "ALinq_ContainsNotValidOnEmptyCollection";
         internal const string ALinq_AggregationMethodNotSupported = "ALinq_AggregationMethodNotSupported";
         internal const string ALinq_InvalidAggregateExpression = "ALinq_InvalidAggregateExpression";
+        internal const string ALinq_InvalidGroupingExpression = "ALinq_InvalidGroupingExpression";
+        internal const string ALinq_InvalidGroupByKeySelector = "ALinq_InvalidGroupByKeySelector";
         internal const string DSKAttribute_MustSpecifyAtleastOnePropertyName = "DSKAttribute_MustSpecifyAtleastOnePropertyName";
         internal const string DataServiceCollection_LoadRequiresTargetCollectionObserved = "DataServiceCollection_LoadRequiresTargetCollectionObserved";
         internal const string DataServiceCollection_CannotStopTrackingChildCollection = "DataServiceCollection_CannotStopTrackingChildCollection";

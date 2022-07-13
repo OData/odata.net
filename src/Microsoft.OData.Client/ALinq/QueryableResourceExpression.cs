@@ -13,6 +13,7 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
+    using Microsoft.OData.UriParser.Aggregation;
 
     /// <summary>Queryable Resource Expression, the base class for ResourceSetExpression and SingletonExpression</summary>
     [DebuggerDisplay("QueryableResourceExpression {Source}.{MemberExpression}")]
@@ -371,8 +372,24 @@ namespace Microsoft.OData.Client
             this.keyPredicateConjuncts.Clear();
         }
 
-        internal void AddApply(Expression aggregateExpr, OData.UriParser.Aggregation.AggregationMethod aggregationMethod)
+        /// <summary>
+        /// Adds an aggregation expression to the $apply expression of this resource expression.
+        /// If the resource expression already contains a $filter expression, 
+        /// the predicate conjuncts of the $filter expression are moved
+        /// to the predicate conjuncts of the $apply expression and 
+        /// the $filter expression removed.
+        /// The predicate conjuncts in the $apply expression are used to generate 
+        /// a filter transformation used to restrict the set of data to be aggregated.
+        /// </summary>
+        /// <param name="aggregationExpr">The aggregation expression.</param>
+        /// <param name="aggregationMethod">The aggregation method.</param>
+        /// <param name="aggregationAlias">The aggregation alias.</param>
+        internal void AddAggregation(Expression aggregationExpr, AggregationMethod aggregationMethod, string aggregationAlias = "")
         {
+            // Aggregation expression should not be null if the aggregation method is anything other than VirtualPropertyCount ($count)
+            Debug.Assert(aggregationExpr != null || aggregationMethod == AggregationMethod.VirtualPropertyCount,
+                "aggregationExpr != null || aggregationMethod == AggregationMethod.VirtualPropertyCount");
+
             if (this.OrderBy != null)
             {
                 throw new NotSupportedException(Strings.ALinq_QueryOptionOutOfOrder("apply", "orderby"));
@@ -400,12 +417,12 @@ namespace Microsoft.OData.Client
                 // The $apply query option is evaluated first, then other query options ($filter, $orderby, $select) are evaluated, 
                 // if applicable, on the result of $apply in their normal order.
                 // http://docs.oasis-open.org/odata/odata-data-aggregation-ext/v4.0/cs02/odata-data-aggregation-ext-v4.0-cs02.html#_Toc435016590
-                
+
                 // If a Where appears before an aggregation method (e.g. Average, Sum, etc) or GroupBy, 
                 // the conjuncts of the filter expression will be used to restrict the set of data to be aggregated. 
                 // They will not appear on the $filter query option. Instead, we use them to construct a filter transformation.
                 // E.g. /Sales?$apply=filter(Amount gt 1)/aggregate(Amount with average as AverageAmount)
-                
+
                 // If a Where appears after an aggregation method or GroupBy, the conjuncts should appear
                 // on a $filter query option after the $apply.
                 // E.g. /Sales?$apply=groupby((Product/Color),aggregate(Amount with average as AverageAmount))&$filter=Product/Color eq 'Brown'
@@ -418,7 +435,7 @@ namespace Microsoft.OData.Client
                 this.RemoveFilterExpression();
             }
 
-            this.Apply.Aggregations.Add(new ApplyQueryOptionExpression.Aggregation(aggregateExpr, aggregationMethod));
+            this.Apply.Aggregations.Add(new ApplyQueryOptionExpression.Aggregation(aggregationExpr, aggregationMethod, aggregationAlias));
         }
 
         /// <summary>
