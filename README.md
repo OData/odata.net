@@ -243,6 +243,17 @@ This scenario allows you to choose which writer implementation is used to proces
 
 For more information about these tests, [read this doc](test/PerformanceTests/SerializationComparisonsTests/README.md).
 
+#### Collecting traces
+
+Crank can collect and download native trace files from the benchmarked application that you can analyze in specialized tools using the `--[job].collect true` option, where `[job]` is the name of a job defined in the `.yml` config file.
+
+On Windows, `--[job].collect true` option will collect traces using [PerfView](https://github.com/Microsoft/perfview) download an `.etl` trace file that you can you can also analyze using PerfView.
+
+For example, the `loadtest.yml` config defines an `application` job which refers to the server handling the requests. We can collect traces from the server as follows:
+
+```
+crank --config loadtests.yml --config lab-windows --scenario SerializationComparisons --variable writer=ODataMessageWriter --application.collect true
+```
 
 #### Comparing benchmarks
 
