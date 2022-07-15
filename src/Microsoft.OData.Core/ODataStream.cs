@@ -37,6 +37,7 @@ namespace Microsoft.OData
         /// Constructor.
         /// </summary>
         /// <param name="listener">Listener interface to be notified of operation changes.</param>
+        /// <param name="synchronous">true if the stream is created for synchronous operation; false for asynchronous.</param>
         internal ODataStream(IODataStreamListener listener, bool synchronous = true)
         {
             Debug.Assert(listener != null, "listener != null");

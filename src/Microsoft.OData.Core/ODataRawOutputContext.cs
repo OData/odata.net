@@ -318,6 +318,20 @@ namespace Microsoft.OData
             }
         }
 
+#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
+        /// <summary>
+        /// Closes the text writer asynchronously.
+        /// </summary>
+        /// <returns><returns>A task that represents the asynchronous operation.</returns></returns>
+        internal async Task CloseWriterAsync()
+        {
+            Debug.Assert(this.rawValueWriter != null, "The text writer has not been initialized yet.");
+
+            await this.rawValueWriter.DisposeAsync().ConfigureAwait(false);
+            this.rawValueWriter = null;
+        }
+#endif
+
         /// <summary>
         /// Perform the actual cleanup work.
         /// </summary>
