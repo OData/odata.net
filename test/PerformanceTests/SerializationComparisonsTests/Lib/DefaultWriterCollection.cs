@@ -36,6 +36,8 @@ namespace ExperimentsLib
 
                 ("ODataUtf8JsonWriter-Direct", new ODataJsonWriterDirectPayloadWriter(
                     stream => stream.CreateODataUtf8JsonWriter())),
+                ("ODataUtf8JsonWriter-Direct-Async", new ODataJsonWriterAsyncDirectPayloadWriter(
+                    stream => stream.CreateODataUtf8JsonWriterAsync())),
 
                 ("ODataJsonWriter-Direct", new ODataJsonWriterDirectPayloadWriter(
                     stream => stream.CreateODataJsonWriter())),
@@ -47,14 +49,24 @@ namespace ExperimentsLib
                 ("ODataMessageWriter-NoValidation", new ODataMessageWriterPayloadWriter(model, stream => stream.CreateJsonWriterMessage(), enableValidation: false)),
                 ("ODataMessageWriter-NoOp", new ODataMessageWriterPayloadWriter(model, stream => stream.CreateNoopMessage())),
 
-                ("ODataMessageWriter-Utf8JsonWriter", new ODataMessageWriterPayloadWriter(model, stream => stream.CreateUtf8JsonWriterMessage())),
-                ("ODataMessageWriter-Utf8JsonWriter-Utf16", new ODataMessageWriterPayloadWriter(model, stream => stream.CreateUtf8JsonWriterMessage("UTF-16"))),
-                ("ODataMessageWriter-Utf8JsonWriter-NoValidation", new ODataMessageWriterPayloadWriter(model, stream => stream.CreateUtf8JsonWriterMessage(), enableValidation: false)),
+                ("ODataMessageWriter-Utf8JsonWriter", new ODataMessageWriterPayloadWriter(model,
+                    stream => stream.CreateUtf8JsonWriterMessage())),
+                ("ODataMessageWriter-Utf8JsonWriter-Utf16", new ODataMessageWriterPayloadWriter(model,
+                    stream => stream.CreateUtf8JsonWriterMessage("UTF-16"))),
+                ("ODataMessageWriter-Utf8JsonWriter-NoValidation", new ODataMessageWriterPayloadWriter(model,
+                    stream => stream.CreateUtf8JsonWriterMessage(), enableValidation: false)),
 
-                ("ODataMessageWriter-Async", new ODataMessageWriterAsyncPayloadWriter(model, stream => stream.CreateJsonWriterMessage())),
-                ("ODataMessageWriter-NoValidation-Async", new ODataMessageWriterAsyncPayloadWriter(model, stream => stream.CreateJsonWriterMessage(), enableValidation: false)),
-                ("ODataMessageWriter-NoOp-Async", new ODataMessageWriterAsyncPayloadWriter(model, stream => stream.CreateNoopMessage()))
-                );
+                ("ODataMessageWriter-Async", new ODataMessageWriterAsyncPayloadWriter(model,
+                    stream => stream.CreateJsonWriterMessage())),
+                ("ODataMessageWriter-NoValidation-Async", new ODataMessageWriterAsyncPayloadWriter(model,
+                    stream => stream.CreateJsonWriterMessage(), enableValidation: false)),
+                ("ODataMessageWriter-NoOp-Async", new ODataMessageWriterAsyncPayloadWriter(model,
+                    stream => stream.CreateNoopMessage())),
+
+                ("ODataMessageWriter-Utf8JsonWriter-Async", new ODataMessageWriterAsyncPayloadWriter(model,
+                    stream => stream.CreateUtf8JsonWriterMessage())),
+                ("ODataMessageWriter-Utf8JsonWriter-NoValidation-Async", new ODataMessageWriterAsyncPayloadWriter(model,
+                    stream => stream.CreateUtf8JsonWriterMessage(), enableValidation: false)));
 
             return writers;
         }

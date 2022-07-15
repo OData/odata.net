@@ -127,11 +127,24 @@ namespace Microsoft.OData.JsonLight
                     this.jsonWriter = CreateJsonWriter(this.Container, this.textWriter, isIeee754Compatible, messageWriterSettings);
                 }
 
-                this.asynchronousJsonWriter = CreateAsynchronousJsonWriter(
-                    this.Container,
-                    this.textWriter,
-                    isIeee754Compatible,
-                    messageWriterSettings);
+                IStreamBasedJsonWriterFactoryAsync streamBasedJsonWriterFactoryAsync = this.Container?.GetService<IStreamBasedJsonWriterFactoryAsync>();
+
+                if (streamBasedJsonWriterFactoryAsync != null)
+                {
+                    this.asynchronousJsonWriter = CreateAsynchronousJsonWriter(
+                        streamBasedJsonWriterFactoryAsync,
+                        this.messageOutputStream,
+                        isIeee754Compatible,
+                        messageInfo.Encoding);
+                }
+                else
+                {
+                    this.asynchronousJsonWriter = CreateAsynchronousJsonWriter(
+                        this.Container,
+                        this.textWriter,
+                        isIeee754Compatible,
+                        messageWriterSettings);
+                }
             }
             catch (Exception e)
             {
@@ -979,6 +992,27 @@ namespace Microsoft.OData.JsonLight
             }
 
             return asynchronousJsonWriter;
+        }
+
+        private IJsonWriterAsync CreateAsynchronousJsonWriter(
+            IStreamBasedJsonWriterFactoryAsync factory,
+            Stream outputStream,
+            bool isIeee754Compatible,
+            Encoding encoding)
+        {
+            if (this.concreteJsonWriter != null)
+            {
+                return this.concreteJsonWriter;
+            }
+
+            IJsonWriterAsync jsonWriter = factory.CreateAsynchronousJsonWriter(outputStream, isIeee754Compatible, encoding);
+
+            if (jsonWriter == null)
+            {
+                throw new ODataException(Strings.ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull(encoding.WebName, isIeee754Compatible));
+            }
+
+            return jsonWriter;
         }
 
         /// <summary>

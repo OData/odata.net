@@ -18,7 +18,7 @@ namespace Microsoft.OData.Json
     /// rather than a TextWriter.
     /// </summary>
     [CLSCompliant(false)]
-    public sealed class DefaultStreamBasedJsonWriterFactory : IStreamBasedJsonWriterFactory
+    public sealed class DefaultStreamBasedJsonWriterFactory : IStreamBasedJsonWriterFactory, IStreamBasedJsonWriterFactoryAsync
     {
         private readonly JavaScriptEncoder encoder = null;
 
@@ -43,6 +43,21 @@ namespace Microsoft.OData.Json
                 throw new ArgumentNullException(nameof(stream));
             }
         
+            if (encoding == null)
+            {
+                throw new ArgumentNullException(nameof(encoding));
+            }
+
+            return new ODataUtf8JsonWriter(stream, isIeee754Compatible, encoding, encoder: this.encoder);
+        }
+
+        public IJsonWriterAsync CreateAsynchronousJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding)
+        {
+            if (stream == null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
             if (encoding == null)
             {
                 throw new ArgumentNullException(nameof(encoding));

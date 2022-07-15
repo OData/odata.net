@@ -34,6 +34,12 @@ namespace ExperimentsLib
             return factory.CreateJsonWriter(stream, false, encoding ?? Encoding.UTF8);
         }
 
+        public static IJsonWriterAsync CreateODataUtf8JsonWriterAsync(this Stream stream, Encoding encoding = null)
+        {
+            DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Default;
+            return factory.CreateAsynchronousJsonWriter(stream, false, encoding ?? Encoding.UTF8);
+        }
+
         public static IODataResponseMessage CreateJsonWriterMessage(this Stream stream, string charset = "UTF-8")
         {
             return stream.CreateODataMessage(null, charset);
@@ -54,11 +60,10 @@ namespace ExperimentsLib
         {
             DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Default;
 
-            IContainerBuilder services = new ContainerBuilder();
-            services.AddDefaultODataServices();
             return stream.CreateODataMessage(services =>
             {
                 services.AddService<IStreamBasedJsonWriterFactory>(ServiceLifetime.Singleton, _ => factory);
+                services.AddService<IStreamBasedJsonWriterFactoryAsync>(ServiceLifetime.Singleton, _ => factory);
             }, charset);
         }
 

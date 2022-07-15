@@ -88,7 +88,7 @@ scenarios:
     application:
       job: serializationComparisons
       variables:
-        filterArg: "*File*"
+        filter: "*File*"
 
 profiles:
   local:
