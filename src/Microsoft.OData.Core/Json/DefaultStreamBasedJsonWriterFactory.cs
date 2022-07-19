@@ -50,6 +50,11 @@ namespace Microsoft.OData.Json
 
             return new ODataUtf8JsonWriter(stream, isIeee754Compatible, encoding, encoder: this.encoder);
         }
+
+        public IJsonWriterAsync CreateAsynchronousJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 #endif

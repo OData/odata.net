@@ -25,5 +25,16 @@ namespace Microsoft.OData.Json
         /// <param name="encoding">The text encoding of the output data.</param>
         /// <returns>The JSON writer created.</returns>
         IJsonWriter CreateJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding);
+
+        /// <summary>
+        /// Creates an asynchronous JSON writer of <see cref="IJsonWriterAsync"/>.
+        /// The returned instance should also implement the synchronous <see cref="IJsonWriter"/>
+        /// interface.
+        /// </summary>
+        /// <param name="stream">Output stream to which the resulting <see cref="IJsonWriterAsync"/> should write data.</param>
+        /// <param name="isIeee754Compatible">True if it is IEEE754Compatible.</param>
+        /// <param name="encoding">The text encoding of the output data.</param>
+        /// <returns>The JSON writer created.</returns>
+        IJsonWriterAsync CreateAsynchronousJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding);
     }
 }

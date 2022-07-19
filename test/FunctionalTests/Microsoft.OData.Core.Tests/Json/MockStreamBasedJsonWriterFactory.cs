@@ -24,6 +24,11 @@ namespace Microsoft.OData.Tests.Json
         {
             return this.jsonWriter;
         }
+
+        public IJsonWriterAsync CreateAsynchronousJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
 #endif
