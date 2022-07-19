@@ -18,7 +18,7 @@ namespace Microsoft.OData.Json
     /// rather than a TextWriter.
     /// </summary>
     [CLSCompliant(false)]
-    public sealed class DefaultStreamBasedJsonWriterFactory : IStreamBasedJsonWriterFactory, IStreamBasedJsonWriterFactoryAsync
+    public sealed class DefaultStreamBasedJsonWriterFactory : IStreamBasedJsonWriterFactory
     {
         private readonly JavaScriptEncoder encoder = null;
 

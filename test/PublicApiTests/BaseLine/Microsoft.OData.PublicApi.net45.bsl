@@ -5975,6 +5975,7 @@ public interface Microsoft.OData.Json.IJsonWriterFactoryAsync {
 CLSCompliantAttribute(),
 ]
 public interface Microsoft.OData.Json.IStreamBasedJsonWriterFactory {
+    Microsoft.OData.Json.IJsonWriterAsync CreateAsynchronousJsonWriter (System.IO.Stream stream, bool isIeee754Compatible, System.Text.Encoding encoding)
     Microsoft.OData.Json.IJsonWriter CreateJsonWriter (System.IO.Stream stream, bool isIeee754Compatible, System.Text.Encoding encoding)
 }
 

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Microsoft.Test.OData.DependencyInjection;
@@ -371,7 +372,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             }
         }
 
-        private class TestJsonWriter : IJsonWriter
+        private class TestJsonWriter : IJsonWriter, IJsonWriterAsync
         {
             private readonly TextWriter textWriter;
 
@@ -513,6 +514,141 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             public void Flush()
             {
                 this.textWriter.Flush();
+            }
+
+            public Task StartPaddingFunctionScopeAsync()
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task EndPaddingFunctionScopeAsync()
+            {
+                throw new NotImplementedException();
+            }
+
+            public async Task StartObjectScopeAsync()
+            {
+                await this.textWriter.WriteAsync('<');
+            }
+
+            public async Task EndObjectScopeAsync()
+            {
+                await this.textWriter.WriteAsync('>');
+            }
+
+            public Task StartArrayScopeAsync()
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task EndArrayScopeAsync()
+            {
+                throw new NotImplementedException();
+            }
+
+            public async Task WriteNameAsync(string name)
+            {
+                if (name.StartsWith("@odata."))
+                {
+                    name = '@' + name.Substring(7);
+                }
+
+                await this.textWriter.WriteAsync(string.Format("\"{0}\":", name));
+            }
+
+            public Task WritePaddingFunctionNameAsync(string functionName)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task WriteValueAsync(bool value)
+            {
+                throw new NotImplementedException();
+            }
+
+            public async Task WriteValueAsync(int value)
+            {
+                await this.textWriter.WriteAsync(string.Format("{0},", value));
+            }
+
+            public Task WriteValueAsync(float value)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task WriteValueAsync(short value)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task WriteValueAsync(long value)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task WriteValueAsync(double value)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task WriteValueAsync(Guid value)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task WriteValueAsync(decimal value)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task WriteValueAsync(DateTimeOffset value)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task WriteValueAsync(TimeSpan value)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task WriteValueAsync(byte value)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task WriteValueAsync(sbyte value)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task WriteValueAsync(string value)
+            {
+                return this.textWriter.WriteAsync(string.Format("\"{0}\",", value));
+            }
+
+            public Task WriteValueAsync(byte[] value)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task WriteValueAsync(Date value)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task WriteValueAsync(TimeOfDay value)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task WriteRawValueAsync(string rawValue)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task FlushAsync()
+            {
+                return this.textWriter.FlushAsync();
             }
         }
 

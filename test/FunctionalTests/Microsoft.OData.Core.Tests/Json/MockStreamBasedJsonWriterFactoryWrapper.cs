@@ -41,19 +41,35 @@ namespace Microsoft.OData.Tests.Json
             return writer;
         }
 
+        public IJsonWriterAsync CreateAsynchronousJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding)
+        {
+            this.NumCalls++;
+            this.Encoding = encoding;
+            IJsonWriterAsync writer = innerFactory.CreateAsynchronousJsonWriter(stream, isIeee754Compatible, encoding);
+            this.CreatedAsyncWriter = writer;
+
+            return writer;
+        }
+
         /// <summary>
         /// The <see cref="IJsonWriter"/> that was last created by the wrapped <see cref="IStreamBasedJsonWriterFactory"/>.
         /// </summary>
         public IJsonWriter CreatedWriter { get; private set; }
+
+        /// <summary>
+        /// The <see cref="IJsonWriterAsync" that was last created by the wrapped <see cref="IStreamBasedJsonWriterFactory"/>.
+        /// </summary>
+        public IJsonWriterAsync CreatedAsyncWriter { get; private set; }
+
         /// <summary>
         /// The encoding used when creating the <see cref="IJsonWriter"/>.
         /// </summary>
         public Encoding Encoding { get; private set; }
+
         /// <summary>
         /// Number of times the <see cref="CreateJsonWriter(Stream, bool, Encoding)"/> method was called.
         /// </summary>
         public int NumCalls { get; private set; }
     }
 }
-
 #endif
