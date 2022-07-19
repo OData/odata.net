@@ -41,6 +41,11 @@ namespace Microsoft.OData.Tests.Json
             return writer;
         }
 
+        public IJsonWriterAsync CreateAsynchronousJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// The <see cref="IJsonWriter"/> that was last created by the wrapped <see cref="IStreamBasedJsonWriterFactory"/>.
         /// </summary>
