@@ -232,7 +232,7 @@ crank --config benchmarks.yml --scenario ODataWriter --profile local --variable 
 Besides benchmarks, we also have some load tests which measure request round-trips from a client to a server.
 These can be used to evaluate how OData libraries behave when handling multiple concurrent requests on the same server.
 
-We have tests that evaluate different writer implementations, serializing a simple a static collection response
+We have tests that evaluate different writer implementations, serializing a simple static collection response
 on each request:
 
 ```text
