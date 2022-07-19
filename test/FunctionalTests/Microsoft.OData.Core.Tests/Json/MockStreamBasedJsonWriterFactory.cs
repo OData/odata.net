@@ -16,7 +16,7 @@ namespace Microsoft.OData.Tests.Json
         private readonly IJsonWriter jsonWriter;
         private readonly IJsonWriterAsync asyncJsonWriter;
 
-        public MockStreamBasedJsonWriterFactory(IJsonWriter jsonWriter, IJsonStreamWriterAsync asyncJsonWriter)
+        public MockStreamBasedJsonWriterFactory(IJsonWriter jsonWriter, IJsonWriterAsync asyncJsonWriter)
         {
             this.jsonWriter = jsonWriter;
             this.asyncJsonWriter = asyncJsonWriter;

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 
-namespace Microsoft.OData.Core.Tests.Json
+namespace Microsoft.OData.Tests.Json
 {
     /// <summary>
     /// A mock implementation of <see cref="IJsonWriterAsync"/> that
