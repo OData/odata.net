@@ -91,6 +91,11 @@ namespace Microsoft.OData
         }
 
 #if NETCOREAPP3_1_OR_GREATER
+        /// <summary>
+        /// Asynchronously disposes the <see cref="RawValueWriter"/>.
+        /// It flushes itself and then disposes its inner <see cref="System.IO.TextWriter"/>.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous dispose operation.</returns>
         public ValueTask DisposeAsync()
         {
             return DisposeInnerAsync();

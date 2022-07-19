@@ -760,10 +760,10 @@ namespace Microsoft.OData.MultipartMixed
 
 #if NETCOREAPP3_1_OR_GREATER
         /// <summary>
-        /// Disposes the batch writer and set the 'OperationStreamRequested' batch writer state;
+        /// Asynchronously disposes the batch writer and set the 'OperationStreamRequested' batch writer state;
         /// called after the flush operation(s) have completed.
         /// </summary>
-        /// <returns>A task that represents the asynchronous write operation.</returns>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         private async Task DisposeBatchWriterAndSetContentStreamRequestedStateAsync()
         {
             await this.RawOutputContext.CloseWriterAsync().ConfigureAwait(false);

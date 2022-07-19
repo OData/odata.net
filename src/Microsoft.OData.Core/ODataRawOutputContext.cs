@@ -322,7 +322,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Closes the text writer asynchronously.
         /// </summary>
-        /// <returns><returns>A task that represents the asynchronous operation.</returns></returns>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         internal async Task CloseWriterAsync()
         {
             Debug.Assert(this.rawValueWriter != null, "The text writer has not been initialized yet.");
