@@ -318,7 +318,7 @@ namespace Microsoft.OData
             }
         }
 
-#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP3_1_OR_GREATER
         /// <summary>
         /// Closes the text writer asynchronously.
         /// </summary>

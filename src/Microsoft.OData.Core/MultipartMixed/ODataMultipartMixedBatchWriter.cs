@@ -125,7 +125,7 @@ namespace Microsoft.OData.MultipartMixed
             // then dispose the batch writer (since we are now writing the operation content) and set the corresponding state.
             await this.RawOutputContext.FlushBuffersAsync()
                 .ConfigureAwait(false);
-#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP3_1_OR_GREATER
             await this.DisposeBatchWriterAndSetContentStreamRequestedStateAsync()
                 .ConfigureAwait(false);
 #else
@@ -758,7 +758,7 @@ namespace Microsoft.OData.MultipartMixed
             }
         }
 
-#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP3_1_OR_GREATER
         /// <summary>
         /// Disposes the batch writer and set the 'OperationStreamRequested' batch writer state;
         /// called after the flush operation(s) have completed.

@@ -17,7 +17,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Class that handles writing top level raw values to a stream.
     /// </summary>
-#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP3_1_OR_GREATER
     internal sealed class RawValueWriter : IDisposable, IAsyncDisposable
 #else
     internal sealed class RawValueWriter : IDisposable
@@ -90,18 +90,22 @@ namespace Microsoft.OData
             this.textWriter = null;
         }
 
-#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP3_1_OR_GREATER
         public ValueTask DisposeAsync()
         {
-            return DisposeAsyncCore();
-        }
+            return DisposeInnerAsync();
 
-        private async ValueTask DisposeAsyncCore()
-        {
-            Debug.Assert(this.textWriter != null, "The text writer has not been initialized yet.");
+            async ValueTask DisposeInnerAsync()
+            {
+                Debug.Assert(this.textWriter != null, "The text writer has not been initialized yet.");
 
-            await this.textWriter.FlushAsync().ConfigureAwait(false);
-            this.textWriter = null;
+                if (this.textWriter != null)
+                {
+                    await this.textWriter.DisposeAsync().ConfigureAwait(false);
+                }
+
+                this.textWriter = null;
+            }
         }
 #endif
 
