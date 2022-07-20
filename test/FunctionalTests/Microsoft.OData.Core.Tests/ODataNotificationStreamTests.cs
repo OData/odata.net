@@ -31,7 +31,7 @@ namespace Microsoft.OData.Tests
         {
             // We care about the notification stream being disposed
             // We don't care about the stream passed to the notification stream
-            using (var notificationStream = new ODataNotificationStream(
+            using (Stream notificationStream = new ODataNotificationStream(
                 this.stream,
                 this.streamListener,
                 synchronous))
@@ -48,7 +48,7 @@ namespace Microsoft.OData.Tests
         [InlineData(false, "StreamDisposedAsync")]
         public void NotificationStreamDisposeShouldBeIdempotent(bool synchronous, string expected)
         {
-            var notificationStream = new ODataNotificationStream(
+            Stream notificationStream = new ODataNotificationStream(
                 this.stream,
                 this.streamListener,
                 synchronous);
@@ -64,11 +64,11 @@ namespace Microsoft.OData.Tests
             Assert.Equal(expected, result);
         }
 
-#if NETCOREAPP3_1
+#if NETCOREAPP3_1_OR_GREATER
         [Fact]
-        public async Task NotificationStreamDisposeShouldInvokeStreamDisposedAsync()
+        public async Task NotificationStreamDisposeAsyncShouldInvokeStreamDisposedAsync()
         {
-            await using (var notificationStream = new ODataNotificationStream(
+            await using (Stream notificationStream = new ODataNotificationStream(
                 this.stream,
                 this.streamListener)) // `synchronous` argument becomes irrelevant
             {
@@ -80,9 +80,9 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public async Task NotificationStreamDisposeAsyncShouldBeIdempotent()
+        public async Task NotificationStreamDisposeAsyncShouldBeIdempotentAsync()
         {
-            var notificationStream = new ODataNotificationStream(
+            Stream notificationStream = new ODataNotificationStream(
                 this.stream,
                 this.streamListener);
 
@@ -99,9 +99,9 @@ namespace Microsoft.OData.Tests
 
 #else
         [Fact]
-        public async Task NotificationStreamDisposeShouldInvokeStreamDisposedAsync()
+        public async Task NotificationStreamDisposeAsyncShouldInvokeStreamDisposedAsync()
         {
-            using (var notificationStream = new ODataNotificationStream(
+            using (Stream notificationStream = new ODataNotificationStream(
                 this.stream,
                 this.streamListener,
                 /*synchronous*/ false))
