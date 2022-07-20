@@ -183,6 +183,10 @@ Accept-Charset: UTF-8
                     }
                 },
                 batchRequestBoundary);
+
+            Assert.Empty(verifyUrlStack);
+            Assert.Empty(verifyDependsOnIdsStack);
+            Assert.Empty(verifyResourceStack);
         }
 
         [Fact]
@@ -324,6 +328,10 @@ Accept-Charset: UTF-8
                     }
                 },
                 batchRequestBoundary);
+
+            Assert.Empty(verifyUrlStack);
+            Assert.Empty(verifyDependsOnIdsStack);
+            Assert.Empty(verifyResourceStack);
         }
 
         [Fact]
@@ -340,6 +348,7 @@ OData-Version: 4.0
 {""@odata.context"":""http://tempuri.org/$metadata#Customers/$entity"",""Id"":1,""Name"":""Sue""}
 --batchresponse_aed653ab--
 ";
+            bool resourceRead = false;
 
             SetupMultipartMixedBatchReaderAndRunTest(
                 payload,
@@ -362,6 +371,7 @@ OData-Version: 4.0
                                         {
                                             case ODataReaderState.ResourceEnd:
                                                 var resource = jsonLightResourceReader.Item as ODataResource;
+                                                resourceRead = true;
                                                 Assert.NotNull(resource);
                                                 Assert.Equal("NS.Customer", resource.TypeName);
                                                 var properties = resource.Properties.ToArray();
@@ -381,6 +391,8 @@ OData-Version: 4.0
                 },
                 batchResponseBoundary,
                 isRequest: false);
+
+            Assert.True(resourceRead);
         }
 
         [Fact]
@@ -397,6 +409,7 @@ OData-Version: 4.0
 {""@odata.context"":""http://tempuri.org/$metadata#Customers/$entity"",""Id"":1,""Name"":""Sue""}
 --batchresponse_aed653ab--
 ";
+            bool resourceRead = false;
 
             await SetupMultipartMixedBatchReaderAndRunTestAsync(
                 payload,
@@ -419,6 +432,7 @@ OData-Version: 4.0
                                         {
                                             case ODataReaderState.ResourceEnd:
                                                 var resource = jsonLightResourceReader.Item as ODataResource;
+                                                resourceRead = true;
                                                 Assert.NotNull(resource);
                                                 Assert.Equal("NS.Customer", resource.TypeName);
                                                 var properties = resource.Properties.ToArray();
@@ -438,6 +452,8 @@ OData-Version: 4.0
                 },
                 batchResponseBoundary,
                 isRequest: false);
+
+            Assert.True(resourceRead);
         }
 
         #region BatchOperationReadStream
