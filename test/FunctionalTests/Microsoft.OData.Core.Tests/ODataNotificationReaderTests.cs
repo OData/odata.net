@@ -67,9 +67,9 @@ namespace Microsoft.OData.Tests
             Assert.Equal(expected, result);
         }
 
-#if NETCOREAPP3_1
+#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
         [Fact]
-        public async Task NotificationReaderDisposeShouldInvokeStreamDisposedAsync()
+        public async Task NotificationReaderDisposeAsyncShouldInvokeStreamDisposedAsync()
         {
             await using (var notificationReader = new ODataNotificationReader(
                 this.reader,
@@ -83,7 +83,7 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public async Task NotificationReaderDisposeAsyncShouldBeIdempotent()
+        public async Task NotificationReaderDisposeAsyncShouldBeIdempotentAsync()
         {
             var notificationReader = new ODataNotificationReader(
                 this.reader,
@@ -102,7 +102,7 @@ namespace Microsoft.OData.Tests
 
 #else
         [Fact]
-        public async Task NotificationReaderDisposeShouldInvokeStreamDisposedAsync()
+        public async Task NotificationReaderDisposeAsyncShouldInvokeStreamDisposedAsync()
         {
             using (var notificationReader = new ODataNotificationReader(
                 this.reader,
