@@ -23,31 +23,9 @@ namespace Microsoft.OData.Tests
         private readonly ODataMessageReaderSettings messageReaderSettings;
         private readonly ODataBatchOperationHeaders batchOperationHeaders;
 
-        private EdmModel model;
+        #region Batch Paylods
 
-        public ODataMultipartMixedBatchReaderTests()
-        {
-            this.InitializeEdmModel();
-            this.messageReaderSettings = new ODataMessageReaderSettings();
-            this.mediaType = new ODataMediaType(
-                "Multipart",
-                "Mixed",
-                new KeyValuePair<string, string>[] { new KeyValuePair<string, string>("boundary", batchRequestBoundary) });
-
-            this.batchOperationHeaders = new ODataBatchOperationHeaders
-            {
-                { "OData-Version", "4.0" },
-                { "OData-MaxVersion", "4.0" },
-                { "Content-Type", "application/json;odata.metadata=minimal" },
-                { "Accept", "application/json;odata.metadata=minimal" },
-                { "Accept-Charset", "UTF-8" }
-            };
-        }
-
-        [Fact]
-        public void ReadMultipartMixedBatchRequest()
-        {
-            var payload = @"--batch_aed653ab
+        private const string batchRequestPayload = @"--batch_aed653ab
 Content-Type: multipart/mixed; boundary=changeset_5e368128
 
 --changeset_5e368128
@@ -93,6 +71,44 @@ Accept-Charset: UTF-8
 --batch_aed653ab--
 ";
 
+        private const string batchResponsePayload = @"--batchresponse_aed653ab
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+HTTP/1.1 200 OK
+Content-Type: application/json;odata.metadata=minimal;odata.streaming=true
+OData-Version: 4.0
+
+{""@odata.context"":""http://tempuri.org/$metadata#Customers/$entity"",""Id"":1,""Name"":""Sue""}
+--batchresponse_aed653ab--
+";
+
+        #endregion Batch Payloads
+
+        private EdmModel model;
+
+        public ODataMultipartMixedBatchReaderTests()
+        {
+            this.InitializeEdmModel();
+            this.messageReaderSettings = new ODataMessageReaderSettings();
+            this.mediaType = new ODataMediaType(
+                "Multipart",
+                "Mixed",
+                new KeyValuePair<string, string>[] { new KeyValuePair<string, string>("boundary", batchRequestBoundary) });
+
+            this.batchOperationHeaders = new ODataBatchOperationHeaders
+            {
+                { "OData-Version", "4.0" },
+                { "OData-MaxVersion", "4.0" },
+                { "Content-Type", "application/json;odata.metadata=minimal" },
+                { "Accept", "application/json;odata.metadata=minimal" },
+                { "Accept-Charset", "UTF-8" }
+            };
+        }
+
+        [Fact]
+        public void ReadMultipartMixedBatchRequest()
+        {
             var verifyUrlStack = new Stack<string>(new[] { "$1/Orders/$ref", "http://tempuri.org/Orders", "http://tempuri.org/Customers" });
 
             var verifyDependsOnIdsStack = new Stack<Action<IEnumerable<string>>>();
@@ -130,7 +146,7 @@ Accept-Charset: UTF-8
             });
 
             SetupMultipartMixedBatchReaderAndRunTest(
-                payload,
+                batchRequestPayload,
                 (multipartMixedBatchReader) =>
                 {
                     var operationCount = 0;
@@ -192,52 +208,6 @@ Accept-Charset: UTF-8
         [Fact]
         public async Task ReadMultipartMixedBatchRequestAsync()
         {
-            var payload = @"--batch_aed653ab
-Content-Type: multipart/mixed; boundary=changeset_5e368128
-
---changeset_5e368128
-Content-Type: application/http
-Content-Transfer-Encoding: binary
-Content-ID: 1
-
-POST http://tempuri.org/Customers HTTP/1.1
-OData-Version: 4.0
-OData-MaxVersion: 4.0
-Content-Type: application/json;odata.metadata=minimal
-Accept: application/json;odata.metadata=minimal
-Accept-Charset: UTF-8
-
-{""@odata.type"":""NS.Customer"",""Id"":1,""Name"":""Sue""}
---changeset_5e368128
-Content-Type: application/http
-Content-Transfer-Encoding: binary
-Content-ID: 2
-
-POST http://tempuri.org/Orders HTTP/1.1
-OData-Version: 4.0
-OData-MaxVersion: 4.0
-Content-Type: application/json;odata.metadata=minimal
-Accept: application/json;odata.metadata=minimal
-Accept-Charset: UTF-8
-
-{""@odata.type"":""NS.Order"",""Id"":1,""Amount"":13}
---changeset_5e368128
-Content-Type: application/http
-Content-Transfer-Encoding: binary
-Content-ID: 3
-
-POST $1/Orders/$ref HTTP/1.1
-OData-Version: 4.0
-OData-MaxVersion: 4.0
-Content-Type: application/json;odata.metadata=minimal
-Accept: application/json;odata.metadata=minimal
-Accept-Charset: UTF-8
-
-{""@odata.id"":""$2""}
---changeset_5e368128--
---batch_aed653ab--
-";
-
             var verifyUrlStack = new Stack<string>(new[] { "$1/Orders/$ref", "http://tempuri.org/Orders", "http://tempuri.org/Customers" });
 
             var verifyDependsOnIdsStack = new Stack<Action<IEnumerable<string>>>();
@@ -275,7 +245,7 @@ Accept-Charset: UTF-8
             });
 
             await SetupMultipartMixedBatchReaderAndRunTestAsync(
-                payload,
+                batchRequestPayload,
                 async (multipartMixedBatchReader) =>
                 {
                     var operationCount = 0;
@@ -337,21 +307,10 @@ Accept-Charset: UTF-8
         [Fact]
         public void ReadMultipartMixedBatchResponse()
         {
-            var payload = @"--batchresponse_aed653ab
-Content-Type: application/http
-Content-Transfer-Encoding: binary
-
-HTTP/1.1 200 OK
-Content-Type: application/json;odata.metadata=minimal;odata.streaming=true
-OData-Version: 4.0
-
-{""@odata.context"":""http://tempuri.org/$metadata#Customers/$entity"",""Id"":1,""Name"":""Sue""}
---batchresponse_aed653ab--
-";
             bool resourceRead = false;
 
             SetupMultipartMixedBatchReaderAndRunTest(
-                payload,
+                batchResponsePayload,
                 (multipartMixedBatchReader) =>
                 {
                     while (multipartMixedBatchReader.Read())
@@ -398,21 +357,10 @@ OData-Version: 4.0
         [Fact]
         public async Task ReadMultipartMixedBatchResponseAsync()
         {
-            var payload = @"--batchresponse_aed653ab
-Content-Type: application/http
-Content-Transfer-Encoding: binary
-
-HTTP/1.1 200 OK
-Content-Type: application/json;odata.metadata=minimal;odata.streaming=true
-OData-Version: 4.0
-
-{""@odata.context"":""http://tempuri.org/$metadata#Customers/$entity"",""Id"":1,""Name"":""Sue""}
---batchresponse_aed653ab--
-";
             bool resourceRead = false;
 
             await SetupMultipartMixedBatchReaderAndRunTestAsync(
-                payload,
+                batchResponsePayload,
                 async (multipartMixedBatchReader) =>
                 {
                     while (await multipartMixedBatchReader.ReadAsync())
@@ -469,7 +417,7 @@ OData-Version: 4.0
 --batch_aed653ab--
 ";
             var stream = new MemoryStream();
-            using (var batchReaderStream = ODataBatchUtils.CreateBatchOperationReadStream(
+            using (Stream batchReaderStream = ODataBatchUtils.CreateBatchOperationReadStream(
                 CreateBatchReaderStream(payload),
                 this.batchOperationHeaders,
                 new MockODataStreamListener(new StreamWriter(stream)),
@@ -494,7 +442,7 @@ OData-Version: 4.0
 --batch_aed653ab--
 ";
             var stream = new MemoryStream();
-            var batchReaderStream = ODataBatchUtils.CreateBatchOperationReadStream(
+            Stream batchReaderStream = ODataBatchUtils.CreateBatchOperationReadStream(
                 CreateBatchReaderStream(payload),
                 this.batchOperationHeaders,
                 new MockODataStreamListener(new StreamWriter(stream)),
@@ -512,7 +460,7 @@ OData-Version: 4.0
             Assert.Equal(expected, contents);
         }
 
-#if NETSTANDARD20 || NETCOREAPP3_1
+#if NETSTANDARD20 || NETCOREAPP3_1_OR_GREATER
         [Fact]
         public async Task ODataBatchReaderStreamDisposeAsyncShouldInvokeStreamDisposedAsync()
         {
@@ -522,7 +470,7 @@ OData-Version: 4.0
 --batch_aed653ab--
 ";
             var stream = new MemoryStream();
-            await using (var batchReaderStream = ODataBatchUtils.CreateBatchOperationReadStream(
+            await using (Stream batchReaderStream = ODataBatchUtils.CreateBatchOperationReadStream(
                 CreateBatchReaderStream(payload),
                 this.batchOperationHeaders,
                 new MockODataStreamListener(new StreamWriter(stream))))// `synchronous` argument becomes irrelevant since we'll directly call DisposeAsync
@@ -536,7 +484,7 @@ OData-Version: 4.0
         }
 
         [Fact]
-        public async Task ODataBatchReaderStreamDisposeAsyncShouldBeIdempotent()
+        public async Task ODataBatchReaderStreamDisposeAsyncShouldBeIdempotentAsync()
         {
             var payload = @"
 
@@ -544,7 +492,7 @@ OData-Version: 4.0
 --batch_aed653ab--
 ";
             var stream = new MemoryStream();
-            var batchReaderStream = ODataBatchUtils.CreateBatchOperationReadStream(
+            Stream batchReaderStream = ODataBatchUtils.CreateBatchOperationReadStream(
                 CreateBatchReaderStream(payload),
                 this.batchOperationHeaders,
                 new MockODataStreamListener(new StreamWriter(stream)));// `synchronous` argument becomes irrelevant since we'll directly call DisposeAsync
@@ -569,7 +517,7 @@ OData-Version: 4.0
 --batch_aed653ab--
 ";
             var stream = new MemoryStream();
-            using (var batchReaderStream = ODataBatchUtils.CreateBatchOperationReadStream(
+            using (Stream batchReaderStream = ODataBatchUtils.CreateBatchOperationReadStream(
                 CreateBatchReaderStream(payload),
                 this.batchOperationHeaders,
                 new MockODataStreamListener(new StreamWriter(stream)),
@@ -593,7 +541,7 @@ OData-Version: 4.0
         public void ODataBatchWriteStreamDisposeShouldInvokeStreamDisposed(bool synchronous, string expected)
         {
             var stream = new MemoryStream();
-            using (var batchWriteStream = ODataBatchUtils.CreateBatchOperationWriteStream(
+            using (Stream batchWriteStream = ODataBatchUtils.CreateBatchOperationWriteStream(
                 new MemoryStream(),
                 new MockODataStreamListener(new StreamWriter(stream)),
                 synchronous: synchronous))
@@ -612,7 +560,7 @@ OData-Version: 4.0
         public void ODataBatchWriterStreamDisposeShouldBeIdempotent(bool synchronous, string expected)
         {
             var stream = new MemoryStream();
-            var batchWriteStream = ODataBatchUtils.CreateBatchOperationWriteStream(
+            Stream batchWriteStream = ODataBatchUtils.CreateBatchOperationWriteStream(
                 new MemoryStream(),
                 new MockODataStreamListener(new StreamWriter(stream)),
                 synchronous: synchronous);
@@ -628,12 +576,12 @@ OData-Version: 4.0
             Assert.Equal(expected, contents);
         }
 
-#if NETSTANDARD20 || NETCOREAPP3_1
+#if NETSTANDARD20 || NETCOREAPP3_1_OR_GREATER
         [Fact]
         public async Task ODataBatchWriteStreamDisposeAsyncShouldInvokeStreamDisposedAsync()
         {
             var stream = new MemoryStream();
-            await using (var batchWriteStream = ODataBatchUtils.CreateBatchOperationWriteStream(
+            await using (Stream batchWriteStream = ODataBatchUtils.CreateBatchOperationWriteStream(
                 new MemoryStream(),
                 new MockODataStreamListener(new StreamWriter(stream))))// `synchronous` argument becomes irrelevant since we'll directly call DisposeAsync
             {
@@ -646,10 +594,10 @@ OData-Version: 4.0
         }
 
         [Fact]
-        public async Task ODataBatchWriteStreamDisposeAsyncShouldBeIdempotent()
+        public async Task ODataBatchWriteStreamDisposeAsyncShouldBeIdempotentAsync()
         {
             var stream = new MemoryStream();
-            var batchWriteStream = ODataBatchUtils.CreateBatchOperationWriteStream(
+            Stream batchWriteStream = ODataBatchUtils.CreateBatchOperationWriteStream(
                 new MemoryStream(),
                 new MockODataStreamListener(new StreamWriter(stream)));// `synchronous` argument becomes irrelevant since we'll directly call DisposeAsync
 
@@ -668,7 +616,7 @@ OData-Version: 4.0
         public async Task ODataBatchWriteStreamDisposeAsyncShouldInvokeStreamDisposedAsync()
         {
             var stream = new MemoryStream();
-            using (var batchWriteStream = ODataBatchUtils.CreateBatchOperationWriteStream(
+            using (Stream batchWriteStream = ODataBatchUtils.CreateBatchOperationWriteStream(
                 new MemoryStream(),
                 new MockODataStreamListener(new StreamWriter(stream)),
                 synchronous: false))
