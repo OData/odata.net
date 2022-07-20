@@ -64,7 +64,7 @@ namespace Microsoft.OData.Tests
             Assert.Equal(expected, result);
         }
 
-#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP3_1_OR_GREATER
         [Fact]
         public async Task NotificationStreamDisposeAsyncShouldInvokeStreamDisposedAsync()
         {
@@ -99,7 +99,7 @@ namespace Microsoft.OData.Tests
 
 #else
         [Fact]
-        public async Task NotificationStreamDisposeShouldInvokeStreamDisposedAsync()
+        public async Task NotificationStreamDisposeAsyncShouldInvokeStreamDisposedAsync()
         {
             using (Stream notificationStream = new ODataNotificationStream(
                 this.stream,

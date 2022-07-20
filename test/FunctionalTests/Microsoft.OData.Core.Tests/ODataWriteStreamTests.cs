@@ -67,7 +67,7 @@ namespace Microsoft.OData.Tests
             Assert.Equal(expected, result);
         }
 
-#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP3_1_OR_GREATER
         [Fact]
         public async Task WriteStreamDisposeAsyncShouldInvokeStreamDisposedAsync()
         {
@@ -102,7 +102,7 @@ namespace Microsoft.OData.Tests
 
 #else
         [Fact]
-        public async Task WriteStreamDisposeShouldInvokeStreamDisposedAsync()
+        public async Task WriteStreamDisposeAsyncShouldInvokeStreamDisposedAsync()
         {
             using (Stream writeStream = new ODataWriteStream(
                 new MemoryStream(),
