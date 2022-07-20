@@ -460,7 +460,7 @@ OData-Version: 4.0
             Assert.Equal(expected, contents);
         }
 
-#if NETSTANDARD20 || NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP3_1_OR_GREATER
         [Fact]
         public async Task ODataBatchReaderStreamDisposeAsyncShouldInvokeStreamDisposedAsync()
         {
@@ -508,7 +508,7 @@ OData-Version: 4.0
             Assert.Equal("StreamDisposedAsync", contents);
         }
 #else
-[Fact]
+        [Fact]
         public async Task ODataBatchReaderStreamDisposeAsyncShouldInvokeStreamDisposedAsync()
         {
             var payload = @"
@@ -576,7 +576,7 @@ OData-Version: 4.0
             Assert.Equal(expected, contents);
         }
 
-#if NETSTANDARD20 || NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP3_1_OR_GREATER
         [Fact]
         public async Task ODataBatchWriteStreamDisposeAsyncShouldInvokeStreamDisposedAsync()
         {
