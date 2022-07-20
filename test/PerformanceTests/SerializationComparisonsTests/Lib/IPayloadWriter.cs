@@ -23,6 +23,6 @@ namespace ExperimentsLib
         /// <param name="payload">The data to write.</param>
         /// <param name="stream">The stream to write to.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        Task WritePayload(T payload, Stream stream);
+        Task WritePayloadAsync(T payload, Stream stream);
     }
 }

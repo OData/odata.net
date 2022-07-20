@@ -29,7 +29,7 @@ namespace ExperimentsLib
             this.enableValidation = enableValidation;
         }
 
-        public Task WritePayload(IEnumerable<Customer> payload, Stream stream)
+        public Task WritePayloadAsync(IEnumerable<Customer> payload, Stream stream)
         {
             var settings = new ODataMessageWriterSettings();
 

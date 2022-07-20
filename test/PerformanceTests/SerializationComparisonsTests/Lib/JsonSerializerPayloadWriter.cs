@@ -18,7 +18,7 @@ namespace ExperimentsLib
     /// </summary>
     public class JsonSerializerPayloadWriter : IPayloadWriter<IEnumerable<Customer>>
     {
-        public async Task WritePayload(IEnumerable<Customer> payload, Stream stream)
+        public async Task WritePayloadAsync(IEnumerable<Customer> payload, Stream stream)
         {
             var serviceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/");
 

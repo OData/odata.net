@@ -45,7 +45,7 @@ public class CustomerCollectionOutputFormatter : TextOutputFormatter
         var customers = (IEnumerable<Customer>)context.Object!;
 
         var stream = httpContext.Response.Body;
-        await writer.WritePayload(customers, stream);
+        await writer.WritePayloadAsync(customers, stream);
     }
 }
 

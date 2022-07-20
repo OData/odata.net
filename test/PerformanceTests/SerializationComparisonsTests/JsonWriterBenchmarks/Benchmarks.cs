@@ -19,14 +19,13 @@ namespace JsonWriterBenchmarks
     [Orderer(SummaryOrderPolicy.Method, MethodOrderPolicy.Declared)]
     public class Benchmarks
     {
-        IEnumerable<Customer> data;
-        IEdmModel model;
+        private readonly static WriterCollection<IEnumerable<Customer>> writerCollection = DefaultWriterCollection.Create();
+        private readonly IEnumerable<Customer> data;
+        private readonly IEdmModel model;
 
-        public Stream memoryStream;
-        public Stream fileStream;
-
-        WriterCollection<IEnumerable<Customer>> writerCollection;
-        IPayloadWriter<IEnumerable<Customer>> writer;
+        private Stream memoryStream;
+        private Stream fileStream;
+        private IPayloadWriter<IEnumerable<Customer>> writer;
 
         [ParamsSource(nameof(WriterNames))]
         public string WriterName;
@@ -39,7 +38,6 @@ namespace JsonWriterBenchmarks
             // the written output will be about 1.45MB of JSON text
             data = CustomerDataSet.GetCustomers(5000);
             model = DataModel.GetEdmModel();
-            writerCollection = DefaultWriterCollection.Create();
         }
 
         [IterationSetup]
@@ -60,21 +58,21 @@ namespace JsonWriterBenchmarks
 
         [Benchmark]
         [BenchmarkCategory("InMemory")]
-        public async Task WriteToMemory()
+        public async Task WriteToMemoryAsync()
         {
-            await writer.WritePayload(data, memoryStream);
+            await writer.WritePayloadAsync(data, memoryStream);
         }
 
         [Benchmark]
         [BenchmarkCategory("ToFile")]
-        public async Task WriteToFile()
+        public async Task WriteToFileAsync()
         {
             // multiple writes to increase benchmark duration
-            await writer.WritePayload(data, fileStream);
-            await writer.WritePayload(data, fileStream);
-            await writer.WritePayload(data, fileStream);
-            await writer.WritePayload(data, fileStream);
-            await writer.WritePayload(data, fileStream);
+            await writer.WritePayloadAsync(data, fileStream);
+            await writer.WritePayloadAsync(data, fileStream);
+            await writer.WritePayloadAsync(data, fileStream);
+            await writer.WritePayloadAsync(data, fileStream);
+            await writer.WritePayloadAsync(data, fileStream);
 
         }
     }

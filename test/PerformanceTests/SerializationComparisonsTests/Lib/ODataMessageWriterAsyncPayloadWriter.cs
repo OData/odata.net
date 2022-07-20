@@ -28,7 +28,7 @@ namespace ExperimentsLib
             this.enableValidation = enableValidation;
             this.messageFactory = messageFactory;
         }
-        public async Task WritePayload(IEnumerable<Customer> payload, Stream stream)
+        public async Task WritePayloadAsync(IEnumerable<Customer> payload, Stream stream)
         {
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
             settings.ODataUri = new ODataUri
@@ -144,6 +144,7 @@ namespace ExperimentsLib
                 // end write resource
                 await writer.WriteEndAsync();
             }
+
             await writer.WriteEndAsync();
             await writer.FlushAsync();
         }

@@ -26,7 +26,7 @@ namespace ExperimentsLib
             this.jsonWriterFactory = jsonWriterFactory;
         }
 
-        public async Task WritePayload(IEnumerable<Customer> payload, Stream stream)
+        public async Task WritePayloadAsync(IEnumerable<Customer> payload, Stream stream)
         {
             Uri serviceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/");
             IJsonWriterAsync jsonWriter = this.jsonWriterFactory(stream);

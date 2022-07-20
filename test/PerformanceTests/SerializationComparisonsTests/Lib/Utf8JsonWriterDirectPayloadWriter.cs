@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.OData;
@@ -27,7 +26,7 @@ namespace ExperimentsLib
             this.writerFactory = writerFactory;
         }
 
-        public async Task WritePayload(IEnumerable<Customer> payload, Stream stream)
+        public async Task WritePayloadAsync(IEnumerable<Customer> payload, Stream stream)
         {
             Uri serviceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/");
 
@@ -91,6 +90,7 @@ namespace ExperimentsLib
                     await jsonWriter.FlushAsync();
                 }
             }
+
             jsonWriter.WriteEndArray();
             jsonWriter.WriteEndObject();
             await jsonWriter.FlushAsync();

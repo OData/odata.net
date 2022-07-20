@@ -16,14 +16,13 @@ namespace ExperimentTests
 {
     public class WriterTests
     {
-        public static IEnumerable<Customer> data = CustomerDataSet.GetCustomers(4);
-        public static WriterCollection<IEnumerable<Customer>> writers = DefaultWriterCollection.Create();
+        private readonly static IEnumerable<Customer> customerData = CustomerDataSet.GetCustomers(4);
+        private readonly static WriterCollection<IEnumerable<Customer>> writers = DefaultWriterCollection.Create();
         public static IEnumerable<object[]> WriterNames { get; } = writers.GetWriterNames()
             .Where(n => !n.Contains("NoOp"))
             .Select(n => new string[] { n });
 
-        public static IEnumerable<object[]> noOpWriterNames() =>
-            writers.GetWriterNames()
+        public static IEnumerable<object[]> NoOpWriterNames { get; } = writers.GetWriterNames()
             .Where(n => n.Contains("NoOp"))
             .Select(n => new string[] { n });
 
@@ -34,30 +33,30 @@ namespace ExperimentTests
             using var stream = new MemoryStream();
             var writer = writers.GetWriter(writerName);
 
-            await writer.WritePayload(data, stream);
+            await writer.WritePayloadAsync(customerData, stream);
 
             using var expectedReader = new StreamReader("ExpectedOutput.txt");
-            string expectedOutput = expectedReader.ReadToEnd();
+            string expectedOutput = await expectedReader.ReadToEndAsync();
             stream.Seek(0, SeekOrigin.Begin);
             using var actualReader = writerName.Contains("Utf16") ?
                 new StreamReader(stream, Encoding.Unicode):
                 new StreamReader(stream);
-            string actualOutput = actualReader.ReadToEnd();
+            string actualOutput = await actualReader.ReadToEndAsync();
             Assert.Equal(NormalizeJsonText(expectedOutput), NormalizeJsonText(actualOutput));
         }
 
         [Theory]
-        [MemberData(nameof(noOpWriterNames))]
+        [MemberData(nameof(NoOpWriterNames))]
         public async Task NoOpWritersShouldNotWriteContent(string writerName)
         {
             using var stream = new MemoryStream();
             var writer = writers.GetWriter(writerName);
 
-            await writer.WritePayload(data, stream);
+            await writer.WritePayloadAsync(customerData, stream);
 
             stream.Seek(0, SeekOrigin.Begin);
             using var reader = new StreamReader(stream);
-            string output = reader.ReadToEnd();
+            string output = await reader.ReadToEndAsync();
             Assert.Equal(string.Empty, output);
         }
 

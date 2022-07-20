@@ -29,28 +29,28 @@ Here are sample results:
 BenchmarkDotNet=v0.13.1, OS=Windows 10.0.20348
 Intel Xeon E-2336 CPU 2.90GHz, 1 CPU, 12 logical and 6 physical cores
 .NET SDK=        5.0.404 [C:\Program Files\dotnet\sdk]
-  [Host] : .NET 6.0.6 (6.0.622.26707), X64 RyuJIT
+  [Host] : .NET 6.0.7 (6.0.722.32202), X64 RyuJIT
 
 Toolchain=InProcessEmitToolchain  InvocationCount=1  UnrollFactor=1
 
-|     Method |                                     WriterName |       Mean |     Error |    StdDev |      Gen 0 |     Gen 1 |  Allocated |
------------- |----------------------------------------------- |-----------:|----------:|----------:|-----------:|----------:|-----------:|
- WriteToFile |                                 JsonSerializer |  32.065 ms | 0.4696 ms | 0.4613 ms |          - |         - |      12 KB |
- WriteToFile |                              NoOpWriter-Direct |   1.309 ms | 0.0047 ms | 0.0037 ms |          - |         - |       3 KB |
- WriteToFile |                         ODataJsonWriter-Direct |  36.818 ms | 0.4113 ms | 0.3646 ms |  1000.0000 |         - |   6,675 KB |
- WriteToFile |                   ODataJsonWriter-Direct-Async | 185.579 ms | 0.5759 ms | 0.5387 ms |  8000.0000 |         - |  48,701 KB |
- WriteToFile |                             ODataMessageWriter | 293.201 ms | 0.5024 ms | 0.4454 ms | 41000.0000 |         - | 254,694 KB |
- WriteToFile |                       ODataMessageWriter-Async | 895.449 ms | 3.9967 ms | 3.5430 ms | 66000.0000 | 1000.0000 | 406,576 KB |
- WriteToFile |                        ODataMessageWriter-NoOp | 239.316 ms | 0.4038 ms | 0.3372 ms | 40000.0000 |         - | 248,036 KB |
- WriteToFile |                  ODataMessageWriter-NoOp-Async | 368.968 ms | 0.4373 ms | 0.4091 ms | 44000.0000 |         - | 272,266 KB |
- WriteToFile |                ODataMessageWriter-NoValidation | 250.643 ms | 0.3796 ms | 0.3551 ms | 37000.0000 |         - | 231,254 KB |
- WriteToFile |          ODataMessageWriter-NoValidation-Async | 856.539 ms | 4.9224 ms | 4.6044 ms | 62000.0000 | 1000.0000 | 383,063 KB |
- WriteToFile |                       ODataMessageWriter-Utf16 | 303.753 ms | 0.6522 ms | 0.6101 ms | 41000.0000 |         - | 254,689 KB |
- WriteToFile |              ODataMessageWriter-Utf8JsonWriter | 278.479 ms | 0.4706 ms | 0.4172 ms | 40000.0000 | 1000.0000 | 248,271 KB |
- WriteToFile | ODataMessageWriter-Utf8JsonWriter-NoValidation | 236.229 ms | 0.5566 ms | 0.5206 ms | 36000.0000 | 1000.0000 | 224,831 KB |
- WriteToFile |        ODataMessageWriter-Utf8JsonWriter-Utf16 | 283.418 ms | 0.3669 ms | 0.3432 ms | 40000.0000 | 1000.0000 | 248,272 KB |
- WriteToFile |                     ODataUtf8JsonWriter-Direct |  21.066 ms | 0.0464 ms | 0.0411 ms |          - |         - |     241 KB |
- WriteToFile |   Utf8JsonWriter-Direct-ArrayPool-NoValidation |  18.313 ms | 0.0308 ms | 0.0273 ms |          - |         - |      29 KB |
+|          Method |                                     WriterName |       Mean |     Error |    StdDev |      Gen 0 |     Gen 1 |  Allocated |
+----------------- |----------------------------------------------- |-----------:|----------:|----------:|-----------:|----------:|-----------:|
+ WriteToFileAsync |                                 JsonSerializer |  30.849 ms | 0.2615 ms | 0.2446 ms |          - |         - |      28 KB |
+ WriteToFileAsync |                              NoOpWriter-Direct |   1.252 ms | 0.0054 ms | 0.0042 ms |          - |         - |       3 KB |
+ WriteToFileAsync |                         ODataJsonWriter-Direct |  34.918 ms | 0.0741 ms | 0.0657 ms |  1000.0000 |         - |   6,675 KB |
+ WriteToFileAsync |                   ODataJsonWriter-Direct-Async | 190.807 ms | 0.7046 ms | 0.6590 ms |  8000.0000 |         - |  48,698 KB |
+ WriteToFileAsync |                             ODataMessageWriter | 293.411 ms | 0.5442 ms | 0.5091 ms | 41000.0000 |         - | 254,694 KB |
+ WriteToFileAsync |                       ODataMessageWriter-Async | 900.943 ms | 2.9349 ms | 2.2914 ms | 66000.0000 | 1000.0000 | 406,565 KB |
+ WriteToFileAsync |                        ODataMessageWriter-NoOp | 242.911 ms | 0.6638 ms | 0.6210 ms | 40000.0000 |         - | 248,036 KB |
+ WriteToFileAsync |                  ODataMessageWriter-NoOp-Async | 373.211 ms | 0.4660 ms | 0.4131 ms | 44000.0000 |         - | 272,274 KB |
+ WriteToFileAsync |                ODataMessageWriter-NoValidation | 258.008 ms | 0.4445 ms | 0.4158 ms | 37000.0000 |         - | 231,254 KB |
+ WriteToFileAsync |          ODataMessageWriter-NoValidation-Async | 853.044 ms | 2.1455 ms | 1.9020 ms | 62000.0000 | 1000.0000 | 382,928 KB |
+ WriteToFileAsync |                       ODataMessageWriter-Utf16 | 304.285 ms | 0.7415 ms | 0.6936 ms | 41000.0000 |         - | 254,689 KB |
+ WriteToFileAsync |              ODataMessageWriter-Utf8JsonWriter | 284.935 ms | 0.5261 ms | 0.4921 ms | 40000.0000 | 1000.0000 | 248,271 KB |
+ WriteToFileAsync | ODataMessageWriter-Utf8JsonWriter-NoValidation | 245.019 ms | 0.6755 ms | 0.6319 ms | 36000.0000 | 1000.0000 | 224,831 KB |
+ WriteToFileAsync |        ODataMessageWriter-Utf8JsonWriter-Utf16 | 288.879 ms | 0.4336 ms | 0.3844 ms | 40000.0000 | 1000.0000 | 248,272 KB |
+ WriteToFileAsync |                     ODataUtf8JsonWriter-Direct |  21.080 ms | 0.0378 ms | 0.0354 ms |          - |         - |     241 KB |
+ WriteToFileAsync |   Utf8JsonWriter-Direct-ArrayPool-NoValidation |  18.246 ms | 0.0396 ms | 0.0370 ms |          - |         - |      29 KB |
 
 By default, there's a filter applied that only runs the "ToFile" tests. If you want to run the in-memory tests, or apply a different filter, you can pass the `filter` variable manually to the `crank` command:
 
@@ -58,7 +58,7 @@ By default, there's a filter applied that only runs the "ToFile" tests. If you w
 crank --config benchmarks.yml --profile lab-windows --scenario SerializationComparisons --variable filter=*Memory*
 ```
 
-### Load tests
+## Load tests
 
 The load tests are based on a simple AspNetCore service defined in the [TestServer](./TestServer/) project. It defines an endpoint that returns a collection of `Customer` objects. It allows you to specify the writer to use to serialize the request's response as well as the number of entries to return.
 
@@ -203,7 +203,7 @@ Results:
 | Read throughput (MB/s) | 118.45  |
 
 It's always important to look at the `Bad responses` metric before making any conclusions from the other stats.
-If Bad responses is 0, it means all requests were successful (i.e. 2xx response codes). If it's non-zero, it means there were failed requests. Common causes of failed requests include passing an unknown writer to the `--variable writer=...` variable and flooding the server with more requests than it can handle. To mitigate against the latter, you can try to limit the load on the server by setting limit the number of concurrent connections and/or the max request rate (number of requests per second). Different servers can handle different capacities, so may need to play around with different values until you find the highest load that results in 0 bad responses.
+If Bad responses is 0, it means all requests were successful (i.e. 2xx response codes). If it's non-zero, it means there were failed requests. Common causes of failed requests include passing an unknown writer to the `--variable writer=...` variable and flooding the server with more requests than it can handle. To mitigate against the latter, you can try to limit the load on the server by limiting the number of concurrent connections and/or the max request rate (number of requests per second). Different servers can handle different capacities, so may need to play around with different values until you find the highest load that results in 0 bad responses.
 
 The following command limits the number of concurrent connections to 128 and the request rate to 200 requets/s.
 
@@ -215,7 +215,9 @@ Another important metric to look at when trying to make sense of results is the 
 
 In the results above, the CPU usage is high because the latency of the network requests is low. This is because in the selected profile (`lab-windows`), both client and server machines are in the same local network with fast links. So the server spent most of its time building the responses rather than waiting for network transfers to complete.
 
-In a real-world scenario, the client and server may be separated by a much slower Internet connection. To simulate this scenario, we can run the server on a remote machine, for example on Azure. This would require setting up a crank-agent on a machine on Azure. The `loadtests.yml` config defines a `remote-windows` profile which runs the client locally and the server on a machine that you specify. You have manually edit the `loadtests.yml` with the remote server's IP address.
+### Load testing across the internet
+
+In a real-world scenario, the client and server may be separated by a much slower internet connection. To simulate this scenario, we can run the server on a remote machine, for example on Azure. This would require setting up a crank-agent on a machine on Azure. The `loadtests.yml` config defines a `remote-windows` profile which runs the client locally and the server on a machine that you specify. You have manually edit the `loadtests.yml` with the remote server's IP address.
 
 For the purposes of this example, I created a Windows VM with 4 cores on Azure, installed .NET on the machine then installed and ran the `crank-agent` service. I configured the firewall to allow the server to accept remote HTTP requests via ports 5010 (where crank-agent is running) and 5000 (where the test service will run). You should take precautions to secure the VM and prevent unauthorized access since crank-agent allows code to be uploaded and executed on the server.
 
