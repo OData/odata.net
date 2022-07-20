@@ -83,7 +83,7 @@ namespace Microsoft.OData
             ODataBatchReaderStream batchReaderStream,
             ODataBatchOperationHeaders headers,
             IODataStreamListener operationListener,
-            bool synchronous)
+            bool synchronous = true)
         {
             Debug.Assert(batchReaderStream != null, "batchReaderStream != null");
             Debug.Assert(operationListener != null, "operationListener != null");
@@ -114,7 +114,7 @@ namespace Microsoft.OData
         internal static ODataWriteStream CreateBatchOperationWriteStream(
             Stream outputStream,
             IODataStreamListener operationListener,
-            bool synchronous)
+            bool synchronous = true)
         {
             Debug.Assert(outputStream != null, "outputStream != null");
             Debug.Assert(operationListener != null, "operationListener != null");

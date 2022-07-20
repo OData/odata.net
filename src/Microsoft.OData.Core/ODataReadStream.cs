@@ -114,7 +114,11 @@ namespace Microsoft.OData
         /// <param name="length">The content length of the operation stream.</param>
         /// <param name="synchronous">true if the stream is created for synchronous operation; false for asynchronous.</param>
         /// <returns>A <see cref="ODataReadStream"/> to read the content of a batch operation from.</returns>
-        internal static ODataReadStream Create(ODataBatchReaderStream batchReaderStream, IODataStreamListener listener, int length, bool synchronous)
+        internal static ODataReadStream Create(
+            ODataBatchReaderStream batchReaderStream,
+            IODataStreamListener listener,
+            int length,
+            bool synchronous = true)
         {
             return new ODataBatchOperationReadStreamWithLength(batchReaderStream, listener, length, synchronous);
         }
@@ -126,7 +130,10 @@ namespace Microsoft.OData
         /// <param name="listener">The batch operation listener.</param>
         /// <param name="synchronous">true if the stream is created for synchronous operation; false for asynchronous.</param>
         /// <returns>A <see cref="ODataReadStream"/> to read the content of a batch operation from.</returns>
-        internal static ODataReadStream Create(ODataBatchReaderStream batchReaderStream, IODataStreamListener listener, bool synchronous)
+        internal static ODataReadStream Create(
+            ODataBatchReaderStream batchReaderStream,
+            IODataStreamListener listener,
+            bool synchronous = true)
         {
             return new ODataBatchOperationReadStreamWithDelimiter(batchReaderStream, listener, synchronous);
         }
@@ -145,7 +152,11 @@ namespace Microsoft.OData
             /// <param name="batchReaderStream">The underlying batch stream to write the message to.</param>
             /// <param name="listener">Listener interface to be notified of operation changes.</param>
             /// <param name="length">The total length of the stream.</param>
-            internal ODataBatchOperationReadStreamWithLength(ODataBatchReaderStream batchReaderStream, IODataStreamListener listener, int length, bool synchronous)
+            internal ODataBatchOperationReadStreamWithLength(
+                ODataBatchReaderStream batchReaderStream,
+                IODataStreamListener listener,
+                int length,
+                bool synchronous)
                 : base(batchReaderStream, listener, synchronous)
             {
                 ExceptionUtils.CheckIntegerNotNegative(length, "length");
@@ -192,7 +203,10 @@ namespace Microsoft.OData
             /// </summary>
             /// <param name="batchReaderStream">The underlying batch stream to write the message to.</param>
             /// <param name="listener">Listener interface to be notified of operation changes.</param>
-            internal ODataBatchOperationReadStreamWithDelimiter(ODataBatchReaderStream batchReaderStream, IODataStreamListener listener, bool synchronous)
+            internal ODataBatchOperationReadStreamWithDelimiter(
+                ODataBatchReaderStream batchReaderStream,
+                IODataStreamListener listener,
+                bool synchronous)
                 : base(batchReaderStream, listener, synchronous)
             {
             }
