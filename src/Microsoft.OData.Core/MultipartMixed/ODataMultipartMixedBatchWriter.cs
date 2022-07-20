@@ -125,7 +125,12 @@ namespace Microsoft.OData.MultipartMixed
             // then dispose the batch writer (since we are now writing the operation content) and set the corresponding state.
             await this.RawOutputContext.FlushBuffersAsync()
                 .ConfigureAwait(false);
+#if NETCOREAPP3_1_OR_GREATER
+            await this.DisposeBatchWriterAndSetContentStreamRequestedStateAsync()
+                .ConfigureAwait(false);
+#else
             this.DisposeBatchWriterAndSetContentStreamRequestedState();
+#endif
         }
 
         /// <summary>
@@ -752,5 +757,19 @@ namespace Microsoft.OData.MultipartMixed
                 }
             }
         }
+
+#if NETCOREAPP3_1_OR_GREATER
+        /// <summary>
+        /// Asynchronously disposes the batch writer and set the 'OperationStreamRequested' batch writer state;
+        /// called after the flush operation(s) have completed.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        private async Task DisposeBatchWriterAndSetContentStreamRequestedStateAsync()
+        {
+            await this.RawOutputContext.CloseWriterAsync().ConfigureAwait(false);
+
+            this.SetState(BatchWriterState.OperationStreamRequested);
+        }
+#endif
     }
 }
