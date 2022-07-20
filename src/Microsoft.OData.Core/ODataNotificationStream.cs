@@ -249,7 +249,7 @@ namespace Microsoft.OData
         /// Asynchronously releases all resources used by the <see cref="ODataNotificationStream"/> object.
         /// </summary>
         /// <returns>A task that represents the asynchronous dispose operation.</returns>
-        public async ValueTask DisposeAsyncCore()
+        private async ValueTask DisposeAsyncCore()
         {
             if (!this.disposed && this.listener != null)
             {
