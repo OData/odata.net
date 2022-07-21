@@ -1651,7 +1651,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="container">Reference to the calling object.</param>
         /// <returns>collection of pairs of container element and NavigationPropertyBindings.</returns>
-        public static IEnumerable<(IEdmEntityContainerElement, IEdmNavigationPropertyBinding)> GetNavigationPropertyBindings(this IEdmEntityContainer container)
+        public static IEnumerable<Tuple<IEdmEntityContainerElement, IEdmNavigationPropertyBinding>> GetNavigationPropertyBindings(this IEdmEntityContainer container)
         {
             EdmUtil.CheckArgumentNull(container, "container");
 
@@ -1663,13 +1663,13 @@ namespace Microsoft.OData.Edm
                     case IEdmEntitySet entitySet:
                         foreach(var binding in entitySet.NavigationPropertyBindings)
                         {
-                            yield return (entitySet, binding);
+                            yield return Tuple.Create<IEdmEntityContainerElement, IEdmNavigationPropertyBinding>(entitySet, binding);
                         }
                         break;
                     case IEdmSingleton singleton:
                         foreach (var binding in singleton.NavigationPropertyBindings)
                         {
-                            yield return (singleton, binding);
+                            yield return Tuple.Create< IEdmEntityContainerElement, IEdmNavigationPropertyBinding>(singleton, binding);
                         }
                         break;
                     default:
