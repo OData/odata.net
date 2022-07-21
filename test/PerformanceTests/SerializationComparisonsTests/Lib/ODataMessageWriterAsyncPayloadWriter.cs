@@ -28,6 +28,8 @@ namespace ExperimentsLib
             this.enableValidation = enableValidation;
             this.messageFactory = messageFactory;
         }
+
+        /// <inheritdoc/>
         public async Task WritePayloadAsync(IEnumerable<Customer> payload, Stream stream)
         {
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
@@ -98,6 +100,7 @@ namespace ExperimentsLib
                         new ODataProperty { Name = "Street", Value = customer.HomeAddress.Street }
                     }
                 };
+
                 await writer.WriteStartAsync(homeAddressResource);
                 await writer.WriteEndAsync();
 
@@ -117,6 +120,7 @@ namespace ExperimentsLib
                 var addressesResourceSet = new ODataResourceSet();
                 // start addressesResourceSet
                 await writer.WriteStartAsync(addressesResourceSet);
+
                 foreach (var address in customer.Addresses)
                 {
                     var addressResource = new ODataResource

@@ -28,6 +28,7 @@ namespace ExperimentsLib
             this.writerFactory = writerFactory;
         }
 
+        /// <inheritdoc/>
         public async Task WritePayloadAsync(IEnumerable<Customer> payload, Stream stream)
         {
             var serviceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/");
@@ -36,7 +37,6 @@ namespace ExperimentsLib
             using Utf8JsonWriter jsonWriter = this.writerFactory(bufferWriter);
 
             var resourceSet = new ODataResourceSet();
-            //Console.WriteLine("Start writing resource set");
             jsonWriter.WriteStartObject();
             jsonWriter.WriteString("@odata.context", $"{serviceRoot}$metadata#Customers");
             jsonWriter.WriteStartArray("value");

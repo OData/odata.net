@@ -26,6 +26,7 @@ namespace ExperimentsLib
             this.jsonWriterFactory = jsonWriterFactory;
         }
 
+        /// <inheritdoc/>
         public Task WritePayloadAsync(IEnumerable<Customer> payload, Stream stream)
         {
             Uri serviceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/");
@@ -46,10 +47,12 @@ namespace ExperimentsLib
                 jsonWriter.WriteValue(customer.Name);
                 jsonWriter.WriteName("Emails");
                 jsonWriter.StartArrayScope();
+
                 foreach (var email in customer.Emails)
                 {
                     jsonWriter.WriteValue(email);
                 }
+
                 jsonWriter.EndArrayScope();
 
 

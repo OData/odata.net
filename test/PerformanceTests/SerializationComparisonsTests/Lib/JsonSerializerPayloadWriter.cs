@@ -18,6 +18,7 @@ namespace ExperimentsLib
     /// </summary>
     public class JsonSerializerPayloadWriter : IPayloadWriter<IEnumerable<Customer>>
     {
+        /// <inheritdoc/>
         public async Task WritePayloadAsync(IEnumerable<Customer> payload, Stream stream)
         {
             var serviceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/");
@@ -39,6 +40,7 @@ namespace ExperimentsLib
         {
             [JsonPropertyName("@odata.context")]
             public string Context { get; set; }
+
             [JsonPropertyName("value")]
             public IEnumerable<Customer> Value { get; set; }
         }
