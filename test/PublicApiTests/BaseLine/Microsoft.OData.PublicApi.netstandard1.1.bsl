@@ -2028,6 +2028,11 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
     [
     ExtensionAttribute(),
     ]
+    public static System.Collections.Generic.IEnumerable`1[[System.Tuple`2[[Microsoft.OData.Edm.IEdmEntityContainerElement],[Microsoft.OData.Edm.IEdmNavigationPropertyBinding]]]] GetNavigationPropertyBindings (Microsoft.OData.Edm.IEdmEntityContainer container)
+
+    [
+    ExtensionAttribute(),
+    ]
     public static Microsoft.OData.Edm.IEdmPathExpression GetPartnerPath (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty)
 
     [
