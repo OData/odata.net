@@ -8,6 +8,7 @@ using System;
 using Microsoft.OData.Json;
 using Microsoft.OData.Edm;
 using Xunit;
+using System.Threading.Tasks;
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -16,7 +17,7 @@ namespace Microsoft.OData.Tests.Json
     /// 
     /// So far only a a few things have been implemented.
     /// </summary>
-    internal class MockJsonWriter : IJsonWriter
+    internal class MockJsonWriter : IJsonWriter, IJsonWriterAsync
     {
         public Action<string> WriteNameVerifier;
         public Action<string> WriteValueVerifier;
@@ -151,6 +152,144 @@ namespace Microsoft.OData.Tests.Json
         }
 
         public void Flush()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task StartPaddingFunctionScopeAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task EndPaddingFunctionScopeAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task StartObjectScopeAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task EndObjectScopeAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task StartArrayScopeAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task EndArrayScopeAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task WriteNameAsync(string name)
+        {
+            Assert.NotNull(this.WriteNameVerifier);
+            this.WriteNameVerifier(name);
+            return TaskUtils.CompletedTask;
+        }
+
+        public Task WritePaddingFunctionNameAsync(string functionName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task WriteValueAsync(bool value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task WriteValueAsync(int value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task WriteValueAsync(float value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task WriteValueAsync(short value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task WriteValueAsync(long value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task WriteValueAsync(double value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task WriteValueAsync(Guid value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task WriteValueAsync(decimal value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task WriteValueAsync(DateTimeOffset value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task WriteValueAsync(TimeSpan value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task WriteValueAsync(byte value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task WriteValueAsync(sbyte value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task WriteValueAsync(string value)
+        {
+            Assert.NotNull(this.WriteValueVerifier);
+            this.WriteValueVerifier(value);
+            return TaskUtils.CompletedTask;
+        }
+
+        public Task WriteValueAsync(byte[] value)
+        {
+            Assert.NotNull(this.WriteValueVerifier);
+            this.WriteValueVerifier(Convert.ToBase64String(value));
+            return TaskUtils.CompletedTask;
+        }
+
+        public Task WriteValueAsync(Date value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task WriteValueAsync(TimeOfDay value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task WriteRawValueAsync(string rawValue)
+        {
+            Assert.NotNull(this.WriteValueVerifier);
+            this.WriteValueVerifier(rawValue);
+            return TaskUtils.CompletedTask;
+        }
+
+        public Task FlushAsync()
         {
             throw new NotImplementedException();
         }

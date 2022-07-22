@@ -14,10 +14,12 @@ namespace Microsoft.OData.Tests.Json
     internal sealed class MockStreamBasedJsonWriterFactory : IStreamBasedJsonWriterFactory
     {
         private readonly IJsonWriter jsonWriter;
+        private readonly IJsonWriterAsync asyncJsonWriter;
 
-        public MockStreamBasedJsonWriterFactory(IJsonWriter jsonWriter)
+        public MockStreamBasedJsonWriterFactory(IJsonWriter jsonWriter, IJsonWriterAsync asyncJsonWriter)
         {
             this.jsonWriter = jsonWriter;
+            this.asyncJsonWriter = asyncJsonWriter;
         }
 
         public IJsonWriter CreateJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding)
@@ -27,7 +29,7 @@ namespace Microsoft.OData.Tests.Json
 
         public IJsonWriterAsync CreateAsynchronousJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding)
         {
-            throw new System.NotImplementedException();
+            return this.asyncJsonWriter;
         }
     }
 }

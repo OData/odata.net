@@ -98,6 +98,8 @@ ODataMessageWriter_JsonPaddingOnInvalidContentType=A JsonPaddingFunctionName was
 ODataMessageWriter_NonCollectionType=The type '{0}' specified as the collection's item type is not primitive, enum or complex. An ODataCollectionWriter can only write collections of primitive, enum or complex values.
 ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue=Not allowed to write top level property '{0}' with 'ODataResourceValue' or collection of resource value.
 ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull=The provided implementation of IStreamBasedJsonWriterFactory returned null for arguments: isIeee754Compatible '{0}', encoding '{1}'. The factory should return a concrete IJsonWriter implementation.
+ODataMessageWriter_IJsonWriterAsync_Must_Implement_IJsonWriter=The provided IJsonWriterAsync instance must also implement IJsonWriter.
+ODataMessageWriter_IJsonWriter_And_IJsonWriterAsync_Are_Different_Instances=Detected different instances of IJsonWriter and IJsonWriterAsync. The writer instance returned by the factory should implement both IJsonWriter and IJsonWriterAsync.
 
 ODataMessageWriterSettings_MessageWriterSettingsXmlCustomizationCallbacksMustBeSpecifiedBoth=Both startResourceXmlCustomizationCallback and endResourceXmlCustomizationCallback must be either null or non-null.
 

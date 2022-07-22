@@ -100,6 +100,8 @@ namespace Microsoft.OData
         internal const string ODataMessageWriter_NonCollectionType = "ODataMessageWriter_NonCollectionType";
         internal const string ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue = "ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue";
         internal const string ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull = "ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull";
+        internal const string ODataMessageWriter_IJsonWriterAsync_Must_Implement_IJsonWriter = "ODataMessageWriter_IJsonWriterAsync_Must_Implement_IJsonWriter";
+        internal const string ODataMessageWriter_IJsonWriter_And_IJsonWriterAsync_Are_Different_Instances = "ODataMessageWriter_IJsonWriter_And_IJsonWriterAsync_Are_Different_Instances";
         internal const string ODataMessageWriterSettings_MessageWriterSettingsXmlCustomizationCallbacksMustBeSpecifiedBoth = "ODataMessageWriterSettings_MessageWriterSettingsXmlCustomizationCallbacksMustBeSpecifiedBoth";
         internal const string ODataCollectionWriterCore_InvalidTransitionFromStart = "ODataCollectionWriterCore_InvalidTransitionFromStart";
         internal const string ODataCollectionWriterCore_InvalidTransitionFromCollection = "ODataCollectionWriterCore_InvalidTransitionFromCollection";

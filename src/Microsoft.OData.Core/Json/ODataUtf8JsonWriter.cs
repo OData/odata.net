@@ -13,17 +13,19 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Encodings.Web;
 using Microsoft.OData.Edm;
+using System.Threading.Tasks;
 
 namespace Microsoft.OData.Json
 {
     /// <summary>
-    /// Implementation of <see cref="IJsonWriter"/> that is based on
+    /// Implementation of <see cref="IJsonWriter"/> and <see cref="IJsonWriterAsync"/>that is based on
     /// <see cref="Utf8JsonWriter"/>.
     /// </summary>
-    internal sealed class ODataUtf8JsonWriter : IJsonWriter, IDisposable
+    internal sealed class ODataUtf8JsonWriter : IJsonWriter, IDisposable, IJsonWriterAsync, IAsyncDisposable
     {
         private const int DefaultBufferSize = 16 * 1024;
         private readonly float bufferFlushThreshold;
+        private readonly static ReadOnlyMemory<byte> Parantheses = new byte[] { (byte)'(', (byte)')' };
 
         private readonly Stream outputStream;
         private readonly Stream writeStream;
@@ -84,7 +86,7 @@ namespace Microsoft.OData.Json
             }
         }
 
-        public void FlushIfBufferThresholdReached()
+        private void FlushIfBufferThresholdReached()
         {
             if (this.writer.BytesPending >= this.bufferFlushThreshold)
             {
@@ -311,6 +313,246 @@ namespace Microsoft.OData.Json
             this.Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
+
+        #region "Asynchronous API"
+
+        public async Task StartPaddingFunctionScopeAsync()
+        {
+            await this.FlushAsync().ConfigureAwait(false);
+            // writes '('
+            await this.writeStream.WriteAsync(Parantheses[..1]).ConfigureAwait(false);
+        }
+
+        public async Task WritePaddingFunctionNameAsync(string functionName)
+        {
+            await this.FlushAsync().ConfigureAwait(false);
+            await this.writeStream.WriteAsync(Encoding.UTF8.GetBytes(functionName)).ConfigureAwait(false);
+        }
+
+        public async Task EndPaddingFunctionScopeAsync()
+        {
+            await this.FlushAsync().ConfigureAwait(false);
+            // writes ')'
+            await this.writeStream.WriteAsync(Parantheses[1..2]).ConfigureAwait(false);
+        }
+
+        public async Task StartObjectScopeAsync()
+        {
+            this.writer.WriteStartObject();
+            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+        }
+
+        public async Task EndObjectScopeAsync()
+        {
+            this.writer.WriteEndObject();
+            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+        }
+
+        public async Task StartArrayScopeAsync()
+        {
+            this.writer.WriteStartArray();
+            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+        }
+
+        public async Task EndArrayScopeAsync()
+        {
+            this.writer.WriteEndArray();
+            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+        }
+
+        public async Task WriteNameAsync(string name)
+        {
+            this.writer.WritePropertyName(name);
+            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+        }
+
+        
+        public async Task WriteValueAsync(bool value)
+        {
+            this.writer.WriteBooleanValue(value);
+            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+        }
+
+        public async Task WriteValueAsync(int value)
+        {
+            this.writer.WriteNumberValue(value);
+            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+        }
+
+        public async Task WriteValueAsync(float value)
+        {
+            this.writer.WriteNumberValue(value);
+            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+        }
+
+        public async Task WriteValueAsync(short value)
+        {
+            this.writer.WriteNumberValue(value);
+            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+        }
+
+        public async Task WriteValueAsync(long value)
+        {
+            if (this.isIeee754Compatible)
+            {
+                this.writer.WriteStringValue(value.ToString(CultureInfo.InvariantCulture));
+            }
+            else
+            {
+                this.writer.WriteNumberValue(value);
+            }
+
+            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+        }
+
+        public async Task WriteValueAsync(double value)
+        {
+            this.writer.WriteNumberValue(value);
+            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+        }
+
+        public async Task WriteValueAsync(Guid value)
+        {
+            this.writer.WriteStringValue(value);
+            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+        }
+
+        public async Task WriteValueAsync(decimal value)
+        {
+            if (this.isIeee754Compatible)
+            {
+                this.writer.WriteStringValue(value.ToString(CultureInfo.InvariantCulture));
+            }
+            else
+            {
+                this.writer.WriteNumberValue(value);
+            }
+
+            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+        }
+
+        public async Task WriteValueAsync(DateTimeOffset value)
+        {
+            this.writer.WriteStringValue(value);
+            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+        }
+
+        public async Task WriteValueAsync(TimeSpan value)
+        {
+            string stringValue = EdmValueWriter.DurationAsXml(value);
+            this.writer.WriteStringValue(stringValue);
+            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+        }
+
+        public async Task WriteValueAsync(Date value)
+        {
+            this.writer.WriteStringValue(value.ToString());
+            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+        }
+
+        public async Task WriteValueAsync(TimeOfDay value)
+        {
+            this.writer.WriteStringValue(value.ToString());
+            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+        }
+
+        public async Task WriteValueAsync(byte value)
+        {
+            this.writer.WriteNumberValue(value);
+            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+        }
+
+        public async Task WriteValueAsync(sbyte value)
+        {
+            this.writer.WriteNumberValue(value);
+            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+        }
+
+        public async Task WriteValueAsync(string value)
+        {
+            if (value == null)
+            {
+                this.writer.WriteNullValue();
+            }
+            else
+            {
+                this.writer.WriteStringValue(value.ToString());
+            }
+
+            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+        }
+
+        public async Task WriteValueAsync(byte[] value)
+        {
+            if (value == null)
+            {
+                this.writer.WriteNullValue();
+            }
+            else
+            {
+                this.writer.WriteBase64StringValue(value);
+            }
+
+            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+        }
+
+        public async Task WriteRawValueAsync(string rawValue)
+        {
+            if (rawValue == null)
+            {
+                return;
+            }
+
+            // Consider using Utf8JsonWriter.WriteRawValue() in .NET 6+
+            // see: https://github.com/OData/odata.net/issues/2420
+
+            await this.FlushAsync().ConfigureAwait(false); // ensure we don't write to the stream while there are still pending data in the buffer
+            await this.writeStream.WriteAsync(Encoding.UTF8.GetBytes(rawValue)).ConfigureAwait(false);
+            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+        }
+
+        public async Task FlushAsync()
+        {
+            if (this.writer.BytesPending > 0)
+            {
+                await this.writer.FlushAsync().ConfigureAwait(false);
+            }
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            if (this.writeStream != null)
+            {
+                await this.writeStream.FlushAsync().ConfigureAwait(false);
+            }
+
+            if (this.writer != null)
+            {
+                await this.writer.DisposeAsync().ConfigureAwait(false);
+            }
+
+            if (this.outputStream != this.writeStream && this.writeStream != null)
+            {
+                await this.writeStream.DisposeAsync().ConfigureAwait(false);
+            }
+
+            if (!this.leaveStreamOpen && this.outputStream != null)
+            {
+                await this.outputStream.DisposeAsync().ConfigureAwait(false);
+            }
+
+            this.Dispose(false);
+        }
+
+        private async ValueTask FlushIfBufferThresholdReachedAsync()
+        {
+            if (this.writer.BytesPending >= this.bufferFlushThreshold)
+            {
+                await this.FlushAsync().ConfigureAwait(false);
+            }
+        }
+
+        #endregion
     }
 }
 #endif
