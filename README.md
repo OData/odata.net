@@ -239,7 +239,7 @@ on each request:
 crank --config loadtests.yml --config lab-windows --scenario SerializationComparisons --application.options.counterProviders System.Runtime --variable writer=ODataMessageWriter
 ```
 
-This scenario allows you to choose which writer implementation is used to process the response as well. It also allows yout to configure different aspects of the requests, e.g. number of connections, max request per second, etc.
+This scenario allows you to choose which writer implementation is used to process the response as well. It also allows you to configure different aspects of the requests, e.g. number of connections, max requests per second, etc.
 
 For more information about these tests, [read this doc](test/PerformanceTests/SerializationComparisonsTests/README.md).
 

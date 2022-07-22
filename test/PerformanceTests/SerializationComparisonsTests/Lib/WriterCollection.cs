@@ -10,7 +10,7 @@ using System.Collections.Generic;
 namespace ExperimentsLib
 {
     /// <summary>
-    /// Manages a collection of <see cref="IPayloadWriter{T}"/>.
+    /// Manages a collection of <see cref="IPayloadWriter{T}" instances/>.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class WriterCollection<T>

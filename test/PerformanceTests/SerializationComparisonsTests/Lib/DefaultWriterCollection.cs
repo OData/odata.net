@@ -11,14 +11,14 @@ using Microsoft.OData.Edm;
 namespace ExperimentsLib
 {
     /// <summary>
-    /// Creates the default collection of <see cref="IPayloadWriter{T}"/>s used for testing.
+    /// Creates the default collection of <see cref="IPayloadWriter{T}"/> instances used for testing.
     /// </summary>
     public static class DefaultWriterCollection
     {
         /// <summary>
-        /// Creates a collection of <see cref="IPayloadWriter{Customer}"/>s for testing.
+        /// Creates a collection of <see cref="IPayloadWriter{Customer}"/> instances for testing.
         /// </summary>
-        /// <returns>A collection of <see cref="IPayloadWriter{Customer}"/>.</returns>
+        /// <returns>A collection of <see cref="IPayloadWriter{Customer}"/> instances.</returns>
         public static WriterCollection<IEnumerable<Customer>> Create()
         {
             IEdmModel model = DataModel.GetEdmModel();
