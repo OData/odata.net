@@ -1,46 +1,60 @@
-﻿using Microsoft.OData;
-using Microsoft.OData.Edm;
+﻿//---------------------------------------------------------------------
+// <copyright file="ODataMessageWriterPayloadWriter.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.OData;
+using Microsoft.OData.Edm;
 
-namespace SerializationBaselineTests
+namespace ExperimentsLib
 {
-    public class ODataSyncExperimentWriter : IExperimentWriter
+    /// <summary>
+    /// Writes Customer collection payload using <see cref="ODataMessageWriter"/>
+    /// </summary>
+    public class ODataMessageWriterPayloadWriter : IPayloadWriter<IEnumerable<Customer>>
     {
-        IEdmModel model;
-        bool useArrayPool;
+        readonly IEdmModel model;
+        readonly bool enableValidation;
+        readonly Func<Stream, IODataResponseMessage> messageFactory;
 
-        public ODataSyncExperimentWriter(IEdmModel model, bool useArrayPool = false)
+        public ODataMessageWriterPayloadWriter(IEdmModel model, Func<Stream, IODataResponseMessage> messageFactory, bool enableValidation = true)
         {
             this.model = model;
-            this.useArrayPool = useArrayPool;
+            this.messageFactory = messageFactory;
+            this.enableValidation = enableValidation;
         }
 
-        public Task WriteCustomers(IEnumerable<Customer> payload, Stream stream)
+        /// <inheritdoc/>
+        public Task WritePayloadAsync(IEnumerable<Customer> payload, Stream stream)
         {
             var settings = new ODataMessageWriterSettings();
+
             settings.ODataUri = new ODataUri
             {
-                ServiceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/")
+                ServiceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/"),
+                
             };
 
-            if (useArrayPool)
+            if (!this.enableValidation)
             {
-                settings.ArrayPool = CharArrayPool.Shared;
+                settings.Validations = ValidationKinds.None;
+                settings.EnableCharactersCheck = false;
+                settings.AlwaysAddTypeAnnotationsForDerivedTypes = false;
             }
 
-            InMemoryMessage message = new InMemoryMessage { Stream = stream };
+            IODataResponseMessage message = messageFactory(stream);
 
-            var messageWriter = new ODataMessageWriter((IODataResponseMessage)message, settings, model);
+            var messageWriter = new ODataMessageWriter(message, settings, model);
             var entitySet = model.EntityContainer.FindEntitySet("Customers");
             var writer = messageWriter.CreateODataResourceSetWriter(entitySet);
 
             var resourceSet = new ODataResourceSet();
-            //Console.WriteLine("Start writing resource set");
             writer.WriteStart(resourceSet);
-            //Console.WriteLine("About to write resources {0}", payload.Count());
 
             foreach (var customer in payload)
             {
@@ -68,7 +82,6 @@ namespace SerializationBaselineTests
                     }
                 };
 
-                //Console.WriteLine("Start writing resource {0}", customer.Id);
                 writer.WriteStart(resource);
                 // skip WriterStreamPropertiesAsync
                 // WriteComplexPropertiesAsync
@@ -134,12 +147,10 @@ namespace SerializationBaselineTests
 
                 // end write resource
                 writer.WriteEnd();
-                //Console.WriteLine("Finish writing resource {0}", customer.Id);
-
             }
 
             writer.WriteEnd();
-
+            writer.Flush();
             return Task.CompletedTask;
         }
     }

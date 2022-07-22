@@ -1,18 +1,28 @@
-﻿using Microsoft.OData;
+﻿//---------------------------------------------------------------------
+// <copyright file="ODataMessage.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.OData;
 
-namespace SerializationBaselineTests
+namespace ExperimentsLib
 {
-    public class InMemoryMessage : IODataResponseMessageAsync, IContainerProvider, IDisposable
+    /// <summary>
+    /// Implementation of <see cref="IODataResponseMessageAsync"/> used to pass
+    /// the response message to the <see cref="ODataMessageWriter"/>.
+    /// </summary>
+    public class ODataMessage : IODataResponseMessageAsync, IContainerProvider, IDisposable
     {
         private readonly Dictionary<string, string> headers;
 
-        public InMemoryMessage()
+        public ODataMessage()
         {
-            headers = new Dictionary<string, string>();
+            this.headers = new Dictionary<string, string>();
         }
 
         public IEnumerable<KeyValuePair<string, string>> Headers
@@ -32,13 +42,12 @@ namespace SerializationBaselineTests
 
         public string GetHeader(string headerName)
         {
-            string headerValue;
-            return this.headers.TryGetValue(headerName, out headerValue) ? headerValue : null;
+            return this.headers.TryGetValue(headerName, out string headerValue) ? headerValue : null;
         }
 
         public void SetHeader(string headerName, string headerValue)
         {
-            headers[headerName] = headerValue;
+            this.headers[headerName] = headerValue;
         }
 
         public Stream GetStream()

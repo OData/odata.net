@@ -1,7 +1,13 @@
-﻿using Microsoft.OData.Edm;
-using System.Collections.Generic;
+﻿//---------------------------------------------------------------------
+// <copyright file="DataModel.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
 
-namespace SerializationBaselineTests
+using System.Collections.Generic;
+using Microsoft.OData.Edm;
+
+namespace ExperimentsLib
 {
     public class Customer
     {
@@ -20,16 +26,21 @@ namespace SerializationBaselineTests
 
     public static class DataModel
     {
+        /// <summary>
+        /// Gets an OData model for testing, defining
+        /// and entity set of Customer instances.
+        /// </summary>
+        /// <returns>The OData model.</returns>
         public static IEdmModel GetEdmModel()
         {
-            var model = new EdmModel();
+            EdmModel model = new EdmModel();
 
-            var addressType = new EdmComplexType("NS", "Address");
+            EdmComplexType addressType = new EdmComplexType("NS", "Address");
             addressType.AddStructuralProperty("City", EdmPrimitiveTypeKind.String);
             addressType.AddStructuralProperty("Street", EdmPrimitiveTypeKind.String);
             model.AddElement(addressType);
 
-            var customer = new EdmEntityType("NS", "Customer");
+            EdmEntityType customer = new EdmEntityType("NS", "Customer");
             customer.AddKeys(customer.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32, isNullable: false));
             customer.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
             customer.AddStructuralProperty("Emails",
@@ -40,7 +51,7 @@ namespace SerializationBaselineTests
                     new EdmCollectionType(new EdmComplexTypeReference(addressType, isNullable: false))));
             model.AddElement(customer);
 
-            var container = new EdmEntityContainer("NS", "DefaultContainer");
+            EdmEntityContainer container = new EdmEntityContainer("NS", "DefaultContainer");
             container.AddEntitySet("Customers", customer);
             model.AddElement(container);
 

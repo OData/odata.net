@@ -1,48 +1,58 @@
-﻿using Microsoft.OData;
-using Microsoft.OData.Edm;
+﻿//---------------------------------------------------------------------
+// <copyright file="ODataMessageWriterAsyncPayloadWriter.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.OData;
+using Microsoft.OData.Edm;
 
-namespace SerializationBaselineTests
+namespace ExperimentsLib
 {
-    class ODataExperimentWriter : IExperimentWriter
+    /// <summary>
+    /// Writes Customer collection OData JSON format using <see cref="ODataMessageWriter"/> async version.
+    /// </summary>
+    public class ODataMessageWriterAsyncPayloadWriter : IPayloadWriter<IEnumerable<Customer>>
     {
-        IEdmModel _model;
-        bool _useArrayPool = false;
+        private readonly IEdmModel model;
+        private readonly bool enableValidation;
+        private readonly Func<Stream, IODataResponseMessage> messageFactory;
 
-        public ODataExperimentWriter(IEdmModel model, bool useArrayPool = false)
+        public ODataMessageWriterAsyncPayloadWriter(IEdmModel model, Func<Stream, IODataResponseMessage> messageFactory, bool enableValidation = true)
         {
-            _model = model;
-            _useArrayPool = useArrayPool;
+            this.model = model;
+            this.enableValidation = enableValidation;
+            this.messageFactory = messageFactory;
         }
-        public async Task WriteCustomers(IEnumerable<Customer> payload, Stream stream)
+
+        /// <inheritdoc/>
+        public async Task WritePayloadAsync(IEnumerable<Customer> payload, Stream stream)
         {
-            var sw = new Stopwatch();
-            sw.Start();
-            var settings = new ODataMessageWriterSettings();
+            ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
             settings.ODataUri = new ODataUri
             {
                 ServiceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/")
             };
-            if (_useArrayPool)
-            {
-                settings.ArrayPool = CharArrayPool.Shared;
-            }
-            var model = _model;
-            InMemoryMessage message = new InMemoryMessage { Stream = stream };
 
-            var messageWriter = new ODataMessageWriter((IODataResponseMessage)message, settings, model);
-            var entitySet = model.EntityContainer.FindEntitySet("Customers");
-            var writer = await messageWriter.CreateODataResourceSetWriterAsync(entitySet);
+            if (!this.enableValidation)
+            {
+                settings.Validations = ValidationKinds.None;
+                settings.EnableCharactersCheck = false;
+                settings.AlwaysAddTypeAnnotationsForDerivedTypes = false;
+            }
+            
+            IODataResponseMessage message = this.messageFactory(stream);
+
+            var messageWriter = new ODataMessageWriter(message, settings, this.model);
+            var entitySet = this.model.EntityContainer.FindEntitySet("Customers");
+            ODataWriter writer = await messageWriter.CreateODataResourceSetWriterAsync(entitySet);
 
             var resourceSet = new ODataResourceSet();
-            //Console.WriteLine("Start writing resource set");
             await writer.WriteStartAsync(resourceSet);
-            //Console.WriteLine("About to write resources {0}", payload.Count());
 
             foreach (var customer in payload)
             {
@@ -70,7 +80,6 @@ namespace SerializationBaselineTests
                     }
                 };
 
-                //Console.WriteLine("Start writing resource {0}", customer.Id);
                 await writer.WriteStartAsync(resource);
                 // skip WriterStreamPropertiesAsync
                 // WriteComplexPropertiesAsync
@@ -91,6 +100,7 @@ namespace SerializationBaselineTests
                         new ODataProperty { Name = "Street", Value = customer.HomeAddress.Street }
                     }
                 };
+
                 await writer.WriteStartAsync(homeAddressResource);
                 await writer.WriteEndAsync();
 
@@ -110,6 +120,7 @@ namespace SerializationBaselineTests
                 var addressesResourceSet = new ODataResourceSet();
                 // start addressesResourceSet
                 await writer.WriteStartAsync(addressesResourceSet);
+
                 foreach (var address in customer.Addresses)
                 {
                     var addressResource = new ODataResource
@@ -136,10 +147,10 @@ namespace SerializationBaselineTests
 
                 // end write resource
                 await writer.WriteEndAsync();
-                //Console.WriteLine("Finish writing resource {0}", customer.Id);
-                //Console.WriteLine("Finised customer {0}", customer.Id);
             }
+
             await writer.WriteEndAsync();
+            await writer.FlushAsync();
         }
     }
 }
