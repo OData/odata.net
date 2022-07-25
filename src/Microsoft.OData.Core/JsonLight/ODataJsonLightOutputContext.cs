@@ -72,14 +72,6 @@ namespace Microsoft.OData.JsonLight
         private PropertyCacheHandler propertyCacheHandler;
 
         /// <summary>
-        /// The concrete <see cref="JsonWriter"/> instance initialized when
-        /// creating either synchronous or asynchronous writer.
-        /// Used to guarantee that the synchronous and asynchronous writers share the same scope(s) specifically
-        /// because the synchronous writer is used to write spatial data in both synchronous and asynchronous scenarios.
-        /// </summary>
-        //private JsonWriter concreteJsonWriter;
-
-        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="messageInfo">The context information for the message.</param>
