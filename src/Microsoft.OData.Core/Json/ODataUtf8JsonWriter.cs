@@ -319,8 +319,7 @@ namespace Microsoft.OData.Json
         public async Task StartPaddingFunctionScopeAsync()
         {
             await this.FlushAsync().ConfigureAwait(false);
-            // writes '('
-            await this.writeStream.WriteAsync(Parantheses[..1]).ConfigureAwait(false);
+            await this.writeStream.WriteAsync(stackalloc byte[] { '(' }.ConfigureAwait(false);
         }
 
         public async Task WritePaddingFunctionNameAsync(string functionName)
@@ -332,8 +331,7 @@ namespace Microsoft.OData.Json
         public async Task EndPaddingFunctionScopeAsync()
         {
             await this.FlushAsync().ConfigureAwait(false);
-            // writes ')'
-            await this.writeStream.WriteAsync(Parantheses[1..2]).ConfigureAwait(false);
+            await this.writeStream.WriteAsync(stackalloc byte[] {  ')' }]).ConfigureAwait(false);
         }
 
         public async Task StartObjectScopeAsync()
