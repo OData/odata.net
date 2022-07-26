@@ -3,7 +3,7 @@
 There are often features in the latest versions of .NET that we want to consume in ODL. However, all versions of ODL are not on the same version of .NET, so not all .NET features may be accessible to each ODL version that needs support. In such cases, we should copy the entire file containing the feature and include it in the ODL repository. This file will be included in the appropriate `.csproj`. It can be excluded from the latest version (to not conflict with the feature shipped with .NET) by conditionally compiling it:
 
 ```
-<ItemGroup>
+<ItemGroup> <!--TODO make additive so that we don't have increased maintenance over time-->
   <Compile Condition="'$(TargetFramework)' == '{framework_version_that_has_feature}'" Remove="Class1.cs" />
 </ItemGroup>
 ```
