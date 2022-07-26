@@ -19,6 +19,10 @@ Once we are depending on the source instead of the framework, we are now respons
 
 ### Open questions
 
-1. How often should we check for updates?
-2. How should we record the URL that the file was taken from?
-3. What limit do we want to place on nested "new feature" dependencies?
+1. How often should we check for updates? 3 months, unless we can subscribe to changes to github files
+2. How should we record the URL that the file was taken from? header inside the file, come up with proposal; maybe in the future, we decide to use git modules?
+3. What limit do we want to place on nested "new feature" dependencies? always take "one file" dependencies, but leave more than that up to the judgment of contributor and reviewers
+4. Compiler constants might need to be explicitly excluded? action item: what does the .net repo actually look like in this regard?
+
+
+5. What happens if there is a conflict between existing ODL code/resources and the .NET stuff?
