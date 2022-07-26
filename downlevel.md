@@ -25,4 +25,4 @@ Once we are depending on the source instead of the framework, we are now respons
 4. Compiler constants might need to be explicitly excluded? action item: what does the .net repo actually look like in this regard?
 
 
-5. What happens if there is a conflict between existing ODL code/resources and the .NET stuff?
+What happens if there is a conflict between existing ODL code/resources and the .NET stuff?
