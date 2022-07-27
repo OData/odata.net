@@ -38,10 +38,9 @@ namespace ExperimentsLib
             jsonWriter.WriteStartArray("value");
 
             int count = 0;
-            foreach (var _customer in payload)
-            {
-                Customer customer = _customer;
 
+            foreach (Customer customer in payload)
+            {
                 jsonWriter.WriteStartObject();
                 jsonWriter.WriteNumber("Id", customer.Id);
                 jsonWriter.WriteString("Name", customer.Name);
