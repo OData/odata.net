@@ -5,14 +5,16 @@ There are often features in the latest versions of .NET that we want to consume 
 This file will be included in the appropriate `.csproj`. It can be excluded from the latest version (to not conflict with the feature shipped with .NET) by conditionally compiling it:
 
 ```
-<ItemGroup> <!--TODO make additive so that we don't have increased maintenance over time; also have a work item in the "follow-through" to remove these lines and the no longer relevant source file-->
-  <Compile Condition="'$(TargetFramework)' == '{framework_version_that_has_feature}'" Remove="Class1.cs" />
+<ItemGroup>
+  <Compile Condition="'$(TargetFramework)' != '{framework_version_that_has_feature}' and ..." Remove="Class1.cs" />
 </ItemGroup>
 ```
 
 ### Follow-through work
 
 Once we are depending on the source instead of the framework, we are now responsible for any security fixes that are introduced to the feature. We should create tracking work items to check if there are updates to the feature every 3 months, and pull those updates into our repo if necessary. If the URL of the source file has changed, update the `.md` file with the new URL. 
+
+Another follow-up work item is that we should remove the conditional compilation once the downlevel framework versions are no longer supported. 
 
 ### Limitations
 
