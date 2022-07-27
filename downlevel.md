@@ -21,14 +21,8 @@ Once we are depending on the source instead of the framework, we are now respons
 3. Preprocessor directives can cause issues when bringing in a source file. If a source file contains these directives, then that means that a framework version is compiled for a specific SKU. If ODL does not ship a package that targets *all* of those SKUs, the the source file cannot be taken. Note that, currently, .NET does not use preprocessor directives in the C# libraries; you can verify this by [searching](https://github.com/dotnet/runtime/search?q=filename%3A.cs+ifdef&type=code) the github repo.
 4. The Microsoft [open source guidelines](https://docs.opensource.microsoft.com/) should be followed *in addition* to this document, specifically the "Policies & guidance" section
 
-### Open questions
-
-1. Is there a way to subscribe to changes to a file in github?
-
-
-
-
 ### Future
 
-1. Use git modules to pull source files?
-2. What happens if there is a conflict between existing ODL code/resources and the .NET stuff?
+1. We might be able to use git modules to pull source files, take updates to the module whenever a file is modified.
+2. Github does not explicitly have a way to subscribe to changes made in a file. We could add something like this to our build process to regularly check for changes in an automated way. 
+3. We should be on the lookout for when a conflict might arise between existing ODL code/resources and the .NET files. This is a living document and may need to be modified as issues arise. 
