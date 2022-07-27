@@ -21,7 +21,7 @@ namespace ExperimentsLib
     {
         private readonly Func<Stream, Utf8JsonWriter> writerFactory;
 
-        public Utf8JsonWriterDirectPayloadWriter(Func<Stream, Utf8JsonWriter> writerFactory, bool simulateResourceGeneration = false)
+        public Utf8JsonWriterDirectPayloadWriter(Func<Stream, Utf8JsonWriter> writerFactory)
         {
             this.writerFactory = writerFactory;
         }
@@ -29,6 +29,9 @@ namespace ExperimentsLib
         /// <inheritdoc/>
         public async Task WritePayloadAsync(IEnumerable<Customer> payload, Stream stream)
         {
+            Uri serviceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/");
+
+            using Utf8JsonWriter jsonWriter = this.writerFactory(stream);
 
             jsonWriter.WriteStartObject();
             jsonWriter.WriteString("@odata.context", $"{serviceRoot}$metadata#Customers");
@@ -43,10 +46,12 @@ namespace ExperimentsLib
                 jsonWriter.WriteNumber("Id", customer.Id);
                 jsonWriter.WriteString("Name", customer.Name);
                 jsonWriter.WriteStartArray("Emails");
+
                 foreach (var email in customer.Emails)
                 {
                     jsonWriter.WriteStringValue(email);
                 }
+
                 jsonWriter.WriteEndArray();
 
 
@@ -88,6 +93,7 @@ namespace ExperimentsLib
                     await jsonWriter.FlushAsync();
                 }
             }
+
             jsonWriter.WriteEndArray();
             jsonWriter.WriteEndObject();
             await jsonWriter.FlushAsync();
