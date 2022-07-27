@@ -3437,44 +3437,55 @@ namespace Microsoft.OData.Edm
         /// <returns>Alternate Keys of this type.</returns>
         private static IEnumerable<IDictionary<string, IEdmProperty>> GetDeclaredAlternateKeysForType(IEdmEntityType type, IEdmModel model, bool useCore = false)
         {
-            IEdmTerm alternateKeyTerms = useCore ? CoreVocabularyModel.AlternateKeysTerm : AlternateKeysVocabularyModel.AlternateKeysTerm;
-            IEdmVocabularyAnnotation annotationValue = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(type, alternateKeyTerms).FirstOrDefault();
+            IEdmVocabularyAnnotation annotationValue = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(type, AlternateKeysVocabularyModel.AlternateKeysTerm).FirstOrDefault();
+            IEdmVocabularyAnnotation coreAnnotationValue = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(type, CoreVocabularyModel.AlternateKeysTerm).FirstOrDefault();
 
-            if (annotationValue != null)
+            if (annotationValue != null || coreAnnotationValue != null)
             {
                 List<IDictionary<string, IEdmProperty>> declaredAlternateKeys = new List<IDictionary<string, IEdmProperty>>();
 
-                IEdmCollectionExpression keys = annotationValue.Value as IEdmCollectionExpression;
-                Debug.Assert(keys != null, "expected IEdmCollectionExpression for alternate key annotation value");
-
-                foreach (IEdmRecordExpression key in keys.Elements.OfType<IEdmRecordExpression>())
+                Action<IEdmVocabularyAnnotation> retrieveAnnotationAction = ann =>
                 {
-                    var edmPropertyConstructor = key.Properties.FirstOrDefault(e => e.Name == "Key");
-                    if (edmPropertyConstructor != null)
+                    if (ann == null)
                     {
-                        IEdmCollectionExpression collectionExpression = edmPropertyConstructor.Value as IEdmCollectionExpression;
-                        Debug.Assert(collectionExpression != null, "expected IEdmCollectionExpression type for Key Property");
+                        return;
+                    }
 
-                        IDictionary<string, IEdmProperty> alternateKey = new Dictionary<string, IEdmProperty>();
-                        foreach (IEdmRecordExpression propertyRef in collectionExpression.Elements.OfType<IEdmRecordExpression>())
+                    IEdmCollectionExpression keys = ann.Value as IEdmCollectionExpression;
+                    Debug.Assert(keys != null, "expected IEdmCollectionExpression for alternate key annotation value");
+
+                    foreach (IEdmRecordExpression key in keys.Elements.OfType<IEdmRecordExpression>())
+                    {
+                        var edmPropertyConstructor = key.Properties.FirstOrDefault(e => e.Name == "Key");
+                        if (edmPropertyConstructor != null)
                         {
-                            var aliasProp = propertyRef.Properties.FirstOrDefault(e => e.Name == "Alias");
-                            Debug.Assert(aliasProp != null, "expected non null Alias Property");
-                            string alias = ((IEdmStringConstantExpression)aliasProp.Value).Value;
+                            IEdmCollectionExpression collectionExpression = edmPropertyConstructor.Value as IEdmCollectionExpression;
+                            Debug.Assert(collectionExpression != null, "expected IEdmCollectionExpression type for Key Property");
 
-                            var nameProp = propertyRef.Properties.FirstOrDefault(e => e.Name == "Name");
-                            Debug.Assert(nameProp != null, "expected non null Name Property");
-                            string propertyName = ((IEdmPathExpression)nameProp.Value).PathSegments.FirstOrDefault();
+                            IDictionary<string, IEdmProperty> alternateKey = new Dictionary<string, IEdmProperty>();
+                            foreach (IEdmRecordExpression propertyRef in collectionExpression.Elements.OfType<IEdmRecordExpression>())
+                            {
+                                var aliasProp = propertyRef.Properties.FirstOrDefault(e => e.Name == "Alias");
+                                Debug.Assert(aliasProp != null, "expected non null Alias Property");
+                                string alias = ((IEdmStringConstantExpression)aliasProp.Value).Value;
 
-                            alternateKey[alias] = type.FindProperty(propertyName);
-                        }
+                                var nameProp = propertyRef.Properties.FirstOrDefault(e => e.Name == "Name");
+                                Debug.Assert(nameProp != null, "expected non null Name Property");
+                                string propertyName = ((IEdmPathExpression)nameProp.Value).PathSegments.FirstOrDefault();
 
-                        if (alternateKey.Any())
-                        {
-                            declaredAlternateKeys.Add(alternateKey);
+                                alternateKey[alias] = type.FindProperty(propertyName);
+                            }
+
+                            if (alternateKey.Any())
+                            {
+                                declaredAlternateKeys.Add(alternateKey);
+                            }
                         }
                     }
-                }
+                };
+
+                retrieveAnnotationAction(annotationValue);
+                retrieveAnnotationAction(coreAnnotationValue);
 
                 return declaredAlternateKeys;
             }
