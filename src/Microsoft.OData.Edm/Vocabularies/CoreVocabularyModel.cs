@@ -131,11 +131,11 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         /// <summary>
         /// The AlternateKey ComplexType.
         /// </summary>
-        internal static readonly IEdmComplexType AlternateKeyType = VocabularyModelProvider.CoreModel.FindDeclaredType(CoreVocabularyConstants.AlternateKeyType) as IEdmComplexType;
+        internal static readonly IEdmComplexType AlternateKeyType = VocabularyModelProvider.CoreModel.FindDeclaredType(CoreVocabularyConstants.AlternateKey) as IEdmComplexType;
 
         /// <summary>
         /// The PropertyRef ComplexType.
         /// </summary>
-        internal static readonly IEdmComplexType PropertyRefType = VocabularyModelProvider.CoreModel.FindDeclaredType(CoreVocabularyConstants.PropertyRefType) as IEdmComplexType;
+        internal static readonly IEdmComplexType PropertyRefType = VocabularyModelProvider.CoreModel.FindDeclaredType(CoreVocabularyConstants.PropertyRef) as IEdmComplexType;
     }
 }
