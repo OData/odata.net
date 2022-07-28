@@ -2128,16 +2128,7 @@ namespace Microsoft.OData.Edm
             IEdmEntityType checkingType = type;
             while (checkingType != null)
             {
-                // Check the core version first
-                IEnumerable<IDictionary<string, IEdmProperty>> declaredAlternateKeys = GetDeclaredAlternateKeysForType(checkingType, model, true);
-                if (declaredAlternateKeys != null)
-                {
-                    return declaredAlternateKeys;
-                }
-
-                // for back-compability, check the community version second.
-                // Please remove the community version in the ODL 8
-                declaredAlternateKeys = GetDeclaredAlternateKeysForType(checkingType, model);
+                IEnumerable<IDictionary<string, IEdmProperty>> declaredAlternateKeys = GetDeclaredAlternateKeysForType(checkingType, model);
                 if (declaredAlternateKeys != null)
                 {
                     return declaredAlternateKeys;
@@ -3435,7 +3426,7 @@ namespace Microsoft.OData.Edm
         /// <param name="type">Reference to the calling object.</param>
         /// <param name="model">The model to be used.</param>
         /// <returns>Alternate Keys of this type.</returns>
-        private static IEnumerable<IDictionary<string, IEdmProperty>> GetDeclaredAlternateKeysForType(IEdmEntityType type, IEdmModel model, bool useCore = false)
+        private static IEnumerable<IDictionary<string, IEdmProperty>> GetDeclaredAlternateKeysForType(IEdmEntityType type, IEdmModel model)
         {
             IEdmVocabularyAnnotation annotationValue = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(type, AlternateKeysVocabularyModel.AlternateKeysTerm).FirstOrDefault();
             IEdmVocabularyAnnotation coreAnnotationValue = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(type, CoreVocabularyModel.AlternateKeysTerm).FirstOrDefault();
@@ -3484,6 +3475,7 @@ namespace Microsoft.OData.Edm
                     }
                 };
 
+                // For back-compability, we merge the alternate keys from community and core vocabulary annotations if have.
                 retrieveAnnotationAction(annotationValue);
                 retrieveAnnotationAction(coreAnnotationValue);
 
