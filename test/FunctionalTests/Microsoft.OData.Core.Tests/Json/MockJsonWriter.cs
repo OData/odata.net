@@ -22,35 +22,17 @@ namespace Microsoft.OData.Tests.Json
         public Action<string> WriteNameVerifier;
         public Action<string> WriteValueVerifier;
 
-        public void StartPaddingFunctionScope()
-        {
-            throw new NotImplementedException();
-        }
+        public void StartPaddingFunctionScope() => throw new NotImplementedException();
 
-        public void EndPaddingFunctionScope()
-        {
-            throw new NotImplementedException();
-        }
+        public void EndPaddingFunctionScope() => throw new NotImplementedException();
 
-        public void StartObjectScope()
-        {
-            throw new NotImplementedException();
-        }
+        public void StartObjectScope() => throw new NotImplementedException();
 
-        public void EndObjectScope()
-        {
-            throw new NotImplementedException();
-        }
+        public void EndObjectScope() => throw new NotImplementedException();
 
-        public void StartArrayScope()
-        {
-            throw new NotImplementedException();
-        }
+        public void StartArrayScope() => throw new NotImplementedException();
 
-        public void EndArrayScope()
-        {
-            throw new NotImplementedException();
-        }
+        public void EndArrayScope() => throw new NotImplementedException();
 
         public void WriteName(string name)
         {
@@ -58,80 +40,35 @@ namespace Microsoft.OData.Tests.Json
             this.WriteNameVerifier(name);
         }
 
-        public void WritePaddingFunctionName(string functionName)
-        {
-            throw new NotImplementedException();
-        }
+        public void WritePaddingFunctionName(string functionName) => throw new NotImplementedException();
 
-        public void WriteValue(bool value)
-        {
-            throw new NotImplementedException();
-        }
+        public void WriteValue(bool value) => throw new NotImplementedException();
 
-        public void WriteValue(int value)
-        {
-            throw new NotImplementedException();
-        }
+        public void WriteValue(int value) => throw new NotImplementedException();
 
-        public void WriteValue(float value)
-        {
-            throw new NotImplementedException();
-        }
+        public void WriteValue(float value) => throw new NotImplementedException();
 
-        public void WriteValue(short value)
-        {
-            throw new NotImplementedException();
-        }
+        public void WriteValue(short value) => throw new NotImplementedException();
 
-        public void WriteValue(long value)
-        {
-            throw new NotImplementedException();
-        }
+        public void WriteValue(long value) => throw new NotImplementedException();
 
-        public void WriteValue(double value)
-        {
-            throw new NotImplementedException();
-        }
+        public void WriteValue(double value) => throw new NotImplementedException();
 
-        public void WriteValue(Guid value)
-        {
-            throw new NotImplementedException();
-        }
+        public void WriteValue(Guid value) => throw new NotImplementedException();
 
-        public void WriteValue(decimal value)
-        {
-            throw new NotImplementedException();
-        }
+        public void WriteValue(decimal value) => throw new NotImplementedException();
 
-        public void WriteValue(Date value)
-        {
-            throw new NotImplementedException();
-        }
+        public void WriteValue(Date value) => throw new NotImplementedException();
 
-        public void WriteValue(DateTimeOffset value)
-        {
-            throw new NotImplementedException();
-        }
+        public void WriteValue(DateTimeOffset value) => throw new NotImplementedException();
 
-        public void WriteValue(TimeSpan value)
-        {
-            throw new NotImplementedException();
-        }
+        public void WriteValue(TimeSpan value) => throw new NotImplementedException();
 
-        public void WriteValue(TimeOfDay value)
-        {
-            throw new NotImplementedException();
-        }
+        public void WriteValue(TimeOfDay value) => throw new NotImplementedException();
 
-        public void WriteValue(byte value)
-        {
-            throw new NotImplementedException();
-        }
+        public void WriteValue(byte value) => throw new NotImplementedException();
 
-        public void WriteValue(sbyte value)
-        {
-            throw new NotImplementedException();
-        }
+        public void WriteValue(sbyte value) => throw new NotImplementedException();
 
         public void WriteValue(string value)
         {
@@ -151,40 +88,19 @@ namespace Microsoft.OData.Tests.Json
             this.WriteValueVerifier(rawValue);
         }
 
-        public void Flush()
-        {
-            throw new NotImplementedException();
-        }
+        public void Flush() => throw new NotImplementedException();
 
-        public Task StartPaddingFunctionScopeAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public Task StartPaddingFunctionScopeAsync() => throw new NotImplementedException();
 
-        public Task EndPaddingFunctionScopeAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public Task EndPaddingFunctionScopeAsync() => throw new NotImplementedException();
 
-        public Task StartObjectScopeAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public Task StartObjectScopeAsync() => throw new NotImplementedException();
 
-        public Task EndObjectScopeAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public Task EndObjectScopeAsync() => throw new NotImplementedException();
 
-        public Task StartArrayScopeAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public Task StartArrayScopeAsync() => throw new NotImplementedException();
 
-        public Task EndArrayScopeAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public Task EndArrayScopeAsync() => throw new NotImplementedException();
 
         public Task WriteNameAsync(string name)
         {
@@ -193,70 +109,31 @@ namespace Microsoft.OData.Tests.Json
             return TaskUtils.CompletedTask;
         }
 
-        public Task WritePaddingFunctionNameAsync(string functionName)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WritePaddingFunctionNameAsync(string functionName) => throw new NotImplementedException();
 
-        public Task WriteValueAsync(bool value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(bool value) => throw new NotImplementedException();
 
-        public Task WriteValueAsync(int value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(int value) => throw new NotImplementedException();
 
-        public Task WriteValueAsync(float value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(float value) => throw new NotImplementedException();
 
-        public Task WriteValueAsync(short value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(short value) => throw new NotImplementedException();
 
-        public Task WriteValueAsync(long value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(long value) => throw new NotImplementedException();
 
-        public Task WriteValueAsync(double value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(double value) => throw new NotImplementedException();
 
-        public Task WriteValueAsync(Guid value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(Guid value) => throw new NotImplementedException();
 
-        public Task WriteValueAsync(decimal value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(decimal value) => throw new NotImplementedException();
 
-        public Task WriteValueAsync(DateTimeOffset value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(DateTimeOffset value) => throw new NotImplementedException();
 
-        public Task WriteValueAsync(TimeSpan value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(TimeSpan value) => throw new NotImplementedException();
 
-        public Task WriteValueAsync(byte value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(byte value) => throw new NotImplementedException();
 
-        public Task WriteValueAsync(sbyte value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(sbyte value) => throw new NotImplementedException();
 
         public Task WriteValueAsync(string value)
         {
@@ -272,15 +149,9 @@ namespace Microsoft.OData.Tests.Json
             return TaskUtils.CompletedTask;
         }
 
-        public Task WriteValueAsync(Date value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(Date value) => throw new NotImplementedException();
 
-        public Task WriteValueAsync(TimeOfDay value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(TimeOfDay value) => throw new NotImplementedException();
 
         public Task WriteRawValueAsync(string rawValue)
         {
@@ -289,9 +160,6 @@ namespace Microsoft.OData.Tests.Json
             return TaskUtils.CompletedTask;
         }
 
-        public Task FlushAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public Task FlushAsync() => throw new NotImplementedException();
     }
 }

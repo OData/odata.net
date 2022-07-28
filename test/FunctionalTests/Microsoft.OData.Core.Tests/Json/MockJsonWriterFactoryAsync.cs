@@ -17,6 +17,7 @@ namespace Microsoft.OData.Tests.Json
         {
             this.jsonWriter = jsonWriter;
         }
+
         public IJsonWriterAsync CreateAsynchronousJsonWriter(TextWriter textWriter, bool isIeee754Compatible)
         {
             return jsonWriter;

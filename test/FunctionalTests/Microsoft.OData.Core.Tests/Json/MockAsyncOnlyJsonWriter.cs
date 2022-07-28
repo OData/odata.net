@@ -18,134 +18,56 @@ namespace Microsoft.OData.Tests.Json
     /// </summary>
     internal class MockAsyncOnlyJsonWriter : IJsonWriterAsync
     {
-        public Task EndArrayScopeAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public Task EndArrayScopeAsync() => throw new NotImplementedException();
 
-        public Task EndObjectScopeAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public Task EndObjectScopeAsync() => throw new NotImplementedException();
 
-        public Task EndPaddingFunctionScopeAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public Task EndPaddingFunctionScopeAsync() => throw new NotImplementedException();
 
-        public Task FlushAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public Task FlushAsync() => throw new NotImplementedException();
 
-        public Task StartArrayScopeAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public Task StartArrayScopeAsync() => throw new NotImplementedException();
 
-        public Task StartObjectScopeAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public Task StartObjectScopeAsync() => throw new NotImplementedException();
 
-        public Task StartPaddingFunctionScopeAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public Task StartPaddingFunctionScopeAsync() => throw new NotImplementedException();
 
-        public Task WriteNameAsync(string name)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteNameAsync(string name) => throw new NotImplementedException();
 
-        public Task WritePaddingFunctionNameAsync(string functionName)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WritePaddingFunctionNameAsync(string functionName) => throw new NotImplementedException();
 
-        public Task WriteRawValueAsync(string rawValue)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteRawValueAsync(string rawValue) => throw new NotImplementedException();
 
-        public Task WriteValueAsync(bool value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(bool value) => throw new NotImplementedException();
 
-        public Task WriteValueAsync(int value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(int value) => throw new NotImplementedException();
 
-        public Task WriteValueAsync(float value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(float value) => throw new NotImplementedException();
 
-        public Task WriteValueAsync(short value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(short value) => throw new NotImplementedException();
 
-        public Task WriteValueAsync(long value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(long value) => throw new NotImplementedException();
 
-        public Task WriteValueAsync(double value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(double value) => throw new NotImplementedException();
 
-        public Task WriteValueAsync(Guid value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(Guid value) => throw new NotImplementedException();
 
-        public Task WriteValueAsync(decimal value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(decimal value) => throw new NotImplementedException();
 
-        public Task WriteValueAsync(DateTimeOffset value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(DateTimeOffset value) => throw new NotImplementedException();
 
-        public Task WriteValueAsync(TimeSpan value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(TimeSpan value) => throw new NotImplementedException();
 
-        public Task WriteValueAsync(byte value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(byte value) => throw new NotImplementedException();
 
-        public Task WriteValueAsync(sbyte value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(sbyte value) => throw new NotImplementedException();
 
-        public Task WriteValueAsync(string value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(string value) => throw new NotImplementedException();
 
-        public Task WriteValueAsync(byte[] value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(byte[] value) => throw new NotImplementedException();
 
-        public Task WriteValueAsync(Date value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(Date value) => throw new NotImplementedException();
 
-        public Task WriteValueAsync(TimeOfDay value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(TimeOfDay value) => throw new NotImplementedException();
     }
 }

@@ -876,7 +876,7 @@ namespace Microsoft.OData.JsonLight
         /// when the JSON writer factory is DefaultJsonWriterFactory - since both CreateJsonWriter and
         /// CreateAsynchronousJsonWriter methods of that factory return an instance of JsonWriter.
         /// Merging IJsonWriter and IJsonWriterAsync interface in a major release will simplify this.</remarks>
-        private IJsonWriter CreateJsonWriter(
+        private static IJsonWriter CreateJsonWriter(
             IServiceProvider container,
             TextWriter textWriter,
             bool isIeee754Compatible,
@@ -936,7 +936,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="isIeee754Compatible">true if the writer should write large integers as strings.</param>
         /// <param name="writerSettings">Configuration settings for the OData writer.</param>
         /// <returns>An asynchronous JSON writer.</returns>
-        private IJsonWriterAsync CreateAsynchronousJsonWriter(
+        private static IJsonWriterAsync CreateAsynchronousJsonWriter(
             IServiceProvider container,
             TextWriter textWriter,
             bool isIeee754Compatible,
@@ -961,7 +961,7 @@ namespace Microsoft.OData.JsonLight
             return asynchronousJsonWriter;
         }
 
-        private IJsonWriterAsync CreateAsynchronousJsonWriter(
+        private static IJsonWriterAsync CreateAsynchronousJsonWriter(
             IStreamBasedJsonWriterFactory factory,
             Stream outputStream,
             bool isIeee754Compatible,
@@ -994,21 +994,21 @@ namespace Microsoft.OData.JsonLight
             if (this.jsonWriter != null && this.asynchronousJsonWriter == null && this.jsonWriter is IJsonWriterAsync jsonWriterAsync)
             {
                 this.asynchronousJsonWriter = jsonWriterAsync;
+                return;
             }
 
             if (this.asynchronousJsonWriter != null && this.jsonWriter == null)
             {
-                if (this.asynchronousJsonWriter is IJsonWriter jsonWriter)
+                if (this.asynchronousJsonWriter is IJsonWriter syncJsonWriter)
                 {
-                    this.jsonWriter = jsonWriter;
+                    this.jsonWriter = syncJsonWriter;
+                    return;
                 }
-                else
-                {
-                    throw new ODataException(Strings.ODataMessageWriter_IJsonWriterAsync_Must_Implement_IJsonWriter);
-                }
+
+                throw new ODataException(Strings.ODataMessageWriter_IJsonWriterAsync_Must_Implement_IJsonWriter);
             }
 
-            if (this.asynchronousJsonWriter != null && !this.asynchronousJsonWriter.Equals(this.jsonWriter))
+            if (this.asynchronousJsonWriter != null && !object.ReferenceEquals(this.asynchronousJsonWriter, this.jsonWriter))
             {
                 throw new ODataException(Strings.ODataMessageWriter_IJsonWriter_And_IJsonWriterAsync_Are_Different_Instances);
             }

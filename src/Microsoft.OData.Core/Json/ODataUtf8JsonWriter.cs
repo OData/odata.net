@@ -25,7 +25,7 @@ namespace Microsoft.OData.Json
     {
         private const int DefaultBufferSize = 16 * 1024;
         private readonly float bufferFlushThreshold;
-        private readonly static ReadOnlyMemory<byte> Parentheses = new byte[] { (byte)'(', (byte)')' };
+        private readonly static ReadOnlyMemory<byte> parentheses = new byte[] { (byte)'(', (byte)')' };
 
         private readonly Stream outputStream;
         private readonly Stream writeStream;
@@ -319,7 +319,7 @@ namespace Microsoft.OData.Json
         public async Task StartPaddingFunctionScopeAsync()
         {
             await this.FlushAsync().ConfigureAwait(false);
-            await this.writeStream.WriteAsync(Parentheses[..1]).ConfigureAwait(false);
+            await this.writeStream.WriteAsync(parentheses[..1]).ConfigureAwait(false);
         }
 
         public async Task WritePaddingFunctionNameAsync(string functionName)
@@ -331,7 +331,7 @@ namespace Microsoft.OData.Json
         public async Task EndPaddingFunctionScopeAsync()
         {
             await this.FlushAsync().ConfigureAwait(false);
-            await this.writeStream.WriteAsync(Parentheses[1..2]).ConfigureAwait(false);
+            await this.writeStream.WriteAsync(parentheses[1..2]).ConfigureAwait(false);
         }
 
         public async Task StartObjectScopeAsync()
@@ -364,7 +364,6 @@ namespace Microsoft.OData.Json
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
-        
         public async Task WriteValueAsync(bool value)
         {
             this.writer.WriteBooleanValue(value);

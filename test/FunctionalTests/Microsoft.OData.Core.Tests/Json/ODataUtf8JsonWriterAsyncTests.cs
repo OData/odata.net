@@ -433,7 +433,6 @@ namespace Microsoft.OData.Tests.Json
 
         #endregion Custom JavaScriptEncoder
 
-
         private Task<string> ReadStreamAsync()
         {
             return this.ReadStreamAsync(Encoding.UTF8);
