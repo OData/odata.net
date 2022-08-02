@@ -755,6 +755,14 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The provided implementation of IStreamBasedJsonWriterFactory returned null for arguments: isIeee754Compatible '{0}', encoding '{1}'. The factory should return a concrete IJsonWriter implementation."
+        /// </summary>
+        internal static string ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull(object p0, object p1)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull, p0, p1);
+        }
+
+        /// <summary>
         /// A string like "Both startResourceXmlCustomizationCallback and endResourceXmlCustomizationCallback must be either null or non-null."
         /// </summary>
         internal static string ODataMessageWriterSettings_MessageWriterSettingsXmlCustomizationCallbacksMustBeSpecifiedBoth
@@ -1615,6 +1623,30 @@ namespace Microsoft.OData {
         internal static string ODataBatchReaderStreamBuffer_BoundaryLineSecurityLimitReached(object p0)
         {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataBatchReaderStreamBuffer_BoundaryLineSecurityLimitReached, p0);
+        }
+
+        /// <summary>
+        /// A string like "Unknown property name '{0}' for message in batch."
+        /// </summary>
+        internal static string ODataJsonLightBatchPayloadItemPropertiesCache_UnknownPropertyForMessageInBatch(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightBatchPayloadItemPropertiesCache_UnknownPropertyForMessageInBatch, p0);
+        }
+
+        /// <summary>
+        /// A string like "Unexpected reader.NodeType: {0}."
+        /// </summary>
+        internal static string ODataJsonLightBatchBodyContentReaderStream_UnexpectedNodeType(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightBatchBodyContentReaderStream_UnexpectedNodeType, p0);
+        }
+
+        /// <summary>
+        /// A string like "Unknown/undefined type, new type that needs to be supported: {0}?"
+        /// </summary>
+        internal static string ODataJsonLightBatchBodyContentReaderStream_UnsupportedContentTypeInHeader(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightBatchBodyContentReaderStream_UnsupportedContentTypeInHeader, p0);
         }
 
         /// <summary>

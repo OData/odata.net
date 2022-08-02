@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
+using Microsoft.OData.Json;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Microsoft.Test.OData.DependencyInjection;
@@ -175,7 +176,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 };
 
                 var entityTypeRef = new EdmEntityTypeReference(entityType, false);
-                serializer.WriteResourceValue(resourceValue, entityTypeRef, false, serializer.CreateDuplicatePropertyNameChecker());
+                serializer.WriteResourceValue(resourceValue, entityTypeRef, false, serializer.GetDuplicatePropertyNameChecker());
             });
 
             Assert.Equal(@"{""Name"":""MyName"",""Location"":{""City"":""MyCity""}}", result);
@@ -217,6 +218,47 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
+        public void WritingResourceValueAndNestedResourceValueWithSimilarPropertiesShouldWrite()
+        {
+            var complexType = new EdmComplexType("NS", "Address");
+            complexType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+            complexType.AddStructuralProperty("City", EdmPrimitiveTypeKind.String);
+            model.AddElement(complexType);
+
+            var entityType = new EdmEntityType("NS", "Customer");
+            entityType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+            entityType.AddStructuralProperty("Location", new EdmComplexTypeReference(complexType, false));
+            model.AddElement(entityType);
+
+            settings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
+            var result = this.SetupSerializerAndRunTest(serializer =>
+            {
+                var resourceValue = new ODataResourceValue
+                {
+                    TypeName = "NS.Customer",
+                    Properties = new[]
+                    {
+                        new ODataProperty { Name = "Name", Value = "MyName" },
+                        new ODataProperty { Name = "Location", Value = new ODataResourceValue
+                            {
+                                TypeName = "NS.Address",
+                                Properties = new [] {
+                                    new ODataProperty {  Name = "Name", Value = "AddressName" },
+                                    new ODataProperty {  Name = "City", Value = "MyCity" }
+                                }
+                            }
+                        }
+                    }
+                };
+
+                var entityTypeRef = new EdmEntityTypeReference(entityType, false);
+                serializer.WriteResourceValue(resourceValue, entityTypeRef, false, serializer.GetDuplicatePropertyNameChecker());
+            });
+
+            Assert.Equal(@"{""Name"":""MyName"",""Location"":{""Name"":""AddressName"",""City"":""MyCity""}}", result);
+        }
+
+        [Fact]
         public void WritingInstanceAnnotationInResourceValueShouldWrite()
         {
             var complexType = new EdmComplexType("TestNamespace", "Address");
@@ -234,7 +276,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 };
 
                 var complexTypeRef = new EdmComplexTypeReference(complexType, false);
-                serializer.WriteResourceValue(resourceValue, complexTypeRef, false, serializer.CreateDuplicatePropertyNameChecker());
+                serializer.WriteResourceValue(resourceValue, complexTypeRef, false, serializer.GetDuplicatePropertyNameChecker());
             });
 
             Assert.Equal(@"{""@Is.ReadOnly"":true}", result);
@@ -266,11 +308,58 @@ namespace Microsoft.OData.Tests.JsonLight
                 };
 
                 var complexTypeRef = new EdmComplexTypeReference(complexType, false);
-                serializer.WriteResourceValue(resourceValue, complexTypeRef, false, serializer.CreateDuplicatePropertyNameChecker());
+                serializer.WriteResourceValue(resourceValue, complexTypeRef, false, serializer.GetDuplicatePropertyNameChecker());
             });
 
             Assert.Equal(expect, result);
         }
+
+        [Fact]
+        public void WriteStreamValue_WritesStreamValue()
+        {
+            var stream = new MemoryStream();
+            var writer = new BinaryWriter(stream);
+            writer.Write("1234567890");
+            writer.Flush();
+            stream.Position = 0;
+            var streamValue = new ODataBinaryStreamValue(stream);
+
+            var result = this.SetupSerializerAndRunTest(
+                (jsonLightValueSerializer) =>
+                {
+                    jsonLightValueSerializer.WriteStreamValue(streamValue);
+                });
+
+            Assert.Equal("\"CjEyMzQ1Njc4OTA=\"", result);
+        }
+
+#if NETCOREAPP3_1_OR_GREATER
+        [Fact]
+        public void WriteStreamValue_UsingODataUtf8JsonWriter_WritesStreamValue()
+        {
+            var stream = new MemoryStream();
+            var writer = new BinaryWriter(stream);
+            writer.Write("1234567890");
+            writer.Flush();
+            stream.Position = 0;
+            var streamValue = new ODataBinaryStreamValue(stream);
+
+            var builder = new TestContainerBuilder();
+            builder.AddDefaultODataServices();
+            builder.AddService<IStreamBasedJsonWriterFactory>(
+                ServiceLifetime.Singleton,
+                (sp) => DefaultStreamBasedJsonWriterFactory.Default);
+            var container = builder.BuildContainer();
+
+            var result = this.SetupSerializerAndRunTest(
+                (jsonLightValueSerializer) =>
+                {
+                    jsonLightValueSerializer.WriteStreamValue(streamValue);
+                }, container);
+
+            Assert.Equal("\"CjEyMzQ1Njc4OTA=\"", result);
+        }
+#endif
 
         private ODataJsonLightValueSerializer CreateODataJsonLightValueSerializer(bool writingResponse, IServiceProvider container = null)
         {

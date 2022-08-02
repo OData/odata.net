@@ -84,7 +84,7 @@ namespace Microsoft.OData
                 return this.duplicatePropertyNameChecker ??
                        (this.duplicatePropertyNameChecker =
                            outputContext.MessageWriterSettings.Validator
-                           .CreateDuplicatePropertyNameChecker());
+                           .GetDuplicatePropertyNameChecker());
             }
         }
 
@@ -117,7 +117,7 @@ namespace Microsoft.OData
             this.VerifyCanFlush(false /*synchronousCall*/);
 
             // make sure we switch to writer state Error if an exception is thrown during flushing.
-            return this.FlushAsynchronously().FollowOnFaultWith(t => this.EnterErrorScope());
+            return this.InterceptExceptionAsync((thisParam) => thisParam.FlushAsynchronously());
         }
 
         /// <summary>
@@ -779,6 +779,7 @@ namespace Microsoft.OData
             catch
             {
                 this.EnterErrorScope();
+
                 throw;
             }
         }
@@ -807,6 +808,7 @@ namespace Microsoft.OData
             catch
             {
                 this.EnterErrorScope();
+
                 throw;
             }
         }
@@ -835,6 +837,7 @@ namespace Microsoft.OData
             catch
             {
                 this.EnterErrorScope();
+
                 throw;
             }
         }
@@ -961,6 +964,7 @@ namespace Microsoft.OData
             catch
             {
                 this.EnterErrorScope();
+
                 throw;
             }
         }
@@ -990,6 +994,7 @@ namespace Microsoft.OData
             catch
             {
                 this.EnterErrorScope();
+
                 throw;
             }
         }
@@ -1019,6 +1024,31 @@ namespace Microsoft.OData
             catch
             {
                 this.EnterErrorScope();
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Catch any exception thrown by the action passed in; in the exception case move the reader into
+        /// state Exception and then rethrow the exception.
+        /// </summary>
+        /// <typeparam name="TResult">The type returned from the <paramref name="action"/></typeparam>
+        /// <param name="action">The action to execute.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains the result of executing the <paramref name="action"/>.
+        /// </returns>
+        private async Task<TResult> InterceptExceptionAsync<TResult>(Func<ODataParameterWriterCore, Task<TResult>> action)
+        {
+            try
+            {
+                return await action(this).ConfigureAwait(false);
+            }
+            catch
+            {
+                this.EnterErrorScope();
+
                 throw;
             }
         }

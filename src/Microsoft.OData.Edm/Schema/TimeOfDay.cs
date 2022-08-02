@@ -296,11 +296,7 @@ namespace Microsoft.OData.Edm
         /// <returns>string value of timeofday</returns>
         public override string ToString()
         {
-#if ORCAS
-            return this.timeSpan.ToString();
-#else
             return this.timeSpan.ToString(@"hh\:mm\:ss\.fffffff", CultureInfo.InvariantCulture);
-#endif
         }
 
         /// <summary>
@@ -391,12 +387,7 @@ namespace Microsoft.OData.Edm
         public static bool TryParse(string text, IFormatProvider provider, out TimeOfDay result)
         {
             TimeSpan time;
-            bool b;
-#if ORCAS
-            b = TimeSpan.TryParse(text, out time);
-#else
-            b = TimeSpan.TryParse(text, provider, out time);
-#endif
+            bool b = TimeSpan.TryParse(text, provider, out time);
             if (b && time.Ticks >= MinTickValue && time.Ticks <= MaxTickValue)
             {
                 result = new TimeOfDay(time.Ticks);

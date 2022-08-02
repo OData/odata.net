@@ -9,10 +9,6 @@ using System.Diagnostics;
 
 namespace Microsoft.OData.UriParser
 {
-    ////#if ORCAS // Not working in .Net3.5 solution, why ??
-    ////    [Serializable]
-    ////#endif
-
     /// <summary>
     /// Throw this exception when the parser can parse the target type but failed to do so.
     /// Do not throw when parser is not able to parse the target type.

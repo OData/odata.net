@@ -1694,7 +1694,7 @@ namespace EdmLibTests.FunctionalTests
             IEdmStructuralProperty stringProp = (IEdmStructuralProperty)typeDefinition.FindProperty("myString");
             Assert.IsNull(stringProp.Type.AsString().MaxLength, "Maxlength should default to null");
             IEdmStructuralProperty decimalProp = (IEdmStructuralProperty)typeDefinition.FindProperty("myDecimal");
-            Assert.AreEqual(decimalProp.Type.AsDecimal().Scale, 0, "Scale should default to 0");
+            Assert.IsNull(decimalProp.Type.AsDecimal().Scale, "Scale should default to null");
             Assert.IsNull(decimalProp.Type.AsDecimal().Precision, "Precision should default to null");
             IEdmStructuralProperty datetimeProp = (IEdmStructuralProperty)typeDefinition.FindProperty("myDateTime");
             Assert.AreEqual(0, datetimeProp.Type.AsTemporal().Precision, "Temporal precision should default to 0");
@@ -1709,7 +1709,7 @@ namespace EdmLibTests.FunctionalTests
   <ComplexType Name=""Smod"">
     <Property Name=""myDecimal"" Type=""Decimal"" Precision=""3""/>
     <Property Name=""mySecondDecimal"" Type=""Decimal"" Precision=""3"" Scale=""Variable""/>
-    <Property Name=""myThirdDecimal"" Type=""Decimal"" Precision=""3"" Scale=""Variable""/>
+    <Property Name=""myThirdDecimal"" Type=""Decimal"" Precision=""3"" Scale=""0""/>
     <Property Name=""myDateTime"" Type=""DateTimeOffset"" Precision=""1""/>
     <Property Name=""myString"" Type=""String"" Unicode=""false""/>
   </ComplexType>
@@ -1726,13 +1726,13 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsNull(stringProp.Type.AsString().MaxLength, "Maxlength should default to null");
             Assert.AreEqual(false, stringProp.Type.AsString().IsUnicode, "String unicode should be set to false");
             IEdmStructuralProperty decimalProp = (IEdmStructuralProperty)typeDefinition.FindProperty("myDecimal");
-            Assert.AreEqual(decimalProp.Type.AsDecimal().Scale, 0, "Scale should default to 0");
+            Assert.IsNull(decimalProp.Type.AsDecimal().Scale, "Scale should default to null");
             Assert.AreEqual(3, decimalProp.Type.AsDecimal().Precision, "Decimal precision should be set to 3");
             IEdmStructuralProperty secondDecimalProp = (IEdmStructuralProperty)typeDefinition.FindProperty("mySecondDecimal");
             Assert.IsNull(secondDecimalProp.Type.AsDecimal().Scale, "Decimal scale should be null when its value is Variable");
             Assert.AreEqual(3, secondDecimalProp.Type.AsDecimal().Precision, "Decimal precision should be set to 3");
             IEdmStructuralProperty thirdDecimalProp = (IEdmStructuralProperty)typeDefinition.FindProperty("myThirdDecimal");
-            Assert.IsNull(thirdDecimalProp.Type.AsDecimal().Scale, "Decimal scale should be null when its value is variable");
+            Assert.AreEqual(thirdDecimalProp.Type.AsDecimal().Scale, 0, "Decimal scale should be set to 0");
             Assert.AreEqual(3, thirdDecimalProp.Type.AsDecimal().Precision, "Decimal precision should be set to 3");
             IEdmStructuralProperty datetimeProp = (IEdmStructuralProperty)typeDefinition.FindProperty("myDateTime");
             Assert.AreEqual(1, datetimeProp.Type.AsTemporal().Precision, "Temporal precision should be set to 1");

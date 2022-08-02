@@ -245,7 +245,7 @@ namespace Microsoft.OData.JsonLight
                     {
                         if (duplicatePropertyNamesChecker == null)
                         {
-                            duplicatePropertyNamesChecker = this.CreateDuplicatePropertyNameChecker();
+                            duplicatePropertyNamesChecker = this.GetDuplicatePropertyNameChecker();
                         }
 
                         this.WriteResourceValue(
@@ -285,6 +285,11 @@ namespace Microsoft.OData.JsonLight
                             }
                         }
                     }
+                }
+
+                if (duplicatePropertyNamesChecker != null)
+                {
+                    this.ReturnDuplicatePropertyNameChecker(duplicatePropertyNamesChecker);
                 }
             }
 
@@ -374,8 +379,8 @@ namespace Microsoft.OData.JsonLight
             IJsonStreamWriter streamWriter = this.JsonWriter as IJsonStreamWriter;
             if (streamWriter == null)
             {
-                // write as a string
-                this.JsonWriter.WritePrimitiveValue(new StreamReader(streamValue.Stream).ReadToEnd());
+                // write as a byte array
+                this.JsonWriter.WritePrimitiveValue(streamValue.Stream.ReadAllBytes());
             }
             else
             {
@@ -567,7 +572,7 @@ namespace Microsoft.OData.JsonLight
                     {
                         if (duplicatePropertyNamesChecker == null)
                         {
-                            duplicatePropertyNamesChecker = this.CreateDuplicatePropertyNameChecker();
+                            duplicatePropertyNamesChecker = this.GetDuplicatePropertyNameChecker();
                         }
 
                         await this.WriteResourceValueAsync(
@@ -607,6 +612,11 @@ namespace Microsoft.OData.JsonLight
                             }
                         }
                     }
+                }
+
+                if (duplicatePropertyNamesChecker != null)
+                {
+                    this.ReturnDuplicatePropertyNameChecker(duplicatePropertyNamesChecker);
                 }
             }
 
@@ -709,7 +719,7 @@ namespace Microsoft.OData.JsonLight
             if (streamWriter == null)
             {
                 // write as a string
-                string value = await new StreamReader(streamValue.Stream).ReadToEndAsync().ConfigureAwait(false);
+                byte[] value = await streamValue.Stream.ReadAllBytesAsync().ConfigureAwait(false);
                 await this.AsynchronousJsonWriter.WritePrimitiveValueAsync(value).ConfigureAwait(false);
             }
             else

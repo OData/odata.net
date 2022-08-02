@@ -113,7 +113,7 @@ You can query the latest nightly NuGet packages using this query: [MAGIC OData q
 
 ### 3.5 Official Release
 
-The release of the component binaries is carried out regularly through [Nuget](http://www.nuget.org/).
+The release of the component binaries is carried out regularly through [Nuget](http://www.nuget.org/). A new version is released every 2 months. A new [milestone](https://github.com/OData/odata.net/milestones) item will be created after each release. It will correspond to the work that is expected to be included in the next release. Any work that has been completed by the due date for the milestone will be shipped regardless of if the entire milestone is completed. Work that is not completed by the due date will be moved to another milestone. 
 
 ### 3.6 Performance benchmarks
 
@@ -161,12 +161,6 @@ The easiest way to run the perf benchmarks is to use the [Microsoft.Crank](https
     crank --config benchmarks.yml --scenario Components --profile local
     ```
 
-- Run benchmarks for end-to-end scenarios against a local OData service:
-    
-    ```text
-    crank --config benchmarks.yml --scenario Service --profile local
-    ```
-
 - Run only ODataReader tests:
 
     ```text
@@ -184,10 +178,10 @@ The easiest way to run the perf benchmarks is to use the [Microsoft.Crank](https
     crank --config benchmarks.yml --scenario UriParser --profile local
     ```
 
-- Run tests that compare serialization performance of ODataWriter and System.Text.Json
+- Run tests that compare different writer implementations and configurations
 
     ```text
-    crank --config benchmarks.yml --scenario SerializerBaselines --profile local
+    crank --config benchmarks.yml --scenario SerializationComparisons --profile local
     ```
 
 #### Run benchmarks on remote dedicated agents
@@ -222,7 +216,7 @@ To run benchmarks against the official repo instead of your local repo, pass
 the `base=true` variable to the command, e.g.:
 
 ```text
-crank --config benchmarks.yml --scenario Service --profile local --variable base=true
+crank --config benchmarks.yml --scenario ODataWriter --profile local --variable base=true
 ```
 
 This will cause the crank agent to clone the official repo and run the tests against the `master` branch.
@@ -230,7 +224,35 @@ This will cause the crank agent to clone the official repo and run the tests aga
 You can specify a different branch, commit or tag using the `baseBranch` variable:
 
 ```text
-crank --config benchmarks.yml --scenario Service --profile local --variable base=true --variable baseBranch=v7.6.4
+crank --config benchmarks.yml --scenario ODataWriter --profile local --variable base=true --variable baseBranch=v7.6.4
+```
+
+#### Run load tests
+
+Besides benchmarks, we also have some load tests which measure request round-trips from a client to a server.
+These can be used to evaluate how OData libraries behave when handling multiple concurrent requests on the same server.
+
+We have tests that evaluate different writer implementations, serializing a simple static collection response
+on each request:
+
+```text
+crank --config loadtests.yml --config lab-windows --scenario SerializationComparisons --application.options.counterProviders System.Runtime --variable writer=ODataMessageWriter
+```
+
+This scenario allows you to choose which writer implementation is used to process the response as well. It also allows you to configure different aspects of the requests, e.g. number of connections, max requests per second, etc.
+
+For more information about these tests, [read this doc](test/PerformanceTests/SerializationComparisonsTests/README.md).
+
+#### Collecting traces
+
+Crank can collect and download native trace files from the benchmarked application that you can analyze in specialized tools using the `--[job].collect true` option, where `[job]` is the name of a job defined in the `.yml` config file.
+
+On Windows, `--[job].collect true` option will collect traces using [PerfView](https://github.com/Microsoft/perfview) download an `.etl` trace file that you can you can also analyze using PerfView.
+
+For example, the `loadtest.yml` config defines an `application` job which refers to the server handling the requests. We can collect traces from the server as follows:
+
+```
+crank --config loadtests.yml --config lab-windows --scenario SerializationComparisons --variable writer=ODataMessageWriter --application.collect true
 ```
 
 #### Comparing benchmarks

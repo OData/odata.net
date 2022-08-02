@@ -8,16 +8,19 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.OData.Edm;
 using Microsoft.OData.JsonLight;
 using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
-using System.Threading.Tasks;
 
 namespace Microsoft.OData.Tests.JsonLight
 {
     public class ODataJsonLightDeltaReaderTests
     {
+        private readonly ODataMessageReaderSettings messageReaderSettings;
+
         private IEdmModel model;
 
         private const string payload = "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\",\"@odata.count\":5,\"value\":[{\"@odata.id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\"},{\"@odata.context\":\"http://host/service/$metadata#Customers/$deletedLink\",\"source\":\"Customers('ALFKI')\",\"relationship\":\"Orders\",\"target\":\"Orders('10643')\"},{\"@odata.context\":\"http://host/service/$metadata#Customers/$link\",\"source\":\"Customers('BOTTM')\",\"relationship\":\"Orders\",\"target\":\"Orders('10645')\"},{\"@odata.context\":\"http://host/service/$metadata#Orders/$entity\",\"@odata.id\":\"Orders(10643)\",\"Address\":{\"Street\":\"23 Tsawassen Blvd.\",\"City\":{\"CityName\":\"Tsawassen\"},\"Region\":\"BC\",\"PostalCode\":\"T2F 8M4\"}},{\"@odata.context\":\"http://host/service/$metadata#Customers/$deletedEntity\",\"id\":\"Customers('ANTON')\",\"reason\":\"deleted\"}],\"@odata.deltaLink\":\"Customers?$expand=Orders&$deltatoken=8015\"}";
@@ -77,6 +80,12 @@ namespace Microsoft.OData.Tests.JsonLight
 
         #endregion
 
+        public ODataJsonLightDeltaReaderTests()
+        {
+            this.messageReaderSettings = new ODataMessageReaderSettings();
+            var _ = Model; // To trigger early initialization of entity types and entity sets
+        }
+
         #region ODataV4 tests
 
         [InlineData(/*isResponse*/true)]
@@ -87,15 +96,6 @@ namespace Microsoft.OData.Tests.JsonLight
             var tuples = this.ReadItem(payload, Model, customers, customer, isResponse);
             this.ValidateTuples(tuples);
         }
-
-        //[InlineData(/*isResponse*/true)]
-        //[InlineData(/*isResponse*/false)]
-        //[Theory]
-        //public async void ReadExample30FromV4SpecAsync(bool isResponse)
-        //{
-        //    var tuples = await this.ReadItemAsync(payload, Model, customers, customer, isResponse);
-        //    this.ValidateTuples(tuples);
-        //}
 
         #region ReadExample30FromV4SpecWithNavigationLinks
 
@@ -206,15 +206,6 @@ namespace Microsoft.OData.Tests.JsonLight
             this.ValidateTuples(tuples);
         }
 
-        //[InlineData(/*isResponse*/true)]
-        //[InlineData(/*isResponse*/false)]
-        //[Theory]
-        //public async void ReadExpandedFeedAsync(bool isResponse)
-        //{
-        //    var tuples = await this.ReadItemAsync(expandedPayload, this.Model, customers, customer, isResponse);
-        //    this.ValidateTuples(tuples);
-        //}
-
         [Fact]
         public void ReadExpandedFeedWithNavigationLink()
         {
@@ -306,15 +297,6 @@ namespace Microsoft.OData.Tests.JsonLight
             var tuples = this.ReadItem(multipleExpandedPayload, this.Model, customers, customer, isResponse);
             this.ValidateTuples(tuples);
         }
-
-        //[InlineData(/*isResponse*/true)]
-        //[InlineData(/*isResponse*/false)]
-        //[Theory]
-        //public async void ReadMutlipleExpandedFeedsAsync(bool isResponse)
-        //{
-        //    var tuples = await this.ReadItemAsync(multipleExpandedPayload, this.Model, customers, customer, isResponse);
-        //    this.ValidateTuples(tuples);
-        //}
 
         [InlineData(/*isResponse*/true)]
         [InlineData(/*isResponse*/false)]
@@ -604,8 +586,8 @@ namespace Microsoft.OData.Tests.JsonLight
             }
 
             Assert.NotNull(deletedResource);
-            Assert.Equal(1, deletedResource.Properties.FirstOrDefault(p=>p.Name == "Id").Value);
-       }
+            Assert.Equal(1, deletedResource.Properties.FirstOrDefault(p => p.Name == "Id").Value);
+        }
 
         [InlineData(/*isResponse*/true)]
         [InlineData(/*isResponse*/false)]
@@ -681,9 +663,9 @@ namespace Microsoft.OData.Tests.JsonLight
             string payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@removed\":{\"reason\":\"changed\"},\"Id\":1,\"ContactName\":\"Samantha Stones\"}]}";
             ODataReader reader = GetODataReader(payload, this.Model, customers, customer, isResponse);
             ODataDeletedResource deletedResource = null;
-            while(reader.Read())
+            while (reader.Read())
             {
-                switch(reader.State)
+                switch (reader.State)
                 {
                     case ODataReaderState.DeletedResourceEnd:
                         deletedResource = reader.Item as ODataDeletedResource;
@@ -694,7 +676,7 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.NotNull(deletedResource);
             Assert.Equal(2, deletedResource.Properties.Count());
             Assert.Equal(1, deletedResource.Properties.First(p => p.Name == "Id").Value);
-            Assert.Equal("Samantha Stones", deletedResource.Properties.First(p => p.Name=="ContactName").Value);
+            Assert.Equal("Samantha Stones", deletedResource.Properties.First(p => p.Name == "ContactName").Value);
             Assert.Equal(DeltaDeletedEntryReason.Changed, deletedResource.Reason);
         }
 
@@ -987,7 +969,7 @@ namespace Microsoft.OData.Tests.JsonLight
                         nestedResourceInfo = reader.Item as ODataNestedResourceInfo;
                         break;
                     case ODataReaderState.ResourceEnd:
-                            nestedResource = reader.Item as ODataResource;
+                        nestedResource = reader.Item as ODataResource;
                         break;
                     case ODataReaderState.DeltaResourceSetEnd:
                         if (nestedDeltaResourceSet == null)
@@ -1132,7 +1114,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 "{\"@context\":\"http://host/service/$metadata#Customers/$entity\",\"Id\":1,\"FavouriteProducts@count\":5,\"FavouriteProducts@nextLink\":\"http://host/service/Customers?$skipToken=5\",\"FavouriteProducts@delta\":[{\"Id\":1,\"Name\":\"Car\"},{\"@removed\":{\"reason\":\"deleted\"},\"Id\":10}]}" :
                 "{\"@context\":\"http://host/service/$metadata#Customers/$entity\",\"Id\":1,\"FavouriteProducts@delta\":[{\"Id\":1,\"Name\":\"Car\"},{\"@removed\":{\"reason\":\"deleted\"},\"Id\":10}]}";
 
-            ODataReader reader = GetODataReader(payload, this.Model, customers, customer, isResponse, singleResource:true);
+            ODataReader reader = GetODataReader(payload, this.Model, customers, customer, isResponse, singleResource: true);
             ODataResource deltaResource = null;
             ODataNestedResourceInfo nestedResourceInfo = null;
             ODataResource nestedResource = null;
@@ -1438,10 +1420,2583 @@ namespace Microsoft.OData.Tests.JsonLight
                 }
             };
 
-            readAction.Throws<ODataException>(Strings.ReaderValidationUtils_ContextUriValidationInvalidExpectedEntitySet("http://host/service/$metadata#Customers/$deletedEntity","Customers", "Customers.Orders"));
+            readAction.Throws<ODataException>(Strings.ReaderValidationUtils_ContextUriValidationInvalidExpectedEntitySet("http://host/service/$metadata#Customers/$deletedEntity", "Customers", "Customers.Orders"));
         }
 
         #endregion
+
+        #region Async Tests
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ReadDeltaPayloadAsync(bool isResponse)
+        {
+            var verifyDeltaLinkActionStack = new Stack<Action<ODataDeltaLinkBase>>();
+            verifyDeltaLinkActionStack.Push((deltaLink) =>
+            {
+                Assert.NotNull(deltaLink.Source);
+                Assert.Equal("Customers('BOTTM')", deltaLink.Source.OriginalString);
+                Assert.Equal("Orders", deltaLink.Relationship);
+                Assert.NotNull(deltaLink.Target);
+                Assert.Equal("Orders('10645')", deltaLink.Target.OriginalString);
+            });
+            verifyDeltaLinkActionStack.Push((deltaLink) =>
+            {
+                Assert.NotNull(deltaLink.Source);
+                Assert.Equal("Customers('ALFKI')", deltaLink.Source.OriginalString);
+                Assert.Equal("Orders", deltaLink.Relationship);
+                Assert.NotNull(deltaLink.Target);
+                Assert.Equal("Orders('10643')", deltaLink.Target.OriginalString);
+            });
+
+            var verifyNestedResourceInfoActionStack = new Stack<Action<ODataNestedResourceInfo>>();
+            verifyNestedResourceInfoActionStack.Push((nestedResourceInfo) => Assert.Equal("Address", nestedResourceInfo.Name));
+            verifyNestedResourceInfoActionStack.Push((nestedResourceInfo) => Assert.Equal("City", nestedResourceInfo.Name));
+
+            var verifyResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Address", resource.TypeName);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(3, properties.Length);
+                Assert.Equal("Street", properties[0].Name);
+                Assert.Equal("23 Tsawassen Blvd.", properties[0].Value);
+                Assert.Equal("Region", properties[1].Name);
+                Assert.Equal("BC", properties[1].Value);
+                Assert.Equal("PostalCode", properties[2].Name);
+                Assert.Equal("T2F 8M4", properties[2].Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.City", resource.TypeName);
+                var cityNameProperty = Assert.Single(resource.Properties);
+                Assert.Equal("CityName", cityNameProperty.Name);
+                Assert.Equal("Tsawassen", cityNameProperty.Value);
+            });
+
+            var verifyDeltaResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyDeltaResourceActionStack.Push((deltaResource) =>
+            {
+                Assert.NotNull(deltaResource);
+                Assert.Equal("MyNS.Order", deltaResource.TypeName);
+                Assert.NotNull(deltaResource.Id);
+                Assert.EndsWith("Orders(10643)", deltaResource.Id.OriginalString);
+                Assert.Empty(deltaResource.Properties);
+            });
+            verifyDeltaResourceActionStack.Push((deltaResource) =>
+            {
+                Assert.NotNull(deltaResource);
+                Assert.Equal("MyNS.Customer", deltaResource.TypeName);
+                Assert.NotNull(deltaResource.Id);
+                Assert.EndsWith("Customers('BOTTM')", deltaResource.Id.OriginalString);
+                var contactNameProperty = Assert.Single(deltaResource.Properties);
+                Assert.Equal("ContactName", contactNameProperty.Name);
+                Assert.Equal("Susan Halvenstern", contactNameProperty.Value);
+            });
+
+            await SetupJsonLightDeltaReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightDeltaReader) => DoReadAsync(jsonLightDeltaReader,
+                    verifyDeltaResourceSetAction: (deltaResourceSet) =>
+                    {
+                        Assert.NotNull(deltaResourceSet);
+                        Assert.Equal(5, deltaResourceSet.Count);
+                        Assert.NotNull(deltaResourceSet.DeltaLink);
+                        Assert.EndsWith("Customers?$expand=Orders&$deltatoken=8015", deltaResourceSet.DeltaLink.OriginalString);
+                    },
+                    verifyDeltaResourceAction: (deltaResource) =>
+                    {
+                        Assert.NotEmpty(verifyDeltaResourceActionStack);
+                        var internalVerifyDeltaResourceAction = verifyDeltaResourceActionStack.Pop();
+                        internalVerifyDeltaResourceAction(deltaResource);
+                    },
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var internalVerifyResourceAction = verifyResourceActionStack.Pop();
+                        internalVerifyResourceAction(resource);
+                    },
+                    verifyDeletedEntryAction: (deletedEntry) =>
+                    {
+                        Assert.NotNull(deletedEntry);
+                        Assert.NotNull(deletedEntry.Id);
+                        Assert.Equal("Customers('ANTON')", deletedEntry.Id);
+                        Assert.Equal(DeltaDeletedEntryReason.Deleted, deletedEntry.Reason);
+                    },
+                    verifyDeltaLinkAction: (deltaLink) =>
+                    {
+                        Assert.NotEmpty(verifyDeltaLinkActionStack);
+                        var internalVerifyDeltaLinkAction = verifyDeltaLinkActionStack.Pop();
+                        internalVerifyDeltaLinkAction(deltaLink);
+                    },
+                    verifyNestedResourceInfoAction: (nestedResourceInfo) =>
+                    {
+                        Assert.NotNull(nestedResourceInfo);
+                        Assert.NotEmpty(verifyNestedResourceInfoActionStack);
+                        var internalVerifyNestedResourceInfoAction = verifyNestedResourceInfoActionStack.Pop();
+                        internalVerifyNestedResourceInfoAction(nestedResourceInfo);
+                    }),
+                isResponse: isResponse);
+
+            Assert.Empty(verifyResourceActionStack);
+            Assert.Empty(verifyDeltaResourceActionStack);
+            Assert.Empty(verifyDeltaLinkActionStack);
+            Assert.Empty(verifyNestedResourceInfoActionStack);
+        }
+
+        [Fact]
+        public async Task ReadDeltaPayloadWithNavigationLinksAsync()
+        {
+            var verifyDeltaLinkActionStack = new Stack<Action<ODataDeltaLinkBase>>();
+            verifyDeltaLinkActionStack.Push((deltaLink) =>
+            {
+                Assert.NotNull(deltaLink.Source);
+                Assert.Equal("Customers('BOTTM')", deltaLink.Source.OriginalString);
+                Assert.Equal("Orders", deltaLink.Relationship);
+                Assert.NotNull(deltaLink.Target);
+                Assert.Equal("Orders('10645')", deltaLink.Target.OriginalString);
+            });
+            verifyDeltaLinkActionStack.Push((deltaLink) =>
+            {
+                Assert.NotNull(deltaLink.Source);
+                Assert.Equal("Customers('ALFKI')", deltaLink.Source.OriginalString);
+                Assert.Equal("Orders", deltaLink.Relationship);
+                Assert.NotNull(deltaLink.Target);
+                Assert.Equal("Orders('10643')", deltaLink.Target.OriginalString);
+            });
+
+            var verifyNestedResourceInfoActionStack = new Stack<Action<ODataNestedResourceInfo>>();
+            verifyNestedResourceInfoActionStack.Push((nestedResourceInfo) => Assert.Equal("Address", nestedResourceInfo.Name));
+            verifyNestedResourceInfoActionStack.Push((nestedResourceInfo) => Assert.Equal("City", nestedResourceInfo.Name));
+            verifyNestedResourceInfoActionStack.Push((nestedResourceInfo) =>
+            {
+                Assert.Equal("Parent", nestedResourceInfo.Name);
+                Assert.NotNull(nestedResourceInfo.Url);
+                Assert.Equal("http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Person", nestedResourceInfo.Url.AbsoluteUri);
+                Assert.NotNull(nestedResourceInfo.AssociationLinkUrl);
+                Assert.Equal("http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Person/$ref", nestedResourceInfo.AssociationLinkUrl.AbsoluteUri);
+            });
+            verifyNestedResourceInfoActionStack.Push((nestedResourceInfo) =>
+            {
+                Assert.Equal("Orders", nestedResourceInfo.Name);
+                Assert.NotNull(nestedResourceInfo.Url);
+                Assert.Equal("http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Order", nestedResourceInfo.Url.AbsoluteUri);
+                Assert.NotNull(nestedResourceInfo.AssociationLinkUrl);
+                Assert.Equal("http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Order/$ref", nestedResourceInfo.AssociationLinkUrl.AbsoluteUri);
+            });
+
+            var verifyResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Address", resource.TypeName);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(3, properties.Length);
+                Assert.Equal("Street", properties[0].Name);
+                Assert.Equal("23 Tsawassen Blvd.", properties[0].Value);
+                Assert.Equal("Region", properties[1].Name);
+                Assert.Equal("BC", properties[1].Value);
+                Assert.Equal("PostalCode", properties[2].Name);
+                Assert.Equal("T2F 8M4", properties[2].Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.City", resource.TypeName);
+                var cityNameProperty = Assert.Single(resource.Properties);
+                Assert.Equal("CityName", cityNameProperty.Name);
+                Assert.Equal("Tsawassen", cityNameProperty.Value);
+            });
+
+            var verifyDeltaResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyDeltaResourceActionStack.Push((deltaResource) =>
+            {
+                Assert.NotNull(deltaResource);
+                Assert.Equal("MyNS.Order", deltaResource.TypeName);
+                Assert.NotNull(deltaResource.Id);
+                Assert.EndsWith("Orders(10643)", deltaResource.Id.OriginalString);
+                Assert.Empty(deltaResource.Properties);
+            });
+            verifyDeltaResourceActionStack.Push((deltaResource) =>
+            {
+                Assert.NotNull(deltaResource);
+                Assert.Equal("MyNS.Customer", deltaResource.TypeName);
+                Assert.NotNull(deltaResource.Id);
+                Assert.EndsWith("Customers('BOTTM')", deltaResource.Id.OriginalString);
+                var contactNameProperty = Assert.Single(deltaResource.Properties);
+                Assert.Equal("ContactName", contactNameProperty.Name);
+                Assert.Equal("Susan Halvenstern", contactNameProperty.Value);
+            });
+
+            await SetupJsonLightDeltaReaderAndRunTestAsync(
+                payloadWithNavigationLinks,
+                customers,
+                customer,
+                (jsonLightDeltaReader) => DoReadAsync(jsonLightDeltaReader,
+                    verifyDeltaResourceSetAction: (deltaResourceSet) =>
+                    {
+                        Assert.NotNull(deltaResourceSet);
+                        Assert.Equal(5, deltaResourceSet.Count);
+                        Assert.NotNull(deltaResourceSet.DeltaLink);
+                        Assert.EndsWith("Customers?$expand=Orders&$deltatoken=8015", deltaResourceSet.DeltaLink.OriginalString);
+                    },
+                    verifyDeltaResourceAction: (deltaResource) =>
+                    {
+                        Assert.NotEmpty(verifyDeltaResourceActionStack);
+                        var internalVerifyDeltaResourceAction = verifyDeltaResourceActionStack.Pop();
+                        internalVerifyDeltaResourceAction(deltaResource);
+                    },
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var internalVerifyResourceAction = verifyResourceActionStack.Pop();
+                        internalVerifyResourceAction(resource);
+                    },
+                    verifyDeletedEntryAction: (deletedEntry) =>
+                    {
+                        Assert.NotNull(deletedEntry);
+                        Assert.NotNull(deletedEntry.Id);
+                        Assert.Equal("Customers('ANTON')", deletedEntry.Id);
+                        Assert.Equal(DeltaDeletedEntryReason.Deleted, deletedEntry.Reason);
+                    },
+                    verifyDeltaLinkAction: (deltaLink) =>
+                    {
+                        Assert.NotEmpty(verifyDeltaLinkActionStack);
+                        var internalVerifyDeltaLinkAction = verifyDeltaLinkActionStack.Pop();
+                        internalVerifyDeltaLinkAction(deltaLink);
+                    },
+                    verifyNestedResourceInfoAction: (nestedResourceInfo) =>
+                    {
+                        Assert.NotNull(nestedResourceInfo);
+                        Assert.NotEmpty(verifyNestedResourceInfoActionStack);
+                        var internalVerifyNestedResourceInfoAction = verifyNestedResourceInfoActionStack.Pop();
+                        internalVerifyNestedResourceInfoAction(nestedResourceInfo);
+                    }));
+
+            Assert.Empty(verifyResourceActionStack);
+            Assert.Empty(verifyDeltaResourceActionStack);
+            Assert.Empty(verifyDeltaLinkActionStack);
+            Assert.Empty(verifyNestedResourceInfoActionStack);
+        }
+
+        [Fact]
+        public async Task ReadDeltaPayloadWithSimplifiedODataAnnotationsAysnc()
+        {
+            var verifyDeltaLinkActionStack = new Stack<Action<ODataDeltaLinkBase>>();
+            verifyDeltaLinkActionStack.Push((deltaLink) =>
+            {
+                Assert.NotNull(deltaLink.Source);
+                Assert.Equal("Customers('BOTTM')", deltaLink.Source.OriginalString);
+                Assert.Equal("Orders", deltaLink.Relationship);
+                Assert.NotNull(deltaLink.Target);
+                Assert.Equal("Orders('10645')", deltaLink.Target.OriginalString);
+            });
+            verifyDeltaLinkActionStack.Push((deltaLink) =>
+            {
+                Assert.NotNull(deltaLink.Source);
+                Assert.Equal("Customers('ALFKI')", deltaLink.Source.OriginalString);
+                Assert.Equal("Orders", deltaLink.Relationship);
+                Assert.NotNull(deltaLink.Target);
+                Assert.Equal("Orders('10643')", deltaLink.Target.OriginalString);
+            });
+
+            var verifyNestedResourceInfoActionStack = new Stack<Action<ODataNestedResourceInfo>>();
+            verifyNestedResourceInfoActionStack.Push((nestedResourceInfo) => Assert.Equal("Address", nestedResourceInfo.Name));
+            verifyNestedResourceInfoActionStack.Push((nestedResourceInfo) => Assert.Equal("City", nestedResourceInfo.Name));
+            verifyNestedResourceInfoActionStack.Push((nestedResourceInfo) =>
+            {
+                Assert.Equal("Parent", nestedResourceInfo.Name);
+                Assert.NotNull(nestedResourceInfo.Url);
+                Assert.Equal("http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Person", nestedResourceInfo.Url.AbsoluteUri);
+                Assert.NotNull(nestedResourceInfo.AssociationLinkUrl);
+                Assert.Equal("http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Person/$ref", nestedResourceInfo.AssociationLinkUrl.AbsoluteUri);
+            });
+            verifyNestedResourceInfoActionStack.Push((nestedResourceInfo) =>
+            {
+                Assert.Equal("Orders", nestedResourceInfo.Name);
+                Assert.NotNull(nestedResourceInfo.Url);
+                Assert.Equal("http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Order", nestedResourceInfo.Url.AbsoluteUri);
+                Assert.NotNull(nestedResourceInfo.AssociationLinkUrl);
+                Assert.Equal("http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Order/$ref", nestedResourceInfo.AssociationLinkUrl.AbsoluteUri);
+            });
+
+            var verifyResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Address", resource.TypeName);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(3, properties.Length);
+                Assert.Equal("Street", properties[0].Name);
+                Assert.Equal("23 Tsawassen Blvd.", properties[0].Value);
+                Assert.Equal("Region", properties[1].Name);
+                Assert.Equal("BC", properties[1].Value);
+                Assert.Equal("PostalCode", properties[2].Name);
+                Assert.Equal("T2F 8M4", properties[2].Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.City", resource.TypeName);
+                var cityNameProperty = Assert.Single(resource.Properties);
+                Assert.Equal("CityName", cityNameProperty.Name);
+                Assert.Equal("Tsawassen", cityNameProperty.Value);
+            });
+
+            var verifyDeltaResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyDeltaResourceActionStack.Push((deltaResource) =>
+            {
+                Assert.NotNull(deltaResource);
+                Assert.Equal("MyNS.Order", deltaResource.TypeName);
+                Assert.NotNull(deltaResource.Id);
+                Assert.EndsWith("Orders(10643)", deltaResource.Id.OriginalString);
+                Assert.Empty(deltaResource.Properties);
+            });
+            verifyDeltaResourceActionStack.Push((deltaResource) =>
+            {
+                Assert.NotNull(deltaResource);
+                Assert.Equal("MyNS.Customer", deltaResource.TypeName);
+                Assert.NotNull(deltaResource.Id);
+                Assert.EndsWith("Customers('BOTTM')", deltaResource.Id.OriginalString);
+                var contactNameProperty = Assert.Single(deltaResource.Properties);
+                Assert.Equal("ContactName", contactNameProperty.Name);
+                Assert.Equal("Susan Halvenstern", contactNameProperty.Value);
+            });
+
+            await SetupJsonLightDeltaReaderAndRunTestAsync(
+                payloadWithNavigationLinks,
+                customers,
+                customer,
+                (jsonLightDeltaReader) => DoReadAsync(jsonLightDeltaReader,
+                    verifyDeltaResourceSetAction: (deltaResourceSet) =>
+                    {
+                        Assert.NotNull(deltaResourceSet);
+                        Assert.Equal(5, deltaResourceSet.Count);
+                        Assert.NotNull(deltaResourceSet.DeltaLink);
+                        Assert.EndsWith("Customers?$expand=Orders&$deltatoken=8015", deltaResourceSet.DeltaLink.OriginalString);
+                    },
+                    verifyDeltaResourceAction: (deltaResource) =>
+                    {
+                        Assert.NotEmpty(verifyDeltaResourceActionStack);
+                        var internalVerifyDeltaResourceAction = verifyDeltaResourceActionStack.Pop();
+                        internalVerifyDeltaResourceAction(deltaResource);
+                    },
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var internalVerifyResourceAction = verifyResourceActionStack.Pop();
+                        internalVerifyResourceAction(resource);
+                    },
+                    verifyDeletedEntryAction: (deletedEntry) =>
+                    {
+                        Assert.NotNull(deletedEntry);
+                        Assert.NotNull(deletedEntry.Id);
+                        Assert.Equal("Customers('ANTON')", deletedEntry.Id);
+                        Assert.Equal(DeltaDeletedEntryReason.Deleted, deletedEntry.Reason);
+                    },
+                    verifyDeltaLinkAction: (deltaLink) =>
+                    {
+                        Assert.NotEmpty(verifyDeltaLinkActionStack);
+                        var internalVerifyDeltaLinkAction = verifyDeltaLinkActionStack.Pop();
+                        internalVerifyDeltaLinkAction(deltaLink);
+                    },
+                    verifyNestedResourceInfoAction: (nestedResourceInfo) =>
+                    {
+                        Assert.NotNull(nestedResourceInfo);
+                        Assert.NotEmpty(verifyNestedResourceInfoActionStack);
+                        var internalVerifyNestedResourceInfoAction = verifyNestedResourceInfoActionStack.Pop();
+                        internalVerifyNestedResourceInfoAction(nestedResourceInfo);
+                    }),
+                enableReadingODataAnnotationWithoutPrefix: true);
+
+            Assert.Empty(verifyResourceActionStack);
+            Assert.Empty(verifyDeltaResourceActionStack);
+            Assert.Empty(verifyDeltaLinkActionStack);
+            Assert.Empty(verifyNestedResourceInfoActionStack);
+        }
+
+        [Fact]
+        public async Task ReadDeltaPayloadWithSimplifiedODataAnnotationsAndNavigationLinksAsync()
+        {
+            var verifyDeltaLinkActionStack = new Stack<Action<ODataDeltaLinkBase>>();
+            verifyDeltaLinkActionStack.Push((deltaLink) =>
+            {
+                Assert.NotNull(deltaLink.Source);
+                Assert.Equal("Customers('BOTTM')", deltaLink.Source.OriginalString);
+                Assert.Equal("Orders", deltaLink.Relationship);
+                Assert.NotNull(deltaLink.Target);
+                Assert.Equal("Orders('10645')", deltaLink.Target.OriginalString);
+            });
+            verifyDeltaLinkActionStack.Push((deltaLink) =>
+            {
+                Assert.NotNull(deltaLink.Source);
+                Assert.Equal("Customers('ALFKI')", deltaLink.Source.OriginalString);
+                Assert.Equal("Orders", deltaLink.Relationship);
+                Assert.NotNull(deltaLink.Target);
+                Assert.Equal("Orders('10643')", deltaLink.Target.OriginalString);
+            });
+
+            var verifyNestedResourceInfoActionStack = new Stack<Action<ODataNestedResourceInfo>>();
+            verifyNestedResourceInfoActionStack.Push((nestedResourceInfo) => Assert.Equal("Address", nestedResourceInfo.Name));
+            verifyNestedResourceInfoActionStack.Push((nestedResourceInfo) => Assert.Equal("City", nestedResourceInfo.Name));
+            verifyNestedResourceInfoActionStack.Push((nestedResourceInfo) =>
+            {
+                Assert.Equal("Parent", nestedResourceInfo.Name);
+                Assert.NotNull(nestedResourceInfo.Url);
+                Assert.Equal("http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Person", nestedResourceInfo.Url.AbsoluteUri);
+                Assert.NotNull(nestedResourceInfo.AssociationLinkUrl);
+                Assert.Equal("http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Person/$ref", nestedResourceInfo.AssociationLinkUrl.AbsoluteUri);
+            });
+            verifyNestedResourceInfoActionStack.Push((nestedResourceInfo) =>
+            {
+                Assert.Equal("Orders", nestedResourceInfo.Name);
+                Assert.NotNull(nestedResourceInfo.Url);
+                Assert.Equal("http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Order", nestedResourceInfo.Url.AbsoluteUri);
+                Assert.NotNull(nestedResourceInfo.AssociationLinkUrl);
+                Assert.Equal("http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Order/$ref", nestedResourceInfo.AssociationLinkUrl.AbsoluteUri);
+            });
+
+            var verifyResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Address", resource.TypeName);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(3, properties.Length);
+                Assert.Equal("Street", properties[0].Name);
+                Assert.Equal("23 Tsawassen Blvd.", properties[0].Value);
+                Assert.Equal("Region", properties[1].Name);
+                Assert.Equal("BC", properties[1].Value);
+                Assert.Equal("PostalCode", properties[2].Name);
+                Assert.Equal("T2F 8M4", properties[2].Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.City", resource.TypeName);
+                var cityNameProperty = Assert.Single(resource.Properties);
+                Assert.Equal("CityName", cityNameProperty.Name);
+                Assert.Equal("Tsawassen", cityNameProperty.Value);
+            });
+
+            var verifyDeltaResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyDeltaResourceActionStack.Push((deltaResource) =>
+            {
+                Assert.NotNull(deltaResource);
+                Assert.Equal("MyNS.Order", deltaResource.TypeName);
+                Assert.NotNull(deltaResource.Id);
+                Assert.EndsWith("Orders(10643)", deltaResource.Id.OriginalString);
+                Assert.Empty(deltaResource.Properties);
+            });
+            verifyDeltaResourceActionStack.Push((deltaResource) =>
+            {
+                Assert.NotNull(deltaResource);
+                Assert.Equal("MyNS.Customer", deltaResource.TypeName);
+                Assert.NotNull(deltaResource.Id);
+                Assert.EndsWith("Customers('BOTTM')", deltaResource.Id.OriginalString);
+                var contactNameProperty = Assert.Single(deltaResource.Properties);
+                Assert.Equal("ContactName", contactNameProperty.Name);
+                Assert.Equal("Susan Halvenstern", contactNameProperty.Value);
+            });
+
+            await SetupJsonLightDeltaReaderAndRunTestAsync(
+                payloadWithSimplifiedAnnotations,
+                customers,
+                customer,
+                (jsonLightDeltaReader) => DoReadAsync(jsonLightDeltaReader,
+                    verifyDeltaResourceSetAction: (deltaResourceSet) =>
+                    {
+                        Assert.NotNull(deltaResourceSet);
+                        Assert.Equal(5, deltaResourceSet.Count);
+                        Assert.NotNull(deltaResourceSet.DeltaLink);
+                        Assert.EndsWith("Customers?$expand=Orders&$deltatoken=8015", deltaResourceSet.DeltaLink.OriginalString);
+                    },
+                    verifyDeltaResourceAction: (deltaResource) =>
+                    {
+                        Assert.NotEmpty(verifyDeltaResourceActionStack);
+                        var internalVerifyDeltaResourceAction = verifyDeltaResourceActionStack.Pop();
+                        internalVerifyDeltaResourceAction(deltaResource);
+                    },
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var internalVerifyResourceAction = verifyResourceActionStack.Pop();
+                        internalVerifyResourceAction(resource);
+                    },
+                    verifyDeletedEntryAction: (deletedEntry) =>
+                    {
+                        Assert.NotNull(deletedEntry);
+                        Assert.NotNull(deletedEntry.Id);
+                        Assert.Equal("Customers('ANTON')", deletedEntry.Id);
+                        Assert.Equal(DeltaDeletedEntryReason.Deleted, deletedEntry.Reason);
+                    },
+                    verifyDeltaLinkAction: (deltaLink) =>
+                    {
+                        Assert.NotEmpty(verifyDeltaLinkActionStack);
+                        var internalVerifyDeltaLinkAction = verifyDeltaLinkActionStack.Pop();
+                        internalVerifyDeltaLinkAction(deltaLink);
+                    },
+                    verifyNestedResourceInfoAction: (nestedResourceInfo) =>
+                    {
+                        Assert.NotNull(nestedResourceInfo);
+                        Assert.NotEmpty(verifyNestedResourceInfoActionStack);
+                        var internalVerifyNestedResourceInfoAction = verifyNestedResourceInfoActionStack.Pop();
+                        internalVerifyNestedResourceInfoAction(nestedResourceInfo);
+                    }),
+                enableReadingODataAnnotationWithoutPrefix: true);
+
+            Assert.Empty(verifyResourceActionStack);
+            Assert.Empty(verifyDeltaResourceActionStack);
+            Assert.Empty(verifyDeltaLinkActionStack);
+            Assert.Empty(verifyNestedResourceInfoActionStack);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ReadDeltaPayloadWithODataTypeAnnotationAsync(bool isResponse)
+        {
+            var payload = "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[{" +
+                "\"@odata.context\":\"http://host/service/$metadata#Orders/$entity\"," +
+                "\"@odata.type\":\"MyNS.Order\"," +
+                "\"@odata.id\":\"Orders(10643)\"," +
+                "\"Address\":{" +
+                "\"Street\":\"23 Tsawassen Blvd.\"," +
+                "\"City\":{\"CityName\":\"Tsawassen\"}," +
+                "\"Region\":\"BC\"," +
+                "\"PostalCode\":\"T2F 8M4\"}}]}";
+
+            var verifyResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Address", resource.TypeName);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(3, properties.Length);
+                Assert.Equal("Street", properties[0].Name);
+                Assert.Equal("23 Tsawassen Blvd.", properties[0].Value);
+                Assert.Equal("Region", properties[1].Name);
+                Assert.Equal("BC", properties[1].Value);
+                Assert.Equal("PostalCode", properties[2].Name);
+                Assert.Equal("T2F 8M4", properties[2].Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.City", resource.TypeName);
+                var cityNameProperty = Assert.Single(resource.Properties);
+                Assert.Equal("CityName", cityNameProperty.Name);
+                Assert.Equal("Tsawassen", cityNameProperty.Value);
+            });
+
+            await SetupJsonLightDeltaReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightDeltaReader) => DoReadAsync(jsonLightDeltaReader,
+                    verifyDeltaResourceAction: (deltaResource) =>
+                    {
+                        Assert.NotNull(deltaResource);
+                        Assert.Equal("MyNS.Order", deltaResource.TypeName);
+                        Assert.NotNull(deltaResource.Id);
+                        Assert.EndsWith("Orders(10643)", deltaResource.Id.OriginalString);
+                        Assert.Empty(deltaResource.Properties);
+                    },
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var internalVerifyResourceAction = verifyResourceActionStack.Pop();
+                        internalVerifyResourceAction(resource);
+                    }),
+                isResponse: isResponse);
+
+            Assert.Empty(verifyResourceActionStack);
+        }
+
+        [Fact]
+        public async Task ReadDeltaPayloadWithODataNextLinkAnnotationAtStartAsync()
+        {
+            var payload = "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"@odata.nextLink\":\"http://tempuri.org/\",\"value\":[]}";
+
+            await SetupJsonLightDeltaReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightDeltaReader) => DoReadAsync(jsonLightDeltaReader,
+                    verifyDeltaResourceSetAction: (deltaResourceSet) =>
+                    {
+                        Assert.NotNull(deltaResourceSet);
+                        Assert.NotNull(deltaResourceSet.NextPageLink);
+                        Assert.EndsWith("http://tempuri.org/", deltaResourceSet.NextPageLink.AbsoluteUri);
+                    }));
+        }
+
+        [Fact]
+        public async Task ReadDeltaPayloadWithODataNextLinkAnnotationAtEndAsync()
+        {
+            var payload = "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[],\"@odata.nextLink\":\"http://tempuri.org/\"}";
+
+            await SetupJsonLightDeltaReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightDeltaReader) => DoReadAsync(jsonLightDeltaReader,
+                    verifyDeltaResourceSetAction: (deltaResourceSet) =>
+                    {
+                        Assert.NotNull(deltaResourceSet);
+                        Assert.NotNull(deltaResourceSet.NextPageLink);
+                        Assert.EndsWith("http://tempuri.org/", deltaResourceSet.NextPageLink.AbsoluteUri);
+                    }));
+        }
+
+        [Fact]
+        public async Task ReadDeltaPayloadWithODataDeltaLinkAnnotationAtStartAsync()
+        {
+            var payload = "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"@odata.deltaLink\":\"http://tempuri.org/\",\"value\":[]}";
+
+            await SetupJsonLightDeltaReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightDeltaReader) => DoReadAsync(jsonLightDeltaReader,
+                    verifyDeltaResourceSetAction: (deltaResourceSet) =>
+                    {
+                        Assert.NotNull(deltaResourceSet);
+                        Assert.NotNull(deltaResourceSet.DeltaLink);
+                        Assert.EndsWith("http://tempuri.org/", deltaResourceSet.DeltaLink.AbsoluteUri);
+                    }));
+        }
+
+        [Fact]
+        public async Task ReadDeltaPayloadWithODataDeltaLinkAnnotationAtEndAsync()
+        {
+            var payload = "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[],\"@odata.deltaLink\":\"http://tempuri.org/\"}";
+
+            await SetupJsonLightDeltaReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightDeltaReader) => DoReadAsync(jsonLightDeltaReader,
+                    verifyDeltaResourceSetAction: (deltaResourceSet) =>
+                    {
+                        Assert.NotNull(deltaResourceSet);
+                        Assert.NotNull(deltaResourceSet.DeltaLink);
+                        Assert.EndsWith("http://tempuri.org/", deltaResourceSet.DeltaLink.AbsoluteUri);
+                    }));
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ReadDeltaPayloadWithExpandedCollectionNavigationPropertyAsync(bool isResponse)
+        {
+            var payload = "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[{" +
+                "\"@odata.id\":\"http://host/service/Customers('BOTTM')\"," +
+                "\"ContactName\":\"Susan Halvenstern\"," +
+                "\"Orders\":[{" +
+                "\"@odata.id\":\"http://host/service/Orders(10643)\"," +
+                "\"Id\":10643," +
+                "\"Address\":{" +
+                "\"Street\":\"23 Tsawassen Blvd.\"," +
+                "\"City\":{\"CityName\":\"Tsawassen\"}," +
+                "\"Region\":\"BC\"," +
+                "\"PostalCode\":\"T2F 8M4\"}}]}]}";
+
+            var verifyResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Order", resource.TypeName);
+                Assert.NotNull(resource.Id);
+                Assert.EndsWith("http://host/service/Orders(10643)", resource.Id.AbsoluteUri);
+                var idProperty = Assert.Single(resource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(10643, idProperty.Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Address", resource.TypeName);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(3, properties.Length);
+                Assert.Equal("Street", properties[0].Name);
+                Assert.Equal("23 Tsawassen Blvd.", properties[0].Value);
+                Assert.Equal("Region", properties[1].Name);
+                Assert.Equal("BC", properties[1].Value);
+                Assert.Equal("PostalCode", properties[2].Name);
+                Assert.Equal("T2F 8M4", properties[2].Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.City", resource.TypeName);
+                var cityNameProperty = Assert.Single(resource.Properties);
+                Assert.Equal("CityName", cityNameProperty.Name);
+                Assert.Equal("Tsawassen", cityNameProperty.Value);
+            });
+
+            await SetupJsonLightDeltaReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightDeltaReader) => DoReadAsync(jsonLightDeltaReader,
+                    verifyDeltaResourceAction: (deltaResource) =>
+                    {
+                        Assert.NotNull(deltaResource);
+                        Assert.Equal("MyNS.Customer", deltaResource.TypeName);
+                        Assert.NotNull(deltaResource.Id);
+                        Assert.EndsWith("http://host/service/Customers('BOTTM')", deltaResource.Id.AbsoluteUri);
+                        var contactNameProperty = Assert.Single(deltaResource.Properties);
+                        Assert.Equal("ContactName", contactNameProperty.Name);
+                        Assert.Equal("Susan Halvenstern", contactNameProperty.Value);
+                    },
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var internalVerifyResourceAction = verifyResourceActionStack.Pop();
+                        internalVerifyResourceAction(resource);
+                    }),
+                isResponse: isResponse);
+
+            Assert.Empty(verifyResourceActionStack);
+        }
+
+        [Fact]
+        public async Task ReadDeltaPayloadWithExpandedCollectionNavigationPropertyAndNavigationLinksAsync()
+        {
+            var payload = "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[{" +
+                "\"@odata.context\":\"http://host/service/$metadata#Customers/$entity\"," +
+                "\"@odata.type\":\"#MyNS.Customer\"," +
+                "\"@odata.id\":\"http://host/service/Customers('BOTTM')\"," +
+                "\"@odata.editLink\":\"Customers('BOTTM')\"," +
+                "\"ContactName\":\"Susan Halvenstern\"," +
+                "\"Orders@odata.associationLink\":\"http://host/service/Customers('BOTTM')/Orders/$ref\"," +
+                "\"Orders@odata.navigationLink\":\"http://host/service/Customers('BOTTM')/Orders\"," +
+                "\"Orders\":[{" +
+                "\"@odata.type\":\"#MyNS.Order\"," +
+                "\"@odata.id\":\"http://host/service/Orders(10643)\"," +
+                "\"@odata.editLink\":\"http://host/service/Orders(10643)\"," +
+                "\"Id\":10643," +
+                "\"Address\":{" +
+                "\"Street\":\"23 Tsawassen Blvd.\"," +
+                "\"City\":{\"CityName\":\"Tsawassen\"}," +
+                "\"Region\":\"BC\"," +
+                "\"PostalCode\":\"T2F 8M4\"}}]," +
+                "\"FavouriteProducts@odata.associationLink\":\"http://host/service/Customers('BOTTM')/FavouriteProducts/$ref\"," +
+                "\"FavouriteProducts@odata.navigationLink\":\"http://host/service/Customers('BOTTM')/FavouriteProducts\"," +
+                "\"ProductBeingViewed@odata.associationLink\":\"http://host/service/Customers('BOTTM')/ProductBeingViewed/$ref\"," +
+                "\"ProductBeingViewed@odata.navigationLink\":\"http://host/service/Customers('BOTTM')/ProductBeingViewed\"}]}";
+
+            var verifyResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Order", resource.TypeName);
+                Assert.NotNull(resource.Id);
+                Assert.Equal("http://host/service/Orders(10643)", resource.Id.AbsoluteUri);
+                Assert.NotNull(resource.EditLink);
+                Assert.Equal("http://host/service/Orders(10643)", resource.EditLink.AbsoluteUri);
+                var idProperty = Assert.Single(resource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(10643, idProperty.Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Address", resource.TypeName);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(3, properties.Length);
+                Assert.Equal("Street", properties[0].Name);
+                Assert.Equal("23 Tsawassen Blvd.", properties[0].Value);
+                Assert.Equal("Region", properties[1].Name);
+                Assert.Equal("BC", properties[1].Value);
+                Assert.Equal("PostalCode", properties[2].Name);
+                Assert.Equal("T2F 8M4", properties[2].Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.City", resource.TypeName);
+                var cityNameProperty = Assert.Single(resource.Properties);
+                Assert.Equal("CityName", cityNameProperty.Name);
+                Assert.Equal("Tsawassen", cityNameProperty.Value);
+            });
+
+            var verifyNestedResourceInfoActionStack = new Stack<Action<ODataNestedResourceInfo>>();
+            verifyNestedResourceInfoActionStack.Push((nestedResourceInfo) =>
+            {
+                Assert.Equal("ProductBeingViewed", nestedResourceInfo.Name);
+                Assert.NotNull(nestedResourceInfo.Url);
+                Assert.Equal("http://host/service/Customers('BOTTM')/ProductBeingViewed", nestedResourceInfo.Url.AbsoluteUri);
+                Assert.NotNull(nestedResourceInfo.AssociationLinkUrl);
+                Assert.Equal("http://host/service/Customers('BOTTM')/ProductBeingViewed/$ref", nestedResourceInfo.AssociationLinkUrl.AbsoluteUri);
+            });
+            verifyNestedResourceInfoActionStack.Push((nestedResourceInfo) =>
+            {
+                Assert.Equal("FavouriteProducts", nestedResourceInfo.Name);
+                Assert.NotNull(nestedResourceInfo.Url);
+                Assert.Equal("http://host/service/Customers('BOTTM')/FavouriteProducts", nestedResourceInfo.Url.AbsoluteUri);
+                Assert.NotNull(nestedResourceInfo.AssociationLinkUrl);
+                Assert.Equal("http://host/service/Customers('BOTTM')/FavouriteProducts/$ref", nestedResourceInfo.AssociationLinkUrl.AbsoluteUri);
+            });
+            verifyNestedResourceInfoActionStack.Push((nestedResourceInfo) =>
+            {
+                Assert.Equal("Orders", nestedResourceInfo.Name);
+                Assert.NotNull(nestedResourceInfo.Url);
+                Assert.Equal("http://host/service/Customers('BOTTM')/Orders", nestedResourceInfo.Url.AbsoluteUri);
+                Assert.NotNull(nestedResourceInfo.AssociationLinkUrl);
+                Assert.Equal("http://host/service/Customers('BOTTM')/Orders/$ref", nestedResourceInfo.AssociationLinkUrl.AbsoluteUri);
+            });
+            verifyNestedResourceInfoActionStack.Push((nestedResourceInfo) => Assert.Equal("Address", nestedResourceInfo.Name));
+            verifyNestedResourceInfoActionStack.Push((nestedResourceInfo) => Assert.Equal("City", nestedResourceInfo.Name));
+
+            await SetupJsonLightDeltaReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightDeltaReader) => DoReadAsync(jsonLightDeltaReader,
+                    verifyDeltaResourceAction: (deltaResource) =>
+                    {
+                        Assert.NotNull(deltaResource);
+                        Assert.Equal("MyNS.Customer", deltaResource.TypeName);
+                        Assert.NotNull(deltaResource.Id);
+                        Assert.Equal("http://host/service/Customers('BOTTM')", deltaResource.Id.AbsoluteUri);
+                        Assert.NotNull(deltaResource.EditLink);
+                        Assert.EndsWith("Customers('BOTTM')", deltaResource.EditLink.OriginalString);
+                        var contactNameProperty = Assert.Single(deltaResource.Properties);
+                        Assert.Equal("ContactName", contactNameProperty.Name);
+                        Assert.Equal("Susan Halvenstern", contactNameProperty.Value);
+                    },
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var internalVerifyResourceAction = verifyResourceActionStack.Pop();
+                        internalVerifyResourceAction(resource);
+                    },
+                    verifyNestedResourceInfoAction: (nestedResourceInfo) =>
+                    {
+                        Assert.NotEmpty(verifyNestedResourceInfoActionStack);
+                        var internalVerifyNestedResourceInfoAction = verifyNestedResourceInfoActionStack.Pop();
+                        internalVerifyNestedResourceInfoAction(nestedResourceInfo);
+                    }));
+
+            Assert.Empty(verifyResourceActionStack);
+            Assert.Empty(verifyNestedResourceInfoActionStack);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ReadDeltaPayloadWithMultipleExpandedCollectionNavigationPropertyAsync(bool isResponse)
+        {
+            var payload = "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[{" +
+                "\"@odata.id\":\"http://host/service/Customers('BOTTM')\"," +
+                "\"ContactName\":\"Susan Halvenstern\"," +
+                "\"Orders\":[{" +
+                "\"@odata.id\":\"http://host/service/Orders(10643)\"," +
+                "\"Id\":10643," +
+                "\"Address\":{" +
+                "\"Street\":\"23 Tsawassen Blvd.\"," +
+                "\"City\":{\"CityName\":\"Tsawassen\"}," +
+                "\"Region\":\"BC\"," +
+                "\"PostalCode\":\"T2F 8M4\"}}]," +
+                "\"FavouriteProducts\":[{\"@odata.id\":\"http://host/service/Products(1)\",\"Id\":1,\"Name\":\"Car\"}]}]}";
+
+            var verifyResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Product", resource.TypeName);
+                Assert.NotNull(resource.Id);
+                Assert.Equal("http://host/service/Products(1)", resource.Id.AbsoluteUri);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(2, properties.Length);
+                Assert.Equal("Id", properties[0].Name);
+                Assert.Equal(1, properties[0].Value);
+                Assert.Equal("Name", properties[1].Name);
+                Assert.Equal("Car", properties[1].Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Order", resource.TypeName);
+                Assert.NotNull(resource.Id);
+                Assert.Equal("http://host/service/Orders(10643)", resource.Id.AbsoluteUri);
+                var idProperty = Assert.Single(resource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(10643, idProperty.Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Address", resource.TypeName);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(3, properties.Length);
+                Assert.Equal("Street", properties[0].Name);
+                Assert.Equal("23 Tsawassen Blvd.", properties[0].Value);
+                Assert.Equal("Region", properties[1].Name);
+                Assert.Equal("BC", properties[1].Value);
+                Assert.Equal("PostalCode", properties[2].Name);
+                Assert.Equal("T2F 8M4", properties[2].Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.City", resource.TypeName);
+                var cityNameProperty = Assert.Single(resource.Properties);
+                Assert.Equal("CityName", cityNameProperty.Name);
+                Assert.Equal("Tsawassen", cityNameProperty.Value);
+            });
+
+            await SetupJsonLightDeltaReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightDeltaReader) => DoReadAsync(jsonLightDeltaReader,
+                    verifyDeltaResourceAction: (deltaResource) =>
+                    {
+                        Assert.NotNull(deltaResource);
+                        Assert.Equal("MyNS.Customer", deltaResource.TypeName);
+                        Assert.NotNull(deltaResource.Id);
+                        Assert.Equal("http://host/service/Customers('BOTTM')", deltaResource.Id.AbsoluteUri);
+                        var contactNameProperty = Assert.Single(deltaResource.Properties);
+                        Assert.Equal("ContactName", contactNameProperty.Name);
+                        Assert.Equal("Susan Halvenstern", contactNameProperty.Value);
+                    },
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var internalVerifyResourceAction = verifyResourceActionStack.Pop();
+                        internalVerifyResourceAction(resource);
+                    }),
+                isResponse: isResponse);
+
+            Assert.Empty(verifyResourceActionStack);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ReadDeltaPayloadWithExpandedContainedCollectionNavigationPropertyAsync(bool isResponse)
+        {
+            var payload = "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[{" +
+                "\"@odata.id\":\"http://host/service/Customers('BOTTM')\"," +
+                "\"ContactName\":\"Susan Halvenstern\"," +
+                "\"FavouriteProducts\":[{" +
+                "\"@odata.id\":\"http://host/service/Products(1)\"," +
+                "\"Id\":1," +
+                "\"Name\":\"Car\"," +
+                "\"Details\":[{\"@odata.type\":\"#MyNS.ProductDetail\",\"Id\":1,\"Detail\":\"made in china\"}]}]}]}";
+
+            var resourceSetCount = 0;
+            var verifyResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Product", resource.TypeName);
+                Assert.NotNull(resource.Id);
+                Assert.Equal("http://host/service/Products(1)", resource.Id.AbsoluteUri);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(2, properties.Length);
+                Assert.Equal("Id", properties[0].Name);
+                Assert.Equal(1, properties[0].Value);
+                Assert.Equal("Name", properties[1].Name);
+                Assert.Equal("Car", properties[1].Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.ProductDetail", resource.TypeName);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(2, properties.Length);
+                Assert.Equal("Id", properties[0].Name);
+                Assert.Equal(1, properties[0].Value);
+                Assert.Equal("Detail", properties[1].Name);
+                Assert.Equal("made in china", properties[1].Value);
+            });
+
+            await SetupJsonLightDeltaReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightDeltaReader) => DoReadAsync(jsonLightDeltaReader,
+                    verifyDeltaResourceAction: (deltaResource) =>
+                    {
+                        Assert.NotNull(deltaResource);
+                        Assert.Equal("MyNS.Customer", deltaResource.TypeName);
+                        Assert.NotNull(deltaResource.Id);
+                        Assert.Equal("http://host/service/Customers('BOTTM')", deltaResource.Id.AbsoluteUri);
+                        var contactNameProperty = Assert.Single(deltaResource.Properties);
+                        Assert.Equal("ContactName", contactNameProperty.Name);
+                        Assert.Equal("Susan Halvenstern", contactNameProperty.Value);
+                    },
+                    verifyResourceSetAction: (resourceSet) => resourceSetCount++,
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var internalVerifyResourceAction = verifyResourceActionStack.Pop();
+                        internalVerifyResourceAction(resource);
+                    }),
+                isResponse: isResponse);
+
+            Assert.Equal(2, resourceSetCount);
+            Assert.Empty(verifyResourceActionStack);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ReadDeltaPayloadWithExpandedSingletonNavigationPropertyAsync(bool isResponse)
+        {
+            var payload = "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[{" +
+                "\"@odata.id\":\"http://host/service/Customers('BOTTM')\"," +
+                "\"ContactName\":\"Susan Halvenstern\"," +
+                "\"ProductBeingViewed\":{" +
+                "\"@odata.id\":\"http://host/service/Products(1)\"," +
+                "\"Id\":1," +
+                "\"Name\":\"Car\"," +
+                "\"Details\":[{\"@odata.type\":\"#MyNS.ProductDetail\",\"Id\":1,\"Detail\":\"made in china\"}]}}]}";
+
+            var resourceSetCount = 0;
+            var verifyResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Product", resource.TypeName);
+                Assert.NotNull(resource.Id);
+                Assert.Equal("http://host/service/Products(1)", resource.Id.AbsoluteUri);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(2, properties.Length);
+                Assert.Equal("Id", properties[0].Name);
+                Assert.Equal(1, properties[0].Value);
+                Assert.Equal("Name", properties[1].Name);
+                Assert.Equal("Car", properties[1].Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.ProductDetail", resource.TypeName);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(2, properties.Length);
+                Assert.Equal("Id", properties[0].Name);
+                Assert.Equal(1, properties[0].Value);
+                Assert.Equal("Detail", properties[1].Name);
+                Assert.Equal("made in china", properties[1].Value);
+            });
+
+            await SetupJsonLightDeltaReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightDeltaReader) => DoReadAsync(jsonLightDeltaReader,
+                    verifyDeltaResourceAction: (deltaResource) =>
+                    {
+                        Assert.NotNull(deltaResource);
+                        Assert.Equal("MyNS.Customer", deltaResource.TypeName);
+                        Assert.NotNull(deltaResource.Id);
+                        Assert.Equal("http://host/service/Customers('BOTTM')", deltaResource.Id.AbsoluteUri);
+                        var contactNameProperty = Assert.Single(deltaResource.Properties);
+                        Assert.Equal("ContactName", contactNameProperty.Name);
+                        Assert.Equal("Susan Halvenstern", contactNameProperty.Value);
+                    },
+                    verifyResourceSetAction: (resourceSet) => resourceSetCount++,
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var internalVerifyResourceAction = verifyResourceActionStack.Pop();
+                        internalVerifyResourceAction(resource);
+                    }),
+                isResponse: isResponse);
+
+            Assert.Equal(1, resourceSetCount);
+            Assert.Empty(verifyResourceActionStack);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ReadDeltaPayloadWithNestedComplexPropertyAsync(bool isResponse)
+        {
+            var payload = "{\"@odata.context\":\"http://host/service/$metadata#Orders/$delta\"," +
+                "\"value\":[{" +
+                "\"@odata.id\":\"http://host/service/Orders(10643)\"," +
+                "\"Id\":10643," +
+                "\"Address\":{" +
+                "\"Street\":\"23 Tsawassen Blvd.\"," +
+                "\"City\":{\"CityName\":\"Tsawassen\"}," +
+                "\"Region\":\"BC\"," +
+                "\"PostalCode\":\"T2F 8M4\"}}]}";
+
+            var verifyResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Address", resource.TypeName);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(3, properties.Length);
+                Assert.Equal("Street", properties[0].Name);
+                Assert.Equal("23 Tsawassen Blvd.", properties[0].Value);
+                Assert.Equal("Region", properties[1].Name);
+                Assert.Equal("BC", properties[1].Value);
+                Assert.Equal("PostalCode", properties[2].Name);
+                Assert.Equal("T2F 8M4", properties[2].Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.City", resource.TypeName);
+                var cityNameProperty = Assert.Single(resource.Properties);
+                Assert.Equal("CityName", cityNameProperty.Name);
+                Assert.Equal("Tsawassen", cityNameProperty.Value);
+            });
+
+            await SetupJsonLightDeltaReaderAndRunTestAsync(
+                payload,
+                orders,
+                order,
+                (jsonLightDeltaReader) => DoReadAsync(jsonLightDeltaReader,
+                    verifyDeltaResourceAction: (deltaResource) =>
+                    {
+                        Assert.NotNull(deltaResource);
+                        Assert.Equal("MyNS.Order", deltaResource.TypeName);
+                        Assert.NotNull(deltaResource.Id);
+                        Assert.Equal("http://host/service/Orders(10643)", deltaResource.Id.AbsoluteUri);
+                        var idProperty = Assert.Single(deltaResource.Properties);
+                        Assert.Equal("Id", idProperty.Name);
+                        Assert.Equal(10643, idProperty.Value);
+                    },
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var internalVerifyResourceAction = verifyResourceActionStack.Pop();
+                        internalVerifyResourceAction(resource);
+                    }),
+                isResponse: isResponse);
+
+            Assert.Empty(verifyResourceActionStack);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ReadDeltaPayloadWithNestedCollectionOfComplexPropertyAsync(bool isResponse)
+        {
+            var payload = "{\"@odata.context\":\"http://host/service/$metadata#Orders/$delta\"," +
+                    "\"value\":[{" +
+                    "\"@odata.id\":\"http://host/service/Orders(10643)\"," +
+                    "\"Id\":10643," +
+                    "\"Addresses@odata.type\":\"#Collection(MyNS.Address)\"," +
+                    "\"Addresses\":[" +
+                    "{\"@odata.type\":\"#MyNS.Address\"," +
+                    "\"Street\":\"23 Tsawassen Blvd.\"," +
+                    "\"City\":{\"CityName\":\"Tsawassen\"}," +
+                    "\"Region\":\"BC\"," +
+                    "\"PostalCode\":\"T2F 8M4\"}," +
+                    "{\"@odata.type\":\"#MyNS.Address\"," +
+                    "\"Street\":\"ZixingRoad.\"," +
+                    "\"City\":{\"CityName\":\"Shanghai\"}," +
+                    "\"PostalCode\":\"200001\"}]}]}";
+
+            var resourceSetCount = 0;
+            var verifyResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Address", resource.TypeName);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(2, properties.Length);
+                Assert.Equal("Street", properties[0].Name);
+                Assert.Equal("ZixingRoad.", properties[0].Value);
+                Assert.Equal("PostalCode", properties[1].Name);
+                Assert.Equal("200001", properties[1].Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.City", resource.TypeName);
+                var cityNameProperty = Assert.Single(resource.Properties);
+                Assert.Equal("CityName", cityNameProperty.Name);
+                Assert.Equal("Shanghai", cityNameProperty.Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Address", resource.TypeName);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(3, properties.Length);
+                Assert.Equal("Street", properties[0].Name);
+                Assert.Equal("23 Tsawassen Blvd.", properties[0].Value);
+                Assert.Equal("Region", properties[1].Name);
+                Assert.Equal("BC", properties[1].Value);
+                Assert.Equal("PostalCode", properties[2].Name);
+                Assert.Equal("T2F 8M4", properties[2].Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.City", resource.TypeName);
+                var cityNameProperty = Assert.Single(resource.Properties);
+                Assert.Equal("CityName", cityNameProperty.Name);
+                Assert.Equal("Tsawassen", cityNameProperty.Value);
+            });
+
+            await SetupJsonLightDeltaReaderAndRunTestAsync(
+                payload,
+                orders,
+                order,
+                (jsonLightDeltaReader) => DoReadAsync(jsonLightDeltaReader,
+                    verifyDeltaResourceAction: (deltaResource) =>
+                    {
+                        Assert.NotNull(deltaResource);
+                        Assert.Equal("MyNS.Order", deltaResource.TypeName);
+                        Assert.NotNull(deltaResource.Id);
+                        Assert.Equal("http://host/service/Orders(10643)", deltaResource.Id.AbsoluteUri);
+                        var idProperty = Assert.Single(deltaResource.Properties);
+                        Assert.Equal("Id", idProperty.Name);
+                        Assert.Equal(10643, idProperty.Value);
+                    },
+                    verifyResourceSetAction: (resourceSet) => resourceSetCount++,
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var internalVerifyResourceAction = verifyResourceActionStack.Pop();
+                        internalVerifyResourceAction(resource);
+                    }),
+                isResponse: isResponse);
+
+            Assert.Equal(1, resourceSetCount);
+            Assert.Empty(verifyResourceActionStack);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ReadV401DeletedEntryWithODataIdAnnotationAsync(bool isResponse)
+        {
+            this.messageReaderSettings.Version = ODataVersion.V401;
+
+            var payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[" +
+                "{\"@removed\":{\"reason\":\"changed\"}," +
+                "\"@id\":\"Customers/1\"}]}";
+
+            await SetupJsonLightDeltaReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightDeltaReader) => DoReadAsync(jsonLightDeltaReader,
+                    verifyDeletedEntryAction: (deletedEntry) =>
+                    {
+                        Assert.NotNull(deletedEntry);
+                        Assert.NotNull(deletedEntry.Id);
+                        Assert.Equal("Customers/1", deletedEntry.Id);
+                        Assert.Equal(DeltaDeletedEntryReason.Changed, deletedEntry.Reason);
+                    }),
+                isResponse: isResponse);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ReadV401DeletedEntryWithKeyPropertyAsync(bool isResponse)
+        {
+            this.messageReaderSettings.Version = ODataVersion.V401;
+
+            var payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[" +
+                "{\"@removed\":{\"reason\":\"changed\"}," +
+                "\"Id\":1}]}";
+
+            await SetupJsonLightDeltaReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightDeltaReader) => DoReadAsync(jsonLightDeltaReader,
+                    verifyDeletedEntryAction: (deletedEntry) =>
+                    {
+                        Assert.NotNull(deletedEntry);
+                        Assert.NotNull(deletedEntry.Id);
+                        Assert.Equal("http://host/service/Customers(1)", deletedEntry.Id);
+                        Assert.Equal(DeltaDeletedEntryReason.Changed, deletedEntry.Reason);
+                    }),
+                isResponse: isResponse);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ReadV401DeletedEntryWithRemovedPropertyAtEndAsync(bool isResponse)
+        {
+            this.messageReaderSettings.Version = ODataVersion.V401;
+
+            var payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[{" +
+                "\"Id\":1," +
+                "\"@removed\":{\"reason\":\"changed\"}}]}";
+
+            await SetupJsonLightDeltaReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightDeltaReader) => DoReadAsync(jsonLightDeltaReader,
+                    verifyDeletedEntryAction: (deletedEntry) =>
+                    {
+                        Assert.NotNull(deletedEntry);
+                        Assert.NotNull(deletedEntry.Id);
+                        Assert.Equal("http://host/service/Customers(1)", deletedEntry.Id);
+                        Assert.Equal(DeltaDeletedEntryReason.Changed, deletedEntry.Reason);
+                    }),
+                isResponse: isResponse);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ReadV401DeletedEntryWithRemovedPropertyEmptyAsync(bool isResponse)
+        {
+            this.messageReaderSettings.Version = ODataVersion.V401;
+
+            var payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[" +
+                "{\"@removed\":{}," +
+                "\"Id\":1}]}";
+
+            await SetupJsonLightDeltaReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightDeltaReader) => DoReadAsync(jsonLightDeltaReader,
+                    verifyDeletedEntryAction: (deletedEntry) =>
+                    {
+                        Assert.NotNull(deletedEntry);
+                        Assert.NotNull(deletedEntry.Id);
+                        Assert.Equal("http://host/service/Customers(1)", deletedEntry.Id);
+                        Assert.Equal(DeltaDeletedEntryReason.Changed, deletedEntry.Reason);
+                    }),
+                isResponse: isResponse);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ReadV401DeletedEntryWithRemovedPropertyNullAsync(bool isResponse)
+        {
+            this.messageReaderSettings.Version = ODataVersion.V401;
+
+            var payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[{\"@removed\":null," +
+                "\"Id\":1}]}";
+
+            await SetupJsonLightDeltaReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightDeltaReader) => DoReadAsync(jsonLightDeltaReader,
+                    verifyDeletedEntryAction: (deletedEntry) =>
+                    {
+                        Assert.NotNull(deletedEntry);
+                        Assert.NotNull(deletedEntry.Id);
+                        Assert.Equal("http://host/service/Customers(1)", deletedEntry.Id);
+                        Assert.Equal(DeltaDeletedEntryReason.Changed, deletedEntry.Reason);
+                    }),
+                isResponse: isResponse);
+        }
+
+        [Fact]
+        public async Task ReadV401DeletedEntryWithRemovedPropertyValueContainingExtraPropertiesAsync()
+        {
+            this.messageReaderSettings.Version = ODataVersion.V401;
+
+            var payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[" +
+                "{\"@removed\":{\"reason\":\"changed\",\"extraProperty\":\"value\",\"@extra.annotation\":\"annotationValue\"}," +
+                "\"Id\":1}]}";
+
+            await SetupJsonLightDeltaReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightDeltaReader) => DoReadAsync(jsonLightDeltaReader,
+                    verifyDeletedEntryAction: (deletedEntry) =>
+                    {
+                        Assert.NotNull(deletedEntry);
+                        Assert.NotNull(deletedEntry.Id);
+                        Assert.Equal("http://host/service/Customers(1)", deletedEntry.Id);
+                        Assert.Equal(DeltaDeletedEntryReason.Changed, deletedEntry.Reason);
+                    }));
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ReadV401DeletedEntryAsync(bool isResponse)
+        {
+            this.messageReaderSettings.Version = ODataVersion.V401;
+
+            var payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[" +
+                "{\"@removed\":{\"reason\":\"changed\"}," +
+                "\"Id\":1," +
+                "\"ContactName\":\"Samantha Stones\"}]}";
+
+            await SetupJsonLightDeltaReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightDeltaReader) => DoReadAsync(
+                    jsonLightDeltaReader,
+                    verifyDeletedEntryAction: (deletedEntry) =>
+                    {
+                        Assert.NotNull(deletedEntry);
+                        Assert.NotNull(deletedEntry.Id);
+                        Assert.Equal("http://host/service/Customers(1)", deletedEntry.Id);
+                        Assert.Equal(DeltaDeletedEntryReason.Changed, deletedEntry.Reason);
+                    }),
+                isResponse: isResponse);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ReadDeletedEntryIgnoresExtraPropertiesAsync(bool isResponse)
+        {
+            this.messageReaderSettings.Version = ODataVersion.V401;
+
+            var payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[" +
+                "{\"@context\":\"http://host/service/$metadata#Orders/$deletedEntity\"," +
+                "\"id\":\"Customers('BOTTM')\"," +
+                "\"reason\":\"deleted\"," +
+                "\"ContactName\":\"Susan Halvenstern\"}]}";
+
+            await SetupJsonLightDeltaReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightDeltaReader) => DoReadAsync(
+                    jsonLightDeltaReader,
+                    verifyDeletedEntryAction: (deletedEntry) =>
+                    {
+                        Assert.NotNull(deletedEntry);
+                        Assert.NotNull(deletedEntry.Id);
+                        Assert.Equal("Customers('BOTTM')", deletedEntry.Id);
+                        Assert.Equal(DeltaDeletedEntryReason.Deleted, deletedEntry.Reason);
+                    }),
+                isResponse: isResponse);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ReadV401DeletedEntryWithNestedResourceAsync(bool isResponse)
+        {
+            this.messageReaderSettings.Version = ODataVersion.V401;
+
+            var payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[" +
+                "{\"@removed\":{\"reason\":\"changed\"}," +
+                "\"Id\":1," +
+                "\"ProductBeingViewed\":{\"Name\":\"Scissors\",\"Id\":10}}]}";
+
+            await SetupJsonLightReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightReader) => DoReadAsync(jsonLightReader,
+                    verifyDeletedResourceAction: (deletedResource) =>
+                    {
+                        Assert.NotNull(deletedResource);
+                        Assert.Equal("MyNS.Customer", deletedResource.TypeName);
+                        Assert.Equal(DeltaDeletedEntryReason.Changed, deletedResource.Reason);
+                        var idProperty = Assert.Single(deletedResource.Properties);
+                        Assert.Equal("Id", idProperty.Name);
+                        Assert.Equal(1, idProperty.Value);
+                    },
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotNull(resource);
+                        Assert.Equal("MyNS.Product", resource.TypeName);
+                        var properties = resource.Properties.ToArray();
+                        Assert.Equal(2, properties.Length);
+                        Assert.Equal("Name", properties[0].Name);
+                        Assert.Equal("Scissors", properties[0].Value);
+                        Assert.Equal("Id", properties[1].Name);
+                        Assert.Equal(10, properties[1].Value);
+                    }),
+                isResponse: isResponse);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task Read401DeletedEntryWithNestedNullResourceAsync(bool isResponse)
+        {
+            this.messageReaderSettings.Version = ODataVersion.V401;
+
+            var payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[" +
+                "{\"@removed\":{\"reason\":\"changed\"}," +
+                "\"Id\":1," +
+                "\"ProductBeingViewed\":null}]}";
+
+            await SetupJsonLightReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightReader) => DoReadAsync(jsonLightReader,
+                    verifyDeletedResourceAction: (deletedResource) =>
+                    {
+                        Assert.NotNull(deletedResource);
+                        Assert.Equal("MyNS.Customer", deletedResource.TypeName);
+                        Assert.Equal(DeltaDeletedEntryReason.Changed, deletedResource.Reason);
+                        var idProperty = Assert.Single(deletedResource.Properties);
+                        Assert.Equal("Id", idProperty.Name);
+                        Assert.Equal(1, idProperty.Value);
+                    },
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.Null(resource);
+                    }),
+                isResponse: isResponse);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ReadV401DeltaPayloadWithNestedResourceAsync(bool isResponse)
+        {
+            this.messageReaderSettings.Version = ODataVersion.V401;
+
+            var payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[{" +
+                "\"Id\":1," +
+                "\"ProductBeingViewed\":{\"Name\":\"Scissors\",\"Id\":10},\"ContactName\":\"Samantha Stones\"}]}";
+
+            var verifyResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Customer", resource.TypeName);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(2, properties.Length);
+                Assert.Equal("Id", properties[0].Name);
+                Assert.Equal(1, properties[0].Value);
+                Assert.Equal("ContactName", properties[1].Name);
+                Assert.Equal("Samantha Stones", properties[1].Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Product", resource.TypeName);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(2, properties.Length);
+                Assert.Equal("Name", properties[0].Name);
+                Assert.Equal("Scissors", properties[0].Value);
+                Assert.Equal("Id", properties[1].Name);
+                Assert.Equal(10, properties[1].Value);
+            });
+
+            await SetupJsonLightReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightReader) => DoReadAsync(jsonLightReader,
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                        innerVerifyResourceAction(resource);
+                    }),
+                isResponse: isResponse);
+
+            Assert.Empty(verifyResourceActionStack);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ReadV401DeletedEntryWithNestedDeletedEntryAsync(bool isResponse)
+        {
+            this.messageReaderSettings.Version = ODataVersion.V401;
+
+            var payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[" +
+                "{\"@removed\":{\"reason\":\"changed\"}," +
+                "\"Id\":1," +
+                "\"ProductBeingViewed\":{\"@removed\":{\"reason\":\"deleted\"},\"Name\":\"Scissors\",\"Id\":10}}]}";
+
+            var verifyDeletedResourceActionStack = new Stack<Action<ODataDeletedResource>>();
+            verifyDeletedResourceActionStack.Push((deletedResource) =>
+            {
+                Assert.NotNull(deletedResource);
+                Assert.Equal("MyNS.Customer", deletedResource.TypeName);
+                Assert.Equal(DeltaDeletedEntryReason.Changed, deletedResource.Reason);
+                var idProperty = Assert.Single(deletedResource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(1, idProperty.Value);
+            });
+            verifyDeletedResourceActionStack.Push((deletedResource) =>
+            {
+                Assert.NotNull(deletedResource);
+                Assert.Equal("MyNS.Product", deletedResource.TypeName);
+                Assert.Equal(DeltaDeletedEntryReason.Deleted, deletedResource.Reason);
+                var properties = deletedResource.Properties.ToArray();
+                Assert.Equal(2, properties.Length);
+                Assert.Equal("Name", properties[0].Name);
+                Assert.Equal("Scissors", properties[0].Value);
+                Assert.Equal("Id", properties[1].Name);
+                Assert.Equal(10, properties[1].Value);
+            });
+
+            await SetupJsonLightReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightReader) => DoReadAsync(jsonLightReader,
+                    verifyDeletedResourceAction: (deletedResource) =>
+                    {
+                        Assert.NotEmpty(verifyDeletedResourceActionStack);
+                        var innerVerifyDeletedResourceAction = verifyDeletedResourceActionStack.Pop();
+                        innerVerifyDeletedResourceAction(deletedResource);
+                    }),
+                isResponse: isResponse);
+
+            Assert.Empty(verifyDeletedResourceActionStack);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ReadV401DeletedEntryWithNestedDerivedDeletedEntryAsync(bool isResponse)
+        {
+            this.messageReaderSettings.Version = ODataVersion.V401;
+
+            var payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[" +
+                "{\"@removed\":{\"reason\":\"changed\"}," +
+                "\"Id\":1," +
+                "\"ProductBeingViewed\":{\"@removed\":{\"reason\":\"deleted\"},\"@type\":\"#MyNS.PhysicalProduct\",\"Id\":10,\"Name\":\"car\",\"Material\":\"gold\"}}]}";
+
+            var verifyDeletedResourceActionStack = new Stack<Action<ODataDeletedResource>>();
+            verifyDeletedResourceActionStack.Push((deletedResource) =>
+            {
+                Assert.NotNull(deletedResource);
+                Assert.Equal("MyNS.Customer", deletedResource.TypeName);
+                Assert.Equal(DeltaDeletedEntryReason.Changed, deletedResource.Reason);
+                var idProperty = Assert.Single(deletedResource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(1, idProperty.Value);
+            });
+            verifyDeletedResourceActionStack.Push((deletedResource) =>
+            {
+                Assert.NotNull(deletedResource);
+                Assert.Equal("MyNS.PhysicalProduct", deletedResource.TypeName);
+                Assert.Equal(DeltaDeletedEntryReason.Deleted, deletedResource.Reason);
+                var properties = deletedResource.Properties.ToArray();
+                Assert.Equal(3, properties.Length);
+                Assert.Equal("Id", properties[0].Name);
+                Assert.Equal(10, properties[0].Value);
+                Assert.Equal("Name", properties[1].Name);
+                Assert.Equal("car", properties[1].Value);
+                Assert.Equal("Material", properties[2].Name);
+                Assert.Equal("gold", properties[2].Value);
+            });
+
+            await SetupJsonLightReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightReader) => DoReadAsync(jsonLightReader,
+                    verifyDeletedResourceAction: (deletedResource) =>
+                    {
+                        Assert.NotEmpty(verifyDeletedResourceActionStack);
+                        var innerVerifyDeletedResourceAction = verifyDeletedResourceActionStack.Pop();
+                        innerVerifyDeletedResourceAction(deletedResource);
+                    }),
+                isResponse: isResponse);
+
+            Assert.Empty(verifyDeletedResourceActionStack);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ReadV401DeltaPayloadWithNestedDeletedEntryAsync(bool isResponse)
+        {
+            this.messageReaderSettings.Version = ODataVersion.V401;
+
+            var payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[{" +
+                "\"Id\":1," +
+                "\"ProductBeingViewed\":{\"@removed\":{\"reason\":\"deleted\"},\"Name\":\"Scissors\",\"Id\":10}}]}";
+
+            await SetupJsonLightReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightReader) => DoReadAsync(jsonLightReader,
+                    verifyDeletedResourceAction: (deletedResource) =>
+                    {
+                        Assert.NotNull(deletedResource);
+                        Assert.Equal("MyNS.Product", deletedResource.TypeName);
+                        Assert.Equal(DeltaDeletedEntryReason.Deleted, deletedResource.Reason);
+                        var properties = deletedResource.Properties.ToArray();
+                        Assert.Equal(2, properties.Length);
+                        Assert.Equal("Name", properties[0].Name);
+                        Assert.Equal("Scissors", properties[0].Value);
+                        Assert.Equal("Id", properties[1].Name);
+                        Assert.Equal(10, properties[1].Value);
+
+                    },
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotNull(resource);
+                        Assert.Equal("MyNS.Customer", resource.TypeName);
+                        var idProperty = Assert.Single(resource.Properties);
+                        Assert.Equal("Id", idProperty.Name);
+                        Assert.Equal(1, idProperty.Value);
+                    }),
+                isResponse: isResponse);
+        }
+
+        [Fact]
+        public async Task ReadV401DeletedEntryWithNestedDeltaResourceSetInResponsePayloadAsync()
+        {
+            this.messageReaderSettings.Version = ODataVersion.V401;
+
+            var payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[" +
+                "{\"@removed\":{\"reason\":\"changed\"}," +
+                "\"Id\":1," +
+                "\"FavouriteProducts@count\":5," +
+                "\"FavouriteProducts@nextLink\":\"http://host/service/Customers?$skipToken=5\"," +
+                "\"FavouriteProducts@delta\":[{\"Id\":1,\"Name\":\"Car\"},{\"@removed\":{\"reason\":\"deleted\"},\"Id\":10}]}]}";
+
+            var verifyDeltaResourceSetActionStack = new Stack<Action<ODataDeltaResourceSet>>();
+            verifyDeltaResourceSetActionStack.Push((deltaResourceSet) => Assert.NotNull(deltaResourceSet));
+            verifyDeltaResourceSetActionStack.Push((deltaResourceSet) =>
+            {
+                Assert.Equal(5, deltaResourceSet.Count);
+                Assert.Equal("http://host/service/Customers?$skipToken=5", deltaResourceSet.NextPageLink.AbsoluteUri);
+            });
+
+            var verifyDeletedResourceActionStack = new Stack<Action<ODataDeletedResource>>();
+            verifyDeletedResourceActionStack.Push((deletedResource) =>
+            {
+                Assert.NotNull(deletedResource);
+                Assert.Equal("MyNS.Customer", deletedResource.TypeName);
+                Assert.Equal(DeltaDeletedEntryReason.Changed, deletedResource.Reason);
+                var idProperty = Assert.Single(deletedResource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(1, idProperty.Value);
+            });
+            verifyDeletedResourceActionStack.Push((deletedResource) =>
+            {
+                Assert.NotNull(deletedResource);
+                Assert.Equal("MyNS.Product", deletedResource.TypeName);
+                Assert.Equal(DeltaDeletedEntryReason.Deleted, deletedResource.Reason);
+                var idProperty = Assert.Single(deletedResource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(10, idProperty.Value);
+            });
+
+            await SetupJsonLightReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightReader) => DoReadAsync(jsonLightReader,
+                    verifyDeltaResourceSetAction: (deltaResourceSet) =>
+                    {
+                        Assert.NotEmpty(verifyDeltaResourceSetActionStack);
+                        var innerVerifyDeltaResourceSetAction = verifyDeltaResourceSetActionStack.Pop();
+                        innerVerifyDeltaResourceSetAction(deltaResourceSet);
+                    },
+                    verifyDeletedResourceAction: (deletedResource) =>
+                    {
+                        Assert.NotEmpty(verifyDeletedResourceActionStack);
+                        var innerVerifyDeletedResourceAction = verifyDeletedResourceActionStack.Pop();
+                        innerVerifyDeletedResourceAction(deletedResource);
+                    },
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotNull(resource);
+                        Assert.Equal("MyNS.Product", resource.TypeName);
+                        var properties = resource.Properties.ToArray();
+                        Assert.Equal(2, properties.Length);
+                        Assert.Equal("Id", properties[0].Name);
+                        Assert.Equal(1, properties[0].Value);
+                        Assert.Equal("Name", properties[1].Name);
+                        Assert.Equal("Car", properties[1].Value);
+                    }));
+
+            Assert.Empty(verifyDeltaResourceSetActionStack);
+            Assert.Empty(verifyDeletedResourceActionStack);
+        }
+
+        [Fact]
+        public async Task ReadV401DeletedEntryWithNestedDeltaResourceSetInRequestPayloadAsync()
+        {
+            this.messageReaderSettings.Version = ODataVersion.V401;
+
+            var payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[" +
+                "{\"@removed\":{\"reason\":\"changed\"}," +
+                "\"Id\":1," +
+                "\"FavouriteProducts@delta\":[{\"Id\":1,\"Name\":\"Car\"},{\"@removed\":{\"reason\":\"deleted\"},\"Id\":10}]}]}";
+
+            var deltaResourceSetCount = 0;
+            var verifyDeletedResourceActionStack = new Stack<Action<ODataDeletedResource>>();
+            verifyDeletedResourceActionStack.Push((deletedResource) =>
+            {
+                Assert.NotNull(deletedResource);
+                Assert.Equal("MyNS.Customer", deletedResource.TypeName);
+                Assert.Equal(DeltaDeletedEntryReason.Changed, deletedResource.Reason);
+                var idProperty = Assert.Single(deletedResource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(1, idProperty.Value);
+            });
+            verifyDeletedResourceActionStack.Push((deletedResource) =>
+            {
+                Assert.NotNull(deletedResource);
+                Assert.Equal("MyNS.Product", deletedResource.TypeName);
+                Assert.Equal(DeltaDeletedEntryReason.Deleted, deletedResource.Reason);
+                var idProperty = Assert.Single(deletedResource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(10, idProperty.Value);
+            });
+
+            await SetupJsonLightReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightReader) => DoReadAsync(jsonLightReader,
+                    verifyDeltaResourceSetAction: (deltaResourceSet) => deltaResourceSetCount++,
+                    verifyDeletedResourceAction: (deletedResource) =>
+                    {
+                        Assert.NotEmpty(verifyDeletedResourceActionStack);
+                        var innerVerifyDeletedResourceAction = verifyDeletedResourceActionStack.Pop();
+                        innerVerifyDeletedResourceAction(deletedResource);
+                    },
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotNull(resource);
+                        Assert.Equal("MyNS.Product", resource.TypeName);
+                        var properties = resource.Properties.ToArray();
+                        Assert.Equal(2, properties.Length);
+                        Assert.Equal("Id", properties[0].Name);
+                        Assert.Equal(1, properties[0].Value);
+                        Assert.Equal("Name", properties[1].Name);
+                        Assert.Equal("Car", properties[1].Value);
+                    }),
+                isResponse: false);
+
+            Assert.Equal(2, deltaResourceSetCount);
+            Assert.Empty(verifyDeletedResourceActionStack);
+        }
+
+        [Fact]
+        public async Task ReadV401DeletedEntryWithEmptyNestedDeltaResourceSetInResponsePayloadAsync()
+        {
+            this.messageReaderSettings.Version = ODataVersion.V401;
+
+            var payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[" +
+                "{\"@removed\":{\"reason\":\"changed\"}," +
+                "\"Id\":1," +
+                "\"FavouriteProducts@count\":2," +
+                "\"FavouriteProducts@nextLink\":\"http://host/service/Customers?$skipToken=5\"," +
+                "\"FavouriteProducts@delta\":[]}]}";
+
+            var verifyDeltaResourceSetActionStack = new Stack<Action<ODataDeltaResourceSet>>();
+            verifyDeltaResourceSetActionStack.Push((deltaResourceSet) => Assert.NotNull(deltaResourceSet));
+            verifyDeltaResourceSetActionStack.Push((deltaResourceSet) =>
+            {
+                Assert.Equal(2, deltaResourceSet.Count);
+                Assert.Equal("http://host/service/Customers?$skipToken=5", deltaResourceSet.NextPageLink.AbsoluteUri);
+            });
+
+            await SetupJsonLightReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightReader) => DoReadAsync(jsonLightReader,
+                    verifyDeltaResourceSetAction: (deltaResourceSet) =>
+                    {
+                        Assert.NotEmpty(verifyDeltaResourceSetActionStack);
+                        var innerVerifyDeltaResourceSetAction = verifyDeltaResourceSetActionStack.Pop();
+                        innerVerifyDeltaResourceSetAction(deltaResourceSet);
+                    },
+                    verifyDeletedResourceAction: (deletedResource) =>
+                    {
+                        Assert.NotNull(deletedResource);
+                        Assert.Equal("MyNS.Customer", deletedResource.TypeName);
+                        Assert.Equal(DeltaDeletedEntryReason.Changed, deletedResource.Reason);
+                        var idProperty = Assert.Single(deletedResource.Properties);
+                        Assert.Equal("Id", idProperty.Name);
+                        Assert.Equal(1, idProperty.Value);
+                    }));
+
+            Assert.Empty(verifyDeltaResourceSetActionStack);
+        }
+
+        [Fact]
+        public async Task ReadV401DeletedEntryWithEmptyNestedDeltaResourceSetInRequestPayloadAsync()
+        {
+            this.messageReaderSettings.Version = ODataVersion.V401;
+
+            var payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[" +
+                "{\"@removed\":{\"reason\":\"changed\"}," +
+                "\"Id\":1," +
+                "\"FavouriteProducts@delta\":[]}]}";
+
+            var deltaResourceSetCount = 0;
+
+            await SetupJsonLightReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightReader) => DoReadAsync(jsonLightReader,
+                    verifyDeltaResourceSetAction: (deltaResourceSet) => deltaResourceSetCount++,
+                    verifyDeletedResourceAction: (deletedResource) =>
+                    {
+                        Assert.NotNull(deletedResource);
+                        Assert.Equal("MyNS.Customer", deletedResource.TypeName);
+                        Assert.Equal(DeltaDeletedEntryReason.Changed, deletedResource.Reason);
+                        var idProperty = Assert.Single(deletedResource.Properties);
+                        Assert.Equal("Id", idProperty.Name);
+                        Assert.Equal(1, idProperty.Value);
+                    }),
+                isResponse: false);
+
+            Assert.Equal(2, deltaResourceSetCount);
+        }
+
+        [Fact]
+        public async Task ReadV401DeltaPayloadWithNestedDeltaResourceSetInResponsePayloadAsync()
+        {
+            this.messageReaderSettings.Version = ODataVersion.V401;
+
+            var payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[{" +
+                "\"Id\":1," +
+                "\"FavouriteProducts@count\":5," +
+                "\"FavouriteProducts@nextLink\":\"http://host/service/Customers?$skipToken=5\"," +
+                "\"FavouriteProducts@delta\":[{\"Id\":1,\"Name\":\"Car\"},{\"@removed\":{\"reason\":\"deleted\"},\"Id\":10}]}]}";
+
+            var verifyDeltaResourceSetActionStack = new Stack<Action<ODataDeltaResourceSet>>();
+            verifyDeltaResourceSetActionStack.Push((deltaResourceSet) => Assert.NotNull(deltaResourceSet));
+            verifyDeltaResourceSetActionStack.Push((deltaResourceSet) =>
+            {
+                Assert.Equal(5, deltaResourceSet.Count);
+                Assert.Equal("http://host/service/Customers?$skipToken=5", deltaResourceSet.NextPageLink.AbsoluteUri);
+            });
+
+            var verifyResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Customer", resource.TypeName);
+                var idProperty = Assert.Single(resource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(1, idProperty.Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Product", resource.TypeName);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(2, properties.Length);
+                Assert.Equal("Id", properties[0].Name);
+                Assert.Equal(1, properties[0].Value);
+                Assert.Equal("Name", properties[1].Name);
+                Assert.Equal("Car", properties[1].Value);
+            });
+
+            await SetupJsonLightReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightReader) => DoReadAsync(jsonLightReader,
+                    verifyDeltaResourceSetAction: (deltaResourceSet) =>
+                    {
+                        Assert.NotEmpty(verifyDeltaResourceSetActionStack);
+                        var innerVerifyDeltaResourceSetAction = verifyDeltaResourceSetActionStack.Pop();
+                        innerVerifyDeltaResourceSetAction(deltaResourceSet);
+                    },
+                    verifyDeletedResourceAction: (deletedResource) =>
+                    {
+                        Assert.NotNull(deletedResource);
+                        Assert.Equal("MyNS.Product", deletedResource.TypeName);
+                        Assert.Equal(DeltaDeletedEntryReason.Deleted, deletedResource.Reason);
+                        var idProperty = Assert.Single(deletedResource.Properties);
+                        Assert.Equal("Id", idProperty.Name);
+                        Assert.Equal(10, idProperty.Value);
+                    },
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                        innerVerifyResourceAction(resource);
+                    }));
+
+            Assert.Empty(verifyDeltaResourceSetActionStack);
+            Assert.Empty(verifyResourceActionStack);
+        }
+
+        [Fact]
+        public async Task ReadV401DeltaPayloadWithNestedDeltaResourceSetInRequestPayloadAsync()
+        {
+            this.messageReaderSettings.Version = ODataVersion.V401;
+
+            var payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[{" +
+                "\"Id\":1," +
+                "\"FavouriteProducts@delta\":[{\"Id\":1,\"Name\":\"Car\"},{\"@removed\":{\"reason\":\"deleted\"},\"Id\":10}]}]}";
+
+            var deltaResourceSetCount = 0;
+            var verifyResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Customer", resource.TypeName);
+                var idProperty = Assert.Single(resource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(1, idProperty.Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Product", resource.TypeName);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(2, properties.Length);
+                Assert.Equal("Id", properties[0].Name);
+                Assert.Equal(1, properties[0].Value);
+                Assert.Equal("Name", properties[1].Name);
+                Assert.Equal("Car", properties[1].Value);
+            });
+
+            await SetupJsonLightReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightReader) => DoReadAsync(jsonLightReader,
+                    verifyDeltaResourceSetAction: (deltaResourceSet) => deltaResourceSetCount++,
+                    verifyDeletedResourceAction: (deletedResource) =>
+                    {
+                        Assert.NotNull(deletedResource);
+                        Assert.Equal("MyNS.Product", deletedResource.TypeName);
+                        Assert.Equal(DeltaDeletedEntryReason.Deleted, deletedResource.Reason);
+                        var idProperty = Assert.Single(deletedResource.Properties);
+                        Assert.Equal("Id", idProperty.Name);
+                        Assert.Equal(10, idProperty.Value);
+                    },
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                        innerVerifyResourceAction(resource);
+                    }),
+                isResponse: false);
+
+            Assert.Empty(verifyResourceActionStack);
+        }
+
+        [Fact]
+        public async Task ReadV401TopLevelResourceWithNestedDeltaResourceSetInResponsePayloadAsync()
+        {
+            this.messageReaderSettings.Version = ODataVersion.V401;
+
+            var payload = "{\"@context\":\"http://host/service/$metadata#Customers/$entity\"," +
+                "\"Id\":1," +
+                "\"FavouriteProducts@count\":5," +
+                "\"FavouriteProducts@nextLink\":\"http://host/service/Customers?$skipToken=5\"," +
+                "\"FavouriteProducts@delta\":[{\"Id\":1,\"Name\":\"Car\"},{\"@removed\":{\"reason\":\"deleted\"},\"Id\":10}]}";
+
+            var verifyResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Customer", resource.TypeName);
+                var idProperty = Assert.Single(resource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(1, idProperty.Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Product", resource.TypeName);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(2, properties.Length);
+                Assert.Equal("Id", properties[0].Name);
+                Assert.Equal(1, properties[0].Value);
+                Assert.Equal("Name", properties[1].Name);
+                Assert.Equal("Car", properties[1].Value);
+            });
+
+            await SetupJsonLightReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightReader) => DoReadAsync(jsonLightReader,
+                    verifyDeltaResourceSetAction: (deltaResourceSet) =>
+                    {
+                        Assert.NotNull(deltaResourceSet);
+                        Assert.Equal(5, deltaResourceSet.Count);
+                        Assert.Equal("http://host/service/Customers?$skipToken=5", deltaResourceSet.NextPageLink.AbsoluteUri);
+                    },
+                    verifyDeletedResourceAction: (deletedResource) =>
+                    {
+                        Assert.NotNull(deletedResource);
+                        Assert.Equal("MyNS.Product", deletedResource.TypeName);
+                        Assert.Equal(DeltaDeletedEntryReason.Deleted, deletedResource.Reason);
+                        var idProperty = Assert.Single(deletedResource.Properties);
+                        Assert.Equal("Id", idProperty.Name);
+                        Assert.Equal(10, idProperty.Value);
+                    },
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                        innerVerifyResourceAction(resource);
+                    }),
+                readingResourceSet: false);
+
+            Assert.Empty(verifyResourceActionStack);
+        }
+
+        [Fact]
+        public async Task ReadV401TopLevelResourceWithNestedDeltaResourceSetInRequestPayloadAsync()
+        {
+            this.messageReaderSettings.Version = ODataVersion.V401;
+
+            var payload = "{\"@context\":\"http://host/service/$metadata#Customers/$entity\"," +
+                "\"Id\":1," +
+                "\"FavouriteProducts@delta\":[{\"Id\":1,\"Name\":\"Car\"},{\"@removed\":{\"reason\":\"deleted\"},\"Id\":10}]}";
+
+            var verifyResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Customer", resource.TypeName);
+                var idProperty = Assert.Single(resource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(1, idProperty.Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Product", resource.TypeName);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(2, properties.Length);
+                Assert.Equal("Id", properties[0].Name);
+                Assert.Equal(1, properties[0].Value);
+                Assert.Equal("Name", properties[1].Name);
+                Assert.Equal("Car", properties[1].Value);
+            });
+
+            await SetupJsonLightReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightReader) => DoReadAsync(jsonLightReader,
+                    verifyDeletedResourceAction: (deletedResource) =>
+                    {
+                        Assert.NotNull(deletedResource);
+                        Assert.Equal("MyNS.Product", deletedResource.TypeName);
+                        Assert.Equal(DeltaDeletedEntryReason.Deleted, deletedResource.Reason);
+                        var idProperty = Assert.Single(deletedResource.Properties);
+                        Assert.Equal("Id", idProperty.Name);
+                        Assert.Equal(10, idProperty.Value);
+                    },
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                        innerVerifyResourceAction(resource);
+                    }),
+                readingResourceSet: false,
+                isResponse: false);
+
+            Assert.Empty(verifyResourceActionStack);
+        }
+
+        [Fact]
+        public async Task ReadV401DeletedEntryWithNestedResourceSetInResponsePayloadAsync()
+        {
+            this.messageReaderSettings.Version = ODataVersion.V401;
+
+            var payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[" +
+                "{\"@removed\":{\"reason\":\"changed\"}," +
+                "\"Id\":1," +
+                "\"FavouriteProducts@count\":5," +
+                "\"FavouriteProducts@nextLink\":\"http://host/service/Customers?$skipToken=5\"," +
+                "\"FavouriteProducts\":[{\"Id\":1,\"Name\":\"Car\"},{\"Id\":10}]}]}";
+
+            var verifyResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Product", resource.TypeName);
+                var idProperty = Assert.Single(resource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(10, idProperty.Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Product", resource.TypeName);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(2, properties.Length);
+                Assert.Equal("Id", properties[0].Name);
+                Assert.Equal(1, properties[0].Value);
+                Assert.Equal("Name", properties[1].Name);
+                Assert.Equal("Car", properties[1].Value);
+            });
+
+            await SetupJsonLightReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightReader) => DoReadAsync(jsonLightReader,
+                    verifyDeltaResourceSetAction: (deltaResourceSet) => Assert.NotNull(deltaResourceSet),
+                    verifyDeletedResourceAction: (deletedResource) =>
+                    {
+                        Assert.NotNull(deletedResource);
+                        Assert.Equal("MyNS.Customer", deletedResource.TypeName);
+                        Assert.Equal(DeltaDeletedEntryReason.Changed, deletedResource.Reason);
+                        var idProperty = Assert.Single(deletedResource.Properties);
+                        Assert.Equal("Id", idProperty.Name);
+                        Assert.Equal(1, idProperty.Value);
+                    },
+                    verifyResourceSetAction: (resourceSet) =>
+                    {
+                        Assert.NotNull(resourceSet);
+                        Assert.Equal(5, resourceSet.Count);
+                        Assert.Equal("http://host/service/Customers?$skipToken=5", resourceSet.NextPageLink.AbsoluteUri);
+                    },
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                        innerVerifyResourceAction(resource);
+                    }));
+
+            Assert.Empty(verifyResourceActionStack);
+        }
+
+        [Fact]
+        public async Task ReadV401DeletedEntryWithNestedResourceSetInRequestPayloadAsync()
+        {
+            this.messageReaderSettings.Version = ODataVersion.V401;
+
+            var payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[" +
+                "{\"@removed\":{\"reason\":\"changed\"}," +
+                "\"Id\":1," +
+                "\"FavouriteProducts\":[{\"Id\":1,\"Name\":\"Car\"},{\"Id\":10}]}]}";
+
+            var verifyResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Product", resource.TypeName);
+                var idProperty = Assert.Single(resource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(10, idProperty.Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Product", resource.TypeName);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(2, properties.Length);
+                Assert.Equal("Id", properties[0].Name);
+                Assert.Equal(1, properties[0].Value);
+                Assert.Equal("Name", properties[1].Name);
+                Assert.Equal("Car", properties[1].Value);
+            });
+
+            await SetupJsonLightReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightReader) => DoReadAsync(jsonLightReader,
+                    verifyDeltaResourceSetAction: (deltaResourceSet) => Assert.NotNull(deltaResourceSet),
+                    verifyDeletedResourceAction: (deletedResource) =>
+                    {
+                        Assert.NotNull(deletedResource);
+                        Assert.Equal("MyNS.Customer", deletedResource.TypeName);
+                        Assert.Equal(DeltaDeletedEntryReason.Changed, deletedResource.Reason);
+                        var idProperty = Assert.Single(deletedResource.Properties);
+                        Assert.Equal("Id", idProperty.Name);
+                        Assert.Equal(1, idProperty.Value);
+                    },
+                    verifyResourceSetAction: (resourceSet) => Assert.NotNull(resourceSet),
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                        innerVerifyResourceAction(resource);
+                    }),
+                isResponse: false);
+
+            Assert.Empty(verifyResourceActionStack);
+        }
+
+        [Fact]
+        public async Task ReadV401DeltaPayloadWithNestedResourceSetInResponsePayloadAsync()
+        {
+            this.messageReaderSettings.Version = ODataVersion.V401;
+
+            var payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[{" +
+                "\"Id\":1," +
+                "\"FavouriteProducts@count\":5," +
+                "\"FavouriteProducts@nextLink\":\"http://host/service/Customers?$skipToken=5\"," +
+                "\"FavouriteProducts\":[{\"Id\":1,\"Name\":\"Car\"},{\"Id\":10}]}]}";
+
+            var verifyResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Customer", resource.TypeName);
+                var idProperty = Assert.Single(resource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(1, idProperty.Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Product", resource.TypeName);
+                var idProperty = Assert.Single(resource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(10, idProperty.Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Product", resource.TypeName);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(2, properties.Length);
+                Assert.Equal("Id", properties[0].Name);
+                Assert.Equal(1, properties[0].Value);
+                Assert.Equal("Name", properties[1].Name);
+                Assert.Equal("Car", properties[1].Value);
+            });
+
+            await SetupJsonLightReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightReader) => DoReadAsync(jsonLightReader,
+                    verifyDeltaResourceSetAction: (deltaResourceSet) => Assert.NotNull(deltaResourceSet),
+                    verifyResourceSetAction: (resourceSet) =>
+                    {
+                        Assert.NotNull(resourceSet);
+                        Assert.Equal(5, resourceSet.Count);
+                        Assert.Equal("http://host/service/Customers?$skipToken=5", resourceSet.NextPageLink.AbsoluteUri);
+                    },
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                        innerVerifyResourceAction(resource);
+                    }));
+
+            Assert.Empty(verifyResourceActionStack);
+        }
+
+        [Fact]
+        public async Task ReadV401DeltaPayloadWithNestedResourceSetInRequestPayloadAsync()
+        {
+            this.messageReaderSettings.Version = ODataVersion.V401;
+
+            var payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[{\"Id\":1,\"FavouriteProducts\":[{\"Id\":1,\"Name\":\"Car\"},{\"Id\":10}]}]}";
+
+            var verifyResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Customer", resource.TypeName);
+                var idProperty = Assert.Single(resource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(1, idProperty.Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Product", resource.TypeName);
+                var idProperty = Assert.Single(resource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(10, idProperty.Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("MyNS.Product", resource.TypeName);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(2, properties.Length);
+                Assert.Equal("Id", properties[0].Name);
+                Assert.Equal(1, properties[0].Value);
+                Assert.Equal("Name", properties[1].Name);
+                Assert.Equal("Car", properties[1].Value);
+            });
+
+            await SetupJsonLightReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightReader) => DoReadAsync(jsonLightReader,
+                    verifyDeltaResourceSetAction: (deltaResourceSet) => Assert.NotNull(deltaResourceSet),
+                    verifyResourceSetAction: (resourceSet) => Assert.NotNull(resourceSet),
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotEmpty(verifyResourceActionStack);
+                        var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                        innerVerifyResourceAction(resource);
+                    }),
+                isResponse: false);
+
+            Assert.Empty(verifyResourceActionStack);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ReadV401DeltaPayloadWithNestedDeletedEntryFromDifferentResourceSetAsync(bool isResponse)
+        {
+            this.messageReaderSettings.Version = ODataVersion.V401;
+
+            var payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[{" +
+                "\"@id\":\"Customers('BOTTM')\"," +
+                "\"ContactName\":\"Susan Halvenstern\"}," +
+                "{\"@context\":\"http://host/service/$metadata#Orders/$deletedEntity\",\"@removed\":{\"reason\":\"changed\"},\"Id\":1}]}";
+
+            await SetupJsonLightReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightReader) => DoReadAsync(jsonLightReader,
+                    verifyDeletedResourceAction: (deletedResource) =>
+                    {
+                        Assert.NotNull(deletedResource);
+                        Assert.Equal("MyNS.Order", deletedResource.TypeName);
+                        var idProperty = Assert.Single(deletedResource.Properties);
+                        Assert.Equal("Id", idProperty.Name);
+                        Assert.Equal(1, idProperty.Value);
+                    },
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotNull(resource);
+                        Assert.Equal("MyNS.Customer", resource.TypeName);
+                        Assert.NotNull(resource.Id);
+                        Assert.EndsWith("Customers('BOTTM')", resource.Id.OriginalString);
+                        var contactNameProperty = Assert.Single(resource.Properties);
+                        Assert.Equal("ContactName", contactNameProperty.Name);
+                        Assert.Equal("Susan Halvenstern", contactNameProperty.Value);
+                    }),
+                isResponse: isResponse);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task ReadV401DeltaPayloadWithNestedDerivedDeletedEntryAsync(bool isResponse)
+        {
+            this.messageReaderSettings.Version = ODataVersion.V401;
+
+            var payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[{\"@removed\":{\"reason\":\"changed\"},\"@odata.type\":\"#MyNS.PreferredCustomer\",\"Id\":1,\"HonorLevel\":\"Gold\"}]}";
+
+            await SetupJsonLightReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightReader) => DoReadAsync(jsonLightReader,
+                    verifyDeletedResourceAction: (deletedResource) =>
+                    {
+                        Assert.NotNull(deletedResource);
+                        Assert.Equal("MyNS.PreferredCustomer", deletedResource.TypeName);
+                        var properties = deletedResource.Properties.ToArray();
+                        Assert.Equal("Id", properties[0].Name);
+                        Assert.Equal(1, properties[0].Value);
+                        Assert.Equal("HonorLevel", properties[1].Name);
+                        Assert.Equal("Gold", properties[1].Value);
+                    }),
+                isResponse: isResponse);
+        }
+
+        [Fact]
+        public async Task ReadV401TopLevelResourceWithNestedDeltaResourceSetWithNestedDeletedEntryInResponsePayloadAsync_ThrowsException()
+        {
+            this.messageReaderSettings.Version = ODataVersion.V401;
+
+            var payload = "{\"@context\":\"http://host/service/$metadata#Customers/$entity\"," +
+                "\"Id\":1," +
+                "\"FavouriteProducts@count\":5," +
+                "\"FavouriteProducts@nextLink\":\"http://host/service/Customers?$skipToken=5\"," +
+                "\"FavouriteProducts@delta\":[{\"Id\":1,\"Name\":\"Car\"},{\"@removed\":{\"reason\":\"deleted\"},\"Id\":10}]}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightReader) => DoReadAsync(jsonLightReader),
+                readingResourceSet: false,
+                readingDelta: false));
+
+            Assert.Equal(
+                Strings.ODataJsonLightResourceDeserializer_UnexpectedDeletedEntryInResponsePayload,
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task ReadV401DeltaPayloadWithNestedDeletedEntryFromDifferentResourceSetAsync_ThrowsException()
+        {
+            this.messageReaderSettings.Version = ODataVersion.V401;
+
+            var payload = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                "\"value\":[{" +
+                "\"@id\":\"Customers('BOTTM')\"," +
+                "\"ContactName\":\"Susan Halvenstern\"," +
+                "\"Orders\":[{\"@context\":\"http://host/service/$metadata#Customers/$deletedEntity\",\"@removed\":{\"reason\":\"changed\"},\"Id\":1}]}]}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightReaderAndRunTestAsync(
+                payload,
+                customers,
+                customer,
+                (jsonLightReader) => DoReadAsync(jsonLightReader)));
+
+            Assert.Equal(
+                Strings.ReaderValidationUtils_ContextUriValidationInvalidExpectedEntitySet(
+                    "http://host/service/$metadata#Customers/$deletedEntity",
+                    "Customers",
+                    "Customers.Orders"),
+                exception.Message);
+        }
+
+        #endregion Async Tests
 
         #region Private Methods
 
@@ -1581,38 +4136,6 @@ namespace Microsoft.OData.Tests.JsonLight
                 }
             }
         }
-
-        //private async Task<IEnumerable<Tuple<ODataItem, ODataDeltaReaderState, ODataReaderState>>> ReadItemAsync(string payload, IEdmModel model = null, IEdmNavigationSource navigationSource = null, IEdmEntityType entityType = null, bool isResponse = true, bool enableReadingODataAnnotationWithoutPrefix = false)
-        //{
-        //    List<Tuple<ODataItem, ODataDeltaReaderState, ODataReaderState>> tuples = new List<Tuple<ODataItem, ODataDeltaReaderState, ODataReaderState>>();
-        //    var settings = new ODataMessageReaderSettings
-        //    {
-        //        ShouldIncludeAnnotation = s => true,
-        //    };
-
-        //    var messageInfo = new ODataMessageInfo
-        //    {
-        //        IsResponse = isResponse,
-        //        MediaType = new ODataMediaType("application", "json"),
-        //        IsAsync = true,
-        //        Model = model ?? new EdmModel(),
-        //        Container = ContainerBuilderHelper.BuildContainer(null)
-        //    };
-
-        //    using (var inputContext = new ODataJsonLightInputContext(
-        //        new StringReader(payload), messageInfo, settings))
-        //    {
-        //        inputContext.Container.GetRequiredService<ODataSimplifiedOptions>()
-        //            .EnableReadingODataAnnotationWithoutPrefix = enableReadingODataAnnotationWithoutPrefix;
-        //        var jsonLightReader = new ODataJsonLightDeltaReader(inputContext, navigationSource, entityType);
-        //        while (await jsonLightReader.ReadAsync())
-        //        {
-        //            tuples.Add(new Tuple<ODataItem, ODataDeltaReaderState, ODataReaderState>(jsonLightReader.Item, jsonLightReader.State, jsonLightReader.SubState));
-        //        }
-        //    }
-
-        //    return tuples;
-        //}
 
         private void ValidateTuples(IEnumerable<Tuple<ODataItem, ODataDeltaReaderState, ODataReaderState>> tuples, Uri nextLink = null, Uri feedDeltaLink = null)
         {
@@ -1838,6 +4361,262 @@ namespace Microsoft.OData.Tests.JsonLight
             return true;
         }
 
-        #endregion
+        private async Task DoReadAsync(
+            ODataJsonLightDeltaReader jsonLightDeltaReader,
+            Action<ODataDeltaResourceSet> verifyDeltaResourceSetAction = null,
+            Action<ODataResource> verifyDeltaResourceAction = null,
+            Action<ODataResourceSet> verifyResourceSetAction = null,
+            Action<ODataResource> verifyResourceAction = null,
+            Action<ODataNestedResourceInfo> verifyNestedResourceInfoAction = null,
+            Action<ODataDeltaDeletedEntry> verifyDeletedEntryAction = null,
+            Action<ODataDeltaLinkBase> verifyDeltaLinkAction = null)
+        {
+            while (await jsonLightDeltaReader.ReadAsync())
+            {
+                switch (jsonLightDeltaReader.State)
+                {
+                    case ODataDeltaReaderState.DeltaResourceSetStart:
+                        Assert.NotNull(jsonLightDeltaReader.Item as ODataDeltaResourceSet);
+                        break;
+                    case ODataDeltaReaderState.DeltaResourceSetEnd:
+                        if (verifyDeltaResourceSetAction != null)
+                        {
+                            verifyDeltaResourceSetAction(jsonLightDeltaReader.Item as ODataDeltaResourceSet);
+                        }
+
+                        break;
+                    case ODataDeltaReaderState.DeltaResourceStart:
+                        Assert.NotNull(jsonLightDeltaReader.Item as ODataResource);
+                        break;
+                    case ODataDeltaReaderState.DeltaResourceEnd:
+                        if (verifyDeltaResourceAction != null)
+                        {
+                            verifyDeltaResourceAction(jsonLightDeltaReader.Item as ODataResource);
+                        }
+
+                        break;
+                    case ODataDeltaReaderState.NestedResource:
+                        switch (jsonLightDeltaReader.SubState)
+                        {
+                            case ODataReaderState.Start:
+                                Assert.NotNull(jsonLightDeltaReader.Item as ODataNestedResourceInfo);
+                                break;
+                            case ODataReaderState.Completed:
+                                if (verifyNestedResourceInfoAction != null)
+                                {
+                                    verifyNestedResourceInfoAction(jsonLightDeltaReader.Item as ODataNestedResourceInfo);
+                                }
+
+                                break;
+                            case ODataReaderState.ResourceStart:
+                                Assert.NotNull(jsonLightDeltaReader.Item as ODataResource);
+                                break;
+                            case ODataReaderState.ResourceEnd:
+                                if (verifyResourceAction != null)
+                                {
+                                    verifyResourceAction(jsonLightDeltaReader.Item as ODataResource);
+                                }
+
+                                break;
+                            case ODataReaderState.ResourceSetStart:
+                                Assert.NotNull(jsonLightDeltaReader.Item as ODataResourceSet);
+                                break;
+                            case ODataReaderState.ResourceSetEnd:
+                                if (verifyResourceSetAction != null)
+                                {
+                                    verifyResourceSetAction(jsonLightDeltaReader.Item as ODataResourceSet);
+                                }
+
+                                break;
+                            case ODataReaderState.NestedResourceInfoStart:
+                                Assert.NotNull(jsonLightDeltaReader.Item as ODataNestedResourceInfo);
+                                break;
+                            case ODataReaderState.NestedResourceInfoEnd:
+                                if (verifyNestedResourceInfoAction != null)
+                                {
+                                    verifyNestedResourceInfoAction(jsonLightDeltaReader.Item as ODataNestedResourceInfo);
+                                }
+
+                                break;
+                            default:
+                                break;
+                        }
+
+                        break;
+                    case ODataDeltaReaderState.DeltaDeletedEntry:
+                        if (verifyDeletedEntryAction != null)
+                        {
+                            verifyDeletedEntryAction(jsonLightDeltaReader.Item as ODataDeltaDeletedEntry);
+                        }
+
+                        break;
+                    case ODataDeltaReaderState.DeltaLink:
+                        if (verifyDeltaLinkAction != null)
+                        {
+                            verifyDeltaLinkAction(jsonLightDeltaReader.Item as ODataDeltaLinkBase);
+                        }
+
+                        break;
+                    case ODataDeltaReaderState.DeltaDeletedLink:
+                        if (verifyDeltaLinkAction != null)
+                        {
+                            verifyDeltaLinkAction(jsonLightDeltaReader.Item as ODataDeltaLinkBase);
+                        }
+
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private async Task DoReadAsync(
+            ODataJsonLightReader jsonLightReader,
+            Action<ODataResourceSet> verifyResourceSetAction = null,
+            Action<ODataResource> verifyResourceAction = null,
+            Action<ODataNestedResourceInfo> verifyNestedResourceInfoAction = null,
+            Action<ODataDeltaResourceSet> verifyDeltaResourceSetAction = null,
+            Action<ODataDeletedResource> verifyDeletedResourceAction = null,
+            Action<ODataDeltaLinkBase> verifyDeltaLinkAction = null)
+        {
+            while (await jsonLightReader.ReadAsync())
+            {
+                switch (jsonLightReader.State)
+                {
+                    case ODataReaderState.ResourceSetStart:
+                        break;
+                    case ODataReaderState.ResourceSetEnd:
+                        if (verifyResourceSetAction != null)
+                        {
+                            verifyResourceSetAction(jsonLightReader.Item as ODataResourceSet);
+                        }
+
+                        break;
+                    case ODataReaderState.ResourceStart:
+                        break;
+                    case ODataReaderState.ResourceEnd:
+                        if (verifyResourceAction != null)
+                        {
+                            verifyResourceAction(jsonLightReader.Item as ODataResource);
+                        }
+
+                        break;
+                    case ODataReaderState.NestedResourceInfoStart:
+                        break;
+                    case ODataReaderState.NestedResourceInfoEnd:
+                        if (verifyNestedResourceInfoAction != null)
+                        {
+                            verifyNestedResourceInfoAction(jsonLightReader.Item as ODataNestedResourceInfo);
+                        }
+
+                        break;
+                    case ODataReaderState.DeltaResourceSetStart:
+                        break;
+                    case ODataReaderState.DeltaResourceSetEnd:
+                        if (verifyDeltaResourceSetAction != null)
+                        {
+                            verifyDeltaResourceSetAction(jsonLightReader.Item as ODataDeltaResourceSet);
+                        }
+
+                        break;
+                    case ODataReaderState.DeletedResourceStart:
+                        break;
+                    case ODataReaderState.DeletedResourceEnd:
+                        if (verifyDeletedResourceAction != null)
+                        {
+                            verifyDeletedResourceAction(jsonLightReader.Item as ODataDeletedResource);
+                        }
+
+                        break;
+                    case ODataReaderState.DeltaLink:
+                        if (verifyDeltaLinkAction != null)
+                        {
+                            verifyDeltaLinkAction(jsonLightReader.Item as ODataDeltaLinkBase);
+                        }
+
+                        break;
+                    case ODataReaderState.DeltaDeletedLink:
+                        if (verifyDeltaLinkAction != null)
+                        {
+                            verifyDeltaLinkAction(jsonLightReader.Item as ODataDeltaLinkBase);
+                        }
+
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private ODataJsonLightInputContext CreateJsonLightInputContext(string payload, bool isAsync = false, bool isResponse = true)
+        {
+            var messageInfo = new ODataMessageInfo
+            {
+                MediaType = new ODataMediaType("application", "json"),
+#if NETCOREAPP1_1
+                Encoding = Encoding.GetEncoding(0),
+#else
+                Encoding = Encoding.Default,
+#endif
+                IsResponse = isResponse,
+                IsAsync = isAsync,
+                Model = this.Model,
+                Container = ContainerBuilderHelper.BuildContainer(null)
+            };
+
+            return new ODataJsonLightInputContext(new StringReader(payload), messageInfo, this.messageReaderSettings);
+        }
+
+        /// <summary>
+        /// Sets up an ODataJsonLightReader, then runs the given test code asynchronously
+        /// </summary>
+        private async Task SetupJsonLightReaderAndRunTestAsync(
+            string payload,
+            IEdmNavigationSource navigationSource,
+            IEdmStructuredType expectedResourceType,
+            Func<ODataJsonLightReader, Task> func,
+            bool readingResourceSet = true,
+            bool readingDelta = true,
+            bool isResponse = true)
+        {
+            using (var jsonLightInputContext = CreateJsonLightInputContext(payload, isAsync: true, isResponse: isResponse))
+            {
+                var jsonLightReader = new ODataJsonLightReader(
+                    jsonLightInputContext,
+                    navigationSource,
+                    expectedResourceType,
+                    readingResourceSet: readingResourceSet,
+                    readingParameter: false,
+                    readingDelta: readingDelta,
+                    listener: null);
+
+                await func(jsonLightReader);
+            }
+        }
+
+        /// <summary>
+        /// Sets up an ODataJsonLightDeltaReader, then runs the given test code asynchronously
+        /// </summary>
+        private async Task SetupJsonLightDeltaReaderAndRunTestAsync(
+            string payload,
+            IEdmNavigationSource navigationSource,
+            IEdmEntityType expectedEntityType,
+            Func<ODataJsonLightDeltaReader, Task> func,
+            bool isResponse = true,
+            bool enableReadingODataAnnotationWithoutPrefix = false)
+        {
+            using (var jsonLightInputContext = CreateJsonLightInputContext(payload, isAsync: true, isResponse: isResponse))
+            {
+                jsonLightInputContext.Container.GetRequiredService<ODataSimplifiedOptions>().EnableReadingODataAnnotationWithoutPrefix = enableReadingODataAnnotationWithoutPrefix;
+                var jsonLightDeltaReader = new ODataJsonLightDeltaReader(
+                    jsonLightInputContext,
+                    navigationSource,
+                    expectedEntityType);
+
+                await func(jsonLightDeltaReader);
+            }
+        }
+
+        #endregion Private Methods
     }
 }

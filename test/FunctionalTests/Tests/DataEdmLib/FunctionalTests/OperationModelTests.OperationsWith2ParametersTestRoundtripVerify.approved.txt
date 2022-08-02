@@ -20,9 +20,9 @@
     <ReturnType Type="Edm.DateTimeOffset" Nullable="false" />
   </Function>
   <Function Name="FunctionWith2Parameters4">
-    <Parameter Name="Param1" Type="Edm.Decimal" />
+    <Parameter Name="Param1" Type="Edm.Decimal" Scale="Variable" />
     <Parameter Name="Param2" Type="Edm.Binary" MaxLength="2147483647" />
-    <ReturnType Type="Edm.Decimal" Nullable="false" />
+    <ReturnType Type="Edm.Decimal" Nullable="false" Scale="Variable" />
   </Function>
   <Function Name="FunctionWith2Parameters5">
     <Parameter Name="Param1" Type="Edm.Double" />
@@ -187,7 +187,7 @@
   <Function Name="FunctionWith2Parameters37">
     <Parameter Name="Param1" Type="Edm.DateTimeOffset" Nullable="false" />
     <Parameter Name="Param2" Type="Edm.String" MaxLength="0" />
-    <ReturnType Type="Edm.Decimal" Nullable="false" />
+    <ReturnType Type="Edm.Decimal" Nullable="false" Scale="Variable" />
   </Function>
   <EntityContainer Name="DefaultContainer">
     <FunctionImport Name="FunctionWith2Parameters0" Function="DefaultNamespace.FunctionWith2Parameters0" />

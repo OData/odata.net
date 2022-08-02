@@ -99,6 +99,7 @@ namespace Microsoft.OData
         internal const string ODataMessageWriter_JsonPaddingOnInvalidContentType = "ODataMessageWriter_JsonPaddingOnInvalidContentType";
         internal const string ODataMessageWriter_NonCollectionType = "ODataMessageWriter_NonCollectionType";
         internal const string ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue = "ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue";
+        internal const string ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull = "ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull";
         internal const string ODataMessageWriterSettings_MessageWriterSettingsXmlCustomizationCallbacksMustBeSpecifiedBoth = "ODataMessageWriterSettings_MessageWriterSettingsXmlCustomizationCallbacksMustBeSpecifiedBoth";
         internal const string ODataCollectionWriterCore_InvalidTransitionFromStart = "ODataCollectionWriterCore_InvalidTransitionFromStart";
         internal const string ODataCollectionWriterCore_InvalidTransitionFromCollection = "ODataCollectionWriterCore_InvalidTransitionFromCollection";
@@ -190,6 +191,9 @@ namespace Microsoft.OData
         internal const string ODataBatchReaderStream_MultiByteEncodingsNotSupported = "ODataBatchReaderStream_MultiByteEncodingsNotSupported";
         internal const string ODataBatchReaderStream_UnexpectedEndOfInput = "ODataBatchReaderStream_UnexpectedEndOfInput";
         internal const string ODataBatchReaderStreamBuffer_BoundaryLineSecurityLimitReached = "ODataBatchReaderStreamBuffer_BoundaryLineSecurityLimitReached";
+        internal const string ODataJsonLightBatchPayloadItemPropertiesCache_UnknownPropertyForMessageInBatch = "ODataJsonLightBatchPayloadItemPropertiesCache_UnknownPropertyForMessageInBatch";
+        internal const string ODataJsonLightBatchBodyContentReaderStream_UnexpectedNodeType = "ODataJsonLightBatchBodyContentReaderStream_UnexpectedNodeType";
+        internal const string ODataJsonLightBatchBodyContentReaderStream_UnsupportedContentTypeInHeader = "ODataJsonLightBatchBodyContentReaderStream_UnsupportedContentTypeInHeader";
         internal const string ODataAsyncWriter_CannotCreateResponseWhenNotWritingResponse = "ODataAsyncWriter_CannotCreateResponseWhenNotWritingResponse";
         internal const string ODataAsyncWriter_CannotCreateResponseMoreThanOnce = "ODataAsyncWriter_CannotCreateResponseMoreThanOnce";
         internal const string ODataAsyncWriter_SyncCallOnAsyncWriter = "ODataAsyncWriter_SyncCallOnAsyncWriter";

@@ -12,6 +12,8 @@ using System.Text.Encodings.Web;
 #endif
 using System.Xml;
 using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.Csdl.CsdlSemantics;
+using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Csdl.Serialization;
 using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
@@ -43,13 +45,15 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             complexType.AddStructuralProperty("Height", EdmCoreModel.Instance.GetDecimal(6, 2, true));
             complexType.AddStructuralProperty("Weight", EdmCoreModel.Instance.GetDecimal(6, null, true));
             complexType.AddStructuralProperty("Length", EdmCoreModel.Instance.GetDecimal(null, null, false));
+            complexType.AddStructuralProperty("Breadth", EdmCoreModel.Instance.GetDecimal(6, 0, true));
 
             // Act & Assert for XML
             VisitAndVerifyXml(v => v.VisitSchemaType(complexType),
                 @"<ComplexType Name=""Dimensions"">
   <Property Name=""Height"" Type=""Edm.Decimal"" Precision=""6"" Scale=""2"" />
   <Property Name=""Weight"" Type=""Edm.Decimal"" Precision=""6"" Scale=""Variable"" />
-  <Property Name=""Length"" Type=""Edm.Decimal"" Nullable=""false"" />
+  <Property Name=""Length"" Type=""Edm.Decimal"" Nullable=""false"" Scale=""Variable"" />
+  <Property Name=""Breadth"" Type=""Edm.Decimal"" Precision=""6"" Scale=""0"" />
 </ComplexType>");
 
             // Act & Assert for JSON
@@ -69,6 +73,12 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
     },
     ""Length"": {
       ""$Type"": ""Edm.Decimal""
+    },
+    ""Breadth"": {
+      ""$Type"": ""Edm.Decimal"",
+      ""$Nullable"": true,
+      ""$Precision"": 6,
+      ""$Scale"": 0
     }
   }
 }");

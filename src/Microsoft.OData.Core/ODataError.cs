@@ -20,9 +20,6 @@ namespace Microsoft.OData
     /// Class representing an error payload.
     /// </summary>
     [DebuggerDisplay("{ErrorCode}: {Message}")]
-#if ORCAS
-    [Serializable]
-#endif
     public sealed class ODataError : ODataAnnotatable
     {
         /// <summary>Gets or sets the error code to be used in payloads.</summary>

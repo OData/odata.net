@@ -241,7 +241,7 @@ namespace EdmLibTests.FunctionalTests
     <Property Name=""CollectionOfFloatingProperty"" Type=""Collection(Edm.Double)"" Nullable=""true"" />
     <Property Name=""CollectionOfGuidProperty"" Type=""Collection(Edm.Guid)"" Nullable=""true"" />
     <Property Name=""CollectionOfBinaryProperty"" Type=""Collection(Edm.Binary)"" Nullable=""true"" />
-    <Property Name=""CollectionOfDecimalProperty"" Type=""Collection(Edm.Decimal)"" Nullable=""true"">
+    <Property Name=""CollectionOfDecimalProperty"" Type=""Collection(Edm.Decimal)"" Nullable=""true"" Scale=""Variable"">
       <Annotation Term=""NS.CollectionOfDecimalTerm"">
         <Collection>
           <Decimal>-1.0000000000</Decimal>
@@ -281,7 +281,7 @@ namespace EdmLibTests.FunctionalTests
   <Term Name=""CollectionOfFloatingTerm"" Type=""Collection(Edm.Double)"" />
   <Term Name=""CollectionOfGuidTerm"" Type=""Collection(Edm.Guid)"" />
   <Term Name=""CollectionOfBinaryTerm"" Type=""Collection(Edm.Binary)"" />
-  <Term Name=""CollectionOfDecimalTerm"" Type=""Collection(Edm.Decimal)"" />
+  <Term Name=""CollectionOfDecimalTerm"" Type=""Collection(Edm.Decimal)"" Scale=""Variable"" />
   <Term Name=""CollectionOfStringTerm"" Type=""Collection(Edm.String)"" />
   <Term Name=""CollectionOfDateTimeOffsetTerm"" Type=""Collection(Edm.DateTimeOffset)"" />
   <Term Name=""CollectionOfDurationTerm"" Type=""Collection(Edm.Duration)"" />

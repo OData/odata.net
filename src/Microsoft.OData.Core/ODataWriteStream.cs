@@ -28,6 +28,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="stream">The underlying stream to write the message to.</param>
         /// <param name="listener">Listener interface to be notified of operation changes.</param>
+        /// <param name="synchronous">true if the stream is created for synchronous operation; false for asynchronous.</param>
         internal ODataWriteStream(Stream stream, IODataStreamListener listener, bool synchronous = true)
             : base(listener, synchronous)
         {
@@ -163,7 +164,7 @@ namespace Microsoft.OData
             base.Dispose(disposing);
         }
 
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
         /// <summary>
         /// Encapsulates the common asynchronous cleanup operations.
         /// </summary>

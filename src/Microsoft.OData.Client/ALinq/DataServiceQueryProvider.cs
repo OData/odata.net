@@ -172,9 +172,28 @@ namespace Microsoft.OData.Client
 
             UriWriter.Translate(this.Context, addTrailingParens, e, out uri, out version);
             ResourceExpression re = e as ResourceExpression;
-            Type lastSegmentType = re.Projection == null ? re.ResourceType : re.Projection.Selector.Parameters[0].Type;
+            ApplyQueryOptionExpression applyQueryOptionExpr = (re as QueryableResourceExpression)?.Apply;
+            Type lastSegmentType;
+
+            // The KeySelectorMap property is initialized and populated with a least one item if we're dealing with a GroupBy expression.
+            // In that case, the selector in the Projection will take the following form:
+            // (d2, d3) => new <>f_AnonymousType13`2(CategoryName = d2, AverageAmount = d3.Average(d4 => d4))
+            // We examine the 2nd parameter to determine the type of values in the IGrouping<TKey, TElement>
+            // The TElement type implements IEnumerable and the first generic argument should be our last segment type
+            if (applyQueryOptionExpr?.KeySelectorMap?.Count > 0)
+            {
+                lastSegmentType = re.Projection.Selector.Parameters[1].Type.GetGenericArguments()[0];
+            }
+            else
+            {
+                lastSegmentType = re.Projection == null ? re.ResourceType : re.Projection.Selector.Parameters[0].Type;
+            }
+
             LambdaExpression selector = re.Projection == null ? null : re.Projection.Selector;
-            return new QueryComponents(uri, version, lastSegmentType, selector, normalizerRewrites);
+            QueryComponents queryComponents = new QueryComponents(uri, version, lastSegmentType, selector, normalizerRewrites);
+            queryComponents.GroupByKeySelectorMap = applyQueryOptionExpr?.KeySelectorMap;
+
+            return queryComponents;
         }
 
         /// <summary>

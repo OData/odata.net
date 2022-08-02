@@ -14,6 +14,18 @@ namespace Microsoft.OData.UriParser
     internal sealed class DetermineNavigationSourceTranslator : PathSegmentTranslator<IEdmNavigationSource>
     {
         /// <summary>
+        /// Prevents a default instance of the <see cref="DetermineNavigationSourceTranslator"/> class from being created
+        /// </summary>
+        private DetermineNavigationSourceTranslator()
+        {
+        }
+
+        /// <summary>
+        /// Gets the singleton instance of the <see cref="DetermineNavigationSourceTranslator"/>
+        /// </summary>
+        public static DetermineNavigationSourceTranslator Instance { get; } = new DetermineNavigationSourceTranslator();
+
+        /// <summary>
         /// Determine the NavigationSource of a NavigationPropertyLinkSegment
         /// </summary>
         /// <param name="segment">The NavigationPropertyLinkSegment to look in.</param>

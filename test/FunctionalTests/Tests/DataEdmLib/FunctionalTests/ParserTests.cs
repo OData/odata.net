@@ -95,8 +95,7 @@ namespace EdmLibTests.FunctionalTests
                     {
                         var type = (IEdmDecimalTypeReference)property.Type;
                         Assert.IsFalse(type.Precision.HasValue, "Default value of Precision is null.");
-                        Assert.IsTrue(type.Scale.HasValue);
-                        Assert.AreEqual(type.Scale.Value, 0, "Scale's default value should be 0.");
+                        Assert.IsFalse(type.Scale.HasValue, "Default value of Scale is null.");
                     }
                 }
             }

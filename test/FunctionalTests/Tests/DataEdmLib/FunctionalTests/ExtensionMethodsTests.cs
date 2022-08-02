@@ -282,7 +282,7 @@ namespace EdmLibTests.FunctionalTests
             model.AddElement(personType);
 
             string outputText = this.SerializeModel(model);
-            Assert.AreEqual("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<Schema Namespace=\"MyNS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">\r\n  <TypeDefinition Name=\"UInt64\" UnderlyingType=\"Edm.Decimal\" />\r\n  <EntityType Name=\"Person\">\r\n    <Key>\r\n      <PropertyRef Name=\"ID\" />\r\n    </Key>\r\n    <Property Name=\"ID\" Type=\"MyNS.UInt64\" />\r\n  </EntityType>\r\n</Schema>", outputText);
+            Assert.AreEqual("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<Schema Namespace=\"MyNS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">\r\n  <TypeDefinition Name=\"UInt64\" UnderlyingType=\"Edm.Decimal\" />\r\n  <EntityType Name=\"Person\">\r\n    <Key>\r\n      <PropertyRef Name=\"ID\" />\r\n    </Key>\r\n    <Property Name=\"ID\" Type=\"MyNS.UInt64\" Scale=\"Variable\" />\r\n  </EntityType>\r\n</Schema>", outputText);
         }
 
         [TestMethod]

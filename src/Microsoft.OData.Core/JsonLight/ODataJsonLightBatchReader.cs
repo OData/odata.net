@@ -13,7 +13,7 @@ namespace Microsoft.OData.JsonLight
     using System.Diagnostics;
     using System.IO;
     using System.Text;
-
+    using System.Threading.Tasks;
     using Microsoft.OData.Json;
 
     #endregion Namespaces
@@ -230,8 +230,7 @@ namespace Microsoft.OData.JsonLight
                 this.StartReadingBatchArray();
 
                 Debug.Assert(this.messagePropertiesCache == null, "this.messagePropertiesCache == null");
-                this.messagePropertiesCache =
-                    new ODataJsonLightBatchPayloadItemPropertiesCache(this);
+                this.messagePropertiesCache = ODataJsonLightBatchPayloadItemPropertiesCache.Create(this);
 
                 string currentGroup = (string)this.messagePropertiesCache.GetPropertyValue(
                     ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameAtomicityGroup);
@@ -294,8 +293,7 @@ namespace Microsoft.OData.JsonLight
             if (this.messagePropertiesCache == null)
             {
                 // Load the message details since operation is detected.
-                this.messagePropertiesCache =
-                    new ODataJsonLightBatchPayloadItemPropertiesCache(this);
+                this.messagePropertiesCache = ODataJsonLightBatchPayloadItemPropertiesCache.Create(this);
             }
 
             // Calculate and return next state with changeset state detection.
@@ -365,6 +363,81 @@ namespace Microsoft.OData.JsonLight
                     throw new ODataException(Strings.ODataBatchReader_DependsOnIdNotFound(id, contentId));
                 }
             }
+        }
+
+        /// <summary>
+        /// Asynchronous implementation of the reader logic when in state 'Start'.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains the batch reader state after the read.
+        /// </returns>
+        protected override async Task<ODataBatchReaderState> ReadAtStartImplementationAsync()
+        {
+            Debug.Assert(this.State == ODataBatchReaderState.Initial, $"{nameof(this.State)} == {nameof(ODataBatchReaderState.Initial)}");
+
+            if (mode == ReaderMode.NotDetected)
+            {
+                // The stream should be positioned at the beginning of the batch envelope.
+                // Need to detect whether we are reading request or response. Stay in Initial state upon return.
+                await DetectReaderModeAsync()
+                    .ConfigureAwait(false);
+                return ODataBatchReaderState.Initial;
+            }
+            else
+            {
+                // The stream should be positioned at the beginning of requests array.
+                await this.StartReadingBatchArrayAsync()
+                    .ConfigureAwait(false);
+
+                Debug.Assert(this.messagePropertiesCache == null, $"{nameof(this.messagePropertiesCache)} == null");
+                this.messagePropertiesCache = await ODataJsonLightBatchPayloadItemPropertiesCache.CreateAsync(this)
+                    .ConfigureAwait(false);
+
+                string currentGroup = (string)this.messagePropertiesCache.GetPropertyValue(
+                    ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameAtomicityGroup);
+
+                if (currentGroup == null)
+                {
+                    return ODataBatchReaderState.Operation;
+                }
+                else
+                {
+                    HandleNewAtomicGroupStart(
+                        (string)this.messagePropertiesCache.GetPropertyValue(
+                            ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameId),
+                        currentGroup);
+                    return ODataBatchReaderState.ChangesetStart;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Asynchronous implementation of the reader logic when in state 'Operation'.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains the batch reader state after the read.
+        /// </returns>
+        protected override async Task<ODataBatchReaderState> ReadAtOperationImplementationAsync()
+        {
+            if (this.JsonLightInputContext.JsonReader.NodeType != JsonNodeType.StartObject)
+            {
+                // No more requests in the batch.
+                return await HandleMessagesEndAsync()
+                    .ConfigureAwait(false);
+            }
+
+            // Load the message properties if there is no cached item for processing.
+            if (this.messagePropertiesCache == null)
+            {
+                // Load the message details since operation is detected.
+                this.messagePropertiesCache = await ODataJsonLightBatchPayloadItemPropertiesCache.CreateAsync(this)
+                    .ConfigureAwait(false);
+            }
+
+            // Calculate and return next state with changeset state detection.
+            return DetectChangesetStates(this.messagePropertiesCache);
         }
 
         /// <summary>
@@ -538,6 +611,82 @@ namespace Microsoft.OData.JsonLight
             }
 
             return nextState;
+        }
+
+        /// <summary>
+        /// Asynchronously verify the first JSON property of the batch payload to detect the reader's mode.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous read operation.</returns>
+        private async Task DetectReaderModeAsync()
+        {
+            await this.batchStream.JsonReader.ReadNextAsync()
+                .ConfigureAwait(false);
+            await this.batchStream.JsonReader.ReadStartObjectAsync()
+                .ConfigureAwait(false);
+
+            string propertyName = await this.batchStream.JsonReader.ReadPropertyNameAsync()
+                .ConfigureAwait(false);
+
+            if (PropertyNameRequests.Equals(propertyName, StringComparison.OrdinalIgnoreCase))
+            {
+                this.mode = ReaderMode.Requests;
+            }
+            else if (PropertyNameResponses.Equals(propertyName, StringComparison.OrdinalIgnoreCase))
+            {
+                this.mode = ReaderMode.Responses;
+            }
+            else
+            {
+                throw new ODataException(Strings.ODataBatchReader_JsonBatchTopLevelPropertyMissing);
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously verify the JSON array of the batch payload.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains the batch reader's Operation state.
+        /// </returns>
+        private async Task<ODataBatchReaderState> StartReadingBatchArrayAsync()
+        {
+            await this .batchStream.JsonReader.ReadStartArrayAsync()
+                .ConfigureAwait(false);
+
+            ODataBatchReaderState nextState = ODataBatchReaderState.Operation;
+
+            return nextState;
+        }
+
+        /// <summary>
+        /// Asynchronously setup the reader's states at the end of the messages.
+        /// If atomicGroup is under processing, it needs to be closed first.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains the reader's next state.
+        /// </returns>
+        private async Task<ODataBatchReaderState> HandleMessagesEndAsync()
+        {
+            ODataBatchReaderState nextReaderState;
+
+            if (this.atomicGroups.IsWithinAtomicGroup)
+            {
+                // We need to close pending changeset and update the atomic group status first.
+                this.atomicGroups.IsWithinAtomicGroup = false;
+                nextReaderState = ODataBatchReaderState.ChangesetEnd;
+            }
+            else
+            {
+                // Set the completion state.
+                await this .JsonLightInputContext.JsonReader.ReadEndArrayAsync()
+                    .ConfigureAwait(false);
+                await this.JsonLightInputContext.JsonReader.ReadEndObjectAsync()
+                    .ConfigureAwait(false);
+                nextReaderState = ODataBatchReaderState.Completed;
+            }
+
+            return nextReaderState;
         }
     }
 }

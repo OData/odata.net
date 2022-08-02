@@ -43,8 +43,8 @@ namespace Microsoft.OData.JsonLight
             Stream result;
             try
             {
-                result = new MemoryStream(this.Value == null ? new byte[0] :
-                    Convert.FromBase64String((string)this.Value));
+                result = this.Value == null ? Stream.Null :
+                    new MemoryStream(Convert.FromBase64String((string)this.Value));
             }
             catch (FormatException)
             {
@@ -104,7 +104,7 @@ namespace Microsoft.OData.JsonLight
 
                 if (value == null)
                 {
-                    result = new MemoryStream(new byte[0]);
+                    result = Stream.Null;
                 }
                 else
                 {

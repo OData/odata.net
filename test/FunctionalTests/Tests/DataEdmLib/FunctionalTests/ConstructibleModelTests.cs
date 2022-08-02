@@ -957,7 +957,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(EdmPrimitiveTypeKind.Duration, timeRef.PrimitiveKind(), "Correct primitive kind");
 
             Assert.IsNull(decimalRef.AsDecimal().Precision, "Decimal precision null when created with shortcut");
-            Assert.AreEqual(0, decimalRef.AsDecimal().Scale, "Decimal scale 0 when created with shortcut");
+            Assert.IsNull(decimalRef.AsDecimal().Scale, "Decimal scale equals null when created with shortcut");
 
             Assert.AreEqual(0, timeRef.AsTemporal().Precision, "Duration precision equals to 0 when created with shortcut");
         }

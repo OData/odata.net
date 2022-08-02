@@ -261,11 +261,11 @@ namespace Microsoft.OData
                     model,
                     messageWriterSettings,
                     textWriter,
-                    (serializer) => serializer.WriteResourceValue(
-                        resourceValue, /* resourceValue */
-                        null, /* metadataTypeReference */
-                        true, /* isOpenPropertyType */
-                        serializer.CreateDuplicatePropertyNameChecker()));
+                    (serializer, duplicatePropertyNamesChecker) => serializer.WriteResourceValue(
+                        resourceValue,
+                        metadataTypeReference : null,
+                        isOpenPropertyType : true,
+                        duplicatePropertyNamesChecker: duplicatePropertyNamesChecker));
             }
 
             return builder.ToString();
@@ -313,13 +313,14 @@ namespace Microsoft.OData
                     model,
                     messageWriterSettings,
                     textWriter,
-                    (serializer) => serializer.WriteCollectionValue(
+                    (serializer, duplicatePropertyNameChecker) => serializer.WriteCollectionValue(
                         collectionValue,
-                        null /*metadataTypeReference*/,
-                        null /*valueTypeReference*/,
-                        false /*isTopLevelProperty*/,
-                        true /*isInUri*/,
-                        false /*isOpenPropertyType*/));
+                        metadataTypeReference : null,
+                        valueTypeReference : null,
+                        isTopLevelProperty: false,
+                        isInUri: true,
+                        isOpenPropertyType: false),
+                        isResourceValue: false);
             }
 
             return builder.ToString();
@@ -554,7 +555,8 @@ namespace Microsoft.OData
         /// <param name="messageWriterSettings">Settings to use when writing.</param>
         /// <param name="textWriter">TextWriter to use as the output for the value.</param>
         /// <param name="writeValue">Delegate to use to actually write the value.</param>
-        private static void WriteJsonLightLiteral(IEdmModel model, ODataMessageWriterSettings messageWriterSettings, TextWriter textWriter, Action<ODataJsonLightValueSerializer> writeValue)
+        /// <param name="isResourceValue">We want to pass the <see cref="IDuplicatePropertyNameChecker"/> instance to the Action delegate when writing Resource value but not Collection value.</param>
+        private static void WriteJsonLightLiteral(IEdmModel model, ODataMessageWriterSettings messageWriterSettings, TextWriter textWriter, Action<ODataJsonLightValueSerializer, IDuplicatePropertyNameChecker> writeValue, bool isResourceValue = true)
         {
             IEnumerable<KeyValuePair<string, string>> parameters = new Dictionary<string, string>
             {
@@ -577,7 +579,18 @@ namespace Microsoft.OData
                 new ODataJsonLightOutputContext(textWriter, messageInfo, messageWriterSettings))
             {
                 ODataJsonLightValueSerializer jsonLightValueSerializer = new ODataJsonLightValueSerializer(jsonOutputContext);
-                writeValue(jsonLightValueSerializer);
+
+                if (!isResourceValue)
+                {
+                    writeValue(jsonLightValueSerializer, null);
+                }
+                else
+                {
+                    IDuplicatePropertyNameChecker duplicatePropertyNameChecker = jsonLightValueSerializer.GetDuplicatePropertyNameChecker();
+                    writeValue(jsonLightValueSerializer, duplicatePropertyNameChecker);
+                    jsonLightValueSerializer.ReturnDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
+                }
+
                 jsonLightValueSerializer.AssertRecursionDepthIsZero();
             }
         }

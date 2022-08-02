@@ -1543,6 +1543,7 @@ Microsoft.OData.UriParser.ODataPath.ODataPath(System.Collections.Generic.IEnumer
 Microsoft.OData.UriParser.ODataPath.this[int i].get -> Microsoft.OData.UriParser.ODataPathSegment
 Microsoft.OData.UriParser.ODataPath.WalkWith(Microsoft.OData.UriParser.PathSegmentHandler handler) -> void
 Microsoft.OData.UriParser.ODataPath.WalkWith<T>(Microsoft.OData.UriParser.PathSegmentTranslator<T> translator) -> System.Collections.Generic.IEnumerable<T>
+Microsoft.OData.UriParser.ODataPathExtensions
 Microsoft.OData.UriParser.ODataPathSegment
 Microsoft.OData.UriParser.ODataPathSegment.Identifier.get -> string
 Microsoft.OData.UriParser.ODataPathSegment.Identifier.set -> void
@@ -2303,7 +2304,13 @@ static readonly Microsoft.OData.UriParser.QueryToken.EmptyTokens -> Microsoft.OD
 virtual Microsoft.OData.Evaluation.ODataMetadataSelector.SelectBindableOperations(Microsoft.OData.Edm.IEdmStructuredType type, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation> bindableOperations) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
 virtual Microsoft.OData.Evaluation.ODataMetadataSelector.SelectNavigationProperties(Microsoft.OData.Edm.IEdmStructuredType type, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmNavigationProperty> navigationProperties) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmNavigationProperty>
 virtual Microsoft.OData.Evaluation.ODataMetadataSelector.SelectStreamProperties(Microsoft.OData.Edm.IEdmStructuredType type, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmStructuralProperty> selectedStreamProperties) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmStructuralProperty>
+virtual Microsoft.OData.ODataBatchReader.CreateOperationRequestMessageImplementationAsync() -> System.Threading.Tasks.Task<Microsoft.OData.ODataBatchOperationRequestMessage>
+virtual Microsoft.OData.ODataBatchReader.CreateOperationResponseMessageImplementationAsync() -> System.Threading.Tasks.Task<Microsoft.OData.ODataBatchOperationResponseMessage>
 virtual Microsoft.OData.ODataBatchReader.GetCurrentGroupIdImplementation() -> string
+virtual Microsoft.OData.ODataBatchReader.ReadAtChangesetEndImplementationAsync() -> System.Threading.Tasks.Task<Microsoft.OData.ODataBatchReaderState>
+virtual Microsoft.OData.ODataBatchReader.ReadAtChangesetStartImplementationAsync() -> System.Threading.Tasks.Task<Microsoft.OData.ODataBatchReaderState>
+virtual Microsoft.OData.ODataBatchReader.ReadAtOperationImplementationAsync() -> System.Threading.Tasks.Task<Microsoft.OData.ODataBatchReaderState>
+virtual Microsoft.OData.ODataBatchReader.ReadAtStartImplementationAsync() -> System.Threading.Tasks.Task<Microsoft.OData.ODataBatchReaderState>
 virtual Microsoft.OData.ODataBatchWriter.OnInStreamErrorAsync() -> System.Threading.Tasks.Task
 virtual Microsoft.OData.ODataBatchWriter.StreamDisposedAsync() -> System.Threading.Tasks.Task
 virtual Microsoft.OData.ODataInputContext.CreateCollectionReader(Microsoft.OData.Edm.IEdmTypeReference expectedItemTypeReference) -> Microsoft.OData.ODataCollectionReader
@@ -2345,6 +2352,9 @@ virtual Microsoft.OData.ODataOutputContext.WriteError(Microsoft.OData.ODataError
 virtual Microsoft.OData.ODataOutputContext.WriteErrorAsync(Microsoft.OData.ODataError odataError, bool includeDebugInformation) -> System.Threading.Tasks.Task
 virtual Microsoft.OData.ODataOutputContext.WriteProperty(Microsoft.OData.ODataProperty odataProperty) -> void
 virtual Microsoft.OData.ODataOutputContext.WritePropertyAsync(Microsoft.OData.ODataProperty odataProperty) -> System.Threading.Tasks.Task
+virtual Microsoft.OData.ODataParameterReader.CreateCollectionReaderAsync() -> System.Threading.Tasks.Task<Microsoft.OData.ODataCollectionReader>
+virtual Microsoft.OData.ODataParameterReader.CreateResourceReaderAsync() -> System.Threading.Tasks.Task<Microsoft.OData.ODataReader>
+virtual Microsoft.OData.ODataParameterReader.CreateResourceSetReaderAsync() -> System.Threading.Tasks.Task<Microsoft.OData.ODataReader>
 virtual Microsoft.OData.ODataPayloadValueConverter.ConvertFromPayloadValue(object value, Microsoft.OData.Edm.IEdmTypeReference edmTypeReference) -> object
 virtual Microsoft.OData.ODataPayloadValueConverter.ConvertToPayloadValue(object value, Microsoft.OData.Edm.IEdmTypeReference edmTypeReference) -> object
 virtual Microsoft.OData.ODataPropertyInfo.PrimitiveTypeKind.get -> Microsoft.OData.Edm.EdmPrimitiveTypeKind

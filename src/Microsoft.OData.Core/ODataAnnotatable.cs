@@ -14,17 +14,11 @@ namespace Microsoft.OData
     /// <summary>
     /// Base class for all annotatable types in OData library.
     /// </summary>
-#if ORCAS
-    [Serializable]
-#endif
     public abstract class ODataAnnotatable
     {
         /// <summary>
         /// Collection of custom instance annotations.
         /// </summary>
-#if ORCAS
-        [NonSerialized]
-#endif
         private ICollection<ODataInstanceAnnotation> instanceAnnotations;
 
         /// <summary>
