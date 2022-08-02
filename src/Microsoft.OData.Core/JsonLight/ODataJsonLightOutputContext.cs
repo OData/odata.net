@@ -139,7 +139,7 @@ namespace Microsoft.OData.JsonLight
                     }
                 }
 
-                this.VerifyJsonWriter();
+                this.EnsureJsonWritersAreTheSame();
             }
             catch (Exception e)
             {
@@ -183,7 +183,7 @@ namespace Microsoft.OData.JsonLight
                 this.jsonWriter = CreateJsonWriter(messageInfo.Container, textWriter, ieee754CompatibleSetToTrue, messageWriterSettings);
             }
             
-            this.VerifyJsonWriter();
+            this.EnsureJsonWritersAreTheSame();
             this.metadataLevel = new JsonMinimalMetadataLevel();
             this.propertyCacheHandler = new PropertyCacheHandler();
         }
@@ -977,7 +977,13 @@ namespace Microsoft.OData.JsonLight
             return jsonWriter;
         }
 
-        private void VerifyJsonWriter()
+        /// <summary>
+        /// Ensures that both <see cref="jsonWriter"/> and <see cref="asynchronousJsonWriter"/>
+        /// members are set and they refer to the same instance, otherwise it throws
+        /// an exception.
+        /// </summary>
+        /// <exception cref="ODataException"></exception>
+        private void EnsureJsonWritersAreTheSame()
         {
             // Asynchronous support is not implemented in Microsoft.Spatial library.
             // To write spatial data, we rely on the synchronous PrimitiveConverter.Instance.WriteJsonLight(object, IJsonWriter) method.
@@ -991,7 +997,9 @@ namespace Microsoft.OData.JsonLight
             // can be reused for spatial data. If we somehow end up with 2 separate instances, then we fail early with an exception.
             // Merging IJsonWriter and IJsonWriterAsync interface in a major release will simplify this.
 
-            if (this.jsonWriter != null && this.asynchronousJsonWriter == null && this.jsonWriter is IJsonWriterAsync jsonWriterAsync)
+            if (this.jsonWriter != null
+                && this.asynchronousJsonWriter == null
+                && this.jsonWriter is IJsonWriterAsync jsonWriterAsync)
             {
                 this.asynchronousJsonWriter = jsonWriterAsync;
                 return;

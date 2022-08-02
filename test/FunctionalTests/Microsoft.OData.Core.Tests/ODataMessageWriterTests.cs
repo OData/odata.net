@@ -746,6 +746,7 @@ namespace Microsoft.OData.Tests
             using (StreamReader reader = new StreamReader(message.Stream, encoding: encoding ?? Encoding.UTF8))
             {
                 string contents = await reader.ReadToEndAsync();
+
                 return contents;
             }
         }

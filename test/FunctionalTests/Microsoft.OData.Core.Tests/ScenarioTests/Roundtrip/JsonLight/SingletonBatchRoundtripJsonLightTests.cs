@@ -986,7 +986,7 @@ Content-Type: application/json;odata.metadata=none
         }
 
         [Fact]
-        public void BatchJsonLightTest()
+        public void BatchJsonLightTestUsingMultipartMixed()
         {
             BatchJsonLightTestUsingBatchFormat(BatchFormat.MultipartMIME, 0);
         }
@@ -999,7 +999,7 @@ Content-Type: application/json;odata.metadata=none
 
 #if NETCOREAPP3_1_OR_GREATER
         [Fact]
-        public void BatchJsonLightTest_WithODataUtf8JsonWriter()
+        public void BatchJsonLightTestUsingMultipartMixed_WithODataUtf8JsonWriter()
         {
             Action<IContainerBuilder> configure = (IContainerBuilder builder) =>
             {
@@ -1022,7 +1022,7 @@ Content-Type: application/json;odata.metadata=none
 #endif
 
         [Fact]
-        public void BatchJsonLightTestChangesetsFollowedByQuery()
+        public void BatchJsonLightTestChangesetsFollowedByQueryUsingMultipartMixed()
         {
             BatchJsonLightTestUsingBatchFormat(BatchFormat.MultipartMIME, 1);
         }
