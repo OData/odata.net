@@ -58,7 +58,7 @@ namespace Microsoft.OData.UriParser
         /// Gets the selected properties and operations.
         /// </summary>
         /// <remarks>This list includes expanded navigations properties, which may have additional nested selections and expansions.</remarks>
-        public IList<SelectItem> SelectedItems
+        public IReadOnlyList<SelectItem> SelectedItems
         {
             get
             {

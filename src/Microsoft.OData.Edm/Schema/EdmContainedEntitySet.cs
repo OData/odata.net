@@ -25,9 +25,20 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="parentNavigationSource">The <see cref="IEdmNavigationSource"/> that container element belongs to</param>
         /// <param name="navigationProperty">An <see cref="IEdmNavigationProperty"/> containing the navigation property definition of the contained element</param>
-        public EdmContainedEntitySet(IEdmNavigationSource parentNavigationSource, IEdmNavigationProperty navigationProperty)
-            : this(parentNavigationSource, navigationProperty, new EdmPathExpression(navigationProperty.Name))
+        /// <param name="navigationPath">The path from the parentNavigationSource to the related resource, concluding with the navigation property name. May traverse complex types and cast segments</param>
+        public EdmContainedEntitySet(
+            IEdmNavigationSource parentNavigationSource,
+            IEdmNavigationProperty navigationProperty,
+            IEdmPathExpression navigationPath)
+            : base(
+                  EdmUtil.CheckArgumentNull(navigationProperty, nameof(navigationProperty)).Name,
+                  navigationProperty.ToEntityType())
         {
+            EdmUtil.CheckArgumentNull(parentNavigationSource, nameof(parentNavigationSource));
+
+            this.parentNavigationSource = parentNavigationSource;
+            this.navigationProperty = navigationProperty;
+            this.navigationPath = navigationPath;
         }
 
         /// <summary>
@@ -35,16 +46,12 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="parentNavigationSource">The <see cref="IEdmNavigationSource"/> that container element belongs to</param>
         /// <param name="navigationProperty">An <see cref="IEdmNavigationProperty"/> containing the navigation property definition of the contained element</param>
-        /// <param name="navigationPath">The path from the parentNavigationSource to the related resource, concluding with the navigation property name. May traverse complex types and cast segments</param>
-        public EdmContainedEntitySet(IEdmNavigationSource parentNavigationSource, IEdmNavigationProperty navigationProperty, IEdmPathExpression navigationPath)
-            : base(navigationProperty.Name, navigationProperty.ToEntityType())
+        internal EdmContainedEntitySet(IEdmNavigationSource parentNavigationSource, IEdmNavigationProperty navigationProperty)
+            : this(
+                  parentNavigationSource,
+                  navigationProperty,
+                  new EdmPathExpression(navigationProperty.Name))
         {
-            EdmUtil.CheckArgumentNull(parentNavigationSource, "parentNavigationSource");
-            EdmUtil.CheckArgumentNull(navigationProperty, "navigationProperty");
-
-            this.parentNavigationSource = parentNavigationSource;
-            this.navigationProperty = navigationProperty;
-            this.navigationPath = navigationPath;
         }
 
         /// <summary>

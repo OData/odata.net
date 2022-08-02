@@ -2495,7 +2495,6 @@ public class Microsoft.OData.Edm.EdmComplexTypeReference : Microsoft.OData.Edm.E
 }
 
 public class Microsoft.OData.Edm.EdmContainedEntitySet : Microsoft.OData.Edm.EdmEntitySetBase, IEdmContainedEntitySet, IEdmElement, IEdmEntitySetBase, IEdmNamedElement, IEdmNavigationSource {
-    public EdmContainedEntitySet (Microsoft.OData.Edm.IEdmNavigationSource parentNavigationSource, Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty)
     public EdmContainedEntitySet (Microsoft.OData.Edm.IEdmNavigationSource parentNavigationSource, Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmPathExpression navigationPath)
 
     Microsoft.OData.Edm.IEdmNavigationProperty NavigationProperty  { public virtual get; }
@@ -7416,7 +7415,7 @@ public sealed class Microsoft.OData.UriParser.SelectExpandClause {
     public SelectExpandClause (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.SelectItem]] selectedItems, bool allSelected)
 
     bool AllSelected  { public get; }
-    System.Collections.Generic.IList`1[[Microsoft.OData.UriParser.SelectItem]] SelectedItems  { public get; }
+    System.Collections.Generic.IReadOnlyList`1[[Microsoft.OData.UriParser.SelectItem]] SelectedItems  { public get; }
 }
 
 public sealed class Microsoft.OData.UriParser.SelectTermToken : Microsoft.OData.UriParser.SelectExpandTermToken {
