@@ -11,7 +11,9 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Json;
 using Microsoft.OData.JsonLight;
+using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 
 namespace Microsoft.OData.Core.Tests.JsonLight
@@ -1071,6 +1073,59 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 result);
         }
 
+#if NETCOREAPP3_1_OR_GREATER
+        [Fact]
+        public async Task WriteBinaryValueToStream_WithODataUtf8JsonWriter_Async()
+        {
+            var addressResource = CreateAddressResource();
+            var streamProperty = new ODataStreamPropertyInfo
+            {
+                Name = "Stream",
+                EditLink = new Uri($"{ServiceUri}/Orders(1)/ShippingAddress/Stream/edit", UriKind.Absolute),
+                ReadLink = new Uri($"{ServiceUri}/Orders(1)/ShippingAddress/Stream/read", UriKind.Absolute),
+                ContentType = "text/plain"
+            };
+
+            Action<IContainerBuilder> configureWriter = (builder) =>
+            {
+                builder.AddService<IStreamBasedJsonWriterFactory>(ServiceLifetime.Singleton, _ => DefaultStreamBasedJsonWriterFactory.Default);
+            };
+
+            var result = await SetupJsonLightWriterAndRunTestAsync(
+                async (jsonLightWriter) =>
+                {
+                    await jsonLightWriter.WriteStartAsync(addressResource);
+                    await jsonLightWriter.WriteStartAsync(streamProperty);
+
+                    using (var stream = await jsonLightWriter.CreateBinaryWriteStreamAsync())
+                    {
+                        var bytes = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
+
+                        await stream.WriteAsync(bytes, 0, 4);
+                        await stream.WriteAsync(bytes, 4, 4);
+                        await stream.WriteAsync(bytes, 8, 2);
+                        await stream.FlushAsync();
+                    }
+
+                    await jsonLightWriter.WriteEndAsync();
+                    await jsonLightWriter.WriteEndAsync();
+                },
+                this.orderEntitySet,
+                this.orderEntityType,
+                configAction: configureWriter);
+
+            Assert.Equal(
+                "{\"@odata.context\":\"http://tempuri.org/$metadata#Orders/NS.Address/$entity\"," +
+                "\"Street\":\"One Microsoft Way\",\"City\":\"Redmond\"," +
+                "\"Stream@odata.mediaEditLink\":\"http://tempuri.org/Orders(1)/ShippingAddress/Stream/edit\"," +
+                "\"Stream@odata.mediaReadLink\":\"http://tempuri.org/Orders(1)/ShippingAddress/Stream/read\"," +
+                "\"Stream@odata.mediaContentType\":\"text/plain\"," +
+                "\"Stream\":\"AQIDBAUGBwgJAA==\"}",
+                result);
+        }
+
+#endif
+
         [Fact]
         public async Task WriteRequestPayloadAsync()
         {
@@ -1827,9 +1882,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             bool writingDelta = false,
             bool writingParameter = false,
             bool writingRequest = false,
-            IODataReaderWriterListener writerListener = null)
+            IODataReaderWriterListener writerListener = null,
+            Action<IContainerBuilder> configAction = null)
         {
-            var jsonLightOutputContext = CreateJsonLightOutputContext(writingRequest);
+            var jsonLightOutputContext = CreateJsonLightOutputContext(writingRequest, configAction);
 
             var jsonLightWriter = new ODataJsonLightWriter(
                 jsonLightOutputContext,
@@ -1846,8 +1902,18 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             return await new StreamReader(this.stream).ReadToEndAsync();
         }
 
-        private ODataJsonLightOutputContext CreateJsonLightOutputContext(bool writingRequest = false)
+        private ODataJsonLightOutputContext CreateJsonLightOutputContext(bool writingRequest = false, Action<IContainerBuilder> configAction = null)
         {
+            IServiceProvider container = null;
+
+            if (configAction != null)
+            {
+                var containerBuilder = new TestContainerBuilder();
+                containerBuilder.AddDefaultODataServices();
+                configAction?.Invoke(containerBuilder);
+                container = containerBuilder.BuildContainer();
+            }
+
             var messageInfo = new ODataMessageInfo
             {
                 MessageStream = this.stream,
@@ -1859,7 +1925,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 #endif
                 IsResponse = !writingRequest,
                 IsAsync = true,
-                Model = this.model
+                Model = this.model,
+                Container = container
             };
 
             return new ODataJsonLightOutputContext(messageInfo, this.settings);

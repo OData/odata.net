@@ -53,7 +53,17 @@ namespace Microsoft.OData.Json
 
         public IJsonWriterAsync CreateAsynchronousJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding)
         {
-            throw new NotImplementedException();
+            if (stream == null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            if (encoding == null)
+            {
+                throw new ArgumentNullException(nameof(encoding));
+            }
+
+            return new ODataUtf8JsonWriter(stream, isIeee754Compatible, encoding, encoder: this.encoder);
         }
     }
 }

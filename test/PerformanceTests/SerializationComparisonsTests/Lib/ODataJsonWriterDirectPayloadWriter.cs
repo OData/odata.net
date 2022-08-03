@@ -47,12 +47,10 @@ namespace ExperimentsLib
                 jsonWriter.WriteValue(customer.Name);
                 jsonWriter.WriteName("Emails");
                 jsonWriter.StartArrayScope();
-
                 foreach (var email in customer.Emails)
                 {
                     jsonWriter.WriteValue(email);
                 }
-
                 jsonWriter.EndArrayScope();
 
 

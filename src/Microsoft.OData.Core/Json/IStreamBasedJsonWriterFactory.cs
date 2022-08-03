@@ -11,7 +11,7 @@ using System.Text;
 namespace Microsoft.OData.Json
 {
     /// <summary>
-    /// The interface of factories that create <see cref="IJsonWriter"/> instances
+    /// The interface of factories that create <see cref="IJsonWriter"/> and <see cref="IJsonWriterAsync"/> instances
     /// that write directly to a <see cref="Stream"/> rather than a <see cref="TextWriter"/>.
     /// </summary>
     [CLSCompliant(false)]

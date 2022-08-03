@@ -23,7 +23,7 @@ namespace ExperimentsLib
         private Func<IBufferWriter<byte>, Utf8JsonWriter> writerFactory;
         const int BufferSize = 16 * 1024;
 
-        public Utf8JsonWriterDirectPayloadWriterWithArrayPool(Func<IBufferWriter<byte>, Utf8JsonWriter> writerFactory, bool simulateResourceGeneration = false)
+        public Utf8JsonWriterDirectPayloadWriterWithArrayPool(Func<IBufferWriter<byte>, Utf8JsonWriter> writerFactory)
         {
             this.writerFactory = writerFactory;
         }
@@ -42,16 +42,19 @@ namespace ExperimentsLib
             jsonWriter.WriteStartArray("value");
 
             int count = 0;
+
             foreach (Customer customer in payload)
             {
                 jsonWriter.WriteStartObject();
                 jsonWriter.WriteNumber("Id", customer.Id);
                 jsonWriter.WriteString("Name", customer.Name);
                 jsonWriter.WriteStartArray("Emails");
+
                 foreach (var email in customer.Emails)
                 {
                     jsonWriter.WriteStringValue(email);
                 }
+
                 jsonWriter.WriteEndArray();
 
 

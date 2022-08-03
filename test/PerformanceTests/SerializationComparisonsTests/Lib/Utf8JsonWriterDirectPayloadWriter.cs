@@ -21,7 +21,7 @@ namespace ExperimentsLib
     {
         private readonly Func<Stream, Utf8JsonWriter> writerFactory;
 
-        public Utf8JsonWriterDirectPayloadWriter(Func<Stream, Utf8JsonWriter> writerFactory, bool simulateResourceGeneration = false)
+        public Utf8JsonWriterDirectPayloadWriter(Func<Stream, Utf8JsonWriter> writerFactory)
         {
             this.writerFactory = writerFactory;
         }
@@ -39,10 +39,8 @@ namespace ExperimentsLib
 
             int count = 0;
 
-            foreach (var _customer in payload)
+            foreach (Customer customer in payload)
             {
-                Customer customer = _customer;
-
                 jsonWriter.WriteStartObject();
                 jsonWriter.WriteNumber("Id", customer.Id);
                 jsonWriter.WriteString("Name", customer.Name);

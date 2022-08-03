@@ -71,7 +71,7 @@ scenarios:
         filter: "*ODataWriter*"
   UriParser:
     application:
-      job: component
+      job: components
       variables:
         filter: "*UriParser*"
   Components:
