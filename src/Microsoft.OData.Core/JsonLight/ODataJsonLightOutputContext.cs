@@ -119,7 +119,7 @@ namespace Microsoft.OData.JsonLight
                         messageInfo.Encoding);
 
                     // the IStreamBasedJsonWriterFactory expects that the async writer also implements
-                    // the synchronous interface. The EnsureJsonWritersAreTheSame() method verifies this.
+                    // the synchronous interface. The EnsureJsonWritersReferenceTheSameInstance() method verifies this.
                 }
 
                 // Then fallback to the TextWriter-based approach
@@ -137,7 +137,7 @@ namespace Microsoft.OData.JsonLight
                     }
                 }
 
-                this.EnsureJsonWritersAreTheSame();
+                this.EnsureJsonWritersReferenceTheSameInstance();
             }
             catch (Exception e)
             {
@@ -181,7 +181,7 @@ namespace Microsoft.OData.JsonLight
                 this.jsonWriter = CreateJsonWriter(messageInfo.Container, textWriter, ieee754CompatibleSetToTrue, messageWriterSettings);
             }
             
-            this.EnsureJsonWritersAreTheSame();
+            this.EnsureJsonWritersReferenceTheSameInstance();
             this.metadataLevel = new JsonMinimalMetadataLevel();
             this.propertyCacheHandler = new PropertyCacheHandler();
         }
@@ -981,20 +981,21 @@ namespace Microsoft.OData.JsonLight
         /// an exception.
         /// </summary>
         /// <exception cref="ODataException"></exception>
-        private void EnsureJsonWritersAreTheSame()
+        /// <remarks>
+        /// Asynchronous support is not implemented in Microsoft.Spatial library.
+        /// To write spatial data, we rely on the synchronous PrimitiveConverter.Instance.WriteJsonLight(object, IJsonWriter) method.
+        /// When writing asynchronously we wrap this method in a Task. WriteJsonLight method takes an
+        /// IJsonWriter parameter while the asynchronous writer is declared as IJsonWriterAsync.
+        /// When writing asynchronously, we have to ensure that the IJsonWriter that is used
+        /// for writing spatial data is the same instance as the IJsonWriterAsync used for writing
+        /// everything else in order to guarantee that the writer state is correctly maintained
+        /// throughout the writing process (e.g. keeping track of the writer's current scope).
+        /// When an IJsonWriterAsync is provided, it must also implement IJsonWriter so that the same instance
+        /// can be reused for spatial data. If we somehow end up with 2 separate instances, then we fail early with an exception.
+        /// Merging IJsonWriter and IJsonWriterAsync interface in a major release will simplify this.
+        /// </remarks>
+        private void EnsureJsonWritersReferenceTheSameInstance()
         {
-            // Asynchronous support is not implemented in Microsoft.Spatial library.
-            // To write spatial data, we rely on the synchronous PrimitiveConverter.Instance.WriteJsonLight(object, IJsonWriter) method.
-            // When writing asynchronously we wrap this method in a Task. WriteJsonLight method takes an
-            // IJsonWriter parameter while the asynchronous writer is declared as IJsonWriterAsync.
-            // When writing asynchronously, we have to ensure that the IJsonWriter that is used
-            // for writing spatial data is the same instance as the IJsonWriterAsync used for writing
-            // everything else in order to guarantee that the writer state is correctly maintained
-            // throughout the writing process (e.g. keeping track of the writer's current scope).
-            // When an IJsonWriterAsync is provided, it must also implement IJsonWriter so that the same instance
-            // can be reused for spatial data. If we somehow end up with 2 separate instances, then we fail early with an exception.
-            // Merging IJsonWriter and IJsonWriterAsync interface in a major release will simplify this.
-
             if (this.jsonWriter != null
                 && this.asynchronousJsonWriter == null
                 && this.jsonWriter is IJsonWriterAsync jsonWriterAsync)
