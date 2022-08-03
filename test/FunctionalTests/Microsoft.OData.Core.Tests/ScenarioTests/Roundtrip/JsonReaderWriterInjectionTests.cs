@@ -459,14 +459,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 
             public Task EndPaddingFunctionScopeAsync() => throw new NotImplementedException();
 
-            public async Task StartObjectScopeAsync()
+            public Task StartObjectScopeAsync()
             {
-                await this.textWriter.WriteAsync('<');
+                return this.textWriter.WriteAsync('<');
             }
 
-            public async Task EndObjectScopeAsync()
+            public Task EndObjectScopeAsync()
             {
-                await this.textWriter.WriteAsync('>');
+                return this.textWriter.WriteAsync('>');
             }
 
             public Task StartArrayScopeAsync() => throw new NotImplementedException();
@@ -487,9 +487,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 
             public Task WriteValueAsync(bool value) => throw new NotImplementedException();
 
-            public async Task WriteValueAsync(int value)
+            public Task WriteValueAsync(int value)
             {
-                await this.textWriter.WriteAsync(string.Format("{0},", value));
+                return this.textWriter.WriteAsync(string.Format("{0},", value));
             }
 
             public Task WriteValueAsync(float value) => throw new NotImplementedException();
