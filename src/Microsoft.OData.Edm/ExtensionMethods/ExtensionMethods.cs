@@ -1655,19 +1655,20 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(container, "container");
 
-            var elements = container.AllElements();
-            foreach(var element in elements)
+            IEnumerable<IEdmEntityContainerElement> elements = container.AllElements();
+
+            foreach(IEdmEntityContainerElement element in elements)
             {
                 switch (element)
                 {
                     case IEdmEntitySet entitySet:
-                        foreach(var binding in entitySet.NavigationPropertyBindings)
+                        foreach(IEdmNavigationPropertyBinding binding in entitySet.NavigationPropertyBindings)
                         {
                             yield return Tuple.Create<IEdmEntityContainerElement, IEdmNavigationPropertyBinding>(entitySet, binding);
                         }
                         break;
                     case IEdmSingleton singleton:
-                        foreach (var binding in singleton.NavigationPropertyBindings)
+                        foreach (IEdmNavigationPropertyBinding binding in singleton.NavigationPropertyBindings)
                         {
                             yield return Tuple.Create< IEdmEntityContainerElement, IEdmNavigationPropertyBinding>(singleton, binding);
                         }
