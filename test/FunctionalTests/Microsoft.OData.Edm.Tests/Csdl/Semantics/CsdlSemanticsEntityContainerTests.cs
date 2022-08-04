@@ -87,7 +87,14 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
             csdlModel.AddSchema(schema);
             
             // act
-            var container = (IEdmEntityContainer)csdlEntityContainer;
+            var container = new CsdlSemanticsEntityContainer(
+                new CsdlSemanticsSchema(
+                    new CsdlSemanticsModel(
+                        csdlModel,
+                        new EdmDirectValueAnnotationsManager(),
+                        Enumerable.Empty<IEdmModel>()),
+                    schema),
+                csdlEntityContainer);
             var bindings = container.GetNavigationPropertyBindings().ToList();
 
             // assert
