@@ -3038,24 +3038,6 @@ public sealed class Microsoft.OData.Edm.Csdl.SerializationExtensionMethods {
     public static void SetSerializationLocation (Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation annotation, Microsoft.OData.Edm.IEdmModel model, System.Nullable`1[[Microsoft.OData.Edm.Csdl.EdmVocabularyAnnotationSerializationLocation]] location)
 }
 
-public class Microsoft.OData.Edm.Csdl.CsdlJsonReaderSettings : Microsoft.OData.Edm.Csdl.CsdlReaderSettingsBase {
-    public static Microsoft.OData.Edm.Csdl.CsdlJsonReaderSettings Default = Microsoft.OData.Edm.Csdl.CsdlJsonReaderSettings
-
-    public CsdlJsonReaderSettings ()
-
-    bool IgnoreUnexpectedJsonElements  { public get; public set; }
-    bool IncludeDefaultVocabularies  { public get; public set; }
-    bool IsBracketNotation  { public get; public set; }
-    Microsoft.OData.Edm.Csdl.CsdlJsonReaderFactory JsonSchemaReaderFactory  { public get; public set; }
-    System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmModel]] ReferencedModels  { public get; public set; }
-}
-
-public class Microsoft.OData.Edm.Csdl.CsdlJsonWriterSettings {
-    public CsdlJsonWriterSettings ()
-
-    bool IsIeee754Compatible  { public get; public set; }
-}
-
 public class Microsoft.OData.Edm.Csdl.CsdlLocation : Microsoft.OData.Edm.EdmLocation {
     int LineNumber  { public get; }
     int LinePosition  { public get; }
@@ -3066,15 +3048,11 @@ public class Microsoft.OData.Edm.Csdl.CsdlLocation : Microsoft.OData.Edm.EdmLoca
 }
 
 public class Microsoft.OData.Edm.Csdl.CsdlReader {
-    public static Microsoft.OData.Edm.IEdmModel Parse (System.Text.Json.Utf8JsonReader& reader)
     public static Microsoft.OData.Edm.IEdmModel Parse (System.Xml.XmlReader reader)
-    public static Microsoft.OData.Edm.IEdmModel Parse (System.Text.Json.Utf8JsonReader& reader, Microsoft.OData.Edm.Csdl.CsdlJsonReaderSettings settings)
     public static Microsoft.OData.Edm.IEdmModel Parse (System.Xml.XmlReader reader, Microsoft.OData.Edm.IEdmModel referencedModel)
     public static Microsoft.OData.Edm.IEdmModel Parse (System.Xml.XmlReader reader, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmModel]] referencedModels)
     public static Microsoft.OData.Edm.IEdmModel Parse (System.Xml.XmlReader reader, System.Func`2[[System.Uri],[System.Xml.XmlReader]] getReferencedModelReaderFunc)
-    public static bool TryParse (System.Text.Json.Utf8JsonReader& reader, out Microsoft.OData.Edm.IEdmModel& model, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
     public static bool TryParse (System.Xml.XmlReader reader, out Microsoft.OData.Edm.IEdmModel& model, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
-    public static bool TryParse (System.Text.Json.Utf8JsonReader& reader, Microsoft.OData.Edm.Csdl.CsdlJsonReaderSettings settings, out Microsoft.OData.Edm.IEdmModel& model, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
     public static bool TryParse (System.Xml.XmlReader reader, Microsoft.OData.Edm.IEdmModel reference, out Microsoft.OData.Edm.IEdmModel& model, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
     public static bool TryParse (System.Xml.XmlReader reader, bool ignoreUnexpectedAttributesAndElements, out Microsoft.OData.Edm.IEdmModel& model, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
     public static bool TryParse (System.Xml.XmlReader reader, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmModel]] references, out Microsoft.OData.Edm.IEdmModel& model, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
@@ -3087,8 +3065,6 @@ public class Microsoft.OData.Edm.Csdl.CsdlWriter {
     protected CsdlWriter (Microsoft.OData.Edm.IEdmModel model, System.Version edmxVersion)
 
     protected static string GetVersionString (System.Version version)
-    public static bool TryWriteCsdl (Microsoft.OData.Edm.IEdmModel model, System.Text.Json.Utf8JsonWriter writer, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
-    public static bool TryWriteCsdl (Microsoft.OData.Edm.IEdmModel model, System.Text.Json.Utf8JsonWriter writer, Microsoft.OData.Edm.Csdl.CsdlJsonWriterSettings settings, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
     public static bool TryWriteCsdl (Microsoft.OData.Edm.IEdmModel model, System.Xml.XmlWriter writer, Microsoft.OData.Edm.Csdl.CsdlTarget target, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
     protected virtual void WriteCsdl ()
 }
@@ -3100,14 +3076,6 @@ public class Microsoft.OData.Edm.Csdl.EdmParseException : System.Exception, ISer
     public EdmParseException (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]] parseErrors)
 
     System.Collections.ObjectModel.ReadOnlyCollection`1[[Microsoft.OData.Edm.Validation.EdmError]] Errors  { public get; }
-}
-
-public sealed class Microsoft.OData.Edm.Csdl.CsdlJsonReaderFactory : System.MulticastDelegate, ICloneable, ISerializable {
-    public CsdlJsonReaderFactory (object object, System.IntPtr method)
-
-    public virtual System.IAsyncResult BeginInvoke (System.Uri uri, out System.Boolean& skip, System.AsyncCallback callback, object object)
-    public virtual System.Text.Json.Utf8JsonReader EndInvoke (out System.Boolean& skip, System.IAsyncResult result)
-    public virtual System.Text.Json.Utf8JsonReader Invoke (System.Uri uri, out System.Boolean& skip)
 }
 
 public sealed class Microsoft.OData.Edm.Csdl.CsdlReaderSettings : Microsoft.OData.Edm.Csdl.CsdlReaderSettingsBase {
