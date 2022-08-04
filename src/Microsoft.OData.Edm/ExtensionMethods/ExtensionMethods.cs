@@ -1647,10 +1647,10 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Returns NavigationPropertyBindings with their corresponding container elements (EntitySet or Singelton)
+        /// Returns navigation property bindings with their corresponding container elements (entity set or singleton)
         /// </summary>
         /// <param name="container">Reference to the calling object.</param>
-        /// <returns>collection of pairs of container element and NavigationPropertyBindings.</returns>
+        /// <returns>Collection of pairs of container element and navigation property bindings.</returns>
         public static IEnumerable<Tuple<IEdmEntityContainerElement, IEdmNavigationPropertyBinding>> GetNavigationPropertyBindings(this IEdmEntityContainer container)
         {
             EdmUtil.CheckArgumentNull(container, "container");
