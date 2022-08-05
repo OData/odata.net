@@ -99,6 +99,16 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
 
             // assert
             Assert.Equal(2, bindings.Count);
+            var entitySet = Assert.IsType<CsdlSemanticsEntitySet>(bindings[0].Item1);
+            var singleton = Assert.IsType<CsdlSemanticsSingleton>(bindings[1].Item1);
+            Assert.Equal("EntitySet1", entitySet.Name);
+            Assert.Equal("Singleton", singleton.Name);
+            var navigationPropertyBinding1 = Assert.IsType<EdmNavigationPropertyBinding>(bindings[0].Item2);
+            var navigationPropertyBinding2 = Assert.IsType<EdmNavigationPropertyBinding>(bindings[1].Item2);
+            Assert.Equal("foo", navigationPropertyBinding1.Path.Path);
+            Assert.Equal("bar", navigationPropertyBinding1.Target.Name);
+            Assert.Equal("foo", navigationPropertyBinding2.Path.Path);
+            Assert.Equal("bar", navigationPropertyBinding2.Target.Name);
         }
     }
 }
