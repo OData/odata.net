@@ -1646,6 +1646,40 @@ namespace Microsoft.OData.Edm
             return container.AllElements().OfType<IEdmOperationImport>();
         }
 
+        /// <summary>
+        /// Returns navigation property bindings with their corresponding container elements (entity set or singleton)
+        /// </summary>
+        /// <param name="container">Reference to the calling object.</param>
+        /// <returns>Collection of pairs of container element and navigation property bindings.</returns>
+        public static IEnumerable<Tuple<IEdmEntityContainerElement, IEdmNavigationPropertyBinding>> GetNavigationPropertyBindings(this IEdmEntityContainer container)
+        {
+            EdmUtil.CheckArgumentNull(container, "container");
+
+            IEnumerable<IEdmEntityContainerElement> elements = container.AllElements();
+
+            foreach(IEdmEntityContainerElement element in elements)
+            {
+                switch (element)
+                {
+                    case IEdmEntitySet entitySet:
+                        foreach(IEdmNavigationPropertyBinding binding in entitySet.NavigationPropertyBindings)
+                        {
+                            yield return Tuple.Create<IEdmEntityContainerElement, IEdmNavigationPropertyBinding>(entitySet, binding);
+                        }
+                        break;
+                    case IEdmSingleton singleton:
+                        foreach (IEdmNavigationPropertyBinding binding in singleton.NavigationPropertyBindings)
+                        {
+                            yield return Tuple.Create< IEdmEntityContainerElement, IEdmNavigationPropertyBinding>(singleton, binding);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+
         #endregion
 
         #region IEdmTypeReference
