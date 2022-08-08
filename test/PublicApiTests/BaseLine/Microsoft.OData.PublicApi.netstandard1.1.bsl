@@ -1648,7 +1648,7 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
     [
     ExtensionAttribute(),
     ]
-    public static void AddAlternateKeyAnnotation (Microsoft.OData.Edm.EdmModel model, Microsoft.OData.Edm.IEdmEntityType type, System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.Edm.IEdmProperty]] alternateKey)
+    public static void AddAlternateKeyAnnotation (Microsoft.OData.Edm.EdmModel model, Microsoft.OData.Edm.IEdmEntityType type, System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.Edm.IEdmProperty]] alternateKey, params bool useCore)
 
     [
     ExtensionAttribute(),
@@ -4174,6 +4174,8 @@ public sealed class Microsoft.OData.Edm.Vocabularies.V1.CapabilitiesVocabularyMo
 
 public sealed class Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants {
     public static string AcceptableMediaTypes = "Org.OData.Core.V1.AcceptableMediaTypes"
+    public static string AlternateKey = "Org.OData.Core.V1.AlternateKey"
+    public static string AlternateKeys = "Org.OData.Core.V1.AlternateKeys"
     public static string Computed = "Org.OData.Core.V1.Computed"
     public static string ConventionalIDs = "Org.OData.Core.V1.ConventionalIDs"
     public static string CoreNamespace = "Org.OData.Core.V1"
@@ -4188,6 +4190,7 @@ public sealed class Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants 
     public static string OptimisticConcurrency = "Org.OData.Core.V1.OptimisticConcurrency"
     public static string OptionalParameter = "Org.OData.Core.V1.OptionalParameter"
     public static string Permissions = "Org.OData.Core.V1.Permissions"
+    public static string PropertyRef = "Org.OData.Core.V1.PropertyRef"
     public static string RequiresType = "Org.OData.Core.V1.RequiresType"
     public static string ResourcePath = "Org.OData.Core.V1.ResourcePath"
     public static string Revisions = "Org.OData.Core.V1.Revisions"
@@ -4195,6 +4198,7 @@ public sealed class Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants 
 
 public sealed class Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyModel {
     public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm AcceptableMediaTypesTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
+    public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm AlternateKeysTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
     public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm ComputedTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
     public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm ConcurrencyTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
     public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm ConventionalIDsTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
