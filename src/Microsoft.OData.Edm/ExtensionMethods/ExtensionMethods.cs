@@ -2161,7 +2161,7 @@ namespace Microsoft.OData.Edm
             IEdmComplexType alternateKeyType = useCore ? CoreVocabularyModel.AlternateKeyType : AlternateKeysVocabularyModel.AlternateKeyType;
 
             EdmCollectionExpression annotationValue = null;
-            var ann = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(type, alternateKeyTerms).FirstOrDefault();
+            var ann = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(type, alternateKeysTerm).FirstOrDefault();
             if (ann != null)
             {
                 annotationValue = ann.Value as EdmCollectionExpression;
@@ -2188,7 +2188,7 @@ namespace Microsoft.OData.Edm
 
             var annotation = new EdmVocabularyAnnotation(
                 type,
-                alternateKeyTerms,
+                alternateKeysTerm,
                 new EdmCollectionExpression(alternateKeysCollection));
 
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
