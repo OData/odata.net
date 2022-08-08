@@ -2153,7 +2153,8 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(type, "type");
             EdmUtil.CheckArgumentNull(alternateKey, "alternateKey");
 
-            IEdmTerm alternateKeyTerms = useCore ? CoreVocabularyModel.AlternateKeysTerm : AlternateKeysVocabularyModel.AlternateKeysTerm;
+            IEdmTerm alternateKeysTerm = useCore ? CoreVocabularyModel.AlternateKeysTerm : AlternateKeysVocabularyModel.AlternateKeysTerm;
+
             IEdmComplexType propertyRefType = useCore ? CoreVocabularyModel.PropertyRefType : AlternateKeysVocabularyModel.PropertyRefType;
             IEdmComplexType alternateKeyType = useCore ? CoreVocabularyModel.AlternateKeyType : AlternateKeysVocabularyModel.AlternateKeyType;
 
