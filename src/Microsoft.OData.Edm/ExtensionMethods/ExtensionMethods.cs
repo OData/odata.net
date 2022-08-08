@@ -3475,7 +3475,8 @@ namespace Microsoft.OData.Edm
                     }
                 };
 
-                // For back-compability, we merge the alternate keys from community and core vocabulary annotations if have.
+                // For backwards-compability, we merge the alternate keys from community and core vocabulary annotations.
+
                 retrieveAnnotationAction(annotationValue);
                 retrieveAnnotationAction(coreAnnotationValue);
 
