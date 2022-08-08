@@ -71,7 +71,7 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         // <summary>Org.OData.Core.V1.AlternateKey</summary>
         public const string AlternateKey = "Org.OData.Core.V1.AlternateKey";
 
-        // <summary>Org.OData.Core.V1.AlternateKey</summary>
+        // <summary>Org.OData.Core.V1.PropertyRef</summary>
         public const string PropertyRef = "Org.OData.Core.V1.PropertyRef";
 
         /// <summary>Org.OData.Core.V1.xml file suffix</summary>

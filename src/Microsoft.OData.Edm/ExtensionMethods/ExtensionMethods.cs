@@ -2146,7 +2146,9 @@ namespace Microsoft.OData.Edm
         /// <param name="model">The model to be used.</param>
         /// <param name="type">Reference to the calling object.</param>
         /// <param name="alternateKey">Dictionary of alias and structural properties for the alternate key.</param>
-        /// <param name="useCore">A flag to indicate which alternate term to use.</param>
+        /// <param name="useCore">A flag to indicate which alternate term to use.
+        /// If ture, 'Org.OData.Core.V1.AlternateKeys' is used, otherwise, 'OData.Community.Keys.V1.AlternateKeys' is used.
+        /// </param>
         public static void AddAlternateKeyAnnotation(this EdmModel model, IEdmEntityType type, IDictionary<string, IEdmProperty> alternateKey, bool useCore = false)
         {
             EdmUtil.CheckArgumentNull(model, "model");
