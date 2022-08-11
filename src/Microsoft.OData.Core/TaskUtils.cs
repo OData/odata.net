@@ -90,11 +90,15 @@ namespace Microsoft.OData.Client
         /// <returns>An already completed task with the specified exception.</returns>
         internal static Task<T> GetFaultedTask<T>(Exception exception)
         {
+#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
+            return Task.FromException<T>(exception);
+#else
             TaskCompletionSource<T> taskCompletionSource = new TaskCompletionSource<T>();
             taskCompletionSource.SetException(exception);
             return taskCompletionSource.Task;
+#endif
         }
-        #endregion
+#endregion
 
 #region GetTaskForSynchronousOperation
         /// <summary>
@@ -121,7 +125,7 @@ namespace Microsoft.OData.Client
                     throw;
                 }
 
-                return TaskUtils.GetFaultedTask(e);
+                return GetFaultedTask(e);
             }
         }
 
@@ -142,7 +146,7 @@ namespace Microsoft.OData.Client
             try
             {
                 T result = synchronousOperation();
-                return TaskUtils.GetCompletedTask<T>(result);
+                return Task.FromResult(result);
             }
             catch (Exception e)
             {
@@ -151,7 +155,7 @@ namespace Microsoft.OData.Client
                     throw;
                 }
 
-                return TaskUtils.GetFaultedTask<T>(e);
+                return GetFaultedTask<T>(e);
             }
         }
 
@@ -175,7 +179,7 @@ namespace Microsoft.OData.Client
                     throw;
                 }
 
-                return TaskUtils.GetFaultedTask(exception);
+                return GetFaultedTask(exception);
             }
         }
 
@@ -200,10 +204,10 @@ namespace Microsoft.OData.Client
                     throw;
                 }
 
-                return TaskUtils.GetFaultedTask<TResult>(exception);
+                return GetFaultedTask<TResult>(exception);
             }
         }
-        #endregion
+#endregion
 
 #region FollowOnSuccessWith
         /// <summary>
@@ -267,9 +271,9 @@ namespace Microsoft.OData.Client
         {
             return FollowOnSuccessWithImplementation(antecedentTask, t => operation((Task<TAntecedentTaskResult>)t));
         }
-        #endregion
+#endregion
 
-        #region FollowOnSuccessWithTask
+#region FollowOnSuccessWithTask
         /// <summary>
         /// Returns a new task which will consist of the <paramref name="antecedentTask"/> followed by a call to the <paramref name="operation"/>
         /// which will only be invoked if the antecedent task succeeded.
@@ -369,7 +373,7 @@ namespace Microsoft.OData.Client
                 TaskContinuationOptions.ExecuteSynchronously);
             return taskCompletionSource.Task.Unwrap();
         }
-        #endregion
+#endregion
 
 #region FollowOnFaultWith
         /// <summary>
@@ -398,7 +402,7 @@ namespace Microsoft.OData.Client
         {
             return FollowOnFaultWithImplementation(antecedentTask, t => ((Task<TResult>)t).Result, t => operation((Task<TResult>)t));
         }
-        #endregion
+#endregion
 
 #region FollowOnFaultAndCatchExceptionWith
         /// <summary>
@@ -419,7 +423,7 @@ namespace Microsoft.OData.Client
         {
             return FollowOnFaultAndCatchExceptionWithImplementation<TResult, TExceptionType>(antecedentTask, t => ((Task<TResult>)t).Result, catchBlock);
         }
-        #endregion
+#endregion
 
 #region FollowAlwaysWith
         /// <summary>
@@ -454,7 +458,7 @@ namespace Microsoft.OData.Client
         {
             return FollowAlwaysWithImplementation(antecedentTask, t => ((Task<TResult>)t).Result, t => operation((Task<TResult>)t));
         }
-        #endregion
+#endregion
 
 #region Task.IgnoreExceptions - copied from Samples for Parallel Programming
         /// <summary>Suppresses default exception handling of a Task that would otherwise reraise the exception on the finalizer thread.</summary>
@@ -470,7 +474,7 @@ namespace Microsoft.OData.Client
                 TaskScheduler.Default);
             return task;
         }
-        #endregion Task.IgnoreExceptions - copied from Samples for Parallel Programming
+#endregion Task.IgnoreExceptions - copied from Samples for Parallel Programming
 
 #region TaskFactory.GetTargetScheduler - copied from Samples for Parallel Programming
         /// <summary>Gets the TaskScheduler instance that should be used to schedule tasks.</summary>
@@ -481,7 +485,7 @@ namespace Microsoft.OData.Client
             Debug.Assert(factory != null, "factory != null");
             return factory.Scheduler ?? TaskScheduler.Current;
         }
-        #endregion TaskFactory.GetTargetScheduler - copied from Samples for Parallel Programming
+#endregion TaskFactory.GetTargetScheduler - copied from Samples for Parallel Programming
 
 #region TaskFactory.Iterate - copied from Samples for Parallel Programming
         //// Note that if we would migrate to .NET 4.5 and could get dependency on the "await" keyword, all of this is not needed
@@ -573,7 +577,7 @@ namespace Microsoft.OData.Client
             // Return the representative task to the user
             return trc.Task;
         }
-        #endregion TaskFactory.Iterate - copied from Samples for Parallel Programming
+#endregion TaskFactory.Iterate - copied from Samples for Parallel Programming
 
 #region FollowOnSuccess helpers
         /// <summary>
@@ -636,7 +640,7 @@ namespace Microsoft.OData.Client
                 .IgnoreExceptions();
             return taskCompletionSource.Task;
         }
-        #endregion
+#endregion
 
 #region FollowOnFault helpers
         /// <summary>
@@ -690,7 +694,7 @@ namespace Microsoft.OData.Client
                 .IgnoreExceptions();
             return taskCompletionSource.Task;
         }
-        #endregion
+#endregion
 
 #region FollowOnFaultAndCatchException helpers
         /// <summary>
@@ -766,7 +770,7 @@ namespace Microsoft.OData.Client
                 .IgnoreExceptions();
             return taskCompletionSource.Task;
         }
-        #endregion
+#endregion
 
 #region FollowAlways helpers
         /// <summary>
@@ -847,6 +851,6 @@ namespace Microsoft.OData.Client
                 .IgnoreExceptions();
             return taskCompletionSource.Task;
         }
-        #endregion
+#endregion
     }
 }

@@ -1785,38 +1785,42 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="deltaResourceSet">The resource set to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override async Task EndDeltaResourceSetAsync(ODataDeltaResourceSet deltaResourceSet)
+        protected override Task EndDeltaResourceSetAsync(ODataDeltaResourceSet deltaResourceSet)
         {
             Debug.Assert(deltaResourceSet != null, "deltaResourceSet != null");
 
             if (this.ParentNestedResourceInfo == null)
             {
-                // End the array which holds the entries in the resource set.
-                await this.asynchronousJsonWriter.EndArrayScopeAsync()
-                    .ConfigureAwait(false);
+                return EndDeltaResourceSetInnerAsync();
 
-                // Write custom instance annotations
-                await this.instanceAnnotationWriter.WriteInstanceAnnotationsAsync(
-                    deltaResourceSet.InstanceAnnotations,
-                    this.CurrentDeltaResourceSetScope.InstanceAnnotationWriteTracker).ConfigureAwait(false);
+                async Task EndDeltaResourceSetInnerAsync()
+                {
+                    // End the array which holds the entries in the resource set.
+                    await this.asynchronousJsonWriter.EndArrayScopeAsync()
+                        .ConfigureAwait(false);
 
-                // Write the next link if it's available.
-                await this.WriteResourceSetNextLinkAsync(deltaResourceSet.NextPageLink, /*propertynamne*/ null)
-                    .ConfigureAwait(false);
+                    // Write custom instance annotations
+                    await this.instanceAnnotationWriter.WriteInstanceAnnotationsAsync(
+                        deltaResourceSet.InstanceAnnotations,
+                        this.CurrentDeltaResourceSetScope.InstanceAnnotationWriteTracker).ConfigureAwait(false);
 
-                // Write the delta link if it's available.
-                await this.WriteResourceSetDeltaLinkAsync(deltaResourceSet.DeltaLink)
-                    .ConfigureAwait(false);
+                    // Write the next link if it's available.
+                    await this.WriteResourceSetNextLinkAsync(deltaResourceSet.NextPageLink, /*propertynamne*/ null)
+                        .ConfigureAwait(false);
 
-                // Close the object wrapper.
-                await this.asynchronousJsonWriter.EndObjectScopeAsync()
-                    .ConfigureAwait(false);
+                    // Write the delta link if it's available.
+                    await this.WriteResourceSetDeltaLinkAsync(deltaResourceSet.DeltaLink)
+                        .ConfigureAwait(false);
+
+                    // Close the object wrapper.
+                    await this.asynchronousJsonWriter.EndObjectScopeAsync()
+                        .ConfigureAwait(false);
+                }
             }
             else
             {
                 // End the array which holds the entries in the resource set.
-                await this.asynchronousJsonWriter.EndArrayScopeAsync()
-                    .ConfigureAwait(false);
+                return this.asynchronousJsonWriter.EndArrayScopeAsync();
             }
         }
 
@@ -1977,21 +1981,25 @@ namespace Microsoft.OData.JsonLight
         /// Asynchronously finish writing a stream value.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected sealed override async Task EndBinaryStreamAsync()
+        protected sealed override Task EndBinaryStreamAsync()
         {
             if (this.asynchronousJsonStreamWriter == null)
             {
-                await this.asynchronousJsonWriter.WriteValueAsync(
+                return EndBinaryStreamInnerAsync();
+
+                async Task EndBinaryStreamInnerAsync()
+                {
+                    await this.asynchronousJsonWriter.WriteValueAsync(
                     this.jsonLightOutputContext.BinaryValueStream.ToArray()).ConfigureAwait(false);
-                await this.jsonLightOutputContext.BinaryValueStream.FlushAsync()
-                    .ConfigureAwait(false);
-                this.jsonLightOutputContext.BinaryValueStream.Dispose();
-                this.jsonLightOutputContext.BinaryValueStream = null;
+                    await this.jsonLightOutputContext.BinaryValueStream.FlushAsync()
+                        .ConfigureAwait(false);
+                    this.jsonLightOutputContext.BinaryValueStream.Dispose();
+                    this.jsonLightOutputContext.BinaryValueStream = null;
+                }
             }
             else
             {
-                await this.asynchronousJsonStreamWriter.EndStreamValueScopeAsync()
-                    .ConfigureAwait(false);
+                return this.asynchronousJsonStreamWriter.EndStreamValueScopeAsync();
             }
         }
 
@@ -2038,24 +2046,28 @@ namespace Microsoft.OData.JsonLight
         /// Asynchronously finish writing a text value.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected sealed override async Task EndTextWriterAsync()
+        protected sealed override Task EndTextWriterAsync()
         {
             if (this.asynchronousJsonStreamWriter == null)
             {
                 Debug.Assert(this.jsonLightOutputContext.StringWriter != null,
                     "Calling EndTextWriter with a non-streaming asynchronous JsonWriter and a null StringWriter");
 
-                await this.jsonLightOutputContext.StringWriter.FlushAsync()
+                return EndTextWriterInnerAsync();
+
+                async Task EndTextWriterInnerAsync()
+                {
+                    await this.jsonLightOutputContext.StringWriter.FlushAsync()
                     .ConfigureAwait(false);
-                await this.asynchronousJsonWriter.WriteValueAsync(
-                    this.jsonLightOutputContext.StringWriter.GetStringBuilder().ToString()).ConfigureAwait(false);
-                this.jsonLightOutputContext.StringWriter.Dispose();
-                this.jsonLightOutputContext.StringWriter = null;
+                    await this.asynchronousJsonWriter.WriteValueAsync(
+                        this.jsonLightOutputContext.StringWriter.GetStringBuilder().ToString()).ConfigureAwait(false);
+                    this.jsonLightOutputContext.StringWriter.Dispose();
+                    this.jsonLightOutputContext.StringWriter = null;
+                }
             }
             else
             {
-                await this.asynchronousJsonStreamWriter.EndTextWriterValueScopeAsync()
-                    .ConfigureAwait(false);
+                return this.asynchronousJsonStreamWriter.EndTextWriterValueScopeAsync();
             }
         }
 
@@ -2106,7 +2118,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="nestedResourceInfo">The nested resource info to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override async Task StartNestedResourceInfoWithContentAsync(ODataNestedResourceInfo nestedResourceInfo)
+        protected override Task StartNestedResourceInfoWithContentAsync(ODataNestedResourceInfo nestedResourceInfo)
         {
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
             Debug.Assert(!string.IsNullOrEmpty(nestedResourceInfo.Name),
@@ -2114,31 +2126,38 @@ namespace Microsoft.OData.JsonLight
 
             if (this.writingResponse)
             {
-                // Write @odata.context annotation for navigation property
-                IEdmContainedEntitySet containedEntitySet = this.CurrentScope.NavigationSource as IEdmContainedEntitySet;
-                if (containedEntitySet != null
-                    && this.messageWriterSettings.LibraryCompatibility < ODataLibraryCompatibility.Version7
-                    && this.messageWriterSettings.Version < ODataVersion.V401)
+                return StartNestedResourceInfoWithContentInnerAsync();
+
+                async Task StartNestedResourceInfoWithContentInnerAsync()
                 {
-                    ODataContextUrlInfo info = ODataContextUrlInfo.Create(
-                        this.CurrentScope.NavigationSource,
-                        this.CurrentScope.ResourceType.FullTypeName(),
-                        containedEntitySet.NavigationProperty.Type.TypeKind() != EdmTypeKind.Collection,
-                        this.CurrentScope.ODataUri,
-                        this.messageWriterSettings.Version ?? ODataVersion.V4);
+                    // Write @odata.context annotation for navigation property
+                    IEdmContainedEntitySet containedEntitySet = this.CurrentScope.NavigationSource as IEdmContainedEntitySet;
+                    if (containedEntitySet != null
+                        && this.messageWriterSettings.LibraryCompatibility < ODataLibraryCompatibility.Version7
+                        && this.messageWriterSettings.Version < ODataVersion.V401)
+                    {
+                        ODataContextUrlInfo info = ODataContextUrlInfo.Create(
+                            this.CurrentScope.NavigationSource,
+                            this.CurrentScope.ResourceType.FullTypeName(),
+                            containedEntitySet.NavigationProperty.Type.TypeKind() != EdmTypeKind.Collection,
+                            this.CurrentScope.ODataUri,
+                            this.messageWriterSettings.Version ?? ODataVersion.V4);
 
-                    await this.jsonLightResourceSerializer.WriteNestedResourceInfoContextUrlAsync(nestedResourceInfo, info)
-                        .ConfigureAwait(false);
+                        await this.jsonLightResourceSerializer.WriteNestedResourceInfoContextUrlAsync(nestedResourceInfo, info)
+                            .ConfigureAwait(false);
+                    }
+
+                    // Write the nested resource info metadata first. The rest is written by the content resource or resource set.
+                    await this.jsonLightResourceSerializer.WriteNavigationLinkMetadataAsync(
+                        nestedResourceInfo,
+                        this.DuplicatePropertyNameChecker).ConfigureAwait(false);
                 }
-
-                // Write the nested resource info metadata first. The rest is written by the content resource or resource set.
-                await this.jsonLightResourceSerializer.WriteNavigationLinkMetadataAsync(
-                    nestedResourceInfo,
-                    this.DuplicatePropertyNameChecker).ConfigureAwait(false);
             }
             else
             {
                 this.WriterValidator.ValidateNestedResourceInfoHasCardinality(nestedResourceInfo);
+
+                return TaskUtils.CompletedTask;
             }
         }
 
@@ -2147,31 +2166,38 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="nestedResourceInfo">The nested resource info to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override async Task EndNestedResourceInfoWithContentAsync(ODataNestedResourceInfo nestedResourceInfo)
+        protected override Task EndNestedResourceInfoWithContentAsync(ODataNestedResourceInfo nestedResourceInfo)
         {
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
-
-            JsonLightNestedResourceInfoScope navigationLinkScope = (JsonLightNestedResourceInfoScope)this.CurrentScope;
 
             // If we wrote entity reference links for a collection navigation property but no
             // resource set afterwards, we have to now close the array of links.
             if (!this.writingResponse)
             {
-                if (navigationLinkScope.EntityReferenceLinkWritten && !navigationLinkScope.ResourceSetWritten && nestedResourceInfo.IsCollection.Value)
-                {
-                    await this.asynchronousJsonWriter.EndArrayScopeAsync()
-                        .ConfigureAwait(false);
-                }
+                return EndNestedResourceInfoWithContentInnerAsync();
 
-                // In requests, the nested resource info may have multiple entries in multiple resource sets in it; if we
-                // wrote at least one resource set, close the resulting array here.
-                if (navigationLinkScope.ResourceSetWritten)
+                async Task EndNestedResourceInfoWithContentInnerAsync()
                 {
-                    Debug.Assert(nestedResourceInfo.IsCollection == null || nestedResourceInfo.IsCollection.Value, "nestedResourceInfo.IsCollection.Value");
-                    await this.asynchronousJsonWriter.EndArrayScopeAsync()
-                        .ConfigureAwait(false);
+                    JsonLightNestedResourceInfoScope navigationLinkScope = (JsonLightNestedResourceInfoScope)this.CurrentScope;
+
+                    if (navigationLinkScope.EntityReferenceLinkWritten && !navigationLinkScope.ResourceSetWritten && nestedResourceInfo.IsCollection.Value)
+                    {
+                        await this.asynchronousJsonWriter.EndArrayScopeAsync()
+                            .ConfigureAwait(false);
+                    }
+
+                    // In requests, the nested resource info may have multiple entries in multiple resource sets in it; if we
+                    // wrote at least one resource set, close the resulting array here.
+                    if (navigationLinkScope.ResourceSetWritten)
+                    {
+                        Debug.Assert(nestedResourceInfo.IsCollection == null || nestedResourceInfo.IsCollection.Value, "nestedResourceInfo.IsCollection.Value");
+                        await this.asynchronousJsonWriter.EndArrayScopeAsync()
+                            .ConfigureAwait(false);
+                    }
                 }
             }
+
+            return TaskUtils.CompletedTask;
         }
 
         /// <summary>
@@ -2690,25 +2716,32 @@ namespace Microsoft.OData.JsonLight
         /// <param name="count">The count to write for the resource set.</param>
         /// <param name="propertyName">The name of the expanded nav property or null for a top-level resource set.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteResourceSetCountAsync(long? count, string propertyName)
+        private Task WriteResourceSetCountAsync(long? count, string propertyName)
         {
             if (count.HasValue)
             {
-                if (propertyName == null)
-                {
-                    await this.asynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(
-                        ODataAnnotationNames.ODataCount).ConfigureAwait(false);
-                }
-                else
-                {
-                    await this.asynchronousODataAnnotationWriter.WritePropertyAnnotationNameAsync(
-                        propertyName,
-                        ODataAnnotationNames.ODataCount).ConfigureAwait(false);
-                }
+                return WriteResourceSetCountInnerAsync();
 
-                await this.asynchronousJsonWriter.WriteValueAsync(count.Value)
-                    .ConfigureAwait(false);
+                async Task WriteResourceSetCountInnerAsync()
+                {
+                    if (propertyName == null)
+                    {
+                        await this.asynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(
+                            ODataAnnotationNames.ODataCount).ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        await this.asynchronousODataAnnotationWriter.WritePropertyAnnotationNameAsync(
+                            propertyName,
+                            ODataAnnotationNames.ODataCount).ConfigureAwait(false);
+                    }
+
+                    await this.asynchronousJsonWriter.WriteValueAsync(count.Value)
+                        .ConfigureAwait(false);
+                }
             }
+
+            return TaskUtils.CompletedTask;
         }
 
         /// <summary>
@@ -2717,7 +2750,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="nextPageLink">The nextLink to write, if available.</param>
         /// <param name="propertyName">The name of the expanded nav property or null for a top-level resource set.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteResourceSetNextLinkAsync(Uri nextPageLink, string propertyName)
+        private Task WriteResourceSetNextLinkAsync(Uri nextPageLink, string propertyName)
         {
             bool nextPageWritten = this.State == WriterState.ResourceSet ?
                 this.CurrentResourceSetScope.NextPageLinkWritten :
@@ -2725,30 +2758,37 @@ namespace Microsoft.OData.JsonLight
 
             if (nextPageLink != null && !nextPageWritten)
             {
-                if (propertyName == null)
-                {
-                    await this.asynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(
-                        ODataAnnotationNames.ODataNextLink).ConfigureAwait(false);
-                }
-                else
-                {
-                    await this.asynchronousODataAnnotationWriter.WritePropertyAnnotationNameAsync(
-                        propertyName,
-                        ODataAnnotationNames.ODataNextLink).ConfigureAwait(false);
-                }
+                return WriteResourceSetNextLinkInnerAsync();
 
-                await this.asynchronousJsonWriter.WriteValueAsync(
-                    this.jsonLightResourceSerializer.UriToString(nextPageLink)).ConfigureAwait(false);
+                async Task WriteResourceSetNextLinkInnerAsync()
+                {
+                    if (propertyName == null)
+                    {
+                        await this.asynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(
+                            ODataAnnotationNames.ODataNextLink).ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        await this.asynchronousODataAnnotationWriter.WritePropertyAnnotationNameAsync(
+                            propertyName,
+                            ODataAnnotationNames.ODataNextLink).ConfigureAwait(false);
+                    }
 
-                if (this.State == WriterState.ResourceSet)
-                {
-                    this.CurrentResourceSetScope.NextPageLinkWritten = true;
-                }
-                else
-                {
-                    this.CurrentDeltaResourceSetScope.NextPageLinkWritten = true;
+                    await this.asynchronousJsonWriter.WriteValueAsync(
+                        this.jsonLightResourceSerializer.UriToString(nextPageLink)).ConfigureAwait(false);
+
+                    if (this.State == WriterState.ResourceSet)
+                    {
+                        this.CurrentResourceSetScope.NextPageLinkWritten = true;
+                    }
+                    else
+                    {
+                        this.CurrentDeltaResourceSetScope.NextPageLinkWritten = true;
+                    }
                 }
             }
+
+            return TaskUtils.CompletedTask;
         }
 
         /// <summary>
@@ -2757,11 +2797,11 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="deltaLink">The delta link to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteResourceSetDeltaLinkAsync(Uri deltaLink)
+        private Task WriteResourceSetDeltaLinkAsync(Uri deltaLink)
         {
             if (deltaLink == null)
             {
-                return;
+                return TaskUtils.CompletedTask;
             }
 
             Debug.Assert(this.State == WriterState.ResourceSet || this.State == WriterState.DeltaResourceSet,
@@ -2773,20 +2813,27 @@ namespace Microsoft.OData.JsonLight
 
             if (!deltaLinkWritten)
             {
-                await this.asynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(
-                    ODataAnnotationNames.ODataDeltaLink).ConfigureAwait(false);
-                await this.asynchronousJsonWriter.WriteValueAsync(
-                    this.jsonLightResourceSerializer.UriToString(deltaLink)).ConfigureAwait(false);
+                return WriteResourceSetDeltaLinkInnerAsync();
 
-                if (this.State == WriterState.ResourceSet)
+                async Task WriteResourceSetDeltaLinkInnerAsync()
                 {
-                    this.CurrentResourceSetScope.DeltaLinkWritten = true;
-                }
-                else
-                {
-                    this.CurrentDeltaResourceSetScope.DeltaLinkWritten = true;
+                    await this.asynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(
+                    ODataAnnotationNames.ODataDeltaLink).ConfigureAwait(false);
+                    await this.asynchronousJsonWriter.WriteValueAsync(
+                        this.jsonLightResourceSerializer.UriToString(deltaLink)).ConfigureAwait(false);
+
+                    if (this.State == WriterState.ResourceSet)
+                    {
+                        this.CurrentResourceSetScope.DeltaLinkWritten = true;
+                    }
+                    else
+                    {
+                        this.CurrentDeltaResourceSetScope.DeltaLinkWritten = true;
+                    }
                 }
             }
+
+            return TaskUtils.CompletedTask;
         }
 
         /// <summary>

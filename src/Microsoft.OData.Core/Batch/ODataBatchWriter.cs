@@ -167,11 +167,10 @@ namespace Microsoft.OData
 
         /// <summary>Asynchronously starts a new batch; can be only called once and as first call.</summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public async Task WriteStartBatchAsync()
+        public Task WriteStartBatchAsync()
         {
             this.VerifyCanWriteStartBatch(false);
-            await this.WriteStartBatchImplementationAsync()
-                .ConfigureAwait(false);
+            return this.WriteStartBatchImplementationAsync();
         }
 
         /// <summary>Ends a batch; can only be called after WriteStartBatch has been called and if no other active changeset or operation exist.</summary>
@@ -340,12 +339,16 @@ namespace Microsoft.OData
         /// The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
         /// <param name="dependsOnIds">The prerequisite request ids of this request.</param>
         /// <returns>A task that when completed returns the newly created operation request message.</returns>
-        public async Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageAsync(string method, Uri uri, string contentId,
-            BatchPayloadUriOption payloadUriOption, IList<string> dependsOnIds)
+        public Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageAsync(
+            string method,
+            Uri uri,
+            string contentId,
+            BatchPayloadUriOption payloadUriOption,
+            IList<string> dependsOnIds)
         {
             this.VerifyCanCreateOperationRequestMessage(false, method, uri, contentId);
-            return await this.CreateOperationRequestMessageInternalAsync(
-                method, uri, contentId, payloadUriOption, dependsOnIds).ConfigureAwait(false);
+            return this.CreateOperationRequestMessageInternalAsync(
+                method, uri, contentId, payloadUriOption, dependsOnIds);
         }
 
         /// <summary>Creates a message for writing an operation of a batch response.</summary>
@@ -360,11 +363,10 @@ namespace Microsoft.OData
         /// <summary>Asynchronously creates an <see cref="Microsoft.OData.ODataBatchOperationResponseMessage" /> for writing an operation of a batch response.</summary>
         /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
         /// <returns>A task that when completed returns the newly created operation response message.</returns>
-        public async Task<ODataBatchOperationResponseMessage> CreateOperationResponseMessageAsync(string contentId)
+        public Task<ODataBatchOperationResponseMessage> CreateOperationResponseMessageAsync(string contentId)
         {
             this.VerifyCanCreateOperationResponseMessage(false);
-            return await this.CreateOperationResponseMessageImplementationAsync(contentId)
-                .ConfigureAwait(false);
+            return this.CreateOperationResponseMessageImplementationAsync(contentId);
         }
 
         /// <summary>Flushes the write buffer to the underlying stream.</summary>

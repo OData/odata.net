@@ -59,107 +59,92 @@ namespace Microsoft.OData.Json
         /// <param name="jsonWriter">The <see cref="JsonWriter"/> to write to.</param>
         /// <param name="value">The value to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        internal static async Task WritePrimitiveValueAsync(this IJsonWriterAsync jsonWriter, object value)
+        internal static Task WritePrimitiveValueAsync(this IJsonWriterAsync jsonWriter, object value)
         {
             if (value is bool)
             {
-                await jsonWriter.WriteValueAsync((bool)value).ConfigureAwait(false);
-                return;
+                return jsonWriter.WriteValueAsync((bool)value);
             }
 
             if (value is byte)
             {
-                await jsonWriter.WriteValueAsync((byte)value).ConfigureAwait(false);
-                return;
+                return jsonWriter.WriteValueAsync((byte)value);
             }
 
             if (value is decimal)
             {
-                await jsonWriter.WriteValueAsync((decimal)value).ConfigureAwait(false);
-                return;
+                return jsonWriter.WriteValueAsync((decimal)value);
             }
 
             if (value is double)
             {
-                await jsonWriter.WriteValueAsync((double)value).ConfigureAwait(false);
-                return;
+                return jsonWriter.WriteValueAsync((double)value);
             }
 
-            if (value is Int16)
+            if (value is short)
             {
-                await jsonWriter.WriteValueAsync((Int16)value).ConfigureAwait(false);
-                return;
+                return jsonWriter.WriteValueAsync((short)value);
             }
 
-            if (value is Int32)
+            if (value is int)
             {
-                await jsonWriter.WriteValueAsync((Int32)value).ConfigureAwait(false);
-                return;
+                return jsonWriter.WriteValueAsync((int)value);
             }
 
-            if (value is Int64)
+            if (value is long)
             {
-                await jsonWriter.WriteValueAsync((Int64)value).ConfigureAwait(false);
-                return;
+                return jsonWriter.WriteValueAsync((long)value);
             }
 
             if (value is sbyte)
             {
-                await jsonWriter.WriteValueAsync((sbyte)value).ConfigureAwait(false);
-                return;
+                return jsonWriter.WriteValueAsync((sbyte)value);
             }
 
-            if (value is Single)
+            if (value is float)
             {
-                await jsonWriter.WriteValueAsync((Single)value).ConfigureAwait(false);
-                return;
+                return jsonWriter.WriteValueAsync((float)value);
             }
 
             var str = value as string;
             if (str != null)
             {
-                await jsonWriter.WriteValueAsync(str).ConfigureAwait(false);
-                return;
+                return jsonWriter.WriteValueAsync(str);
             }
 
             byte[] valueAsByteArray = value as byte[];
             if (valueAsByteArray != null)
             {
-                await jsonWriter.WriteValueAsync(valueAsByteArray).ConfigureAwait(false);
-                return;
+                return jsonWriter.WriteValueAsync(valueAsByteArray);
             }
 
             if (value is DateTimeOffset)
             {
-                await jsonWriter.WriteValueAsync((DateTimeOffset)value).ConfigureAwait(false);
-                return;
+                return jsonWriter.WriteValueAsync((DateTimeOffset)value);
             }
 
             if (value is Guid)
             {
-                await jsonWriter.WriteValueAsync((Guid)value).ConfigureAwait(false);
-                return;
+                return jsonWriter.WriteValueAsync((Guid)value);
             }
 
             if (value is TimeSpan)
             {
-                await jsonWriter.WriteValueAsync((TimeSpan)value).ConfigureAwait(false);
-                return;
+                return jsonWriter.WriteValueAsync((TimeSpan)value);
             }
 
             if (value is Date)
             {
-                await jsonWriter.WriteValueAsync((Date)value).ConfigureAwait(false);
-                return;
+                return jsonWriter.WriteValueAsync((Date)value);
             }
 
             if (value is TimeOfDay)
             {
-                await jsonWriter.WriteValueAsync((TimeOfDay)value).ConfigureAwait(false);
-                return;
+                return jsonWriter.WriteValueAsync((TimeOfDay)value);
             }
 
-            throw new ODataException(ODataErrorStrings.ODataJsonWriter_UnsupportedValueType(value.GetType().FullName));
+            return TaskUtils.GetFaultedTask(
+                new ODataException(ODataErrorStrings.ODataJsonWriter_UnsupportedValueType(value.GetType().FullName)));
         }
 
         /// <summary>
@@ -168,62 +153,65 @@ namespace Microsoft.OData.Json
         /// <param name="jsonWriter">The <see cref="JsonWriter"/> to write to.</param>
         /// <param name="odataValue">value to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        internal static async Task WriteODataValueAsync(this IJsonWriterAsync jsonWriter, ODataValue odataValue)
+        internal static Task WriteODataValueAsync(this IJsonWriterAsync jsonWriter, ODataValue odataValue)
         {
             if (odataValue == null || odataValue is ODataNullValue)
             {
-                await jsonWriter.WriteValueAsync((string)null).ConfigureAwait(false);
-                return;
+                return jsonWriter.WriteValueAsync((string)null);
             }
 
             object objectValue = odataValue.FromODataValue();
             if (EdmLibraryExtensions.IsPrimitiveType(objectValue.GetType()))
             {
-                await jsonWriter.WritePrimitiveValueAsync(objectValue).ConfigureAwait(false);
-                return;
+                return jsonWriter.WritePrimitiveValueAsync(objectValue);
             }
 
-            ODataResourceValue resourceValue = odataValue as ODataResourceValue;
-            if (resourceValue != null)
+            if (odataValue is ODataResourceValue resourceValue)
             {
-                await jsonWriter.StartObjectScopeAsync().ConfigureAwait(false);
+                return WriteODataResourceValueAsync();
 
-                foreach (ODataProperty property in resourceValue.Properties)
+                async Task WriteODataResourceValueAsync()
                 {
-                    await jsonWriter.WriteNameAsync(property.Name).ConfigureAwait(false);
-                    await jsonWriter.WriteODataValueAsync(property.ODataValue).ConfigureAwait(false);
-                }
+                    await jsonWriter.StartObjectScopeAsync().ConfigureAwait(false);
 
-                await jsonWriter.EndObjectScopeAsync().ConfigureAwait(false);
-                return;
+                    foreach (ODataProperty property in resourceValue.Properties)
+                    {
+                        await jsonWriter.WriteNameAsync(property.Name).ConfigureAwait(false);
+                        await jsonWriter.WriteODataValueAsync(property.ODataValue).ConfigureAwait(false);
+                    }
+
+                    await jsonWriter.EndObjectScopeAsync().ConfigureAwait(false);
+                }
             }
 
-            ODataCollectionValue collectionValue = odataValue as ODataCollectionValue;
-            if (collectionValue != null)
+            if (odataValue is ODataCollectionValue collectionValue)
             {
-                await jsonWriter.StartArrayScopeAsync().ConfigureAwait(false);
+                return WriteODataCollectionValueAsync();
 
-                foreach (object item in collectionValue.Items)
+                async Task WriteODataCollectionValueAsync()
                 {
-                    // Will not be able to accurately serialize complex objects unless they are ODataValues.
-                    ODataValue collectionItem = item as ODataValue;
-                    if (item != null)
+                    await jsonWriter.StartArrayScopeAsync().ConfigureAwait(false);
+
+                    foreach (object item in collectionValue.Items)
                     {
-                        await jsonWriter.WriteODataValueAsync(collectionItem).ConfigureAwait(false);
+                        // Will not be able to accurately serialize complex objects unless they are ODataValues.
+                        ODataValue collectionItem = item as ODataValue;
+                        if (item != null)
+                        {
+                            await jsonWriter.WriteODataValueAsync(collectionItem).ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            throw new ODataException(ODataErrorStrings.ODataJsonWriter_UnsupportedValueInCollection);
+                        }
                     }
-                    else
-                    {
-                        throw new ODataException(ODataErrorStrings.ODataJsonWriter_UnsupportedValueInCollection);
-                    }
+
+                    await jsonWriter.EndArrayScopeAsync().ConfigureAwait(false);
                 }
-
-                await jsonWriter.EndArrayScopeAsync().ConfigureAwait(false);
-
-                return;
             }
 
-            throw new ODataException(
-                ODataErrorStrings.ODataJsonWriter_UnsupportedValueType(odataValue.GetType().FullName));
+            return TaskUtils.GetFaultedTask(
+                new ODataException(ODataErrorStrings.ODataJsonWriter_UnsupportedValueType(odataValue.GetType().FullName)));
         }
 
         /// <summary>
@@ -252,28 +240,27 @@ namespace Microsoft.OData.Json
         /// <param name="jsonWriter">The <see cref="JsonWriter"/> to write to.</param>
         /// <param name="propertyValue">value to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private static async Task WriteJsonValueAsync(this IJsonWriterAsync jsonWriter, object propertyValue)
+        private static Task WriteJsonValueAsync(this IJsonWriterAsync jsonWriter, object propertyValue)
         {
             if (propertyValue == null)
             {
-                await jsonWriter.WriteValueAsync((string)null).ConfigureAwait(false);
+                return jsonWriter.WriteValueAsync((string)null);
             }
             else if (EdmLibraryExtensions.IsPrimitiveType(propertyValue.GetType()))
             {
-                await jsonWriter.WritePrimitiveValueAsync(propertyValue).ConfigureAwait(false);
+                return jsonWriter.WritePrimitiveValueAsync(propertyValue);
             }
             else
             {
-                IDictionary<string, object> objectValue = propertyValue as IDictionary<string, object>;
-                if (objectValue != null)
+                if (propertyValue is IDictionary<string, object> objectValue)
                 {
-                    await jsonWriter.WriteJsonObjectValueAsync(objectValue, null /*typeName */).ConfigureAwait(false);
+                    return jsonWriter.WriteJsonObjectValueAsync(objectValue, injectPropertyDelegate: null);
                 }
                 else
                 {
                     IEnumerable arrayValue = propertyValue as IEnumerable;
                     Debug.Assert(arrayValue != null, "arrayValue != null");
-                    await jsonWriter.WriteJsonArrayValueAsync(arrayValue).ConfigureAwait(false);
+                    return jsonWriter.WriteJsonArrayValueAsync(arrayValue);
                 }
             }
         }

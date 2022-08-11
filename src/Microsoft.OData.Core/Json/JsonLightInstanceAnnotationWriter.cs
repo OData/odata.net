@@ -266,7 +266,7 @@ namespace Microsoft.OData
         /// <param name="ignoreFilter">Whether to ignore the filter in settings.</param>
         /// <param name="propertyName">The name of the property this instance annotation applies to</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        internal async Task WriteInstanceAnnotationsAsync(
+        internal Task WriteInstanceAnnotationsAsync(
             ICollection<ODataInstanceAnnotation> instanceAnnotations,
             InstanceAnnotationWriteTracker tracker,
             bool ignoreFilter = false,
@@ -279,7 +279,7 @@ namespace Microsoft.OData
 
             if (instanceAnnotations.Count == 0)
             {
-                return;
+                return TaskUtils.CompletedTask;
             }
 
             HashSet<string> instanceAnnotationNames = new HashSet<string>(StringComparer.Ordinal);
@@ -289,19 +289,28 @@ namespace Microsoft.OData
             // but foreach against an IEnumerable does due to boxing
             if (instanceAnnotations is List<ODataInstanceAnnotation> instanceAnnotationsList)
             {
-                foreach (ODataInstanceAnnotation annotation in instanceAnnotationsList)
-                {
-                    await this.WriteAndTrackInstanceAnnotationAsync(annotation, tracker, instanceAnnotationNames, ignoreFilter, propertyName)
-                        .ConfigureAwait(false);
-                }
+                return WriteInstanceAnnotationsListAsync();
 
+                async Task WriteInstanceAnnotationsListAsync()
+                {
+                    foreach (ODataInstanceAnnotation annotation in instanceAnnotationsList)
+                    {
+                        await this.WriteAndTrackInstanceAnnotationAsync(annotation, tracker, instanceAnnotationNames, ignoreFilter, propertyName)
+                            .ConfigureAwait(false);
+                    }
+                }
             }
             else
             {
-                foreach (ODataInstanceAnnotation annotation in instanceAnnotations)
+                return WriteInstanceAnnotationsInnerAsync();
+
+                async Task WriteInstanceAnnotationsInnerAsync()
                 {
-                    await this.WriteAndTrackInstanceAnnotationAsync(annotation, tracker, instanceAnnotationNames, ignoreFilter, propertyName)
-                        .ConfigureAwait(false);
+                    foreach (ODataInstanceAnnotation annotation in instanceAnnotations)
+                    {
+                        await this.WriteAndTrackInstanceAnnotationAsync(annotation, tracker, instanceAnnotationNames, ignoreFilter, propertyName)
+                            .ConfigureAwait(false);
+                    }
                 }
             }
         }
@@ -313,7 +322,7 @@ namespace Microsoft.OData
         /// <param name="instanceAnnotations">Collection of instance annotations to write.</param>
         /// <param name="propertyName">The name of the property this instance annotation applies to</param>
         /// <param name="isUndeclaredProperty">If writing an undeclared property.</param>
-        internal async Task WriteInstanceAnnotationsAsync(
+        internal Task WriteInstanceAnnotationsAsync(
             ICollection<ODataInstanceAnnotation> instanceAnnotations,
             string propertyName = null,
             bool isUndeclaredProperty = false)
@@ -322,13 +331,11 @@ namespace Microsoft.OData
             if (isUndeclaredProperty)
             {
                 // write undeclared property's all annotations
-                await WriteInstanceAnnotationsForUndeclaredPropertyAsync(instanceAnnotations, propertyName)
-                    .ConfigureAwait(false);
+                return WriteInstanceAnnotationsForUndeclaredPropertyAsync(instanceAnnotations, propertyName);
             }
             else
             {
-                await this.WriteInstanceAnnotationsAsync(instanceAnnotations, new InstanceAnnotationWriteTracker(), false, propertyName)
-                        .ConfigureAwait(false);
+                return this.WriteInstanceAnnotationsAsync(instanceAnnotations, new InstanceAnnotationWriteTracker(), false, propertyName);
             }
         }
 
@@ -542,7 +549,7 @@ namespace Microsoft.OData
             }
 
             if (!tracker.IsAnnotationWritten(annotation.Name)
-                        && (!ODataAnnotationNames.IsODataAnnotationName(annotation.Name) || ODataAnnotationNames.IsUnknownODataAnnotationName(annotation.Name)))
+                && (!ODataAnnotationNames.IsODataAnnotationName(annotation.Name) || ODataAnnotationNames.IsUnknownODataAnnotationName(annotation.Name)))
             {
                 await this.WriteInstanceAnnotationAsync(annotation, ignoreFilter, propertyName)
                     .ConfigureAwait(false);

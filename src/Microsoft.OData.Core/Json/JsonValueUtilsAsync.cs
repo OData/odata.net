@@ -381,7 +381,7 @@ namespace Microsoft.OData.Json
         /// <param name="stringEscapeOption">The string escape option.</param>
         /// <param name="buffer">Char buffer to use for streaming data.</param>
         /// <param name="bufferPool">Array pool for renting a buffer.</param>
-        internal static async Task WriteEscapedJsonStringValueAsync(
+        internal static Task WriteEscapedJsonStringValueAsync(
             this TextWriter writer,
             string inputString,
             ODataStringEscapeOption stringEscapeOption,
@@ -394,45 +394,52 @@ namespace Microsoft.OData.Json
             int firstIndex;
             if (!CheckIfStringHasSpecialChars(inputString, stringEscapeOption, out firstIndex))
             {
-                await writer.WriteAsync(inputString).ConfigureAwait(false);
+                // This block is executed majority of the times
+                // Eliding async and await for better performance and memory usage metrics
+                return writer.WriteAsync(inputString);
             }
             else
             {
-                Debug.Assert(firstIndex < inputString.Length, "First index of the special character should be within the string");
-                buffer.Value = BufferUtils.InitializeBufferIfRequired(bufferPool, buffer.Value);
-                int bufferLength = buffer.Value.Length;
-                int bufferIndex = 0;
-                int currentIndex = 0;
+                return WriteEscapedJsonStringValueInnerAsync();
 
-                // Let's copy and flush strings up to the first index of the special char
-                while (currentIndex < firstIndex)
+                async Task WriteEscapedJsonStringValueInnerAsync()
                 {
-                    int substrLength = firstIndex - currentIndex;
+                    Debug.Assert(firstIndex < inputString.Length, "First index of the special character should be within the string");
+                    buffer.Value = BufferUtils.InitializeBufferIfRequired(bufferPool, buffer.Value);
+                    int bufferLength = buffer.Value.Length;
+                    int bufferIndex = 0;
+                    int currentIndex = 0;
 
-                    Debug.Assert(substrLength > 0, "SubStrLength should be greater than 0 always");
-
-                    // If the first index of the special character is larger than the buffer length,
-                    // flush everything to the buffer first and reset the buffer to the next chunk.
-                    // Otherwise copy to the buffer and go on from there.
-                    if (substrLength >= bufferLength)
+                    // Let's copy and flush strings up to the first index of the special char
+                    while (currentIndex < firstIndex)
                     {
-                        inputString.CopyTo(currentIndex, buffer.Value, 0, bufferLength);
-                        await writer.WriteAsync(buffer.Value, 0, bufferLength).ConfigureAwait(false);
-                        currentIndex += bufferLength;
+                        int substrLength = firstIndex - currentIndex;
+
+                        Debug.Assert(substrLength > 0, "SubStrLength should be greater than 0 always");
+
+                        // If the first index of the special character is larger than the buffer length,
+                        // flush everything to the buffer first and reset the buffer to the next chunk.
+                        // Otherwise copy to the buffer and go on from there.
+                        if (substrLength >= bufferLength)
+                        {
+                            inputString.CopyTo(currentIndex, buffer.Value, 0, bufferLength);
+                            await writer.WriteAsync(buffer.Value, 0, bufferLength).ConfigureAwait(false);
+                            currentIndex += bufferLength;
+                        }
+                        else
+                        {
+                            WriteSubstringToBuffer(inputString, ref currentIndex, buffer.Value, ref bufferIndex, substrLength);
+                        }
                     }
-                    else
+
+                    // Write escaped string to buffer
+                    WriteEscapedStringToBuffer(writer, inputString, ref currentIndex, buffer.Value, ref bufferIndex, stringEscapeOption);
+
+                    // write any remaining chars to the writer
+                    if (bufferIndex > 0)
                     {
-                        WriteSubstringToBuffer(inputString, ref currentIndex, buffer.Value, ref bufferIndex, substrLength);
+                        await writer.WriteAsync(buffer.Value, 0, bufferIndex).ConfigureAwait(false);
                     }
-                }
-
-                // Write escaped string to buffer
-                WriteEscapedStringToBuffer(writer, inputString, ref currentIndex, buffer.Value, ref bufferIndex, stringEscapeOption);
-
-                // write any remaining chars to the writer
-                if (bufferIndex > 0)
-                {
-                    await writer.WriteAsync(buffer.Value, 0, bufferIndex).ConfigureAwait(false);
                 }
             }
         }

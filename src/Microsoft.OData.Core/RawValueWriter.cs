@@ -184,15 +184,22 @@ namespace Microsoft.OData
         /// Asynchronously start writing a raw output. This should only be called once.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        internal async Task StartAsync()
+        internal Task StartAsync()
         {
             if (this.settings.HasJsonPaddingFunction())
             {
-                await this.textWriter.WriteAsync(this.settings.JsonPCallback)
+                return StartInnerAsync();
+
+                async Task StartInnerAsync()
+                {
+                    await this.textWriter.WriteAsync(this.settings.JsonPCallback)
                     .ConfigureAwait(false);
-                await this.textWriter.WriteAsync(JsonConstants.StartPaddingFunctionScope)
-                    .ConfigureAwait(false);
+                    await this.textWriter.WriteAsync(JsonConstants.StartPaddingFunctionScope)
+                        .ConfigureAwait(false);
+                }
             }
+
+            return TaskUtils.CompletedTask;
         }
 
         /// <summary>

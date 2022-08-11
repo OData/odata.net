@@ -178,11 +178,10 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="collection">The <see cref="ODataCollectionStart"/> representing the collection.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public sealed override async Task WriteStartAsync(ODataCollectionStart collection)
+        public sealed override Task WriteStartAsync(ODataCollectionStart collection)
         {
             this.VerifyCanWriteStart(false, collection);
-            await this.WriteStartImplementationAsync(collection)
-                .ConfigureAwait(false);
+            return this.WriteStartImplementationAsync(collection);
         }
 
         /// <summary>
@@ -200,11 +199,10 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="item">The collection item to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public sealed override async Task WriteItemAsync(object item)
+        public sealed override Task WriteItemAsync(object item)
         {
             this.VerifyCanWriteItem(false);
-            await this.WriteItemImplementationAsync(item)
-                .ConfigureAwait(false);
+            return this.WriteItemImplementationAsync(item);
         }
 
         /// <summary>
