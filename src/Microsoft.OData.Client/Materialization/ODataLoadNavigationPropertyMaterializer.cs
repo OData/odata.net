@@ -89,6 +89,9 @@ namespace Microsoft.OData.Client.Materialization
 
                 entry.ActualType = this.responseInfo.Model.GetClientTypeAnnotation(this.responseInfo.Model.GetOrCreateEdmType(entity.GetType()));
 
+                // NOTE: This class materializes load property result for complex and complex collection properties too.
+                // However, the materialized value(s) are applied to the property from LoadPropertyResult class.
+                // In the case of complex collection, the collection property is first cleared
                 if (property.IsEntityCollection)
                 {
                     this.EntryValueMaterializationPolicy.ApplyItemsToCollection(
@@ -99,12 +102,11 @@ namespace Microsoft.OData.Client.Materialization
                         this.MaterializeEntryPlan,
                         this.responseInfo.IsContinuation);
                 }
-                else
+                else if (property.EdmProperty.Type.TypeKind() == EdmTypeKind.Entity)
                 {
                     Debug.Assert(this.items.Count <= 1, "Expecting 0 or 1 element.");
                     object target = this.items.Count > 0 ? this.items[0] : null;
 
-                    Debug.Assert(property.EdmProperty.Type.TypeKind() == EdmTypeKind.Entity, "Must be entity typed property if not an entity collection property.");
                     this.EntityTrackingAdapter.MaterializationLog.SetLink(entry, property.PropertyName, target);
 
                     // Singleton entity property
