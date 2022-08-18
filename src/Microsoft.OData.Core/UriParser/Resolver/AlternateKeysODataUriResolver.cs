@@ -10,6 +10,9 @@ namespace Microsoft.OData.UriParser
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.Edm.Vocabularies;
+    using Microsoft.OData.Edm.Vocabularies.Community.V1;
+    using Microsoft.OData.Edm.Vocabularies.V1;
 
     /// <summary>
     /// Implementation for resolving the alternate keys.
@@ -22,12 +25,40 @@ namespace Microsoft.OData.UriParser
         private readonly IEdmModel model;
 
         /// <summary>
+        /// The <see cref="IEdmTerm"/>s that are used within <see cref="model"/> to represent alternate key annotations
+        /// </summary>
+        private readonly IEnumerable<IEdmTerm> alternateKeyTerms;
+
+        /// <summary>
         /// Constructs a AlternateKeysODataUriResolver with the given edmModel to be used for resolving alternate keys
         /// </summary>
         /// <param name="model">The model to be used.</param>
         public AlternateKeysODataUriResolver(IEdmModel model)
+            : this(model, new[] { AlternateKeysVocabularyModel.AlternateKeysTerm, CoreVocabularyModel.AlternateKeysTerm })
         {
+        }
+
+        /// <summary>
+        /// Constructs a AlternateKeysODataUriResolver with the given edmModel to be used for resolving alternate keys
+        /// </summary>
+        /// <param name="model">The model to be used.</param>
+        /// <param name="alternateKeyTerms">The <see cref="IEdmTerm"/>s that are used within <paramref name="model"/> to represent alternate key annotations</param>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="alternateKeyTerms"/> is <see langword="null"/></exception>
+        /// <exception cref="ArgumentException">Thrown if <paramref name="alternateKeyTerms"/> contains any <see langword="null"/> values</exception>
+        public AlternateKeysODataUriResolver(IEdmModel model, IEnumerable<IEdmTerm> alternateKeyTerms)
+        {
+            if (alternateKeyTerms == null)
+            {
+                throw new ArgumentNullException(nameof(alternateKeyTerms));
+            }
+
+            if (alternateKeyTerms.Where(term => term == null).Any())
+            {
+                throw new ArgumentException(Strings.UriParser_NullAlternateKeyTerm(nameof(alternateKeyTerms)));
+            }
+
             this.model = model;
+            this.alternateKeyTerms = alternateKeyTerms;
         }
 
         /// <summary>
@@ -62,7 +93,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>True if resolve succeeded.</returns>
         private bool TryResolveAlternateKeys(IEdmEntityType type, IDictionary<string, string> namedValues, Func<IEdmTypeReference, string, object> convertFunc, out IEnumerable<KeyValuePair<string, object>> convertedPairs)
         {
-            IEnumerable<IDictionary<string, IEdmProperty>> alternateKeys = model.GetAlternateKeysAnnotation(type);
+            IEnumerable<IDictionary<string, IEdmProperty>> alternateKeys = model.GetAlternateKeysAnnotation(type, this.alternateKeyTerms);
             foreach (IDictionary<string, IEdmProperty> keys in alternateKeys)
             {
                 if (TryResolveKeys(type, namedValues, keys, convertFunc, out convertedPairs))

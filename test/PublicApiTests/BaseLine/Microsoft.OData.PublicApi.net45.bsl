@@ -1978,6 +1978,11 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
     [
     ExtensionAttribute(),
     ]
+    public static System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.Edm.IEdmProperty]]]] GetAlternateKeysAnnotation (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmEntityType type, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmTerm]] alternateKeyTerms)
+
+    [
+    ExtensionAttribute(),
+    ]
     public static T GetAnnotationValue (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmElement element)
 
     [
@@ -6621,6 +6626,7 @@ public sealed class Microsoft.OData.UriParser.AllToken : Microsoft.OData.UriPars
 
 public sealed class Microsoft.OData.UriParser.AlternateKeysODataUriResolver : Microsoft.OData.UriParser.ODataUriResolver {
     public AlternateKeysODataUriResolver (Microsoft.OData.Edm.IEdmModel model)
+    public AlternateKeysODataUriResolver (Microsoft.OData.Edm.IEdmModel model, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmTerm]] alternateKeyTerms)
 
     public virtual System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.Object]]]] ResolveKeys (Microsoft.OData.Edm.IEdmEntityType type, System.Collections.Generic.IDictionary`2[[System.String],[System.String]] namedValues, System.Func`3[[Microsoft.OData.Edm.IEdmTypeReference],[System.String],[System.Object]] convertFunc)
 }

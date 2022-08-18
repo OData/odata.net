@@ -11,6 +11,7 @@ using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.OData.Edm.Vocabularies.V1;
 using Microsoft.OData.Edm.Tests.Validation;
 using Microsoft.OData.Edm.Validation;
 using Xunit;
@@ -178,6 +179,24 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         {
             var enumType = new EdmEnumTypeReference(new EdmEnumType("n", "enumtype"), false);
             Assert.Equal(enumType.Definition.FullTypeName(), enumType.FullName());
+        }
+
+        [Fact]
+        public void GetAlternateKeyAnnotationsWithNullTerms()
+        {
+            Assert.Throws<ArgumentNullException>(() => EdmCoreModel.Instance.GetAlternateKeysAnnotation(EdmCoreModelEntityType.Instance, null));
+        }
+
+        [Fact]
+        public void GetAlternateKeyAnnotationsWithNullTerm()
+        {
+            Assert.Throws<ArgumentException>(() => EdmCoreModel.Instance.GetAlternateKeysAnnotation(
+                EdmCoreModelEntityType.Instance, 
+                new IEdmTerm[]
+                {
+                    CoreVocabularyModel.AlternateKeysTerm,
+                    null,
+                }));
         }
 
         #region IEdmType FullName tests

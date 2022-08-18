@@ -840,6 +840,7 @@ UriParser_ExpandCountExceeded=The result of parsing $expand contained at least {
 UriParser_ExpandDepthExceeded=The result of parsing $expand was at least {0} items deep, but the maximum allowed is {1}.
 UriParser_TypeInvalidForSelectExpand=The type '{0}' is not valid for $select or $expand, only structured types are allowed.
 UriParser_ContextHandlerCanNotBeNull=The handler property for context '{0}' should not return null.
+UriParser_NullAlternateKeyTerm=A null term was provided in the '{0}' parameter
 UriParserMetadata_MultipleMatchingPropertiesFound=More than one properties match the name '{0}' were found in type '{1}'.
 UriParserMetadata_MultipleMatchingNavigationSourcesFound=More than one navigation sources match the name '{0}' were found in model.
 UriParserMetadata_MultipleMatchingTypesFound=More than one types match the name '{0}' were found in model.

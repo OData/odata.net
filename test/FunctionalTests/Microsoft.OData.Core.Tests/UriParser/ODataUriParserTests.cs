@@ -12,6 +12,7 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.Community.V1;
+using Microsoft.OData.Edm.Vocabularies.V1;
 using Microsoft.OData.UriParser;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Strings;
@@ -403,6 +404,72 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal(2, pathSegment.Count);
             pathSegment.FirstSegment.ShouldBeEntitySetSegment(HardCodedTestModel.TestModel.FindDeclaredEntitySet("People"));
             pathSegment.LastSegment.ShouldBeKeySegment(new KeyValuePair<string, object>("CoreSN", "1"));
+        }
+
+        [Fact]
+        public void CoreAlternateKeyNotFound()
+        {
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People(CoreSN = \'1\')"))
+            {
+                Resolver = new AlternateKeysODataUriResolver(HardCodedTestModel.TestModel, new[] { AlternateKeysVocabularyModel.AlternateKeysTerm }),
+            };
+            var exception = Assert.Throws<ODataException>(() => parser.ParsePath());
+            Assert.Contains("The key in the request URI is not valid", exception.Message, StringComparison.OrdinalIgnoreCase);
+        }
+
+        [Fact]
+        public void CommunityAlternateKeyNotFound()
+        {
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People(SocialSN = \'1\')"))
+            {
+                Resolver = new AlternateKeysODataUriResolver(HardCodedTestModel.TestModel, new[] { CoreVocabularyModel.AlternateKeysTerm }),
+            };
+            var exception = Assert.Throws<ODataException>(() => parser.ParsePath());
+            Assert.Contains("The key in the request URI is not valid", exception.Message, StringComparison.OrdinalIgnoreCase);
+        }
+
+        [Fact]
+        public void SideBySideAlternateKeys()
+        {
+            var resolver = new AlternateKeysODataUriResolver(HardCodedTestModel.TestModel);
+
+            // check for a community alternate key
+            var communityPath = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People(SocialSN = \'1\')"))
+            {
+                Resolver = resolver,
+            }.ParsePath();
+
+            Assert.Equal(2, communityPath.Count);
+            communityPath.FirstSegment.ShouldBeEntitySetSegment(HardCodedTestModel.TestModel.FindDeclaredEntitySet("People"));
+            communityPath.LastSegment.ShouldBeKeySegment(new KeyValuePair<string, object>("SocialSN", "1"));
+
+            // check for a core alternate key
+            var corePath = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People(CoreSN = \'1\')"))
+            {
+                Resolver = resolver
+            }.ParsePath();
+
+            Assert.Equal(2, corePath.Count);
+            corePath.FirstSegment.ShouldBeEntitySetSegment(HardCodedTestModel.TestModel.FindDeclaredEntitySet("People"));
+            corePath.LastSegment.ShouldBeKeySegment(new KeyValuePair<string, object>("CoreSN", "1"));
+        }
+
+        [Fact]
+        public void AlternateKeyResolverWithNullTerms()
+        {
+            Assert.Throws<ArgumentNullException>(() => new AlternateKeysODataUriResolver(HardCodedTestModel.TestModel, null));
+        }
+
+        [Fact]
+        public void AlternateKeyResolverWithNullTerm()
+        {
+            Assert.Throws<ArgumentException>(() => new AlternateKeysODataUriResolver(
+                HardCodedTestModel.TestModel, 
+                new IEdmTerm[] 
+                {
+                    CoreVocabularyModel.AlternateKeysTerm, 
+                    null,
+                }));
         }
 
         [Fact]
