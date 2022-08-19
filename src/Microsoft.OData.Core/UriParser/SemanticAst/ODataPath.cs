@@ -53,6 +53,26 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Creates a new instance of <see cref="ODataPath"/> by copying segments
+        /// from an existing <see cref="ODataPath"/>.
+        /// </summary>
+        /// <param name="odataPath">The instance to copy segments from.</param>
+        internal ODataPath(ODataPath odataPath)
+        {
+            ExceptionUtils.CheckArgumentNotNull(odataPath, nameof(odataPath));
+            this.segments = new List<ODataPathSegment>(odataPath.segments);
+
+            // This is a hot path. Avoid LINQ Contains()
+            for (int i = 0; i < odataPath.segments.Count; i++)
+            {
+                if (odataPath.segments[i] == null)
+                {
+                    throw Error.ArgumentNull(nameof(odataPath));
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets the first segment in the path. Returns null if the path is empty.
         /// </summary>
         public ODataPathSegment FirstSegment
