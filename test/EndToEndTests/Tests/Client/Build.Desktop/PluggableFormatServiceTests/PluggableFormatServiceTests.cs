@@ -25,7 +25,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
     /// <summary>
     /// Tests for pluggable format service
     /// </summary>
-    public class PluggableFormatQueryTests : ODataWCFServiceTestsBase<PluggableFormatService>
+    public class PluggableFormatQueryTests : ODataWCFServiceTestsBase<PluggableFormatService>, IDisposable
     {
         public PluggableFormatQueryTests()
             : base(ServiceDescriptors.PluggableFormatServiceDescriptor)
@@ -313,5 +313,10 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             return settings;
         }
 #endif
+
+        public override void Dispose()
+        {
+            base.Dispose();
+        }
     }
 }

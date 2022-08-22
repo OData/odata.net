@@ -16,7 +16,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
     /// <summary>
     /// Tests for pluggable format service
     /// </summary>
-    public class PayloadValueConverterTests : ODataWCFServiceTestsBase<PluggableFormatService>
+    public class PayloadValueConverterTests : ODataWCFServiceTestsBase<PluggableFormatService>, IDisposable
     {
         public PayloadValueConverterTests()
             : base(ServiceDescriptors.PayloadValueConverterServiceDescriptor)
@@ -39,6 +39,11 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             Assert.Equal(200, responseMessage.StatusCode);
             var dat = new StreamReader(responseMessage.GetStream()).ReadToEnd();
             Assert.True(dat.Contains("\"value\":\"3-1-4\""));
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
         }
     }
 }

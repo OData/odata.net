@@ -6,15 +6,16 @@
 
 namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
 {
+    using System;
     using System.Linq;
-    using Microsoft.OData.Client;
     using Microsoft.OData;
+    using Microsoft.OData.Client;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;
     using Xunit;
 
-    public class QueryOptionOnCollectionTypePropertyTests : ODataWCFServiceTestsBase<InMemoryEntities>
+    public class QueryOptionOnCollectionTypePropertyTests : ODataWCFServiceTestsBase<InMemoryEntities>, IDisposable
     {
 
         public QueryOptionOnCollectionTypePropertyTests()
@@ -144,5 +145,10 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
         }
 
         #endregion
+
+        public override void Dispose()
+        {
+            base.Dispose();
+        }
     }
 }
