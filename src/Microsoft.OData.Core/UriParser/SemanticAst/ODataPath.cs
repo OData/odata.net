@@ -60,7 +60,11 @@ namespace Microsoft.OData.UriParser
         internal ODataPath(ODataPath odataPath)
         {
             ExceptionUtils.CheckArgumentNotNull(odataPath, nameof(odataPath));
-            this.segments = new List<ODataPathSegment>(odataPath.segments);
+            // We mostly clone the path when we want to add a new segment.
+            // We allocate additional capacity to ensure the new segment will
+            // be added without requiring a resize.
+            this.segments = new List<ODataPathSegment>(odataPath.segments.Count + 1);
+            this.segments.AddRange(odataPath.segments);
 
             // We don't need to check for null segments since
             // the input ODataPath must have already validated the segments
