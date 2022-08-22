@@ -52,13 +52,14 @@ namespace Microsoft.OData.UriParser
                 throw new ArgumentNullException(nameof(alternateKeyTerms));
             }
 
-            if (alternateKeyTerms.Where(term => term == null).Any())
+            this.alternateKeyTerms = alternateKeyTerms.ToList();
+
+            if (this.alternateKeyTerms.Where(term => term == null).Any())
             {
                 throw new ArgumentException(Strings.UriParser_NullAlternateKeyTerm(nameof(alternateKeyTerms)));
             }
 
             this.model = model;
-            this.alternateKeyTerms = alternateKeyTerms;
         }
 
         /// <summary>
