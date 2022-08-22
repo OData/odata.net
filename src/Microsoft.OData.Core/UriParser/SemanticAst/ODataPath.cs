@@ -62,14 +62,8 @@ namespace Microsoft.OData.UriParser
             ExceptionUtils.CheckArgumentNotNull(odataPath, nameof(odataPath));
             this.segments = new List<ODataPathSegment>(odataPath.segments);
 
-            // This is a hot path. Avoid LINQ Contains()
-            for (int i = 0; i < odataPath.segments.Count; i++)
-            {
-                if (odataPath.segments[i] == null)
-                {
-                    throw Error.ArgumentNull(nameof(odataPath));
-                }
-            }
+            // We don't need to check for null segments since
+            // the input ODataPath must have already validated the segments
         }
 
         /// <summary>
