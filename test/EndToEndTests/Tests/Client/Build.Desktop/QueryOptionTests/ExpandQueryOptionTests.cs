@@ -14,7 +14,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
     using Microsoft.Test.OData.Tests.Client.Common;
     using Xunit;
 
-    public class ExpandQueryOptionTests : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>
+    public class ExpandQueryOptionTests : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>, IDisposable
     {
         public ExpandQueryOptionTests()
             : base(ServiceDescriptors.ODataWCFServiceDescriptor)
@@ -151,6 +151,9 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
 
         #endregion
 
-        
+        public override void Dispose()
+        {
+            base.Dispose();
+        }
     }
 }

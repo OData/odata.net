@@ -19,7 +19,7 @@ using Xunit;
 
 namespace Microsoft.Test.OData.Tests.Client.ClientTests
 {
-    public class ClientEntityDescripterTests : ODataWCFServiceTestsBase<InMemoryEntities>
+    public class ClientEntityDescripterTests : ODataWCFServiceTestsBase<InMemoryEntities>, IDisposable
     {
         public ClientEntityDescripterTests()
             : base(ServiceDescriptors.ODataWCFServiceDescriptor)
@@ -346,6 +346,11 @@ namespace Microsoft.Test.OData.Tests.Client.ClientTests
             MethodInfo executeOfTMethod = typeof(DataServiceContext).GetMethod("Execute", new[] { typeof(Uri) }).MakeGenericMethod(clientType);
             var results = executeOfTMethod.Invoke(clientContext, new object[] { uriToExecute });
             return results as IEnumerable;
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
         }
     }
 }
