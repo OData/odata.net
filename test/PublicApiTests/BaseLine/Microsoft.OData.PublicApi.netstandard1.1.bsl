@@ -2499,6 +2499,18 @@ public class Microsoft.OData.Edm.EdmComplexTypeReference : Microsoft.OData.Edm.E
     public EdmComplexTypeReference (Microsoft.OData.Edm.IEdmComplexType complexType, bool isNullable)
 }
 
+public class Microsoft.OData.Edm.EdmContainedEntitySet : Microsoft.OData.Edm.EdmEntitySetBase, IEdmContainedEntitySet, IEdmElement, IEdmEntitySetBase, IEdmNamedElement, IEdmNavigationSource {
+    public EdmContainedEntitySet (Microsoft.OData.Edm.IEdmNavigationSource parentNavigationSource, Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmPathExpression navigationPath)
+
+    Microsoft.OData.Edm.IEdmNavigationProperty NavigationProperty  { public virtual get; }
+    Microsoft.OData.Edm.IEdmNavigationSource ParentNavigationSource  { public virtual get; }
+    Microsoft.OData.Edm.IEdmPathExpression Path  { public virtual get; }
+
+    public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmNavigationPropertyBinding]] FindNavigationPropertyBindings (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty)
+    public virtual Microsoft.OData.Edm.IEdmNavigationSource FindNavigationTarget (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty)
+    public virtual Microsoft.OData.Edm.IEdmNavigationSource FindNavigationTarget (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmPathExpression bindingPath)
+}
+
 public class Microsoft.OData.Edm.EdmCoreModel : Microsoft.OData.Edm.EdmElement, IEdmCoreModelElement, IEdmElement, IEdmModel {
     public static readonly Microsoft.OData.Edm.EdmCoreModel Instance = Microsoft.OData.Edm.EdmCoreModel
 
@@ -6474,17 +6486,21 @@ public class Microsoft.OData.UriParser.NamedFunctionParameterNode : Microsoft.OD
     public virtual T Accept (QueryNodeVisitor`1 visitor)
 }
 
-public class Microsoft.OData.UriParser.ODataExpandPath : Microsoft.OData.UriParser.ODataPath, IEnumerable, IEnumerable`1 {
+public class Microsoft.OData.UriParser.ODataExpandPath : Microsoft.OData.UriParser.ODataPath, IEnumerable, IEnumerable`1, IReadOnlyCollection`1, IReadOnlyList`1 {
     public ODataExpandPath (Microsoft.OData.UriParser.ODataPathSegment[] segments)
     public ODataExpandPath (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.ODataPathSegment]] segments)
 }
 
-public class Microsoft.OData.UriParser.ODataPath : IEnumerable, IEnumerable`1 {
+[
+DefaultMemberAttribute(),
+]
+public class Microsoft.OData.UriParser.ODataPath : IEnumerable, IEnumerable`1, IReadOnlyCollection`1, IReadOnlyList`1 {
     public ODataPath (Microsoft.OData.UriParser.ODataPathSegment[] segments)
     public ODataPath (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.ODataPathSegment]] segments)
 
-    int Count  { public get; }
+    int Count  { public virtual get; }
     Microsoft.OData.UriParser.ODataPathSegment FirstSegment  { public get; }
+    Microsoft.OData.UriParser.ODataPathSegment Item [int i] { public virtual get; }
     Microsoft.OData.UriParser.ODataPathSegment LastSegment  { public get; }
 
     public virtual System.Collections.Generic.IEnumerator`1[[Microsoft.OData.UriParser.ODataPathSegment]] GetEnumerator ()
@@ -6517,7 +6533,7 @@ public class Microsoft.OData.UriParser.ODataQueryOptionParser {
     public System.Nullable`1[[System.Int64]] ParseTop ()
 }
 
-public class Microsoft.OData.UriParser.ODataSelectPath : Microsoft.OData.UriParser.ODataPath, IEnumerable, IEnumerable`1 {
+public class Microsoft.OData.UriParser.ODataSelectPath : Microsoft.OData.UriParser.ODataPath, IEnumerable, IEnumerable`1, IReadOnlyCollection`1, IReadOnlyList`1 {
     public ODataSelectPath (Microsoft.OData.UriParser.ODataPathSegment[] segments)
     public ODataSelectPath (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.ODataPathSegment]] segments)
 }
@@ -7408,7 +7424,7 @@ public sealed class Microsoft.OData.UriParser.SelectExpandClause {
     public SelectExpandClause (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.SelectItem]] selectedItems, bool allSelected)
 
     bool AllSelected  { public get; }
-    System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.SelectItem]] SelectedItems  { public get; }
+    System.Collections.Generic.IReadOnlyList`1[[Microsoft.OData.UriParser.SelectItem]] SelectedItems  { public get; }
 }
 
 public sealed class Microsoft.OData.UriParser.SelectTermToken : Microsoft.OData.UriParser.SelectExpandTermToken {

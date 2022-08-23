@@ -6,21 +6,17 @@
 
 namespace Microsoft.OData.UriParser
 {
-    #region Namespaces
-
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
-    #endregion Namespaces
-
     /// <summary>
     /// A representation of the path portion of an OData URI which is made up of <see cref="ODataPathSegment"/>s.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Justification = "ODataPathCollection just doesn't sound right")]
-    public class ODataPath : IEnumerable<ODataPathSegment>
+    public class ODataPath : IReadOnlyList<ODataPathSegment>
     {
         /// <summary>
         /// The segments that make up this path.
@@ -53,6 +49,14 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Get the number of segments in this path.
+        /// </summary>
+        public int Count
+        {
+            get { return this.segments.Count; }
+        }
+
+        /// <summary>
         /// Gets the first segment in the path. Returns null if the path is empty.
         /// </summary>
         public ODataPathSegment FirstSegment
@@ -73,15 +77,6 @@ namespace Microsoft.OData.UriParser
                 return this.segments.LastOrDefault();
             }
         }
-
-        /// <summary>
-        /// Get the number of segments in this path.
-        /// </summary>
-        public int Count
-        {
-            get { return this.segments.Count; }
-        }
-
         /// <summary>
         /// Get the List of ODataPathSegments.
         /// </summary>
@@ -90,6 +85,18 @@ namespace Microsoft.OData.UriParser
             get { return this.segments; }
         }
 
+        /// <summary>
+        /// Get the segment in the path at the specified index.
+        /// </summary>
+        /// <param name="i">The index.</param>
+        /// <returns>The segment corresponding to the index.</returns>
+        public ODataPathSegment this[int i]
+        {
+            get
+            {
+                return this.segments[i];
+            }
+        }
         /// <summary>
         /// Get the segments enumerator
         /// </summary>
@@ -136,23 +143,6 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Checks if this path is equal to another path.
-        /// </summary>
-        /// <param name="other">The other path to compare it to</param>
-        /// <returns>True if the two paths are equal</returns>
-        /// <exception cref="System.ArgumentNullException">Throws if the input other is null.</exception>
-        internal bool Equals(ODataPath other)
-        {
-            ExceptionUtils.CheckArgumentNotNull(other, "other");
-            if (this.segments.Count != other.segments.Count)
-            {
-                return false;
-            }
-
-            return !this.segments.Where((t, i) => !t.Equals(other.segments[i])).Any();
-        }
-
-        /// <summary>
         /// Add a segment to this path.
         /// </summary>
         /// <param name="newSegment">the segment to add</param>
@@ -170,6 +160,32 @@ namespace Microsoft.OData.UriParser
         internal void AddRange(ODataPath oDataPath)
         {
             this.segments.AddRange(oDataPath.segments);
+        }
+
+        /// <summary>
+        /// Checks if this path is equal to another path.
+        /// </summary>
+        /// <param name="other">The other path to compare it to</param>
+        /// <returns>True if the two paths are equal</returns>
+        /// <exception cref="System.ArgumentNullException">Throws if the input other is null.</exception>
+        internal bool Equals(ODataPath other)
+        {
+            ExceptionUtils.CheckArgumentNotNull(other, "other");
+
+            if (this.segments.Count != other.segments.Count)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < this.segments.Count; i++)
+            {
+                if (!this.segments[i].Equals(other.segments[i]))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

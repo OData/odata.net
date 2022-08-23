@@ -41,19 +41,6 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets the selected properties and operations.
-        /// </summary>
-        /// <remarks>This list includes expanded navigations properties, which may have additional nested selections and expansions.</remarks>
-        public IEnumerable<SelectItem> SelectedItems
-        {
-            get
-            {
-                ////Debug.Assert(!this.usedInternalLegacyConstructor || this.selectedItems != null, "You cannot get the list of selected items until processing is complete.");
-                return new ReadOnlyCollection<SelectItem>(this.selectedItems).AsEnumerable();
-            }
-        }
-
-        /// <summary>
         /// Gets a flag indicating that everything at this level has been selected.
         /// </summary>
         /// <remarks>
@@ -64,6 +51,18 @@ namespace Microsoft.OData.UriParser
             get
             {
                 return this.allSelected.Value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the selected properties and operations.
+        /// </summary>
+        /// <remarks>This list includes expanded navigations properties, which may have additional nested selections and expansions.</remarks>
+        public IReadOnlyList<SelectItem> SelectedItems
+        {
+            get
+            {
+                return new ReadOnlyCollection<SelectItem>(this.selectedItems);
             }
         }
 

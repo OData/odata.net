@@ -124,6 +124,11 @@ Microsoft.OData.Edm.EdmComplexType.SchemaElementKind.get -> Microsoft.OData.Edm.
 Microsoft.OData.Edm.EdmComplexTypeReference
 Microsoft.OData.Edm.EdmComplexTypeReference.EdmComplexTypeReference(Microsoft.OData.Edm.IEdmComplexType complexType, bool isNullable) -> void
 Microsoft.OData.Edm.EdmConstants
+Microsoft.OData.Edm.EdmContainedEntitySet
+Microsoft.OData.Edm.EdmContainedEntitySet.EdmContainedEntitySet(Microsoft.OData.Edm.IEdmNavigationSource parentNavigationSource, Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty) -> void
+Microsoft.OData.Edm.EdmContainedEntitySet.EdmContainedEntitySet(Microsoft.OData.Edm.IEdmNavigationSource parentNavigationSource, Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmPathExpression navigationPath) -> void
+Microsoft.OData.Edm.EdmContainedEntitySet.NavigationProperty.get -> Microsoft.OData.Edm.IEdmNavigationProperty
+Microsoft.OData.Edm.EdmContainedEntitySet.ParentNavigationSource.get -> Microsoft.OData.Edm.IEdmNavigationSource
 Microsoft.OData.Edm.EdmContainerElementKind
 Microsoft.OData.Edm.EdmContainerElementKind.ActionImport = 2 -> Microsoft.OData.Edm.EdmContainerElementKind
 Microsoft.OData.Edm.EdmContainerElementKind.EntitySet = 1 -> Microsoft.OData.Edm.EdmContainerElementKind
@@ -1390,6 +1395,10 @@ override Microsoft.OData.Edm.EdmActionImport.ContainerElementKind.get -> Microso
 override Microsoft.OData.Edm.EdmActionImport.OperationArgumentNullParameterName() -> string
 override Microsoft.OData.Edm.EdmCollectionType.TypeKind.get -> Microsoft.OData.Edm.EdmTypeKind
 override Microsoft.OData.Edm.EdmComplexType.TypeKind.get -> Microsoft.OData.Edm.EdmTypeKind
+override Microsoft.OData.Edm.EdmContainedEntitySet.FindNavigationPropertyBindings(Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmNavigationPropertyBinding>
+override Microsoft.OData.Edm.EdmContainedEntitySet.FindNavigationTarget(Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty) -> Microsoft.OData.Edm.IEdmNavigationSource
+override Microsoft.OData.Edm.EdmContainedEntitySet.FindNavigationTarget(Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmPathExpression bindingPath) -> Microsoft.OData.Edm.IEdmNavigationSource
+override Microsoft.OData.Edm.EdmContainedEntitySet.Path.get -> Microsoft.OData.Edm.IEdmPathExpression
 override Microsoft.OData.Edm.EdmEntityReferenceType.TypeKind.get -> Microsoft.OData.Edm.EdmTypeKind
 override Microsoft.OData.Edm.EdmEntitySet.Path.get -> Microsoft.OData.Edm.IEdmPathExpression
 override Microsoft.OData.Edm.EdmEntitySet.Type.get -> Microsoft.OData.Edm.IEdmType
