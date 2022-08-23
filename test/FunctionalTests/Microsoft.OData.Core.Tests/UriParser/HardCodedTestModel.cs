@@ -1042,6 +1042,20 @@ namespace Microsoft.OData.Tests.UriParser
         <NavigationProperty Name=""MyContainedDog"" Type=""Fully.Qualified.Namespace.Dog"" ContainsTarget=""true"" />
         <NavigationProperty Name=""MyContainedChimeras"" Type=""Collection(Fully.Qualified.Namespace.Chimera)"" ContainsTarget=""true"" />
         <NavigationProperty Name=""MyPet2Set"" Type=""Collection(Fully.Qualified.Namespace.Pet2)"" />
+        <Annotation Term=""Org.OData.Core.V1.AlternateKeys"">
+          <Collection>
+            <Record Type=""Org.OData.Core.V1.AlternateKey"">
+              <PropertyValue Property=""Key"">
+                <Collection>
+                  <Record Type=""Org.OData.Core.V1.PropertyRef"">
+                    <PropertyValue Property=""Alias"" String=""CoreSN"" />
+                    <PropertyValue Property=""Name"" PropertyPath=""SSN"" />
+                  </Record>
+                </Collection>
+              </PropertyValue>
+            </Record>
+          </Collection>
+        </Annotation>
         <Annotation Term=""OData.Community.Keys.V1.AlternateKeys"">
           <Collection>
             <Record Type=""OData.Community.Keys.V1.AlternateKey"">
@@ -1070,20 +1084,6 @@ namespace Microsoft.OData.Tests.UriParser
             </Record>
           </Collection>
         </Annotation>
-        <Annotation Term=""Org.OData.Core.V1.AlternateKeys"">
-          <Collection>
-            <Record Type=""Org.OData.Core.V1.AlternateKey"">
-              <PropertyValue Property=""Key"">
-                <Collection>
-                  <Record Type=""Org.OData.Core.V1.PropertyRef"">
-                    <PropertyValue Property=""Alias"" String=""CoreSN"" />
-                    <PropertyValue Property=""Name"" PropertyPath=""SSN"" />
-                  </Record>
-                </Collection>
-              </PropertyValue>
-            </Record>
-          </Collection>
-        </Annotation>
       </EntityType>
       <EntityType Name=""Employee"" BaseType=""Fully.Qualified.Namespace.Person"">
         <Property Name=""WorkEmail"" Type=""Edm.String"" />
@@ -1092,6 +1092,20 @@ namespace Microsoft.OData.Tests.UriParser
         <NavigationProperty Name=""PaintingsInOffice"" Type=""Collection(Fully.Qualified.Namespace.Painting)"" />
         <NavigationProperty Name=""Manager"" Type=""Fully.Qualified.Namespace.Manager"" />
         <NavigationProperty Name=""OfficeDog"" Type=""Fully.Qualified.Namespace.Dog"" Nullable=""false"" Partner=""EmployeeOwner"" />
+        <Annotation Term=""Org.OData.Core.V1.AlternateKeys"">
+          <Collection>
+            <Record Type=""Org.OData.Core.V1.AlternateKey"">
+              <PropertyValue Property=""Key"">
+                <Collection>
+                  <Record Type=""Org.OData.Core.V1.PropertyRef"">
+                    <PropertyValue Property=""Alias"" String=""CoreWorkId"" />
+                    <PropertyValue Property=""Name"" PropertyPath=""WorkID"" />
+                  </Record>
+                </Collection>
+              </PropertyValue>
+            </Record>
+          </Collection>
+        </Annotation>
       </EntityType>
       <EntityType Name=""Manager"" BaseType=""Fully.Qualified.Namespace.Employee"">
         <Property Name=""NumberOfReports"" Type=""Edm.Int32"" />

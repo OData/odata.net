@@ -429,6 +429,39 @@ namespace Microsoft.OData.Tests.UriParser
         }
 
         [Fact]
+        public void AlternateKeyOnDerivedType()
+        {
+            var resolver = new AlternateKeysODataUriResolver(HardCodedTestModel.TestModel);
+
+            // alternate key defined on derived type
+            var employeeWorkIdPath = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People/Fully.Qualified.Namespace.Employee(CoreWorkId = 1)"))
+            {
+                Resolver = resolver
+            }.ParsePath();
+
+            Assert.Equal(3, employeeWorkIdPath.Count);
+            employeeWorkIdPath.LastSegment.ShouldBeKeySegment(new KeyValuePair<string, object>("CoreWorkId", 1));
+
+            // community alternate key on base type
+            var employeeCommunitySocialPath = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People/Fully.Qualified.Namespace.Employee(SocialSN = \'1\')"))
+            {
+                Resolver = resolver
+            }.ParsePath();
+
+            Assert.Equal(3, employeeCommunitySocialPath.Count);
+            employeeCommunitySocialPath.LastSegment.ShouldBeKeySegment(new KeyValuePair<string, object>("SocialSN", "1"));
+
+            // core alternate key on base type
+            var employeeCoreSocialPath = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People/Fully.Qualified.Namespace.Employee(CoreSN = \'1\')"))
+            {
+                Resolver = resolver
+            }.ParsePath();
+
+            Assert.Equal(3, employeeCoreSocialPath.Count);
+            employeeCoreSocialPath.LastSegment.ShouldBeKeySegment(new KeyValuePair<string, object>("CoreSN", "1"));
+        }
+
+        [Fact]
         public void SideBySideAlternateKeys()
         {
             var resolver = new AlternateKeysODataUriResolver(HardCodedTestModel.TestModel);
