@@ -81,7 +81,7 @@
     <Compile Include="Tests\Materialization\CollectionValueMaterializationPolicyTests.cs" />
     <Compile Include="Tests\Materialization\EntryValueMaterializationPolicyUnitTests.cs" />
     <Compile Include="Tests\Materialization\CamelCasedTypeMaterializationTests.cs" />
-    <Compile Include="Tests\LoadPropertyTests.cs" />
+    <Compile Include="Tests\Materialization\LoadPropertyTests.cs" />
     <Compile Include="Tests\Materialization\ODataMaterializerTests.cs" />
     <Compile Include="Tests\Materialization\ODataMaterializerTestsProxy.cs" />
     <Compile Include="Tests\Materialization\PrimitiveValueMaterializationPolicyTests.cs" />
