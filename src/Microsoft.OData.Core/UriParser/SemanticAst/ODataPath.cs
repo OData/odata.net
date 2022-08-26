@@ -85,7 +85,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Get the List of ODataPathSegments.
         /// </summary>
-        internal IList<ODataPathSegment> Segments
+        internal IReadOnlyList<ODataPathSegment> Segments
         {
             get { return this.segments; }
         }
