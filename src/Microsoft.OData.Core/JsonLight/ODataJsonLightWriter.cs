@@ -1791,9 +1791,9 @@ namespace Microsoft.OData.JsonLight
 
             if (this.ParentNestedResourceInfo == null)
             {
-                return EndDeltaResourceSetInnerAsync();
+                return EndDeltaResourceSetInnerAsync(deltaResourceSet);
 
-                async Task EndDeltaResourceSetInnerAsync()
+                async Task EndDeltaResourceSetInnerAsync(ODataDeltaResourceSet innerDeltaResourceSet)
                 {
                     // End the array which holds the entries in the resource set.
                     await this.asynchronousJsonWriter.EndArrayScopeAsync()
@@ -1801,15 +1801,15 @@ namespace Microsoft.OData.JsonLight
 
                     // Write custom instance annotations
                     await this.instanceAnnotationWriter.WriteInstanceAnnotationsAsync(
-                        deltaResourceSet.InstanceAnnotations,
+                        innerDeltaResourceSet.InstanceAnnotations,
                         this.CurrentDeltaResourceSetScope.InstanceAnnotationWriteTracker).ConfigureAwait(false);
 
                     // Write the next link if it's available.
-                    await this.WriteResourceSetNextLinkAsync(deltaResourceSet.NextPageLink, /*propertynamne*/ null)
+                    await this.WriteResourceSetNextLinkAsync(innerDeltaResourceSet.NextPageLink, /*propertynamne*/ null)
                         .ConfigureAwait(false);
 
                     // Write the delta link if it's available.
-                    await this.WriteResourceSetDeltaLinkAsync(deltaResourceSet.DeltaLink)
+                    await this.WriteResourceSetDeltaLinkAsync(innerDeltaResourceSet.DeltaLink)
                         .ConfigureAwait(false);
 
                     // Close the object wrapper.
@@ -2126,9 +2126,9 @@ namespace Microsoft.OData.JsonLight
 
             if (this.writingResponse)
             {
-                return StartNestedResourceInfoWithContentInnerAsync();
+                return StartNestedResourceInfoWithContentInnerAsync(nestedResourceInfo);
 
-                async Task StartNestedResourceInfoWithContentInnerAsync()
+                async Task StartNestedResourceInfoWithContentInnerAsync(ODataNestedResourceInfo innerNestedResourceInfo)
                 {
                     // Write @odata.context annotation for navigation property
                     IEdmContainedEntitySet containedEntitySet = this.CurrentScope.NavigationSource as IEdmContainedEntitySet;
@@ -2143,13 +2143,13 @@ namespace Microsoft.OData.JsonLight
                             this.CurrentScope.ODataUri,
                             this.messageWriterSettings.Version ?? ODataVersion.V4);
 
-                        await this.jsonLightResourceSerializer.WriteNestedResourceInfoContextUrlAsync(nestedResourceInfo, info)
+                        await this.jsonLightResourceSerializer.WriteNestedResourceInfoContextUrlAsync(innerNestedResourceInfo, info)
                             .ConfigureAwait(false);
                     }
 
                     // Write the nested resource info metadata first. The rest is written by the content resource or resource set.
                     await this.jsonLightResourceSerializer.WriteNavigationLinkMetadataAsync(
-                        nestedResourceInfo,
+                        innerNestedResourceInfo,
                         this.DuplicatePropertyNameChecker).ConfigureAwait(false);
                 }
             }
@@ -2174,13 +2174,13 @@ namespace Microsoft.OData.JsonLight
             // resource set afterwards, we have to now close the array of links.
             if (!this.writingResponse)
             {
-                return EndNestedResourceInfoWithContentInnerAsync();
+                return EndNestedResourceInfoWithContentInnerAsync(nestedResourceInfo);
 
-                async Task EndNestedResourceInfoWithContentInnerAsync()
+                async Task EndNestedResourceInfoWithContentInnerAsync(ODataNestedResourceInfo innerNestedResourceInfo)
                 {
                     JsonLightNestedResourceInfoScope navigationLinkScope = (JsonLightNestedResourceInfoScope)this.CurrentScope;
 
-                    if (navigationLinkScope.EntityReferenceLinkWritten && !navigationLinkScope.ResourceSetWritten && nestedResourceInfo.IsCollection.Value)
+                    if (navigationLinkScope.EntityReferenceLinkWritten && !navigationLinkScope.ResourceSetWritten && innerNestedResourceInfo.IsCollection.Value)
                     {
                         await this.asynchronousJsonWriter.EndArrayScopeAsync()
                             .ConfigureAwait(false);
@@ -2190,7 +2190,7 @@ namespace Microsoft.OData.JsonLight
                     // wrote at least one resource set, close the resulting array here.
                     if (navigationLinkScope.ResourceSetWritten)
                     {
-                        Debug.Assert(nestedResourceInfo.IsCollection == null || nestedResourceInfo.IsCollection.Value, "nestedResourceInfo.IsCollection.Value");
+                        Debug.Assert(innerNestedResourceInfo.IsCollection == null || innerNestedResourceInfo.IsCollection.Value, "nestedResourceInfo.IsCollection.Value");
                         await this.asynchronousJsonWriter.EndArrayScopeAsync()
                             .ConfigureAwait(false);
                     }
@@ -2720,11 +2720,11 @@ namespace Microsoft.OData.JsonLight
         {
             if (count.HasValue)
             {
-                return WriteResourceSetCountInnerAsync();
+                return WriteResourceSetCountInnerAsync(count.Value, propertyName);
 
-                async Task WriteResourceSetCountInnerAsync()
+                async Task WriteResourceSetCountInnerAsync(long innerCount, string innerPropertyName)
                 {
-                    if (propertyName == null)
+                    if (innerPropertyName == null)
                     {
                         await this.asynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(
                             ODataAnnotationNames.ODataCount).ConfigureAwait(false);
@@ -2732,11 +2732,11 @@ namespace Microsoft.OData.JsonLight
                     else
                     {
                         await this.asynchronousODataAnnotationWriter.WritePropertyAnnotationNameAsync(
-                            propertyName,
+                            innerPropertyName,
                             ODataAnnotationNames.ODataCount).ConfigureAwait(false);
                     }
 
-                    await this.asynchronousJsonWriter.WriteValueAsync(count.Value)
+                    await this.asynchronousJsonWriter.WriteValueAsync(innerCount)
                         .ConfigureAwait(false);
                 }
             }
@@ -2758,11 +2758,11 @@ namespace Microsoft.OData.JsonLight
 
             if (nextPageLink != null && !nextPageWritten)
             {
-                return WriteResourceSetNextLinkInnerAsync();
+                return WriteResourceSetNextLinkInnerAsync(nextPageLink, propertyName);
 
-                async Task WriteResourceSetNextLinkInnerAsync()
+                async Task WriteResourceSetNextLinkInnerAsync(Uri innerNextPageLink, string innerPropertyName)
                 {
-                    if (propertyName == null)
+                    if (innerPropertyName == null)
                     {
                         await this.asynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(
                             ODataAnnotationNames.ODataNextLink).ConfigureAwait(false);
@@ -2770,12 +2770,12 @@ namespace Microsoft.OData.JsonLight
                     else
                     {
                         await this.asynchronousODataAnnotationWriter.WritePropertyAnnotationNameAsync(
-                            propertyName,
+                            innerPropertyName,
                             ODataAnnotationNames.ODataNextLink).ConfigureAwait(false);
                     }
 
                     await this.asynchronousJsonWriter.WriteValueAsync(
-                        this.jsonLightResourceSerializer.UriToString(nextPageLink)).ConfigureAwait(false);
+                        this.jsonLightResourceSerializer.UriToString(innerNextPageLink)).ConfigureAwait(false);
 
                     if (this.State == WriterState.ResourceSet)
                     {
@@ -2813,14 +2813,14 @@ namespace Microsoft.OData.JsonLight
 
             if (!deltaLinkWritten)
             {
-                return WriteResourceSetDeltaLinkInnerAsync();
+                return WriteResourceSetDeltaLinkInnerAsync(deltaLink);
 
-                async Task WriteResourceSetDeltaLinkInnerAsync()
+                async Task WriteResourceSetDeltaLinkInnerAsync(Uri innerDeltaLink)
                 {
                     await this.asynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(
-                    ODataAnnotationNames.ODataDeltaLink).ConfigureAwait(false);
+                        ODataAnnotationNames.ODataDeltaLink).ConfigureAwait(false);
                     await this.asynchronousJsonWriter.WriteValueAsync(
-                        this.jsonLightResourceSerializer.UriToString(deltaLink)).ConfigureAwait(false);
+                        this.jsonLightResourceSerializer.UriToString(innerDeltaLink)).ConfigureAwait(false);
 
                     if (this.State == WriterState.ResourceSet)
                     {

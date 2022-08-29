@@ -177,12 +177,12 @@ namespace Microsoft.OData.Json
 
             if (settings.HasJsonPaddingFunction())
             {
-                return StartJsonPaddingIfRequiredInnerAsync();
+                return StartJsonPaddingIfRequiredInnerAsync(jsonWriter, settings);
 
-                async Task StartJsonPaddingIfRequiredInnerAsync()
+                async Task StartJsonPaddingIfRequiredInnerAsync(IJsonWriterAsync innerJsonWriter, ODataMessageWriterSettings innerSettings)
                 {
-                    await jsonWriter.WritePaddingFunctionNameAsync(settings.JsonPCallback).ConfigureAwait(false);
-                    await jsonWriter.StartPaddingFunctionScopeAsync().ConfigureAwait(false);
+                    await innerJsonWriter.WritePaddingFunctionNameAsync(innerSettings.JsonPCallback).ConfigureAwait(false);
+                    await innerJsonWriter.StartPaddingFunctionScopeAsync().ConfigureAwait(false);
                 }
             }
 

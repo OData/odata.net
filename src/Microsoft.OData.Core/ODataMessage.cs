@@ -194,17 +194,17 @@ namespace Microsoft.OData
                 }
             }
 
-            return GetMessageStreamAsync();
+            return GetMessageStreamAsync(streamFuncAsync, isRequest);
 
-            async Task<Stream> GetMessageStreamAsync()
+            async Task<Stream> GetMessageStreamAsync(Func<Task<Stream>> innerStreamFuncAsync, bool innerIsRequest)
             {
-                Task<Stream> messageStreamTask = streamFuncAsync();
-                ValidateMessageStreamTask(messageStreamTask, isRequest);
+                Task<Stream> messageStreamTask = innerStreamFuncAsync();
+                ValidateMessageStreamTask(messageStreamTask, innerIsRequest);
 
                 // Wrap it in a non-disposing stream if requested
                 Stream messageStream = await messageStreamTask
                     .ConfigureAwait(false);
-                ValidateMessageStream(messageStream, isRequest);
+                ValidateMessageStream(messageStream, innerIsRequest);
 
                 // When reading, wrap the stream in a byte counting stream if a max message size was specified.
                 // When requested, wrap the stream in a non-disposing stream.

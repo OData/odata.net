@@ -1283,15 +1283,16 @@ namespace Microsoft.OData
             // Set the content type header here since all headers have to be set before getting the stream
             this.SetOrVerifyHeaders(payloadKind);
             // Create the output context
-            return WriteToOutputInnerAsync();
-            async Task WriteToOutputInnerAsync()
+            return WriteToOutputInnerAsync(writeAsyncAction);
+
+            async Task WriteToOutputInnerAsync(Func<ODataOutputContext, Task> innerWriteAsyncAction)
             {
                 Stream messageStream = await this.message.GetStreamAsync()
                     .ConfigureAwait(false);
                 this.outputContext = await this.format.CreateOutputContextAsync(
                         this.GetOrCreateMessageInfo(messageStream, true),
                         this.settings).ConfigureAwait(false);
-                await writeAsyncAction(this.outputContext).ConfigureAwait(false);
+                await innerWriteAsyncAction(this.outputContext).ConfigureAwait(false);
             }
         }
         /// <summary>
@@ -1306,15 +1307,16 @@ namespace Microsoft.OData
             // Set the content type header here since all headers have to be set before getting the stream
             this.SetOrVerifyHeaders(payloadKind);
             // Create the output context
-            return WriteToOutputInnerAsync();
-            async Task<TResult> WriteToOutputInnerAsync()
+            return WriteToOutputInnerAsync(writeFunc);
+
+            async Task<TResult> WriteToOutputInnerAsync(Func<ODataOutputContext, Task<TResult>> innerWriteFunc)
             {
                 Stream messageStream = await this.message.GetStreamAsync()
                     .ConfigureAwait(false);
                 this.outputContext = await this.format.CreateOutputContextAsync(
                     this.GetOrCreateMessageInfo(messageStream, true),
                     this.settings).ConfigureAwait(false);
-                return await writeFunc(this.outputContext).ConfigureAwait(false);
+                return await innerWriteFunc(this.outputContext).ConfigureAwait(false);
             }
         }
     }

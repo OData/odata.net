@@ -168,13 +168,13 @@ namespace Microsoft.OData.Json
 
             if (odataValue is ODataResourceValue resourceValue)
             {
-                return WriteODataResourceValueAsync();
+                return WriteODataResourceValueAsync(resourceValue);
 
-                async Task WriteODataResourceValueAsync()
+                async Task WriteODataResourceValueAsync(ODataResourceValue innerResourceValue)
                 {
                     await jsonWriter.StartObjectScopeAsync().ConfigureAwait(false);
 
-                    foreach (ODataProperty property in resourceValue.Properties)
+                    foreach (ODataProperty property in innerResourceValue.Properties)
                     {
                         await jsonWriter.WriteNameAsync(property.Name).ConfigureAwait(false);
                         await jsonWriter.WriteODataValueAsync(property.ODataValue).ConfigureAwait(false);
@@ -186,9 +186,9 @@ namespace Microsoft.OData.Json
 
             if (odataValue is ODataCollectionValue collectionValue)
             {
-                return WriteODataCollectionValueAsync();
+                return WriteODataCollectionValueAsync(collectionValue);
 
-                async Task WriteODataCollectionValueAsync()
+                async Task WriteODataCollectionValueAsync(ODataCollectionValue innerCollectionValue)
                 {
                     await jsonWriter.StartArrayScopeAsync().ConfigureAwait(false);
 

@@ -289,27 +289,45 @@ namespace Microsoft.OData
             // but foreach against an IEnumerable does due to boxing
             if (instanceAnnotations is List<ODataInstanceAnnotation> instanceAnnotationsList)
             {
-                return WriteInstanceAnnotationsListAsync();
+                return WriteInstanceAnnotationsListAsync(instanceAnnotationsList, tracker, instanceAnnotationNames, ignoreFilter, propertyName);
 
-                async Task WriteInstanceAnnotationsListAsync()
+                async Task WriteInstanceAnnotationsListAsync(
+                    List<ODataInstanceAnnotation> innerInstanceAnnotationsList,
+                    InstanceAnnotationWriteTracker innerInstanceAnnotationWriteTracker,
+                    HashSet<string> innerInstanceAnnotationNames,
+                    bool innerIgnoreFilter,
+                    string innerPropertyName)
                 {
-                    foreach (ODataInstanceAnnotation annotation in instanceAnnotationsList)
+                    foreach (ODataInstanceAnnotation annotation in innerInstanceAnnotationsList)
                     {
-                        await this.WriteAndTrackInstanceAnnotationAsync(annotation, tracker, instanceAnnotationNames, ignoreFilter, propertyName)
-                            .ConfigureAwait(false);
+                        await this.WriteAndTrackInstanceAnnotationAsync(
+                            annotation,
+                            innerInstanceAnnotationWriteTracker,
+                            innerInstanceAnnotationNames,
+                            innerIgnoreFilter,
+                            innerPropertyName).ConfigureAwait(false);
                     }
                 }
             }
             else
             {
-                return WriteInstanceAnnotationsInnerAsync();
+                return WriteInstanceAnnotationsInnerAsync(instanceAnnotations, tracker, instanceAnnotationNames, ignoreFilter, propertyName);
 
-                async Task WriteInstanceAnnotationsInnerAsync()
+                async Task WriteInstanceAnnotationsInnerAsync(
+                    ICollection<ODataInstanceAnnotation> innerInstanceAnnotations,
+                    InstanceAnnotationWriteTracker innerInstanceAnnotationWriteTracker,
+                    HashSet<string> innerInstanceAnnotationNames,
+                    bool innerIgnoreFilter,
+                    string innerPropertyName)
                 {
-                    foreach (ODataInstanceAnnotation annotation in instanceAnnotations)
+                    foreach (ODataInstanceAnnotation annotation in innerInstanceAnnotations)
                     {
-                        await this.WriteAndTrackInstanceAnnotationAsync(annotation, tracker, instanceAnnotationNames, ignoreFilter, propertyName)
-                            .ConfigureAwait(false);
+                        await this.WriteAndTrackInstanceAnnotationAsync(
+                            annotation,
+                            innerInstanceAnnotationWriteTracker,
+                            innerInstanceAnnotationNames,
+                            innerIgnoreFilter,
+                            innerPropertyName).ConfigureAwait(false);
                     }
                 }
             }
