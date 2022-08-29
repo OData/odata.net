@@ -219,6 +219,13 @@ namespace Microsoft.OData.UriParser
                 EdmCoreModel.Instance.GetString(true));
             functions.Add("contains", new FunctionSignatureWithReturnType[] { signature });
 
+            // bool matchesPattern(string, string)
+            signature = new FunctionSignatureWithReturnType(
+                EdmCoreModel.Instance.GetBoolean(false),
+                EdmCoreModel.Instance.GetString(true),
+                EdmCoreModel.Instance.GetString(true));
+            functions.Add("matchesPattern", new FunctionSignatureWithReturnType[] { signature });
+
             // string concat(string, string)
             signature = new FunctionSignatureWithReturnType(
                 EdmCoreModel.Instance.GetString(true),
