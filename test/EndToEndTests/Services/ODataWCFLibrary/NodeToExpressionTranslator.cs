@@ -12,6 +12,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
     using System.Diagnostics;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Text.RegularExpressions;
     using System.Reflection;
     using Microsoft.OData;
     using Microsoft.OData.UriParser;
@@ -566,6 +567,12 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                     var instanceOfContains = argumentNodes.ElementAt(0).Accept(this);
                     var argumentOfContains = argumentNodes.ElementAt(1).Accept(this);
                     return Expression.Call(instanceOfContains, methodInfoOfContains, argumentOfContains);
+
+                case "matchesPattern":
+                    var methodInfoOfIsMatch = typeof(Regex).GetMethod("IsMatch", BindingFlags.Public | BindingFlags.Static);
+                    var argument1OfIsMatch = argumentNodes.ElementAt(0).Accept(this);
+                    var argument2OfIsMatch = argumentNodes.ElementAt(1).Accept(this);
+                    return Expression.Call(methodInfoOfIsMatch, argument1OfIsMatch, argument2OfIsMatch);
 
                 case "endswith":
                     var methodInfoOfEndsWith = typeof(string).GetMethod("EndsWith", new Type[] { typeof(string) });

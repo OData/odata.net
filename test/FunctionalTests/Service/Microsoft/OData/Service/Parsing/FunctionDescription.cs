@@ -11,6 +11,7 @@ namespace Microsoft.OData.Service.Parsing
     using System.Diagnostics;
     using System.Linq.Expressions;
     using System.Reflection;
+    using System.Text.RegularExpressions;
     using Microsoft.OData.Service.Providers;
     using Microsoft.Spatial;
 
@@ -251,6 +252,12 @@ namespace Microsoft.OData.Service.Parsing
                 new FunctionDescription("Contains", new Type[] { typeof(string), typeof(string) }, Contains)
             };
             result.Add("contains", signatures);
+
+            signatures = new FunctionDescription[]
+            {
+                CreateFunctionDescription(typeof(Regex), false /* instance */, true /* method */, "IsMatch", typeof(string), typeof(string))
+            };
+            result.Add("matchesPattern", signatures);
 
             signatures = new FunctionDescription[]
             {

@@ -457,6 +457,7 @@ namespace AstoriaUnitTests.Tests
                     "startswith('abc', 'ab')",
                     "not startswith('abc', 'aab')",
                     "contains('abc','b')",
+                    "matchesPattern('abc','[a-z]b')",
                     "indexof('abc', 'b') ge 1",
                     "replace('foo','o','g') eq 'fgg'",
                     "substring('123', 1) eq '23'",
@@ -474,6 +475,7 @@ namespace AstoriaUnitTests.Tests
                     "startswith(" + customerNameProperty + ", 'C')",
                     "endswith(concat(" + customerNameProperty + ", 'b'), 'b')",
                     "contains(" + customerNameProperty + ",'C')",
+                    "matchesPattern(" + customerNameProperty + ",'^C')",
                     "trim(" + customerNameProperty + ") eq substring(" + customerNameProperty + ", 0)",
 
                     // DateTime functions.
