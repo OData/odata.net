@@ -11,10 +11,21 @@ using Microsoft.OData.UriParser;
 
 namespace Microsoft.OData
 {
+    /// <summary>
+    /// A lightweight version of <see cref="ODataUri"/> that is
+    /// used by the writer to efficiently create a copy of the URI when entering
+    /// each scope. This is used to avoid cloning <see cref="ODataUri"/>
+    /// excessively.
+    /// </summary>
     internal struct ODataUriSlim
     {
         private readonly ODataUri odataUri;
 
+        /// <summary>
+        /// Creates an instance of <see cref="ODataUriSlim"/>
+        /// by copying the provided <see cref="ODataUri"/> instance.
+        /// </summary>
+        /// <param name="odataUri">The URI to copy.</param>
         public ODataUriSlim(ODataUri odataUri)
         {
             Debug.Assert(odataUri != null, "odataUri != null");
@@ -23,6 +34,11 @@ namespace Microsoft.OData
             this.Path = odataUri.Path;
         }
 
+        /// <summary>
+        /// Creates an instance of <see cref="ODataUriSlim"/> by
+        /// cloning the provided <see cref="ODataUriSlim"/>.
+        /// </summary>
+        /// <param name="odataUriSlim">The URI to copy.</param>
         public ODataUriSlim(ODataUriSlim odataUriSlim)
         {
             this.odataUri = odataUriSlim.odataUri;
