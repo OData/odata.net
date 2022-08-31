@@ -124,7 +124,6 @@ namespace Microsoft.OData.JsonLight
                 // However, we need to answer this question for materializing operations which were left out of the payload.
                 // To get around this, the client sets a callback in the ReaderBehavior to answer the question.
 
-                // TODO: find ways to avoid creating a new ODataUriSlim here
                 ODataUriSlim? odataUri = null;
                 if (this.ODataUri != null)
                 {

@@ -92,7 +92,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="value">The ODataValue to be used.</param>
         /// <param name="version">OData Version.</param>
-        /// <param name="odataUriSlim">The odata uri info for current query.</param>
+        /// <param name="odataUri">The odata uri info for current query.</param>
         /// <param name="model">The model used to handle unsigned int conversions.</param>
         /// <returns>The generated ODataContextUrlInfo.</returns>
         internal static ODataContextUrlInfo Create(ODataValue value, ODataVersion version, in ODataUriSlim odataUri, IEdmModel model = null)
