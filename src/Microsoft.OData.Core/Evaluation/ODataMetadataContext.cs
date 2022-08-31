@@ -36,7 +36,7 @@ namespace Microsoft.OData.Evaluation
         /// <summary>
         /// Gets the OData uri.
         /// </summary>
-        ODataUri ODataUri { get; }
+        ODataUriSlim ODataUri { get; }
 
         /// <summary>
         /// Gets an entity metadata builder for the given resource.
@@ -95,7 +95,7 @@ namespace Microsoft.OData.Evaluation
         /// <summary>
         /// The OData Uri.
         /// </summary>
-        private readonly ODataUri odataUri;
+        private readonly ODataUriSlim odataUri;
 
         /// <summary>
         /// The service base Uri.
@@ -115,8 +115,8 @@ namespace Microsoft.OData.Evaluation
         /// <param name="metadataDocumentUri">The metadata document uri.</param>
         /// <param name="odataUri">The request Uri.</param>
         /// <remarks>This overload should only be used by the writer.</remarks>
-        public ODataMetadataContext(bool isResponse, IEdmModel model, Uri metadataDocumentUri, ODataUri odataUri)
-            : this(isResponse, /*OperationsBoundToEntityTypeMustBeContainerQualified*/ null, EdmTypeWriterResolver.Instance, model, metadataDocumentUri, odataUri)
+        public ODataMetadataContext(bool isResponse, IEdmModel model, Uri metadataDocumentUri, in ODataUriSlim odataUri)
+            : this(isResponse, /*OperationsBoundToEntityTypeMustBeContainerQualified*/ null, EdmTypeWriterResolver.Instance, model, metadataDocumentUri, in odataUri)
         {
         }
 
@@ -136,7 +136,7 @@ namespace Microsoft.OData.Evaluation
             EdmTypeResolver edmTypeResolver,
             IEdmModel model,
             Uri metadataDocumentUri,
-            ODataUri odataUri)
+            in ODataUriSlim odataUri)
         {
             Debug.Assert(edmTypeResolver != null, "edmTypeResolver != null");
             Debug.Assert(model != null, "model != null");
@@ -166,9 +166,9 @@ namespace Microsoft.OData.Evaluation
             EdmTypeResolver edmTypeResolver,
             IEdmModel model,
             Uri metadataDocumentUri,
-            ODataUri odataUri,
+            in ODataUriSlim odataUri,
             JsonLightMetadataLevel metadataLevel)
-            : this(isResponse, operationsBoundToEntityTypeMustBeContainerQualified, edmTypeResolver, model, metadataDocumentUri, odataUri)
+            : this(isResponse, operationsBoundToEntityTypeMustBeContainerQualified, edmTypeResolver, model, metadataDocumentUri, in odataUri)
         {
             Debug.Assert(metadataLevel != null, "MetadataLevel != null");
 
@@ -215,7 +215,7 @@ namespace Microsoft.OData.Evaluation
         /// <summary>
         /// Gets the OData uri.
         /// </summary>
-        public ODataUri ODataUri
+        public ODataUriSlim ODataUri
         {
             get
             {

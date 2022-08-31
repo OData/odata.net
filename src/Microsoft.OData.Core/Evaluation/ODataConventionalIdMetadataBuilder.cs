@@ -177,14 +177,14 @@ namespace Microsoft.OData.Evaluation
             {
                 // Compute ID from context URL rather than from parent.
                 uri = this.UriBuilder.BuildBaseUri();
-                ODataUri odataUri = this.ODataUri ?? this.MetadataContext.ODataUri;
+                ODataPath odataPath = this.ODataUri?.Path ?? this.MetadataContext.ODataUri.Path;
 
-                if (odataUri == null || odataUri.Path == null || odataUri.Path.Count == 0)
+                if (odataPath == null || odataPath.Count == 0)
                 {
                     throw new ODataException(Strings.ODataMetadataBuilder_MissingParentIdOrContextUrl);
                 }
 
-                uri = this.GetContainingEntitySetUri(uri, odataUri);
+                uri = this.GetContainingEntitySetUri(uri, odataPath);
             }
 
             // A path segment for the containment navigation property
@@ -270,9 +270,8 @@ namespace Microsoft.OData.Evaluation
         /// <param name="baseUri">The service root Uri.</param>
         /// <param name="odataUri">The request Uri.</param>
         /// <returns>The resource path.</returns>
-        private Uri GetContainingEntitySetUri(Uri baseUri, ODataUri odataUri)
+        private Uri GetContainingEntitySetUri(Uri baseUri, ODataPath path)
         {
-            ODataPath path = odataUri.Path;
             List<ODataPathSegment> segments = path.ToList();
             int lastIndex = segments.Count - 1;
             ODataPathSegment lastSegment = segments[lastIndex];

@@ -114,7 +114,7 @@ namespace Microsoft.OData.JsonLight
             SelectedPropertiesNode selectedProperties,
             bool isResponse,
             bool keyAsSegment,
-            ODataUri odataUri,
+            in ODataUriSlim odataUri,
             ODataMessageWriterSettings settings);
 
         /// <summary>

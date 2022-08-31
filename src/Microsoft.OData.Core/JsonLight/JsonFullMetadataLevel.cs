@@ -95,7 +95,7 @@ namespace Microsoft.OData.JsonLight
             SelectedPropertiesNode selectedProperties,
             bool isResponse,
             bool keyAsSegment,
-            ODataUri odataUri,
+            in ODataUriSlim odataUri,
             ODataMessageWriterSettings settings)
         {
             Debug.Assert(resource != null, "resource != null");
@@ -106,7 +106,7 @@ namespace Microsoft.OData.JsonLight
                 isResponse,
                 this.model,
                 this.NonNullMetadataDocumentUri,
-                odataUri);
+                in odataUri);
 
             ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(metadataContext.ServiceBaseUri,
                 keyAsSegment ? ODataUrlKeyDelimiter.Slash : ODataUrlKeyDelimiter.Parentheses);

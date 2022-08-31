@@ -123,13 +123,16 @@ namespace Microsoft.OData.JsonLight
                 // Under the client knob, the model we're given is really a facade, which doesn't flow open-type information into the combined types.
                 // However, we need to answer this question for materializing operations which were left out of the payload.
                 // To get around this, the client sets a callback in the ReaderBehavior to answer the question.
+                
+                // TODO: find ways to avoid creating a new ODataUriSlim here
+                ODataUriSlim odataUri = new ODataUriSlim(this.ODataUri);
                 return this.metadataContext ?? (this.metadataContext = new ODataMetadataContext(
                     this.ReadingResponse,
                     null,
                     this.JsonLightInputContext.EdmTypeResolver,
                     this.Model,
                     this.MetadataDocumentUri,
-                    this.ODataUri,
+                    in odataUri,
                     this.JsonLightInputContext.MetadataLevel));
             }
         }

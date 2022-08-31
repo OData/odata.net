@@ -50,7 +50,7 @@ namespace Microsoft.OData.JsonLight
             SelectedPropertiesNode selectedProperties,
             bool isResponse,
             bool keyAsSegment,
-            ODataUri odataUri,
+            in ODataUriSlim odataUri,
             ODataMessageWriterSettings settings)
         {
             // For minimal metadata we don't want to change the metadata builder that's currently on the resource because the resource might come from a JSON light
