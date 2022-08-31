@@ -1168,10 +1168,10 @@ namespace Microsoft.OData.JsonLight
             IEdmType itemType,
             bool skipWriting,
             SelectedPropertiesNode selectedProperties,
-            ref ODataUriSlim odataUri,
+            in ODataUriSlim odataUri,
             bool isUndeclared)
         {
-            return new JsonLightResourceSetScope(resourceSet, navigationSource, itemType, skipWriting, selectedProperties, ref odataUri, isUndeclared);
+            return new JsonLightResourceSetScope(resourceSet, navigationSource, itemType, skipWriting, selectedProperties, in odataUri, isUndeclared);
         }
 
         /// <summary>
@@ -1191,10 +1191,10 @@ namespace Microsoft.OData.JsonLight
             IEdmStructuredType resourceType,
             bool skipWriting,
             SelectedPropertiesNode selectedProperties,
-            ref ODataUriSlim odataUri,
+            in ODataUriSlim odataUri,
             bool isUndeclared)
         {
-            return new JsonLightDeltaResourceSetScope(deltaResourceSet, navigationSource, resourceType, selectedProperties, ref odataUri);
+            return new JsonLightDeltaResourceSetScope(deltaResourceSet, navigationSource, resourceType, selectedProperties, in odataUri);
         }
 
         /// <summary>
@@ -1208,7 +1208,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="odataUri">The ODataUri info of this scope.</param>
         /// <param name="isUndeclared">true if the resource is for an undeclared property</param>
         /// <returns>The newly create scope.</returns>
-        protected override DeletedResourceScope CreateDeletedResourceScope(ODataDeletedResource deltaResource, IEdmNavigationSource navigationSource, IEdmEntityType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ref ODataUriSlim odataUri, bool isUndeclared)
+        protected override DeletedResourceScope CreateDeletedResourceScope(ODataDeletedResource deltaResource, IEdmNavigationSource navigationSource, IEdmEntityType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, in ODataUriSlim odataUri, bool isUndeclared)
         {
             return new JsonLightDeletedResourceScope(
                 deltaResource,
@@ -1218,7 +1218,7 @@ namespace Microsoft.OData.JsonLight
                 skipWriting,
                 this.messageWriterSettings,
                 selectedProperties,
-                ref odataUri,
+                in odataUri,
                 isUndeclared);
         }
 
@@ -1231,9 +1231,9 @@ namespace Microsoft.OData.JsonLight
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         /// <param name="odataUri">The ODataUri info of this scope.</param>
         /// <returns>The newly created property scope.</returns>
-        protected override PropertyInfoScope CreatePropertyInfoScope(ODataPropertyInfo property, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, SelectedPropertiesNode selectedProperties, ref ODataUriSlim odataUri)
+        protected override PropertyInfoScope CreatePropertyInfoScope(ODataPropertyInfo property, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, SelectedPropertiesNode selectedProperties, in ODataUriSlim odataUri)
         {
-            return new JsonLightPropertyScope(property, navigationSource, resourceType, selectedProperties, ref odataUri);
+            return new JsonLightPropertyScope(property, navigationSource, resourceType, selectedProperties, in odataUri);
         }
 
         /// <summary>
@@ -1245,7 +1245,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         /// <param name="odataUri">The ODataUri info of this scope.</param>
         /// <returns>The newly create scope.</returns>
-        protected override DeltaLinkScope CreateDeltaLinkScope(ODataDeltaLinkBase link, IEdmNavigationSource navigationSource, IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, ref ODataUriSlim odataUri)
+        protected override DeltaLinkScope CreateDeltaLinkScope(ODataDeltaLinkBase link, IEdmNavigationSource navigationSource, IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, in ODataUriSlim odataUri)
         {
             return new JsonLightDeltaLinkScope(
                 link is ODataDeltaLink ? WriterState.DeltaLink : WriterState.DeltaDeletedLink,
@@ -1254,7 +1254,7 @@ namespace Microsoft.OData.JsonLight
                 navigationSource,
                 entityType,
                 selectedProperties,
-                ref odataUri);
+                in odataUri);
         }
 
         /// <summary>
@@ -1268,7 +1268,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="odataUri">The ODataUri info of this scope.</param>
         /// <param name="isUndeclared">true if the resource is for an undeclared property</param>
         /// <returns>The newly create scope.</returns>
-        protected override ResourceScope CreateResourceScope(ODataResource resource, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ref ODataUriSlim odataUri, bool isUndeclared)
+        protected override ResourceScope CreateResourceScope(ODataResource resource, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, in ODataUriSlim odataUri, bool isUndeclared)
         {
             return new JsonLightResourceScope(
                 resource,
@@ -1278,7 +1278,7 @@ namespace Microsoft.OData.JsonLight
                 skipWriting,
                 this.messageWriterSettings,
                 selectedProperties,
-                ref odataUri,
+                in odataUri,
                 isUndeclared);
         }
 
@@ -1293,10 +1293,10 @@ namespace Microsoft.OData.JsonLight
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         /// <param name="odataUri">The ODataUri info of this scope.</param>
         /// <returns>The newly created JSON Light  nested resource info scope.</returns>
-        protected override NestedResourceInfoScope CreateNestedResourceInfoScope(WriterState writerState, ODataNestedResourceInfo navLink, IEdmNavigationSource navigationSource, IEdmType itemType, bool skipWriting, SelectedPropertiesNode selectedProperties, ref ODataUriSlim odataUri)
+        protected override NestedResourceInfoScope CreateNestedResourceInfoScope(WriterState writerState, ODataNestedResourceInfo navLink, IEdmNavigationSource navigationSource, IEdmType itemType, bool skipWriting, SelectedPropertiesNode selectedProperties, in ODataUriSlim odataUri)
         {
             Debug.Assert(this.CurrentScope != null, "Creating a nested resource info scope with a null parent scope.");
-            return new JsonLightNestedResourceInfoScope(writerState, navLink, navigationSource, itemType, skipWriting, selectedProperties, ref odataUri, this.CurrentScope);
+            return new JsonLightNestedResourceInfoScope(writerState, navLink, navigationSource, itemType, skipWriting, selectedProperties, in odataUri, this.CurrentScope);
         }
 
         /// <summary>
@@ -3080,8 +3080,8 @@ namespace Microsoft.OData.JsonLight
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
             /// <param name="isUndeclared">true if the resource set is for an undeclared property</param>
-            internal JsonLightResourceSetScope(ODataResourceSet resourceSet, IEdmNavigationSource navigationSource, IEdmType itemType, bool skipWriting, SelectedPropertiesNode selectedProperties, ref ODataUriSlim odataUri, bool isUndeclared)
-                : base(resourceSet, navigationSource, itemType, skipWriting, selectedProperties, ref odataUri)
+            internal JsonLightResourceSetScope(ODataResourceSet resourceSet, IEdmNavigationSource navigationSource, IEdmType itemType, bool skipWriting, SelectedPropertiesNode selectedProperties, in ODataUriSlim odataUri, bool isUndeclared)
+                : base(resourceSet, navigationSource, itemType, skipWriting, selectedProperties, in odataUri)
             {
                 this.isUndeclared = isUndeclared;
             }
@@ -3158,9 +3158,9 @@ namespace Microsoft.OData.JsonLight
                 bool skipWriting,
                 ODataMessageWriterSettings writerSettings,
                 SelectedPropertiesNode selectedProperties,
-                ref ODataUriSlim odataUri,
+                in ODataUriSlim odataUri,
                 bool isUndeclared)
-                : base(resource, serializationInfo, navigationSource, resourceType, writerSettings, selectedProperties, ref odataUri)
+                : base(resource, serializationInfo, navigationSource, resourceType, writerSettings, selectedProperties, in odataUri)
             {
                 this.isUndeclared = isUndeclared;
             }
@@ -3342,8 +3342,8 @@ namespace Microsoft.OData.JsonLight
             /// <param name="resourceType">The structured type for the resource containing the property to be written.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            internal JsonLightPropertyScope(ODataPropertyInfo property, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, SelectedPropertiesNode selectedProperties, ref ODataUriSlim odataUri)
-                : base(property, navigationSource, resourceType, selectedProperties, ref odataUri)
+            internal JsonLightPropertyScope(ODataPropertyInfo property, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, SelectedPropertiesNode selectedProperties, in ODataUriSlim odataUri)
+                : base(property, navigationSource, resourceType, selectedProperties, in odataUri)
             {
             }
         }
@@ -3363,8 +3363,8 @@ namespace Microsoft.OData.JsonLight
             /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            public JsonLightDeltaLinkScope(WriterState state, ODataItem link, ODataResourceSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, ref ODataUriSlim odataUri)
-                : base(state, link, serializationInfo, navigationSource, entityType, selectedProperties, ref odataUri)
+            public JsonLightDeltaLinkScope(WriterState state, ODataItem link, ODataResourceSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, in ODataUriSlim odataUri)
+                : base(state, link, serializationInfo, navigationSource, entityType, selectedProperties, in odataUri)
             {
             }
         }
@@ -3388,8 +3388,8 @@ namespace Microsoft.OData.JsonLight
             /// <param name="resourceType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            public JsonLightDeltaResourceSetScope(ODataDeltaResourceSet resourceSet, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, SelectedPropertiesNode selectedProperties, ref ODataUriSlim odataUri)
-                : base(resourceSet, navigationSource, resourceType, selectedProperties, ref odataUri)
+            public JsonLightDeltaResourceSetScope(ODataDeltaResourceSet resourceSet, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, SelectedPropertiesNode selectedProperties, in ODataUriSlim odataUri)
+                : base(resourceSet, navigationSource, resourceType, selectedProperties, in odataUri)
             {
             }
 
@@ -3457,9 +3457,9 @@ namespace Microsoft.OData.JsonLight
                 bool skipWriting,
                 ODataMessageWriterSettings writerSettings,
                 SelectedPropertiesNode selectedProperties,
-                ref ODataUriSlim odataUri,
+                in ODataUriSlim odataUri,
                 bool isUndeclared)
-                : base(resource, serializationInfo, navigationSource, resourceType, skipWriting, writerSettings, selectedProperties, ref odataUri)
+                : base(resource, serializationInfo, navigationSource, resourceType, skipWriting, writerSettings, selectedProperties, in odataUri)
             {
                 this.isUndeclared = isUndeclared;
             }
@@ -3651,8 +3651,8 @@ namespace Microsoft.OData.JsonLight
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
             /// <param name="parentScope">The scope of the parent.</param>
-            internal JsonLightNestedResourceInfoScope(WriterState writerState, ODataNestedResourceInfo navLink, IEdmNavigationSource navigationSource, IEdmType itemType, bool skipWriting, SelectedPropertiesNode selectedProperties, ref ODataUriSlim odataUri, Scope parentScope)
-                : base(writerState, navLink, navigationSource, itemType, skipWriting, selectedProperties, ref odataUri, parentScope)
+            internal JsonLightNestedResourceInfoScope(WriterState writerState, ODataNestedResourceInfo navLink, IEdmNavigationSource navigationSource, IEdmType itemType, bool skipWriting, SelectedPropertiesNode selectedProperties, in ODataUriSlim odataUri, Scope parentScope)
+                : base(writerState, navLink, navigationSource, itemType, skipWriting, selectedProperties, in odataUri, parentScope)
             {
             }
 
@@ -3697,7 +3697,7 @@ namespace Microsoft.OData.JsonLight
             {
                 ODataUriSlim odataUri = this.ODataUri;
 
-                return new JsonLightNestedResourceInfoScope(newWriterState, (ODataNestedResourceInfo)this.Item, this.NavigationSource, this.ItemType, this.SkipWriting, this.SelectedProperties, ref odataUri, this.parentScope)
+                return new JsonLightNestedResourceInfoScope(newWriterState, (ODataNestedResourceInfo)this.Item, this.NavigationSource, this.ItemType, this.SkipWriting, this.SelectedProperties, in odataUri, this.parentScope)
                 {
                     EntityReferenceLinkWritten = this.entityReferenceLinkWritten,
                     ResourceSetWritten = this.resourceSetWritten,

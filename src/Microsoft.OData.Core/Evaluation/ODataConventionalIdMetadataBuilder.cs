@@ -177,7 +177,7 @@ namespace Microsoft.OData.Evaluation
             {
                 // Compute ID from context URL rather than from parent.
                 uri = this.UriBuilder.BuildBaseUri();
-                ODataPath odataPath = this.ODataUri?.Path ?? this.MetadataContext.ODataUri.Path;
+                ODataPath odataPath = this.ODataUri?.Path ?? this.MetadataContext.ODataUri?.Path;
 
                 if (odataPath == null || odataPath.Count == 0)
                 {

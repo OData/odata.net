@@ -4,6 +4,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using Microsoft.OData.UriParser.Aggregation;
 using Microsoft.OData.UriParser;
@@ -16,6 +17,7 @@ namespace Microsoft.OData
 
         public ODataUriSlim(ODataUri odataUri)
         {
+            Debug.Assert(odataUri != null, "odataUri != null");
             this.odataUri = odataUri;
             this.SelectAndExpand = odataUri.SelectAndExpand;
             this.Path = odataUri.Path;

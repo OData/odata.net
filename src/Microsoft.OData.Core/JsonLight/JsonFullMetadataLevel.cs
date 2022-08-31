@@ -95,7 +95,7 @@ namespace Microsoft.OData.JsonLight
             SelectedPropertiesNode selectedProperties,
             bool isResponse,
             bool keyAsSegment,
-            in ODataUriSlim odataUri,
+            in ODataUriSlim? odataUri,
             ODataMessageWriterSettings settings)
         {
             Debug.Assert(resource != null, "resource != null");
