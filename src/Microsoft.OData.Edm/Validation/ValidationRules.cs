@@ -2737,8 +2737,10 @@ namespace Microsoft.OData.Edm.Validation
         private static bool TryResolveNavigationPropertyBindingPath(IEdmModel model, IEdmNavigationSource navigationSource, IEdmNavigationPropertyBinding binding)
         {
             var pathSegments = binding.Path.PathSegments.ToArray();
+            IEdmNavigationProperty lastNavProp = null;
             var definingType = navigationSource.EntityType() as IEdmStructuredType;
-            for (int index = 0; index < pathSegments.Length - 1; index++)
+
+            for (int index = 0; index < pathSegments.Length; index++)
             {
                 string segment = pathSegments[index];
                 if (segment.IndexOf('.') < 0)
@@ -2750,9 +2752,14 @@ namespace Microsoft.OData.Edm.Validation
                     }
 
                     var navProperty = property as IEdmNavigationProperty;
-                    if (navProperty != null && !navProperty.ContainsTarget)
+                    if (navProperty != null)
                     {
-                        return false;
+                        if (lastNavProp != null && !lastNavProp.ContainsTarget)
+                        {
+                            return false;
+                        }
+
+                        lastNavProp = navProperty;
                     }
 
                     definingType = property.Type.Definition.AsElementType() as IEdmStructuredType;
@@ -2773,8 +2780,7 @@ namespace Microsoft.OData.Edm.Validation
                 }
             }
 
-            var navigationProperty = definingType.FindProperty(pathSegments.Last()) as IEdmNavigationProperty;
-            return navigationProperty != null;
+            return lastNavProp != null;
         }
 
         private static bool HasPathTypeProperty(IEdmStructuredType structuredType, IList<IEdmStructuredType> visited)

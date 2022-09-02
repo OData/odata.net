@@ -172,9 +172,14 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         {
             Debug.Assert(binding != null);
             Debug.Assert(binding.Path != null);
-            var pathSegments = binding.Path.Split('/');
+
+            string[] pathSegments = binding.Path.Split('/');
+            int segmentCount = pathSegments.Length;
+            IEdmNavigationProperty lastNavProp = null;
             IEdmStructuredType definingType = this.typeCache.GetValue(this, ComputeElementTypeFunc, null);
-            for (int index = 0; index < pathSegments.Length - 1; index++)
+            IEdmStructuredType rootType = definingType;
+
+            for (int index = 0; index < segmentCount; index++)
             {
                 string segment = pathSegments[index];
                 if (segment.IndexOf('.') < 0)
@@ -186,10 +191,15 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                     }
 
                     var navProperty = property as IEdmNavigationProperty;
-                    if (navProperty != null && !navProperty.ContainsTarget)
+                    if (navProperty != null)
                     {
-                        // TODO: Improve error message #644.
-                        return new UnresolvedNavigationPropertyPath(definingType, binding.Path, binding.Location);
+                       if (lastNavProp != null && !lastNavProp.ContainsTarget)
+                       {
+                            // TODO: Improve error message #644.
+                            return new UnresolvedNavigationPropertyPath(definingType, binding.Path, binding.Location);
+                       }
+
+                       lastNavProp = navProperty; 
                     }
 
                     definingType = property.Type.Definition.AsElementType() as IEdmStructuredType;
@@ -212,8 +222,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 }
             }
 
-            return definingType.FindProperty(pathSegments.Last()) as IEdmNavigationProperty
-                   ?? new UnresolvedNavigationPropertyPath(definingType, binding.Path, binding.Location);
+            return lastNavProp ?? new UnresolvedNavigationPropertyPath(rootType, binding.Path, binding.Location);
         }
     }
 }

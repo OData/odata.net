@@ -97,7 +97,15 @@ namespace Microsoft.OData.Edm
                 return;
             }
 
-            if (navigationProperty.Name != bindingPath.PathSegments.Last())
+            // Last segment must be the navigation segment or a type cast segment
+            string lastSegment = bindingPath.PathSegments.Last();
+            if (lastSegment == null)
+            {
+                throw new ArgumentException(Strings.NavigationPropertyBinding_PathIsNotValid);
+            }
+
+            if (navigationProperty.Name != lastSegment && lastSegment.IndexOf('.') < 0
+                && navigationProperty.Name != bindingPath.PathSegments.Skip(bindingPath.PathSegments.Count() - 1).First())
             {
                 throw new ArgumentException(Strings.NavigationPropertyBinding_PathIsNotValid);
             }

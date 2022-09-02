@@ -50,5 +50,11 @@
     <PackageReference Include="xunit.assert" Version="2.4.1" />
     <PackageReference Include="xunit.core" Version="2.4.1" />
   </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+    <PackageReference Include="System.Text.Json">
+      <Version>4.6.0</Version>
+    </PackageReference>
+  </ItemGroup>
  
 </Project>
