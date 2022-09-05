@@ -421,6 +421,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     customerOperationMessage.SetHeader("odata-version", "4.0");
                     customerOperationMessage.SetHeader("Content-Type", "application/json");
 
+                    // Copies operation's response body to the main batch response's stream
+                    // This is similar to how the DefaultODataBatchHandler in WebApi writes batch responses.  
                     using (var customerResponseStream = CreateCustomerResponseStream(customerId: "1"))
                     using (var stream = await customerOperationMessage.GetStreamAsync())
                     {
