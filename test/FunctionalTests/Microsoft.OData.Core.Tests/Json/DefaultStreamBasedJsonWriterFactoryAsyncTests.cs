@@ -123,6 +123,29 @@ namespace Microsoft.OData.Tests.Json
             string contents = await reader.ReadToEndAsync();
             Assert.Equal(@"{""Foo"":""Bar"",""Fizz"":15.0,""Buzz"":""<\""\n""}", contents);
         }
+
+        [Fact]
+        public async Task CreatedAsyncJsonWriterShouldNotCloseOutputStream()
+        {
+            DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Default;
+            using TestStream stream = new TestStream();
+
+            IAsyncDisposable jsonWriter = factory.CreateAsynchronousJsonWriter(stream, false, Encoding.UTF8) as IAsyncDisposable;
+            await jsonWriter.DisposeAsync();
+
+            Assert.False(stream.Disposed);
+        }
+
+        private sealed class TestStream : MemoryStream
+        {
+            public bool Disposed { get; private set; }
+
+            public override ValueTask DisposeAsync()
+            {
+                Disposed = true;
+                return base.DisposeAsync();
+            }
+        }
     }
 }
 #endif
