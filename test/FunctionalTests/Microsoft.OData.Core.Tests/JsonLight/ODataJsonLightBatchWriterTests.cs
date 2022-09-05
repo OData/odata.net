@@ -418,7 +418,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     await jsonLightBatchWriter.WriteStartBatchAsync();
 
                     var customerOperationMessage = await jsonLightBatchWriter.CreateOperationResponseMessageAsync("1");
-                    customerOperationMessage.SetHeader("odata-version", "4.0");
+                    customerOperationMessage.SetHeader(ODataConstants.ODataVersionHeader, "4.0");
                     customerOperationMessage.SetHeader("Content-Type", "application/json");
 
                     // Copies operation's response body to the main batch response's stream
@@ -486,7 +486,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     }
 
                     var orderOperationMessage = await jsonLightBatchWriter.CreateOperationResponseMessageAsync("2");
-                    orderOperationMessage.SetHeader("odata-version", "4.0");
+                    orderOperationMessage.SetHeader(ODataConstants.ODataVersionHeader, "4.0");
                     orderOperationMessage.SetHeader("Content-Type", "application/json");
 
                     using (var orderOperationStream = CreateOrderResponseStream(orderId: "1"))
