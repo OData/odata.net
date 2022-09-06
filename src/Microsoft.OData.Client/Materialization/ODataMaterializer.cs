@@ -23,10 +23,10 @@ namespace Microsoft.OData.Client.Materialization
     internal abstract class ODataMaterializer : IDisposable
     {
         /// <summary>Empty navigation links collection</summary>
-        internal static readonly ODataNestedResourceInfo[] EmptyLinks = new ODataNestedResourceInfo[0];
+        internal static readonly IList<ODataNestedResourceInfo> EmptyLinks = new List<ODataNestedResourceInfo>();
 
         /// <summary>Empty property collection</summary>
-        protected static readonly ODataProperty[] EmptyProperties = new ODataProperty[0];
+        protected static readonly IEnumerable<ODataProperty> EmptyProperties = Enumerable.Empty<ODataProperty>();
 
         /// <summary>Collection->Next Link Table for nested links</summary>
         protected Dictionary<IEnumerable, DataServiceQueryContinuation> nextLinkTable;

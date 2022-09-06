@@ -22,7 +22,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
     /// <summary>
     /// Send query and verify the results from the service implemented using ODataLib and EDMLib.
     /// </summary>
-    public class ODataWCFServiceQueryTests : ODataWCFServiceTestsBase<InMemoryEntities>
+    public class ODataWCFServiceQueryTests : ODataWCFServiceTestsBase<InMemoryEntities>, IDisposable
     {
         public ODataWCFServiceQueryTests()
             : base(ServiceDescriptors.ODataWCFServiceDescriptor)
@@ -754,6 +754,11 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             responseMessage = requestMessage.GetResponse();
             Assert.Equal(200, responseMessage.StatusCode);
             #endregion
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
         }
     }
 }

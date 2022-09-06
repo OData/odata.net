@@ -62,6 +62,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.errorsCache.GetValue(this, ComputeErrorsFunc, null); }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
         private byte[] ComputeValue()
         {
             byte[] binary;

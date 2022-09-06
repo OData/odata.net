@@ -103,12 +103,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     {
                         if (testConfiguration.Synchronous)
                         {
-#if !SILVERLIGHT && !WINDOWS_PHONE
                             this.Assert.ExpectedException(
                                 () => ((ODataParameterReaderTestWrapper)reader).ParameterReader.ReadAsync(),
                                 ODataExpectedExceptions.ODataException("ODataParameterReaderCore_AsyncCallOnSyncReader"), this.ExceptionVerifier);
                             this.Assert.AreEqual(ODataParameterReaderState.Start, reader.State, "Reader should be in 'Start' state.");
-#endif
                         }
                         else
                         {

@@ -68,11 +68,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new TaupoNotSupportedException("This test is not supported in asynchronous mode in Silverlight or Windows Phone");
-#else
                 this.batchWriter.WriteStartBatchAsync().Wait();
-#endif
             }
         }
 
@@ -87,11 +83,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new TaupoNotSupportedException("This test is not supported in asynchronous mode in Silverlight or Windows Phone");
-#else
                 this.batchWriter.WriteEndBatchAsync().Wait();
-#endif
             }
         }
 
@@ -106,11 +98,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new TaupoNotSupportedException("This test is not supported in asynchronous mode in Silverlight or Windows Phone");
-#else
                 this.batchWriter.WriteStartChangesetAsync().Wait();
-#endif
             }
         }
 
@@ -125,11 +113,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new TaupoNotSupportedException("This test is not supported in asynchronous mode in Silverlight or Windows Phone");
-#else
                 this.batchWriter.WriteEndChangesetAsync().Wait();
-#endif
             }
         }
 
@@ -150,11 +134,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new TaupoNotSupportedException("This test is not supported in asynchronous mode in Silverlight or Windows Phone");
-#else
                 return this.batchWriter.CreateOperationRequestMessageAsync(method, uri, contentIdToWrite).WaitForResult();
-#endif
             }
         }
 
@@ -172,11 +152,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new TaupoNotSupportedException("This test is not supported in asynchronous mode in Silverlight or Windows Phone");
-#else
                 return this.batchWriter.CreateOperationResponseMessageAsync(contentId).WaitForResult();
-#endif
             }
         }
 
@@ -191,11 +167,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new TaupoNotSupportedException("This test is not supported in asynchronous mode in Silverlight or Windows Phone");
-#else
                 this.batchWriter.FlushAsync().Wait();
-#endif
             }
         }
     }

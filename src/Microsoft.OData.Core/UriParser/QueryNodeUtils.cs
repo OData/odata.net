@@ -139,44 +139,5 @@ namespace Microsoft.OData.UriParser
                     throw new ODataException(ODataErrorStrings.General_InternalError(InternalErrorCodes.QueryNodeUtils_BinaryOperatorResultType_UnreachableCodepath));
             }
         }
-
-#if ORCAS
-        /// <summary>
-        /// The tuple for .NET35
-        /// </summary>
-        /// <typeparam name="T1">First component type.</typeparam>
-        /// <typeparam name="T2">Second component type.</typeparam>
-        /// <typeparam name="T3">Third component type.</typeparam>
-        private class Tuple<T1, T2, T3>
-        {
-            /// <summary>
-            ///  Initializes a new instance of this class.
-            /// </summary>
-            /// <param name="first">The value of the tuple's first component.</param>
-            /// <param name="second">The value of the tuple's second component.</param>
-            /// <param name="third">The value of the tuple's third component.</param>
-            internal Tuple(T1 first, T2 second, T3 third)
-            {
-                First = first;
-                Second = second;
-                Third = third;
-            }
-
-            /// <summary>
-            /// The value of the tuple's first component.
-            /// </summary>
-            public T1 First { get; private set; }
-
-            /// <summary>
-            /// The value of the tuple's second component.
-            /// </summary>
-            public T2 Second { get; private set; }
-
-            /// <summary>
-            /// The value of the tuple's third component.
-            /// </summary>
-            public T3 Third { get; private set; }
-        }
-#endif
     }
 }

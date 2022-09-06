@@ -13,9 +13,7 @@ namespace Microsoft.Test.Taupo.Common
     /// <summary>
     /// Thrown whenever test variation wants to skip execution without signaling warning or a failure.
     /// </summary>
-#if !SILVERLIGHT
     [Serializable]
-#endif
     public class TestSkippedException : TaupoException
     {
         /// <summary>
@@ -44,7 +42,6 @@ namespace Microsoft.Test.Taupo.Common
         {
         }
 
-#if !SILVERLIGHT
         /// <summary>
         /// Initializes a new instance of the TestSkippedException class based on 
         /// <see cref="SerializationInfo"/>
@@ -55,6 +52,5 @@ namespace Microsoft.Test.Taupo.Common
             : base(info, context)
         {
         }
-#endif
     }
 }

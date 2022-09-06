@@ -11,15 +11,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts
     using System.Globalization;
     using System.Linq;
     using System.Runtime.Serialization;
-#if SILVERLIGHT
-#if !WIN8
-    using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataServiceBuilderService.Silverlight;
-#else
-    using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataServiceBuilderService.Win8;
-#endif
-#else
     using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataServiceBuilderService.DotNet;
-#endif
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Utilities;
 

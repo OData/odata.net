@@ -435,15 +435,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                 }
                 else
                 {
-                    // TODO: 191417: Enable async Tests on Phone and Silverlight when Product Supports them 
-#if SILVERLIGHT || WINDOWS_PHONE
-                    throw new TaupoNotSupportedException("This test is not supported in aSynchronous mode in Silverlight or Phone");
-#else
                     var t = requestMessage.GetStreamAsync();
                     t.Wait();
                     result.MessageStream = t.Result;
                     return result;
-#endif
                 }
             }
 
@@ -457,16 +452,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                 }
                 else
                 {
-                    // TODO: Enable async Tests on Phone and Silverlight when Product Supports them 
-#if SILVERLIGHT || WINDOWS_PHONE
-                    throw new TaupoNotSupportedException("This test is not supported in aSynchronous mode in Silverlight or Phone");
-#else
-
                     var t = responseMessage.GetStreamAsync();
                     t.Wait();
                     result.MessageStream = t.Result;
                     return result;
-#endif
                 }
             }
 

@@ -29,9 +29,6 @@ namespace Microsoft.Test.Taupo.Runners
         {
             string platform = "desktop";
 
-#if SILVERLIGHT
-            platform = "Silverlight";
-#endif
             ExceptionUtilities.CheckArgumentNotNull(reader, "reader");
 
             reader.MoveToContent();

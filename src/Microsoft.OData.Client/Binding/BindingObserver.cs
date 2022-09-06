@@ -375,11 +375,9 @@ namespace Microsoft.OData.Client
 
                     break;
 
-#if !PORTABLELIB
                 case NotifyCollectionChangedAction.Move:
                     // Do Nothing. Added for completeness.
                     break;
-#endif
 
                 default: // No Action
                     break;
@@ -419,11 +417,9 @@ namespace Microsoft.OData.Client
                         this.OnRemoveFromComplexTypeCollection(sender, e.OldItems);
                         this.OnAddToComplexTypeCollection(sender, e.NewItems);
                         break;
-#if !PORTABLELIB
                     case NotifyCollectionChangedAction.Move:
                         // Do Nothing. Added for completeness.
                         break;
-#endif
                     case NotifyCollectionChangedAction.Reset:
                         this.bindingGraph.RemoveCollection(sender);
                         break;

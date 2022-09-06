@@ -54,6 +54,7 @@ namespace Microsoft.OData.Edm.Csdl
         internal const string UsedNamespacesAnnotation = "UsedNamespaces";
         internal const string ReferencesAnnotation = "References";
         internal const string PrimitiveValueConverterMapAnnotation = "PrimitiveValueConverterMap";
+        internal const string IsImmutable = "IsImmutable";
 
         internal const string Attribute_Abstract = "Abstract";
         internal const string Attribute_Action = "Action";
@@ -204,7 +205,7 @@ namespace Microsoft.OData.Edm.Csdl
         internal const int Default_SpatialGeographySrid = 4326;
         internal const int Default_SpatialGeometrySrid = 0;
         internal const int Default_UnspecifiedSrid = Int32.MinValue;
-        internal const int Default_Scale = 0;
+        internal static readonly int? Default_Scale = null;
 
         internal const int Max_NameLength = 480;
         internal const int Max_NamespaceLength = 512;

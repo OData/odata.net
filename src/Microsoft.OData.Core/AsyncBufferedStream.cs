@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+#if NETSTANDARD1_1
 namespace Microsoft.OData
 {
     #region Namespaces
@@ -368,3 +369,5 @@ namespace Microsoft.OData
         }
     }
 }
+
+#endif

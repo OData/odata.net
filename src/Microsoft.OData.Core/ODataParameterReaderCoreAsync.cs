@@ -7,10 +7,11 @@
 namespace Microsoft.OData
 {
     #region Namespaces
+
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using Microsoft.OData.Edm;
+
     #endregion Namespaces
 
     /// <summary>
@@ -28,6 +29,75 @@ namespace Microsoft.OData
             IEdmOperation operation)
             : base(inputContext, operation)
         {
+        }
+
+        /// <summary>
+        /// This method asynchronously creates an <see cref="ODataReader"/> to read the resource value when the state is ODataParameterReaderState.Resource.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains an <see cref="ODataReader"/> to read the resource value when the state is ODataParameterReaderState.Resource.
+        /// </returns>
+        /// <remarks>
+        /// When the state is ODataParameterReaderState.Resource, the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
+        /// and the Value property of the <see cref="ODataParameterReader"/> returns null. Calling this method in any other state will cause an ODataException to be thrown.
+        /// </remarks>
+        public override async Task<ODataReader> CreateResourceReaderAsync()
+        {
+            this.VerifyCanCreateSubReader(ODataParameterReaderState.Resource);
+            this.subReaderState = SubReaderState.Active;
+            Debug.Assert(this.Name != null, "this.Name != null");
+            Debug.Assert(this.Value == null, "this.Value == null");
+            IEdmStructuredType expectedResourceType = (IEdmStructuredType)this.GetParameterTypeReference(this.Name).Definition;
+
+            return await this.CreateResourceReaderAsync(expectedResourceType)
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// This method asynchronously creates an <see cref="ODataReader"/> to read the resource set value when the state is ODataParameterReaderState.ResourceSet.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains an <see cref="ODataReader"/> to read the resource set value when the state is ODataParameterReaderState.ResourceSet.
+        /// </returns>
+        /// <remarks>
+        /// When the state is ODataParameterReaderState.ResourceSet, the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
+        /// and the Value property of the <see cref="ODataParameterReader"/> returns null. Calling this method in any other state will cause an ODataException to be thrown.
+        /// </remarks>
+        public override async Task<ODataReader> CreateResourceSetReaderAsync()
+        {
+            this.VerifyCanCreateSubReader(ODataParameterReaderState.ResourceSet);
+            this.subReaderState = SubReaderState.Active;
+            Debug.Assert(this.Name != null, "this.Name != null");
+            Debug.Assert(this.Value == null, "this.Value == null");
+            IEdmStructuredType expectedResourceType = (IEdmStructuredType)((IEdmCollectionType)this.GetParameterTypeReference(this.Name).Definition).ElementType.Definition;
+
+            return await this.CreateResourceSetReaderAsync(expectedResourceType)
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// This method asynchronously creates an <see cref="ODataCollectionReader"/> to read the collection value when the state is ODataParameterReaderState.Collection.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains an <see cref="ODataCollectionReader"/> to read the collection value when the state is ODataParameterReaderState.Collection.
+        /// </returns>
+        /// <remarks>
+        /// When the state is ODataParameterReaderState.Collection, the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
+        /// and the Value property of the <see cref="ODataParameterReader"/> returns null. Calling this method in any other state will cause an ODataException to be thrown.
+        /// </remarks>
+        public override async Task<ODataCollectionReader> CreateCollectionReaderAsync()
+        {
+            this.VerifyCanCreateSubReader(ODataParameterReaderState.Collection);
+            this.subReaderState = SubReaderState.Active;
+            Debug.Assert(this.Name != null, "this.Name != null");
+            Debug.Assert(this.Value == null, "this.Value == null");
+            IEdmTypeReference expectedItemTypeReference = ((IEdmCollectionType)this.GetParameterTypeReference(this.Name).Definition).ElementType;
+
+            return await this.CreateCollectionReaderAsync(expectedItemTypeReference)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -69,50 +139,42 @@ namespace Microsoft.OData
         /// <returns>A task that when completed indicates whether more items were read.</returns>
         /// <remarks>The base class already implements this but only for fully synchronous readers, the implementation here
         /// allows fully asynchronous readers.</remarks>
-        protected override Task<bool> ReadAsynchronously()
+        protected override async Task<bool> ReadAsynchronously()
         {
+            bool result;
+
             switch (this.State)
             {
                 case ODataParameterReaderState.Start:
-#if DEBUG
-                    return this.ReadAtStartImplementationAsync()
-                        .FollowOnSuccessWith(t =>
-                            {
-                                Debug.Assert(
-                                    this.State == ODataParameterReaderState.Value ||
-                                    this.State == ODataParameterReaderState.Resource ||
-                                    this.State == ODataParameterReaderState.ResourceSet ||
-                                    this.State == ODataParameterReaderState.Collection ||
-                                    this.State == ODataParameterReaderState.Completed,
-                                    "ReadAtStartImplementationAsync should transition the state to ODataParameterReaderState.Value, ODataParameterReaderState.Resource, ODataParameterReaderState.ResourceSet, ODataParameterReaderState.Collection or ODataParameterReaderState.Completed. The current state is: " + this.State);
-                                return t.Result;
-                            });
-#else
-                    return this.ReadAtStartImplementationAsync();
-#endif
+                    result = await this.ReadAtStartImplementationAsync()
+                        .ConfigureAwait(false);
 
+                    Debug.Assert(
+                        this.State == ODataParameterReaderState.Value ||
+                        this.State == ODataParameterReaderState.Resource ||
+                        this.State == ODataParameterReaderState.ResourceSet ||
+                        this.State == ODataParameterReaderState.Collection ||
+                        this.State == ODataParameterReaderState.Completed,
+                        "ReadAtStartImplementationAsync should transition the state to ODataParameterReaderState.Value, ODataParameterReaderState.Resource, ODataParameterReaderState.ResourceSet, ODataParameterReaderState.Collection or ODataParameterReaderState.Completed. The current state is: " + this.State);
+
+                    return result;
                 case ODataParameterReaderState.Value:   // fall through
                 case ODataParameterReaderState.Resource:
                 case ODataParameterReaderState.ResourceSet:
                 case ODataParameterReaderState.Collection:
                     this.OnParameterCompleted();
-#if DEBUG
-                    return this.ReadNextParameterImplementationAsync()
-                        .FollowOnSuccessWith(t =>
-                            {
-                                Debug.Assert(
-                                    this.State == ODataParameterReaderState.Value ||
-                                    this.State == ODataParameterReaderState.Resource ||
-                                    this.State == ODataParameterReaderState.ResourceSet ||
-                                    this.State == ODataParameterReaderState.Collection ||
-                                    this.State == ODataParameterReaderState.Completed,
-                                    "ReadNextParameterImplementationAsync should transition the state to ODataParameterReaderState.Value, ODataParameterReaderState.Resource, ODataParameterReaderState.ResourceSet, ODataParameterReaderState.Collection or ODataParameterReaderState.Completed. The current state is: " + this.State);
-                                return t.Result;
-                            });
-#else
-                    return this.ReadNextParameterImplementationAsync();
-#endif
+                    result = await this.ReadNextParameterImplementationAsync()
+                        .ConfigureAwait(false);
 
+                    Debug.Assert(
+                        this.State == ODataParameterReaderState.Value ||
+                        this.State == ODataParameterReaderState.Resource ||
+                        this.State == ODataParameterReaderState.ResourceSet ||
+                        this.State == ODataParameterReaderState.Collection ||
+                        this.State == ODataParameterReaderState.Completed,
+                        "ReadNextParameterImplementationAsync should transition the state to ODataParameterReaderState.Value, ODataParameterReaderState.Resource, ODataParameterReaderState.ResourceSet, ODataParameterReaderState.Collection or ODataParameterReaderState.Completed. The current state is: " + this.State);
+
+                    return result;
                 case ODataParameterReaderState.Exception:    // fall through
                 case ODataParameterReaderState.Completed:
                     Debug.Assert(false, "This case should have been caught earlier.");

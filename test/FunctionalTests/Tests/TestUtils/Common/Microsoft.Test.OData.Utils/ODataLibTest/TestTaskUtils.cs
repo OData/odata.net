@@ -6,7 +6,6 @@
 
 namespace Microsoft.Test.OData.Utils.ODataLibTest
 {
-#if !SILVERLIGHT
     using System.Threading.Tasks;
     using Microsoft.Test.OData.Utils.Common;
 
@@ -66,5 +65,4 @@ namespace Microsoft.Test.OData.Utils.ODataLibTest
             return task.Result;
         }
     }
-#endif
 }

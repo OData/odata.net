@@ -831,9 +831,62 @@ namespace Microsoft.OData.Client
                 return aggregationExpr;
             }
 
-            resourceExpr.AddApply(selector, aggregationMethod);
+            resourceExpr.AddAggregation(selector, aggregationMethod);
 
             return resourceExpr;
+        }
+
+        /// <summary>
+        /// Analyzes a GroupBy(source, keySelector, resultSelector) method expression to 
+        /// determine whether it can be satisfied with $apply.
+        /// </summary>
+        /// <param name="methodCallExpr">Expression to analyze.</param>
+        /// <param name="expr">
+        /// <paramref name="methodCallExpr"/>, or a new resource set expression
+        /// for the target resource in the analyzed expression.
+        /// </param>
+        /// <returns>true if <paramref name="methodCallExpr"/> can be satisfied with $apply; false otherwise.</returns>
+        private bool AnalyzeGroupBy(MethodCallExpression methodCallExpr, out Expression expr)
+        {
+            Debug.Assert(methodCallExpr != null, "methodCallExpr != null");
+
+            expr = methodCallExpr;
+
+            // Total 3 arguments expected
+            // GroupBy<TSource, TKey, TResult>(
+            //     IQueryable<TSource> source,
+            //     Expression<Func<TSource, TKey>> keySelector,
+            //     Expression<Func<TKey, IEnumerable<TSource>, TResult>> resultSelector)
+            if (methodCallExpr.Arguments.Count != 3)
+            {
+                return false;
+            }
+
+            SequenceMethod sequenceMethod;
+
+            if (!ReflectionUtil.TryIdentifySequenceMethod(methodCallExpr.Method, out sequenceMethod) ||
+                sequenceMethod != SequenceMethod.GroupByResultSelector)
+            {
+                return false;
+            }
+
+            // We expect a resource expression as the first argument.
+            QueryableResourceExpression source = this.Visit(methodCallExpr.Arguments[0]) as QueryableResourceExpression;
+            if (source == null)
+            {
+                return false;
+            }
+
+            ResourceExpression resourceExpr = source.CreateCloneWithNewType(methodCallExpr.Method.ReturnType);
+
+            if (!GroupByAnalyzer.Analyze(methodCallExpr, source, resourceExpr))
+            {
+                return false;
+            }
+
+            expr = resourceExpr;
+
+            return true;
         }
 
         /// <summary>Ensures that there's a limit on the cardinality of a query.</summary>
@@ -1308,6 +1361,7 @@ namespace Microsoft.OData.Client
                 // since we could be adding query options to the root, create a new one which can be mutable.
                 return QueryableResourceExpression.CreateNavigationResourceExpression(rse.NodeType, rse.Type, rse.Source, rse.MemberExpression, rse.ResourceType, null /*expandPaths*/, CountOption.None, null /*customQueryOptions*/, null /*projection*/, rse.ResourceTypeAs, rse.UriVersion, rse.OperationName, rse.OperationParameters);
             }
+
             return rse;
         }
 
@@ -1373,7 +1427,7 @@ namespace Microsoft.OData.Client
             return rseCopy;
         }
 
-        private static void AddSequenceQueryOption(ResourceExpression target, QueryOptionExpression qoe)
+        internal static void AddSequenceQueryOption(ResourceExpression target, QueryOptionExpression qoe)
         {
             QueryableResourceExpression rse = (QueryableResourceExpression)target;
             rse.ConvertKeyToFilterExpression();
@@ -1464,13 +1518,16 @@ namespace Microsoft.OData.Client
             {
                 // The leaf projection can be one of Select(source, selector) or
                 // SelectMany(source, collectionSelector, resultSelector).
-                if (sequenceMethod == SequenceMethod.Select ||
-                    sequenceMethod == SequenceMethod.SelectManyResultSelector)
+                if ((sequenceMethod == SequenceMethod.Select ||
+                    sequenceMethod == SequenceMethod.SelectManyResultSelector) &&
+                    this.AnalyzeProjection(mce, sequenceMethod, out e))
                 {
-                    if (this.AnalyzeProjection(mce, sequenceMethod, out e))
-                    {
-                        return e;
-                    }
+                    return e;
+                }
+                else if (sequenceMethod == SequenceMethod.GroupByResultSelector &&
+                    this.AnalyzeGroupBy(mce, out e))
+                {
+                    return e;
                 }
             }
 
@@ -3030,6 +3087,46 @@ namespace Microsoft.OData.Client
                     {
                         throw new NotSupportedException(Strings.ALinq_InvalidAggregateExpression(expr));
                     }
+                }
+            }
+
+            /// <summary>
+            /// Checks whether the specified <paramref name="expr"/> is a valid grouping expression.
+            /// </summary>
+            /// <param name="expr">The grouping expression</param>
+            internal static void ValidateGroupingExpression(Expression expr)
+            {
+                MemberExpression memberExpr = StripTo<MemberExpression>(expr);
+                Debug.Assert(memberExpr != null, "memberExpr != null");
+
+                // NOTE: Based on the spec, if the property path leads to a single-valued navigation 
+                // property, this means grouping by the entity-id of the related entities.
+                // However, that support is not implemented in OData WebApi. At the moment, grouping 
+                // expression must evaluate to a single-valued primitive property
+
+                // Disallow unsupported scenarios like the following:
+                // - GroupBy(d1 => d1.Property.Length)
+                // - GroupBy(d1 => d1.CollectionProperty.Count)
+                MemberExpression containingExpr = StripTo<MemberExpression>(memberExpr.Expression);
+                if (containingExpr != null)
+                {
+                    if (PrimitiveType.IsKnownNullableType(containingExpr.Type))
+                    {
+                        throw new NotSupportedException(Strings.ALinq_InvalidGroupingExpression(memberExpr));
+                    }
+
+                    Type collectionType = ClientTypeUtil.GetImplementationType(containingExpr.Type, typeof(ICollection<>));
+                    if (collectionType != null)
+                    {
+                        throw new NotSupportedException(Strings.ALinq_InvalidGroupingExpression(memberExpr));
+                    }
+                }
+
+                // Disallow grouping expressions that evaluate to a single-valued complex or navigation property
+                // Due to feature gap in OData WebApi
+                if (!PrimitiveType.IsKnownNullableType(memberExpr.Type))
+                {
+                    throw new NotSupportedException(Strings.ALinq_InvalidGroupingExpression(memberExpr));
                 }
             }
         }

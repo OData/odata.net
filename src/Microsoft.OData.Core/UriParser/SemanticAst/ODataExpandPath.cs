@@ -58,30 +58,23 @@ namespace Microsoft.OData.UriParser
             bool foundNavProp = false;
             foreach (ODataPathSegment segment in this)
             {
-                if (segment is TypeSegment)
+                if (segment is PropertySegment)
                 {
                     if (index == this.Count - 1)
                     {
-                        throw new ODataException(ODataErrorStrings.ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty);
-                    }
-                }
-                else if (segment is PropertySegment)
-                {
-                    if (index == this.Count - 1)
-                    {
-                        throw new ODataException(ODataErrorStrings.ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty);
+                        throw new ODataException(ODataErrorStrings.ODataExpandPath_LastSegmentMustBeNavigationPropertyOrTypeSegment);
                     }
                 }
                 else if (segment is NavigationPropertySegment)
                 {
-                    if (index < this.Count - 1 || foundNavProp)
+                    if (foundNavProp)
                     {
-                        throw new ODataException(ODataErrorStrings.ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty);
+                        throw new ODataException(ODataErrorStrings.ODataExpandPath_OnlyLastSegmentCanBeNavigationProperty);
                     }
 
                     foundNavProp = true;
                 }
-                else
+                else if (!(segment is TypeSegment))
                 {
                     throw new ODataException(ODataErrorStrings.ODataExpandPath_InvalidExpandPathSegment(segment.GetType().Name));
                 }

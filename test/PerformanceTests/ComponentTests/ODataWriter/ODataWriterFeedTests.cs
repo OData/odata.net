@@ -23,14 +23,24 @@ namespace Microsoft.OData.Performance
     [MemoryDiagnoser]
     public class ODataWriterFeedTests
     {
-        private static readonly IEdmModel Model = TestUtils.GetAdventureWorksModel();
-        private static readonly IEdmEntitySet TestEntitySet = Model.EntityContainer.FindEntitySet("Product");
+        private IEdmModel Model = TestUtils.GetAdventureWorksModel();
+        private IEdmEntitySet TestEntitySet;
         private const int MaxStreamSize = 220000000;
 
         private static readonly Stream WriteStream = new MemoryStream(MaxStreamSize);
 
+        [Params(true, false)]
+        public bool isModelImmutable;
+
+        [GlobalSetup]
+        public void InitModel()
+        {
+            Model = TestUtils.GetAdventureWorksModel(isModelImmutable);
+            TestEntitySet = Model.EntityContainer.FindEntitySet("Product");
+        }
+
         [IterationSetup]
-        public void RewindStream()
+        public void ResetStream()
         {
             WriteStream.Seek(0, SeekOrigin.Begin);
         }

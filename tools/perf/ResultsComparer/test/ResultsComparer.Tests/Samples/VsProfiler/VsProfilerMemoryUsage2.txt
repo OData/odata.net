@@ -1,0 +1,1361 @@
+Object Type	Count	Size (Bytes)	Inclusive Size (Bytes)	Module	
+ + String	70,625	2,978,592	2,978,592	System.Private.CoreLib.dll
+ + RuntimeType	3,507	140,280	140,280	System.Private.CoreLib.dll
+ + SByte[]	1,943	103,840	103,840	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.CsdlLocation	1,033	41,320	41,320	Microsoft.OData.Edm.dll
+ + RuntimeParameterInfo	777	74,592	94,352	System.Private.CoreLib.dll
+ + RuntimeMethodInfo	640	66,560	320,040	System.Private.CoreLib.dll
+ + RuntimeType[]	596	22,320	23,720	System.Private.CoreLib.dll
+ + Object	577	13,848	13,848	System.Private.CoreLib.dll
+ + Object[]	540	37,600	258,816	System.Private.CoreLib.dll
+ + Signature	522	41,760	67,664	System.Private.CoreLib.dll
+ + ParameterInfo[]	520	18,920	113,272	System.Private.CoreLib.dll
+ + Byte[]	510	26,344	26,344	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlConstantExpression	424	20,352	82,504	Microsoft.OData.Edm.dll
+ + List<Object>	423	13,536	201,544	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlAnnotation	416	23,296	152,544	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlProperty	238	13,328	171,072	Microsoft.OData.Edm.dll
+ + OpCode	226	5,424	5,424	System.Private.CoreLib.dll
+ + Int32[]	198	17,736	17,736	System.Private.CoreLib.dll
+ + String[]	187	9,856	32,344	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlNamedTypeReference	172	15,136	27,040	Microsoft.OData.Edm.dll
+ + RuntimeTypeHandle	119	2,856	2,856	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsElement, IEnumerable<Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation>>	113	2,712	2,800	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlTerm	97	6,208	97,448	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm	97	6,984	111,448	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm, Microsoft.OData.Edm.IEdmTypeReference>	97	2,328	2,560	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlStringTypeReference	91	8,736	13,104	Microsoft.OData.Edm.dll
+ + RuntimePropertyInfo	90	9,360	35,264	System.Private.CoreLib.dll
+ + KnownHeader	85	5,440	16,264	System.Net.Http.dll
+ + Microsoft.OData.Edm.Vocabularies.EdmDirectValueAnnotation	82	3,280	9,808	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlPrimitiveTypeReference	80	7,680	11,408	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlCollectionType	75	3,000	14,712	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlExpressionTypeReference	75	3,600	18,312	Microsoft.OData.Edm.dll
+ + List<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlProperty>	73	2,336	178,440	System.Private.CoreLib.dll
+ + List<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlNavigationProperty>	73	2,336	5,560	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsStructuredTypeDefinition, List<Microsoft.OData.Edm.IEdmProperty>>	73	1,752	7,152	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsStructuredTypeDefinition, IDictionary<String, Microsoft.OData.Edm.IEdmProperty>>	73	1,752	5,240	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlProperty[]	71	5,032	176,104	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlComplexType	63	4,536	187,136	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsComplexTypeDefinition	63	5,544	198,952	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsComplexTypeDefinition, Microsoft.OData.Edm.IEdmComplexType>	63	1,512	1,512	Microsoft.OData.Edm.dll
+ + RuntimeAssembly	62	2,976	3,368	System.Private.CoreLib.dll
+ + DynamicMethod	62	5,952	65,640	System.Private.CoreLib.dll
+ + RTDynamicMethod	62	2,976	68,664	System.Private.CoreLib.dll
+ + DynamicILGenerator	62	9,424	42,040	System.Private.CoreLib.dll
+ + ScopeTree	62	2,976	2,976	System.Private.CoreLib.dll
+ + LineNumberInfo	62	1,984	1,984	System.Private.CoreLib.dll
+ + SignatureHelper	62	2,976	6,448	System.Private.CoreLib.dll
+ + DynamicScope	62	1,488	15,752	System.Private.CoreLib.dll
+ + Closure	62	1,984	2,008	System.Linq.Expressions.dll
+ + DynamicResolver	62	4,464	9,384	System.Private.CoreLib.dll
+ + RuntimeMethodInfoStub	62	5,456	5,456	System.Private.CoreLib.dll
+ + RuntimeMethodInfo[]	60	4,752	41,168	System.Private.CoreLib.dll
+ + ArrayVersioningList<Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation>	55	1,320	13,104	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation[]	55	1,976	11,784	Microsoft.OData.Edm.dll
+ + Entry<MethodBase, ParameterInfo[]>	50	2,000	42,112	System.Linq.Expressions.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlEnumMember	45	2,520	20,368	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.VersioningTree<Microsoft.OData.Edm.IEdmElement, Microsoft.OData.Edm.VersioningList<Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation>>	45	2,520	48,592	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.EdmPrimitiveTypeReference	44	1,408	2,600	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Client.PrimitiveType	44	2,112	3,216	Microsoft.OData.Client.dll
+ + Microsoft.OData.ODataMediaTypeFormat	42	1,344	5,696	Microsoft.OData.Core.dll
+ + Microsoft.OData.ODataMediaType	42	1,680	4,352	Microsoft.OData.Core.dll
+ + RuntimeMethodHandle	42	1,008	1,008	System.Private.CoreLib.dll
+ + RuntimePropertyInfo[]	41	1,928	5,592	System.Private.CoreLib.dll
+ + GCHeapHash	40	1,280	137,992	System.Private.CoreLib.dll
+ + KeyValuePair<String, String>[]	37	2,088	2,424	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.EdmCoreModelPrimitiveType	34	1,360	3,680	Microsoft.OData.Edm.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementParser, String>	34	2,176	2,176	System.Private.CoreLib.dll
+ + List<Microsoft.OData.Edm.IEdmOperation>	33	1,056	11,496	System.Private.CoreLib.dll
+ + Uri	29	2,088	12,400	System.Private.Uri.dll
+ + RuntimeTypeCache	29	4,408	80,232	System.Private.CoreLib.dll
+ + Char[]	28	3,360	3,360	System.Private.CoreLib.dll
+ + MemberInfoCache<RuntimeMethodInfo>	28	1,568	62,168	System.Private.CoreLib.dll
+ + <>c	26	624	624	Microsoft.OData.Edm.dll
+ + OverideEventProvider	26	2,912	5,200	System.Private.CoreLib.dll
+ + EtwEnableCallback	26	1,664	1,664	System.Private.CoreLib.dll
+ + Action<Object, Object>	26	1,664	31,448	System.Private.CoreLib.dll
+ + GenericHeaderParser	24	1,152	2,688	System.Net.Http.dll
+ + GetParsedValueLengthDelegate	24	1,536	1,536	System.Net.Http.dll
+ + EdmTypeCacheValue	23	736	5,328	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.Metadata.ClientTypeAnnotation	23	2,208	88,688	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.Metadata.ODataTypeInfo	23	2,024	51,488	Microsoft.OData.Client.dll
+ + ConcurrentDictionary<String, String>	23	920	15,824	System.Collections.Concurrent.dll
+ + Node<String, String>[]	23	6,256	6,256	System.Collections.Concurrent.dll
+ + Tables<String, String>	23	920	14,904	System.Collections.Concurrent.dll
+ + Node<Type, Microsoft.OData.Client.Metadata.ODataTypeInfo>	23	1,104	53,416	System.Collections.Concurrent.dll
+ + ContextCallback	22	1,408	1,408	System.Private.CoreLib.dll
+ + Func<Object, Object>	22	1,408	25,376	System.Private.CoreLib.dll
+ + RuntimeModule	21	1,344	1,344	System.Private.CoreLib.dll
+ + Microsoft.OData.Client.Metadata.ClientPropertyAnnotation	21	4,200	79,704	Microsoft.OData.Client.dll
+ + Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsProperty	21	1,344	3,488	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.EdmEntityTypeReference	21	672	672	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsProperty, Microsoft.OData.Edm.IEdmTypeReference>	21	504	2,144	Microsoft.OData.Edm.dll
+ + GenericMethodInfo	20	640	640	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.EdmCollectionTypeReference	19	608	720	Microsoft.OData.Edm.dll
+ + TimeSpan	18	432	432	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlRecordExpression	18	864	6,696	Microsoft.OData.Edm.dll
+ + List<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlPropertyValue>	18	576	5,112	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.EdmStructuralProperty	18	864	1,600	Microsoft.OData.Edm.dll
+ + BuiltInUriParser	17	544	688	System.Private.Uri.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlPropertyValue[]	17	920	4,536	Microsoft.OData.Edm.dll
+ + MemberInfoCache<RuntimePropertyInfo>	17	952	8,400	System.Private.CoreLib.dll
+ + HeaderStoreItemInfo	17	680	2,416	System.Net.Http.dll
+ + Version	16	512	512	System.Private.CoreLib.dll
+ + UriInfo	16	1,152	3,736	System.Private.Uri.dll
+ + MoreInfo	16	1,024	1,560	System.Private.Uri.dll
+ + List<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlReference>	16	512	6,664	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlPropertyValue	16	768	3,616	Microsoft.OData.Edm.dll
+ + Node<String, IList<Microsoft.OData.Edm.IEdmOperation>>	16	768	1,336	System.Collections.Concurrent.dll
+ + Action<Object>	16	1,024	6,424	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.IEdmProperty[]	16	1,064	8,296	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlDirectValueAnnotation	15	960	3,456	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsElement, IEnumerable<Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation>>	15	360	360	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.EdmStringTypeReference	15	720	848	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.EdmCollectionType	15	360	872	Microsoft.OData.Edm.dll
+ + Node<String, Microsoft.OData.Edm.IEdmSchemaElement>	14	672	672	System.Collections.Concurrent.dll
+ + Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsStringTypeReference	14	896	896	Microsoft.OData.Edm.dll
+ + WeakReference	13	312	312	System.Private.CoreLib.dll
+ + TraceLoggingEventHandleTable	13	312	1,664	System.Private.CoreLib.dll
+ + IntPtr[]	13	1,352	1,352	System.Private.CoreLib.dll
+ + EtwEventProvider	13	312	312	System.Private.CoreLib.dll
+ + EventPipeEventProvider	13	312	312	System.Private.CoreLib.dll
+ + List<Microsoft.OData.Edm.IEdmProperty>	13	416	5,968	System.Private.CoreLib.dll
+ + PropertyInfo[]	13	752	3,416	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.IEdmModel[]	12	624	624	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlEnumMember[]	12	768	21,136	Microsoft.OData.Edm.dll
+ + <>c	12	288	288	Microsoft.OData.Core.dll
+ + SecurityPackageInfoClass	12	576	2,048	System.Net.Security.dll
+ + Microsoft.OData.Edm.EdmTemporalTypeReference	12	480	760	Microsoft.OData.Edm.dll
+ + ArrayList	12	384	2,496	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.EdmPathExpression	12	384	512	Microsoft.OData.Edm.dll
+ + List<PropertyInfo>	12	384	992	System.Private.CoreLib.dll
+ + Dictionary<String, PropertyInfo>	12	864	28,584	System.Private.CoreLib.dll
+ + <>c	11	264	264	Microsoft.OData.Client.dll
+ + EmptyVersioningList<Microsoft.OData.Edm.IEdmElement>	11	264	264	Microsoft.OData.Edm.dll
+ + Func<Microsoft.OData.Edm.IEdmElement, Microsoft.OData.Edm.IEdmElement, Int32>	11	704	704	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlEnumType	11	704	23,240	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlOperationParameter	11	704	3,144	Microsoft.OData.Edm.dll
+ + List<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlEnumMember>	11	352	21,464	System.Private.CoreLib.dll
+ + List<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlOperationParameter>	11	352	3,856	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsEnumTypeDefinition	11	880	24,648	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsEnumTypeDefinition, Microsoft.OData.Edm.IEdmPrimitiveType>	11	264	264	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsEnumTypeDefinition, IEnumerable<Microsoft.OData.Edm.IEdmEnumMember>>	11	264	264	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.IEdmOperation[]	11	616	10,440	Microsoft.OData.Edm.dll
+ + Task<Int32>	11	792	792	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsNamedTypeReference	11	704	968	Microsoft.OData.Edm.dll
+ + MemberInfoCache<RuntimeType>	11	616	2,520	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsNamedTypeReference, Microsoft.OData.Edm.IEdmType>	11	264	264	Microsoft.OData.Edm.dll
+ + Object[] (Bytes > 1K)	11	59,152	277,840	System.Private.CoreLib.dll
+ + Thread	10	720	720	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlEntityType	10	800	17,288	Microsoft.OData.Edm.dll
+ + List<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlReferentialConstraint>	10	320	344	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlNavigationProperty	10	880	2,864	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.IEdmStructuredType[]	10	528	528	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsEntityTypeDefinition	10	960	26,528	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsEntityTypeDefinition, Microsoft.OData.Edm.IEdmEntityType>	10	240	240	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsEntityTypeDefinition, IEnumerable<Microsoft.OData.Edm.IEdmStructuralProperty>>	10	240	240	Microsoft.OData.Edm.dll
+ + HttpMethod	10	320	632	System.Net.Http.dll
+ + Table<String, RuntimeMethodInfo[]>	10	400	4,736	System.Private.CoreLib.dll
+ + RuntimeMethodInfo[][]	10	1,088	2,560	System.Private.CoreLib.dll
+ + StringBuilder	10	480	2,520	System.Private.CoreLib.dll
+ + Entry<String, PropertyInfo>[]	10	1,632	27,208	System.Private.CoreLib.dll
+ + Func<Object, Object, Boolean>	10	640	12,160	System.Private.CoreLib.dll
+ + Type[]	9	456	1,496	System.Private.CoreLib.dll
+ + List<Microsoft.OData.Edm.IEdmModel>	9	288	824	System.Private.CoreLib.dll
+ + Dictionary<String, String>	9	648	7,832	System.Private.CoreLib.dll
+ + Dictionary<String, Microsoft.OData.Edm.IEdmSchemaType>	9	648	279,648	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlSchema[]	9	472	8,608	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlExpressionBase[]	9	480	6,744	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsSchema[]	9	472	6,888	Microsoft.OData.Edm.dll
+ + List<Microsoft.OData.Edm.IEdmStructuredType>	9	288	792	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsOperationParameter	9	576	1,488	Microsoft.OData.Edm.dll
+ + NameObjectEntry	9	288	1,256	System.Collections.Specialized.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsOperationParameter, Microsoft.OData.Edm.IEdmTypeReference>	9	216	912	Microsoft.OData.Edm.dll
+ + Dictionary<String, Object>	8	576	34,520	System.Private.CoreLib.dll
+ + <>c	8	192	192	System.Private.CoreLib.dll
+ + List<String>	8	256	520	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsModel	8	1,024	475,248	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsSchema	8	896	8,432	Microsoft.OData.Edm.dll
+ + OneKeyDictionary<Microsoft.OData.Edm.IEdmElement, Microsoft.OData.Edm.VersioningList<Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation>>	8	320	5,664	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlModel	8	384	15,888	Microsoft.OData.Edm.dll
+ + List<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlSchema>	8	256	8,840	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlSchema	8	896	9,368	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlCollectionExpression	8	384	7,640	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlTypeDefinition	8	384	10,344	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlNavigationPropertyBinding	8	384	1,504	Microsoft.OData.Edm.dll
+ + List<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlExpressionBase>	8	256	6,976	System.Private.CoreLib.dll
+ + List<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlStructuredType>	8	256	1,128	System.Private.CoreLib.dll
+ + List<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlEnumType>	8	256	536	System.Private.CoreLib.dll
+ + List<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlOperation>	8	256	368	System.Private.CoreLib.dll
+ + List<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlTerm>	8	256	1,728	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlTerm[]	8	1,472	1,472	Microsoft.OData.Edm.dll
+ + List<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlEntityContainer>	8	256	336	System.Private.CoreLib.dll
+ + List<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlAnnotations>	8	256	280	System.Private.CoreLib.dll
+ + List<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlTypeDefinition>	8	256	536	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsDirectValueAnnotationsManager	8	384	11,192	Microsoft.OData.Edm.dll
+ + List<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsSchema>	8	256	7,120	System.Private.CoreLib.dll
+ + List<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsReference>	8	256	1,512	System.Private.CoreLib.dll
+ + Dictionary<String, List<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsAnnotations>>	8	576	576	System.Private.CoreLib.dll
+ + ConcurrentDictionary<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlAnnotation, Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsVocabularyAnnotation>	8	320	5,576	System.Collections.Concurrent.dll
+ + Node<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlAnnotation, Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsVocabularyAnnotation>[]	8	2,176	2,224	System.Collections.Concurrent.dll
+ + Tables<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlAnnotation, Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsVocabularyAnnotation>	8	320	5,232	System.Collections.Concurrent.dll
+ + Dictionary<String, List<Microsoft.OData.Edm.IEdmStructuredType>>	8	576	2,480	System.Private.CoreLib.dll
+ + Dictionary<String, Microsoft.OData.Edm.IEdmEntityContainer>	8	576	12,848	System.Private.CoreLib.dll
+ + Dictionary<String, Microsoft.OData.Edm.Vocabularies.IEdmTerm>	8	576	122,456	System.Private.CoreLib.dll
+ + Dictionary<String, IList<Microsoft.OData.Edm.IEdmOperation>>	8	576	12,408	System.Private.CoreLib.dll
+ + ConcurrentDictionary<String, IList<Microsoft.OData.Edm.IEdmOperation>>	8	320	6,840	System.Collections.Concurrent.dll
+ + Node<String, IList<Microsoft.OData.Edm.IEdmOperation>>[]	8	2,176	3,512	System.Collections.Concurrent.dll
+ + Tables<String, IList<Microsoft.OData.Edm.IEdmOperation>>	8	320	6,520	System.Collections.Concurrent.dll
+ + List<Microsoft.OData.Edm.IEdmReference>	8	256	504	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsSchema, IEnumerable<Microsoft.OData.Edm.IEdmSchemaType>>	8	192	1,760	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsSchema, IEnumerable<Microsoft.OData.Edm.IEdmOperation>>	8	192	560	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsSchema, IEnumerable<Microsoft.OData.Edm.IEdmEntityContainer>>	8	192	528	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsSchema, IEnumerable<Microsoft.OData.Edm.Vocabularies.IEdmTerm>>	8	192	1,920	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsSchema, Dictionary<String, Object>>	8	192	192	Microsoft.OData.Edm.dll
+ + Dictionary<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlLabeledExpression, Microsoft.OData.Edm.Vocabularies.IEdmLabeledExpression>	8	576	576	System.Private.CoreLib.dll
+ + Dictionary<List<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlLabeledExpression>, Microsoft.OData.Edm.Vocabularies.IEdmLabeledExpression>	8	576	576	System.Private.CoreLib.dll
+ + List<Microsoft.OData.Edm.IEdmSchemaType>	8	256	1,568	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.IEdmSchemaType[]	8	1,312	1,312	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTypeDefinitionDefinition	8	576	11,304	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTypeDefinitionDefinition, Microsoft.OData.Edm.IEdmPrimitiveType>	8	192	192	Microsoft.OData.Edm.dll
+ + List<Microsoft.OData.Edm.Vocabularies.IEdmTerm>	8	256	1,728	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Vocabularies.IEdmTerm[]	8	1,472	1,472	Microsoft.OData.Edm.dll
+ + List<Microsoft.OData.Edm.IEdmEntityContainer>	8	256	336	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlInclude[]	8	416	1,144	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsOperation, Microsoft.OData.Edm.IEdmPathExpression>	8	192	192	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsOperation, Microsoft.OData.Edm.IEdmOperationReturn>	8	192	192	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsOperation, IEnumerable<Microsoft.OData.Edm.IEdmOperationParameter>>	8	192	2,032	Microsoft.OData.Edm.dll
+ + TimerQueue	8	640	736	System.Private.CoreLib.dll
+ + Microsoft.OData.Client.GeographyTypeConverter	8	192	192	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.GeometryTypeConverter	8	192	192	Microsoft.OData.Client.dll
+ + ValueCollection<String, IList<Microsoft.OData.Edm.IEdmOperation>>	8	192	192	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.EdmComplexTypeReference	8	256	256	Microsoft.OData.Edm.dll
+ + Byte[] (Bytes > 1K)	8	33,952	33,952	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlReference	7	392	5,904	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlInclude	7	336	728	Microsoft.OData.Edm.dll
+ + EncoderReplacementFallback	7	168	192	System.Private.CoreLib.dll
+ + DecoderReplacementFallback	7	168	192	System.Private.CoreLib.dll
+ + Entry<String, Microsoft.OData.Edm.IEdmSchemaType>[]	7	2,976	273,384	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlNavigationProperty[]	7	360	3,224	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlOperationParameter[]	7	360	3,504	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlStructuredType[]	7	872	872	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsReference	7	504	1,008	Microsoft.OData.Edm.dll
+ + Func<String, String, Int32>	7	448	448	System.Private.CoreLib.dll
+ + ArrayVersioningList<String>	7	168	656	Microsoft.OData.Edm.dll
+ + List<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlInclude>	7	224	1,344	System.Private.CoreLib.dll
+ + List<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlIncludeAnnotations>	7	224	248	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsReference, List<Microsoft.OData.Edm.IEdmInclude>>	7	168	168	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsReference, List<Microsoft.OData.Edm.IEdmIncludeAnnotations>>	7	168	168	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.VersioningTree<String, String>	7	392	992	Microsoft.OData.Edm.dll
+ + RtFieldInfo	7	504	504	System.Private.CoreLib.dll
+ + Microsoft.OData.ODataMediaTypeFormat[]	7	728	6,424	Microsoft.OData.Core.dll
+ + Microsoft.OData.Client.OriginalNameAttribute	7	168	168	Microsoft.OData.Client.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.EdmStructuredType, IDictionary<String, Microsoft.OData.Edm.IEdmProperty>>	7	168	168	Microsoft.OData.Edm.dll
+ + UInt16[]	6	312	312	System.Private.CoreLib.dll
+ + CultureInfo	6	672	3,104	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlOperationReturn	6	240	1,512	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlPropertyReference[]	6	184	800	Microsoft.OData.Edm.dll
+ + Entry<String, Microsoft.OData.Edm.Vocabularies.IEdmTerm>[]	6	1,824	73,128	System.Private.CoreLib.dll
+ + WorkStealingQueue	6	288	1,968	System.Private.CoreLib.dll
+ + HashSet<String>	6	384	1,928	System.Collections.dll
+ + TypeInfo	6	192	1,792	System.Linq.Expressions.dll
+ + <>c	6	144	144	System.Net.Http.dll
+ + AsyncCallback	6	384	408	System.Private.CoreLib.dll
+ + Table<String, RuntimePropertyInfo[]>	6	240	2,616	System.Private.CoreLib.dll
+ + RuntimePropertyInfo[][]	6	640	1,376	System.Private.CoreLib.dll
+ + ThreadPoolWorkQueueThreadLocals	6	336	336	System.Private.CoreLib.dll
+ + Dictionary<String, Microsoft.OData.Edm.IEdmProperty>	6	432	3,488	System.Private.CoreLib.dll
+ + Entry<String, Microsoft.OData.Edm.IEdmProperty>[]	6	1,584	2,648	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.IEdmOperationParameter[]	6	216	1,704	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.EdmNavigationProperty	6	432	1,304	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.EdmEnumTypeReference	6	192	192	Microsoft.OData.Edm.dll
+ + List<KeyValuePair<String, Object>>	6	192	216	System.Private.CoreLib.dll
+ + CultureData	5	2,360	3,472	System.Private.CoreLib.dll
+ + Hashtable	5	360	2,672	System.Private.CoreLib.dll
+ + bucket[]	5	2,256	2,312	System.Private.CoreLib.dll
+ + Func<Object, Boolean>	5	320	320	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlReference[]	5	248	6,152	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlPropertyReference	5	200	616	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlKey	5	200	1,336	Microsoft.OData.Edm.dll
+ + List<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlPropertyReference>	5	160	936	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlTemporalTypeReference	5	480	784	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlFunction	5	360	4,296	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlEnumType[]	5	280	280	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlTypeDefinition[]	5	280	280	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsReference[]	5	248	1,256	Microsoft.OData.Edm.dll
+ + Entry<String, String>[]	5	1,824	3,256	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.IEdmReference[]	5	248	248	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsFunction	5	480	6,016	Microsoft.OData.Edm.dll
+ + DateTime	5	120	120	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsNavigationProperty	5	480	1,288	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsNavigationProperty, Microsoft.OData.Edm.IEdmTypeReference>	5	120	328	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsNavigationProperty, Microsoft.OData.Edm.IEdmNavigationProperty>	5	120	120	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsNavigationProperty, Microsoft.OData.Edm.IEdmReferentialConstraint>	5	120	120	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsNavigationProperty, Microsoft.OData.Edm.IEdmEntityType>	5	120	120	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsNavigationProperty, IEnumerable<Microsoft.OData.Edm.Validation.EdmError>>	5	120	120	Microsoft.OData.Edm.dll
+ + List<Microsoft.OData.Edm.IEdmOperationParameter>	5	160	1,840	System.Private.CoreLib.dll
+ + <>c__DisplayClass37_0	5	240	240	Microsoft.OData.Client.dll
+ + PropertyData	5	320	840	Microsoft.OData.Core.dll
+ + Collection<Microsoft.OData.ODataInstanceAnnotation>	5	120	304	System.Private.CoreLib.dll
+ + List<Microsoft.OData.ODataInstanceAnnotation>	5	160	184	System.Private.CoreLib.dll
+ + Object[] (Bytes > 10K)	5	114,424	221,728	System.Private.CoreLib.dll
+ + UTF8EncodingSealed	4	192	360	System.Private.CoreLib.dll
+ + NumberFormatInfo	4	800	1,864	System.Private.CoreLib.dll
+ + Regex	4	416	4,312	System.Text.RegularExpressions.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue, Boolean>	4	256	256	System.Private.CoreLib.dll
+ + Node<String, Type>	4	192	192	System.Collections.Concurrent.dll
+ + List<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlNavigationPropertyBinding>	4	128	1,768	System.Private.CoreLib.dll
+ + RegexCode	4	352	2,128	System.Text.RegularExpressions.dll
+ + ExclusiveReference	4	160	1,000	System.Text.RegularExpressions.dll
+ + WeakReference<RegexReplacement>	4	96	96	System.Private.CoreLib.dll
+ + Entry<String, List<Microsoft.OData.Edm.IEdmStructuredType>>[]	4	480	1,728	System.Private.CoreLib.dll
+ + InternalEncoderBestFitFallback	4	128	128	System.Private.CoreLib.dll
+ + InternalDecoderBestFitFallback	4	160	160	System.Private.CoreLib.dll
+ + Task<Boolean>	4	288	288	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.EdmDecimalTypeReference	4	192	320	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsCollectionTypeDefinition	4	256	592	Microsoft.OData.Edm.dll
+ + Func<Expression, String, Boolean, ReadOnlyCollection<ParameterExpression>, LambdaExpression>	4	256	256	System.Private.CoreLib.dll
+ + IPAddress	4	160	320	System.Net.Primitives.dll
+ + WebRequestPrefixElement	4	128	336	System.Net.Requests.dll
+ + TransferCodingHeaderParser	4	160	416	System.Net.Http.dll
+ + Microsoft.OData.Client.QueryComponents	4	352	1,280	Microsoft.OData.Client.dll
+ + RuntimeConstructorInfo	4	416	1,088	System.Private.CoreLib.dll
+ + Scope[]	4	128	2,416	Microsoft.OData.Core.dll
+ + Microsoft.OData.Client.HeaderCollection	4	96	2,456	Microsoft.OData.Client.dll
+ + Dictionary<HeaderDescriptor, HeaderStoreItemInfo>	4	288	3,784	System.Private.CoreLib.dll
+ + Func<TransferCodingHeaderValue>	4	256	256	System.Private.CoreLib.dll
+ + Entry<HeaderDescriptor, HeaderStoreItemInfo>[]	4	736	3,304	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsNavigationSource, Microsoft.OData.Edm.IEdmEntityType>	4	96	96	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsNavigationSource, IEnumerable<Microsoft.OData.Edm.IEdmNavigationPropertyBinding>>	4	96	232	Microsoft.OData.Edm.dll
+ + ConcurrentDictionary<Microsoft.OData.Edm.IEdmNavigationProperty, Microsoft.OData.Edm.IEdmContainedEntitySet>	4	160	2,776	System.Collections.Concurrent.dll
+ + Node<Microsoft.OData.Edm.IEdmNavigationProperty, Microsoft.OData.Edm.IEdmContainedEntitySet>[]	4	1,088	1,088	System.Collections.Concurrent.dll
+ + Tables<Microsoft.OData.Edm.IEdmNavigationProperty, Microsoft.OData.Edm.IEdmContainedEntitySet>	4	160	2,592	System.Collections.Concurrent.dll
+ + ConcurrentDictionary<Microsoft.OData.Edm.IEdmNavigationProperty, Microsoft.OData.Edm.IEdmUnknownEntitySet>	4	160	2,752	System.Collections.Concurrent.dll
+ + Node<Microsoft.OData.Edm.IEdmNavigationProperty, Microsoft.OData.Edm.IEdmUnknownEntitySet>[]	4	1,088	1,088	System.Collections.Concurrent.dll
+ + Tables<Microsoft.OData.Edm.IEdmNavigationProperty, Microsoft.OData.Edm.IEdmUnknownEntitySet>	4	160	2,592	System.Collections.Concurrent.dll
+ + ConcurrentDictionary<Microsoft.OData.Edm.IEdmNavigationProperty, IEnumerable<Microsoft.OData.Edm.IEdmNavigationPropertyBinding>>	4	160	3,336	System.Collections.Concurrent.dll
+ + Node<Microsoft.OData.Edm.IEdmNavigationProperty, IEnumerable<Microsoft.OData.Edm.IEdmNavigationPropertyBinding>>[]	4	1,088	1,672	System.Collections.Concurrent.dll
+ + Tables<Microsoft.OData.Edm.IEdmNavigationProperty, IEnumerable<Microsoft.OData.Edm.IEdmNavigationPropertyBinding>>	4	160	3,176	System.Collections.Concurrent.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsCollectionTypeDefinition, Microsoft.OData.Edm.IEdmTypeReference>	4	96	336	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsCollectionTypeExpression	4	224	816	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Client.LinkInfo	4	160	2,048	Microsoft.OData.Client.dll
+ + ActivatorCache	4	160	288	System.Private.CoreLib.dll
+ + Dictionary<String, Microsoft.OData.Client.Metadata.ClientPropertyAnnotation>	4	288	81,888	System.Private.CoreLib.dll
+ + Microsoft.OData.Client.Providers.EdmComplexTypeWithDelayLoadedProperties	4	352	1,392	Microsoft.OData.Client.dll
+ + Entry<Type, Func<Expression, String, Boolean, ReadOnlyCollection<ParameterExpression>, LambdaExpression>>	4	160	576	System.Linq.Expressions.dll
+ + Entry<String, Microsoft.OData.Client.Metadata.ClientPropertyAnnotation>[]	4	720	81,288	System.Private.CoreLib.dll
+ + ValueCollection<String, Microsoft.OData.Client.Metadata.ClientPropertyAnnotation>	4	96	96	System.Private.CoreLib.dll
+ + MemberFilter	3	192	192	System.Private.CoreLib.dll
+ + Guid	3	96	96	System.Private.CoreLib.dll
+ + CultureAwareComparer	3	96	96	System.Private.CoreLib.dll
+ + UnicodeEncoding	3	144	288	System.Private.CoreLib.dll
+ + Func<String, Boolean>	3	192	240	System.Private.CoreLib.dll
+ + Dictionary<String, Microsoft.OData.Client.Metadata.ClientTypeAnnotation>	3	216	86,992	System.Private.CoreLib.dll
+ + CompareInfo	3	168	200	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Vocabularies.EdmDirectValueAnnotationsManager	3	144	10,776	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.EdmCoreModelPathType	3	96	96	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Client.EntityDescriptor	3	672	9,536	Microsoft.OData.Client.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlAction	3	216	2,368	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlEntitySet	3	192	1,536	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlNavigationPropertyBinding[]	3	136	1,640	Microsoft.OData.Edm.dll
+ + OneKeyDictionary<String, String>	3	120	312	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlDecimalTypeReference	3	288	432	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsAction	3	264	3,808	Microsoft.OData.Edm.dll
+ + TimeZoneInfo	3	216	696	System.Private.CoreLib.dll
+ + Microsoft.OData.ODataNestedResourceInfo[]	3	72	72	Microsoft.OData.Core.dll
+ + Microsoft.OData.ODataProperty[]	3	104	568	Microsoft.OData.Core.dll
+ + Microsoft.OData.ODataPayloadKind[]	3	144	144	Microsoft.OData.Core.dll
+ + Func<KeyValuePair<String, String>, Boolean>	3	192	192	System.Private.CoreLib.dll
+ + Func<KeyValuePair<String, String>, String>	3	192	192	System.Private.CoreLib.dll
+ + ReadOnlyIPAddress	3	120	120	System.Net.Primitives.dll
+ + MediaTypeHeaderParser	3	120	312	System.Net.Http.dll
+ + EventHandler<SocketAsyncEventArgs>	3	192	192	System.Private.CoreLib.dll
+ + <>c	3	72	72	System.Net.Sockets.dll
+ + Microsoft.OData.ODataMessageQuotas	3	120	120	Microsoft.OData.Core.dll
+ + Microsoft.OData.ODataSimplifiedOptions	3	72	72	Microsoft.OData.Core.dll
+ + MemoryStream	3	216	2,688	System.Private.CoreLib.dll
+ + Func<MediaTypeHeaderValue>	3	192	192	System.Private.CoreLib.dll
+ + AppDomainTimerSafeHandle	3	96	96	System.Private.CoreLib.dll
+ + StrongBox<SocketAsyncEventArgs>	3	72	72	System.Private.CoreLib.dll
+ + PreAllocatedOverlapped	3	96	312	System.Private.CoreLib.dll
+ + ThreadPoolBoundHandleOverlapped	3	216	216	System.Private.CoreLib.dll
+ + OverlappedData	3	216	216	System.Private.CoreLib.dll
+ + NameValueHeaderValue[]	3	136	520	System.Net.Http.dll
+ + Microsoft.OData.UriParser.ODataPathSegment[]	3	80	240	Microsoft.OData.Core.dll
+ + Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsEntitySet	3	312	8,008	Microsoft.OData.Edm.dll
+ + Node<Microsoft.OData.Edm.IEdmNavigationProperty, IEnumerable<Microsoft.OData.Edm.IEdmNavigationPropertyBinding>>	3	144	584	System.Collections.Concurrent.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsOperationImport, Microsoft.OData.Edm.IEdmExpression>	3	72	72	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Client.Providers.EdmEntityTypeWithDelayLoadedProperties	3	288	1,336	Microsoft.OData.Client.dll
+ + List<Microsoft.OData.ODataProperty>	3	96	640	System.Private.CoreLib.dll
+ + List<Microsoft.OData.Edm.IEdmNavigationPropertyBinding>	3	96	440	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.IEdmNavigationPropertyBinding[]	3	136	344	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Client.ClientEdmStructuredValue	3	144	240	Microsoft.OData.Client.dll
+ + Microsoft.OData.Edm.IEdmStructuralProperty[]	3	136	136	Microsoft.OData.Edm.dll
+ + Dictionary<Type, TypeInfo>	3	216	1,600	System.Private.CoreLib.dll
+ + Entry<Type, TypeInfo>[]	3	288	1,264	System.Private.CoreLib.dll
+ + ResourceManager	2	256	4,040	System.Private.CoreLib.dll
+ + Boolean	2	48	48	System.Private.CoreLib.dll
+ + Microsoft.OData.Client.DataServiceUrlKeyDelimiter	2	48	48	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.ClientEdmModel	2	128	106,864	Microsoft.OData.Client.dll
+ + OSEncoding	2	128	272	System.Console.dll
+ + Func<Encoding>	2	128	128	System.Private.CoreLib.dll
+ + Dictionary<Version, Version>	2	144	416	System.Private.CoreLib.dll
+ + UTF8Encoding	2	96	96	System.Private.CoreLib.dll
+ + State[]	2	880	880	System.Private.Xml.dll
+ + ThreadAbortException	2	256	256	System.Private.CoreLib.dll
+ + Entry<String, Object>[]	2	528	33,808	System.Private.CoreLib.dll
+ + Dictionary<Type, Microsoft.OData.Client.ClientEdmModel.EdmTypeCacheValue>	2	144	6,560	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.IEdmSchemaElement[]	2	560	560	Microsoft.OData.Edm.dll
+ + ConcurrentDictionary<String, Microsoft.OData.Edm.IEdmSchemaElement>	2	80	2,624	System.Collections.Concurrent.dll
+ + Node<String, Microsoft.OData.Edm.IEdmSchemaElement>[]	2	832	1,504	System.Collections.Concurrent.dll
+ + Tables<String, Microsoft.OData.Edm.IEdmSchemaElement>	2	80	2,544	System.Collections.Concurrent.dll
+ + Func<Object, Boolean>[]	2	80	144	System.Private.CoreLib.dll
+ + Node<Object, Microsoft.OData.Client.EntityDescriptor>	2	96	9,264	System.Collections.Concurrent.dll
+ + List<Action<Microsoft.OData.Client.ReadingEntryArgs>>	2	64	88	System.Private.CoreLib.dll
+ + List<Action<Microsoft.OData.Client.ReadingFeedArgs>>	2	64	88	System.Private.CoreLib.dll
+ + List<Action<Microsoft.OData.Client.ReadingNestedResourceInfoArgs>>	2	64	88	System.Private.CoreLib.dll
+ + List<Action<Microsoft.OData.Client.WritingEntryArgs>>	2	64	88	System.Private.CoreLib.dll
+ + List<Action<Microsoft.OData.Client.WritingNestedResourceInfoArgs>>	2	64	88	System.Private.CoreLib.dll
+ + Func<Type, String>	2	128	128	System.Private.CoreLib.dll
+ + Func<String, Type>	2	128	128	System.Private.CoreLib.dll
+ + Entry<Version, Version>[]	2	192	192	System.Private.CoreLib.dll
+ + Func<KeyValuePair<Version, String>, String>	2	128	128	System.Private.CoreLib.dll
+ + Func<KeyValuePair<Version, String>, Version>	2	128	128	System.Private.CoreLib.dll
+ + List<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue>	2	64	88	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlFunctionImport	2	160	672	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlEntitySet[]	2	80	1,272	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlSingleton[]	2	80	1,104	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlOperationImport[]	2	80	1,024	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlOperation[]	2	112	112	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlEntityContainer[]	2	80	80	Microsoft.OData.Edm.dll
+ + Dictionary<String, ResourceSet>	2	144	416	System.Private.CoreLib.dll
+ + CultureNameResourceSetPair	2	64	2,824	System.Private.CoreLib.dll
+ + ResourceManagerMediator	2	48	48	System.Private.CoreLib.dll
+ + ManifestBasedResourceGroveler	2	48	96	System.Private.CoreLib.dll
+ + ManifestResourceStream	2	208	208	System.Private.CoreLib.dll
+ + RuntimeResourceSet	2	144	2,760	System.Private.CoreLib.dll
+ + Dictionary<String, ResourceLocator>	2	144	856	System.Private.CoreLib.dll
+ + ResourceReader	2	256	1,760	System.Private.CoreLib.dll
+ + BinaryReader	2	128	1,200	System.Private.CoreLib.dll
+ + DecoderNLS	2	112	112	System.Private.CoreLib.dll
+ + Entry<String, ResourceSet>[]	2	192	192	System.Private.CoreLib.dll
+ + Entry<String, ResourceLocator>[]	2	240	632	System.Private.CoreLib.dll
+ + Int32[][]	2	192	728	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.IEdmEntityContainer[]	2	80	80	Microsoft.OData.Edm.dll
+ + TwoKeyDictionary<String, String>	2	112	416	Microsoft.OData.Edm.dll
+ + TreeDictionary<String, String>	2	64	792	Microsoft.OData.Edm.dll
+ + WindowsConsoleStream	2	112	112	System.Console.dll
+ + DateTimeFormatInfo	2	720	1,760	System.Private.CoreLib.dll
+ + IOCompletionCallback	2	128	128	System.Private.CoreLib.dll
+ + CancellationTokenSource	2	128	128	System.Private.CoreLib.dll
+ + TimerCallback	2	128	128	System.Private.CoreLib.dll
+ + ExecutionContext	2	80	104	System.Private.CoreLib.dll
+ + Int64	2	48	48	System.Private.CoreLib.dll
+ + Func<Object, Int32>	2	128	128	System.Private.CoreLib.dll
+ + GregorianCalendar	2	64	64	System.Private.CoreLib.dll
+ + Internal.Win32.RegistryKey	2	48	112	System.Private.CoreLib.dll
+ + Dictionary<Type, Microsoft.OData.Edm.IEdmPrimitiveTypeReference>	2	144	5,264	System.Private.CoreLib.dll
+ + Dictionary<Type, Microsoft.OData.Client.PrimitiveType>	2	144	6,784	System.Private.CoreLib.dll
+ + Microsoft.OData.ODataProperty	2	128	464	Microsoft.OData.Core.dll
+ + Func<KeyValuePair<ConstantExpression, ConstantExpression>, ConstantExpression>	2	128	128	System.Private.CoreLib.dll
+ + ConstantExpression	2	48	128	System.Linq.Expressions.dll
+ + Func<PropertyInfo, String>	2	128	128	System.Private.CoreLib.dll
+ + Func<String>	2	128	128	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Client.Materialization.PrimitivePropertyConverter>	2	128	128	System.Private.CoreLib.dll
+ + HashSet<Microsoft.OData.Edm.IEdmStructuredType>	2	128	352	System.Collections.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsComplexTypeDefinition, Microsoft.OData.Edm.IEdmComplexType>	2	128	128	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsEntityContainer, Microsoft.OData.Edm.IEdmEntityContainer>	2	128	128	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsEntityTypeDefinition, Microsoft.OData.Edm.IEdmEntityType>	2	128	128	System.Private.CoreLib.dll
+ + Microsoft.OData.ODataUrlKeyDelimiter	2	48	48	Microsoft.OData.Core.dll
+ + DefaultLiteralFormatter	2	48	48	Microsoft.OData.Core.dll
+ + Func<Microsoft.OData.ODataMediaTypeFormat, Microsoft.OData.ODataMediaType>	2	128	128	System.Private.CoreLib.dll
+ + PropertyChangedEventArgs	2	48	120	System.ObjectModel.dll
+ + RequestCachePolicy	2	48	48	System.Net.Primitives.dll
+ + Func<IWebProxy>	2	128	128	System.Private.CoreLib.dll
+ + SslApplicationProtocol	2	48	48	System.Net.Security.dll
+ + NameValueHeaderValue	2	64	384	System.Net.Http.dll
+ + ProductInfoHeaderParser	2	64	88	System.Net.Http.dll
+ + AsyncProtocolCallback	2	128	128	System.Net.Security.dll
+ + Oid	2	80	192	System.Security.Cryptography.Encoding.dll
+ + Func<AwaitableSocketAsyncEventArgs>	2	128	128	System.Private.CoreLib.dll
+ + <>c	2	48	48	System.Net.NameResolution.dll
+ + Microsoft.OData.Client.ResourceSetExpression	2	304	1,088	Microsoft.OData.Client.dll
+ + Dictionary<ConstantExpression, ConstantExpression>	2	144	168	System.Private.CoreLib.dll
+ + List<Microsoft.OData.Client.QueryOptionExpression>	2	64	88	System.Private.CoreLib.dll
+ + List<Expression>	2	64	88	System.Private.CoreLib.dll
+ + Microsoft.OData.Client.DataServiceQueryProvider	2	48	48	Microsoft.OData.Client.dll
+ + ClientEdmPrimitiveType	2	96	288	Microsoft.OData.Client.dll
+ + Microsoft.OData.Edm.EdmBinaryTypeReference	2	80	168	Microsoft.OData.Edm.dll
+ + Entry<Type, Microsoft.OData.Edm.IEdmPrimitiveTypeReference>[]	2	1,824	4,768	System.Private.CoreLib.dll
+ + MemberInfoCache<RuntimeConstructorInfo>	2	112	504	System.Private.CoreLib.dll
+ + RuntimeConstructorInfo[]	2	80	392	System.Private.CoreLib.dll
+ + Gen2GcCallback	2	80	208	System.Private.CoreLib.dll
+ + Microsoft.OData.ODataUri	2	368	792	Microsoft.OData.Core.dll
+ + MatchInfoCacheKey	2	80	360	Microsoft.OData.Core.dll
+ + MediaTypeMatchInfo	2	80	80	Microsoft.OData.Core.dll
+ + Node<Microsoft.OData.MediaTypeUtils.MatchInfoCacheKey, Microsoft.OData.MediaTypeUtils.MediaTypeMatchInfo>	2	96	536	System.Collections.Concurrent.dll
+ + Microsoft.OData.ODataBatchPayloadUriConverter	2	64	64	Microsoft.OData.Core.dll
+ + Microsoft.OData.MultipartMixed.DependsOnIdsTracker	2	80	208	Microsoft.OData.Core.dll
+ + ThreadContext	2	48	48	System.Net.NameResolution.dll
+ + DynamicWinsockMethods[]	2	80	272	System.Net.Sockets.dll
+ + Microsoft.OData.Client.HttpWebResponseMessage	2	96	1,472	Microsoft.OData.Client.dll
+ + <>c__DisplayClass53_0	2	48	48	Microsoft.OData.Client.dll
+ + MediaTypeHeaderValue	2	64	864	System.Net.Http.dll
+ + HttpContentHeaders	2	128	1,664	System.Net.Http.dll
+ + SslApplicationProtocol[]	2	80	80	System.Net.Security.dll
+ + Internal.Win32.SafeHandles.SafeRegistryHandle	2	64	64	System.Private.CoreLib.dll
+ + ProductHeaderValue	2	64	248	System.Net.Http.dll
+ + ProductInfoHeaderValue	2	64	312	System.Net.Http.dll
+ + ObjectCollection<NameValueHeaderValue>	2	64	688	System.Net.Http.dll
+ + List<NameValueHeaderValue>	2	64	560	System.Private.CoreLib.dll
+ + Func<Stream>	2	128	128	System.Private.CoreLib.dll
+ + Microsoft.OData.ODataMessageReaderSettings	2	224	352	Microsoft.OData.Core.dll
+ + Microsoft.OData.ReaderValidator	2	48	48	Microsoft.OData.Core.dll
+ + Microsoft.OData.Metadata.EdmTypeReaderResolver	2	64	64	Microsoft.OData.Core.dll
+ + Microsoft.OData.Edm.IEdmEntityContainerElement[]	2	112	7,928	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsFunctionImport	2	176	224	Microsoft.OData.Edm.dll
+ + Microsoft.OData.ReadOnlyEnumerable<Microsoft.OData.ODataProperty>	2	64	672	Microsoft.OData.Core.dll
+ + Microsoft.OData.Edm.EdmNavigationPropertyBinding	2	80	208	Microsoft.OData.Edm.dll
+ + Node<Microsoft.OData.Edm.IEdmStructuredType, HashSet<Microsoft.OData.Edm.IEdmStructuredType>>	2	96	448	System.Collections.Concurrent.dll
+ + Slot<Microsoft.OData.Edm.IEdmStructuredType>[]	2	144	144	System.Collections.dll
+ + Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsPrimitiveTypeReference	2	128	128	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Client.FunctionDescriptor	2	176	2,048	Microsoft.OData.Client.dll
+ + List<Microsoft.OData.Client.OperationDescriptor>	2	64	4,176	System.Private.CoreLib.dll
+ + Microsoft.OData.Client.OperationDescriptor[]	2	80	4,112	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.ActionDescriptor	2	176	1,984	Microsoft.OData.Client.dll
+ + Trippin.Location[]	2	80	336	ODataClientExample.dll
+ + ParameterExpression[]	2	48	48	System.Linq.Expressions.dll
+ + Action<Microsoft.OData.Client.Providers.EdmComplexTypeWithDelayLoadedProperties>	2	128	224	System.Private.CoreLib.dll
+ + <>c__DisplayClass37_1	2	64	160	Microsoft.OData.Client.dll
+ + Action<Microsoft.OData.Client.Providers.EdmEnumTypeWithDelayLoadedMembers>	2	128	288	System.Private.CoreLib.dll
+ + Microsoft.OData.Client.Providers.EdmEnumTypeWithDelayLoadedMembers	2	160	872	Microsoft.OData.Client.dll
+ + List<Microsoft.OData.Edm.IEdmEnumMember>	2	64	88	System.Private.CoreLib.dll
+ + List<Microsoft.OData.Edm.IEdmStructuralProperty>	2	64	176	System.Private.CoreLib.dll
+ + MaterializerPropertyValue	2	48	48	Microsoft.OData.Client.dll
+ + Node<Uri, Microsoft.OData.Client.EntityDescriptor>	2	96	96	System.Collections.Concurrent.dll
+ + Dictionary<Uri, Microsoft.OData.ODataResource>	2	144	4,968	System.Private.CoreLib.dll
+ + Microsoft.OData.Client.SimpleLazy<Microsoft.OData.Client.Materialization.PrimitivePropertyConverter>	2	96	232	Microsoft.OData.Client.dll
+ + Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation[]	2	80	80	Microsoft.OData.Edm.dll
+ + List<Microsoft.OData.ODataAction>	2	64	88	System.Private.CoreLib.dll
+ + List<Microsoft.OData.ODataFunction>	2	64	88	System.Private.CoreLib.dll
+ + Microsoft.OData.ODataPrimitiveValue	2	80	224	Microsoft.OData.Core.dll
+ + Microsoft.OData.Edm.IEdmExpression[]	2	80	208	Microsoft.OData.Edm.dll
+ + CtorDelegate	2	128	128	System.Private.CoreLib.dll
+ + String (Bytes > 1K)	2	2,776	2,776	System.Private.CoreLib.dll
+ + RuntimeMethodInfo[] (Bytes > 1K)	2	2,912	16,168	System.Private.CoreLib.dll
+ + Byte[] (Bytes > 10K)	2	98,352	98,352	System.Private.CoreLib.dll
+ + SByte[] (Bytes > 1K)	2	3,136	3,136	System.Private.CoreLib.dll
+ + EventHandler	1	64	64	System.Private.CoreLib.dll
+ + Missing	1	24	24	System.Private.CoreLib.dll
+ + AppDomain	1	72	96	System.Private.CoreLib.dll
+ + OrdinalCaseSensitiveComparer	1	24	24	System.Private.CoreLib.dll
+ + OrdinalIgnoreCaseComparer	1	24	24	System.Private.CoreLib.dll
+ + TaskFactory	1	40	40	System.Private.CoreLib.dll
+ + Task	1	64	64	System.Private.CoreLib.dll
+ + DecoderExceptionFallback	1	24	24	System.Private.CoreLib.dll
+ + EncoderExceptionFallback	1	24	24	System.Private.CoreLib.dll
+ + Int32	1	24	24	System.Private.CoreLib.dll
+ + UInt32[]	1	56	56	System.Private.CoreLib.dll
+ + SyncHashtable	1	80	304	System.Private.CoreLib.dll
+ + CodePageDataItem[]	1	88	240	System.Private.CoreLib.dll
+ + CodePageDataItem	1	64	152	System.Private.CoreLib.dll
+ + FastResourceComparer	1	24	24	System.Private.CoreLib.dll
+ + Dictionary<RuntimeType, RuntimeType>	1	72	872	System.Private.CoreLib.dll
+ + NullStream	1	32	32	System.Private.CoreLib.dll
+ + NullTextWriter	1	40	72	System.Private.CoreLib.dll
+ + CalendarData	1	160	1,624	System.Private.CoreLib.dll
+ + Dictionary<String, CultureData>	1	72	1,432	System.Private.CoreLib.dll
+ + Dictionary<String, CultureInfo>	1	72	464	System.Private.CoreLib.dll
+ + Dictionary<Int32, CultureInfo>	1	72	72	System.Private.CoreLib.dll
+ + NativeRuntimeEventSource	1	168	848	System.Private.CoreLib.dll
+ + RuntimeEventSource	1	320	952	System.Private.CoreLib.dll
+ + ActivityTracker	1	32	32	System.Private.CoreLib.dll
+ + List<WeakReference>	1	32	496	System.Private.CoreLib.dll
+ + NonRandomizedStringEqualityComparer	1	24	24	System.Private.CoreLib.dll
+ + <>c	1	24	24	ODataClientExample.dll
+ + Version[]	1	40	40	System.Private.CoreLib.dll
+ + DefaultKeySerializer	1	24	24	Microsoft.OData.Client.dll
+ + SegmentKeySerializer	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.Annotation.InstanceAnnotationDictWeakKeyComparer	1	24	48	Microsoft.OData.Client.dll
+ + Func<Microsoft.OData.Edm.IEdmSchemaElement, Boolean>	1	64	64	System.Private.CoreLib.dll
+ + Dictionary<Microsoft.OData.Client.ODataProtocolVersion, Microsoft.OData.Client.ClientEdmModel>	1	72	107,072	System.Private.CoreLib.dll
+ + SyncTextReader	1	24	24	System.Console.dll
+ + SyncTextWriter	1	48	4,400	System.Private.CoreLib.dll
+ + <>c	1	24	24	System.Console.dll
+ + Func<TextReader>	1	64	64	System.Private.CoreLib.dll
+ + Func<TextWriter>	1	64	64	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.EdmCoreModel	1	104	15,688	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.EdmCoreModelComplexType	1	24	24	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.EdmCoreModelEntityType	1	24	24	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.EdmCoreModelUntypedType	1	24	24	Microsoft.OData.Edm.dll
+ + Dictionary<Version, String[]>	1	72	400	System.Private.CoreLib.dll
+ + Dictionary<Version, String>	1	72	312	System.Private.CoreLib.dll
+ + Dictionary<String, Version>	1	72	208	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsSchema, IEnumerable<Microsoft.OData.Edm.IEdmSchemaType>>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsSchema, IEnumerable<Microsoft.OData.Edm.IEdmOperation>>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsSchema, IEnumerable<Microsoft.OData.Edm.IEdmEntityContainer>>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsSchema, IEnumerable<Microsoft.OData.Edm.Vocabularies.IEdmTerm>>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsSchema, Dictionary<String, Object>>	1	64	64	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Common.XmlAttributeInfo	1	48	48	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValueCollection	1	32	216	Microsoft.OData.Edm.dll
+ + Func<Microsoft.OData.Edm.Validation.EdmError, Boolean>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlReference, IEnumerable<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlInclude>>	1	64	64	System.Private.CoreLib.dll
+ + Func<KeyValuePair<Version, String[]>, IEnumerable<KeyValuePair<Version, String>>>	1	64	64	System.Private.CoreLib.dll
+ + ReadOnlyCollection<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue>	1	24	56	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlAttributeInfo, Boolean>	1	64	64	System.Private.CoreLib.dll
+ + Microsoft.OData.Json.ODataJsonFormat	1	24	24	Microsoft.OData.Core.dll
+ + Microsoft.OData.ODataRawValueFormat	1	24	24	Microsoft.OData.Core.dll
+ + Microsoft.OData.MultipartMixed.ODataMultipartMixedBatchFormat	1	24	24	Microsoft.OData.Core.dll
+ + Microsoft.OData.ODataMetadataFormat	1	24	24	Microsoft.OData.Core.dll
+ + NodeData	1	128	128	System.Private.Xml.dll
+ + Dictionary<CachedCodeEntryKey, CachedCodeEntry>	1	72	872	System.Private.CoreLib.dll
+ + String[][]	1	920	18,968	System.Private.CoreLib.dll
+ + RegexPrefix	1	32	32	System.Text.RegularExpressions.dll
+ + Exception	1	128	128	System.Private.CoreLib.dll
+ + OutOfMemoryException	1	128	128	System.Private.CoreLib.dll
+ + StackOverflowException	1	128	128	System.Private.CoreLib.dll
+ + ExecutionEngineException	1	128	128	System.Private.CoreLib.dll
+ + GenericEqualityComparer<String>	1	24	24	System.Private.CoreLib.dll
+ + WeakReference[]	1	152	464	System.Private.CoreLib.dll
+ + Trippin.Container	1	288	16,480	ODataClientExample.dll
+ + EnumEqualityComparer<Microsoft.OData.Client.ODataProtocolVersion>	1	24	24	System.Private.CoreLib.dll
+ + Entry<RuntimeType, RuntimeType>[]	1	288	728	System.Private.CoreLib.dll
+ + ObjectEqualityComparer<RuntimeType>	1	24	24	System.Private.CoreLib.dll
+ + CustomAttributeRecord[]	1	24	24	System.Private.CoreLib.dll
+ + ObjectEqualityComparer<Type>	1	24	24	System.Private.CoreLib.dll
+ + CalendarId[]	1	32	32	System.Private.CoreLib.dll
+ + CalendarData[]	1	208	208	System.Private.CoreLib.dll
+ + Dictionary<String, Microsoft.OData.Edm.EdmPrimitiveTypeKind>	1	72	5,760	System.Private.CoreLib.dll
+ + Dictionary<Microsoft.OData.Edm.EdmPrimitiveTypeKind, Microsoft.OData.Edm.EdmCoreModelPrimitiveType>	1	72	2,880	System.Private.CoreLib.dll
+ + EnumEqualityComparer<Microsoft.OData.Edm.EdmPrimitiveTypeKind>	1	24	24	System.Private.CoreLib.dll
+ + Dictionary<String, Microsoft.OData.Edm.EdmPathTypeKind>	1	72	696	System.Private.CoreLib.dll
+ + Dictionary<Microsoft.OData.Edm.EdmPathTypeKind, Microsoft.OData.Edm.EdmCoreModelPathType>	1	72	304	System.Private.CoreLib.dll
+ + EnumEqualityComparer<Microsoft.OData.Edm.EdmPathTypeKind>	1	24	24	System.Private.CoreLib.dll
+ + EmptyVersioningDictionary<Microsoft.OData.Edm.IEdmElement, Microsoft.OData.Edm.VersioningList<Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation>>	1	24	88	Microsoft.OData.Edm.dll
+ + List<Microsoft.OData.Edm.IEdmSchemaElement>	1	32	568	System.Private.CoreLib.dll
+ + GenericArraySortHelper<UInt64>	1	24	24	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.EdmCoreModelPrimitiveType[]	1	24	24	Microsoft.OData.Edm.dll
+ + Entry<Microsoft.OData.Edm.EdmPrimitiveTypeKind, Microsoft.OData.Edm.EdmCoreModelPrimitiveType>[]	1	912	2,632	System.Private.CoreLib.dll
+ + Entry<Microsoft.OData.Edm.EdmPathTypeKind, Microsoft.OData.Edm.EdmCoreModelPathType>[]	1	96	192	System.Private.CoreLib.dll
+ + Entry<String, Microsoft.OData.Edm.EdmPathTypeKind>[]	1	192	568	System.Private.CoreLib.dll
+ + Entry<Microsoft.OData.Client.ODataProtocolVersion, Microsoft.OData.Client.ClientEdmModel>[]	1	96	106,960	System.Private.CoreLib.dll
+ + Microsoft.OData.Client.WeakDictionary<Object, IDictionary<String, Object>>	1	64	352	Microsoft.OData.Client.dll
+ + ObjectEqualityComparer<Object>	1	24	24	System.Private.CoreLib.dll
+ + Dictionary<Object, IDictionary<String, Object>>	1	72	72	System.Private.CoreLib.dll
+ + List<Func<Object, Boolean>>	1	32	152	System.Private.CoreLib.dll
+ + Microsoft.OData.Client.WeakDictionary<Object, IList<Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation>>	1	64	160	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.WeakKeyComparer<Object>	1	24	24	Microsoft.OData.Client.dll
+ + Dictionary<Object, IList<Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation>>	1	72	72	System.Private.CoreLib.dll
+ + Microsoft.OData.Client.DataServiceRequestMessageFactory	1	24	24	Microsoft.OData.Client.dll
+ + ConcurrentDictionary<String, Type>	1	40	880	System.Collections.Concurrent.dll
+ + Node<String, Type>[]	1	272	464	System.Collections.Concurrent.dll
+ + Tables<String, Type>	1	40	840	System.Collections.Concurrent.dll
+ + Microsoft.OData.Client.UriResolver	1	40	488	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.EntityTracker	1	56	10,840	Microsoft.OData.Client.dll
+ + ConcurrentDictionary<Object, Microsoft.OData.Client.EntityDescriptor>	1	40	9,976	System.Collections.Concurrent.dll
+ + Microsoft.OData.Client.EntityEqualityComparer<Object>	1	24	24	Microsoft.OData.Client.dll
+ + Node<Object, Microsoft.OData.Client.EntityDescriptor>[]	1	272	9,536	System.Collections.Concurrent.dll
+ + Tables<Object, Microsoft.OData.Client.EntityDescriptor>	1	40	9,912	System.Collections.Concurrent.dll
+ + Microsoft.OData.Client.DataServiceClientFormat	1	56	120	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.DataServiceClientConfigurations	1	32	864	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration	1	88	464	Microsoft.OData.Client.dll
+ + Action<Microsoft.OData.Client.ReadingEntryArgs>[]	1	24	24	System.Private.CoreLib.dll
+ + Action<Microsoft.OData.Client.ReadingFeedArgs>[]	1	24	24	System.Private.CoreLib.dll
+ + Action<Microsoft.OData.Client.ReadingNestedResourceInfoArgs>[]	1	24	24	System.Private.CoreLib.dll
+ + List<Action<Microsoft.OData.Client.MaterializedEntityArgs>>	1	32	56	System.Private.CoreLib.dll
+ + Action<Microsoft.OData.Client.MaterializedEntityArgs>[]	1	24	24	System.Private.CoreLib.dll
+ + List<Action<Microsoft.OData.Client.MessageReaderSettingsArgs>>	1	32	56	System.Private.CoreLib.dll
+ + Action<Microsoft.OData.Client.MessageReaderSettingsArgs>[]	1	24	24	System.Private.CoreLib.dll
+ + Microsoft.OData.Client.DataServiceClientRequestPipelineConfiguration	1	80	368	Microsoft.OData.Client.dll
+ + List<Action<Microsoft.OData.Client.WritingEntityReferenceLinkArgs>>	1	32	56	System.Private.CoreLib.dll
+ + Action<Microsoft.OData.Client.WritingEntityReferenceLinkArgs>[]	1	24	24	System.Private.CoreLib.dll
+ + Action<Microsoft.OData.Client.WritingEntryArgs>[]	1	24	24	System.Private.CoreLib.dll
+ + Action<Microsoft.OData.Client.WritingNestedResourceInfoArgs>[]	1	24	24	System.Private.CoreLib.dll
+ + List<Action<Microsoft.OData.Client.MessageWriterSettingsArgs>>	1	32	56	System.Private.CoreLib.dll
+ + Action<Microsoft.OData.Client.MessageWriterSettingsArgs>[]	1	24	24	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.IEdmModel>	1	64	64	System.Private.CoreLib.dll
+ + GenericEqualityComparer<Int32>	1	24	24	System.Private.CoreLib.dll
+ + Entry<String, CultureInfo>[]	1	96	352	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Validation.EdmError[]	1	24	24	Microsoft.OData.Edm.dll
+ + EmptyPartition<Microsoft.OData.Edm.IEdmModel>	1	24	24	System.Linq.dll
+ + GenericEqualityComparer<Version>	1	24	24	System.Private.CoreLib.dll
+ + Entry<Version, String[]>[]	1	96	264	System.Private.CoreLib.dll
+ + Entry<Version, String>[]	1	96	200	System.Private.CoreLib.dll
+ + Entry<String, Version>[]	1	96	96	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementInfo[]	1	24	24	Microsoft.OData.Edm.dll
+ + ElementScope[]	1	24	24	Microsoft.OData.Edm.dll
+ + <>c<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlSchema>	1	24	24	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Common.XmlAttributeInfo[]	1	24	24	Microsoft.OData.Edm.dll
+ + ValueCollection<Version, String[]>	1	24	24	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Common.XmlAnnotationInfo[]	1	24	24	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementParser[]	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlTypeReference>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlProperty>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlExpressionBase>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlPropertyValue>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlRecordExpression>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlLabeledExpression>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlCollectionExpression>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlAnnotation>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlReferentialConstraint>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlOnDelete>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlNamedElement>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlComplexType>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlPropertyReference>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlKey>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlEntityType>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlEnumMember>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlEnumType>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlTypeDefinition>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlOperationParameter>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlOperationReturn>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlAction>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlOperation>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlTerm>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlAnnotations>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlNavigationPropertyBinding>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlEntitySet>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlSingleton>	1	24	24	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlSingleton	1	56	1,024	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlActionImport>	1	24	24	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlActionImport	1	72	272	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlOperationImport>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlEntityContainer>	1	24	24	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlEntityContainer	1	72	3,536	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlSchema>	1	24	24	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue[]	1	24	24	Microsoft.OData.Edm.dll
+ + EmptyPartition<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue>	1	24	24	System.Linq.dll
+ + Lookup<String, Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue>	1	48	128	System.Linq.dll
+ + Grouping<String, Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue>[]	1	80	80	System.Linq.dll
+ + <>c__1<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlAnnotation>	1	24	24	Microsoft.OData.Edm.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlAnnotation>, Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlAnnotation>	1	64	64	System.Private.CoreLib.dll
+ + <>c__1<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlPropertyReference>	1	24	24	Microsoft.OData.Edm.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlPropertyReference>, Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlPropertyReference>	1	64	64	System.Private.CoreLib.dll
+ + <>c__1<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlOnDelete>	1	24	24	Microsoft.OData.Edm.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlOnDelete>, Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlOnDelete>	1	64	64	System.Private.CoreLib.dll
+ + <>c__1<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlReferentialConstraint>	1	24	24	Microsoft.OData.Edm.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlReferentialConstraint>, Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlReferentialConstraint>	1	64	64	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlReferentialConstraint[]	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__1<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlKey>	1	24	24	Microsoft.OData.Edm.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlKey>, Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlKey>	1	64	64	System.Private.CoreLib.dll
+ + <>c__1<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlProperty>	1	24	24	Microsoft.OData.Edm.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlProperty>, Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlProperty>	1	64	64	System.Private.CoreLib.dll
+ + <>c__1<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlNavigationProperty>	1	24	24	Microsoft.OData.Edm.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlNavigationProperty>, Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlNavigationProperty>	1	64	64	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlSpatialTypeReference	1	104	168	Microsoft.OData.Edm.dll
+ + <>c__1<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlEnumMember>	1	24	24	Microsoft.OData.Edm.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlEnumMember>, Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlEnumMember>	1	64	64	System.Private.CoreLib.dll
+ + <>c__1<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlOperationParameter>	1	24	24	Microsoft.OData.Edm.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlOperationParameter>, Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlOperationParameter>	1	64	64	System.Private.CoreLib.dll
+ + <>c__1<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlOperationReturn>	1	24	24	Microsoft.OData.Edm.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlOperationReturn>, Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlOperationReturn>	1	64	64	System.Private.CoreLib.dll
+ + <>c__1<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlNavigationPropertyBinding>	1	24	24	Microsoft.OData.Edm.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlNavigationPropertyBinding>, Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlNavigationPropertyBinding>	1	64	64	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlPropertyPathExpression	1	40	112	Microsoft.OData.Edm.dll
+ + <>c__1<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlTypeReference>	1	24	24	Microsoft.OData.Edm.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlTypeReference>, Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlTypeReference>	1	64	64	System.Private.CoreLib.dll
+ + <>c__1<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlExpressionBase>	1	24	24	Microsoft.OData.Edm.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlExpressionBase>, Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlExpressionBase>	1	64	64	System.Private.CoreLib.dll
+ + EmptyPartition<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlOperationParameter>	1	24	24	System.Linq.dll
+ + <>c__1<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlEntitySet>	1	24	24	Microsoft.OData.Edm.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlEntitySet>, Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlEntitySet>	1	64	64	System.Private.CoreLib.dll
+ + <>c__1<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlSingleton>	1	24	24	Microsoft.OData.Edm.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlSingleton>, Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlSingleton>	1	64	64	System.Private.CoreLib.dll
+ + <>c__1<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlOperationImport>	1	24	24	Microsoft.OData.Edm.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlOperationImport>, Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlOperationImport>	1	64	64	System.Private.CoreLib.dll
+ + List<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlEntitySet>	1	32	1,280	System.Private.CoreLib.dll
+ + List<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlSingleton>	1	32	1,112	System.Private.CoreLib.dll
+ + List<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlOperationImport>	1	32	1,032	System.Private.CoreLib.dll
+ + <>c__1<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlStructuredType>	1	24	24	Microsoft.OData.Edm.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlStructuredType>, Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlStructuredType>	1	64	64	System.Private.CoreLib.dll
+ + <>c__1<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlEnumType>	1	24	24	Microsoft.OData.Edm.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlEnumType>, Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlEnumType>	1	64	64	System.Private.CoreLib.dll
+ + <>c__1<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlOperation>	1	24	24	Microsoft.OData.Edm.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlOperation>, Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlOperation>	1	64	64	System.Private.CoreLib.dll
+ + <>c__1<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlTerm>	1	24	24	Microsoft.OData.Edm.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlTerm>, Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlTerm>	1	64	64	System.Private.CoreLib.dll
+ + <>c__1<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlEntityContainer>	1	24	24	Microsoft.OData.Edm.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlEntityContainer>, Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlEntityContainer>	1	64	64	System.Private.CoreLib.dll
+ + <>c__1<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlAnnotations>	1	24	24	Microsoft.OData.Edm.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlAnnotations>, Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlAnnotations>	1	64	64	System.Private.CoreLib.dll
+ + <>c__1<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlTypeDefinition>	1	24	24	Microsoft.OData.Edm.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlTypeDefinition>, Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlTypeDefinition>	1	64	64	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlAnnotations[]	1	24	24	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlModel[]	1	24	24	Microsoft.OData.Edm.dll
+ + ObjectEqualityComparer<Microsoft.OData.Edm.Validation.EdmError>	1	24	24	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsVocabularyAnnotation	1	112	3,888	Microsoft.OData.Edm.dll
+ + Node<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlAnnotation, Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsVocabularyAnnotation>	1	48	48	System.Collections.Concurrent.dll
+ + ObjectEqualityComparer<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlAnnotation>	1	24	24	System.Private.CoreLib.dll
+ + Entry<String, CultureData>[]	1	192	1,304	System.Private.CoreLib.dll
+ + <>c__1<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlPropertyValue>	1	24	24	Microsoft.OData.Edm.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlPropertyValue>, Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlPropertyValue>	1	64	64	System.Private.CoreLib.dll
+ + Entry<CachedCodeEntryKey, CachedCodeEntry>[]	1	704	704	System.Private.CoreLib.dll
+ + GenericEqualityComparer<CachedCodeEntryKey>	1	24	24	System.Private.CoreLib.dll
+ + SingleRange[]	1	24	24	System.Text.RegularExpressions.dll
+ + RegexInterpreter	1	136	840	System.Text.RegularExpressions.dll
+ + Match	1	112	208	System.Text.RegularExpressions.dll
+ + EmptyPartition<Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation>	1	24	24	System.Linq.dll
+ + ObjectEqualityComparer<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlLabeledExpression>	1	24	24	System.Private.CoreLib.dll
+ + ObjectEqualityComparer<List<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlLabeledExpression>>	1	24	24	System.Private.CoreLib.dll
+ + <>c<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlReference>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlInclude>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlIncludeAnnotations>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__7<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlReference>	1	24	24	Microsoft.OData.Edm.dll
+ + <>c__1<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlInclude>	1	24	24	Microsoft.OData.Edm.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlInclude>, Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlInclude>	1	64	64	System.Private.CoreLib.dll
+ + <>c__1<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlIncludeAnnotations>	1	24	24	Microsoft.OData.Edm.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Common.XmlElementValue<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlIncludeAnnotations>, Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlIncludeAnnotations>	1	64	64	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlIncludeAnnotations[]	1	24	24	Microsoft.OData.Edm.dll
+ + Entry<String, IList<Microsoft.OData.Edm.IEdmOperation>>[]	1	432	11,544	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsEntityContainer	1	112	12,016	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsEntityContainer, IEnumerable<Microsoft.OData.Edm.IEdmEntityContainerElement>>	1	24	7,960	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsEntityContainer, Dictionary<String, Microsoft.OData.Edm.IEdmEntitySet>>	1	24	312	Microsoft.OData.Edm.dll
+ + Dictionary<String, Microsoft.OData.Edm.IEdmEntitySet>	1	72	288	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsEntityContainer, Dictionary<String, Microsoft.OData.Edm.IEdmSingleton>>	1	24	24	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsEntityContainer, Dictionary<String, Object>>	1	24	24	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsEntityContainer, IEnumerable<Microsoft.OData.Edm.Validation.EdmError>>	1	24	24	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsEntityContainer, Microsoft.OData.Edm.IEdmEntityContainer>	1	24	24	Microsoft.OData.Edm.dll
+ + Entry<String, Microsoft.OData.Edm.IEdmEntityContainer>[]	1	96	12,208	System.Private.CoreLib.dll
+ + StreamWriter	1	104	4,352	System.Private.CoreLib.dll
+ + OSEncoder	1	48	48	System.Console.dll
+ + ConsoleEncoding	1	56	128	System.Console.dll
+ + StreamReader	1	96	33,112	System.Private.CoreLib.dll
+ + DefaultDecoder	1	40	40	System.Private.CoreLib.dll
+ + OperatingSystem	1	48	80	System.Private.CoreLib.dll
+ + DefaultBinder	1	24	24	System.Private.CoreLib.dll
+ + DBNull	1	24	24	System.Private.CoreLib.dll
+ + Primitives[]	1	104	104	System.Private.CoreLib.dll
+ + Single[]	1	72	72	System.Private.CoreLib.dll
+ + Double[]	1	208	208	System.Private.CoreLib.dll
+ + CachedData	1	56	728	System.Private.CoreLib.dll
+ + ArrayPoolEventSource	1	168	856	System.Private.CoreLib.dll
+ + TimerQueue[]	1	88	824	System.Private.CoreLib.dll
+ + EmptyAsyncLocalValueMap	1	24	24	System.Private.CoreLib.dll
+ + ThreadPoolWorkQueue	1	160	992	System.Private.CoreLib.dll
+ + WorkStealingQueue[]	1	72	2,040	System.Private.CoreLib.dll
+ + __ComObject [RCW]	1	1,024	1,024	System.Private.CoreLib.dll
+ + ThreadPoolTaskScheduler	1	24	24	System.Private.CoreLib.dll
+ + TplEventSource	1	176	864	System.Private.CoreLib.dll
+ + ASCIIEncodingSealed	1	48	48	System.Private.CoreLib.dll
+ + Latin1Encoding	1	48	120	System.Private.CoreLib.dll
+ + Dictionary<Int64, WeakReference<AssemblyLoadContext>>	1	72	72	System.Private.CoreLib.dll
+ + Task<VoidTaskResult>	1	72	72	System.Private.CoreLib.dll
+ + Task<Int32>[]	1	104	824	System.Private.CoreLib.dll
+ + InternalModuleBuilder	1	64	112	System.Private.CoreLib.dll
+ + Func<SemaphoreSlim>	1	64	64	System.Private.CoreLib.dll
+ + SpanAction<Char, ValueTuple<IntPtr, Int32, IntPtr, Int32, Boolean>>	1	64	64	System.Private.CoreLib.dll
+ + FrameworkEventSource	1	168	896	System.Private.CoreLib.dll
+ + Dictionary<MethodInfo, Microsoft.OData.Client.SequenceMethod>	1	72	201,432	System.Private.CoreLib.dll
+ + Dictionary<Microsoft.OData.Client.SequenceMethod, MethodInfo>	1	72	5,640	System.Private.CoreLib.dll
+ + Dictionary<MethodInfo, String>	1	72	42,160	System.Private.CoreLib.dll
+ + Dictionary<PropertyInfo, MethodInfo>	1	72	6,152	System.Private.CoreLib.dll
+ + Dictionary<Type, Type>	1	72	680	System.Private.CoreLib.dll
+ + Dictionary<Microsoft.OData.UriParser.Aggregation.AggregationMethod, String>	1	72	544	System.Private.CoreLib.dll
+ + Dictionary<String, Microsoft.OData.Client.PrimitiveType>	1	72	2,968	System.Private.CoreLib.dll
+ + HashSet<Type>	1	64	1,520	System.Collections.dll
+ + ConcurrentDictionary<Type, Microsoft.OData.Client.Metadata.ODataTypeInfo>	1	40	54,992	System.Collections.Concurrent.dll
+ + Predicate<Type>	1	64	64	System.Private.CoreLib.dll
+ + Func<Type, Int32, KeyValuePair<Type, Int32>>	1	64	64	System.Private.CoreLib.dll
+ + Func<KeyValuePair<Type, Int32>, Type>	1	64	64	System.Private.CoreLib.dll
+ + Func<KeyValuePair<Type, Int32>, Int32>	1	64	64	System.Private.CoreLib.dll
+ + Func<KeyValuePair<Type, Microsoft.OData.Client.PrimitiveType>, Boolean>	1	64	64	System.Private.CoreLib.dll
+ + Func<MethodInfo, Boolean>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Client.Metadata.ClientPropertyAnnotation, Boolean>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.ODataResource, Object>	1	64	64	System.Private.CoreLib.dll
+ + Microsoft.OData.ODataResource	1	128	4,208	Microsoft.OData.Core.dll
+ + Microsoft.OData.Client.Materialization.PrimitivePropertyConverter	1	24	136	Microsoft.OData.Client.dll
+ + Func<Microsoft.OData.ODataPayloadKindDetectionResult, Boolean>	1	64	64	System.Private.CoreLib.dll
+ + ConcurrentDictionary<Microsoft.OData.Edm.IEdmStructuredType, HashSet<Microsoft.OData.Edm.IEdmStructuredType>>	1	40	1,160	System.Collections.Concurrent.dll
+ + EmptyPartition<Microsoft.OData.Edm.IEdmStructuralProperty>	1	24	24	System.Linq.dll
+ + EmptyPartition<Microsoft.OData.Edm.IEdmNavigationProperty>	1	24	24	System.Linq.dll
+ + Func<Microsoft.OData.Edm.IEdmModel, String, Microsoft.OData.Edm.IEdmSchemaType>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.IEdmModel, String, Microsoft.OData.Edm.Vocabularies.IEdmTerm>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.IEdmModel, String, IEnumerable<Microsoft.OData.Edm.IEdmOperation>>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.IEdmModel, String, Microsoft.OData.Edm.IEdmEntityContainer>	1	64	64	System.Private.CoreLib.dll
+ + Func<IEnumerable<Microsoft.OData.Edm.IEdmOperation>, IEnumerable<Microsoft.OData.Edm.IEdmOperation>, IEnumerable<Microsoft.OData.Edm.IEdmOperation>>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsCollectionExpression, Microsoft.OData.Edm.IEdmTypeReference>	1	64	64	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsCollectionExpression	1	80	456	Microsoft.OData.Edm.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsCollectionExpression, IEnumerable<Microsoft.OData.Edm.IEdmExpression>>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsCollectionTypeDefinition, Microsoft.OData.Edm.IEdmTypeReference>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsElement, IEnumerable<Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation>>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsElement, IEnumerable<Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation>>	1	64	64	System.Private.CoreLib.dll
+ + EmptyPartition<Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation>	1	24	24	System.Linq.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsEntityContainer, IEnumerable<Microsoft.OData.Edm.IEdmEntityContainerElement>>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsEntityContainer, Dictionary<String, Microsoft.OData.Edm.IEdmEntitySet>>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsEntityContainer, Dictionary<String, Microsoft.OData.Edm.IEdmSingleton>>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsEntityContainer, Dictionary<String, Object>>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsEntityContainer, IEnumerable<Microsoft.OData.Edm.Validation.EdmError>>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsEntityTypeDefinition, IEnumerable<Microsoft.OData.Edm.IEdmStructuralProperty>>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsNamedTypeReference, Microsoft.OData.Edm.IEdmType>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsNavigationProperty, Microsoft.OData.Edm.IEdmTypeReference>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsNavigationProperty, Microsoft.OData.Edm.IEdmNavigationProperty>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsNavigationProperty, Microsoft.OData.Edm.IEdmReferentialConstraint>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsNavigationProperty, Microsoft.OData.Edm.IEdmEntityType>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsNavigationProperty, IEnumerable<Microsoft.OData.Edm.Validation.EdmError>>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsNavigationSource, Microsoft.OData.Edm.IEdmEntityType>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsNavigationSource, IEnumerable<Microsoft.OData.Edm.IEdmNavigationPropertyBinding>>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsOperation, Microsoft.OData.Edm.IEdmPathExpression>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsOperation, Microsoft.OData.Edm.IEdmOperationReturn>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsOperation, IEnumerable<Microsoft.OData.Edm.IEdmOperationParameter>>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsOperationParameter, Microsoft.OData.Edm.IEdmTypeReference>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsPathExpression, IEnumerable<String>>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsProperty, Microsoft.OData.Edm.IEdmTypeReference>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsStructuredTypeDefinition, List<Microsoft.OData.Edm.IEdmProperty>>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsStructuredTypeDefinition, IDictionary<String, Microsoft.OData.Edm.IEdmProperty>>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm, Microsoft.OData.Edm.IEdmTypeReference>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsVocabularyAnnotation, Microsoft.OData.Edm.IEdmExpression>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsVocabularyAnnotation, Microsoft.OData.Edm.Vocabularies.IEdmTerm>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsVocabularyAnnotation, Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.IEdmSchemaType, Microsoft.OData.Edm.IEdmSchemaType, Microsoft.OData.Edm.IEdmSchemaType>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Vocabularies.IEdmTerm, Microsoft.OData.Edm.Vocabularies.IEdmTerm, Microsoft.OData.Edm.Vocabularies.IEdmTerm>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.IEdmEntityContainer, String, Microsoft.OData.Edm.IEdmEntitySet>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.IEdmEntityContainer, String, Microsoft.OData.Edm.IEdmNavigationSource>	1	64	64	System.Private.CoreLib.dll
+ + CDSCollectionETWBCLProvider	1	168	944	System.Collections.Concurrent.dll
+ + MatchInfoConcurrentCache	1	24	2,928	Microsoft.OData.Core.dll
+ + HashSet<Microsoft.OData.ODataPayloadKind>	1	64	416	System.Collections.dll
+ + Microsoft.OData.ODataMediaTypeResolver	1	24	24	Microsoft.OData.Core.dll
+ + Dictionary<Microsoft.OData.ODataPayloadKind, IEnumerable<Microsoft.OData.ODataMediaTypeFormat>>	1	72	1,136	System.Private.CoreLib.dll
+ + List<Microsoft.OData.ODataMediaTypeFormat>	1	32	5,616	System.Private.CoreLib.dll
+ + Microsoft.OData.ODataPayloadValueConverter	1	24	24	Microsoft.OData.Core.dll
+ + Microsoft.OData.UriParser.ODataUriResolver	1	32	56	Microsoft.OData.Core.dll
+ + Microsoft.OData.Metadata.EdmTypeWriterResolver	1	24	24	Microsoft.OData.Core.dll
+ + DefaultKeySerializer	1	24	24	Microsoft.OData.Core.dll
+ + SegmentKeySerializer	1	24	24	Microsoft.OData.Core.dll
+ + KeysAsSegmentsLiteralFormatter	1	24	24	Microsoft.OData.Core.dll
+ + Action<Microsoft.OData.ODataBatchWriter, Microsoft.OData.ODataBatchWriter.BatchWriterState>	1	64	64	System.Private.CoreLib.dll
+ + Action<Microsoft.OData.ODataBatchWriter>	1	64	64	System.Private.CoreLib.dll
+ + HttpHeaderEnd	1	56	56	Microsoft.OData.Core.dll
+ + Comparison<Microsoft.OData.HttpUtils.CharsetPart>	1	64	64	System.Private.CoreLib.dll
+ + Func<String, Exception>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.ODataPayloadKindDetectionResult, Microsoft.OData.ODataFormat>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.ODataInputContext, Microsoft.OData.ODataBatchReader>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.ODataOutputContext, Microsoft.OData.ODataBatchWriter>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.EdmTypeKind>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.IEdmStructuralProperty, Boolean>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.IEdmStructuralProperty, String>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation, Boolean>	1	64	64	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.IEdmExpression, Boolean>	1	64	64	System.Private.CoreLib.dll
+ + SingleRangeComparer	1	24	24	System.Text.RegularExpressions.dll
+ + NotifyCollectionChangedEventArgs	1	48	48	System.ObjectModel.dll
+ + CacheDict<Type, MethodInfo>	1	32	568	System.Linq.Expressions.dll
+ + CacheDict<Type, Func<Expression, String, Boolean, ReadOnlyCollection<ParameterExpression>, LambdaExpression>>	1	32	1,144	System.Linq.Expressions.dll
+ + CacheDict<MethodBase, ParameterInfo[]>	1	32	43,192	System.Linq.Expressions.dll
+ + List<WebRequestPrefixElement>	1	32	424	System.Private.CoreLib.dll
+ + HttpNoProxy	1	24	24	System.Net.Http.dll
+ + <>c	1	24	24	System.Net.Requests.dll
+ + Func<List<WebRequestPrefixElement>>	1	64	64	System.Private.CoreLib.dll
+ + NetEventSource	1	168	832	System.Net.Requests.dll
+ + NetEventSource	1	168	872	System.Net.WebHeaderCollection.dll
+ + CaseInsensitiveAscii	1	24	24	System.Net.WebHeaderCollection.dll
+ + NetEventSource	1	168	824	System.Net.Http.dll
+ + Dictionary<HttpMethod, HttpMethod>	1	72	432	System.Private.CoreLib.dll
+ + Boolean[]	1	152	152	System.Private.CoreLib.dll
+ + Lazy<IWebProxy>	1	40	40	System.Private.CoreLib.dll
+ + HashSet<KnownHeader>	1	64	880	System.Collections.dll
+ + List<SslApplicationProtocol>	1	32	88	System.Private.CoreLib.dll
+ + Action<CachedConnection>	1	64	64	System.Private.CoreLib.dll
+ + DiagnosticListener	1	48	128	System.Diagnostics.DiagnosticSource.dll
+ + ByteArrayHeaderParser	1	32	32	System.Net.Http.dll
+ + CacheControlHeaderParser	1	32	64	System.Net.Http.dll
+ + Action<String>	1	64	64	System.Private.CoreLib.dll
+ + DateHeaderParser	1	32	32	System.Net.Http.dll
+ + TransferCodingHeaderValue	1	32	72	System.Net.Http.dll
+ + NameValueWithParametersHeaderValue	1	40	88	System.Net.Http.dll
+ + Action<HttpHeaderValueCollection<String>, String>	1	64	64	System.Private.CoreLib.dll
+ + HttpHeaderValueCollection<String>	1	56	56	System.Net.Http.dll
+ + Func<HttpRequestHeaders, HttpHeaderValueCollection<NameValueWithParametersHeaderValue>>	1	64	64	System.Private.CoreLib.dll
+ + HttpRequestHeaders	1	48	1,512	System.Net.Http.dll
+ + HttpHeaderValueCollection<NameValueWithParametersHeaderValue>	1	56	56	System.Net.Http.dll
+ + Int32NumberHeaderParser	1	32	32	System.Net.Http.dll
+ + Int64NumberHeaderParser	1	32	32	System.Net.Http.dll
+ + Func<NameValueHeaderValue>	1	64	64	System.Private.CoreLib.dll
+ + TimeSpanHeaderParser	1	32	32	System.Net.Http.dll
+ + UriHeaderParser	1	32	32	System.Net.Http.dll
+ + ConcurrentDictionary<String, WeakReference<ServicePoint>>	1	40	712	System.Collections.Concurrent.dll
+ + NetEventSource	1	168	832	System.Net.Security.dll
+ + BidirectionalDictionary<Interop.SECURITY_STATUS, SecurityStatusPalErrorCode>	1	32	2,160	System.Net.Security.dll
+ + SSPIAuthType	1	24	24	System.Net.Security.dll
+ + SSPISecureChannelType	1	24	24	System.Net.Security.dll
+ + SecurityPackageInfoClass[]	1	120	2,168	System.Net.Security.dll
+ + ExceptionDispatchInfo	1	64	240	System.Private.CoreLib.dll
+ + <>c	1	24	24	System.Net.Security.dll
+ + Func<SslClientAuthenticationOptions, CancellationToken, AsyncCallback, Object, IAsyncResult>	1	64	64	System.Private.CoreLib.dll
+ + Action<IAsyncResult>	1	64	64	System.Private.CoreLib.dll
+ + ConcurrentDictionary<SslCredKey, SafeCredentialReference>	1	40	888	System.Collections.Concurrent.dll
+ + SafeCredentialReference	1	40	88	System.Net.Security.dll
+ + IdnMapping	1	24	24	System.Private.CoreLib.dll
+ + DiagnosticSourceEventSource	1	200	2,144	System.Diagnostics.DiagnosticSource.dll
+ + AsyncLocal<Activity>	1	24	24	System.Private.CoreLib.dll
+ + NetEventSource	1	168	832	System.Net.Sockets.dll
+ + TaskSocketAsyncEventArgs<Socket>	1	376	504	System.Net.Sockets.dll
+ + Int32TaskSocketAsyncEventArgs	1	384	512	System.Net.Sockets.dll
+ + AwaitableSocketAsyncEventArgs	1	400	528	System.Net.Sockets.dll
+ + Func<CachedEventArgs>	1	64	64	System.Private.CoreLib.dll
+ + List<DynamicWinsockMethods>	1	32	280	System.Private.CoreLib.dll
+ + DynamicWinsockMethods	1	104	192	System.Net.Sockets.dll
+ + NetEventSource	1	168	856	System.Net.NameResolution.dll
+ + LPLOOKUPSERVICE_COMPLETION_ROUTINE	1	64	64	System.Net.NameResolution.dll
+ + AsyncLocal<Microsoft.Win32.SafeHandles.SafeAccessTokenHandle>	1	24	88	System.Private.CoreLib.dll
+ + EventHandler<TracingStatusChangedEventArgs>	1	64	64	System.Private.CoreLib.dll
+ + <BatchQueriesExperiment>d__2	1	48	48	ODataClientExample.dll
+ + <MakeBatchRequests>d__6	1	112	112	ODataClientExample.dll
+ + TextInfo	1	64	64	System.Private.CoreLib.dll
+ + Microsoft.OData.Client.ReferenceEqualityComparer<ConstantExpression>	1	24	24	Microsoft.OData.Client.dll
+ + ObjectEqualityComparer<ConstantExpression>	1	24	24	System.Private.CoreLib.dll
+ + Microsoft.OData.Client.QueryOptionExpression[]	1	24	24	Microsoft.OData.Client.dll
+ + Expression[]	1	24	24	System.Linq.Expressions.dll
+ + DataServiceOrderedQuery<Trippin.Person>	1	48	1,120	Microsoft.OData.Client.dll
+ + Trippin.Person	1	152	1,352	ODataClientExample.dll
+ + Microsoft.OData.Client.BooleanTypeConverter	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.ByteTypeConverter	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.ByteArrayTypeConverter	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.DateTimeOffsetTypeConverter	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.DecimalTypeConverter	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.DoubleTypeConverter	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.GuidTypeConverter	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.Int16TypeConverter	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.Int32TypeConverter	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.Int64TypeConverter	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.SingleTypeConverter	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.StringTypeConverter	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.SByteTypeConverter	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.TimeSpanTypeConverter	1	24	24	Microsoft.OData.Client.dll
+ + Entry<String, Microsoft.OData.Client.PrimitiveType>[]	1	912	2,720	System.Private.CoreLib.dll
+ + Microsoft.OData.Client.NamedStreamTypeConverter	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.DateTypeConverter	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.TimeOfDayConvert	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.CharTypeConverter	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.CharArrayTypeConverter	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.ClrTypeConverter	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.UriTypeConverter	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.XDocumentTypeConverter	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.XElementTypeConverter	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.UInt16TypeConverter	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.UInt32TypeConverter	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.UInt64TypeConverter	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.DateTimeTypeConverter	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.BinaryTypeConverter	1	24	24	Microsoft.OData.Client.dll
+ + MemberInfoCache<RuntimeEventInfo>	1	56	80	System.Private.CoreLib.dll
+ + RuntimeEventInfo[]	1	24	24	System.Private.CoreLib.dll
+ + MemberInfoCache<RuntimeFieldInfo>	1	56	640	System.Private.CoreLib.dll
+ + RuntimeFieldInfo[]	1	80	584	System.Private.CoreLib.dll
+ + <>c<Trippin.Person>	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.ReferenceEqualityComparer<Expression>	1	24	24	Microsoft.OData.Client.dll
+ + ObjectEqualityComparer<Expression>	1	24	24	System.Private.CoreLib.dll
+ + ObjectEqualityComparer<MethodInfo>	1	24	24	System.Private.CoreLib.dll
+ + EnumEqualityComparer<Microsoft.OData.Client.SequenceMethod>	1	24	24	System.Private.CoreLib.dll
+ + EnumEqualityComparer<Microsoft.OData.UriParser.Aggregation.AggregationMethod>	1	24	24	System.Private.CoreLib.dll
+ + ObjectComparer<SingleRange>	1	24	24	System.Private.CoreLib.dll
+ + ArraySortHelper<SingleRange>	1	24	24	System.Private.CoreLib.dll
+ + TlsOverPerCoreLockedStacksArrayPool<Int32>	1	40	296	System.Private.CoreLib.dll
+ + PerCoreLockedStacks<Int32>[]	1	160	160	System.Private.CoreLib.dll
+ + ConditionalWeakTable<Int32[][], Object>	1	40	328	System.Private.CoreLib.dll
+ + Container<Int32[][], Object>	1	56	264	System.Private.CoreLib.dll
+ + Entry<Int32[][], Object>[]	1	152	152	System.Private.CoreLib.dll
+ + ObjectEqualityComparer<PropertyInfo>	1	24	24	System.Private.CoreLib.dll
+ + Entry<PropertyInfo, MethodInfo>[]	1	912	5,904	System.Private.CoreLib.dll
+ + Entry<Microsoft.OData.UriParser.Aggregation.AggregationMethod, String>[]	1	192	416	System.Private.CoreLib.dll
+ + Microsoft.OData.Client.DataServiceRequest<Trippin.Person>	1	48	656	Microsoft.OData.Client.dll
+ + DataServiceOrderedQuery<Trippin.Airline>	1	48	1,216	Microsoft.OData.Client.dll
+ + Trippin.Airline	1	56	88	ODataClientExample.dll
+ + Microsoft.OData.Client.DataServiceRequest<Trippin.Airline>	1	48	616	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.DataServiceRequest[]	1	40	1,312	Microsoft.OData.Client.dll
+ + Func<IAsyncResult, Microsoft.OData.Client.DataServiceResponse>	1	64	64	System.Private.CoreLib.dll
+ + Microsoft.OData.Client.DataServiceResponse	1	40	664	Microsoft.OData.Client.dll
+ + TaskFactory<Microsoft.OData.Client.DataServiceResponse>	1	40	40	System.Private.CoreLib.dll
+ + <>c__DisplayClass35_0<Microsoft.OData.Client.DataServiceResponse>	1	40	104	System.Private.CoreLib.dll
+ + Task<Microsoft.OData.Client.DataServiceResponse>	1	72	72	System.Private.CoreLib.dll
+ + Microsoft.OData.Client.BatchSaveResult	1	224	11,248	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.RequestInfo	1	48	336	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.ODataMessageWritingHelper	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.TypeResolver	1	64	264	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.Serializer	1	40	64	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.ODataPropertyConverter	1	24	24	Microsoft.OData.Client.dll
+ + List<Microsoft.OData.Client.Descriptor>	1	32	56	System.Private.CoreLib.dll
+ + Microsoft.OData.Client.Descriptor[]	1	24	24	Microsoft.OData.Client.dll
+ + HttpRequestCreator	1	24	24	System.Net.Requests.dll
+ + FtpWebRequestCreator	1	24	24	System.Net.Requests.dll
+ + FileWebRequestCreator	1	24	24	System.Net.Requests.dll
+ + WebRequestPrefixElement[]	1	56	392	System.Net.Requests.dll
+ + Entry<HttpMethod, HttpMethod>[]	1	288	288	System.Private.CoreLib.dll
+ + GenericEqualityComparer<HttpMethod>	1	24	24	System.Private.CoreLib.dll
+ + Microsoft.OData.ODataMessageWriterSettings	1	144	656	Microsoft.OData.Core.dll
+ + Microsoft.OData.WriterValidator	1	24	24	Microsoft.OData.Core.dll
+ + Microsoft.OData.UriParser.ParameterAliasValueAccessor	1	32	176	Microsoft.OData.Core.dll
+ + Dictionary<String, Microsoft.OData.UriParser.SingleValueNode>	1	72	72	System.Private.CoreLib.dll
+ + EnumEqualityComparer<Microsoft.OData.ODataPayloadKind>	1	24	24	System.Private.CoreLib.dll
+ + Slot<Microsoft.OData.ODataPayloadKind>[]	1	232	232	System.Collections.dll
+ + Entry<Microsoft.OData.ODataPayloadKind, IEnumerable<Microsoft.OData.ODataMediaTypeFormat>>[]	1	192	1,008	System.Private.CoreLib.dll
+ + IncludeAllFilter	1	24	48	Microsoft.OData.Core.dll
+ + Microsoft.OData.AnnotationFilterPattern[]	1	24	24	Microsoft.OData.Core.dll
+ + KeyValuePair<Microsoft.OData.ODataMediaType, String>[]	1	24	24	System.Private.CoreLib.dll
+ + ConcurrentDictionary<Microsoft.OData.MediaTypeUtils.MatchInfoCacheKey, Microsoft.OData.MediaTypeUtils.MediaTypeMatchInfo>	1	40	2,904	System.Collections.Concurrent.dll
+ + Tables<Microsoft.OData.MediaTypeUtils.MatchInfoCacheKey, Microsoft.OData.MediaTypeUtils.MediaTypeMatchInfo>	1	40	2,840	System.Collections.Concurrent.dll
+ + GenericEqualityComparer<Microsoft.OData.MediaTypeUtils.MatchInfoCacheKey>	1	24	24	System.Private.CoreLib.dll
+ + Microsoft.OData.MultipartMixed.ODataMultipartMixedBatchOutputContext	1	152	856	Microsoft.OData.Core.dll
+ + Microsoft.OData.MultipartMixed.ODataMultipartMixedBatchWriter	1	104	1,208	Microsoft.OData.Core.dll
+ + KeyValuePair<Type, Microsoft.OData.Client.PrimitiveType>[]	1	24	24	System.Private.CoreLib.dll
+ + SZGenericArrayEnumerator<Type>	1	32	56	System.Private.CoreLib.dll
+ + Entry<Type, Type>[]	1	192	552	System.Private.CoreLib.dll
+ + PerRequest	1	88	65,672	Microsoft.OData.Client.dll
+ + AsyncStateBag	1	24	24	Microsoft.OData.Client.dll
+ + IAsyncLocal[]	1	24	24	System.Private.CoreLib.dll
+ + ConcurrentQueue<Object>	1	40	832	System.Private.CoreLib.dll
+ + ConcurrentQueueSegment<Object>	1	232	768	System.Private.CoreLib.dll
+ + Slot<Object>[]	1	536	536	System.Private.CoreLib.dll
+ + AsyncStateMachineBox<VoidTaskResult, ODataClientExample.Program.<MakeBatchRequests>d__6>	1	96	96	System.Private.CoreLib.dll
+ + AsyncStateMachineBox<VoidTaskResult, ODataClientExample.Program.<BatchQueriesExperiment>d__2>	1	96	96	System.Private.CoreLib.dll
+ + SetOnInvokeMres	1	40	40	System.Private.CoreLib.dll
+ + ConnectExDelegate	1	64	64	System.Net.Sockets.dll
+ + WebHeaderCollection	1	96	2,560	System.Net.WebHeaderCollection.dll
+ + CacheControlHeaderValue	1	120	120	System.Net.Http.dll
+ + NameValueCollection	1	80	2,264	System.Collections.Specialized.dll
+ + HttpRequestMessage	1	72	3,432	System.Net.Http.dll
+ + ByteArrayContent	1	64	1,816	System.Net.Http.dll
+ + Node<String, WeakReference<ServicePoint>>[]	1	272	272	System.Collections.Concurrent.dll
+ + Tables<String, WeakReference<ServicePoint>>	1	40	648	System.Collections.Concurrent.dll
+ + GenericEqualityComparer<HeaderDescriptor>	1	24	24	System.Private.CoreLib.dll
+ + HttpGeneralHeaders	1	88	200	System.Net.Http.dll
+ + HttpHeaderValueCollection<TransferCodingHeaderValue>	1	56	56	System.Net.Http.dll
+ + GenericEqualityComparer<HttpConnectionKey>	1	24	24	System.Private.CoreLib.dll
+ + CachedConnection[]	1	24	24	System.Net.Http.dll
+ + <>c__DisplayClass0_0<WebResponse>	1	32	120	System.Net.Requests.dll
+ + TaskCompletionSource<WebResponse>	1	24	24	System.Private.CoreLib.dll
+ + Task<WebResponse>	1	72	8,936	System.Private.CoreLib.dll
+ + Action<Task<WebResponse>>	1	64	184	System.Private.CoreLib.dll
+ + ContinuationTaskFromResultTask<WebResponse>	1	72	256	System.Private.CoreLib.dll
+ + IPAddress[]	1	24	24	System.Net.Primitives.dll
+ + Node<SslCredKey, SafeCredentialReference>[]	1	272	448	System.Collections.Concurrent.dll
+ + Node<SslCredKey, SafeCredentialReference>	1	64	176	System.Collections.Concurrent.dll
+ + Tables<SslCredKey, SafeCredentialReference>	1	40	824	System.Collections.Concurrent.dll
+ + GenericEqualityComparer<SslCredKey>	1	24	24	System.Private.CoreLib.dll
+ + Action<AsyncLocalValueChangedArgs<Microsoft.Win32.SafeHandles.SafeAccessTokenHandle>>	1	64	64	System.Private.CoreLib.dll
+ + SafeFreeCredential_SECURITY	1	48	48	System.Net.Security.dll
+ + Dictionary<Interop.SECURITY_STATUS, SecurityStatusPalErrorCode>	1	72	1,064	System.Private.CoreLib.dll
+ + Entry<Interop.SECURITY_STATUS, SecurityStatusPalErrorCode>[]	1	776	776	System.Private.CoreLib.dll
+ + EnumEqualityComparer<Interop.SECURITY_STATUS>	1	24	24	System.Private.CoreLib.dll
+ + Dictionary<SecurityStatusPalErrorCode, Interop.SECURITY_STATUS>	1	72	1,064	System.Private.CoreLib.dll
+ + Entry<SecurityStatusPalErrorCode, Interop.SECURITY_STATUS>[]	1	776	776	System.Private.CoreLib.dll
+ + EnumEqualityComparer<SecurityStatusPalErrorCode>	1	24	24	System.Private.CoreLib.dll
+ + ObjectDisposedException	1	136	176	System.Private.CoreLib.dll
+ + OffsetAndRule	1	40	40	System.Private.CoreLib.dll
+ + Oid[]	1	24	24	System.Security.Cryptography.Encoding.dll
+ + <>c<Internal.Cryptography.Pal.Native.SafeLocalAllocHandle>	1	24	24	System.Security.Cryptography.X509Certificates.dll
+ + Internal.Cryptography.Pal.Native.SafeLocalAllocHandle	1	32	32	System.Security.Cryptography.X509Certificates.dll
+ + Func<Internal.Cryptography.Pal.Native.SafeLocalAllocHandle>	1	64	64	System.Private.CoreLib.dll
+ + Dictionary<String, TimeZoneInfo>	1	72	280	System.Private.CoreLib.dll
+ + Entry<String, TimeZoneInfo>[]	1	96	168	System.Private.CoreLib.dll
+ + X509ChainStatus[]	1	24	24	System.Security.Cryptography.X509Certificates.dll
+ + ThreadContext	1	24	24	System.Net.Security.dll
+ + ObjectEqualityComparer<KnownHeader>	1	24	24	System.Private.CoreLib.dll
+ + Slot<KnownHeader>[]	1	616	616	System.Collections.dll
+ + MediaTypeWithQualityHeaderValue	1	32	88	System.Net.Http.dll
+ + StringWithQualityHeaderValue	1	40	72	System.Net.Http.dll
+ + Action<NameValueHeaderValue>	1	64	64	System.Private.CoreLib.dll
+ + TlsOverPerCoreLockedStacksArrayPool<Byte>	1	40	296	System.Private.CoreLib.dll
+ + PerCoreLockedStacks<Byte>[]	1	160	160	System.Private.CoreLib.dll
+ + ConditionalWeakTable<Byte[][], Object>	1	40	328	System.Private.CoreLib.dll
+ + Byte[][]	1	160	35,024	System.Private.CoreLib.dll
+ + Container<Byte[][], Object>	1	56	264	System.Private.CoreLib.dll
+ + Entry<Byte[][], Object>[]	1	152	152	System.Private.CoreLib.dll
+ + HttpResponseMessage	1	72	5,656	System.Net.Http.dll
+ + HttpConnectionResponseContent	1	56	936	System.Net.Http.dll
+ + HttpResponseHeaders	1	48	1,184	System.Net.Http.dll
+ + ContentLengthReadStream	1	56	56	System.Net.Http.dll
+ + HttpWebResponse	1	64	8,840	System.Net.Requests.dll
+ + CookieCollection	1	40	96	System.Net.Primitives.dll
+ + DateTimeOffset	1	32	32	System.Private.CoreLib.dll
+ + Task<Stream>	1	72	72	System.Private.CoreLib.dll
+ + AsyncAction	1	64	64	Microsoft.OData.Client.dll
+ + AsyncReadState	1	32	32	Microsoft.OData.Client.dll
+ + TaskWrapperAsyncResult	1	40	40	System.Net.Http.dll
+ + Microsoft.OData.MultipartMixed.ODataMultipartMixedBatchInputContext	1	128	488	Microsoft.OData.Core.dll
+ + Microsoft.OData.MultipartMixed.ODataMultipartMixedBatchReader	1	96	10,888	Microsoft.OData.Core.dll
+ + Microsoft.OData.MultipartMixed.ODataMultipartMixedBatchReaderStream	1	88	10,168	Microsoft.OData.Core.dll
+ + Microsoft.OData.ODataBatchReaderStreamBuffer	1	32	8,056	Microsoft.OData.Core.dll
+ + <HandleBatchResponse>d__29	1	72	10,960	Microsoft.OData.Client.dll
+ + Microsoft.OData.ODataPayloadKindDetectionResult[]	1	24	24	Microsoft.OData.Core.dll
+ + ObjectEqualityComparer<Microsoft.OData.ODataFormat>	1	24	24	System.Private.CoreLib.dll
+ + Microsoft.OData.UriParser.TypeFacetsPromotionRules	1	24	24	Microsoft.OData.Core.dll
+ + Microsoft.OData.UriParser.CustomQueryOptionToken[]	1	24	24	Microsoft.OData.Core.dll
+ + ValueCollection<String, Microsoft.OData.Edm.IEdmEntityContainer>	1	24	24	System.Private.CoreLib.dll
+ + List<Microsoft.OData.Edm.IEdmEntityContainerElement>	1	32	7,936	System.Private.CoreLib.dll
+ + ObjectEqualityComparer<Microsoft.OData.Edm.IEdmNavigationProperty>	1	24	24	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsSingleton	1	104	2,248	Microsoft.OData.Edm.dll
+ + EmptyPartition<Microsoft.OData.Edm.IEdmOperation>	1	24	24	System.Linq.dll
+ + Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsActionImport	1	72	96	Microsoft.OData.Edm.dll
+ + Entry<String, Microsoft.OData.Edm.IEdmEntitySet>[]	1	96	176	System.Private.CoreLib.dll
+ + ObjectEqualityComparer<Microsoft.OData.UriParser.ODataPathSegment>	1	24	24	System.Private.CoreLib.dll
+ + GenericEqualityComparer<Int64>	1	24	24	System.Private.CoreLib.dll
+ + EmptyPartition<Microsoft.OData.ODataPayloadKind>	1	24	24	System.Linq.dll
+ + Attribute[]	1	24	24	System.Private.CoreLib.dll
+ + SZGenericArrayEnumerator<Object>	1	32	56	System.Private.CoreLib.dll
+ + CharsetPart[]	1	24	24	Microsoft.OData.Core.dll
+ + ObjectEqualityComparer<Uri>	1	24	24	System.Private.CoreLib.dll
+ + Microsoft.OData.Client.LinkDescriptor[]	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.ReferenceEqualityComparer<IEnumerable>	1	24	24	Microsoft.OData.Client.dll
+ + ObjectEqualityComparer<IEnumerable>	1	24	24	System.Private.CoreLib.dll
+ + KeyValuePair<String, Object>[]	1	24	24	System.Private.CoreLib.dll
+ + Microsoft.OData.ODataAction[]	1	24	24	Microsoft.OData.Core.dll
+ + Microsoft.OData.ODataFunction[]	1	24	24	Microsoft.OData.Core.dll
+ + Microsoft.OData.ODataInstanceAnnotation[]	1	24	24	Microsoft.OData.Core.dll
+ + Slot<String>[]	1	392	1,424	System.Collections.dll
+ + EmptyPartition<KeyValuePair<String, Object>>	1	24	24	System.Linq.dll
+ + <>c<Microsoft.OData.ODataProperty>	1	24	24	Microsoft.OData.Core.dll
+ + Func<Microsoft.OData.ReadOnlyEnumerable<Microsoft.OData.ODataProperty>>	1	64	64	System.Private.CoreLib.dll
+ + Microsoft.OData.SimpleLazy<Microsoft.OData.ReadOnlyEnumerable<Microsoft.OData.ODataProperty>>	1	48	224	Microsoft.OData.Core.dll
+ + ReadOnlyCollection<Microsoft.OData.ODataProperty>	1	24	56	System.Private.CoreLib.dll
+ + ConditionalWeakTable<Microsoft.OData.ODataAnnotatable, Microsoft.OData.Client.Materialization.MaterializerEntry>	1	40	328	System.Private.CoreLib.dll
+ + Microsoft.OData.Client.Materialization.MaterializerEntry	1	64	432	Microsoft.OData.Client.dll
+ + Container<Microsoft.OData.ODataAnnotatable, Microsoft.OData.Client.Materialization.MaterializerEntry>	1	56	264	System.Private.CoreLib.dll
+ + Entry<Microsoft.OData.ODataAnnotatable, Microsoft.OData.Client.Materialization.MaterializerEntry>[]	1	152	152	System.Private.CoreLib.dll
+ + Microsoft.OData.ODataResource[]	1	24	24	Microsoft.OData.Core.dll
+ + ConditionalWeakTable<Microsoft.OData.ODataAnnotatable, Microsoft.OData.Client.Materialization.MaterializerNavigationLink>	1	40	328	System.Private.CoreLib.dll
+ + Container<Microsoft.OData.ODataAnnotatable, Microsoft.OData.Client.Materialization.MaterializerNavigationLink>	1	56	264	System.Private.CoreLib.dll
+ + Entry<Microsoft.OData.ODataAnnotatable, Microsoft.OData.Client.Materialization.MaterializerNavigationLink>[]	1	152	152	System.Private.CoreLib.dll
+ + ConditionalWeakTable<Microsoft.OData.ODataAnnotatable, IEnumerable<Microsoft.OData.ODataResource>>	1	40	328	System.Private.CoreLib.dll
+ + Container<Microsoft.OData.ODataAnnotatable, IEnumerable<Microsoft.OData.ODataResource>>	1	56	264	System.Private.CoreLib.dll
+ + Entry<Microsoft.OData.ODataAnnotatable, IEnumerable<Microsoft.OData.ODataResource>>[]	1	152	152	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlNavigationPropertyBinding, Microsoft.OData.Edm.IEdmNavigationPropertyBinding>	1	64	64	System.Private.CoreLib.dll
+ + SelectListIterator<Microsoft.OData.Edm.Csdl.Parsing.Ast.CsdlNavigationPropertyBinding, Microsoft.OData.Edm.IEdmNavigationPropertyBinding>	1	72	136	System.Linq.dll
+ + Node<Microsoft.OData.Edm.IEdmStructuredType, HashSet<Microsoft.OData.Edm.IEdmStructuredType>>[]	1	272	720	System.Collections.Concurrent.dll
+ + Tables<Microsoft.OData.Edm.IEdmStructuredType, HashSet<Microsoft.OData.Edm.IEdmStructuredType>>	1	40	1,096	System.Collections.Concurrent.dll
+ + ObjectEqualityComparer<Microsoft.OData.Edm.IEdmStructuredType>	1	24	24	System.Private.CoreLib.dll
+ + ObjectEqualityComparer<Microsoft.OData.Edm.IEdmOperation>	1	24	24	System.Private.CoreLib.dll
+ + ObjectEqualityComparer<IList<Microsoft.OData.Edm.IEdmOperation>>	1	24	24	System.Private.CoreLib.dll
+ + Dictionary<String, Microsoft.OData.Client.LinkInfo>	1	72	2,368	System.Private.CoreLib.dll
+ + Entry<String, Microsoft.OData.Client.LinkInfo>[]	1	192	2,240	System.Private.CoreLib.dll
+ + ObservableCollection<String>	1	56	272	System.ObjectModel.dll
+ + ObservableCollection<Trippin.Location>	1	56	400	System.ObjectModel.dll
+ + Trippin.Location	1	40	256	ODataClientExample.dll
+ + List<Trippin.Location>	1	32	344	System.Private.CoreLib.dll
+ + ObservableCollection<Trippin.Feature>	1	56	112	System.ObjectModel.dll
+ + List<Trippin.Feature>	1	32	56	System.Private.CoreLib.dll
+ + Trippin.Feature[]	1	24	24	ODataClientExample.dll
+ + Microsoft.OData.Client.DataServiceCollection<Trippin.Person>	1	112	168	Microsoft.OData.Client.dll
+ + List<Trippin.Person>	1	32	56	System.Private.CoreLib.dll
+ + Trippin.Person[]	1	24	24	ODataClientExample.dll
+ + Microsoft.OData.Client.DataServiceCollection<Trippin.Trip>	1	112	168	Microsoft.OData.Client.dll
+ + List<Trippin.Trip>	1	32	56	System.Private.CoreLib.dll
+ + Trippin.Trip[]	1	24	24	ODataClientExample.dll
+ + GenericComparer<String>	1	24	24	System.Private.CoreLib.dll
+ + GenericComparer<Int32>	1	24	24	System.Private.CoreLib.dll
+ + GenericArraySortHelper<Int32>	1	24	24	System.Private.CoreLib.dll
+ + ObjectEqualityComparer<ParameterExpression>	1	24	24	System.Private.CoreLib.dll
+ + Entry<Type, MethodInfo>[]	1	536	536	System.Linq.Expressions.dll
+ + Entry<Type, Func<Expression, String, Boolean, ReadOnlyCollection<ParameterExpression>, LambdaExpression>>[]	1	536	1,112	System.Linq.Expressions.dll
+ + ObjectEqualityComparer<LambdaExpression>	1	24	24	System.Private.CoreLib.dll
+ + CompilerScope[]	1	24	24	System.Linq.Expressions.dll
+ + BoundConstants[]	1	24	24	System.Linq.Expressions.dll
+ + ReferenceEqualityComparer<Object>	1	24	24	System.Linq.Expressions.dll
+ + GenericEqualityComparer<TypedConstant>	1	24	24	System.Private.CoreLib.dll
+ + ObjectEqualityComparer<LabelTarget>	1	24	24	System.Private.CoreLib.dll
+ + InternalAssemblyBuilder	1	48	48	System.Private.CoreLib.dll
+ + ModuleBuilder[]	1	24	24	System.Private.CoreLib.dll
+ + MethodBuilder[]	1	24	24	System.Private.CoreLib.dll
+ + TrueReadOnlyCollection<ParameterExpression>	1	24	24	System.Linq.Expressions.dll
+ + EmptyPartition<PropertyInfo>	1	24	24	System.Linq.dll
+ + Microsoft.OData.Edm.IEdmEnumMember[]	1	24	24	Microsoft.OData.Edm.dll
+ + Slot<Type>[]	1	616	1,256	System.Collections.dll
+ + Action<Microsoft.OData.Client.Providers.EdmEntityTypeWithDelayLoadedProperties>	1	64	112	System.Private.CoreLib.dll
+ + Entry<Type, Microsoft.OData.Client.ClientEdmModel.EdmTypeCacheValue>[]	1	912	6,240	System.Private.CoreLib.dll
+ + ConditionalWeakTable<Microsoft.OData.ODataAnnotatable, Microsoft.OData.Client.Materialization.ODataItemExtensions.MaterializerPropertyValue>	1	40	488	System.Private.CoreLib.dll
+ + Container<Microsoft.OData.ODataAnnotatable, Microsoft.OData.Client.Materialization.ODataItemExtensions.MaterializerPropertyValue>	1	56	424	System.Private.CoreLib.dll
+ + Entry<Microsoft.OData.ODataAnnotatable, Microsoft.OData.Client.Materialization.ODataItemExtensions.MaterializerPropertyValue>[]	1	280	280	System.Private.CoreLib.dll
+ + Tables<Type, Microsoft.OData.Client.Metadata.ODataTypeInfo>	1	40	54,952	System.Collections.Concurrent.dll
+ + Entry<String, Microsoft.OData.Client.Metadata.ClientTypeAnnotation>[]	1	432	86,680	System.Private.CoreLib.dll
+ + Trippin.City	1	48	160	ODataClientExample.dll
+ + SZGenericArrayEnumerator<Microsoft.OData.ODataNestedResourceInfo>	1	32	56	System.Private.CoreLib.dll
+ + ConcurrentDictionary<Uri, Microsoft.OData.Client.EntityDescriptor>	1	40	808	System.Collections.Concurrent.dll
+ + Node<Uri, Microsoft.OData.Client.EntityDescriptor>[]	1	272	368	System.Collections.Concurrent.dll
+ + Tables<Uri, Microsoft.OData.Client.EntityDescriptor>	1	40	744	System.Collections.Concurrent.dll
+ + CurrentOperationResponse	1	40	1,112	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.ResponseInfo	1	40	64	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.ODataMessageReadingHelper	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.MaterializeAtom	1	64	10,072	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.Materialization.ODataMaterializerContext	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.Materialization.ODataReaderWrapper	1	32	3,920	Microsoft.OData.Client.dll
+ + Microsoft.OData.JsonLight.ODataJsonLightInputContext	1	120	320	Microsoft.OData.Core.dll
+ + Microsoft.OData.JsonLight.JsonMinimalMetadataLevel	1	24	24	Microsoft.OData.Core.dll
+ + Microsoft.OData.JsonLight.ODataJsonLightReader	1	88	3,888	Microsoft.OData.Core.dll
+ + Stack<Microsoft.OData.ODataReaderCore.Scope>	1	32	2,376	System.Collections.dll
+ + Microsoft.OData.JsonLight.ODataJsonLightResourceDeserializer	1	80	1,024	Microsoft.OData.Core.dll
+ + JsonLightTopLevelScope	1	80	80	Microsoft.OData.Core.dll
+ + Microsoft.OData.Client.Materialization.EntityTrackingAdapter	1	64	5,160	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.AtomMaterializerLog	1	72	5,096	Microsoft.OData.Client.dll
+ + List<Microsoft.OData.Client.LinkDescriptor>	1	32	56	System.Private.CoreLib.dll
+ + Microsoft.OData.Client.Materialization.ODataReaderEntityMaterializer	1	136	9,944	Microsoft.OData.Client.dll
+ + Dictionary<IEnumerable, Microsoft.OData.Client.DataServiceQueryContinuation>	1	72	96	System.Private.CoreLib.dll
+ + Microsoft.OData.Client.Materialization.EnumValueMaterializationPolicy	1	24	24	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.Materialization.PrimitiveValueMaterializationPolicy	1	32	32	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.Materialization.CollectionValueMaterializationPolicy	1	40	40	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.Materialization.InstanceAnnotationMaterializationPolicy	1	40	40	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.ProjectionPlan	1	40	104	Microsoft.OData.Client.dll
+ + Func<Object, Object, Type, Object>	1	64	64	System.Private.CoreLib.dll
+ + Microsoft.OData.Client.Materialization.EntryValueMaterializationPolicy	1	64	248	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.Materialization.FeedAndEntryMaterializerAdapter	1	72	3,992	Microsoft.OData.Client.dll
+ + Microsoft.OData.Client.QueryOperationResponse<Trippin.Airline>	1	56	10,128	Microsoft.OData.Client.dll
+ + Microsoft.OData.PropertyAndAnnotationCollector	1	48	1,704	Microsoft.OData.Core.dll
+ + Dictionary<String, Microsoft.OData.PropertyAndAnnotationCollector.PropertyData>	1	72	1,296	System.Private.CoreLib.dll
+ + Microsoft.OData.JsonLight.ODataJsonLightContextUriParseResult	1	88	880	Microsoft.OData.Core.dll
+ + Microsoft.OData.UriParser.ODataPath	1	24	248	Microsoft.OData.Core.dll
+ + Microsoft.OData.UriParser.EntitySetSegment	1	64	160	Microsoft.OData.Core.dll
+ + List<Microsoft.OData.UriParser.ODataPathSegment>	1	32	224	System.Private.CoreLib.dll
+ + List<Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation>	1	32	88	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsVocabularyAnnotation, Microsoft.OData.Edm.IEdmExpression>	1	24	480	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsVocabularyAnnotation, Microsoft.OData.Edm.Vocabularies.IEdmTerm>	1	24	24	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsVocabularyAnnotation, Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable>	1	24	24	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Csdl.EdmVocabularyAnnotationSerializationLocation	1	24	24	Microsoft.OData.Edm.dll
+ + TwoKeyDictionary<Microsoft.OData.Edm.IEdmElement, Microsoft.OData.Edm.VersioningList<Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation>>	1	56	4,768	Microsoft.OData.Edm.dll
+ + Microsoft.OData.SelectedPropertiesNode	1	64	64	Microsoft.OData.Core.dll
+ + Microsoft.OData.ODataTypeAnnotation	1	32	32	Microsoft.OData.Core.dll
+ + Entry<String, Microsoft.OData.PropertyAndAnnotationCollector.PropertyData>[]	1	192	1,168	System.Private.CoreLib.dll
+ + Func<Microsoft.OData.PropertyAndAnnotationCollector, String, Object>	1	64	64	System.Private.CoreLib.dll
+ + Microsoft.OData.Evaluation.ODataMetadataContext	1	80	1,008	Microsoft.OData.Core.dll
+ + Func<Microsoft.OData.Edm.IEdmStructuredType, Boolean>	1	64	64	System.Private.CoreLib.dll
+ + ODataResourceTypeContextWithModel	1	80	80	Microsoft.OData.Core.dll
+ + ODataResourceMetadataContextWithModel	1	120	936	Microsoft.OData.Core.dll
+ + Microsoft.OData.Evaluation.ODataConventionalUriBuilder	1	32	280	Microsoft.OData.Core.dll
+ + Microsoft.OData.Evaluation.ODataConventionalEntityMetadataBuilder	1	208	2,992	Microsoft.OData.Core.dll
+ + Func<Microsoft.OData.Edm.IEdmNavigationProperty, Boolean>	1	64	64	System.Private.CoreLib.dll
+ + <Properties>d__100	1	56	56	Microsoft.OData.Edm.dll
+ + <OfTypeIterator>d__61<Microsoft.OData.Edm.IEdmNavigationProperty>	1	56	112	System.Linq.dll
+ + Func<Microsoft.OData.Edm.IEdmNavigationProperty, Microsoft.OData.JsonLight.ODataJsonLightReaderNestedResourceInfo>	1	64	64	System.Private.CoreLib.dll
+ + WhereSelectEnumerableIterator<Microsoft.OData.Edm.IEdmNavigationProperty, Microsoft.OData.JsonLight.ODataJsonLightReaderNestedResourceInfo>	1	64	192	System.Linq.dll
+ + JsonLightResourceScope	1	120	2,288	Microsoft.OData.Core.dll
+ + Dictionary<String, Microsoft.OData.Edm.IEdmStructuralProperty>	1	72	72	System.Private.CoreLib.dll
+ + <ComputeETagPropertiesFromAnnotation>d__18	1	48	120	Microsoft.OData.Core.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsCollectionExpression, Microsoft.OData.Edm.IEdmTypeReference>	1	24	24	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsCollectionExpression, IEnumerable<Microsoft.OData.Edm.IEdmExpression>>	1	24	240	Microsoft.OData.Edm.dll
+ + List<Microsoft.OData.Edm.IEdmExpression>	1	32	216	System.Private.CoreLib.dll
+ + Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsPropertyPathExpression	1	72	128	Microsoft.OData.Edm.dll
+ + Microsoft.OData.Edm.Cache<Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsPathExpression, IEnumerable<String>>	1	24	56	Microsoft.OData.Edm.dll
+ + WhereListIterator<Microsoft.OData.Edm.IEdmExpression>	1	72	72	System.Linq.dll
+ + <GetPropertyValues>d__31	1	112	288	Microsoft.OData.Core.dll
+ + Microsoft.OData.Evaluation.ODataMissingOperationGenerator	1	48	112	Microsoft.OData.Core.dll
+ + <>c__DisplayClass17_0	1	32	32	Microsoft.OData.Core.dll
+ + Func<Microsoft.OData.Edm.IEdmOperation, Boolean>	1	64	96	System.Private.CoreLib.dll
+ + WhereListIterator<Microsoft.OData.Edm.IEdmOperation>	1	72	200	System.Linq.dll
+ + Entry<Uri, Microsoft.OData.ODataResource>[]	1	96	4,784	System.Private.CoreLib.dll
+ + TreeDictionary<Microsoft.OData.Edm.IEdmElement, Microsoft.OData.Edm.VersioningList<Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation>>	1	32	10,128	Microsoft.OData.Edm.dll
+ + Func<Microsoft.Spatial.GeoJsonObjectFormatter>	1	64	64	System.Private.CoreLib.dll
+ + Microsoft.OData.Client.SimpleLazy<Microsoft.Spatial.GeoJsonObjectFormatter>	1	48	112	Microsoft.OData.Client.dll
+ + ObjectEqualityComparer<WorkStealingQueue>	1	24	24	System.Private.CoreLib.dll
+ + String (Bytes > 10K)	1	31,112	31,112	System.Private.CoreLib.dll
+ + Entry<String, Microsoft.OData.Edm.EdmPrimitiveTypeKind>[] (Bytes > 1K)	1	2,160	5,304	System.Private.CoreLib.dll
+ + Entry<String, Microsoft.OData.Edm.IEdmSchemaType>[] (Bytes > 1K)	1	2,160	4,568	System.Private.CoreLib.dll
+ + Entry<String, String>[] (Bytes > 1K)	1	1,152	3,288	System.Private.CoreLib.dll
+ + LowerCaseMapping[] (Bytes > 1K)	1	1,152	1,152	System.Text.RegularExpressions.dll
+ + Entry<String, Microsoft.OData.Edm.Vocabularies.IEdmTerm>[] (Bytes > 1K)	1	2,160	47,920	System.Private.CoreLib.dll
+ + Char[] (Bytes > 10K)	1	32,792	32,792	System.Private.CoreLib.dll
+ + Entry<Type, Microsoft.OData.Client.PrimitiveType>[] (Bytes > 1K)	1	2,160	6,256	System.Private.CoreLib.dll
+ + Entry<MethodBase, ParameterInfo[]>[] (Bytes > 1K)	1	1,048	43,160	System.Linq.Expressions.dll
+ + Entry<Microsoft.OData.Client.SequenceMethod, MethodInfo>[] (Bytes > 1K)	1	4,752	4,752	System.Private.CoreLib.dll
+ + Int32[] (Bytes > 1K)	1	1,752	1,752	System.Private.CoreLib.dll
+ + Entry<MethodInfo, Microsoft.OData.Client.SequenceMethod>[] (Bytes > 10K)	1	10,368	199,608	System.Private.CoreLib.dll
+ + Entry<MethodInfo, String>[] (Bytes > 1K)	1	2,160	41,704	System.Private.CoreLib.dll
+ + Char[] (Bytes > 1K)	1	1,232	1,232	System.Private.CoreLib.dll
+ + Node<Microsoft.OData.MediaTypeUtils.MatchInfoCacheKey, Microsoft.OData.MediaTypeUtils.MediaTypeMatchInfo>[] (Bytes > 1K)	1	2,072	2,608	System.Collections.Concurrent.dll
+ + Node<Type, Microsoft.OData.Client.Metadata.ODataTypeInfo>[] (Bytes > 1K)	1	1,120	53,712	System.Collections.Concurrent.dll
+ + String[] (Bytes > 100K)	1	524,312	3,141,936	System.Private.CoreLib.dll

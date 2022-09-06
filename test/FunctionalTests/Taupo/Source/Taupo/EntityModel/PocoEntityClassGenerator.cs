@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !SILVERLIGHT
-
 namespace Microsoft.Test.Taupo.EntityModel
 {
     using System;
@@ -446,5 +444,3 @@ namespace Microsoft.Test.Taupo.EntityModel
         }
     }
 }
-
-#endif

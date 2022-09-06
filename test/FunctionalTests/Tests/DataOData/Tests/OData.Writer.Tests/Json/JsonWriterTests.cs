@@ -4,9 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-// These tests and helpers are disabled on Silverlight and Phone because they  
-// use private reflection not available on Silverlight and Phone
-#if !SILVERLIGHT && !WINDOWS_PHONE
 namespace Microsoft.Test.Taupo.OData.Writer.Tests.Json
 {
     using System;
@@ -277,4 +274,3 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Json
         }
     }
 }
-#endif

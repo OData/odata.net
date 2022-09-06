@@ -87,11 +87,7 @@ namespace Microsoft.OData.Client
         {
             if (this.stream != null && this.close)
             {
-#if PORTABLELIB
-                this.stream.Dispose();
-#else
                 this.stream.Close();
-#endif
             }
         }
     }

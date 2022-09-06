@@ -121,6 +121,7 @@ namespace Microsoft.OData
             /// <summary>
             /// Private default constructor.
             /// </summary>
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
             internal IncludeAllFilter() : base(new AnnotationFilterPattern[0])
             {
             }
@@ -145,6 +146,7 @@ namespace Microsoft.OData
             /// <summary>
             /// Private default constructor.
             /// </summary>
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
             internal ExcludeAllFilter() : base(new AnnotationFilterPattern[0])
             {
             }

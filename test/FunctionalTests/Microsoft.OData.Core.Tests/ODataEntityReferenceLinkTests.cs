@@ -9,8 +9,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Microsoft.OData.JsonLight;
+using System.Threading.Tasks;
 using Microsoft.OData.Edm;
+using Microsoft.OData.JsonLight;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Strings;
 
@@ -22,6 +23,16 @@ namespace Microsoft.OData.Tests
         private readonly static ODataMessageReaderSettings MessageReaderSettingsReadAndValidateCustomInstanceAnnotations;
         private static readonly EdmEntityType EntityType;
         private static readonly EdmEntitySet EntitySet;
+        private EdmModel model;
+        private EdmEntityType orderEntityType;
+        private EdmEntityType customerEntityType;
+        private EdmEntitySet orderEntitySet;
+        private EdmEntitySet customerEntitySet;
+
+        public ODataEntityReferenceLinkTests()
+        {
+            this.InitializeEdmModel();
+        }
 
         static ODataEntityReferenceLinkTests()
         {
@@ -198,6 +209,409 @@ namespace Microsoft.OData.Tests
             SameEntityReferenceLink(referencelink, link);
         }
 
+        [Fact]
+        public async Task ReadEntityReferenceLinkAsync()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#$ref\"," +
+                "\"@odata.id\":\"http://tempuri.org/Orders(1)\"}";
+
+            await SetupJsonLightEntityReferenceLinkDeserializerAndRunTestAsync(
+                payload,
+                async (jsonLightEntityReferenceLinkDeserializer) =>
+                {
+                    var entityReferenceLink = await jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinkAsync();
+
+                    Assert.NotNull(entityReferenceLink);
+                    Assert.Equal("http://tempuri.org/Orders(1)", entityReferenceLink.Url.AbsoluteUri);
+                });
+        }
+
+        [Fact]
+        public void ReadEntityReferenceLinks_ThrowsExceptionForInvalidPropertyAnnotationInEntityReferenceLinks()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Collection($ref)\"," +
+                "\"value@custom.annotation\":\"foobar\"}";
+
+            using (var jsonInputContext = CreateJsonLightInputContext(
+                payload,
+                this.model))
+            {
+                var jsonLightEntityReferenceLinkDeserializer = new ODataJsonLightEntityReferenceLinkDeserializer(jsonInputContext);
+
+                var exception = Assert.Throws<ODataException>(
+                    () => jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinks());
+
+                Assert.Equal(
+                    ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_InvalidPropertyAnnotationInEntityReferenceLinks("value"),
+                    exception.Message);
+            }
+        }
+
+        [Theory]
+        [InlineData("\"UnexpectedProp\":\"foobar\"")]
+        [InlineData("\"UnexpectedProp@custom.annotation\":\"foobar\"")]
+        public void ReadEntityReferenceLink_ThrowsExceptionForInvalidPropertyOrAnnotationInEntityReferenceLink(string invalidPart)
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#$ref\"," +
+                "\"@odata.id\":\"http://tempuri.org/Orders(1)\"," +
+                $"{invalidPart}}}";
+
+            using (var jsonInputContext = CreateJsonLightInputContext(
+                payload,
+                this.model))
+            {
+                var jsonLightEntityReferenceLinkDeserializer = new ODataJsonLightEntityReferenceLinkDeserializer(jsonInputContext);
+
+                var exception = Assert.Throws<ODataException>(
+                    () => jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLink());
+
+                Assert.Equal(
+                    ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_InvalidAnnotationInEntityReferenceLink("UnexpectedProp"),
+                    exception.Message);
+            }
+        }
+
+        [Fact]
+        public async Task ReadEntityReferenceLinkWithCustomAnnotationsAsync()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#$ref\"," +
+                "\"@odata.id\":\"http://tempuri.org/Orders(1)\"," +
+                "\"@custom.annotation\":\"foobar\"}";
+
+            await SetupJsonLightEntityReferenceLinkDeserializerAndRunTestAsync(
+                payload,
+                async (jsonLightEntityReferenceLinkDeserializer) =>
+                {
+                    var entityReferenceLink = await jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinkAsync();
+
+                    Assert.NotNull(entityReferenceLink);
+                    Assert.Equal("http://tempuri.org/Orders(1)", entityReferenceLink.Url.AbsoluteUri);
+
+                    var annotation = Assert.Single(entityReferenceLink.GetInstanceAnnotations());
+                    var customAnnotation = Assert.IsType<ODataPrimitiveValue>(annotation.Value);
+                    Assert.Equal("foobar", customAnnotation.Value);
+                });
+        }
+
+        [Fact]
+        public async Task ReadEntityReferenceLinksAsync()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Collection($ref)\"," +
+                "\"value\":[" +
+                "{\"@odata.id\":\"http://tempuri.org/Orders(1)\"}," +
+                "{\"@odata.id\":\"http://tempuri.org/Orders(2)\"}]}";
+
+            await SetupJsonLightEntityReferenceLinkDeserializerAndRunTestAsync(
+                payload,
+                async (jsonLightEntityReferenceLinkDeserializer) =>
+                {
+                    var entityReferenceLinks = await jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync();
+
+                    Assert.NotNull(entityReferenceLinks);
+                    Assert.Equal(2, entityReferenceLinks.Links.Count());
+                    Assert.Equal("http://tempuri.org/Orders(1)", entityReferenceLinks.Links.First().Url.AbsoluteUri);
+                    Assert.Equal("http://tempuri.org/Orders(2)", entityReferenceLinks.Links.Last().Url.AbsoluteUri);
+                });
+        }
+
+        [Fact]
+        public async Task ReadEntityReferenceLinksWithODataAnnotationsAsync()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Collection($ref)\"," +
+                "\"@odata.count\":3," +
+                "\"value\":[" +
+                "{\"@odata.id\":\"http://tempuri.org/Orders(1)\"}," +
+                "{\"@odata.id\":\"http://tempuri.org/Orders(2)\"}]," +
+                "\"@odata.nextLink\":\"http://tempuri.org/Customers(1)/Orders/nextLink\"}";
+
+            await SetupJsonLightEntityReferenceLinkDeserializerAndRunTestAsync(
+                payload,
+                async (jsonLightEntityReferenceLinkDeserializer) =>
+                {
+                    var entityReferenceLinks = await jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync();
+
+                    Assert.NotNull(entityReferenceLinks);
+                    Assert.Equal(2, entityReferenceLinks.Links.Count());
+                    Assert.Equal("http://tempuri.org/Orders(1)", entityReferenceLinks.Links.First().Url.AbsoluteUri);
+                    Assert.Equal("http://tempuri.org/Orders(2)", entityReferenceLinks.Links.Last().Url.AbsoluteUri);
+
+                    Assert.Equal(3, entityReferenceLinks.Count);
+                    Assert.Equal("http://tempuri.org/Customers(1)/Orders/nextLink", entityReferenceLinks.NextPageLink.AbsoluteUri);
+                });
+        }
+
+        [Fact]
+        public async Task ReadEntityReferenceLinksWithCustomAnnotationsAsync()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Collection($ref)\"," +
+                "\"@pre.annotation\":\"foo\"," +
+                "\"value\":[" +
+                "{\"@odata.id\":\"http://tempuri.org/Orders(1)\"}]," +
+                "\"@post.annotation\":\"bar\"}";
+
+            await SetupJsonLightEntityReferenceLinkDeserializerAndRunTestAsync(
+                payload,
+                async (jsonLightEntityReferenceLinkDeserializer) =>
+                {
+                    var entityReferenceLinks = await jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync();
+
+                    Assert.NotNull(entityReferenceLinks);
+                    var entityReferenceLink = Assert.Single(entityReferenceLinks.Links);
+                    Assert.Equal("http://tempuri.org/Orders(1)", entityReferenceLink.Url.AbsoluteUri);
+
+                    var customAnnotations = entityReferenceLinks.GetInstanceAnnotations();
+                    Assert.Equal(2, customAnnotations.Count());
+                    var preAnnotation = Assert.IsType<ODataPrimitiveValue>(customAnnotations.First().Value);
+                    var postAnnotation = Assert.IsType<ODataPrimitiveValue>(customAnnotations.Last().Value);
+                    Assert.Equal("foo", preAnnotation.Value);
+                    Assert.Equal("bar", postAnnotation.Value);
+                });
+        }
+
+        [Fact]
+        public async Task ReadEntityReferenceLinksAsync_ThrowsExceptionForUnexpectedODataAnnotation()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Collection($ref)\"," +
+                "\"value\":[" +
+                "{\"@odata.id\":\"http://tempuri.org/Orders(1)\"}]," +
+                "\"@odata.deltaLink\":\"http://tempuri.org/Customers(1)/Orders/deltaLink\"}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightEntityReferenceLinkDeserializerAndRunTestAsync(
+                    payload,
+                    (jsonLightEntityReferenceLinkDeserializer) => jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync()));
+
+            Assert.Equal(
+                ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties("odata.deltaLink"),
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task ReadEntityReferenceLinksAsync_ThrowsExceptionForUnexpectedProperty()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Collection($ref)\"," +
+                "\"UnexpectedProp\":\"foobar\"}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightEntityReferenceLinkDeserializerAndRunTestAsync(
+                    payload,
+                    (jsonLightEntityReferenceLinkDeserializer) => jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync()));
+
+            Assert.Equal(
+                ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_InvalidEntityReferenceLinksPropertyFound("UnexpectedProp", "value"),
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task ReadEntityReferenceLinksAsync_ThrowsExceptionForUnsupportedODataPropertyAnnotation()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Collection($ref)\"," +
+                "\"value@odata.count\":3}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightEntityReferenceLinkDeserializerAndRunTestAsync(
+                    payload,
+                    (jsonLightEntityReferenceLinkDeserializer) => jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync()));
+
+            Assert.Equal(
+                ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_PropertyAnnotationForEntityReferenceLinks,
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task ReadEntityReferenceLinksAsync_ThrowsExceptionForExpectedEntityReferenceLinksPropertyNotFound()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Collection($ref)\"}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightEntityReferenceLinkDeserializerAndRunTestAsync(
+                    payload,
+                    (jsonLightEntityReferenceLinkDeserializer) => jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync()));
+
+            Assert.Equal(
+                ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_ExpectedEntityReferenceLinksPropertyNotFound("value"),
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task ReadEntityReferenceLinksAsync_ThrowsExceptionForMetadataReferencePropertyInPayload()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Collection($ref)\"," +
+                "\"#NS.Top2Orders\":{\"title\":\"Top2Orders\",\"target\":\"http://tempuri.org/Customers(1)/Top2Orders\"}}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightEntityReferenceLinkDeserializerAndRunTestAsync(
+                    payload,
+                    (jsonLightEntityReferenceLinkDeserializer) => jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync()));
+
+            Assert.Equal(
+                ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty("#NS.Top2Orders"),
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task ReadEntityReferenceLinksAsync_ThrowsExceptionForInvalidPropertyAnnotationInEntityReferenceLinks()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Collection($ref)\"," +
+                "\"value@custom.annotation\":\"foobar\"}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightEntityReferenceLinkDeserializerAndRunTestAsync(
+                    payload,
+                    (jsonLightEntityReferenceLinkDeserializer) => jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync()));
+
+            Assert.Equal(
+                    ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_InvalidPropertyAnnotationInEntityReferenceLinks("value"),
+                    exception.Message);
+        }
+
+        [Fact]
+        public async Task ReadEntityReferenceLinksAsync_ThrowsExceptionForEntityReferenceLinkValueNotAnObject()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Collection($ref)\"," +
+                "\"value\":[\"foobar\"]}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightEntityReferenceLinkDeserializerAndRunTestAsync(
+                    payload,
+                    (jsonLightEntityReferenceLinkDeserializer) => jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync()));
+
+            Assert.Equal(
+                ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_EntityReferenceLinkMustBeObjectValue("PrimitiveValue"),
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task ReadEntityReferenceLinksAsync_ThrowsExceptionForMultipleReferenceLinkUris()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Collection($ref)\"," +
+                "\"value\":[{\"@odata.id\":\"http://tempuri.org/Orders(1)\",\"@odata.id\":\"http://tempuri.org/Orders(1)\"}]}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightEntityReferenceLinkDeserializerAndRunTestAsync(
+                    payload,
+                    (jsonLightEntityReferenceLinkDeserializer) => jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync()));
+
+            Assert.Equal(
+                ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_MultipleUriPropertiesInEntityReferenceLink("odata.id"),
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task ReadEntityReferenceLinksAsync_ThrowsExceptionForUnexpectedODataAnnotationEntityReferenceLink()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Collection($ref)\"," +
+                "\"value\":[{\"@odata.nextLink\":\"http://tempuri.org/Customers(1)/Orders/nextLink\"}]}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightEntityReferenceLinkDeserializerAndRunTestAsync(
+                    payload,
+                    (jsonLightEntityReferenceLinkDeserializer) => jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync()));
+
+            Assert.Equal(
+                ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_InvalidPropertyInEntityReferenceLink("odata.nextLink", "odata.id"),
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task ReadEntityReferenceLinksAsync_ThrowsExceptionForEntityReferenceLinkUriAsNull()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Collection($ref)\"," +
+                "\"value\":[{\"@odata.id\":null}]}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightEntityReferenceLinkDeserializerAndRunTestAsync(
+                    payload,
+                    (jsonLightEntityReferenceLinkDeserializer) => jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync()));
+
+            Assert.Equal(
+                ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_EntityReferenceLinkUrlCannotBeNull("odata.id"),
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task ReadEntityReferenceLinkAsync_ThrowsExceptionForCustomAnnotationBeforeEntityReferenceLinkUri()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#$ref\"," +
+                "\"@custom.annotation\":\"foobar\"," +
+                "\"@odata.id\":\"http://tempuri.org/Orders(1)\"}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightEntityReferenceLinkDeserializerAndRunTestAsync(
+                    payload,
+                    (jsonLightEntityReferenceLinkDeserializer) => jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinkAsync()));
+
+            Assert.Equal(
+                ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_MissingEntityReferenceLinkProperty("odata.id"),
+                exception.Message);
+        }
+
+        [Theory]
+        [InlineData("\"UnexpectedProp\":\"foobar\"")]
+        [InlineData("\"UnexpectedProp@custom.annotation\":\"foobar\"")]
+        public async Task ReadEntityReferenceLinkAsync_ThrowsExceptionForInvalidPropertyOrAnnotationInEntityReferenceLink(string invalidPart)
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#$ref\"," +
+                "\"@odata.id\":\"http://tempuri.org/Orders(1)\"," +
+                $"{invalidPart}}}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightEntityReferenceLinkDeserializerAndRunTestAsync(
+                    payload,
+                    (jsonLightEntityReferenceLinkDeserializer) => jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinkAsync()));
+
+            Assert.Equal(
+                ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_InvalidAnnotationInEntityReferenceLink("UnexpectedProp"),
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task ReadEntityReferenceLinkAsync_ThrowsExceptionForUnexpectedMetadataReferenceProperty()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#$ref\"," +
+                "\"#NS.Top2Orders\":{\"title\":\"Top2Orders\",\"target\":\"http://tempuri.org/Customers(1)/Top2Orders\"}}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightEntityReferenceLinkDeserializerAndRunTestAsync(
+                    payload,
+                    (jsonLightEntityReferenceLinkDeserializer) => jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinkAsync()));
+
+            Assert.Equal(
+                ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty("#NS.Top2Orders"),
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task ReadEntityReferenceLinkAsync_ThrowsExceptionForMissingEntityReferenceLinkProperty()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#$ref\"}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightEntityReferenceLinkDeserializerAndRunTestAsync(
+                    payload,
+                    (jsonLightEntityReferenceLinkDeserializer) => jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinkAsync()));
+
+            Assert.Equal(
+                ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_MissingEntityReferenceLinkProperty("odata.id"),
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task ReadEntityReferenceLinkAsync_ThrowsExceptionForUnsupportedODataPropertyAnnotation()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#$ref\"," +
+                "\"odata.id@odata.type\":\"#Edm.String\"}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightEntityReferenceLinkDeserializerAndRunTestAsync(
+                    payload,
+                    (jsonLightEntityReferenceLinkDeserializer) => jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinkAsync()));
+
+            Assert.Equal(
+                ODataErrorStrings.ODataJsonLightEntityReferenceLinkDeserializer_PropertyAnnotationForEntityReferenceLink("odata.type"),
+                exception.Message);
+        }
+
         private static void SameEntityReferenceLink(ODataEntityReferenceLink link1, ODataEntityReferenceLink link2)
         {
             Assert.NotNull(link1);
@@ -244,12 +658,12 @@ namespace Microsoft.OData.Tests
 
         private ODataJsonLightEntityReferenceLinkDeserializer CreateJsonLightEntryAndFeedDeserializer(string payload, bool isIeee754Compatible = false)
         {
-            var inputContext = this.CreateJsonLightInputContext(payload, isIeee754Compatible);
+            var inputContext = this.CreateJsonLightInputContext(payload, EdmModel, isIeee754Compatible);
 
             return new ODataJsonLightEntityReferenceLinkDeserializer(inputContext);
         }
 
-        private ODataJsonLightInputContext CreateJsonLightInputContext(string payload, bool isIeee754Compatible)
+        private ODataJsonLightInputContext CreateJsonLightInputContext(string payload, IEdmModel model, bool isIeee754Compatible = false, bool isAsync = false, bool isResponse = true)
         {
             var mediaType = isIeee754Compatible
                 ? new ODataMediaType("application", "json", new KeyValuePair<string, string>("IEEE754Compatible", "true"))
@@ -257,16 +671,75 @@ namespace Microsoft.OData.Tests
 
             var messageInfo = new ODataMessageInfo
             {
-                IsResponse = true,
+                IsResponse = isResponse,
                 MediaType = mediaType,
-                IsAsync = false,
-                Model = EdmModel,
+                IsAsync = isAsync,
+                Model = model,
             };
 
             return new ODataJsonLightInputContext(
                 new StringReader(payload),
                 messageInfo,
                 MessageReaderSettingsReadAndValidateCustomInstanceAnnotations);
+        }
+
+        private async Task SetupJsonLightEntityReferenceLinkDeserializerAndRunTestAsync(
+            string payload,
+            Func<ODataJsonLightEntityReferenceLinkDeserializer, Task> func,
+            bool isResponse = false)
+        {
+            using (var jsonInputContext = CreateJsonLightInputContext(
+                payload,
+                this.model,
+                isIeee754Compatible: false,
+                isAsync: true,
+                isResponse: isResponse))
+            {
+                var jsonLightEntityReferenceLinkDeserializer = new ODataJsonLightEntityReferenceLinkDeserializer(jsonInputContext);
+
+                await func(jsonLightEntityReferenceLinkDeserializer);
+            }
+        }
+
+        private void InitializeEdmModel()
+        {
+            this.model = new EdmModel();
+            this.orderEntityType = new EdmEntityType("NS", "Order");
+            this.customerEntityType = new EdmEntityType("NS", "Customer");
+
+            var orderIdProperty = this.orderEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32);
+            this.orderEntityType.AddKeys(orderIdProperty);
+            this.orderEntityType.AddStructuralProperty("Amount", EdmPrimitiveTypeKind.Decimal);
+            var customerNavProperty = this.orderEntityType.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo
+                {
+                    Name = "Customer",
+                    Target = this.customerEntityType,
+                    TargetMultiplicity = EdmMultiplicity.ZeroOrOne
+                });
+            this.model.AddElement(this.orderEntityType);
+
+            var customerIdProperty = this.customerEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32);
+            this.customerEntityType.AddKeys(customerIdProperty);
+            this.customerEntityType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+            var ordersNavProperty = this.customerEntityType.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo
+                {
+                    Name = "Orders",
+                    Target = this.orderEntityType,
+                    TargetMultiplicity = EdmMultiplicity.Many
+                });
+
+            this.model.AddElement(this.customerEntityType);
+
+            var entityContainer = new EdmEntityContainer("NS", "Container");
+            this.model.AddElement(entityContainer);
+
+            this.orderEntitySet = entityContainer.AddEntitySet("Orders", this.orderEntityType);
+            this.customerEntitySet = entityContainer.AddEntitySet("Customers", this.customerEntityType);
+
+            this.orderEntitySet.AddNavigationTarget(customerNavProperty, this.customerEntitySet);
+            this.customerEntitySet.AddNavigationTarget(ordersNavProperty, this.orderEntitySet);
         }
     }
 }

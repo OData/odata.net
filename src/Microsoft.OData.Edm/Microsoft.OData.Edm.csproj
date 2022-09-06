@@ -34,14 +34,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Microsoft.OData.Edm.tt">
+    <Content Include="Microsoft.OData.Edm.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Microsoft.OData.Edm.cs</LastGenOutput>
-    </Resource>
-    <Resource Include="Parameterized.Microsoft.OData.Edm.tt">
+    </Content>
+    <Content Include="Parameterized.Microsoft.OData.Edm.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Parameterized.Microsoft.OData.Edm.cs</LastGenOutput>
-    </Resource>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -90,8 +90,17 @@
     </EmbeddedResource>
   </ItemGroup>
 
+    <ItemGroup>
+        <AdditionalFiles Include="PublicAPI/$(TargetFramework)/PublicAPI.Shipped.txt" />
+        <AdditionalFiles Include="PublicAPI/$(TargetFramework)/PublicAPI.Unshipped.txt" />
+    </ItemGroup>
+    
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="3.3.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

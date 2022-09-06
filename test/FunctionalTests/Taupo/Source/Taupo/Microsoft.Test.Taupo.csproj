@@ -578,7 +578,6 @@
     <Compile Include="Execution\VariationTestItem.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Platforms\EnumExtensionMethods.cs" />
-    <Compile Include="Platforms\IEnumerableExtensionMethods.cs" />
     <Compile Include="Platforms\MissingSystemTypes.cs" />
     <Compile Include="ProgrammingLanguages\CSharpLanguageStrategy.cs" />
     <Compile Include="ProgrammingLanguages\ExtendedCSharpCodeGenerator.cs" />
@@ -623,7 +622,6 @@
     <Compile Include="Utilities\CompositeLogger.cs" />
     <Compile Include="Utilities\ConsecutiveIdentifierGenerator.cs" />
     <Compile Include="Utilities\ConsoleLogger.cs" />
-    <Compile Include="Utilities\CSharpGenericTypeBuilder.cs" />
     <Compile Include="Utilities\CSharpILGenAnonymousTypeBuilder.cs" />
     <Compile Include="Utilities\DefaultCodeBuilder.cs" />
     <Compile Include="Utilities\DefaultWorkspaceManager.cs" />

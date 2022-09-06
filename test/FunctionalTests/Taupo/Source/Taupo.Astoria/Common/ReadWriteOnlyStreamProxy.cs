@@ -10,10 +10,6 @@ namespace Microsoft.Test.Taupo.Astoria.Common
     using System.Diagnostics;
     using System.IO;
     using System.Security;
-#if WIN8
-    using System.Threading;
-    using System.Threading.Tasks;
-#endif
     using Microsoft.Test.Taupo.Common;
 
     /// <summary>
@@ -201,7 +197,6 @@ namespace Microsoft.Test.Taupo.Astoria.Common
             this.Underlying.Write(buffer, offset, count);
         }
 
-#if !WIN8
         /// <summary>
         /// Begins an async read from the underlying stream.
         /// </summary>
@@ -245,36 +240,6 @@ namespace Microsoft.Test.Taupo.Astoria.Common
                 this.Underlying = null;
             }
         }
-#else
-        /// <summary>
-        /// Asynchronous read from the underlying stream.
-        /// </summary>
-        /// <param name="buffer">The buffer to read into</param>
-        /// <param name="offset">The offset into the buffer</param>
-        /// <param name="count">The number of bytes to read</param>
-        /// <param name="cancellationToken">The cancelation token</param>
-        /// <returns>The resulting task</returns>
-        public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
-        {
-            ExceptionUtilities.CheckObjectNotNull(this.Underlying, "Underlying stream was null");
-            return this.Underlying.ReadAsync(buffer, offset, count, cancellationToken);
-        }
-
-        /// <summary>
-        /// Asynchronous write from the underlying stream.
-        /// </summary>
-        /// <param name="buffer">The buffer to read into</param>
-        /// <param name="offset">The offset into the buffer</param>
-        /// <param name="count">The number of bytes to read</param>
-        /// <param name="cancellationToken">The cancelation token</param>
-        /// <returns>The resulting task</returns>
-        public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
-        {
-            ExceptionUtilities.Assert(this.writeable, "Writing to this stream is not allowed");
-            ExceptionUtilities.CheckObjectNotNull(this.Underlying, "Underlying stream was null");
-            return this.Underlying.WriteAsync(buffer, offset, count, cancellationToken);
-        }
-#endif
 
         /// <summary>
         /// Reads a single byte. Throws exception if called.
@@ -285,7 +250,6 @@ namespace Microsoft.Test.Taupo.Astoria.Common
             throw new TaupoNotSupportedException(NotSupportedMessage);
         }
 
-#if !WIN8
         /// <summary>
         /// Ends an async read from the underlying stream. 
         /// </summary>
@@ -296,7 +260,6 @@ namespace Microsoft.Test.Taupo.Astoria.Common
             ExceptionUtilities.CheckObjectNotNull(this.Underlying, "Underlying stream was null");
             return this.Underlying.EndRead(asyncResult);
         }
-#endif
 
         /// <summary>
         /// Writes a single byte. Throws exception if called.
@@ -307,7 +270,6 @@ namespace Microsoft.Test.Taupo.Astoria.Common
             throw new TaupoNotSupportedException(NotSupportedMessage);
         }
 
-#if !WIN8
         /// <summary>
         /// Ends an async write to the underlying stream.
         /// </summary>
@@ -318,7 +280,6 @@ namespace Microsoft.Test.Taupo.Astoria.Common
             ExceptionUtilities.CheckObjectNotNull(this.Underlying, "Underlying stream was null");
             this.Underlying.EndWrite(asyncResult);
         }
-#endif
 
         /// <summary>
         /// Converts the stream to a string. Throws exception if called.

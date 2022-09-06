@@ -12,9 +12,7 @@ namespace Microsoft.Test.Taupo.Utilities
     using System.Linq;
     using System.Reflection;
     using System.Security;
-#if !WIN8
     using System.Security.Permissions;
-#endif
     using Microsoft.Test.Taupo.Common;
 
     /// <summary>
@@ -48,18 +46,15 @@ namespace Microsoft.Test.Taupo.Utilities
             this.knownSubDirectories[prefix] = directory;
         }
 
-#if !WIN8
         /// <summary>
         /// Extracts embedded resources to the file system
         /// </summary>
         /// <param name="assembly">Assembly to locate resources in</param>
         /// <param name="prefix">Prefix of resources to extract</param>
         /// <param name="outputDirectory">Directory resources should be written to</param>
-#if !SILVERLIGHT
         [SecuritySafeCritical]
         [PermissionSet(SecurityAction.Assert, Unrestricted = true)]
         [AssertJustification("Calling Directory.CreateDirectory demands FileIOPermission (Read | Write) for all subdirectories created in the specified outputDirectory.")]
-#endif
         public void Extract(Assembly assembly, string prefix, string outputDirectory)
         {
             Directory.CreateDirectory(outputDirectory);
@@ -86,6 +81,5 @@ namespace Microsoft.Test.Taupo.Utilities
                 IOHelpers.WriteResourceToFile(resourceName, filename, assembly);
             }
         }
-#endif
     }
 }

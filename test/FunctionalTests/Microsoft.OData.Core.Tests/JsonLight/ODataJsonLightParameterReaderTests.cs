@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ParameterReaderTests.cs" company="Microsoft">
+// <copyright file="ODataJsonLightParameterReaderTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -9,14 +9,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.OData.Edm;
+using Microsoft.OData.JsonLight;
 using Microsoft.Test.OData.Utils.ODataLibTest;
 using Xunit;
 
 namespace Microsoft.OData.Tests.JsonLight
 {
     /// <summary>
-    /// Tests the use of ODataParameterReader class when the payload is JSON.
+    /// Tests the use of ODataJsonLightParameterReader class when the payload is JSON.
     ///
     /// TODO: For error tests, see Microsoft.Test.Taupo.OData.Reader.Tests.Reader.ParameterReaderTests.
     /// These should eventually be migrated here.
@@ -525,7 +527,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
             var item = Assert.Single(result.Values);
             Assert.Equal("property", item.Key);
-            Assert.Equal("value",  item.Value);
+            Assert.Equal("value", item.Value);
         }
 
         [Fact]
@@ -669,6 +671,1011 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.Equal("TestName", entry.Properties.ElementAt(1).Value);
         }
 
+        [Fact]
+        public async Task ReadEmptyParameterPayloadAsync()
+        {
+            var payload = "{}";
+
+            await SetupJsonLightParameterReaderAndRunTestAsync(
+                payload,
+                async (jsonLightParameterReader) =>
+                {
+                    await DoReadAsync(jsonLightParameterReader);
+                    
+                    Assert.Equal(ODataParameterReaderState.Completed, jsonLightParameterReader.State);
+                });
+        }
+
+        [Fact]
+        public async Task ReadPrimitiveParameterAsync()
+        {
+            this.action.AddParameter("rating", EdmCoreModel.Instance.GetInt32(false));
+
+            var payload = "{\"rating\":4}";
+
+            await SetupJsonLightParameterReaderAndRunTestAsync(
+                payload,
+                (jsonLightParameterReader) => DoReadAsync(jsonLightParameterReader, verifyValueAction: (value) => Assert.Equal(4, value)));
+        }
+
+        [Fact]
+        public async Task ReadEmptyNullableNonOptionalParameterAsync()
+        {
+            this.action.AddParameter("rating", EdmCoreModel.Instance.GetInt32(true));
+
+            var payload = "{ }";
+
+            await SetupJsonLightParameterReaderAndRunTestAsync(
+                payload,
+                (jsonLightParameterReader) => DoReadAsync(jsonLightParameterReader));
+        }
+
+        [Fact]
+        public async Task ReadEmptyNonNullableNonOptionalParameterAsync_ThrowsException()
+        {
+            this.action.AddParameter("rating", EdmCoreModel.Instance.GetInt32(false));
+
+            var payload = "{ }";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightParameterReaderAndRunTestAsync(
+                    payload,
+                    (jsonLightParameterReader) => DoReadAsync(jsonLightParameterReader)));
+
+            Assert.Equal(
+                Strings.ODataParameterReaderCore_ParametersMissingInPayload("ActionImport", "rating"),
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task ReadOptionalParameterAsync()
+        {
+            this.action.AddParameter("rating", EdmCoreModel.Instance.GetInt32(false));
+            this.action.AddOptionalParameter("comment", EdmCoreModel.Instance.GetString(false));
+
+            var payload = "{\"rating\":4,\"comment\":\"Great product!\"}";
+
+            var valueActionStack = new Stack<object>(new object[] { "Great product!", 4 });
+
+            await SetupJsonLightParameterReaderAndRunTestAsync(
+                payload,
+                (jsonLightParameterReader) => DoReadAsync(
+                    jsonLightParameterReader,
+                    verifyValueAction: (value) =>
+                    {
+                        Assert.NotEmpty(valueActionStack);
+                        Assert.Equal(valueActionStack.Pop(), value);
+                    }));
+
+            Assert.Empty(valueActionStack);
+        }
+
+        [Fact]
+        public async Task ReadParameterPayalodWithMissingOptionalParameterAsync()
+        {
+            this.action.AddParameter("rating", EdmCoreModel.Instance.GetInt32(false));
+            this.action.AddOptionalParameter("comment", EdmCoreModel.Instance.GetString(false));
+
+            var payload = "{\"rating\":4}";
+
+            await SetupJsonLightParameterReaderAndRunTestAsync(
+                payload,
+                (jsonLightParameterReader) => DoReadAsync(jsonLightParameterReader, verifyValueAction: (value) => Assert.Equal(4, value)));
+        }
+
+        [Fact]
+        public async Task ReadMultiplePrimitiveParametersAsync()
+        {
+            this.action.AddParameter("rating", EdmCoreModel.Instance.GetInt32(false));
+            this.action.AddParameter("comment", EdmCoreModel.Instance.GetString(false));
+
+            var payload = "{\"rating\":4,\"comment\":\"Great product!\"}";
+
+            var valueActionStack = new Stack<object>(new object[] { "Great product!", 4 });
+
+            await SetupJsonLightParameterReaderAndRunTestAsync(
+                payload,
+                (jsonLightParameterReader) => DoReadAsync(
+                    jsonLightParameterReader,
+                    verifyValueAction: (value) =>
+                    {
+                        Assert.NotEmpty(valueActionStack);
+                        Assert.Equal(valueActionStack.Pop(), value);
+                    }));
+
+            Assert.Empty(valueActionStack);
+        }
+
+        [Fact]
+        public async Task ReadPrimitiveCollectionParameterAsync()
+        {
+            var parameterEdmTypeReference = new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false)));
+            this.action.AddParameter("ratings", parameterEdmTypeReference);
+
+            var payload = "{\"ratings\":[4,3]}";
+
+            var collectionItemsStack = new Stack<int>(new int[] { 3, 4 });
+
+            await SetupJsonLightParameterReaderAndRunTestAsync(
+                payload,
+                (jsonLightParameterReader) => DoReadAsync(
+                    jsonLightParameterReader,
+                    verifyCollectionAction: async (collectionReader) =>
+                    {
+                        while (await collectionReader.ReadAsync())
+                        {
+                            switch(collectionReader.State)
+                            {
+                                case ODataCollectionReaderState.Value:
+                                    Assert.NotEmpty(collectionItemsStack);
+                                    Assert.Equal(collectionItemsStack.Pop(), collectionReader.Item);
+                                    break;
+                            }
+                        }
+                    }));
+        }
+
+        [Fact]
+        public async Task ReadRandomlyOrderedParametersAsync()
+        {
+            this.action.AddParameter("rating", EdmCoreModel.Instance.GetInt32(false));
+            this.action.AddParameter("comment", EdmCoreModel.Instance.GetString(false));
+
+            var payload = "{\"comment\":\"Great product!\",\"rating\":4}";
+
+            var verifyValueActionStack = new Stack<object>(new object[] { 4, "Great product!" });
+
+            await SetupJsonLightParameterReaderAndRunTestAsync(
+                payload,
+                (jsonLightParameterReader) => DoReadAsync(
+                    jsonLightParameterReader,
+                    verifyValueAction: (value) =>
+                    {
+                        Assert.NotEmpty(verifyValueActionStack);
+                        Assert.Equal(verifyValueActionStack.Pop(), value);
+                    }));
+
+            Assert.Empty(verifyValueActionStack);
+        }
+
+        [Fact]
+        public async Task ReadPrimitiveAndPrimitiveCollectionParametersAsync()
+        {
+            this.action.AddParameter("comment", EdmCoreModel.Instance.GetString(false));
+            var parameterEdmTypeReference = new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false)));
+            this.action.AddParameter("ratings", parameterEdmTypeReference);
+
+            var payload = "{\"comment\":\"Great product!\",\"ratings\":[4,3]}";
+
+            var collectionItemsStack = new Stack<int>(new int[] { 3, 4 });
+
+            await SetupJsonLightParameterReaderAndRunTestAsync(
+                payload,
+                (jsonLightParameterReader) => DoReadAsync(
+                    jsonLightParameterReader,
+                    verifyValueAction: (value) => Assert.Equal("Great product!", value),
+                    verifyCollectionAction: async (collectionReader) =>
+                    {
+                        while (await collectionReader.ReadAsync())
+                        {
+                            switch (collectionReader.State)
+                            {
+                                case ODataCollectionReaderState.Value:
+                                    Assert.NotEmpty(collectionItemsStack);
+                                    Assert.Equal(collectionItemsStack.Pop(), collectionReader.Item);
+                                    break;
+                            }
+                        }
+                    }));
+        }
+
+        [Fact]
+        public async Task ReadTypeDefinitionAndTypeDefinitionCollectionParametersAsync()
+        {
+            var moneyTypeDefinition = new EdmTypeDefinition("NS", "Money", EdmPrimitiveTypeKind.Decimal);
+            this.referencedModel.AddElement(moneyTypeDefinition);
+
+            var parameterEdmTypeReference = new EdmCollectionTypeReference(new EdmCollectionType(new EdmTypeDefinitionReference(moneyTypeDefinition, false)));
+            this.action.AddParameter("price", new EdmTypeDefinitionReference(moneyTypeDefinition, false));
+            this.action.AddParameter("discounts", parameterEdmTypeReference);
+
+            var payload = "{\"price\":13.5,\"discounts\":[1.5,2.5]}";
+
+            var collectionItemsStack = new Stack<decimal>(new decimal[] { 2.5M, 1.5M });
+
+            await SetupJsonLightParameterReaderAndRunTestAsync(
+                payload,
+                (jsonLightParameterReader) => DoReadAsync(
+                    jsonLightParameterReader,
+                    verifyValueAction: (value) => Assert.Equal(13.5M, value),
+                    verifyCollectionAction: async (collectionReader) =>
+                    {
+                        while (await collectionReader.ReadAsync())
+                        {
+                            switch (collectionReader.State)
+                            {
+                                case ODataCollectionReaderState.Value:
+                                    Assert.NotEmpty(collectionItemsStack);
+                                    Assert.Equal(collectionItemsStack.Pop(), collectionReader.Item);
+                                    break;
+                            }
+                        }
+                    }));
+        }
+
+        [Fact]
+        public async Task ReadParameterWithTypeDetectionAsync()
+        {
+            this.action.AddParameter("rating", EdmCoreModel.Instance.GetDouble(false));
+
+            var payload = "{\"rating\":3.5}";
+
+            await SetupJsonLightParameterReaderAndRunTestAsync(
+                payload,
+                (jsonLightParameterReader) => DoReadAsync(
+                    jsonLightParameterReader,
+                    verifyValueAction: (value) =>
+                    {
+                        Assert.IsType<double>(value);
+                        Assert.Equal(3.5D, value);
+                    }));
+        }
+
+        [Fact]
+        public async Task ReadComplexParameterAsync()
+        {
+            var addressComplexType = new EdmComplexType("NS", "Address");
+            addressComplexType.AddStructuralProperty("Street", EdmPrimitiveTypeKind.String);
+            this.referencedModel.AddElement(addressComplexType);
+
+            this.action.AddParameter("address", new EdmComplexTypeReference(addressComplexType, false));
+
+            var payload = "{\"address\":{\"Street\":\"One Way\"}}";
+
+            await SetupJsonLightParameterReaderAndRunTestAsync(
+                payload,
+                (jsonLightParameterReader) => DoReadAsync(
+                    jsonLightParameterReader,
+                    verifyResourceAction: (jsonLightReader) => DoReadAsync(
+                        jsonLightReader,
+                        verifyResourceAction: (resource) =>
+                        {
+                            Assert.NotNull(resource);
+                            Assert.Equal("NS.Address", resource.TypeName);
+                            var streetProperty = Assert.Single(resource.Properties);
+                            Assert.Equal("Street", streetProperty.Name);
+                            Assert.Equal("One Way", streetProperty.Value);
+                        })));
+        }
+
+        [Fact]
+        public async Task ReadDerivedComplexParameterAsync()
+        {
+            var addressComplexType = new EdmComplexType("NS", "Address");
+            addressComplexType.AddStructuralProperty("Street", EdmPrimitiveTypeKind.String);
+            var buildingAddressComplexType = new EdmComplexType("NS", "BuildingAddress", addressComplexType);
+            buildingAddressComplexType.AddStructuralProperty("Building", EdmPrimitiveTypeKind.String);
+            this.referencedModel.AddElement(buildingAddressComplexType);
+
+            this.action.AddParameter("address", new EdmComplexTypeReference(addressComplexType, false));
+
+            var payload = "{\"address\":{\"@odata.type\":\"#NS.BuildingAddress\",\"Building\":\"Studio A\",\"Street\":\"One Way\"}}";
+
+            await SetupJsonLightParameterReaderAndRunTestAsync(
+                payload,
+                (jsonLightParameterReader) => DoReadAsync(
+                    jsonLightParameterReader,
+                    verifyResourceAction: (jsonLightReader) => DoReadAsync(
+                        jsonLightReader,
+                        verifyResourceAction: (resource) =>
+                        {
+                            Assert.NotNull(resource);
+                            Assert.Equal("NS.BuildingAddress", resource.TypeName);
+                            var properties = resource.Properties.ToArray();
+                            Assert.Equal(2, properties.Length);
+                            Assert.Equal("Building", properties[0].Name);
+                            Assert.Equal("Studio A", properties[0].Value);
+                            Assert.Equal("Street", properties[1].Name);
+                            Assert.Equal("One Way", properties[1].Value);
+                        })));
+        }
+
+        [Fact]
+        public async Task ReadComplexCollectionParameterAsync()
+        {
+            var addressComplexType = new EdmComplexType("NS", "Address");
+            addressComplexType.AddStructuralProperty("Street", EdmPrimitiveTypeKind.String);
+            this.referencedModel.AddElement(addressComplexType);
+
+            var parameterEdmTypeReference = new EdmCollectionTypeReference(new EdmCollectionType(new EdmComplexTypeReference(addressComplexType, false)));
+            this.action.AddParameter("addresses", parameterEdmTypeReference);
+
+            var payload = "{\"addresses\":[{\"Street\":\"One Way\"},{\"Street\":\"Two Way\"}]}";
+            var verifyResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("NS.Address", resource.TypeName);
+                var streetProperty = Assert.Single(resource.Properties);
+                Assert.Equal("Street", streetProperty.Name);
+                Assert.Equal("Two Way", streetProperty.Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("NS.Address", resource.TypeName);
+                var streetProperty = Assert.Single(resource.Properties);
+                Assert.Equal("Street", streetProperty.Name);
+                Assert.Equal("One Way", streetProperty.Value);
+            });
+
+            await SetupJsonLightParameterReaderAndRunTestAsync(
+                payload,
+                (jsonLightParameterReader) => DoReadAsync(
+                    jsonLightParameterReader,
+                    verifyResourceSetAction: (jsonLightReader) => DoReadAsync(
+                        jsonLightReader,
+                        verifyResourceAction: (resource) =>
+                        {
+                            Assert.NotEmpty(verifyResourceActionStack);
+                            var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                            innerVerifyResourceAction(resource);
+                        })));
+
+            Assert.Empty(verifyResourceActionStack);
+        }
+
+        [Fact]
+        public async Task ReadDerivedComplexCollectionParameterAsync()
+        {
+            var addressComplexType = new EdmComplexType("NS", "Address");
+            addressComplexType.AddStructuralProperty("Street", EdmPrimitiveTypeKind.String);
+            var buildingAddressComplexType = new EdmComplexType("NS", "BuildingAddress", addressComplexType);
+            buildingAddressComplexType.AddStructuralProperty("Building", EdmPrimitiveTypeKind.String);
+            this.referencedModel.AddElement(buildingAddressComplexType);
+
+            var parameterEdmTypeReference = new EdmCollectionTypeReference(new EdmCollectionType(new EdmComplexTypeReference(addressComplexType, false)));
+            this.action.AddParameter("addresses", parameterEdmTypeReference);
+
+            var payload = "{\"addresses\":[{\"@odata.type\":\"#NS.BuildingAddress\",\"Building\":\"Studio A\",\"Street\":\"One Way\"},{\"Street\":\"Two Way\"}]}";
+
+            var verifyResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("NS.Address", resource.TypeName);
+                var streetProperty = Assert.Single(resource.Properties);
+                Assert.Equal("Street", streetProperty.Name);
+                Assert.Equal("Two Way", streetProperty.Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("NS.BuildingAddress", resource.TypeName);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(2, properties.Length);
+                Assert.Equal("Building", properties[0].Name);
+                Assert.Equal("Studio A", properties[0].Value);
+                Assert.Equal("Street", properties[1].Name);
+                Assert.Equal("One Way", properties[1].Value);
+            });
+
+            await SetupJsonLightParameterReaderAndRunTestAsync(
+                payload,
+                (jsonLightParameterReader) => DoReadAsync(
+                    jsonLightParameterReader,
+                    verifyResourceSetAction: (jsonLightReader) => DoReadAsync(
+                        jsonLightReader,
+                        verifyResourceAction: (resource) =>
+                        {
+                            Assert.NotEmpty(verifyResourceActionStack);
+                            var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                            innerVerifyResourceAction(resource);
+                        })));
+
+            Assert.Empty(verifyResourceActionStack);
+        }
+
+        [Fact]
+        public async Task ReadEntityParameterAsync()
+        {
+            var customerEntityType = new EdmEntityType("NS", "Customer");
+            customerEntityType.AddKeys(customerEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            customerEntityType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+            this.referencedModel.AddElement(customerEntityType);
+
+            this.action.AddParameter("customer", new EdmEntityTypeReference(customerEntityType, false));
+
+            var payload = "{\"customer\":{\"Id\":1,\"Name\":\"Sue\"}}";
+
+            await SetupJsonLightParameterReaderAndRunTestAsync(
+                payload,
+                (jsonLightParameterReader) => DoReadAsync(
+                    jsonLightParameterReader,
+                    verifyResourceAction: (jsonLightReader) => DoReadAsync(
+                        jsonLightReader,
+                        verifyResourceAction: (resource) =>
+                        {
+                            Assert.NotNull(resource);
+                            Assert.Equal("NS.Customer", resource.TypeName);
+                            var properties = resource.Properties.ToArray();
+                            Assert.Equal(2, properties.Length);
+                            Assert.Equal("Id", properties[0].Name);
+                            Assert.Equal(1, properties[0].Value);
+                            Assert.Equal("Name", properties[1].Name);
+                            Assert.Equal("Sue", properties[1].Value);
+                        })));
+        }
+
+        [Fact]
+        public async Task ReadNullEntityParameterAsync()
+        {
+            var customerEntityType = new EdmEntityType("NS", "Customer");
+            customerEntityType.AddKeys(customerEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            this.referencedModel.AddElement(customerEntityType);
+
+            this.action.AddParameter("customer", new EdmEntityTypeReference(customerEntityType, false));
+
+            var payload = "{\"customer\":null}";
+
+            await SetupJsonLightParameterReaderAndRunTestAsync(
+                payload,
+                (jsonLightParameterReader) => DoReadAsync(
+                    jsonLightParameterReader,
+                    verifyResourceAction: (jsonLightReader) => DoReadAsync(
+                        jsonLightReader,
+                        verifyResourceAction: (resource) => Assert.Null(resource))));
+        }
+
+        [Fact]
+        public async Task ReadDerivedEntityParameterAsync()
+        {
+            var customerEntityType = new EdmEntityType("NS", "Customer");
+            customerEntityType.AddKeys(customerEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            var enterpriseCustomerEntityType = new EdmEntityType("NS", "EnterpriseCustomer", customerEntityType);
+            enterpriseCustomerEntityType.AddStructuralProperty("CreditLimit", EdmPrimitiveTypeKind.Decimal);
+            this.referencedModel.AddElement(enterpriseCustomerEntityType);
+
+            this.action.AddParameter("customer", new EdmEntityTypeReference(customerEntityType, false));
+
+            var payload = "{\"customer\":{\"@odata.type\":\"#NS.EnterpriseCustomer\",\"Id\":1,\"CreditLimit\":170}}";
+
+            await SetupJsonLightParameterReaderAndRunTestAsync(
+                payload,
+                (jsonLightParameterReader) => DoReadAsync(
+                    jsonLightParameterReader,
+                    verifyResourceAction: (jsonLightReader) => DoReadAsync(
+                        jsonLightReader,
+                        verifyResourceAction: (resource) =>
+                        {
+                            Assert.NotNull(resource);
+                            Assert.Equal("NS.EnterpriseCustomer", resource.TypeName);
+                            var properties = resource.Properties.ToArray();
+                            Assert.Equal(2, properties.Length);
+                            Assert.Equal("Id", properties[0].Name);
+                            Assert.Equal(1, properties[0].Value);
+                            Assert.Equal("CreditLimit", properties[1].Name);
+                            Assert.Equal(170M, properties[1].Value);
+                        })));
+        }
+
+        [Fact]
+        public async Task ReadOpenEntityParameterAsync()
+        {
+            var customerEntityType = new EdmEntityType("NS", "Customer", baseType: null, isAbstract: false, isOpen: true);
+            customerEntityType.AddKeys(customerEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            this.referencedModel.AddElement(customerEntityType);
+
+            this.action.AddParameter("customer", new EdmEntityTypeReference(customerEntityType, false));
+
+            var payload = "{\"customer\":{\"Id\":1,\"DynamicProp@odata.type\":\"#Edm.Decimal\",\"DynamicProp\":310}}";
+
+            await SetupJsonLightParameterReaderAndRunTestAsync(
+                payload,
+                (jsonLightParameterReader) => DoReadAsync(
+                    jsonLightParameterReader,
+                    verifyResourceAction: (jsonLightReader) => DoReadAsync(
+                        jsonLightReader,
+                        verifyResourceAction: (resource) =>
+                        {
+                            Assert.NotNull(resource);
+                            Assert.Equal("NS.Customer", resource.TypeName);
+                            var properties = resource.Properties.ToArray();
+                            Assert.Equal(2, properties.Length);
+                            Assert.Equal("Id", properties[0].Name);
+                            Assert.Equal(1, properties[0].Value);
+                            Assert.Equal("DynamicProp", properties[1].Name);
+                            Assert.Equal(310M, properties[1].Value);
+                        })));
+        }
+
+        [Fact]
+        public async Task ReadEntityCollectionParameterAsync()
+        {
+            var customerEntityType = new EdmEntityType("NS", "Customer");
+            customerEntityType.AddKeys(customerEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            customerEntityType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+            this.referencedModel.AddElement(customerEntityType);
+
+            var parameterEdmTypeReference = new EdmCollectionTypeReference(new EdmCollectionType(new EdmEntityTypeReference(customerEntityType, false)));
+            this.action.AddParameter("customers", parameterEdmTypeReference);
+
+            var payload = "{\"customers\":[{\"Id\":1,\"Name\":\"Sue\"}]}";
+
+            await SetupJsonLightParameterReaderAndRunTestAsync(
+                payload,
+                (jsonLightParameterReader) => DoReadAsync(
+                    jsonLightParameterReader,
+                    verifyResourceSetAction: (jsonLightReader) => DoReadAsync(
+                        jsonLightReader,
+                        verifyResourceAction: (resource) =>
+                        {
+                            Assert.NotNull(resource);
+                            Assert.Equal("NS.Customer", resource.TypeName);
+                            var properties = resource.Properties.ToArray();
+                            Assert.Equal(2, properties.Length);
+                            Assert.Equal("Id", properties[0].Name);
+                            Assert.Equal(1, properties[0].Value);
+                            Assert.Equal("Name", properties[1].Name);
+                            Assert.Equal("Sue", properties[1].Value);
+                        })));
+        }
+
+        [Fact]
+        public async Task ReadMultipleEntityCollectionParametersAsync()
+        {
+            var customerEntityType = new EdmEntityType("NS", "Customer");
+            customerEntityType.AddKeys(customerEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            this.referencedModel.AddElement(customerEntityType);
+
+            var parameterEdmTypeReference = new EdmCollectionTypeReference(new EdmCollectionType(new EdmEntityTypeReference(customerEntityType, false)));
+            this.action.AddParameter("customer1", parameterEdmTypeReference);
+            this.action.AddParameter("customer2", parameterEdmTypeReference);
+
+            var payload = "{\"customer1\":[{\"Id\":1}],\"customer2\":[{\"Id\":2}]}";
+
+            var resourceSetCount = 0;
+            var verifyResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("NS.Customer", resource.TypeName);
+                var idProperty = Assert.Single(resource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(2, idProperty.Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("NS.Customer", resource.TypeName);
+                var idProperty = Assert.Single(resource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(1, idProperty.Value);
+            });
+
+            await SetupJsonLightParameterReaderAndRunTestAsync(
+                payload,
+                (jsonLightParameterReader) => DoReadAsync(
+                    jsonLightParameterReader,
+                    verifyResourceSetAction: async (jsonLightReader) =>
+                    {
+                        resourceSetCount++;
+                        await DoReadAsync(
+                            jsonLightReader,
+                            verifyResourceAction: (resource) =>
+                            {
+                                Assert.NotEmpty(verifyResourceActionStack);
+                                var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                                innerVerifyResourceAction(resource);
+                            });
+                    }));
+
+            Assert.Equal(2, resourceSetCount);
+            Assert.Empty(verifyResourceActionStack);
+        }
+
+        [Fact]
+        public async Task ReadDerivedEntityCollectionParametersAsync()
+        {
+            var customerEntityType = new EdmEntityType("NS", "Customer");
+            customerEntityType.AddKeys(customerEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            var enterpriseCustomerEntityType = new EdmEntityType("NS", "EnterpriseCustomer", customerEntityType);
+            enterpriseCustomerEntityType.AddStructuralProperty("CreditLimit", EdmPrimitiveTypeKind.Decimal);
+            this.referencedModel.AddElement(enterpriseCustomerEntityType);
+
+            var parameterEdmTypeReference = new EdmCollectionTypeReference(new EdmCollectionType(new EdmEntityTypeReference(customerEntityType, false)));
+            this.action.AddParameter("customer1", parameterEdmTypeReference);
+            this.action.AddParameter("customer2", parameterEdmTypeReference);
+
+            var payload = "{\"customer1\":[{\"Id\":1}],\"customer2\":[{\"@odata.type\":\"#NS.EnterpriseCustomer\",\"Id\":2,\"CreditLimit\":130}]}";
+
+            var resourceSetCount = 0;
+            var verifyResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("NS.EnterpriseCustomer", resource.TypeName);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(2, properties.Length);
+                Assert.Equal("Id", properties[0].Name);
+                Assert.Equal(2, properties[0].Value);
+                Assert.Equal("CreditLimit", properties[1].Name);
+                Assert.Equal(130M, properties[1].Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("NS.Customer", resource.TypeName);
+                var idProperty = Assert.Single(resource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(1, idProperty.Value);
+            });
+
+            await SetupJsonLightParameterReaderAndRunTestAsync(
+                payload,
+                (jsonLightParameterReader) => DoReadAsync(
+                    jsonLightParameterReader,
+                    verifyResourceSetAction: async (jsonLightReader) =>
+                    {
+                        resourceSetCount++;
+                        await DoReadAsync(
+                            jsonLightReader,
+                            verifyResourceAction: (resource) =>
+                            {
+                                Assert.NotEmpty(verifyResourceActionStack);
+                                var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                                innerVerifyResourceAction(resource);
+                            });
+                    }));
+
+            Assert.Equal(2, resourceSetCount);
+            Assert.Empty(verifyResourceActionStack);
+        }
+
+        [Fact]
+        public async Task ReadPrimitiveAndEntityParametersAsync()
+        {
+            var customerEntityType = new EdmEntityType("NS", "Customer");
+            customerEntityType.AddKeys(customerEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            this.referencedModel.AddElement(customerEntityType);
+
+            this.action.AddParameter("customer", new EdmEntityTypeReference(customerEntityType, false));
+            this.action.AddParameter("rating", EdmCoreModel.Instance.GetInt32(false));
+
+            var payload = "{\"customer\":{\"Id\":1},\"rating\":4}";
+
+            await SetupJsonLightParameterReaderAndRunTestAsync(
+                payload,
+                (jsonLightParameterReader) => DoReadAsync(
+                    jsonLightParameterReader,
+                    verifyValueAction: (value) => Assert.Equal(4, value),
+                    verifyResourceAction: (jsonLightReader) => DoReadAsync(
+                        jsonLightReader,
+                        verifyResourceAction: (resource) =>
+                        {
+                            Assert.NotNull(resource);
+                            Assert.Equal("NS.Customer", resource.TypeName);
+                            var idProperty = Assert.Single(resource.Properties);
+                            Assert.Equal("Id", idProperty.Name);
+                            Assert.Equal(1, idProperty.Value);
+                        })));
+        }
+
+        [Fact]
+        public async Task ReadEnumAndEntityParametersAsync()
+        {
+            var colorEnumType = new EdmEnumType("NS", "Color");
+            colorEnumType.AddMember("Black", new EdmEnumMemberValue(1));
+            colorEnumType.AddMember("White", new EdmEnumMemberValue(2));
+            this.referencedModel.AddElement(colorEnumType);
+            var customerEntityType = new EdmEntityType("NS", "Customer");
+            customerEntityType.AddKeys(customerEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            this.referencedModel.AddElement(customerEntityType);
+
+            this.action.AddParameter("customer", new EdmEntityTypeReference(customerEntityType, false));
+            this.action.AddParameter("favoriteColor", new EdmEnumTypeReference(colorEnumType, false));
+
+            var payload = "{\"customer\":{\"Id\":1},\"favoriteColor\":\"Black\"}";
+
+            await SetupJsonLightParameterReaderAndRunTestAsync(
+                payload,
+                (jsonLightParameterReader) => DoReadAsync(
+                    jsonLightParameterReader,
+                    verifyValueAction: (value) =>
+                    {
+                        var favoriteColor = Assert.IsType<ODataEnumValue>(value);
+                        Assert.Equal("Black", favoriteColor.Value);
+                    },
+                    verifyResourceAction: (jsonLightReader) => DoReadAsync(
+                        jsonLightReader,
+                        verifyResourceAction: (resource) =>
+                        {
+                            Assert.NotNull(resource);
+                            Assert.Equal("NS.Customer", resource.TypeName);
+                            var idProperty = Assert.Single(resource.Properties);
+                            Assert.Equal("Id", idProperty.Name);
+                            Assert.Equal(1, idProperty.Value);
+                        })));
+        }
+
+        [Fact]
+        public async Task ReadComplexAndEntityParametersAsync()
+        {
+            var addressComplexType = new EdmComplexType("NS", "Address");
+            addressComplexType.AddStructuralProperty("Street", EdmPrimitiveTypeKind.String);
+            this.referencedModel.AddElement(addressComplexType);
+            var customerEntityType = new EdmEntityType("NS", "Customer");
+            customerEntityType.AddKeys(customerEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            customerEntityType.AddStructuralProperty("PhysicalAddress", new EdmComplexTypeReference(addressComplexType, false));
+            this.referencedModel.AddElement(customerEntityType);
+
+            this.action.AddParameter("customer", new EdmEntityTypeReference(customerEntityType, false));
+            this.action.AddParameter("address", new EdmComplexTypeReference(addressComplexType, false));
+
+            var payload = "{\"customer\":{\"Id\":1,\"PhysicalAddress\":{\"Street\":\"One Way\"}},\"address\":{\"Street\":\"Two Way\"}}";
+            
+            var outerResourceCount = 0;
+            var verifyResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("NS.Address", resource.TypeName);
+                var streetProperty = Assert.Single(resource.Properties);
+                Assert.Equal("Street", streetProperty.Name);
+                Assert.Equal("Two Way", streetProperty.Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("NS.Customer", resource.TypeName);
+                var idProperty = Assert.Single(resource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(1, idProperty.Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("NS.Address", resource.TypeName);
+                var streetProperty = Assert.Single(resource.Properties);
+                Assert.Equal("Street", streetProperty.Name);
+                Assert.Equal("One Way", streetProperty.Value);
+            });
+
+            await SetupJsonLightParameterReaderAndRunTestAsync(
+                payload,
+                (jsonLightParameterReader) => DoReadAsync(
+                    jsonLightParameterReader,
+                    verifyResourceAction: async (jsonLightReader) =>
+                    {
+                        outerResourceCount++;
+                        await DoReadAsync(
+                            jsonLightReader,
+                            verifyResourceAction: (resource) =>
+                            {
+                                Assert.NotEmpty(verifyResourceActionStack);
+                                var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                                innerVerifyResourceAction(resource);
+                            });
+                    }));
+
+            Assert.Equal(2, outerResourceCount);
+            Assert.Empty(verifyResourceActionStack);
+        }
+
+        [Fact]
+        public async Task ReadEntityAndEntityCollectionParametersAsync()
+        {
+            var customerEntityType = new EdmEntityType("NS", "Customer");
+            customerEntityType.AddKeys(customerEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            this.referencedModel.AddElement(customerEntityType);
+
+            this.action.AddParameter("customer", new EdmEntityTypeReference(customerEntityType, false));
+            var parameterEdmTypeReference = new EdmCollectionTypeReference(new EdmCollectionType(new EdmEntityTypeReference(customerEntityType, false)));
+            this.action.AddParameter("competitors", parameterEdmTypeReference);
+
+            var payload = "{\"customer\":{\"Id\":1},\"competitors\":[{\"Id\":2}]}";
+
+            var resourceCount = 0;
+            var resourceSetCount = 0;
+            var verifyResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("NS.Customer", resource.TypeName);
+                var idProperty = Assert.Single(resource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(2, idProperty.Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("NS.Customer", resource.TypeName);
+                var idProperty = Assert.Single(resource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(1, idProperty.Value);
+            });
+
+            await SetupJsonLightParameterReaderAndRunTestAsync(
+                payload,
+                (jsonLightParameterReader) => DoReadAsync(
+                    jsonLightParameterReader,
+                    verifyResourceSetAction: async (jsonLightReader) =>
+                    {
+                        resourceSetCount++;
+                        await DoReadAsync(
+                            jsonLightReader,
+                            verifyResourceAction: (resource) =>
+                            {
+                                Assert.NotEmpty(verifyResourceActionStack);
+                                var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                                innerVerifyResourceAction(resource);
+                            });
+                    },
+                    verifyResourceAction: async (jsonLightReader) =>
+                    {
+                        resourceCount++;
+                        await DoReadAsync(
+                            jsonLightReader,
+                            verifyResourceAction: (resource) =>
+                            {
+                                Assert.NotEmpty(verifyResourceActionStack);
+                                var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                                innerVerifyResourceAction(resource);
+                            });
+                    }));
+
+            Assert.Equal(1, resourceSetCount);
+            Assert.Equal(1, resourceCount);
+            Assert.Empty(verifyResourceActionStack);
+        }
+
+        [Fact]
+        public async Task ReadEntityCollectionParameterWithNestedEntityAsync()
+        {
+            var customerEntityType = new EdmEntityType("NS", "Customer");
+            customerEntityType.AddKeys(customerEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            var orderEntityType = new EdmEntityType("NS", "Order");
+            orderEntityType.AddKeys(orderEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            orderEntityType.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo { Name = "Customer", Target = customerEntityType, TargetMultiplicity = EdmMultiplicity.One });
+
+            var parameterEdmTypeReference = new EdmCollectionTypeReference(new EdmCollectionType(new EdmEntityTypeReference(orderEntityType, false)));
+            this.action.AddParameter("orders", parameterEdmTypeReference);
+
+            var payload = "{\"orders\":[{\"Id\":7,\"Customer\":{\"Id\":1}}]}";
+
+            var verifyResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("NS.Order", resource.TypeName);
+                var idProperty = Assert.Single(resource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(7, idProperty.Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("NS.Customer", resource.TypeName);
+                var idProperty = Assert.Single(resource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(1, idProperty.Value);
+            });
+
+            await SetupJsonLightParameterReaderAndRunTestAsync(
+                payload,
+                (jsonLightParameterReader) => DoReadAsync(
+                    jsonLightParameterReader,
+                    verifyResourceSetAction: (jsonLightReader) => DoReadAsync(
+                        jsonLightReader,
+                        verifyResourceAction: (resource) =>
+                        {
+                            Assert.NotEmpty(verifyResourceActionStack);
+                            var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                            innerVerifyResourceAction(resource);
+                        })));
+
+            Assert.Empty(verifyResourceActionStack);
+        }
+
+        [Fact]
+        public async Task ReadEntityCollectionParameterWithNestedContainedEntityAsync()
+        {
+            var nextOfKinEntityType = new EdmEntityType("NS", "NextOfKin");
+            nextOfKinEntityType.AddKeys(nextOfKinEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            var customerEntityType = new EdmEntityType("NS", "Customer");
+            customerEntityType.AddKeys(customerEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            customerEntityType.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo { Name = "NextOfKin", Target = nextOfKinEntityType, TargetMultiplicity = EdmMultiplicity.One, ContainsTarget = true });
+
+            var parameterEdmTypeReference = new EdmCollectionTypeReference(new EdmCollectionType(new EdmEntityTypeReference(customerEntityType, false)));
+            this.action.AddParameter("customers", parameterEdmTypeReference);
+
+            var payload = "{\"customers\":[{\"Id\":1,\"NextOfKin\":{\"Id\":13}}]}";
+
+            var verifyResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("NS.Customer", resource.TypeName);
+                var idProperty = Assert.Single(resource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(1, idProperty.Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("NS.NextOfKin", resource.TypeName);
+                var idProperty = Assert.Single(resource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(13, idProperty.Value);
+            });
+
+            await SetupJsonLightParameterReaderAndRunTestAsync(
+                payload,
+                (jsonLightParameterReader) => DoReadAsync(
+                    jsonLightParameterReader,
+                    verifyResourceSetAction: (jsonLightReader) => DoReadAsync(
+                        jsonLightReader,
+                        verifyResourceAction: (resource) =>
+                        {
+                            Assert.NotEmpty(verifyResourceActionStack);
+                            var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                            innerVerifyResourceAction(resource);
+                        })));
+
+            Assert.Empty(verifyResourceActionStack);
+        }
+
+        [Fact]
+        public async Task ReadEntityCollectionParameterWithNestedContainedEntityCollectionAsync()
+        {
+            var nextOfKinEntityType = new EdmEntityType("NS", "Subsidiary");
+            nextOfKinEntityType.AddKeys(nextOfKinEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            var customerEntityType = new EdmEntityType("NS", "Customer");
+            customerEntityType.AddKeys(customerEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            customerEntityType.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo { Name = "Subsidiaries", Target = nextOfKinEntityType, TargetMultiplicity = EdmMultiplicity.Many, ContainsTarget = true });
+
+            var parameterEdmTypeReference = new EdmCollectionTypeReference(new EdmCollectionType(new EdmEntityTypeReference(customerEntityType, false)));
+            this.action.AddParameter("customers", parameterEdmTypeReference);
+
+            var payload = "{\"customers\":[{\"Id\":1,\"Subsidiaries\":[{\"Id\":13}]}]}";
+
+            var verifyResourceActionStack = new Stack<Action<ODataResource>>();
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("NS.Customer", resource.TypeName);
+                var idProperty = Assert.Single(resource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(1, idProperty.Value);
+            });
+            verifyResourceActionStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("NS.Subsidiary", resource.TypeName);
+                var idProperty = Assert.Single(resource.Properties);
+                Assert.Equal("Id", idProperty.Name);
+                Assert.Equal(13, idProperty.Value);
+            });
+
+            await SetupJsonLightParameterReaderAndRunTestAsync(
+                payload,
+                (jsonLightParameterReader) => DoReadAsync(
+                    jsonLightParameterReader,
+                    verifyResourceSetAction: (jsonLightReader) => DoReadAsync(
+                        jsonLightReader,
+                        verifyResourceAction: (resource) =>
+                        {
+                            Assert.NotEmpty(verifyResourceActionStack);
+                            var innerVerifyResourceAction = verifyResourceActionStack.Pop();
+                            innerVerifyResourceAction(resource);
+                        })));
+
+            Assert.Empty(verifyResourceActionStack);
+        }
+
         private ParameterReaderResult RunParameterReaderTest(string payload)
         {
             var message = new InMemoryMessage();
@@ -755,6 +1762,119 @@ namespace Microsoft.OData.Tests.JsonLight
             }
 
             return parameterReaderResult;
+        }
+
+        private ODataJsonLightInputContext CreateJsonLightInputContext(string payload, bool isAsync = false, bool isResponse = true)
+        {
+            var messageInfo = new ODataMessageInfo
+            {
+                MediaType = new ODataMediaType("application", "json"),
+#if NETCOREAPP1_1
+                Encoding = Encoding.GetEncoding(0),
+#else
+                Encoding = Encoding.Default,
+#endif
+                IsResponse = isResponse,
+                IsAsync = isAsync,
+                Model = this.model
+            };
+
+            return new ODataJsonLightInputContext(new StringReader(payload), messageInfo, new ODataMessageReaderSettings());
+        }
+
+        /// <summary>
+        /// Sets up an ODataJsonLightParameterReader, then runs the given test code asynchronously
+        /// </summary>
+        private async Task SetupJsonLightParameterReaderAndRunTestAsync(
+            string payload,
+            Func<ODataJsonLightParameterReader, Task> func)
+        {
+            using (var jsonLightInputContext = CreateJsonLightInputContext(payload, isAsync: true, isResponse: false))
+            {
+                var jsonLightParameterReader = new ODataJsonLightParameterReader(
+                    jsonLightInputContext,
+                    this.action);
+
+                await func(jsonLightParameterReader);
+            }
+        }
+
+        private async Task DoReadAsync(
+            ODataJsonLightParameterReader jsonLightParameterReader,
+            Action<object> verifyValueAction = null,
+            Func<ODataCollectionReader, Task> verifyCollectionAction = null,
+            Func<ODataJsonLightReader, Task> verifyResourceAction = null,
+            Func<ODataJsonLightReader, Task> verifyResourceSetAction = null)
+        {
+            while (await jsonLightParameterReader.ReadAsync())
+            {
+                switch(jsonLightParameterReader.State)
+                {
+                    case ODataParameterReaderState.Value:
+                        if (verifyValueAction != null)
+                        {
+                            verifyValueAction(jsonLightParameterReader.Value);
+                        }
+
+                        break;
+                    case ODataParameterReaderState.Collection:
+                        if (verifyCollectionAction != null)
+                        {
+                            await verifyCollectionAction(await jsonLightParameterReader.CreateCollectionReaderAsync());
+                        }
+
+                        break;
+                    case ODataParameterReaderState.Resource:
+                        if (verifyResourceAction != null)
+                        {
+                            await verifyResourceAction(await jsonLightParameterReader.CreateResourceReaderAsync() as ODataJsonLightReader);
+                        }
+
+                        break;
+                    case ODataParameterReaderState.ResourceSet:
+                        if (verifyResourceSetAction != null)
+                        {
+                            await verifyResourceSetAction(await jsonLightParameterReader.CreateResourceSetReaderAsync() as ODataJsonLightReader);
+                        }
+
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private async Task DoReadAsync(
+           ODataJsonLightReader jsonLightReader,
+           Action<ODataResourceSet> verifyResourceSetAction = null,
+           Action<ODataResource> verifyResourceAction = null)
+        {
+            while (await jsonLightReader.ReadAsync())
+            {
+                switch (jsonLightReader.State)
+                {
+                    case ODataReaderState.ResourceSetStart:
+                        break;
+                    case ODataReaderState.ResourceSetEnd:
+                        if (verifyResourceSetAction != null)
+                        {
+                            verifyResourceSetAction(jsonLightReader.Item as ODataResourceSet);
+                        }
+
+                        break;
+                    case ODataReaderState.ResourceStart:
+                        break;
+                    case ODataReaderState.ResourceEnd:
+                        if (verifyResourceAction != null)
+                        {
+                            verifyResourceAction(jsonLightReader.Item as ODataResource);
+                        }
+
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
         private class ParameterReaderResult

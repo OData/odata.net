@@ -1144,6 +1144,39 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 Strings.EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsTypeOfKey("Id", "NS.Entity"));
         }
 
+        [Fact]
+        public void TestInterfaceEntityTypeCannotDefineDuplicateKey()
+        {
+            EdmEntityType baseEntity = new EdmEntityType("NS", "Base");
+            baseEntity.AddKeys(baseEntity.AddStructuralProperty("Id", EdmPrimitiveTypeKind.String));
+            EdmEntityType entity = new EdmEntityType("NS", "Entity", baseEntity);
+            entity.AddKeys(entity.AddStructuralProperty("Id2", EdmPrimitiveTypeKind.String));
+
+#pragma warning disable CS0618 // Type or member is obsolete
+            ValidateError(
+                ValidationRules.EntityTypeInvalidKeyKeyDefinedInBaseClass,
+                entity,
+                EdmErrorCode.InvalidKey,
+                Strings.EdmModel_Validator_Semantic_InvalidKeyKeyDefinedInBaseClass(entity.Name, entity.BaseEntityType().Name));
+#pragma warning restore CS0618 // Type or member is obsolete
+        }
+
+        [Fact]
+        public void TestInterfaceEntityTypeCannotDefineDuplicateIndirectKey()
+        {
+            EdmEntityType baseEntity = new EdmEntityType("NS", "Base");
+            baseEntity.AddKeys(baseEntity.AddStructuralProperty("Id", EdmPrimitiveTypeKind.String));
+            EdmEntityType interimEntity = new EdmEntityType("NS", "InterimEntity", baseEntity);
+            EdmEntityType entity = new EdmEntityType("NS", "Entity", interimEntity);
+            entity.AddKeys(entity.AddStructuralProperty("Id2", EdmPrimitiveTypeKind.String));
+
+            ValidateError(
+                ValidationRules.EntityTypeInvalidKeyKeyDefinedInAncestor,
+                entity,
+                EdmErrorCode.InvalidKey,
+                Strings.EdmModel_Validator_Semantic_InvalidKeyKeyDefinedInBaseClass(entity.Name, baseEntity.Name));
+        }
+
         [Theory]
         [InlineData(EdmTypeKind.Complex)]
         [InlineData(EdmTypeKind.Primitive)]

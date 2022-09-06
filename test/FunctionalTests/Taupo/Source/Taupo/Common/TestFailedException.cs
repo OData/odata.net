@@ -13,9 +13,7 @@ namespace Microsoft.Test.Taupo.Common
     /// <summary>
     /// Exception thrown whenever the test fails.
     /// </summary>
-#if !SILVERLIGHT
     [Serializable]
-#endif
     public abstract class TestFailedException : TaupoException
     {
         /// <summary>
@@ -44,7 +42,6 @@ namespace Microsoft.Test.Taupo.Common
         {
         }
 
-#if !SILVERLIGHT
         /// <summary>
         /// Initializes a new instance of the TestFailedException class based on 
         /// <see cref="SerializationInfo"/>
@@ -55,6 +52,5 @@ namespace Microsoft.Test.Taupo.Common
             : base(info, context)
         {
         }
-#endif
     }
 }

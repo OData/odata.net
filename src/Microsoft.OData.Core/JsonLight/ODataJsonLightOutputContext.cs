@@ -11,6 +11,7 @@ namespace Microsoft.OData.JsonLight
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
+    using System.Text;
     using System.Threading.Tasks;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Json;
@@ -42,8 +43,13 @@ namespace Microsoft.OData.JsonLight
         /// <summary>The message output stream.</summary>
         private Stream messageOutputStream;
 
+#if NETSTANDARD1_1
         /// <summary>The asynchronous output stream if we're writing asynchronously.</summary>
         private AsyncBufferedStream asynchronousOutputStream;
+#else
+        /// <summary>The asynchronous output stream if we're writing asynchronously.</summary>
+        private Stream asynchronousOutputStream;
+#endif
 
         /// <summary>The text writer created for the output stream.</summary>
         private TextWriter textWriter;
@@ -64,14 +70,6 @@ namespace Microsoft.OData.JsonLight
         /// The handler to manage property cache.
         /// </summary>
         private PropertyCacheHandler propertyCacheHandler;
-
-        /// <summary>
-        /// The concrete <see cref="JsonWriter"/> instance initialized when
-        /// creating either synchronous or asynchronous writer.
-        /// Used to guarantee that the synchronous and asynchronous writers share the same scope(s) specifically
-        /// because the synchronous writer is used to write spatial data in both synchronous and asynchronous scenarios.
-        /// </summary>
-        private JsonWriter concreteJsonWriter;
 
         /// <summary>
         /// Constructor.
@@ -97,20 +95,49 @@ namespace Microsoft.OData.JsonLight
                 }
                 else
                 {
+#if NETSTANDARD1_1
                     this.asynchronousOutputStream = new AsyncBufferedStream(this.messageOutputStream);
+#else 
+                    this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, ODataConstants.DefaultOutputBufferSize);
+#endif
                     outputStream = this.asynchronousOutputStream;
                 }
 
                 this.textWriter = new StreamWriter(outputStream, messageInfo.Encoding);
 
-                // COMPAT 2: JSON indentation - WCFDS indents only partially, it inserts newlines but doesn't actually insert spaces for indentation
-                // in here we allow the user to specify if true indentation should be used or if the limited functionality is enough.
-                this.jsonWriter = CreateJsonWriter(this.Container, this.textWriter, messageInfo.MediaType.HasIeee754CompatibleSetToTrue(), messageWriterSettings);
-                this.asynchronousJsonWriter = CreateAsynchronousJsonWriter(
-                    this.Container,
-                    this.textWriter,
-                    messageInfo.MediaType.HasIeee754CompatibleSetToTrue(),
-                    messageWriterSettings);
+                bool isIeee754Compatible = messageInfo.MediaType.HasIeee754CompatibleSetToTrue();
+
+                // We first attempt to create a JSON writer which directly writes to the stream
+                IStreamBasedJsonWriterFactory streamBasedJsonWriterFactory = this.Container?.GetService<IStreamBasedJsonWriterFactory>();
+
+                if (streamBasedJsonWriterFactory != null)
+                {
+                    this.asynchronousJsonWriter = CreateAsynchronousJsonWriter(
+                        streamBasedJsonWriterFactory,
+                        this.messageOutputStream,
+                        isIeee754Compatible,
+                        messageInfo.Encoding);
+
+                    // the IStreamBasedJsonWriterFactory expects that the async writer also implements
+                    // the synchronous interface. The EnsureJsonWritersReferenceTheSameInstance() method verifies this.
+                }
+
+                // Then fallback to the TextWriter-based approach
+                if (this.asynchronousJsonWriter == null && this.jsonWriter == null)
+                {
+                    this.jsonWriter = CreateJsonWriter(this.Container, this.textWriter, isIeee754Compatible, messageWriterSettings);
+
+                    if (!(this.jsonWriter is IJsonWriterAsync))
+                    {
+                        this.asynchronousJsonWriter = CreateAsynchronousJsonWriter(
+                        this.Container,
+                        this.textWriter,
+                        isIeee754Compatible,
+                        messageWriterSettings);
+                    }
+                }
+
+                this.EnsureJsonWritersReferenceTheSameInstance();
             }
             catch (Exception e)
             {
@@ -147,8 +174,14 @@ namespace Microsoft.OData.JsonLight
 
             this.textWriter = textWriter;
             bool ieee754CompatibleSetToTrue = (messageInfo.MediaType != null) ? messageInfo.MediaType.HasIeee754CompatibleSetToTrue() : false;
-            this.jsonWriter = CreateJsonWriter(messageInfo.Container, textWriter, ieee754CompatibleSetToTrue, messageWriterSettings);
             this.asynchronousJsonWriter = CreateAsynchronousJsonWriter(messageInfo.Container, textWriter, ieee754CompatibleSetToTrue, messageWriterSettings);
+            
+            if (this.asynchronousJsonWriter == null)
+            {
+                this.jsonWriter = CreateJsonWriter(messageInfo.Container, textWriter, ieee754CompatibleSetToTrue, messageWriterSettings);
+            }
+            
+            this.EnsureJsonWritersReferenceTheSameInstance();
             this.metadataLevel = new JsonMinimalMetadataLevel();
             this.propertyCacheHandler = new PropertyCacheHandler();
         }
@@ -531,7 +564,11 @@ namespace Microsoft.OData.JsonLight
         {
             if (this.asynchronousOutputStream != null)
             {
+#if NETSTANDARD1_1
                 this.asynchronousOutputStream.FlushSync();
+#else
+                this.asynchronousOutputStream.Flush();
+#endif
             }
         }
 
@@ -543,12 +580,14 @@ namespace Microsoft.OData.JsonLight
         {
             if (this.asynchronousOutputStream != null)
             {
+#if NETSTANDARD1_1
                 return this.asynchronousOutputStream.FlushAsync();
+#else
+                return this.asynchronousOutputStream.FlushAsync();
+#endif
             }
-            else
-            {
-                return TaskUtils.CompletedTask;
-            }
+
+            return TaskUtils.CompletedTask;
         }
 
         /// <summary>
@@ -766,21 +805,25 @@ namespace Microsoft.OData.JsonLight
             {
                 if (this.messageOutputStream != null)
                 {
-                    // JsonWriter.Flush will call the underlying TextWriter.Flush.
-                    // The TextWriter.Flush (Which is in fact StreamWriter.Flush) will call the underlying Stream.Flush.
+                    // The IJsonWriter will flush the underlying stream
                     this.jsonWriter.Flush();
 
-                    JsonWriter writer = this.jsonWriter as JsonWriter;
-                    if (writer != null)
+                    if (this.jsonWriter is IDisposable disposableWriter)
                     {
-                        writer.Dispose();
+                        disposableWriter.Dispose();
                     }
 
                     // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitly.
                     if (this.asynchronousOutputStream != null)
                     {
+#if NETSTANDARD1_1
                         this.asynchronousOutputStream.FlushSync();
                         this.asynchronousOutputStream.Dispose();
+#else
+                        this.asynchronousOutputStream.Flush();
+                        // We are working with a BufferedStream here. We flushed it already, so there is nothing else to dispose. And it would dispose the 
+                        // inner stream as well.
+#endif
                     }
 
                     // Dispose the message stream (note that we OWN this stream, so we always dispose it).
@@ -831,7 +874,7 @@ namespace Microsoft.OData.JsonLight
         /// when the JSON writer factory is DefaultJsonWriterFactory - since both CreateJsonWriter and
         /// CreateAsynchronousJsonWriter methods of that factory return an instance of JsonWriter.
         /// Merging IJsonWriter and IJsonWriterAsync interface in a major release will simplify this.</remarks>
-        private IJsonWriter CreateJsonWriter(
+        private static IJsonWriter CreateJsonWriter(
             IServiceProvider container,
             TextWriter textWriter,
             bool isIeee754Compatible,
@@ -840,29 +883,44 @@ namespace Microsoft.OData.JsonLight
             IJsonWriter jsonWriter;
             if (container == null)
             {
-                if (this.concreteJsonWriter != null)
-                {
-                    return this.concreteJsonWriter;
-                }
-
                 jsonWriter = new JsonWriter(textWriter, isIeee754Compatible);
             }
             else
             {
                 IJsonWriterFactory jsonWriterFactory = container.GetRequiredService<IJsonWriterFactory>();
-                if (jsonWriterFactory is DefaultJsonWriterFactory && this.concreteJsonWriter != null)
-                {
-                    return this.concreteJsonWriter;
-                }
-
                 jsonWriter = jsonWriterFactory.CreateJsonWriter(textWriter, isIeee754Compatible);
                 Debug.Assert(jsonWriter != null, "jsonWriter != null");
             }
 
-            this.concreteJsonWriter = jsonWriter as JsonWriter;
-            if (this.concreteJsonWriter != null && writerSettings.ArrayPool != null)
+            if (jsonWriter is Json.JsonWriter defaultJsonWriter)
             {
-                this.concreteJsonWriter.ArrayPool = writerSettings.ArrayPool;
+                defaultJsonWriter.ArrayPool = writerSettings.ArrayPool;
+            }
+
+            return jsonWriter;
+        }
+
+        /// <summary>
+        /// Creates a new JSON writer of <see cref="IJsonWriter"/> that can write
+        /// directly to the output stream. Returns null if unable to create
+        /// such a writer with the given constraints.
+        /// </summary>
+        /// <param name="factory">The factory used to create the <see cref="IJsonWriter"/> instance.</param>
+        /// <param name="outputStream">The output stream to write to.</param>
+        /// <param name="isIeee754Compatible">True if the writer should write decimals and longs as strings.</param>
+        /// <param name="encoding">The text encoding of the output data.</param>
+        /// <returns>The JSON writer instance, or null if none could be created.</returns>
+        private static IJsonWriter CreateJsonWriter(
+            IStreamBasedJsonWriterFactory factory,
+            Stream outputStream,
+            bool isIeee754Compatible,
+            Encoding encoding)
+        {
+            IJsonWriter jsonWriter = factory.CreateJsonWriter(outputStream, isIeee754Compatible, encoding);
+
+            if (jsonWriter == null)
+            {
+                throw new ODataException(Strings.ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull(encoding.WebName, isIeee754Compatible));
             }
 
             return jsonWriter;
@@ -876,18 +934,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="isIeee754Compatible">true if the writer should write large integers as strings.</param>
         /// <param name="writerSettings">Configuration settings for the OData writer.</param>
         /// <returns>An asynchronous JSON writer.</returns>
-        /// <remarks>Asynchronous support is not implemented in Microsoft.Spatial library.
-        /// To write spatial data, we rely on the synchronous PrimitiveConverter.Instance.WriteJsonLight(object, IJsonWriter) method.
-        /// When writing asynchronously we wrap this method in a Task. WriteJsonLight method takes an
-        /// IJsonWriter parameter while the asynchronous writer is declared as IJsonWriterAsync.
-        /// However, JsonWriter class implements both IJsonWriter and IJsonWriterAsync.
-        /// To guarantee that when the synchronous writer is called to write spatial data it shares
-        /// the same scope(s) as the asynchronous writer, we initialize them to the same concrete JsonWriter instance.
-        /// We only do this when the dependency injection container is uninitialized or
-        /// when the JSON writer factory is DefaultJsonWriterFactory - since both CreateJsonWriter and
-        /// CreateAsynchronousJsonWriter methods of that factory return an instance of JsonWriter.
-        /// Merging IJsonWriter and IJsonWriterAsync interface in a major release will simplify this.</remarks>
-        private IJsonWriterAsync CreateAsynchronousJsonWriter(
+        private static IJsonWriterAsync CreateAsynchronousJsonWriter(
             IServiceProvider container,
             TextWriter textWriter,
             bool isIeee754Compatible,
@@ -896,32 +943,82 @@ namespace Microsoft.OData.JsonLight
             IJsonWriterAsync asynchronousJsonWriter;
             if (container == null)
             {
-                if (this.concreteJsonWriter != null)
-                {
-                    return this.concreteJsonWriter;
-                }
-
-                asynchronousJsonWriter = new JsonWriter(textWriter, isIeee754Compatible);
-            }
-            else
-            {
-                IJsonWriterFactoryAsync asynchronousJsonWriterFactory = container.GetRequiredService<IJsonWriterFactoryAsync>();
-                if (asynchronousJsonWriterFactory is DefaultJsonWriterFactory && this.concreteJsonWriter != null)
-                {
-                    return this.concreteJsonWriter;
-                }
-
-                asynchronousJsonWriter = asynchronousJsonWriterFactory.CreateAsynchronousJsonWriter(textWriter, isIeee754Compatible);
-                Debug.Assert(asynchronousJsonWriter != null, "asynchronousJsonWriter != null");
+                // we don't create a default JsonWriter here because that's already handled by the CreateJsonWriter() method.
+                return null;
             }
 
-            this.concreteJsonWriter = asynchronousJsonWriter as JsonWriter;
-            if (this.concreteJsonWriter != null && writerSettings.ArrayPool != null)
+            IJsonWriterFactoryAsync asynchronousJsonWriterFactory = container.GetRequiredService<IJsonWriterFactoryAsync>();
+            asynchronousJsonWriter = asynchronousJsonWriterFactory.CreateAsynchronousJsonWriter(textWriter, isIeee754Compatible);
+            Debug.Assert(asynchronousJsonWriter != null, "asynchronousJsonWriter != null");
+
+            if (asynchronousJsonWriter is Json.JsonWriter defaultJsonWriter)
             {
-                this.concreteJsonWriter.ArrayPool = writerSettings.ArrayPool;
+                defaultJsonWriter.ArrayPool = writerSettings.ArrayPool;
             }
 
             return asynchronousJsonWriter;
+        }
+
+        private static IJsonWriterAsync CreateAsynchronousJsonWriter(
+            IStreamBasedJsonWriterFactory factory,
+            Stream outputStream,
+            bool isIeee754Compatible,
+            Encoding encoding)
+        {
+            IJsonWriterAsync jsonWriter = factory.CreateAsynchronousJsonWriter(outputStream, isIeee754Compatible, encoding);
+
+            if (jsonWriter == null)
+            {
+                throw new ODataException(Strings.ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull(encoding.WebName, isIeee754Compatible));
+            }
+
+            return jsonWriter;
+        }
+
+        /// <summary>
+        /// Ensures that both <see cref="jsonWriter"/> and <see cref="asynchronousJsonWriter"/>
+        /// members are set and they refer to the same instance, otherwise it throws
+        /// an exception.
+        /// </summary>
+        /// <exception cref="ODataException"></exception>
+        /// <remarks>
+        /// Asynchronous support is not implemented in Microsoft.Spatial library.
+        /// To write spatial data, we rely on the synchronous PrimitiveConverter.Instance.WriteJsonLight(object, IJsonWriter) method.
+        /// When writing asynchronously we wrap this method in a Task. WriteJsonLight method takes an
+        /// IJsonWriter parameter while the asynchronous writer is declared as IJsonWriterAsync.
+        /// When writing asynchronously, we have to ensure that the IJsonWriter that is used
+        /// for writing spatial data is the same instance as the IJsonWriterAsync used for writing
+        /// everything else in order to guarantee that the writer state is correctly maintained
+        /// throughout the writing process (e.g. keeping track of the writer's current scope).
+        /// When an IJsonWriterAsync is provided, it must also implement IJsonWriter so that the same instance
+        /// can be reused for spatial data. If we somehow end up with 2 separate instances, then we fail early with an exception.
+        /// Merging IJsonWriter and IJsonWriterAsync interface in a major release will simplify this.
+        /// </remarks>
+        private void EnsureJsonWritersReferenceTheSameInstance()
+        {
+            if (this.jsonWriter != null
+                && this.asynchronousJsonWriter == null
+                && this.jsonWriter is IJsonWriterAsync jsonWriterAsync)
+            {
+                this.asynchronousJsonWriter = jsonWriterAsync;
+                return;
+            }
+
+            if (this.asynchronousJsonWriter != null && this.jsonWriter == null)
+            {
+                if (this.asynchronousJsonWriter is IJsonWriter syncJsonWriter)
+                {
+                    this.jsonWriter = syncJsonWriter;
+                    return;
+                }
+
+                throw new ODataException(Strings.ODataMessageWriter_IJsonWriterAsync_Must_Implement_IJsonWriter);
+            }
+
+            if (this.asynchronousJsonWriter != null && !object.ReferenceEquals(this.asynchronousJsonWriter, this.jsonWriter))
+            {
+                throw new ODataException(Strings.ODataMessageWriter_IJsonWriter_And_IJsonWriterAsync_Are_Different_Instances);
+            }
         }
 
         /// <summary>

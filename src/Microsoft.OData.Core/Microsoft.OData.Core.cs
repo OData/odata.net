@@ -99,6 +99,9 @@ namespace Microsoft.OData
         internal const string ODataMessageWriter_JsonPaddingOnInvalidContentType = "ODataMessageWriter_JsonPaddingOnInvalidContentType";
         internal const string ODataMessageWriter_NonCollectionType = "ODataMessageWriter_NonCollectionType";
         internal const string ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue = "ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue";
+        internal const string ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull = "ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull";
+        internal const string ODataMessageWriter_IJsonWriterAsync_Must_Implement_IJsonWriter = "ODataMessageWriter_IJsonWriterAsync_Must_Implement_IJsonWriter";
+        internal const string ODataMessageWriter_IJsonWriter_And_IJsonWriterAsync_Are_Different_Instances = "ODataMessageWriter_IJsonWriter_And_IJsonWriterAsync_Are_Different_Instances";
         internal const string ODataMessageWriterSettings_MessageWriterSettingsXmlCustomizationCallbacksMustBeSpecifiedBoth = "ODataMessageWriterSettings_MessageWriterSettingsXmlCustomizationCallbacksMustBeSpecifiedBoth";
         internal const string ODataCollectionWriterCore_InvalidTransitionFromStart = "ODataCollectionWriterCore_InvalidTransitionFromStart";
         internal const string ODataCollectionWriterCore_InvalidTransitionFromCollection = "ODataCollectionWriterCore_InvalidTransitionFromCollection";
@@ -190,6 +193,9 @@ namespace Microsoft.OData
         internal const string ODataBatchReaderStream_MultiByteEncodingsNotSupported = "ODataBatchReaderStream_MultiByteEncodingsNotSupported";
         internal const string ODataBatchReaderStream_UnexpectedEndOfInput = "ODataBatchReaderStream_UnexpectedEndOfInput";
         internal const string ODataBatchReaderStreamBuffer_BoundaryLineSecurityLimitReached = "ODataBatchReaderStreamBuffer_BoundaryLineSecurityLimitReached";
+        internal const string ODataJsonLightBatchPayloadItemPropertiesCache_UnknownPropertyForMessageInBatch = "ODataJsonLightBatchPayloadItemPropertiesCache_UnknownPropertyForMessageInBatch";
+        internal const string ODataJsonLightBatchBodyContentReaderStream_UnexpectedNodeType = "ODataJsonLightBatchBodyContentReaderStream_UnexpectedNodeType";
+        internal const string ODataJsonLightBatchBodyContentReaderStream_UnsupportedContentTypeInHeader = "ODataJsonLightBatchBodyContentReaderStream_UnsupportedContentTypeInHeader";
         internal const string ODataAsyncWriter_CannotCreateResponseWhenNotWritingResponse = "ODataAsyncWriter_CannotCreateResponseWhenNotWritingResponse";
         internal const string ODataAsyncWriter_CannotCreateResponseMoreThanOnce = "ODataAsyncWriter_CannotCreateResponseMoreThanOnce";
         internal const string ODataAsyncWriter_SyncCallOnAsyncWriter = "ODataAsyncWriter_SyncCallOnAsyncWriter";
@@ -472,6 +478,7 @@ namespace Microsoft.OData
         internal const string ODataJsonLightPropertyAndValueDeserializer_NoPropertyAndAnnotationAllowedInNullPayload = "ODataJsonLightPropertyAndValueDeserializer_NoPropertyAndAnnotationAllowedInNullPayload";
         internal const string ODataJsonLightPropertyAndValueDeserializer_CollectionTypeNotExpected = "ODataJsonLightPropertyAndValueDeserializer_CollectionTypeNotExpected";
         internal const string ODataJsonLightPropertyAndValueDeserializer_CollectionTypeExpected = "ODataJsonLightPropertyAndValueDeserializer_CollectionTypeExpected";
+        internal const string ODataJsonLightPropertyAndValueDeserializer_ODataResourceExpectedForProperty = "ODataJsonLightPropertyAndValueDeserializer_ODataResourceExpectedForProperty";
         internal const string ODataJsonReaderCoreUtils_CannotReadSpatialPropertyValue = "ODataJsonReaderCoreUtils_CannotReadSpatialPropertyValue";
         internal const string ODataJsonLightReader_UnexpectedPrimitiveValueForODataResource = "ODataJsonLightReader_UnexpectedPrimitiveValueForODataResource";
         internal const string ODataJsonLightReaderUtils_AnnotationWithNullValue = "ODataJsonLightReaderUtils_AnnotationWithNullValue";
@@ -735,7 +742,8 @@ namespace Microsoft.OData
         internal const string PathParser_TypeCastOnlyAllowedAfterStructuralCollection = "PathParser_TypeCastOnlyAllowedAfterStructuralCollection";
         internal const string PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint = "PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint";
         internal const string ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink = "ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink";
-        internal const string ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty = "ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty";
+        internal const string ODataExpandPath_OnlyLastSegmentCanBeNavigationProperty = "ODataExpandPath_OnlyLastSegmentCanBeNavigationProperty";
+        internal const string ODataExpandPath_LastSegmentMustBeNavigationPropertyOrTypeSegment = "ODataExpandPath_LastSegmentMustBeNavigationPropertyOrTypeSegment";
         internal const string ODataExpandPath_InvalidExpandPathSegment = "ODataExpandPath_InvalidExpandPathSegment";
         internal const string ODataSelectPath_CannotOnlyHaveTypeSegment = "ODataSelectPath_CannotOnlyHaveTypeSegment";
         internal const string ODataSelectPath_InvalidSelectPathSegmentType = "ODataSelectPath_InvalidSelectPathSegmentType";
@@ -780,6 +788,8 @@ namespace Microsoft.OData
         internal const string BadRequest_ResourceCanBeCrossReferencedOnlyForBindOperation = "BadRequest_ResourceCanBeCrossReferencedOnlyForBindOperation";
         internal const string DataServiceConfiguration_ResponseVersionIsBiggerThanProtocolVersion = "DataServiceConfiguration_ResponseVersionIsBiggerThanProtocolVersion";
         internal const string BadRequest_KeyCountMismatch = "BadRequest_KeyCountMismatch";
+        internal const string BadRequest_KeyMismatch = "BadRequest_KeyMismatch";
+        internal const string BadRequest_KeyOrAlternateKeyMismatch = "BadRequest_KeyOrAlternateKeyMismatch";
         internal const string RequestUriProcessor_KeysMustBeNamed = "RequestUriProcessor_KeysMustBeNamed";
         internal const string RequestUriProcessor_ResourceNotFound = "RequestUriProcessor_ResourceNotFound";
         internal const string RequestUriProcessor_BatchedActionOnEntityCreatedInSameChangeset = "RequestUriProcessor_BatchedActionOnEntityCreatedInSameChangeset";
@@ -795,8 +805,8 @@ namespace Microsoft.OData
         internal const string ExceptionUtils_ArgumentStringNullOrEmpty = "ExceptionUtils_ArgumentStringNullOrEmpty";
         internal const string ExpressionToken_OnlyRefAllowWithStarInExpand = "ExpressionToken_OnlyRefAllowWithStarInExpand";
         internal const string ExpressionToken_DollarCountNotAllowedInSelect = "ExpressionToken_DollarCountNotAllowedInSelect";
-        internal const string ExpressionToken_NoPropAllowedAfterRef = "ExpressionToken_NoPropAllowedAfterRef";
         internal const string ExpressionToken_NoPropAllowedAfterDollarCount = "ExpressionToken_NoPropAllowedAfterDollarCount";
+        internal const string ExpressionToken_NoPropAllowedAfterRef = "ExpressionToken_NoPropAllowedAfterRef";
         internal const string ExpressionToken_NoSegmentAllowedBeforeStarInExpand = "ExpressionToken_NoSegmentAllowedBeforeStarInExpand";
         internal const string ExpressionToken_IdentifierExpected = "ExpressionToken_IdentifierExpected";
         internal const string ExpressionLexer_UnterminatedStringLiteral = "ExpressionLexer_UnterminatedStringLiteral";

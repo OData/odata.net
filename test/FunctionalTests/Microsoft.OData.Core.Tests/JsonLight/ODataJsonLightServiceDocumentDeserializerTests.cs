@@ -8,9 +8,11 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Microsoft.OData.JsonLight;
+using System.Threading.Tasks;
 using Microsoft.OData.Edm;
+using Microsoft.OData.JsonLight;
 using Xunit;
+using ErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.JsonLight
 {
@@ -21,6 +23,12 @@ namespace Microsoft.OData.Tests.JsonLight
     REPLACE
   ]
 }";
+        private readonly ODataMessageReaderSettings messageReaderSettings;
+
+        public ODataJsonLightServiceDocumentDeserializerTests()
+        {
+            this.messageReaderSettings = new ODataMessageReaderSettings();
+        }
 
         [Fact]
         public void ReadServiceDocumentWithFunctionImportInfo()
@@ -69,14 +77,14 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
-        public void ReadServiceDocumentWithSingletonInfoWithNameAbsent() 
+        public void ReadServiceDocumentWithSingletonInfoWithNameAbsent()
         {
             Action test = () => ReadServiceDocument(DefaultEmptyServiceDocumentStarter.Replace("REPLACE", @"{""url"":""singleton"", ""kind"":""Singleton""}"));
             test.Throws<ODataException>(Strings.ODataJsonLightServiceDocumentDeserializer_MissingRequiredPropertyInServiceDocumentElement(JsonLightConstants.ODataServiceDocumentElementName));
         }
 
         [Fact]
-        public void ReadServiceDocumentWithSingletonInfoWithKindAbsent() 
+        public void ReadServiceDocumentWithSingletonInfoWithKindAbsent()
         {
             var serviceDocument = ReadServiceDocument(DefaultEmptyServiceDocumentStarter.Replace("REPLACE", @"{""url"":""singleton"", ""name"":""singleton""}"));
             Assert.Empty(serviceDocument.Singletons);
@@ -84,7 +92,7 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
-        public void ReaderServiceDocumentWithSingletonInfoWithEmptyUrl() 
+        public void ReaderServiceDocumentWithSingletonInfoWithEmptyUrl()
         {
             Action test = () => ReadServiceDocument(DefaultEmptyServiceDocumentStarter.Replace("REPLACE", @"{""url"":"""", ""name"":""singleton""}"));
             test.Throws<ODataException>(Strings.ODataJsonLightServiceDocumentDeserializer_MissingRequiredPropertyInServiceDocumentElement(JsonLightConstants.ODataServiceDocumentElementUrlName));
@@ -144,28 +152,422 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.Equal("some function import", functionImport.Title);
         }
 
-        private ODataServiceDocument ReadServiceDocument(string payload)
+        [Theory]
+        [InlineData("{\"name\":\"Customers\",\"name\":\"Customers\"}", "name")]
+        [InlineData("{\"url\":\"http://tempuri.org/Customers\",\"url\":\"http://tempuri.org/Customers\"}", "url")]
+        [InlineData("{\"kind\":\"EntitySet\",\"kind\":\"EntitySet\"}", "kind")]
+        [InlineData("{\"title\":\"Customers\",\"title\":\"Customers\"}", "title")]
+        public void ReadServiceDocument_ThrowsExceptionForRepeatedPropertyInServiceDocumentElement(string fragment, string property)
         {
-            MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
-            ODataJsonLightServiceDocumentDeserializer deserializer = CreateODataJsonServiceDocumentDeserializer(stream);
-            return deserializer.ReadServiceDocument();
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata\"," +
+                $"\"value\":[{fragment}]}}";
+
+            var exception = Assert.Throws<ODataException>(() => ReadServiceDocument(payload));
+
+            Assert.Equal(
+                ErrorStrings.ODataJsonLightServiceDocumentDeserializer_DuplicatePropertiesInServiceDocumentElement(property),
+                exception.Message);
         }
 
-        private ODataJsonLightServiceDocumentDeserializer CreateODataJsonServiceDocumentDeserializer(MemoryStream stream, IODataPayloadUriConverter urlResolver = null)
+        [Fact]
+        public async Task ReadServiceDocumentAsync()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata\"," +
+                "\"value\":[" +
+                "{\"name\":\"Customers\",\"url\":\"http://tempuri.org/Customers\",\"kind\":\"EntitySet\",\"title\":\"Customers\"}," +
+                "{\"name\":\"Company\",\"url\":\"http://tempuri.org/Company\",\"kind\":\"Singleton\",\"title\":\"Company\"}," +
+                "{\"name\":\"Top5Customers\",\"url\":\"http://tempuri.org/Top5Customers\",\"kind\":\"FunctionImport\",\"title\":\"Top5Customers\"}]}";
+
+            await SetupJsonLightServiceDocumentDeserializerAndRunTestAsync(
+                payload,
+                async (jsonLightServiceDocumentDeserializer) =>
+                {
+                    var serviceDocument = await jsonLightServiceDocumentDeserializer.ReadServiceDocumentAsync();
+
+                    var customersEntitySet = Assert.Single(serviceDocument.EntitySets);
+                    Assert.Equal("Customers", customersEntitySet.Name);
+                    Assert.Equal("http://tempuri.org/Customers", customersEntitySet.Url.AbsoluteUri);
+                    Assert.Equal("Customers", customersEntitySet.Title);
+
+                    var companySingleton = Assert.Single(serviceDocument.Singletons);
+                    Assert.Equal("Company", companySingleton.Name);
+                    Assert.Equal("http://tempuri.org/Company", companySingleton.Url.AbsoluteUri);
+                    Assert.Equal("Company", companySingleton.Title);
+
+                    var top5CustomersFunctionImport = Assert.Single(serviceDocument.FunctionImports);
+                    Assert.Equal("Top5Customers", top5CustomersFunctionImport.Name);
+                    Assert.Equal("http://tempuri.org/Top5Customers", top5CustomersFunctionImport.Url.AbsoluteUri);
+                    Assert.Equal("Top5Customers", top5CustomersFunctionImport.Title);
+                });
+        }
+
+        [Fact]
+        public async Task ReadServiceDocumentEmptyOfServiceDocumentElementsAsync()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata\"," +
+                "\"value\":[]}";
+
+            await SetupJsonLightServiceDocumentDeserializerAndRunTestAsync(
+                payload,
+                async (jsonLightServiceDocumentDeserializer) =>
+                {
+                    var serviceDocument = await jsonLightServiceDocumentDeserializer.ReadServiceDocumentAsync();
+
+                    Assert.Empty(serviceDocument.EntitySets);
+                    Assert.Empty(serviceDocument.Singletons);
+                    Assert.Empty(serviceDocument.FunctionImports);
+                });
+        }
+
+        [Fact]
+        public async Task ReadServiceDocumentWithMultipleServiceDocumentElementsOfSameKindAsync()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata\"," +
+                "\"value\":[" +
+                "{\"name\":\"RankCustomers\",\"url\":\"http://tempuri.org/RankCustomers\",\"kind\":\"FunctionImport\",\"title\":\"RankCustomers\"}," +
+                "{\"name\":\"Top5Customers\",\"url\":\"http://tempuri.org/Top5Customers\",\"kind\":\"FunctionImport\",\"title\":\"Top5Customers\"}]}";
+
+            await SetupJsonLightServiceDocumentDeserializerAndRunTestAsync(
+                payload,
+                async (jsonLightServiceDocumentDeserializer) =>
+                {
+                    var serviceDocument = await jsonLightServiceDocumentDeserializer.ReadServiceDocumentAsync();
+
+                    Assert.Empty(serviceDocument.EntitySets);
+                    Assert.Empty(serviceDocument.Singletons);
+
+                    Assert.Equal(2, serviceDocument.FunctionImports.Count());
+                    var rankCustomersFunctionImport = serviceDocument.FunctionImports.First();
+                    var top5CustomersFunctionImport = serviceDocument.FunctionImports.Last();
+                    Assert.Equal("RankCustomers", rankCustomersFunctionImport.Name);
+                    Assert.Equal("http://tempuri.org/RankCustomers", rankCustomersFunctionImport.Url.AbsoluteUri);
+                    Assert.Equal("RankCustomers", rankCustomersFunctionImport.Title);
+                    Assert.Equal("Top5Customers", top5CustomersFunctionImport.Name);
+                    Assert.Equal("http://tempuri.org/Top5Customers", top5CustomersFunctionImport.Url.AbsoluteUri);
+                    Assert.Equal("Top5Customers", top5CustomersFunctionImport.Title);
+                });
+        }
+
+        [Fact]
+        public async Task ReadServiceDocumentWithoutTitleInServiceDocumentElementAsync()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata\"," +
+                "\"value\":[{\"name\":\"Company\",\"url\":\"http://tempuri.org/Company\",\"kind\":\"Singleton\"}]}";
+
+            await SetupJsonLightServiceDocumentDeserializerAndRunTestAsync(
+                payload,
+                async (jsonLightServiceDocumentDeserializer) =>
+                {
+                    var serviceDocument = await jsonLightServiceDocumentDeserializer.ReadServiceDocumentAsync();
+
+                    Assert.Empty(serviceDocument.EntitySets);
+                    Assert.Empty(serviceDocument.FunctionImports);
+
+                    var companySingleton = Assert.Single(serviceDocument.Singletons);
+                    Assert.Equal("Company", companySingleton.Name);
+                    Assert.Equal("http://tempuri.org/Company", companySingleton.Url.AbsoluteUri);
+                    Assert.Null(companySingleton.Title);
+                });
+        }
+
+        [Fact]
+        public async Task ReadServiceDocumentAsync_ServiceDocumentElementDefaultsToEntitySetForTitleNotSpecified()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata\"," +
+                "\"value\":[{\"name\":\"Customers\",\"url\":\"http://tempuri.org/Customers\",\"title\":\"Customers\"}]}";
+
+            await SetupJsonLightServiceDocumentDeserializerAndRunTestAsync(
+                payload,
+                async (jsonLightServiceDocumentDeserializer) =>
+                {
+                    var serviceDocument = await jsonLightServiceDocumentDeserializer.ReadServiceDocumentAsync();
+
+                    var customersEntitySet = Assert.Single(serviceDocument.EntitySets);
+                    Assert.Equal("Customers", customersEntitySet.Name);
+                    Assert.Equal("http://tempuri.org/Customers", customersEntitySet.Url.AbsoluteUri);
+                    Assert.Equal("Customers", customersEntitySet.Title);
+
+                    Assert.Empty(serviceDocument.Singletons);
+                    Assert.Empty(serviceDocument.FunctionImports);
+                });
+        }
+
+        [Fact]
+        public async Task ReadServiceDocumentAsync_ThrowsExceptionForUnexpectedODataAnnotationInServiceDocument()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata\"," +
+                "\"@odata.type\":\"#Collection(NS.ServiceDocumentElement)\"," +
+                "\"value\":[]}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightServiceDocumentDeserializerAndRunTestAsync(
+                    payload,
+                    (jsonLightServiceDocumentDeserializer) => jsonLightServiceDocumentDeserializer.ReadServiceDocumentAsync()));
+
+            Assert.Equal(
+                ErrorStrings.ODataJsonLightServiceDocumentDeserializer_InstanceAnnotationInServiceDocument("odata.type", "value"),
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task ReadServiceDocumentAsync_ThrowsExceptionForUnexpectedODataPropertyAnnotationInServiceDocument()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata\"," +
+                "\"value@odata.type\":\"#Collection(NS.ServiceDocumentElement)\"," +
+                "\"value\":[]}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightServiceDocumentDeserializerAndRunTestAsync(
+                    payload,
+                    (jsonLightServiceDocumentDeserializer) => jsonLightServiceDocumentDeserializer.ReadServiceDocumentAsync()));
+
+            Assert.Equal(
+                ErrorStrings.ODataJsonLightServiceDocumentDeserializer_PropertyAnnotationInServiceDocument("odata.type", "value"),
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task ReadServiceDocumentAsync_ThrowsExceptionForUnexpectedMetadataReferencePropertyInServiceDocument()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata\"," +
+                "\"#NS.Top5Customers\":{\"title\":\"Top5Customers\",\"target\":\"http://tempuri.org/Top5Customers\"}," +
+                "\"value\":[]}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightServiceDocumentDeserializerAndRunTestAsync(
+                    payload,
+                    (jsonLightServiceDocumentDeserializer) => jsonLightServiceDocumentDeserializer.ReadServiceDocumentAsync()));
+
+            Assert.Equal(
+                ErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty("#NS.Top5Customers"),
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task ReadServiceDocumentAsync_ThrowsExceptionForUnexpectedPropertyAnnotationWithoutPropertyInServiceDocument()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata\"," +
+                "\"value@custom.annotation\":\"foobar\"}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightServiceDocumentDeserializerAndRunTestAsync(
+                    payload,
+                    (jsonLightServiceDocumentDeserializer) => jsonLightServiceDocumentDeserializer.ReadServiceDocumentAsync()));
+
+            Assert.Equal(
+                ErrorStrings.ODataJsonLightServiceDocumentDeserializer_PropertyAnnotationWithoutProperty("value"),
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task ReadServiceDocumentAsync_ThrowsExceptionForMissingODataValuePropertyInServiceDocument()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata\"}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightServiceDocumentDeserializerAndRunTestAsync(
+                    payload,
+                    (jsonLightServiceDocumentDeserializer) => jsonLightServiceDocumentDeserializer.ReadServiceDocumentAsync()));
+
+            Assert.Equal(
+                ErrorStrings.ODataJsonLightServiceDocumentDeserializer_MissingValuePropertyInServiceDocument("value"),
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task ReadServiceDocumentAsync_ThrowsExceptionForRepeatedODataValuePropertyInServiceDocument()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata\"," +
+                "\"value\":[{\"name\":\"Customers\",\"url\":\"http://tempuri.org/Customers\",\"kind\":\"EntitySet\",\"title\":\"Customers\"}]," +
+                "\"value\":[{\"name\":\"Company\",\"url\":\"http://tempuri.org/Company\",\"kind\":\"Singleton\",\"title\":\"Company\"}]}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightServiceDocumentDeserializerAndRunTestAsync(
+                    payload,
+                    (jsonLightServiceDocumentDeserializer) => jsonLightServiceDocumentDeserializer.ReadServiceDocumentAsync()));
+
+            Assert.Equal(
+                ErrorStrings.ODataJsonLightServiceDocumentDeserializer_DuplicatePropertiesInServiceDocument("value"),
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task ReadServiceDocumentAsync_ThrowsExceptionForUnexpectedPropertyInServiceDocument()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata\"," +
+                "\"unexpectedProp\":\"foobar\"}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightServiceDocumentDeserializerAndRunTestAsync(
+                    payload,
+                    (jsonLightServiceDocumentDeserializer) => jsonLightServiceDocumentDeserializer.ReadServiceDocumentAsync()));
+
+            Assert.Equal(
+                ErrorStrings.ODataJsonLightServiceDocumentDeserializer_UnexpectedPropertyInServiceDocument("unexpectedProp", "value"),
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task ReadServiceDocumentAsync_ThrowsExceptionForUnexpectedODataInstanceAnnotationInServiceDocumentElement()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata\"," +
+                "\"value\":[{\"@odata.type\":\"#NS.ServiceDocumentElement\"}]}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightServiceDocumentDeserializerAndRunTestAsync(
+                    payload,
+                    (jsonLightServiceDocumentDeserializer) => jsonLightServiceDocumentDeserializer.ReadServiceDocumentAsync()));
+
+            Assert.Equal(
+                ErrorStrings.ODataJsonLightServiceDocumentDeserializer_InstanceAnnotationInServiceDocumentElement("odata.type"),
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task ReadServiceDocumentAsync_ThrowsExceptionForUnexpectedODataPropertyAnnotationInServiceDocumentElement()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata\"," +
+                "\"value\":[{\"name@odata.type\":\"#Edm.String\"}]}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightServiceDocumentDeserializerAndRunTestAsync(
+                    payload,
+                    (jsonLightServiceDocumentDeserializer) => jsonLightServiceDocumentDeserializer.ReadServiceDocumentAsync()));
+
+            Assert.Equal(
+                ErrorStrings.ODataJsonLightServiceDocumentDeserializer_PropertyAnnotationInServiceDocumentElement("odata.type"),
+                exception.Message);
+        }
+
+        [Theory]
+        [InlineData("{\"name\":\"Customers\",\"name\":\"Customers\"}", "name")]
+        [InlineData("{\"url\":\"http://tempuri.org/Customers\",\"url\":\"http://tempuri.org/Customers\"}", "url")]
+        [InlineData("{\"kind\":\"EntitySet\",\"kind\":\"EntitySet\"}", "kind")]
+        [InlineData("{\"title\":\"Customers\",\"title\":\"Customers\"}", "title")]
+        public async Task ReadServiceDocumentAsync_ThrowsExceptionForRepeatedPropertyInServiceDocumentElement(string fragment, string property)
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata\"," +
+                $"\"value\":[{fragment}]}}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightServiceDocumentDeserializerAndRunTestAsync(
+                    payload,
+                    (jsonLightServiceDocumentDeserializer) => jsonLightServiceDocumentDeserializer.ReadServiceDocumentAsync()));
+
+            Assert.Equal(
+                ErrorStrings.ODataJsonLightServiceDocumentDeserializer_DuplicatePropertiesInServiceDocumentElement(property),
+                exception.Message);
+        }
+
+        [Theory]
+        [InlineData("{\"url\":\"http://tempuri.org/Customers\",\"kind\":\"EntitySet\",\"title\":\"Customers\"}", "name")]
+        [InlineData("{\"name\":\"Customers\",\"kind\":\"EntitySet\",\"title\":\"Customers\"}", "url")]
+        [InlineData("{\"name\":null,\"url\":\"http://tempuri.org/Customers\",\"kind\":\"EntitySet\",\"title\":\"Customers\"}", "name")]
+        public async Task ReadServiceDocumentAsync_ThrowsExceptionForMissingOrNullRequiredPropertyInServiceDocumentElement(string fragment, string property)
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata\"," +
+                $"\"value\":[{fragment}]}}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightServiceDocumentDeserializerAndRunTestAsync(
+                    payload,
+                    (jsonLightServiceDocumentDeserializer) => jsonLightServiceDocumentDeserializer.ReadServiceDocumentAsync()));
+
+            Assert.Equal(
+                ErrorStrings.ODataJsonLightServiceDocumentDeserializer_MissingRequiredPropertyInServiceDocumentElement(property),
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task ReadServiceDocumentAsync_ThrowsExceptionForServiceDocumentElementUrlIsNull()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata\"," +
+                "\"value\":[{\"name\":\"Customers\",\"url\":null,\"kind\":\"EntitySet\",\"title\":\"Customers\"}]}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightServiceDocumentDeserializerAndRunTestAsync(
+                    payload,
+                    (jsonLightServiceDocumentDeserializer) => jsonLightServiceDocumentDeserializer.ReadServiceDocumentAsync()));
+
+            Assert.Equal(
+                ErrorStrings.ValidationUtils_ServiceDocumentElementUrlMustNotBeNull,
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task ReadServiceDocumentAsync_ThrowsExceptionForUnexpectedMetadataReferencePropertyInServiceDocumentElement()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata\"," +
+                "\"value\":[{\"#NS.Top5Customers\":{\"title\":\"Top5Customers\",\"target\":\"http://tempuri.org/Top5Customers\"}}]}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightServiceDocumentDeserializerAndRunTestAsync(
+                    payload,
+                    (jsonLightServiceDocumentDeserializer) => jsonLightServiceDocumentDeserializer.ReadServiceDocumentAsync()));
+
+            Assert.Equal(
+                ErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty("#NS.Top5Customers"),
+                exception.Message);
+        }
+
+        [Fact]        
+        public async Task ReadServiceDocumentAsync_ThrowsExceptionForUnexpectedPropertyAnnotationWithoutPropertyInServiceDocumentElement()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata\"," +
+                "\"value\":[{\"name@custom.annotation\":\"foobar\"}]}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightServiceDocumentDeserializerAndRunTestAsync(
+                    payload,
+                    (jsonLightServiceDocumentDeserializer) => jsonLightServiceDocumentDeserializer.ReadServiceDocumentAsync()));
+
+            Assert.Equal(
+                ErrorStrings.ODataJsonLightServiceDocumentDeserializer_PropertyAnnotationWithoutProperty("name"),
+                exception.Message);
+        }
+
+        [Fact]
+        public async Task ReadServiceDocumentAsync_ThrowsExceptionForUnexpectedPropertyInServiceDocumentElement()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata\"," +
+                "\"value\":[{\"unexpectedProp\":\"foobar\"}]}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightServiceDocumentDeserializerAndRunTestAsync(
+                    payload,
+                    (jsonLightServiceDocumentDeserializer) => jsonLightServiceDocumentDeserializer.ReadServiceDocumentAsync()));
+
+            Assert.Equal(
+                ErrorStrings.ODataJsonLightServiceDocumentDeserializer_UnexpectedPropertyInServiceDocumentElement("unexpectedProp", "name", "url"),
+                exception.Message);
+        }
+
+        private ODataServiceDocument ReadServiceDocument(string payload)
+        {
+            ODataServiceDocument serviceDocument;
+
+            using (var jsonInputContext = CreateJsonLightInputContext(payload, isAsync: false))
+            {
+                var jsonLightServiceDocumentDeserializer = new ODataJsonLightServiceDocumentDeserializer(jsonInputContext);
+
+                serviceDocument = jsonLightServiceDocumentDeserializer.ReadServiceDocument();
+            }
+
+            return serviceDocument;
+        }
+
+        private ODataJsonLightInputContext CreateJsonLightInputContext(string payload, bool isAsync = false)
         {
             var messageInfo = new ODataMessageInfo
             {
                 Encoding = Encoding.UTF8,
                 IsResponse = true,
                 MediaType = new ODataMediaType("application", "json"),
-                IsAsync = false,
+                IsAsync = isAsync,
                 Model = new EdmModel(),
-                PayloadUriConverter = urlResolver,
-                MessageStream = stream
             };
 
-            var inputContext = new ODataJsonLightInputContext(messageInfo, new ODataMessageReaderSettings());
-            return new ODataJsonLightServiceDocumentDeserializer(inputContext);
+            return new ODataJsonLightInputContext(new StringReader(payload), messageInfo, this.messageReaderSettings);
         }
 
         private void TestEntitySetInServiceDocument(ODataServiceDocument serviceDocument)
@@ -174,6 +576,18 @@ namespace Microsoft.OData.Tests.JsonLight
             var entitySet = Assert.Single(serviceDocument.EntitySets);
             Assert.Equal("entityset", entitySet.Name);
             Assert.Equal("http://service/entityset", entitySet.Url.ToString());
+        }
+
+        private async Task SetupJsonLightServiceDocumentDeserializerAndRunTestAsync(
+            string payload,
+            Func<ODataJsonLightServiceDocumentDeserializer, Task> func)
+        {
+            using (var jsonInputContext = CreateJsonLightInputContext(payload, isAsync: true))
+            {
+                var jsonLightServiceDocumentDeserializer = new ODataJsonLightServiceDocumentDeserializer(jsonInputContext);
+
+                await func(jsonLightServiceDocumentDeserializer);
+            }
         }
     }
 }

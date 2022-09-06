@@ -33,7 +33,7 @@ namespace Microsoft.OData.Json
         /// <param name="writingJsonLight">true if we're writing JSON lite, false if we're writing verbose JSON.</param>
         internal static void WriteError(
             IJsonWriter jsonWriter,
-            Action<IEnumerable<ODataInstanceAnnotation>> writeInstanceAnnotationsDelegate,
+            Action<ICollection<ODataInstanceAnnotation>> writeInstanceAnnotationsDelegate,
             ODataError error,
             bool includeDebugInformation,
             int maxInnerErrorDepth,
@@ -137,7 +137,7 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous write operation.</returns>
         internal static Task WriteErrorAsync(
             IJsonWriterAsync jsonWriter,
-            Func<IEnumerable<ODataInstanceAnnotation>, Task> writeInstanceAnnotationsDelegate,
+            Func<ICollection<ODataInstanceAnnotation>, Task> writeInstanceAnnotationsDelegate,
             ODataError error,
             bool includeDebugInformation,
             int maxInnerErrorDepth)
@@ -221,8 +221,8 @@ namespace Microsoft.OData.Json
             string target,
             IEnumerable<ODataErrorDetail> details,
             ODataInnerError innerError,
-            IEnumerable<ODataInstanceAnnotation> instanceAnnotations,
-            Action<IEnumerable<ODataInstanceAnnotation>> writeInstanceAnnotationsDelegate,
+            ICollection<ODataInstanceAnnotation> instanceAnnotations,
+            Action<ICollection<ODataInstanceAnnotation>> writeInstanceAnnotationsDelegate,
             int maxInnerErrorDepth,
             bool writingJsonLight)
         {
@@ -453,8 +453,8 @@ namespace Microsoft.OData.Json
             string target,
             IEnumerable<ODataErrorDetail> details,
             ODataInnerError innerError,
-            IEnumerable<ODataInstanceAnnotation> instanceAnnotations,
-            Func<IEnumerable<ODataInstanceAnnotation>, Task> writeInstanceAnnotationsDelegate,
+            ICollection<ODataInstanceAnnotation> instanceAnnotations,
+            Func<ICollection<ODataInstanceAnnotation>, Task> writeInstanceAnnotationsDelegate,
             int maxInnerErrorDepth)
         {
             Debug.Assert(jsonWriter != null, "jsonWriter != null");

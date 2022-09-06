@@ -7,7 +7,6 @@
 namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
 {
     // We currently only support InternalsVisibleTo on the desktop.
-#if !SILVERLIGHT && !WINDOWS_PHONE
     #region Namespaces
     using System;
     using Microsoft.OData.Edm;
@@ -918,5 +917,4 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
             }
         }
     }
-#endif
 }

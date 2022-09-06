@@ -146,6 +146,7 @@ namespace Microsoft.Spatial
         /// <summary>
         /// Ends the current spatial object
         /// </summary>
+        [SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
         internal override void EndGeo()
         {
             // Create the geography instance

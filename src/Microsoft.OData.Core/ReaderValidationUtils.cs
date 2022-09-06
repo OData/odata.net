@@ -116,8 +116,9 @@ namespace Microsoft.OData
         /// <returns>The <see cref="IEdmProperty"/> instance representing the property with name <paramref name="propertyName"/>
         /// or null if no metadata is available.</returns>
         internal static IEdmProperty ValidatePropertyDefined(string propertyName,
-                                                                  IEdmStructuredType owningStructuredType,
-                                                                  bool throwOnUndeclaredPropertyForNonOpenType)
+            IEdmStructuredType owningStructuredType,
+            bool throwOnUndeclaredPropertyForNonOpenType,
+            bool enablePropertyNameCaseInsensitive)
         {
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
@@ -126,7 +127,16 @@ namespace Microsoft.OData
                 return null;
             }
 
-            IEdmProperty property = owningStructuredType.FindProperty(propertyName);
+            IEdmProperty property = null;
+            try
+            {
+                property = owningStructuredType.FindProperty(propertyName, enablePropertyNameCaseInsensitive);
+            }
+            catch (InvalidOperationException)
+            {
+                // ODL should allow to read any undeclared property as dynamic property.
+            }
+
             if (property == null && !owningStructuredType.IsOpen)
             {
                 if (throwOnUndeclaredPropertyForNonOpenType)
@@ -531,11 +541,7 @@ namespace Microsoft.OData
         {
             Debug.Assert(encoding != null, "encoding != null");
 
-#if !ORCAS
             if (string.CompareOrdinal(Encoding.UTF8.WebName, encoding.WebName) != 0)
-#else
-            if (!encoding.IsSingleByte && Encoding.UTF8.CodePage != encoding.CodePage)
-#endif
             {
                 // TODO: Batch reader does not support multi codepoint encodings
                 // We decided to not support multi-byte encodings other than UTF8 for now.
@@ -551,11 +557,7 @@ namespace Microsoft.OData
         {
             Debug.Assert(encoding != null, "encoding != null");
 
-#if !ORCAS
             if (string.CompareOrdinal(Encoding.UTF8.WebName, encoding.WebName) != 0)
-#else
-            if (!encoding.IsSingleByte && Encoding.UTF8.CodePage != encoding.CodePage)
-#endif
             {
                 // We decided to not support multi-byte encodings other than UTF8 for now.
                 throw new ODataException(Strings.ODataAsyncReader_MultiByteEncodingsNotSupported(encoding.WebName));

@@ -12,6 +12,9 @@
     <SigningScenario Condition="'$(SigningScenario)' == '' and '$(Configuration)' == 'Release'">$(SigningScenarioForRelease)</SigningScenario>
     <SigningScenario Condition="'$(SigningScenario)' == '' and '$(TargetFrameworkIdentifier)' != 'Silverlight'">Delay</SigningScenario>
     <SigningType Condition="'$(SigningType)' == ''">Product</SigningType>
+
+    <!-- Treat the public API warnings as errors-->
+    <WarningsAsErrors>RS0016</WarningsAsErrors>
   </PropertyGroup>
     
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">    

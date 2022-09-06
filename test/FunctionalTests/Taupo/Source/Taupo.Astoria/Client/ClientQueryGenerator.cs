@@ -100,12 +100,6 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                 var condition = this.GenerateLinqExpression(expression.Condition);
                 var ifTrue = this.GenerateLinqExpression(expression.IfTrue);
                 var ifFalse = this.GenerateLinqExpression(expression.IfFalse);
-#if WIN8
-                if (ifTrue.Type != ifFalse.Type && ifTrue.Type.IsAssignableFrom(ifFalse.Type))
-                {
-                    return Expression.Condition(condition, Expression.TypeAs(ifTrue, ifFalse.Type), ifFalse);
-                }
-#endif
                 
                 return Expression.Condition(condition, ifTrue, ifFalse);
             }

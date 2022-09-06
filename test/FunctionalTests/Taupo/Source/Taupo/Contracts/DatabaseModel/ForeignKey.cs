@@ -100,16 +100,10 @@ namespace Microsoft.Test.Taupo.Contracts.DatabaseModel
         /// </summary>
         /// <param name="sourceColumns">Source columns.</param>
         /// <returns>This object (useful for chaining multiple calls)</returns>
-#if WIN8
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:LiteralsShouldBeSpelledCorrectly", Justification = "MethodInfo.GetCurrentMethod() is not available on Win8.")]
-#endif
         public ForeignKey WithSourceColumns(params Column[] sourceColumns)
         {
-#if WIN8
-            var currentMethodName = "WithSourceColumns";
-#else
             var currentMethodName = MethodInfo.GetCurrentMethod().Name;
-#endif
+
             if (this.SourceColumns.Count > 0)
             {
                 throw new TaupoInvalidOperationException(currentMethodName + "() can only be called on Foreign Key without source columns defined.");

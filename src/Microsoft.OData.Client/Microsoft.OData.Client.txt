@@ -177,6 +177,7 @@ ALinq_CantAddDuplicateQueryOption=Can't add duplicate query option '{0}'.
 ALinq_CantAddAstoriaQueryOption=Can't add query option '{0}' because it would conflict with the query options from the translated Linq expression.
 ALinq_CantAddQueryOptionStartingWithDollarSign=Can't add query option '{0}' because it begins with reserved character '$'.
 ALinq_CantReferToPublicField=Referencing public field '{0}' not supported in query option expression.  Use public property instead.
+ALinq_QueryOptionNotSupported=The query option '{0}' is not supported or is controlled by the OData service.
 ALinq_QueryOptionsOnlyAllowedOnSingletons=Cannot specify query options (orderby, where, take, skip, count) on single resource.
 ALinq_QueryOptionOutOfOrder=The {0} query option cannot be specified after the {1} query option.
 ALinq_CannotAddCountOption=Cannot add count option to the resource set.
@@ -210,6 +211,8 @@ ALinq_TypeTokenWithNoTrailingNavProp=Found an illegal type token '{0}' without a
 ALinq_ContainsNotValidOnEmptyCollection=The Contains method cannot be used with an empty collection.
 ALinq_AggregationMethodNotSupported=The aggregation method '{0}' is not supported.
 ALinq_InvalidAggregateExpression=The expression '{0}' is not a valid aggregate expression. The aggregate expression must evaluate to a single-valued property path to an aggregatable property.
+ALinq_InvalidGroupingExpression=The expression '{0}' is not a valid expression for grouping. The grouping expression must evaluate to a single-valued property path, i.e., a path ending in a single-valued primitive.
+ALinq_InvalidGroupByKeySelector=The expression '{0}' in the GroupBy key selector is not supported.
 
 DSKAttribute_MustSpecifyAtleastOnePropertyName=DataServiceKey attribute must specify at least one property name.
 

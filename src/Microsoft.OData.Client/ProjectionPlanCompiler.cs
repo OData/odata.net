@@ -7,8 +7,6 @@
 //// Uncomment the following line to trace projection building activity.
 ////#define TRACE_CLIENT_PROJECTIONS
 
-using System.Globalization;
-
 namespace Microsoft.OData.Client
 {
     #region Namespaces
@@ -16,6 +14,7 @@ namespace Microsoft.OData.Client
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Globalization;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -691,11 +690,8 @@ namespace Microsoft.OData.Client
                             entryParameterAtMemberInit,
                             expressions.Skip(1));
                     }
-#if PORTABLELIB
-                    Type memberParentType = assignment.Member.DeclaringType;
-#else
+
                     Type memberParentType = assignment.Member.ReflectedType;
-#endif
                     ProjectionPathSegment nestedSegment = new ProjectionPathSegment(
                         entryPath,
                         assignment.Member.Name,

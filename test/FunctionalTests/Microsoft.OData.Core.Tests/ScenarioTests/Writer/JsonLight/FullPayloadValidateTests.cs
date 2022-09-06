@@ -296,6 +296,47 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         }
 
         [Fact]
+        public async void ReadDeltaFeedTest_CanReadAsyncDeltaRequests()
+        {
+            string payload = "{\"" +
+                             "@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet/$delta\"," +
+                             "\"@odata.count\":1000," +
+                             "\"value\":[" +
+                                           "{" +
+                                              "\"ID\":101,\"Name\":\"Alice\"" +
+                                           "}" +
+                                       "]" +
+                             "}";
+
+            InMemoryMessage message = new InMemoryMessage();
+            message.SetHeader("Content-Type", "application/json;odata.metadata=minimal");
+            message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
+            List<ODataDeltaResourceSet> feedList = new List<ODataDeltaResourceSet>();
+
+            using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, null, ModelWithFunction))
+            {
+                var result = await messageReader.DetectPayloadKindAsync();
+
+                Assert.Equal(ODataPayloadKind.Delta, result.Single().PayloadKind);
+
+                var reader = await messageReader.CreateODataDeltaResourceSetReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.DeltaResourceSetEnd:
+                            feedList.Add(reader.Item as ODataDeltaResourceSet);
+                            break;
+                    }
+                }
+            }
+
+            ODataDeltaResourceSet set = Assert.IsType<ODataDeltaResourceSet>(Assert.Single(feedList));
+
+            Assert.Equal(1000, set.Count);
+        }
+
+        [Fact]
         public void WritingFeedExpandWithCollectionContainedElement()
         {
             ODataItem[] itemsToWrite = new ODataItem[]

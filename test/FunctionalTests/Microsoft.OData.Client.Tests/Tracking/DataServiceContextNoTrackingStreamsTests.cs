@@ -401,7 +401,6 @@ namespace Microsoft.OData.Client.Tests.Tracking
             : base(args)
         {
         }
-        
 
         public CustomizedRequestMessage(DataServiceClientRequestMessageArgs args, string response, Dictionary<string, string> headers)
             : base(args)
@@ -431,7 +430,7 @@ namespace Microsoft.OData.Client.Tests.Tracking
 
         public override Stream EndGetRequestStream(IAsyncResult asyncResult)
         {
-           return GetStream();
+            return GetStream();
         }
 
         public override IODataResponseMessage GetResponse()

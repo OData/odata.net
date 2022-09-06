@@ -91,7 +91,7 @@ namespace AstoriaUnitTests.Tests
             Assert.Equal("AAECAw==", converter.ToString(new byte[] { 0, 1, 2, 3 }));
         }
 
-#if !ASTORIA_LIGHT && !(NETCOREAPP1_0 || NETCOREAPP2_0)
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [Fact]
         public void BinaryTypeConverterTests()
         {

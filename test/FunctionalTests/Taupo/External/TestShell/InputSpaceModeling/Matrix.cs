@@ -15,9 +15,7 @@ namespace Microsoft.SqlServer.Test.TestShell.Core.InputSpaceModeling
 	/// <summary>
 	/// Dimensions in the test matrix have the same name.
 	/// </summary>
-#if !SILVERLIGHT	
     [Serializable]
-#endif
 	public class DuplicateDimensionNameException : Exception
 	{
 		/// <summary>
@@ -36,7 +34,6 @@ namespace Microsoft.SqlServer.Test.TestShell.Core.InputSpaceModeling
 		/// <param name="inner">The inner.</param>
 		public DuplicateDimensionNameException(string message, Exception inner) : base(message, inner) { }
 
-#if !SILVERLIGHT
         /// <summary>
 		/// Initializes a new instance of the <see cref="DuplicateDimensionNameException"/> class.
 		/// </summary>
@@ -48,7 +45,6 @@ namespace Microsoft.SqlServer.Test.TestShell.Core.InputSpaceModeling
 		System.Runtime.Serialization.SerializationInfo info,
 		System.Runtime.Serialization.StreamingContext context)
 			: base(info, context) { }
-#endif
 	}
 
 	/// <summary>

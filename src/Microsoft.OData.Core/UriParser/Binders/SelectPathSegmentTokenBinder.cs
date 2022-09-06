@@ -181,12 +181,12 @@ namespace Microsoft.OData.UriParser
             if (possibleFunctions.Count() > 1)
             {
                 possibleFunctions = possibleFunctions.FilterBoundOperationsWithSameTypeHierarchyToTypeClosestToBindingType(entityType);
-            }
 
-            // If more than one overload matches, try to select based on optional parameters
-            if (possibleFunctions.Count() > 1 && parameterNames.Count > 0)
-            {
-                possibleFunctions = possibleFunctions.FilterOverloadsBasedOnParameterCount(parameterNames.Count);
+                // If more than one overload matches, try to select based on optional parameters
+                if (parameterNames.Count > 0 && possibleFunctions.Count() > 1)
+                {
+                    possibleFunctions = possibleFunctions.FilterOverloadsBasedOnParameterCount(parameterNames.Count);
+                }
             }
 
             if (!possibleFunctions.HasAny())

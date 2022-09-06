@@ -12,15 +12,7 @@ namespace Microsoft.Test.Taupo.Astoria.LinqToAstoria
     using Microsoft.Test.Taupo.Astoria.Contracts;
     using Microsoft.Test.Taupo.Astoria.Contracts.LinqToAstoria;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
-#if SILVERLIGHT
-#if !WIN8
-    using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataOracleService.Silverlight;
-#else
-    using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataOracleService.Win8;
-#endif
-#else
     using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataOracleService.DotNet;
-#endif
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts;
     using Microsoft.Test.Taupo.Contracts.EntityModel;

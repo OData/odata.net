@@ -138,9 +138,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Json
         };
         #endregion PrimitiveValueTestCases
 
-        // These tests and helpers are disabled on Silverlight and Phone because they  
-        // use private reflection not available on Silverlight and Phone
-#if !SILVERLIGHT && !WINDOWS_PHONE
         [TestMethod, Variation(Description = "Verifies that primitive values are correctly converted to JSON.")]
         public void PrimitiveTypesConversionToJsonTest()
         {
@@ -288,6 +285,5 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Json
             public static void WriteValue(TextWriter writer, sbyte value) { ReflectionUtils.InvokeMethod(classType, "WriteValue", writer, value); }
             public static void WriteValue(TextWriter writer, string value) { Ref<char[]> buffer = new Ref<char[]>(); ReflectionUtils.InvokeMethod(classType, "WriteValue", new Type[] { typeof(TextWriter), typeof(string), typeof(ODataStringEscapeOption), typeof(Ref<char[]>), typeof(ICharArrayPool) }, writer, value, ODataStringEscapeOption.EscapeNonAscii, buffer, null); }
         }
-#endif
     }
 }

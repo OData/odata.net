@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm.Vocabularies.Community.V1;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.OData.Edm.Vocabularies.V1
@@ -120,5 +121,21 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
         public static readonly IEdmTerm PermissionsTerm = VocabularyModelProvider.CoreModel.FindDeclaredTerm(CoreVocabularyConstants.Permissions);
+
+        /// <summary>
+        /// The AlternateKeys term.
+        /// </summary>
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
+        public static readonly IEdmTerm AlternateKeysTerm = VocabularyModelProvider.CoreModel.FindDeclaredTerm(CoreVocabularyConstants.AlternateKeys);
+
+        /// <summary>
+        /// The AlternateKey ComplexType.
+        /// </summary>
+        internal static readonly IEdmComplexType AlternateKeyType = VocabularyModelProvider.CoreModel.FindDeclaredType(CoreVocabularyConstants.AlternateKey) as IEdmComplexType;
+
+        /// <summary>
+        /// The PropertyRef ComplexType.
+        /// </summary>
+        internal static readonly IEdmComplexType PropertyRefType = VocabularyModelProvider.CoreModel.FindDeclaredType(CoreVocabularyConstants.PropertyRef) as IEdmComplexType;
     }
 }

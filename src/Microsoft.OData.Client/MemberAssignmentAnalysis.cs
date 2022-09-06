@@ -31,6 +31,7 @@ namespace Microsoft.OData.Client
         #region Fields
 
         /// <summary>Empty expression array; immutable.</summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
         internal static readonly Expression[] EmptyExpressionArray = new Expression[0];
 
         /// <summary>Entity in scope for the lambda that's providing the parameter.</summary>

@@ -7,15 +7,7 @@
 namespace Microsoft.Test.Taupo.Astoria.Contracts
 {
     using System.Collections.Generic;
-#if SILVERLIGHT
-#if !WIN8
-    using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataOracleService.Silverlight;
-#else
-    using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataOracleService.Win8;
-#endif
-#else
     using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataOracleService.DotNet;
-#endif
 
     /// <summary>
     /// Internal contract for use in the context of a particular implementation of IAsyncDataSynchronizer which uses a data oracle

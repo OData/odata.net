@@ -22,7 +22,7 @@ namespace Microsoft.OData.Evaluation
         /// <summary>
         /// Empty array of properties.
         /// </summary>
-        private static readonly KeyValuePair<string, object>[] EmptyProperties = new KeyValuePair<string, object>[0];
+        private static readonly IEnumerable<KeyValuePair<string, object>> EmptyProperties = Enumerable.Empty<KeyValuePair<string, object>>();
 
         /// <summary>
         /// The resource instance.
@@ -166,41 +166,46 @@ namespace Microsoft.OData.Evaluation
         /// <param name="resource">The resource instance.</param>
         /// <param name="serializationInfo">The serialization info of the resource for writing without model.</param>
         /// <param name="actualEntityType">The edm entity type of the resource</param>
+        /// <param name="requiresId">Whether key properties are required to be returned</param>
         /// <returns>Key value pair array</returns>
         internal static KeyValuePair<string, object>[] GetKeyProperties(
             ODataResourceBase resource,
             ODataResourceSerializationInfo serializationInfo,
-            IEdmEntityType actualEntityType)
+            IEdmEntityType actualEntityType,
+            bool requiresId)
         {
-            KeyValuePair<string, object>[] keyProperties = null;
-            string actualEntityTypeName = null;
+            Debug.Assert(resource != null, "GetKeyProperties called for a null resource.");
 
+            KeyValuePair<string, object>[] keyProperties = null;
+            string actualEntityTypeName = string.IsNullOrEmpty(resource.TypeName) ? actualEntityType?.FullName() : resource.TypeName;
+
+            // if we have serializationInfo, try that first
             if (serializationInfo != null)
             {
-                if (String.IsNullOrEmpty(resource.TypeName))
-                {
-                    throw new ODataException(Strings.ODataResourceTypeContext_ODataResourceTypeNameMissing);
-                }
-
-                actualEntityTypeName = resource.TypeName;
                 keyProperties = ODataResourceMetadataContextWithoutModel.GetPropertiesBySerializationInfoPropertyKind(resource, ODataPropertyKind.Key, actualEntityTypeName);
             }
-            else
+
+            // if we didn't get any keys from serializationInfo, try using entity type
+            if ((keyProperties == null || keyProperties.Length == 0) && actualEntityType != null)
             {
-                keyProperties = GetPropertyValues(actualEntityType.Key(), resource, actualEntityType, /*isKeyProperty*/ true, /*isRequired*/ true).ToArray();
+                keyProperties = GetPropertyValues(actualEntityType.Key(), resource, actualEntityType, requiresId).ToArray();
             }
 
-            ValidateEntityTypeHasKeyProperties(keyProperties, actualEntityTypeName);
+            if (!ValidateEntityTypeHasKeyProperties(keyProperties, actualEntityTypeName, requiresId))
+            { 
+                return Enumerable.Empty<KeyValuePair<string, object>>().ToArray();
+            }
+
             return keyProperties;
         }
 
-        private static IEnumerable<KeyValuePair<string, object>> GetPropertyValues(IEnumerable<IEdmStructuralProperty> properties, ODataResourceBase resource, IEdmEntityType actualEntityType, bool isKeyProperty, bool isRequired)
+        private static IEnumerable<KeyValuePair<string, object>> GetPropertyValues(IEnumerable<IEdmStructuralProperty> properties, ODataResourceBase resource, IEdmEntityType actualEntityType, bool isRequired)
         {
             string actualEntityTypeName = actualEntityType.FullName();
             object primitiveValue;
             foreach (IEdmStructuralProperty property in properties)
             {
-                if (TryGetPrimitiveOrEnumPropertyValue(resource, property.Name, actualEntityTypeName, isKeyProperty, isRequired, out primitiveValue))
+                if (TryGetPrimitiveOrEnumPropertyValue(resource, property.Name, actualEntityTypeName, isRequired, out primitiveValue))
                 {
                     yield return new KeyValuePair<string, object>(property.Name, primitiveValue);
                 }
@@ -213,11 +218,10 @@ namespace Microsoft.OData.Evaluation
         /// <param name="resource">The resource to get the property value.</param>
         /// <param name="propertyName">Name of the property.</param>
         /// <param name="entityTypeName">The name of the entity type to get the property value.</param>
-        /// <param name="isKeyProperty">true if the property is a key property, false otherwise.</param>
+        /// <param name="isRequired">true, if the property value is required to be non-null.</param>
         /// <param name="value">returned value, or null if no value is found.</param>
-        /// <param name="isRequired">true, if the property value is required.</param>
         /// <returns>true, if the primitive value is found, otherwise false.</returns>
-        private static bool TryGetPrimitiveOrEnumPropertyValue(ODataResourceBase resource, string propertyName, string entityTypeName, bool isKeyProperty, bool isRequired, out object value)
+        private static bool TryGetPrimitiveOrEnumPropertyValue(ODataResourceBase resource, string propertyName, string entityTypeName, bool isRequired, out object value)
         {
             Debug.Assert(resource != null, "resource != null");
 
@@ -235,7 +239,7 @@ namespace Microsoft.OData.Evaluation
                 }
             }
 
-            value = GetPrimitiveOrEnumPropertyValue(entityTypeName, property, isKeyProperty);
+            value = GetPrimitiveOrEnumPropertyValue(entityTypeName, property, isRequired);
             return true;
         }
 
@@ -244,12 +248,12 @@ namespace Microsoft.OData.Evaluation
         /// </summary>
         /// <param name="entityTypeName">The name of the entity type to get the property value.</param>
         /// <param name="property">The ODataProperty to get the value from.</param>
-        /// <param name="isKeyProperty">true if the property is a key property, false otherwise.</param>
+        /// <param name="validateNotNull">true if property must not be null, false otherwise.</param>
         /// <returns>The value of the property.</returns>
-        private static object GetPrimitiveOrEnumPropertyValue(string entityTypeName, ODataProperty property, bool isKeyProperty)
+        private static object GetPrimitiveOrEnumPropertyValue(string entityTypeName, ODataProperty property, bool validateNotNull)
         {
             object propertyValue = property.Value;
-            if (propertyValue == null && isKeyProperty)
+            if (propertyValue == null && validateNotNull)
             {
                 throw new ODataException(Strings.ODataResourceMetadataContext_NullKeyValue(property.Name, entityTypeName));
             }
@@ -267,13 +271,39 @@ namespace Microsoft.OData.Evaluation
         /// </summary>
         /// <param name="keyProperties">Key properties of the resource.</param>
         /// <param name="actualEntityTypeName">The entity type name of the resource.</param>
-        private static void ValidateEntityTypeHasKeyProperties(KeyValuePair<string, object>[] keyProperties, string actualEntityTypeName)
+        /// <param name="throwOnError">Whether to throw if validation fails.</param>
+        /// <returns>True, if validation succeeds, or false if validation fails.</returns>
+        private static bool ValidateEntityTypeHasKeyProperties(KeyValuePair<string, object>[] keyProperties, string actualEntityTypeName, bool throwOnError)
         {
-            Debug.Assert(keyProperties != null, "keyProperties != null");
             if (keyProperties == null || keyProperties.Length == 0)
             {
-                throw new ODataException(Strings.ODataResourceMetadataContext_EntityTypeWithNoKeyProperties(actualEntityTypeName));
+                if (throwOnError)
+                {
+                    throw new ODataException(Strings.ODataResourceMetadataContext_EntityTypeWithNoKeyProperties(actualEntityTypeName));
+                }
+                else
+                {
+                    return false;
+                }
             }
+
+            for (int keyProperty = 0; keyProperty < keyProperties.Length; keyProperty++)
+            {
+                object keyValue = keyProperties[keyProperty].Value;
+                if (keyValue == null || (keyValue is ODataValue && !(keyValue is ODataEnumValue)))
+                {
+                    if (throwOnError)
+                    {
+                        throw new ODataException(Strings.ODataResourceMetadataContext_NullKeyValue(keyProperties[keyProperty].Key, actualEntityTypeName));
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -288,14 +318,14 @@ namespace Microsoft.OData.Evaluation
             Debug.Assert(resource != null, "resource != null");
             Debug.Assert(propertyKind == ODataPropertyKind.Key || propertyKind == ODataPropertyKind.ETag, "propertyKind == ODataPropertyKind.Key || propertyKind == ODataPropertyKind.ETag");
 
-            List<KeyValuePair<string, object>> properties = new List<KeyValuePair<string, object>>(); ;
+            List<KeyValuePair<string, object>> properties = new List<KeyValuePair<string, object>>();
             if (resource.NonComputedProperties != null)
             {
                 foreach(ODataProperty property in resource.NonComputedProperties)
                 {
                     if(property.SerializationInfo != null && property.SerializationInfo.PropertyKind == propertyKind)
                     {
-                        properties.Add(new KeyValuePair<string, object>(property.Name, GetPrimitiveOrEnumPropertyValue(actualEntityTypeName, property, propertyKind == ODataPropertyKind.Key)));
+                        properties.Add(new KeyValuePair<string, object>(property.Name, GetPrimitiveOrEnumPropertyValue(actualEntityTypeName, property, false)));
                     }
                 }                
             }
@@ -311,7 +341,7 @@ namespace Microsoft.OData.Evaluation
             /// <summary>
             /// Empty array of navigation properties.
             /// </summary>
-            private static readonly IEdmNavigationProperty[] EmptyNavigationProperties = new IEdmNavigationProperty[0];
+            private static readonly IEnumerable<IEdmNavigationProperty> EmptyNavigationProperties = Enumerable.Empty<IEdmNavigationProperty>();
 
             /// <summary>
             /// Empty dictionary of stream properties.
@@ -321,7 +351,7 @@ namespace Microsoft.OData.Evaluation
             /// <summary>
             /// Empty array of operations.
             /// </summary>
-            private static readonly IEdmOperation[] EmptyOperations = new IEdmOperation[0];
+            private static readonly IEnumerable<IEdmOperation> EmptyOperations = Enumerable.Empty<IEdmOperation>();
 
             /// <summary>
             /// True if the resource requires an id, false if it is a non-deleted resource in a delta request payload.
@@ -357,11 +387,8 @@ namespace Microsoft.OData.Evaluation
                 {
                     if (this.keyProperties == null)
                     {
-                        this.keyProperties = GetPropertiesBySerializationInfoPropertyKind(this.resource, ODataPropertyKind.Key, this.ActualResourceTypeName);
-                        if (this.requiresId)
-                        {
-                            ValidateEntityTypeHasKeyProperties(this.keyProperties, this.ActualResourceTypeName);
-                        }
+                        IEdmEntityType entityType = this.ActualResourceType as IEdmEntityType;
+                        this.keyProperties = GetKeyProperties(this.resource, this.serializationInfo, entityType, this.requiresId);
                     }
 
                     return this.keyProperties;
@@ -483,16 +510,12 @@ namespace Microsoft.OData.Evaluation
                         IEdmEntityType entityType = this.actualResourceType as IEdmEntityType;
                         if (entityType != null)
                         {
-                            this.keyProperties = keyProperties = GetPropertyValues(entityType.Key(), resource, entityType, /*isKeyProperty*/ true, this.requiresId).ToArray();
-
-                            if (this.requiresId)
-                            {
-                                ValidateEntityTypeHasKeyProperties(this.keyProperties, this.ActualResourceTypeName);
-                            }
+                            this.keyProperties = GetPropertyValues(entityType.Key(), resource, entityType, this.requiresId).ToArray();
                         }
-                        else
+
+                        if (!ValidateEntityTypeHasKeyProperties(this.keyProperties, this.ActualResourceTypeName, this.requiresId))
                         {
-                            this.keyProperties = Enumerable.Empty<KeyValuePair<string, object>>().ToArray();
+                            return Enumerable.Empty<KeyValuePair<string, object>>().ToArray();
                         }
                     }
 
@@ -512,7 +535,7 @@ namespace Microsoft.OData.Evaluation
                         IEdmEntityType actualEntityType = this.actualResourceType as IEdmEntityType;
                         IEnumerable<IEdmStructuralProperty> properties = this.ComputeETagPropertiesFromAnnotation();
                         this.etagProperties = properties.Any()
-                            ? GetPropertyValues(properties, resource, actualEntityType, /*isKeyProperty*/false, /*isRequired*/ true)
+                            ? GetPropertyValues(properties, resource, actualEntityType, /*isRequired*/ false)
                             : EmptyProperties;
                     }
 

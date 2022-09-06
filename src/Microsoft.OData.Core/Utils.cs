@@ -37,11 +37,13 @@ namespace Microsoft.OData
             return false;
         }
 
+
         /// <summary>
         /// Asynchronously flushes a stream.
         /// </summary>
         /// <param name="stream">The stream to flush.</param>
         /// <returns>Task which represents the pending Flush operation.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2008:Do not create tasks without passing a TaskScheduler", Justification = "<Pending>")]
         internal static Task FlushAsync(this Stream stream)
         {
             return Task.Factory.StartNew(stream.Flush);

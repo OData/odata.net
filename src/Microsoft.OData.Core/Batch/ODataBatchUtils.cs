@@ -77,11 +77,13 @@ namespace Microsoft.OData
         /// <param name="batchReaderStream">The batch stream to create the operation read stream for.</param>
         /// <param name="headers">The headers of the current part; based on the header we create different, optimized stream implementations.</param>
         /// <param name="operationListener">The operation listener to be passed to the newly created read stream.</param>
+        /// <param name="synchronous">true if the stream is to be created for synchronous operation; false for asynchronous.</param>
         /// <returns>A new <see cref="ODataReadStream"/> instance.</returns>
         internal static ODataReadStream CreateBatchOperationReadStream(
             ODataBatchReaderStream batchReaderStream,
             ODataBatchOperationHeaders headers,
-            IODataStreamListener operationListener)
+            IODataStreamListener operationListener,
+            bool synchronous = true)
         {
             Debug.Assert(batchReaderStream != null, "batchReaderStream != null");
             Debug.Assert(operationListener != null, "operationListener != null");
@@ -96,10 +98,10 @@ namespace Microsoft.OData
                     throw new ODataException(Strings.ODataBatchReaderStream_InvalidContentLengthSpecified(contentLengthValue));
                 }
 
-                return ODataReadStream.Create(batchReaderStream, operationListener, length);
+                return ODataReadStream.Create(batchReaderStream, operationListener, length, synchronous);
             }
 
-            return ODataReadStream.Create(batchReaderStream, operationListener);
+            return ODataReadStream.Create(batchReaderStream, operationListener, synchronous);
         }
 
         /// <summary>
@@ -107,6 +109,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="outputStream">The output stream to create the operation write stream over.</param>
         /// <param name="operationListener">The operation listener to be passed to the newly created write stream.</param>
+        /// <param name="synchronous">true if the stream is to be created for synchronous operation; false for asynchronous.</param>
         /// <returns>A new <see cref="ODataWriteStream"/> instance.</returns>
         internal static ODataWriteStream CreateBatchOperationWriteStream(
             Stream outputStream,

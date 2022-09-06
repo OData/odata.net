@@ -15,7 +15,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
     using Microsoft.Test.OData.Tests.Client.Common;
     using Xunit;
 
-    public class ModelReferenceQueryTests : ODataWCFServiceTestsBase<InMemoryEntities>
+    public class ModelReferenceQueryTests : ODataWCFServiceTestsBase<InMemoryEntities>, IDisposable
     {
         private const string TestModelNameSpace = "Microsoft.OData.SampleService.Models.ModelRefDemo";
 
@@ -671,5 +671,10 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             return item;
         }
         #endregion
+
+        public override void Dispose()
+        {
+            base.Dispose();
+        }
     }
 }

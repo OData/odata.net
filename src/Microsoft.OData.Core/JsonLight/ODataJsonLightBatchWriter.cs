@@ -503,7 +503,7 @@ namespace Microsoft.OData.JsonLight
         /// Asynchronously starts a new changeset.
         /// </summary>
         /// <param name="groupId">The atomic group id of the changeset to start.
-		/// If it is null for Json batch, an GUID will be generated and used as the atomic group id.</param>
+        /// If it is null for Json batch, an GUID will be generated and used as the atomic group id.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
         protected override async Task WriteStartChangesetImplementationAsync(string groupId)
         {

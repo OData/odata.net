@@ -463,7 +463,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             // The value of $Scale is a number or a string with one of the symbolic values floating or variable.
             // TODO: the symbolic values floating or variable is not supported now.
             // Absence of $Scale means variable.
-            this.jsonWriter.WriteOptionalProperty("$Scale", reference.Scale, CsdlConstants.Default_Scale);
+            this.jsonWriter.WriteOptionalProperty("$Scale", reference.Scale);
         }
 
         internal override void WriteSpatialTypeAttributes(IEdmSpatialTypeReference reference)
@@ -841,6 +841,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
             if (isInline)
             {
+                // In JSON, we always write the annotation value.
                 this.WriteInlineExpression(annotation.Value);
             }
         }
@@ -867,7 +868,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
             if (expression.DeclaredType != null)
             {
-                this.jsonWriter.WriteRequiredProperty("$Type", expression.DeclaredType.FullName());
+                // The type of a record expression is represented as the @type control information.
+                this.jsonWriter.WriteRequiredProperty("@type", expression.DeclaredType.FullName());
             }
             // It MAY contain annotations for itself. It's not supported now.
         }

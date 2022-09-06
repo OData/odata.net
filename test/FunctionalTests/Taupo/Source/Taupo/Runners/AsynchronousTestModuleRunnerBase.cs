@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !WIN8
 namespace Microsoft.Test.Taupo.Runners
 {
     using System;
@@ -18,11 +17,7 @@ namespace Microsoft.Test.Taupo.Runners
     /// <summary>
     /// Asynchronous test module runner.
     /// </summary>
-#if SILVERLIGHT
-    public abstract class AsynchronousTestModuleRunnerBase : ITestModuleRunner
-#else
     public abstract class AsynchronousTestModuleRunnerBase : MarshalByRefObject, ITestModuleRunner
-#endif
     {
         private ITestLogWriter currentLogWriter;
         private ExecutionContext currentContext;
@@ -75,7 +70,6 @@ namespace Microsoft.Test.Taupo.Runners
             Terminating,
         }
 
-#if !SILVERLIGHT
         /// <summary>
         /// Obtains a lifetime service object to control the lifetime policy for this instance.
         /// </summary>
@@ -87,7 +81,6 @@ namespace Microsoft.Test.Taupo.Runners
         {
             return null;
         }
-#endif
 
         /// <summary>
         /// Runs the specified module.
@@ -560,9 +553,6 @@ namespace Microsoft.Test.Taupo.Runners
         /// <param name="action">Action to execute.</param>
         private void RunOnExecutionThread(Action action)
         {
-#if SILVERLIGHT
-            this.ExecuteOnUIThread(action);
-#else
             ExceptionUtilities.Assert(this.executionThread != null, "executionThread != null");
             ExceptionUtilities.Assert(!this.executionThreadAborted, "!this.executionThreadAborted");
             ExceptionUtilities.Assert(!this.runCompleted, "!this.runCompleted");
@@ -572,7 +562,6 @@ namespace Microsoft.Test.Taupo.Runners
                 this.actionToExecute = action;
                 Monitor.Pulse(this.executionThreadMonitor);
             }
-#endif
         }
 
         private void IncrementResultCounter(TestItemData testItemData, TestResult result)
@@ -618,12 +607,7 @@ namespace Microsoft.Test.Taupo.Runners
         {
             private AsynchronousTestModuleRunnerBase runner;
             private int expectedAsyncCounter;
-#if WIN8
-            private ThreadPoolTimer timer;
-#else
             private Timer timer;
-
-#endif
             private object lockObject = new object();
 
             /// <summary>
@@ -700,11 +684,7 @@ namespace Microsoft.Test.Taupo.Runners
             {
                 if (this.timer != null)
                 {
-#if WIN8
-                    this.timer.Cancel();
-#else
                     this.timer.Dispose();
-#endif
                     this.timer = null;
                 }
             }
@@ -790,4 +770,3 @@ namespace Microsoft.Test.Taupo.Runners
         }
     }
 }
-#endif

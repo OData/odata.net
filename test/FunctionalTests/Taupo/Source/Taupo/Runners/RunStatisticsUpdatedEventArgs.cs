@@ -12,9 +12,7 @@ namespace Microsoft.Test.Taupo.Runners
     /// <summary>
     /// Event arguments that encapsulate run statistics.
     /// </summary>
-#if !SILVERLIGHT
     [Serializable]
-#endif
     public class RunStatisticsUpdatedEventArgs : EventArgs
     {
         /// <summary>

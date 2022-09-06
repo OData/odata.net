@@ -15,7 +15,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Xunit;
 
-    public class SingletonClientTests : ODataWCFServiceTestsBase<InMemoryEntities>
+    public class SingletonClientTests : ODataWCFServiceTestsBase<InMemoryEntities>, IDisposable
     {
         public SingletonClientTests() : base(ServiceDescriptors.ODataWCFServiceDescriptor)
         {
@@ -302,5 +302,10 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
         }
 
         #endregion
+
+        public override void Dispose()
+        {
+            base.Dispose();
+        }
     }
 }

@@ -62,13 +62,11 @@ namespace Microsoft.Test.Taupo.Astoria.Client
         [InjectDependency(IsRequired = true)]
         public IDataServiceResponsePreferenceVerifier ResponsePreferenceVerifier { get; set; }
 
-#if !WINDOWS_PHONE
         /// <summary>
         /// Gets or sets the sending request event verifier to use
         /// </summary>
         [InjectDependency(IsRequired = true)]
         public ISendingRequestEventVerifier SendingRequestEventVerifier { get; set; }
-#endif
 
         /// <summary>
         /// Gets or sets the server state verifier to use
@@ -184,9 +182,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
         protected virtual void SetupBeforeProductCall()
         {
             this.ResponsePreferenceVerifier.RegisterEventHandler(this.Input.Context);
-#if !WINDOWS_PHONE
             this.SendingRequestEventVerifier.RegisterEventHandler(this.Input.Context);
-#endif
         }
 
         /// <summary>
@@ -195,9 +191,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
         protected virtual void CleanupAfterProductCall()
         {
             this.ResponsePreferenceVerifier.UnregisterEventHandler(this.Input.Context, this.State.Response == null);
-#if !WINDOWS_PHONE
             this.SendingRequestEventVerifier.UnregisterEventHandler(this.Input.Context, this.State.Response == null);
-#endif
         }
 
         /// <summary>
@@ -246,9 +240,6 @@ namespace Microsoft.Test.Taupo.Astoria.Client
             }
             else
             {
-#if SILVERLIGHT
-                throw new TaupoNotSupportedException("Silverlight does not support synchronous operations");
-#else
                 // in the sync case we can use a simple try-finally block rather than wrapping the continuation
                 try
                 {
@@ -269,7 +260,6 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                 
                 this.OnProductCallSuccess();
                 continuation.Continue();
-#endif
             }
         }
         

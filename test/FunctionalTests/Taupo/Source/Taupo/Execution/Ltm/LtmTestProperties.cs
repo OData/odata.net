@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !SILVERLIGHT
-
 using System;
 using System.Collections.Generic;
 using Microsoft.Test.Taupo.Common;
@@ -46,5 +44,3 @@ namespace Microsoft.Test.Taupo.Execution.Ltm
         }
     }
 }
-
-#endif

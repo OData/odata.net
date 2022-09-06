@@ -15,6 +15,18 @@ namespace Microsoft.OData.UriParser
     internal sealed class IsCollectionTranslator : PathSegmentTranslator<bool>
     {
         /// <summary>
+        /// Prevents a default instance of the <see cref="IsCollectionTranslator"/> class from being created
+        /// </summary>
+        private IsCollectionTranslator()
+        {
+        }
+
+        /// <summary>
+        /// Gets the singleton instance of the <see cref="IsCollectionTranslator"/>
+        /// </summary>
+        public static IsCollectionTranslator Instance { get; } = new IsCollectionTranslator();
+
+        /// <summary>
         /// Translate a NavigationPropertySegment
         /// </summary>
         /// <param name="segment">the segment to Translate</param>

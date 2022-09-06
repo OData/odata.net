@@ -31,18 +31,19 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             createWithValueSegment.Throws<ODataException>(ODataErrorStrings.ODataExpandPath_InvalidExpandPathSegment("ValueSegment"));
         }
 
-        [Fact]
-        public void ExpandPathShouldNotAllowTypeSegmentToBeLast()
-        {
-            Action createWithTypeSegmentLast = () => new ODataExpandPath(this.typeSegment);
-            createWithTypeSegmentLast.Throws<ODataException>(ODataErrorStrings.ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty);
-        }
+        // This test is not relevant since we are now supporting type segments as the last segment in $expand
+        //[Fact]
+        //public void ExpandPathShouldNotAllowTypeSegmentToBeLast()
+        //{
+        //    Action createWithTypeSegmentLast = () => new ODataExpandPath(this.typeSegment);
+        //    createWithTypeSegmentLast.Throws<ODataException>(ODataErrorStrings.ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty);
+        //}
 
         [Fact]
         public void ExpandPathShouldNotAllowMultipleNavigations()
         {
             Action createWithTypeSegmentLast = () => new ODataExpandPath(this.navigationSegment, this.navigationSegment);
-            createWithTypeSegmentLast.Throws<ODataException>(ODataErrorStrings.ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty);
+            createWithTypeSegmentLast.Throws<ODataException>(ODataErrorStrings.ODataExpandPath_OnlyLastSegmentCanBeNavigationProperty);
         }
 
         [Fact]

@@ -2191,9 +2191,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                });
         }
 
-        // These tests and helpers are disabled on Silverlight and Phone because they
-        // use private reflection not available on Silverlight and Phone
-#if !SILVERLIGHT && !WINDOWS_PHONE
         [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test writing entry payloads with duplicate property names.")]
         public void DuplicatePropertyNamesTest()
@@ -2671,7 +2668,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             public ODataItem[] PayloadItems { get; set; }
             public Func<bool, WriterTestConfiguration, ExpectedException> ExpectedException { get; set; }
         }
-#endif
 
         [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test writing entry payloads with duplicate navigation links. This test is targetted at the binding scenarios.")]

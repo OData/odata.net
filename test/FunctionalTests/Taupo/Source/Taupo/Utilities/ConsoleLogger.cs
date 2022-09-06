@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !SILVERLIGHT
-
 namespace Microsoft.Test.Taupo.Utilities
 {
     using System;
@@ -72,5 +70,3 @@ namespace Microsoft.Test.Taupo.Utilities
         }
     }
 }
-
-#endif

@@ -32,6 +32,22 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void SimpleKeySegmentWithDecimalKey()
+        {
+            var path = PathFunctionalTestsUtil.RunParsePath("Pet4Set(261210.08)");
+            path.LastSegment.ShouldBeSimpleKeySegment((decimal)261210.08);
+            Assert.Same(HardCodedTestModel.GetPet4Set(), path.NavigationSource());
+        }
+
+        [Fact]
+        public void SimpleKeySegmentWithDecimalKeyWithSuffix()
+        {
+            var path = PathFunctionalTestsUtil.RunParsePath("Pet4Set(261210.08m)");
+            path.LastSegment.ShouldBeSimpleKeySegment(261210.08m);
+            Assert.Same(HardCodedTestModel.GetPet4Set(), path.NavigationSource());
+        }
+
+        [Fact]
         public void SimpleSingleton()
         {
             var path = PathFunctionalTestsUtil.RunParsePath("Boss");
@@ -814,7 +830,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void IfKeyIsExplicitlySetToValueOfImplicitKeyThrowError()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("People(32)/MyLions(ID1=64)", ODataErrorStrings.BadRequest_KeyCountMismatch(HardCodedTestModel.GetLionType().FullName()));
+            PathFunctionalTestsUtil.RunParseErrorPath("People(32)/MyLions(ID1=64)", ODataErrorStrings.BadRequest_KeyMismatch(HardCodedTestModel.GetLionType().FullName()));
         }
 
         [Fact]
@@ -1192,7 +1208,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             Assert.Equal("$42", path.FirstSegment.ShouldBeBatchReferenceSegment(HardCodedTestModel.GetDogType()).ContentId);
             path.LastSegment.ShouldBeNavigationPropertySegment(HardCodedTestModel.GetDogMyPeopleNavProp());
-            Assert.Same(HardCodedTestModel.GetDogsSet(), path.FirstSegment.TranslateWith(new DetermineNavigationSourceTranslator()));
+            Assert.Same(HardCodedTestModel.GetDogsSet(), path.FirstSegment.TranslateWith(DetermineNavigationSourceTranslator.Instance));
         }
 
         //[Fact(Skip = "#833: Throw exception when $value appears after a stream.")]
@@ -1507,7 +1523,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void KeyOfIncompatibleTypeDefinitionShouldFail()
         {
             Action action = () => PathFunctionalTestsUtil.RunParsePath("Pet6Set(ID='abc')");
-            action.Throws<ODataException>(ODataErrorStrings.RequestUriProcessor_SyntaxError);
+            action.Throws<ODataException>(ODataErrorStrings.BadRequest_KeyMismatch(HardCodedTestModel.GetPet6Type().FullTypeName()));
         }
 
         [Fact]

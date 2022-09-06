@@ -94,7 +94,7 @@ namespace Microsoft.OData.Client.Annotation
         /// </summary>
         /// <param name="key">The key of an entry to be checked.</param>
         /// <returns>Returns true if the target of a WeakKeyReference&lt;object&gt; in a tuple is dead, else false.</returns>
-        public bool RemoveRule(object key)
+        public static bool RemoveRule(object key)
         {
             var tupleObj = key as Tuple<WeakKeyReference<object>, MemberInfo>;
             if (tupleObj != null)

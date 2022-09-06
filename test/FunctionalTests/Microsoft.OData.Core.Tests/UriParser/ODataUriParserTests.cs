@@ -393,6 +393,19 @@ namespace Microsoft.OData.Tests.UriParser
         }
 
         [Fact]
+        public void AlternateKeyUsingCoreVocabularyVersionShouldWork()
+        {
+            ODataPath pathSegment = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People(CoreSN = \'1\')"))
+            {
+                Resolver = new AlternateKeysODataUriResolver(HardCodedTestModel.TestModel)
+            }.ParsePath();
+
+            Assert.Equal(2, pathSegment.Count);
+            pathSegment.FirstSegment.ShouldBeEntitySetSegment(HardCodedTestModel.TestModel.FindDeclaredEntitySet("People"));
+            pathSegment.LastSegment.ShouldBeKeySegment(new KeyValuePair<string, object>("CoreSN", "1"));
+        }
+
+        [Fact]
         public void CompositeAlternateKeyShouldWork()
         {
             Uri fullUri = new Uri("http://host/People(NameAlias=\'anyName\',FirstNameAlias=\'anyFirst\')");
@@ -415,7 +428,7 @@ namespace Microsoft.OData.Tests.UriParser
                 Resolver = new AlternateKeysODataUriResolver(HardCodedTestModel.TestModel)
             }.ParsePath();
 
-            action.Throws<ODataException>("Bad Request - Error in query syntax.");
+            action.Throws<ODataException>(ODataErrorStrings.BadRequest_KeyOrAlternateKeyMismatch(HardCodedTestModel.GetPersonType().FullTypeName()));
         }
 
         [Fact]
@@ -427,7 +440,7 @@ namespace Microsoft.OData.Tests.UriParser
                 Resolver = new AlternateKeysODataUriResolver(HardCodedTestModel.TestModel)
             }.ParsePath();
 
-            action.Throws<ODataException>(ODataErrorStrings.BadRequest_KeyCountMismatch(HardCodedTestModel.GetPersonType().FullTypeName()));
+            action.Throws<ODataException>(ODataErrorStrings.BadRequest_KeyOrAlternateKeyMismatch(HardCodedTestModel.GetPersonType().FullTypeName()));
         }
 
         [Fact]
@@ -439,7 +452,7 @@ namespace Microsoft.OData.Tests.UriParser
                 Resolver = new ODataUriResolver()
             }.ParsePath();
 
-            action.Throws<ODataException>("Bad Request - Error in query syntax.");
+            action.Throws<ODataException>(ODataErrorStrings.BadRequest_KeyMismatch(HardCodedTestModel.GetPersonType().FullTypeName()));
         }
 
         [Fact]

@@ -103,5 +103,10 @@
     <VisualStudioInstallLocation Condition="'$(VisualStudioVersion)' == '14.0'">$(VS140COMNTOOLS)..\IDE\</VisualStudioInstallLocation>
     <VisualStudioInstallLocation Condition="'$(VisualStudioVersion)' == '16.0'">$(VS160COMNTOOLS)..\IDE\</VisualStudioInstallLocation>
   </PropertyGroup>
+
+  <!--C# uses ';' as a delimiter, but VB uses ',', so we need to swap them-->
+  <PropertyGroup>
+    <DefineConstants Condition="'$([System.IO.Path]::GetExtension($(MSBuildProjectFile)))' == '.vbproj'">$(DefineConstants.Replace(";", ","))</DefineConstants>
+  </PropertyGroup>
   
 </Project>

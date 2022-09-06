@@ -33,7 +33,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
         [InjectDependency(IsRequired = true)]
         public IDependencyInjector Injector { get; set; }
 
-#if !SILVERLIGHT && !WINDOWS_PHONE
         // Batch stream buffer tests use private reflection and thus cannot run on Silverlight or the phone.
         [TestMethod, TestCategory("Reader.Batch"), Variation(Description = "Testing the ODataBatchReaderStream.RefillFrom method.")]
         public void BatchReaderStreamReadLineTest()
@@ -379,6 +378,5 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                     string.Format("\r\n{0}:\r\nExpected to read line '{1}' but reported value is '{2}'.", this.DebugDescription, expectedLine, line));
             }
         }
-#endif
     }
 }

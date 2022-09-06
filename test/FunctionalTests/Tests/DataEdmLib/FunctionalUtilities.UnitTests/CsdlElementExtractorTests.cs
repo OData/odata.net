@@ -9,9 +9,6 @@ namespace EdmLibTests.FunctionalUtilities.UnitTests
     using System;
     using System.Linq;
     using System.Xml.Linq;
-#if SILVERLIGHT
-    using Microsoft.Silverlight.Testing;
-#endif
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]

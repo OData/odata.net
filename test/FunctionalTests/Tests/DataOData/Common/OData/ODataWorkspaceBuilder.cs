@@ -97,15 +97,10 @@ namespace Microsoft.Test.Taupo.OData
             }
 
             string outputFilePath = Guid.NewGuid().ToString();
-#if SILVERLIGHT
-            outputFilePath = String.Format("{0}Assembly.dll", outputFilePath);
-            return typeof(DefaultNamespace.Phone).Assembly;
-#else
             outputFilePath = outputFilePath + ".dll";
             this.Language.CompileAssemblyFromSource(outputFilePath, new[] { objectLayerCode }, referenceAssemblies);
             var assembly = AssemblyHelpers.LoadAssembly(outputFilePath, referenceAssemblies);
             return assembly;
-#endif
         }
     }
 }

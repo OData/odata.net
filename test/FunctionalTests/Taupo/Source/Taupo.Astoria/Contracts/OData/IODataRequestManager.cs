@@ -48,7 +48,6 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.OData
         /// <returns>An OData request body</returns>
         ODataPayloadBody BuildBody(string contentType, ODataUri uri, ODataPayloadElement rootElement);
 
-#if !SILVERLIGHT // synchronous, so omitted from SL
         /// <summary>
         /// Gets a response to the given request using an injected Http stack implementation
         /// </summary>
@@ -57,6 +56,5 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.OData
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
             Justification = "Method is only intended to be used for OData-level requests")]
         ODataResponse GetResponse(ODataRequest request);
-#endif
     }
 }

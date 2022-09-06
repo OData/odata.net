@@ -53,9 +53,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
                 ConformanceLevel = ConformanceLevel.Auto,
                 IgnoreComments = true,
                 IgnoreProcessingInstructions = true,
-#if !ORCAS
                 DtdProcessing = DtdProcessing.Prohibit
-#endif
             };
 
             // user specified a stream to read from, read from it.
@@ -166,6 +164,11 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             return defaultSrid;
         }
 
+        /// <summary>
+        /// Parses the scale attribute if it's set.
+        /// </summary>
+        /// <param name="attributeName">The name of the attribute.</param>
+        /// <returns>The parsed scale value.</returns>
         protected int? OptionalScale(string attributeName)
         {
             XmlAttributeInfo attr = GetOptionalAttribute(this.currentElement, attributeName);

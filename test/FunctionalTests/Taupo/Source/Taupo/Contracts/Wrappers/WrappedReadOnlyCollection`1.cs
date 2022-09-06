@@ -64,11 +64,7 @@ namespace Microsoft.Test.Taupo.Contracts.Wrappers
         {
             get
             {
-#if !WINDOWS_PHONE
                 return WrapperUtilities.InvokeMethodAndWrap<T>(this, WrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "T get_Item(Int32)"), new object[] { index });
-#else
-                return WrapperUtilities.InvokeMethodAndWrap<T>(this, WrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "T get_Item(System.Int32)"), new object[] { index });
-#endif
             }
         }
         
@@ -79,11 +75,7 @@ namespace Microsoft.Test.Taupo.Contracts.Wrappers
         /// <returns>The value returned by the underlying method.</returns>
         public virtual bool Contains(T value)
         {
-#if !WINDOWS_PHONE
             return WrapperUtilities.InvokeMethodAndCast<bool>(this, WrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Boolean Contains(T)"), new object[] { value });
-#else
-            return WrapperUtilities.InvokeMethodAndCast<bool>(this, WrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "System.Boolean Contains(T)"), new object[] { value });
-#endif
         }
         
         /// <summary>
@@ -93,11 +85,7 @@ namespace Microsoft.Test.Taupo.Contracts.Wrappers
         /// <param name="index">The value of the 'index' parameter.</param>
         public virtual void CopyTo(WrappedArray<T> array, int index)
         {
-#if !WINDOWS_PHONE
             WrapperUtilities.InvokeMethodWithoutResult(this, WrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void CopyTo(T[], Int32)"), new object[] { array, index });
-#else
-            WrapperUtilities.InvokeMethodWithoutResult(this, WrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "System.Void CopyTo(T[], System.Int32)"), new object[] { array, index });
-#endif
         }
         
         /// <summary>
@@ -116,11 +104,7 @@ namespace Microsoft.Test.Taupo.Contracts.Wrappers
         /// <returns>The value returned by the underlying method.</returns>
         public virtual int IndexOf(T value)
         {
-#if !WINDOWS_PHONE
             return WrapperUtilities.InvokeMethodAndCast<int>(this, WrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Int32 IndexOf(T)"), new object[] { value });
-#else
-            return WrapperUtilities.InvokeMethodAndCast<int>(this, WrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "System.Int32 IndexOf(T)"), new object[] { value });
-#endif
         }
     }
 }

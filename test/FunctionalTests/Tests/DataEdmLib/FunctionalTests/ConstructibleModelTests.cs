@@ -19,9 +19,6 @@ namespace EdmLibTests.FunctionalTests
     using Microsoft.OData.Edm.Validation;
     using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Metadata;
-#if SILVERLIGHT
-    using Microsoft.Silverlight.Testing;
-#endif
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -960,7 +957,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(EdmPrimitiveTypeKind.Duration, timeRef.PrimitiveKind(), "Correct primitive kind");
 
             Assert.IsNull(decimalRef.AsDecimal().Precision, "Decimal precision null when created with shortcut");
-            Assert.AreEqual(0, decimalRef.AsDecimal().Scale, "Decimal scale 0 when created with shortcut");
+            Assert.IsNull(decimalRef.AsDecimal().Scale, "Decimal scale equals null when created with shortcut");
 
             Assert.AreEqual(0, timeRef.AsTemporal().Precision, "Duration precision equals to 0 when created with shortcut");
         }
@@ -1344,16 +1341,10 @@ namespace EdmLibTests.FunctionalTests
                     "ppp", new EdmEntityTypeReference(t1, true /*isNullable*/), null /*partnerDependentProperties*/, null /*partnerPrincipalProperties*/, false /*partnerContainsTarget*/, EdmOnDeleteAction.None);
                 Assert.Fail("exception expected");
             }
-#if !SILVERLIGHT
             catch (ArgumentException e)
             {
                 Assert.AreEqual("propertyType", e.ParamName, "exception");
             }
-#else
-            catch (ArgumentException)
-            {
-            }
-#endif
 
             try
             {
@@ -1362,16 +1353,10 @@ namespace EdmLibTests.FunctionalTests
                     "ppp", EdmCoreModel.Instance.GetInt32(false /*isNullable*/), null /*partnerDependentProperties*/, null /*partnerPrincipalProperties*/, false /*partnerContainsTarget*/, EdmOnDeleteAction.None);
                 Assert.Fail("exception expected");
             }
-#if !SILVERLIGHT
             catch (ArgumentException e)
             {
                 Assert.AreEqual("partnerPropertyType", e.ParamName, "exception");
             }
-#else
-            catch (ArgumentException)
-            {
-            }
-#endif
         }
 
         [TestMethod]
@@ -1379,7 +1364,7 @@ namespace EdmLibTests.FunctionalTests
         public void EdmCoreModelTests()
         {
             Assert.AreEqual("Edm", EdmCoreModel.Namespace, "Correct Namespace");
-#if !(SILVERLIGHT || ORCAS)
+#if !ORCAS
             Assert.AreEqual(40, EdmCoreModel.Instance.SchemaElements.Count(), "Core model has one of every type except none.");
 #endif
             Assert.AreEqual(0, EdmCoreModel.Instance.VocabularyAnnotations.Count(), "Core model has no annotations.");

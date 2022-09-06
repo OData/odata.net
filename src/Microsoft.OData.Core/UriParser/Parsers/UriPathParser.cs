@@ -58,7 +58,6 @@ namespace Microsoft.OData.UriParser
                 int numberOfSegmentsToSkip = 0;
 
                 // Skip over the base URI segments
-#if !ORCAS
                 // need to calculate the number of segments to skip in the full
                 // uri (so that we can skip over http://blah.com/basePath for example,
                 // get only the odata specific parts of the path).
@@ -70,10 +69,6 @@ namespace Microsoft.OData.UriParser
                 // length - 1 since its a zero based array.
                 numberOfSegmentsToSkip = serviceBaseUri.AbsolutePath.Split('/').Length - 1;
                 string[] uriSegments = uri.AbsolutePath.Split('/');
-#else
-                numberOfSegmentsToSkip = serviceBaseUri.Segments.Length;
-                string[] uriSegments = uri.Segments;
-#endif
 
                 List<string> segments = new List<string>();
                 for (int i = numberOfSegmentsToSkip; i < uriSegments.Length; i++)
@@ -103,11 +98,7 @@ namespace Microsoft.OData.UriParser
 
                 return segments.ToArray();
             }
-#if !ORCAS
             catch (FormatException uriFormatException)
-#else
-            catch (UriFormatException uriFormatException)
-#endif
             {
                 throw new ODataException(Strings.UriQueryPathParser_SyntaxError, uriFormatException);
             }

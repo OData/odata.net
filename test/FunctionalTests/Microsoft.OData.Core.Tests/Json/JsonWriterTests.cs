@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Microsoft.OData.Edm;
@@ -125,9 +126,33 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
+        public void WritePrimitiveValueStringWritesNullIfArgumentIsNull()
+        {
+            this.writer.WriteValue((string)null);
+            Assert.Equal("null", this.builder.ToString());
+        }
+
+        [Theory]
+        [InlineData("Foo \uD800\udc05 \u00e4", "\"Foo \\ud800\\udc05 \\u00e4\"")]
+        [InlineData("Foo \nBar\t\"Baz\"", "\"Foo \\nBar\\t\\\"Baz\\\"\"")]
+        [InlineData("Foo ия", "\"Foo \\u0438\\u044f\"")]
+        [InlineData("<script>", "\"<script>\"")]
+        public void WritePrimitiveValueStringEscapesStrings(string input, string expectedOutput)
+        {
+            this.VerifyWritePrimitiveValue(input, expectedOutput);
+        }
+
+        [Fact]
         public void WritePrimitiveValueByteArray()
         {
             this.VerifyWritePrimitiveValue(new byte[] { 0 }, "\"" + Convert.ToBase64String(new byte[] { 0 }) + "\"");
+        }
+
+        [Fact]
+        public void WritePrimitiveValueByteArrayWritesNullIfArgumentIsNull()
+        {
+            this.writer.WriteValue((byte[])null);
+            Assert.Equal("null", this.builder.ToString());
         }
 
         [Fact]
@@ -160,6 +185,20 @@ namespace Microsoft.OData.Tests.Json
             this.VerifyWritePrimitiveValue(new TimeOfDay(12, 30, 5, 10), "\"12:30:05.0100000\"");
         }
 
+        [Fact]
+        public void WriteRawValueWritesValue()
+        {
+            this.writer.WriteRawValue("Raw\t\"Value ия");
+            Assert.Equal("Raw\t\"Value ия", this.builder.ToString());
+        }
+
+        [Fact]
+        public void WriteRawValueWritesNothingWhenNull()
+        {
+            this.writer.WriteRawValue(null);
+            Assert.Equal("", this.builder.ToString());
+        }
+
         private void VerifyWritePrimitiveValue<T>(T parameter, string expected)
         {
             this.writer.WritePrimitiveValue(parameter);
@@ -174,6 +213,116 @@ namespace Microsoft.OData.Tests.Json
         }
 
         #endregion
+
+        #region JsonWriter Extension Methods
+
+        [Fact]
+        public void WriteJsonObjectValueWritesJsonObject()
+        {
+            var properties = new Dictionary<string, object>
+            {
+                { "Name", "Sue" },
+                { "Attributes",
+                    new Dictionary<string, object>
+                    {
+                        { "Height", 1.77 },
+                        { "Weight", 80.7 }
+                    }
+                }
+            };
+            this.writer.WriteJsonObjectValue(properties, null);
+            Assert.Equal("{\"Name\":\"Sue\",\"Attributes\":{\"Height\":1.77,\"Weight\":80.7}}", this.builder.ToString());
+        }
+
+        [Fact]
+        public void WriteJsonObjectValueCallsInjectedPropertyAction()
+        {
+            var properties = new Dictionary<string, object> { { "Name", "Sue" } };
+            Action<IJsonWriter> injectPropertyDelegate = (IJsonWriter actionWriter) =>
+            {
+                actionWriter.WriteName("Id");
+                actionWriter.WriteValue(7);
+            };
+
+            this.writer.WriteJsonObjectValue(properties, injectPropertyDelegate);
+            Assert.Equal("{\"Id\":7,\"Name\":\"Sue\"}", this.builder.ToString());
+        }
+
+        [Fact]
+        public void WriteJsonObjectValueWritesPrimitiveCollection()
+        {
+            var properties = new Dictionary<string, object>
+            {
+                { "Names", new string[] { "Sue", "Joe", null } }
+            };
+
+            this.writer.WriteJsonObjectValue(properties, null);
+            Assert.Equal("{\"Names\":[\"Sue\",\"Joe\",null]}", this.builder.ToString());
+        }
+
+        [Fact]
+        public void WriteODataValueWritesODataValue()
+        {
+            var value = new ODataPrimitiveValue(3.14);
+            this.writer.WriteODataValue(value);
+            Assert.Equal("3.14", this.builder.ToString());
+        }
+
+        [Fact]
+        public void WriteODataValueWritesNullValue()
+        {
+            var value = new ODataNullValue();
+            this.writer.WriteODataValue(value);
+            Assert.Equal("null", this.builder.ToString());
+        }
+
+        [Fact]
+        public void WriteODataValueWritesODataResourceValue()
+        {
+            var resourceValue = new ODataResourceValue
+            {
+                Properties = new List<ODataProperty>
+                {
+                    new ODataProperty { Name = "Name", Value = "Sue" },
+                    new ODataProperty { Name = "Age", Value = 19 }
+                }
+            };
+            
+            this.writer.WriteODataValue(resourceValue);
+            Assert.Equal("{\"Name\":\"Sue\",\"Age\":19}", this.builder.ToString());
+        }
+
+        [Fact]
+        public void WriteODataValueWritesODataCollectionValue()
+        {
+            var collectionValue = new ODataCollectionValue
+            {
+                Items = new List<ODataResourceValue>
+                {
+                    new ODataResourceValue
+                    {
+                        Properties = new List<ODataProperty>
+                        {
+                            new ODataProperty { Name = "Name", Value = "Sue" },
+                            new ODataProperty { Name = "Age", Value = 19 }
+                        }
+                    },
+                    new ODataResourceValue
+                    {
+                        Properties = new List<ODataProperty>
+                        {
+                            new ODataProperty { Name = "Name", Value = "Joe" },
+                            new ODataProperty { Name = "Age", Value = 23 }
+                        }
+                    }
+                }
+            };
+
+            this.writer.WriteODataValue(collectionValue);
+            Assert.Equal("[{\"Name\":\"Sue\",\"Age\":19},{\"Name\":\"Joe\",\"Age\":23}]", this.builder.ToString());
+        }
+
+        #endregion JsonWriter Extension Methods
 
         [Fact]
         public void WriteNameUsesProvidedCharArrayPool()

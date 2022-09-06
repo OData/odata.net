@@ -686,14 +686,7 @@ namespace Microsoft.Test.Taupo.Query.Contracts.Linq
             foreach (var propertyInfo in anonymousInstance.GetType().GetProperties())
             {
                 memberNames.Add(propertyInfo.Name);
-
-#if SILVERLIGHT
-                var propertyExpression = CoreLinq.Expression.Property(CoreLinq.Expression.Constant(anonymousInstance), propertyInfo);
-                var value = CoreLinq.Expression.Lambda<Func<object>>(propertyExpression).Compile().Invoke();
-                members.Add((QueryExpression)value);
-#else
                 members.Add((QueryExpression)propertyInfo.GetValue(anonymousInstance, null));       
-#endif
             }
             
             return New(memberNames, members, QueryType.Unresolved);

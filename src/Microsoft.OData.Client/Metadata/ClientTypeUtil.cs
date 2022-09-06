@@ -46,6 +46,7 @@ namespace Microsoft.OData.Client.Metadata
     internal static class ClientTypeUtil
     {
         /// <summary>A static empty PropertyInfo array.</summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
         internal static readonly PropertyInfo[] EmptyPropertyInfoArray = new PropertyInfo[0];
 
         internal static ConcurrentDictionary<Type, ODataTypeInfo> ODataTypeInfoCache { get; set; } = new ConcurrentDictionary<Type, ODataTypeInfo>();
@@ -587,6 +588,7 @@ namespace Microsoft.OData.Client.Metadata
             return clientTypeAnnotation.EdmType.IsOpen();
         }
 
+
         /// <summary>
         /// Returns true if the <paramref name="instance"/> contains a non-null dictionary property of string and object
         /// The dictionary should also not be decorated with IgnoreClientPropertyAttribute
@@ -594,6 +596,7 @@ namespace Microsoft.OData.Client.Metadata
         /// <param name="instance">Object with expected container property</param>
         /// <param name="containerProperty">Reference to the container property</param>
         /// <returns>true if expected container property is found</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
         internal static bool TryGetContainerProperty(object instance, out IDictionary<string, object> containerProperty)
         {
             Debug.Assert(instance != null, "instance != null");
@@ -679,6 +682,62 @@ namespace Microsoft.OData.Client.Metadata
             if (getMethod != null && getMethod.GetBaseDefinition().DeclaringType != type)
             {
                 return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Tries to resolve a type with specified name from the loaded assemblies.
+        /// </summary>
+        /// <param name="typeName">Name of the type to resolve.</param>
+        /// <param name="fullNamespace">Namespace of the type.</param>
+        /// <param name="languageDependentNamespace">Namespace that the resolved type is expected to be.
+        /// Usually same as <paramref name="fullNamespace"/> but can be different
+        /// where namespace for client types does not match namespace in service types.</param>
+        /// <param name="matchedType">The resolved type.</param>
+        /// <returns>true if type was successfully resolved; otherwise false.</returns>
+        internal static bool TryResolveType(string typeName, string fullNamespace, string languageDependentNamespace, out Type matchedType)
+        {
+            Debug.Assert(typeName != null, "typeName != null");
+
+            matchedType = null;
+            int namespaceLength = fullNamespace?.Length ?? 0;
+            string serverDefinedName = typeName.Substring(namespaceLength + 1);
+
+            // Searching only loaded assemblies, not referenced assemblies
+            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                matchedType = assembly.GetType(string.Concat(languageDependentNamespace, typeName.Substring(namespaceLength)), false);
+                if (matchedType != null)
+                {
+                    return true;
+                }
+
+                IEnumerable<Type> types = null;
+
+                try
+                {
+                    types = assembly.GetTypes();
+                }
+                catch (ReflectionTypeLoadException)
+                {
+                    // Ignore
+                }
+
+                if (types != null)
+                {
+                    foreach (Type type in types)
+                    {
+                        OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)type.GetCustomAttributes(typeof(OriginalNameAttribute), true).SingleOrDefault();
+                        if (string.Equals(originalNameAttribute?.OriginalName, serverDefinedName, StringComparison.Ordinal)
+                            && type.Namespace.Equals(languageDependentNamespace, StringComparison.Ordinal))
+                        {
+                            matchedType = type;
+                            return true;
+                        }
+                    }
+                }
             }
 
             return false;

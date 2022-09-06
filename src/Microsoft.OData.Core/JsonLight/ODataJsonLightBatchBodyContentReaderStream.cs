@@ -14,7 +14,7 @@ namespace Microsoft.OData.JsonLight
     using System.Globalization;
     using System.IO;
     using System.Text;
-
+    using System.Threading.Tasks;
     using Microsoft.OData.Json;
 
     #endregion Namespaces
@@ -112,10 +112,7 @@ namespace Microsoft.OData.JsonLight
                     break;
 
                     default:
-                        throw new NotSupportedException(string.Format(
-                            CultureInfo.InvariantCulture,
-                            "unknown / undefined type, new type that needs to be supported: {0}? ",
-                            contentType));
+                        throw new ODataException(Strings.ODataJsonLightBatchBodyContentReaderStream_UnsupportedContentTypeInHeader(contentType));
                 }
 
                 isStreamPopulated = true;
@@ -146,6 +143,100 @@ namespace Microsoft.OData.JsonLight
             {
                 // Anything else, treated as binary content-type.
                 WriteBinaryContent(cachedBodyContent);
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously populates the body content the Json reader is referencing.
+        /// Since the content-type header might not be available at this point (when "headers" attribute
+        /// is read after the "body" attribute), if the content-type is not json the body content is
+        /// first stored into a string which will be used to populate the stream when the content-type
+        /// header is read later.
+        /// </summary>
+        /// <param name="jsonReader">The Json reader providing access to the data.</param>
+        /// <param name="contentTypeHeader">The request's content-type header value.</param>
+        /// <returns>
+        /// A task that represents the asynchronous write operation.
+        /// The value of the TResult parameter contains true if body content is written to stream; false otherwise.
+        /// </returns>
+        internal async Task<bool> PopulateBodyContentAsync(IJsonReaderAsync jsonReader, string contentTypeHeader)
+        {
+            bool isStreamPopulated = false;
+
+            BatchPayloadBodyContentType? contentType = DetectBatchPayloadBodyContentType(jsonReader, contentTypeHeader);
+
+            if (contentType == null)
+            {
+                // We don't have deterministic content-type, cache the string content.
+                Debug.Assert(jsonReader.NodeType == JsonNodeType.PrimitiveValue, "jsonReader.NodeType == JsonNodeType.PrimitiveValue");
+                this.cachedBodyContent = await jsonReader.ReadStringValueAsync()
+                    .ConfigureAwait(false);
+                Debug.Assert(isStreamPopulated == false, "isStreamPopulated == false");
+            }
+            else
+            {
+                // We have content-type figured out and should be able to populate the stream.
+                switch (contentType)
+                {
+                    case BatchPayloadBodyContentType.Json:
+                        await WriteJsonContentAsync(jsonReader)
+                            .ConfigureAwait(false);
+
+                        break;
+
+                    case BatchPayloadBodyContentType.Textual:
+                        string bodyContent = string.Format(CultureInfo.InvariantCulture,
+                            "\"{0}\"", jsonReader.ReadStringValue());
+                        await WriteBytesAsync(Encoding.UTF8.GetBytes(bodyContent))
+                            .ConfigureAwait(false);
+
+                        break;
+
+                    case BatchPayloadBodyContentType.Binary:
+                        // Body content is a base64url encoded string. We could have used HttpServerUtility.UrlTokenDecode(string)
+                        // directly but it would introduce new dependency of System.Web.dll.
+                        string encoded = await jsonReader.ReadStringValueAsync()
+                            .ConfigureAwait(false);
+                        await WriteBinaryContentAsync(encoded)
+                            .ConfigureAwait(false);
+
+                        break;
+
+                    default:
+                        throw new ODataException(Strings.ODataJsonLightBatchBodyContentReaderStream_UnsupportedContentTypeInHeader(contentType));
+                }
+
+                isStreamPopulated = true;
+            }
+
+            return isStreamPopulated;
+        }
+
+        /// <summary>
+        /// Asynchronously populates the stream with the cached body content according to the content-type specified.
+        /// </summary>
+        /// <param name="contentTypeHeader">The content-type header value.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        internal async Task PopulateCachedBodyContentAsync(string contentTypeHeader)
+        {
+            Debug.Assert(this.cachedBodyContent != null);
+
+            ODataMediaType mediaType = GetMediaType(contentTypeHeader);
+
+            // Content-Type can be either textual or binary, since json content is not cached.
+            if (mediaType != null && mediaType.Type.Equals(MimeConstants.MimeTextType, StringComparison.Ordinal))
+            {
+                // Explicit check for matching of textual content-type.
+                string bodyContent = string.Format(CultureInfo.InvariantCulture,
+                    "\"{0}\"", this.cachedBodyContent);
+                await WriteBytesAsync(Encoding.UTF8.GetBytes(bodyContent))
+                    .ConfigureAwait(false);
+            }
+            else
+            {
+                // Anything else, treated as binary content-type.
+                await WriteBinaryContentAsync(cachedBodyContent)
+                    .ConfigureAwait(false);
             }
         }
 
@@ -351,10 +442,7 @@ namespace Microsoft.OData.JsonLight
 
                     default:
                         {
-                            throw new ODataException(String.Format(
-                                CultureInfo.InvariantCulture,
-                                "Unexpected reader.NodeType: {0}.",
-                                reader.NodeType));
+                            throw new ODataException(Strings.ODataJsonLightBatchBodyContentReaderStream_UnexpectedNodeType(reader.NodeType));
                         }
                 }
 
@@ -363,6 +451,135 @@ namespace Microsoft.OData.JsonLight
             while (nodeTypes.Count != 0);
 
             jsonWriter.Flush();
+        }
+
+        /// <summary>
+        /// Asynchronously reads off the data of the starting Json object from the Json reader,
+        /// and populate the data into the memory stream.
+        /// </summary>
+        /// <param name="reader"> The json reader pointing at the json structure whose data needs to
+        /// be populated into an memory stream.
+        /// </param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        private async Task WriteJsonContentAsync(IJsonReaderAsync reader)
+        {
+            // Reader is on the value node after the "body" property name node.
+            IJsonWriterAsync jsonWriter = new JsonWriter(
+                new StreamWriter(this),
+                reader.IsIeee754Compatible);
+
+            await WriteCurrentJsonObjectAsync(reader, jsonWriter)
+                .ConfigureAwait(false);
+            await this.FlushAsync()
+                .ConfigureAwait(false);
+            this.Position = 0;
+        }
+
+        /// <summary>
+        /// Asynchronously decodes the base64url-encoded string and writes the binary bytes to the underlying memory stream.
+        /// </summary>
+        /// <param name="encodedContent">The base64url-encoded content.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        private Task WriteBinaryContentAsync(string encodedContent)
+        {
+            byte[] bytes = Convert.FromBase64String(encodedContent.Replace('-', '+').Replace('_', '/'));
+            
+            return WriteBytesAsync(bytes);
+        }
+
+        /// <summary>
+        /// Asynchronously writes the binary bytes to the underlying memory stream.
+        /// </summary>
+        /// <param name="bytes">The raw bytes to be written into the stream.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        private async Task WriteBytesAsync(byte[] bytes)
+        {
+            await this.WriteAsync(bytes, 0, bytes.Length)
+                .ConfigureAwait(false);
+            await this.FlushAsync()
+                .ConfigureAwait(false);
+            this.Position = 0;
+        }
+
+        /// <summary>
+        /// Asynchronously writes the current Json object.
+        /// </summary>
+        /// <param name="reader">The Json reader providing the data.</param>
+        /// <param name="jsonWriter">The Json writer writes data into memory stream.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        private static async Task WriteCurrentJsonObjectAsync(IJsonReaderAsync reader, IJsonWriterAsync jsonWriter)
+        {
+            Stack<JsonNodeType> nodeTypes = new Stack<JsonNodeType>();
+
+            do
+            {
+                switch (reader.NodeType)
+                {
+                    case JsonNodeType.PrimitiveValue:
+                        object primitiveValue;
+
+                        if ((primitiveValue = await reader.GetValueAsync().ConfigureAwait(false)) != null)
+                        {
+                            await jsonWriter.WritePrimitiveValueAsync(primitiveValue)
+                                .ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            await jsonWriter.WriteValueAsync((string)null)
+                                .ConfigureAwait(false);
+                        }
+
+                        break;
+
+                    case JsonNodeType.Property:
+                        object propertyName = await reader.GetValueAsync()
+                                .ConfigureAwait(false);
+                        await jsonWriter.WriteNameAsync(propertyName.ToString())
+                            .ConfigureAwait(false);
+
+                        break;
+
+                    case JsonNodeType.StartObject:
+                        nodeTypes.Push(reader.NodeType);
+                        await jsonWriter.StartObjectScopeAsync()
+                            .ConfigureAwait(false);
+
+                        break;
+
+                    case JsonNodeType.StartArray:
+                        nodeTypes.Push(reader.NodeType);
+                        await jsonWriter.StartArrayScopeAsync()
+                            .ConfigureAwait(false);
+
+                        break;
+
+                    case JsonNodeType.EndObject:
+                        Debug.Assert(nodeTypes.Peek() == JsonNodeType.StartObject);
+                        nodeTypes.Pop();
+                        await jsonWriter.EndObjectScopeAsync()
+                            .ConfigureAwait(false);
+
+                        break;
+
+                    case JsonNodeType.EndArray:
+                        Debug.Assert(nodeTypes.Peek() == JsonNodeType.StartArray);
+                        nodeTypes.Pop();
+                        await jsonWriter.EndArrayScopeAsync()
+                            .ConfigureAwait(false);
+
+                        break;
+
+                    default:
+                        throw new ODataException(Strings.ODataJsonLightBatchBodyContentReaderStream_UnexpectedNodeType(reader.NodeType));
+                }
+
+                await reader.ReadNextAsync()
+                    .ConfigureAwait(false); // This can be EndOfInput, where nodeTypes should be empty.
+            }
+            while (nodeTypes.Count != 0);
+
+            await jsonWriter.FlushAsync()
+                .ConfigureAwait(false);
         }
     }
 }

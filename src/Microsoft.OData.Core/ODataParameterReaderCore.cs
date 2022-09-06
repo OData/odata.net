@@ -7,6 +7,7 @@
 namespace Microsoft.OData
 {
     #region Namespaces
+
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -15,6 +16,7 @@ namespace Microsoft.OData
     using System.Threading.Tasks;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
+
     #endregion Namespaces
 
     /// <summary>
@@ -35,7 +37,7 @@ namespace Microsoft.OData
         private readonly HashSet<string> parametersRead = new HashSet<string>(StringComparer.Ordinal);
 
         /// <summary>Tracks the state of the sub-reader.</summary>
-        private SubReaderState subReaderState;
+        protected SubReaderState subReaderState;
 
         /// <summary>
         /// Constructor.
@@ -53,7 +55,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>Enum to track the state of the sub-reader.</summary>
-        private enum SubReaderState
+        protected enum SubReaderState
         {
             /// <summary>No sub-reader has been created for the current parameter.</summary>
             None,
@@ -182,7 +184,7 @@ namespace Microsoft.OData
         public override sealed bool Read()
         {
             this.VerifyCanRead(true);
-            return this.InterceptException(this.ReadSynchronously);
+            return this.InterceptException((thisParam) => thisParam.ReadSynchronously());
         }
 
         /// <summary>
@@ -192,7 +194,7 @@ namespace Microsoft.OData
         public override sealed Task<bool> ReadAsync()
         {
             this.VerifyCanRead(false);
-            return this.ReadAsynchronously().FollowOnFaultWith(t => this.EnterScope(ODataParameterReaderState.Exception, null, null));
+            return this.InterceptExceptionAsync((thisParam) => thisParam.ReadAsynchronously());
         }
 
         /// <summary>
@@ -433,23 +435,14 @@ this.State == ODataParameterReaderState.Collection,
         }
 
         /// <summary>
-        /// Gets the corresponding create reader method name for the given state.
-        /// </summary>
-        /// <param name="state">State in question.</param>
-        /// <returns>Returns the name of the method to create the correct reader for the given state.</returns>
-        private static string GetCreateReaderMethodName(ODataParameterReaderState state)
-        {
-            Debug.Assert(state == ODataParameterReaderState.Resource || state == ODataParameterReaderState.ResourceSet || state == ODataParameterReaderState.Collection, "state must be Resource, ResourceSet or Collection.");
-            return "Create" + state.ToString() + "Reader";
-        }
-
-        /// <summary>
-        /// Verifies that one of CreateResourceReader(), CreateResourceSetReader() or CreateCollectionReader() can be called.
+        /// Verifies that one of CreateResourceReader(), CreateResourceSetReader(), CreateCollectionReader(),
+        /// CreateResourceReaderAsync(), CreateResourceSetReaderAsync() or CreateCollectionReaderAsync() can be called.
         /// </summary>
         /// <param name="expectedState">The expected state of the reader.</param>
-        private void VerifyCanCreateSubReader(ODataParameterReaderState expectedState)
+        protected void VerifyCanCreateSubReader(ODataParameterReaderState expectedState)
         {
             this.inputContext.VerifyNotDisposed();
+
             if (this.State != expectedState)
             {
                 throw new ODataException(Strings.ODataParameterReaderCore_InvalidCreateReaderMethodCalledForState(ODataParameterReaderCore.GetCreateReaderMethodName(expectedState), this.State));
@@ -463,17 +456,55 @@ this.State == ODataParameterReaderState.Collection,
         }
 
         /// <summary>
+        /// Gets the corresponding create reader method name for the given state.
+        /// </summary>
+        /// <param name="state">State in question.</param>
+        /// <returns>Returns the name of the method to create the correct reader for the given state.</returns>
+        private static string GetCreateReaderMethodName(ODataParameterReaderState state)
+        {
+            Debug.Assert(state == ODataParameterReaderState.Resource || state == ODataParameterReaderState.ResourceSet || state == ODataParameterReaderState.Collection, "state must be Resource, ResourceSet or Collection.");
+            return "Create" + state.ToString() + "Reader";
+        }
+
+        /// <summary>
         /// Catch any exception thrown by the action passed in; in the exception case move the reader into
         /// state ExceptionThrown and then rethrow the exception.
         /// </summary>
         /// <typeparam name="T">The type returned from the <paramref name="action"/> to execute.</typeparam>
         /// <param name="action">The action to execute.</param>
         /// <returns>The result of executing the <paramref name="action"/>.</returns>
-        private T InterceptException<T>(Func<T> action)
+        private T InterceptException<T>(Func<ODataParameterReaderCore, T> action)
         {
             try
             {
-                return action();
+                return action(this);
+            }
+            catch (Exception e)
+            {
+                if (ExceptionUtils.IsCatchableExceptionType(e))
+                {
+                    this.EnterScope(ODataParameterReaderState.Exception, null, null);
+                }
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Catch any exception thrown by the action passed in; in the exception case move the reader into
+        /// state ExceptionThrown and then rethrow the exception.
+        /// </summary>
+        /// <typeparam name="TResult">The type returned from the <paramref name="action"/></typeparam>
+        /// <param name="action">The action to execute.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains the result of executing the <paramref name="action"/>.
+        /// </returns>
+        private async Task<TResult> InterceptExceptionAsync<TResult>(Func<ODataParameterReaderCore, Task<TResult>> action)
+        {
+            try
+            {
+                return await action(this).ConfigureAwait(false);
             }
             catch (Exception e)
             {

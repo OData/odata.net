@@ -1186,7 +1186,6 @@ namespace Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceRefere
                 return global::System.Xml.XmlReader.Create(new global::System.IO.StringReader(edmxToParse));
             }
         }
-#if !ASTORIA_LIGHT && !PORTABLELIB
         /// <summary>
         /// There are no comments for GetPrimitiveString in the schema.
         /// </summary>
@@ -1250,7 +1249,6 @@ namespace Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceRefere
             this.Execute(requestUri, "POST",
                 new global::Microsoft.OData.Client.OperationParameter[] { });
         }
-#endif
     }
     /// <summary>
     /// There are no comments for AllSpatialTypes in the schema.
@@ -2021,7 +2019,6 @@ namespace Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceRefere
                 this.PropertyChanged(this, new global::System.ComponentModel.PropertyChangedEventArgs(property));
             }
         }
-#if !ASTORIA_LIGHT && !PORTABLELIB
         /// <summary>
         /// There are no comments for ChangeCustomerAuditInfo in the schema.
         /// </summary>
@@ -2037,7 +2034,6 @@ namespace Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceRefere
             Context.Execute(requestUri, "POST",
                 new global::Microsoft.OData.Client.OperationParameter[] { new global::Microsoft.OData.Client.BodyOperationParameter("auditInfo", auditInfo) });
         }
-#endif
     }
     /// <summary>
     /// There are no comments for Login in the schema.
@@ -4206,7 +4202,6 @@ namespace Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceRefere
                 this.PropertyChanged(this, new global::System.ComponentModel.PropertyChangedEventArgs(property));
             }
         }
-#if !ASTORIA_LIGHT && !PORTABLELIB
         /// <summary>
         /// There are no comments for GetComputer in the schema.
         /// </summary>
@@ -4223,7 +4218,6 @@ namespace Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceRefere
                 Context.Execute<global::Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReferenceModifiedClientTypes.Computer>(requestUri, "POST", true,
                 new global::Microsoft.OData.Client.OperationParameter[] { }));
         }
-#endif
     }
     /// <summary>
     /// There are no comments for Microsoft.Test.OData.Services.AstoriaDefaultService.Computer in the schema.
@@ -4526,7 +4520,6 @@ namespace Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceRefere
                 this.PropertyChanged(this, new global::System.ComponentModel.PropertyChangedEventArgs(property));
             }
         }
-#if !ASTORIA_LIGHT && !PORTABLELIB
         /// <summary>
         /// There are no comments for ResetComputerDetailsSpecifications in the schema.
         /// </summary>
@@ -4543,7 +4536,6 @@ namespace Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceRefere
                 new global::Microsoft.OData.Client.OperationParameter[] { new global::Microsoft.OData.Client.BodyOperationParameter("specifications", specifications),
                     new global::Microsoft.OData.Client.BodyOperationParameter("purchaseTime", purchaseTime) });
         }
-#endif
     }
     /// <summary>
     /// There are no comments for Driver in the schema.
@@ -6941,7 +6933,6 @@ namespace Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceRefere
         private global::Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReferenceModifiedClientTypes.Employee _Manager;
         partial void OnManagerChanging(global::Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReferenceModifiedClientTypes.Employee value);
         partial void OnManagerChanged();
-#if !ASTORIA_LIGHT && !PORTABLELIB
         /// <summary>
         /// There are no comments for Sack in the schema.
         /// </summary>
@@ -6957,7 +6948,6 @@ namespace Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceRefere
             Context.Execute(requestUri, "POST",
                 new global::Microsoft.OData.Client.OperationParameter[] { });
         }
-#endif
     }
     /// <summary>
     /// There are no comments for SpecialEmployee in the schema.

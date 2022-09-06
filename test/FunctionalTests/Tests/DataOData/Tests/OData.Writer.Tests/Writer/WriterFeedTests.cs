@@ -268,13 +268,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             this.CombinatorialEngineProvider.RunCombinations(
                 testCases,
                 ODataFormatUtils.ODataFormats.Where(f => f != null),
-
-                // Async  test configuration is not supported for Phone and Silverlight
-#if !SILVERLIGHT && !WINDOWS_PHONE
                 new bool[] { false, true },
-#else
-                new bool[] {true},
-#endif
                 (testCase, format, synchronous) =>
                 {
                     using (var memoryStream = new TestStream())

@@ -22,7 +22,7 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
     /// Tests for Edm.Duration primitive type
     /// Send query and verify the results from the service implemented using ODataLib and EDMLib.
     /// </summary>
-    public class DurationTests : ODataWCFServiceTestsBase<InMemoryEntities>
+    public class DurationTests : ODataWCFServiceTestsBase<InMemoryEntities>, IDisposable
     {
         public DurationTests() : base(ServiceDescriptors.ODataWCFServiceDescriptor)
         {
@@ -235,5 +235,10 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
             Assert.True(queryable4.Count() == 0);
         }
 #endif
+
+        public override void Dispose()
+        {
+            base.Dispose();
+        }
     }
 }

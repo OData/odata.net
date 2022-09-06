@@ -338,19 +338,7 @@ namespace Microsoft.Test.Taupo.Query.Linq
                     return ComparisonResult.Failure;
                 }
 
-                object actualValue = null;
-
-#if SILVERLIGHT
-                CoreLinq.Expressions.ParameterExpression param = CoreLinq.Expressions.Expression.Parameter(typeof(Object), "param");
-                CoreLinq.Expressions.Expression convertedParam = CoreLinq.Expressions.Expression.Convert(param, actual.GetType());
-                CoreLinq.Expressions.LambdaExpression GetPropertyValueExp = CoreLinq.Expressions.Expression.Lambda(System.Linq.Expressions.Expression.Property(convertedParam, actualProperty), param);
-
-                Delegate dynamicGetter = GetPropertyValueExp.Compile();
-
-                actualValue = dynamicGetter.DynamicInvoke(actual);
-#else
-                actualValue = actualProperty.GetValue(actual, null);
-#endif
+                object actualValue = actualProperty.GetValue(actual, null);
                 QueryType expectedPropertyType = expected.Type.Properties.Where(p => p.Name == expectedName).Single().PropertyType;
 
                 string newPath = path + "." + expectedName;

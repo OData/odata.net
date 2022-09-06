@@ -573,7 +573,6 @@ namespace Microsoft.OData.Client
             {
                 return PlatformHelper.ConvertDateTimeToDateTimeOffset((DateTime)propertyValue);
             }
-#if !PORTABLELIB
             else if (string.Equals(propertyType.FullName, "System.Data.Linq.Binary", StringComparison.Ordinal))
             {
                 // For System.Data.Linq.Binary, it is a delay loaded type. Hence checking it based on name.
@@ -583,7 +582,6 @@ namespace Microsoft.OData.Client
                 // Since ODataLib does not understand binary type, we need to convert the value to byte[].
                 return ((BinaryTypeConverter)primitiveType.TypeConverter).ToArray(propertyValue);
             }
-#endif
             else if (primitiveType.EdmTypeName == null)
             {
                 // case StorageType.DateTimeOffset:

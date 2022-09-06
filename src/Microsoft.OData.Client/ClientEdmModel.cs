@@ -21,13 +21,7 @@ namespace Microsoft.OData.Client
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Vocabularies;
     using c = Microsoft.OData.Client;
-
-#if PORTABLELIB && WINDOWSPHONE
-    // Windows Phone 8.0 doesn't support ConcurrentDictionary
-    using ConcurrentEdmSchemaDictionary = System.Collections.Generic.Dictionary<string, Edm.IEdmSchemaElement>;
-#else
     using ConcurrentEdmSchemaDictionary = System.Collections.Concurrent.ConcurrentDictionary<string, Edm.IEdmSchemaElement>;
-#endif
 
     #endregion Namespaces.
 
@@ -328,7 +322,7 @@ namespace Microsoft.OData.Client
                 {
                     hierarchy.Insert(0, type);
                 }
-                while ((type = c.PlatformHelper.GetBaseType(type)) != null);
+                while ((type = c.PlatformHelper.GetBaseType(type)) != null && type != typeof(object));
             }
 
             return hierarchy.ToArray();
@@ -413,7 +407,7 @@ namespace Microsoft.OData.Client
             }
 
             if (cachedEdmType == null)
-            {
+            { 
                 Type collectionType;
                 bool isOpen = false;
                 IEdmSchemaElement edmSchemaElement = null;
@@ -494,11 +488,7 @@ namespace Microsoft.OData.Client
                     {
                         Action<EdmEnumTypeWithDelayLoadedMembers> delayLoadEnumMembers = (enumType) =>
                         {
-#if PORTABLELIB
-                            foreach (FieldInfo tmp in enumTypeTmp.GetFields().Where(fieldInfo => fieldInfo.IsStatic))
-#else
                             foreach (FieldInfo tmp in enumTypeTmp.GetFields(BindingFlags.Static | BindingFlags.Public))
-#endif
                             {
                                 object memberValue = Enum.Parse(enumTypeTmp, tmp.Name, false);
                                 enumType.AddMember(new EdmEnumMember(enumType, tmp.Name, new EdmEnumMemberValue((long)Convert.ChangeType(memberValue, typeof(long), CultureInfo.InvariantCulture.NumberFormat))));

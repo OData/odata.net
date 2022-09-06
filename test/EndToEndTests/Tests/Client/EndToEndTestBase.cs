@@ -11,17 +11,10 @@ namespace Microsoft.Test.OData.Tests.Client
     using Microsoft.OData.Client;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
-#if !WIN8 && !SILVERLIGHT && !PORTABLELIB && !WINDOWSPHONE
     using Microsoft.Test.OData.Tests.Client.Common;
-#endif
-#if SILVERLIGHT
-    using System.Threading;
-    using Microsoft.Silverlight.Testing;
-#endif
-#if !WIN8 && !SILVERLIGHT && !PORTABLELIB && !(NETCOREAPP1_0 || NETCOREAPP2_0)
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
     using Microsoft.Test.DataDriven;
 #endif
-
     using Microsoft.Test.OData.Framework.Client;
     using Microsoft.Test.OData.Framework.Server;
     using Microsoft.Test.OData.Services.TestServices;
@@ -34,7 +27,7 @@ namespace Microsoft.Test.OData.Tests.Client
     /// Base class for OData End to End Tests.
     /// </summary>
     public class EndToEndTestBase
-#if !WIN8 && !PORTABLELIB && !(NETCOREAPP1_0 || NETCOREAPP2_0)
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
  : DataDrivenTest
 #endif
         ,IDisposable
@@ -62,11 +55,7 @@ namespace Microsoft.Test.OData.Tests.Client
         {
             TestServiceUtil.ServiceUriGenerator = ServiceGeneratorFactory.CreateServiceUriGenerator();
             this.serviceDescriptor = serviceDescriptor;
-#if WIN8 || PORTABLELIB
-            this.serviceWrapper = new ExternalHostedServiceWrapper(this.serviceDescriptor);
-#else
             this.serviceWrapper = new DefaultServiceWrapper(this.serviceDescriptor);
-#endif
             this.TestCompleted = false;
             this.serviceWrapper.StartService();
 
@@ -116,7 +105,7 @@ namespace Microsoft.Test.OData.Tests.Client
         {
         }
 
-#if !WIN8 && !PORTABLELIB && !(NETCOREAPP1_0 || NETCOREAPP2_0)
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         /// <summary>
         /// Exposes the protected single parameter DataDrivenTest.Invoke method.
         /// </summary>
@@ -146,16 +135,14 @@ namespace Microsoft.Test.OData.Tests.Client
 
             var contextWrapper = new DataServiceContextWrapper<TContext>(context);
 
-#if !WINDOWSPHONE
             contextWrapper.BuildingRequest += (s, e) => e.Headers.Add("TestName", string.Format("{0}.{1}", testClassName, testName));
 
             // Override any url conventions that may be baked into the context by codegen
             contextWrapper.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Parentheses;
-#endif
+
             return contextWrapper;
         }
 
-#if !WIN8 && !PORTABLELIB && !WINDOWSPHONE
         /// <summary>
         /// Get the metadata document from the test service as an IEdmModel
         /// </summary>
@@ -169,6 +156,5 @@ namespace Microsoft.Test.OData.Tests.Client
                 return messageReader.ReadMetadataDocument();
             }
         }
-#endif
     }
 }

@@ -135,27 +135,7 @@ namespace Microsoft.Test.Taupo.Contracts.DatabaseModel
         /// </returns>
         public override int GetHashCode()
         {
-#if WIN8
-            int hashCode = 12345;
-            if (this.PrimaryKey != null)
-            {
-                hashCode ^= this.PrimaryKey.GetHashCode();
-            }
-
-            foreach (var column in this.Columns)
-            {
-                hashCode ^= column.GetHashCode();
-            }
-
-            foreach (var uniqueConstraint in this.UniqueConstraints)
-            {
-                hashCode ^= uniqueConstraint.GetHashCode();
-            }
-
-            return hashCode;
-#else
             return RuntimeHelpers.GetHashCode(this);
-#endif
         }
 
         /// <summary>

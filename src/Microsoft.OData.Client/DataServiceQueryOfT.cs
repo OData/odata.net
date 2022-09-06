@@ -29,11 +29,7 @@ namespace Microsoft.OData.Client
         private static readonly MethodInfo expandMethodInfo = typeof(DataServiceQuery<TElement>).GetMethod("Expand", new Type[] { typeof(string) });
 
         /// <summary>Method info for the generic version of the Expand method</summary>
-#if PORTABLELIB
-        private static readonly MethodInfo expandGenericMethodInfo = typeof(DataServiceQuery<TElement>).GetMethodWithGenericArgs("Expand", true /*isPublic*/, false /*isStatic*/, 1 /*genericArgCount*/);
-#else
         private static readonly MethodInfo expandGenericMethodInfo = (MethodInfo)typeof(DataServiceQuery<TElement>).GetMember("Expand*").Single(m => ((MethodInfo)m).GetGenericArguments().Length == 1);
-#endif
 
         /// <summary>Linq Expression</summary>
         private readonly Expression queryExpression;
@@ -51,11 +47,13 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="expression">expression for query</param>
         /// <param name="provider">query provider for query</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ApiDesign", "RS0022:Constructor make noninheritable base class inheritable", Justification = "<Pending>")]
         public DataServiceQuery(Expression expression, DataServiceQueryProvider provider)
             : this(expression, provider, true)
         {
             this.IsFunction = false;
         }
+
 
         /// <summary>
         /// query object of a function which returns a collection of items
@@ -63,6 +61,7 @@ namespace Microsoft.OData.Client
         /// <param name="expression">expression for query</param>
         /// <param name="provider">query provider for query</param>
         /// <param name="isComposable">whether this query is composable</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ApiDesign", "RS0022:Constructor make noninheritable base class inheritable", Justification = "<Pending>")]
         public DataServiceQuery(Expression expression, DataServiceQueryProvider provider, bool isComposable)
         {
             Debug.Assert(provider.Context != null, "null context");
@@ -226,7 +225,7 @@ namespace Microsoft.OData.Client
         /// <summary>Starts an asynchronous network operation that executes the query represented by this object instance.</summary>
         /// <returns>A task that represents an <see cref="System.Collections.Generic.IEnumerable{T}" />  that contains the results of the query operation.</returns>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        public virtual new Task<IEnumerable<TElement>> ExecuteAsync(CancellationToken cancellationToken)
+        public virtual Task<IEnumerable<TElement>> ExecuteAsync(CancellationToken cancellationToken)
         {
             return this.Context.FromAsync(this.BeginExecute, this.EndExecute, cancellationToken);
         }
@@ -256,11 +255,13 @@ namespace Microsoft.OData.Client
             return GetAllPagesAsync(CancellationToken.None);
         }
 
+
         /// <summary>
         /// Asynchronously sends a request to get all items by auto iterating all pages
         /// </summary>
         /// <returns>A task that represents an <see cref="System.Collections.Generic.IEnumerable{T}" /> that contains the results of the query operation.</returns>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2008:Do not create tasks without passing a TaskScheduler", Justification = "<Pending>")]
         public virtual Task<IEnumerable<TElement>> GetAllPagesAsync(CancellationToken cancellationToken)
         {
             var currentTask = this.Context.FromAsync(this.BeginExecute, this.EndExecute, cancellationToken);
@@ -470,6 +471,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="response">The response of the previous page</param>
         /// <returns>The items retrieved</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2008:Do not create tasks without passing a TaskScheduler", Justification = "<Pending>")]
         private IEnumerable<TElement> ContinuePage(IEnumerable<TElement> response, CancellationToken cancellationToken)
         {
             foreach (var element in response)

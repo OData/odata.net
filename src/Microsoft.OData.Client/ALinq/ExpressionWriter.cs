@@ -526,7 +526,7 @@ namespace Microsoft.OData.Client
             else if (m != null && ReflectionUtil.IsSequenceMethod(m.Method, SequenceMethod.Contains))
             {
                 StringBuilder listExpr = new StringBuilder();
-                ODataVersion version = CommonUtil.ConvertToODataVersion(this.uriVersion);
+
                 foreach (object item in (IEnumerable)c.Value)
                 {
                     if (listExpr.Length != 0)
@@ -534,7 +534,24 @@ namespace Microsoft.OData.Client
                         listExpr.Append(UriHelper.COMMA);
                     }
 
-                    string uriLiteral = ODataUriUtils.ConvertToUriLiteral(item, version);
+                    string uriLiteral;
+
+                    try
+                    {
+                        uriLiteral = LiteralFormatter.ForConstants.Format(item);
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        if (this.cantTranslateExpression)
+                        {
+                            // There's already a problem in the parents.
+                            // Return.A up the stack will throw a better exception
+                            return c;
+                        }
+
+                        throw new NotSupportedException(Strings.ALinq_CouldNotConvert(item));
+                    }
+
                     listExpr.Append(uriLiteral);
                 }
 
@@ -610,10 +627,7 @@ namespace Microsoft.OData.Client
                                 this.Visit(u.Operand);
                                 this.builder.Append(UriHelper.COMMA);
                             }
-
-                            this.builder.Append(UriHelper.QUOTE);
                             this.builder.Append(UriHelper.GetTypeNameForUri(u.Type, this.context));
-                            this.builder.Append(UriHelper.QUOTE);
                             this.builder.Append(UriHelper.RIGHTPAREN);
                         }
                     }

@@ -19,7 +19,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         [Fact]
         public void TranslateWithNavigationPropertySegmentNonCollectionReturnsFalse()
         {
-            IsCollectionTranslator translator = new IsCollectionTranslator();
+            IsCollectionTranslator translator = IsCollectionTranslator.Instance;
             var segment = new NavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp(), null);
 
             Assert.False(translator.Translate(segment));
@@ -28,7 +28,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         [Fact]
         public void TranslateWithEntitySetSegmentReturnsTrue()
         {
-            IsCollectionTranslator translator = new IsCollectionTranslator();
+            IsCollectionTranslator translator = IsCollectionTranslator.Instance;
             var segment = new EntitySetSegment(HardCodedTestModel.GetPeopleSet());
 
             Assert.True(translator.Translate(segment));
@@ -37,7 +37,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         [Fact]
         public void TranslateWithKeySetSegmentReturnsFalse()
         {
-            IsCollectionTranslator translator = new IsCollectionTranslator();
+            IsCollectionTranslator translator = IsCollectionTranslator.Instance;
             var segment = new KeySegment(
                     new List<KeyValuePair<string, object>>(),
                     ModelBuildingHelpers.BuildValidEntityType(),
@@ -49,7 +49,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         [Fact]
         public void TranslateWithPropertySetSegmentReturnsFalse()
         {
-            IsCollectionTranslator translator = new IsCollectionTranslator();
+            IsCollectionTranslator translator = IsCollectionTranslator.Instance;
             var segment = new PropertySegment(HardCodedTestModel.GetDogColorProp());
 
             Assert.False(translator.Translate(segment));
@@ -58,7 +58,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         [Fact]
         public void TranslateWithDynamicPathSegmentReturnsFalse()
         {
-            IsCollectionTranslator translator = new IsCollectionTranslator();
+            IsCollectionTranslator translator = IsCollectionTranslator.Instance;
             var segment = new DynamicPathSegment("test");
 
             Assert.False(translator.Translate(segment));
@@ -67,7 +67,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         [Fact]
         public void TranslateWithCountSegmentReturnsFalse()
         {
-            IsCollectionTranslator translator = new IsCollectionTranslator();
+            IsCollectionTranslator translator = IsCollectionTranslator.Instance;
             var segment = CountSegment.Instance;
 
             Assert.False(translator.Translate(segment));
@@ -76,7 +76,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         [Fact]
         public void TranslateWithNavigationPropertyLinkSegmentReturnsFalse()
         {
-            IsCollectionTranslator translator = new IsCollectionTranslator();
+            IsCollectionTranslator translator = IsCollectionTranslator.Instance;
             var segment = new NavigationPropertyLinkSegment(HardCodedTestModel.GetPersonMyDogNavProp(), null);
 
             Assert.False(translator.Translate(segment));
@@ -85,7 +85,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         [Fact]
         public void TranslateWithBatchSegmentReturnsFalse()
         {
-            IsCollectionTranslator translator = new IsCollectionTranslator();
+            IsCollectionTranslator translator = IsCollectionTranslator.Instance;
             var segment = BatchSegment.Instance;
 
             Assert.False(translator.Translate(segment));
@@ -94,7 +94,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         [Fact]
         public void TranslateWithBatchReferenceSegmentReturnsFalse()
         {
-            IsCollectionTranslator translator = new IsCollectionTranslator();
+            IsCollectionTranslator translator = IsCollectionTranslator.Instance;
             var segment = new BatchReferenceSegment(
                 "$0", HardCodedTestModel.GetDogType(), HardCodedTestModel.GetDogsSet());
 
@@ -104,7 +104,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         [Fact]
         public void TranslateWithValueSegmentReturnsThrows()
         {
-            IsCollectionTranslator translator = new IsCollectionTranslator();
+            IsCollectionTranslator translator = IsCollectionTranslator.Instance;
             var segment = new ValueSegment(ModelBuildingHelpers.BuildValidEntityType());
 
             Action translateAction = () => translator.Translate(segment);
@@ -114,7 +114,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         [Fact]
         public void TranslateWithMetadataSegmentReturnsFalse()
         {
-            IsCollectionTranslator translator = new IsCollectionTranslator();
+            IsCollectionTranslator translator = IsCollectionTranslator.Instance;
             var segment = MetadataSegment.Instance;
 
             Assert.False(translator.Translate(segment));

@@ -1,0 +1,8 @@
+﻿Type	Allocations	Bytes
+ - System.Collections.Generic.List<>	237,000	7,612,856
+ - System.String	125,696	5,338,698
+ - Microsoft.OData.ODataProperty	45,000	2,880,000
+ - System.Collections.Generic.List<>.Enumerator	124,285	4,971,400
+ - System.Int32	125,446	2,771,704
+ - System.Linq.Enumerable.EnumerablePartition<>	75,002	4,200,112
+ - System.SZGenericArrayEnumerator<>	50,147	1,604,704

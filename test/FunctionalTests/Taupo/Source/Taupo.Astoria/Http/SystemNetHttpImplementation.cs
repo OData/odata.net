@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !SILVERLIGHT
 namespace Microsoft.Test.Taupo.Astoria.Http
 {
     using System;
@@ -185,4 +184,3 @@ namespace Microsoft.Test.Taupo.Astoria.Http
         }
     }
 }
-#endif

@@ -109,10 +109,10 @@ namespace Microsoft.Test.OData.Tests.Client
         [Fact]
         public void PrimitiveTypeInRequestUrlTest()
         {
-            const string stringOfCast = "cast(PersonId,'Edm.Byte')";
+            const string stringOfCast = "cast(PersonId,Edm.Byte)";
             var context = this.CreateContext().Context;
 
-            //GET http://jinfutanodata01:9090/AstoriaDefault635157546921762475/Person()?$filter=cast(cast(PersonId,'Edm.Byte'),'Edm.Int32')%20gt%200 HTTP/1.1
+            //GET http://jinfutanodata01:9090/AstoriaDefault635157546921762475/Person()?$filter=cast(cast(PersonId,Edm.Byte),Edm.Int32)%20gt%200 HTTP/1.1
             //all the IDs in [-10, 2] except 0 are counted in.
             var result = context.Person.Where(c => (Byte)c.PersonId > 0);
             var stringOfQuery = result.ToString();
@@ -150,31 +150,32 @@ namespace Microsoft.Test.OData.Tests.Client
             }
         }
 
-        [Fact]
-        public void QueryEntityNavigationWithImplicitKeys()
+        [Theory]
+        [InlineData("Login('1')/SentMessages(FromUsername='1',MessageId=-10)", true, -10, "")]
+        [InlineData("Login('1')/SentMessages(MessageId = -10)", false, 0, "BadRequest_KeyMismatch")]
+        [InlineData("Login('1')/SentMessages(-10)", false, 0, "BadRequest_KeyCountMismatch")]
+        public void QueryEntityNavigationWithImplicitKeys(
+            string endpoint, bool expectSuccess, /* only used on success */ int messageId, /* only used on error */string errorStringIdentifier)
         {
-            // this test is to baseline the WCF Data Service behavior that is not modified to support implicit keys 
-            Dictionary<string, bool> testCases = new Dictionary<string, bool>()
-            {
-                {"Login('1')/SentMessages(FromUsername='1',MessageId=-10)", false /*expect error*/},
-                {"Login('1')/SentMessages(MessageId=-10)", true /*expect error*/},
-                {"Login('1')/SentMessages(-10)", true /*expect error*/},
-            };
-
+            // this test is to baseline the WCF Data Service behavior that is not modified to support implicit keys
             var contextWrapper = this.CreateContext();
-            foreach (var testCase in testCases)
+
+            if (expectSuccess)
+            {
+                var message = contextWrapper.Execute<Message>(new Uri(this.ServiceUri.OriginalString.TrimEnd('/') + "/" + endpoint)).Single();
+                Assert.Equal(messageId, message.MessageId);
+            }
+            else
             {
                 try
                 {
-                    var message = contextWrapper.Execute<Message>(new Uri(this.ServiceUri.OriginalString.TrimEnd('/') + "/" + testCase.Key)).Single();
-                    Assert.False(testCase.Value);
-                    Assert.Equal(-10, message.MessageId);
+                    var message = contextWrapper.Execute<Message>(new Uri(this.ServiceUri.OriginalString.TrimEnd('/') + "/" + endpoint)).Single();
+                    Assert.False(true, "This statement should not have executed because the request should have thrown an exception.");
                 }
                 catch (DataServiceQueryException ex)
                 {
-                    Assert.True(testCase.Value);
                     Assert.Equal(400, ex.Response.StatusCode);
-                    StringResourceUtil.VerifyDataServicesString(ClientExceptionUtil.ExtractServerErrorMessage(ex), "BadRequest_KeyCountMismatch", "Microsoft.Test.OData.Services.AstoriaDefaultService.Message");
+                    StringResourceUtil.VerifyODataLibString(ClientExceptionUtil.ExtractServerErrorMessage(ex), errorStringIdentifier, true, "Microsoft.Test.OData.Services.AstoriaDefaultService.Message");
                     //InnerException for DataServiceClientException must be set with the exception response from the server.
                     ODataErrorException oDataErrorException = ex.InnerException.InnerException as ODataErrorException;
                     Assert.True(oDataErrorException != null, "InnerException for DataServiceClientException has not been set.");

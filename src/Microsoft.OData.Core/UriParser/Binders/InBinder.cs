@@ -46,8 +46,17 @@ namespace Microsoft.OData.UriParser
             ExceptionUtils.CheckArgumentNotNull(inToken, "inToken");
 
             SingleValueNode left = this.GetSingleValueOperandFromToken(inToken.Left);
-            CollectionNode right = this.GetCollectionOperandFromToken(
-                inToken.Right, new EdmCollectionTypeReference(new EdmCollectionType(left.TypeReference)), state.Model);
+            CollectionNode right = null;
+            if (left.TypeReference != null)
+            {
+                right = this.GetCollectionOperandFromToken(
+                    inToken.Right, new EdmCollectionTypeReference(new EdmCollectionType(left.TypeReference)), state.Model);
+            }
+            else 
+            {
+                right = this.GetCollectionOperandFromToken(
+                    inToken.Right, new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetUntyped())), state.Model);
+            }
 
             return new InNode(left, right);
         }
@@ -232,6 +241,13 @@ namespace Microsoft.OData.UriParser
                 char next = input[k];
                 if (next == '"')
                 {
+                    // If prev and next are both double quotes, then it's an empty string.
+                    if (input[k - 1] == '"')
+                    {
+                        // We append \"\" so as to return "\"\"" instead of "".
+                        // This is to avoid passing an empty string to the ConstantNode.
+                        sb.Append("\\\"\\\"");
+                    }
                     break;
                 }
                 else if (next == '\\')
@@ -277,7 +293,20 @@ namespace Microsoft.OData.UriParser
                 {
                     if (k + 1 >= length || input[k + 1] != '\'')
                     {
-                        // match with single qutoe ('), stop it.
+                        // If prev and next are both single quotes, then it's an empty string.
+                        if (input[k - 1] == '\'')
+                        {
+                            if(k > 2 && input[k - 2] == '\'')
+                            {
+                                // Ignore we have 3 single quotes e.g 'xyz'''
+                                // It means we need to escape the double quotes to return the result "xyz'"
+                                continue;
+                            }
+                            // We append \"\" so as to return "\"\"" instead of "".
+                            // This is to avoid passing an empty string to the ConstantNode.
+                            sb.Append("\\\"\\\"");
+                        }
+                        // match with single quote ('), stop it.
                         break;
                     }
                     else
@@ -310,10 +339,13 @@ namespace Microsoft.OData.UriParser
         private static string NormalizeGuidCollectionItems(string bracketLiteralText)
         {
             string normalizedText = bracketLiteralText.Substring(1, bracketLiteralText.Length - 2).Trim();
+
+            // If we have empty brackets ()
             if (normalizedText.Length == 0)
             {
                 return "[]";
             }
+
             string[] items = normalizedText.Split(',')
                 .Select(s => s.Trim()).ToArray();
 
@@ -331,10 +363,13 @@ namespace Microsoft.OData.UriParser
         private static string NormalizeDateTimeCollectionItems(string bracketLiteralText)
         {
             string normalizedText = bracketLiteralText.Substring(1, bracketLiteralText.Length - 2).Trim();
+
+            // If we have empty brackets ()
             if (normalizedText.Length == 0)
             {
                 return "[]";
             }
+
             string[] items = normalizedText.Split(',')
                 .Select(s => s.Trim()).ToArray();
 

@@ -317,24 +317,26 @@ namespace Microsoft.OData.Json
         /// Asynchronously writes a separator of a value if it's needed for the next value to be written.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteValueSeparatorAsync()
+        private Task WriteValueSeparatorAsync()
         {
             if (this.scopes.Count == 0)
             {
-                return;
+                return TaskUtils.CompletedTask;
             }
 
             Scope currentScope = this.scopes.Peek();
             if (currentScope.Type == ScopeType.Array)
             {
-                if (currentScope.ObjectCount != 0)
+                currentScope.ObjectCount++;
+                if (currentScope.ObjectCount > 1)
                 {
-                    await this.writer.WriteAsync(JsonConstants.ArrayElementSeparator)
-                        .ConfigureAwait(false);
+                    return this.writer.WriteAsync(JsonConstants.ArrayElementSeparator);
                 }
 
-                currentScope.ObjectCount++;
+                
             }
+
+            return TaskUtils.CompletedTask;
         }
 
         /// <summary>

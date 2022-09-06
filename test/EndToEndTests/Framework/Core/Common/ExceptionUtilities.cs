@@ -164,12 +164,10 @@ namespace Microsoft.Test.OData.Framework.Common
         /// </returns>
         public static bool IsCatchable(Exception exception)
         {
-#if !WIN8 && !PORTABLELIB
             if (exception is ThreadAbortException)
             {
                 return false;
             }
-#endif
 
             return true;
         }

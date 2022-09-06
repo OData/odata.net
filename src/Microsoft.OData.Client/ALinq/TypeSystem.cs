@@ -53,9 +53,7 @@ namespace Microsoft.OData.Client
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Justification = "Cleaner code")]
         static TypeSystem()
         {
-#if !PORTABLELIB
             const int ExpectedCount = 43;
-#endif
             // string functions
             expressionMethodMap = new Dictionary<MethodInfo, string>(EqualityComparer<MethodInfo>.Default);
             expressionMethodMap.Add(typeof(string).GetMethod("Contains", new Type[] { typeof(string) }), @"contains");
@@ -126,10 +124,7 @@ namespace Microsoft.OData.Client
             expressionMethodMap.Add(typeof(GeographyOperationsExtensions).GetMethod("Distance", new Type[] { typeof(GeographyPoint), typeof(GeographyPoint) }, true /*isPublic*/, true /*isStatic*/), @"geo.distance");
             expressionMethodMap.Add(typeof(GeometryOperationsExtensions).GetMethod("Distance", new Type[] { typeof(GeometryPoint), typeof(GeometryPoint) }, true /*isPublic*/, true /*isStatic*/), @"geo.distance");
 
-            // Portable Lib can be 35 or 33 depending on if its running on Silverlight or not, disabling in this case
-#if !PORTABLELIB
             Debug.Assert(expressionMethodMap.Count == ExpectedCount, "expressionMethodMap.Count == ExpectedCount");
-#endif
             // vb methods
             // lookup these by type name + method name
             expressionVBMethodMap = new Dictionary<string, string>(StringComparer.Ordinal);

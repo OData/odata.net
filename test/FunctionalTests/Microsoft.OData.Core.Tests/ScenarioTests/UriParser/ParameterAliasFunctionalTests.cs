@@ -1059,7 +1059,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             IEdmNavigationSource navigationSource = null;
             foreach (ODataPathSegment segment in oDataPath)
             {
-                navigationSource = segment.TranslateWith(new DetermineNavigationSourceTranslator()) ?? navigationSource;
+                navigationSource = segment.TranslateWith(DetermineNavigationSourceTranslator.Instance) ?? navigationSource;
             }
 
             return navigationSource;

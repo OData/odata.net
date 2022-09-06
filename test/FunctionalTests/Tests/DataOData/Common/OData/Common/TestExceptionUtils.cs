@@ -143,9 +143,6 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// </returns>
         public static Exception UnwrapAggregateException(Exception exception, AssertionHandler assert)
         {
-#if SILVERLIGHT
-            return exception;
-#else
             AggregateException ae = exception as AggregateException;
             if (ae == null)
             {
@@ -155,7 +152,6 @@ namespace Microsoft.Test.Taupo.OData.Common
             ae = ae.Flatten();
             assert.AreEqual(1, ae.InnerExceptions.Count, "Expected exception count does not match.");
             return ae.InnerExceptions[0];
-#endif
         }
 
         /// <summary>
@@ -169,17 +165,10 @@ namespace Microsoft.Test.Taupo.OData.Common
             {
                 action();
             }
-#if SILVERLIGHT
-            catch (Exception aggregateException)
-            {
-                throw UnwrapAggregateException(aggregateException, assert);
-            }
-#else
             catch (AggregateException aggregateException)
             {
                 throw UnwrapAggregateException(aggregateException, assert);
             }
-#endif
         }
     }
 }

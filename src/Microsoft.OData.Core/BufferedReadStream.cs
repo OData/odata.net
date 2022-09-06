@@ -235,11 +235,13 @@ namespace Microsoft.OData
             this.currentBufferReadCount = 0;
         }
 
+
         /// <summary>
         /// Returns enumeration of tasks to run to buffer the entire input stream.
         /// </summary>
         /// <returns>Enumeration of tasks to run to buffer the input stream.</returns>
         /// <remarks>This method relies on lazy eval of the enumerator, never enumerate through it synchronously.</remarks>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2008:Do not create tasks without passing a TaskScheduler", Justification = "<Pending>")]
         private IEnumerable<Task> BufferInputStream()
         {
             while (this.inputStream != null)

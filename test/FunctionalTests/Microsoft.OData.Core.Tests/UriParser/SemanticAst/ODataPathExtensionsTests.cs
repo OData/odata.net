@@ -79,7 +79,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             );
 
             Action expandPathAction = () => path.ToExpandPath();
-            expandPathAction.Throws<ODataException>(ODataErrorStrings.ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty);
+            expandPathAction.Throws<ODataException>(ODataErrorStrings.ODataExpandPath_LastSegmentMustBeNavigationPropertyOrTypeSegment);
         }
 
         [Fact]

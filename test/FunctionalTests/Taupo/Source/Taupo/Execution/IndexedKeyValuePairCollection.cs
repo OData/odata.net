@@ -14,9 +14,7 @@ namespace Microsoft.Test.Taupo.Execution
     /// <summary>
     /// Indexable KeyValuePairCollection so that its easier to synchronize selected Value with the UI
     /// </summary>
-#if !SILVERLIGHT
     [Serializable]
-#endif
     public class IndexedKeyValuePairCollection : ReadOnlyCollection<KeyValuePair<string, string>>, INotifyPropertyChanged
     {
         private int selectedIndex;
@@ -35,9 +33,7 @@ namespace Microsoft.Test.Taupo.Execution
         /// <summary>
         /// This event is raised when the value of a property of this type is changed
         /// </summary>
-#if !SILVERLIGHT
         [field: NonSerialized]
-#endif
         public event PropertyChangedEventHandler PropertyChanged;
         #endregion
 

@@ -15,12 +15,7 @@ namespace Microsoft.Test.Taupo.OData.Common
     /// <summary>
     /// A test response message that stores the version and the underlying stream.
     /// </summary>
-    public class TestResponseMessage : TestMessage,
-#if SILVERLIGHT
-        IODataResponseMessage
-#else
-        IODataResponseMessageAsync
-#endif
+    public class TestResponseMessage : TestMessage, IODataResponseMessageAsync
     {
         /// <summary>
         /// The status code of the response.

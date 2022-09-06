@@ -6,9 +6,6 @@
 
 namespace EdmLibTests.FunctionalTests
 {
-    #if SILVERLIGHT
-    using Microsoft.Silverlight.Testing;
-#endif
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -36,7 +33,7 @@ namespace EdmLibTests.FunctionalTests
     <Term Name=""ByteValue"" Type=""Byte"" />
     <Term Name=""DateValue"" Type=""Date"" />
     <Term Name=""DateTimeOffsetValue"" Type=""DateTimeOffset"" />
-    <Term Name=""DecimalValue"" Type=""Decimal"" />
+    <Term Name=""DecimalValue"" Scale=""Variable"" Type=""Decimal"" />
     <Term Name=""DoubleValue"" Type=""Double"" />
     <Term Name=""GuidValue"" Type=""Guid"" />
     <Term Name=""Int16Value"" Type=""Int16"" />

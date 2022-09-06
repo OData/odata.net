@@ -12,9 +12,6 @@ namespace EdmLibTests.FunctionalTests
     using EdmLibTests.FunctionalUtilities;
     using Microsoft.OData.Edm.Validation;
     using Microsoft.Test.OData.Utils.Metadata;
-#if SILVERLIGHT
-    using Microsoft.Silverlight.Testing;
-#endif
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]

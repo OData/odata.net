@@ -12,9 +12,7 @@ namespace Microsoft.Test.Taupo.Execution
     /// <summary>
     /// Represents a bug attribute that targets a bug in one of the databases.
     /// </summary>
-#if !SILVERLIGHT
     [Serializable]
-#endif
     public abstract class BaseBugAttribute : BugAttribute
     {
         /// <summary>

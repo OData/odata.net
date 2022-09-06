@@ -1,0 +1,8 @@
+﻿Type	Allocations	Bytes
+ - System.Collections.Generic.List<>	237,933	7,613,856
+ - System.String	128,696	5,339,698
+ - System.Collections.ObjectModel.Collection<>	125,001	3,000,024
+ - System.Collections.Generic.List<>.Enumerator	124,285	4,971,400
+ - System.Int32	115,446	2,770,704
+ - System.Linq.Enumerable.EnumerablePartition<>	75,002	4,200,112
+

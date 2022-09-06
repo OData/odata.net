@@ -32,6 +32,7 @@ namespace Microsoft.OData.Edm
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Reflection;
     using System.Xml;
@@ -39,6 +40,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Helper methods that provide a common API surface on all platforms.
     /// </summary>
+    [SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
     internal static class PlatformHelper
     {
         /// <summary>
@@ -470,10 +472,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static IEnumerable<PropertyInfo> GetPublicProperties(this Type type, bool instanceOnly, bool declaredOnly)
         {
-            // PORTABLELIB: The BindingFlags enum and all related reflection method overloads have been removed from PORTABLELIB. Instead of trying to provide
-            // a general purpose flags enum and methods that can take any combination of the flags, we provide more restrictive methods that
-            // still allow for the same functionality as needed by the calling code.
-
             // TypeInfo.DeclaredProperties and Type.GetRuntimeProperties return both public and private properties, so need to filter out only public ones.
             IEnumerable<PropertyInfo> properties = declaredOnly ? type.GetTypeInfo().DeclaredProperties : type.GetRuntimeProperties();
             return properties.Where(p => IsPublic(p) && (!instanceOnly || IsInstance(p)));
@@ -488,9 +486,6 @@ namespace Microsoft.OData.Edm
         /// <returns>Enumerable of non public properties for the type.</returns>
         internal static IEnumerable<PropertyInfo> GetNonPublicProperties(this Type type, bool instanceOnly, bool declaredOnly)
         {
-            // PORTABLELIB: The BindingFlags enum and all related reflection method overloads have been removed from PORTABLELIB. Instead of trying to provide
-            // a general purpose flags enum and methods that can take any combination of the flags, we provide more restrictive methods that
-            // still allow for the same functionality as needed by the calling code.
             // TypeInfo.DeclaredProperties and Type.GetRuntimeProperties return both public and private properties, so need to filter out only public ones.
             IEnumerable<PropertyInfo> properties = declaredOnly ? type.GetTypeInfo().DeclaredProperties : type.GetRuntimeProperties();
             return properties.Where(p => !IsPublic(p) && (!instanceOnly || IsInstance(p)));
@@ -566,9 +561,6 @@ namespace Microsoft.OData.Edm
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
         internal static MethodInfo GetMethod(this Type type, string name, bool isPublic, bool isStatic)
         {
-            // WIN8: The BindingFlags enum and all related reflection method overloads have been removed from Win8. Instead of trying to provide
-            // a general purpose flags enum and methods that can take any combination of the flags, we provide more restrictive methods that
-            // still allow for the same functionality as needed by the calling code.
             return type.GetRuntimeMethods()
                 .Where(
                     m =>

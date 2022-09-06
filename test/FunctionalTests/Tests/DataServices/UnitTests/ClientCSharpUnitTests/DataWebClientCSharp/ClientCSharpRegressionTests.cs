@@ -181,7 +181,7 @@ namespace AstoriaUnitTests.Tests
             var q = ctx.CreateQuery<Customer>("Customers").Where(c => ((CustomerWithBirthday)c) is CustomerWithBirthday);
             string uri = ((DataServiceRequest)q).RequestUri.OriginalString;
             // check that we do not escape type strings:
-            TestUtil.AssertContains(uri, "$filter=isof(cast('%:/?#[]@=$&;()*+,'\" !'), '%:/?#[]@=$&;()*+,'\" !')");
+            TestUtil.AssertContains(uri, "$filter=isof(cast(%:/?#[]@=$&;()*+,'\" !), '%:/?#[]@=$&;()*+,'\" !')");
         }
 
         public class TestEntity1
