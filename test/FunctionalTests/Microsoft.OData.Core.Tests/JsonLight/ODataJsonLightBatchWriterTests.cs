@@ -6,11 +6,15 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Json;
 using Microsoft.OData.JsonLight;
+using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 
 namespace Microsoft.OData.Core.Tests.JsonLight
@@ -404,6 +408,112 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 "\"body\" :{\"@odata.context\":\"http://tempuri.org/$metadata#Customers/$entity\",\"Id\":1,\"Name\":\"Customer 1\",\"Type\":\"Retail\"}}]}",
                 result);
         }
+
+        [Fact]
+        public async Task WriteBatchResponseAsync_WithStreamCopy()
+        {
+            var result = await SetupJsonLightBatchWriterAndRunTestAsync(
+                async (jsonLightBatchWriter) =>
+                {
+                    await jsonLightBatchWriter.WriteStartBatchAsync();
+
+                    var customerOperationMessage = await jsonLightBatchWriter.CreateOperationResponseMessageAsync("1");
+                    customerOperationMessage.SetHeader(ODataConstants.ODataVersionHeader, "4.0");
+                    customerOperationMessage.SetHeader("Content-Type", "application/json");
+
+                    // Copies operation's response body to the main batch response's stream
+                    // This is similar to how the DefaultODataBatchHandler in WebApi writes batch responses.  
+                    using (var customerResponseStream = CreateCustomerResponseStream(customerId: "1"))
+                    using (var stream = await customerOperationMessage.GetStreamAsync())
+                    {
+                        customerResponseStream.Seek(0L, SeekOrigin.Begin);
+                        await customerResponseStream.CopyToAsync(stream);
+                    }
+
+                    var orderOperationMessage = await jsonLightBatchWriter.CreateOperationResponseMessageAsync("2");
+                    orderOperationMessage.SetHeader(ODataConstants.ODataVersionHeader, "4.0");
+                    orderOperationMessage.SetHeader("Content-Type", "application/json");
+
+                    using (var orderOperationStream = CreateOrderResponseStream(orderId: "1"))
+                    using (var stream = await orderOperationMessage.GetStreamAsync())
+                    {
+                        orderOperationStream.Seek(0L, SeekOrigin.Begin);
+                        await orderOperationStream.CopyToAsync(stream);
+                    }
+
+                    await jsonLightBatchWriter.WriteEndBatchAsync();
+                },
+                writingRequest: false);
+
+            Assert.Equal("{\"responses\":[" +
+                "{\"id\":\"1\"," +
+                "\"status\":0," +
+                "\"headers\":{\"odata-version\":\"4.0\",\"content-type\":\"application/json\"}, " +
+                "\"body\" :{\"@odata.context\":\"http://tempuri.org/$metadata#Customers/$entity\",\"Id\":1,\"Name\":\"Customer 1\",\"Type\":\"Retail\"}}," +
+                "{\"id\":\"2\"," +
+                "\"status\":0," +
+                "\"headers\":{\"odata-version\":\"4.0\",\"content-type\":\"application/json\"}, " +
+                "\"body\" :{\"@odata.context\":\"http://tempuri.org/$metadata#Orders/$entity\",\"Id\":1,\"CustomerId\":1,\"Amount\":13}}" +
+                "]}",
+                result);
+        }
+
+#if NETCOREAPP3_1_OR_GREATER
+        [Fact]
+        public async Task WriteBatchResponseAsync_WithStreamCopy_UsingODataUtf8JsonWriter()
+        {
+            Action<IContainerBuilder> configureServices = (builder) =>
+            {
+                builder.AddService<IStreamBasedJsonWriterFactory>(ServiceLifetime.Singleton, _ =>DefaultStreamBasedJsonWriterFactory.Default);
+            };
+
+            var result = await SetupJsonLightBatchWriterAndRunTestAsync(
+                async (jsonLightBatchWriter) =>
+                {
+                    await jsonLightBatchWriter.WriteStartBatchAsync();
+
+                    var customerOperationMessage = await jsonLightBatchWriter.CreateOperationResponseMessageAsync("1");
+                    customerOperationMessage.SetHeader(ODataConstants.ODataVersionHeader, "4.0");
+                    customerOperationMessage.SetHeader("Content-Type", "application/json");
+
+                    // Copies operation's response body to the main batch response's stream
+                    // This is similar to how the DefaultODataBatchHandler in WebApi writes batch responses.  
+                    using (var customerResponseStream = CreateCustomerResponseStream(customerId: "1"))
+                    using (var stream = await customerOperationMessage.GetStreamAsync())
+                    {
+                        customerResponseStream.Seek(0L, SeekOrigin.Begin);
+                        await customerResponseStream.CopyToAsync(stream);
+                    }
+
+                    var orderOperationMessage = await jsonLightBatchWriter.CreateOperationResponseMessageAsync("2");
+                    orderOperationMessage.SetHeader(ODataConstants.ODataVersionHeader, "4.0");
+                    orderOperationMessage.SetHeader("Content-Type", "application/json");
+
+                    using (var orderOperationStream = CreateOrderResponseStream(orderId: "1"))
+                    using (var stream = await orderOperationMessage.GetStreamAsync())
+                    {
+                        orderOperationStream.Seek(0L, SeekOrigin.Begin);
+                        await orderOperationStream.CopyToAsync(stream);
+                    }
+
+                    await jsonLightBatchWriter.WriteEndBatchAsync();
+                },
+                writingRequest: false,
+                configureServices);
+
+            Assert.Equal("{\"responses\":[" +
+                "{\"id\":\"1\"," +
+                "\"status\":0," +
+                "\"headers\":{\"odata-version\":\"4.0\",\"content-type\":\"application/json\"}, " +
+                "\"body\" :{\"@odata.context\":\"http://tempuri.org/$metadata#Customers/$entity\",\"Id\":1,\"Name\":\"Customer 1\",\"Type\":\"Retail\"}}," +
+                "{\"id\":\"2\"," +
+                "\"status\":0," +
+                "\"headers\":{\"odata-version\":\"4.0\",\"content-type\":\"application/json\"}, " +
+                "\"body\" :{\"@odata.context\":\"http://tempuri.org/$metadata#Orders/$entity\",\"Id\":1,\"CustomerId\":1,\"Amount\":13}}" +
+                "]}",
+                result);
+        }
+#endif
 
         [Fact]
         public async Task WriteBatchRequestWithAbsoluteUriUsingHostHeaderAsync()
@@ -853,9 +963,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         /// </summary>
         private async Task<string> SetupJsonLightBatchWriterAndRunTestAsync(
             Func<ODataJsonLightBatchWriter, Task> func,
-            bool writingRequest = true)
+            bool writingRequest = true,
+            Action<IContainerBuilder> configureServices = null)
         {
-            var jsonLightOutputContext = CreateJsonLightOutputContext(writingRequest, /*asynchronous*/ true);
+            var jsonLightOutputContext = CreateJsonLightOutputContext(writingRequest, asynchronous: true, configureServices: configureServices);
             var jsonLightBatchWriter = new ODataJsonLightBatchWriter(jsonLightOutputContext);
 
             await func(jsonLightBatchWriter);
@@ -864,8 +975,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             return await new StreamReader(this.stream).ReadToEndAsync();
         }
 
-        private ODataJsonLightOutputContext CreateJsonLightOutputContext(bool writingRequest = true, bool asynchronous = false)
+        private ODataJsonLightOutputContext CreateJsonLightOutputContext(bool writingRequest = true, bool asynchronous = false, Action<IContainerBuilder> configureServices = null)
         {
+            IServiceProvider container = configureServices == null ? null : CreateServiceProvider(configureServices);
+
             var messageInfo = new ODataMessageInfo
             {
                 MessageStream = this.stream,
@@ -873,7 +986,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 Encoding = this.encoding,
                 IsResponse = !writingRequest,
                 IsAsync = asynchronous,
-                Model = this.model
+                Model = this.model,
+                Container = container,
             };
 
             return new ODataJsonLightOutputContext(messageInfo, this.settings);
@@ -931,6 +1045,42 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     NavigationSourceKind = EdmNavigationSourceKind.EntitySet
                 }
             };
+        }
+
+        private static Stream CreateCustomerResponseStream(string customerId)
+        {
+            string content = $"{{\"@odata.context\":\"http://tempuri.org/$metadata#Customers/$entity\",\"Id\":{customerId},\"Name\":\"Customer 1\",\"Type\":\"Retail\"}}";
+            return CreateStreamWithContents(content);
+        }
+
+        private static Stream CreateOrderResponseStream(string orderId)
+        {
+            string content = $"{{\"@odata.context\":\"http://tempuri.org/$metadata#Orders/$entity\",\"Id\":{orderId},\"CustomerId\":1,\"Amount\":13}}";
+            return CreateStreamWithContents(content);
+        }
+
+        /// <summary>
+        /// Creates a stream that contains the specified content in the specified encoding.
+        /// </summary>
+        /// <param name="content">Content to fill the stream with.</param>
+        /// <returns>The stream with the specified content.</returns>
+        /// <remarks>The stream's cursor is positioned at the end.
+        /// You will need to seek or reposition the cursor if you want to read the stream from the beginning.
+        /// </remarks>
+        private static Stream CreateStreamWithContents(string content, Encoding encoding = null)
+        {
+            MemoryStream stream = new MemoryStream();
+            byte[] encoded = (encoding ?? Encoding.UTF8).GetBytes(content);
+            stream.Write(encoded, 0, encoded.Length);
+            return stream;
+        }
+
+        private static IServiceProvider CreateServiceProvider(Action<IContainerBuilder> configureServices)
+        {
+            TestContainerBuilder containerBuilder = new TestContainerBuilder();
+            containerBuilder.AddDefaultODataServices();
+            configureServices(containerBuilder);
+            return containerBuilder.BuildContainer();
         }
 
         #endregion Helper Methods

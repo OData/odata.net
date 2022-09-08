@@ -48,7 +48,7 @@ namespace Microsoft.OData.Json
                 throw new ArgumentNullException(nameof(encoding));
             }
 
-            return new ODataUtf8JsonWriter(stream, isIeee754Compatible, encoding, encoder: this.encoder);
+            return new ODataUtf8JsonWriter(stream, isIeee754Compatible, encoding, encoder: this.encoder, leaveStreamOpen: true);
         }
 
         public IJsonWriterAsync CreateAsynchronousJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding)
@@ -63,7 +63,7 @@ namespace Microsoft.OData.Json
                 throw new ArgumentNullException(nameof(encoding));
             }
 
-            return new ODataUtf8JsonWriter(stream, isIeee754Compatible, encoding, encoder: this.encoder);
+            return new ODataUtf8JsonWriter(stream, isIeee754Compatible, encoding, encoder: this.encoder, leaveStreamOpen: true);
         }
     }
 }

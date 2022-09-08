@@ -114,7 +114,7 @@ namespace Microsoft.OData.JsonLight
                 {
                     this.asynchronousJsonWriter = CreateAsynchronousJsonWriter(
                         streamBasedJsonWriterFactory,
-                        this.messageOutputStream,
+                        outputStream,
                         isIeee754Compatible,
                         messageInfo.Encoding);
 
