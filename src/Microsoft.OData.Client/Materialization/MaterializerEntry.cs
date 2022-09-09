@@ -225,12 +225,12 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="isTracking">True if the contents of the entry will be tracked in the context, otherwise False.</param>
         /// <param name="model">The client model.</param>
         /// <returns>A new materializer entry.</returns>
-        public static MaterializerEntry CreateEntry(ODataResource entry, ODataFormat format, bool isTracking, ClientEdmModel model)
+        public static MaterializerEntry CreateEntry(ODataResource entry, ODataFormat format, bool isTracking, ClientEdmModel model, IODataMaterializerContext materializerContext)
         {
-            Debug.Assert(entry.GetAnnotation<MaterializerEntry>() == null, "MaterializerEntry has already been created.");
+            Debug.Assert(materializerContext.GetAnnotation<MaterializerEntry>(entry) == null, "MaterializerEntry has already been created.");
 
             MaterializerEntry materializerEntry = new MaterializerEntry(entry, format, isTracking, model);
-            entry.SetAnnotation<MaterializerEntry>(materializerEntry);
+            materializerContext.SetAnnotation<MaterializerEntry>(entry, materializerEntry);
 
             return materializerEntry;
         }
@@ -252,9 +252,9 @@ namespace Microsoft.OData.Client.Materialization
         /// </summary>
         /// <param name="entry">The ODataResource.</param>
         /// <returns>The materializer entry</returns>
-        public static MaterializerEntry GetEntry(ODataResource entry)
+        public static MaterializerEntry GetEntry(ODataResource entry, IODataMaterializerContext materializerContext)
         {
-            return entry.GetAnnotation<MaterializerEntry>();
+            return materializerContext.GetAnnotation<MaterializerEntry>(entry);
         }
 
         /// <summary>

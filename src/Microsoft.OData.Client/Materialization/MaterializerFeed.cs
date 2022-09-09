@@ -68,16 +68,16 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="feed">The feed.</param>
         /// <param name="entries">The entries.</param>
         /// <returns>The materializer feed.</returns>
-        public static MaterializerFeed CreateFeed(ODataResourceSet feed, IEnumerable<ODataResource> entries)
+        public static MaterializerFeed CreateFeed(ODataResourceSet feed, IEnumerable<ODataResource> entries, IODataMaterializerContext materializerContext)
         {
-            Debug.Assert(feed.GetAnnotation<IEnumerable<ODataResource>>() == null, "Feed state has already been created.");
+            Debug.Assert(materializerContext.GetAnnotation<IEnumerable<ODataResource>>(feed) == null, "Feed state has already been created.");
             if (entries == null)
             {
                 entries = Enumerable.Empty<ODataResource>();
             }
             else
             {
-                feed.SetAnnotation<IEnumerable<ODataResource>>(entries);
+                materializerContext.SetAnnotation<IEnumerable<ODataResource>>(feed, entries);
             }
 
             return new MaterializerFeed(feed, entries);
@@ -88,9 +88,9 @@ namespace Microsoft.OData.Client.Materialization
         /// </summary>
         /// <param name="feed">The feed.</param>
         /// <returns>The materializer feed.</returns>
-        public static MaterializerFeed GetFeed(ODataResourceSet feed)
+        public static MaterializerFeed GetFeed(ODataResourceSet feed, IODataMaterializerContext materializerContext)
         {
-            IEnumerable<ODataResource> entries = feed.GetAnnotation<IEnumerable<ODataResource>>();
+            IEnumerable<ODataResource> entries = materializerContext.GetAnnotation<IEnumerable<ODataResource>>(feed);
             return new MaterializerFeed(feed, entries);
         }
     }

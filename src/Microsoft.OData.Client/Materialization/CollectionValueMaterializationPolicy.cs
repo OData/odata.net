@@ -134,7 +134,7 @@ namespace Microsoft.OData.Client.Materialization
                 addValueToBackingICollectionInstance,
                 isElementNullable);
 
-            collectionProperty.SetMaterializedValue(collectionInstance);
+            collectionProperty.SetMaterializedValue(collectionInstance, this.materializerContext);
         }
 
         /// <summary>

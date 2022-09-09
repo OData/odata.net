@@ -40,9 +40,9 @@ namespace Microsoft.OData.Client.Materialization
             object materializedValue = null;
             ODataEnumValue value = property.Value as ODataEnumValue;
             this.MaterializeODataEnumValue(valueType, value.TypeName, value.Value, () => "TODO: Is this reachable?", out materializedValue);
-            if (!property.HasMaterializedValue())
+            if (!property.HasMaterializedValue(this.context))
             {
-                property.SetMaterializedValue(materializedValue);
+                property.SetMaterializedValue(materializedValue, this.context);
             }
 
             return materializedValue;

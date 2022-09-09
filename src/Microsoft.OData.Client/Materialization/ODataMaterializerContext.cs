@@ -22,6 +22,7 @@ namespace Microsoft.OData.Client.Materialization
         internal ODataMaterializerContext(ResponseInfo responseInfo)
         {
             this.ResponseInfo = responseInfo;
+            this.AnnotationsCache = new MaterializerAnnotationsCache();
         }
 
         /// <summary>
@@ -84,5 +85,7 @@ namespace Microsoft.OData.Client.Materialization
         {
             return this.ResponseInfo.TypeResolver.ResolveExpectedTypeForReading(expectedType);
         }
+
+        public MaterializerAnnotationsCache AnnotationsCache { get; private set; }
     }
 }

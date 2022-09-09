@@ -232,7 +232,7 @@ namespace Microsoft.OData.Client.Materialization
                     }
 
                     ODataReaderWrapper reader = ODataReaderWrapper.Create(messageReader, payloadKind, edmType, responseInfo.ResponsePipeline);
-                    EntityTrackingAdapter entityTrackingAdapter = new EntityTrackingAdapter(responseInfo.EntityTracker, responseInfo.MergeOption, responseInfo.Model, responseInfo.Context);
+                    EntityTrackingAdapter entityTrackingAdapter = new EntityTrackingAdapter(responseInfo.EntityTracker, responseInfo.MergeOption, responseInfo.Model, responseInfo.Context, materializerContext);
                     LoadPropertyResponseInfo loadPropertyResponseInfo = responseInfo as LoadPropertyResponseInfo;
 
                     if (loadPropertyResponseInfo != null)

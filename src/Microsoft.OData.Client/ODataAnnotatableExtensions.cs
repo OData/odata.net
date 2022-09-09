@@ -11,22 +11,22 @@ namespace Microsoft.OData.Client
 {
     internal static class ODataAnnotatableExtensions
     {
-        public static void SetAnnotation<T>(this ODataAnnotatable annotatable, T annotation)
-            where T : class
-        {
-            Debug.Assert(annotatable != null, "annotatable != null");
-            Debug.Assert(annotation != null, "annotation != null");
+        //public static void SetAnnotation<T>(this ODataAnnotatable annotatable, T annotation)
+        //    where T : class
+        //{
+        //    Debug.Assert(annotatable != null, "annotatable != null");
+        //    Debug.Assert(annotation != null, "annotation != null");
 
-            InternalDictionary<T>.SetAnnotation(annotatable, annotation);
-        }
+        //    InternalDictionary<T>.SetAnnotation(annotatable, annotation);
+        //}
 
-        public static T GetAnnotation<T>(this ODataAnnotatable annotatable)
-            where T : class
-        {
-            Debug.Assert(annotatable != null, "annotatable != null");
+        //public static T GetAnnotation<T>(this ODataAnnotatable annotatable)
+        //    where T : class
+        //{
+        //    Debug.Assert(annotatable != null, "annotatable != null");
 
-            return InternalDictionary<T>.GetAnnotation(annotatable);
-        }
+        //    return InternalDictionary<T>.GetAnnotation(annotatable);
+        //}
 
         private static class InternalDictionary<T> where T : class
         {

@@ -865,7 +865,8 @@ namespace Microsoft.OData.Client
                             responseMsg.StatusCode,
                             () => responseStream);
 
-                        entry = ODataReaderEntityMaterializer.ParseSingleEntityPayload(responseMessageWrapper, responseInfo, entityDescriptor.Entity.GetType());
+                        ODataMaterializerContext materializerContext = new ODataMaterializerContext(responseInfo);
+                        entry = ODataReaderEntityMaterializer.ParseSingleEntityPayload(responseMessageWrapper, responseInfo, entityDescriptor.Entity.GetType(), materializerContext);
                         entityDescriptor.TransientEntityDescriptor = entry.EntityDescriptor;
                     }
                     catch (Exception ex)

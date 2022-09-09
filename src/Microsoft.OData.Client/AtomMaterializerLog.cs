@@ -46,6 +46,8 @@ namespace Microsoft.OData.Client
         /// <summary>Target instance to refresh.</summary>
         private object insertRefreshObject;
 
+        private IODataMaterializerContext materializerContext;
+
         #endregion Private fields
 
         #region Constructors
@@ -59,7 +61,7 @@ namespace Microsoft.OData.Client
         /// <remarks>
         /// Note that the merge option can't be changed.
         /// </remarks>
-        internal AtomMaterializerLog(MergeOption mergeOption, ClientEdmModel model, EntityTrackerBase entityTracker)
+        internal AtomMaterializerLog(MergeOption mergeOption, ClientEdmModel model, EntityTrackerBase entityTracker, IODataMaterializerContext materializerContext)
         {
             Debug.Assert(model != null, "model != null");
             Debug.Assert(entityTracker != null, "entityTracker != null");
@@ -70,6 +72,7 @@ namespace Microsoft.OData.Client
             this.entityTracker = entityTracker;
             this.identityStack = new Dictionary<Uri, ODataResource>(EqualityComparer<Uri>.Default);
             this.links = new List<LinkDescriptor>();
+            this.materializerContext = materializerContext;
         }
 
         #endregion Constructors
@@ -179,7 +182,7 @@ namespace Microsoft.OData.Client
             foreach (KeyValuePair<Uri, ODataResource> entity in this.identityStack)
             {
                 // Try to attach the entity descriptor got from materializer, if one already exists, get the existing reference instead.
-                MaterializerEntry entry = MaterializerEntry.GetEntry(entity.Value);
+                MaterializerEntry entry = MaterializerEntry.GetEntry(entity.Value, this.materializerContext);
 
                 bool mergeEntityDescriptorInfo = entry.CreatedByMaterializer ||
                                                  entry.ResolvedObject == this.insertRefreshObject ||
@@ -309,7 +312,7 @@ namespace Microsoft.OData.Client
 
             if (this.identityStack.TryGetValue(entry.Id, out existingODataEntry))
             {
-                existingEntry = MaterializerEntry.GetEntry(existingODataEntry);
+                existingEntry = MaterializerEntry.GetEntry(existingODataEntry, this.materializerContext);
                 return true;
             }
 
@@ -321,7 +324,7 @@ namespace Microsoft.OData.Client
                 this.entityTracker.TryGetEntity(entry.Id, out state);
                 if (state == EntityStates.Unchanged)
                 {
-                    existingEntry = MaterializerEntry.GetEntry(existingODataEntry);
+                    existingEntry = MaterializerEntry.GetEntry(existingODataEntry, this.materializerContext);
                     return true;
                 }
                 else

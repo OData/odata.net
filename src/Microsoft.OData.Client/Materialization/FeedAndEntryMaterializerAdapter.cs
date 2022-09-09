@@ -39,6 +39,8 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>The current entry.</summary>
         private ODataResource currentEntry;
 
+        private IODataMaterializerContext materializerContext;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FeedAndEntryMaterializerAdapter"/> class.
         /// </summary>
@@ -46,8 +48,8 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="reader">The reader.</param>
         /// <param name="model">The model.</param>
         /// <param name="mergeOption">The mergeOption.</param>
-        internal FeedAndEntryMaterializerAdapter(ODataMessageReader messageReader, ODataReaderWrapper reader, ClientEdmModel model, MergeOption mergeOption)
-            : this(ODataUtils.GetReadFormat(messageReader), reader, model, mergeOption)
+        internal FeedAndEntryMaterializerAdapter(ODataMessageReader messageReader, ODataReaderWrapper reader, ClientEdmModel model, MergeOption mergeOption, IODataMaterializerContext materializerContext)
+            : this(ODataUtils.GetReadFormat(messageReader), reader, model, mergeOption, materializerContext)
         {
         }
 
@@ -58,7 +60,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="reader">The reader.</param>
         /// <param name="model">The model.</param>
         /// <param name="mergeOption">The mergeOption.</param>
-        internal FeedAndEntryMaterializerAdapter(ODataFormat odataFormat, ODataReaderWrapper reader, ClientEdmModel model, MergeOption mergeOption)
+        internal FeedAndEntryMaterializerAdapter(ODataFormat odataFormat, ODataReaderWrapper reader, ClientEdmModel model, MergeOption mergeOption, IODataMaterializerContext materializerContext)
         {
             this.readODataFormat = odataFormat;
             this.clientEdmModel = model;
@@ -67,6 +69,7 @@ namespace Microsoft.OData.Client.Materialization
             this.currentEntry = null;
             this.currentFeed = null;
             this.feedEntries = null;
+            this.materializerContext = materializerContext;
         }
 
         /// <summary>
@@ -105,7 +108,7 @@ namespace Microsoft.OData.Client.Materialization
         {
             if (this.currentFeed == null && this.currentEntry == null && readIfNoFeed && this.TryReadFeed(true, out this.currentFeed))
             {
-                this.feedEntries = MaterializerFeed.GetFeed(this.currentFeed).Entries.GetEnumerator();
+                this.feedEntries = MaterializerFeed.GetFeed(this.currentFeed, this.materializerContext).Entries.GetEnumerator();
             }
 
             if (this.currentFeed != null && this.currentFeed.Count.HasValue)
@@ -152,7 +155,7 @@ namespace Microsoft.OData.Client.Materialization
                             this.currentFeed = feed;
                             if (this.currentFeed != null)
                             {
-                                this.feedEntries = MaterializerFeed.GetFeed(this.currentFeed).Entries.GetEnumerator();
+                                this.feedEntries = MaterializerFeed.GetFeed(this.currentFeed, this.materializerContext).Entries.GetEnumerator();
 
                                 // Try to read the first entry.
                                 if (!this.feedEntries.MoveNext())
@@ -278,11 +281,11 @@ namespace Microsoft.OData.Client.Materialization
 
             if (lazy)
             {
-                MaterializerFeed.CreateFeed(result, lazyEntries);
+                MaterializerFeed.CreateFeed(result, lazyEntries, this.materializerContext);
             }
             else
             {
-                MaterializerFeed.CreateFeed(result, new List<ODataResource>(lazyEntries));
+                MaterializerFeed.CreateFeed(result, new List<ODataResource>(lazyEntries), this.materializerContext);
             }
 
             return result;
@@ -339,7 +342,8 @@ namespace Microsoft.OData.Client.Materialization
                     result,
                     this.readODataFormat,
                     this.mergeOption != MergeOption.NoTracking,
-                    this.clientEdmModel);
+                    this.clientEdmModel,
+                    this.materializerContext);
 
                 do
                 {
@@ -395,12 +399,12 @@ namespace Microsoft.OData.Client.Materialization
             {
                 if (feed != null)
                 {
-                    MaterializerNavigationLink.CreateLink(link, feed);
+                    MaterializerNavigationLink.CreateLink(link, feed, this.materializerContext);
                 }
                 else
                 {
                     Debug.Assert(entry != null, "entry != null");
-                    MaterializerNavigationLink.CreateLink(link, entry);
+                    MaterializerNavigationLink.CreateLink(link, entry, this.materializerContext);
                 }
 
                 this.ReadAndExpectState(ODataReaderState.NestedResourceInfoEnd);

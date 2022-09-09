@@ -27,9 +27,9 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="mergeOption">The merge option.</param>
         /// <param name="model">The model.</param>
         /// <param name="context">The context.</param>
-        internal EntityTrackingAdapter(EntityTrackerBase entityTracker, MergeOption mergeOption, ClientEdmModel model, DataServiceContext context)
+        internal EntityTrackingAdapter(EntityTrackerBase entityTracker, MergeOption mergeOption, ClientEdmModel model, DataServiceContext context, IODataMaterializerContext materializerContext)
         {
-            this.MaterializationLog = new AtomMaterializerLog(mergeOption, model, entityTracker);
+            this.MaterializationLog = new AtomMaterializerLog(mergeOption, model, entityTracker, materializerContext);
             this.MergeOption = mergeOption;
             this.EntityTracker = entityTracker;
             this.Model = model;

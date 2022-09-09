@@ -534,11 +534,11 @@ namespace Microsoft.OData.Client.Materialization
             ClientEdmModel edmModel = this.MaterializerContext.Model;
             ClientTypeAnnotation collectionType = edmModel.GetClientTypeAnnotation(edmModel.GetOrCreateEdmType(property.ResourceSetItemType));
 
-            IEnumerable<ODataResource> entries = MaterializerFeed.GetFeed(feed).Entries;
+            IEnumerable<ODataResource> entries = MaterializerFeed.GetFeed(feed, this.MaterializerContext).Entries;
 
             foreach (ODataResource feedEntry in entries)
             {
-                this.Materialize(MaterializerEntry.GetEntry(feedEntry), collectionType.ElementType, includeLinks);
+                this.Materialize(MaterializerEntry.GetEntry(feedEntry, this.MaterializerContext), collectionType.ElementType, includeLinks);
             }
 
             ProjectionPlan continuationPlan = includeLinks ?
@@ -548,7 +548,7 @@ namespace Microsoft.OData.Client.Materialization
             this.ApplyItemsToCollection(
                 entry,
                 property,
-                entries.Select(e => MaterializerEntry.GetEntry(e).ResolvedObject),
+                entries.Select(e => MaterializerEntry.GetEntry(e, this.MaterializerContext).ResolvedObject),
                 feed.NextPageLink,
                 continuationPlan,
                 false);
@@ -591,7 +591,7 @@ namespace Microsoft.OData.Client.Materialization
 
                 foreach (ODataNestedResourceInfo link in entry.NestedResourceInfos)
                 {
-                    MaterializerNavigationLink linkState = MaterializerNavigationLink.GetLink(link);
+                    MaterializerNavigationLink linkState = MaterializerNavigationLink.GetLink(link, this.MaterializerContext);
 
                     if (linkState == null)
                     {
@@ -722,7 +722,7 @@ namespace Microsoft.OData.Client.Materialization
                 return;
             }
 
-            MaterializerNavigationLink linkState = MaterializerNavigationLink.GetLink(link);
+            MaterializerNavigationLink linkState = MaterializerNavigationLink.GetLink(link, this.MaterializerContext);
             if (linkState == null || (linkState.Entry == null && linkState.Feed == null))
             {
                 return;
@@ -754,10 +754,10 @@ namespace Microsoft.OData.Client.Materialization
                     Type collectionType = typeof(System.Collections.ObjectModel.Collection<>).MakeGenericType(new Type[] { collectionItemType });
                     IList collection = (IList)Util.ActivatorCreateInstance(collectionType);
 
-                    IEnumerable<ODataResource> feedEntries = MaterializerFeed.GetFeed(linkState.Feed).Entries;
+                    IEnumerable<ODataResource> feedEntries = MaterializerFeed.GetFeed(linkState.Feed, this.MaterializerContext).Entries;
                     foreach (ODataResource feedEntry in feedEntries)
                     {
-                        MaterializerEntry linkEntry = MaterializerEntry.GetEntry(feedEntry);
+                        MaterializerEntry linkEntry = MaterializerEntry.GetEntry(feedEntry, this.MaterializerContext);
                         this.Materialize(linkEntry, collectionItemType, false /*includeLinks*/);
                         collection.Add(linkEntry.ResolvedObject);
                     }
