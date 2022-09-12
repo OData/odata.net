@@ -191,7 +191,8 @@ namespace Microsoft.OData.Client.Materialization
             Type materializerType,
             QueryComponents queryComponents,
             ProjectionPlan plan,
-            ODataPayloadKind payloadKind)
+            ODataPayloadKind payloadKind,
+            MaterializerAnnotationsCache annotationsCache)
         {
             ODataMessageReader messageReader = CreateODataMessageReader(responseMessage, responseInfo, ref payloadKind);
 
@@ -200,7 +201,7 @@ namespace Microsoft.OData.Client.Materialization
 
             try
             {
-                ODataMaterializerContext materializerContext = new ODataMaterializerContext(responseInfo);
+                ODataMaterializerContext materializerContext = new ODataMaterializerContext(responseInfo, annotationsCache);
 
                 // Since in V1/V2, astoria client allowed Execute<object> and depended on the typeresolver or the wire type name
                 // to get the clr type to materialize. Hence if we see the materializer type as object, we should set the edmtype

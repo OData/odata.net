@@ -79,7 +79,8 @@ namespace Microsoft.OData.Client
             QueryComponents queryComponents,
             ProjectionPlan plan,
             IODataResponseMessage responseMessage,
-            ODataPayloadKind payloadKind)
+            ODataPayloadKind payloadKind,
+            MaterializerAnnotationsCache annotationsCache)
         {
             Debug.Assert(queryComponents != null, "queryComponents != null");
 
@@ -91,7 +92,7 @@ namespace Microsoft.OData.Client
 
             Type implementationType;
             Type materializerType = GetTypeForMaterializer(this.expectingPrimitiveValue, this.elementType, responseInfo.Model, out implementationType);
-            this.materializer = ODataMaterializer.CreateMaterializerForMessage(responseMessage, responseInfo, materializerType, queryComponents, plan, payloadKind);
+            this.materializer = ODataMaterializer.CreateMaterializerForMessage(responseMessage, responseInfo, materializerType, queryComponents, plan, payloadKind, annotationsCache);
         }
 
         /// <summary>
@@ -101,7 +102,7 @@ namespace Microsoft.OData.Client
         /// <param name="entries">entries that needs to be materialized.</param>
         /// <param name="elementType">result type.</param>
         /// <param name="format">The format of the response being materialized from.</param>
-        internal MaterializeAtom(ResponseInfo responseInfo, IEnumerable<ODataResource> entries, Type elementType, ODataFormat format)
+        internal MaterializeAtom(ResponseInfo responseInfo, IEnumerable<ODataResource> entries, Type elementType, ODataFormat format, MaterializerAnnotationsCache annotationsCache)
         {
             this.responseInfo = responseInfo;
             this.elementType = elementType;
@@ -110,7 +111,7 @@ namespace Microsoft.OData.Client
             Type implementationType;
             Type materializerType = GetTypeForMaterializer(this.expectingPrimitiveValue, this.elementType, responseInfo.Model, out implementationType);
             QueryComponents qc = new QueryComponents(null, Util.ODataVersionEmpty, elementType, null, null);
-            ODataMaterializerContext context = new ODataMaterializerContext(responseInfo);
+            ODataMaterializerContext context = new ODataMaterializerContext(responseInfo, annotationsCache);
             EntityTrackingAdapter entityTrackingAdapter = new EntityTrackingAdapter(responseInfo.EntityTracker, responseInfo.MergeOption, responseInfo.Model, responseInfo.Context, context);
             this.materializer = new ODataEntriesEntityMaterializer(entries, context, entityTrackingAdapter, qc, materializerType, null, format);
         }

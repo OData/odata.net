@@ -360,7 +360,7 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(this.cachedResponse.Exception == null && this.cachedResponse.MaterializerEntry != null, "this.cachedResponse.Exception == null && this.cachedResponse.Entry != null");
             ODataResource entry = this.cachedResponse.MaterializerEntry == null ? null : this.cachedResponse.MaterializerEntry.Entry;
-            return new MaterializeAtom(responseInfo, new[] { entry }, entityDescriptor.Entity.GetType(), this.cachedResponse.MaterializerEntry.Format);
+            return new MaterializeAtom(responseInfo, new[] { entry }, entityDescriptor.Entity.GetType(), this.cachedResponse.MaterializerEntry.Format, annotationsCache);
         }
 
         /// <summary>
@@ -865,7 +865,7 @@ namespace Microsoft.OData.Client
                             responseMsg.StatusCode,
                             () => responseStream);
 
-                        ODataMaterializerContext materializerContext = new ODataMaterializerContext(responseInfo);
+                        ODataMaterializerContext materializerContext = new ODataMaterializerContext(responseInfo, this.annotationsCache);
                         entry = ODataReaderEntityMaterializer.ParseSingleEntityPayload(responseMessageWrapper, responseInfo, entityDescriptor.Entity.GetType(), materializerContext);
                         entityDescriptor.TransientEntityDescriptor = entry.EntityDescriptor;
                     }

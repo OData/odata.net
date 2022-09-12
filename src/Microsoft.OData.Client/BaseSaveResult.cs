@@ -19,6 +19,7 @@ namespace Microsoft.OData.Client
     using System.Text;
     using System.Threading;
     using Microsoft.OData;
+    using Microsoft.OData.Client.Materialization;
     using Microsoft.OData.Client.Metadata;
 
     #endregion Namespaces
@@ -65,6 +66,8 @@ namespace Microsoft.OData.Client
 
         /// <summary>application/json Content-Type header</summary>
         private const string JsonContentTypeHeader = "application/json";
+
+        protected MaterializerAnnotationsCache annotationsCache = new MaterializerAnnotationsCache();
 
         #endregion Private Fields
 

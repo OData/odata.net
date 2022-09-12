@@ -19,10 +19,10 @@ namespace Microsoft.OData.Client.Materialization
         /// Initializes a materializer context
         /// </summary>
         /// <param name="responseInfo">Response information used to initialize with the materializer</param>
-        internal ODataMaterializerContext(ResponseInfo responseInfo)
+        internal ODataMaterializerContext(ResponseInfo responseInfo, MaterializerAnnotationsCache annotationsCache)
         {
             this.ResponseInfo = responseInfo;
-            this.AnnotationsCache = new MaterializerAnnotationsCache();
+            this.AnnotationsCache = annotationsCache;
         }
 
         /// <summary>

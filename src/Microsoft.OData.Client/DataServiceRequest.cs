@@ -12,6 +12,7 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Net;
     using Microsoft.OData;
+    using Microsoft.OData.Client.Materialization;
 
     /// <summary>Non-generic placeholder for generic implementation</summary>
     public abstract class DataServiceRequest
@@ -66,7 +67,8 @@ namespace Microsoft.OData.Client
             ProjectionPlan plan,
             string contentType,
             IODataResponseMessage message,
-            ODataPayloadKind expectedPayloadKind)
+            ODataPayloadKind expectedPayloadKind,
+            MaterializerAnnotationsCache annotationsCache)
         {
             Debug.Assert(queryComponents != null, "querycomponents");
             Debug.Assert(message != null, "message");
@@ -77,7 +79,8 @@ namespace Microsoft.OData.Client
                 return MaterializeAtom.EmptyResults;
             }
 
-            return new MaterializeAtom(responseInfo, queryComponents, plan, message, expectedPayloadKind);
+            
+            return new MaterializeAtom(responseInfo, queryComponents, plan, message, expectedPayloadKind, annotationsCache);
         }
 
         /// <summary>
