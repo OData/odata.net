@@ -49,7 +49,7 @@ namespace Microsoft.OData.Client.Materialization
             ProjectionPlan materializeEntryPlan)
             : base(materializerContext, expectedType)
         {
-            this.materializeEntryPlan = materializeEntryPlan ?? CreatePlan(queryComponents);
+            this.materializeEntryPlan = materializeEntryPlan ?? CreatePlan(queryComponents, materializerContext);
             this.EntityTrackingAdapter = entityTrackingAdapter;
             DSClient.SimpleLazy<PrimitivePropertyConverter> converter = new DSClient.SimpleLazy<PrimitivePropertyConverter>(() => new PrimitivePropertyConverter());
 
@@ -959,7 +959,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>Creates an entry materialization plan for a given projection.</summary>
         /// <param name="queryComponents">Query components for plan to materialize.</param>
         /// <returns>A materialization plan.</returns>
-        private static ProjectionPlan CreatePlan(QueryComponents queryComponents)
+        private static ProjectionPlan CreatePlan(QueryComponents queryComponents, IODataMaterializerContext materializerContext)
         {
             // Can we have a primitive property as well?
             LambdaExpression projection = queryComponents.Projection;
@@ -977,7 +977,7 @@ namespace Microsoft.OData.Client.Materialization
                 }
                 else
                 {
-                    result = ProjectionPlanCompiler.CompilePlan(projection, queryComponents.NormalizerRewrites);
+                    result = ProjectionPlanCompiler.CompilePlan(projection, queryComponents.NormalizerRewrites, materializerContext);
                 }
 
                 result.LastSegmentType = queryComponents.LastSegmentType;
