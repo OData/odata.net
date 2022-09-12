@@ -63,7 +63,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
 
         internal PrimitiveValueMaterializationPolicy CreatePrimitiveValueMaterializationPolicy()
         {
-            return new PrimitiveValueMaterializationPolicy(new TestMaterializerContext(), new SimpleLazy<PrimitivePropertyConverter>(() => new PrimitivePropertyConverter()));
+            return new PrimitiveValueMaterializationPolicy(new TestMaterializerContext(new MaterializerAnnotationsCache()), new SimpleLazy<PrimitivePropertyConverter>(() => new PrimitivePropertyConverter()));
         }
 
         public class UnknownPoint

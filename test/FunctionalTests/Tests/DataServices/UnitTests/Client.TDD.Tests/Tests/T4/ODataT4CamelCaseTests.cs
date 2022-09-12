@@ -322,14 +322,14 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             var clientEdmModel = new ClientEdmModel(ODataProtocolVersion.V4);
             var context = new DataServiceContext();
-            var materializerEntry = MaterializerEntry.CreateEntry(odataEntry, OData.ODataFormat.Json, true, clientEdmModel);
+            var materializerContext = new TestMaterializerContext(new MaterializerAnnotationsCache()) { Model = clientEdmModel, Context = context };
+            var materializerEntry = MaterializerEntry.CreateEntry(odataEntry, OData.ODataFormat.Json, true, clientEdmModel, materializerContext);
 
-            MaterializerNavigationLink.CreateLink(complexP, MaterializerEntry.CreateEntry(complexResource, OData.ODataFormat.Json, true, clientEdmModel));
-            MaterializerFeed.CreateFeed(complexColResourceSet, items);
-            MaterializerNavigationLink.CreateLink(complexColP, complexColResourceSet);
+            MaterializerNavigationLink.CreateLink(complexP, MaterializerEntry.CreateEntry(complexResource, OData.ODataFormat.Json, true, clientEdmModel, materializerContext), materializerContext);
+            MaterializerFeed.CreateFeed(complexColResourceSet, items, materializerContext);
+            MaterializerNavigationLink.CreateLink(complexColP, complexColResourceSet, materializerContext);
 
-            var materializerContext = new TestMaterializerContext() { Model = clientEdmModel, Context = context };
-            var adapter = new EntityTrackingAdapter(new TestEntityTracker(), MergeOption.OverwriteChanges, clientEdmModel, context);
+            var adapter = new EntityTrackingAdapter(new TestEntityTracker(), MergeOption.OverwriteChanges, clientEdmModel, context, materializerContext);
             QueryComponents components = new QueryComponents(new Uri("http://foo.com/Service"), new Version(4, 0), typeof(EntityType), null, new Dictionary<Expression, Expression>());
 
             var entriesMaterializer = new ODataEntriesEntityMaterializer(new OData.ODataResource[] { odataEntry }, materializerContext, adapter, components, typeof(EntityType), null, OData.ODataFormat.Json);
@@ -381,7 +381,9 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                     }
                 }
             };
-            var materializerEntry = MaterializerEntry.CreateEntry(complexValue, OData.ODataFormat.Json, false, new ClientEdmModel(ODataProtocolVersion.V4));
+
+            var materializerContext = new TestMaterializerContext(new MaterializerAnnotationsCache());
+            var materializerEntry = MaterializerEntry.CreateEntry(complexValue, OData.ODataFormat.Json, false, new ClientEdmModel(ODataProtocolVersion.V4), materializerContext);
             this.CreateEntryMaterializationPolicy().Materialize(materializerEntry, typeof(ComplexType), false);
             var complex = materializerEntry.ResolvedObject as ComplexType;
             complex.Name.Should().Be("June");
@@ -396,9 +398,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         {
             OData.ODataEnumValue enumValue = new OData.ODataEnumValue("blue");
             OData.ODataProperty property = new OData.ODataProperty { Name = "enumProperty", Value = enumValue };
-            var enumPolicy = new EnumValueMaterializationPolicy(new TestMaterializerContext());
+            var materializerContext = new TestMaterializerContext(new MaterializerAnnotationsCache());
+            var enumPolicy = new EnumValueMaterializationPolicy(materializerContext);
             var result = enumPolicy.MaterializeEnumTypeProperty(typeof(Color), property);
-            property.GetMaterializedValue().Should().Be(Color.Blue);
+            property.GetMaterializedValue(materializerContext).Should().Be(Color.Blue);
             result.Should().Be(Color.Blue);
         }
 
@@ -470,8 +473,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         {
             var clientEdmModel = new ClientEdmModel(ODataProtocolVersion.V4);
             var context = new DataServiceContext().ReConfigureForNetworkLoadingTests();
-            materializerContext = materializerContext ?? new TestMaterializerContext() { Model = clientEdmModel, Context = context };
-            var adapter = new EntityTrackingAdapter(new TestEntityTracker(), MergeOption.OverwriteChanges, clientEdmModel, context);
+            materializerContext = materializerContext ?? new TestMaterializerContext(new MaterializerAnnotationsCache()) { Model = clientEdmModel, Context = context };
+            var adapter = new EntityTrackingAdapter(new TestEntityTracker(), MergeOption.OverwriteChanges, clientEdmModel, context, materializerContext);
             var lazyPrimitivePropertyConverter = new Microsoft.OData.Client.SimpleLazy<PrimitivePropertyConverter>(() => new PrimitivePropertyConverter());
             var primitiveValueMaterializerPolicy = new PrimitiveValueMaterializationPolicy(materializerContext, lazyPrimitivePropertyConverter);
             var entryPolicy = new EntryValueMaterializationPolicy(materializerContext, adapter, lazyPrimitivePropertyConverter, null);
