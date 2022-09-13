@@ -218,11 +218,13 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Equal(navProp, set1.NavigationPropertyBindings.First().NavigationProperty);
         }
 
-        [Fact]
-        public void ValidateNavigationPropertyBindingPathEndingInTypeCast()
+        [InlineData("4.0")]
+        [InlineData("4.01")]
+        [Theory]
+        public void ValidateNavigationPropertyBindingPathEndingInTypeCast(string odataVersion)
         {
-            var csdl
-                = "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+            var csdl = string.Format(
+                  "<edmx:Edmx Version=\"{0}\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
                       "<edmx:DataServices>" +
                         "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
                           "<EntityType Name=\"EntityA\">" +
@@ -246,7 +248,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                           "</EntityContainer>" +
                         "</Schema>" +
                       "</edmx:DataServices>" +
-                    "</edmx:Edmx>";
+                    "</edmx:Edmx>", odataVersion);
             var model = CsdlReader.Parse(XElement.Parse(csdl).CreateReader());
             IEnumerable<EdmError> errors;
             Assert.True(model.Validate(out errors));

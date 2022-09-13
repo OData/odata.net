@@ -98,14 +98,21 @@ namespace Microsoft.OData.Edm
             }
 
             // Last segment must be the navigation segment or a type cast segment
-            string lastSegment = bindingPath.PathSegments.Last();
+            string lastSegment = null;
+            string penultimateSegment = null;
+            foreach (string segment in bindingPath.PathSegments)
+            {
+                penultimateSegment = lastSegment;
+                lastSegment = segment;
+            }
+
             if (lastSegment == null)
             {
                 throw new ArgumentException(Strings.NavigationPropertyBinding_PathIsNotValid);
             }
 
-            if (navigationProperty.Name != lastSegment && lastSegment.IndexOf('.') < 0
-                && navigationProperty.Name != bindingPath.PathSegments.Skip(bindingPath.PathSegments.Count() - 1).First())
+            if (navigationProperty.Name != lastSegment && (lastSegment.IndexOf('.') < 0
+                || navigationProperty.Name != penultimateSegment))
             {
                 throw new ArgumentException(Strings.NavigationPropertyBinding_PathIsNotValid);
             }
