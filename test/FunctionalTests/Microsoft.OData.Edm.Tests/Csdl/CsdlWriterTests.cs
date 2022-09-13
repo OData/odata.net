@@ -2413,38 +2413,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.True(model.Validate(out errors));
             Assert.Empty(errors);
 
-            // Act & Assert for XML
-            WriteAndVerifyXml(model, 
-                "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
-                    "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
-                    "<edmx:DataServices>" +
-                    "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
-                        "<EntityType Name=\"PurchaseOrder\">" + 
-                            "<Key><PropertyRef Name=\"Id\" /></Key>" +
-                            "<Property Name=\"Id\" Type=\"Edm.String\" Nullable=\"false\" />" +
-                            "<NavigationProperty Name=\"Product\" Type=\"Collection(NS.Product)\" />" +
-                        "</EntityType>" +
-                        "<EntityType Name=\"Product\">" +
-                            "<Key><PropertyRef Name=\"Id\" /></Key>" +
-                            "<Property Name=\"Id\" Type=\"Edm.String\" Nullable=\"false\" />" +
-                        "</EntityType>" +
-                        "<EntityType Name=\"Widget\" BaseType=\"NS.Product\" />" +
-                        "<EntityType Name=\"DooHickey\" BaseType=\"NS.Product\" />" +
-                        "<EntityContainer Name=\"MyApi\">" +
-                            "<EntitySet Name=\"PurchaseOrders\" EntityType=\"NS.PurchaseOrder\">" +
-                                "<NavigationPropertyBinding Path=\"Product/NS.DooHickey\" Target=\"DooHickies\" />" +
-                                "<NavigationPropertyBinding Path=\"Product/NS.Widget\" Target=\"Widgets\" />" +
-                            "</EntitySet>" +
-                            "<EntitySet Name=\"Widgets\" EntityType=\"NS.Widget\" />" +
-                            "<EntitySet Name=\"DooHickies\" EntityType=\"NS.DooHickey\" />" +
-                        "</EntityContainer>" +
-                    "</Schema>" +
-                    "</edmx:DataServices>" +
-                "</edmx:Edmx>"
-);
-
-            // Act & Assert for JSON
-            WriteAndVerifyJson(model,
+var v40Json = 
 @"{
   ""$Version"": ""4.0"",
   ""$EntityContainer"": ""NS.MyApi"",
@@ -2496,7 +2465,55 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     }
   }
-}");
+}";
+
+            var xmlResult =
+                "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+                    "<edmx:Edmx Version=\"{0}\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                    "<edmx:DataServices>" +
+                    "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                        "<EntityType Name=\"PurchaseOrder\">" +
+                            "<Key><PropertyRef Name=\"Id\" /></Key>" +
+                            "<Property Name=\"Id\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                            "<NavigationProperty Name=\"Product\" Type=\"Collection(NS.Product)\" />" +
+                        "</EntityType>" +
+                        "<EntityType Name=\"Product\">" +
+                            "<Key><PropertyRef Name=\"Id\" /></Key>" +
+                            "<Property Name=\"Id\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                        "</EntityType>" +
+                        "<EntityType Name=\"Widget\" BaseType=\"NS.Product\" />" +
+                        "<EntityType Name=\"DooHickey\" BaseType=\"NS.Product\" />" +
+                        "<EntityContainer Name=\"MyApi\">" +
+                        "{1}" +
+                            "<EntitySet Name=\"Widgets\" EntityType=\"NS.Widget\" />" +
+                            "<EntitySet Name=\"DooHickies\" EntityType=\"NS.DooHickey\" />" +
+                        "</EntityContainer>" +
+                    "</Schema>" +
+                    "</edmx:DataServices>" +
+                "</edmx:Edmx>";
+
+            var v40EntitySet =
+                            "<EntitySet Name=\"PurchaseOrders\" EntityType=\"NS.PurchaseOrder\" />";
+
+            var v401EntitySet =
+                            "<EntitySet Name=\"PurchaseOrders\" EntityType=\"NS.PurchaseOrder\">" +
+                                "<NavigationPropertyBinding Path=\"Product/NS.DooHickey\" Target=\"DooHickies\" />" +
+                                "<NavigationPropertyBinding Path=\"Product/NS.Widget\" Target=\"Widgets\" />" +
+                            "</EntitySet>";
+
+            // Act & Assert for XML 4.0
+            WriteAndVerifyXml(model, String.Format(xmlResult, "4.0", v40EntitySet));
+
+            // Act & Assert for JSON 4.0
+            WriteAndVerifyJson(model, v40Json);
+
+            model.SetEdmVersion(Version.Parse("4.01"));
+
+            // Act & Assert for XML 4.1
+            WriteAndVerifyXml(model, String.Format(xmlResult, "4.01", v401EntitySet));
+
+            // Act & Assert for JSON 4.1
+            WriteAndVerifyJson(model, v40Json.Replace("4.0", "4.01"));
         }
 
         [Fact]
