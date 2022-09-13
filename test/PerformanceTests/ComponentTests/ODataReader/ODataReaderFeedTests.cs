@@ -18,14 +18,25 @@ namespace Microsoft.OData.Performance
     [MemoryDiagnoser]
     public class ODataReaderFeedTests
     {
-        private static readonly IEdmModel Model = TestUtils.GetAdventureWorksModel();
-        private static readonly IEdmEntitySet TestEntitySet = Model.EntityContainer.FindEntitySet("Product");
-        private static readonly IEdmEntityType TestEntityType = Model.FindDeclaredType("PerformanceServices.Edm.AdventureWorks.Product") as IEdmEntityType;
+        private IEdmModel Model;
+        private IEdmEntitySet TestEntitySet;
+        private IEdmEntityType TestEntityType;
 
         [Params(true, false)]
         public bool _isFullValidation;
 
+        [Params(true, false)]
+        public bool _isModelImmutable;
+
         public Stream _stream;
+
+        [GlobalSetup]
+        public void InitModel()
+        {
+            Model = TestUtils.GetAdventureWorksModel(_isModelImmutable);
+            TestEntitySet = Model.EntityContainer.FindEntitySet("Product");
+            TestEntityType = Model.FindDeclaredType("PerformanceServices.Edm.AdventureWorks.Product") as IEdmEntityType;
+        }
 
         [IterationCleanup]
         public void Cleanup()
@@ -33,49 +44,49 @@ namespace Microsoft.OData.Performance
             _stream.Dispose();
         }
 
-        [IterationSetup(Target = nameof(ReadFeed))]
+        ////[IterationSetup(Target = nameof(ReadFeed))]
         public void SetupForReadFeed()
         {
             SetupDataStream("Entry.json", 1000);
         }
 
-        [Benchmark]
+        ////[Benchmark]
         public void ReadFeed()
         {
             RunReadFeedTest(_isFullValidation);
         }
 
-        [IterationSetup(Target = nameof(ReadFeedIncludeSpatial))]
+        ////[IterationSetup(Target = nameof(ReadFeedIncludeSpatial))]
         public void SetupForReadFeedIncludeSpatial()
         {
             SetupDataStream("EntryIncludeSpatial.json", 1000);
         }
 
-        [Benchmark]
+        ////[Benchmark]
         public void ReadFeedIncludeSpatial()
         {
             RunReadFeedTest(_isFullValidation);
         }
 
-        [IterationSetup(Target = nameof(ReadFeedWithExpansions))]
+        ////[IterationSetup(Target = nameof(ReadFeedWithExpansions))]
         public void SetupForReadFeedWithExpansions()
         {
             SetupDataStream("EntryWithExpansions.json", 100);
         }
 
-        [Benchmark]
+        ////[Benchmark]
         public void ReadFeedWithExpansions()
         {
             RunReadFeedTest(_isFullValidation);
         }
 
-        [IterationSetup(Target = nameof(ReadFeedIncludeSpatialWithExpansions))]
+        ////[IterationSetup(Target = nameof(ReadFeedIncludeSpatialWithExpansions))]
         public void SetupForReadFeedIncludeSpatialWithExpansions()
         {
             SetupDataStream("EntryIncludeSpatialWithExpansions.json", 100);
         }
 
-        [Benchmark]
+        ////[Benchmark]
         public void ReadFeedIncludeSpatialWithExpansions()
         {
             RunReadFeedTest(_isFullValidation);

@@ -13,9 +13,7 @@ namespace Microsoft.Test.Taupo.Execution
     /// <summary>
     /// Test parameter information determined using reflection.
     /// </summary>
-#if !SILVERLIGHT
     [Serializable]
-#endif
     public class TestParameterInfo
     {
         private static List<string> possibleBooleanValues = new List<string>() { "false", "true" };

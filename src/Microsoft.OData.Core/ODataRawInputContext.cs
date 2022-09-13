@@ -7,13 +7,16 @@
 namespace Microsoft.OData
 {
     #region Namespaces
+
     using System;
+    using System.Buffers;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Text;
     using System.Threading.Tasks;
     using Microsoft.OData.Edm;
+
     #endregion Namespaces
 
     /// <summary>
@@ -114,8 +117,7 @@ namespace Microsoft.OData
         /// <returns>Task which when completed returns an <see cref="object"/> representing the read value.</returns>
         internal override Task<object> ReadValueAsync(IEdmPrimitiveTypeReference expectedPrimitiveTypeReference)
         {
-            // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.ReadValueImplementation(expectedPrimitiveTypeReference));
+            return this.ReadValueImplementationAsync(expectedPrimitiveTypeReference);
         }
 
         /// <summary>
@@ -164,23 +166,7 @@ namespace Microsoft.OData
         private object ReadValueImplementation(IEdmPrimitiveTypeReference expectedPrimitiveTypeReference)
         {
             // if an expected primitive type is specified it trumps the content type/reader payload kind
-            bool readBinary;
-            if (expectedPrimitiveTypeReference == null)
-            {
-                readBinary = this.readerPayloadKind == ODataPayloadKind.BinaryValue;
-            }
-            else
-            {
-                if (expectedPrimitiveTypeReference.PrimitiveKind() == EdmPrimitiveTypeKind.Binary ||
-                    expectedPrimitiveTypeReference.PrimitiveKind() == EdmPrimitiveTypeKind.Stream)
-                {
-                    readBinary = true;
-                }
-                else
-                {
-                    readBinary = false;
-                }
-            }
+            bool readBinary = ReadAsBinary(expectedPrimitiveTypeReference);
 
             if (readBinary)
             {
@@ -189,7 +175,7 @@ namespace Microsoft.OData
             else
             {
                 Debug.Assert(this.textReader == null, "this.textReader == null");
-                this.textReader = this.Encoding == null ? new StreamReader(this.stream) : new StreamReader(this.stream, this.Encoding);
+                InitializeTextReader();
                 return this.ReadRawValue(expectedPrimitiveTypeReference);
             }
         }
@@ -200,33 +186,33 @@ namespace Microsoft.OData
         /// <returns>A byte array containing all the data read.</returns>
         private byte[] ReadBinaryValue()
         {
-            //// This method is copied from Deserializer.ReadByteStream
-
             byte[] data;
+
+            // If stream is seekable, we can access the length and perform a single read
+            if (this.stream.CanSeek && this.stream.Length <= int.MaxValue)
+            {
+                data = new byte[this.stream.Length];
+                this.stream.Read(data, 0, (int)stream.Length);
+
+                return data;
+            }
 
             long numberOfBytesRead = 0;
             int result;
             List<byte[]> byteData = new List<byte[]>();
+            ArrayPool<byte> arrayPool = ArrayPool<byte>.Shared;
 
             do
             {
-                data = new byte[BufferSize];
+                data = arrayPool.Rent(BufferSize);
+
                 result = this.stream.Read(data, 0, data.Length);
                 numberOfBytesRead += result;
                 byteData.Add(data);
             }
             while (result == data.Length);
 
-            // Find out the total number of bytes read and copy data from byteData to data
-            data = new byte[numberOfBytesRead];
-            for (int i = 0; i < byteData.Count - 1; i++)
-            {
-                Buffer.BlockCopy(byteData[i], 0, data, i * BufferSize, BufferSize);
-            }
-
-            // For the last buffer, copy the remaining number of bytes, not always the buffer size
-            Buffer.BlockCopy(byteData[byteData.Count - 1], 0, data, (byteData.Count - 1) * BufferSize, result);
-            return data;
+            return ConcatByteArrays(byteData, numberOfBytesRead, result, arrayPool);
         }
 
         /// <summary>
@@ -250,6 +236,163 @@ namespace Microsoft.OData
             }
 
             return rawValue;
+        }
+
+        /// <summary>
+        /// Asynchronously read a top-level value.
+        /// </summary>
+        /// <param name="expectedPrimitiveTypeReference">The expected primitive type for the value to be read; null if no expected type is available.</param>
+        /// <returns>
+        /// A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains an object representing the read value.
+        /// </returns>
+        private async Task<object> ReadValueImplementationAsync(IEdmPrimitiveTypeReference expectedPrimitiveTypeReference)
+        {
+            object value;
+
+            // If an expected primitive type is specified it trumps the content type/reader payload kind
+            bool readBinary = ReadAsBinary(expectedPrimitiveTypeReference);
+
+            if (readBinary)
+            {
+                value = await this.ReadBinaryValueAsync()
+                    .ConfigureAwait(false);
+            }
+            else
+            {
+                Debug.Assert(this.textReader == null, "this.textReader == null");
+                this.InitializeTextReader();
+                value = await this.ReadRawValueAsync(expectedPrimitiveTypeReference)
+                    .ConfigureAwait(false);
+            }
+
+            return value;
+        }
+
+        /// <summary>
+        /// Asynchronously read the binary value from the stream.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains a byte array containing all the data read.
+        /// </returns>
+        private async Task<byte[]> ReadBinaryValueAsync()
+        {
+            byte[] data;
+
+            // If stream is seekable, we can access the length and perform a single read
+            if (this.stream.CanSeek && this.stream.Length <= int.MaxValue)
+            {
+                data = new byte[this.stream.Length];
+                await this.stream.ReadAsync(data, 0, (int)stream.Length)
+                    .ConfigureAwait(false);
+
+                return data;
+            }
+
+            long numberOfBytesRead = 0;
+            int result;
+            List<byte[]> byteData = new List<byte[]>();
+            ArrayPool<byte> arrayPool = ArrayPool<byte>.Shared;
+
+            do
+            {
+                data = new byte[BufferSize];
+                result = await this.stream.ReadAsync(data, 0, data.Length)
+                    .ConfigureAwait(false);
+                numberOfBytesRead += result;
+                byteData.Add(data);
+            }
+            while (result == data.Length);
+
+            return ConcatByteArrays(byteData, numberOfBytesRead, result, arrayPool);
+        }
+
+        /// <summary>
+        /// Asynchronously reads the content of a text reader as string and, if <paramref name="expectedPrimitiveTypeReference"/> is specified and primitive type conversion
+        /// is enabled, converts the string to the expected type.
+        /// </summary>
+        /// <param name="expectedPrimitiveTypeReference">The expected type of the value being read or null if no type conversion should be performed.</param>
+        /// <returns>
+        /// A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains the raw value that was read from the text reader
+        /// either as string or converted to the provided <paramref name="expectedPrimitiveTypeReference"/>.
+        /// </returns>
+        private async Task<object> ReadRawValueAsync(IEdmPrimitiveTypeReference expectedPrimitiveTypeReference)
+        {
+            string stringFromStream = await this.textReader.ReadToEndAsync()
+                .ConfigureAwait(false);
+
+            if (expectedPrimitiveTypeReference != null && this.MessageReaderSettings.EnablePrimitiveTypeConversion)
+            {
+                return ODataRawValueUtils.ConvertStringToPrimitive(stringFromStream, expectedPrimitiveTypeReference);
+            }
+            else
+            {
+                return stringFromStream;
+            }
+        }
+
+        /// <summary>
+        /// Initializes the <see cref="TextReader"/> class variable.
+        /// </summary>
+        private void InitializeTextReader()
+        {
+            this.textReader = this.Encoding == null ? new StreamReader(this.stream) : new StreamReader(this.stream, this.Encoding);
+        }
+
+        /// <summary>
+        /// Checks whether the value can be read as binary given its expected primitive type.
+        /// </summary>
+        /// <param name="expectedPrimitiveTypeReference">The expected primitive type for the value to be read;
+        /// null if no expected type is available.</param>
+        /// <returns>true if the value can be read as binary; otherwise false.</returns>
+        private bool ReadAsBinary(IEdmPrimitiveTypeReference expectedPrimitiveTypeReference)
+        {
+            if (expectedPrimitiveTypeReference == null)
+            {
+                return this.readerPayloadKind == ODataPayloadKind.BinaryValue;
+            }
+            else
+            {
+                if (expectedPrimitiveTypeReference.PrimitiveKind() == EdmPrimitiveTypeKind.Binary ||
+                    expectedPrimitiveTypeReference.PrimitiveKind() == EdmPrimitiveTypeKind.Stream)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Concatenates a list of bytes arrays into a single byte array.
+        /// </summary>
+        /// <param name="byteData">List of byte arrays containing all the data read.</param>
+        /// <param name="totalBytesRead">Total number of bytes read.</param>
+        /// <param name="finalBytesRead">Bytes read in the final read operation.</param>
+        /// <param name="arrayPool">Array pool for renting a byte array.</param>
+        /// <returns>A byte array containing all the data read.</returns>
+        private static byte[] ConcatByteArrays(List<byte[]> byteData, long totalBytesRead, int finalBytesRead, ArrayPool<byte> arrayPool)
+        {
+            // Find out the total number of bytes read and copy data from byteData to data
+            byte[] combined = new byte[totalBytesRead];
+            int offset = 0;
+
+            for (int i = 0; i < byteData.Count - 1; i++)
+            {
+                Buffer.BlockCopy(byteData[i], 0, combined, offset, byteData[i].Length);
+                offset += byteData[i].Length;
+                arrayPool.Return(byteData[i]);
+            }
+
+            // For the last buffer, copy the remaining number of bytes, not always the buffer size
+            Buffer.BlockCopy(byteData[byteData.Count - 1], 0, combined, offset, finalBytesRead);
+            arrayPool.Return(byteData[byteData.Count - 1]);
+
+            return combined;
         }
     }
 }

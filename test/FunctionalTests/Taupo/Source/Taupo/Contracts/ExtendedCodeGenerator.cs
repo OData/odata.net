@@ -74,9 +74,7 @@ namespace Microsoft.Test.Taupo.Contracts
         /// </summary>
         /// <param name="value">The string to create an escaped identifier for.</param>
         /// <returns>The escaped identifier for the value.</returns>
-#if !SILVERLIGHT
         [SecuritySafeCritical]
-#endif
         public string CreateEscapedIdentifier(string value)
         {
             return this.WrappedCodeGenerator.CreateEscapedIdentifier(value);
@@ -87,9 +85,7 @@ namespace Microsoft.Test.Taupo.Contracts
         /// </summary>
         /// <param name="value">The string to generate a valid identifier for.</param>
         /// <returns>A valid identifier for the specified value.</returns>
-#if !SILVERLIGHT
         [SecuritySafeCritical]
-#endif
         public string CreateValidIdentifier(string value)
         {
             return this.WrappedCodeGenerator.CreateValidIdentifier(value);
@@ -129,9 +125,7 @@ namespace Microsoft.Test.Taupo.Contracts
         /// <param name="compileUnit">A <see cref="CodeCompileUnit"/> to generate code for.</param>
         /// <param name="writer">The <see cref="TextWriter"/> to output code to.</param>
         /// <param name="options">A <see cref="SafeCodeGeneratorOptions"/> that indicates the options to use for generating code.</param>
-#if !SILVERLIGHT
         [SecuritySafeCritical]
-#endif
         public virtual void GenerateCodeFromCompileUnit(CodeCompileUnit compileUnit, TextWriter writer, SafeCodeGeneratorOptions options)
         {
             using (var wrappingWriter = new StringWriter(CultureInfo.InvariantCulture))
@@ -175,9 +169,7 @@ namespace Microsoft.Test.Taupo.Contracts
         /// <param name="expression">A <see cref="CodeExpression"/> that indicates the expression to generate code for.</param>
         /// <param name="writer">The <see cref="TextWriter"/> to output code to.</param>
         /// <param name="options">A <see cref="SafeCodeGeneratorOptions"/> that indicates the options to use for generating code.</param>
-#if !SILVERLIGHT
         [SecuritySafeCritical]
-#endif
         public virtual void GenerateCodeFromExpression(CodeExpression expression, TextWriter writer, SafeCodeGeneratorOptions options)
         {
             using (StringWriter wrappedWriter = new StringWriter(CultureInfo.InvariantCulture))
@@ -221,9 +213,7 @@ namespace Microsoft.Test.Taupo.Contracts
         /// <param name="ns">A <see cref="CodeNamespace"/> that indicates the namespace to generate code for.</param>
         /// <param name="writer">The <see cref="TextWriter"/> to output code to.</param>
         /// <param name="options">A <see cref="SafeCodeGeneratorOptions"/> that indicates the options to use for generating code.</param>
-#if !SILVERLIGHT
         [SecuritySafeCritical]
-#endif
         public virtual void GenerateCodeFromNamespace(CodeNamespace ns, TextWriter writer, SafeCodeGeneratorOptions options)
         {
             using (StringWriter wrappedWriter = new StringWriter(CultureInfo.InvariantCulture))
@@ -267,9 +257,7 @@ namespace Microsoft.Test.Taupo.Contracts
         /// <param name="statement">A <see cref="CodeStatement"/> containing the CodeDOM elements to translate.</param>
         /// <param name="writer">The <see cref="TextWriter"/> to output code to.</param>
         /// <param name="options">A <see cref="SafeCodeGeneratorOptions"/> that indicates the options to use for generating code.</param>
-#if !SILVERLIGHT
         [SecuritySafeCritical]
-#endif
         public virtual void GenerateCodeFromStatement(CodeStatement statement, TextWriter writer, SafeCodeGeneratorOptions options)
         {
             using (var wrappedWriter = new StringWriter(CultureInfo.InvariantCulture))
@@ -313,9 +301,7 @@ namespace Microsoft.Test.Taupo.Contracts
         /// <param name="type">A <see cref="CodeTypeDeclaration"/> that indicates the type to generate code for.</param>
         /// <param name="writer">The <see cref="TextWriter"/> to output code to.</param>
         /// <param name="options">A <see cref="SafeCodeGeneratorOptions"/> that indicates the options to use for generating code.</param>
-#if !SILVERLIGHT
         [SecuritySafeCritical]
-#endif
         public virtual void GenerateCodeFromType(CodeTypeDeclaration type, TextWriter writer, SafeCodeGeneratorOptions options)
         {
            using (StringWriter wrappedWriter = new StringWriter(CultureInfo.InvariantCulture))
@@ -332,9 +318,7 @@ namespace Microsoft.Test.Taupo.Contracts
         /// <returns>
         /// A text representation of the specified type for the language this code generator is designed to generate code in. For example, in Visual Basic, passing in type System.Int32 will return "Integer".
         /// </returns>
-#if !SILVERLIGHT
         [SecuritySafeCritical]
-#endif
         public string GetTypeOutput(CodeTypeReference type)
         {
             return this.RewriteExtensionMethod(this.WrappedCodeGenerator.GetTypeOutput(this.Rewriter.Rewrite(type)));
@@ -347,9 +331,7 @@ namespace Microsoft.Test.Taupo.Contracts
         /// <returns>
         /// true if the <paramref name="value"/> parameter is a valid identifier; otherwise, false.
         /// </returns>
-#if !SILVERLIGHT
         [SecuritySafeCritical]
-#endif
         public bool IsValidIdentifier(string value)
         {
             return this.WrappedCodeGenerator.IsValidIdentifier(value);
@@ -362,9 +344,7 @@ namespace Microsoft.Test.Taupo.Contracts
         /// <returns>
         /// true if the specified capabilities are supported; otherwise, false.
         /// </returns>
-#if !SILVERLIGHT
         [SecuritySafeCritical]
-#endif
         public bool Supports(GeneratorSupport support)
         {
             return this.WrappedCodeGenerator.Supports(support);
@@ -374,9 +354,7 @@ namespace Microsoft.Test.Taupo.Contracts
         /// Throws an exception if the specified value is not a valid identifier.
         /// </summary>
         /// <param name="value">The identifier to validate.</param>
-#if !SILVERLIGHT
         [SecuritySafeCritical]
-#endif
         public void ValidateIdentifier(string value)
         {
             this.WrappedCodeGenerator.ValidateIdentifier(value);

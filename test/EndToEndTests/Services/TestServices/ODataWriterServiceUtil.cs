@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !SILVERLIGHT && !PORTABLELIB
 namespace Microsoft.Test.OData.Services.TestServices
 {
     using Microsoft.OData.Service;
@@ -32,4 +31,3 @@ namespace Microsoft.Test.OData.Services.TestServices
         }
     }
 }
-#endif

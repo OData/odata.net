@@ -138,7 +138,7 @@ namespace Microsoft.OData.UriParser
                     }
 
                     // Keep track of last navigation source.
-                    IEdmNavigationSource navigationSource = parsedSegments.Last().TranslateWith(new DetermineNavigationSourceTranslator());
+                    IEdmNavigationSource navigationSource = parsedSegments.Last().TranslateWith(DetermineNavigationSourceTranslator.Instance);
                     if (navigationSource != null)
                     {
                         lastNavigationSource = navigationSource;

@@ -22,7 +22,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
         {
         }
 
-#if !WIN8 && !WINDOWSPHONE && !(NETCOREAPP1_0 || NETCOREAPP2_0)
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [Fact]
         public void SimpleQuery()
         {

@@ -454,11 +454,13 @@ namespace Microsoft.OData.Evaluation
                 return result;
             }
 
+
             /// <summary>
             /// Formats the literal with a type prefix and quotes (if the type requires it).
             /// </summary>
             /// <param name="value">The value to format.</param>
             /// <returns>The formatted literal, with type marker if needed.</returns>
+            [SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "<Pending>")]
             private string FormatLiteralWithTypePrefix(object value)
             {
                 Debug.Assert(value != null, "value != null. Null values need to be handled differently in some cases.");
@@ -468,7 +470,6 @@ namespace Microsoft.OData.Evaluation
                 {
                     if (string.IsNullOrEmpty(enumValue.TypeName))
                     {
-                        // TODO: [Sizhong Du] Replace with error string #647.
                         throw new ODataException("Type name should not be null or empty when serializing an Enum value for URI key.");
                     }
 

@@ -47,21 +47,7 @@ namespace Microsoft.Test.Taupo.DependencyInjection
                 if (this.testParameters.TryGetValue(parameterName, out level))
                 {
                     LogLevel minLevel;
-                    bool succeeded;
-#if SILVERLIGHT
-                    try
-                    {
-                        minLevel = (LogLevel)Enum.Parse(typeof(LogLevel), level, true);
-                        succeeded = true;
-                    }
-                    catch
-                    {
-                        succeeded = false;
-                        minLevel = LogLevel.Error;
-                    }
-#else
-                    succeeded = Enum.TryParse<LogLevel>(level, out minLevel);
-#endif
+                    bool succeeded = Enum.TryParse<LogLevel>(level, out minLevel);
 
                     if (succeeded)
                     {

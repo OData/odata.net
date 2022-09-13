@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -35,6 +36,18 @@ namespace Microsoft.OData.Tests
         public static void Throws<T>(this Action testCode, string errorMessage) where T : Exception
         {
             T exception = Assert.Throws<T>(testCode);
+            Assert.Equal(errorMessage, exception.Message);
+        }
+
+        /// <summary>
+        /// Verifies that the exact exception calling the async test code is thrown.
+        /// </summary>
+        /// <typeparam name="T">The type of the exception expected to be thrown</typeparam>
+        /// <param name="testCode">An async delegate to the code to be tested</param>
+        /// <param name="errorMessage">The expected error message.</param>
+        public static async Task ThrowsAsync<T>(this Func<Task> testCode, string errorMessage) where T : Exception
+        {
+            T exception = await Assert.ThrowsAsync<T>(testCode);
             Assert.Equal(errorMessage, exception.Message);
         }
 

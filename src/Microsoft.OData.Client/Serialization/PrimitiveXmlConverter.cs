@@ -169,7 +169,6 @@ namespace Microsoft.OData.Client
         }
     }
 
-#if !PORTABLELIB
     /// <summary>
     /// Convert between primitive types to string and xml representation
     /// </summary>
@@ -222,7 +221,6 @@ namespace Microsoft.OData.Client
             return (byte[])this.convertToByteArrayMethodInfo.Invoke(instance, null);
         }
     }
-#endif
 
     /// <summary>
     /// Convert between primitive types to string and xml representation

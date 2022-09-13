@@ -9,27 +9,11 @@ namespace Microsoft.Test.Taupo.Astoria
     using System;
     using Microsoft.Test.Taupo.Astoria.Contracts;
     using Microsoft.Test.Taupo.Astoria.Contracts.ServiceReferences;
-#if SILVERLIGHT
-#if !WIN8
-    using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataServiceBuilderService.Silverlight;
-#else
-    using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataServiceBuilderService.Win8;
-#endif
-#else
     using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataServiceBuilderService.DotNet;
-#endif
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts;
     using Microsoft.Test.Taupo.Contracts.Spatial;
-#if SILVERLIGHT
-#if !WIN8
-    using Microsoft.Test.Taupo.Contracts.WebServices.CompilerService.Silverlight;
-#else
-    using Microsoft.Test.Taupo.Contracts.WebServices.CompilerService.Win8;
-#endif
-#else
     using Microsoft.Test.Taupo.Contracts.WebServices.CompilerService.DotNet;
-#endif
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.Query.Contracts;
     using Microsoft.Test.Taupo.Spatial.Contracts;
@@ -93,11 +77,7 @@ namespace Microsoft.Test.Taupo.Astoria
 
             // in Silverlight, we want to do the same default uri for the compiler service. 
             // However, on the desktop we want to do local compiliation unless a specific uri has been specified
-#if SILVERLIGHT
-            container.RegisterServiceReference<ICompilerService>(() => this.CompilerServiceUri, () => this.TestServicesBaseUri, "TestServices/Compiler.svc");
-#else
             container.RegisterServiceReference<ICompilerService>(() => this.CompilerServiceUri);
-#endif
             // need to do this here so that the workspace builder can see it, which happens before the test case is initialized
             container.Register<ISpatialClrTypeResolver, SpatialClrTypeResolver>();
             container.Register<ISpatialDataTypeDefinitionResolver, SpatialDataTypeDefinitionResolver>();

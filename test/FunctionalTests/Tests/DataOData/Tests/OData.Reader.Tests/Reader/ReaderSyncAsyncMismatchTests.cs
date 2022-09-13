@@ -23,7 +23,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
         [InjectDependency(IsRequired = true)]
         public PayloadReaderTestDescriptor.Settings Settings { get; set; }
 
-#if !SILVERLIGHT
         [TestMethod, TestCategory("Reader.Errors"), Variation(Description = "Verifies that sync and async calls cannot be mixed on a single reader.")]
         public void SyncAsyncMismatchTest()
         {
@@ -82,7 +81,5 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
 
             return testDescriptors;
         }
-
-#endif //ODATA_ASYNC
     }
 }

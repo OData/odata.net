@@ -45,7 +45,6 @@ namespace Microsoft.OData.Client
             throw Error.NotImplemented();
         }
 
-#if !PORTABLELIB
         /// <summary>Executes the query against the data service.</summary>
         /// <returns>An <see cref="System.Collections.Generic.IEnumerable{T}" /> that contains the results of the query operation.</returns>
         /// <exception cref="Microsoft.OData.Client.DataServiceQueryException">When the data service returns an HTTP 404: Resource Not Found error.</exception>
@@ -53,7 +52,6 @@ namespace Microsoft.OData.Client
         {
             return this.ExecuteInternal();
         }
-#endif
 
         /// <summary>Asynchronously sends a request to execute the data service query.</summary>
         /// <returns>An <see cref="System.IAsyncResult" /> object that is used to track the status of the asynchronous operation.</returns>
@@ -80,14 +78,11 @@ namespace Microsoft.OData.Client
             return this.EndExecuteInternal(asyncResult);
         }
 
-#if !PORTABLELIB
-        /// Synchronous methods not available
         /// <summary>
         /// Returns an IEnumerable from an Internet resource.
         /// </summary>
         /// <returns>An IEnumerable that contains the response from the Internet resource.</returns>
         internal abstract IEnumerable ExecuteInternal();
-#endif
 
         /// <summary>
         /// Begins an asynchronous request to an Internet resource.

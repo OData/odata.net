@@ -19,9 +19,6 @@ namespace Microsoft.OData
     /// Class representing implementation specific debugging information to help determine the cause of the error.
     /// </summary>
     [DebuggerDisplay("{Message}")]
-#if ORCAS
-    [Serializable]
-#endif
     public sealed class ODataInnerError
     {
         /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.ODataInnerError" /> class with default values.</summary>

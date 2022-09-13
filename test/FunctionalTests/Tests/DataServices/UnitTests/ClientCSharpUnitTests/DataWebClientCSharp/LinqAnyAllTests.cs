@@ -215,7 +215,7 @@ namespace AstoriaUnitTests.Tests
                     q = from m in movies
                         where m.Awards.All(aw => m.Director is MegaStar && ((MegaStar)m.Director).MegaStartProp.StartsWith("Hus") && aw.Recepient == m.Director)
                         select m,
-                    url = "Movies?$filter=Awards/all(aw:isof($it/Director, 'NS.MegaStar') and startswith(cast($it/Director,'NS.MegaStar')/MegaStartProp,'Hus') and aw/Recepient eq $it/Director)"
+                    url = "Movies?$filter=Awards/all(aw:isof($it/Director, 'NS.MegaStar') and startswith(cast($it/Director,NS.MegaStar)/MegaStartProp,'Hus') and aw/Recepient eq $it/Director)"
                 },
                 new{
                     q = from m in movies

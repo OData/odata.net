@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !WIN8
 namespace Microsoft.Test.Taupo.Astoria.Php
 {
     using System;
@@ -84,9 +83,7 @@ namespace Microsoft.Test.Taupo.Astoria.Php
             
             var fileName = string.Format(CultureInfo.InvariantCulture, "{0}{1}.php", DateTime.Now.Day.ToString(CultureInfo.InvariantCulture), DateTime.Now.TimeOfDay.ToString().Replace(':', '.'));
             string phpCode = this.CodeGenerator.GenerateCode(expression);
-#if !SILVERLIGHT
             File.WriteAllText(string.Format(CultureInfo.InvariantCulture, "{0}\\{1}", this.PhpWorkingDirectory, fileName), phpCode);
-#endif
             string result = this.CodeExecutor.ExecuteCode(fileName);
             if (!result.Equals("Passed"))
             {
@@ -104,4 +101,3 @@ namespace Microsoft.Test.Taupo.Astoria.Php
         }
     }
 }
-#endif

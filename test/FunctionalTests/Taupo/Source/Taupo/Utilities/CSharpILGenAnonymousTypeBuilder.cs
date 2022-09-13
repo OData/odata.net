@@ -6,7 +6,6 @@
 
 namespace Microsoft.Test.Taupo.Utilities
 {
-#if !WINDOWS_PHONE && !WIN8
     using System;
     using System.Collections.Generic;
     using System.Globalization;
@@ -35,7 +34,6 @@ namespace Microsoft.Test.Taupo.Utilities
         {
             AssemblyName assemblyName = new AssemblyName("AnonymousTypes" + Guid.NewGuid().ToString("N"));
 
-#if !SILVERLIGHT
             // We apply the SecurityTransparentAttribute because this dynamic assembly should not do anything
             // that is security-sensitive. Furthermore, emitting a non-transparent dynamic assembly from a
             // transparent method causes a demand for the emitting assembly's (i.e. Microsoft.Test.Taupo.dll)
@@ -56,9 +54,6 @@ namespace Microsoft.Test.Taupo.Utilities
                 AssemblyBuilderAccess.Run,
                 customAttributes,
                 SecurityContextSource.CurrentAppDomain);
-#else
-            this.assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
-#endif
             this.moduleBuilder = this.assemblyBuilder.DefineDynamicModule(assemblyName.Name);
         }
 
@@ -197,5 +192,4 @@ namespace Microsoft.Test.Taupo.Utilities
             ilgen.Emit(OpCodes.Ret);
         }
     }
-#endif
 }

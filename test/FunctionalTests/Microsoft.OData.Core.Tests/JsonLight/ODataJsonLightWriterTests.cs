@@ -11,7 +11,9 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Json;
 using Microsoft.OData.JsonLight;
+using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 
 namespace Microsoft.OData.Core.Tests.JsonLight
@@ -50,7 +52,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             this.model = new EdmModel();
 
             this.customerTypeEnumType = new EdmEnumType("NS", "CustomerType");
-            this.addressComplexType = new EdmComplexType("NS", "Address", /*baseType*/ null, /*isAbstract*/ true, /*isOpen*/ true);
+            this.addressComplexType = new EdmComplexType("NS", "Address", baseType: null, isAbstract: true, isOpen: true);
             this.orderEntityType = new EdmEntityType("NS", "Order");
             this.customerEntityType = new EdmEntityType("NS", "Customer");
             this.productEntityType = new EdmEntityType("NS", "Product");
@@ -235,7 +237,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 },
                 this.customerEntitySet,
                 this.customerEntityType,
-                /*writingResourceSet*/ true);
+                writingResourceSet: true);
 
             Assert.Equal(expected, result);
         }
@@ -334,8 +336,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 },
                 this.customerEntitySet,
                 this.customerEntityType,
-                /*writingResultSet*/ true,
-                /*writingDelta*/ true);
+                writingResourceSet: true,
+                writingDelta: true);
 
             Assert.Equal(expected, result);
         }
@@ -367,8 +369,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 },
                 this.customerEntitySet,
                 this.customerEntityType,
-                /*writingResultSet*/ false,
-                /*writingDelta*/ true);
+                writingResourceSet: false,
+                writingDelta: true);
 
             Assert.Equal(
                 "{\"@context\":\"http://tempuri.org/$metadata#Customers/$entity\"," +
@@ -626,8 +628,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 },
                 this.customerEntitySet,
                 this.customerEntityType,
-                /*writingResultSet*/ true,
-                /*writingDelta*/ true);
+                writingResourceSet: true,
+                writingDelta: true);
 
             Assert.Equal(
                 "{\"@odata.context\":\"http://tempuri.org/$metadata#Customers/$delta\"," +
@@ -659,8 +661,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 },
                 this.customerEntitySet,
                 this.customerEntityType,
-                /*writingResultSet*/ true,
-                /*writingDelta*/ true);
+                writingResourceSet: true,
+                writingDelta: true);
 
             Assert.Equal(
                 "{\"@context\":\"http://tempuri.org/$metadata#Customers/$delta\"," +
@@ -695,8 +697,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 },
                 this.orderEntitySet,
                 this.orderEntityType,
-                /*writingResultSet*/ false,
-                /*writingDelta*/ true);
+                writingResourceSet: false,
+                writingDelta: true);
 
             Assert.Equal(
                 "{\"@context\":\"http://tempuri.org/$metadata#Orders/$entity\"," +
@@ -792,8 +794,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 },
                 this.orderEntitySet,
                 this.orderEntityType,
-                /*writingResultSet*/ true,
-                /*writingDelta*/ true);
+                writingResourceSet: true,
+                writingDelta: true);
 
             Assert.Equal(
                 "{\"@odata.context\":\"http://tempuri.org/$metadata#Orders/$delta\"," +
@@ -823,8 +825,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 },
                 this.orderEntitySet,
                 this.orderEntityType,
-                /*writingResultSet*/ true,
-                /*writingDelta*/ true);
+                writingResourceSet: true,
+                writingDelta: true);
 
             Assert.Equal(
                 "{\"@odata.context\":\"http://tempuri.org/$metadata#Orders/$delta\"," +
@@ -911,9 +913,9 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     await jsonLightWriter.WriteStartAsync(customerResourceSet);
                     await jsonLightWriter.WriteEndAsync();
                 },
-                /*navigationSource*/ null,
-                /*resourceType*/ null,
-                /*writingResourceSet*/ true);
+                navigationSource: null,
+                resourceType: null,
+                writingResourceSet: true);
 
             Assert.Equal(
                 "{\"@odata.context\":\"http://tempuri.org/$metadata#Customers\",\"value\":[]}",
@@ -934,9 +936,9 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     await jsonLightWriter.WriteEndAsync();
                     await jsonLightWriter.WriteEndAsync();
                 },
-                /*navigationSource*/ null,
-                /*resourceType*/ null,
-                /*writingResourceSet*/ true);
+                navigationSource: null,
+                resourceType: null,
+                writingResourceSet: true);
 
             Assert.Equal(
                 "{\"@odata.context\":\"http://tempuri.org/$metadata#Customers\"," +
@@ -960,8 +962,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     await jsonLightWriter.WriteStartAsync(customerResource);
                     await jsonLightWriter.WriteEndAsync();
                 },
-                /*navigationSource*/ null,
-                /*resourceType*/ null);
+                navigationSource: null,
+                resourceType: null);
 
             Assert.Equal(
                 "{\"@odata.context\":\"http://tempuri.org/$metadata#Customers/$entity\"," +
@@ -985,8 +987,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 },
                 this.orderEntitySet,
                 this.orderEntityType,
-                /*writingResourceSet*/ true,
-                /*writingDelta*/ true);
+                writingResourceSet: true,
+                writingDelta: true);
 
             Assert.Equal(
                 "{\"@odata.context\":\"http://tempuri.org/$metadata#Orders/$delta\"," +
@@ -1071,6 +1073,59 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 result);
         }
 
+#if NETCOREAPP3_1_OR_GREATER
+        [Fact]
+        public async Task WriteBinaryValueToStream_WithODataUtf8JsonWriter_Async()
+        {
+            var addressResource = CreateAddressResource();
+            var streamProperty = new ODataStreamPropertyInfo
+            {
+                Name = "Stream",
+                EditLink = new Uri($"{ServiceUri}/Orders(1)/ShippingAddress/Stream/edit", UriKind.Absolute),
+                ReadLink = new Uri($"{ServiceUri}/Orders(1)/ShippingAddress/Stream/read", UriKind.Absolute),
+                ContentType = "text/plain"
+            };
+
+            Action<IContainerBuilder> configureWriter = (builder) =>
+            {
+                builder.AddService<IStreamBasedJsonWriterFactory>(ServiceLifetime.Singleton, _ => DefaultStreamBasedJsonWriterFactory.Default);
+            };
+
+            var result = await SetupJsonLightWriterAndRunTestAsync(
+                async (jsonLightWriter) =>
+                {
+                    await jsonLightWriter.WriteStartAsync(addressResource);
+                    await jsonLightWriter.WriteStartAsync(streamProperty);
+
+                    using (var stream = await jsonLightWriter.CreateBinaryWriteStreamAsync())
+                    {
+                        var bytes = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
+
+                        await stream.WriteAsync(bytes, 0, 4);
+                        await stream.WriteAsync(bytes, 4, 4);
+                        await stream.WriteAsync(bytes, 8, 2);
+                        await stream.FlushAsync();
+                    }
+
+                    await jsonLightWriter.WriteEndAsync();
+                    await jsonLightWriter.WriteEndAsync();
+                },
+                this.orderEntitySet,
+                this.orderEntityType,
+                configAction: configureWriter);
+
+            Assert.Equal(
+                "{\"@odata.context\":\"http://tempuri.org/$metadata#Orders/NS.Address/$entity\"," +
+                "\"Street\":\"One Microsoft Way\",\"City\":\"Redmond\"," +
+                "\"Stream@odata.mediaEditLink\":\"http://tempuri.org/Orders(1)/ShippingAddress/Stream/edit\"," +
+                "\"Stream@odata.mediaReadLink\":\"http://tempuri.org/Orders(1)/ShippingAddress/Stream/read\"," +
+                "\"Stream@odata.mediaContentType\":\"text/plain\"," +
+                "\"Stream\":\"AQIDBAUGBwgJAA==\"}",
+                result);
+        }
+
+#endif
+
         [Fact]
         public async Task WriteRequestPayloadAsync()
         {
@@ -1093,10 +1148,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 },
                 this.orderEntitySet,
                 this.orderEntityType,
-                /*writingResourceSet*/ true,
-                /*writingDelta*/ false,
-                /*writingParameter*/ false,
-                /*writingRequest*/ true);
+                writingResourceSet: true,
+                writingDelta: false,
+                writingParameter: false,
+                writingRequest: true);
 
             Assert.Equal(
                 "{\"@odata.context\":\"http://tempuri.org/$metadata#Orders\"," +
@@ -1128,10 +1183,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 },
                 this.customerEntitySet,
                 this.customerEntityType,
-                /*writingResourceSet*/ false,
-                /*writingDelta*/ false,
-                /*writingParameter*/ false,
-                /*writingRequest*/ true);
+                writingResourceSet: false,
+                writingDelta: false,
+                writingParameter: false,
+                writingRequest: true);
 
             Assert.Equal(
                 "{\"@odata.context\":\"http://tempuri.org/$metadata#Customers/$entity\"," +
@@ -1160,10 +1215,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 },
                 this.customerEntitySet,
                 this.customerEntityType,
-                /*writingResourceSet*/ false,
-                /*writingDelta*/ false,
-                /*writingParameter*/ false,
-                /*writingRequest*/ true);
+                writingResourceSet: false,
+                writingDelta: false,
+                writingParameter: false,
+                writingRequest: true);
 
             Assert.Equal(
                 "{\"@odata.context\":\"http://tempuri.org/$metadata#Customers/$entity\"," +
@@ -1194,10 +1249,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 },
                 this.customerEntitySet,
                 this.customerEntityType,
-                /*writingResourceSet*/ false,
-                /*writingDelta*/ false,
-                /*writingParameter*/ false,
-                /*writingRequest*/ true);
+                writingResourceSet: false,
+                writingDelta: false,
+                writingParameter: false,
+                writingRequest: true);
 
             Assert.Equal(
                 "{\"@context\":\"http://tempuri.org/$metadata#Customers/$entity\"," +
@@ -1224,9 +1279,9 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 },
                 this.customerEntitySet,
                 this.customerEntityType,
-                /*writingResourceSet*/ true,
-                /*writingDelta*/ false,
-                /*writingParameter*/ true);
+                writingResourceSet: true,
+                writingDelta: false,
+                writingParameter: true);
 
             Assert.Equal("[{\"Id\":1,\"Name\":\"Sue\",\"Type\":\"Retail\"}]", result);
         }
@@ -1287,7 +1342,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 },
                 this.customerEntitySet,
                 this.customerEntityType,
-                /*writingResourceSet*/ true);
+                writingResourceSet: true);
 
             Assert.Equal(
                 "{\"@odata.context\":\"http://tempuri.org/$metadata#Customers\"," +
@@ -1295,6 +1350,50 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 "\"Orders@odata.navigationLink\":\"http://tempuri.org/Customers(1)/Orders\"}]}",
                 result);
         }
+
+
+        [Fact]
+        public async Task WriteDeltaResourceSetAsync_NoLongerThrowsExceptionForWriterNotConfiguredForWritingDelta()
+        {
+            var customerDeltaResourceSet = CreateCustomerDeltaResourceSet();
+
+            var result = await SetupJsonLightWriterAndRunTestAsync(
+                    async (jsonLightWriter) =>
+                    {
+                        await jsonLightWriter.WriteStartAsync(customerDeltaResourceSet);
+                        await jsonLightWriter.WriteEndAsync();
+                    },
+                    this.customerEntitySet,
+                    this.customerEntityType,
+                    writingResourceSet: true,
+                    writingDelta: false);
+
+            Assert.Equal(
+               "{\"@odata.context\":\"http://tempuri.org/$metadata#Customers/$delta\",\"value\":[]}",
+                result);
+        }
+
+        [Fact]
+        public async Task WriteDeletedResourceAsync_WorksForDeletedResourceAtTopLevel()
+        {
+            var customerDeletedResource = CreateCustomerDeletedResource();
+
+            var result = await SetupJsonLightWriterAndRunTestAsync(
+                    async (jsonLightWriter) =>
+                    {
+                        await jsonLightWriter.WriteStartAsync(customerDeletedResource);
+                        await jsonLightWriter.WriteEndAsync();
+                    },
+                    this.customerEntitySet,
+                    this.customerEntityType,
+                    writingResourceSet: false,
+                    writingDelta: false);
+
+            Assert.Equal(
+                "{\"@odata.context\":\"http://tempuri.org/$metadata#Customers/$deletedEntity\",\"id\":\"http://tempuri.org/Customers(1)\",\"reason\":\"changed\"}",
+                result);
+        }
+
 
         #region Exception Cases
 
@@ -1311,24 +1410,6 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
             Assert.Equal(
                 Strings.ODataWriterCore_InvalidTransitionFromStart("Start", "NestedResourceInfo"),
-                exception.Message);
-        }
-
-        [Fact]
-        public async Task WriteDeletedResourceAsync_ThrowsExceptionForDeletedResourceAtTopLevel()
-        {
-            var customerDeletedResource = CreateCustomerDeletedResource();
-
-            var exception = await Assert.ThrowsAsync<ODataException>(
-                () => SetupJsonLightWriterAndRunTestAsync(
-                    (jsonLightWriter) => jsonLightWriter.WriteStartAsync(customerDeletedResource),
-                    this.customerEntitySet,
-                    this.customerEntityType,
-                    /*writingResourceSet*/ false,
-                    /*writingDelta*/ true));
-
-            Assert.Equal(
-                Strings.ODataWriterCore_InvalidTransitionFromStart("Start", "DeletedResource"),
                 exception.Message);
         }
 
@@ -1403,7 +1484,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     (jsonLightWriter) => jsonLightWriter.WriteStartAsync(customerResourceSet),
                     this.customerEntitySet,
                     this.customerEntityType,
-                    /*writingResourceSet*/ false));
+                    writingResourceSet: false));
 
             Assert.Equal(Strings.ODataWriterCore_CannotWriteTopLevelResourceSetWithResourceWriter, exception.Message);
         }
@@ -1418,7 +1499,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     (jsonLightWriter) => jsonLightWriter.WriteStartAsync(customerResource),
                     this.customerEntitySet,
                     this.customerEntityType,
-                    /*writingResourceSet*/ true));
+                    writingResourceSet: true));
 
             Assert.Equal(Strings.ODataWriterCore_CannotWriteTopLevelResourceWithResourceSetWriter, exception.Message);
         }
@@ -1433,28 +1514,12 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     (jsonLightWriter) => jsonLightWriter.WriteStartAsync(customerDeltaResourceSet),
                     this.customerEntitySet,
                     this.customerEntityType,
-                    /*writingResourceSet*/ false,
-                    /*writingDelta*/ true));
+                    writingResourceSet: false,
+                    writingDelta: true));
 
             Assert.Equal(
                 Strings.ODataWriterCore_CannotWriteTopLevelResourceSetWithResourceWriter,
                 exception.Message);
-        }
-
-        [Fact]
-        public async Task WriteDeltaResourceSetAsync_ThrowsExceptionForWriterNotConfiguredForWritingDelta()
-        {
-            var customerDeltaResourceSet = CreateCustomerDeltaResourceSet();
-
-            var exception = await Assert.ThrowsAsync<ODataException>(
-                () => SetupJsonLightWriterAndRunTestAsync(
-                    (jsonLightWriter) => jsonLightWriter.WriteStartAsync(customerDeltaResourceSet),
-                    this.customerEntitySet,
-                    this.customerEntityType,
-                    /*writingResourceSet*/ true,
-                    /*writingDelta*/ false));
-
-            Assert.Equal(Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter, exception.Message);
         }
 
         [Fact]
@@ -1471,10 +1536,11 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     (jsonLightWriter) => jsonLightWriter.WriteDeltaLinkAsync(deltaLink),
                     this.orderEntitySet,
                     this.orderEntityType,
-                    /*writingResourceSet*/ false,
-                    /*writingDelta*/ false));
+                    writingResourceSet: false,
+                    writingDelta: false));
 
-            Assert.Equal(Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter, exception.Message);
+            Assert.Equal(Strings.ODataWriterCore_InvalidTransitionFromStart("Start", "DeltaLink"),
+                exception.Message);
         }
 
         [Fact]
@@ -1491,10 +1557,11 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     (jsonLightWriter) => jsonLightWriter.WriteDeltaDeletedLinkAsync(deltaLink),
                     this.orderEntitySet,
                     this.orderEntityType,
-                    /*writingResourceSet*/ false,
-                    /*writingDelta*/ false));
+                    writingResourceSet: false,
+                    writingDelta: false));
 
-            Assert.Equal(Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter, exception.Message);
+            Assert.Equal(Strings.ODataWriterCore_InvalidTransitionFromStart("Start", "DeltaDeletedLink"),
+                exception.Message);
         }
 
         [Fact]
@@ -1580,8 +1647,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 },
                 this.orderEntitySet,
                 this.orderEntityType,
-                /*writingResultSet*/ false,
-                /*writingDelta*/ true));
+                writingResourceSet: false,
+                writingDelta: true));
 
             Assert.Equal(
                 Strings.ODataWriterCore_InvalidTransitionFromExpandedLink("NestedResourceInfoWithContent", "DeletedResource"),
@@ -1603,11 +1670,11 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     },
                     this.orderEntitySet,
                     this.orderEntityType,
-                    /*writingResourceSet*/ true,
-                    /*writingDelta*/ true));
+                    writingResourceSet: true,
+                    writingDelta: true));
 
             Assert.Equal(
-                Strings.ODataWriterCore_InvalidTransitionFromResourceSet("ResourceSet", "DeletedResource"),
+                Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter,
                 exception.Message);
         }
 
@@ -1628,8 +1695,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     },
                     this.customerEntitySet,
                     this.customerEntityType,
-                    /*writingResourceSet*/ false,
-                    /*writingDelta*/ true));
+                    writingResourceSet: false,
+                    writingDelta: true));
 
             Assert.Equal(
                 Strings.ODataWriterCore_InvalidTransitionFromExpandedLink("NestedResourceInfoWithContent", "DeltaResourceSet"),
@@ -1647,10 +1714,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 (jsonLightWriter) => jsonLightWriter.WriteStartAsync(orderResourceSet),
                 this.orderEntitySet,
                 this.orderEntityType,
-                /*writingResourceSet*/ true,
-                /*writingDelta*/ false,
-                /*writingParameter*/ false,
-                /*writingRequest*/ true));
+                writingResourceSet: true,
+                writingDelta: false,
+                writingParameter: false,
+                writingRequest: true));
 
             Assert.Equal(Strings.ODataWriterCore_QueryCountInRequest, exception.Message);
         }
@@ -1666,10 +1733,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 (jsonLightWriter) => jsonLightWriter.WriteStartAsync(customerDeltaResourceSet),
                 this.customerEntitySet,
                 this.customerEntityType,
-                /*writingResourceSet*/ true,
-                /*writingDelta*/ true,
-                /*writingParameter*/ false,
-                /*writingRequest*/ true));
+                writingResourceSet: true,
+                writingDelta: true,
+                writingParameter: false,
+                writingRequest: true));
 
             Assert.Equal(Strings.ODataWriterCore_QueryNextLinkInRequest, exception.Message);
         }
@@ -1685,10 +1752,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 (jsonLightWriter) => jsonLightWriter.WriteStartAsync(customerDeltaResourceSet),
                 this.customerEntitySet,
                 this.customerEntityType,
-                /*writingResourceSet*/ true,
-                /*writingDelta*/ true,
-                /*writingParameter*/ false,
-                /*writingRequest*/ true));
+                writingResourceSet: true,
+                writingDelta: true,
+                writingParameter: false,
+                writingRequest: true));
 
             Assert.Equal(Strings.ODataWriterCore_QueryDeltaLinkInRequest, exception.Message);
         }
@@ -1713,10 +1780,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 },
                 this.customerEntitySet,
                 this.customerEntityType,
-                /*writingResourceSet*/ true,
-                /*writingDelta*/ false,
-                /*writingParameter*/ false,
-                /*writingRequest*/ true));
+                writingResourceSet: true,
+                writingDelta: false,
+                writingParameter: false,
+                writingRequest: true));
 
             Assert.Equal(Strings.ODataWriterCore_DeferredLinkInRequest, exception.Message);
         }
@@ -1815,9 +1882,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             bool writingDelta = false,
             bool writingParameter = false,
             bool writingRequest = false,
-            IODataReaderWriterListener writerListener = null)
+            IODataReaderWriterListener writerListener = null,
+            Action<IContainerBuilder> configAction = null)
         {
-            var jsonLightOutputContext = CreateJsonLightOutputContext(writingRequest);
+            var jsonLightOutputContext = CreateJsonLightOutputContext(writingRequest, configAction);
 
             var jsonLightWriter = new ODataJsonLightWriter(
                 jsonLightOutputContext,
@@ -1834,8 +1902,18 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             return await new StreamReader(this.stream).ReadToEndAsync();
         }
 
-        private ODataJsonLightOutputContext CreateJsonLightOutputContext(bool writingRequest = false)
+        private ODataJsonLightOutputContext CreateJsonLightOutputContext(bool writingRequest = false, Action<IContainerBuilder> configAction = null)
         {
+            IServiceProvider container = null;
+
+            if (configAction != null)
+            {
+                var containerBuilder = new TestContainerBuilder();
+                containerBuilder.AddDefaultODataServices();
+                configAction?.Invoke(containerBuilder);
+                container = containerBuilder.BuildContainer();
+            }
+
             var messageInfo = new ODataMessageInfo
             {
                 MessageStream = this.stream,
@@ -1847,7 +1925,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 #endif
                 IsResponse = !writingRequest,
                 IsAsync = true,
-                Model = this.model
+                Model = this.model,
+                Container = container
             };
 
             return new ODataJsonLightOutputContext(messageInfo, this.settings);

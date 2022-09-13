@@ -50,9 +50,6 @@ namespace Microsoft.Test.Taupo.Astoria.Php
         /// <returns>Returns the result of executing the code</returns>
         public string ExecuteCode(string command)
         {
-#if SILVERLIGHT
-            return string.Empty;
-#else
             string phpExecuteCommand = string.Format(CultureInfo.InvariantCulture, "/c ..\\php.exe {0}", command);
             var output = this.ProcessRunner.Run("cmd", phpExecuteCommand, this.PhpWorkingDirectory, TimeSpan.MaxValue);
             if (output.StandardErrorLines.Count != 0)
@@ -61,7 +58,6 @@ namespace Microsoft.Test.Taupo.Astoria.Php
             }
 
             return string.Join(string.Empty, output.StandardOutputLines).Trim(new char[] { '\n', ' ' });
-#endif
         }
     }
 }

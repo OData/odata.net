@@ -227,8 +227,29 @@ namespace Microsoft.OData
             base.Dispose(disposing);
         }
 
-#if NETSTANDARD2_0
-        public async ValueTask DisposeAsync()
+#if NETCOREAPP3_1_OR_GREATER
+        /// <inheritdoc/>
+        public override ValueTask DisposeAsync()
+        {
+            return DisposeAsyncCore();
+        }
+#elif NETSTANDARD2_0
+        /// <summary>
+        /// Asynchronously releases all resources used by the <see cref="ODataNotificationStream"/> object.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous dispose operation.</returns>
+        public ValueTask DisposeAsync()
+        {
+            return DisposeAsyncCore();
+        }
+#endif
+
+#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
+        /// <summary>
+        /// Asynchronously releases all resources used by the <see cref="ODataNotificationStream"/> object.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous dispose operation.</returns>
+        private async ValueTask DisposeAsyncCore()
         {
             if (!this.disposed && this.listener != null)
             {

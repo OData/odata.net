@@ -220,5 +220,30 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var ex = Record.Exception(bindWithEmptySelectedItemsList);
             Assert.Null(ex);
         }
+
+        [Fact]
+        public void BindingOnTreeWithWithTypeTokenDoesNotThrow()
+        {
+            // Arrange: $expand=MyPeople/Fully.Qualified.Namespace.Employee
+            NonSystemToken innerSegment = new NonSystemToken("Fully.Qualified.Namespace.Employee", null, null);
+            NonSystemToken navProp = new NonSystemToken("MyPeople", null, innerSegment);
+            ExpandToken expandToken = new ExpandToken(new ExpandTermToken[] { new ExpandTermToken(navProp) });
+
+            // Act
+            var binderForDog = new SelectExpandBinder(this.V4configuration, new ODataPathInfo(HardCodedTestModel.GetDogType(), HardCodedTestModel.GetDogsSet()), null);
+            SelectExpandClause selectExpandClause = binderForDog.Bind(expandToken, null);
+
+            // Assert
+            Assert.NotNull(selectExpandClause);
+            var selectItem = Assert.Single(selectExpandClause.SelectedItems, x => x is ExpandedNavigationSelectItem);
+            ExpandedNavigationSelectItem expandedNavigationSelectItem = selectItem as ExpandedNavigationSelectItem;
+            Assert.Equal(2, expandedNavigationSelectItem.PathToNavigationProperty.Count);
+
+            NavigationPropertySegment navPropSegment = Assert.IsType<NavigationPropertySegment>(expandedNavigationSelectItem.PathToNavigationProperty.Segments.First());
+            TypeSegment typeSegment = Assert.IsType<TypeSegment>(expandedNavigationSelectItem.PathToNavigationProperty.Segments.Last());
+            Assert.Equal("MyPeople", navPropSegment.Identifier);
+            Assert.Equal("Collection(Fully.Qualified.Namespace.Person)", navPropSegment.EdmType.FullTypeName());
+            Assert.Equal("Fully.Qualified.Namespace.Employee", typeSegment.EdmType.FullTypeName());
+        }
     }
 }

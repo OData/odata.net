@@ -73,9 +73,6 @@ namespace Microsoft.Test.Taupo.Astoria
         protected override void ConfigureDependencies(DependencyInjectionContainer container)
         {
             base.ConfigureDependencies(container);
-#if WINDOWS_PHONE
-            container.Register<IAuthenticationProvider, AnonymousAuthenticationProvider>();
-#endif
             AstoriaTestServices.ConfigureDependencies(container);
         }
 

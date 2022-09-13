@@ -1,0 +1,68 @@
+Function Name	Total (Allocations)	Self (Allocations)	Self Size (Bytes)	Module Name
+ + ODataWriterVsSystemTextJson (PID: 24864)	1,710,817	32	11,420	Multiple modules
+| + System.Threading._IOCompletionCallback.PerformIOCompletionCallback(uint, uint, System.Threading.NativeOverlapped*)	1,526,265	15	3,320	system.private.corelib.il
+|| + System.Net.ListenerAsyncResult.IOCompleted(System.Net.ListenerAsyncResult, uint, uint)	1,526,250	90	6,622	system.net.httplistener.il
+||| + System.Net.LazyAsyncResult.Complete(int)	1,526,108	9	408	system.net.httplistener.il
+|||| + System.Threading.Tasks.TaskFactory<T>.FromAsyncImpl.AnonymousMethod__0(System.IAsyncResult)	1,526,097	2	112	system.private.corelib.il
+||||| + System.Threading.Tasks.TaskFactory<T>.FromAsyncCoreLogic(System.IAsyncResult, System.Func<System.IAsyncResult, T>, System.Action<System.IAsyncResult>, System.Threading.Tasks.Task<T>, bool)	1,526,095	21	1,000	system.private.corelib.il
+|||||| + System.Threading.Tasks.Task<T>.TrySetResult(T)	1,526,065	10	480	system.private.corelib.il
+||||||| + System.Threading.Tasks.Task.RunContinuations(object)	1,526,055	2	112	system.private.corelib.il
+|||||||| + System.Threading.Tasks.AwaitTaskContinuation.RunOrScheduleAction(System.Runtime.CompilerServices.IAsyncStateMachineBox, bool)	1,526,053	8	560	system.private.corelib.il
+||||||||| + System.Runtime.CompilerServices.AsyncTaskMethodBuilder<System.Threading.Tasks.VoidTaskResult, ODataWriterVsSystemTextJson.ExperimentServer.HandleRequests>.MoveNext(System.Threading.Thread)	1,526,044	0	0	system.private.corelib.il
+|||||||||| + System.Threading.ExecutionContext.RunInternal(System.Threading.ExecutionContext, System.Threading.ContextCallback, object)	1,526,043	1	288	system.private.corelib.il
+||||||||||| + ODataWriterVsSystemTextJson.ExperimentServer.HandleRequests()	1,526,042	83	14,504	odatawritervssystemtextjson
+|||||||||||| + ODataWriterVsSystemTextJson.ODataSyncExperimentWriter.WriteCustomers(System.Collections.Generic.IEnumerable<ODataWriterVsSystemTextJson.Customer>, System.IO.Stream)	1,525,740	230,069	11,484,724	odatawritervssystemtextjson
+||||||||||||| - Microsoft.OData.ODataWriterCore.InterceptException<T>(System.Action<Microsoft.OData.ODataWriterCore, T>, T)	514,369	33	9,132	microsoft.odata.core
+||||||||||||| - Microsoft.OData.ODataWriterCore.WriteStartNestedResourceInfoImplementation(Microsoft.OData.ODataNestedResourceInfo)	310,071	0	0	microsoft.odata.core
+||||||||||||| - [Allocations]		230,069	11,484,724	
+||||||||||||| - Microsoft.OData.ODataWriterCore.WriteStartResourceImplementation(Microsoft.OData.ODataResource)	85,055	3	152	microsoft.odata.core
+||||||||||||| - Microsoft.OData.ODataWriterCore.WriteEnd()	120,096	0	0	microsoft.odata.core
+||||||||||||| - Microsoft.OData.ODataValueUtils.ToODataValue(object)	120,009	40,006	1,600,352	microsoft.odata.core
+||||||||||||| - Microsoft.OData.ODataResourceBase.ctor()	80,000	80,000	2,400,000	microsoft.odata.core
+||||||||||||| - Microsoft.OData.ODataWriterCore.WriteStartResourceSetImplementation(Microsoft.OData.ODataResourceSet)	20,185	57	3,004	microsoft.odata.core
+||||||||||||| - Microsoft.OData.ODataResourceBase.VerifyProperties(System.Collections.Generic.IEnumerable<Microsoft.OData.ODataProperty>)	25,003	2	104	microsoft.odata.core
+||||||||||||| - Microsoft.OData.ODataResourceSet.ctor()	20,007	20,004	600,120	microsoft.odata.core
+||||||||||||| - Microsoft.OData.ODataMessageWriter.WriteToOutput<T>(Microsoft.OData.ODataPayloadKind, System.Func<Microsoft.OData.ODataOutputContext, T>)	246	21	1,004	microsoft.odata.core
+||||||||||||| - Microsoft.OData.JsonLight.ODataJsonLightOutputContext.CreateODataResourceSetWriter(Microsoft.OData.Edm.IEdmEntitySetBase, Microsoft.OData.Edm.IEdmStructuredType)	237	13	656	microsoft.odata.core
+||||||||||||| - Microsoft.OData.ODataMessageWriter.ctor(Microsoft.OData.IODataResponseMessage, Microsoft.OData.ODataMessageWriterSettings, Microsoft.OData.Edm.IEdmModel)	310	20	894	microsoft.odata.core
+||||||||||||| - Microsoft.OData.ODataUri.set_ServiceRoot(System.Uri)	43	6	360	microsoft.odata.core
+||||||||||||| - Microsoft.OData.ODataWriterCore.WriteStart(Microsoft.OData.ODataResourceSet)	21	6	764	microsoft.odata.core
+||||||||||||| - Microsoft.OData.ODataMessageWriter.CreateODataResourceSetWriter(Microsoft.OData.Edm.IEdmEntitySetBase, Microsoft.OData.Edm.IEdmStructuredType)	7	5	248	microsoft.odata.core
+||||||||||||| - Microsoft.OData.ODataWriterCore.Flush()	4	2	120	microsoft.odata.core
+||||||||||||| - Microsoft.OData.ODataMessageWriterSettings.ctor()	4	4	144	microsoft.odata.core
+||||||||||||| - Microsoft.OData.Edm.EdmModelBase.get_EntityContainer()	2	1	24	microsoft.odata.edm
+||||||||||||| - Microsoft.OData.ODataWriterCore.WriteStart(Microsoft.OData.ODataNestedResourceInfo)	1	1	58	microsoft.odata.core
+||||||||||||| - System.Collections.Generic.List<T>.System.Collections.Generic.IEnumerable<T>.GetEnumerator()	1	1	40	system.private.corelib.il
+|||||||||||| - [Allocations]		83	14,504	
+|||||||||||| - System.Net.WebHeaderCollection.Set(string, string)	63	8	384	system.net.webheadercollection.il
+|||||||||||| - System.Net.HttpListenerResponse.Close()	34	5	496	system.net.httplistener.il
+|||||||||||| - System.Net.HttpListenerRequest.get_RequestUri()	38	3	154	system.net.httplistener.il
+|||||||||||| - System.Console.WriteLine(string, object)	25	0	0	system.console.il
+|||||||||||| - System.Net.HttpListenerResponse.ctor(System.Net.HttpListenerContext)	21	10	512	system.net.httplistener.il
+|||||||||||| - System.Console.WriteLine(string, object, object)	13	0	0	system.console.il
+|||||||||||| - System.Net.HttpListener.GetContextAsync()	8	0	0	system.net.httplistener.il
+|||||||||||| - System.Uri.get_Query()	2	1	64	system.private.uri.il
+|||||||||||| - System.Net.HttpListenerResponse.EnsureResponseStream()	3	3	182	system.net.httplistener.il
+|||||||||||| - System.Net.HttpListenerResponse.set_ContentType(string)	3	3	144	system.net.httplistener.il
+|||||||||||| - System.Uri.ToString()	2	0	0	system.private.uri.il
+|||||||||||| - System.Collections.Specialized.NameObjectCollectionBase.BaseSet(string, object)	2	0	0	system.collections.specialized.il
+|||||||||||| - System.Diagnostics.Stopwatch.cctor()	2	0	0	system.runtime.extensions.il
+|||||||||||| - System.Collections.Specialized.NameValueCollection.Set(string, string)	2	1	32	system.collections.specialized.il
+|||||||||||| - System.Collections.Specialized.NameObjectCollectionBase.BaseAdd(string, object)	1	1	32	system.collections.specialized.il
+||||||||||| - [Allocations]		1	288	
+|||||||||| - System.Runtime.CompilerServices.AsyncTaskMethodBuilder<System.Threading.Tasks.VoidTaskResult, ODataWriterVsSystemTextJson.ExperimentServer.HandleRequests>.cctor()	1	1	64	system.private.corelib.il
+||||||||| - [Allocations]		8	560	
+||||||||| - System.Threading.Tasks.AwaitTaskContinuation.get_IsValidLocationForInlining()	1	0	0	system.private.corelib.il
+|||||||| - [Allocations]		2	112	
+||||||| - [Allocations]		10	480	
+|||||| - [Allocations]		21	1,000	
+|||||| - System.Net.HttpListener.EndGetContext(System.IAsyncResult)	9	8	398	system.net.httplistener.il
+||||| - [Allocations]		2	112	
+|||| - [Allocations]		9	408	
+|||| - System.Net.LazyAsyncResult.get_CurrentThreadContext()	2	2	56	system.net.httplistener.il
+||| - [Allocations]		90	6,622	
+||| - System.Net.HttpListener.HandleAuthentication(System.Net.RequestContextBase, ref bool)	52	18	1,452	system.net.httplistener.il
+|| - [Allocations]		15	3,320	
+| - ODataWriterVsSystemTextJson.Program.Main(System.String[])	184,175	4	160	odatawritervssystemtextjson
+| - System.AppContext.Setup(wchar**, wchar**, int)	130	3	120	system.private.corelib.il
+| - System.StartupHookProvider.ProcessStartupHooks()	215	4	176	system.private.corelib.il

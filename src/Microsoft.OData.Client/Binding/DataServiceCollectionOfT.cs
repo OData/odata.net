@@ -585,13 +585,6 @@ namespace Microsoft.OData.Client
         private static void ValidateIteratorParameter(IEnumerable<T> items)
         {
             Util.CheckArgumentNull(items, "items");
-#if PORTABLELIB
-            DataServiceQuery<T> dsq = items as DataServiceQuery<T>;
-            if (dsq != null)
-            {
-                throw new ArgumentException(Strings.DataServiceCollection_DataServiceQueryCanNotBeEnumerated);
-            }
-#endif
         }
 
         /// <summary>
@@ -632,16 +625,12 @@ namespace Microsoft.OData.Client
         private void InternalLoadCollection(IEnumerable<T> items)
         {
             Debug.Assert(items != null, "items != null");
-#if !PORTABLELIB
             // For SDP, we must execute the Query implicitly
             DataServiceQuery<T> query = items as DataServiceQuery<T>;
             if (query != null)
             {
                 items = query.Execute() as QueryOperationResponse<T>;
             }
-#else
-            Debug.Assert(!(items is DataServiceQuery), "SL Client using DSQ as items...should have been caught by ValidateIteratorParameter.");
-#endif
 
             foreach (T item in items)
             {

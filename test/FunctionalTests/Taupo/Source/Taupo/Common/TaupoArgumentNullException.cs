@@ -13,9 +13,7 @@ namespace Microsoft.Test.Taupo.Common
     /// <summary>
     /// Exception thrown whenever argument to a method or a property on a Taupo component is invalidly set to null.
     /// </summary>
-#if !SILVERLIGHT
     [Serializable]
-#endif
     public class TaupoArgumentNullException : TaupoException
     {
         /// <summary>
@@ -44,7 +42,6 @@ namespace Microsoft.Test.Taupo.Common
         {
         }
 
-#if !SILVERLIGHT
         /// <summary>
         /// Initializes a new instance of the TaupoArgumentNullException class based on 
         /// <see cref="SerializationInfo"/>
@@ -55,7 +52,6 @@ namespace Microsoft.Test.Taupo.Common
             : base(info, context)
         {
         }
-#endif
 
         private static string BuildExceptionMessage(string argumentName)
         {

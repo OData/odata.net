@@ -9,9 +9,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     #region Namespaces
     using System;
     using System.Collections.Generic;
-#if !SILVERLIGHT && !WINDOWS_PHONE
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData.Edm;
     using Microsoft.OData;
     using Microsoft.Test.Taupo.Common;
@@ -121,11 +119,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
-#else
                 return this.messageReader.DetectPayloadKindAsync().WaitForResult();
-#endif
             }
         }
 
@@ -141,14 +135,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
-#else
                 return this.messageReader.CreateODataResourceSetReaderAsync().ContinueWith(
                     task => new ODataReaderTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
-#endif
             }
         }
 
@@ -165,14 +155,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
-#else
                 return this.messageReader.CreateODataResourceSetReaderAsync(expectedBaseEntityType).ContinueWith(
                     task => new ODataReaderTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
-#endif
             }
         }
 
@@ -190,14 +176,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
-#else
                 return this.messageReader.CreateODataResourceSetReaderAsync(entitySet, expectedBaseEntityType).ContinueWith(
                     task => new ODataReaderTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
-#endif
             }
         }
 
@@ -213,14 +195,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
-#else
                 return this.messageReader.CreateODataResourceReaderAsync().ContinueWith(
                     task => new ODataReaderTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
-#endif
             }
         }
 
@@ -237,14 +215,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
-#else
                 return this.messageReader.CreateODataResourceReaderAsync(expectedResourceType).ContinueWith(
                     task => new ODataReaderTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
-#endif
             }
         }
 
@@ -262,14 +236,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
-#else
                 return this.messageReader.CreateODataResourceReaderAsync(entitySet, expectedResourceType).ContinueWith(
                     task => new ODataReaderTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
-#endif
             }
         }
 
@@ -285,14 +255,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
-#else
                 return this.messageReader.CreateODataCollectionReaderAsync().ContinueWith(
                     task => new ODataCollectionReaderTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
-#endif
             }
         }
 
@@ -309,14 +275,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
-#else
                 return this.messageReader.CreateODataCollectionReaderAsync(expectedItemType).ContinueWith(
                     task => new ODataCollectionReaderTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
-#endif
             }
         }
 
@@ -334,14 +296,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
-#else
                 return this.messageReader.CreateODataCollectionReaderAsync(itemTypeReference).ContinueWith(
                     task => new ODataCollectionReaderTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
-#endif
             }
         }
 
@@ -357,14 +315,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
-#else
                 return this.messageReader.CreateODataBatchReaderAsync().ContinueWith(
                     task => new ODataBatchReaderTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
-#endif
             }
         }
 
@@ -382,14 +336,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
-#else
                 return this.messageReader.CreateODataParameterReaderAsync(operation).ContinueWith(
                     task => new ODataParameterReaderTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
-#endif
             }
         }
 
@@ -405,11 +355,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
-#else
                 return this.messageReader.ReadServiceDocumentAsync().WaitForResult();
-#endif
             }
         }
 
@@ -441,11 +387,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
-#else
                 return this.messageReader.ReadPropertyAsync().WaitForResult();
-#endif
             }
         }
 
@@ -462,11 +404,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
-#else
                 return this.messageReader.ReadPropertyAsync(expectedPropertyType).WaitForResult();
-#endif
             }
         }
 
@@ -483,11 +421,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
-#else
                 return this.messageReader.ReadPropertyAsync(property).WaitForResult();
-#endif
             }
         }
 
@@ -504,11 +438,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
-#else
                 return this.messageReader.ReadPropertyAsync(producingFunctionImport.Operation.ReturnType).WaitForResult();
-#endif
             }
         }
 
@@ -524,11 +454,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
-#else
                 return this.messageReader.ReadErrorAsync().WaitForResult();
-#endif
             }
         }
 
@@ -544,11 +470,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
-#else
                 return this.messageReader.ReadEntityReferenceLinksAsync().WaitForResult();
-#endif
             }
         }
 
@@ -564,11 +486,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
-#else
                 return this.messageReader.ReadEntityReferenceLinkAsync().WaitForResult();
-#endif
             }
         }
 
@@ -585,11 +503,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
-#else
                 return this.messageReader.ReadValueAsync(expectedValueType).WaitForResult();
-#endif
             }
         }
 

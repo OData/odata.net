@@ -112,6 +112,7 @@ namespace Microsoft.OData.Client
         /// <param name="parameterName">name of the argument</param>
         /// <exception cref="System.ArgumentNullException">if value is null</exception>
         /// <returns>value</returns>
+        [DebuggerStepThrough]
         internal static T CheckArgumentNull<T>([ValidatedNotNull] T value, string parameterName) where T : class
         {
             if (value == null)
@@ -129,6 +130,7 @@ namespace Microsoft.OData.Client
         /// <param name="parameterName">parameterName of public function</param>
         /// <exception cref="System.ArgumentNullException">if value is null</exception>
         /// <exception cref="System.ArgumentException">if value is empty</exception>
+        [DebuggerStepThrough]
         internal static void CheckArgumentNullAndEmpty([ValidatedNotNull] string value, string parameterName)
         {
             CheckArgumentNull(value, parameterName);
@@ -141,6 +143,7 @@ namespace Microsoft.OData.Client
         /// <param name="value">value to check</param>
         /// <param name="parameterName">parameterName of public function</param>
         /// <exception cref="System.ArgumentException">if value is empty</exception>
+        [DebuggerStepThrough]
         internal static void CheckArgumentNotEmpty(string value, string parameterName)
         {
             if (value != null && value.Length == 0)
@@ -157,6 +160,7 @@ namespace Microsoft.OData.Client
         /// <param name="parameterName">parameterName of public function</param>
         /// <exception cref="System.ArgumentNullException">if value is null</exception>
         /// <exception cref="System.ArgumentException">if value is empty or contains null elements</exception>
+        [DebuggerStepThrough]
         internal static void CheckArgumentNotEmpty<T>(T[] value, string parameterName) where T : class
         {
             CheckArgumentNull(value, parameterName);
@@ -410,11 +414,7 @@ namespace Microsoft.OData.Client
         {
             if (constructor == null)
             {
-#if PORTABLELIB
-                throw new MissingMemberException();
-#else
                 throw new MissingMethodException();
-#endif
             }
 
             return constructor.Invoke(arguments);

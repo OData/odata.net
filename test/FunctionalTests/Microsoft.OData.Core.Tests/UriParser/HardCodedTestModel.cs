@@ -100,6 +100,7 @@ namespace Microsoft.OData.Tests.UriParser
             var FullyQualifiedNamespaceAddress = new EdmComplexType("Fully.Qualified.Namespace", "Address");
             var FullyQualifiedNamespaceOpenAddress = new EdmComplexType("Fully.Qualified.Namespace", "OpenAddress", null, false, true);
             var FullyQualifiedNamespaceHomeAddress = new EdmComplexType("Fully.Qualified.Namespace", "HomeAddress", FullyQualifiedNamespaceAddress);
+            var FullyQualifiedNamespaceWorkAddress = new EdmComplexType("Fully.Qualified.Namespace", "WorkAddress", FullyQualifiedNamespaceAddress);
 
             var FullyQualifiedNamespaceHeartbeat = new EdmComplexType("Fully.Qualified.Namespace", "Heartbeat");
             var FullyQualifiedNamespaceFilm = new EdmEntityType("Fully.Qualified.Namespace", "Film", null, false, false);
@@ -131,6 +132,7 @@ namespace Microsoft.OData.Tests.UriParser
 
             var FullyQualifiedNamespaceAddressTypeReference = new EdmComplexTypeReference(FullyQualifiedNamespaceAddress, true);
             var FullyQualifiedNamespaceOpenAddressTypeReference = new EdmComplexTypeReference(FullyQualifiedNamespaceOpenAddress, true);
+            var FullyQualifiedNamespaceWorkAddressTypeReference = new EdmComplexTypeReference(FullyQualifiedNamespaceWorkAddress, true);
             var FullyQualifiedNamespacePerson_ID = FullyQualifiedNamespacePerson.AddStructuralProperty("ID", EdmCoreModel.Instance.GetInt32(false));
             var FullyQualifiedNamespacePerson_SSN = FullyQualifiedNamespacePerson.AddStructuralProperty("SSN", EdmCoreModel.Instance.GetString(true));
             FullyQualifiedNamespacePerson.AddStructuralProperty("Shoe", EdmCoreModel.Instance.GetString(true));
@@ -207,6 +209,13 @@ namespace Microsoft.OData.Tests.UriParser
                 {"SocialSN", FullyQualifiedNamespacePerson_SSN}
             });
 
+            // Use Core Vocabulary version.
+            model.AddAlternateKeyAnnotation(FullyQualifiedNamespacePerson, new Dictionary<string, IEdmProperty>()
+            {
+                {"CoreSN", FullyQualifiedNamespacePerson_SSN}
+            },
+            true);
+
             model.AddAlternateKeyAnnotation(FullyQualifiedNamespacePerson, new Dictionary<string, IEdmProperty>()
             {
                 {"NameAlias", FullyQualifiedNamespacePerson_Name},
@@ -216,6 +225,8 @@ namespace Microsoft.OData.Tests.UriParser
             model.AddElement(FullyQualifiedNamespacePerson);
 
             FullyQualifiedNamespaceEmployee.AddStructuralProperty("WorkEmail", EdmCoreModel.Instance.GetString(true));
+            FullyQualifiedNamespaceEmployee.AddStructuralProperty("WorkID", EdmCoreModel.Instance.GetInt32(false));
+            FullyQualifiedNamespaceEmployee.AddStructuralProperty("WorkAddress", FullyQualifiedNamespaceWorkAddressTypeReference);
             var FullyQualifiedNamespaceEmployee_PaintingsInOffice = FullyQualifiedNamespaceEmployee.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "PaintingsInOffice", TargetMultiplicity = EdmMultiplicity.Many, Target = FullyQualifiedNamespacePainting });
             var FullyQualifiedNamespaceEmployee_Manager = FullyQualifiedNamespaceEmployee.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "Manager", TargetMultiplicity = EdmMultiplicity.ZeroOrOne, Target = FullyQualifiedNamespaceManager });
             var FullyQualifiedNamespaceEmployee_OfficeDog = FullyQualifiedNamespaceDog.AddBidirectionalNavigation
@@ -343,6 +354,9 @@ namespace Microsoft.OData.Tests.UriParser
 
             FullyQualifiedNamespaceHomeAddress.AddStructuralProperty("HomeNO", EdmCoreModel.Instance.GetString(true));
             model.AddElement(FullyQualifiedNamespaceHomeAddress);
+
+            FullyQualifiedNamespaceWorkAddress.AddStructuralProperty("WorkNO", EdmCoreModel.Instance.GetString(true));
+            model.AddElement(FullyQualifiedNamespaceWorkAddress);
 
             model.AddElement(FullyQualifiedNamespaceOpenAddress);
 
@@ -1056,9 +1070,25 @@ namespace Microsoft.OData.Tests.UriParser
             </Record>
           </Collection>
         </Annotation>
+        <Annotation Term=""Org.OData.Core.V1.AlternateKeys"">
+          <Collection>
+            <Record Type=""Org.OData.Core.V1.AlternateKey"">
+              <PropertyValue Property=""Key"">
+                <Collection>
+                  <Record Type=""Org.OData.Core.V1.PropertyRef"">
+                    <PropertyValue Property=""Alias"" String=""CoreSN"" />
+                    <PropertyValue Property=""Name"" PropertyPath=""SSN"" />
+                  </Record>
+                </Collection>
+              </PropertyValue>
+            </Record>
+          </Collection>
+        </Annotation>
       </EntityType>
       <EntityType Name=""Employee"" BaseType=""Fully.Qualified.Namespace.Person"">
         <Property Name=""WorkEmail"" Type=""Edm.String"" />
+        <Property Name=""WorkID"" Type=""Edm.Int32"" />
+        <Property Name=""WorkAddress"" Type=""Fully.Qualified.Namespace.WorkAddress"" />
         <NavigationProperty Name=""PaintingsInOffice"" Type=""Collection(Fully.Qualified.Namespace.Painting)"" />
         <NavigationProperty Name=""Manager"" Type=""Fully.Qualified.Namespace.Manager"" />
         <NavigationProperty Name=""OfficeDog"" Type=""Fully.Qualified.Namespace.Dog"" Nullable=""false"" Partner=""EmployeeOwner"" />
@@ -1150,6 +1180,9 @@ namespace Microsoft.OData.Tests.UriParser
       </ComplexType>
       <ComplexType Name=""HomeAddress"" BaseType=""Fully.Qualified.Namespace.Address"">
         <Property Name=""HomeNO"" Type=""Edm.String"" />
+      </ComplexType>
+      <ComplexType Name=""WorkAddress"" BaseType=""Fully.Qualified.Namespace.Address"">
+        <Property Name=""WorkNO"" Type=""Edm.String"" />
       </ComplexType>
       <ComplexType Name=""OpenAddress"" OpenType=""true"" />
       <EntityType Name=""Pet1"">
@@ -1588,6 +1621,11 @@ namespace Microsoft.OData.Tests.UriParser
         public static IEdmEntityType GetPet5Type()
         {
             return TestModel.FindType("Fully.Qualified.Namespace.Pet5") as IEdmEntityType;
+        }
+
+        public static IEdmEntityType GetPet6Type()
+        {
+            return TestModel.FindType("Fully.Qualified.Namespace.Pet6") as IEdmEntityType;
         }
 
         public static IEdmEntitySet GetPet1Set()

@@ -187,6 +187,18 @@ namespace Microsoft.OData.Service
         internal static string GetModelTypeName(Type type)
         {
             Debug.Assert(type != null, "type != null");
+
+            string typeName;
+            OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)type.GetCustomAttributes(typeof(OriginalNameAttribute), false).SingleOrDefault();
+            if (originalNameAttribute != null)
+            {
+                typeName = originalNameAttribute.OriginalName;
+            }
+            else
+            {
+                typeName = type.Name;
+            }
+
 #if ODATA_CLIENT
             if (type.IsGenericType())
 #else
@@ -194,7 +206,7 @@ namespace Microsoft.OData.Service
 #endif
             {
                 Type[] genericArguments = type.GetGenericArguments();
-                StringBuilder builder = new StringBuilder(type.Name.Length * 2 * (1 + genericArguments.Length));
+                StringBuilder builder = new StringBuilder(typeName.Length * 2 * (1 + genericArguments.Length));
                 if (type.IsNested)
                 {
                     Debug.Assert(type.DeclaringType != null, "type.DeclaringType != null");
@@ -202,7 +214,7 @@ namespace Microsoft.OData.Service
                     builder.Append('_');
                 }
 
-                builder.Append(type.Name);
+                builder.Append(typeName);
                 builder.Append('[');
                 for (int i = 0; i < genericArguments.Length; i++)
                 {
@@ -234,11 +246,11 @@ namespace Microsoft.OData.Service
             else if (type.IsNested)
             {
                 Debug.Assert(type.DeclaringType != null, "type.DeclaringType != null");
-                return GetModelTypeName(type.DeclaringType) + "_" + type.Name;
+                return GetModelTypeName(type.DeclaringType) + "_" + typeName;
             }
             else
             {
-                return type.Name;
+                return typeName;
             }
         }
 

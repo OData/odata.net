@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !SILVERLIGHT
-
 namespace Microsoft.Test.Taupo.DatabaseModel
 {
     using System.CodeDom.Compiler;
@@ -191,5 +189,3 @@ namespace Microsoft.Test.Taupo.DatabaseModel
         }
     }
 }
-
-#endif

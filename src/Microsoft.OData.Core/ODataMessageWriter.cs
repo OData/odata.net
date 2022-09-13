@@ -1272,7 +1272,6 @@ namespace Microsoft.OData
             return writeFunc(this.outputContext);
         }
 
-
         /// <summary>
         /// Creates an output context and invokes a write operation on it.
         /// </summary>
@@ -1283,21 +1282,18 @@ namespace Microsoft.OData
         {
             // Set the content type header here since all headers have to be set before getting the stream
             this.SetOrVerifyHeaders(payloadKind);
-
             // Create the output context
-            return this.message.GetStreamAsync()
-                .FollowOnSuccessWithTask(
-                    streamTask => this.format.CreateOutputContextAsync(
-                        this.GetOrCreateMessageInfo(streamTask.Result, true),
-                        this.settings))
-                .FollowOnSuccessWithTask(
-                    createOutputContextTask =>
-                    {
-                        this.outputContext = createOutputContextTask.Result;
-                        return writeAsyncAction(this.outputContext);
-                    });
+            return WriteToOutputInnerAsync();
+            async Task WriteToOutputInnerAsync()
+            {
+                Stream messageStream = await this.message.GetStreamAsync()
+                    .ConfigureAwait(false);
+                this.outputContext = await this.format.CreateOutputContextAsync(
+                        this.GetOrCreateMessageInfo(messageStream, true),
+                        this.settings).ConfigureAwait(false);
+                await writeAsyncAction(this.outputContext).ConfigureAwait(false);
+            }
         }
-
         /// <summary>
         /// Creates an output context and invokes a write operation on it.
         /// </summary>
@@ -1309,19 +1305,17 @@ namespace Microsoft.OData
         {
             // Set the content type header here since all headers have to be set before getting the stream
             this.SetOrVerifyHeaders(payloadKind);
-
             // Create the output context
-            return this.message.GetStreamAsync()
-                .FollowOnSuccessWithTask(
-                    streamTask => this.format.CreateOutputContextAsync(
-                        this.GetOrCreateMessageInfo(streamTask.Result, true),
-                        this.settings))
-                .FollowOnSuccessWithTask(
-                    createOutputContextTask =>
-                    {
-                        this.outputContext = createOutputContextTask.Result;
-                        return writeFunc(this.outputContext);
-                    });
+            return WriteToOutputInnerAsync();
+            async Task<TResult> WriteToOutputInnerAsync()
+            {
+                Stream messageStream = await this.message.GetStreamAsync()
+                    .ConfigureAwait(false);
+                this.outputContext = await this.format.CreateOutputContextAsync(
+                    this.GetOrCreateMessageInfo(messageStream, true),
+                    this.settings).ConfigureAwait(false);
+                return await writeFunc(this.outputContext).ConfigureAwait(false);
+            }
         }
     }
 }

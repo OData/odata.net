@@ -6,20 +6,19 @@
 
 namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 {
+    using System;
+    using System.Collections.ObjectModel;
+    using System.Linq;
     using Microsoft.OData;
-    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Tests.Client.Common;
-    using System;
-    using System.Linq;
-    using System.Collections.ObjectModel;
     using Xunit;
 
     /// <summary>
     /// CUD tests for the ODL service.
     /// </summary>
-    public class ODataWCFServiceUpdateTests : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>
+    public class ODataWCFServiceUpdateTests : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>, IDisposable
     {
         private static string NameSpacePrefix = "Microsoft.Test.OData.Services.ODataWCFService.";
 
@@ -201,6 +200,11 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             }
 
             return item;
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
         }
     }
 }

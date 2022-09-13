@@ -13,25 +13,13 @@ namespace Microsoft.Test.Taupo.Astoria.Common
     using System.Linq;
     using System.Net;
     using System.Reflection;
-
-#if SILVERLIGHT
-    using System.Windows;
-#endif
     using System.Xml.Linq;
     using Microsoft.OData.Client;
     using Microsoft.Test.Taupo.Astoria.Contracts;
     using Microsoft.Test.Taupo.Astoria.Contracts.Client;
     using Microsoft.Test.Taupo.Astoria.Contracts.EntityModel;
     using Microsoft.Test.Taupo.Astoria.Contracts.ServiceReferences;
-#if SILVERLIGHT
-#if !WIN8
-    using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataOracleService.Silverlight;
-#else
-    using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataOracleService.Win8;
-#endif
-#else
     using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataOracleService.DotNet;
-#endif
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts;
     using Microsoft.Test.Taupo.Contracts.EntityModel;
@@ -51,13 +39,7 @@ namespace Microsoft.Test.Taupo.Astoria.Common
             "System.dll",
             "System.Core.dll",
             "System.Net.dll",
-#if SILVERLIGHT
-            DataFxAssemblyRef.File.DataServicesSilverlightClient ,
-            "System.Windows.dll",
-            "System.Windows.Browser.dll",
-#else
             DataFxAssemblyRef.File.DataServicesClient,
-#endif
             DataFxAssemblyRef.File.ODataLib,
             DataFxAssemblyRef.File.EntityDataModel,
             "System.Xml.dll",
@@ -65,10 +47,6 @@ namespace Microsoft.Test.Taupo.Astoria.Common
 
         private EntityModelSchema initialModel;
         private string clientLayerCode;
-#if WIN8
-        private Type dataServiceContextType;
-        private Assembly clientLayerAssembly;
-#endif
 
         /// <summary>
         /// Initializes a new instance of the AstoriaWorkspaceBuilderBase class.
@@ -82,9 +60,6 @@ namespace Microsoft.Test.Taupo.Astoria.Common
             this.SkipDataDownload = false;
             this.MaxProtocolVersion = DataServiceProtocolVersion.V4;
             this.ModelFeatureVersion = DataServiceProtocolVersion.V4;
-#if WIN8
-            this.DataServiceContextTypeName = "DefaultNamespace.DefaultContainer";
-#endif
         }
 
         /// <summary>
@@ -188,14 +163,6 @@ namespace Microsoft.Test.Taupo.Astoria.Common
         [InjectDependency(IsRequired = true)]
         public IServiceDocumentParser ServiceDocumentParser { get; set; }
 
-#if WIN8
-        /// <summary>
-        /// Gets or sets the DataServiceContext type name
-        /// </summary>
-        [InjectTestParameter("DataServiceContextTypeName", DefaultValueDescription = "DefaultNamespace.DefaultContainer")]
-        public string DataServiceContextTypeName { get; set; }
-#endif
-
         /// <summary>
         /// Gets or sets the MajorReleaseVersion
         /// </summary>
@@ -256,12 +223,6 @@ namespace Microsoft.Test.Taupo.Astoria.Common
 
             this.Logger.WriteLine(LogLevel.Verbose, "Initializing model...");
             this.InitializeModel(workspace);
-
-#if WIN8
-            this.clientLayerAssembly = typeof(DefaultNamespace.DefaultContainer).GetAssembly();
-            this.dataServiceContextType = this.clientLayerAssembly.GetType(this.DataServiceContextTypeName);
-            ExceptionUtilities.CheckObjectNotNull(dataServiceContextType, "The DataServiceContext type was not found.");
-#endif
 
             this.Logger.WriteLine(LogLevel.Verbose, "Building workspace asynchronously.");
 
@@ -335,11 +296,8 @@ namespace Microsoft.Test.Taupo.Astoria.Common
         protected static IResourceLookup BuildSystemDataServicesClientResourceLookup()
         {
             Assembly systemDataServiceClientAssembly;
-#if !SILVERLIGHT
             systemDataServiceClientAssembly = Assembly.Load(new AssemblyName(DataFxAssemblyRef.DataServicesClient));
-#else
-            systemDataServiceClientAssembly = typeof(Microsoft.OData.Client.DataServiceContext).GetAssembly();
-#endif
+
             return new AssemblyResourceLookup(systemDataServiceClientAssembly);
         }
 
@@ -349,17 +307,9 @@ namespace Microsoft.Test.Taupo.Astoria.Common
         /// <returns>The resource lookup</returns>
         protected static IResourceLookup BuildMicrosoftDataODataResourceLookup()
         {
-#if WINDOWS_PHONE
-            return new DictionaryResourceLookup(new Dictionary<string, string>()); // OData library does not exist on phone
-#else
             Assembly microsoftDataODataAssembly;
-#if !SILVERLIGHT
             microsoftDataODataAssembly = Assembly.Load(new AssemblyName(DataFxAssemblyRef.OData));
-#else
-            microsoftDataODataAssembly = typeof(Microsoft.OData.ODataError).GetAssembly();
-#endif
             return new AssemblyResourceLookup(microsoftDataODataAssembly);
-#endif
         }
 
         /// <summary>
@@ -497,7 +447,6 @@ namespace Microsoft.Test.Taupo.Astoria.Common
                 return;
             }
 
-#if !WIN8
             dataOracleClient.BeginGetContainerData(
                 result => AsyncHelpers.CatchErrors(
                     continuation,
@@ -517,24 +466,6 @@ namespace Microsoft.Test.Taupo.Astoria.Common
                         continuation.Continue();
                     }),
                 null);
-#else
-            var task = dataOracleClient.GetContainerDataAsync(new GetContainerDataRequest());
-            task.Wait();
-            var result = task.Result;
-
-            string errorMessage = result.errorMessage;
-            var container = result.GetContainerDataResult;
-            if (container == null)
-            {
-                continuation.Fail(new TaupoInfrastructureException(errorMessage));
-                return;
-            }
-
-            this.Logger.WriteLine(LogLevel.Verbose, "Got container with {0} entities.", container.Entities.Length);
-            this.CurrentWorkspace.DownloadedEntityContainerData = this.DataOracleConverter.Convert(this.CurrentWorkspace.ConceptualModel, container);
-
-            continuation.Continue();
-#endif
         }
 
         private void GenerateClientLayerCode(IAsyncContinuation continuation)
@@ -545,9 +476,6 @@ namespace Microsoft.Test.Taupo.Astoria.Common
                 return;
             }
 
-#if WIN8
-            continuation.Continue();
-#else
             this.Logger.WriteLine(LogLevel.Verbose, "Generating client source code...");
             AsyncHelpers.CatchErrors(
                 continuation,
@@ -564,7 +492,6 @@ namespace Microsoft.Test.Taupo.Astoria.Common
                             this.Logger.WriteLine(LogLevel.Trace, "Generated Code: {0}", this.clientLayerCode);
                         });
                 });
-#endif
         }
 
         private void CompileClientLayerCode(IAsyncContinuation continuation)
@@ -575,10 +502,6 @@ namespace Microsoft.Test.Taupo.Astoria.Common
                 return;
             }
 
-#if WIN8
-            this.CurrentWorkspace.Assemblies.Add(new FileContents<Assembly>(this.clientLayerAssembly.FullName, this.clientLayerAssembly));
-            continuation.Continue();
-#else
             this.Logger.WriteLine(LogLevel.Verbose, "Compiling Client Source Code....");
 
             var languageSpecificReferences = GetClientReferenceAssemblies(this.CurrentWorkspace.ConceptualModel, this.Language);
@@ -599,7 +522,6 @@ namespace Microsoft.Test.Taupo.Astoria.Common
                     this.CurrentWorkspace.Assemblies.Add(new FileContents<Assembly>(assemblyBaseName + ".dll", asm));
                     continuation.Continue();
                 });
-#endif
         }
 
         private void RegisterServiceUri(IAsyncContinuation continuation)
@@ -627,7 +549,6 @@ namespace Microsoft.Test.Taupo.Astoria.Common
             else
             {
                 WebRequest serviceDocRequest = WebRequest.Create(this.ServiceDocumentUri);
-#if !SILVERLIGHT
 
                 if (this.AuthenticationProvider.UseDefaultCredentials)
                 {
@@ -649,7 +570,6 @@ namespace Microsoft.Test.Taupo.Astoria.Common
 
                 // we will set the timeout to 5 seconds to avoid waiting forever for a Service doc request to complete.
                 serviceDocRequest.Timeout = 5000;
-#endif
                 serviceDocRequest.BeginGetResponse(
                     (asyncResult) =>
                     {
@@ -676,10 +596,6 @@ namespace Microsoft.Test.Taupo.Astoria.Common
                 continuation.Continue();
                 return;
             }
-#if WIN8
-            this.CurrentWorkspace.ContextType = this.dataServiceContextType;
-            continuation.Continue();
-#else
 
             foreach (var asm in this.CurrentWorkspace.Assemblies.Select(c => c.Contents))
             {
@@ -693,7 +609,6 @@ namespace Microsoft.Test.Taupo.Astoria.Common
 
             ExceptionUtilities.Assert(this.CurrentWorkspace.ContextType != null, "DataServiceContext was not found in the compiled assembly.");
             continuation.Continue();
-#endif
         }
     }
 }

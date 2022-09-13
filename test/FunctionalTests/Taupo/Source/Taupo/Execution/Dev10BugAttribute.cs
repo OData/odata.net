@@ -12,9 +12,7 @@ namespace Microsoft.Test.Taupo.Execution
     /// <summary>
     /// Indicates that a test class or variation is associated with a specific Dev10 bug.
     /// </summary>
-#if !SILVERLIGHT
     [Serializable]
-#endif
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
     public sealed class Dev10BugAttribute : BaseBugAttribute
     {

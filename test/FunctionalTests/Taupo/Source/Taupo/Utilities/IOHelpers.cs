@@ -11,9 +11,7 @@ namespace Microsoft.Test.Taupo.Utilities
     using System.IO;
     using System.Reflection;
     using System.Security;
-#if !WIN8
     using System.Security.Permissions;
-#endif
     using System.Threading;
     using Microsoft.Test.Taupo.Common;
 
@@ -24,8 +22,6 @@ namespace Microsoft.Test.Taupo.Utilities
     public static class IOHelpers
     {
         private const int DefaultCopyBufferSize = 65536;
-
-#if !SILVERLIGHT
         private static string baseDir;
         private static string baseTaupoDir;
         private static string baseTempDir;
@@ -273,7 +269,6 @@ namespace Microsoft.Test.Taupo.Utilities
                 }
             }
         }
-#endif
 
         /// <summary>
         /// Copies contents of one stream into another.
@@ -317,18 +312,15 @@ namespace Microsoft.Test.Taupo.Utilities
             return bytesCopied;
         }
 
-#if !WIN8
         /// <summary>
         /// Write an embedded resource to a local file
         /// </summary>
         /// <param name="resourceName">Resource to be written</param>
         /// <param name="fileName">File to write resource to</param>
         /// <param name="assembly">Assembly to extract resource from</param>
-#if !SILVERLIGHT
         [SecuritySafeCritical]
         [PermissionSet(SecurityAction.Assert, Unrestricted = true)]
         [AssertJustification("Calling File.Open demands FileIOPermission (Append flag) for the destination file path.")]
-#endif
         public static void WriteResourceToFile(string resourceName, string fileName, Assembly assembly)
         {
             using (Stream resourceStream = assembly.GetManifestResourceStream(resourceName))
@@ -344,9 +336,7 @@ namespace Microsoft.Test.Taupo.Utilities
                 }
             }
         }
-#endif
 
-#if !SILVERLIGHT
         /// <summary>
         /// Adds the given set of file attributes to the file at the given path
         /// </summary>
@@ -366,6 +356,5 @@ namespace Microsoft.Test.Taupo.Utilities
         {
             File.SetAttributes(fileName, File.GetAttributes(fileName) & ~toRemove);
         }
-#endif
     }
 }

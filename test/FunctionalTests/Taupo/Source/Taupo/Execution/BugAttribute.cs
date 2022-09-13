@@ -11,9 +11,7 @@ namespace Microsoft.Test.Taupo.Execution
     /// <summary>
     /// Indicates that a test class or variation is associated with a bug from a particular bug location.
     /// </summary>
-#if !SILVERLIGHT
     [Serializable]
-#endif
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
     public abstract class BugAttribute : Attribute, IEquatable<BugAttribute>
     {
@@ -51,7 +49,6 @@ namespace Microsoft.Test.Taupo.Execution
         /// </summary>
         public string Server { get; private set; }
 
-#if !SILVERLIGHT
         /// <summary>
         /// When implemented in a derived class, gets a unique identifier for this <see cref="T:System.Attribute"/>.
         /// </summary>
@@ -64,7 +61,6 @@ namespace Microsoft.Test.Taupo.Execution
                 return Tuple.Create(this.GetType(), this.Server, this.Product, this.BugId);
             }
         }
-#endif
 
         /// <summary>
         /// Returns a value that indicates whether this instance is equal to a specified object.

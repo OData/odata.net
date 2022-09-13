@@ -1,13 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;netstandard2.0;netstandard1.1</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard2.0;netstandard1.1;netcoreapp3.1</TargetFrameworks>
     <AssemblyName>Microsoft.OData.Core</AssemblyName>
     <RootNamespace>Microsoft.OData.Core</RootNamespace>
 
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <DefineConstants>$(DefineConstants);ODATA_CORE;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE;DelaySignKeys</DefineConstants>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+    <DefineConstants>$(DefineConstants);NETCOREAPP3_1_OR_GREATER;NETCOREAPP;NETCOREAPP3_1</DefineConstants>
   </PropertyGroup>
  
   <Import Project="..\Build.props" />
@@ -50,10 +54,15 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="3.3.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="System.Buffers" Version="4.5.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -62,14 +71,14 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Resource Include="Microsoft.OData.Core.tt">
+    <Content Include="Microsoft.OData.Core.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Microsoft.OData.Core.cs</LastGenOutput>
-    </Resource>
-    <Resource Include="Parameterized.Microsoft.OData.Core.tt">
+    </Content>
+    <Content Include="Parameterized.Microsoft.OData.Core.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Parameterized.Microsoft.OData.Core.cs</LastGenOutput>
-    </Resource>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -86,4 +95,12 @@
     </Compile>
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces">
+      <Version>5.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.ObjectPool">
+      <Version>6.0.3</Version>
+    </PackageReference>
+  </ItemGroup>
 </Project>

@@ -11,15 +11,7 @@ namespace Microsoft.Test.Taupo.Astoria
     using System.Linq;
     using Microsoft.Test.Taupo.Astoria.Contracts;
     using Microsoft.Test.Taupo.Astoria.Contracts.EntityModel.Data;
-#if SILVERLIGHT
-#if !WIN8
-    using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataOracleService.Silverlight;
-#else
-    using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataOracleService.Win8;
-#endif
-#else
     using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataOracleService.DotNet;
-#endif
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts;
     using Microsoft.Test.Taupo.Contracts.EntityModel;
@@ -96,19 +88,6 @@ namespace Microsoft.Test.Taupo.Astoria
         {
             ExceptionUtilities.CheckArgumentNotNull(serializableNamedValue, "serializableNamedValue");
             var value = serializableNamedValue.Value;
-#if WIN8
-            var dateTimeOffsetValue = value as Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataOracleService.Win8.DateTimeOffset;
-            if (dateTimeOffsetValue != null)
-            {
-                value = new System.DateTimeOffset(dateTimeOffsetValue.DateTime.Year,
-                    dateTimeOffsetValue.DateTime.Month,
-                    dateTimeOffsetValue.DateTime.Day,
-                    dateTimeOffsetValue.DateTime.Hour,
-                    dateTimeOffsetValue.DateTime.Minute,
-                    dateTimeOffsetValue.DateTime.Second,
-                    TimeSpan.FromMinutes(dateTimeOffsetValue.OffsetMinutes));
-            }
-#endif
             var spatialValue = value as SerializableSpatialData;
             if (spatialValue != null)
             {

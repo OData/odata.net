@@ -232,11 +232,7 @@ namespace Microsoft.OData.Client.Materialization
             {
                 return this.CreateNewInstance(edmCollectionTypeReference, clientCollectionType);
             }
-#if PORTABLELIB
-            catch (MissingMemberException ex)
-#else
             catch (MissingMethodException ex)
-#endif
             {
                 throw DSClient.Error.InvalidOperation(error(), ex);
             }

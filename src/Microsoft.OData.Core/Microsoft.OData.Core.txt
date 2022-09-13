@@ -48,7 +48,7 @@ ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties=No Id or key properties we
 ODataWriterCore_QueryCountInRequest=The ODataResourceSet.Count must be null for request payloads. Query counts are only supported in responses.
 ODataWriterCore_QueryNextLinkInRequest=The NextPageLink must be null for request payloads. Next page links are only supported in responses.
 ODataWriterCore_QueryDeltaLinkInRequest=The DeltaLink must be null for request payloads. Delta links are only supported in responses.
-ODataWriterCore_CannotWriteDeltaWithResourceSetWriter=Cannot write a deleted resource, link, deleted link, or nested delta resource set to a non-delta payload. Please use a delta resource set writer, or a request resource writer.
+ODataWriterCore_CannotWriteDeltaWithResourceSetWriter=Cannot write a deleted resource, link, deleted link, or nested delta resource set within a resource set; they must be written within a delta resource set.
 ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry=Nested content is not allowed in an OData 4.0 deleted entry. For content in deleted entries, please specify OData 4.01 or greater.
 ODataWriterCore_CannotWriteTopLevelResourceSetWithResourceWriter=Cannot write a top-level resource set with a writer that was created to write a top-level resource.
 ODataWriterCore_CannotWriteTopLevelResourceWithResourceSetWriter=Cannot write a top-level resource with a writer that was created to write a top-level resource set.
@@ -97,6 +97,9 @@ ODataMessageWriter_CannotSpecifyOperationWithoutModel=No model was specified in 
 ODataMessageWriter_JsonPaddingOnInvalidContentType=A JsonPaddingFunctionName was specified, but the content-type '{0}' is not supported with Json Padding.
 ODataMessageWriter_NonCollectionType=The type '{0}' specified as the collection's item type is not primitive, enum or complex. An ODataCollectionWriter can only write collections of primitive, enum or complex values.
 ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue=Not allowed to write top level property '{0}' with 'ODataResourceValue' or collection of resource value.
+ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull=The provided implementation of IStreamBasedJsonWriterFactory returned null for arguments: isIeee754Compatible '{0}', encoding '{1}'. The factory should return a concrete IJsonWriter implementation.
+ODataMessageWriter_IJsonWriterAsync_Must_Implement_IJsonWriter=The provided IJsonWriterAsync instance must also implement IJsonWriter.
+ODataMessageWriter_IJsonWriter_And_IJsonWriterAsync_Are_Different_Instances=Detected different instances of IJsonWriter and IJsonWriterAsync. The writer instance returned by the factory should implement both IJsonWriter and IJsonWriterAsync.
 
 ODataMessageWriterSettings_MessageWriterSettingsXmlCustomizationCallbacksMustBeSpecifiedBoth=Both startResourceXmlCustomizationCallback and endResourceXmlCustomizationCallback must be either null or non-null.
 
@@ -202,6 +205,11 @@ ODataBatchReaderStream_MultiByteEncodingsNotSupported=Invalid multi-byte encodin
 ODataBatchReaderStream_UnexpectedEndOfInput=Encountered an unexpected end of input while reading the batch payload.
 
 ODataBatchReaderStreamBuffer_BoundaryLineSecurityLimitReached=Too many white spaces after a boundary delimiter and before the terminating line resource set. For security reasons, the total number of characters for a boundary including white spaces must not exceed {0}.
+
+ODataJsonLightBatchPayloadItemPropertiesCache_UnknownPropertyForMessageInBatch=Unknown property name '{0}' for message in batch.
+
+ODataJsonLightBatchBodyContentReaderStream_UnexpectedNodeType=Unexpected reader.NodeType: {0}.
+ODataJsonLightBatchBodyContentReaderStream_UnsupportedContentTypeInHeader=Unknown/undefined type, new type that needs to be supported: {0}?
 
 ODataAsyncWriter_CannotCreateResponseWhenNotWritingResponse=When not writing an async response, you cannot create an async response message.
 ODataAsyncWriter_CannotCreateResponseMoreThanOnce=You cannot create an async response message more than once.
@@ -535,6 +543,7 @@ ODataJsonLightPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty=E
 ODataJsonLightPropertyAndValueDeserializer_NoPropertyAndAnnotationAllowedInNullPayload=The property with name '{0}' was found in a null payload. In OData, no properties or OData annotations can appear in a null payload.
 ODataJsonLightPropertyAndValueDeserializer_CollectionTypeNotExpected=A collection type of '{0}' was specified for a non-collection value.
 ODataJsonLightPropertyAndValueDeserializer_CollectionTypeExpected=A non-collection type of '{0}' was specified for a collection value.
+ODataJsonLightPropertyAndValueDeserializer_ODataResourceExpectedForProperty=The property with name '{0}' was found with a value node of type '{1}'; however, a resource value of type '{2}' was expected.
 
 ODataJsonReaderCoreUtils_CannotReadSpatialPropertyValue=The value specified for the spatial property was not valid. You must specify a valid spatial value.
 
@@ -846,7 +855,8 @@ PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint=Type cast segment '{0}' on
 
 ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink=A resource set may contain a next page link, a delta link or neither, but must not contain both.
 
-ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty=The last segment, and only the last segment, must be a navigation property in $expand.
+ODataExpandPath_OnlyLastSegmentCanBeNavigationProperty=The last segment, and only the last segment, can be a navigation property in $expand.
+ODataExpandPath_LastSegmentMustBeNavigationPropertyOrTypeSegment=The last segment must be a navigation property or type segment in $expand.
 ODataExpandPath_InvalidExpandPathSegment=Found a segment of type '{0} in an expand path, but only NavigationProperty, Property and Type segments are allowed.
 
 ODataSelectPath_CannotOnlyHaveTypeSegment=TypeSegment cannot be the only segment in a $select.
@@ -900,6 +910,8 @@ OpenNavigationPropertiesNotSupportedOnOpenTypes=Open navigation properties are n
 BadRequest_ResourceCanBeCrossReferencedOnlyForBindOperation=Error processing request stream. In batch mode, a resource can be cross-referenced only for bind/unbind operations.
 DataServiceConfiguration_ResponseVersionIsBiggerThanProtocolVersion=The response requires that version {0} of the protocol be used, but the MaxProtocolVersion of the data service is set to {1}.
 BadRequest_KeyCountMismatch=The number of keys specified in the URI does not match number of key properties for the resource '{0}'.
+BadRequest_KeyMismatch=The key in the request URI is not valid for resource '{0}'. Ensure that the names and number of key properties match the declared key of the resource '{0}'.
+BadRequest_KeyOrAlternateKeyMismatch=The key in the request URI is not valid for resource '{0}'. Ensure that the names and number of key properties match the declared or alternate key properties for the resource '{0}'.
 RequestUriProcessor_KeysMustBeNamed=Segments with multiple key values must specify them in 'name=value' form.
 RequestUriProcessor_ResourceNotFound=Resource not found for the segment '{0}'.
 RequestUriProcessor_BatchedActionOnEntityCreatedInSameChangeset=Batched service action '{0}' cannot be invoked because it was bound to an entity created in the same changeset.

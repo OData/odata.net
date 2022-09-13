@@ -22,29 +22,32 @@ namespace Microsoft.OData.Performance
         /// Reads the common test model (based on AdventureWorks) as CSDL from assembly resources,
         /// and converts to IEdmModel.
         /// </summary>
+        /// <param name="markAsImmutable">Whether to mark the model as immutable</param>
         /// <returns>The common AdventureWorks test model as IEdmModel.</returns>
-        public static IEdmModel GetAdventureWorksModel()
+        public static IEdmModel GetAdventureWorksModel(bool markAsImmutable = true)
         {
-            return ReadModelFromResources("AdventureWorksPlus.csdl");
+            return ReadModelFromResources("AdventureWorksPlus.csdl", markAsImmutable);
         }
 
         /// <summary>
         /// Reads the model which contains entity type with different type of property
         /// </summary>
+        /// <param name="markAsImmutable">Whether to mark the model as immutable.</param>
         /// <returns></returns>
-        public static IEdmModel GetEntityWithDifferentPropertyTypeModel()
+        public static IEdmModel GetEntityWithDifferentPropertyTypeModel(bool markAsImmutable = true)
         {
-            return ReadModelFromResources("EntityWithDifferentPropertyType.csdl");
+            return ReadModelFromResources("EntityWithDifferentPropertyType.csdl", markAsImmutable);
         }
 
         /// <summary>
         /// Reads the common test model (based on ExchangeAttachment.csdl) as CSDL from assembly resources,
         /// and converts to IEdmModel.
         /// </summary>
+        /// <param name="markAsImmutable">Whether to mark the model as immutable</param>
         /// <returns>The ExchangeAttachment test model as IEdmModel.</returns>
-        public static IEdmModel GetExchangeAttachmentModel()
+        public static IEdmModel GetExchangeAttachmentModel(bool markAsImmutable = true)
         {
-            return ReadModelFromResources("ExchangeAttachment.csdl");
+            return ReadModelFromResources("ExchangeAttachment.csdl", markAsImmutable);
         }
 
         /// <summary>
@@ -66,8 +69,9 @@ namespace Microsoft.OData.Performance
         /// Reads edm model from resource file
         /// </summary>
         /// <param name="modelName">The name of resource file containing the model</param>
+        /// <param name="markAsImmutable">Whether or not to mark the model as immutable.</param>
         /// <returns>Edm model</returns>
-        private static IEdmModel ReadModelFromResources(string modelName)
+        private static IEdmModel ReadModelFromResources(string modelName, bool markAsImmutable = true)
         {
             IEdmModel model;
             IEnumerable<EdmError> errors;
@@ -76,6 +80,11 @@ namespace Microsoft.OData.Performance
             if (!parseResult)
             {
                 throw new InvalidOperationException("Failed to load model : " + string.Join(Environment.NewLine, errors.Select(e => e.ErrorMessage)));
+            }
+
+            if (markAsImmutable)
+            {
+                model.MarkAsImmutable();
             }
 
             return model;

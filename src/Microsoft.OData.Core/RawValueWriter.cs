@@ -17,7 +17,11 @@ namespace Microsoft.OData
     /// <summary>
     /// Class that handles writing top level raw values to a stream.
     /// </summary>
+#if NETCOREAPP3_1_OR_GREATER
+    internal sealed class RawValueWriter : IDisposable, IAsyncDisposable
+#else
     internal sealed class RawValueWriter : IDisposable
+#endif
     {
         /// <summary>
         /// Writer settings.
@@ -85,6 +89,30 @@ namespace Microsoft.OData
             this.textWriter.Dispose();
             this.textWriter = null;
         }
+
+#if NETCOREAPP3_1_OR_GREATER
+        /// <summary>
+        /// Asynchronously disposes the <see cref="RawValueWriter"/>.
+        /// It flushes itself and then disposes its inner <see cref="System.IO.TextWriter"/>.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous dispose operation.</returns>
+        public ValueTask DisposeAsync()
+        {
+            return DisposeInnerAsync();
+
+            async ValueTask DisposeInnerAsync()
+            {
+                Debug.Assert(this.textWriter != null, "The text writer has not been initialized yet.");
+
+                if (this.textWriter != null)
+                {
+                    await this.textWriter.DisposeAsync().ConfigureAwait(false);
+                }
+
+                this.textWriter = null;
+            }
+        }
+#endif
 
         /// <summary>
         /// Start writing a raw output. This should only be called once.
@@ -241,7 +269,11 @@ namespace Microsoft.OData
             // We must create the text writer over a stream which will ignore Dispose, since we need to be able to Dispose
             // the writer without disposing the underlying message stream.
             Stream nonDisposingStream;
+#if NETSTANDARD1_1
             if (MessageStreamWrapper.IsNonDisposingStream(this.stream) || this.stream is AsyncBufferedStream)
+#else
+            if (MessageStreamWrapper.IsNonDisposingStream(this.stream))
+#endif
             {
                 // AsyncBufferedStream ignores Dispose
                 nonDisposingStream = this.stream;

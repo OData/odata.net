@@ -6,24 +6,17 @@
 
 namespace EdmLibTests.FunctionalTests
 {
-#if !SILVERLIGHT
     using ApprovalTests.Reporters;
-#endif
     using System.Runtime.CompilerServices;
     using EdmLibTests.FunctionalUtilities;
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Utils.Common;
     using Microsoft.Test.OData.Utils.Metadata;
-#if SILVERLIGHT
-    using Microsoft.Silverlight.Testing;
-#endif
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-#if !SILVERLIGHT
     [UseReporter(typeof(LoggingReporter))]
     [DeploymentItem("FunctionalTests")]
-#endif
     public class OperationModelTests : EdmLibTestCaseBase
     {
         public OperationModelTests()

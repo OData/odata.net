@@ -278,7 +278,12 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         internal override void WriteDecimalTypeAttributes(IEdmDecimalTypeReference reference)
         {
             this.WriteOptionalAttribute(CsdlConstants.Attribute_Precision, reference.Precision, EdmValueWriter.IntAsXml);
-            this.WriteOptionalAttribute(CsdlConstants.Attribute_Scale, reference.Scale, CsdlConstants.Default_Scale, ScaleAsXml);
+
+            // Starting with versions > 7.10.0 we always write the scale even if it's the default scale.
+            // This is because we changed default scale from 0 to null/variable and wanted
+            // to preserve backwards compatibility with code which expected null scale to be written out to the CSDL by default
+            // see PR: https://github.com/OData/odata.net/pull/2346
+            this.WriteRequiredAttribute(CsdlConstants.Attribute_Scale, reference.Scale, ScaleAsXml);
         }
 
         internal override void WriteSpatialTypeAttributes(IEdmSpatialTypeReference reference)
@@ -436,6 +441,23 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
         }
 
+        internal static bool IsUsingDefaultValue(IEdmVocabularyAnnotation annotation)
+        {
+            EdmVocabularyAnnotation edmAnnotation = annotation as EdmVocabularyAnnotation;
+            if (edmAnnotation != null)
+            {
+                return edmAnnotation.UseDefault;
+            }
+
+            CsdlSemanticsVocabularyAnnotation csdlAnnotation = annotation as CsdlSemanticsVocabularyAnnotation;
+            if (csdlAnnotation != null)
+            {
+                return csdlAnnotation.UseDefault;
+            }
+
+            return false;
+        }
+
         internal override void WriteInlineExpression(IEdmExpression expression)
         {
             IEdmPathExpression pathExpression = expression as IEdmPathExpression;
@@ -502,8 +524,10 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_Annotation);
             this.WriteRequiredAttribute(CsdlConstants.Attribute_Term, annotation.Term, this.TermAsXml);
             this.WriteOptionalAttribute(CsdlConstants.Attribute_Qualifier, annotation.Qualifier, EdmValueWriter.StringAsXml);
-            if (isInline)
+
+            if (isInline && !IsUsingDefaultValue(annotation))
             {
+                // in xml format, we can (should) skip writing the expression value if it matches the term default value.
                 this.WriteInlineExpression(annotation.Value);
             }
         }

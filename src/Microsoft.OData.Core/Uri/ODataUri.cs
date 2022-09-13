@@ -30,13 +30,13 @@ namespace Microsoft.OData
         /// </summary>
         private Uri serviceRoot;
 
+        private ParameterAliasValueAccessor parameterAliasValueAccessor;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ODataUri"/> class.
         /// </summary>
         public ODataUri()
         {
-            IDictionary<string, string> dictionary = new Dictionary<string, string>(StringComparer.Ordinal);
-            this.ParameterAliasValueAccessor = new ParameterAliasValueAccessor(dictionary);
         }
 
         /// <summary>
@@ -214,7 +214,23 @@ namespace Microsoft.OData
         /// <summary>
         /// Gets or sets the ParameterAliasValueAccessor.
         /// </summary>
-        internal ParameterAliasValueAccessor ParameterAliasValueAccessor { get; set; }
+        internal ParameterAliasValueAccessor ParameterAliasValueAccessor
+        {
+            get
+            {
+                if (parameterAliasValueAccessor == null)
+                {
+                    IDictionary<string, string> dictionary = new Dictionary<string, string>(StringComparer.Ordinal);
+                    parameterAliasValueAccessor = new ParameterAliasValueAccessor(dictionary);
+                }
+
+                return parameterAliasValueAccessor;
+            }
+            set
+            {
+                parameterAliasValueAccessor = value;
+            }
+        }
 
         /// <summary>
         /// Return a copy of current ODataUri.

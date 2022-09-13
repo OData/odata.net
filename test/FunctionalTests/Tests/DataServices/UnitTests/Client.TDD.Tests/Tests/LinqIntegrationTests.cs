@@ -894,7 +894,7 @@ namespace AstoriaUnitTests.Tests.Client
         {
             query = context.CreateQuery<EntityWithDateAndTime>("Test").Where(p => p.dateTimeOffsetProperty.Date == (DateTimeOffset.MinValue)).ToString();
 
-            Assert.Equal(rootUrl + "Test?$filter=cast(date(dateTimeOffsetProperty),'Edm.DateTimeOffset') eq 0001-01-01T00:00:00Z", query);
+            Assert.Equal(rootUrl + "Test?$filter=cast(date(dateTimeOffsetProperty),Edm.DateTimeOffset) eq 0001-01-01T00:00:00Z", query);
         }
         [Fact]
         public void WhereClauseWithDateAndHourOfDateTimeOffsetShouldReturnUrlWithDateAndHourFunctions()

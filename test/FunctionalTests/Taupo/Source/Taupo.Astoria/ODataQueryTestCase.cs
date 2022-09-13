@@ -11,10 +11,6 @@ namespace Microsoft.Test.Taupo.Astoria
     using System.Collections.ObjectModel;
     using System.Globalization;
     using System.Linq;
-
-#if SILVERLIGHT && !WIN8
-    using System.Net.Browser;
-#endif
     using Microsoft.Test.Taupo.Astoria.Client;
     using Microsoft.Test.Taupo.Astoria.Contracts;
     using Microsoft.Test.Taupo.Astoria.Contracts.Client;
@@ -22,15 +18,7 @@ namespace Microsoft.Test.Taupo.Astoria
     using Microsoft.Test.Taupo.Astoria.Contracts.LinqToAstoria;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Astoria.Contracts.ServiceReferences;
-#if SILVERLIGHT
-#if WIN8
-    using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataOracleService.Win8;
-#else
-    using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataOracleService.Silverlight;
-#endif
-#else
     using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataOracleService.DotNet;
-#endif
     using Microsoft.Test.Taupo.Astoria.LinqToAstoria;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts;
@@ -312,9 +300,7 @@ namespace Microsoft.Test.Taupo.Astoria
                     queryProperties = queryProperties.Where(qp => (qp.PropertyType as IQueryClrType).ClrType != typeof(string)).ToList();
                     queryProperties = queryProperties.Where(qp => (qp.PropertyType as IQueryClrType).ClrType != typeof(bool)).ToList();
                     queryProperties = queryProperties.Where(qp => (qp.PropertyType as IQueryClrType).ClrType != typeof(DateTime)).ToList();
-#if !WINDOWS_PHONE
                     queryProperties = queryProperties.Where(qp => (qp.PropertyType as IQueryClrType).ClrType != typeof(Guid)).ToList();
-#endif
                 }
             }
 

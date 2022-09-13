@@ -17,9 +17,6 @@ namespace EdmLibTests.FunctionalTests
     using Microsoft.OData.Edm.Csdl;
     using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Metadata;
-#if SILVERLIGHT
-    using Microsoft.Silverlight.Testing;
-#endif
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -272,7 +269,6 @@ namespace EdmLibTests.FunctionalTests
             this.CompareCsdls(expectedCsdls, actualCsdls);
         }
 
-#if !SILVERLIGHT
         [TestMethod]
         public void MultithreadedAnnotations()
         {
@@ -562,7 +558,6 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsTrue(nonNullPropertiesCount > 50000, "Many properties enumerables");
             Assert.IsTrue(nonNullPropertyTypeCount > 500000, "Many property types");
         }
-#endif
 
         private static IEdmEntityType[] BaseTypes;
         private static IEnumerable<IEdmProperty>[] Properties;

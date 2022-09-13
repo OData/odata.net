@@ -6,9 +6,6 @@
 
 namespace EdmLibTests.FunctionalTests
 {
-    #if SILVERLIGHT
-    using Microsoft.Silverlight.Testing;
-#endif
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -35,7 +32,6 @@ namespace EdmLibTests.FunctionalTests
             this.EdmVersion = EdmVersion.V40;
         }
 
-#if !SILVERLIGHT
         [TestMethod]
         [Ignore("VSUpgrade19 - RegTest")]
         public void InterfaceValidatorAutoCheck()
@@ -130,7 +126,6 @@ namespace EdmLibTests.FunctionalTests
                 }
             }
         }
-#endif
 
         [TestMethod]
         public void ValidateNavigationPropertyPartnerPath()
@@ -2445,7 +2440,6 @@ namespace EdmLibTests.FunctionalTests
             this.VerifySemanticValidation(model, EdmVersion.V40, expectedErrors);
         }
 
-#if !SILVERLIGHT
         [TestMethod]
         public void SchemaWriterShouldFailWithGoodMessageWhenWritingInvalidXml()
         {
@@ -2476,6 +2470,5 @@ namespace EdmLibTests.FunctionalTests
 
             xmlWriter.Close();
         }
-#endif
     }
 }

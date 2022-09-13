@@ -294,10 +294,19 @@ namespace Microsoft.OData
             }
 
             // $select=Orders will include the entire subtree when there are no same expanded entity.
-            if (this.selectedProperties != null && this.selectedProperties.Contains(navigationPropertyName) &&
-                (this.children == null || !this.children.Any(n => n.Key.Equals(navigationPropertyName, StringComparison.Ordinal) && n.Value.isExpandedNavigationProperty)))
+            if (this.selectedProperties != null && this.selectedProperties.Contains(navigationPropertyName))
             {
-                return new SelectedPropertiesNode(SelectionType.EntireSubtree);
+                if (this.children == null)
+                {
+                    return new SelectedPropertiesNode(SelectionType.EntireSubtree);
+                }
+
+                bool containsExpandedNavigationProperty = this.children.TryGetValue(navigationPropertyName, out SelectedPropertiesNode child)
+                    && child.isExpandedNavigationProperty;
+                if (!containsExpandedNavigationProperty)
+                {
+                    return new SelectedPropertiesNode(SelectionType.EntireSubtree);
+                }
             }
 
             if (this.children != null)
@@ -312,9 +321,8 @@ namespace Microsoft.OData
 
                 // try to find a child with a type segment before it that matches the current type.
                 // Note: the result of this aggregation will be either empty or a found child node.
-                return this.GetMatchingTypeSegments(structuredType)
-                    .Select(typeSegmentChild => typeSegmentChild.GetSelectedPropertiesForNavigationProperty(structuredType, navigationPropertyName))
-                    .Aggregate(child, CombineNodes);
+                return GetSelectePropertiesForTypeSegmentsNavigationProperties(this.GetMatchingTypeSegments(structuredType), structuredType, navigationPropertyName)
+                    .Aggregate(child, (left, right) => CombineNodes(left, right));
             }
 
             // $select=* will include Orders, but none of its properties
@@ -680,6 +688,22 @@ namespace Microsoft.OData
                         yield return typeSegmentChild;
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Gets the selected properties for each of the type segment child
+        /// </summary>
+        /// <param name="typeSegments">The children type segments</param>
+        /// <param name="structuredType">The parent type</param>
+        /// <param name="navigationPropertyName">The navigation property for which to find selected properties</param>
+        /// <returns>The selected properties node for each type segment</returns>
+        /// <remarks>This method exists solely for performance reasons, to avoid closure allocations when IEnumerable.Select()</remarks>
+        private static IEnumerable<SelectedPropertiesNode> GetSelectePropertiesForTypeSegmentsNavigationProperties(IEnumerable<SelectedPropertiesNode> typeSegments, IEdmStructuredType structuredType, string navigationPropertyName)
+        {
+            foreach (SelectedPropertiesNode typeSegment in typeSegments)
+            {
+                yield return typeSegment.GetSelectedPropertiesForNavigationProperty(structuredType, navigationPropertyName);
             }
         }
 

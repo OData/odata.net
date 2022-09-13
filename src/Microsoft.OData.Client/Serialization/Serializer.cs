@@ -937,12 +937,14 @@ namespace Microsoft.OData.Client
             return valueInODataFormat;
         }
 
+
         /// <summary>
         /// Creates an ODataResource using some properties extracted from an entity operation parameter.
         /// </summary>
         /// <param name="clientTypeAnnotation">The client type annotation of the entity.</param>
         /// <param name="parameterValue">The Clr value of the entity.</param>
         /// <returns>The ODataResource created.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
         private ODataResourceWrapper CreateODataResourceFromEntityOperationParameter(ClientTypeAnnotation clientTypeAnnotation, object parameterValue)
         {
             ClientPropertyAnnotation[] properties = new ClientPropertyAnnotation[0];

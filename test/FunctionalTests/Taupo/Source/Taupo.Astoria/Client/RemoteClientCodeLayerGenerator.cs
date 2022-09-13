@@ -10,15 +10,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
     using System.CodeDom;
     using System.Linq;
     using Microsoft.Test.Taupo.Astoria.Contracts.Client;
-#if SILVERLIGHT
-#if !WIN8
-    using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataServiceBuilderService.Silverlight;
-#else
-    using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataServiceBuilderService.Win8;
-#endif
-#else
     using Microsoft.Test.Taupo.Astoria.Contracts.WebServices.DataServiceBuilderService.DotNet;
-#endif
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts;
     using Microsoft.Test.Taupo.Contracts.CodeDomExtensions;
@@ -96,7 +88,6 @@ namespace Microsoft.Test.Taupo.Astoria.Client
 
             string constructorOverload = language.CreateCodeGenerator().GenerateCodeFromNamespace(contextNamespace);
 
-#if !WIN8
             this.DataServiceBuilder.BeginGenerateClientLayerCode(
                 serviceRoot.OriginalString,
                 this.DesignVersion,
@@ -124,29 +115,6 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                         });
                 },
                 null);
-#else
-            var task = this.DataServiceBuilder.GenerateClientLayerCodeAsync(
-                new GenerateClientLayerCodeRequest(
-                    serviceRoot.OriginalString,
-                    this.DesignVersion,
-                    this.ClientVersion,
-                    language.FileExtension));
-            task.Wait();
-            var result = task.Result;
-            string clientCode = result.GenerateClientLayerCodeResult;
-            string errorMessage = result.errorLog;
-            if (errorMessage != null)
-            {
-                throw new TaupoInfrastructureException(errorMessage);
-            }
-
-            // add the extra constructor overload we generated above
-            clientCode = string.Concat(clientCode, Environment.NewLine, constructorOverload);
-
-            onCompletion(clientCode);
-
-            continuation.Continue();
-#endif
         }
     }
 }

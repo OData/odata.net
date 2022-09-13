@@ -9,9 +9,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     #region Namespaces
     using System;
     using System.Reflection;
-#if !WINDOWS_PHONE
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.OData.Common;
@@ -134,15 +132,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
             else
             {
-#if SILVERLIGHT || WINDOWS_PHONE
-                throw new PlatformNotSupportedException("Asynchronous reading is only supported on desktop");
-#else
                 return this.parameterReader.ReadAsync().WaitForResult();
-#endif
             }
         }
 
-#if !WINDOWS_PHONE
         /// <summary>
         /// Asynchronously reads the next item from the message payload.
         /// </summary>
@@ -151,6 +144,5 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         {
             throw new NotImplementedException("Tests should always use synchronous APIs.");
         }
-#endif
     }
 }

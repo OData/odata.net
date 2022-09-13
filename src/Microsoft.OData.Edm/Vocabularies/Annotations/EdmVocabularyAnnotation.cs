@@ -44,6 +44,7 @@ namespace Microsoft.OData.Edm.Vocabularies
             this.term = term;
             this.qualifier = qualifier;
             this.value = value;
+            UseDefault = false;
         }
 
         /// <summary>
@@ -77,5 +78,11 @@ namespace Microsoft.OData.Edm.Vocabularies
         {
             get { return this.value; }
         }
+
+        /// <summary>
+        /// Gets whether the annotation uses a default value.
+        /// In vNext, need refactor this.
+        /// </summary>
+        internal bool UseDefault { get; set; }
     }
 }

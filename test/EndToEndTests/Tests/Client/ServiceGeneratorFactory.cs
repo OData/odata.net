@@ -12,23 +12,7 @@ namespace Microsoft.Test.OData.Tests.Client
     {
         public static IServiceUriGenerator CreateServiceUriGenerator()
         {
-#if WINDOWSPHONE
-            return new WindowsPhoneUriGenerator();
-#else
-#if SILVERLIGHT
-            return new SilverlightUriGenerator();
-#else
-#if WIN8
-            return new WindowsStoreUriGenerator();
-#else
-#if PORTABLELIB
-            return new DesktopExternalUriGenerator();
-#else
             return new DesktopUriGenerator();
-#endif
-#endif
-#endif
-#endif
         }
     }
 }

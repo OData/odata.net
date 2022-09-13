@@ -11,7 +11,7 @@ Imports Microsoft.OData.Service
 Imports Microsoft.OData.Client
 Imports System.Data.Test.Astoria
 Imports System.Text
-Imports AstoriaClientUnitTests.AstoriaClientUnitTests.Stubs
+Imports Microsoft.Data.WebClient.UnitTests.AstoriaClientUnitTests.Stubs
 Imports Microsoft.Test.ModuleCore
 Imports Microsoft.VisualStudio.TestTools.UnitTesting
 

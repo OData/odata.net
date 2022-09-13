@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !SILVERLIGHT
-
 namespace Microsoft.Test.Taupo.Contracts
 {
     using Microsoft.Test.Taupo.Common;
@@ -31,5 +29,3 @@ namespace Microsoft.Test.Taupo.Contracts
         string GetWorkspacePath(string workspaceName);
     }
 }
-
-#endif

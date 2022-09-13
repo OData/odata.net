@@ -20,13 +20,12 @@ namespace Microsoft.Test.Taupo.Astoria.Client
     [ImplementationName(typeof(IDataServiceResponsePreferenceVerifier), "Default")]
     public class DataServiceResponsePreferenceVerifier : IDataServiceResponsePreferenceVerifier
     {
-#if !WINDOWS_PHONE
         /// <summary>
         /// Gets or sets the http tracker to use
         /// </summary>
         [InjectDependency(IsRequired = true)]
         public IDataServiceContextHttpTracker HttpTracker { get; set; }
-#endif
+
         /// <summary>
         /// Gets or sets assertion class to be used.
         /// </summary>
@@ -46,9 +45,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
         public void RegisterEventHandler(DataServiceContext context)
         {
             ExceptionUtilities.CheckArgumentNotNull(context, "context");
-#if !WINDOWS_PHONE
             this.HttpTracker.RegisterHandler(context, this.HandleRequestResponsePair);
-#endif
         }
 
         /// <summary>
@@ -59,9 +56,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
         public void UnregisterEventHandler(DataServiceContext context, bool inErrorState)
         {
             ExceptionUtilities.CheckArgumentNotNull(context, "context");
-#if !WINDOWS_PHONE
             this.HttpTracker.UnregisterHandler(context, this.HandleRequestResponsePair, !inErrorState);
-#endif
         }
 
         /// <summary>
@@ -72,16 +67,13 @@ namespace Microsoft.Test.Taupo.Astoria.Client
         /// <param name="response">The http response</param>
         public void HandleRequestResponsePair(DataServiceContext context, HttpRequestData request, HttpResponseData response)
         {
-#if !SILVERLIGHT || WIN8
             this.VerifyPreferHeaderOnRequest(request, context.AddAndUpdateResponsePreference);
             if (context.AddAndUpdateResponsePreference != DataServiceResponsePreference.None && this.IsCreateOrUpdate(request.GetEffectiveVerb()))
             {
                 this.VerifyVersionHeaders(request);
             }
-#endif
         }
 
-#if !SILVERLIGHT || WIN8
         private void VerifyPreferHeaderOnRequest(HttpRequestData request, DataServiceResponsePreference responsePreference)
         {
             bool preferExists = request.Headers.Keys.Contains(HttpHeaders.Prefer);
@@ -110,16 +102,14 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                 }
             }
         }
-#endif
+
         private void VerifyVersionHeaders(HttpRequestData request)
         {
-#if !SILVERLIGHT || WIN8
             if (request.Headers.Keys.Contains(HttpHeaders.Prefer))
             {
                 this.Assert.IsTrue(DataServiceProtocolVersion.V4 <= request.GetDataServiceVersion(), string.Format(CultureInfo.InvariantCulture, "Request DSV should be at least 3 if prefer is specified. Value was '{0}'.", request.Headers[HttpHeaders.DataServiceVersion]));
                 this.Assert.IsTrue(DataServiceProtocolVersion.V4 <= request.GetMaxDataServiceVersion(), string.Format(CultureInfo.InvariantCulture, "Request MDSV should be at least 3 if prefer is specified. Value was '{0}'.", request.Headers[HttpHeaders.MaxDataServiceVersion]));
             }
-#endif
         }
 
         private bool IsCreateOrUpdate(HttpVerb verb)

@@ -22,7 +22,9 @@ namespace Microsoft.OData.Client
         {
             if (dataServiceContext.HttpRequestTransportMode == HttpRequestTransportMode.HttpWebRequest)
             {
+#pragma warning disable CS0618 // Type or member is obsolete
                 return new HttpWebRequestMessage(args);
+#pragma warning restore CS0618 // Type or member is obsolete
             }
             else
             {

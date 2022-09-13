@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !SILVERLIGHT
 namespace Microsoft.Test.OData.Tests.Client
 {
     using System;
@@ -68,12 +67,7 @@ namespace Microsoft.Test.OData.Tests.Client
         /// <param name="milliseconds">The milliseconds to sleep</param>
         private static void Sleep(int milliseconds)
         {
-#if PORTABLELIB
-            System.Threading.Tasks.Task.Delay(milliseconds).Wait();
-#else
             System.Threading.Thread.Sleep(milliseconds);
-#endif
         }
     }
 }
-#endif

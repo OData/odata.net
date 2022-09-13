@@ -116,9 +116,8 @@ namespace Microsoft.Test.Taupo.Astoria.Client
         private static int GetStatusCodeForInsert(DSClient.DataServiceContext context)
         {
             DataServiceResponsePreference preference = DataServiceResponsePreference.Unspecified;
-#if !WINDOWS_PHONE
             preference = context.AddAndUpdateResponsePreference.ToTestEnum();
-#endif
+
             if (preference == DataServiceResponsePreference.NoContent)
             {
                 return (int)HttpStatusCode.NoContent;
@@ -132,9 +131,8 @@ namespace Microsoft.Test.Taupo.Astoria.Client
         private static int GetStatusCodeForUpdate(DSClient.DataServiceContext context)
         {
             DataServiceResponsePreference preference = DataServiceResponsePreference.Unspecified;
-#if !WINDOWS_PHONE
             preference = context.AddAndUpdateResponsePreference.ToTestEnum();
-#endif
+
             if (preference == DataServiceResponsePreference.IncludeContent)
             {
                 return (int)HttpStatusCode.OK;

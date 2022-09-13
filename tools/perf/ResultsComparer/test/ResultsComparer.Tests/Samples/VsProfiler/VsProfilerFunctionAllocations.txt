@@ -1,0 +1,9 @@
+﻿Name	Total (Allocations)	Self (Allocations)	Self Size (Bytes)
+ + ODataWriterVsSystemTextJson (PID: 24864)	1,710,817	32	11,420
+| + microsoft.odata.core.dll	1,295,668	767,068	38,363,306
+|| - Microsoft.OData.ODataUri.Clone()	35,017	35,005	6,440,688
+|| - Microsoft.OData.JsonLight.ODataJsonLightWriter.CreateResourceScope(Microsoft.OData.ODataResource, Microsoft.OData.Edm.IEdmNavigationSource, Microsoft.OData.Edm.IEdmStructuredType, bool, Microsoft.OData.SelectedPropertiesNode, Microsoft.OData.ODataUri, bool)	60,006	20,005	2,560,248
+|| - Microsoft.OData.JsonLightInstanceAnnotationWriter.WriteInstanceAnnotations(System.Collections.Generic.IEnumerable<Microsoft.OData.ODataInstanceAnnotation>, Microsoft.OData.InstanceAnnotationWriteTracker, bool, string)	80,004	40,002	2,560,128
+|| - Microsoft.OData.ODataResourceBase.ctor()	80,000	80,000	2,400,000
+|| - Microsoft.OData.ODataPrimitiveValue.ctor(object)	80,003	80,001	2,240,080
+|| - Microsoft.OData.Json.JsonValueUtils.CreateSpecialCharToEscapedStringMap()	130,884	65,441	2,094,872

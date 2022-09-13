@@ -78,14 +78,17 @@ namespace Microsoft.OData.JsonLight
 
                     // Note we do not allow named stream properties to be written as top level property.
                     this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
+                    IDuplicatePropertyNameChecker duplicatePropertyNameChecker = this.GetDuplicatePropertyNameChecker();
+
                     this.WriteProperty(
                         property,
-                        null /*owningType*/,
-                        true /* isTopLevel */,
-                        this.CreateDuplicatePropertyNameChecker(),
-                        null /* metadataBuilder */);
-                    this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
+                        owningType: null,
+                        isTopLevel: true,
+                        duplicatePropertyNameChecker: duplicatePropertyNameChecker,
+                        metadataBuilder : null);
 
+                    this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
+                    this.ReturnDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
                     this.JsonWriter.EndObjectScope();
                 });
         }
@@ -276,14 +279,17 @@ namespace Microsoft.OData.JsonLight
 
                     // Note we do not allow named stream properties to be written as top level property.
                     this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
+                    IDuplicatePropertyNameChecker duplicatePropertyNameChecker = this.GetDuplicatePropertyNameChecker();
+
                     await this.WritePropertyAsync(
                         property,
-                        null /*owningType*/,
-                        true /* isTopLevel */,
-                        this.CreateDuplicatePropertyNameChecker(),
-                        null /* metadataBuilder */).ConfigureAwait(false);
-                    this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
+                        owningType : null,
+                        isTopLevel : true,
+                        duplicatePropertyNameChecker : duplicatePropertyNameChecker,
+                        metadataBuilder : null).ConfigureAwait(false);
 
+                    this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
+                    this.ReturnDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
                     await this.AsynchronousJsonWriter.EndObjectScopeAsync().ConfigureAwait(false);
                 });
         }
@@ -645,11 +651,15 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(!this.currentPropertyInfo.IsTopLevel, "Resource property should not be top level");
             this.JsonWriter.WriteName(property.Name);
 
+            IDuplicatePropertyNameChecker duplicatePropertyNameChecker = this.GetDuplicatePropertyNameChecker();
+
             this.JsonLightValueSerializer.WriteResourceValue(
                 resourceValue,
                 this.currentPropertyInfo.MetadataType.TypeReference,
                 isOpenPropertyType,
-                this.CreateDuplicatePropertyNameChecker());
+                duplicatePropertyNameChecker);
+
+            this.ReturnDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
         }
 
         /// <summary>
@@ -916,21 +926,21 @@ namespace Microsoft.OData.JsonLight
         /// <param name="isTopLevel">If writing top level property.</param>
         /// <param name="isUndeclaredProperty">If writing an undeclared property.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteInstanceAnnotationAsync(ODataPropertyInfo property, bool isTopLevel, bool isUndeclaredProperty)
+        private Task WriteInstanceAnnotationAsync(ODataPropertyInfo property, bool isTopLevel, bool isUndeclaredProperty)
         {
             if (property.InstanceAnnotations.Count != 0)
             {
                 if (isTopLevel)
                 {
-                    await this.InstanceAnnotationWriter.WriteInstanceAnnotationsAsync(property.InstanceAnnotations)
-                        .ConfigureAwait(false);
+                    return this.InstanceAnnotationWriter.WriteInstanceAnnotationsAsync(property.InstanceAnnotations);
                 }
                 else
                 {
-                    await this.InstanceAnnotationWriter.WriteInstanceAnnotationsAsync(property.InstanceAnnotations, property.Name, isUndeclaredProperty)
-                        .ConfigureAwait(false);
+                    return this.InstanceAnnotationWriter.WriteInstanceAnnotationsAsync(property.InstanceAnnotations, property.Name, isUndeclaredProperty);
                 }
             }
+
+            return TaskUtils.CompletedTask;
         }
 
         /// <summary>
@@ -939,7 +949,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="property">The property to handle.</param>
         /// <param name="isTopLevel">If writing top level property.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteODataTypeAnnotationAsync(ODataPropertyInfo property, bool isTopLevel)
+        private Task WriteODataTypeAnnotationAsync(ODataPropertyInfo property, bool isTopLevel)
         {
             if (property.TypeAnnotation != null && property.TypeAnnotation.TypeName != null)
             {
@@ -952,16 +962,17 @@ namespace Microsoft.OData.JsonLight
                 {
                     if (isTopLevel)
                     {
-                        await this.AsynchronousODataAnnotationWriter.WriteODataTypeInstanceAnnotationAsync(typeName)
-                            .ConfigureAwait(false);
+                        return this.AsynchronousODataAnnotationWriter.WriteODataTypeInstanceAnnotationAsync(typeName);
                     }
                     else
                     {
-                        await this.AsynchronousODataAnnotationWriter.WriteODataTypePropertyAnnotationAsync(property.Name, typeName)
-                            .ConfigureAwait(false);
+                        return this.AsynchronousODataAnnotationWriter.WriteODataTypePropertyAnnotationAsync(property.Name, typeName);
+
                     }
                 }
             }
+
+            return TaskUtils.CompletedTask;
         }
 
         /// <summary>
@@ -1070,11 +1081,15 @@ namespace Microsoft.OData.JsonLight
             await this.AsynchronousJsonWriter.WriteNameAsync(property.Name)
                 .ConfigureAwait(false);
 
+            IDuplicatePropertyNameChecker duplicatePropertyNameChecker = this.GetDuplicatePropertyNameChecker();
+
             await this.JsonLightValueSerializer.WriteResourceValueAsync(
                 resourceValue,
                 this.currentPropertyInfo.MetadataType.TypeReference,
                 isOpenPropertyType,
-                this.CreateDuplicatePropertyNameChecker()).ConfigureAwait(false);
+                duplicatePropertyNameChecker).ConfigureAwait(false);
+
+            this.ReturnDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
         }
 
         /// <summary>
@@ -1162,7 +1177,7 @@ namespace Microsoft.OData.JsonLight
         /// Asynchronously writes the type name on the wire.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WritePropertyTypeNameAsync()
+        private Task WritePropertyTypeNameAsync()
         {
             string typeNameToWrite = this.currentPropertyInfo.TypeNameToWrite;
             if (typeNameToWrite != null)
@@ -1170,15 +1185,15 @@ namespace Microsoft.OData.JsonLight
                 // We write the type name as an instance annotation (named "odata.type") for top-level properties, but as a property annotation (e.g., "...@odata.type") if not top level.
                 if (this.currentPropertyInfo.IsTopLevel)
                 {
-                    await this.AsynchronousODataAnnotationWriter.WriteODataTypeInstanceAnnotationAsync(typeNameToWrite)
-                        .ConfigureAwait(false);
+                    return this.AsynchronousODataAnnotationWriter.WriteODataTypeInstanceAnnotationAsync(typeNameToWrite);
                 }
                 else
                 {
-                    await this.AsynchronousODataAnnotationWriter.WriteODataTypePropertyAnnotationAsync(this.currentPropertyInfo.PropertyName, typeNameToWrite)
-                        .ConfigureAwait(false);
+                    return this.AsynchronousODataAnnotationWriter.WriteODataTypePropertyAnnotationAsync(this.currentPropertyInfo.PropertyName, typeNameToWrite);
                 }
             }
+
+            return TaskUtils.CompletedTask;
         }
     }
 }

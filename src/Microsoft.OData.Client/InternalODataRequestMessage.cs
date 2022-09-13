@@ -245,7 +245,6 @@ namespace Microsoft.OData.Client
             throw new NotImplementedException();
         }
 
-#if !PORTABLELIB
         /// <summary>
         /// Returns a response from an Internet resource.
         /// </summary>
@@ -254,6 +253,5 @@ namespace Microsoft.OData.Client
         {
             throw new NotImplementedException();
         }
-#endif
     }
 }

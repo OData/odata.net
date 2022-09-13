@@ -149,21 +149,6 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts
             builder.Append(')');
         }
 
-#if SILVERLIGHT
-        /// <summary>
-        /// Extension method for Encoding.GetString(byte[]) because it is not available in silverlight
-        /// </summary>
-        /// <param name="encoding">The encoding to extend</param>
-        /// <param name="buffer">The byte array containing the sequence of bytes to decode.</param>
-        /// <returns>A string containing the results of decoding the specified sequence of bytes.</returns>
-        public static string GetString(this Encoding encoding, byte[] buffer)
-        {
-            ExceptionUtilities.CheckArgumentNotNull(encoding, "encoding");
-            ExceptionUtilities.CheckArgumentNotNull(buffer, "buffer");
-            return encoding.GetString(buffer, 0, buffer.Length);
-        }
-#endif
-
         /// <summary>
         /// Executes the Request Synchronously/Asynchronously based on the <paramref name="runAsync"/> value
         /// </summary>
@@ -344,17 +329,5 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts
                 value.Annotations.Add(annotationToAdd);
             }
         }
-
-#if SILVERLIGHT
-        /// <summary>
-        /// Helper extension method to stand in for WebRequest.GetResponse in Silverlight. Always throws.
-        /// </summary>
-        /// <param name="request">The request to send</param>
-        /// <returns>Always throws</returns>
-        private static WebResponse GetResponse(this WebRequest request)
-        {
-            throw new TaupoInvalidOperationException("Sync API not supported in Silverlight");
-        }
-#endif
     }
 }

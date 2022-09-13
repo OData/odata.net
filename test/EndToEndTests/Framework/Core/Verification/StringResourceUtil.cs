@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !PORTABLELIB && !SILVERLIGHT
 namespace Microsoft.Test.OData.Framework.Verification
 {
     using System;
@@ -23,7 +22,7 @@ namespace Microsoft.Test.OData.Framework.Verification
             new Lazy<StringResourceVerifier>(() => new StringResourceVerifier(new AssemblyResourceLookup(Assembly.Load(new AssemblyName("Microsoft.OData.Client").FullName))));
 
         private static readonly Lazy<StringResourceVerifier> odataLibStringResourceVerifier =
-            new Lazy<StringResourceVerifier>(() => new StringResourceVerifier(new AssemblyResourceLookup(Assembly.Load(new AssemblyName("Microsoft.OData.Core").FullName))));
+            new Lazy<StringResourceVerifier>(() => new StringResourceVerifier(new AssemblyResourceLookup(Assembly.Load(new AssemblyName("Microsoft.OData.Core").FullName), "Microsoft.OData.Core")));
 
         /// <summary>
         /// Verifies an error message against a string resource from the Microsoft.OData.Service assembly.
@@ -65,4 +64,3 @@ namespace Microsoft.Test.OData.Framework.Verification
         }
     }
 }
-#endif

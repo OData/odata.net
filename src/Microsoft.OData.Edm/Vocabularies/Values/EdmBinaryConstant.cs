@@ -34,9 +34,11 @@ namespace Microsoft.OData.Edm.Vocabularies
             this.value = value;
         }
 
+
         /// <summary>
         /// Gets the definition of this value.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1819:Properties should not return arrays", Justification = "<Pending>")]
         public byte[] Value
         {
             get { return this.value; }

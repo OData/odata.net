@@ -9,9 +9,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
     #region Namespaces
     using System;
     using System.Text;
-#if !SILVERLIGHT
     using System.Threading.Tasks;
-#endif
     using Microsoft.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts;
@@ -156,15 +154,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-#if SILVERLIGHT
-                var feedWriter = this.messageWriter.CreateODataResourceSetWriter();
-                return new ODataWriterTestWrapper(feedWriter, testConfiguration);
-#else
                 return this.messageWriter.CreateODataResourceSetWriterAsync().ContinueWith(
                     task => new ODataWriterTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
-#endif
             }
         }
 
@@ -181,15 +174,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-#if SILVERLIGHT
-                var feedWriter = this.messageWriter.CreateODataResourceSetWriter(entitySet);
-                return new ODataWriterTestWrapper(feedWriter, testConfiguration);
-#else
                 return this.messageWriter.CreateODataResourceSetWriterAsync(entitySet).ContinueWith(
                     task => new ODataWriterTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
-#endif
             }
         }
         
@@ -207,15 +195,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-#if SILVERLIGHT
-                var feedWriter = this.messageWriter.CreateODataResourceSetWriter(entitySet, entityType);
-                return new ODataWriterTestWrapper(feedWriter, testConfiguration);
-#else
                 return this.messageWriter.CreateODataResourceSetWriterAsync(entitySet, entityType).ContinueWith(
                     task => new ODataWriterTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
-#endif
             }
         }
 
@@ -231,15 +214,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-#if SILVERLIGHT
-                var entryWriter = this.messageWriter.CreateODataResourceWriter();
-                return new ODataWriterTestWrapper(entryWriter, testConfiguration);
-#else
                 return this.messageWriter.CreateODataResourceWriterAsync().ContinueWith(
                     task => new ODataWriterTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
-#endif
             }
         }
 
@@ -256,15 +234,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-#if SILVERLIGHT
-                var entryWriter = this.messageWriter.CreateODataResourceWriter(entitySet);
-                return new ODataWriterTestWrapper(entryWriter, testConfiguration);
-#else
                 return this.messageWriter.CreateODataResourceWriterAsync(entitySet).ContinueWith(
                     task => new ODataWriterTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
-#endif
             }
         }
 
@@ -282,15 +255,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-#if SILVERLIGHT
-                var entryWriter = this.messageWriter.CreateODataResourceWriter(entitySet, entityType);
-                return new ODataWriterTestWrapper(entryWriter, testConfiguration);
-#else
                 return this.messageWriter.CreateODataResourceWriterAsync(entitySet, entityType).ContinueWith(
                     task => new ODataWriterTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
-#endif
             }
         }
 
@@ -339,14 +307,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-#if SILVERLIGHT
-                throw new TaupoNotSupportedException("This test is not supported in aSynchronous mode in Silverlight");
-#else
                 return this.messageWriter.CreateODataCollectionWriterAsync().ContinueWith(
                     task => new ODataCollectionWriterTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
-#endif
             }
         }
 
@@ -363,14 +327,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-#if SILVERLIGHT
-                throw new TaupoNotSupportedException("This test is not supported in aSynchronous mode in Silverlight");
-#else
                 return this.messageWriter.CreateODataCollectionWriterAsync(itemTypeReference).ContinueWith(
                     task => new ODataCollectionWriterTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
-#endif
             }
         }
 
@@ -386,14 +346,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-#if SILVERLIGHT
-                throw new TaupoNotSupportedException("This test is not supported in aSynchronous mode in Silverlight");
-#else
                 return this.messageWriter.CreateODataBatchWriterAsync().ContinueWith(
                     task => new ODataBatchWriterTestWrapper(task.Result, this.testConfiguration),
                     TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
-#endif
             }
         }
 
@@ -411,13 +367,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-#if SILVERLIGHT
-                throw new TaupoNotSupportedException("This test is not supported in aSynchronous mode in Silverlight");
-#else
                 return this.messageWriter.CreateODataParameterWriterAsync(operation)
                     .ContinueWith(task => new ODataParameterWriterTestWrapper(task.Result, this.testConfiguration), TaskContinuationOptions.ExecuteSynchronously)
                     .WaitForResult();
-#endif
             }
         }
 
@@ -434,11 +386,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-#if SILVERLIGHT
-                throw new TaupoNotSupportedException("This test is not supported in aSynchronous mode in Silverlight");
-#else
                 this.messageWriter.WriteServiceDocumentAsync(serviceDocument).Wait();
-#endif
             }
         }
 
@@ -454,11 +402,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-#if SILVERLIGHT
-                throw new TaupoNotSupportedException("This test is not supported in asynchronous mode in Silverlight");
-#else
                 throw new TaupoNotSupportedException("Asynchronous metadata writing is not supported.");
-#endif
             }
         }
 
@@ -474,11 +418,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-#if SILVERLIGHT
-                throw new TaupoNotSupportedException("This test is not supported in aSynchronous mode in Silverlight");
-#else
                 this.messageWriter.WritePropertyAsync(property).Wait();
-#endif
             }
         }
 
@@ -495,11 +435,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-#if SILVERLIGHT
-                throw new TaupoNotSupportedException("This test is not supported in aSynchronous mode in Silverlight");
-#else
                 this.messageWriter.WritePropertyAsync(property).Wait();
-#endif
             }
         }
 
@@ -516,11 +452,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-#if SILVERLIGHT
-                throw new TaupoNotSupportedException("This test is not supported in aSynchronous mode in Silverlight");
-#else
                 this.messageWriter.WritePropertyAsync(property).Wait();
-#endif
             }
         }
 
@@ -540,11 +472,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-#if SILVERLIGHT
-                throw new TaupoNotSupportedException("This test is not supported in aSynchronous mode in Silverlight");
-#else
                 this.messageWriter.WriteErrorAsync(error, includeDebugInformation).Wait();
-#endif
             }
         }
 
@@ -560,11 +488,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-#if SILVERLIGHT
-                throw new TaupoNotSupportedException("This test is not supported in aSynchronous mode in Silverlight");
-#else
                 this.messageWriter.WriteEntityReferenceLinksAsync(links).Wait();
-#endif
             }
         }
 
@@ -580,11 +504,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-#if SILVERLIGHT
-                throw new TaupoNotSupportedException("This test is not supported in aSynchronous mode in Silverlight");
-#else
                 this.messageWriter.WriteEntityReferenceLinkAsync(link).Wait();
-#endif
             }
         }
 
@@ -600,11 +520,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-#if SILVERLIGHT
-                throw new TaupoNotSupportedException("This test is not supported in aSynchronous mode in Silverlight");
-#else
                 this.messageWriter.WriteValueAsync(value).Wait();
-#endif
             }
         }
 

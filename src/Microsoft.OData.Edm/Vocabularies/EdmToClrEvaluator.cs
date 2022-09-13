@@ -35,7 +35,6 @@ namespace Microsoft.OData.Edm.Vocabularies
         {
         }
 
-#if !ORCAS
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmToClrEvaluator"/> class.
         /// </summary>
@@ -54,7 +53,6 @@ namespace Microsoft.OData.Edm.Vocabularies
         {
             this.ResolveTypeFromName = this.ResolveEdmTypeFromName;
         }
-#endif
 
         /// <summary>
         /// Gets or sets an instance of <see cref="EdmToClrConverter"/> that is used to produce CLR values during evaluation.

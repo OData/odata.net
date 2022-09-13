@@ -13,9 +13,7 @@ namespace Microsoft.Test.Taupo.Execution
     /// A facade over <see cref="TestModule"/> that exposes only data
     /// about the module, instead of a way to execute it.
     /// </summary>
-#if !SILVERLIGHT
     [Serializable]
-#endif
     public class TestModuleData : TestItemData
     {
         private TestParameterInfo[] availableParameters;

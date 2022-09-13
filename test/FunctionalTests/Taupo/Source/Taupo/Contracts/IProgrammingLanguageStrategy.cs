@@ -32,7 +32,6 @@ namespace Microsoft.Test.Taupo.Contracts
         /// </summary>
         string ProjectFileExtension { get; }
 
-#if !SILVERLIGHT
         /// <summary>
         /// Compiles given set of source files to an assembly (dll).
         /// </summary>
@@ -41,7 +40,6 @@ namespace Microsoft.Test.Taupo.Contracts
         /// <param name="referenceAssemblies">Reference assemblies to be used.</param>
         /// <param name="resourceFiles">Embedded resource files</param>
         void CompileAssemblyFromSource(string outputFile, string[] sourceContent, string[] referenceAssemblies, params string[] resourceFiles);
-#endif
 
         /// <summary>
         /// Asynchronously compiles given set of source files to an assembly (dll).

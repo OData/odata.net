@@ -7,6 +7,7 @@
 namespace Microsoft.Spatial
 {
     using System.Collections.ObjectModel;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Geometry Line String
@@ -24,6 +25,7 @@ namespace Microsoft.Spatial
         /// <param name="coordinateSystem">CoordinateSystem</param>
         /// <param name="creator">The implementation that created this instance.</param>
         /// <param name="points">The point list</param>
+        [SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
         internal GeometryLineStringImplementation(CoordinateSystem coordinateSystem, SpatialImplementation creator, params GeometryPoint[] points)
             : base(coordinateSystem, creator)
         {

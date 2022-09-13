@@ -12,9 +12,7 @@ namespace Microsoft.Test.Taupo.Runners
     /// <summary>
     /// Arguments for TestItemCompleted on <see cref="AsynchronousTestModuleRunnerBase"/>.
     /// </summary>
-#if !SILVERLIGHT
     [Serializable]
-#endif
     public class TestItemStatusChangedEventArgs : EventArgs
     {
         /// <summary>

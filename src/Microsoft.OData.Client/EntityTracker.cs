@@ -524,11 +524,7 @@ namespace Microsoft.OData.Client
         {
             if (this.identityToDescriptor == null)
             {
-            #if PORTABLELIB && WINDOWSPHONE
-                System.Threading.Interlocked.CompareExchange(ref this.identityToDescriptor, new Dictionary<Uri, EntityDescriptor>(EqualityComparer<Uri>.Default), null);
-            #else
                 System.Threading.Interlocked.CompareExchange(ref this.identityToDescriptor, new ConcurrentDictionary<Uri, EntityDescriptor>(EqualityComparer<Uri>.Default), null);
-            #endif
             }
         }
 
@@ -537,11 +533,7 @@ namespace Microsoft.OData.Client
         {
             if (this.bindings == null)
             {
-            #if PORTABLELIB && WINDOWSPHONE
-                System.Threading.Interlocked.CompareExchange(ref this.bindings, new Dictionary<LinkDescriptor, LinkDescriptor>(LinkDescriptor.EquivalenceComparer), null);
-            #else
                 System.Threading.Interlocked.CompareExchange(ref this.bindings, new ConcurrentDictionary<LinkDescriptor, LinkDescriptor>(LinkDescriptor.EquivalenceComparer), null);
-            #endif
             }
         }
 

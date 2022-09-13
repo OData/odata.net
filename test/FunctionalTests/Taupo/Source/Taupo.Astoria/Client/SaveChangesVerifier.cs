@@ -22,11 +22,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
     [ImplementationName(typeof(ISaveChangesVerifier), "WithoutTestHooks")]
     public class SaveChangesVerifier : SaveChangesVerifierBase
     {
-#if WINDOWS_PHONE
-        private EventLogger<DSClient.SendingRequestEventArgs> sendingRequestLog;
-#else
         private EventLogger<DSClient.SendingRequest2EventArgs> sendingRequestLog;
-#endif
 
         /// <summary>
         /// Gets or sets the request calculator.
@@ -68,11 +64,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
         /// <param name="continuation">The async continuation</param>
         protected override void InitializeState(IAsyncContinuation continuation)
         {
-#if WINDOWS_PHONE
-            this.sendingRequestLog = new EventLogger<DSClient.SendingRequestEventArgs>();
-#else
             this.sendingRequestLog = new EventLogger<DSClient.SendingRequest2EventArgs>();
-#endif
 
             base.InitializeState(continuation);
         }
@@ -87,11 +79,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
             this.DescriptorDataChangeTracker.ApplyUpdatesImmediately = false;
 
             // Attach event handlers
-#if WINDOWS_PHONE            
-            this.Input.Context.SendingRequest += this.sendingRequestLog.LogEvent;
-#else
             this.Input.Context.SendingRequest2 += this.sendingRequestLog.LogEvent;
-#endif
             this.State.ExpectedResponse = this.ResponseCalculator.CalculateSaveChangesResponseData(this.Input.ContextData, this.State.UsedOptions, this.Input.Context);
         }
 
@@ -106,11 +94,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
             this.DescriptorDataChangeTracker.ApplyUpdatesImmediately = true;
 
             // remove event handlers
-#if WINDOWS_PHONE
-            this.Input.Context.SendingRequest -= this.sendingRequestLog.LogEvent;
-#else
             this.Input.Context.SendingRequest2 -= this.sendingRequestLog.LogEvent;
-#endif
         }
 
         /// <summary>

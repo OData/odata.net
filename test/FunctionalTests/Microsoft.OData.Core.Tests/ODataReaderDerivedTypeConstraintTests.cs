@@ -516,7 +516,7 @@ namespace Microsoft.OData.Tests
             // Negative test case --Structural property has the derived type constraint.
             SetDerivedTypeAnnotation(this.edmModel, locationProperty, "NS.CnAddress");
 
-            Action test = () => ReadEntityPayload(payload, this.edmModel, this.edmMe, this.edmCustomerType); ;
+            Action test = () => ReadEntityPayload(payload, this.edmModel, this.edmMe, this.edmCustomerType);
             var exception = Assert.Throws<ODataException>(test);
             Assert.Equal(Strings.ReaderValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint("NS.UsAddress", "nested resource", "Location"), exception.Message);
         }

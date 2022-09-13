@@ -263,7 +263,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
             });
         }
 
-#if !PORTABLELIB && !(NETCOREAPP1_0 || NETCOREAPP2_0)
+#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         public override IODataResponseMessage GetResponse()
         {
             return UnwrapAggregateException(() =>

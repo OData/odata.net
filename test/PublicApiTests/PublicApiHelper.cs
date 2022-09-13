@@ -48,13 +48,24 @@ namespace Microsoft.OData.PublicApi.Tests
                 try
                 {
                     Assembly assembly;
-                    if (File.Exists(assemblyNames[k]))
+                    try
                     {
-                        assembly = Assembly.LoadFrom(assemblyNames[k]);
+                        if (File.Exists(assemblyNames[k]))
+                        {
+                            assembly = Assembly.LoadFrom(assemblyNames[k]);
+                        }
+                        else
+                        {
+                            assembly = Assembly.Load(assemblyNames[k]);
+                        }
                     }
-                    else
+                    catch (FileLoadException)
                     {
-                        assembly = Assembly.Load(assemblyNames[k]);
+                        // the assembly is already loaded, so find it from loaded assemblies
+                        assembly = AppDomain
+                            .CurrentDomain
+                            .GetAssemblies()
+                            .First(_ => _.FullName.StartsWith(Path.GetFileNameWithoutExtension(assemblyNames[k]), StringComparison.OrdinalIgnoreCase));
                     }
 
                     assemblies.Add(assembly);
@@ -63,7 +74,7 @@ namespace Microsoft.OData.PublicApi.Tests
                 {
                     streamWriter.WriteLine(@"Error loading types from assembly '{0}':", assemblyNames[k]);
                     streamWriter.WriteLine(e.ToString());
-                    Environment.Exit(1);
+                    throw;
                 }
             }
 

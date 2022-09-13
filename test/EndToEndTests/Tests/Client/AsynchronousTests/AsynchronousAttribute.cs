@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !SILVERLIGHT
 namespace Microsoft.Test.OData.Tests.Client
 {
     using System;
@@ -18,4 +17,3 @@ namespace Microsoft.Test.OData.Tests.Client
     {
     }
 }
-#endif

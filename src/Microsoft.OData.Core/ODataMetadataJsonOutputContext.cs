@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -30,7 +30,7 @@ namespace Microsoft.OData
         private Utf8JsonWriter jsonWriter;
 
         /// <summary>The asynchronous output stream if we're writing asynchronously.</summary>
-        private AsyncBufferedStream asynchronousOutputStream;
+        private BufferedStream asynchronousOutputStream;
 
         /// <summary>
         /// Constructor.
@@ -55,7 +55,7 @@ namespace Microsoft.OData
                 }
                 else
                 {
-                    this.asynchronousOutputStream = new AsyncBufferedStream(this.messageOutputStream);
+                    this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, ODataConstants.DefaultOutputBufferSize);
                     outputStream = this.asynchronousOutputStream;
                 }
 
@@ -229,10 +229,10 @@ namespace Microsoft.OData
         private async Task DisposeOutputStreamAsync()
         {
             await this.asynchronousOutputStream.FlushAsync().ConfigureAwait(false);
-            this.asynchronousOutputStream.Dispose();
 
             await this.jsonWriter.FlushAsync().ConfigureAwait(false);
             await this.jsonWriter.DisposeAsync().ConfigureAwait(false);
+            this.asynchronousOutputStream.Dispose();
         }
     }
 }

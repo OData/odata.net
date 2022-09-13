@@ -28,16 +28,19 @@ namespace Microsoft.OData.UriParser
 
         private static readonly object Locker = new object();
 
+
         /// <summary>
         /// Used for General uri literal parsers. These parsers will be called for every text that has to parsed.
         /// The parses could parse multiple EdmTypes.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
         private static IUriLiteralParser[] customUriLiteralParsers = new IUriLiteralParser[0];
 
         /// <summary>
         /// "Registered" uri literal parser to an EdmType. These parsers will be called when the text has to be parsed to the
         /// specific EdmType they had registered to. Each of these parsers could parse only one EdmType. Better performance.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
         private static UriLiteralParserPerEdmType[] customUriLiteralParserPerEdmType = new UriLiteralParserPerEdmType[0];
 
         //// TODO: Consider use Dictionary<EmdTypeReference,IUriLiteralParser> which is a better solution.

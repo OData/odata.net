@@ -327,7 +327,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Cannot write a deleted resource, link, deleted link, or nested delta resource set to a non-delta payload. Please use a delta resource set writer, or a request resource writer."
+        /// A string like "Cannot write a deleted resource, link, deleted link, or nested delta resource set within a resource set; they must be written within a delta resource set."
         /// </summary>
         internal static string ODataWriterCore_CannotWriteDeltaWithResourceSetWriter
         {
@@ -752,6 +752,36 @@ namespace Microsoft.OData {
         internal static string ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue(object p0)
         {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue, p0);
+        }
+
+        /// <summary>
+        /// A string like "The provided implementation of IStreamBasedJsonWriterFactory returned null for arguments: isIeee754Compatible '{0}', encoding '{1}'. The factory should return a concrete IJsonWriter implementation."
+        /// </summary>
+        internal static string ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull(object p0, object p1)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "The provided IJsonWriterAsync instance must also implement IJsonWriter."
+        /// </summary>
+        internal static string ODataMessageWriter_IJsonWriterAsync_Must_Implement_IJsonWriter
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataMessageWriter_IJsonWriterAsync_Must_Implement_IJsonWriter);
+            }
+        }
+
+        /// <summary>
+        /// A string like "Detected different instances of IJsonWriter and IJsonWriterAsync. The writer instance returned by the factory should implement both IJsonWriter and IJsonWriterAsync."
+        /// </summary>
+        internal static string ODataMessageWriter_IJsonWriter_And_IJsonWriterAsync_Are_Different_Instances
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataMessageWriter_IJsonWriter_And_IJsonWriterAsync_Are_Different_Instances);
+            }
         }
 
         /// <summary>
@@ -1615,6 +1645,30 @@ namespace Microsoft.OData {
         internal static string ODataBatchReaderStreamBuffer_BoundaryLineSecurityLimitReached(object p0)
         {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataBatchReaderStreamBuffer_BoundaryLineSecurityLimitReached, p0);
+        }
+
+        /// <summary>
+        /// A string like "Unknown property name '{0}' for message in batch."
+        /// </summary>
+        internal static string ODataJsonLightBatchPayloadItemPropertiesCache_UnknownPropertyForMessageInBatch(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightBatchPayloadItemPropertiesCache_UnknownPropertyForMessageInBatch, p0);
+        }
+
+        /// <summary>
+        /// A string like "Unexpected reader.NodeType: {0}."
+        /// </summary>
+        internal static string ODataJsonLightBatchBodyContentReaderStream_UnexpectedNodeType(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightBatchBodyContentReaderStream_UnexpectedNodeType, p0);
+        }
+
+        /// <summary>
+        /// A string like "Unknown/undefined type, new type that needs to be supported: {0}?"
+        /// </summary>
+        internal static string ODataJsonLightBatchBodyContentReaderStream_UnsupportedContentTypeInHeader(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightBatchBodyContentReaderStream_UnsupportedContentTypeInHeader, p0);
         }
 
         /// <summary>
@@ -4132,6 +4186,14 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The property with name '{0}' was found with a value node of type '{1}'; however, a resource value of type '{2}' was expected."
+        /// </summary>
+        internal static string ODataJsonLightPropertyAndValueDeserializer_ODataResourceExpectedForProperty(object p0, object p1, object p2)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueDeserializer_ODataResourceExpectedForProperty, p0, p1, p2);
+        }
+
+        /// <summary>
         /// A string like "The value specified for the spatial property was not valid. You must specify a valid spatial value."
         /// </summary>
         internal static string ODataJsonReaderCoreUtils_CannotReadSpatialPropertyValue
@@ -5215,9 +5277,12 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "Only $filter and $search query options are allowed within $count."
         /// </summary>
-        internal static string UriQueryExpressionParser_IllegalQueryOptioninDollarCount()
+        internal static string UriQueryExpressionParser_IllegalQueryOptioninDollarCount
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriQueryExpressionParser_IllegalQueryOptioninDollarCount);
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriQueryExpressionParser_IllegalQueryOptioninDollarCount);
+            }
         }
 
         /// <summary>
@@ -5506,9 +5571,12 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "The next token in a CountSegmentNode must be a collection."
         /// </summary>
-        internal static string MetadataBinder_CountSegmentNextTokenNotCollectionValue()
+        internal static string MetadataBinder_CountSegmentNextTokenNotCollectionValue
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.MetadataBinder_CountSegmentNextTokenNotCollectionValue);
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.MetadataBinder_CountSegmentNextTokenNotCollectionValue);
+            }
         }
 
         /// <summary>
@@ -6215,9 +6283,12 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "Empty parenthesis not allowed."
         /// </summary>
-        internal static string UriParser_EmptyParenthesis()
+        internal static string UriParser_EmptyParenthesis
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriParser_EmptyParenthesis);
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriParser_EmptyParenthesis);
+            }
         }
 
         /// <summary>
@@ -6407,13 +6478,24 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The last segment, and only the last segment, must be a navigation property in $expand."
+        /// A string like "The last segment, and only the last segment, can be a navigation property in $expand."
         /// </summary>
-        internal static string ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty
+        internal static string ODataExpandPath_OnlyLastSegmentCanBeNavigationProperty
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataExpandPath_OnlyLastSegmentCanBeNavigationProperty);
+            }
+        }
+
+        /// <summary>
+        /// A string like "The last segment must be a navigation property or type segment in $expand."
+        /// </summary>
+        internal static string ODataExpandPath_LastSegmentMustBeNavigationPropertyOrTypeSegment
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataExpandPath_LastSegmentMustBeNavigationPropertyOrTypeSegment);
             }
         }
 
@@ -6812,6 +6894,22 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The key in the request URI is not valid for resource '{0}'. Ensure that the names and number of key properties match the declared key of the resource '{0}'."
+        /// </summary>
+        internal static string BadRequest_KeyMismatch(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.BadRequest_KeyMismatch, p0);
+        }
+
+        /// <summary>
+        /// A string like "The key in the request URI is not valid for resource '{0}'. Ensure that the names and number of key properties match the declared or alternate key properties for the resource '{0}'."
+        /// </summary>
+        internal static string BadRequest_KeyOrAlternateKeyMismatch(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.BadRequest_KeyOrAlternateKeyMismatch, p0);
+        }
+
+        /// <summary>
         /// A string like "Segments with multiple key values must specify them in 'name=value' form."
         /// </summary>
         internal static string RequestUriProcessor_KeysMustBeNamed
@@ -6942,13 +7040,13 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "No property is allowed after $ref segment."
+        /// A string like "$count is not allowed in $select option."
         /// </summary>
-        internal static string ExpressionToken_NoPropAllowedAfterRef
+        internal static string ExpressionToken_DollarCountNotAllowedInSelect
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ExpressionToken_NoPropAllowedAfterRef);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ExpressionToken_DollarCountNotAllowedInSelect);
             }
         }
 
@@ -6964,13 +7062,13 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "$count is not allowed in $select option."
+        /// A string like "No property is allowed after $ref segment."
         /// </summary>
-        internal static string ExpressionToken_DollarCountNotAllowedInSelect
+        internal static string ExpressionToken_NoPropAllowedAfterRef
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ExpressionToken_DollarCountNotAllowedInSelect);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ExpressionToken_NoPropAllowedAfterRef);
             }
         }
 

@@ -14,18 +14,12 @@ namespace Microsoft.OData
     /// <summary>
     /// Base class for all annotatable types in OData library.
     /// </summary>
-#if ORCAS
-    [Serializable]
-#endif
     public abstract class ODataAnnotatable
     {
         /// <summary>
         /// Collection of custom instance annotations.
         /// </summary>
-#if ORCAS
-        [NonSerialized]
-#endif
-        private ICollection<ODataInstanceAnnotation> instanceAnnotations = new Collection<ODataInstanceAnnotation>();
+        private ICollection<ODataInstanceAnnotation> instanceAnnotations;
 
         /// <summary>
         /// The annotation for storing @odata.type.
@@ -38,7 +32,11 @@ namespace Microsoft.OData
         /// <returns>The custom instance annotations.</returns>
         internal ICollection<ODataInstanceAnnotation> GetInstanceAnnotations()
         {
-            Debug.Assert(this.instanceAnnotations != null, "this.instanceAnnotations != null");
+            if (this.instanceAnnotations == null)
+            {
+                this.instanceAnnotations = new List<ODataInstanceAnnotation>();
+            }
+
             return this.instanceAnnotations;
         }
 

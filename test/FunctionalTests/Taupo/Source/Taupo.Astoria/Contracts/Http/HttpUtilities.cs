@@ -17,11 +17,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Http
     /// </summary>
     public static class HttpUtilities
     {
-#if !SILVERLIGHT
         private static readonly Encoding[] allEncodings = Encoding.GetEncodings().Select(e => e.GetEncoding()).ToArray();
-#else
-        private static readonly Encoding[] allEncodings = new Encoding[] { Encoding.BigEndianUnicode, Encoding.Unicode, Encoding.UTF8 };
-#endif
         private static readonly string[] allEncodingWebNames = allEncodings.Select(e => e.WebName).Distinct().ToArray();
         private static readonly IDictionary<string, Encoding> allEncodingsByWebName = allEncodingWebNames.ToDictionary(n => n, n => allEncodings.First(e => e.WebName == n));
 

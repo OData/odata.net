@@ -14,6 +14,16 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
     public class ODataPathTests
     {
         [Fact]
+        public void ConstructorCopiesSegmentWhenPassedAnotherODataPath()
+        {
+            ODataPath existing = new ODataPath(MetadataSegment.Instance);
+            ODataPath clone = new ODataPath(existing);
+
+            clone.FirstSegment.ShouldBeMetadataSegment();
+            Assert.Equal(1, clone.Segments.Count);
+        }
+
+        [Fact]
         public void FirstSegmentSetCorrectly()
         {
             ODataPath path = new ODataPath(new ValueSegment(ModelBuildingHelpers.BuildValidEntityType()), CountSegment.Instance);

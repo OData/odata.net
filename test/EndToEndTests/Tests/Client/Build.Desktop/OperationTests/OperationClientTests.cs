@@ -13,7 +13,7 @@ using Xunit;
 
 namespace Microsoft.Test.OData.Tests.Client.OperationTests
 {
-    public class OperationClientTests : ODataWCFServiceTestsBase<OperationService>
+    public class OperationClientTests : ODataWCFServiceTestsBase<OperationService>, IDisposable
     {
 
         public OperationClientTests()
@@ -199,6 +199,11 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
             var orders = this.TestClientContext.Orders.GetOrdersByNote("1111").Where(o => o.ID < 1).ToList();
             Assert.Equal(1, orders.Count);
             Assert.Null(orders[0].Customer);
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
         }
     }
 }

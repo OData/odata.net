@@ -56,6 +56,8 @@ namespace Microsoft.OData.Performance
             this.singleton = new EdmSingleton(defaultContainer, "MySingleton", this.webType);
             this.defaultContainer.AddElement(this.singleton);
 
+            this.userModel.MarkAsImmutable();
+
             int len = 1 << 10;
             StringBuilder sb = new StringBuilder(len);
             sb.Append('a', len);

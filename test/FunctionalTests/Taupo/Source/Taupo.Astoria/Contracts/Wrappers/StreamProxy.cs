@@ -15,10 +15,6 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
     using System;
     using System.Collections.Generic;
     using System.Reflection;
-#if WIN8
-    using System.Threading;
-    using System.Threading.Tasks;
-#endif
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts;
     using Microsoft.Test.Taupo.Contracts.Wrappers;
@@ -185,7 +181,6 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
             }
         }
 
-#if !WIN8
         /// <summary>
         /// Wraps the 'System.IAsyncResult BeginRead(Byte[], Int32, Int32, System.AsyncCallback, System.Object)' on the 'System.IO.Stream' type.
         /// </summary>
@@ -251,39 +246,6 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
             var methodInfo = WrapperUtilities.GetMethodInfo(type, MethodInfoCache, "Void EndWrite(System.IAsyncResult)");
             WrapperUtilities.InvokeMethodWithoutResult(this, methodInfo, new object[] { asyncResult });
         }
-#else
-        /// <summary>
-        /// Wraps the 'Task`int ReadAsync(Byte[], Int32, Int32, CancellationToken)' on the 'System.IO.Stream' type.
-        /// </summary>
-        /// <param name="buffer">The value of the 'buffer' parameter.</param>
-        /// <param name="offset">The value of the 'offset' parameter.</param>
-        /// <param name="count">The value of the 'count' parameter.</param>
-        /// <param name="cancellationToken">The value of the 'cancellationToken' parameter.</param>
-        /// <returns>The value returned by the underlying method.</returns>
-        public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
-        {
-            // this method has been added manually - WrapperGenerator will not be able to produce this
-            var type = WrapperUtilities.GetTypeFromCache("System.IO.Stream", "mscorlib", TypeCache);
-            var methodInfo = WrapperUtilities.GetMethodInfo(type, MethodInfoCache, "System.Threading.Tasks.Task ReadAsync(Byte[], Int32, Int32, System.Threading.CancellationToken)");
-            return WrapperUtilities.InvokeMethodAndCast<Task<int>>(this, methodInfo, new object[] { buffer, offset, count, cancellationToken });
-        }
-
-        /// <summary>
-        /// Wraps the 'Tasks.Task`int WriteAsync(Byte[], Int32, Int32, CancellationToken)' on the 'System.IO.Stream' type.
-        /// </summary>
-        /// <param name="buffer">The value of the 'buffer' parameter.</param>
-        /// <param name="offset">The value of the 'offset' parameter.</param>
-        /// <param name="count">The value of the 'count' parameter.</param>
-        /// <param name="cancellationToken">The value of the 'cancellationToken' parameter.</param>
-        /// <returns>The value returned by the underlying method.</returns>
-        public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
-        {
-            // this method has been added manually - WrapperGenerator will not be able to produce this
-            var type = WrapperUtilities.GetTypeFromCache("System.IO.Stream", "mscorlib", TypeCache);
-            var methodInfo = WrapperUtilities.GetMethodInfo(type, MethodInfoCache, "System.Threading.Tasks.Task WriteAsync(Byte[], Int32, Int32, System.Threading.CancellationToken)");
-            return WrapperUtilities.InvokeMethodAndCast<Task>(this, methodInfo, new object[] { buffer, offset, count, cancellationToken });
-        }
-#endif
 
         /// <summary>
         /// Wraps the 'Boolean Equals(System.Object)' on the 'System.IO.Stream' type.

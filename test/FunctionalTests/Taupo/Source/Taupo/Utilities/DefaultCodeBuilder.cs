@@ -15,9 +15,7 @@ namespace Microsoft.Test.Taupo.Utilities
     using System.Linq;
     using System.Reflection;
     using System.Security;
-#if !WIN8
     using System.Security.Permissions;
-#endif
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts;
     using Microsoft.Test.Taupo.Contracts.CodeDomExtensions;
@@ -416,19 +414,13 @@ namespace Microsoft.Test.Taupo.Utilities
         /// Gets the location of the Microsoft.Test.Taupo assembly.
         /// </summary>
         /// <returns>The path to where the assembly is located.</returns>
-#if !SILVERLIGHT
         [SecurityCritical]
         [PermissionSet(SecurityAction.Assert, Unrestricted = true)]
         [AssertJustification("Calling Assembly.Location demands FileIOPermission (PathDiscovery flag) to that path.")]
-#endif
         private string GetAssemblyLocation()
         {
             var assembly = this.GetType().GetAssembly();
-#if WINDOWS_PHONE || WIN8
-            return assembly.FullName;
-#else
             return assembly.Location;
-#endif
         }
 
         /// <summary>
@@ -532,14 +524,10 @@ namespace Microsoft.Test.Taupo.Utilities
             // add assemblies specified by the user
             combinedReferenceAssemblies.AddRange(this.referenceAssemblies);
 
-#if SILVERLIGHT && !WIN8
-            combinedReferenceAssemblies.Add("Microsoft.Test.Taupo.SL.dll");
-#else
             // fix paths for assembly references 
             combinedReferenceAssemblies = this.ResolveTaupoReferencePaths(combinedReferenceAssemblies).ToList();
 
             // get Taupo assembly location
-#if !WIN8
             string taupoAssemblyLocation = this.GetAssemblyLocation();
 
             // only add Taupo assembly if it is not added before
@@ -547,8 +535,6 @@ namespace Microsoft.Test.Taupo.Utilities
             {
                 combinedReferenceAssemblies.Add(taupoAssemblyLocation);
             }
-#endif
-#endif
 
             this.language.CompileAssemblyAsync(
                 assemblyName,

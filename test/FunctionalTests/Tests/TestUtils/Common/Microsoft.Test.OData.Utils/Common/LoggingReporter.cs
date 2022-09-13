@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !SILVERLIGHT
 namespace Microsoft.Test.OData.Utils.Common
 {
     using System;
@@ -24,4 +23,3 @@ namespace Microsoft.Test.OData.Utils.Common
         }
     }
 }
-#endif

@@ -956,6 +956,76 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
             Assert.Null(unknownType);
         }
 
+        [Fact]
+        public void FindProperty_WithCaseInsensitive_ThrowsArugmentNull()
+        {
+            // Arrange & Act & Assert
+            IEdmStructuredType structuredType = null;
+            ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => structuredType.FindProperty("name", caseInsensitive: true));
+            Assert.Equal("structuredType", ex.ParamName);
+
+            structuredType = new EdmComplexType("NS", "Complex");
+            ex = Assert.Throws<ArgumentNullException>(() => structuredType.FindProperty(null, caseInsensitive: true));
+            Assert.Equal("propertyName", ex.ParamName);
+        }
+
+        [Fact]
+        public void FindProperty_WithCaseInsensitive_WorksForCaseSensitiveAndInsensitive()
+        {
+            // Arrange
+            EdmComplexType structuredType = new EdmComplexType("NS", "Complex");
+            structuredType.AddStructuralProperty("Title", EdmPrimitiveTypeKind.String);
+            structuredType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+            structuredType.AddStructuralProperty("nAme", EdmPrimitiveTypeKind.Int32);
+            structuredType.AddStructuralProperty("naMe", EdmPrimitiveTypeKind.Double);
+
+            // 1) Act & Assert: Cannot find the property
+            IEdmProperty property = structuredType.FindProperty("Unknown", true);
+            Assert.Null(property);
+
+            property = structuredType.FindProperty("Unknown", false);
+            Assert.Null(property);
+
+            // 2) Act & Assert : Can find one "Title" property
+            foreach (var name in new[] { "Title", "title", "tiTle", "TITLE" })
+            {
+                VerifyResolvedProperty(structuredType, name, "Title", "Edm.String");
+            }
+
+            // 3) Act & Assert: Can find the correct overload version
+            VerifyResolvedProperty(structuredType, "Name", "Name", "Edm.String");
+            VerifyResolvedProperty(structuredType, "nAme", "nAme", "Edm.Int32");
+            VerifyResolvedProperty(structuredType, "naMe", "naMe", "Edm.Double");
+        }
+
+        private static void VerifyResolvedProperty(IEdmStructuredType structuredType, string propertyName, string expectedName, string expectedTypeName)
+        {
+            IEdmProperty property = structuredType.FindProperty(propertyName, true);
+            Assert.NotNull(property);
+
+            Assert.Equal(expectedName, property.Name);
+            Assert.Equal(expectedTypeName, property.Type.FullName());
+        }
+
+        [Fact]
+        public void FindProperty_WithCaseInsensitive_ThrowsForAmbiguousPropertyName()
+        {
+            // Arrange
+            EdmComplexType structuredType = new EdmComplexType("NS", "Complex");
+            structuredType.AddStructuralProperty("Title", EdmPrimitiveTypeKind.String);
+            structuredType.AddStructuralProperty("tiTle", EdmPrimitiveTypeKind.Int32);
+            structuredType.AddStructuralProperty("tiTlE", EdmPrimitiveTypeKind.Double);
+
+            // Act & Assert - Positive case
+            IEdmProperty edmProperty = structuredType.FindProperty("tiTlE", true);
+            Assert.NotNull(edmProperty);
+            Assert.Equal("Edm.Double", edmProperty.Type.FullName());
+
+            // Act & Assert - Negative case
+            InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => structuredType.FindProperty("title", caseInsensitive: true));
+            Assert.Equal("More than one properties match the name 'title' were found in type 'NS.Complex'.", ex.Message);
+        }
+
         [Theory]
         [InlineData("TestModelNameSpace.MyFunction")]
         [InlineData("TestModelAlias.MyFunction")]

@@ -7,6 +7,7 @@
 namespace Microsoft.Spatial
 {
     using System.Collections.ObjectModel;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Geometry Multi-Point
@@ -24,6 +25,7 @@ namespace Microsoft.Spatial
         /// <param name="coordinateSystem">The CoordinateSystem</param>
         /// <param name="creator">The implementation that created this instance.</param>
         /// <param name="points">Points</param>
+        [SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
         internal GeometryMultiPointImplementation(CoordinateSystem coordinateSystem, SpatialImplementation creator, params GeometryPoint[] points)
             : base(coordinateSystem, creator)
         {

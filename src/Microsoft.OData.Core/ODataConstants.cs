@@ -208,6 +208,12 @@ namespace Microsoft.OData
 
         /// <summary>The $deletedLink token indicates delta deleted link.</summary>
         internal const string ContextUriDeletedLink = UriSegmentSeparator + DeletedLink;
+
+        /// <summary>
+        /// The default size used for buffering output data.
+        /// </summary>
+        internal const int DefaultOutputBufferSize = 84000;
+
         #endregion Context URL
     }
 }

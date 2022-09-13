@@ -20,25 +20,17 @@ namespace Microsoft.Test.Taupo.OData.Common
     {
         public static string ToXml(this Expression expression)
         {
-#if SILVERLIGHT
-            throw new PlatformNotSupportedException("This method is not supported on non-desktop platforms");
-#else
             return ExpressionTreeToXmlSerializer.SerializeToString(expression);
-#endif
         }
-#if !SILVERLIGHT
+
         public static XmlDocument ToXmlDocument(this Expression expression)
         {
             return ExpressionTreeToXmlSerializer.SerializeToXmlDocument(expression);
         }
-#endif
+
         public static XDocument ToXDocument(this Expression expression)
         {
-#if SILVERLIGHT
-            throw new PlatformNotSupportedException("This method is not supported on non-desktop platforms");
-#else
             return ExpressionTreeToXmlSerializer.SerializeToXDocument(expression);
-#endif
         }
     }
 }

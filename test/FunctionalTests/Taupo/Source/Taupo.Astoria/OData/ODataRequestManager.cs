@@ -29,13 +29,11 @@ namespace Microsoft.Test.Taupo.Astoria.OData
             this.Logger = Logger.Null;
         }
 
-#if !SILVERLIGHT // IHttpImplementation omitted from SL
         /// <summary>
         /// Gets or sets the http implementation to use when sending requests
         /// </summary>
         [InjectDependency(IsRequired = true)]
         public IHttpImplementation HttpImplementation { get; set; }
-#endif
         
         /// <summary>
         /// Gets or sets the protocol format strategy selector to use for serializing/deserializing
@@ -145,7 +143,6 @@ namespace Microsoft.Test.Taupo.Astoria.OData
             return new ODataPayloadBody(serializedBody, rootElement);
         }
 
-#if !SILVERLIGHT // IHttpImplementation omitted from SL
         /// <summary>
         /// Gets a response to the given request using an injected Http stack implementation
         /// </summary>
@@ -162,7 +159,6 @@ namespace Microsoft.Test.Taupo.Astoria.OData
 
             return this.BuildResponse(request, underlyingResponse);
         }
-#endif
 
         /// <summary>
         /// Constructs an OData response to the given request using the given response data
@@ -267,7 +263,6 @@ namespace Microsoft.Test.Taupo.Astoria.OData
                 request.WriteToLog(this.Logger, LogLevel.Verbose);
                 response.WriteToLog(this.Logger, LogLevel.Verbose);
 
-#if !SILVERLIGHT
                 if (this.Synchronizer != null)
                 {
                     EntitySet entitySet;
@@ -284,7 +279,6 @@ namespace Microsoft.Test.Taupo.Astoria.OData
                         }
                     }
                 }
-#endif
 
                 throw new AssertionFailedException("Failed to deserialize response body", ex);
             }

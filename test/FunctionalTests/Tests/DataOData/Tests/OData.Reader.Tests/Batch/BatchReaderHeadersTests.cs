@@ -37,7 +37,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
         [InjectDependency(IsRequired = true)]
         public BatchReaderHeaderTestSettings Settings { get; set; }
 
-#if !SILVERLIGHT && !WINDOWS_PHONE
         // BatchReaderHeaders tests use private reflection and thus cannot run on Silverlight or the phone.
         [TestMethod, TestCategory("Reader.Batch"), Variation(Description = "Testing the BatchReaderHeaders implementation.")]
         public void BatchReaderHeadersTest()
@@ -309,6 +308,5 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                 }
             }
         }
-#endif
     }
 }

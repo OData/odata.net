@@ -11,9 +11,7 @@ namespace Microsoft.Test.Taupo.Execution
     /// <summary>
     /// Metadata for <see cref="TestItem" />.
     /// </summary>
-#if !SILVERLIGHT
     [Serializable]
-#endif
     public class TestItemMetadata : IEquatable<TestItemMetadata>
     {
         /// <summary>

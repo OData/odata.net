@@ -167,11 +167,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
 
             yield return "System.dll";
             yield return "System.Core.dll";
-#if SILVERLIGHT && !WIN8
-            yield return DataFxAssemblyRef.File.DataServicesSilverlightClient;
-#else
             yield return DataFxAssemblyRef.File.DataServicesClient;
-#endif
             yield return DataFxAssemblyRef.File.ODataLib;
             yield return DataFxAssemblyRef.File.EntityDataModel;
 
@@ -180,16 +176,9 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                 yield return DataFxAssemblyRef.File.SpatialCore;
             }
 
-#if SILVERLIGHT && !WIN8
-            yield return "System.Windows.dll";
-            yield return "Microsoft.Test.Taupo.SL.dll";
-            yield return "Microsoft.Test.Taupo.Astoria.SL.dll";
-            yield return "Microsoft.Test.Taupo.Query.SL.dll";
-#else
             yield return "Microsoft.Test.Taupo.dll";
             yield return "Microsoft.Test.Taupo.Astoria.dll";
             yield return "Microsoft.Test.Taupo.Query.dll";
-#endif
         }
 
         /// <summary>
@@ -238,9 +227,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
         {
             DataServiceProtocolVersion maxProtocolVersion = this.workspace.ConceptualModel.GetMaxProtocolVersion();
             DataServiceProtocolVersion maxClientProtocolVersion = DataServiceProtocolVersion.Unspecified;
-#if !WINDOWS_PHONE
             maxClientProtocolVersion = ((ODataProtocolVersion)dataServiceContext.MaxProtocolVersion.Product).ToTestEnum();
-#endif
             var singleVariationCodeBuilder = this.ClientQuerySingleVariationCodeBuilderResolver.Resolve(query);
 
             // TODO: Fix service operation test coverage in Taupo.Clientko

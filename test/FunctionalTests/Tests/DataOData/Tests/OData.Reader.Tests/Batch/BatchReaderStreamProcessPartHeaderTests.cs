@@ -31,7 +31,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
         [InjectDependency(IsRequired = true)]
         public IDependencyInjector Injector { get; set; }
 
-#if !SILVERLIGHT && !WINDOWS_PHONE
         // Batch stream buffer tests use private reflection and thus cannot run on SilverLight or the phone.
         [TestMethod, TestCategory("Reader.Batch"), Variation(Description = "Testing the ODataMultipartMixedBatchReaderStream.ProcessPartHeader method.")]
         public void BatchReaderStreamProcessPartHeaderTest()
@@ -556,6 +555,5 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                     string.Format("\r\n{0}:\r\nExpected change set boundary '{1}' but reported value is '{2}'.", this.DebugDescription, this.ExpectedChangeSetBoundary, streamWrapper.ChangeSetBoundary));
             }
         }
-#endif
     }
 }

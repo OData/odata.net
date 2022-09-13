@@ -104,7 +104,6 @@
     <Compile Include="..\AsynchronousTests\AsynchronousQueryTests.cs" />
     <Compile Include="..\AsynchronousTests\AsynchronousSingletonClientTest.cs" />
     <Compile Include="..\AsynchronousTests\AsynchronousTestsExtensionMethodsDesktop.cs" />
-    <Compile Include="..\AsynchronousTests\AsynchronousTestsExtensionMethodsSilverlight.cs" />
     <Compile Include="..\AsynchronousTests\AsynchronousUpdateTests.cs" />
     <Compile Include="..\AsynchronousTests\AsyncMethodTests.cs" />
     <Compile Include="..\DataDrivenClientTestExtensionMethods.cs" />

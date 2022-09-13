@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !SILVERLIGHT && !WINDOWS_PHONE
 namespace Microsoft.Test.Taupo.OData.Common.Tests.InfrastructureTests
 {
     #region Namespaces
@@ -240,4 +239,3 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.InfrastructureTests
         }
     }
 }
-#endif

@@ -20,7 +20,6 @@ namespace Microsoft.Test.Taupo.Astoria.Client
     using Microsoft.Test.Taupo.Common;
     using ReferenceEqualityComparer = Taupo.Common.ReferenceEqualityComparer;
 
-#if !WINDOWS_PHONE
     /// <summary>
     /// Default implementation for tracking the http-level test hooks on DataServiceContext
     /// </summary>
@@ -495,13 +494,12 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                     return BuildResponse(() => ((HttpWebResponseMessage)base.EndGetResponse(asyncResult)));
                 }
 
-#if !SILVERLIGHT
                 [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "HttpWebResponse is passed to TestHttpWebResponseMessage, which will get disposed by DataServiceContext.")]
                 public override IODataResponseMessage GetResponse()
                 {
                     return BuildResponse(() => ((HttpWebResponseMessage)base.GetResponse()));
                 }
-#endif
+
                 [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "HttpWebResponse is passed to TestHttpWebResponseMessage, which will get disposed by DataServiceContext.")]
                 private IODataResponseMessage BuildResponse(Func<HttpWebResponseMessage> getWebResponse)
                 {
@@ -590,13 +588,12 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                     return BuildResponse(() => ((HttpWebResponseMessage)base.EndGetResponse(asyncResult)));
                 }
 
-#if !SILVERLIGHT
                 [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "HttpWebResponse is passed to TestHttpWebResponseMessage, which will get disposed by DataServiceContext.")]
                 public override IODataResponseMessage GetResponse()
                 {
                     return BuildResponse(() => ((HttpWebResponseMessage)base.GetResponse()));
                 }
-#endif
+
                 [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "HttpWebResponse is passed to TestHttpWebResponseMessage, which will get disposed by DataServiceContext.")]
                 private IODataResponseMessage BuildResponse(Func<HttpWebResponseMessage> getWebResponse)
                 {
@@ -645,5 +642,4 @@ namespace Microsoft.Test.Taupo.Astoria.Client
             }
         }
     }
-#endif
 }

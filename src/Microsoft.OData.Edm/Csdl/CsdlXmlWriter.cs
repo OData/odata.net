@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Xml;
 using Microsoft.OData.Edm.Csdl.Serialization;
@@ -96,8 +97,31 @@ namespace Microsoft.OData.Edm.Csdl
 
         private void WriteReferenceElements()
         {
-            EdmModelReferenceElementsXmlVisitor visitor = new EdmModelReferenceElementsXmlVisitor(this.model, this.writer, this.edmxVersion);
-            visitor.VisitEdmReferences(this.model);
+            EdmModelReferenceElementsXmlVisitor visitor;
+            IEnumerable<IEdmReference> references = model.GetEdmReferences();
+            if (references != null)
+            {
+                foreach (IEdmReference reference in references)
+                {
+                    //loop through the includes and set the namespace alias 
+                    if (reference.Includes != null)
+                    {
+                        foreach (IEdmInclude include in reference.Includes)
+                        {
+                            if (include.Alias != null)
+                            {
+                                model.SetNamespaceAlias(include.Namespace, include.Alias);
+                            }
+                        }
+                    }
+                }
+
+                foreach (IEdmReference edmReference in references)
+                {
+                    visitor = new EdmModelReferenceElementsXmlVisitor(this.model, this.writer, this.edmxVersion);
+                    visitor.VisitEdmReferences(this.model, edmReference);
+                }
+            }
         }
 
         private void WriteDataServicesElement()

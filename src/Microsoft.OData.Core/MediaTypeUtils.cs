@@ -96,11 +96,7 @@ namespace Microsoft.OData
         {
             get
             {
-#if !ORCAS
                 return Encoding.UTF8;
-#else
-                return Encoding.GetEncoding("ISO-8859-1", new EncoderExceptionFallback(), new DecoderExceptionFallback());
-#endif
             }
         }
 

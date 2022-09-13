@@ -131,7 +131,6 @@ namespace Microsoft.OData.Edm
             }
         }
 
-#if !ORCAS
         /// <summary>Read-writer lock, implemented over a Monitor.</summary>
         private sealed class ReaderWriterLockSlim
         {
@@ -162,6 +161,5 @@ namespace Microsoft.OData.Edm
                 Monitor.Exit(this.readerWriterLock);
             }
         }
-#endif
     }
 }

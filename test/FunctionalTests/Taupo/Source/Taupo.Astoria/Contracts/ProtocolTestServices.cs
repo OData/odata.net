@@ -22,13 +22,11 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts
         [InjectDependency(IsRequired = true)]
         public IODataLiteralConverter LiteralConverter { get; set; }
 
-#if !SILVERLIGHT
         /// <summary>
         /// Gets or sets the OData request manager to use during the test
         /// </summary>
         [InjectDependency(IsRequired = true)]
         public IODataRequestManager RequestManager { get; set; }
-#endif
 
         /// <summary>
         /// Gets or sets the response verifier factory to use during the test

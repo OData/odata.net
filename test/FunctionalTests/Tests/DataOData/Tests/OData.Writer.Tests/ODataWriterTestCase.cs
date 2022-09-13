@@ -7,9 +7,7 @@
 namespace Microsoft.Test.Taupo.OData.Writer.Tests
 {
     using System;
-#if !SILVERLIGHT
     using ApprovalTests.Reporters;
-#endif
     using Microsoft.OData.Edm;
     using Microsoft.OData;
     using Microsoft.Test.OData.Utils.Common;
@@ -32,13 +30,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
     /// <summary>
     /// Base class for ODataLib Tests with extra assembly added for unit test
     /// </summary>
-#if !SILVERLIGHT
     [UseReporter(typeof(LoggingReporter))]
     [DeploymentItem("CollectionWriter")]
     [DeploymentItem("JsonLight")]
     [DeploymentItem("ParameterWriter")]
     [DeploymentItem("Writer")]
-#endif
     public class ODataWriterTestCase : ODataTestCaseBase
     {
         /// <summary>
@@ -90,9 +86,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             this.CombinatorialEngineProvider = new WriterCombinatorialEngineProvider()
                 .SetBaselineCallback(this.Logger.GetBaseline)
                 .SetLogCombinationCallback(this.Logger.LogCombination);
-#if !SILVERLIGHT
             this.CombinatorialEngineProvider.SetApprovalFileSourcePath(TestContext.DeploymentDirectory);
-#endif
         }
 
         /// <summary>
@@ -132,11 +126,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                 {
                     ODataWriter writer = messageWriter.CreateODataWriter(feedWriter);
                     Action<ODataPayloadElement> writeToStream = payload => this.PayloadElementWriter.WritePayload(writer, payload);
-#if !SILVERLIGHT
                     this.WriteAndLogODataPayload(originalPayload, messageWriter.Message, testConfiguration.Version, testConfiguration.Format, writeToStream);
-#else
-                    //TODO: Add roundtrip for silverlight
-#endif              
                 }
             }
         }
@@ -160,16 +150,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                 using (ODataMessageWriterTestWrapper writer = TestWriterUtils.CreateMessageWriter(memoryStream, testConfiguration, this.Assert, out testMessage, null, model))
                 {
                     Action<ODataPayloadElement> writeElementToStream = payload => this.PropertyPayloadElementWriter.WriteProperty(writer.MessageWriter, payload);
-#if !SILVERLIGHT
                     this.WriteAndLogODataPayload(originalPayload, writer.Message, testConfiguration.Version, testConfiguration.Format, writeElementToStream);
-#else
-                    //TODO: Add roundtrip for silverlight
-#endif
                 }
             }
         }
 
-#if !SILVERLIGHT
         /// <summary>
         /// Writes the payload to the stream using the given callback, then verifies the payload using the test deserializer
         /// </summary>
@@ -189,7 +174,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             var newPayload = TestWriterUtils.ReadToString(message);
             this.Logger.LogPayload(newPayload);
         }
-#endif
 
         private static string WriteToStream(ODataFormat format, Action<ODataPayloadElement> writeToStream, ODataPayloadElement payload)
         {

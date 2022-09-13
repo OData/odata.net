@@ -15,9 +15,7 @@ namespace Microsoft.SqlServer.Test.TestShell.Core.InputSpaceModeling
 	/// <summary>
 	/// <see cref="Category&lt;T&gt;.GetValue"/> is called on an empty category.
 	/// </summary>
-#if !SILVERLIGHT
     [Serializable]
-#endif
 	public class NoValuesInCategoryException : Exception
 	{
 		/// <summary>
@@ -42,7 +40,6 @@ namespace Microsoft.SqlServer.Test.TestShell.Core.InputSpaceModeling
 		/// <param name="inner">The inner.</param>
 		public NoValuesInCategoryException(string message, Exception inner) : base(message, inner) { }
 		
-#if !SILVERLIGHT
         /// <summary>
 		/// Initializes a new instance of the <see cref="NoValuesInCategoryException"/> class.
 		/// </summary>
@@ -54,7 +51,6 @@ namespace Microsoft.SqlServer.Test.TestShell.Core.InputSpaceModeling
 		System.Runtime.Serialization.SerializationInfo info,
 		System.Runtime.Serialization.StreamingContext context)
 			: base(info, context) { }
-#endif
 	}
 
 	/// <summary>

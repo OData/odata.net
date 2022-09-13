@@ -64,7 +64,12 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
                 case EdmPrimitiveTypeKind.Decimal:
                     this.ParseDecimalFacets(out precision, out scale);
-                    return new CsdlDecimalTypeReference(precision, scale, typeName, isNullable, parentLocation);
+                    return new CsdlDecimalTypeReference(
+                        precision,
+                        scale,
+                        typeName,
+                        isNullable,
+                        parentLocation);
 
                 case EdmPrimitiveTypeKind.String:
                     this.ParseStringFacets(out isUnbounded, out maxLength, out unicode);

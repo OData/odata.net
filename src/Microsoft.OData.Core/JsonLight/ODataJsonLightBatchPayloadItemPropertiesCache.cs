@@ -12,6 +12,7 @@ namespace Microsoft.OData.JsonLight
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
+    using System.Threading.Tasks;
     using Microsoft.OData.Json;
 
     #endregion Namespaces
@@ -79,6 +80,11 @@ namespace Microsoft.OData.JsonLight
         private IJsonReader jsonReader;
 
         /// <summary>
+        /// The JSON reader for asynchronously reading payload item in Json format.
+        /// </summary>
+        private IJsonReaderAsync asynchronousJsonReader;
+
+        /// <summary>
         /// The Json batch reader for batch processing.
         /// </summary>
         private IODataStreamListener listener;
@@ -97,14 +103,51 @@ namespace Microsoft.OData.JsonLight
         /// Constructor.
         /// </summary>
         /// <param name="jsonBatchReader">The Json batch reader.</param>
-        internal ODataJsonLightBatchPayloadItemPropertiesCache(ODataJsonLightBatchReader jsonBatchReader)
+        private ODataJsonLightBatchPayloadItemPropertiesCache(ODataJsonLightBatchReader jsonBatchReader)
         {
-            Debug.Assert(jsonBatchReader != null, "jsonBatchReader != null");
+            Debug.Assert(jsonBatchReader != null, $"{nameof(jsonBatchReader)} != null");
 
             this.jsonReader = jsonBatchReader.JsonLightInputContext.JsonReader;
+            this.asynchronousJsonReader = jsonBatchReader.JsonLightInputContext.JsonReader;
             this.listener = jsonBatchReader;
+        }
 
-            ScanJsonProperties();
+        /// <summary>
+        /// Creates a <see cref="ODataJsonLightBatchPayloadItemPropertiesCache"/>
+        /// and subsequently scans the JSON object for known properties and caches them.
+        /// </summary>
+        /// <param name="jsonBatchReader">The JSON batch reader.</param>
+        /// <returns>A <see cref="ODataJsonLightBatchPayloadItemPropertiesCache"/> instance.</returns>
+        internal static ODataJsonLightBatchPayloadItemPropertiesCache Create(ODataJsonLightBatchReader jsonBatchReader)
+        {
+            Debug.Assert(jsonBatchReader != null, $"{nameof(jsonBatchReader)} != null");
+
+            ODataJsonLightBatchPayloadItemPropertiesCache jsonLightBatchPayloadItemPropertiesCache = new ODataJsonLightBatchPayloadItemPropertiesCache(jsonBatchReader);
+
+            jsonLightBatchPayloadItemPropertiesCache.ScanJsonProperties();
+
+            return jsonLightBatchPayloadItemPropertiesCache;
+        }
+
+        /// <summary>
+        /// Asynchronously creates a <see cref="ODataJsonLightBatchPayloadItemPropertiesCache"/>
+        /// and subsequently scans the JSON object for known properties and caches them.
+        /// </summary>
+        /// <param name="jsonBatchReader">The JSON batch reader.</param>
+        /// <returns>
+        /// A task that represents the asynchronous write operation.
+        /// The value of the TResult parameter contains a <see cref="ODataJsonLightBatchPayloadItemPropertiesCache"/> instance.
+        /// </returns>
+        internal static async Task<ODataJsonLightBatchPayloadItemPropertiesCache> CreateAsync(ODataJsonLightBatchReader jsonBatchReader)
+        {
+            Debug.Assert(jsonBatchReader != null, $"{nameof(jsonBatchReader)} != null");
+
+            ODataJsonLightBatchPayloadItemPropertiesCache jsonLightBatchPayloadItemPropertiesCache = new ODataJsonLightBatchPayloadItemPropertiesCache(jsonBatchReader);
+
+            await jsonLightBatchPayloadItemPropertiesCache.ScanJsonPropertiesAsync()
+                .ConfigureAwait(false);
+
+            return jsonLightBatchPayloadItemPropertiesCache;
         }
 
         /// <summary>
@@ -160,8 +203,8 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         private void ScanJsonProperties()
         {
-            Debug.Assert(this.jsonReader != null, "this.jsonReaders != null");
-            Debug.Assert(this.jsonProperties == null, "this.jsonProperties == null");
+            Debug.Assert(this.jsonReader != null, $"{nameof(this.jsonReader)} != null");
+            Debug.Assert(this.jsonProperties == null, $"{nameof(this.jsonProperties)} == null");
 
             this.jsonProperties = new Dictionary<string, object>();
             string contentTypeHeader = null;
@@ -198,7 +241,7 @@ namespace Microsoft.OData.JsonLight
 
                         case PropertyNameDependsOn:
                             {
-                                IList<string> dependsOnIds = new List<string>();
+                                List<string> dependsOnIds = new List<string>();
                                 this.jsonReader.ReadStartArray();
                                 while (this.jsonReader.NodeType != JsonNodeType.EndArray)
                                 {
@@ -257,12 +300,7 @@ namespace Microsoft.OData.JsonLight
                             break;
 
                         default:
-                            {
-                                throw new ODataException(string.Format(
-                                    CultureInfo.InvariantCulture,
-                                    "Unknown property name '{0}' for message in batch",
-                                    propertyName));
-                            }
+                            throw new ODataException(Strings.ODataJsonLightBatchPayloadItemPropertiesCache_UnknownPropertyForMessageInBatch(propertyName));
                     }
                 }
 
@@ -273,6 +311,147 @@ namespace Microsoft.OData.JsonLight
             {
                 // We don't need to use the Json reader anymore.
                 this.jsonReader = null;
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously creates a batch reader stream backed by memory stream containing data the current
+        /// Json object the reader is pointing at.
+        /// Current supported data types are Json and binary types.
+        /// </summary>
+        /// <param name="contentTypeHeader">The content-type header value of the request.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains the wrapper stream backed by memory stream.
+        /// </returns>
+        private async Task<ODataJsonLightBatchBodyContentReaderStream> CreateJsonPayloadBodyContentStreamAsync(string contentTypeHeader)
+        {
+            // Serialization of json object to batch buffer.
+            ODataJsonLightBatchBodyContentReaderStream stream = new ODataJsonLightBatchBodyContentReaderStream(listener);
+
+            this.isStreamPopulated = await stream.PopulateBodyContentAsync(this.asynchronousJsonReader, contentTypeHeader)
+                .ConfigureAwait(false);
+
+            return stream;
+        }
+
+        /// <summary>
+        /// Wrapper method with validation to asynchronously scan the JSON object for known properties.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous read operation.</returns>
+        private async Task ScanJsonPropertiesAsync()
+        {
+            Debug.Assert(this.asynchronousJsonReader != null, $"{nameof(this.asynchronousJsonReader)} != null");
+            Debug.Assert(this.jsonProperties == null, $"{nameof(this.jsonProperties)} == null");
+
+            this.jsonProperties = new Dictionary<string, object>();
+            string contentTypeHeader = null;
+            ODataJsonLightBatchBodyContentReaderStream bodyContentStream = null;
+
+            try
+            {
+                // Request object start.
+                await this.asynchronousJsonReader.ReadStartObjectAsync()
+                    .ConfigureAwait(false);
+
+                while (this.asynchronousJsonReader.NodeType != JsonNodeType.EndObject)
+                {
+                    // Convert to upper case to support case-insensitive request property names
+                    string propertyName = Normalize(await this.asynchronousJsonReader.ReadPropertyNameAsync().ConfigureAwait(false));
+
+                    switch (propertyName)
+                    {
+                        case PropertyNameId:
+                        case PropertyNameAtomicityGroup:
+                        case PropertyNameMethod:
+                        case PropertyNameUrl:
+                            jsonProperties.Add(
+                                propertyName,
+                                await this.asynchronousJsonReader.ReadStringValueAsync().ConfigureAwait(false));
+
+                            break;
+
+                        case PropertyNameStatus:
+                            jsonProperties.Add(
+                                propertyName,
+                                await this.asynchronousJsonReader.ReadPrimitiveValueAsync().ConfigureAwait(false));
+
+                            break;
+
+                        case PropertyNameDependsOn:
+                            List<string> dependsOnIds = new List<string>();
+                            await this.asynchronousJsonReader.ReadStartArrayAsync()
+                                .ConfigureAwait(false);
+                            while (this.asynchronousJsonReader.NodeType != JsonNodeType.EndArray)
+                            {
+                                dependsOnIds.Add(await this.asynchronousJsonReader.ReadStringValueAsync().ConfigureAwait(false));
+                            }
+
+                            await this.asynchronousJsonReader.ReadEndArrayAsync()
+                                .ConfigureAwait(false);
+
+                            jsonProperties.Add(propertyName, dependsOnIds);
+
+                            break;
+
+                        case PropertyNameHeaders:
+                            ODataBatchOperationHeaders headers = new ODataBatchOperationHeaders();
+
+                            // Use empty string (non-null value) to indicate that content-type header has been processed.
+                            contentTypeHeader = "";
+
+                            await this.asynchronousJsonReader.ReadStartObjectAsync()
+                                .ConfigureAwait(false);
+
+                            while (this.asynchronousJsonReader.NodeType != JsonNodeType.EndObject)
+                            {
+                                string headerName = await this.asynchronousJsonReader.ReadPropertyNameAsync()
+                                    .ConfigureAwait(false);
+                                string headerValue = (await this.asynchronousJsonReader.ReadPrimitiveValueAsync().ConfigureAwait(false)).ToString();
+
+                                // Remember the Content-Type header value.
+                                if (headerName.Equals(ODataConstants.ContentTypeHeader, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    contentTypeHeader = headerValue;
+                                }
+
+                                headers.Add(headerName, headerValue);
+                            }
+
+                            await this.asynchronousJsonReader.ReadEndObjectAsync()
+                                .ConfigureAwait(false);
+
+                            jsonProperties.Add(propertyName, headers);
+
+                            if (!this.isStreamPopulated && bodyContentStream != null)
+                            {
+                                // Populate the stream now since the body content has been cached and we now have content-type.
+                                await bodyContentStream.PopulateCachedBodyContentAsync(contentTypeHeader)
+                                    .ConfigureAwait(false);
+                            }
+
+                            break;
+
+                        case PropertyNameBody:
+                            bodyContentStream = await CreateJsonPayloadBodyContentStreamAsync(contentTypeHeader)
+                                .ConfigureAwait(false);
+                            jsonProperties.Add(propertyName, bodyContentStream);
+
+                            break;
+
+                        default:
+                            throw new ODataException(Strings.ODataJsonLightBatchPayloadItemPropertiesCache_UnknownPropertyForMessageInBatch(propertyName));
+                    }
+                }
+
+                // Request object end.
+                await this.asynchronousJsonReader.ReadEndObjectAsync()
+                    .ConfigureAwait(false);
+            }
+            finally
+            {
+                // We don't need to use the Json reader anymore.
+                this.asynchronousJsonReader = null;
             }
         }
     }

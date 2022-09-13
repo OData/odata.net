@@ -8,10 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
-
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
@@ -33,11 +31,10 @@ namespace Microsoft.OData.Edm
 
         private static readonly IEnumerable<IEdmStructuralProperty> EmptyStructuralProperties = Enumerable.Empty<IEdmStructuralProperty>();
         private static readonly IEnumerable<IEdmNavigationProperty> EmptyNavigationProperties = Enumerable.Empty<IEdmNavigationProperty>();
-
+        
         #region IEdmModel
 
         private static readonly Func<IEdmModel, string, IEdmSchemaType> findType = (model, qualifiedName) => model.FindDeclaredType(qualifiedName);
-        private static readonly Func<IEdmModel, IEdmType, IEnumerable<IEdmOperation>> findBoundOperations = (model, bindingType) => model.FindDeclaredBoundOperations(bindingType);
         private static readonly Func<IEdmModel, string, IEdmTerm> findTerm = (model, qualifiedName) => model.FindDeclaredTerm(qualifiedName);
         private static readonly Func<IEdmModel, string, IEnumerable<IEdmOperation>> findOperations = (model, qualifiedName) => model.FindDeclaredOperations(qualifiedName);
         private static readonly Func<IEdmModel, string, IEdmEntityContainer> findEntityContainer = (model, qualifiedName) => { return model.ExistsContainer(qualifiedName) ? model.EntityContainer : null; };
@@ -79,7 +76,12 @@ namespace Microsoft.OData.Edm
 
             string fullyQualifiedName = model.ReplaceAlias(qualifiedName);
 
-            return FindAcrossModels(model, fullyQualifiedName, findType, RegistrationHelper.CreateAmbiguousTypeBinding);  // search built-in EdmCoreModel and CoreVocabularyModel.
+            // search built-in EdmCoreModel and CoreVocabularyModel.
+            return FindAcrossModels(
+                model,
+                fullyQualifiedName,
+                findType,
+                (first, second) => RegistrationHelper.CreateAmbiguousTypeBinding(first, second));
         }
 
         /// <summary>
@@ -92,7 +94,23 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(bindingType, "bindingType");
-            return FindAcrossModels(model, bindingType, findBoundOperations, mergeFunctions);  // search built-in EdmCoreModel and CoreVocabularyModel.
+       
+            IList<IEdmOperation> bindableOperations = new List<IEdmOperation>();
+
+            foreach (IEdmOperation operation in model.FindDeclaredBoundOperations(bindingType))
+            {
+                bindableOperations.Add(operation);
+            }
+
+            foreach (IEdmModel reference in model.ReferencedModels)
+            {
+                foreach (IEdmOperation operation in reference.FindDeclaredBoundOperations(bindingType))
+                {
+                    bindableOperations.Add(operation);
+                }
+            }
+
+            return bindableOperations;
         }
 
         /// <summary>
@@ -138,7 +156,11 @@ namespace Microsoft.OData.Edm
 
             string fullyQualifiedName = model.ReplaceAlias(qualifiedName);
 
-            return FindAcrossModels(model, fullyQualifiedName, findTerm, RegistrationHelper.CreateAmbiguousTermBinding);
+            return FindAcrossModels(
+                model,
+                fullyQualifiedName,
+                findTerm,
+                (first, second) => RegistrationHelper.CreateAmbiguousTermBinding(first, second));
         }
 
         /// <summary>
@@ -191,7 +213,11 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(qualifiedName, "qualifiedName");
 
-            return FindAcrossModels(model, qualifiedName, findEntityContainer, RegistrationHelper.CreateAmbiguousEntityContainerBinding);
+            return FindAcrossModels(
+                model,
+                qualifiedName,
+                findEntityContainer,
+                (first, second) => RegistrationHelper.CreateAmbiguousEntityContainerBinding(first, second));
         }
 
         /// <summary>
@@ -237,10 +263,29 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(element, "element");
 
+            VocabularyAnnotationCache cache = null;
+            bool isImmutable = model.IsImmutable();
+
+            if (isImmutable)
+            {
+                cache = model.GetVocabularyAnnotationCache();
+                if (cache.TryGetVocabularyAnnotations(element, out IEnumerable<IEdmVocabularyAnnotation> annotations))
+                {
+                    return annotations;
+                }
+            }
+
             IEnumerable<IEdmVocabularyAnnotation> result = model.FindVocabularyAnnotationsIncludingInheritedAnnotations(element);
             foreach (IEdmModel referencedModel in model.ReferencedModels)
             {
                 result = result.Concat(referencedModel.FindVocabularyAnnotationsIncludingInheritedAnnotations(element));
+            }
+
+            if (isImmutable)
+            {
+                List<IEdmVocabularyAnnotation> cachedAnnotations = result.ToList();
+                cache.AddVocabularyAnnotations(element, cachedAnnotations);
+                return cachedAnnotations;
             }
 
             return result;
@@ -280,9 +325,10 @@ namespace Microsoft.OData.Edm
 
             List<T> result = null;
 
-            foreach (T annotation in model.FindVocabularyAnnotations(element).OfType<T>())
+            // this loop runs in a hot path, we avoid using OfType<T>() to avoid the extra allocations of OfTypeIterator
+            foreach (IEdmVocabularyAnnotation item in model.FindVocabularyAnnotations(element))
             {
-                if (annotation.Term == term && (qualifier == null || qualifier == annotation.Qualifier))
+                if (item is T annotation && annotation.Term == term && (qualifier == null || qualifier == annotation.Qualifier))
                 {
                     if (result == null)
                     {
@@ -334,12 +380,17 @@ namespace Microsoft.OData.Edm
 
             if (EdmUtil.TryGetNamespaceNameFromQualifiedName(termName, out namespaceName, out name))
             {
-                foreach (T annotation in model.FindVocabularyAnnotations(element).OfType<T>())
+                // this loop runs in a hot path, we avoid using OfType<T>() to avoid the extra allocations of OfTypeIterator
+
+                foreach (IEdmVocabularyAnnotation item in model.FindVocabularyAnnotations(element))
                 {
-                    IEdmTerm annotationTerm = annotation.Term;
-                    if (annotationTerm.Namespace == namespaceName && annotationTerm.Name == name && (qualifier == null || qualifier == annotation.Qualifier))
+                    if (item is T annotation)
                     {
-                        yield return annotation;
+                        IEdmTerm annotationTerm = annotation.Term;
+                        if (annotationTerm.Namespace == namespaceName && annotationTerm.Name == name && (qualifier == null || qualifier == annotation.Qualifier))
+                        {
+                            yield return annotation;
+                        }
                     }
                 }
             }
@@ -1118,6 +1169,56 @@ namespace Microsoft.OData.Edm
             model.SetPrimitiveValueConverter(typeDefinition.Definition, converter);
         }
 
+        /// <summary>
+        /// Marks the model as immutable. This may enable optimizations
+        /// that assume the model does not get modified. It is the responsibility
+        /// of the caller to ensure that the underlying EDM model is not modified after calling
+        /// this method.
+        /// </summary>
+        /// <param name="model">The model involved</param>
+        public static void MarkAsImmutable(this IEdmModel model)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+
+            // it doesn't matter what value we store, so long as it's not null
+            model.SetAnnotationValue(model, EdmConstants.InternalUri, CsdlConstants.IsImmutable, new object());
+        }
+
+        /// <summary>
+        /// Checks whether or not the model has been marked as immutable,
+        /// signifying that it does not change. The model is marked as
+        /// immutable by calling <see cref="MarkAsImmutable(IEdmModel)"/>
+        /// </summary>
+        /// <param name="model">The model involved</param>
+        /// <returns>Whether or not the model has been marked as immutable</returns>
+        public static bool IsImmutable(this IEdmModel model)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+
+            object value = model.GetAnnotationValue(model, EdmConstants.InternalUri, CsdlConstants.IsImmutable);
+            return value != null;
+        }
+
+        /// <summary>
+        /// Gets the cache used to store and retrieve vocabulary annotations
+        /// of elements in this model.
+        /// </summary>
+        /// <param name="model">The model for which to retrieve the cache</param>
+        /// <returns>The vocabulary annotations cache for the model</returns>
+        internal static VocabularyAnnotationCache GetVocabularyAnnotationCache(this IEdmModel model)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+
+            VocabularyAnnotationCache cache = model.GetAnnotationValue<VocabularyAnnotationCache>(model);
+            if (cache == null)
+            {
+                cache = new VocabularyAnnotationCache();
+                model.SetAnnotationValue<VocabularyAnnotationCache>(model, cache);
+            }
+
+            return cache;
+        }
+
         #endregion
 
         #region EdmModel
@@ -1545,6 +1646,40 @@ namespace Microsoft.OData.Edm
             return container.AllElements().OfType<IEdmOperationImport>();
         }
 
+        /// <summary>
+        /// Returns navigation property bindings with their corresponding container elements (entity set or singleton)
+        /// </summary>
+        /// <param name="container">Reference to the calling object.</param>
+        /// <returns>Collection of pairs of container element and navigation property bindings.</returns>
+        public static IEnumerable<Tuple<IEdmEntityContainerElement, IEdmNavigationPropertyBinding>> GetNavigationPropertyBindings(this IEdmEntityContainer container)
+        {
+            EdmUtil.CheckArgumentNull(container, "container");
+
+            IEnumerable<IEdmEntityContainerElement> elements = container.AllElements();
+
+            foreach(IEdmEntityContainerElement element in elements)
+            {
+                switch (element)
+                {
+                    case IEdmEntitySet entitySet:
+                        foreach(IEdmNavigationPropertyBinding binding in entitySet.NavigationPropertyBindings)
+                        {
+                            yield return Tuple.Create<IEdmEntityContainerElement, IEdmNavigationPropertyBinding>(entitySet, binding);
+                        }
+                        break;
+                    case IEdmSingleton singleton:
+                        foreach (IEdmNavigationPropertyBinding binding in singleton.NavigationPropertyBindings)
+                        {
+                            yield return Tuple.Create< IEdmEntityContainerElement, IEdmNavigationPropertyBinding>(singleton, binding);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+
         #endregion
 
         #region IEdmTypeReference
@@ -1818,6 +1953,63 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Finds a property from the definition of this reference.
         /// </summary>
+        /// <param name="structuredType">Reference to the calling object.</param>
+        /// <param name="propertyName">Name of the property to find.</param>
+        /// <param name="caseInsensitive">Property name case-sensitive or not.</param>
+        /// <returns>The requested property if it exists. Otherwise, null.</returns>
+        public static IEdmProperty FindProperty(this IEdmStructuredTypeReference structuredType, string propertyName, bool caseInsensitive)
+        {
+            EdmUtil.CheckArgumentNull(structuredType, "structuredType");
+            return structuredType.StructuredDefinition().FindProperty(propertyName, caseInsensitive);
+        }
+
+        /// <summary>
+        /// Finds a property from the definition of this reference.
+        /// </summary>
+        /// <param name="structuredType">Reference to the calling object.</param>
+        /// <param name="propertyName">Name of the property to find.</param>
+        /// <param name="caseInsensitive">Property name case-sensitive or not.</param>
+        /// <returns>The requested property if it exists. Otherwise, null.</returns>
+        public static IEdmProperty FindProperty(this IEdmStructuredType structuredType, string propertyName, bool caseInsensitive)
+        {
+            EdmUtil.CheckArgumentNull(structuredType, "structuredType");
+            EdmUtil.CheckArgumentNull(propertyName, "propertyName");
+
+            // For example: a structured type has two properties in difference case:
+            //  1) Name
+            //  2) naMe
+            //  3) Title
+            // if input "propertyName="Name", returns the #1 property.
+            // if input "propertyName="naMe", returns the #2 property.
+            // if input "propertyName="name", throw exception because multiple found.
+            // But for "Title", any property name, such as "tiTle", "Title", "title", etc returns #3 property.
+            IEdmProperty edmProperty = structuredType.FindProperty(propertyName);
+            if (edmProperty != null || !caseInsensitive)
+            {
+                return edmProperty;
+            }
+
+            // Since we call "FindProperty" using case-sensitive, we don't miss the "right case" property.
+            // So, it's safety to throw exception if we meet second case.
+            foreach (IEdmProperty property in structuredType.Properties())
+            {
+                if (string.Equals(property.Name, propertyName, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (edmProperty != null)
+                    {
+                        throw new InvalidOperationException(Edm.Strings.MultipleMatchingPropertiesFound(propertyName, structuredType.FullTypeName()));
+                    }
+
+                    edmProperty = property;
+                }
+            }
+
+            return edmProperty;
+        }
+
+        /// <summary>
+        /// Finds a property from the definition of this reference.
+        /// </summary>
         /// <param name="type">Reference to the calling object.</param>
         /// <param name="name">Name of the property to find.</param>
         /// <returns>The requested property if it exists. Otherwise, null.</returns>
@@ -1988,14 +2180,22 @@ namespace Microsoft.OData.Edm
         /// <param name="model">The model to be used.</param>
         /// <param name="type">Reference to the calling object.</param>
         /// <param name="alternateKey">Dictionary of alias and structural properties for the alternate key.</param>
-        public static void AddAlternateKeyAnnotation(this EdmModel model, IEdmEntityType type, IDictionary<string, IEdmProperty> alternateKey)
+        /// <param name="useCore">A flag to indicate which alternate term to use.
+        /// If ture, 'Org.OData.Core.V1.AlternateKeys' is used, otherwise, 'OData.Community.Keys.V1.AlternateKeys' is used.
+        /// </param>
+        public static void AddAlternateKeyAnnotation(this EdmModel model, IEdmEntityType type, IDictionary<string, IEdmProperty> alternateKey, bool useCore = false)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(type, "type");
             EdmUtil.CheckArgumentNull(alternateKey, "alternateKey");
 
+            IEdmTerm alternateKeysTerm = useCore ? CoreVocabularyModel.AlternateKeysTerm : AlternateKeysVocabularyModel.AlternateKeysTerm;
+
+            IEdmComplexType propertyRefType = useCore ? CoreVocabularyModel.PropertyRefType : AlternateKeysVocabularyModel.PropertyRefType;
+            IEdmComplexType alternateKeyType = useCore ? CoreVocabularyModel.AlternateKeyType : AlternateKeysVocabularyModel.AlternateKeyType;
+
             EdmCollectionExpression annotationValue = null;
-            var ann = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(type, AlternateKeysVocabularyModel.AlternateKeysTerm).FirstOrDefault();
+            var ann = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(type, alternateKeysTerm).FirstOrDefault();
             if (ann != null)
             {
                 annotationValue = ann.Value as EdmCollectionExpression;
@@ -2008,21 +2208,21 @@ namespace Microsoft.OData.Edm
             foreach (KeyValuePair<string, IEdmProperty> kvp in alternateKey)
             {
                 IEdmRecordExpression propertyRef = new EdmRecordExpression(
-                    new EdmComplexTypeReference(AlternateKeysVocabularyModel.PropertyRefType, false),
-                    new EdmPropertyConstructor(AlternateKeysVocabularyConstants.PropertyRefTypeAliasPropertyName, new EdmStringConstant(kvp.Key)),
-                    new EdmPropertyConstructor(AlternateKeysVocabularyConstants.PropertyRefTypeNamePropertyName, new EdmPropertyPathExpression(kvp.Value.Name)));
+                    new EdmComplexTypeReference(propertyRefType, false),
+                    new EdmPropertyConstructor("Alias", new EdmStringConstant(kvp.Key)),
+                    new EdmPropertyConstructor("Name", new EdmPropertyPathExpression(kvp.Value.Name)));
                 propertyRefs.Add(propertyRef);
             }
 
             EdmRecordExpression alternateKeyRecord = new EdmRecordExpression(
-                new EdmComplexTypeReference(AlternateKeysVocabularyModel.AlternateKeyType, false),
-                new EdmPropertyConstructor(AlternateKeysVocabularyConstants.AlternateKeyTypeKeyPropertyName, new EdmCollectionExpression(propertyRefs)));
+                new EdmComplexTypeReference(alternateKeyType, false),
+                new EdmPropertyConstructor("Key", new EdmCollectionExpression(propertyRefs)));
 
             alternateKeysCollection.Add(alternateKeyRecord);
 
             var annotation = new EdmVocabularyAnnotation(
                 type,
-                AlternateKeysVocabularyModel.AlternateKeysTerm,
+                alternateKeysTerm,
                 new EdmCollectionExpression(alternateKeysCollection));
 
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
@@ -2720,11 +2920,16 @@ namespace Microsoft.OData.Edm
             if (list != null && mappings != null && idx > 0)
             {
                 var typeAlias = name.Substring(0, idx);
-                var ns = list.FirstOrDefault(n =>
+                // this runs in a hot path, hence the use of for-loop instead of LINQ
+                string ns = null;
+                for (int i = 0; i < list.Count; i++)
                 {
-                    string alias;
-                    return mappings.TryGetValue(n, out alias) && alias == typeAlias;
-                });
+                    if (mappings.TryGetValue(list[i], out string alias) && alias == typeAlias)
+                    {
+                        ns = list[i];
+                        break;
+                    }
+                }
 
                 return (ns != null) ? string.Format(CultureInfo.InvariantCulture, "{0}{1}", ns, name.Substring(idx)) : name;
             }
@@ -3261,42 +3466,56 @@ namespace Microsoft.OData.Edm
         private static IEnumerable<IDictionary<string, IEdmProperty>> GetDeclaredAlternateKeysForType(IEdmEntityType type, IEdmModel model)
         {
             IEdmVocabularyAnnotation annotationValue = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(type, AlternateKeysVocabularyModel.AlternateKeysTerm).FirstOrDefault();
+            IEdmVocabularyAnnotation coreAnnotationValue = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(type, CoreVocabularyModel.AlternateKeysTerm).FirstOrDefault();
 
-            if (annotationValue != null)
+            if (annotationValue != null || coreAnnotationValue != null)
             {
                 List<IDictionary<string, IEdmProperty>> declaredAlternateKeys = new List<IDictionary<string, IEdmProperty>>();
 
-                IEdmCollectionExpression keys = annotationValue.Value as IEdmCollectionExpression;
-                Debug.Assert(keys != null, "expected IEdmCollectionExpression for alternate key annotation value");
-
-                foreach (IEdmRecordExpression key in keys.Elements.OfType<IEdmRecordExpression>())
+                Action<IEdmVocabularyAnnotation> retrieveAnnotationAction = ann =>
                 {
-                    var edmPropertyConstructor = key.Properties.FirstOrDefault(e => e.Name == AlternateKeysVocabularyConstants.AlternateKeyTypeKeyPropertyName);
-                    if (edmPropertyConstructor != null)
+                    if (ann == null)
                     {
-                        IEdmCollectionExpression collectionExpression = edmPropertyConstructor.Value as IEdmCollectionExpression;
-                        Debug.Assert(collectionExpression != null, "expected IEdmCollectionExpression type for Key Property");
+                        return;
+                    }
 
-                        IDictionary<string, IEdmProperty> alternateKey = new Dictionary<string, IEdmProperty>();
-                        foreach (IEdmRecordExpression propertyRef in collectionExpression.Elements.OfType<IEdmRecordExpression>())
+                    IEdmCollectionExpression keys = ann.Value as IEdmCollectionExpression;
+                    Debug.Assert(keys != null, "expected IEdmCollectionExpression for alternate key annotation value");
+
+                    foreach (IEdmRecordExpression key in keys.Elements.OfType<IEdmRecordExpression>())
+                    {
+                        var edmPropertyConstructor = key.Properties.FirstOrDefault(e => e.Name == "Key");
+                        if (edmPropertyConstructor != null)
                         {
-                            var aliasProp = propertyRef.Properties.FirstOrDefault(e => e.Name == AlternateKeysVocabularyConstants.PropertyRefTypeAliasPropertyName);
-                            Debug.Assert(aliasProp != null, "expected non null Alias Property");
-                            string alias = ((IEdmStringConstantExpression)aliasProp.Value).Value;
+                            IEdmCollectionExpression collectionExpression = edmPropertyConstructor.Value as IEdmCollectionExpression;
+                            Debug.Assert(collectionExpression != null, "expected IEdmCollectionExpression type for Key Property");
 
-                            var nameProp = propertyRef.Properties.FirstOrDefault(e => e.Name == AlternateKeysVocabularyConstants.PropertyRefTypeNamePropertyName);
-                            Debug.Assert(nameProp != null, "expected non null Name Property");
-                            string propertyName = ((IEdmPathExpression)nameProp.Value).PathSegments.FirstOrDefault();
+                            IDictionary<string, IEdmProperty> alternateKey = new Dictionary<string, IEdmProperty>();
+                            foreach (IEdmRecordExpression propertyRef in collectionExpression.Elements.OfType<IEdmRecordExpression>())
+                            {
+                                var aliasProp = propertyRef.Properties.FirstOrDefault(e => e.Name == "Alias");
+                                Debug.Assert(aliasProp != null, "expected non null Alias Property");
+                                string alias = ((IEdmStringConstantExpression)aliasProp.Value).Value;
 
-                            alternateKey[alias] = type.FindProperty(propertyName);
-                        }
+                                var nameProp = propertyRef.Properties.FirstOrDefault(e => e.Name == "Name");
+                                Debug.Assert(nameProp != null, "expected non null Name Property");
+                                string propertyName = ((IEdmPathExpression)nameProp.Value).PathSegments.FirstOrDefault();
 
-                        if (alternateKey.Any())
-                        {
-                            declaredAlternateKeys.Add(alternateKey);
+                                alternateKey[alias] = type.FindProperty(propertyName);
+                            }
+
+                            if (alternateKey.Any())
+                            {
+                                declaredAlternateKeys.Add(alternateKey);
+                            }
                         }
                     }
-                }
+                };
+
+                // For backwards-compability, we merge the alternate keys from community and core vocabulary annotations.
+
+                retrieveAnnotationAction(annotationValue);
+                retrieveAnnotationAction(coreAnnotationValue);
 
                 return declaredAlternateKeys;
             }
