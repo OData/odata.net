@@ -115,6 +115,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="message">the message for the payload</param>
         /// <param name="responseInfo">The current ResponseInfo object</param>
         /// <param name="expectedType">The expected type</param>
+        /// <param name="materializerContext">The materializer context.</param>
         /// <returns>the MaterializerEntry that was read</returns>
         internal static MaterializerEntry ParseSingleEntityPayload(IODataResponseMessage message, ResponseInfo responseInfo, Type expectedType, IODataMaterializerContext materializerContext)
         {

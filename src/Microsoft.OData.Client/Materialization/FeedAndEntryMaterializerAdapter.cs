@@ -39,7 +39,10 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>The current entry.</summary>
         private ODataResource currentEntry;
 
-        private IODataMaterializerContext materializerContext;
+        /// <summary>
+        /// The materializer context.
+        /// </summary>
+        private readonly IODataMaterializerContext materializerContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FeedAndEntryMaterializerAdapter"/> class.
@@ -48,6 +51,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="reader">The reader.</param>
         /// <param name="model">The model.</param>
         /// <param name="mergeOption">The mergeOption.</param>
+        /// <param name="materializerContext">The materializer context.</param>
         internal FeedAndEntryMaterializerAdapter(ODataMessageReader messageReader, ODataReaderWrapper reader, ClientEdmModel model, MergeOption mergeOption, IODataMaterializerContext materializerContext)
             : this(ODataUtils.GetReadFormat(messageReader), reader, model, mergeOption, materializerContext)
         {
@@ -60,6 +64,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="reader">The reader.</param>
         /// <param name="model">The model.</param>
         /// <param name="mergeOption">The mergeOption.</param>
+        /// <param name="materializerContext">The materializer context.</param>
         internal FeedAndEntryMaterializerAdapter(ODataFormat odataFormat, ODataReaderWrapper reader, ClientEdmModel model, MergeOption mergeOption, IODataMaterializerContext materializerContext)
         {
             this.readODataFormat = odataFormat;

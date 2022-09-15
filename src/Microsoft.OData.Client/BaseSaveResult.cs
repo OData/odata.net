@@ -67,8 +67,6 @@ namespace Microsoft.OData.Client
         /// <summary>application/json Content-Type header</summary>
         private const string JsonContentTypeHeader = "application/json";
 
-        protected MaterializerAnnotationsCache annotationsCache = new MaterializerAnnotationsCache();
-
         #endregion Private Fields
 
         /// <summary>

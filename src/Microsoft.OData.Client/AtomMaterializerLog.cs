@@ -46,6 +46,9 @@ namespace Microsoft.OData.Client
         /// <summary>Target instance to refresh.</summary>
         private object insertRefreshObject;
 
+        /// <summary>
+        /// The materializer context.
+        /// </summary>
         private IODataMaterializerContext materializerContext;
 
         #endregion Private fields
@@ -58,6 +61,7 @@ namespace Microsoft.OData.Client
         /// <param name="mergeOption">The merge option for the log.</param>
         /// <param name="model">The model for the log.</param>
         /// <param name="entityTracker">The entity tracker for the log.</param>
+        /// <param name="materializerContext">The materializer context.</param>
         /// <remarks>
         /// Note that the merge option can't be changed.
         /// </remarks>

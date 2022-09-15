@@ -224,6 +224,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="format">The format the entry was read in.</param>
         /// <param name="isTracking">True if the contents of the entry will be tracked in the context, otherwise False.</param>
         /// <param name="model">The client model.</param>
+        /// <param name="materializerContext">The current materializer context.</param>
         /// <returns>A new materializer entry.</returns>
         public static MaterializerEntry CreateEntry(ODataResource entry, ODataFormat format, bool isTracking, ClientEdmModel model, IODataMaterializerContext materializerContext)
         {
@@ -251,6 +252,7 @@ namespace Microsoft.OData.Client.Materialization
         /// Gets an entry for a given ODataResource.
         /// </summary>
         /// <param name="entry">The ODataResource.</param>
+        /// <param name="materializerContext">The current materializer context.</param>
         /// <returns>The materializer entry</returns>
         public static MaterializerEntry GetEntry(ODataResource entry, IODataMaterializerContext materializerContext)
         {

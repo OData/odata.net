@@ -60,6 +60,7 @@ namespace Microsoft.OData.Client
         /// <param name="contentType">contentType</param>
         /// <param name="message">the message</param>
         /// <param name="expectedPayloadKind">expected payload kind.</param>
+        /// <param name="annotationsCache">The annotations cache used to store temporary metadata used for materialization of OData items.</param>
         /// <returns>atom materializer</returns>
         internal static MaterializeAtom Materialize(
             ResponseInfo responseInfo,

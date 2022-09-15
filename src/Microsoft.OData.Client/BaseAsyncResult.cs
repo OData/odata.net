@@ -27,6 +27,9 @@ namespace Microsoft.OData.Client
         /// <summary>wrapped request</summary>
         protected PerRequest perRequest;
 
+        /// <summary>
+        /// Cache used to store temporary metadata for OData items during materialization.
+        /// </summary>
         protected MaterializerAnnotationsCache annotationsCache = new MaterializerAnnotationsCache();
 
         /// <summary>

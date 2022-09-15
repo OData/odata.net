@@ -67,6 +67,7 @@ namespace Microsoft.OData.Client.Materialization
         /// </summary>
         /// <param name="feed">The feed.</param>
         /// <param name="entries">The entries.</param>
+        /// <param name="materializerContext">The current materializer context.</param>
         /// <returns>The materializer feed.</returns>
         public static MaterializerFeed CreateFeed(ODataResourceSet feed, IEnumerable<ODataResource> entries, IODataMaterializerContext materializerContext)
         {
@@ -87,6 +88,7 @@ namespace Microsoft.OData.Client.Materialization
         /// Gets the materializer feed.
         /// </summary>
         /// <param name="feed">The feed.</param>
+        /// <param name="materializerContext">The current materializer context.</param>
         /// <returns>The materializer feed.</returns>
         public static MaterializerFeed GetFeed(ODataResourceSet feed, IODataMaterializerContext materializerContext)
         {

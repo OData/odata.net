@@ -52,6 +52,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="entry">Root entry for paths.</param>
         /// <param name="expectedType">Expected type for <paramref name="entry"/>.</param>
         /// <param name="path">Path to pull value for.</param>
+        /// <param name="materializerContext">The materializer context.</param>
         /// <returns>Whether the specified <paramref name="path"/> is null.</returns>
         /// <remarks>
         /// This method will not instantiate entity types on the path.
@@ -93,6 +94,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>Provides support for getting payload entries during projections.</summary>
         /// <param name="entry">Entry to get sub-entry from.</param>
         /// <param name="name">Name of sub-entry.</param>
+        /// <param name="materializerContext">The materializer context.</param>
         /// <returns>The sub-entry (never null).</returns>
         internal static object ProjectionGetEntry(object entry, string name, IODataMaterializerContext materializerContext)
         {

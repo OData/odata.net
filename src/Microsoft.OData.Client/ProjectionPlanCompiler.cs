@@ -51,7 +51,10 @@ namespace Microsoft.OData.Client
         /// <summary>Whether the top level projection has been found.</summary>
         private bool topLevelProjectionFound;
 
-        IODataMaterializerContext materializerContext;
+        /// <summary>
+        /// The materializer context.
+        /// </summary>
+        private readonly IODataMaterializerContext materializerContext;
 
         #endregion Private fields
 
@@ -61,6 +64,7 @@ namespace Microsoft.OData.Client
         /// Initializes a new <see cref="ProjectionPlanCompiler"/> instance.
         /// </summary>
         /// <param name="normalizerRewrites">Rewrites introduces by normalizer.</param>
+        /// <param name="materializerContext">The materializer context.</param>
         private ProjectionPlanCompiler(Dictionary<Expression, Expression> normalizerRewrites, IODataMaterializerContext materializerContext)
         {
             this.annotations = new Dictionary<Expression, ExpressionAnnotation>(ReferenceEqualityComparer<Expression>.Instance);

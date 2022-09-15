@@ -74,6 +74,7 @@ namespace Microsoft.OData.Client
         /// <param name="plan">Projection plan (if compiled in an earlier query).</param>
         /// <param name="responseMessage">responseMessage</param>
         /// <param name="payloadKind">The kind of the payload to materialize.</param>
+        /// <param name="annotationsCache">The annotations cache used to store and retrieve temporary metadata used for materialization of OData items.</param>
         internal MaterializeAtom(
             ResponseInfo responseInfo,
             QueryComponents queryComponents,
@@ -102,6 +103,7 @@ namespace Microsoft.OData.Client
         /// <param name="entries">entries that needs to be materialized.</param>
         /// <param name="elementType">result type.</param>
         /// <param name="format">The format of the response being materialized from.</param>
+        /// <param name="annotationsCache">The annotations cache used to store and retrieve temporary metadata used for materialization of OData items.</param>
         internal MaterializeAtom(ResponseInfo responseInfo, IEnumerable<ODataResource> entries, Type elementType, ODataFormat format, MaterializerAnnotationsCache annotationsCache)
         {
             this.responseInfo = responseInfo;
