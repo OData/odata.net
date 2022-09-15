@@ -116,7 +116,227 @@ namespace Microsoft.OData.Client
             try
             {
                 synchronousOperation();
-                return TaskUtils.CompletedTask;
+                return CompletedTask;
+            }
+            catch (Exception e)
+            {
+                if (!ExceptionUtils.IsCatchableExceptionType(e))
+                {
+                    throw;
+                }
+
+                return GetFaultedTask(e);
+            }
+        }
+
+        /// <summary>
+        /// Returns an already completed task for the specified synchronous operation.
+        /// </summary>
+        /// <typeparam name="TArg">The <paramref name="synchronousOperation"/> delegate argument type.</typeparam>
+        /// <param name="synchronousOperation">The synchronous operation to perform.</param>
+        /// <param name="arg">The argument value provided to the <paramref name="synchronousOperation"/> delegate.</param>
+        /// <returns>
+        /// An already completed task. If the <paramref name="synchronousOperation"/>
+        /// succeeded this will be a successfully completed task,
+        /// otherwise it will be a faulted task holding the exception thrown.
+        /// </returns>
+        /// <remarks>
+        /// The advantage of this method over <see cref="CompletedTask"/> property 
+        /// is that if the <paramref name="synchronousOperation"/> fails
+        /// this method returns a faulted task, instead of throwing exception.
+        /// </remarks>
+        internal static Task GetTaskForSynchronousOperation<TArg>(
+            Action<TArg> synchronousOperation,
+            TArg arg)
+        {
+            Debug.Assert(synchronousOperation != null, "synchronousOperation != null");
+
+            try
+            {
+                synchronousOperation(arg);
+                return CompletedTask;
+            }
+            catch (Exception e)
+            {
+                if (!ExceptionUtils.IsCatchableExceptionType(e))
+                {
+                    throw;
+                }
+
+                return GetFaultedTask(e);
+            }
+        }
+
+        /// <summary>
+        /// Returns an already completed task for the specified synchronous operation.
+        /// </summary>
+        /// <typeparam name="TArg1">The <paramref name="synchronousOperation"/> delegate first argument type.</typeparam>
+        /// <typeparam name="TArg2">The <paramref name="synchronousOperation"/> delegate second argument type.</typeparam>
+        /// <param name="synchronousOperation">The synchronous operation to perform.</param>
+        /// <param name="arg1">The first argument value provided to the <paramref name="synchronousOperation"/> delegate.</param>
+        /// <param name="arg2">The second argument value provided to the <paramref name="synchronousOperation"/> delegate.</param>
+        /// <returns>
+        /// An already completed task. If the <paramref name="synchronousOperation"/>
+        /// succeeded this will be a successfully completed task,
+        /// otherwise it will be a faulted task holding the exception thrown.
+        /// </returns>
+        /// <remarks>
+        /// The advantage of this method over <see cref="CompletedTask"/> property 
+        /// is that if the <paramref name="synchronousOperation"/> fails
+        /// this method returns a faulted task, instead of throwing exception.
+        /// </remarks>
+        internal static Task GetTaskForSynchronousOperation<TArg1, TArg2>(
+            Action<TArg1, TArg2> synchronousOperation,
+            TArg1 arg1,
+            TArg2 arg2)
+        {
+            Debug.Assert(synchronousOperation != null, "synchronousOperation != null");
+
+            try
+            {
+                synchronousOperation(arg1, arg2);
+                return CompletedTask;
+            }
+            catch (Exception e)
+            {
+                if (!ExceptionUtils.IsCatchableExceptionType(e))
+                {
+                    throw;
+                }
+
+                return GetFaultedTask(e);
+            }
+        }
+
+        /// <summary>
+        /// Returns an already completed task for the specified synchronous operation.
+        /// </summary>
+        /// <typeparam name="TArg1">The <paramref name="synchronousOperation"/> delegate first argument type.</typeparam>
+        /// <typeparam name="TArg2">The <paramref name="synchronousOperation"/> delegate second argument type.</typeparam>
+        /// <typeparam name="TArg3">The <paramref name="synchronousOperation"/> delegate third argument type.</typeparam>
+        /// <param name="synchronousOperation">The synchronous operation to perform.</param>
+        /// <param name="arg1">The first argument value provided to the <paramref name="synchronousOperation"/> delegate.</param>
+        /// <param name="arg2">The second argument value provided to the <paramref name="synchronousOperation"/> delegate.</param>
+        /// <param name="arg3">The third argument value provided to the <paramref name="synchronousOperation"/> delegate.</param>
+        /// <returns>
+        /// An already completed task. If the <paramref name="synchronousOperation"/>
+        /// succeeded this will be a successfully completed task,
+        /// otherwise it will be a faulted task holding the exception thrown.
+        /// </returns>
+        /// <remarks>
+        /// The advantage of this method over <see cref="CompletedTask"/> property 
+        /// is that if the <paramref name="synchronousOperation"/> fails
+        /// this method returns a faulted task, instead of throwing exception.
+        /// </remarks>
+        internal static Task GetTaskForSynchronousOperation<TArg1, TArg2, TArg3>(
+            Action<TArg1, TArg2, TArg3> synchronousOperation,
+            TArg1 arg1,
+            TArg2 arg2,
+            TArg3 arg3)
+        {
+            Debug.Assert(synchronousOperation != null, "synchronousOperation != null");
+
+            try
+            {
+                synchronousOperation(arg1, arg2, arg3);
+                return CompletedTask;
+            }
+            catch (Exception e)
+            {
+                if (!ExceptionUtils.IsCatchableExceptionType(e))
+                {
+                    throw;
+                }
+
+                return GetFaultedTask(e);
+            }
+        }
+
+        /// <summary>
+        /// Returns an already completed task for the specified synchronous operation.
+        /// </summary>
+        /// <typeparam name="TArg1">The <paramref name="synchronousOperation"/> delegate first argument type.</typeparam>
+        /// <typeparam name="TArg2">The <paramref name="synchronousOperation"/> delegate second argument type.</typeparam>
+        /// <typeparam name="TArg3">The <paramref name="synchronousOperation"/> delegate third argument type.</typeparam>
+        /// <typeparam name="TArg4">The <paramref name="synchronousOperation"/> delegate fourth argument type.</typeparam>
+        /// <param name="synchronousOperation">The synchronous operation to perform.</param>
+        /// <param name="arg1">The first argument value provided to the <paramref name="synchronousOperation"/> delegate.</param>
+        /// <param name="arg2">The second argument value provided to the <paramref name="synchronousOperation"/> delegate.</param>
+        /// <param name="arg3">The third argument value provided to the <paramref name="synchronousOperation"/> delegate.</param>
+        /// <param name="arg4">The fourth argument value provided to the <paramref name="synchronousOperation"/> delegate.</param>
+        /// <returns>
+        /// An already completed task. If the <paramref name="synchronousOperation"/>
+        /// succeeded this will be a successfully completed task,
+        /// otherwise it will be a faulted task holding the exception thrown.
+        /// </returns>
+        /// <remarks>
+        /// The advantage of this method over <see cref="CompletedTask"/> property 
+        /// is that if the <paramref name="synchronousOperation"/> fails
+        /// this method returns a faulted task, instead of throwing exception.
+        /// </remarks>
+        internal static Task GetTaskForSynchronousOperation<TArg1, TArg2, TArg3, TArg4>(
+            Action<TArg1, TArg2, TArg3, TArg4> synchronousOperation,
+            TArg1 arg1,
+            TArg2 arg2,
+            TArg3 arg3,
+            TArg4 arg4)
+        {
+            Debug.Assert(synchronousOperation != null, "synchronousOperation != null");
+
+            try
+            {
+                synchronousOperation(arg1, arg2, arg3, arg4);
+                return CompletedTask;
+            }
+            catch (Exception e)
+            {
+                if (!ExceptionUtils.IsCatchableExceptionType(e))
+                {
+                    throw;
+                }
+
+                return GetFaultedTask(e);
+            }
+        }
+
+        /// <summary>
+        /// Returns an already completed task for the specified synchronous operation.
+        /// </summary>
+        /// <typeparam name="TArg1">The <paramref name="synchronousOperation"/> delegate first argument type.</typeparam>
+        /// <typeparam name="TArg2">The <paramref name="synchronousOperation"/> delegate second argument type.</typeparam>
+        /// <typeparam name="TArg3">The <paramref name="synchronousOperation"/> delegate third argument type.</typeparam>
+        /// <typeparam name="TArg4">The <paramref name="synchronousOperation"/> delegate fourth argument type.</typeparam>
+        /// <typeparam name="TArg5">The <paramref name="synchronousOperation"/> delegate fifth argument type.</typeparam>
+        /// <param name="synchronousOperation">The synchronous operation to perform.</param>
+        /// <param name="arg1">The first argument value provided to the <paramref name="synchronousOperation"/> delegate.</param>
+        /// <param name="arg2">The second argument value provided to the <paramref name="synchronousOperation"/> delegate.</param>
+        /// <param name="arg3">The third argument value provided to the <paramref name="synchronousOperation"/> delegate.</param>
+        /// <param name="arg4">The fourth argument value provided to the <paramref name="synchronousOperation"/> delegate.</param>
+        /// <param name="arg5">The fifth argument value provided to the <paramref name="synchronousOperation"/> delegate.</param>
+        /// <returns>
+        /// An already completed task. If the <paramref name="synchronousOperation"/>
+        /// succeeded this will be a successfully completed task,
+        /// otherwise it will be a faulted task holding the exception thrown.
+        /// </returns>
+        /// <remarks>
+        /// The advantage of this method over <see cref="CompletedTask"/> property 
+        /// is that if the <paramref name="synchronousOperation"/> fails
+        /// this method returns a faulted task, instead of throwing exception.
+        /// </remarks>
+        internal static Task GetTaskForSynchronousOperation<TArg1, TArg2, TArg3, TArg4, TArg5>(
+            Action<TArg1, TArg2, TArg3, TArg4, TArg5> synchronousOperation,
+            TArg1 arg1,
+            TArg2 arg2,
+            TArg3 arg3,
+            TArg4 arg4,
+            TArg5 arg5)
+        {
+            Debug.Assert(synchronousOperation != null, "synchronousOperation != null");
+
+            try
+            {
+                synchronousOperation(arg1, arg2, arg3, arg4, arg5);
+                return CompletedTask;
             }
             catch (Exception e)
             {
@@ -141,7 +361,8 @@ namespace Microsoft.OData.Client
         internal static Task<T> GetTaskForSynchronousOperation<T>(Func<T> synchronousOperation)
         {
             Debug.Assert(synchronousOperation != null, "synchronousOperation != null");
-            Debug.Assert(!(typeof(Task).IsAssignableFrom(typeof(T))), "This method doesn't support operations returning Task instances.");
+            Debug.Assert(!(typeof(Task).IsAssignableFrom(typeof(T))),
+                "This method doesn't support operations returning Task instances.");
 
             try
             {
@@ -156,6 +377,241 @@ namespace Microsoft.OData.Client
                 }
 
                 return GetFaultedTask<T>(e);
+            }
+        }
+
+        /// <summary>
+        /// Returns an already completed task for the specified synchronous operation.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result returned by the operation. This MUST NOT be a Task type.</typeparam>
+        /// <typeparam name="TArg">The <paramref name="synchronousOperation"/> delegate first argument type.</typeparam>
+        /// <param name="synchronousOperation">The synchronous operation to perform.</param>
+        /// <param name="arg">The first argument value provided to the <paramref name="synchronousOperation"/> delegate.</param>
+        /// <returns>
+        /// An already completed task. If the <paramref name="synchronousOperation"/>
+        /// succeeded this will be a successfully completed task,
+        /// otherwise it will be a faulted task holding the exception thrown.
+        /// </returns>
+        /// <remarks>
+        /// The advantage of this method over <see cref="CompletedTask"/> property
+        /// is that if the <paramref name="synchronousOperation"/> fails
+        /// this method returns a faulted task, instead of throwing exception.
+        /// </remarks>
+        internal static Task<TResult> GetTaskForSynchronousOperation<TResult, TArg>(
+            Func<TArg, TResult> synchronousOperation,
+            TArg arg)
+        {
+            Debug.Assert(synchronousOperation != null, "synchronousOperation != null");
+            Debug.Assert(!typeof(Task).IsAssignableFrom(typeof(TResult)),
+                "This method doesn't support operations returning Task instances.");
+
+            try
+            {
+                TResult result = synchronousOperation(arg);
+                return Task.FromResult(result);
+            }
+            catch (Exception e)
+            {
+                if (!ExceptionUtils.IsCatchableExceptionType(e))
+                {
+                    throw;
+                }
+
+                return GetFaultedTask<TResult>(e);
+            }
+        }
+
+        /// <summary>
+        /// Returns an already completed task for the specified synchronous operation.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result returned by the operation. This MUST NOT be a Task type.</typeparam>
+        /// <typeparam name="TArg1">The <paramref name="synchronousOperation"/> delegate first argument type.</typeparam>
+        /// <typeparam name="TArg2">The <paramref name="synchronousOperation"/> delegate second argument type.</typeparam>
+        /// <param name="synchronousOperation">The synchronous operation to perform.</param>
+        /// <param name="arg1">The first argument value provided to the <paramref name="synchronousOperation"/> delegate.</param>
+        /// <param name="arg2">The second argument value provided to the <paramref name="synchronousOperation"/> delegate.</param>
+        /// <returns>
+        /// An already completed task. If the <paramref name="synchronousOperation"/>
+        /// succeeded this will be a successfully completed task,
+        /// otherwise it will be a faulted task holding the exception thrown.
+        /// </returns>
+        /// <remarks>
+        /// The advantage of this method over <see cref="CompletedTask"/> property
+        /// is that if the <paramref name="synchronousOperation"/> fails
+        /// this method returns a faulted task, instead of throwing exception.
+        /// </remarks>
+        internal static Task<TResult> GetTaskForSynchronousOperation<TResult, TArg1, TArg2>(
+            Func<TArg1, TArg2, TResult> synchronousOperation,
+            TArg1 arg1,
+            TArg2 arg2)
+        {
+            Debug.Assert(synchronousOperation != null, "synchronousOperation != null");
+            Debug.Assert(!typeof(Task).IsAssignableFrom(typeof(TResult)),
+                "This method doesn't support operations returning Task instances.");
+
+            try
+            {
+                TResult result = synchronousOperation(arg1, arg2);
+                return Task.FromResult(result);
+            }
+            catch (Exception e)
+            {
+                if (!ExceptionUtils.IsCatchableExceptionType(e))
+                {
+                    throw;
+                }
+
+                return GetFaultedTask<TResult>(e);
+            }
+        }
+
+        /// <summary>
+        /// Returns an already completed task for the specified synchronous operation.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result returned by the operation. This MUST NOT be a Task type.</typeparam>
+        /// <typeparam name="TArg1">The <paramref name="synchronousOperation"/> delegate first argument type.</typeparam>
+        /// <typeparam name="TArg2">The <paramref name="synchronousOperation"/> delegate second argument type.</typeparam>
+        /// <typeparam name="TArg3">The <paramref name="synchronousOperation"/> delegate third argument type.</typeparam>
+        /// <param name="synchronousOperation">The synchronous operation to perform.</param>
+        /// <param name="arg1">The first argument value provided to the <paramref name="synchronousOperation"/> delegate.</param>
+        /// <param name="arg2">The second argument value provided to the <paramref name="synchronousOperation"/> delegate.</param>
+        /// <param name="arg3">The third argument value provided to the <paramref name="synchronousOperation"/> delegate.</param>
+        /// <returns>
+        /// An already completed task. If the <paramref name="synchronousOperation"/>
+        /// succeeded this will be a successfully completed task,
+        /// otherwise it will be a faulted task holding the exception thrown.
+        /// </returns>
+        /// <remarks>
+        /// The advantage of this method over <see cref="CompletedTask"/> property
+        /// is that if the <paramref name="synchronousOperation"/> fails
+        /// this method returns a faulted task, instead of throwing exception.
+        /// </remarks>
+        internal static Task<TResult> GetTaskForSynchronousOperation<TResult, TArg1, TArg2, TArg3>(
+            Func<TArg1, TArg2, TArg3, TResult> synchronousOperation,
+            TArg1 arg1,
+            TArg2 arg2,
+            TArg3 arg3)
+        {
+            Debug.Assert(synchronousOperation != null, "synchronousOperation != null");
+            Debug.Assert(!typeof(Task).IsAssignableFrom(typeof(TResult)),
+                "This method doesn't support operations returning Task instances.");
+
+            try
+            {
+                TResult result = synchronousOperation(arg1, arg2, arg3);
+                return Task.FromResult(result);
+            }
+            catch (Exception e)
+            {
+                if (!ExceptionUtils.IsCatchableExceptionType(e))
+                {
+                    throw;
+                }
+
+                return GetFaultedTask<TResult>(e);
+            }
+        }
+
+        /// <summary>
+        /// Returns an already completed task for the specified synchronous operation.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result returned by the operation. This MUST NOT be a Task type.</typeparam>
+        /// <typeparam name="TArg1">The <paramref name="synchronousOperation"/> delegate first argument type.</typeparam>
+        /// <typeparam name="TArg2">The <paramref name="synchronousOperation"/> delegate second argument type.</typeparam>
+        /// <typeparam name="TArg3">The <paramref name="synchronousOperation"/> delegate third argument type.</typeparam>
+        /// <typeparam name="TArg4">The <paramref name="synchronousOperation"/> delegate fourth argument type.</typeparam>
+        /// <param name="synchronousOperation">The synchronous operation to perform.</param>
+        /// <param name="arg1">The first argument value provided to the <paramref name="synchronousOperation"/> delegate.</param>
+        /// <param name="arg2">The second argument value provided to the <paramref name="synchronousOperation"/> delegate.</param>
+        /// <param name="arg3">The third argument value provided to the <paramref name="synchronousOperation"/> delegate.</param>
+        /// <param name="arg4">The fourth argument value provided to the <paramref name="synchronousOperation"/> delegate.</param>
+        /// <returns>
+        /// An already completed task. If the <paramref name="synchronousOperation"/>
+        /// succeeded this will be a successfully completed task,
+        /// otherwise it will be a faulted task holding the exception thrown.
+        /// </returns>
+        /// <remarks>
+        /// The advantage of this method over <see cref="CompletedTask"/> property
+        /// is that if the <paramref name="synchronousOperation"/> fails
+        /// this method returns a faulted task, instead of throwing exception.
+        /// </remarks>
+        internal static Task<TResult> GetTaskForSynchronousOperation<TResult, TArg1, TArg2, TArg3, TArg4>(
+            Func<TArg1, TArg2, TArg3, TArg4, TResult> synchronousOperation,
+            TArg1 arg1,
+            TArg2 arg2,
+            TArg3 arg3,
+            TArg4 arg4)
+        {
+            Debug.Assert(synchronousOperation != null, "synchronousOperation != null");
+            Debug.Assert(!typeof(Task).IsAssignableFrom(typeof(TResult)),
+                "This method doesn't support operations returning Task instances.");
+
+            try
+            {
+                TResult result = synchronousOperation(arg1, arg2, arg3, arg4);
+                return Task.FromResult(result);
+            }
+            catch (Exception e)
+            {
+                if (!ExceptionUtils.IsCatchableExceptionType(e))
+                {
+                    throw;
+                }
+
+                return GetFaultedTask<TResult>(e);
+            }
+        }
+
+        /// <summary>
+        /// Returns an already completed task for the specified synchronous operation.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result returned by the operation. This MUST NOT be a Task type.</typeparam>
+        /// <typeparam name="TArg1">The <paramref name="synchronousOperation"/> delegate first argument type.</typeparam>
+        /// <typeparam name="TArg2">The <paramref name="synchronousOperation"/> delegate second argument type.</typeparam>
+        /// <typeparam name="TArg3">The <paramref name="synchronousOperation"/> delegate third argument type.</typeparam>
+        /// <typeparam name="TArg4">The <paramref name="synchronousOperation"/> delegate fourth argument type.</typeparam>
+        /// <typeparam name="TArg5">The <paramref name="synchronousOperation"/> delegate fifth argument type.</typeparam>
+        /// <param name="synchronousOperation">The synchronous operation to perform.</param>
+        /// <param name="arg1">The first argument value provided to the <paramref name="synchronousOperation"/> delegate.</param>
+        /// <param name="arg2">The second argument value provided to the <paramref name="synchronousOperation"/> delegate.</param>
+        /// <param name="arg3">The third argument value provided to the <paramref name="synchronousOperation"/> delegate.</param>
+        /// <param name="arg4">The fourth argument value provided to the <paramref name="synchronousOperation"/> delegate.</param>
+        /// <param name="arg5">The fifth argument value provided to the <paramref name="synchronousOperation"/> delegate.</param>
+        /// <returns>
+        /// An already completed task. If the <paramref name="synchronousOperation"/>
+        /// succeeded this will be a successfully completed task,
+        /// otherwise it will be a faulted task holding the exception thrown.
+        /// </returns>
+        /// <remarks>
+        /// The advantage of this method over <see cref="CompletedTask"/> property
+        /// is that if the <paramref name="synchronousOperation"/> fails
+        /// this method returns a faulted task, instead of throwing exception.
+        /// </remarks>
+        internal static Task<TResult> GetTaskForSynchronousOperation<TResult, TArg1, TArg2, TArg3, TArg4, TArg5>(
+            Func<TArg1, TArg2, TArg3, TArg4, TArg5, TResult> synchronousOperation,
+            TArg1 arg1,
+            TArg2 arg2,
+            TArg3 arg3,
+            TArg4 arg4,
+            TArg5 arg5)
+        {
+            Debug.Assert(synchronousOperation != null, "synchronousOperation != null");
+            Debug.Assert(!typeof(Task).IsAssignableFrom(typeof(TResult)),
+                "This method doesn't support operations returning Task instances.");
+
+            try
+            {
+                TResult result = synchronousOperation(arg1, arg2, arg3, arg4, arg5);
+                return Task.FromResult(result);
+            }
+            catch (Exception e)
+            {
+                if (!ExceptionUtils.IsCatchableExceptionType(e))
+                {
+                    throw;
+                }
+
+                return GetFaultedTask<TResult>(e);
             }
         }
 

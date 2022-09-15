@@ -149,7 +149,8 @@ namespace Microsoft.OData.MultipartMixed
         public override Task StreamDisposedAsync()
         {
             return TaskUtils.GetTaskForSynchronousOperation(
-                () => this.StreamDisposed());
+                thisParam => thisParam.StreamDisposed(),
+                this);
         }
 
         /// <summary>

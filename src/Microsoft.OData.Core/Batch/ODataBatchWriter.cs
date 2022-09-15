@@ -720,6 +720,38 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Catch any exception thrown by the action passed in; in the exception case move the writer into
+        /// state Error and then rethrow the exception.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result returned by the operation.</typeparam>
+        /// <typeparam name="TArg">The action argument type.</typeparam>
+        /// <param name="operation">The action to execute.</param>
+        /// <param name="arg">The argument value provided to the action.</param>
+        /// <returns>The result if the operation succeeds; otherwise the writer state is set to 
+        /// <see cref="BatchWriterState.Error"/> and the exception rethrown.
+        /// </returns>
+        /// <remarks>
+        /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
+        /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
+        /// </remarks>
+        private TResult InterceptException<TResult, TArg>(Func<ODataBatchWriter, TArg, TResult> operation, TArg arg)
+        {
+            try
+            {
+                return operation(this, arg);
+            }
+            catch
+            {
+                if (!IsErrorState(this.state))
+                {
+                    this.SetState(BatchWriterState.Error);
+                }
+
+                throw;
+            }
+        }
+
+        /// <summary>
         /// Catch any exception thrown by the action passed in; in the exception case move the reader into
         /// state Error and then rethrow the exception.
         /// </summary>
@@ -789,9 +821,9 @@ namespace Microsoft.OData
                 this.payloadUriConverter.AddContentId(this.currentOperationContentId);
             }
 
-            // This action delegate is capturing state from the enclosing context, to re-assign the 'uri', hence allocations are incurred here.
-            this.InterceptException((thisParam) =>
-                uri = ODataBatchUtils.CreateOperationRequestUri(uri, thisParam.outputContext.MessageWriterSettings.BaseUri, thisParam.payloadUriConverter));
+            uri = this.InterceptException((thisParam, uriParam) =>
+                ODataBatchUtils.CreateOperationRequestUri(uriParam, thisParam.outputContext.MessageWriterSettings.BaseUri, thisParam.payloadUriConverter),
+                uri);
 
             this.CurrentOperationRequestMessage = this.CreateOperationRequestMessageImplementation(
                 method, uri, contentId, payloadUriOption, dependsOnIds);
@@ -848,9 +880,9 @@ namespace Microsoft.OData
                 this.payloadUriConverter.AddContentId(this.currentOperationContentId);
             }
 
-            // This action delegate is capturing state from the enclosing context, to re-assign the 'uri', hence allocations are incurred here.
-            this.InterceptException((thisParam) =>
-                uri = ODataBatchUtils.CreateOperationRequestUri(uri, thisParam.outputContext.MessageWriterSettings.BaseUri, thisParam.payloadUriConverter));
+            uri = this.InterceptException((thisParam, uriParam) =>
+                ODataBatchUtils.CreateOperationRequestUri(uriParam, thisParam.outputContext.MessageWriterSettings.BaseUri, thisParam.payloadUriConverter),
+                uri);
 
             this.CurrentOperationRequestMessage = await this.CreateOperationRequestMessageImplementationAsync(
                 method, uri, contentId, payloadUriOption, dependsOnIds).ConfigureAwait(false);

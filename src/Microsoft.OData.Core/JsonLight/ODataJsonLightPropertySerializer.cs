@@ -272,9 +272,10 @@ namespace Microsoft.OData.JsonLight
 
                     if (!(this.JsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel))
                     {
-                        ODataContextUrlInfo contextInfo = GetContextUrlInfo(property);
-                        await this.WriteContextUriPropertyAsync(kind, () => contextInfo)
-                            .ConfigureAwait(false);
+                        ODataContextUrlInfo contextUrlInfo = GetContextUrlInfo(property);
+                        await this.WriteContextUriPropertyAsync(
+                            kind,
+                            (contextUrlInfoParam) => contextUrlInfoParam, contextUrlInfo).ConfigureAwait(false);
                     }
 
                     // Note we do not allow named stream properties to be written as top level property.

@@ -2299,12 +2299,21 @@ namespace Microsoft.OData.JsonLight
             SelectedPropertiesNode selectedProperties)
         {
             // Currently, no asynchronous operation is involved when preparing resource for writing
-            return TaskUtils.GetTaskForSynchronousOperation(
-                () => this.PrepareResourceForWriteStart(
-                    resourceScope,
-                    resource,
-                    writingResponse,
-                    selectedProperties));
+            return TaskUtils.GetTaskForSynchronousOperation((
+                thisParam,
+                resourceScopeParam,
+                resourceParam,
+                writingResponseParam,
+                selectedPropertiesParam) => thisParam.PrepareResourceForWriteStart(
+                    resourceScopeParam,
+                    resourceParam,
+                    writingResponseParam,
+                    selectedPropertiesParam),
+                this,
+                resourceScope,
+                resource,
+                writingResponse,
+                selectedProperties);
         }
 
         /// <summary>
@@ -2323,12 +2332,21 @@ namespace Microsoft.OData.JsonLight
             SelectedPropertiesNode selectedProperties)
         {
             // Currently, no asynchronous operation is involved when preparing deleted resource for writing
-            return TaskUtils.GetTaskForSynchronousOperation(
-                () => this.PrepareDeletedResourceForWriteStart(
-                    resourceScope,
-                    deletedResource,
-                    writingResponse,
-                    selectedProperties));
+            return TaskUtils.GetTaskForSynchronousOperation((
+                thisParam,
+                resourceScopeParam,
+                deletedResourceParam,
+                writingResponseParam,
+                selectedPropertiesParam) => this.PrepareDeletedResourceForWriteStart(
+                    resourceScopeParam,
+                    deletedResourceParam,
+                    writingResponseParam,
+                    selectedPropertiesParam),
+                this,
+                resourceScope,
+                deletedResource,
+                writingResponse,
+                selectedProperties);
         }
 
         /// <summary>

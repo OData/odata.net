@@ -281,7 +281,17 @@ namespace Microsoft.OData.JsonLight
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, false, false));
+            return TaskUtils.GetTaskForSynchronousOperation((
+                thisParam,
+                entitySetParam,
+                resourceTypeParam) => thisParam.CreateODataResourceSetWriterImplementation(
+                    entitySetParam,
+                    resourceTypeParam,
+                    writingParameter: false,
+                    writingDelta: false),
+                this,
+                entitySet,
+                resourceType);
         }
 
         /// <summary>
@@ -309,7 +319,17 @@ namespace Microsoft.OData.JsonLight
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, false, true));
+            return TaskUtils.GetTaskForSynchronousOperation((
+                thisParam,
+                entitySetParam,
+                resourceTypeParam) => thisParam.CreateODataResourceSetWriterImplementation(
+                    entitySetParam,
+                    resourceTypeParam,
+                    writingParameter: false,
+                    writingDelta: true),
+                this,
+                entitySet,
+                resourceType);
         }
 
         /// <summary>
@@ -337,7 +357,15 @@ namespace Microsoft.OData.JsonLight
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataResourceWriterImplementation(navigationSource, resourceType));
+            return TaskUtils.GetTaskForSynchronousOperation((
+                thisParam,
+                navigationSourceParam,
+                resourceTypeParam) => thisParam.CreateODataResourceWriterImplementation(
+                    navigationSourceParam,
+                    resourceTypeParam),
+                this,
+                navigationSource,
+                resourceType);
         }
 
         /// <summary>
@@ -363,7 +391,12 @@ namespace Microsoft.OData.JsonLight
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataCollectionWriterImplementation(itemTypeReference));
+            return TaskUtils.GetTaskForSynchronousOperation((
+                thisParam,
+                itemTypeReferenceParam) => thisParam.CreateODataCollectionWriterImplementation(
+                    itemTypeReferenceParam),
+                this,
+                itemTypeReference);
         }
 
         /// <summary>
@@ -415,7 +448,17 @@ namespace Microsoft.OData.JsonLight
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, true, false));
+            return TaskUtils.GetTaskForSynchronousOperation((
+                thisParam,
+                entitySetParam,
+                resourceTypeParam) => thisParam.CreateODataResourceSetWriterImplementation(
+                    entitySetParam,
+                    resourceTypeParam,
+                    writingParameter: true,
+                    writingDelta: false),
+                this,
+                entitySet,
+                resourceType);
         }
 
         /// <summary>
@@ -441,7 +484,12 @@ namespace Microsoft.OData.JsonLight
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataParameterWriterImplementation(operation));
+            return TaskUtils.GetTaskForSynchronousOperation((
+                thisParam,
+                operationParam) => thisParam.CreateODataParameterWriterImplementation(
+                    operationParam),
+                this,
+                operation);
         }
 
         /// <summary>
@@ -624,7 +672,9 @@ namespace Microsoft.OData.JsonLight
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataBatchWriterImplementation());
+            return TaskUtils.GetTaskForSynchronousOperation(
+                thisParam => thisParam.CreateODataBatchWriterImplementation(),
+                this);
         }
 
         /// <summary>
@@ -702,7 +752,15 @@ namespace Microsoft.OData.JsonLight
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataDeltaWriterImplementation(entitySet, entityType));
+            return TaskUtils.GetTaskForSynchronousOperation((
+                thisParam,
+                entitySetParam,
+                entityTypeParam) => thisParam.CreateODataDeltaWriterImplementation(
+                    entitySetParam,
+                    entityTypeParam),
+                this,
+                entitySet,
+                entityType);
         }
 
         /// <summary>

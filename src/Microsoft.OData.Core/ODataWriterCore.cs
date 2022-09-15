@@ -655,7 +655,10 @@ namespace Microsoft.OData
             this.VerifyCanWriteStartNestedResourceInfo(false, nestedResourceInfo);
             // Currently, no asynchronous operation is involved when commencing with writing a nested resource info
             return TaskUtils.GetTaskForSynchronousOperation(
-                () => this.WriteStartNestedResourceInfoImplementation(nestedResourceInfo));
+                (thisParam, nestedResourceInfoParam) => thisParam.WriteStartNestedResourceInfoImplementation(
+                    nestedResourceInfoParam),
+                this,
+                nestedResourceInfo);
         }
 
         /// <summary>
@@ -3286,14 +3289,14 @@ namespace Microsoft.OData
                 async (thisParam, resourceParam) =>
                 {
                     DeletedResourceScope resourceScope = thisParam.CurrentScope as DeletedResourceScope;
-                    this.ValidateResourceForResourceSet(resourceParam, resourceScope);
+                    thisParam.ValidateResourceForResourceSet(resourceParam, resourceScope);
 
-                    await this.PrepareDeletedResourceForWriteStartAsync(
+                    await thisParam.PrepareDeletedResourceForWriteStartAsync(
                         resourceScope,
                         resourceParam,
                         thisParam.outputContext.WritingResponse,
                         resourceScope.SelectedProperties).ConfigureAwait(false);
-                    await thisParam.StartDeletedResourceAsync(resource)
+                    await thisParam.StartDeletedResourceAsync(resourceParam)
                         .ConfigureAwait(false);
                 }, resource).ConfigureAwait(false);
         }

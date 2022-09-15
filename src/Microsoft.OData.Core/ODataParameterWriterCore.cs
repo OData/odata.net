@@ -964,23 +964,27 @@ namespace Microsoft.OData
         /// Asynchronously catch any exception thrown by the action passed in; in the exception case move the writer into
         /// state Error and then rethrow the exception.
         /// </summary>
-        /// <typeparam name="TArg0">The delegate first argument type.</typeparam>
-        /// <typeparam name="TArg1">The delegate second argument type.</typeparam>
-        /// <typeparam name="TArg2">The delegate third argument type.</typeparam>
+        /// <typeparam name="TArg1">The <paramref name="func"/> delegate first argument type.</typeparam>
+        /// <typeparam name="TArg2">The <paramref name="func"/> delegate second argument type.</typeparam>
+        /// <typeparam name="TArg3">The <paramref name="func"/> delegate third argument type.</typeparam>
         /// <param name="func">The delegate to execute asynchronously.</param>
-        /// <param name="arg0">The first argument value provided to the action.</param>
-        /// <param name="arg1">The second argument value provided to the action.</param>
-        /// <param name="arg2">The third argument value provided to the action.</param>
+        /// <param name="arg1">The first argument value provided to the <paramref name="func"/> delegate.</param>
+        /// <param name="arg2">The second argument value provided to the <paramref name="func"/> delegate.</param>
+        /// <param name="arg3">The third argument value provided to the <paramref name="func"/> delegate.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
         /// <remarks>
         /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
         /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
         /// </remarks>
-        private async Task InterceptExceptionAsync<TArg0, TArg1, TArg2>(Func<ODataParameterWriterCore, TArg0, TArg1, TArg2, Task> func, TArg0 arg0, TArg1 arg1, TArg2 arg2)
+        private async Task InterceptExceptionAsync<TArg1, TArg2, TArg3>(
+            Func<ODataParameterWriterCore, TArg1, TArg2, TArg3, Task> func,
+            TArg1 arg1,
+            TArg2 arg2,
+            TArg3 arg3)
         {
             try
             {
-                await func(this, arg0, arg1, arg2).ConfigureAwait(false);
+                await func(this, arg1, arg2, arg3).ConfigureAwait(false);
             }
             catch
             {
@@ -994,23 +998,27 @@ namespace Microsoft.OData
         /// Asynchronously catch any exception thrown by the action passed in; in the exception case move the writer into
         /// state Error and then rethrow the exception.
         /// </summary>
-        /// <typeparam name="T">The delegate first argument type.</typeparam>
-        /// <typeparam name="TArg0">The delegate second argument type.</typeparam>
-        /// <typeparam name="TArg1">The delegate third argument type.</typeparam>
+        /// <typeparam name="T">The type of the result returned by the delegate.</typeparam>
+        /// <typeparam name="TArg1">The <paramref name="func"/> delegate first argument type.</typeparam>
+        /// <typeparam name="TArg2">The <paramref name="func"/> delegate second argument type.</typeparam>
         /// <param name="func">The delegate to execute asynchronously.</param>
-        /// <param name="arg0">The first argument value provided to the action.</param>
-        /// <param name="arg1">The second argument value provided to the action.</param>
+        /// <param name="arg1">The first argument value provided to the <paramref name="func"/> delegate.</param>
+        /// <param name="arg2">The second argument value provided to the <paramref name="func"/> delegate.</param>
         /// <returns>A task that represents the asynchronous operation. 
         /// The value of the TResult parameter contains a T instance.</returns>
         /// <remarks>
         /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
         /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
         /// </remarks>
-        private async Task<T> InterceptExceptionAsync<T, TArg0, TArg1>(Func<ODataParameterWriterCore, TArg0, TArg1, Task<T>> func, TArg0 arg0, TArg1 arg1)
+        private async Task<T> InterceptExceptionAsync<T, TArg1, TArg2>(
+            Func<ODataParameterWriterCore, TArg1, TArg2, Task<T>>
+            func,
+            TArg1 arg1,
+            TArg2 arg2)
         {
             try
             {
-                return await func(this, arg0, arg1).ConfigureAwait(false);
+                return await func(this, arg1, arg2).ConfigureAwait(false);
             }
             catch
             {
@@ -1068,7 +1076,17 @@ namespace Microsoft.OData
         {
             Debug.Assert(this.State == ParameterWriterState.CanWriteParameter, "this.State == ParameterWriterState.CanWriteParameter");
 
-            return this.InterceptExceptionAsync((thisParam) => thisParam.WriteValueParameterAsync(parameterName, parameterValue, expectedTypeReference));
+            return this.InterceptExceptionAsync((
+                thisParam,
+                parameterNameParam,
+                parameterValueParam,
+                expectedTypeReferenceParam) => thisParam.WriteValueParameterAsync(
+                    parameterNameParam,
+                    parameterValueParam,
+                    expectedTypeReferenceParam),
+                parameterName,
+                parameterValue,
+                expectedTypeReference);
         }
 
         /// <summary>

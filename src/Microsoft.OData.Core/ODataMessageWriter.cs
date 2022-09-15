@@ -1278,22 +1278,18 @@ namespace Microsoft.OData
         /// <param name="payloadKind">The payload kind to write.</param>
         /// <param name="writeAsyncAction">The write operation to invoke on the output.</param>
         /// <returns>Task which represents the pending write operation.</returns>
-        private Task WriteToOutputAsync(ODataPayloadKind payloadKind, Func<ODataOutputContext, Task> writeAsyncAction)
+        private async Task WriteToOutputAsync(ODataPayloadKind payloadKind, Func<ODataOutputContext, Task> writeAsyncAction)
         {
             // Set the content type header here since all headers have to be set before getting the stream
             this.SetOrVerifyHeaders(payloadKind);
             // Create the output context
-            return WriteToOutputInnerAsync(writeAsyncAction);
-
-            async Task WriteToOutputInnerAsync(Func<ODataOutputContext, Task> innerWriteAsyncAction)
-            {
-                Stream messageStream = await this.message.GetStreamAsync()
+            Stream messageStream = await this.message.GetStreamAsync()
                     .ConfigureAwait(false);
-                this.outputContext = await this.format.CreateOutputContextAsync(
-                        this.GetOrCreateMessageInfo(messageStream, true),
-                        this.settings).ConfigureAwait(false);
-                await innerWriteAsyncAction(this.outputContext).ConfigureAwait(false);
-            }
+            this.outputContext = await this.format.CreateOutputContextAsync(
+                    this.GetOrCreateMessageInfo(messageStream, true),
+                    this.settings).ConfigureAwait(false);
+
+            await writeAsyncAction(this.outputContext).ConfigureAwait(false);
         }
         /// <summary>
         /// Creates an output context and invokes a write operation on it.
@@ -1302,22 +1298,18 @@ namespace Microsoft.OData
         /// <param name="payloadKind">The payload kind to write.</param>
         /// <param name="writeFunc">The write operation to invoke on the output.</param>
         /// <returns>Task which represents the pending write operation.</returns>
-        private Task<TResult> WriteToOutputAsync<TResult>(ODataPayloadKind payloadKind, Func<ODataOutputContext, Task<TResult>> writeFunc)
+        private async Task<TResult> WriteToOutputAsync<TResult>(ODataPayloadKind payloadKind, Func<ODataOutputContext, Task<TResult>> writeFunc)
         {
             // Set the content type header here since all headers have to be set before getting the stream
             this.SetOrVerifyHeaders(payloadKind);
             // Create the output context
-            return WriteToOutputInnerAsync(writeFunc);
-
-            async Task<TResult> WriteToOutputInnerAsync(Func<ODataOutputContext, Task<TResult>> innerWriteFunc)
-            {
-                Stream messageStream = await this.message.GetStreamAsync()
+            Stream messageStream = await this.message.GetStreamAsync()
                     .ConfigureAwait(false);
-                this.outputContext = await this.format.CreateOutputContextAsync(
-                    this.GetOrCreateMessageInfo(messageStream, true),
-                    this.settings).ConfigureAwait(false);
-                return await innerWriteFunc(this.outputContext).ConfigureAwait(false);
-            }
+            this.outputContext = await this.format.CreateOutputContextAsync(
+                this.GetOrCreateMessageInfo(messageStream, true),
+                this.settings).ConfigureAwait(false);
+            
+            return await writeFunc(this.outputContext).ConfigureAwait(false);
         }
     }
 }
