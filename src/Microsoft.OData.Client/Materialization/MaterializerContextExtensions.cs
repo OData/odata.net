@@ -9,7 +9,8 @@ namespace Microsoft.OData.Client.Materialization
     internal static class MaterializerContextExtensions
     {
         /// <summary>
-        /// Associates the specified annotation <paramref name="value"/> with the specified
+        /// Associates the specified <paramref name="value"/> with the specified
+
         /// <paramref name="annotatable"/> to store metadata used for materialization.
         /// </summary>
         /// <typeparam name="T">The type of the value.</typeparam>
@@ -22,7 +23,8 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>
-        /// Retrieves the annotation value associated with te specified <paramref name="annotatable"/>.
+        /// Retrieves the value associated with the specified <paramref name="annotatable"/>.
+
         /// </summary>
         /// <typeparam name="T">The expected type of the annotation value.</typeparam>
         /// <param name="context">The materializer context.</param>
