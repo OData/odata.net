@@ -113,9 +113,9 @@ namespace Microsoft.OData.Client
             Type implementationType;
             Type materializerType = GetTypeForMaterializer(this.expectingPrimitiveValue, this.elementType, responseInfo.Model, out implementationType);
             QueryComponents qc = new QueryComponents(null, Util.ODataVersionEmpty, elementType, null, null);
-            ODataMaterializerContext context = new ODataMaterializerContext(responseInfo, annotationsCache);
-            EntityTrackingAdapter entityTrackingAdapter = new EntityTrackingAdapter(responseInfo.EntityTracker, responseInfo.MergeOption, responseInfo.Model, responseInfo.Context, context);
-            this.materializer = new ODataEntriesEntityMaterializer(entries, context, entityTrackingAdapter, qc, materializerType, null, format);
+            ODataMaterializerContext materializerContext = new ODataMaterializerContext(responseInfo, annotationsCache);
+            EntityTrackingAdapter entityTrackingAdapter = new EntityTrackingAdapter(responseInfo.EntityTracker, responseInfo.MergeOption, responseInfo.Model, responseInfo.Context, materializerContext);
+            this.materializer = new ODataEntriesEntityMaterializer(entries, materializerContext, entityTrackingAdapter, qc, materializerType, null, format);
         }
 
         /// <summary>

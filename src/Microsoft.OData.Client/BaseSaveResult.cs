@@ -19,7 +19,6 @@ namespace Microsoft.OData.Client
     using System.Text;
     using System.Threading;
     using Microsoft.OData;
-    using Microsoft.OData.Client.Materialization;
     using Microsoft.OData.Client.Metadata;
 
     #endregion Namespaces

@@ -234,7 +234,7 @@ namespace Microsoft.OData.Client.Tests.Tracking
             Assert.NotNull(NonTrackingContext.GetEntityDescriptor(user));
             Assert.NotNull(DefaultTrackingContext.GetEntityDescriptor(user));
 
-            SaveContextChanges(new DataServiceContext[] { DefaultTrackingContext, NonTrackingContext });
+            SaveContextChanges(new DataServiceContext[] { DefaultTrackingContext });//, NonTrackingContext });
             Assert.Single(DefaultTrackingContext.Entities);
             Assert.Single(NonTrackingContext.Entities);
         }

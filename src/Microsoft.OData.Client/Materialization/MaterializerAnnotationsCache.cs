@@ -48,7 +48,7 @@ namespace Microsoft.OData.Client.Materialization
         /// Returns null if the cache does not contain an entry with the specified key.
         /// </summary>
         /// <typeparam name="T">The expected type of the value.</typeparam>
-        /// <param name="annotatable"></param>
+        /// <param name="annotatable">The key of the entry.</param>
         /// <returns>The value associated with the specified <paramref name="annotatable"/> if the entry exists; otherwise null.</returns>
         public T GetAnnotation<T>(ODataAnnotatable annotatable) where T: class
         {
