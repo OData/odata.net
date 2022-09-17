@@ -53,6 +53,10 @@ namespace Microsoft.OData.Client.Materialization
         /// <returns>The resolved EDM type to provide to ODataLib.</returns>
         IEdmType ResolveExpectedTypeForReading(Type clientClrType);
 
-        MaterializerAnnotationsCache AnnotationsCache { get;  }
+        /// <summary>
+        /// Used to store temporary metadata used to converter deserialized
+        /// OData items into CLR objects.
+        /// </summary>
+        MaterializerCache MaterializerCache { get; }
     }
 }

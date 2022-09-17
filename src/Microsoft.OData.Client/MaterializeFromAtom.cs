@@ -74,14 +74,14 @@ namespace Microsoft.OData.Client
         /// <param name="plan">Projection plan (if compiled in an earlier query).</param>
         /// <param name="responseMessage">responseMessage</param>
         /// <param name="payloadKind">The kind of the payload to materialize.</param>
-        /// <param name="annotationsCache">The annotations cache used to store and retrieve temporary metadata used for materialization of OData items.</param>
+        /// <param name="materializerCache">Cache used to store temporary metadata used for materialization of OData items.</param>
         internal MaterializeAtom(
             ResponseInfo responseInfo,
             QueryComponents queryComponents,
             ProjectionPlan plan,
             IODataResponseMessage responseMessage,
             ODataPayloadKind payloadKind,
-            MaterializerAnnotationsCache annotationsCache)
+            MaterializerCache materializerCache)
         {
             Debug.Assert(queryComponents != null, "queryComponents != null");
 
@@ -93,7 +93,7 @@ namespace Microsoft.OData.Client
 
             Type implementationType;
             Type materializerType = GetTypeForMaterializer(this.expectingPrimitiveValue, this.elementType, responseInfo.Model, out implementationType);
-            this.materializer = ODataMaterializer.CreateMaterializerForMessage(responseMessage, responseInfo, materializerType, queryComponents, plan, payloadKind, annotationsCache);
+            this.materializer = ODataMaterializer.CreateMaterializerForMessage(responseMessage, responseInfo, materializerType, queryComponents, plan, payloadKind, materializerCache);
         }
 
         /// <summary>
@@ -103,8 +103,8 @@ namespace Microsoft.OData.Client
         /// <param name="entries">entries that needs to be materialized.</param>
         /// <param name="elementType">result type.</param>
         /// <param name="format">The format of the response being materialized from.</param>
-        /// <param name="annotationsCache">The annotations cache used to store and retrieve temporary metadata used for materialization of OData items.</param>
-        internal MaterializeAtom(ResponseInfo responseInfo, IEnumerable<ODataResource> entries, Type elementType, ODataFormat format, MaterializerAnnotationsCache annotationsCache)
+        /// <param name="materializerCache">Cache used to store temporary metadata used for materialization of OData items.</param>
+        internal MaterializeAtom(ResponseInfo responseInfo, IEnumerable<ODataResource> entries, Type elementType, ODataFormat format, MaterializerCache materializerCache)
         {
             this.responseInfo = responseInfo;
             this.elementType = elementType;
@@ -113,7 +113,7 @@ namespace Microsoft.OData.Client
             Type implementationType;
             Type materializerType = GetTypeForMaterializer(this.expectingPrimitiveValue, this.elementType, responseInfo.Model, out implementationType);
             QueryComponents qc = new QueryComponents(null, Util.ODataVersionEmpty, elementType, null, null);
-            ODataMaterializerContext materializerContext = new ODataMaterializerContext(responseInfo, annotationsCache);
+            ODataMaterializerContext materializerContext = new ODataMaterializerContext(responseInfo, materializerCache);
             EntityTrackingAdapter entityTrackingAdapter = new EntityTrackingAdapter(responseInfo.EntityTracker, responseInfo.MergeOption, responseInfo.Model, responseInfo.Context, materializerContext);
             this.materializer = new ODataEntriesEntityMaterializer(entries, materializerContext, entityTrackingAdapter, qc, materializerType, null, format);
         }

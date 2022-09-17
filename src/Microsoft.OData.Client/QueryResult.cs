@@ -708,7 +708,7 @@ namespace Microsoft.OData.Client
                 this.ContentType,
                 responseMessageWrapper,
                 payloadKind,
-                this.annotationsCache);
+                this.materializerCache);
         }
     }
 }

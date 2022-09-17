@@ -41,7 +41,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             this.clientEdmModel = new ClientEdmModel(ODataProtocolVersion.V4);
             this.clientEdmModel.GetOrCreateEdmType(typeof(TestCustomer));
             this.clientEdmModel.GetOrCreateEdmType(typeof(TestOrder));
-            this.materializerContext = new TestMaterializerContext(new MaterializerAnnotationsCache()) { Model = this.clientEdmModel };
+            this.materializerContext = new TestMaterializerContext(new MaterializerCache()) { Model = this.clientEdmModel };
             this.ordersProperty = this.clientEdmModel.GetClientTypeAnnotation(typeof(TestCustomer)).GetProperty("Orders", UndeclaredPropertyBehavior.ThrowException);
         }
 

@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="MaterializerAnnotationsCache.cs" company="Microsoft">
+// <copyright file="MaterializerCache.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -12,7 +12,6 @@ namespace Microsoft.OData.Client.Materialization
     /// <summary>
     /// A cache used to store temporary materialization metadata
     /// for deserialized <see cref="ODataItem"/>s during materialization of response payloads
-
     /// into client CLR objects. Keys are identified using reference equality.
     /// </summary>
     /// <remarks>
@@ -26,7 +25,7 @@ namespace Microsoft.OData.Client.Materialization
     /// If the requirements change such that we need to allow updating the value of a key to a different type,
     /// then the cache should be redesigned.
     /// </remarks>
-    internal sealed class MaterializerAnnotationsCache
+    internal sealed class MaterializerCache
     {
         private readonly Dictionary<ODataAnnotatable, object> cache = new Dictionary<ODataAnnotatable, object>(ReferenceEqualityComparer<ODataAnnotatable>.Instance);
 

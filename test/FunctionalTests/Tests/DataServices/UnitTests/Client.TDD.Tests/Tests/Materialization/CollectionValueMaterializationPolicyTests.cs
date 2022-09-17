@@ -130,7 +130,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
         [Fact]
         public void DataServicCollectionOfTAsCollectionTypeShouldFailForPrimitiveOrComplexCollections()
         {
-            var testContext = new TestMaterializerContext(new MaterializerAnnotationsCache());
+            var testContext = new TestMaterializerContext(new MaterializerCache());
             var edmType = testContext.Model.GetOrCreateEdmType(typeof(MyInfo));
             var clientTypeAnnotation = new ClientTypeAnnotation(edmType, typeof(MyInfo), "MyInfo", testContext.Model);
 
@@ -141,7 +141,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
         [Fact]
         public void CreateCollectionInstanceShouldFailOnTypeWithNoParametersLessConstructors()
         {
-            var testContext = new TestMaterializerContext(new MaterializerAnnotationsCache());
+            var testContext = new TestMaterializerContext(new MaterializerCache());
             var edmType = testContext.Model.GetOrCreateEdmType(typeof(ListWithNoEmptyConstructors));
             var clientTypeAnnotation = new ClientTypeAnnotation(edmType, typeof(ListWithNoEmptyConstructors), "Points", testContext.Model);
 
@@ -153,7 +153,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
         public void CreateCollectionPropertyInstanceShouldFailOnTypeWithNoParametersLessConstructors()
         {
             var odataProperty = new ODataProperty() { Name = "foo", Value = new ODataCollectionValue() { TypeName = "Points" } };
-            var testContext = new TestMaterializerContext(new MaterializerAnnotationsCache());
+            var testContext = new TestMaterializerContext(new MaterializerCache());
             testContext.ResolveTypeForMaterializationOverrideFunc = (Type type, string name) =>
             {
                 var edmType = testContext.Model.GetOrCreateEdmType(typeof(ListWithNoEmptyConstructors));
@@ -167,7 +167,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
         [Fact]
         public void NonMissingMethodExceptionOnCreateInstanceShouldNotBeCaught()
         {
-            var testContext = new TestMaterializerContext(new MaterializerAnnotationsCache());
+            var testContext = new TestMaterializerContext(new MaterializerCache());
             var edmType = testContext.Model.GetOrCreateEdmType(typeof(ListWithNoEmptyConstructors));
             var clientTypeAnnotation = new ClientTypeAnnotation(edmType, typeof(ErrorThrowingList), "Points", testContext.Model);
 
@@ -181,7 +181,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
 
         internal CollectionValueMaterializationPolicy CreateCollectionValueMaterializationPolicy()
         {
-            return CreateCollectionValueMaterializationPolicy(new TestMaterializerContext(new MaterializerAnnotationsCache()));
+            return CreateCollectionValueMaterializationPolicy(new TestMaterializerContext(new MaterializerCache()));
         }
 
         internal CollectionValueMaterializationPolicy CreateCollectionValueMaterializationPolicy(IODataMaterializerContext materializerContext)

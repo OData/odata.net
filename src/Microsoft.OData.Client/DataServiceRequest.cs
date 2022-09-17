@@ -60,7 +60,7 @@ namespace Microsoft.OData.Client
         /// <param name="contentType">contentType</param>
         /// <param name="message">the message</param>
         /// <param name="expectedPayloadKind">expected payload kind.</param>
-        /// <param name="annotationsCache">The annotations cache used to store temporary metadata used for materialization of OData items.</param>
+        /// <param name="materializerCache">Cache used to store temporary metadata used for materialization of OData items.</param>
         /// <returns>atom materializer</returns>
         internal static MaterializeAtom Materialize(
             ResponseInfo responseInfo,
@@ -69,7 +69,7 @@ namespace Microsoft.OData.Client
             string contentType,
             IODataResponseMessage message,
             ODataPayloadKind expectedPayloadKind,
-            MaterializerAnnotationsCache annotationsCache)
+            MaterializerCache materializerCache)
         {
             Debug.Assert(queryComponents != null, "querycomponents");
             Debug.Assert(message != null, "message");
@@ -80,7 +80,7 @@ namespace Microsoft.OData.Client
                 return MaterializeAtom.EmptyResults;
             }
 
-            return new MaterializeAtom(responseInfo, queryComponents, plan, message, expectedPayloadKind, annotationsCache);
+            return new MaterializeAtom(responseInfo, queryComponents, plan, message, expectedPayloadKind, materializerCache);
         }
 
         /// <summary>

@@ -18,7 +18,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="value">The annotation value.</param>
         public static void SetAnnotation<T>(this IODataMaterializerContext materializerContext, ODataAnnotatable annotatable, T value) where T : class
         {
-            materializerContext.AnnotationsCache.SetAnnotation(annotatable, value);
+            materializerContext.MaterializerCache.SetAnnotation(annotatable, value);
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <returns>The annotation value associated with the <paramref name="annotatable"/> if it exists, or null otherwise.</returns>
         public static T GetAnnotation<T>(this IODataMaterializerContext materializerContext, ODataAnnotatable annotatable) where T : class
         {
-            return materializerContext.AnnotationsCache.GetAnnotation<T>(annotatable);
+            return materializerContext.MaterializerCache.GetAnnotation<T>(annotatable);
         }
     }
 }

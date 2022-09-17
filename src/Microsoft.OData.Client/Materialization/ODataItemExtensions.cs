@@ -58,7 +58,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <returns>The materialized value</returns>
         private static object GetMaterializedValueCore(ODataAnnotatable annotatableObject, IODataMaterializerContext materializerContext)
         {
-            MaterializerPropertyValue value = materializerContext.AnnotationsCache.GetAnnotation<MaterializerPropertyValue>(annotatableObject);
+            MaterializerPropertyValue value = materializerContext.MaterializerCache.GetAnnotation<MaterializerPropertyValue>(annotatableObject);
             Debug.Assert(value != null, "MaterializedValue not set");
             return value.Value;
         }

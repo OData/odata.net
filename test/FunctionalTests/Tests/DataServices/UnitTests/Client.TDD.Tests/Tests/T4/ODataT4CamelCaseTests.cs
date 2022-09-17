@@ -322,7 +322,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             var clientEdmModel = new ClientEdmModel(ODataProtocolVersion.V4);
             var context = new DataServiceContext();
-            var materializerContext = new TestMaterializerContext(new MaterializerAnnotationsCache()) { Model = clientEdmModel, Context = context };
+            var materializerContext = new TestMaterializerContext(new MaterializerCache()) { Model = clientEdmModel, Context = context };
             var materializerEntry = MaterializerEntry.CreateEntry(odataEntry, OData.ODataFormat.Json, true, clientEdmModel, materializerContext);
 
             MaterializerNavigationLink.CreateLink(complexP, MaterializerEntry.CreateEntry(complexResource, OData.ODataFormat.Json, true, clientEdmModel, materializerContext), materializerContext);
@@ -382,7 +382,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                 }
             };
 
-            var materializerContext = new TestMaterializerContext(new MaterializerAnnotationsCache());
+            var materializerContext = new TestMaterializerContext(new MaterializerCache());
             var materializerEntry = MaterializerEntry.CreateEntry(complexValue, OData.ODataFormat.Json, false, new ClientEdmModel(ODataProtocolVersion.V4), materializerContext);
             this.CreateEntryMaterializationPolicy().Materialize(materializerEntry, typeof(ComplexType), false);
             var complex = materializerEntry.ResolvedObject as ComplexType;
@@ -398,7 +398,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         {
             OData.ODataEnumValue enumValue = new OData.ODataEnumValue("blue");
             OData.ODataProperty property = new OData.ODataProperty { Name = "enumProperty", Value = enumValue };
-            var materializerContext = new TestMaterializerContext(new MaterializerAnnotationsCache());
+            var materializerContext = new TestMaterializerContext(new MaterializerCache());
             var enumPolicy = new EnumValueMaterializationPolicy(materializerContext);
             var result = enumPolicy.MaterializeEnumTypeProperty(typeof(Color), property);
             property.GetMaterializedValue(materializerContext).Should().Be(Color.Blue);
@@ -473,7 +473,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         {
             var clientEdmModel = new ClientEdmModel(ODataProtocolVersion.V4);
             var context = new DataServiceContext().ReConfigureForNetworkLoadingTests();
-            materializerContext = materializerContext ?? new TestMaterializerContext(new MaterializerAnnotationsCache()) { Model = clientEdmModel, Context = context };
+            materializerContext = materializerContext ?? new TestMaterializerContext(new MaterializerCache()) { Model = clientEdmModel, Context = context };
             var adapter = new EntityTrackingAdapter(new TestEntityTracker(), MergeOption.OverwriteChanges, clientEdmModel, context, materializerContext);
             var lazyPrimitivePropertyConverter = new Microsoft.OData.Client.SimpleLazy<PrimitivePropertyConverter>(() => new PrimitivePropertyConverter());
             var primitiveValueMaterializerPolicy = new PrimitiveValueMaterializationPolicy(materializerContext, lazyPrimitivePropertyConverter);

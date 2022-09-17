@@ -59,7 +59,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                 new HeaderCollection(),
                 (int)statusCode,
                 () => new MemoryStream());
-            var annotationsCache = new MaterializerAnnotationsCache();
+            var materializerCache = new MaterializerCache();
             var materialize = DataServiceRequest.Materialize(
                 responseInfo,
                 queryComponents,
@@ -67,7 +67,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                 "application/json",
                 responseMessage,
                 payloadKind,
-                annotationsCache);
+                materializerCache);
             Assert.Null(materialize.Context);
             Assert.Null(materialize.Current);
             var enumerable = materialize.Cast<object>();

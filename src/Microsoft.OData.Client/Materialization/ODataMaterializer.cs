@@ -184,6 +184,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="queryComponents">The query components for the request.</param>
         /// <param name="plan">The projection plan.</param>
         /// <param name="payloadKind">expected payload kind.</param>
+        /// <param name="materializerCache">The materializer cache.</param>
         /// <returns>A materializer specialized for the given response.</returns>
         public static ODataMaterializer CreateMaterializerForMessage(
             IODataResponseMessage responseMessage,
@@ -192,7 +193,7 @@ namespace Microsoft.OData.Client.Materialization
             QueryComponents queryComponents,
             ProjectionPlan plan,
             ODataPayloadKind payloadKind,
-            MaterializerAnnotationsCache annotationsCache)
+            MaterializerCache materializerCache)
         {
             ODataMessageReader messageReader = CreateODataMessageReader(responseMessage, responseInfo, ref payloadKind);
 
@@ -201,7 +202,7 @@ namespace Microsoft.OData.Client.Materialization
 
             try
             {
-                ODataMaterializerContext materializerContext = new ODataMaterializerContext(responseInfo, annotationsCache);
+                ODataMaterializerContext materializerContext = new ODataMaterializerContext(responseInfo, materializerCache);
 
                 // Since in V1/V2, astoria client allowed Execute<object> and depended on the typeresolver or the wire type name
                 // to get the clr type to materialize. Hence if we see the materializer type as object, we should set the edmtype
