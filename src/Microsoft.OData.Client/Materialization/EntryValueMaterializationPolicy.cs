@@ -30,16 +30,16 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>
         /// Initializes a new instance of the <see cref="EntryValueMaterializationPolicy" /> class.
         /// </summary>
-        /// <param name="context">The context.</param>
+        /// <param name="materializerContext">The context.</param>
         /// <param name="entityTrackingAdapter">The entity tracking adapter.</param>
         /// <param name="lazyPrimitivePropertyConverter">The lazy primitive property converter.</param>
         /// <param name="nextLinkTable">The next link table.</param>
         internal EntryValueMaterializationPolicy(
-            IODataMaterializerContext context,
+            IODataMaterializerContext materializerContext,
             EntityTrackingAdapter entityTrackingAdapter,
             DSClient.SimpleLazy<PrimitivePropertyConverter> lazyPrimitivePropertyConverter,
             Dictionary<IEnumerable, DataServiceQueryContinuation> nextLinkTable)
-            : base(context, lazyPrimitivePropertyConverter)
+            : base(materializerContext, lazyPrimitivePropertyConverter)
         {
             this.nextLinkTable = nextLinkTable;
             this.EntityTrackingAdapter = entityTrackingAdapter;
