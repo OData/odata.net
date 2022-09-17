@@ -79,7 +79,7 @@ namespace Microsoft.OData.Client
             {
                 return MaterializeAtom.EmptyResults;
             }
-            
+
             return new MaterializeAtom(responseInfo, queryComponents, plan, message, expectedPayloadKind, annotationsCache);
         }
 
