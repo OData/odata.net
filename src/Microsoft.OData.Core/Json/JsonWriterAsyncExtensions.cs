@@ -166,39 +166,46 @@ namespace Microsoft.OData.Json
                 return jsonWriter.WritePrimitiveValueAsync(objectValue);
             }
 
+            // The types of OData values handled by this method are mutually exclusive
+            // We're using local functions to circumvent the async state machine overhead
+
             if (odataValue is ODataResourceValue resourceValue)
             {
-                return WriteODataResourceValueAsync(resourceValue);
+                return WriteODataResourceValueAsync(jsonWriter, resourceValue);
 
-                async Task WriteODataResourceValueAsync(ODataResourceValue innerResourceValue)
+                async Task WriteODataResourceValueAsync(
+                    IJsonWriterAsync innerJsonWriter,
+                    ODataResourceValue innerResourceValue)
                 {
-                    await jsonWriter.StartObjectScopeAsync().ConfigureAwait(false);
+                    await innerJsonWriter.StartObjectScopeAsync().ConfigureAwait(false);
 
                     foreach (ODataProperty property in innerResourceValue.Properties)
                     {
-                        await jsonWriter.WriteNameAsync(property.Name).ConfigureAwait(false);
-                        await jsonWriter.WriteODataValueAsync(property.ODataValue).ConfigureAwait(false);
+                        await innerJsonWriter.WriteNameAsync(property.Name).ConfigureAwait(false);
+                        await innerJsonWriter.WriteODataValueAsync(property.ODataValue).ConfigureAwait(false);
                     }
 
-                    await jsonWriter.EndObjectScopeAsync().ConfigureAwait(false);
+                    await innerJsonWriter.EndObjectScopeAsync().ConfigureAwait(false);
                 }
             }
 
             if (odataValue is ODataCollectionValue collectionValue)
             {
-                return WriteODataCollectionValueAsync(collectionValue);
+                return WriteODataCollectionValueAsync(jsonWriter, collectionValue);
 
-                async Task WriteODataCollectionValueAsync(ODataCollectionValue innerCollectionValue)
+                async Task WriteODataCollectionValueAsync(
+                    IJsonWriterAsync innerJsonWriter,
+                    ODataCollectionValue innerCollectionValue)
                 {
-                    await jsonWriter.StartArrayScopeAsync().ConfigureAwait(false);
+                    await innerJsonWriter.StartArrayScopeAsync().ConfigureAwait(false);
 
-                    foreach (object item in collectionValue.Items)
+                    foreach (object item in innerCollectionValue.Items)
                     {
                         // Will not be able to accurately serialize complex objects unless they are ODataValues.
                         ODataValue collectionItem = item as ODataValue;
                         if (item != null)
                         {
-                            await jsonWriter.WriteODataValueAsync(collectionItem).ConfigureAwait(false);
+                            await innerJsonWriter.WriteODataValueAsync(collectionItem).ConfigureAwait(false);
                         }
                         else
                         {
@@ -206,7 +213,7 @@ namespace Microsoft.OData.Json
                         }
                     }
 
-                    await jsonWriter.EndArrayScopeAsync().ConfigureAwait(false);
+                    await innerJsonWriter.EndArrayScopeAsync().ConfigureAwait(false);
                 }
             }
 

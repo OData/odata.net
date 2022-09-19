@@ -306,7 +306,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Asynchronously writes the data wrapper around a JSON payload.
         /// </summary>
-        /// <param name="payloadWriterAction">The action that writes the actual JSON payload that is being wrapped.</param>
+        /// <param name="payloadWriterFunc">The delegate that writes the actual JSON payload that is being wrapped.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
         internal async Task WriteTopLevelPayloadAsync(Func<Task> payloadWriterFunc)
         {
@@ -329,16 +329,18 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(error != null, "error != null");
 
-            return this.WriteTopLevelPayloadAsync(
-                () =>
-                {
-                    return ODataJsonWriterUtils.WriteErrorAsync(
-                        this.AsynchronousJsonWriter,
-                        this.InstanceAnnotationWriter.WriteInstanceAnnotationsForErrorAsync,
-                        error,
-                        includeDebugInformation,
-                        this.MessageWriterSettings.MessageQuotas.MaxNestingDepth);
-                });
+            return this.WriteTopLevelPayloadAsync((
+                thisParam,
+                errorParam,
+                includeDebugInformationParam) => ODataJsonWriterUtils.WriteErrorAsync(
+                    thisParam.AsynchronousJsonWriter,
+                    thisParam.InstanceAnnotationWriter.WriteInstanceAnnotationsForErrorAsync,
+                    errorParam,
+                    includeDebugInformationParam,
+                    thisParam.MessageWriterSettings.MessageQuotas.MaxNestingDepth),
+                this,
+                error,
+                includeDebugInformation);
         }
 
         /// <summary>
@@ -555,6 +557,75 @@ namespace Microsoft.OData.JsonLight
                 parentContextUrlInfo,
                 contextUrlInfo,
                 propertyName).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Asynchronously writes the data wrapper around a JSON payload.
+        /// </summary>
+        /// <typeparam name="TArg">The <paramref name="payloadWriterFunc"/> delegate argument type.</typeparam>
+        /// <param name="payloadWriterAction">The delegate that writes the actual JSON payload that is being wrapped.</param>
+        /// <param name="arg">The argument value provided to the <paramref name="payloadWriterFunc"/> delegate.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected async Task WriteTopLevelPayloadAsync<TArg>(
+            Func<TArg, Task> payloadWriterFunc,
+            TArg arg)
+        {
+            Debug.Assert(payloadWriterFunc != null, "payloadWriterAction != null");
+
+            await this.WritePayloadStartAsync().ConfigureAwait(false);
+
+            await payloadWriterFunc(arg).ConfigureAwait(false);
+
+            await this.WritePayloadEndAsync().ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Asynchronously writes the data wrapper around a JSON payload.
+        /// </summary>
+        /// <typeparam name="TArg1">The <paramref name="payloadWriterFunc"/> delegate first argument type.</typeparam>
+        /// <typeparam name="TArg2">The <paramref name="payloadWriterFunc"/> delegate second argument type.</typeparam>
+        /// <param name="payloadWriterAction">The delegate that writes the actual JSON payload that is being wrapped.</param>
+        /// <param name="arg1">The first argument value provided to the <paramref name="payloadWriterFunc"/> delegate.</param>
+        /// <param name="arg2">The second argument value provided to the <paramref name="payloadWriterFunc"/> delegate.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected async Task WriteTopLevelPayloadAsync<TArg1, TArg2>(
+            Func<TArg1, TArg2, Task> payloadWriterFunc,
+            TArg1 arg1,
+            TArg2 arg2)
+        {
+            Debug.Assert(payloadWriterFunc != null, "payloadWriterAction != null");
+
+            await this.WritePayloadStartAsync().ConfigureAwait(false);
+
+            await payloadWriterFunc(arg1, arg2).ConfigureAwait(false);
+
+            await this.WritePayloadEndAsync().ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Asynchronously writes the data wrapper around a JSON payload.
+        /// </summary>
+        /// <typeparam name="TArg1">The <paramref name="payloadWriterFunc"/> delegate first argument type.</typeparam>
+        /// <typeparam name="TArg2">The <paramref name="payloadWriterFunc"/> delegate second argument type.</typeparam>
+        /// <typeparam name="TArg3">The <paramref name="payloadWriterFunc"/> delegate third argument type.</typeparam>
+        /// <param name="payloadWriterAction">The delegate that writes the actual JSON payload that is being wrapped.</param>
+        /// <param name="arg1">The first argument value provided to the <paramref name="payloadWriterFunc"/> delegate.</param>
+        /// <param name="arg2">The second argument value provided to the <paramref name="payloadWriterFunc"/> delegate.</param>
+        /// <param name="arg3">The third argument value provided to the <paramref name="payloadWriterFunc"/> delegate.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        protected async Task WriteTopLevelPayloadAsync<TArg1, TArg2, TArg3>(
+            Func<TArg1, TArg2, TArg3, Task> payloadWriterFunc,
+            TArg1 arg1,
+            TArg2 arg2,
+            TArg3 arg3)
+        {
+            Debug.Assert(payloadWriterFunc != null, "payloadWriterAction != null");
+
+            await this.WritePayloadStartAsync().ConfigureAwait(false);
+
+            await payloadWriterFunc(arg1, arg2, arg3).ConfigureAwait(false);
+
+            await this.WritePayloadEndAsync().ConfigureAwait(false);
         }
 
         /// <summary>

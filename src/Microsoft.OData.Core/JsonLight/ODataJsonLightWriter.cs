@@ -1805,7 +1805,7 @@ namespace Microsoft.OData.JsonLight
                         this.CurrentDeltaResourceSetScope.InstanceAnnotationWriteTracker).ConfigureAwait(false);
 
                     // Write the next link if it's available.
-                    await this.WriteResourceSetNextLinkAsync(innerDeltaResourceSet.NextPageLink, /*propertynamne*/ null)
+                    await this.WriteResourceSetNextLinkAsync(innerDeltaResourceSet.NextPageLink, propertyName: null)
                         .ConfigureAwait(false);
 
                     // Write the delta link if it's available.
