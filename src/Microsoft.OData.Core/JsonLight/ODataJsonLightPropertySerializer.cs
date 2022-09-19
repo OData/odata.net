@@ -272,7 +272,7 @@ namespace Microsoft.OData.JsonLight
 
                     if (!(thisParam.JsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel))
                     {
-                        ODataContextUrlInfo contextUrlInfo = thisParam.GetContextUrlInfo(property);
+                        ODataContextUrlInfo contextUrlInfo = thisParam.GetContextUrlInfo(propertyParam);
                         await thisParam.WriteContextUriPropertyAsync(
                             kind,
                             (contextUrlInfoParam) => contextUrlInfoParam, contextUrlInfo).ConfigureAwait(false);
