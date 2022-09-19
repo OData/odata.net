@@ -19,9 +19,11 @@ namespace Microsoft.OData.Client.Materialization
         /// Initializes a materializer context
         /// </summary>
         /// <param name="responseInfo">Response information used to initialize with the materializer</param>
-        internal ODataMaterializerContext(ResponseInfo responseInfo)
+        /// <param name="materializerCache">The materializer cache.</param>
+        internal ODataMaterializerContext(ResponseInfo responseInfo, MaterializerCache materializerCache)
         {
             this.ResponseInfo = responseInfo;
+            this.MaterializerCache = materializerCache;
         }
 
         /// <summary>
@@ -84,5 +86,8 @@ namespace Microsoft.OData.Client.Materialization
         {
             return this.ResponseInfo.TypeResolver.ResolveExpectedTypeForReading(expectedType);
         }
+
+        /// <inheritdoc/>
+        public MaterializerCache MaterializerCache { get; private set; }
     }
 }

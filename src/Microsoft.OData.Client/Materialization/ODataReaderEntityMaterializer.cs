@@ -44,7 +44,7 @@ namespace Microsoft.OData.Client.Materialization
             : base(materializerContext, entityTrackingAdapter, queryComponents, expectedType, materializeEntryPlan)
         {
             this.messageReader = odataMessageReader;
-            this.feedEntryAdapter = new FeedAndEntryMaterializerAdapter(odataMessageReader, reader, materializerContext.Model, entityTrackingAdapter.MergeOption);
+            this.feedEntryAdapter = new FeedAndEntryMaterializerAdapter(odataMessageReader, reader, materializerContext.Model, entityTrackingAdapter.MergeOption, materializerContext);
         }
 
         /// <summary>
@@ -115,8 +115,9 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="message">the message for the payload</param>
         /// <param name="responseInfo">The current ResponseInfo object</param>
         /// <param name="expectedType">The expected type</param>
+        /// <param name="materializerContext">The materializer context.</param>
         /// <returns>the MaterializerEntry that was read</returns>
-        internal static MaterializerEntry ParseSingleEntityPayload(IODataResponseMessage message, ResponseInfo responseInfo, Type expectedType)
+        internal static MaterializerEntry ParseSingleEntityPayload(IODataResponseMessage message, ResponseInfo responseInfo, Type expectedType, IODataMaterializerContext materializerContext)
         {
             ODataPayloadKind messageType = ODataPayloadKind.Resource;
             using (ODataMessageReader messageReader = CreateODataMessageReader(message, responseInfo, ref messageType))
@@ -124,7 +125,7 @@ namespace Microsoft.OData.Client.Materialization
                 IEdmType edmType = responseInfo.TypeResolver.ResolveExpectedTypeForReading(expectedType);
                 ODataReaderWrapper reader = ODataReaderWrapper.Create(messageReader, messageType, edmType, responseInfo.ResponsePipeline);
 
-                FeedAndEntryMaterializerAdapter parser = new FeedAndEntryMaterializerAdapter(messageReader, reader, responseInfo.Model, responseInfo.MergeOption);
+                FeedAndEntryMaterializerAdapter parser = new FeedAndEntryMaterializerAdapter(messageReader, reader, responseInfo.Model, responseInfo.MergeOption, materializerContext);
 
                 ODataResource entry = null;
                 bool readFeed = false;
@@ -154,7 +155,7 @@ namespace Microsoft.OData.Client.Materialization
                     }
                 }
 
-                return MaterializerEntry.GetEntry(entry);
+                return MaterializerEntry.GetEntry(entry, materializerContext);
             }
         }
 

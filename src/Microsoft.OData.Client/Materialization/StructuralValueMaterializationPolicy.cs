@@ -114,7 +114,7 @@ namespace Microsoft.OData.Client.Materialization
             Debug.Assert(type != null, "type != null");
             Debug.Assert(property != null, "atomProperty != null");
 
-            if (!property.HasMaterializedValue())
+            if (!property.HasMaterializedValue(this.MaterializerContext))
             {
                 object value = property.Value;
                 ODataUntypedValue untypedVal = value as ODataUntypedValue;
@@ -125,7 +125,7 @@ namespace Microsoft.OData.Client.Materialization
                 }
 
                 object materializedValue = this.PrimitivePropertyConverter.ConvertPrimitiveValue(value, type);
-                property.SetMaterializedValue(materializedValue);
+                property.SetMaterializedValue(materializedValue, this.MaterializerContext);
             }
         }
 
@@ -218,7 +218,7 @@ namespace Microsoft.OData.Client.Materialization
             else
             {
                 this.MaterializePrimitiveDataValue(prop.NullablePropertyType, property);
-                prop.SetValue(instance, property.GetMaterializedValue(), property.Name, true /* allowAdd? */);
+                prop.SetValue(instance, property.GetMaterializedValue(this.MaterializerContext), property.Name, true /* allowAdd? */);
             }
 
             if (!this.MaterializerContext.Context.DisableInstanceAnnotationMaterialization)

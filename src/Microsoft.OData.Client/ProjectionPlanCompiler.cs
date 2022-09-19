@@ -51,6 +51,11 @@ namespace Microsoft.OData.Client
         /// <summary>Whether the top level projection has been found.</summary>
         private bool topLevelProjectionFound;
 
+        /// <summary>
+        /// The materializer context.
+        /// </summary>
+        private readonly IODataMaterializerContext materializerContext;
+
         #endregion Private fields
 
         #region Constructors
@@ -59,12 +64,14 @@ namespace Microsoft.OData.Client
         /// Initializes a new <see cref="ProjectionPlanCompiler"/> instance.
         /// </summary>
         /// <param name="normalizerRewrites">Rewrites introduces by normalizer.</param>
-        private ProjectionPlanCompiler(Dictionary<Expression, Expression> normalizerRewrites)
+        /// <param name="materializerContext">The materializer context.</param>
+        private ProjectionPlanCompiler(Dictionary<Expression, Expression> normalizerRewrites, IODataMaterializerContext materializerContext)
         {
             this.annotations = new Dictionary<Expression, ExpressionAnnotation>(ReferenceEqualityComparer<Expression>.Instance);
             this.materializerExpression = Expression.Parameter(typeof(object), "mat");
             this.normalizerRewrites = normalizerRewrites;
             this.pathBuilder = new ProjectionPathBuilder();
+            this.materializerContext = materializerContext;
         }
 
         #endregion Constructors
@@ -75,7 +82,7 @@ namespace Microsoft.OData.Client
         /// <param name="projection">Projection expression.</param>
         /// <param name="normalizerRewrites">Tracks rewrite-to-source rewrites introduced by expression normalizer.</param>
         /// <returns>A new <see cref="ProjectionPlan"/> instance.</returns>
-        internal static ProjectionPlan CompilePlan(LambdaExpression projection, Dictionary<Expression, Expression> normalizerRewrites)
+        internal static ProjectionPlan CompilePlan(LambdaExpression projection, Dictionary<Expression, Expression> normalizerRewrites, IODataMaterializerContext materializerContext)
         {
             Debug.Assert(projection != null, "projection != null");
             Debug.Assert(projection.Parameters.Count == 1, "projection.Parameters.Count == 1");
@@ -88,7 +95,7 @@ namespace Microsoft.OData.Client
                 projection.Body.NodeType == ExpressionType.New,
                 "projection.Body.NodeType == Constant, MemberInit, MemberAccess, Convert(Checked) New");
 
-            ProjectionPlanCompiler rewriter = new ProjectionPlanCompiler(normalizerRewrites);
+            ProjectionPlanCompiler rewriter = new ProjectionPlanCompiler(normalizerRewrites, materializerContext);
 #if TRACE_CLIENT_PROJECTIONS
             Trace.WriteLine("Projection: " + projection);
 #endif
@@ -666,7 +673,8 @@ namespace Microsoft.OData.Client
                     Expression nestedEntry = CallMaterializer(
                         "ProjectionGetEntry",
                         entryParameterAtMemberInit,
-                        Expression.Constant(assignment.Member.Name, typeof(string)));
+                        Expression.Constant(assignment.Member.Name, typeof(string)),
+                        Expression.Constant(this.materializerContext));
                     ParameterExpression nestedEntryParameter = Expression.Parameter(
                         typeof(object),
                         "subentry" + (this.identifierId++).ToString(CultureInfo.InvariantCulture));
