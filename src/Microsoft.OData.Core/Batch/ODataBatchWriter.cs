@@ -592,7 +592,9 @@ namespace Microsoft.OData
         /// <returns>A task that represents the asynchronous write operation.</returns>
         protected virtual Task WriteStartBatchImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(this.WriteStartBatchImplementation);
+            return TaskUtils.GetTaskForSynchronousOperation(
+                (thisParam) => thisParam.WriteStartBatchImplementation(),
+                this);
         }
 
         /// <summary>
@@ -601,7 +603,9 @@ namespace Microsoft.OData
         /// <returns>A task that represents the asynchronous write operation.</returns>
         protected virtual Task WriteEndBatchImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(this.WriteEndBatchImplementation);
+            return TaskUtils.GetTaskForSynchronousOperation(
+                (thisParam) => thisParam.WriteEndBatchImplementation(),
+                this);
         }
 
         /// <summary>
@@ -612,7 +616,9 @@ namespace Microsoft.OData
         protected virtual Task WriteStartChangesetImplementationAsync(string groupOrChangesetId)
         {
             return TaskUtils.GetTaskForSynchronousOperation(
-                () => this.WriteStartChangesetImplementation(groupOrChangesetId));
+                (thisParam, groupOrChangesetIdParam) => thisParam.WriteStartChangesetImplementation(groupOrChangesetIdParam),
+                this,
+                groupOrChangesetId);
         }
 
         /// <summary>
@@ -621,7 +627,9 @@ namespace Microsoft.OData
         /// <returns>A task that represents the asynchronous write operation.</returns>
         protected virtual Task WriteEndChangesetImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(this.WriteEndChangesetImplementation);
+            return TaskUtils.GetTaskForSynchronousOperation(
+                (thisParam) => thisParam.WriteEndChangesetImplementation(),
+                this);
         }
 
         /// <summary>

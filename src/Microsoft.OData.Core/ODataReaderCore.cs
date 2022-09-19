@@ -459,7 +459,9 @@ namespace Microsoft.OData
         /// <returns>A task for method called when a stream is requested.</returns>
         Task IODataStreamListener.StreamRequestedAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => ((IODataStreamListener)this).StreamRequested());
+            return TaskUtils.GetTaskForSynchronousOperation(
+                (thisParam) => ((IODataStreamListener)thisParam).StreamRequested(),
+                this);
         }
 
         /// <summary>
@@ -480,7 +482,9 @@ namespace Microsoft.OData
         /// <returns>A task that represents the asynchronous operation.</returns>
         Task IODataStreamListener.StreamDisposedAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => ((IODataStreamListener)this).StreamDisposed());
+            return TaskUtils.GetTaskForSynchronousOperation(
+                (thisParam) => ((IODataStreamListener)thisParam).StreamDisposed(),
+                this);
         }
 
         /// <summary>

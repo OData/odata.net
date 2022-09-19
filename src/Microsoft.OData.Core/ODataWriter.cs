@@ -51,7 +51,10 @@ namespace Microsoft.OData
         /// <param name="resourceSet">The resource set or collection to write.</param>
         public virtual Task WriteStartAsync(ODataResourceSet resourceSet)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStart(resourceSet));
+            return TaskUtils.GetTaskForSynchronousOperation(
+                (thisParam, resourceSetParam) => thisParam.WriteStart(resourceSetParam),
+                this,
+                resourceSet);
         }
 
         /// <summary>Starts the writing of a delta resource set.</summary>
@@ -89,7 +92,10 @@ namespace Microsoft.OData
         /// <param name="deltaResourceSet">The resource set or collection to write.</param>
         public virtual Task WriteStartAsync(ODataDeltaResourceSet deltaResourceSet)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStart(deltaResourceSet));
+            return TaskUtils.GetTaskForSynchronousOperation(
+                (thisParam, deltaResourceSetParam) => thisParam.WriteStart(deltaResourceSetParam),
+                this,
+                deltaResourceSet);
         }
 
         /// <summary>Starts the writing of a resource.</summary>
@@ -164,7 +170,10 @@ namespace Microsoft.OData
         /// <param name="resource">The resource or item to write.</param>
         public virtual Task WriteStartAsync(ODataResource resource)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStart(resource));
+            return TaskUtils.GetTaskForSynchronousOperation(
+                (thisParam, resourceParam) => thisParam.WriteStart(resourceParam),
+                this,
+                resource);
         }
 
 
@@ -183,7 +192,10 @@ namespace Microsoft.OData
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public virtual Task WriteStartAsync(ODataDeletedResource deletedResource)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStart(deletedResource));
+            return TaskUtils.GetTaskForSynchronousOperation(
+                (thisParam, deletedResourceParam) => thisParam.WriteStart(deletedResourceParam),
+                this,
+                deletedResource);
         }
 
 
@@ -204,7 +216,10 @@ namespace Microsoft.OData
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public virtual Task WriteDeltaLinkAsync(ODataDeltaLink deltaLink)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteDeltaLink(deltaLink));
+            return TaskUtils.GetTaskForSynchronousOperation(
+                (thisParam, deltaLinkParam) => thisParam.WriteDeltaLink(deltaLinkParam),
+                this,
+                deltaLink);
         }
 
 
@@ -225,7 +240,10 @@ namespace Microsoft.OData
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public virtual Task WriteDeltaDeletedLinkAsync(ODataDeltaDeletedLink deltaDeletedLink)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteDeltaDeletedLink(deltaDeletedLink));
+            return TaskUtils.GetTaskForSynchronousOperation(
+                (thisParam, deltaDeletedLinkParam) => thisParam.WriteDeltaDeletedLink(deltaDeletedLinkParam),
+                this,
+                deltaDeletedLink);
         }
 
 
@@ -261,7 +279,10 @@ namespace Microsoft.OData
         /// <param name="nestedResourceInfo">The nested resource info to writer.</param>
         public virtual Task WriteStartAsync(ODataNestedResourceInfo nestedResourceInfo)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStart(nestedResourceInfo));
+            return TaskUtils.GetTaskForSynchronousOperation(
+                (thisParam, nestedResourceInfoParam) => thisParam.WriteStart(nestedResourceInfoParam),
+                this,
+                nestedResourceInfo);
         }
 
         /// <summary>Writes a primitive value within an untyped collection.</summary>
@@ -286,7 +307,10 @@ namespace Microsoft.OData
         /// <param name="primitiveValue">The primitive value to write.</param>
         public virtual Task WritePrimitiveAsync(ODataPrimitiveValue primitiveValue)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.WritePrimitive(primitiveValue));
+            return TaskUtils.GetTaskForSynchronousOperation(
+                (thisParam, primitiveValueParam) => thisParam.WritePrimitive(primitiveValueParam),
+                this,
+                primitiveValue);
         }
 
         /// <summary>Writes a primitive property within a resource.</summary>
@@ -326,7 +350,10 @@ namespace Microsoft.OData
         /// <param name="primitiveProperty">The primitive property to write.</param>
         public virtual Task WriteStartAsync(ODataPropertyInfo primitiveProperty)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStart(primitiveProperty));
+            return TaskUtils.GetTaskForSynchronousOperation(
+                (thisParam, primitivePropertyParam) => thisParam.WriteStart(primitivePropertyParam),
+                this,
+                primitiveProperty);
         }
 
         /// <summary>Creates a stream for writing a binary value.</summary>
@@ -353,7 +380,9 @@ namespace Microsoft.OData
         /// <returns>A stream to write a binary value to.</returns>
         public virtual Task<Stream> CreateBinaryWriteStreamAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateBinaryWriteStream());
+            return TaskUtils.GetTaskForSynchronousOperation(
+                (thisParam) => thisParam.CreateBinaryWriteStream(),
+                this);
         }
 
         /// <summary>Creates a TextWriter for writing a string value.</summary>
@@ -368,7 +397,9 @@ namespace Microsoft.OData
         /// <returns>A TextWriter to write a string value.</returns>
         public virtual Task<TextWriter> CreateTextWriterAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateTextWriter());
+            return TaskUtils.GetTaskForSynchronousOperation(
+                (thisParam) => thisParam.CreateTextWriter(),
+                this);
         }
 
         /// <summary>Finishes the writing of a resource set, a resource, or a nested resource info.</summary>
@@ -379,7 +410,9 @@ namespace Microsoft.OData
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public virtual Task WriteEndAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteEnd());
+            return TaskUtils.GetTaskForSynchronousOperation(
+                (thisParam) => thisParam.WriteEnd(),
+                this);
         }
 
         /// <summary> Writes an entity reference link, which is used to represent binding to an existing resource in a request payload. </summary>
@@ -404,7 +437,10 @@ namespace Microsoft.OData
         /// </remarks>
         public virtual Task WriteEntityReferenceLinkAsync(ODataEntityReferenceLink entityReferenceLink)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteEntityReferenceLink(entityReferenceLink));
+            return TaskUtils.GetTaskForSynchronousOperation(
+                (thisParam, entityReferenceLinkParam) => thisParam.WriteEntityReferenceLink(entityReferenceLinkParam),
+                this,
+                entityReferenceLink);
         }
 
         /// <summary>Flushes the write buffer to the underlying stream.</summary>
@@ -415,7 +451,9 @@ namespace Microsoft.OData
         /// <returns>A task instance that represents the asynchronous operation.</returns>
         public virtual Task FlushAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.Flush());
+            return TaskUtils.GetTaskForSynchronousOperation(
+                (thisParam) => thisParam.Flush(),
+                this);
         }
     }
 }
