@@ -54,7 +54,8 @@ namespace Microsoft.OData.Client.Materialization
         IEdmType ResolveExpectedTypeForReading(Type clientClrType);
 
         /// <summary>
-        /// Used to store temporary metadata used to converter deserialized
+        /// Used to store temporary metadata used to convert deserialized
+
         /// OData items into CLR objects.
         /// </summary>
         MaterializerCache MaterializerCache { get; }
