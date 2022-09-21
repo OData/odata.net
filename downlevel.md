@@ -6,7 +6,7 @@ This file will be included in the appropriate `.csproj`. It can be excluded from
 
 ```
 <ItemGroup>
-  <Compile Condition="'$(TargetFramework)' != '{framework_version_that_has_feature}' and ..." Remove="Class1.cs" />
+  <Compile Condition="'$(TargetFramework)' != '{framework_version_that_has_feature}' and ..." Include="Class1.cs" />
 </ItemGroup>
 ```
 
