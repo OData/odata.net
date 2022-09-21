@@ -22,7 +22,7 @@ Another follow-up work item is that we should remove the conditional compilation
 2. A .NET feature can depend upon other, new .NET features. If a feature is contained within a single file that is less than 500KB, we should always take that file. If the feature requires bringing in more than one file or is extremely large, it will be up to the contributor and reviewers of the ODL code change to make the judgment call on how to proceed. 
 3. Preprocessor directives can cause issues when bringing in a source file. If a source file contains these directives, then that means that a framework version is compiled for a specific SKU. If ODL does not ship a package that targets *all* of those SKUs, then the source file cannot be taken. Note that, currently, .NET makes minimal use of preprocessor directives in the C# libraries, and generally these are contained to files that refer to external libraries which we generally would not be interested in consuming anyway. 
 4. The Microsoft [open source guidelines](https://docs.opensource.microsoft.com/) should be followed *in addition* to this document, specifically the "Policies & guidance" section
-5. We should ensure that there are passing test cases with adequate code coverage for the file that we take. This approach applies to any dependency that we choose to take, but is mentioned here for completeness. 
+5. We should ensure that there are passing test cases with adequate code coverage for the file that we take; the tests themselves do not need to be brought into the ODL repo. This approach applies to any dependency that we choose to take, but is mentioned here for completeness. 
 
 ### Future
 
