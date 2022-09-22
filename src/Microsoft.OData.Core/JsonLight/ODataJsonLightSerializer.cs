@@ -393,11 +393,11 @@ namespace Microsoft.OData.JsonLight
         /// Asynchronously writes the context URI property and the specified value into the payload.
         /// </summary>
         /// <typeparam name="TArg">The <paramref name="contextUrlInfoGen"/> delegate argument type.</typeparam>
-        /// <param name="payloadKind">The ODataPayloadKind for the context URI.</param>
-        /// <param name="contextUrlInfoGen">Function to generate contextUrlInfo.</param>
+        /// <param name="payloadKind">The <see cref="ODataPayloadKind"/> for the context URI.</param>
+        /// <param name="contextUrlInfoGen">The delegate to generate <see cref="ODataContextUrlInfo"/>.</param>
         /// <param name="arg">The argument value provided to the <paramref name="contextUrlInfoGen"/> delegate.</param>
-        /// <param name="parentContextUrlInfo">The parent contextUrlInfo.</param>
-        /// <param name="propertyName">Property name to write contextUri on.</param>
+        /// <param name="parentContextUrlInfo">The parent <see cref="ODataContextUrlInfo"/> instance.</param>
+        /// <param name="propertyName">Name for the context URI property.</param>
         /// <returns>A task that represents the asynchronous read operation. 
         /// The value of the TResult parameter contains the <see cref="ODataContextUrlInfo"/> instance 
         /// if the context URI was successfully written.</returns>
@@ -432,12 +432,12 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <typeparam name="TArg1">The <paramref name="contextUrlInfoGen"/> delegate first argument type.</typeparam>
         /// <typeparam name="TArg2">The <paramref name="contextUrlInfoGen"/> delegate second argument type.</typeparam>
-        /// <param name="payloadKind">The ODataPayloadKind for the context URI.</param>
-        /// <param name="contextUrlInfoGen">Function to generate contextUrlInfo.</param>
+        /// <param name="payloadKind">The <see cref="ODataPayloadKind"/> for the context URI.</param>
+        /// <param name="contextUrlInfoGen">The delegate to generate <see cref="ODataContextUrlInfo"/>.</param>
         /// <param name="arg1">The first argument value provided to the <paramref name="contextUrlInfoGen"/> delegate.</param>
         /// <param name="arg2">The second argument value provided to the <paramref name="contextUrlInfoGen"/> delegate.</param>
-        /// <param name="parentContextUrlInfo">The parent contextUrlInfo.</param>
-        /// <param name="propertyName">Property name to write contextUri on.</param>
+        /// <param name="parentContextUrlInfo">The parent <see cref="ODataContextUrlInfo"/> instance.</param>
+        /// <param name="propertyName">Name for the context URI property.</param>
         /// <returns>A task that represents the asynchronous read operation. 
         /// The value of the TResult parameter contains the <see cref="ODataContextUrlInfo"/> instance 
         /// if the context URI was successfully written.</returns>
@@ -474,13 +474,13 @@ namespace Microsoft.OData.JsonLight
         /// <typeparam name="TArg1">The <paramref name="contextUrlInfoGen"/> delegate first argument type.</typeparam>
         /// <typeparam name="TArg2">The <paramref name="contextUrlInfoGen"/> delegate second argument type.</typeparam>
         /// <typeparam name="TArg3">The <paramref name="contextUrlInfoGen"/> delegate third argument type.</typeparam>
-        /// <param name="payloadKind">The ODataPayloadKind for the context URI.</param>
-        /// <param name="contextUrlInfoGen">Function to generate contextUrlInfo.</param>
+        /// <param name="payloadKind">The <see cref="ODataPayloadKind"/> for the context URI.</param>
+        /// <param name="contextUrlInfoGen">The delegate to generate <see cref="ODataContextUrlInfo"/>.</param>
         /// <param name="arg1">The first argument value provided to the <paramref name="contextUrlInfoGen"/> delegate.</param>
         /// <param name="arg2">The second argument value provided to the <paramref name="contextUrlInfoGen"/> delegate.</param>
         /// <param name="arg3">The third argument value provided to the <paramref name="contextUrlInfoGen"/> delegate.</param>
-        /// <param name="parentContextUrlInfo">The parent contextUrlInfo.</param>
-        /// <param name="propertyName">Property name to write contextUri on.</param>
+        /// <param name="parentContextUrlInfo">The parent <see cref="ODataContextUrlInfo"/> instance.</param>
+        /// <param name="propertyName">Name for the context URI property.</param>
         /// <returns>A task that represents the asynchronous read operation. 
         /// The value of the TResult parameter contains the <see cref="ODataContextUrlInfo"/> instance 
         /// if the context URI was successfully written.</returns>
@@ -519,14 +519,14 @@ namespace Microsoft.OData.JsonLight
         /// <typeparam name="TArg2">The <paramref name="contextUrlInfoGen"/> delegate second argument type.</typeparam>
         /// <typeparam name="TArg3">The <paramref name="contextUrlInfoGen"/> delegate third argument type.</typeparam>
         /// <typeparam name="TArg4">The <paramref name="contextUrlInfoGen"/> delegate fourth argument type.</typeparam>
-        /// <param name="payloadKind">The ODataPayloadKind for the context URI.</param>
-        /// <param name="contextUrlInfoGen">Function to generate contextUrlInfo.</param>
+        /// <param name="payloadKind">The <see cref="ODataPayloadKind"/> for the context URI.</param>
+        /// <param name="contextUrlInfoGen">The delegate to generate <see cref="ODataContextUrlInfo"/>.</param>
         /// <param name="arg1">The first argument value provided to the <paramref name="contextUrlInfoGen"/> delegate.</param>
         /// <param name="arg2">The second argument value provided to the <paramref name="contextUrlInfoGen"/> delegate.</param>
         /// <param name="arg3">The third argument value provided to the <paramref name="contextUrlInfoGen"/> delegate.</param>
         /// <param name="arg4">The fourth argument value provided to the <paramref name="contextUrlInfoGen"/> delegate.</param>
-        /// <param name="parentContextUrlInfo">The parent contextUrlInfo.</param>
-        /// <param name="propertyName">Property name to write contextUri on.</param>
+        /// <param name="parentContextUrlInfo">The parent <see cref="ODataContextUrlInfo"/> instance.</param>
+        /// <param name="propertyName">Name for the context URI property.</param>
         /// <returns>A task that represents the asynchronous read operation. 
         /// The value of the TResult parameter contains the <see cref="ODataContextUrlInfo"/> instance 
         /// if the context URI was successfully written.</returns>
@@ -563,14 +563,14 @@ namespace Microsoft.OData.JsonLight
         /// Asynchronously writes the data wrapper around a JSON payload.
         /// </summary>
         /// <typeparam name="TArg">The <paramref name="payloadWriterFunc"/> delegate argument type.</typeparam>
-        /// <param name="payloadWriterAction">The delegate that writes the actual JSON payload that is being wrapped.</param>
+        /// <param name="payloadWriterFunc">The delegate that writes the actual JSON payload that is being wrapped.</param>
         /// <param name="arg">The argument value provided to the <paramref name="payloadWriterFunc"/> delegate.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
         protected async Task WriteTopLevelPayloadAsync<TArg>(
             Func<TArg, Task> payloadWriterFunc,
             TArg arg)
         {
-            Debug.Assert(payloadWriterFunc != null, "payloadWriterAction != null");
+            Debug.Assert(payloadWriterFunc != null, $"{nameof(payloadWriterFunc)} != null");
 
             await this.WritePayloadStartAsync().ConfigureAwait(false);
 
@@ -584,7 +584,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <typeparam name="TArg1">The <paramref name="payloadWriterFunc"/> delegate first argument type.</typeparam>
         /// <typeparam name="TArg2">The <paramref name="payloadWriterFunc"/> delegate second argument type.</typeparam>
-        /// <param name="payloadWriterAction">The delegate that writes the actual JSON payload that is being wrapped.</param>
+        /// <param name="payloadWriterFunc">The delegate that writes the actual JSON payload that is being wrapped.</param>
         /// <param name="arg1">The first argument value provided to the <paramref name="payloadWriterFunc"/> delegate.</param>
         /// <param name="arg2">The second argument value provided to the <paramref name="payloadWriterFunc"/> delegate.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
@@ -593,7 +593,7 @@ namespace Microsoft.OData.JsonLight
             TArg1 arg1,
             TArg2 arg2)
         {
-            Debug.Assert(payloadWriterFunc != null, "payloadWriterAction != null");
+            Debug.Assert(payloadWriterFunc != null, $"{nameof(payloadWriterFunc)} != null");
 
             await this.WritePayloadStartAsync().ConfigureAwait(false);
 
@@ -608,7 +608,7 @@ namespace Microsoft.OData.JsonLight
         /// <typeparam name="TArg1">The <paramref name="payloadWriterFunc"/> delegate first argument type.</typeparam>
         /// <typeparam name="TArg2">The <paramref name="payloadWriterFunc"/> delegate second argument type.</typeparam>
         /// <typeparam name="TArg3">The <paramref name="payloadWriterFunc"/> delegate third argument type.</typeparam>
-        /// <param name="payloadWriterAction">The delegate that writes the actual JSON payload that is being wrapped.</param>
+        /// <param name="payloadWriterFunc">The delegate that writes the actual JSON payload that is being wrapped.</param>
         /// <param name="arg1">The first argument value provided to the <paramref name="payloadWriterFunc"/> delegate.</param>
         /// <param name="arg2">The second argument value provided to the <paramref name="payloadWriterFunc"/> delegate.</param>
         /// <param name="arg3">The third argument value provided to the <paramref name="payloadWriterFunc"/> delegate.</param>
@@ -619,7 +619,7 @@ namespace Microsoft.OData.JsonLight
             TArg2 arg2,
             TArg3 arg3)
         {
-            Debug.Assert(payloadWriterFunc != null, "payloadWriterAction != null");
+            Debug.Assert(payloadWriterFunc != null, $"{nameof(payloadWriterFunc)} != null");
 
             await this.WritePayloadStartAsync().ConfigureAwait(false);
 
@@ -641,12 +641,13 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Asynchronously writes the context URI property and the specified value into the payload.
         /// </summary>
-        /// <param name="payloadKind">The ODataPayloadKind for the context URI.</param>
-        /// <param name="contextUrlInfoGen">Function to generate contextUrlInfo.</param>
-        /// <param name="parentContextUrlInfo">The parent contextUrlInfo.</param>
-        /// <param name="propertyName">Property name to write contextUri on.</param>
+        /// <param name="payloadKind">The <see cref="ODataPayloadKind"/> for the context URI.</param>
+        /// <param name="parentContextUrlInfo">The parent <see cref="ODataContextUrlInfo"/> instance.</param>
+        /// <param name="contextUrlInfo">The <see cref="ODataContextUrlInfo"/> instance
+        /// containing info for the context URI property.</param>
+        /// <param name="propertyName">Name for the context URI property.</param>
         /// <returns>A task that represents the asynchronous read operation. 
-        /// The value of the TResult parameter contains the <see cref="ODataContextUrlInfo"/>, 
+        /// The value of the TResult parameter contains the <see cref="ODataContextUrlInfo"/> instance 
         /// if the context URI was successfully written.</returns>
         private async Task<ODataContextUrlInfo> WriteContextUriPropertyImplementationAsync(
             ODataPayloadKind payloadKind,

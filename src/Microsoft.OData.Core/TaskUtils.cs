@@ -108,7 +108,7 @@ namespace Microsoft.OData.Client
         /// <returns>An already completed task. If the <paramref name="synchronousOperation"/> succeeded this will be a successfully completed task,
         /// otherwise it will be a faulted task holding the exception thrown.</returns>
         /// <remarks>The advantage of this method over CompletedTask property is that if the <paramref name="synchronousOperation"/> fails
-        /// this method returns a faulted task, instead of throwing exception.</remarks>
+        /// this method returns a faulted task, instead of throwing an exception.</remarks>
         internal static Task GetTaskForSynchronousOperation(Action synchronousOperation)
         {
             Debug.Assert(synchronousOperation != null, "synchronousOperation != null");
@@ -143,7 +143,7 @@ namespace Microsoft.OData.Client
         /// <remarks>
         /// The advantage of this method over <see cref="CompletedTask"/> property 
         /// is that if the <paramref name="synchronousOperation"/> fails
-        /// this method returns a faulted task, instead of throwing exception.
+        /// this method returns a faulted task, instead of throwing an exception.
         /// </remarks>
         internal static Task GetTaskForSynchronousOperation<TArg>(
             Action<TArg> synchronousOperation,
@@ -183,7 +183,7 @@ namespace Microsoft.OData.Client
         /// <remarks>
         /// The advantage of this method over <see cref="CompletedTask"/> property 
         /// is that if the <paramref name="synchronousOperation"/> fails
-        /// this method returns a faulted task, instead of throwing exception.
+        /// this method returns a faulted task, instead of throwing an exception.
         /// </remarks>
         internal static Task GetTaskForSynchronousOperation<TArg1, TArg2>(
             Action<TArg1, TArg2> synchronousOperation,
@@ -226,7 +226,7 @@ namespace Microsoft.OData.Client
         /// <remarks>
         /// The advantage of this method over <see cref="CompletedTask"/> property 
         /// is that if the <paramref name="synchronousOperation"/> fails
-        /// this method returns a faulted task, instead of throwing exception.
+        /// this method returns a faulted task, instead of throwing an exception.
         /// </remarks>
         internal static Task GetTaskForSynchronousOperation<TArg1, TArg2, TArg3>(
             Action<TArg1, TArg2, TArg3> synchronousOperation,
@@ -272,7 +272,7 @@ namespace Microsoft.OData.Client
         /// <remarks>
         /// The advantage of this method over <see cref="CompletedTask"/> property 
         /// is that if the <paramref name="synchronousOperation"/> fails
-        /// this method returns a faulted task, instead of throwing exception.
+        /// this method returns a faulted task, instead of throwing an exception.
         /// </remarks>
         internal static Task GetTaskForSynchronousOperation<TArg1, TArg2, TArg3, TArg4>(
             Action<TArg1, TArg2, TArg3, TArg4> synchronousOperation,
@@ -321,7 +321,7 @@ namespace Microsoft.OData.Client
         /// <remarks>
         /// The advantage of this method over <see cref="CompletedTask"/> property 
         /// is that if the <paramref name="synchronousOperation"/> fails
-        /// this method returns a faulted task, instead of throwing exception.
+        /// this method returns a faulted task, instead of throwing an exception.
         /// </remarks>
         internal static Task GetTaskForSynchronousOperation<TArg1, TArg2, TArg3, TArg4, TArg5>(
             Action<TArg1, TArg2, TArg3, TArg4, TArg5> synchronousOperation,
@@ -357,7 +357,7 @@ namespace Microsoft.OData.Client
         /// <returns>An already completed task. If the <paramref name="synchronousOperation"/> succeeded this will be a successfully completed task,
         /// otherwise it will be a faulted task holding the exception thrown.</returns>
         /// <remarks>The advantage of this method over GetCompletedTask property is that if the <paramref name="synchronousOperation"/> fails
-        /// this method returns a faulted task, instead of throwing exception.</remarks>
+        /// this method returns a faulted task, instead of throwing an exception.</remarks>
         internal static Task<T> GetTaskForSynchronousOperation<T>(Func<T> synchronousOperation)
         {
             Debug.Assert(synchronousOperation != null, "synchronousOperation != null");
@@ -395,7 +395,7 @@ namespace Microsoft.OData.Client
         /// <remarks>
         /// The advantage of this method over <see cref="CompletedTask"/> property
         /// is that if the <paramref name="synchronousOperation"/> fails
-        /// this method returns a faulted task, instead of throwing exception.
+        /// this method returns a faulted task, instead of throwing an exception.
         /// </remarks>
         internal static Task<TResult> GetTaskForSynchronousOperation<TResult, TArg>(
             Func<TArg, TResult> synchronousOperation,
@@ -438,7 +438,7 @@ namespace Microsoft.OData.Client
         /// <remarks>
         /// The advantage of this method over <see cref="CompletedTask"/> property
         /// is that if the <paramref name="synchronousOperation"/> fails
-        /// this method returns a faulted task, instead of throwing exception.
+        /// this method returns a faulted task, instead of throwing an exception.
         /// </remarks>
         internal static Task<TResult> GetTaskForSynchronousOperation<TResult, TArg1, TArg2>(
             Func<TArg1, TArg2, TResult> synchronousOperation,
@@ -484,7 +484,7 @@ namespace Microsoft.OData.Client
         /// <remarks>
         /// The advantage of this method over <see cref="CompletedTask"/> property
         /// is that if the <paramref name="synchronousOperation"/> fails
-        /// this method returns a faulted task, instead of throwing exception.
+        /// this method returns a faulted task, instead of throwing an exception.
         /// </remarks>
         internal static Task<TResult> GetTaskForSynchronousOperation<TResult, TArg1, TArg2, TArg3>(
             Func<TArg1, TArg2, TArg3, TResult> synchronousOperation,
@@ -533,7 +533,7 @@ namespace Microsoft.OData.Client
         /// <remarks>
         /// The advantage of this method over <see cref="CompletedTask"/> property
         /// is that if the <paramref name="synchronousOperation"/> fails
-        /// this method returns a faulted task, instead of throwing exception.
+        /// this method returns a faulted task, instead of throwing an exception.
         /// </remarks>
         internal static Task<TResult> GetTaskForSynchronousOperation<TResult, TArg1, TArg2, TArg3, TArg4>(
             Func<TArg1, TArg2, TArg3, TArg4, TResult> synchronousOperation,
@@ -585,7 +585,7 @@ namespace Microsoft.OData.Client
         /// <remarks>
         /// The advantage of this method over <see cref="CompletedTask"/> property
         /// is that if the <paramref name="synchronousOperation"/> fails
-        /// this method returns a faulted task, instead of throwing exception.
+        /// this method returns a faulted task, instead of throwing an exception.
         /// </remarks>
         internal static Task<TResult> GetTaskForSynchronousOperation<TResult, TArg1, TArg2, TArg3, TArg4, TArg5>(
             Func<TArg1, TArg2, TArg3, TArg4, TArg5, TResult> synchronousOperation,

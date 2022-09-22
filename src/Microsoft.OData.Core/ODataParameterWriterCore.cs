@@ -998,7 +998,7 @@ namespace Microsoft.OData
         /// Asynchronously catch any exception thrown by the action passed in; in the exception case move the writer into
         /// state Error and then rethrow the exception.
         /// </summary>
-        /// <typeparam name="T">The type of the result returned by the delegate.</typeparam>
+        /// <typeparam name="T">The type of the result returned by the <paramref name="func"/> delegate.</typeparam>
         /// <typeparam name="TArg1">The <paramref name="func"/> delegate first argument type.</typeparam>
         /// <typeparam name="TArg2">The <paramref name="func"/> delegate second argument type.</typeparam>
         /// <param name="func">The delegate to execute asynchronously.</param>
@@ -1011,8 +1011,7 @@ namespace Microsoft.OData
         /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
         /// </remarks>
         private async Task<T> InterceptExceptionAsync<T, TArg1, TArg2>(
-            Func<ODataParameterWriterCore, TArg1, TArg2, Task<T>>
-            func,
+            Func<ODataParameterWriterCore, TArg1, TArg2, Task<T>> func,
             TArg1 arg1,
             TArg2 arg2)
         {
