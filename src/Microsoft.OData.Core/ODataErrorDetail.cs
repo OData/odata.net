@@ -7,6 +7,7 @@
 
 namespace Microsoft.OData
 {
+    using Microsoft.OData.Json;
     #region
     using System.Globalization;
     #endregion
@@ -36,7 +37,9 @@ namespace Microsoft.OData
         {
             return string.Format(CultureInfo.InvariantCulture,
                 "{{ \"errorcode\": \"{0}\", \"message\": \"{1}\", \"target\": \"{2}\" }}",
-                this.ErrorCode ?? "", this.Message ?? "", this.Target ?? "");
+                this.ErrorCode == null ? "" : JsonValueUtils.GetEscapedJsonString(this.ErrorCode), 
+                this.Message == null ? "" : JsonValueUtils.GetEscapedJsonString(this.Message), 
+                this.Target == null ? "" : JsonValueUtils.GetEscapedJsonString(this.Target));
         }
-}
+    }
 }
