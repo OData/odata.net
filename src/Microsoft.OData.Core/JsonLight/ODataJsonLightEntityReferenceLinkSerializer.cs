@@ -62,7 +62,9 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(link != null, "link != null");
 
             return this.WriteTopLevelPayloadAsync(
-                () => this.WriteEntityReferenceLinkImplementationAsync(link, /* isTopLevel */ true));
+                (thisParam, linkParam) => thisParam.WriteEntityReferenceLinkImplementationAsync(linkParam, isTopLevel: true),
+                this,
+                link);
         }
 
         /// <summary>
@@ -73,8 +75,12 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(entityReferenceLinks != null, "entityReferenceLinks != null");
 
-            return this.WriteTopLevelPayloadAsync(
-                () => this.WriteEntityReferenceLinksImplementationAsync(entityReferenceLinks));
+            return this.WriteTopLevelPayloadAsync((
+                thisParam,
+                entityReferenceLinksParam) => thisParam.WriteEntityReferenceLinksImplementationAsync(
+                    entityReferenceLinks),
+                this,
+                entityReferenceLinks);
         }
 
         /// <summary>

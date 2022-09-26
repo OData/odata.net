@@ -107,8 +107,11 @@ namespace Microsoft.OData.JsonLight
                 // "@odata.context":...
                 await this.WriteContextUriPropertyAsync(
                     ODataPayloadKind.Collection,
-                    () => ODataContextUrlInfo.Create(collectionStart.SerializationInfo, itemTypeReference))
-                        .ConfigureAwait(false);
+                    (collectionStartSerializationInfoParam, itemTypeReferenceParam) => ODataContextUrlInfo.Create(
+                        collectionStartSerializationInfoParam,
+                        itemTypeReferenceParam),
+                    collectionStart.SerializationInfo,
+                    itemTypeReference).ConfigureAwait(false);
 
                 // "@odata.count":...
                 if (collectionStart.Count.HasValue)

@@ -28,7 +28,7 @@ namespace Microsoft.OData
 
 
         /// <summary>Trailing bytes from a previous write to be prepended to the next write.</summary>
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
         private byte[] trailingBytes = Array.Empty<byte>();
 #else
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
@@ -47,7 +47,7 @@ namespace Microsoft.OData
 
 
         /// <summary>An empty byte[].</summary>
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
         private byte[] emptyByteArray = Array.Empty<byte>();
 #else
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]

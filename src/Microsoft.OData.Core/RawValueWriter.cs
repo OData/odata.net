@@ -184,15 +184,22 @@ namespace Microsoft.OData
         /// Asynchronously start writing a raw output. This should only be called once.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        internal async Task StartAsync()
+        internal Task StartAsync()
         {
             if (this.settings.HasJsonPaddingFunction())
             {
-                await this.textWriter.WriteAsync(this.settings.JsonPCallback)
+                return StartInnerAsync();
+
+                async Task StartInnerAsync()
+                {
+                    await this.textWriter.WriteAsync(this.settings.JsonPCallback)
                     .ConfigureAwait(false);
-                await this.textWriter.WriteAsync(JsonConstants.StartPaddingFunctionScope)
-                    .ConfigureAwait(false);
+                    await this.textWriter.WriteAsync(JsonConstants.StartPaddingFunctionScope)
+                        .ConfigureAwait(false);
+                }
             }
+
+            return TaskUtils.CompletedTask;
         }
 
         /// <summary>
@@ -228,8 +235,13 @@ namespace Microsoft.OData
 
             if (value is Geometry || value is Geography)
             {
-                return TaskUtils.GetTaskForSynchronousOperation(
-                    () => PrimitiveConverter.Instance.WriteJsonLight(value, jsonWriter));
+                return TaskUtils.GetTaskForSynchronousOperation((
+                    valueParam,
+                    jsonWriterParam) => PrimitiveConverter.Instance.WriteJsonLight(
+                        valueParam,
+                        jsonWriterParam),
+                    value,
+                    jsonWriter);
             }
 
             if (ODataRawValueUtils.TryConvertPrimitiveToString(value, out string valueAsString))

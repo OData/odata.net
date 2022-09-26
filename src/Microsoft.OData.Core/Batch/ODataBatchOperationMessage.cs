@@ -141,13 +141,22 @@ namespace Microsoft.OData
         {
             this.VerifyNotCompleted();
 
-            // notify the listener that the stream has been requested
-            Task listenerTask = this.operationListener.StreamRequestedAsync();
+            return GetStreamInnerAsync();
 
-            // now remember that we are done processing the part header data (and only the payload is missing)
-            Stream contentStream = this.contentStreamCreatorFunc();
-            this.PartHeaderProcessingCompleted();
-            return listenerTask.FollowOnSuccessWith(task => { return (Stream)contentStream; });
+            async Task<Stream> GetStreamInnerAsync()
+            {
+                // notify the listener that the stream has been requested
+                Task listenerTask = this.operationListener.StreamRequestedAsync();
+
+                // now remember that we are done processing the part header data (and only the payload is missing)
+                Stream contentStream = this.contentStreamCreatorFunc();
+                this.PartHeaderProcessingCompleted();
+
+                await listenerTask
+                    .ConfigureAwait(false);
+
+                return contentStream;
+            }
         }
 
         /// <summary>

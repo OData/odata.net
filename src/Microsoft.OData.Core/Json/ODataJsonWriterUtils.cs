@@ -171,15 +171,22 @@ namespace Microsoft.OData.Json
         /// <param name="jsonWriter">JsonWriter to write to.</param>
         /// <param name="settings">Writer settings.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        internal static async Task StartJsonPaddingIfRequiredAsync(IJsonWriterAsync jsonWriter, ODataMessageWriterSettings settings)
+        internal static Task StartJsonPaddingIfRequiredAsync(IJsonWriterAsync jsonWriter, ODataMessageWriterSettings settings)
         {
             Debug.Assert(jsonWriter != null, "jsonWriter should not be null");
 
             if (settings.HasJsonPaddingFunction())
             {
-                await jsonWriter.WritePaddingFunctionNameAsync(settings.JsonPCallback).ConfigureAwait(false);
-                await jsonWriter.StartPaddingFunctionScopeAsync().ConfigureAwait(false);
+                return StartJsonPaddingIfRequiredInnerAsync(jsonWriter, settings);
+
+                async Task StartJsonPaddingIfRequiredInnerAsync(IJsonWriterAsync innerJsonWriter, ODataMessageWriterSettings innerSettings)
+                {
+                    await innerJsonWriter.WritePaddingFunctionNameAsync(innerSettings.JsonPCallback).ConfigureAwait(false);
+                    await innerJsonWriter.StartPaddingFunctionScopeAsync().ConfigureAwait(false);
+                }
             }
+
+            return TaskUtils.CompletedTask;
         }
 
         /// <summary>

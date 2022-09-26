@@ -604,8 +604,9 @@ namespace Microsoft.OData.JsonLight
         {
             return this.WriteContextUriPropertyAsync(
                 ODataPayloadKind.Resource,
-                () => contextUrlInfo,
-                /* parentContextUrlInfo*/ null, nestedResourceInfo.Name);
+                (contextUrlInfoParam) => contextUrlInfoParam, contextUrlInfo,
+                parentContextUrlInfo: null,
+                propertyName: nestedResourceInfo.Name);
         }
 
         /// <summary>
@@ -649,7 +650,15 @@ namespace Microsoft.OData.JsonLight
 
             return this.WriteContextUriPropertyAsync(
                 ODataPayloadKind.Delta,
-                () => ODataContextUrlInfo.Create(typeContext, this.MessageWriterSettings.Version ?? ODataVersion.V4, kind, odataUri),
+                (typeContextParam, versionParam, kindParam, odataUriParam) => ODataContextUrlInfo.Create(
+                    typeContextParam,
+                    versionParam,
+                    kindParam,
+                    odataUriParam),
+                typeContext,
+                this.MessageWriterSettings.Version ?? ODataVersion.V4,
+                kind,
+                odataUri,
                 parentContextUrlInfo);
         }
 
@@ -666,7 +675,14 @@ namespace Microsoft.OData.JsonLight
 
             return this.WriteContextUriPropertyAsync(
                 ODataPayloadKind.Resource,
-                () => ODataContextUrlInfo.Create(typeContext, this.MessageWriterSettings.Version ?? ODataVersion.V4, /* isSingle */ true, odataUri),
+                (typeContextParam, versionParam, odataUriParam) => ODataContextUrlInfo.Create(
+                        typeContextParam,
+                        versionParam,
+                        isSingle: true,
+                        odataUri: odataUriParam),
+                typeContext,
+                this.MessageWriterSettings.Version ?? ODataVersion.V4,
+                odataUri,
                 parentContextUrlInfo);
         }
 
@@ -682,7 +698,14 @@ namespace Microsoft.OData.JsonLight
 
             return this.WriteContextUriPropertyAsync(
                 ODataPayloadKind.ResourceSet,
-                () => ODataContextUrlInfo.Create(typeContext, this.MessageWriterSettings.Version ?? ODataVersion.V4, /* isSingle */ false, odataUri));
+                (typeContextParam, versionParam, odataUriParam) => ODataContextUrlInfo.Create(
+                    typeContextParam,
+                    versionParam,
+                    isSingle: false,
+                    odataUri: odataUriParam),
+                typeContext,
+                this.MessageWriterSettings.Version ?? ODataVersion.V4,
+                odataUri);
         }
 
         /// <summary>

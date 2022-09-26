@@ -493,11 +493,10 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="resource">Resource/item to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public sealed override async Task WriteStartAsync(ODataResource resource)
+        public sealed override Task WriteStartAsync(ODataResource resource)
         {
             this.VerifyCanWriteStartResource(false, resource);
-            await this.WriteStartResourceImplementationAsync(resource)
-                .ConfigureAwait(false);
+            return this.WriteStartResourceImplementationAsync(resource);
         }
 
         /// <summary>
@@ -515,11 +514,10 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="deletedResource">The delta deleted resource to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public sealed override async Task WriteStartAsync(ODataDeletedResource deletedResource)
+        public sealed override Task WriteStartAsync(ODataDeletedResource deletedResource)
         {
             this.VerifyCanWriteStartDeletedResource(false, deletedResource);
-            await this.WriteStartDeletedResourceImplementationAsync(deletedResource)
-                .ConfigureAwait(false);
+            return this.WriteStartDeletedResourceImplementationAsync(deletedResource);
         }
 
         /// <summary>
@@ -537,11 +535,10 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="deltaLink">The delta link to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public override async Task WriteDeltaLinkAsync(ODataDeltaLink deltaLink)
+        public override Task WriteDeltaLinkAsync(ODataDeltaLink deltaLink)
         {
             this.VerifyCanWriteLink(false, deltaLink);
-            await this.WriteDeltaLinkImplementationAsync(deltaLink)
-                .ConfigureAwait(false);
+            return this.WriteDeltaLinkImplementationAsync(deltaLink);
         }
 
         /// <summary>
@@ -559,11 +556,10 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="deltaLink">The delta link to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public override async Task WriteDeltaDeletedLinkAsync(ODataDeltaDeletedLink deltaLink)
+        public override Task WriteDeltaDeletedLinkAsync(ODataDeltaDeletedLink deltaLink)
         {
             this.VerifyCanWriteLink(false, deltaLink);
-            await this.WriteDeltaLinkImplementationAsync(deltaLink)
-                .ConfigureAwait(false);
+            return this.WriteDeltaLinkImplementationAsync(deltaLink);
         }
 
         /// <summary>
@@ -581,11 +577,10 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="primitiveValue"> Primitive value to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public sealed override async Task WritePrimitiveAsync(ODataPrimitiveValue primitiveValue)
+        public sealed override Task WritePrimitiveAsync(ODataPrimitiveValue primitiveValue)
         {
             this.VerifyCanWritePrimitive(false, primitiveValue);
-            await this.WritePrimitiveValueImplementationAsync(primitiveValue)
-                .ConfigureAwait(false);
+            return this.WritePrimitiveValueImplementationAsync(primitiveValue);
         }
 
         /// <summary>Writes a primitive property within a resource.</summary>
@@ -599,11 +594,10 @@ namespace Microsoft.OData
         /// <summary> Asynchronously write a primitive property within a resource. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         /// <param name="primitiveProperty">The primitive property to write.</param>
-        public sealed override async Task WriteStartAsync(ODataPropertyInfo primitiveProperty)
+        public sealed override Task WriteStartAsync(ODataPropertyInfo primitiveProperty)
         {
             this.VerifyCanWriteProperty(false, primitiveProperty);
-            await this.WriteStartPropertyImplementationAsync(primitiveProperty)
-                .ConfigureAwait(false);
+            return this.WriteStartPropertyImplementationAsync(primitiveProperty);
         }
 
         /// <summary>Creates a stream for writing a binary value.</summary>
@@ -617,11 +611,10 @@ namespace Microsoft.OData
         /// <summary>Asynchronously creates a stream for writing a binary value.</summary>
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains a <see cref="Stream"/> to write a binary value to.</returns>
-        public sealed override async Task<Stream> CreateBinaryWriteStreamAsync()
+        public sealed override Task<Stream> CreateBinaryWriteStreamAsync()
         {
             this.VerifyCanCreateWriteStream(false);
-            return await this.CreateWriteStreamImplementationAsync()
-                .ConfigureAwait(false);
+            return this.CreateWriteStreamImplementationAsync();
         }
 
         /// <summary>Creates a TextWriter for writing a string value.</summary>
@@ -635,11 +628,10 @@ namespace Microsoft.OData
         /// <summary>Asynchronously creates a <see cref="TextWriter"/> for writing a string value.</summary>
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains a <see cref="TextWriter"/> to write a string value to.</returns>
-        public sealed override async Task<TextWriter> CreateTextWriterAsync()
+        public sealed override Task<TextWriter> CreateTextWriterAsync()
         {
             this.VerifyCanCreateWriteStream(false);
-            return await this.CreateTextWriterImplementationAsync()
-                .ConfigureAwait(false);
+            return this.CreateTextWriterImplementationAsync();
         }
 
         /// <summary>
@@ -658,12 +650,15 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="nestedResourceInfo">Navigation link to writer.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public sealed override async Task WriteStartAsync(ODataNestedResourceInfo nestedResourceInfo)
+        public sealed override Task WriteStartAsync(ODataNestedResourceInfo nestedResourceInfo)
         {
             this.VerifyCanWriteStartNestedResourceInfo(false, nestedResourceInfo);
             // Currently, no asynchronous operation is involved when commencing with writing a nested resource info
-            await TaskUtils.GetTaskForSynchronousOperation(
-                () => this.WriteStartNestedResourceInfoImplementation(nestedResourceInfo)).ConfigureAwait(false);
+            return TaskUtils.GetTaskForSynchronousOperation(
+                (thisParam, nestedResourceInfoParam) => thisParam.WriteStartNestedResourceInfoImplementation(
+                    nestedResourceInfoParam),
+                this,
+                nestedResourceInfo);
         }
 
         /// <summary>
@@ -726,11 +721,10 @@ namespace Microsoft.OData
         /// The <see cref="ODataNestedResourceInfo.Url"/> will be ignored in that case and the Uri from the <see cref="ODataEntityReferenceLink.Url"/> will be used
         /// as the binding URL to be written.
         /// </remarks>
-        public sealed override async Task WriteEntityReferenceLinkAsync(ODataEntityReferenceLink entityReferenceLink)
+        public sealed override Task WriteEntityReferenceLinkAsync(ODataEntityReferenceLink entityReferenceLink)
         {
             this.VerifyCanWriteEntityReferenceLink(entityReferenceLink, false);
-            await this.WriteEntityReferenceLinkImplementationAsync(entityReferenceLink)
-                .ConfigureAwait(false);
+            return this.WriteEntityReferenceLinkImplementationAsync(entityReferenceLink);
         }
 
         /// <summary>
@@ -1857,11 +1851,11 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="primitiveValue">Primitive value to write.</param>
         /// <returns>The task.</returns>
-        private async Task WritePrimitiveValueImplementationAsync(ODataPrimitiveValue primitiveValue)
+        private Task WritePrimitiveValueImplementationAsync(ODataPrimitiveValue primitiveValue)
         {
             EnterScope(WriterState.Primitive, primitiveValue);
 
-            await InterceptExceptionAsync(
+            return InterceptExceptionAsync(
                 async (thisParam, primiteValueParam) =>
                 {
                     if (!(CurrentResourceSetValidator == null) && primiteValueParam != null)
@@ -1875,7 +1869,7 @@ namespace Microsoft.OData
                         .ConfigureAwait(false);
                     await thisParam.WriteEndAsync()
                         .ConfigureAwait(false);
-                }, primitiveValue).ConfigureAwait(false);
+                }, primitiveValue);
         }
 
         /// <summary>
@@ -3149,15 +3143,14 @@ namespace Microsoft.OData
         /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
         /// <param name="resourceSet">The resource set/collection to write.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        private async Task VerifyCanWriteStartResourceSetAsync(bool synchronousCall, ODataResourceSet resourceSet)
+        private Task VerifyCanWriteStartResourceSetAsync(bool synchronousCall, ODataResourceSet resourceSet)
         {
             ExceptionUtils.CheckArgumentNotNull(resourceSet, "resourceSet");
 
             this.VerifyNotDisposed();
             this.VerifyCallAllowed(synchronousCall);
 
-            await this.StartPayloadInStartStateAsync()
-                .ConfigureAwait(false);
+            return this.StartPayloadInStartStateAsync();
         }
 
         /// <summary>
@@ -3198,14 +3191,13 @@ namespace Microsoft.OData
         /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
         /// <param name="deltaResourceSet">The delta resource set/collection to write.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        private async Task VerifyCanWriteStartDeltaResourceSetAsync(bool synchronousCall, ODataDeltaResourceSet deltaResourceSet)
+        private Task VerifyCanWriteStartDeltaResourceSetAsync(bool synchronousCall, ODataDeltaResourceSet deltaResourceSet)
         {
             ExceptionUtils.CheckArgumentNotNull(deltaResourceSet, "deltaResourceSet");
             this.VerifyNotDisposed();
             this.VerifyCallAllowed(synchronousCall);
 
-            await this.StartPayloadInStartStateAsync()
-                .ConfigureAwait(false);
+            return this.StartPayloadInStartStateAsync();
         }
 
         /// <summary>
@@ -3297,14 +3289,14 @@ namespace Microsoft.OData
                 async (thisParam, resourceParam) =>
                 {
                     DeletedResourceScope resourceScope = thisParam.CurrentScope as DeletedResourceScope;
-                    this.ValidateResourceForResourceSet(resourceParam, resourceScope);
+                    thisParam.ValidateResourceForResourceSet(resourceParam, resourceScope);
 
-                    await this.PrepareDeletedResourceForWriteStartAsync(
+                    await thisParam.PrepareDeletedResourceForWriteStartAsync(
                         resourceScope,
                         resourceParam,
                         thisParam.outputContext.WritingResponse,
                         resourceScope.SelectedProperties).ConfigureAwait(false);
-                    await thisParam.StartDeletedResourceAsync(resource)
+                    await thisParam.StartDeletedResourceAsync(resourceParam)
                         .ConfigureAwait(false);
                 }, resource).ConfigureAwait(false);
         }
@@ -3314,13 +3306,13 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="property">Property to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteStartPropertyImplementationAsync(ODataPropertyInfo property)
+        private Task WriteStartPropertyImplementationAsync(ODataPropertyInfo property)
         {
             this.EnterScope(WriterState.Property, property);
 
             if (!this.SkipWriting)
             {
-                await this.InterceptExceptionAsync(
+                return this.InterceptExceptionAsync(
                     async (thisParam, propertyParam) =>
                     {
                         await thisParam.StartPropertyAsync(propertyParam)
@@ -3332,8 +3324,10 @@ namespace Microsoft.OData
                             Debug.Assert(scope != null, "Scope for ODataPropertyInfo is not ODataPropertyInfoScope");
                             scope.ValueWritten = true;
                         }
-                    }, property).ConfigureAwait(false);
+                    }, property);
             }
+
+            return TaskUtils.CompletedTask;
         }
 
         /// <summary>

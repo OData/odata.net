@@ -190,70 +190,55 @@ namespace Microsoft.OData
                 if (existingBufferingReadStream != null)
                 {
                     Debug.Assert(this.useBufferingReadStream.HasValue, "UseBufferingReadStream must have been set.");
-                    return TaskUtils.GetCompletedTask(existingBufferingReadStream);
+                    return Task.FromResult(existingBufferingReadStream);
                 }
             }
 
-            Task<Stream> task = streamFuncAsync();
-            ValidateMessageStreamTask(task, isRequest);
+            return GetMessageStreamAsync(streamFuncAsync, isRequest);
 
-            // Wrap it in a non-disposing stream if requested
-            task = task.FollowOnSuccessWith(
-                streamTask =>
-                {
-                    Stream messageStream = streamTask.Result;
-                    ValidateMessageStream(messageStream, isRequest);
-
-                    // When reading, wrap the stream in a byte counting stream if a max message size was specified.
-                    // When requested, wrap the stream in a non-disposing stream.
-                    bool needByteCountingStream = !this.writing && this.maxMessageSize > 0;
-                    if (!this.enableMessageStreamDisposal && needByteCountingStream)
-                    {
-                        messageStream = MessageStreamWrapper.CreateNonDisposingStreamWithMaxSize(messageStream, this.maxMessageSize);
-                    }
-                    else if (!this.enableMessageStreamDisposal)
-                    {
-                        messageStream = MessageStreamWrapper.CreateNonDisposingStream(messageStream);
-                    }
-                    else if (needByteCountingStream)
-                    {
-                        messageStream = MessageStreamWrapper.CreateStreamWithMaxSize(messageStream, this.maxMessageSize);
-                    }
-
-                    return messageStream;
-                });
-
-            // When we are reading, also buffer the input stream
-            if (!this.writing)
+            async Task<Stream> GetMessageStreamAsync(Func<Task<Stream>> innerStreamFuncAsync, bool innerIsRequest)
             {
-                task = task
-                    .FollowOnSuccessWithTask(
-                        streamTask =>
-                        {
-                            return BufferedReadStream.BufferStreamAsync(streamTask.Result);
-                        })
-                    .FollowOnSuccessWith(
-                        streamTask =>
-                        {
-                            BufferedReadStream bufferedReadStream = streamTask.Result;
-                            return (Stream)bufferedReadStream;
-                        });
+                Task<Stream> messageStreamTask = innerStreamFuncAsync();
+                ValidateMessageStreamTask(messageStreamTask, innerIsRequest);
 
-                // If requested also create a buffering stream for payload kind detection
-                if (this.useBufferingReadStream == true)
+                // Wrap it in a non-disposing stream if requested
+                Stream messageStream = await messageStreamTask
+                    .ConfigureAwait(false);
+                ValidateMessageStream(messageStream, innerIsRequest);
+
+                // When reading, wrap the stream in a byte counting stream if a max message size was specified.
+                // When requested, wrap the stream in a non-disposing stream.
+                bool needByteCountingStream = !this.writing && this.maxMessageSize > 0;
+                if (!this.enableMessageStreamDisposal && needByteCountingStream)
                 {
-                    task = task.FollowOnSuccessWith(
-                        streamTask =>
-                        {
-                            Stream messageStream = streamTask.Result;
-                            this.bufferingReadStream = new BufferingReadStream(messageStream);
-                            messageStream = this.bufferingReadStream;
-                            return messageStream;
-                        });
+                    messageStream = MessageStreamWrapper.CreateNonDisposingStreamWithMaxSize(messageStream, this.maxMessageSize);
                 }
-            }
+                else if (!this.enableMessageStreamDisposal)
+                {
+                    messageStream = MessageStreamWrapper.CreateNonDisposingStream(messageStream);
+                }
+                else if (needByteCountingStream)
+                {
+                    messageStream = MessageStreamWrapper.CreateStreamWithMaxSize(messageStream, this.maxMessageSize);
+                }
 
-            return task;
+                // When we are reading, also buffer the input stream
+                if (!this.writing)
+                {
+                    BufferedReadStream bufferedReadStream = await BufferedReadStream.BufferStreamAsync(messageStream)
+                        .ConfigureAwait(false);
+                    messageStream = (Stream)bufferedReadStream;
+
+                    // If requested also create a buffering stream for payload kind detection
+                    if (this.useBufferingReadStream == true)
+                    {
+                        this.bufferingReadStream = new BufferingReadStream(messageStream);
+                        messageStream = this.bufferingReadStream;
+                    }
+                }
+
+                return messageStream;
+            }
         }
 
         /// <summary>

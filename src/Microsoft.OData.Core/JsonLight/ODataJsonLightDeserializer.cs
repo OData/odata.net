@@ -1161,7 +1161,7 @@ namespace Microsoft.OData.JsonLight
         /// 1) true if the annotation name and value is skipped; otherwise false.
         /// 2) The annotation value that was read.
         /// </returns>
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
         private async ValueTask<Tuple<bool, object>> SkipOverUnknownODataAnnotationAsync(
 #else
         private async Task<Tuple<bool, object>> SkipOverUnknownODataAnnotationAsync(

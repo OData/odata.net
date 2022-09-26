@@ -125,7 +125,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             return messageInfo.IsResponse
                 ? Task.FromResult(DetectPayloadKindImplementation(messageInfo, settings))
-                : TaskUtils.GetCompletedTask(Enumerable.Empty<ODataPayloadKind>());
+                : Task.FromResult(Enumerable.Empty<ODataPayloadKind>());
         }
 
         /// <summary>

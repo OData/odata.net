@@ -808,9 +808,10 @@ namespace Microsoft.OData.Json
 #if DEBUG
             bool result = await jsonReader.ReadAsync()
                 .ConfigureAwait(false);
-            Debug.Assert(result, "JsonReader.Read returned false in an unexpected place.");
+            Debug.Assert(result, "JsonReader.ReadAsync returned false in an unexpected place.");
 #else
-            await jsonReader.ReadAsync();
+            await jsonReader.ReadAsync()
+                .ConfigureAwait(false);
 #endif
             return jsonReader.NodeType;
         }

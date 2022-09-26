@@ -60,7 +60,9 @@ namespace Microsoft.OData.MultipartMixed
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataBatchWriterImplementation());
+            return TaskUtils.GetTaskForSynchronousOperation(
+                thisParam => thisParam.CreateODataBatchWriterImplementation(),
+                this);
         }
 
         /// <summary>

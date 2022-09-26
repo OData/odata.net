@@ -2139,7 +2139,7 @@ namespace Microsoft.OData.Json
         /// The value of the TResult parameter contains true if a non-whitespace character was found,
         /// in which case the <see cref="tokenStartIndex"/> is pointing at that character;
         /// otherwise false if there are no non-whitespace characters left in the input.</returns>
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
         private async ValueTask<bool> SkipWhitespacesAsync()
 #else
         private async Task<bool> SkipWhitespacesAsync()
@@ -2167,7 +2167,7 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains true if at least the required number of characters is available; 
         /// otherwise false if end of input was reached.</returns>
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
         private async ValueTask<bool> EnsureAvailableCharactersAsync(int characterCountAfterTokenStart)
 #else
         private async Task<bool> EnsureAvailableCharactersAsync(int characterCountAfterTokenStart)
@@ -2192,7 +2192,7 @@ namespace Microsoft.OData.Json
         /// otherwise false if end of input was reached.</returns>
         /// <remarks>This may move characters in the <see cref="characterBuffer"/>, so after this is called
         /// all indices to the <see cref="characterBuffer"/> are invalid except for <see cref="tokenStartIndex"/>.</remarks>
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
         private async ValueTask<bool> ReadInputAsync()
 #else
         private async Task<bool> ReadInputAsync()
