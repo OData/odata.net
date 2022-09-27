@@ -283,7 +283,9 @@ namespace Microsoft.OData
 
                     if (segment is NavigationPropertySegment navPropSegment)
                     {
-                        if (navPropSegment.NavigationSource.Name.Equals(navigationSource, StringComparison.OrdinalIgnoreCase) && navPropSegment.NavigationProperty.ContainsTarget)
+                        if (navPropSegment.NavigationSource != null && 
+                            navPropSegment.NavigationSource.Name.Equals(navigationSource, StringComparison.OrdinalIgnoreCase) && 
+                            navPropSegment.NavigationProperty.ContainsTarget)
                         {
                             key = keyValues[navigationSource];
                             pathString.Append(navigationSource);

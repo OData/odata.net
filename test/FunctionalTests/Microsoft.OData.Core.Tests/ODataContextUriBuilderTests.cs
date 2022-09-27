@@ -30,6 +30,7 @@ namespace Microsoft.OData.Tests
         private EdmSingleton singletonCity;
         private EdmComplexType addressType;
         private EdmEntityType cityType;
+        private EdmEntityType regionType;
         private EdmEntityType districtType;
         private EdmEntityType capitolCityType;
         private ODataContextUriBuilder responseContextUriBuilder;
@@ -835,6 +836,27 @@ namespace Microsoft.OData.Tests
         }
         #endregion NoMetadata
 
+        [Fact]
+        public void ShouldWriteEntryContextUriForContainedNavigationProperties()
+        {
+            var entitySetSegment = new EntitySetSegment(this.citySet);
+            var keys = new[] { new KeyValuePair<string, object>("Id", 123) };
+            var keySegment = new KeySegment(keys, cityType, citySet);
+
+            var navProperty = (IEdmNavigationProperty)this.cityType.FindProperty("Regions");
+            NavigationPropertySegment navigationPropertySegment = new NavigationPropertySegment(navProperty, this.citySet);
+
+            ODataPath path = new ODataPath(entitySetSegment, keySegment, navigationPropertySegment);
+            ODataUri odataUri = new ODataUri
+            {
+                Path = path
+            };
+            ODataContextUrlInfo info = ODataContextUrlInfo.Create(this.citySet, "TestModel.Region", true, odataUri, ODataVersion.V4);
+
+            Uri uri = this.responseContextUriBuilder.BuildContextUri(ODataPayloadKind.Resource, info);
+            Assert.Equal(uri.OriginalString, BuildExpectedContextUri("#Cities(123)/TestModel.Region/$entity", false));
+        }
+
         #region Helper methods
         private void InitalizeBuilder()
         {
@@ -864,6 +886,12 @@ namespace Microsoft.OData.Tests
             cityType.AddStructuralProperty("Address", new EdmComplexTypeReference(addressType, true));
             this.edmModel.AddElement(cityType);
 
+            this.regionType = new EdmEntityType("TestModel", "Region");
+            EdmStructuralProperty regionIdProperty = regionType.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(/*isNullable*/false));
+            regionType.AddKeys(cityIdProperty);
+            regionType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(/*isNullable*/false));
+            this.edmModel.AddElement(regionType);
+
             this.capitolCityType = new EdmEntityType("TestModel", "CapitolCity", cityType);
             capitolCityType.AddStructuralProperty("CapitolType", EdmCoreModel.Instance.GetString( /*isNullable*/false));
             this.edmModel.AddElement(capitolCityType);
@@ -883,6 +911,8 @@ namespace Microsoft.OData.Tests
             capitolCityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "CapitolDistrict", Target = districtType, TargetMultiplicity = EdmMultiplicity.One });
             capitolCityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "OutlyingDistricts", Target = districtType, TargetMultiplicity = EdmMultiplicity.Many });
 
+            cityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "Regions", Target = regionType, ContainsTarget = true, TargetMultiplicity = EdmMultiplicity.Many });
+            
             this.citySet = defaultContainer.AddEntitySet("Cities", cityType);
             this.districtSet = defaultContainer.AddEntitySet("Districts", districtType);
 
