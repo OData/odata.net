@@ -16,6 +16,7 @@ namespace Microsoft.OData
     using Microsoft.OData.UriParser.Aggregation;
     using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
+    using System.Text;
     #endregion Namespaces
 
     /// <summary>
@@ -260,7 +261,46 @@ namespace Microsoft.OData
                 navigationPath = odataPath.ToContextUrlPathString();
             }
 
+            navigationPath = ComputeKeysForContainedEntities(odataUri, navigationSource);
+
             return navigationPath ?? navigationSource;
+        }
+
+        private static string ComputeKeysForContainedEntities(ODataUri odataUri, string navigationSource)
+        {
+            Dictionary<string, int> keyValues = new Dictionary<string, int>();
+            StringBuilder pathString = new StringBuilder();
+            int key = 0;
+
+            if (odataUri?.Path != null)
+            {
+                foreach (ODataPathSegment segment in odataUri.Path)
+                {
+                    if (segment is KeySegment keySegment)
+                    {
+                        keyValues.Add(keySegment.NavigationSource.Name, (int)keySegment.Keys.FirstOrDefault().Value);
+                    }
+
+                    if (segment is NavigationPropertySegment navPropSegment)
+                    {
+                        if (navPropSegment.NavigationSource.Name.Equals(navigationSource, StringComparison.OrdinalIgnoreCase) && navPropSegment.NavigationProperty.ContainsTarget)
+                        {
+                            key = keyValues[navigationSource];
+                            pathString.Append(navigationSource);
+                            pathString.Append('(');
+                            pathString.Append(key);
+                            pathString.Append(')');
+                        }
+                    }
+                }
+            }
+
+            if (string.IsNullOrEmpty(pathString.ToString()))
+            {
+                return navigationSource;
+            }
+
+            return pathString.ToString();
         }
 
         private static string ComputeResourcePath(ODataUri odataUri)
