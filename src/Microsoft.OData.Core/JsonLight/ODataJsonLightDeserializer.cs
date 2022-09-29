@@ -136,7 +136,7 @@ namespace Microsoft.OData.JsonLight
                     this.JsonLightInputContext.EdmTypeResolver,
                     this.Model,
                     this.MetadataDocumentUri,
-                    in odataUri,
+                    odataUri,
                     this.JsonLightInputContext.MetadataLevel));
             }
         }

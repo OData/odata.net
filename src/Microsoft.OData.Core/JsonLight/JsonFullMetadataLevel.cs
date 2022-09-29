@@ -106,7 +106,7 @@ namespace Microsoft.OData.JsonLight
                 isResponse,
                 this.model,
                 this.NonNullMetadataDocumentUri,
-                in odataUri);
+                odataUri);
 
             ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(metadataContext.ServiceBaseUri,
                 keyAsSegment ? ODataUrlKeyDelimiter.Slash : ODataUrlKeyDelimiter.Parentheses);
