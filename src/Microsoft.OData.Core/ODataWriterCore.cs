@@ -80,7 +80,15 @@ namespace Microsoft.OData
 
             this.listener = listener;
 
-            this.scopeStack.Push(new Scope(WriterState.Start, /*item*/null, navigationSource, resourceType, /*skipWriting*/false, outputContext.MessageWriterSettings.SelectedProperties, in odataUri, /*enableDelta*/ true));
+            this.scopeStack.Push(new Scope(
+                state: WriterState.Start,
+                item: null,
+                navigationSource: navigationSource, 
+                itemType: resourceType,
+                skipWriting: false,
+                selectedProperties: outputContext.MessageWriterSettings.SelectedProperties,
+                odataUri: in odataUri,
+                enableDelta: true));
             this.CurrentScope.DerivedTypeConstraints = this.outputContext.Model.GetDerivedTypeConstraints(navigationSource)?.ToList();
         }
 
@@ -2555,10 +2563,10 @@ namespace Microsoft.OData
             IEdmNavigationSource navigationSource = null;
             IEdmType itemType = null;
             SelectedPropertiesNode selectedProperties = currentScope.SelectedProperties;
-            ODataUriSlim odataUriSlim = new ODataUriSlim(currentScope.ODataUri);
-            if (odataUriSlim.Path == null)
+            ODataUriSlim odataUri = new ODataUriSlim(currentScope.ODataUri);
+            if (odataUri.Path == null)
             {
-                odataUriSlim.Path = new ODataPath();
+                odataUri.Path = new ODataPath();
             }
 
             IEnumerable<string> derivedTypeConstraints = null;
@@ -2595,9 +2603,8 @@ namespace Microsoft.OData
                                 if (serializationInfo.NavigationSourceName != null)
                                 {
                                     ODataUriParser uriParser = new ODataUriParser(model, new Uri(serializationInfo.NavigationSourceName, UriKind.Relative), this.outputContext.Container);
-                                    ODataUri odataUri = uriParser.ParseUri();
-                                    odataUriSlim = new ODataUriSlim(odataUri);
-                                    navigationSource = odataUriSlim.Path.NavigationSource();
+                                    odataUri = new ODataUriSlim(uriParser.ParseUri());
+                                    navigationSource = odataUri.Path.NavigationSource();
                                     itemType = itemType ?? navigationSource.EntityType();
                                 }
 
@@ -2680,7 +2687,7 @@ namespace Microsoft.OData
                 {
                     selectedProperties = currentScope.SelectedProperties.GetSelectedPropertiesForNavigationProperty(currentScope.ResourceType, nestedResourceInfo.Name);
 
-                    ODataPath odataPath = odataUriSlim.Path;
+                    ODataPath odataPath = odataUri.Path;
                     IEdmStructuredType currentResourceType = currentScope.ResourceType;
 
                     ResourceBaseScope resourceScope = currentScope as ResourceBaseScope;
@@ -2735,13 +2742,13 @@ namespace Microsoft.OData
                                 ? null
                                 : currentNavigationSource.FindNavigationTarget(navigationProperty, BindingPathHelper.MatchBindingPath, odataPath.Segments, out bindingPath);
 
-                            SelectExpandClause clause = odataUriSlim.SelectAndExpand;
+                            SelectExpandClause clause = odataUri.SelectAndExpand;
                             TypeSegment typeCastFromExpand = null;
                             if (clause != null)
                             {
                                 SelectExpandClause subClause;
                                 clause.GetSubSelectExpandClause(nestedResourceInfo.Name, out subClause, out typeCastFromExpand);
-                                odataUriSlim.SelectAndExpand = subClause;
+                                odataUri.SelectAndExpand = subClause;
                             }
 
                             switch (navigationSource.NavigationSourceKind())
@@ -2777,7 +2784,7 @@ namespace Microsoft.OData
                         }
                     }
 
-                    odataUriSlim.Path = odataPath;
+                    odataUri.Path = odataPath;
                 }
             }
             else if ((currentState == WriterState.ResourceSet || currentState == WriterState.DeltaResourceSet) && (newState == WriterState.Resource || newState == WriterState.Primitive || newState == WriterState.ResourceSet || newState == WriterState.DeletedResource))
@@ -2791,10 +2798,10 @@ namespace Microsoft.OData
 
             if (navigationSource == null)
             {
-                navigationSource = this.CurrentScope.NavigationSource ?? odataUriSlim.Path.TargetNavigationSource();
+                navigationSource = this.CurrentScope.NavigationSource ?? odataUri.Path.TargetNavigationSource();
             }
 
-            this.PushScope(newState, item, navigationSource, itemType, skipWriting, selectedProperties, in odataUriSlim, derivedTypeConstraints);
+            this.PushScope(newState, item, navigationSource, itemType, skipWriting, selectedProperties, in odataUri, derivedTypeConstraints);
 
             this.NotifyListener(newState);
         }

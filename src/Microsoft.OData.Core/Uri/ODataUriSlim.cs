@@ -57,12 +57,12 @@ namespace Microsoft.OData
         public SelectExpandClause SelectAndExpand { get; set; }
 
         /// <summary>
-        /// Gets or sets the request Uri.
+        /// Gets the request Uri.
         /// </summary>
         public Uri RequestUri => this.odataUri.RequestUri;
 
         /// <summary>
-        /// Gets or sets the service root Uri.
+        /// Gets the service root Uri.
         /// </summary>
         public Uri ServiceRoot => this.odataUri.ServiceRoot;
 
@@ -72,47 +72,47 @@ namespace Microsoft.OData
         public IDictionary<string, SingleValueNode> ParameterAliasNodes => this.odataUri.ParameterAliasNodes;
 
         /// <summary>
-        /// Gets or sets any custom query options for this uri.
+        /// Gets any custom query options for this uri.
         /// </summary>
         public IEnumerable<QueryNode> CustomQueryOptions => this.odataUri.CustomQueryOptions;
 
         /// <summary>
-        /// Gets or sets any $filter option for this uri.
+        /// Gets any $filter option for this uri.
         /// </summary>
         public FilterClause Filter => this.odataUri.Filter;
 
         /// <summary>
-        /// Gets or sets any $orderby option for this uri.
+        /// Gets any $orderby option for this uri.
         /// </summary>
         public OrderByClause OrderBy => this.odataUri.OrderBy;
 
         /// <summary>
-        /// Gets or sets any $search option for this uri.
+        /// Gets any $search option for this uri.
         /// </summary>
         public SearchClause Search => this.odataUri.Search;
 
         /// <summary>
-        /// Gets or sets any $apply option for this uri.
+        /// Gets any $apply option for this uri.
         /// </summary>
         public ApplyClause Apply => this.odataUri.Apply;
 
         /// <summary>
-        /// Gets or sets any $compute option for this uri.
+        /// Gets any $compute option for this uri.
         /// </summary>
         public ComputeClause Compute => this.odataUri.Compute;
 
         /// <summary>
-        /// Gets or sets any $skip option for this uri.
+        /// Gets any $skip option for this uri.
         /// </summary>
         public long? Skip => this.odataUri.Skip;
 
         /// <summary>
-        /// Gets or sets any $top option for this uri.
+        /// Gets any $top option for this uri.
         /// </summary>
         public long? Top => this.odataUri.Top;
 
         /// <summary>
-        /// Gets or sets any $index option for this uri.
+        /// Gets any $index option for this uri.
         /// </summary>
         public long? Index => this.odataUri.Index;
 
@@ -122,12 +122,12 @@ namespace Microsoft.OData
         public bool? QueryCount => this.odataUri.QueryCount;
 
         /// <summary>
-        /// Gets or sets any $skiptoken option for this uri.
+        /// Gets any $skiptoken option for this uri.
         /// </summary>
         public string SkipToken => this.odataUri.SkipToken;
 
         /// <summary>
-        /// Gets or sets any $deltatoken option for this uri.
+        /// Gets any $deltatoken option for this uri.
         /// </summary>
         public string DeltaToken => this.odataUri.DeltaToken;
 
