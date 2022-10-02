@@ -569,10 +569,11 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                     return Expression.Call(instanceOfContains, methodInfoOfContains, argumentOfContains);
 
                 case "matchesPattern":
-                    var methodInfoOfIsMatch = typeof(Regex).GetMethod("IsMatch", BindingFlags.Public | BindingFlags.Static);
+                    var methodInfoOfIsMatch = typeof(Regex).GetMethod("IsMatch", new[] { typeof(string), typeof(string), typeof(RegexOptions) });
                     var argument1OfIsMatch = argumentNodes.ElementAt(0).Accept(this);
                     var argument2OfIsMatch = argumentNodes.ElementAt(1).Accept(this);
-                    return Expression.Call(methodInfoOfIsMatch, argument1OfIsMatch, argument2OfIsMatch);
+                    var argument3OfIsMatch = Expression.Constant(RegexOptions.ECMAScript);
+                    return Expression.Call(methodInfoOfIsMatch, argument1OfIsMatch, argument2OfIsMatch, argument3OfIsMatch);
 
                 case "endswith":
                     var methodInfoOfEndsWith = typeof(string).GetMethod("EndsWith", new Type[] { typeof(string) });

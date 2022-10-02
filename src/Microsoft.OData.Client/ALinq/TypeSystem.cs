@@ -58,7 +58,7 @@ namespace Microsoft.OData.Client
             // string functions
             expressionMethodMap = new Dictionary<MethodInfo, string>(EqualityComparer<MethodInfo>.Default);
             expressionMethodMap.Add(typeof(string).GetMethod("Contains", new Type[] { typeof(string) }), @"contains");
-            expressionMethodMap.Add(typeof(Regex).GetMethod("IsMatch", new Type[] { typeof(string), typeof(string) }), @"matchesPattern");
+            expressionMethodMap.Add(typeof(Regex).GetMethod("IsMatch", new Type[] { typeof(string), typeof(string), typeof(RegexOptions) }), @"matchesPattern");
             expressionMethodMap.Add(typeof(string).GetMethod("EndsWith", new Type[] { typeof(string) }), @"endswith");
             expressionMethodMap.Add(typeof(string).GetMethod("StartsWith", new Type[] { typeof(string) }), @"startswith");
             expressionMethodMap.Add(typeof(string).GetMethod("IndexOf", new Type[] { typeof(string) }), @"indexof");
