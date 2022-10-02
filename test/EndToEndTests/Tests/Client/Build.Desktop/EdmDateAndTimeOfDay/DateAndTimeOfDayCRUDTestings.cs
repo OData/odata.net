@@ -16,7 +16,7 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
     using Microsoft.Test.OData.Tests.Client.Common;
     using Xunit;
 
-    public class DateAndTimeOfDayCRUDTestings : ODataWCFServiceTestsBase<InMemoryEntities>
+    public class DateAndTimeOfDayCRUDTestings : ODataWCFServiceTestsBase<InMemoryEntities>, IDisposable
     {
         public DateAndTimeOfDayCRUDTestings()
             : base(ServiceDescriptors.ODataWCFServiceDescriptor)
@@ -489,7 +489,12 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
         }
 #endif
 
-    #endregion
+        #endregion
+
+        public override void Dispose()
+        {
+            base.Dispose();
+        }
     }
 }
 

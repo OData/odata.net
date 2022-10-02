@@ -260,7 +260,7 @@ namespace Microsoft.OData
             IEnumerable<ODataPayloadKindDetectionResult> payloadKindsFromContentType;
             if (this.TryGetSinglePayloadKindResultFromContentType(out payloadKindsFromContentType))
             {
-                return TaskUtils.GetCompletedTask(payloadKindsFromContentType);
+                return Task.FromResult(payloadKindsFromContentType);
             }
 
             // Otherwise we have to do sniffing

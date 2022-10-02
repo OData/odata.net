@@ -332,8 +332,6 @@ namespace Microsoft.OData.Json
                 {
                     return this.writer.WriteAsync(JsonConstants.ArrayElementSeparator);
                 }
-
-                
             }
 
             return TaskUtils.CompletedTask;

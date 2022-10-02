@@ -6,12 +6,13 @@
 
 namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 {
+    using System;
     using System.Linq;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Xunit;
 
-    public class AbstractEntityTypeTests : ODataWCFServiceTestsBase<InMemoryEntities>
+    public class AbstractEntityTypeTests : ODataWCFServiceTestsBase<InMemoryEntities>, IDisposable
     {
         public AbstractEntityTypeTests()
             : base(ServiceDescriptors.ODataWCFServiceDescriptor)
@@ -31,6 +32,11 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
             //var details = customer.getOrderAndOrderDetails().OfType<OrderDetail>().ToList();
             //Assert.Equal(1, details.Count);
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
         }
     }
 }

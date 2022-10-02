@@ -16,7 +16,7 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus;
     using Xunit;
 
-    public class PostPropertyTrackingTest : ODataWCFServiceTestsBase<InMemoryEntitiesPlus>
+    public class PostPropertyTrackingTest : ODataWCFServiceTestsBase<InMemoryEntitiesPlus>, IDisposable
     {
         public PostPropertyTrackingTest()
             : base(ServiceDescriptors.ODataWCFServiceDescriptor)
@@ -406,6 +406,11 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
 
             OrderPlus orderCreated = customer.PlaceOrderPlus(order).GetValue();
             Assert.Equal(orderId, orderCreated.OrderIDPlus);
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
         }
     }
 }

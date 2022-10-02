@@ -76,7 +76,7 @@ namespace Microsoft.OData.Tests
             int index = 0;
             foreach (var item in enumerable)
             {
-                Assert.Equal(item, expectedElements[index++]);
+                Assert.Equal(expectedElements[index++], item);
             }
         }
     }

@@ -42,7 +42,7 @@ namespace Microsoft.OData
         /// When the state is ODataParameterReaderState.Resource, the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
         /// and the Value property of the <see cref="ODataParameterReader"/> returns null. Calling this method in any other state will cause an ODataException to be thrown.
         /// </remarks>
-        public override async Task<ODataReader> CreateResourceReaderAsync()
+        public override Task<ODataReader> CreateResourceReaderAsync()
         {
             this.VerifyCanCreateSubReader(ODataParameterReaderState.Resource);
             this.subReaderState = SubReaderState.Active;
@@ -50,8 +50,7 @@ namespace Microsoft.OData
             Debug.Assert(this.Value == null, "this.Value == null");
             IEdmStructuredType expectedResourceType = (IEdmStructuredType)this.GetParameterTypeReference(this.Name).Definition;
 
-            return await this.CreateResourceReaderAsync(expectedResourceType)
-                .ConfigureAwait(false);
+            return this.CreateResourceReaderAsync(expectedResourceType);
         }
 
         /// <summary>
@@ -65,7 +64,7 @@ namespace Microsoft.OData
         /// When the state is ODataParameterReaderState.ResourceSet, the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
         /// and the Value property of the <see cref="ODataParameterReader"/> returns null. Calling this method in any other state will cause an ODataException to be thrown.
         /// </remarks>
-        public override async Task<ODataReader> CreateResourceSetReaderAsync()
+        public override Task<ODataReader> CreateResourceSetReaderAsync()
         {
             this.VerifyCanCreateSubReader(ODataParameterReaderState.ResourceSet);
             this.subReaderState = SubReaderState.Active;
@@ -73,8 +72,7 @@ namespace Microsoft.OData
             Debug.Assert(this.Value == null, "this.Value == null");
             IEdmStructuredType expectedResourceType = (IEdmStructuredType)((IEdmCollectionType)this.GetParameterTypeReference(this.Name).Definition).ElementType.Definition;
 
-            return await this.CreateResourceSetReaderAsync(expectedResourceType)
-                .ConfigureAwait(false);
+            return this.CreateResourceSetReaderAsync(expectedResourceType);
         }
 
         /// <summary>
@@ -88,7 +86,7 @@ namespace Microsoft.OData
         /// When the state is ODataParameterReaderState.Collection, the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
         /// and the Value property of the <see cref="ODataParameterReader"/> returns null. Calling this method in any other state will cause an ODataException to be thrown.
         /// </remarks>
-        public override async Task<ODataCollectionReader> CreateCollectionReaderAsync()
+        public override Task<ODataCollectionReader> CreateCollectionReaderAsync()
         {
             this.VerifyCanCreateSubReader(ODataParameterReaderState.Collection);
             this.subReaderState = SubReaderState.Active;
@@ -96,8 +94,7 @@ namespace Microsoft.OData
             Debug.Assert(this.Value == null, "this.Value == null");
             IEdmTypeReference expectedItemTypeReference = ((IEdmCollectionType)this.GetParameterTypeReference(this.Name).Definition).ElementType;
 
-            return await this.CreateCollectionReaderAsync(expectedItemTypeReference)
-                .ConfigureAwait(false);
+            return this.CreateCollectionReaderAsync(expectedItemTypeReference);
         }
 
         /// <summary>

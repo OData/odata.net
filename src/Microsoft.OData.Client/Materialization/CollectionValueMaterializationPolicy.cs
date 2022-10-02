@@ -34,11 +34,11 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>
         /// Initializes a new instance of the <see cref="CollectionValueMaterializationPolicy" /> class.
         /// </summary>
-        /// <param name="context">The context.</param>
+        /// <param name="materializerContext">The context.</param>
         /// <param name="primitivePolicy">The primitive policy.</param>
-        internal CollectionValueMaterializationPolicy(IODataMaterializerContext context, PrimitiveValueMaterializationPolicy primitivePolicy)
+        internal CollectionValueMaterializationPolicy(IODataMaterializerContext materializerContext, PrimitiveValueMaterializationPolicy primitivePolicy)
         {
-            this.materializerContext = context;
+            this.materializerContext = materializerContext;
             this.primitiveValueMaterializationPolicy = primitivePolicy;
         }
 
@@ -134,7 +134,7 @@ namespace Microsoft.OData.Client.Materialization
                 addValueToBackingICollectionInstance,
                 isElementNullable);
 
-            collectionProperty.SetMaterializedValue(collectionInstance);
+            collectionProperty.SetMaterializedValue(collectionInstance, this.materializerContext);
         }
 
         /// <summary>

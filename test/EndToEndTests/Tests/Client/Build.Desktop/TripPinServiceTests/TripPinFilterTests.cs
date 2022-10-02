@@ -15,7 +15,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
     using Microsoft.Test.OData.Tests.Client.Common;
     using Xunit;
 
-    public class TripPinFilterTests : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>
+    public class TripPinFilterTests : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>, IDisposable
     {
         private const string NameSpacePrefix = "Microsoft.OData.SampleService.Models.TripPin.";
 
@@ -421,5 +421,10 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             return entries;
         }
         #endregion
+
+        public override void Dispose()
+        {
+            base.Dispose();
+        }
     }
 }

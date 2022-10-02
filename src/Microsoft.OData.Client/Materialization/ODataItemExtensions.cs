@@ -18,43 +18,47 @@ namespace Microsoft.OData.Client.Materialization
         /// Gets the materialized value.
         /// </summary>
         /// <param name="property">The property.</param>
+        /// <param name="materializerContext">The materializer context.</param>
         /// <returns>The materialized value.</returns>
-        public static object GetMaterializedValue(this ODataProperty property)
+        public static object GetMaterializedValue(this ODataProperty property, IODataMaterializerContext materializerContext)
         {
             ODataAnnotatable annotatableObject = property.Value as ODataAnnotatable ?? property;
-            return GetMaterializedValueCore(annotatableObject);
+            return GetMaterializedValueCore(annotatableObject, materializerContext);
         }
 
         /// <summary>
         /// Determines whether a value has been materialized.
         /// </summary>
         /// <param name="property">The property.</param>
+        /// <param name="materializerContext">The materializer context.</param>
         /// <returns><c>true</c> if the value has been materialized; otherwise, <c>false</c>.</returns>
-        public static bool HasMaterializedValue(this ODataProperty property)
+        public static bool HasMaterializedValue(this ODataProperty property, IODataMaterializerContext materializerContext)
         {
             ODataAnnotatable annotatableObject = property.Value as ODataAnnotatable ?? property;
-            return HasMaterializedValueCore(annotatableObject);
+            return HasMaterializedValueCore(annotatableObject, materializerContext);
         }
 
         /// <summary>
         /// Sets the materialized value.
         /// </summary>
         /// <param name="property">The property.</param>
-        /// <param name="materializedValue">The materialized value.</param>
-        public static void SetMaterializedValue(this ODataProperty property, object materializedValue)
+        /// <param name="materializedValue">The materializer value.</param>
+        /// <param name="materializerContext">The materializer context.</param>
+        public static void SetMaterializedValue(this ODataProperty property, object materializedValue, IODataMaterializerContext materializerContext)
         {
             ODataAnnotatable annotatableObject = property.Value as ODataAnnotatable ?? property;
-            SetMaterializedValueCore(annotatableObject, materializedValue);
+            SetMaterializedValueCore(annotatableObject, materializedValue, materializerContext);
         }
 
         /// <summary>
         /// Gets the materialized value.
         /// </summary>
         /// <param name="annotatableObject">The annotatable object.</param>
+        /// <param name="materializerContext">The materializer context.</param>
         /// <returns>The materialized value</returns>
-        private static object GetMaterializedValueCore(ODataAnnotatable annotatableObject)
+        private static object GetMaterializedValueCore(ODataAnnotatable annotatableObject, IODataMaterializerContext materializerContext)
         {
-            MaterializerPropertyValue value = annotatableObject.GetAnnotation<MaterializerPropertyValue>();
+            MaterializerPropertyValue value = materializerContext.MaterializerCache.GetAnnotation<MaterializerPropertyValue>(annotatableObject);
             Debug.Assert(value != null, "MaterializedValue not set");
             return value.Value;
         }
@@ -63,10 +67,11 @@ namespace Microsoft.OData.Client.Materialization
         /// Determines whether a value has been materialized.
         /// </summary>
         /// <param name="annotatableObject">The annotatable object.</param>
+        /// <param name="materializerContext">The materializer context.</param>
         /// <returns><c>true</c> if the value has been materialized; otherwise, <c>false</c>.</returns>
-        private static bool HasMaterializedValueCore(ODataAnnotatable annotatableObject)
+        private static bool HasMaterializedValueCore(ODataAnnotatable annotatableObject, IODataMaterializerContext materializerContext)
         {
-            return annotatableObject.GetAnnotation<MaterializerPropertyValue>() != null;
+            return materializerContext.GetAnnotation<MaterializerPropertyValue>(annotatableObject) != null;
         }
 
         /// <summary>
@@ -74,10 +79,11 @@ namespace Microsoft.OData.Client.Materialization
         /// </summary>
         /// <param name="annotatableObject">The annotatable object.</param>
         /// <param name="materializedValue">The materialized value.</param>
-        private static void SetMaterializedValueCore(ODataAnnotatable annotatableObject, object materializedValue)
+        /// <param name="materializerContext">The materializer context.</param>
+        private static void SetMaterializedValueCore(ODataAnnotatable annotatableObject, object materializedValue, IODataMaterializerContext materializerContext)
         {
             MaterializerPropertyValue materializerValue = new MaterializerPropertyValue { Value = materializedValue };
-            annotatableObject.SetAnnotation(materializerValue);
+            materializerContext.SetAnnotation(annotatableObject, materializerValue);
         }
 
         /// <summary>

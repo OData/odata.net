@@ -17,12 +17,13 @@ namespace AstoriaUnitTests.Tests
     /// </summary>
     internal class TestMaterializerContext : IODataMaterializerContext
     {
-        public TestMaterializerContext()
+        public TestMaterializerContext(MaterializerCache materializerCache)
         {
             this.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.ThrowException;
             this.ResponsePipeline = new DataServiceClientResponsePipelineConfiguration(this);
             this.Model = new ClientEdmModel(ODataProtocolVersion.V4);
             this.Context = new DataServiceContext();
+            this.MaterializerCache = materializerCache;
         }
 
         public Func<Type, string, ClientTypeAnnotation> ResolveTypeForMaterializationOverrideFunc { get; set; }
@@ -50,5 +51,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         public DataServiceContext Context { get; set; }
+
+        public MaterializerCache MaterializerCache { get; private set; }
     }
 }

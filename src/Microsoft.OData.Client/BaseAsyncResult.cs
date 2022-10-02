@@ -11,6 +11,7 @@ namespace Microsoft.OData.Client
     using System.IO;
     using System.Threading;
     using Microsoft.OData;
+    using Microsoft.OData.Client.Materialization;
 
     /// <summary>
     /// Implementation of IAsyncResult
@@ -25,6 +26,11 @@ namespace Microsoft.OData.Client
 
         /// <summary>wrapped request</summary>
         protected PerRequest perRequest;
+
+        /// <summary>
+        /// Cache used to store temporary metadata used for materialization of OData items.
+        /// </summary>
+        protected MaterializerCache materializerCache = new MaterializerCache();
 
         /// <summary>
         /// The int equivalent for true.

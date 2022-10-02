@@ -15,7 +15,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
     using Microsoft.Test.OData.Tests.Client.Common;
     using Xunit;
 
-    public class SingletonUpdateTests : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>
+    public class SingletonUpdateTests : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>, IDisposable
     {
         private const string NameSpacePrefix = "Microsoft.Test.OData.Services.ODataWCFService.";
 
@@ -189,5 +189,10 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
         }
 
         #endregion
+
+        public override void Dispose()
+        {
+            base.Dispose();
+        }
     }
 }

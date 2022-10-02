@@ -50,45 +50,46 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
         [Fact]
         public void ApplyNonExistantPropertyWithIgnoreMissingPropertiesShouldNotError()
         {
-            TestMaterializerContext context = new TestMaterializerContext() { UndeclaredPropertyBehavior = DSClient.UndeclaredPropertyBehavior.Support };
+            TestMaterializerContext  materializerContext = new TestMaterializerContext(new MaterializerCache()) { UndeclaredPropertyBehavior = DSClient.UndeclaredPropertyBehavior.Support };
             CollectionValueMaterializationPolicyTests.Point point = new CollectionValueMaterializationPolicyTests.Point();
             ODataProperty property = new ODataProperty() { Name = "Z", Value = 10 };
-            this.CreateEntryMaterializationPolicy(context)
-                .ApplyDataValue(context.ResolveTypeForMaterialization(typeof(CollectionValueMaterializationPolicyTests.Point), null), property, point);
+            this.CreateEntryMaterializationPolicy(materializerContext)
+                .ApplyDataValue(materializerContext.ResolveTypeForMaterialization(typeof(CollectionValueMaterializationPolicyTests.Point), null), property, point);
         }
 
         [Fact]
         public void ApplyNullOnCollectionPropertyShouldError()
         {
-            TestMaterializerContext context = new TestMaterializerContext();
+            TestMaterializerContext  materializerContext = new TestMaterializerContext(new MaterializerCache());
             ComplexTypeWithPrimitiveCollection complexInstance = new ComplexTypeWithPrimitiveCollection();
             ODataProperty property = new ODataProperty() { Name = "Strings", Value = null };
 
-            Action test = () => this.CreateEntryMaterializationPolicy(context).ApplyDataValue(context.ResolveTypeForMaterialization(typeof(ComplexTypeWithPrimitiveCollection), null), property, complexInstance);
+            Action test = () => this.CreateEntryMaterializationPolicy(materializerContext).ApplyDataValue(materializerContext.ResolveTypeForMaterialization(typeof(ComplexTypeWithPrimitiveCollection), null), property, complexInstance);
             test.ShouldThrow<InvalidOperationException>().WithMessage(DSClient.Strings.Collection_NullCollectionNotSupported(property.Name));
         }
 
         [Fact]
         public void ApplyStringValueForCollectionPropertyShouldError()
         {
-            TestMaterializerContext context = new TestMaterializerContext();
+            TestMaterializerContext  materializerContext = new TestMaterializerContext(new MaterializerCache());
             ComplexTypeWithPrimitiveCollection complexInstance = new ComplexTypeWithPrimitiveCollection();
             ODataProperty property = new ODataProperty() { Name = "Strings", Value = "foo" };
 
-            Action test = () => this.CreateEntryMaterializationPolicy(context).ApplyDataValue(context.ResolveTypeForMaterialization(typeof(ComplexTypeWithPrimitiveCollection), null), property, complexInstance);
+            Action test = () => this.CreateEntryMaterializationPolicy(materializerContext).ApplyDataValue(materializerContext.ResolveTypeForMaterialization(typeof(ComplexTypeWithPrimitiveCollection), null), property, complexInstance);
             test.ShouldThrow<InvalidOperationException>().WithMessage(DSClient.Strings.Deserialize_MixedTextWithComment);
         }
 
         [Fact]
         public void MaterializeDerivedComplexForBaseComplexTypeProperty()
         {
-            TestMaterializerContext context = new TestMaterializerContext();
+            var materializerCache = new MaterializerCache();
+            TestMaterializerContext  materializerContext = new TestMaterializerContext(materializerCache);
 
             //In a true client, a TypeResolver will be used to resolve derived property type.
-            context.ResolveTypeForMaterializationOverrideFunc = (Type type, string name) =>
+            materializerContext.ResolveTypeForMaterializationOverrideFunc = (Type type, string name) =>
             {
-                var edmType = context.Model.GetOrCreateEdmType(typeof(DerivedComplexType));
-                return new ClientTypeAnnotation(edmType, typeof(DerivedComplexType), "DerivedComplexType", context.Model);
+                var edmType = materializerContext.Model.GetOrCreateEdmType(typeof(DerivedComplexType));
+                return new ClientTypeAnnotation(edmType, typeof(DerivedComplexType), "DerivedComplexType", materializerContext.Model);
             };
 
             var derivedResource = new ODataResource()
@@ -98,8 +99,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             };
 
             var clientEdmModel = new ClientEdmModel(ODataProtocolVersion.V4);
-            var materializerEntry = MaterializerEntry.CreateEntry(derivedResource, ODataFormat.Json, true, clientEdmModel);
-            this.CreateEntryMaterializationPolicy(context).Materialize(materializerEntry, typeof(ChildComplexType), false);
+            var materializerEntry = MaterializerEntry.CreateEntry(derivedResource, ODataFormat.Json, true, clientEdmModel, materializerContext);
+            this.CreateEntryMaterializationPolicy(materializerContext).Materialize(materializerEntry, typeof(ChildComplexType), false);
 
             var derived = materializerEntry.ResolvedObject as DerivedComplexType;
             Assert.NotNull(derived);
@@ -109,19 +110,19 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
         [Fact]
         public void ApplyDerivedComplexForBaseComplexTypeProperty()
         {
-            TestMaterializerContext context = new TestMaterializerContext();
+            TestMaterializerContext  materializerContext = new TestMaterializerContext(new MaterializerCache());
 
-            context.ResolveTypeForMaterializationOverrideFunc = (Type type, string name) =>
+            materializerContext.ResolveTypeForMaterializationOverrideFunc = (Type type, string name) =>
             {
                 if (name == "DerivedComplexType")
                 {
-                    var edmType = context.Model.GetOrCreateEdmType(typeof(DerivedComplexType));
-                    return new ClientTypeAnnotation(edmType, typeof(DerivedComplexType), "DerivedComplexType", context.Model);
+                    var edmType = materializerContext.Model.GetOrCreateEdmType(typeof(DerivedComplexType));
+                    return new ClientTypeAnnotation(edmType, typeof(DerivedComplexType), "DerivedComplexType", materializerContext.Model);
                 }
                 else
                 {
-                    var edmType = context.Model.GetOrCreateEdmType(typeof(ComplexTypeWithChildComplexType));
-                    return new ClientTypeAnnotation(edmType, typeof(ComplexTypeWithChildComplexType), "ComplexTypeWithChildComplexType", context.Model);
+                    var edmType = materializerContext.Model.GetOrCreateEdmType(typeof(ComplexTypeWithChildComplexType));
+                    return new ClientTypeAnnotation(edmType, typeof(ComplexTypeWithChildComplexType), "ComplexTypeWithChildComplexType", materializerContext.Model);
                 }
             };
             ComplexTypeWithChildComplexType complexInstance = new ComplexTypeWithChildComplexType();
@@ -132,7 +133,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
                 TypeName = "DerivedComplexType",
                 Properties = new ODataProperty[] { new ODataProperty { Name = "DerivedProp", Value = 2 } }
             };
-            this.ApplyInnerProperty(innerResource, complexInstance, context);
+            this.ApplyInnerProperty(innerResource, complexInstance, materializerContext);
 
             Assert.Equal(2, (complexInstance.InnerComplexProperty as DerivedComplexType).DerivedProp);
         }
@@ -140,15 +141,15 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
         [Fact]
         public void ApplyODataCollectionValueToNonNullExistingCollectionProperty()
         {
-            TestMaterializerContext context = new TestMaterializerContext();
+            TestMaterializerContext  materializerContext = new TestMaterializerContext(new MaterializerCache());
 
             ComplexTypeWithPrimitiveCollection complexInstance = new ComplexTypeWithPrimitiveCollection();
             complexInstance.Strings.Add("ShouldBeCleared");
             ODataProperty property = new ODataProperty() { Name = "Strings", Value = new ODataCollectionValue() };
 
-            this.CreateEntryMaterializationPolicy(context)
+            this.CreateEntryMaterializationPolicy(materializerContext)
                 .ApplyDataValue(
-                context.ResolveTypeForMaterialization(typeof(ComplexTypeWithPrimitiveCollection), null),
+                materializerContext.ResolveTypeForMaterialization(typeof(ComplexTypeWithPrimitiveCollection), null),
                 property, complexInstance);
             complexInstance.Strings.Should().HaveCount(0);
         }
@@ -156,12 +157,12 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
         [Fact]
         public void ApplyODataCollectionValueToNullCollectionProperty()
         {
-            TestMaterializerContext context = new TestMaterializerContext();
+            TestMaterializerContext  materializerContext = new TestMaterializerContext(new MaterializerCache());
             ComplexTypeWithPrimitiveCollection complexInstance = new ComplexTypeWithPrimitiveCollection();
             complexInstance.Strings = null;
             ODataProperty property = new ODataProperty() { Name = "Strings", Value = new ODataCollectionValue() { Items = new string[] { "foo" }, TypeName = typeof(ComplexTypeWithPrimitiveCollection).FullName } };
 
-            this.CreateEntryMaterializationPolicy(context).ApplyDataValue(context.ResolveTypeForMaterialization(typeof(ComplexTypeWithPrimitiveCollection), null), property, complexInstance);
+            this.CreateEntryMaterializationPolicy(materializerContext).ApplyDataValue(materializerContext.ResolveTypeForMaterialization(typeof(ComplexTypeWithPrimitiveCollection), null), property, complexInstance);
             complexInstance.Strings.Should().HaveCount(1);
             complexInstance.Strings[0].Should().Be("foo");
         }
@@ -171,7 +172,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
         {
             foreach (var startingPropertyState in new ChildComplexType[] { null, new ChildComplexType() })
             {
-                TestMaterializerContext context = new TestMaterializerContext();
+                TestMaterializerContext  materializerContext = new TestMaterializerContext(new MaterializerCache());
                 ComplexTypeWithChildComplexType complexInstance = new ComplexTypeWithChildComplexType();
                 complexInstance.InnerComplexProperty = startingPropertyState;
                 var innerEntry = new ODataResource() { Properties = new ODataProperty[] { new ODataProperty() { Name = "Prop", Value = 1 } } };
@@ -183,7 +184,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
         [Fact]
         public void NullValueShouldBeAppliedToSubComplexValueProperty()
         {
-            TestMaterializerContext context = new TestMaterializerContext();
+            TestMaterializerContext  materializerContext = new TestMaterializerContext(new MaterializerCache());
             ComplexTypeWithChildComplexType complexInstance = new ComplexTypeWithChildComplexType();
             complexInstance.InnerComplexProperty = new ChildComplexType();
 
@@ -191,30 +192,30 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             Assert.Null(complexInstance.InnerComplexProperty);
         }
 
-        private void ApplyInnerProperty(ODataResource innerResource, ComplexTypeWithChildComplexType parentInstance, TestMaterializerContext context = null)
+        private void ApplyInnerProperty(ODataResource innerResource, ComplexTypeWithChildComplexType parentInstance, TestMaterializerContext  materializerContext = null)
         {
-            context = context ?? new TestMaterializerContext();
+            materializerContext = materializerContext ?? new TestMaterializerContext(new MaterializerCache());
             var resource = new ODataResource() { TypeName = "ComplexTypeWithChildComplexType", Properties = new ODataProperty[0] };
 
             var clientEdmModel = new ClientEdmModel(ODataProtocolVersion.V4);
-            var materializerEntry = MaterializerEntry.CreateEntry(resource, ODataFormat.Json, false, clientEdmModel);
+            var materializerEntry = MaterializerEntry.CreateEntry(resource, ODataFormat.Json, false, clientEdmModel, materializerContext);
             materializerEntry.ResolvedObject = parentInstance;
             ODataNestedResourceInfo innerComplexP = new ODataNestedResourceInfo() { Name = "InnerComplexProperty", IsCollection = false };
 
             MaterializerEntry innerMaterializerEntry;
             if (innerResource != null)
             {
-                innerMaterializerEntry = MaterializerEntry.CreateEntry(innerResource, ODataFormat.Json, true, clientEdmModel);
+                innerMaterializerEntry = MaterializerEntry.CreateEntry(innerResource, ODataFormat.Json, true, clientEdmModel, materializerContext);
             }
             else
             {
                 innerMaterializerEntry = MaterializerEntry.CreateEmpty();
             }
 
-            MaterializerNavigationLink.CreateLink(innerComplexP, innerMaterializerEntry);
+            MaterializerNavigationLink.CreateLink(innerComplexP, innerMaterializerEntry, materializerContext);
             materializerEntry.AddNestedResourceInfo(innerComplexP);
 
-            var policy = this.CreateEntryMaterializationPolicy(context);
+            var policy = this.CreateEntryMaterializationPolicy(materializerContext);
             policy.EntityTrackingAdapter.TargetInstance = parentInstance;
             policy.Materialize(materializerEntry, typeof(ComplexTypeWithChildComplexType), true);
         }
@@ -223,8 +224,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
         {
             var clientEdmModel = new ClientEdmModel(ODataProtocolVersion.V4);
             var context = new DataServiceContext();
-            materializerContext = materializerContext ?? new TestMaterializerContext() { Model = clientEdmModel, Context = context };
-            var adapter = new EntityTrackingAdapter(new TestEntityTracker(), MergeOption.OverwriteChanges, clientEdmModel, context);
+            materializerContext = materializerContext ?? new TestMaterializerContext(new MaterializerCache()) { Model = clientEdmModel, Context = context };
+            var adapter = new EntityTrackingAdapter(new TestEntityTracker(), MergeOption.OverwriteChanges, clientEdmModel, context, materializerContext);
             var lazyPrimitivePropertyConverter = new DSClient.SimpleLazy<PrimitivePropertyConverter>(() => new PrimitivePropertyConverter());
             var primitiveValueMaterializerPolicy = new PrimitiveValueMaterializationPolicy(materializerContext, lazyPrimitivePropertyConverter);
             var entryPolicy = new EntryValueMaterializationPolicy(materializerContext, adapter, lazyPrimitivePropertyConverter, null);
@@ -273,7 +274,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
                 new ODataResource(){Properties = new ODataProperty[]{ new ODataProperty(){Name="Points", Value = 0}, new ODataProperty(){Name="Diameter", Value = 18} }},
             });
 
-            var testContext = new TestMaterializerContext();
+            var testContext = new TestMaterializerContext(new MaterializerCache());
             testContext.ResolveTypeForMaterializationOverrideFunc = (Type type, string name) =>
             {
                 var edmType = testContext.Model.GetOrCreateEdmType(typeof(CollectionValueMaterializationPolicyTests.Circle));
@@ -327,9 +328,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
         {
             var clientEdmModel = new ClientEdmModel(ODataProtocolVersion.V4);
             var context = new DataServiceContext();
+            materializerContext = materializerContext ?? new TestMaterializerContext(new MaterializerCache()) { Model = clientEdmModel, Context = context };
 
             var resourceSet = new ODataResourceSet();
-            MaterializerFeed.CreateFeed(resourceSet, resources);
+            MaterializerFeed.CreateFeed(resourceSet, resources, materializerContext);
             resources.ForEach(r =>
             {
                 if (r == null)
@@ -338,11 +340,11 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
                 }
                 else
                 {
-                    MaterializerEntry.CreateEntry(r, ODataFormat.Json, true, clientEdmModel);
+                    MaterializerEntry.CreateEntry(r, ODataFormat.Json, true, clientEdmModel, materializerContext);
                 }
             });
-            materializerContext = materializerContext ?? new TestMaterializerContext() { Model = clientEdmModel, Context = context };
-            var adapter = new EntityTrackingAdapter(new TestEntityTracker(), MergeOption.OverwriteChanges, clientEdmModel, context);
+            
+            var adapter = new EntityTrackingAdapter(new TestEntityTracker(), MergeOption.OverwriteChanges, clientEdmModel, context, materializerContext);
             QueryComponents components = new QueryComponents(new Uri("http://foo.com/Service"), new Version(4, 0), resourceType, null, new Dictionary<Expression, Expression>());
 
             return new ODataEntriesEntityMaterializer(resources, materializerContext, adapter, components, resourceType, null, ODataFormat.Json);

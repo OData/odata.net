@@ -53,6 +53,24 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Creates a new instance of <see cref="ODataPath"/> by copying segments
+        /// from an existing <see cref="ODataPath"/>.
+        /// </summary>
+        /// <param name="odataPath">The instance to copy segments from.</param>
+        internal ODataPath(ODataPath odataPath)
+        {
+            ExceptionUtils.CheckArgumentNotNull(odataPath, nameof(odataPath));
+            // We mostly clone the path when we want to add a new segment.
+            // We allocate additional capacity to ensure the new segment will
+            // be added without requiring a resize.
+            this.segments = new List<ODataPathSegment>(odataPath.segments.Count + 1);
+            this.segments.AddRange(odataPath.segments);
+
+            // We don't need to check for null segments since
+            // the input ODataPath must have already validated the segments
+        }
+
+        /// <summary>
         /// Gets the first segment in the path. Returns null if the path is empty.
         /// </summary>
         public ODataPathSegment FirstSegment
@@ -85,7 +103,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Get the List of ODataPathSegments.
         /// </summary>
-        internal IList<ODataPathSegment> Segments
+        internal IReadOnlyList<ODataPathSegment> Segments
         {
             get { return this.segments; }
         }

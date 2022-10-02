@@ -14,7 +14,7 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
     using Microsoft.Test.OData.Tests.Client.Common;
     using Xunit;
 
-    public class DeltaTests : ODataWCFServiceTestsBase<InMemoryEntities>
+    public class DeltaTests : ODataWCFServiceTestsBase<InMemoryEntities>, IDisposable
     {
         public DeltaTests()
             : base(ServiceDescriptors.ODataWCFServiceDescriptor)
@@ -235,6 +235,11 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
                     }
                 }
             }
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
         }
 
     }

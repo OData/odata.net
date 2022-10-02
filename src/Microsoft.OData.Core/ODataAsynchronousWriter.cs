@@ -62,12 +62,11 @@ namespace Microsoft.OData
         /// Asynchronously creates a message for writing an async response.
         /// </summary>
         /// <returns>The message that can be used to write the async response.</returns>
-        public async Task<ODataAsynchronousResponseMessage> CreateResponseMessageAsync()
+        public Task<ODataAsynchronousResponseMessage> CreateResponseMessageAsync()
         {
             this.VerifyCanCreateResponseMessage(false);
 
-            return await this.CreateResponseMessageImplementationAsync()
-                .ConfigureAwait(false);
+            return this.CreateResponseMessageImplementationAsync();
         }
 
         /// <summary>
@@ -84,12 +83,11 @@ namespace Microsoft.OData
         /// Asynchronously flushes the write buffer to the underlying stream.
         /// </summary>
         /// <returns>A task instance that represents the asynchronous operation.</returns>
-        public async Task FlushAsync()
+        public Task FlushAsync()
         {
             this.VerifyCanFlush(false);
 
-            await this.rawOutputContext.FlushAsync()
-                .ConfigureAwait(false);
+            return this.rawOutputContext.FlushAsync();
         }
 
         /// <summary>

@@ -6,7 +6,6 @@
 
 namespace Microsoft.OData.UriParser
 {
-    using System.Linq;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
     using ODataErrorStrings = Microsoft.OData.Strings;
@@ -140,8 +139,7 @@ namespace Microsoft.OData.UriParser
 
             QueryNode boundFunction;
 
-            SingleValueNode singleValueParent = parent as SingleValueNode;
-            if (singleValueParent != null)
+            if (parent is SingleValueNode singleValueParent)
             {
                 if (endPathToken.Identifier == ExpressionConstants.QueryOptionCount)
                 {
@@ -155,7 +153,7 @@ namespace Microsoft.OData.UriParser
 
                 // Now that we have the parent type, can find its corresponding EDM type
                 IEdmStructuredTypeReference structuredParentType =
-                    singleValueParent.TypeReference == null ? null : singleValueParent.TypeReference.AsStructuredOrNull();
+                    singleValueParent.TypeReference?.AsStructuredOrNull();
 
                 IEdmProperty property =
                     structuredParentType == null ? null : this.Resolver.ResolveProperty(structuredParentType.StructuredDefinition(), endPathToken.Identifier);
@@ -175,20 +173,19 @@ namespace Microsoft.OData.UriParser
 
             // Collection with any or all expression is already supported and handled separately.
             // Add support of collection with $count segment.
-            CollectionNode colNode = parent as CollectionNode;
-            if (colNode != null && endPathToken.Identifier.Equals(UriQueryConstants.CountSegment, System.StringComparison.Ordinal))
+            if (parent is CollectionNode colNode
+                && endPathToken.Identifier.Equals(UriQueryConstants.CountSegment, System.StringComparison.Ordinal))
             {
                 // create a collection count node for collection node property.
                 return new CountNode(colNode);
             }
 
-            CollectionNavigationNode collectionParent = parent as CollectionNavigationNode;
-            if (collectionParent != null)
+            if (parent is CollectionNavigationNode collectionParent)
             {
                 IEdmEntityTypeReference parentType = collectionParent.EntityItemType;
                 IEdmProperty property = this.Resolver.ResolveProperty(parentType.StructuredDefinition(), endPathToken.Identifier);
 
-                if (property.PropertyKind == EdmPropertyKind.Structural
+                if (property?.PropertyKind == EdmPropertyKind.Structural
                     && !property.Type.IsCollection()
                     && this.state.InEntitySetAggregation)
                 {
