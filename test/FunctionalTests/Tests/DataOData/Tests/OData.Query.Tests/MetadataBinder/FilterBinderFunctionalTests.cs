@@ -472,7 +472,7 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
             QueryNode[] args13 = new QueryNode[]
                 {
                     new ConstantNode("oh"),
-                    new ConstantNode("Johny")
+                    new ConstantNode("Joh?ny")
                 };
             yield return new FilterTestCase
             {
