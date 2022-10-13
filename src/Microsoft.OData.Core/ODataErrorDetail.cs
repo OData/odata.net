@@ -7,10 +7,10 @@
 
 namespace Microsoft.OData
 {
-    using Microsoft.OData.Json;
-    #region
+    #region Namespaces
     using System.Globalization;
-    #endregion
+    using Microsoft.OData.Json;
+    #endregion Namespaces
 
     /// <summary>
     /// Class representing an error detail.
