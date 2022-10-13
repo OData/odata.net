@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Microsoft.OData.Core.Tests.Json;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Xunit;
@@ -18,7 +19,7 @@ namespace Microsoft.OData.Tests.Json
     /// Unit tests for the JsonWriter class.
     /// TODO: write unit tests for the remaining functions on JsonWriter.
     /// </summary>
-    public class JsonWriterTests
+    public class JsonWriterTests : JsonWriterEquivalenceTests
     {
         private StringBuilder builder;
         private IJsonWriter writer;
@@ -27,6 +28,7 @@ namespace Microsoft.OData.Tests.Json
         {
             this.builder = new StringBuilder();
             this.writer = new JsonWriter(new StringWriter(builder), isIeee754Compatible: true);
+            
         }
 
         [Fact]
@@ -352,6 +354,11 @@ namespace Microsoft.OData.Tests.Json
             action(jsonWriter);
 
             Assert.True(rentVerified);
+        }
+
+        protected override IJsonWriter CreateJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding)
+        {
+            return new JsonWriter(new StreamWriter(stream, encoding), isIeee754Compatible);
         }
     }
 }
