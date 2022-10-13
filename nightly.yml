@@ -2,18 +2,18 @@
     - template: buildandtest.yml
 
     - script: |
-        mkdir $(Build.ArtifactStagingDirectory)\sbom
+        mkdir $(Build.ArtifactStagingDirectory)\$(NugetArtifactsDir)\sbom
       displayName: 'Create $(Build.ArtifactStagingDirectory)\sbom'
 
     - task: AzureArtifacts.manifest-generator-task.manifest-generator-task.ManifestGeneratorTask@0
       displayName: 'Manifest Generator '
       inputs:
-          BuildDropPath: '$(Build.ArtifactStagingDirectory)\sbom'
+          BuildDropPath: '$(Build.ArtifactStagingDirectory)\$(NugetArtifactsDir)\sbom'
 
     - task: PublishBuildArtifacts@1
       displayName: 'Publish SBOM'
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)\sbom'
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)\$(NugetArtifactsDir)\sbom'
 
     - template: credscan.yml
  
@@ -179,7 +179,7 @@
       displayName: 'Publish Artifact - Nuget Packages'
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)\$(NugetArtifactsDir)'
-        ArtifactName: Nuget
+        ArtifactName: $(NugetArtifactsDir)
 
     - task: NuGetCommand@2
       displayName: 'NuGet push - Nightly packages to MyGet'
