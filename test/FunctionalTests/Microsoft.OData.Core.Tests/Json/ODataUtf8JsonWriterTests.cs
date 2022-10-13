@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.Encodings.Web;
+using Microsoft.OData.Core.Tests.Json;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Xunit;
@@ -19,7 +20,7 @@ namespace Microsoft.OData.Tests.Json
     /// <summary>
     /// Unit tests for the ODataUtf8JsonWriter class
     /// </summary>
-    public sealed class ODataUtf8JsonWriterTests: IDisposable
+    public sealed class ODataUtf8JsonWriterTests: JsonWriterEquivalenceTests, IDisposable
     {
         private IJsonWriter writer;
         private MemoryStream stream;
@@ -444,6 +445,11 @@ namespace Microsoft.OData.Tests.Json
             // leave open since the this.stream is disposed separately
             using StreamReader reader = new StreamReader(this.stream, encoding, leaveOpen: true);
             return reader.ReadToEnd();
+        }
+
+        protected override IJsonWriter CreateJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding)
+        {
+            return new ODataUtf8JsonWriter(stream, isIeee754Compatible, encoding);
         }
     }
 }

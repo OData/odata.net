@@ -26,6 +26,7 @@ namespace Microsoft.OData.Json
         private const int DefaultBufferSize = 16 * 1024;
         private readonly float bufferFlushThreshold;
         private readonly static ReadOnlyMemory<byte> parentheses = new byte[] { (byte)'(', (byte)')' };
+        private readonly static byte itemSeparator = (byte)',';
 
         private readonly Stream outputStream;
         private readonly Stream writeStream;
@@ -34,6 +35,26 @@ namespace Microsoft.OData.Json
         private readonly bool isIeee754Compatible;
         private readonly bool leaveStreamOpen;
         private readonly Encoding outputEncoding;
+        /// <summary>
+        /// Whether we should write the item separator (,) before
+        /// the next object or array entry.
+        /// We need to keep track of this because the WriteRawValue bypasses the
+        /// Utf8JsonWriter and writes to the stream directly, so the Utf8JsonWriter
+        /// does not end up writing the separator.
+        /// This will not be necessary when we switch to using Utf8JsonWriter.WriteRawValue()
+        /// see: https://github.com/OData/odata.net/issues/2420
+        /// </summary>
+        private bool shouldWriteSeparator = false;
+        /// <summary>
+        /// Stack used to keep track of scope transitions and
+        /// whether we're currently in an Object or an Array.
+        /// </summary>
+        private BitStack bitStack;
+        /// <summary>
+        /// Whether we're about the first element
+        /// in an arrya
+        /// </summary>
+        private bool isWritingFirstElementInArray = false;
         private bool disposed;
 
         /// <summary>
@@ -114,26 +135,31 @@ namespace Microsoft.OData.Json
 
         public void StartObjectScope()
         {
+            this.EnterObjectScope();
             this.writer.WriteStartObject();
         }
 
         public void EndObjectScope()
         {
             this.writer.WriteEndObject();
+            this.ExitScope();
         }
 
         public void StartArrayScope()
         {
+            this.EnterArrayScope();
             this.writer.WriteStartArray();
         }
 
         public void EndArrayScope()
         {
             this.writer.WriteEndArray();
+            this.ExitScope();
         }
 
         public void WriteName(string name)
         {
+            this.WriteSeparatorIfNecessary();
             this.writer.WritePropertyName(name);
             this.FlushIfBufferThresholdReached();
         }
@@ -241,6 +267,7 @@ namespace Microsoft.OData.Json
 
         public void WriteValue(string value)
         {
+            this.WriteSeparatorIfNecessary();
             if (value == null)
             {
                 this.writer.WriteNullValue();
@@ -274,12 +301,90 @@ namespace Microsoft.OData.Json
                 return;
             }
 
+            if (IsInArray() && !isWritingFirstElementInArray)
+            {
+                this.writeStream.WriteByte(itemSeparator);
+            }
+
             // Consider using Utf8JsonWriter.WriteRawValue() in .NET 6+
             // see: https://github.com/OData/odata.net/issues/2420
 
             this.Flush(); // ensure we don't write to the stream while there are still pending data in the buffer
             this.writeStream.Write(Encoding.UTF8.GetBytes(rawValue));
             this.FlushIfBufferThresholdReached();
+            // since we bypass the Utf8JsonWriter, we need to signal to other
+            // Write methods that a separator should be written first
+            this.shouldWriteSeparator = true;
+        }
+
+        private void WriteSeparatorIfNecessary()
+        {
+            if (shouldWriteSeparator)
+            {
+                if (!IsInArray())
+                {
+                    // We don't need to write separators inside arrays
+                    // because Utf8JsonWriter writes one before
+                    // each value (except for the first)
+                    this.writeStream.WriteByte(itemSeparator);
+                }
+
+                shouldWriteSeparator = false;
+            }
+
+            isWritingFirstElementInArray = false;
+        }
+
+        private void ClearSeparator()
+        {
+            shouldWriteSeparator = false;
+        }
+
+        private void EnterObjectScope()
+        {
+            this.bitStack.PushTrue();
+        }
+
+        private void EnterArrayScope()
+        {
+            this.isWritingFirstElementInArray = true;
+            this.bitStack.PushFalse();
+        }
+
+        private void ExitScope()
+        {
+            this.bitStack.Pop();
+        }
+
+        private bool IsInArray()
+        {
+            if (!TryPeekScope(out bool isInObject))
+            {
+                return false;
+            }
+
+            return !isInObject;
+        }
+
+        private bool TryPeekScope(out bool isInObject)
+        {
+            isInObject = false;
+            if (this.bitStack.CurrentDepth == 0)
+            {
+                return false;
+            }
+
+            isInObject = this.bitStack.Pop();
+            if (isInObject)
+            {
+                this.bitStack.PushTrue();
+            }
+            else
+            {
+                this.bitStack.PushFalse();
+            }
+
+            return true;
         }
 
         private void Dispose(bool disposing)
@@ -550,6 +655,7 @@ namespace Microsoft.OData.Json
         }
 
         #endregion
+
     }
 }
 #endif

@@ -12,7 +12,7 @@ namespace Microsoft.OData.Core.Tests.Json
     /// </summary>
     public abstract class JsonWriterEquivalenceTests
     {
-        const string MixedObjectJson = "{\"StringProp\":\"John\",\"IntProp\":10,\"BoolPropFalse\":false,\"DateProp\":\"2014-12-31\",\"RawStringProp\":\"foobar\",\"BoolPropTrue\":false,\"RawArrayProp\":[1, 2, 3, 4, 5],\"DateTimeOffsetProp\":\"2014-12-31T12:42:30+01:20\",\"ObjectProp\":{\"FloatProp\":3.1,\"NestedRawValue\":test,\"ShortProp\":1124,\"ByteProp\":10,\"LongProp\":234234\"SignedByteProp\"-10,\"GuidProp\":\"00000012-0000-0000-0000-012345678900\",\"ArrayPropWithEveryValueRaw\":[\"test\",\"raw\",10,\"raw\",true,\"raw\",\"2014-12-31\",\"raw\",\"2014-12-31T12:42:30+01:20\",\"raw\",[1,2,3],1124,\"raw\",10,\"raw\",-10,\"raw\",25253,\"raw\",\"00000012-0000-0000-0000-012345678900\",\"raw\",\"foo\",\"raw\",12.3,\"raw\",2.6,\"raw\",{},\"raw\",[],\"raw\"]},\"ArrayProp\":[10,\"baz\",20,12.3,2.6,{\"RawObjectInArray\": true }],\"UntypedObjectProp\":{\"foo\":\"bar\"}}";
+        const string MixedObjectJson = "{\"StringProp\":\"John\",\"IntProp\":10,\"BoolPropFalse\":false,\"DateProp\":\"2014-12-31\",\"RawStringProp\":\"foobar\",\"BoolPropTrue\":false,\"RawArrayProp\":[1, 2, 3, 4, 5],\"DateTimeOffsetProp\":\"2014-12-31T12:42:30+01:20\",\"ObjectProp\":{\"FloatProp\":3.1,\"NestedRawValue\":\"test\",\"ShortProp\":1124,\"ByteProp\":10,\"LongProp\":234234,\"SignedByteProp\":-10,\"GuidProp\":\"00000012-0000-0000-0000-012345678900\",\"ArrayPropWithEveryValueRaw\":[\"test\",\"raw\",10,\"raw\",true,\"raw\",\"2014-12-31\",\"raw\",\"2014-12-31T12:42:30+01:20\",\"raw\",[1,2,3],1124,\"raw\",10,\"raw\",-10,\"raw\",25253,\"raw\",\"00000012-0000-0000-0000-012345678900\",\"raw\",\"foo\",\"raw\",12.3,\"raw\",2.6,\"raw\",{},\"raw\",[],\"raw\"]},\"ArrayProp\":[10,\"baz\",20,12.3,2.6,{\"RawObjectInArray\": true }],\"UntypedObjectProp\":{\"foo\":\"bar\"}}";
         protected abstract IJsonWriter CreateJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding);
 
         [Fact]
@@ -52,14 +52,14 @@ namespace Microsoft.OData.Core.Tests.Json
                 jsonWriter.WriteName("FloatProp");
                 jsonWriter.WriteValue(3.1f);
                 jsonWriter.WriteName("NestedRawValue");
-                jsonWriter.WriteRawValue("test");
+                jsonWriter.WriteRawValue("\"test\"");
                 jsonWriter.WriteName("ShortProp");
                 jsonWriter.WriteValue((short)1124);
                 jsonWriter.WriteName("ByteProp");
                 jsonWriter.WriteValue((byte)10);
                 jsonWriter.WriteName("LongProp");
                 jsonWriter.WriteValue(234234L);
-                jsonWriter.WriteValue("SignedByteProp");
+                jsonWriter.WriteName("SignedByteProp");
                 jsonWriter.WriteValue((sbyte)-10);
                 jsonWriter.WriteName("GuidProp");
                 jsonWriter.WriteValue(new Guid("00000012-0000-0000-0000-012345678900"));
