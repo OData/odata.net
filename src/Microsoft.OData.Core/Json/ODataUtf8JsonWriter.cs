@@ -55,6 +55,7 @@ namespace Microsoft.OData.Json
         /// in an arrya
         /// </summary>
         private bool isWritingFirstElementInArray = false;
+        private bool isWritingConsecutiveRawValuesAtStartOfArray = false;
         private bool disposed;
 
         /// <summary>
@@ -135,6 +136,7 @@ namespace Microsoft.OData.Json
 
         public void StartObjectScope()
         {
+            this.WriteSeparatorIfNecessary();
             this.EnterObjectScope();
             this.writer.WriteStartObject();
         }
@@ -147,6 +149,7 @@ namespace Microsoft.OData.Json
 
         public void StartArrayScope()
         {
+            this.WriteSeparatorIfNecessary();
             this.EnterArrayScope();
             this.writer.WriteStartArray();
         }
@@ -166,30 +169,35 @@ namespace Microsoft.OData.Json
 
         public void WriteValue(bool value)
         {
+            this.WriteSeparatorIfNecessary();
             this.writer.WriteBooleanValue(value);
             this.FlushIfBufferThresholdReached();
         }
 
         public void WriteValue(int value)
         {
+            this.WriteSeparatorIfNecessary();
             this.writer.WriteNumberValue(value);
             this.FlushIfBufferThresholdReached();
         }
 
         public void WriteValue(float value)
         {
+            this.WriteSeparatorIfNecessary();
             this.writer.WriteNumberValue(value);
             this.FlushIfBufferThresholdReached();
         }
 
         public void WriteValue(short value)
         {
+            this.WriteSeparatorIfNecessary();
             this.writer.WriteNumberValue(value);
             this.FlushIfBufferThresholdReached();
         }
 
         public void WriteValue(long value)
         {
+            this.WriteSeparatorIfNecessary();
             if (this.isIeee754Compatible)
             {
                 this.writer.WriteStringValue(value.ToString(CultureInfo.InvariantCulture));
@@ -204,18 +212,21 @@ namespace Microsoft.OData.Json
 
         public void WriteValue(double value)
         {
+            this.WriteSeparatorIfNecessary();
             this.writer.WriteNumberValue(value);
             this.FlushIfBufferThresholdReached();
         }
 
         public void WriteValue(Guid value)
         {
+            this.WriteSeparatorIfNecessary();
             this.writer.WriteStringValue(value);
             this.FlushIfBufferThresholdReached();
         }
 
         public void WriteValue(decimal value)
         {
+            this.WriteSeparatorIfNecessary();
             if (this.isIeee754Compatible)
             {
                 this.writer.WriteStringValue(value.ToString(CultureInfo.InvariantCulture));
@@ -230,12 +241,14 @@ namespace Microsoft.OData.Json
 
         public void WriteValue(DateTimeOffset value)
         {
+            this.WriteSeparatorIfNecessary();
             this.writer.WriteStringValue(value);
             this.FlushIfBufferThresholdReached();
         }
 
         public void WriteValue(TimeSpan value)
         {
+            this.WriteSeparatorIfNecessary();
             string stringValue = EdmValueWriter.DurationAsXml(value);
             this.writer.WriteStringValue(stringValue);
             this.FlushIfBufferThresholdReached();
@@ -243,24 +256,28 @@ namespace Microsoft.OData.Json
 
         public void WriteValue(Date value)
         {
+            this.WriteSeparatorIfNecessary();
             this.writer.WriteStringValue(value.ToString());
             this.FlushIfBufferThresholdReached();
         }
 
         public void WriteValue(TimeOfDay value)
         {
+            this.WriteSeparatorIfNecessary();
             this.writer.WriteStringValue(value.ToString());
             this.FlushIfBufferThresholdReached();
         }
 
         public void WriteValue(byte value)
         {
+            this.WriteSeparatorIfNecessary();
             this.writer.WriteNumberValue(value);
             this.FlushIfBufferThresholdReached();
         }
 
         public void WriteValue(sbyte value)
         {
+            this.WriteSeparatorIfNecessary();
             this.writer.WriteNumberValue(value);
             this.FlushIfBufferThresholdReached();
         }
@@ -301,38 +318,53 @@ namespace Microsoft.OData.Json
                 return;
             }
 
+            // ensure we don't write to the stream directly while there are still pending data in the Utf8JsonWriter buffer
+            this.Flush(); 
             if (IsInArray() && !isWritingFirstElementInArray)
             {
+                // if we're inside an array we have to manually pre-pend separator
+                // be writing the raw value directly
                 this.writeStream.WriteByte(itemSeparator);
             }
 
             // Consider using Utf8JsonWriter.WriteRawValue() in .NET 6+
             // see: https://github.com/OData/odata.net/issues/2420
-
-            this.Flush(); // ensure we don't write to the stream while there are still pending data in the buffer
             this.writeStream.Write(Encoding.UTF8.GetBytes(rawValue));
             this.FlushIfBufferThresholdReached();
             // since we bypass the Utf8JsonWriter, we need to signal to other
             // Write methods that a separator should be written first
-            this.shouldWriteSeparator = true;
+            if ((this.isWritingFirstElementInArray || this.isWritingConsecutiveRawValuesAtStartOfArray) || !this.IsInArray())
+            {
+                this.shouldWriteSeparator = true;
+            }
+
+            if (this.isWritingFirstElementInArray || this.isWritingConsecutiveRawValuesAtStartOfArray)
+            {
+                this.isWritingConsecutiveRawValuesAtStartOfArray = true;
+            }
+            
+            this.isWritingFirstElementInArray = false;
         }
 
         private void WriteSeparatorIfNecessary()
         {
             if (shouldWriteSeparator)
             {
-                if (!IsInArray())
-                {
-                    // We don't need to write separators inside arrays
-                    // because Utf8JsonWriter writes one before
-                    // each value (except for the first)
-                    this.writeStream.WriteByte(itemSeparator);
-                }
-
-                shouldWriteSeparator = false;
+                // We don't need to write separators inside arrays
+                // because Utf8JsonWriter writes one before
+                // each value (except for the first)
+                this.WriteItemSeparator();
             }
 
-            isWritingFirstElementInArray = false;
+            this.shouldWriteSeparator = false;
+            this.isWritingFirstElementInArray = false;
+            this.isWritingConsecutiveRawValuesAtStartOfArray = false;
+        }
+
+        private void WriteItemSeparator()
+        {
+            this.Flush();
+            this.writeStream.WriteByte(itemSeparator);
         }
 
         private void ClearSeparator()
@@ -342,17 +374,22 @@ namespace Microsoft.OData.Json
 
         private void EnterObjectScope()
         {
+            this.isWritingConsecutiveRawValuesAtStartOfArray = false;
+            this.isWritingFirstElementInArray = false;
             this.bitStack.PushTrue();
         }
 
         private void EnterArrayScope()
         {
+            this.isWritingConsecutiveRawValuesAtStartOfArray = false;
             this.isWritingFirstElementInArray = true;
             this.bitStack.PushFalse();
         }
 
         private void ExitScope()
         {
+            this.isWritingFirstElementInArray = false;
+            this.shouldWriteSeparator = false;
             this.bitStack.Pop();
         }
 
@@ -541,6 +578,7 @@ namespace Microsoft.OData.Json
 
         public async Task WriteValueAsync(TimeSpan value)
         {
+            this.WriteSeparatorIfNecessary();
             string stringValue = EdmValueWriter.DurationAsXml(value);
             this.writer.WriteStringValue(stringValue);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);

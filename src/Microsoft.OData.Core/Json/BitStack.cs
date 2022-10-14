@@ -102,13 +102,13 @@ namespace Microsoft.OData.Json
             bool inObject;
             if (_currentDepth < AllocationFreeMaxDepth)
             {
+                inObject = (_allocationFreeContainer & 1) != 0;
                 _allocationFreeContainer >>= 1;
-                inObject = (_allocationFreeContainer & 1) != 0;
             }
-            else if (_currentDepth == AllocationFreeMaxDepth)
-            {
-                inObject = (_allocationFreeContainer & 1) != 0;
-            }
+            //else if (_currentDepth == AllocationFreeMaxDepth)
+            //{
+            //    inObject = (_allocationFreeContainer & 1) != 0;
+            //}
             else
             {
                 inObject = PopFromArray();
@@ -119,7 +119,7 @@ namespace Microsoft.OData.Json
         [MethodImpl(MethodImplOptions.NoInlining)]
         private bool PopFromArray()
         {
-            int index = _currentDepth - AllocationFreeMaxDepth - 1;
+            int index = _currentDepth - AllocationFreeMaxDepth;
             Debug.Assert(_array != null);
             Debug.Assert(index >= 0, $"Get - Negative - index: {index}, arrayLength: {_array.Length}");
 
@@ -140,20 +140,6 @@ namespace Microsoft.OData.Json
             Debug.Assert(nextDouble > minSize);
 
             Array.Resize(ref _array, nextDouble);
-        }
-
-        public void SetFirstBit()
-        {
-            Debug.Assert(_currentDepth == 0, "Only call SetFirstBit when depth is 0");
-            _currentDepth++;
-            _allocationFreeContainer = 1;
-        }
-
-        public void ResetFirstBit()
-        {
-            Debug.Assert(_currentDepth == 0, "Only call ResetFirstBit when depth is 0");
-            _currentDepth++;
-            _allocationFreeContainer = 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -5,7 +5,7 @@ using System;
 using Microsoft.OData.Json;
 using Xunit;
 
-namespace Microsoft.OData.Tests.Json
+namespace Microsoft.OData.Core.Tests.Json
 {
     public static partial class BitStackTests
     {
@@ -15,35 +15,6 @@ namespace Microsoft.OData.Tests.Json
         public static void DefaultBitStack()
         {
             BitStack bitStack = default;
-            Assert.Equal(0, bitStack.CurrentDepth);
-        }
-
-        [Fact]
-        public static void SetResetFirstBit()
-        {
-            BitStack bitStack = default;
-            Assert.Equal(0, bitStack.CurrentDepth);
-            bitStack.SetFirstBit();
-            Assert.Equal(1, bitStack.CurrentDepth);
-            Assert.False(bitStack.Pop());
-            Assert.Equal(0, bitStack.CurrentDepth);
-
-            bitStack = default;
-            Assert.Equal(0, bitStack.CurrentDepth);
-            bitStack.ResetFirstBit();
-            Assert.Equal(1, bitStack.CurrentDepth);
-            Assert.False(bitStack.Pop());
-            Assert.Equal(0, bitStack.CurrentDepth);
-
-            bitStack = default;
-            Assert.Equal(0, bitStack.CurrentDepth);
-            bitStack.SetFirstBit();
-            Assert.Equal(1, bitStack.CurrentDepth);
-            Assert.False(bitStack.Pop());
-            Assert.Equal(0, bitStack.CurrentDepth);
-            bitStack.ResetFirstBit();
-            Assert.Equal(1, bitStack.CurrentDepth);
-            Assert.False(bitStack.Pop());
             Assert.Equal(0, bitStack.CurrentDepth);
         }
 
@@ -60,6 +31,11 @@ namespace Microsoft.OData.Tests.Json
             for (int i = 0; i < bitLength; i++)
             {
                 values[i] = s_random.NextDouble() >= 0.5;
+            }
+
+            if (bitLength > 64)
+            {
+                values[64] = true;
             }
 
             for (int i = 0; i < bitLength; i++)
@@ -79,7 +55,7 @@ namespace Microsoft.OData.Tests.Json
             for (int i = bitLength - 1; i > 0; i--)
             {
                 // We need the value at the top *after* popping off the last one.
-                Assert.Equal(values[i - 1], bitStack.Pop());
+                Assert.Equal(values[i], bitStack.Pop());
                 Assert.Equal(i, bitStack.CurrentDepth);
             }
         }
@@ -135,7 +111,7 @@ namespace Microsoft.OData.Tests.Json
             for (int i = bitLength - 1; i >= bitLength - IterationCapacity; i--)
             {
                 // We need the value at the top *after* popping off the last one.
-                Assert.Equal(values[i - 1], bitStack.Pop());
+                Assert.Equal(values[i], bitStack.Pop());
 
                 expectedDepth--;
                 Assert.Equal(expectedDepth, bitStack.CurrentDepth);
@@ -143,7 +119,7 @@ namespace Microsoft.OData.Tests.Json
             for (int i = IterationCapacity - 1; i > 0; i--)
             {
                 // We need the value at the top *after* popping off the last one.
-                Assert.Equal(values[i - 1], bitStack.Pop());
+                Assert.Equal(values[i], bitStack.Pop());
 
                 expectedDepth--;
                 Assert.Equal(expectedDepth, bitStack.CurrentDepth);
