@@ -107,37 +107,57 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         private IEnumerable<IEdmStructuralProperty> ComputeDeclaredKey()
         {
-            if (this.entity.Key != null)
+            if (this.entity.Key == null)
             {
-                List<IEdmStructuralProperty> key = new List<IEdmStructuralProperty>();
-                foreach (CsdlPropertyReference keyProperty in this.entity.Key.Properties)
+                return null;
+            }
+
+            List<IEdmStructuralProperty> key = new List<IEdmStructuralProperty>();
+            foreach (CsdlPropertyReference keyProperty in this.entity.Key.Properties)
+            {
+                IEdmStructuralProperty structuralProperty = null;
+                if (!string.IsNullOrEmpty(keyProperty?.PropertyAlias))
                 {
-                    IEdmStructuralProperty structuralProperty = this.FindProperty(keyProperty.PropertyName) as IEdmStructuralProperty;
+                    string[] keyPropertySegments = keyProperty.PropertyName.Split('/');
+                    if (keyPropertySegments.Length > 0)
+                    {
+                        structuralProperty = this.FindProperty(keyPropertySegments[0]) as IEdmStructuralProperty;
+                        if (structuralProperty == null)
+                        {
+                            return null;
+                        }
+
+                        structuralProperty = PropertyAliasHelpers.GetKeyProperty(structuralProperty, keyPropertySegments, keyProperty.PropertyAlias);
+                    }
+
+                }
+                else
+                {
+                    structuralProperty = this.FindProperty(keyProperty.PropertyName) as IEdmStructuralProperty;
+                }
+
+                if (structuralProperty != null)
+                {
+                    key.Add(structuralProperty);
+                }
+                else
+                {
+                    // If keyProperty is a duplicate, it will come back as non-structural from FindProperty, but it still might be structural
+                    // inside the DeclaredProperties, so try it. If it is not in the DeclaredProperties or it is not structural there,
+                    // then fall back to unresolved.
+                    structuralProperty = this.DeclaredProperties.FirstOrDefault(p => p.Name == keyProperty.PropertyName) as IEdmStructuralProperty;
                     if (structuralProperty != null)
                     {
                         key.Add(structuralProperty);
                     }
                     else
                     {
-                        // If keyProperty is a duplicate, it will come back as non-structural from FindProperty, but it still might be structural
-                        // inside the DeclaredProperties, so try it. If it is not in the DeclaredProperties or it is not structural there,
-                        // then fall back to unresolved.
-                        structuralProperty = this.DeclaredProperties.FirstOrDefault(p => p.Name == keyProperty.PropertyName) as IEdmStructuralProperty;
-                        if (structuralProperty != null)
-                        {
-                            key.Add(structuralProperty);
-                        }
-                        else
-                        {
-                            key.Add(new UnresolvedProperty(this, keyProperty.PropertyName, this.Location));
-                        }
+                        key.Add(new UnresolvedProperty(this, keyProperty.PropertyName, this.Location));
                     }
                 }
-
-                return key;
             }
 
-            return null;
+            return key;
         }
     }
 }

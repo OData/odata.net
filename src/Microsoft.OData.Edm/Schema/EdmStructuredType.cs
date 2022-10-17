@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Microsoft.OData.Edm
 {
@@ -159,6 +160,25 @@ namespace Microsoft.OData.Edm
 
             EdmNavigationProperty property = EdmNavigationProperty.CreateNavigationProperty(this, propertyInfo);
 
+            this.AddProperty(property);
+            return property;
+        }
+
+        /// <summary>
+        /// Creates and adds a structural property alias to this type.
+        /// </summary>
+        /// <param name="type">Type of the property.</param>
+        /// <param name="alias">The property alias.</param>
+        /// <param name="path">The key path segments</param>
+        /// <returns>Created structural property.</returns>
+        public EdmStructuralPropertyAlias AddStructuralPropertyAlias(IEdmTypeReference type, string alias, IEnumerable<string> path)
+        {
+            if (path == null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+            string propertyName = path.FirstOrDefault();
+            EdmStructuralPropertyAlias property = new EdmStructuralPropertyAlias(this, propertyName, type, alias, path);
             this.AddProperty(property);
             return property;
         }

@@ -655,13 +655,20 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             {
                 if (v.ValueKind == JsonValueKind.Object)
                 {
-                    // TODO: ODL doesn't support the key referencing a property of a complex type as below.
                     // "$Key": [
                     //    {
                     //      "EntityInfoID": "Info/ID"
                     //    }
                     //  ]
-                    p.ReportError(EdmErrorCode.InvalidKeyValue, "It doesn't support the key object.");
+                    string pName = "";
+                    string pValue = "";
+                    v.ParseAsObject(p, (keyAlias, keyName) =>
+                    {
+                        pName = keyName.ParseAsString(p);
+                        pValue = keyAlias;
+                    });
+
+                    return new CsdlPropertyReference(pName, pValue, context.Location());
                 }
 
                 string propertyName = v.ParseAsString(context);

@@ -2058,5 +2058,46 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             var personType = model.FindType("Other.Types.Person");
             Assert.Null(personType);
         }
+
+        [Fact]
+        public void ReadKeyAlias()
+        {
+            var csdl = @"<?xml version=""1.0"" encoding=""utf-8""?>
+            <edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
+              <edmx:DataServices>
+                <Schema Namespace=""NS1"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+                  <EntityType Name=""Product"">
+                    <Key>
+                      <PropertyRef Name=""ExampleObject/Name"" Alias=""ExampleObjectName""/>
+                    </Key>
+                    <Property Name=""ExampleObject"" Type=""NS1.ExampleComplexObject"" Nullable=""false""/>
+                    <Property Name=""Name"" Type=""Edm.String"" Nullable=""false""/>
+                    <Property Name=""UpdatedTime"" Type=""Edm.Date"" Nullable=""false""/>
+                  </EntityType>
+                  <ComplexType Name =""ExampleComplexObject"">
+                    <Property Name=""Name"" Type=""Edm.String"" Nullable=""false""/>
+                  </ComplexType>
+                  <EntityContainer Name=""Container"">
+                    <EntitySet Name=""Products"" EntityType=""NS1.Product""/>
+                  </EntityContainer>
+                </Schema>
+              </edmx:DataServices>
+            </edmx:Edmx>
+            ";
+
+            using (XmlReader reader = XElement.Parse(csdl).CreateReader())
+            {
+                var model = CsdlReader.Parse(reader);
+                Assert.NotNull(model);
+                var productType = model.FindType("NS1.Product") as IEdmEntityType;
+                var declaredKey = productType.DeclaredKey.FirstOrDefault() as IEdmStructuralPropertyAlias;
+                var expectedDeclaredKeyType = EdmCoreModel.Instance.GetString(false);
+                var expectedDeclaredKeyDeclaringType = new EdmComplexType("NS1", "ExampleComplexObject");
+                Assert.Equal("ExampleObject/Name", string.Join("/", declaredKey.Path));
+                Assert.Equal("ExampleObjectName", declaredKey.PropertyAlias);
+                Assert.Equal(expectedDeclaredKeyType.Definition, declaredKey.Type.Definition);
+                Assert.Equal(expectedDeclaredKeyDeclaringType.FullTypeName(), declaredKey.DeclaringType.FullTypeName());
+            }
+        }
     }
 }
