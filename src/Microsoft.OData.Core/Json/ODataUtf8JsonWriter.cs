@@ -26,7 +26,7 @@ namespace Microsoft.OData.Json
         private const int DefaultBufferSize = 16 * 1024;
         private readonly float bufferFlushThreshold;
         private readonly static ReadOnlyMemory<byte> parentheses = new byte[] { (byte)'(', (byte)')' };
-        private readonly static byte itemSeparator = (byte)',';
+        private readonly static ReadOnlyMemory<byte> itemSeparator = new byte[] { (byte)',' };
 
         private readonly Stream outputStream;
         private readonly Stream writeStream;
@@ -35,28 +35,49 @@ namespace Microsoft.OData.Json
         private readonly bool isIeee754Compatible;
         private readonly bool leaveStreamOpen;
         private readonly Encoding outputEncoding;
-        /// <summary>
-        /// Whether we should write the item separator (,) before
-        /// the next object or array entry.
-        /// We need to keep track of this because the WriteRawValue bypasses the
-        /// Utf8JsonWriter and writes to the stream directly, so the Utf8JsonWriter
-        /// does not end up writing the separator.
-        /// This will not be necessary when we switch to using Utf8JsonWriter.WriteRawValue()
+        private bool disposed;
+        /// The Utf8JsonWriter internally keeps track of when to write the item separtor ','
+        /// between key-value pairs in an object and between items in an array
+        /// However, we bypass the Utf8JsonWriter in our implementation of WriteRawValue
+        /// and write directly to the destination stream. This means that we have to manually
+        /// write an item separator when writing raw values. And since the Utf8JsonWriter is not
+        /// aware of this write, we have to manually keep track of state to synchronise with the Utf8JsonWriter
+        /// to ensure we don't write extra separators or skip a separator where it's needed, both of
+        /// which would result in invalid JSON.
+        /// 
+        /// In particular, we have to ensure write a separator in the following scenarios:
+        /// - inside a JSON object, before writing a property name that's preceded by a raw value
+        /// - inside an array, before writing an item that's preceded by one or more consecutive raw values at the start of the array.
+        /// We only need to do this for the first non-raw value after a sequence of raw values. That's because the Utf8JsonWriter
+        /// (not aware of the raw values) will think that this is the first item in the array and not include a separator before it.
+        /// - inside an array, before writing a raw value that is not at the start of the array
+        /// 
+        /// The following variables are used to keep track of state that allows us to figure out where to manually place a separator
+        /// This will not be necessary when we implement WriteRawValue using Utf8JsonWriter.WriteRawValue()
         /// see: https://github.com/OData/odata.net/issues/2420
+
+        /// <summary>
+        /// Whether we should manually write the item separator (,) before
+        /// the next object or array entry.
         /// </summary>
         private bool shouldWriteSeparator = false;
         /// <summary>
-        /// Stack used to keep track of scope transitions and
+        /// Stack used to keep track of scope transitions i.e,
         /// whether we're currently in an Object or an Array.
         /// </summary>
         private BitStack bitStack;
         /// <summary>
-        /// Whether we're about the first element
-        /// in an arrya
+        /// Whether we're about the first element in array. This helps
+        /// decide whether we should manually write a separator.
         /// </summary>
         private bool isWritingFirstElementInArray = false;
+        /// <summary>
+        /// Whether we're currently writing a raw value at the start of an array
+        /// or preceeded by a sequence of consecutive raw values at the start of
+        /// an array e.g. ["rawValue1", "rawValue2", "rawValue3"
+        /// </summary>
         private bool isWritingConsecutiveRawValuesAtStartOfArray = false;
-        private bool disposed;
+        
 
         /// <summary>
         /// Creates an instance of <see cref="ODataUtf8JsonWriter"/>.
@@ -322,15 +343,15 @@ namespace Microsoft.OData.Json
             this.Flush(); 
             if (IsInArray() && !isWritingFirstElementInArray)
             {
-                // if we're inside an array we have to manually pre-pend separator
-                // be writing the raw value directly
-                this.writeStream.WriteByte(itemSeparator);
+                // Place a separator before the raw value if
+                // this is an array, unless this is the first item in the array.
+                this.writeStream.WriteByte(itemSeparator.Span[0]);
             }
 
             // Consider using Utf8JsonWriter.WriteRawValue() in .NET 6+
             // see: https://github.com/OData/odata.net/issues/2420
             this.writeStream.Write(Encoding.UTF8.GetBytes(rawValue));
-            this.FlushIfBufferThresholdReached();
+
             // since we bypass the Utf8JsonWriter, we need to signal to other
             // Write methods that a separator should be written first
             if ((this.isWritingFirstElementInArray || this.isWritingConsecutiveRawValuesAtStartOfArray) || !this.IsInArray())
@@ -346,32 +367,69 @@ namespace Microsoft.OData.Json
             this.isWritingFirstElementInArray = false;
         }
 
+        /// <summary>
+        /// Manually writes an item separator ','
+        /// to the output if necessary, bypassing the Utf8JsonWriter.
+        /// Should be used before property names in an object or values
+        /// in an array.
+        /// This method should not be called by <see cref="WriteRawValue(string)"/>.
+        /// </summary>
         private void WriteSeparatorIfNecessary()
         {
-            if (shouldWriteSeparator)
+            if (this.shouldWriteSeparator)
             {
-                // We don't need to write separators inside arrays
-                // because Utf8JsonWriter writes one before
-                // each value (except for the first)
                 this.WriteItemSeparator();
             }
 
+            // reset state since now we're back in sync with Utf8JsonWriter.
             this.shouldWriteSeparator = false;
             this.isWritingFirstElementInArray = false;
             this.isWritingConsecutiveRawValuesAtStartOfArray = false;
         }
 
+        /// <summary>
+        /// Manually writes an item separator ',' to the output, bypassing the Utf8JsonWriter.
+        /// </summary>
         private void WriteItemSeparator()
         {
             this.Flush();
-            this.writeStream.WriteByte(itemSeparator);
+            this.writeStream.WriteByte(itemSeparator.Span[0]);
         }
 
-        private void ClearSeparator()
+        /// <summary>
+        /// Asynchronously manually writes an item separator ','
+        /// to the output if necessary, bypassing the Utf8JsonWriter.
+        /// Should be used before property names in an object or values
+        /// in an array.
+        /// This method should not be called by <see cref="WriteRawValue(string)"/>.
+        /// </summary>
+        /// <returns>Task representing the asynchronous operation.</returns>
+        private async ValueTask WriteSeparatorIfNecessaryAsync()
         {
-            shouldWriteSeparator = false;
+            if (this.shouldWriteSeparator)
+            {
+                await this.WriteItemSeparatorAsync().ConfigureAwait(false);
+            }
+
+            // reset state since now we're back in sync with Utf8JsonWriter.
+            this.shouldWriteSeparator = false;
+            this.isWritingFirstElementInArray = false;
+            this.isWritingConsecutiveRawValuesAtStartOfArray = false;
         }
 
+        /// <summary>
+        /// Asynchronously manually writes an item separator ',' to the output, bypassing the Utf8JsonWriter.
+        /// </summary>
+        /// <returns>Task respresenting the asynchronous operation.</returns>
+        private async ValueTask WriteItemSeparatorAsync()
+        {
+            await this.FlushAsync().ConfigureAwait(false);
+            await this.writeStream.WriteAsync(itemSeparator).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Mark that the writer has transitioned to write an object.
+        /// </summary>
         private void EnterObjectScope()
         {
             this.isWritingConsecutiveRawValuesAtStartOfArray = false;
@@ -379,6 +437,9 @@ namespace Microsoft.OData.Json
             this.bitStack.PushTrue();
         }
 
+        /// <summary>
+        /// Mark that the writer has transitioned to write an array.
+        /// </summary>
         private void EnterArrayScope()
         {
             this.isWritingConsecutiveRawValuesAtStartOfArray = false;
@@ -386,6 +447,9 @@ namespace Microsoft.OData.Json
             this.bitStack.PushFalse();
         }
 
+        /// <summary>
+        /// Exit the current object or array scope.
+        /// </summary>
         private void ExitScope()
         {
             this.isWritingFirstElementInArray = false;
@@ -393,6 +457,10 @@ namespace Microsoft.OData.Json
             this.bitStack.Pop();
         }
 
+        /// <summary>
+        /// Checks whether the writer is currently in an array scope.
+        /// </summary>
+        /// <returns>Whether the writer is currently in an array scope.</returns>
         private bool IsInArray()
         {
             if (!TryPeekScope(out bool isInObject))
@@ -403,6 +471,14 @@ namespace Microsoft.OData.Json
             return !isInObject;
         }
 
+        /// <summary>
+        /// Tries to get the current scope.
+        /// </summary>
+        /// <param name="isInObject">
+        /// True if the writer is currently in an object scope, false if the writer is in an array scope.</param>
+        /// <returns>True if the current scope was successfully determined, false if it was not able to determined the scope
+        /// (i.e. we're neither in an array or object).
+        /// </returns>
         private bool TryPeekScope(out bool isInObject)
         {
             isInObject = false;
@@ -411,6 +487,8 @@ namespace Microsoft.OData.Json
                 return false;
             }
 
+            // BitStack doesn't implement a Peek()
+            // method, so we pop then push back.
             isInObject = this.bitStack.Pop();
             if (isInObject)
             {
@@ -478,6 +556,8 @@ namespace Microsoft.OData.Json
 
         public async Task StartObjectScopeAsync()
         {
+            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
+            this.EnterObjectScope();
             this.writer.WriteStartObject();
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
@@ -485,11 +565,14 @@ namespace Microsoft.OData.Json
         public async Task EndObjectScopeAsync()
         {
             this.writer.WriteEndObject();
+            this.ExitScope();
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task StartArrayScopeAsync()
         {
+            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
+            this.EnterArrayScope();
             this.writer.WriteStartArray();
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
@@ -497,41 +580,48 @@ namespace Microsoft.OData.Json
         public async Task EndArrayScopeAsync()
         {
             this.writer.WriteEndArray();
+            this.ExitScope();
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteNameAsync(string name)
         {
+            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
             this.writer.WritePropertyName(name);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(bool value)
         {
+            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
             this.writer.WriteBooleanValue(value);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(int value)
         {
+            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
             this.writer.WriteNumberValue(value);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(float value)
         {
+            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
             this.writer.WriteNumberValue(value);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(short value)
         {
+            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
             this.writer.WriteNumberValue(value);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(long value)
         {
+            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
             if (this.isIeee754Compatible)
             {
                 this.writer.WriteStringValue(value.ToString(CultureInfo.InvariantCulture));
@@ -546,18 +636,21 @@ namespace Microsoft.OData.Json
 
         public async Task WriteValueAsync(double value)
         {
+            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
             this.writer.WriteNumberValue(value);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(Guid value)
         {
+            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
             this.writer.WriteStringValue(value);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(decimal value)
         {
+            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
             if (this.isIeee754Compatible)
             {
                 this.writer.WriteStringValue(value.ToString(CultureInfo.InvariantCulture));
@@ -572,13 +665,14 @@ namespace Microsoft.OData.Json
 
         public async Task WriteValueAsync(DateTimeOffset value)
         {
+            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
             this.writer.WriteStringValue(value);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(TimeSpan value)
         {
-            this.WriteSeparatorIfNecessary();
+            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
             string stringValue = EdmValueWriter.DurationAsXml(value);
             this.writer.WriteStringValue(stringValue);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
@@ -586,30 +680,35 @@ namespace Microsoft.OData.Json
 
         public async Task WriteValueAsync(Date value)
         {
+            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
             this.writer.WriteStringValue(value.ToString());
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(TimeOfDay value)
         {
+            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
             this.writer.WriteStringValue(value.ToString());
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(byte value)
         {
+            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
             this.writer.WriteNumberValue(value);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(sbyte value)
         {
+            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
             this.writer.WriteNumberValue(value);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(string value)
         {
+            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
             if (value == null)
             {
                 this.writer.WriteNullValue();
@@ -624,6 +723,7 @@ namespace Microsoft.OData.Json
 
         public async Task WriteValueAsync(byte[] value)
         {
+            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
             if (value == null)
             {
                 this.writer.WriteNullValue();
@@ -643,12 +743,32 @@ namespace Microsoft.OData.Json
                 return;
             }
 
+            // ensure we don't write to the stream directly while there are still pending data in the Utf8JsonWriter buffer
+            await this.FlushAsync().ConfigureAwait(false);
+            if (IsInArray() && !isWritingFirstElementInArray)
+            {
+                // Place a separator before the raw value if
+                // this is an array, unless this is the first item in the array.
+                await this.writeStream.WriteAsync(itemSeparator).ConfigureAwait(false);
+            }
+
             // Consider using Utf8JsonWriter.WriteRawValue() in .NET 6+
             // see: https://github.com/OData/odata.net/issues/2420
-
-            await this.FlushAsync().ConfigureAwait(false); // ensure we don't write to the stream while there are still pending data in the buffer
             await this.writeStream.WriteAsync(Encoding.UTF8.GetBytes(rawValue)).ConfigureAwait(false);
-            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+
+            // since we bypass the Utf8JsonWriter, we need to signal to other
+            // Write methods that a separator should be written first
+            if ((this.isWritingFirstElementInArray || this.isWritingConsecutiveRawValuesAtStartOfArray) || !this.IsInArray())
+            {
+                this.shouldWriteSeparator = true;
+            }
+
+            if (this.isWritingFirstElementInArray || this.isWritingConsecutiveRawValuesAtStartOfArray)
+            {
+                this.isWritingConsecutiveRawValuesAtStartOfArray = true;
+            }
+
+            this.isWritingFirstElementInArray = false;
         }
 
         public async Task FlushAsync()

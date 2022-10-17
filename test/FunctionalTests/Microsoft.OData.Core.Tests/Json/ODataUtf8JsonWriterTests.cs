@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.Encodings.Web;
-using Microsoft.OData.Core.Tests.Json;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Xunit;
@@ -20,7 +19,7 @@ namespace Microsoft.OData.Tests.Json
     /// <summary>
     /// Unit tests for the ODataUtf8JsonWriter class
     /// </summary>
-    public sealed class ODataUtf8JsonWriterTests: JsonWriterEquivalenceTests, IDisposable
+    public sealed class ODataUtf8JsonWriterTests: JsonWriterBaseTests, IDisposable
     {
         private IJsonWriter writer;
         private MemoryStream stream;

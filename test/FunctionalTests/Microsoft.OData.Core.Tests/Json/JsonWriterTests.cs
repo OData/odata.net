@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Microsoft.OData.Core.Tests.Json;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Xunit;
@@ -19,7 +18,7 @@ namespace Microsoft.OData.Tests.Json
     /// Unit tests for the JsonWriter class.
     /// TODO: write unit tests for the remaining functions on JsonWriter.
     /// </summary>
-    public class JsonWriterTests : JsonWriterEquivalenceTests
+    public class JsonWriterTests : JsonWriterBaseTests
     {
         private StringBuilder builder;
         private IJsonWriter writer;

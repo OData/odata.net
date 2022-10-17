@@ -20,7 +20,7 @@ namespace Microsoft.OData.Tests.Json
     /// <summary>
     /// Unit tests for the ODataUtf8JsonWriter class
     /// </summary>
-    public sealed class ODataUtf8JsonWriterAsyncTests: IDisposable
+    public sealed class ODataUtf8JsonWriterAsyncTests: JsonWriterAsyncBaseTests, IDisposable
     {
         private IJsonWriterAsync writer;
         private MemoryStream stream;
@@ -446,6 +446,11 @@ namespace Microsoft.OData.Tests.Json
             using StreamReader reader = new StreamReader(this.stream, encoding, leaveOpen: true);
             string result = await reader.ReadToEndAsync();
             return result;
+        }
+
+        protected override IJsonWriterAsync CreateJsonWriterAsync(Stream stream, bool isIeee754Compatible, Encoding encoding)
+        {
+            return new ODataUtf8JsonWriter(stream, isIeee754Compatible, encoding);
         }
     }
 }

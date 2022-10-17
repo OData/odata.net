@@ -7,6 +7,15 @@ using System.Runtime.CompilerServices;
 
 namespace Microsoft.OData.Json
 {
+    /// <summary>
+    /// An efficient stack optimized for storing data that has two possible kinds of value, represented
+    /// as true and false.
+    /// </summary>
+    /// <remarks>
+    /// This has been adapted from the .NET runtime's internal BitStack which is used by Utf8JsonWriter
+    /// https://github.com/dotnet/runtime/blob/main/src/libraries/System.Text.Json/src/System/Text/Json/BitStack.cs
+    /// This has been slightly modified because the original Pop() method did not return the last value pushed.
+    /// </remarks>
     internal struct BitStack
     {
         // We are using a ulong to represent our nested state, so we can only
@@ -15,6 +24,9 @@ namespace Microsoft.OData.Json
 
         private const int DefaultInitialArraySize = 2;
 
+        /// When the size of the stack exceeds 64, the following int array will be lazily allocated
+        /// to store additional values. Each int is a segment of the stack holding
+        /// up to 32 values. The current position of the stack is tracked by <see cref="_currentDepth"/>.
         private int[] _array;
 
         // This ulong container represents a tiny stack to track the state during nested transitions.
@@ -27,8 +39,14 @@ namespace Microsoft.OData.Json
 
         private int _currentDepth;
 
+        /// <summary>
+        /// The current depth or size of the stack.
+        /// </summary>
         public int CurrentDepth => _currentDepth;
 
+        /// <summary>
+        /// Pushes the value represented by `true` to the stack.
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void PushTrue()
         {
@@ -43,6 +61,9 @@ namespace Microsoft.OData.Json
             _currentDepth++;
         }
 
+        /// <summary>
+        /// Pushes the value represented by `false` to the stack.
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void PushFalse()
         {
@@ -57,7 +78,7 @@ namespace Microsoft.OData.Json
             _currentDepth++;
         }
 
-        // Allocate the bit array lazily only when it is absolutely necessary
+        /// Allocate the bit array lazily only when it is absolutely necessary.
         [MethodImpl(MethodImplOptions.NoInlining)]
         private void PushToArray(bool value)
         {
@@ -95,6 +116,11 @@ namespace Microsoft.OData.Json
             _array[elementIndex] = newValue;
         }
 
+        /// <summary>
+        /// Removes the value at the top of the stack and returns it.
+        /// </summary>
+        /// <returns>The value at the top of the stack.</returns>
+        /// <remarks>You should ensure the stack is not empty before calling this method.</remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Pop()
         {
@@ -105,14 +131,11 @@ namespace Microsoft.OData.Json
                 inObject = (_allocationFreeContainer & 1) != 0;
                 _allocationFreeContainer >>= 1;
             }
-            //else if (_currentDepth == AllocationFreeMaxDepth)
-            //{
-            //    inObject = (_allocationFreeContainer & 1) != 0;
-            //}
             else
             {
                 inObject = PopFromArray();
             }
+
             return inObject;
         }
 
