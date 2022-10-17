@@ -172,7 +172,7 @@ namespace Microsoft.OData.Client
         /// <summary>A factory class to use in selecting the the request message transport mode implementation </summary>
         private IDataServiceRequestMessageFactory requestMessageFactory = new DataServiceRequestMessageFactory();
 
-        private ConcurrentDictionary<string, Type> resolveTypesCache = new ConcurrentDictionary<string, Type>();
+        private static ConcurrentDictionary<string, Type> resolveTypesCache = new ConcurrentDictionary<string, Type>();
 
         /// <summary>Used to specify the option for the form of Uri to be generated for a delete link request.</summary>
         private DeleteLinkUriOption deleteLinkUriOption;
@@ -3277,11 +3277,11 @@ namespace Microsoft.OData.Client
             {
                 Type matchedType;
 
-                if (!this.resolveTypesCache.TryGetValue(typeName, out matchedType))
+                if (!resolveTypesCache.TryGetValue(typeName, out matchedType))
                 {
                     if (ClientTypeUtil.TryResolveType(typeName, fullNamespace, languageDependentNamespace, out matchedType))
                     {
-                        this.resolveTypesCache.TryAdd(typeName, matchedType);
+                        resolveTypesCache.TryAdd(typeName, matchedType);
 
                         return matchedType;
                     }
