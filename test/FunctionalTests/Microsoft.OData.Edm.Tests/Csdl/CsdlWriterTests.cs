@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 #if NETCOREAPP3_1
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -2811,6 +2812,47 @@ namespace Microsoft.OData.Edm.Tests.Csdl
     }
   }
 }");
+        }
+
+        [Theory]
+        [InlineData(CsdlTarget.OData, "<edmx:DataServices>", "</edmx:DataServices>")]
+        [InlineData(CsdlTarget.EntityFramework, "<edmx:Runtime><edmx:ConceptualModels>", "</edmx:ConceptualModels></edmx:Runtime>")]
+        public void TryWriteCsdlShouldFlush(CsdlTarget csdlTarget, string schemaParentOpeningPartial, string schemaParentClosingPartial)
+        {
+            EdmModel model = new EdmModel();
+
+            var customerEntityType = new EdmEntityType("NS", "Customer");
+            var key = customerEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32);
+            customerEntityType.AddKeys(key);
+            customerEntityType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+            model.AddElement(customerEntityType);
+
+            var builder = new StringBuilder();
+            using (var writer = XmlWriter.Create(builder, new XmlWriterSettings { Encoding = Encoding.UTF8 }))
+            {
+                if (!CsdlWriter.TryWriteCsdl(model, writer, csdlTarget, out var errors))
+                {
+                    Assert.True(false, "Serialization was unsuccessful");
+                }
+
+                // Xml writer should have flushed whatever is in the buffer before TryWriteCsdl is exited
+                Assert.Equal(
+                    builder.ToString(),
+                    "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+                "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                  schemaParentOpeningPartial +
+                    "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                        "<EntityType Name=\"Customer\">" +
+                        "<Key>" +
+                            "<PropertyRef Name=\"Id\" />" +
+                        "</Key>" +
+                        "<Property Name=\"Id\" Type=\"Edm.Int32\" />" +
+                        "<Property Name=\"Name\" Type=\"Edm.String\" />" +
+                        "</EntityType>" +
+                    "</Schema>" +
+                  schemaParentClosingPartial +
+                "</edmx:Edmx>");
+            }
         }
     }
 }
