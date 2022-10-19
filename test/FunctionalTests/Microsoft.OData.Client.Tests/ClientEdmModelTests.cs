@@ -40,9 +40,13 @@ namespace Microsoft.OData.Client.Tests
         }
 
         [Fact]
-        public async Task GetOrCreateEdmType_Is_Thread_Safe()
+        public async Task GetOrCreateEdmTypeIsThreadSafe()
         {
-            for (int i = 0; i < 100; i++)
+            // This test aims to reproduce the race condition
+            // described in this issue: https://github.com/OData/odata.net/issues/2532
+            // We run the test multiple times to increase the chance of reproducing
+            // race conditions issues at least once if the implementation is not thread-safe
+            for (int i = 0; i < 5000; i++)
             {
                 await TestGetOrCreateEdmTypeConsitency();
             }
@@ -53,18 +57,17 @@ namespace Microsoft.OData.Client.Tests
             ClientEdmModel clientEdmModel = new ClientEdmModel(ODataProtocolVersion.V401);
             Type productEntityType = typeof(ProductEntity);
             Type productType = typeof(Product);
-            Type productAType = typeof(ProductA);
 
             Task task1 = Task.Run(() =>
             {
                 IEdmStructuredType edmType = clientEdmModel.GetOrCreateEdmType(productEntityType) as IEdmStructuredType;
-                edmType.DeclaredProperties.ToArray(); // this ensure the properties are also loaded
+                edmType.DeclaredProperties.ToArray(); // this ensures the properties are also loaded
             });
 
             Task task2 = Task.Run(() =>
             {
                 IEdmStructuredType edmType = clientEdmModel.GetOrCreateEdmType(productEntityType) as IEdmStructuredType;
-                edmType.DeclaredProperties.ToArray(); // this ensure the properties are also loaded
+                edmType.DeclaredProperties.ToArray();
             });
 
             await Task.WhenAll(task1, task2);
