@@ -702,6 +702,12 @@ namespace Microsoft.OData.Client
             set { this.deleteLinkUriOption = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether collections of untyped values should be supported in response payloads; if they are not supported, an exception will
+        /// be thrown when they are encountered
+        /// </summary>
+        public virtual bool EnableUntypedCollectionResponses { get; set; } = true;
+
         /// <summary>Gets or sets whether to support undeclared properties.</summary>
         /// <returns>UndeclaredPropertyBehavior.</returns>
         internal UndeclaredPropertyBehavior UndeclaredPropertyBehavior

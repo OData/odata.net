@@ -151,6 +151,12 @@ namespace Microsoft.OData
         public bool EnableCharactersCheck { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether or not an untyped property that contains a collection should be considered untyped, or collection of untyped
+        /// elements; when enabled, such properties will be treated as a collection of untyped elements
+        /// </summary>
+        public bool EnableUntypedCollections { get; set; } = false;
+
+        /// <summary>
         /// Gets or sets the maximum OData protocol version the reader should accept and understand.
         /// </summary>
         /// <returns>The maximum OData protocol version the reader should accept and understand.</returns>
@@ -295,6 +301,7 @@ namespace Microsoft.OData
             this.ReadAsStreamFunc = other.ReadAsStreamFunc;
             this.ArrayPool = other.ArrayPool;
             this.EnablePropertyNameCaseInsensitive = other.EnablePropertyNameCaseInsensitive;
+            this.EnableUntypedCollections = other.EnableUntypedCollections;
         }
     }
 }
