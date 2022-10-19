@@ -5,6 +5,9 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.OData.Client.Metadata;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -34,6 +37,49 @@ namespace Microsoft.OData.Client.Tests
 
             //Assert
             Assert.Equal(expectedBaseTypeOfProductA, resultingBaseTypeOfProductA);
+        }
+
+        [Fact]
+        public async Task GetOrCreateEdmType_Is_Thread_Safe()
+        {
+            for (int i = 0; i < 100; i++)
+            {
+                await TestGetOrCreateEdmTypeConsitency();
+            }
+        }
+
+        private async Task TestGetOrCreateEdmTypeConsitency()
+        {
+            ClientEdmModel clientEdmModel = new ClientEdmModel(ODataProtocolVersion.V401);
+            Type productEntityType = typeof(ProductEntity);
+            Type productType = typeof(Product);
+            Type productAType = typeof(ProductA);
+
+            Task task1 = Task.Run(() =>
+            {
+                IEdmStructuredType edmType = clientEdmModel.GetOrCreateEdmType(productEntityType) as IEdmStructuredType;
+                edmType.DeclaredProperties.ToArray(); // this ensure the properties are also loaded
+            });
+
+            Task task2 = Task.Run(() =>
+            {
+                IEdmStructuredType edmType = clientEdmModel.GetOrCreateEdmType(productEntityType) as IEdmStructuredType;
+                edmType.DeclaredProperties.ToArray(); // this ensure the properties are also loaded
+            });
+
+            await Task.WhenAll(task1, task2);
+
+            AssertClientTypeIsConsistent(productEntityType, clientEdmModel);
+            AssertClientTypeIsConsistent(productType, clientEdmModel);
+        }
+
+        private void AssertClientTypeIsConsistent(Type type, ClientEdmModel clientEdmModel)
+        {
+            IEdmType edmType = clientEdmModel.GetOrCreateEdmType(type);
+            ClientTypeAnnotation typeAnnotation = clientEdmModel.GetClientTypeAnnotation(type.FullName);
+            IEdmSchemaType schemaType = clientEdmModel.FindDeclaredType(type.FullName);
+            Assert.True(object.ReferenceEquals(edmType, typeAnnotation.EdmType));
+            Assert.True(object.ReferenceEquals(schemaType, typeAnnotation.EdmType));
         }
       
     }
