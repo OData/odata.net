@@ -863,7 +863,17 @@ namespace Microsoft.OData.Client
                         var responseMessageWrapper = new HttpWebResponseMessage(
                             headers,
                             responseMsg.StatusCode,
-                            () => responseStream);
+                            () =>
+                            {
+                                /*if (responseStream is MemoryStream memoryStream)
+                                {
+                                    var payload = new StreamReader(memoryStream).ReadToEnd();
+                                    File.WriteAllText(@"c:\users\gdebruin\desktop\testresponse.json", payload);
+                                    memoryStream.Position = 0;
+                                }*/
+
+                                return responseStream;
+                            });
 
                         ODataMaterializerContext materializerContext = new ODataMaterializerContext(responseInfo, this.materializerCache);
                         entry = ODataReaderEntityMaterializer.ParseSingleEntityPayload(responseMessageWrapper, responseInfo, entityDescriptor.Entity.GetType(), materializerContext);

@@ -114,6 +114,7 @@ namespace Microsoft.OData.Client.Materialization
                     if ((untypedVal != null)
                         && this.materializerContext.UndeclaredPropertyBehavior == UndeclaredPropertyBehavior.Support)
                     {
+                        //// TODO only one of the two callers has made a guarantee that the type is primitive; it is parsing a collection, and the collection is known to be of a primitive type; can you have a collection of untyped elements? if not, then that method never hits this code path anyway
                         value = CommonUtil.ParseJsonToPrimitiveValue(untypedVal.RawValue);
                     }
 

@@ -702,6 +702,11 @@ namespace Microsoft.OData.Client
             set { this.deleteLinkUriOption = value; }
         }
 
+        /// <summary>
+        /// TODO disabled by default? expose this at all?
+        /// </summary>
+        public virtual bool EnabledUntypedCollections { get; set; } = true;
+
         /// <summary>Gets or sets whether to support undeclared properties.</summary>
         /// <returns>UndeclaredPropertyBehavior.</returns>
         internal UndeclaredPropertyBehavior UndeclaredPropertyBehavior
@@ -2238,6 +2243,7 @@ namespace Microsoft.OData.Client
             DataServiceResponse errors = null;
             this.ValidateSaveChangesOptions(options);
 
+            //// TODO start passing behavior flag here
             BaseSaveResult result = BaseSaveResult.CreateSaveResult(this, Util.SaveChangesMethodName, null, options, null, null);
             if (result.IsBatchRequest)
             {

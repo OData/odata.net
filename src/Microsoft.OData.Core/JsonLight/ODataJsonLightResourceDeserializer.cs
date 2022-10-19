@@ -1578,7 +1578,22 @@ namespace Microsoft.OData.JsonLight
             }
             else
             {
-                propertyValue = this.JsonReader.ReadAsUntypedOrNullValue();
+                if (base.MessageReaderSettings.EnableUntypedCollections && this.JsonReader.NodeType == JsonNodeType.StartArray)
+                {
+                    //// TODO get test data as part of the repo
+                    propertyValue = new ODataCollectionValue()
+                    {
+                        TypeAnnotation = new ODataTypeAnnotation(EdmUntypedStructuredType.Instance.FullName, EdmUntypedStructuredType.Instance),
+                        TypeName = EdmUntypedStructuredType.Instance.FullName,
+                        Items = this.JsonReader.ReadUntypedCollectionValue().ToList(),
+                    };
+                    //// TODO this makes no attempt at nested resources (including other collections)
+                    //// TODO there are other deserializers that probably need to be updated with this same logic
+                }
+                else
+                {
+                    propertyValue = this.JsonReader.ReadAsUntypedOrNullValue();
+                }
             }
 
             ValidationUtils.ValidateOpenPropertyValue(propertyName, propertyValue);

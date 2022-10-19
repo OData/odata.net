@@ -69,7 +69,11 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Invoked when using the parameterless UseJson method in order to get the service model.
         /// </summary>
-        public Func<IEdmModel> LoadServiceModel { get; set; }
+        public Func<IEdmModel> LoadServiceModel 
+        {
+            get;
+            set; 
+        }
 
         /// <summary>
         /// Gets the service model.
