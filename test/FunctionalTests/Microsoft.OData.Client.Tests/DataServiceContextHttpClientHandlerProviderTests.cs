@@ -4,16 +4,60 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Client;
 using Microsoft.OData.Client.Tests.Serialization;
 using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
+namespace Microsoft.DirectoryServices
+{
+    [EntityType]
+    [Key(nameof(Id))]
+    public class DirectoryObject
+    {
+        public string Id { get; set; }
+    }
+
+    [EntityType]
+    public class User : DirectoryObject
+    {
+        public bool AccountEnabled { get; set; }
+
+        public string City { get; set; }
+
+        public string GivenName { get; set; }
+
+        public string MailNickname { get; set; }
+
+        public string Password { get; set; }
+
+        public string StreetAddress { get; set; }
+
+        public string Surname { get; set; }
+
+        public string UsageLocation { get; set; }
+
+        public AuthorizationInfo AuthorizationInfo { get; set; }
+
+        public string UserPrincipalName { get; set; }
+
+        public string DisplayName { get; set; }
+    }
+
+    public class AuthorizationInfo //// TODO
+    {
+    }
+}
+
 namespace Microsoft.OData.Client.Tests
 {
+    using Microsoft.DirectoryServices;
+
     public class DataServiceContextHttpClientHandlerProviderTests
     {
         private const string BaseUri = "http://service.org";
@@ -33,6 +77,74 @@ namespace Microsoft.OData.Client.Tests
 </edmx:Edmx>";
 
         private const string PersonNameValue = "John Doe";
+
+        [Fact]
+        public void RdsExtendedTest()
+        {
+            var rootUri = new Uri(BaseUri);
+            var entitySet = "users";
+            using (var handler = new MockHttpClientHandler(request =>
+            {
+                string contents;
+                if (request.RequestUri.AbsolutePath.EndsWith("$metadata"))
+                {
+                    contents = System.IO.File.ReadAllText(@"c:\users\gdebruin\desktop\metadata.txt");
+                }
+                else if (request.RequestUri.AbsolutePath.Contains(entitySet))
+                {
+                    contents = System.IO.File.ReadAllText(@"c:\users\gdebruin\desktop\failedresponse.json");
+                }
+                else
+                {
+                    return new HttpResponseMessage(HttpStatusCode.NotFound);
+                }
+
+                var stringContent = new StringContent(contents, Encoding.UTF8, "application/json");
+                var response = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = stringContent,
+                };
+                response.Headers.Add("Location", new Uri(new Uri(rootUri, entitySet), new Uri("080a1a0e-71bf-4582-b141-fd61bdd35a40", UriKind.Relative)).ToString());
+                return response;
+            }))
+            {
+                var provider = new MockHttpClientHandlerProvider(handler);
+
+                var context = new DataServiceContext(rootUri);
+                context.HttpClientHandlerProvider = provider;
+                context.HttpRequestTransportMode = HttpRequestTransportMode.HttpClient;
+
+                //// minimal repro of rds extended test code
+                {
+                    var domainName = "garrett.com";
+                    var user = GenerateRestUser(domainName);
+
+                    context.AddObject(entitySet, user);
+                    var response = context.SaveChanges();
+                }
+            }
+        }
+
+        public static User GenerateRestUser(string domainName)
+        {
+            var user = new User
+            {
+                AccountEnabled = true,
+                City = "Seattle",
+                GivenName = "emannevig", //// Utils.GetRandomString(),
+                MailNickname = "emankcinliam", //// Utils.GetRandomString(30),
+                Password = "drowssap", //// PasswordGenerator.GeneratePlaintextPassword(),
+                StreetAddress = "sserddateerts", ////  Utils.GetRandomString(),
+                Surname = "emanrus", ////  Utils.GetRandomString(),
+                UsageLocation = "US",
+                AuthorizationInfo = new AuthorizationInfo(),
+                UserPrincipalName = string.Format("{0}U@{1}", "emanlapicnirpresu" /*Utils.GetRandomString()*/, domainName)
+            };
+
+            user.DisplayName = string.Format("{0} {1} REST", user.GivenName, user.Surname);
+
+            return user;
+        }
 
         [Fact]
         public async Task UsesProvidedHttpClientToMakeRequest()
