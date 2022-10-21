@@ -28,11 +28,6 @@ namespace Microsoft.OData.Client
         protected PerRequest perRequest;
 
         /// <summary>
-        /// Cache used to store temporary metadata used for materialization of OData items.
-        /// </summary>
-        protected MaterializerCache materializerCache = new MaterializerCache();
-
-        /// <summary>
         /// The int equivalent for true.
         /// </summary>
         private const int True = 1;
@@ -93,6 +88,11 @@ namespace Microsoft.OData.Client
             this.userCallback = callback;
             this.userState = state;
         }
+
+        /// <summary>
+        /// Cache used to store temporary metadata used for materialization of OData items.
+        /// </summary>
+        protected MaterializerCache MaterializerCache { get; } = new MaterializerCache();
 
         /// <summary>
         /// This delegate exists to workaround limitations in the WP7 runtime.

@@ -67,6 +67,8 @@ namespace Microsoft.OData.Client
         /// <param name="materializerContext">The materializer context.</param>
         private ProjectionPlanCompiler(Dictionary<Expression, Expression> normalizerRewrites, IODataMaterializerContext materializerContext)
         {
+            Debug.Assert(materializerContext != null, "materializerContext != null");
+
             this.annotations = new Dictionary<Expression, ExpressionAnnotation>(ReferenceEqualityComparer<Expression>.Instance);
             this.materializerExpression = Expression.Parameter(typeof(object), "mat");
             this.normalizerRewrites = normalizerRewrites;

@@ -64,7 +64,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
                 modifyEntry(entry);
             }
 
-            var materializerContext = new TestMaterializerContext(new MaterializerCache());
+            var materializerContext = new TestMaterializerContext();
             return MaterializerEntry.CreateEntry(entry, format, true, this.clientModel, materializerContext);
         }
     }

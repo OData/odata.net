@@ -254,7 +254,7 @@ namespace Microsoft.OData.Client
                 /*projectionPlan*/ null,
                 this.currentOperationResponse.CreateResponseMessage(),
                 ODataPayloadKind.Resource,
-                this.materializerCache);
+                base.MaterializerCache);
         }
 
         /// <summary>
@@ -690,7 +690,7 @@ namespace Microsoft.OData.Client
                                             this.currentOperationResponse.Headers.GetHeader(XmlConstants.HttpContentType),
                                             this.currentOperationResponse.CreateResponseMessage(),
                                             query.PayloadKind,
-                                            this.materializerCache);
+                                            this.MaterializerCache);
                                         qresponse = QueryOperationResponse.GetInstance(query.ElementType, this.currentOperationResponse.Headers, query, materializer);
                                     }
                                 }
