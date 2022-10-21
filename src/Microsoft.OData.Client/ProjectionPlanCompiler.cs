@@ -504,7 +504,12 @@ namespace Microsoft.OData.Client
         /// <returns>A new expression with the call instance.</returns>
         private Expression CallCheckValueForPathIsNull(Expression entry, Expression entryType, ProjectionPath path)
         {
-            Expression result = CallMaterializer("ProjectionCheckValueForPathIsNull", entry, entryType, Expression.Constant(path, typeof(object)));
+            Expression result = CallMaterializer(
+                "ProjectionCheckValueForPathIsNull",
+                entry,
+                entryType,
+                Expression.Constant(path, typeof(object)),
+                Expression.Constant(this.materializerContext));
             this.annotations.Add(result, new ExpressionAnnotation() { Segment = path[path.Count - 1] });
             return result;
         }
