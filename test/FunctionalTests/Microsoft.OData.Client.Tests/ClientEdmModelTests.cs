@@ -44,8 +44,8 @@ namespace Microsoft.OData.Client.Tests
         {
             // This test aims to reproduce the race condition
             // described in this issue: https://github.com/OData/odata.net/issues/2532
-            // We run the test multiple times to increase the chance of reproducing
-            // race conditions issues at least once if the implementation is not thread-safe
+            // We run the test multiple times to increase the chances that, if the implementaton is not thread-safe,
+            // the race conditions issues will occur at least once
             for (int i = 0; i < 5000; i++)
             {
                 await TestGetOrCreateEdmTypeConsitency();
