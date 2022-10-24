@@ -30,7 +30,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             var clientEdmModel = new ClientEdmModel(ODataProtocolVersion.V4);
             var context = new DataServiceContext();
-            var materializerContext = new TestMaterializerContext(new MaterializerCache()) { Model = clientEdmModel, Context = context };
+            var materializerContext = new TestMaterializerContext() { Model = clientEdmModel, Context = context };
             MaterializerEntry.CreateEntry(odataEntry, ODataFormat.Json, true, clientEdmModel, materializerContext);
             
             var adapter = new EntityTrackingAdapter(new TestEntityTracker(), MergeOption.OverwriteChanges, clientEdmModel, context, materializerContext);

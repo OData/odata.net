@@ -67,6 +67,8 @@ namespace Microsoft.OData.Client
         /// <param name="materializerContext">The materializer context.</param>
         private ProjectionPlanCompiler(Dictionary<Expression, Expression> normalizerRewrites, IODataMaterializerContext materializerContext)
         {
+            Debug.Assert(materializerContext != null, "materializerContext != null");
+
             this.annotations = new Dictionary<Expression, ExpressionAnnotation>(ReferenceEqualityComparer<Expression>.Instance);
             this.materializerExpression = Expression.Parameter(typeof(object), "mat");
             this.normalizerRewrites = normalizerRewrites;
@@ -504,7 +506,12 @@ namespace Microsoft.OData.Client
         /// <returns>A new expression with the call instance.</returns>
         private Expression CallCheckValueForPathIsNull(Expression entry, Expression entryType, ProjectionPath path)
         {
-            Expression result = CallMaterializer("ProjectionCheckValueForPathIsNull", entry, entryType, Expression.Constant(path, typeof(object)));
+            Expression result = CallMaterializer(
+                nameof(ODataEntityMaterializerInvoker.ProjectionCheckValueForPathIsNull),
+                entry,
+                entryType,
+                Expression.Constant(path, typeof(object)),
+                Expression.Constant(this.materializerContext));
             this.annotations.Add(result, new ExpressionAnnotation() { Segment = path[path.Count - 1] });
             return result;
         }
@@ -519,7 +526,12 @@ namespace Microsoft.OData.Client
             Debug.Assert(entry != null, "entry != null");
             Debug.Assert(path != null, "path != null");
 
-            Expression result = CallMaterializer("ProjectionValueForPath", this.materializerExpression, entry, entryType, Expression.Constant(path, typeof(object)));
+            Expression result = CallMaterializer(
+                nameof(ODataEntityMaterializerInvoker.ProjectionValueForPath),
+                this.materializerExpression,
+                entry,
+                entryType,
+                Expression.Constant(path, typeof(object)));
             this.annotations.Add(result, new ExpressionAnnotation() { Segment = path[path.Count - 1] });
             return result;
         }
@@ -671,7 +683,7 @@ namespace Microsoft.OData.Client
                      assignment.Expression.NodeType == ExpressionType.MemberInit))
                 {
                     Expression nestedEntry = CallMaterializer(
-                        "ProjectionGetEntry",
+                        nameof(ODataEntityMaterializerInvoker.ProjectionGetEntry),
                         entryParameterAtMemberInit,
                         Expression.Constant(assignment.Member.Name, typeof(string)),
                         Expression.Constant(this.materializerContext));
@@ -771,7 +783,7 @@ namespace Microsoft.OData.Client
             }
 
             Expression reboundExpression = CallMaterializer(
-                "ProjectionInitializeEntity",
+                nameof(ODataEntityMaterializerInvoker.ProjectionInitializeEntity),
                 this.materializerExpression,
                 entryToInitValue,
                 expectedParamValue,
@@ -797,7 +809,7 @@ namespace Microsoft.OData.Client
             do
             {
                 result = CallMaterializer(
-                    "ProjectionGetEntry",
+                    nameof(ODataEntityMaterializerInvoker.ProjectionGetEntry),
                     result ?? this.pathBuilder.ParameterEntryInScope,
                     Expression.Constant(((MemberExpression)path[pathIndex]).Member.Name, typeof(string)));
                 pathIndex++;
@@ -1051,7 +1063,7 @@ namespace Microsoft.OData.Client
                     // helpers, eg to preserve paging information.
                     Type returnElementType = call.Method.ReturnType.GetGenericArguments()[0];
                     result = CallMaterializer(
-                        "ProjectionSelect",
+                        nameof(ODataEntityMaterializerInvoker.ProjectionSelect),
                         this.materializerExpression,
                         this.pathBuilder.ParameterEntryInScope,
                         this.pathBuilder.ExpectedParamTypeInScope,
@@ -1060,7 +1072,7 @@ namespace Microsoft.OData.Client
                         selectorExpression);
                     this.annotations.Add(result, annotation);
                     result = CallMaterializerWithType(
-                        "EnumerateAsElementType",
+                        nameof(ODataEntityMaterializerInvoker.EnumerateAsElementType),
                         new Type[] { returnElementType },
                         result);
                     this.annotations.Add(result, annotation);
@@ -1150,7 +1162,7 @@ namespace Microsoft.OData.Client
                         // {(mat, entry1, type1) => Convert(ProjectionValueForPath(mat, entry1, type1, p->*.FirstName))}
                         Type returnElementType = call.Method.ReturnType.GetGenericArguments()[0];
                         result = CallMaterializer(
-                            "ProjectionSelect",
+                            nameof(ODataEntityMaterializerInvoker.ProjectionSelect),
                             this.materializerExpression,
                             this.pathBuilder.ParameterEntryInScope,
                             this.pathBuilder.ExpectedParamTypeInScope,
@@ -1159,7 +1171,7 @@ namespace Microsoft.OData.Client
                             selectorExpression);
                         this.annotations.Add(result, annotation);
                         result = CallMaterializerWithType(
-                            "EnumerateAsElementType",
+                            nameof(ODataEntityMaterializerInvoker.EnumerateAsElementType),
                             new Type[] { returnElementType },
                             result);
                         this.annotations.Add(result, annotation);
@@ -1209,7 +1221,7 @@ namespace Microsoft.OData.Client
 
             // Return the annotated expression.
             Expression result = CallMaterializerWithType(
-                "ListAsElementType",
+                nameof(ODataEntityMaterializer.ListAsElementType),
                 new Type[] { enumeratedType, listElementType },
                 this.materializerExpression,
                 source);
