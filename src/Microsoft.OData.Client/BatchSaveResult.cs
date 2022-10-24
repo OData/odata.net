@@ -690,7 +690,7 @@ namespace Microsoft.OData.Client
                                             this.currentOperationResponse.Headers.GetHeader(XmlConstants.HttpContentType),
                                             this.currentOperationResponse.CreateResponseMessage(),
                                             query.PayloadKind,
-                                            this.MaterializerCache);
+                                            base.MaterializerCache);
                                         qresponse = QueryOperationResponse.GetInstance(query.ElementType, this.currentOperationResponse.Headers, query, materializer);
                                     }
                                 }
