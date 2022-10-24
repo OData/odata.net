@@ -7,7 +7,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 
@@ -99,6 +101,7 @@ namespace ExperimentsLib
                     Properties = new[]
                     {
                         new ODataProperty { Name = "City", Value = customer.HomeAddress.City },
+                        new ODataProperty { Name = "Misc", Value = new ODataUntypedValue() { RawValue = $"\"{customer.HomeAddress.Misc}\"" } },
                         new ODataProperty { Name = "Street", Value = customer.HomeAddress.Street }
                     }
                 };
@@ -128,6 +131,7 @@ namespace ExperimentsLib
                         Properties = new[]
                         {
                             new ODataProperty { Name = "City", Value = address.City },
+                            new ODataProperty { Name = "Misc", Value = new ODataUntypedValue() { RawValue = $"\"{address.Misc}\"" } },
                             new ODataProperty { Name = "Street", Value = address.Street }
                         }
                     };
