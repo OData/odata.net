@@ -239,7 +239,10 @@ namespace Microsoft.Test.OData.Services.TestServices.TrippinServiceReference
           <Annotation Term=""Org.OData.Core.V1.Computed"" Bool=""true"" />
         </Property>
         <NavigationProperty Name=""Friends"" Type=""Collection(Microsoft.OData.SampleService.Models.TripPin.Person)"" />
-        <NavigationProperty Name=""Trips"" Type=""Collection(Microsoft.OData.SampleService.Models.TripPin.Trip)"" ContainsTarget=""true"" />
+        <NavigationProperty Name=""Trips"" Type=""Collection(Microsoft.OData.SampleService.Models.TripPin.Trip)"" 
+	
+	
+	Target=""true"" />
         <NavigationProperty Name=""Photo"" Type=""Microsoft.OData.SampleService.Models.TripPin.Photo"" />
       </EntityType>
       <EntityType Name=""Airline"">
@@ -490,6 +493,7 @@ namespace Microsoft.Test.OData.Services.TestServices.TrippinServiceReference
         <Annotation Term=""Org.OData.Capabilities.V1.FilterFunctions"">
           <Collection>
             <String>contains</String>
+            <String>matchesPattern</String>
             <String>endswith</String>
             <String>startswith</String>
             <String>length</String>

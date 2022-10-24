@@ -16,9 +16,9 @@ namespace Microsoft.OData.Client
     using System.Linq.Expressions;
     using System.Reflection;
     using System.Text;
+    using System.Text.RegularExpressions;
     using Microsoft.OData.Client.Metadata;
     using Microsoft.OData;
-    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
 
     #endregion Namespaces
@@ -254,10 +254,26 @@ namespace Microsoft.OData.Client
                 this.builder.Append(methodName);
                 this.builder.Append(UriHelper.LEFTPAREN);
 
+                // The implementation in .NET of "matchesPattern" is unique in that the
+                // invoked method requires an additional hard-coded parameter to match
+                // the spec (RegexOptions.ECMAScript). Therefore we handle it as a special
+                // case
+                if (methodName == "matchesPattern")
+                {
+                    Debug.Assert(m.Method.Name == "IsMatch", "m.Method.Name == 'IsMatch'");
+                    Debug.Assert(m.Object == null, "m.Object == null");
+                    Debug.Assert(m.Arguments.Count == 3, "m.Arguments.Count == 3");
+
+                    this.Visit(m.Arguments[0]);
+                    this.builder.Append(UriHelper.COMMA);
+                    this.Visit(m.Arguments[1]);
+                    this.builder.Append(UriHelper.COMMA);
+                    this.Visit(Expression.Constant(RegexOptions.ECMAScript));
+                }
                 // There is a single function, 'contains', which reorders its argument with
                 // respect to the CLR method. Thus handling it as a special case rather than
                 // using a more general argument reordering mechanism.
-                if (methodName == "contains")
+                else if (methodName == "contains")
                 {
                     Debug.Assert(m.Method.Name == "Contains", "m.Method.Name == 'Contains'");
                     Debug.Assert(m.Object != null, "m.Object != null");

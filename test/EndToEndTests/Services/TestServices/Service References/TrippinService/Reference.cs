@@ -490,6 +490,7 @@ namespace Microsoft.Test.OData.Services.TestServices.TrippinServiceReference
         <Annotation Term=""Org.OData.Capabilities.V1.FilterFunctions"">
           <Collection>
             <String>contains</String>
+            <String>matchesPattern</String>
             <String>endswith</String>
             <String>startswith</String>
             <String>length</String>

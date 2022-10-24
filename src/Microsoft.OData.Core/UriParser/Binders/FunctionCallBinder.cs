@@ -149,6 +149,7 @@ namespace Microsoft.OData.UriParser
         internal static IList<KeyValuePair<string, FunctionSignatureWithReturnType>> GetUriFunctionSignatures(string functionCallToken, bool enableCaseInsensitive = false)
         {
             IList<KeyValuePair<string, FunctionSignatureWithReturnType>> customUriFunctionsNameSignatures = null;
+            string builtInUriFunctionName = null;
             FunctionSignatureWithReturnType[] builtInUriFunctionsSignatures = null;
             IList<KeyValuePair<string, FunctionSignatureWithReturnType>> builtInUriFunctionsNameSignatures = null;
 
@@ -156,21 +157,14 @@ namespace Microsoft.OData.UriParser
             bool customFound = CustomUriFunctions.TryGetCustomFunction(functionCallToken, out customUriFunctionsNameSignatures,
                 enableCaseInsensitive);
 
-            // And find in our built-in functions
-            // Since list of all built-in functions is a fixed list and is initialized with names in lower case,
-            // such as "endswith", "geo.distance", "maxdatetime" and "round",
-            // => For case-insensitive searching, it is more efficient to convert the search key to lower case first
-            //    and then do a case-sensitive match.
-            string nameKey = enableCaseInsensitive
-                ? functionCallToken.ToLowerInvariant()
-                : functionCallToken;
-            bool builtInFound = BuiltInUriFunctions.TryGetBuiltInFunction(nameKey, out builtInUriFunctionsSignatures);
+            bool builtInFound = BuiltInUriFunctions.TryGetBuiltInFunction(functionCallToken, enableCaseInsensitive, out builtInUriFunctionName, 
+                out builtInUriFunctionsSignatures);
 
             // Populate the matched names found for built-in function
             if (builtInFound)
             {
                 builtInUriFunctionsNameSignatures =
-                    builtInUriFunctionsSignatures.Select(sig => new KeyValuePair<string, FunctionSignatureWithReturnType>(nameKey, sig)).ToList();
+                    builtInUriFunctionsSignatures.Select(sig => new KeyValuePair<string, FunctionSignatureWithReturnType>(builtInUriFunctionName, sig)).ToList();
             }
 
             if (!customFound && !builtInFound)
