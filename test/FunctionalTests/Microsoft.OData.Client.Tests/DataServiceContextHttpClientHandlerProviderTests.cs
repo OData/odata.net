@@ -14,7 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Microsoft.DirectoryServices
+/*namespace Microsoft.DirectoryServices
 {
     [EntityType]
     [Key(nameof(Id))]
@@ -52,11 +52,11 @@ namespace Microsoft.DirectoryServices
     public class AuthorizationInfo //// TODO
     {
     }
-}
+}*/
 
 namespace Microsoft.OData.Client.Tests
 {
-    using Microsoft.DirectoryServices;
+    using Microsoft.WindowsAzure.ActiveDirectory;
 
     public class DataServiceContextHttpClientHandlerProviderTests
     {
@@ -88,11 +88,19 @@ namespace Microsoft.OData.Client.Tests
                 string contents;
                 if (request.RequestUri.AbsolutePath.EndsWith("$metadata"))
                 {
+                    // NOTE: if the property *is* in the metadata, the rds test passes
+                    // TODO
+                    // try to repro a nested collection
+                    //
+                    // checkout correct version
+                    // try with full class set
                     contents = System.IO.File.ReadAllText(@"c:\users\gdebruin\desktop\metadata.txt");
                 }
                 else if (request.RequestUri.AbsolutePath.Contains(entitySet))
                 {
                     contents = System.IO.File.ReadAllText(@"c:\users\gdebruin\desktop\failedresponse.json");
+                    //// this still passed the test
+                    ////contents = System.IO.File.ReadAllText(@"c:\users\gdebruin\desktop\nestedcollection.json");
                 }
                 else
                 {
@@ -110,7 +118,8 @@ namespace Microsoft.OData.Client.Tests
             {
                 var provider = new MockHttpClientHandlerProvider(handler);
 
-                var context = new DataServiceContext(rootUri);
+                ////var context = new DataServiceContext(rootUri);
+                var context = new DirectoryDataService(rootUri);
                 context.HttpClientHandlerProvider = provider;
                 context.HttpRequestTransportMode = HttpRequestTransportMode.HttpClient;
 
@@ -129,19 +138,19 @@ namespace Microsoft.OData.Client.Tests
         {
             var user = new User
             {
-                AccountEnabled = true,
-                City = "Seattle",
-                GivenName = "emannevig", //// Utils.GetRandomString(),
-                MailNickname = "emankcinliam", //// Utils.GetRandomString(30),
-                Password = "drowssap", //// PasswordGenerator.GeneratePlaintextPassword(),
-                StreetAddress = "sserddateerts", ////  Utils.GetRandomString(),
-                Surname = "emanrus", ////  Utils.GetRandomString(),
-                UsageLocation = "US",
-                AuthorizationInfo = new AuthorizationInfo(),
-                UserPrincipalName = string.Format("{0}U@{1}", "emanlapicnirpresu" /*Utils.GetRandomString()*/, domainName)
+                accountEnabled = true,
+                city = "Seattle",
+                givenName = "emannevig", //// Utils.GetRandomString(),
+                mailNickname = "emankcinliam", //// Utils.GetRandomString(30),
+                ////Password = "drowssap", //// PasswordGenerator.GeneratePlaintextPassword(),
+                streetAddress = "sserddateerts", ////  Utils.GetRandomString(),
+                surname = "emanrus", ////  Utils.GetRandomString(),
+                usageLocation = "US",
+                authorizationInfo = new AuthorizationInfo(),
+                userPrincipalName = string.Format("{0}U@{1}", "emanlapicnirpresu" /*Utils.GetRandomString()*/, domainName)
             };
 
-            user.DisplayName = string.Format("{0} {1} REST", user.GivenName, user.Surname);
+            user.displayName = string.Format("{0} {1} REST", user.givenName, user.surname);
 
             return user;
         }

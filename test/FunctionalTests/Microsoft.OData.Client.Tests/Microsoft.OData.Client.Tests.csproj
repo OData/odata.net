@@ -13,6 +13,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>..\..\..\bin\AnyCPU\Debug\Test\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>..\..\..\bin\AnyCPU\Release\Test\</OutputPath>
@@ -33,6 +34,10 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.1' or '$(TargetFramework)' == 'netcoreapp3.1'">
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\..\..\..\Users\gdebruin\Desktop\DirectoryInternalSchema_Version27 %281%29 %281%29.cs" Link="DirectoryInternalSchema_Version27 %281%29 %281%29.cs" />
   </ItemGroup>
 
   <ItemGroup>
