@@ -37,10 +37,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\..\..\..\Users\gdebruin\Desktop\DirectoryInternalSchema_Version27 %281%29 %281%29.cs" Link="DirectoryInternalSchema_Version27 %281%29 %281%29.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
     <PackageReference Include="xunit.extensibility.core" Version="2.4.1" />
