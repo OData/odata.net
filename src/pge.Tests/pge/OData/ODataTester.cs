@@ -33,8 +33,15 @@
         public void Line1743(IODataFactory odataFactory)
         {
             //// TODO create class template
+
             //// TODO write this test correctly
-            var odata = odataFactory.Create(null);
+            var model = new ODataModel(@"
+<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
+</edmx:Edmx>
+",
+                ODataModelFormat.Xml);
+
+            var odata = odataFactory.Create(model);
             var response = odata.ServeRequest("asdf");
             Assert.AreEqual(0, response);
         }
