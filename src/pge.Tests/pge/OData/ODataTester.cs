@@ -35,7 +35,7 @@
             //// TODO create class template
             //// TODO write this test correctly
             var odata = odataFactory.Create(null);
-            var response = odata.ServeRequest(null, null, null);
+            var response = odata.ServeRequest("asdf");
             Assert.AreEqual(0, response);
         }
     }
