@@ -1,5 +1,7 @@
 namespace pge.OData
 {
+    using pge.ODataFactory;
+
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -8,7 +10,7 @@ namespace pge.OData
         [TestMethod]
         public void Foo()
         {
-            new ODataTester().Foo(new PgeOData());
+            new ODataTester().Line1743(new PgeODataFactory());
         }
     }
 }
