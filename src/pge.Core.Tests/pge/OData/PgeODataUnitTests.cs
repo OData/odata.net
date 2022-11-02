@@ -8,7 +8,13 @@ namespace pge.OData
     public class PgeODataUnitTests
     {
         [TestMethod]
-        public void Foo()
+        public void Line1737ThroughLine1742()
+        {
+            new ODataTester().Line1737ThroughLine1742(new PgeODataFactory());
+        }
+
+        [TestMethod]
+        public void Line1743()
         {
             new ODataTester().Line1743(new PgeODataFactory());
         }

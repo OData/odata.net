@@ -6,27 +6,7 @@
 
     public sealed class ODataTester
     {
-        public void Line1737(IODataFactory odataFactory)
-        {
-        }
-
-        public void Line1738(IODataFactory odataFactory)
-        {
-        }
-
-        public void Line1739(IODataFactory odataFactory)
-        {
-        }
-
-        public void Line1740(IODataFactory odataFactory)
-        {
-        }
-
-        public void Line1741(IODataFactory odataFactory)
-        {
-        }
-
-        public void Line1742(IODataFactory odataFactory)
+        public void Line1737ThroughLine1742(IODataFactory odataFactory)
         {
         }
 
@@ -35,15 +15,21 @@
             //// TODO create class template
 
             //// TODO write this test correctly
-            var model = new ODataModel(@"
-<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
-</edmx:Edmx>
-",
+            //// TODO confirm this is correct by writing webapi implementation
+            var model = new ODataModel(
+@"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
+</edmx:Edmx>"
+                ,
                 ODataModelFormat.Xml);
 
             var odata = odataFactory.Create(model);
-            var response = odata.ServeRequest("asdf");
-            Assert.AreEqual(0, response);
+            var response = odata.ServeRequest(
+@"GET /$metadata HTTP/1.1"
+                );
+            var statusLine =
+@"HTTP/1.1 200 OK";
+            Assert.IsTrue(response.StartsWith(statusLine));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(response.Substring(statusLine.Length)));
         }
     }
 }
