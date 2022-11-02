@@ -9,5 +9,15 @@
         {
             throw new NotImplementedException();
         }
+
+        public HttpResponse ServeRequest(HttpRequest request)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string ServeRequest(string request)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
