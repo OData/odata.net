@@ -6,6 +6,7 @@
 
     /// <summary>
     /// TODO complete this summary
+    /// TODO commit other standard pages
     /// tests based on https://github.com/OData/odata.net/blob/84488a2dc681b8fd2faf6a78d635f7ccbc650a8c/odata_4.01.txt
     /// </summary>
     public sealed class ODataTester
