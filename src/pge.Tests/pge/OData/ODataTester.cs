@@ -32,7 +32,8 @@
 
         public void Line1743(IODataFactory odataFactory)
         {
-            //// TODO
+            //// TODO create class template
+            //// TODO write this test correctly
             var odata = odataFactory.Create(null);
             var response = odata.ServeRequest(null, null, null);
             Assert.AreEqual(0, response);

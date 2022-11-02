@@ -6,13 +6,9 @@
 
     public interface IOData
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="requestUri"></param>
-        /// <param name="httpMethod"></param>
-        /// <param name="requestPayload"></param>
-        /// <returns>The response <see cref="HttpPayload"/></returns>
-        HttpPayload ServeRequest(Uri requestUri, HttpMethod httpMethod, HttpPayload requestPayload);
+        //// TODO remove this? and all of the now-dead code?
+        HttpResponse ServeRequest(HttpRequest request);
+
+        string ServeRequest(string request);
     }
 }
