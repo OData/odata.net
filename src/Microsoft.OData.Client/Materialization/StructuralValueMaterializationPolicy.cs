@@ -358,11 +358,11 @@ namespace Microsoft.OData.Client.Materialization
             ODataUntypedValue untypedVal = value as ODataUntypedValue;
             if (untypedVal != null)
             {
-                if (untypedVal.RawValue[0] == '[')
+                /*if (untypedVal.RawValue[0] == '[')
                 {
                     value = Microsoft.OData.ODataUriUtils.ConvertFromUriLiteral(untypedVal.RawValue, ODataVersion.V4);
                 }
-                else
+                else*/
                 {
                     //// TODO the caller does not guarantee that this is a primitive type
                     value = CommonUtil.ParseJsonToPrimitiveValue(untypedVal.RawValue);

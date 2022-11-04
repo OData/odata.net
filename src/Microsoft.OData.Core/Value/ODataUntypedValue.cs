@@ -11,6 +11,10 @@ namespace Microsoft.OData
     /// </summary>
     public sealed class ODataUntypedValue : ODataValue
     {
+        public ODataUntypedValue()
+        {
+        }
+
         /// <summary>Gets or sets the raw untyped value.</summary>
         /// <returns>The raw untyped value.</returns>
         /// <remarks>

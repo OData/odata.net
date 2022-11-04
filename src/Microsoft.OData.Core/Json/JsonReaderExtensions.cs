@@ -306,7 +306,33 @@ namespace Microsoft.OData.Json
             }
         }
 
+        internal static IEnumerable<ODataUntypedValue> ReadUntypedCollectionValue(this IJsonReader jsonReader)
+        {
+            //// TODO iterator
+
+            if (jsonReader == null)
+            {
+                throw new ArgumentNullException(nameof(jsonReader));
+            }
+
+            jsonReader.ReadStartArray();
+
+            while (jsonReader.NodeType != JsonNodeType.EndArray)
+            {
+                var builder = new StringBuilder();
+                jsonReader.SkipValue(builder);
+                yield return jsonReader.ReadAsUntypedOrNullValueImpl();
+            }
+
+            jsonReader.ReadEndArray();
+        }
+
         internal static ODataValue ReadAsUntypedOrNullValue(this IJsonReader jsonReader)
+        {
+            return jsonReader.ReadAsUntypedOrNullValueImpl();
+        }
+
+        private static ODataUntypedValue ReadAsUntypedOrNullValueImpl(this IJsonReader jsonReader)
         {
             StringBuilder builder = new StringBuilder();
             jsonReader.SkipValue(builder);
