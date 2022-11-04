@@ -124,6 +124,7 @@ namespace Microsoft.OData.Client.Materialization
                 IEdmType edmType = responseInfo.TypeResolver.ResolveExpectedTypeForReading(expectedType);
                 ODataReaderWrapper reader = ODataReaderWrapper.Create(messageReader, messageType, edmType, responseInfo.ResponsePipeline);
 
+                //// TODO I think this is where the magic happens
                 FeedAndEntryMaterializerAdapter parser = new FeedAndEntryMaterializerAdapter(messageReader, reader, responseInfo.Model, responseInfo.MergeOption);
 
                 ODataResource entry = null;

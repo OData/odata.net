@@ -865,12 +865,12 @@ namespace Microsoft.OData.Client
                             responseMsg.StatusCode,
                             () =>
                             {
-                                if (responseStream is MemoryStream memoryStream)
+                                /*if (responseStream is MemoryStream memoryStream)
                                 {
                                     var payload = new StreamReader(memoryStream).ReadToEnd();
                                     File.WriteAllText(@"c:\users\gdebruin\desktop\testresponse.json", payload);
                                     memoryStream.Position = 0;
-                                }
+                                }*/
 
                                 return responseStream;
                             });
