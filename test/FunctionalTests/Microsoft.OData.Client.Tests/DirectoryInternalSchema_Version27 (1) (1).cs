@@ -1916,10 +1916,9 @@ namespace Microsoft.WindowsAzure.ActiveDirectory
             {
                 try
                 {
-                    /*var assembly = global::System.Reflection.Assembly.GetExecutingAssembly();
+                    var assembly = global::System.Reflection.Assembly.GetExecutingAssembly();
                     var resourcePath = global::System.Linq.Enumerable.Single(assembly.GetManifestResourceNames(), str => str.EndsWith(filePath));
-                    global::System.IO.Stream stream = assembly.GetManifestResourceStream(resourcePath);*/
-                    var stream = System.IO.File.OpenRead(@"c:\users\gdebruin\desktop\metadata.txt");
+                    global::System.IO.Stream stream = assembly.GetManifestResourceStream(resourcePath);
                     return global::System.Xml.XmlReader.Create(new global::System.IO.StreamReader(stream));
                 }
                 catch(global::System.Xml.XmlException e)
