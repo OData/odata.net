@@ -37,10 +37,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="failedresponse.json" />
     <None Remove="version27.xml" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="failedresponse.json" />
     <EmbeddedResource Include="version27.xml" />
   </ItemGroup>
 

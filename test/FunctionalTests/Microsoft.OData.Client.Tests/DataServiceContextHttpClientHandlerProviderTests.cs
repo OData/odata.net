@@ -98,7 +98,10 @@ namespace Microsoft.OData.Client.Tests
                 }
                 else if (request.RequestUri.AbsolutePath.Contains(entitySet))
                 {
-                    contents = System.IO.File.ReadAllText(@"c:\users\gdebruin\desktop\failedresponse.json");
+                    var assembly = global::System.Reflection.Assembly.GetExecutingAssembly();
+                    var resourcePath = global::System.Linq.Enumerable.Single(assembly.GetManifestResourceNames(), str => str.EndsWith("failedresponse.json"));
+                    contents = new System.IO.StreamReader(assembly.GetManifestResourceStream(resourcePath)).ReadToEnd();
+
                     //// this still passed the test
                     ////contents = System.IO.File.ReadAllText(@"c:\users\gdebruin\desktop\nestedcollection.json");
                 }
