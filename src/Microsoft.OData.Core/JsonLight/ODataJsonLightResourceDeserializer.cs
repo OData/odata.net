@@ -1580,6 +1580,7 @@ namespace Microsoft.OData.JsonLight
             {
                 if (this.JsonReader.NodeType == JsonNodeType.StartArray)
                 {
+                    //// TODO get test data as part of the repo
                     propertyValue = new ODataCollectionValue()
                     {
                         TypeAnnotation = new ODataTypeAnnotation(EdmUntypedStructuredType.Instance.FullName, EdmUntypedStructuredType.Instance),
