@@ -17,10 +17,6 @@ namespace Microsoft.OData
     /// </summary>
     public sealed class ODataCollectionValue : ODataValue
     {
-        public ODataCollectionValue()
-        {
-        }
-
         /// <summary>Gets or sets the type of the collection value.</summary>
         /// <returns>The type of the collection value.</returns>
         public string TypeName

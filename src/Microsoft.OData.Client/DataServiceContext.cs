@@ -703,9 +703,10 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// TODO disabled by default? expose this at all?
+        /// Gets or sets a value indicating whether collections of untyped values should be supported in response payloads; if they are not supported, an exception will
+        /// be thrown when they are encountered
         /// </summary>
-        public virtual bool EnabledUntypedCollections { get; set; } = true;
+        public virtual bool EnableUntypedCollectionResponses { get; set; } = true;
 
         /// <summary>Gets or sets whether to support undeclared properties.</summary>
         /// <returns>UndeclaredPropertyBehavior.</returns>

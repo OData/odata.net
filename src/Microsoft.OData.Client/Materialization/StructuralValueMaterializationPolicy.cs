@@ -121,7 +121,6 @@ namespace Microsoft.OData.Client.Materialization
                 if ((untypedVal != null)
                     && this.MaterializerContext.UndeclaredPropertyBehavior == UndeclaredPropertyBehavior.Support)
                 {
-                    //// TODO no guarantee seems to be made by the callers that we have a primitive type here
                     value = CommonUtil.ParseJsonToPrimitiveValue(untypedVal.RawValue);
                 }
 
@@ -272,7 +271,6 @@ namespace Microsoft.OData.Client.Materialization
                 {
                     // Note: MaterializeDataValue materializes only properties of primitive types. Materialization specific
                     // to complex types and collections is done later.
-                    //// TODO what a useful comment, it succinctly explains that all of the other methods i've been looking at are in classes that are already assuming that we have a primitive; however, this seems to not be the case at all...
                     this.MaterializePrimitiveDataValue(property.NullablePropertyType, odataProperty);
                 }
             }
@@ -358,22 +356,14 @@ namespace Microsoft.OData.Client.Materialization
             ODataUntypedValue untypedVal = value as ODataUntypedValue;
             if (untypedVal != null)
             {
-                /*if (untypedVal.RawValue[0] == '[')
+                value = CommonUtil.ParseJsonToPrimitiveValue(untypedVal.RawValue);
+                if (value == null)
                 {
-                    value = Microsoft.OData.ODataUriUtils.ConvertFromUriLiteral(untypedVal.RawValue, ODataVersion.V4);
-                }
-                else*/
-                {
-                    //// TODO the caller does not guarantee that this is a primitive type
-                    value = CommonUtil.ParseJsonToPrimitiveValue(untypedVal.RawValue);
-                    if (value == null)
-                    {
-                        return;
-                    }
-
-                    containerProperty.Add(property.Name, value);
                     return;
                 }
+
+                containerProperty.Add(property.Name, value);
+                return;
             }
 
             // Handle enum value
@@ -414,7 +404,6 @@ namespace Microsoft.OData.Client.Materialization
                 if (!ClientConvert.ToNamedType(collectionItemTypeName, out collectionItemType))
                 {
                     // Non-primitive collection
-                    //// TODO this seems to indicate that we expect to materialize collections of untyped elements
                     collectionItemType = ResolveClientTypeForDynamicProperty(collectionItemTypeName, instance);
                 }
 

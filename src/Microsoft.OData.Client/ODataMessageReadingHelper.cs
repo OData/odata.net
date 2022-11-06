@@ -46,7 +46,7 @@ namespace Microsoft.OData.Client
             settings.ClientCustomTypeResolver = resolveWireTypeName;
             settings.BaseUri = this.responseInfo.BaseUriResolver.BaseUriOrNull;
             settings.MaxProtocolVersion = CommonUtil.ConvertToODataVersion(this.responseInfo.MaxProtocolVersion);
-            settings.EnableUntypedCollections = this.responseInfo.Context.EnabledUntypedCollections;
+            settings.EnableUntypedCollections = this.responseInfo.Context.EnableUntypedCollectionResponses;
 
             if (!this.responseInfo.ThrowOnUndeclaredPropertyForNonOpenType)
             {

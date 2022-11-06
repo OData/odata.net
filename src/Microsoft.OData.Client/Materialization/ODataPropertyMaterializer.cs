@@ -92,7 +92,6 @@ namespace Microsoft.OData.Client.Materialization
             }
             else
             {
-                //// TODO we assert this, but it doesn't look like the caller makes any such guarantee
                 Debug.Assert(this.MaterializerContext.Model.GetOrCreateEdmType(underlyingExpectedType).ToEdmTypeReference(false).IsPrimitive(), "expectedType must be primitive type");
                 object value = property.Value;
                 ODataUntypedValue untypedVal = value as ODataUntypedValue;
