@@ -43,6 +43,7 @@ namespace Microsoft.OData.Edm.Validation
                 ValidationRules.StructuredTypeInvalidMemberNameMatchesTypeName,
                 ValidationRules.StructuredTypePropertyNameAlreadyDefined,
                 ValidationRules.StructuralPropertyInvalidPropertyType,
+                ValidationRules.RecursiveComplexTypedPropertyMustBeOptional,
                 ValidationRules.OperationParameterNameAlreadyDefinedDuplicate,
                 ValidationRules.OperationImportEntityTypeDoesNotMatchEntitySet,
                 ValidationRules.OperationImportCannotImportBoundOperation,

@@ -1384,6 +1384,11 @@ namespace Microsoft.OData.Edm.Validation
         AnnotationApplyToNotAllowedAnnotatable = 400,
 
         /// <summary>
+        /// A recursive complex-typed property must be optional.
+        /// </summary>
+        RecursiveComplexTypedPropertyMustBeOptional = 401,
+
+        /// <summary>
         /// Invalid $Key value.
         /// </summary>
         InvalidKeyValue,
