@@ -1431,17 +1431,29 @@ namespace Microsoft.OData.Tests.JsonLight
                 );
         }
 
-        [InlineData(/*isResponse*/true)]
-        [InlineData(/*isResponse*/false)]
-        [Theory]
-        public void WriteDeletedEntryWithoutKeyOrIdShouldFail(bool isResponse)
+        [Fact]
+        public void WriteDeletedEntryWithoutKeyOrIdShouldNotFailWhenWritingAResponse()
+        {
+            this.TestInit(this.GetModel());
+            Action writeAction = () =>
+            {
+                ODataJsonLightWriter writer = new ODataJsonLightWriter(GetV401OutputContext(true), this.GetCustomers(), this.GetCustomerType(), true, false, true);
+                writer.WriteStart(true ? feed : requestFeed);
+                writer.WriteStart(new ODataDeletedResource());
+            };
+
+            writeAction.DoesNotThrow();
+        }
+
+        [Fact]
+        public void WriteDeletedEntryWithoutKeyOrIdShouldFailWhenWritingARequest()
         {
             this.TestInit(this.GetModel());
 
             Action writeAction = () =>
             {
-                ODataJsonLightWriter writer = new ODataJsonLightWriter(GetV401OutputContext(isResponse), this.GetCustomers(), this.GetCustomerType(), true, false, true);
-                writer.WriteStart(isResponse ? feed : requestFeed);
+                ODataJsonLightWriter writer = new ODataJsonLightWriter(GetV401OutputContext(false), this.GetCustomers(), this.GetCustomerType(), true, false, true);
+                writer.WriteStart(false ? feed : requestFeed);
                 writer.WriteStart(new ODataDeletedResource());
             };
 
