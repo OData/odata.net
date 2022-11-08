@@ -1200,11 +1200,10 @@ namespace Microsoft.OData.Edm.Validation
             new ValidationRule<IEdmStructuralProperty>(
                 (context, property) =>
                 {
-
                     IEdmTypeReference propType = property.Type;
-                    IEdmStructuredType declaredType = property.DeclaringType; // complex entity
+                    IEdmStructuredType declaredType = property.DeclaringType;
 
-                    if (propType.Definition == declaredType && !propType.IsNullable) // recursive and non-nullable
+                    if (propType.Definition == declaredType && !propType.IsNullable)
                     {
                         context.AddError(
                             property.Location(),
@@ -1212,58 +1211,6 @@ namespace Microsoft.OData.Edm.Validation
                             Strings.EdmModel_Validator_Semantic_RecursiveComplexTypedPropertyMustBeOptional(property.Name));
                     }
                 });
-        
-
-        /// <summary>
-        /// Validates that if a complex-typed property has a type that is the same as
-        /// declaring type of the complex type or a derived type, then the complex type is nullable.
-        /// </summary>
-        /// Q: Should I go from the side of validating a complex type or one of its edm:Property's? A: I think the latter
-        /// Q: How do go from a property to its complex type? A: ...................................................
-        /*public static readonly ValidationRule<IEdmProperty> ComplexTypeWithRecursiveContainmentTargetMustBeNullable =
-            new ValidationRule<IEdmProperty>(
-                (context, property) =>
-                {
-
-                    IEdmTypeReference propType = property.Type;
-                    // property.DeclaringType // the name of the type that declared this property AKA the complex type
-                });
-        */
-        /*/// <summary>
-        /// Validates that a open complex type can not have closed derived complex type.
-        /// </summary>
-        public static readonly ValidationRule<IEdmComplexType> OpenComplexTypeCannotHaveClosedDerivedComplexType =
-            new ValidationRule<IEdmComplexType>(
-                (context, complexType) =>
-                {
-                    if (complexType.BaseType != null && complexType.BaseType.IsOpen && !complexType.IsOpen)
-                    {
-                        context.AddError(
-                            complexType.Location(),
-                            EdmErrorCode.InvalidAbstractComplexType,
-                            Strings.EdmModel_Validator_Semantic_BaseTypeOfOpenTypeMustBeOpen(complexType.FullName()));
-                    }
-                });
-
-        /// <summary>
-        /// Validates that the base type of a complex type is complex, and the base type of an entity type is an entity.
-        /// </summary>
-        public static readonly ValidationRule<IEdmStructuredType> StructuredTypeBaseTypeMustBeSameKindAsDerivedKind =
-            new ValidationRule<IEdmStructuredType>(
-                (context, structuredType) =>
-                {
-                    // We can either have 2 rules (entity and complex) or have one rule. I'm choosing the latter.
-                    if (structuredType is IEdmSchemaType)
-                    {
-                        if (structuredType.BaseType != null && structuredType.BaseType.TypeKind != structuredType.TypeKind)
-                        {
-                            context.AddError(
-                                structuredType.Location(),
-                                (structuredType.TypeKind == EdmTypeKind.Entity) ? EdmErrorCode.EntityMustHaveEntityBaseType : EdmErrorCode.ComplexTypeMustHaveComplexBaseType,
-                                Strings.EdmModel_Validator_Semantic_BaseTypeMustHaveSameTypeKind);
-                        }
-                    }
-                });*/
 
         #endregion
 
