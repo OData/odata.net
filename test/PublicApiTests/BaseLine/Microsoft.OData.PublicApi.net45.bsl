@@ -8168,7 +8168,7 @@ public class Microsoft.OData.Client.DataServiceContext {
     System.Net.ICredentials Credentials  { public virtual get; public virtual set; }
     Microsoft.OData.Client.DeleteLinkUriOption DeleteLinkUriOption  { public virtual get; public virtual set; }
     bool DisableInstanceAnnotationMaterialization  { public virtual get; public virtual set; }
-    bool EnabledUntypedCollections  { public virtual get; public virtual set; }
+    bool EnableUntypedCollectionResponses  { public virtual get; public virtual set; }
     bool EnableWritingODataAnnotationWithoutPrefix  { public virtual get; public virtual set; }
     System.Collections.ObjectModel.ReadOnlyCollection`1[[Microsoft.OData.Client.EntityDescriptor]] Entities  { public virtual get; }
     Microsoft.OData.Client.EntityParameterSendOption EntityParameterSendOption  { public virtual get; public virtual set; }
