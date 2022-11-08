@@ -364,7 +364,12 @@ namespace Microsoft.OData.Client
             Debug.Assert(entry != null, "entry != null");
             Debug.Assert(path != null, "path != null");
 
-            Expression result = CallMaterializer("ProjectionValueForPath", this.materializerExpression, entry, entryType, Expression.Constant(path, typeof(object)));
+            Expression result = CallMaterializer(
+                nameof(ODataEntityMaterializerInvoker.ProjectionValueForPath),
+                this.materializerExpression,
+                entry, 
+                entryType,
+                Expression.Constant(path, typeof(object)));
             this.annotations.Add(result, new ExpressionAnnotation() { Segment = path[path.Count - 1] });
             return result;
         }
@@ -523,7 +528,7 @@ namespace Microsoft.OData.Client
             annotation.Segment.StartPath.Add(memberSegment);
 
             Expression value = CallMaterializer(
-                "ProjectionDynamicValueForPath",
+                nameof(ODataEntityMaterializerInvoker.ProjectionDynamicValueForPath),
                 this.materializerExpression,
                 annotation.Segment.StartPath.RootEntry,
                 Expression.Constant(targetType, typeof(Type)),

@@ -31,7 +31,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [Fact]
         public void AfterEntryMaterializedShouldOccur()
         {
-            var materializerContext = new TestMaterializerContext(new MaterializerCache());
+            var materializerContext = new TestMaterializerContext();
 
             foreach (ODataFormat format in new ODataFormat[] { ODataFormat.Json })
             {

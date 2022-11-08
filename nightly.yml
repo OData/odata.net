@@ -2,18 +2,18 @@
     - template: buildandtest.yml
 
     - script: |
-        mkdir $(Build.ArtifactStagingDirectory)\sbom
+        mkdir $(Build.ArtifactStagingDirectory)\$(NugetArtifactsDir)\sbom
       displayName: 'Create $(Build.ArtifactStagingDirectory)\sbom'
 
     - task: AzureArtifacts.manifest-generator-task.manifest-generator-task.ManifestGeneratorTask@0
       displayName: 'Manifest Generator '
       inputs:
-          BuildDropPath: '$(Build.ArtifactStagingDirectory)\sbom'
+          BuildDropPath: '$(Build.ArtifactStagingDirectory)\$(NugetArtifactsDir)\sbom'
 
     - task: PublishBuildArtifacts@1
       displayName: 'Publish SBOM'
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)\sbom'
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)\$(NugetArtifactsDir)\sbom'
 
     - template: credscan.yml
  
@@ -98,62 +98,62 @@
       inputs:
         command: custom
         feedsToUse: config
-        arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.Spatial\Build.NuGet\Microsoft.Spatial.Nightly.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\Nuget -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath3)\**;SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);NightlyBuildVersion=$(VersionNugetNightlyBuild);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols -SymbolPackageFormat snupkg'
+        arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.Spatial\Build.NuGet\Microsoft.Spatial.Nightly.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\$(NugetArtifactsDir) -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath3)\**;SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);NightlyBuildVersion=$(VersionNugetNightlyBuild);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols -SymbolPackageFormat snupkg'
     
     - task: NuGetCommand@2
       displayName: 'NuGet - pack Microsoft.Spatial.Release'
       inputs:
         command: custom
         feedsToUse: config
-        arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.Spatial\Build.NuGet\Microsoft.Spatial.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\Nuget -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath3)\**;SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols -SymbolPackageFormat snupkg'
+        arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.Spatial\Build.NuGet\Microsoft.Spatial.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\$(NugetArtifactsDir) -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath3)\**;SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols -SymbolPackageFormat snupkg'
 
     - task: NuGetCommand@2
       displayName: 'NuGet - pack Microsoft.OData.Edm.Nightly.Release'
       inputs:
         command: custom
         feedsToUse: config
-        arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.OData.Edm\Build.NuGet\Microsoft.OData.Edm.Nightly.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\Nuget -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath1)\**;SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);NightlyBuildVersion=$(VersionNugetNightlyBuild);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols -SymbolPackageFormat snupkg'
+        arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.OData.Edm\Build.NuGet\Microsoft.OData.Edm.Nightly.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\$(NugetArtifactsDir) -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath1)\**;SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);NightlyBuildVersion=$(VersionNugetNightlyBuild);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols -SymbolPackageFormat snupkg'
 
     - task: NuGetCommand@2
       displayName: 'NuGet - pack Microsoft.OData.Edm.Release'
       inputs:
         command: custom
         feedsToUse: config
-        arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.OData.Edm\Build.NuGet\Microsoft.OData.Edm.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\Nuget -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath1)\**;SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols -SymbolPackageFormat snupkg'
+        arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.OData.Edm\Build.NuGet\Microsoft.OData.Edm.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\$(NugetArtifactsDir) -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath1)\**;SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols -SymbolPackageFormat snupkg'
     
     - task: NuGetCommand@2
       displayName: 'NuGet - pack Microsoft.OData.Core.Nightly.Release'
       inputs:
         command: custom
         feedsToUse: config
-        arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.OData.Core\Build.NuGet\Microsoft.OData.Core.Nightly.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\Nuget -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath2)\**;SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);NightlyBuildVersion=$(VersionNugetNightlyBuild);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols -SymbolPackageFormat snupkg'
+        arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.OData.Core\Build.NuGet\Microsoft.OData.Core.Nightly.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\$(NugetArtifactsDir) -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath2)\**;SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);NightlyBuildVersion=$(VersionNugetNightlyBuild);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols -SymbolPackageFormat snupkg'
 
     - task: NuGetCommand@2
       displayName: 'NuGet - pack Microsoft.OData.Core.Release'
       inputs:
         command: custom
         feedsToUse: config
-        arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.OData.Core\Build.NuGet\Microsoft.OData.Core.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\Nuget -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath2)\**;SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols -SymbolPackageFormat snupkg'
+        arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.OData.Core\Build.NuGet\Microsoft.OData.Core.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\$(NugetArtifactsDir) -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath2)\**;SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols -SymbolPackageFormat snupkg'
 
     - task: NuGetCommand@2
       displayName: 'NuGet - pack Microsoft.OData.Client.Nightly.Release'
       inputs:
         command: custom
         feedsToUse: config
-        arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.OData.Client\Build.NuGet\Microsoft.OData.Client.Nightly.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\Nuget -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath4)\**;SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);NightlyBuildVersion=$(VersionNugetNightlyBuild);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols -SymbolPackageFormat snupkg'
+        arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.OData.Client\Build.NuGet\Microsoft.OData.Client.Nightly.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\$(NugetArtifactsDir) -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath4)\**;SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);NightlyBuildVersion=$(VersionNugetNightlyBuild);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols -SymbolPackageFormat snupkg'
     
     - task: NuGetCommand@2
       displayName: 'NuGet - pack Microsoft.OData.Client.Release'
       inputs:
         command: custom
         feedsToUse: config
-        arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.OData.Client\Build.NuGet\Microsoft.OData.Client.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\Nuget -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath4)\**;SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols -SymbolPackageFormat snupkg'
+        arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.OData.Client\Build.NuGet\Microsoft.OData.Client.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\$(NugetArtifactsDir) -Properties Configuration=$(BuildConfiguration);ProductRoot=$(ProductBinPath4)\**;SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols -SymbolPackageFormat snupkg'
 
     - task: EsrpCodeSigning@1
       displayName: 'ESRP CodeSigning Nuget Packages'
       inputs:
         ConnectedServiceName: 'ESRP CodeSigning - OData'
-        FolderPath: '$(Build.ArtifactStagingDirectory)\Nuget'
+        FolderPath: '$(Build.ArtifactStagingDirectory)\$(NugetArtifactsDir)'
         Pattern: '*.nupkg'
         signConfigType: inlineSignParams
         inlineOperation: |
@@ -178,14 +178,14 @@
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact - Nuget Packages'
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)\Nuget'
-        ArtifactName: Nuget
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)\$(NugetArtifactsDir)'
+        ArtifactName: $(NugetArtifactsDir)
 
     - task: NuGetCommand@2
       displayName: 'NuGet push - Nightly packages to MyGet'
       inputs:
         command: push
-        packagesToPush: '$(Build.ArtifactStagingDirectory)\Nuget\*Nightly*.nupkg'
+        packagesToPush: '$(Build.ArtifactStagingDirectory)\$(NugetArtifactsDir)\*Nightly*.nupkg'
         nuGetFeedType: external
         publishFeedCredentials: 'MyGet.org - OData.net Nightly Feed'
       enabled: true

@@ -534,21 +534,21 @@ namespace Microsoft.OData.Client
 
                 Debug.Assert(cachedEdmType != null, "cachedEdmType != null");
 
-                IEdmType edmType = cachedEdmType.EdmType;
-                ClientTypeAnnotation clientTypeAnnotation = this.GetOrCreateClientTypeAnnotation(edmType, type);
-                this.SetClientTypeAnnotation(edmType, clientTypeAnnotation);
-
-                if (edmType.TypeKind == EdmTypeKind.Entity || edmType.TypeKind == EdmTypeKind.Complex)
-                {
-                    IEdmStructuredType edmStructuredType = edmType as IEdmStructuredType;
-                    Debug.Assert(edmStructuredType != null, "edmStructuredType != null");
-                    this.SetMimeTypeForProperties(edmStructuredType);
-                }
-
                 // Need to cache the type before loading the properties so we don't stack overflow because
                 // loading the property can trigger calls to GetOrCreateEdmType on the same type.
                 lock (this.clrToEdmTypeCache)
                 {
+                    IEdmType edmType = cachedEdmType.EdmType;
+                    ClientTypeAnnotation clientTypeAnnotation = this.GetOrCreateClientTypeAnnotation(edmType, type);
+                    this.SetClientTypeAnnotation(edmType, clientTypeAnnotation);
+
+                    if (edmType.TypeKind == EdmTypeKind.Entity || edmType.TypeKind == EdmTypeKind.Complex)
+                    {
+                        IEdmStructuredType edmStructuredType = edmType as IEdmStructuredType;
+                        Debug.Assert(edmStructuredType != null, "edmStructuredType != null");
+                        this.SetMimeTypeForProperties(edmStructuredType);
+                    }
+
                     EdmTypeCacheValue existing;
                     if (this.clrToEdmTypeCache.TryGetValue(type, out existing))
                     {

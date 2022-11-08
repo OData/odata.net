@@ -49,7 +49,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// The materializer context.
         /// </summary>
-        private IODataMaterializerContext materializerContext;
+        private readonly IODataMaterializerContext materializerContext;
 
         #endregion Private fields
 
@@ -69,6 +69,7 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(model != null, "model != null");
             Debug.Assert(entityTracker != null, "entityTracker != null");
+            Debug.Assert(materializerContext != null, "materializerContext != null");
 
             this.appendOnlyEntries = new Dictionary<Uri, ODataResource>(EqualityComparer<Uri>.Default);
             this.mergeOption = mergeOption;

@@ -10,6 +10,7 @@ namespace Microsoft.OData.Client
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Reflection;
+    using System.Text.RegularExpressions;
     using Microsoft.OData.Edm;
     using Microsoft.OData.UriParser.Aggregation;
     using Microsoft.Spatial;
@@ -53,10 +54,11 @@ namespace Microsoft.OData.Client
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Justification = "Cleaner code")]
         static TypeSystem()
         {
-            const int ExpectedCount = 43;
+            const int ExpectedCount = 44;
             // string functions
             expressionMethodMap = new Dictionary<MethodInfo, string>(EqualityComparer<MethodInfo>.Default);
             expressionMethodMap.Add(typeof(string).GetMethod("Contains", new Type[] { typeof(string) }), @"contains");
+            expressionMethodMap.Add(typeof(Regex).GetMethod("IsMatch", new Type[] { typeof(string), typeof(string), typeof(RegexOptions) }), @"matchesPattern");
             expressionMethodMap.Add(typeof(string).GetMethod("EndsWith", new Type[] { typeof(string) }), @"endswith");
             expressionMethodMap.Add(typeof(string).GetMethod("StartsWith", new Type[] { typeof(string) }), @"startswith");
             expressionMethodMap.Add(typeof(string).GetMethod("IndexOf", new Type[] { typeof(string) }), @"indexof");

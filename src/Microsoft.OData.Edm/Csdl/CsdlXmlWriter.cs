@@ -66,6 +66,7 @@ namespace Microsoft.OData.Edm.Csdl
             this.WriteSchemas();
             this.EndElement(); // </DataServices>
             this.EndElement(); // </Edmx>
+            this.writer.Flush();
         }
 
         private void WriteEFCsdl()
@@ -77,6 +78,7 @@ namespace Microsoft.OData.Edm.Csdl
             this.EndElement(); // </ConceptualModels>
             this.EndElement(); // </Runtime>
             this.EndElement(); // </Edmx>
+            this.writer.Flush();
         }
 
         private void WriteEdmxElement()
