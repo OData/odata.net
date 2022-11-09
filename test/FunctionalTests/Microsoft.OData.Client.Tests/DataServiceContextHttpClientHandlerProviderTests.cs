@@ -66,7 +66,7 @@ namespace Microsoft.OData.Client.Tests
                         {
                             response.Headers.Add(
                                 "Location",
-                                Combine(rootUri, entitySet, "080a1a0e-71bf-4582-b141-fd61bdd35a40").ToString());
+                                new Uri(rootUri, $"{entitySet}/080a1a0e-71bf-4582-b141-fd61bdd35a40").ToString());
                             return response;
                         }
                         catch
@@ -161,62 +161,6 @@ namespace Microsoft.OData.Client.Tests
             };
 
             return response;
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="Uri"/> by combining <paramref name="uri"/> with each element of <paramref name="uris"/>
-        /// </summary>
-        /// <param name="uri">The base URI that will be added to</param>
-        /// <param name="uris">The URIs to combine with <paramref name="uri"/></param>
-        /// <returns>The combination of <paramref name="uri"/> and <paramref name="uris"/></returns>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="uri"/> or <paramref name="uris"/> is <see langword="null"/></exception>
-        /// <exception cref="ArgumentException">
-        /// Thrown if <paramref name="uri"/> is not an absolute URI or if one of <paramref name="uris"/> is not a relative URI
-        /// </exception>
-        private static Uri Combine(Uri uri, params string[] uris)
-        {
-            return Combine(uri, uris.Select(_ => new Uri(_, UriKind.Relative)));
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="Uri"/> by combining <paramref name="uri"/> with each element of <paramref name="uris"/>
-        /// </summary>
-        /// <param name="uri">The base URI that will be added to</param>
-        /// <param name="uris">The <see cref="Uri"/>s to combine with <paramref name="uri"/></param>
-        /// <returns>The combination of <paramref name="uri"/> and <paramref name="uris"/></returns>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="uri"/> or <paramref name="uris"/> is <see langword="null"/></exception>
-        /// <exception cref="ArgumentException">Thrown if <paramref name="uri"/> is not an absolute URI</exception>
-        private static Uri Combine(Uri uri, IEnumerable<Uri> uris)
-        {
-            if (uri == null)
-            {
-                throw new ArgumentNullException(nameof(uri));
-            }
-
-            if (!uri.IsAbsoluteUri)
-            {
-                throw new ArgumentException("The URI is not an absolute URI", nameof(uri));
-            }
-
-            if (uris == null)
-            {
-                throw new ArgumentNullException(nameof(uris));
-            }
-
-            var result = uri;
-            foreach (var relativeUri in uris)
-            {
-                if (relativeUri.IsAbsoluteUri)
-                {
-                    result = relativeUri;
-                }
-                else
-                {
-                    result = new Uri(result, relativeUri);
-                }
-            }
-
-            return result;
         }
     }
 
