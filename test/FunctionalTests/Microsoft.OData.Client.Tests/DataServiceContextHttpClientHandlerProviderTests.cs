@@ -38,8 +38,13 @@ namespace Microsoft.OData.Client.Tests
 
         private const string PersonNameValue = "John Doe";
 
+        /// <summary>
+        /// Asserts that a dynamic property which represents a collection of untyped values throwns an exception when the
+        /// <see cref="DataServiceContext.EnableUntypedCollectionResponses"/> behavior flag is not enabled, and that the exception is not present when the flag is
+        /// enabled
+        /// </summary>
         [Fact]
-        public void RdsExtendedTest()
+        public void DynamicPropertyCollectionOfUntypedValues()
         { 
             var rootUri = new Uri(BaseUri);
             var entitySet = "users";
@@ -60,7 +65,7 @@ namespace Microsoft.OData.Client.Tests
                         try
                         {
                             response.Headers.Add(
-                                "Location", 
+                                "Location",
                                 Combine(rootUri, entitySet, "080a1a0e-71bf-4582-b141-fd61bdd35a40").ToString());
                             return response;
                         }
@@ -79,12 +84,35 @@ namespace Microsoft.OData.Client.Tests
             }))
             {
                 var provider = new MockHttpClientHandlerProvider(handler);
-                var context = new DirectoryDataService(rootUri);
-                context.HttpClientHandlerProvider = provider;
-                context.HttpRequestTransportMode = HttpRequestTransportMode.HttpClient;
+                Func<Uri, string, IHttpClientHandlerProvider, DataServiceContext> createRequestForEntityWithDynamicCollectionOfUntypedValues = 
+                    (uri, set, handlerProvider) =>
+                    {
+                        var directoryDataService = new DirectoryDataService(rootUri);
+                        directoryDataService.HttpClientHandlerProvider = provider;
+                        directoryDataService.HttpRequestTransportMode = HttpRequestTransportMode.HttpClient;
 
-                context.AddObject(entitySet, new User());
-                context.SaveChanges();
+                        directoryDataService.AddObject(entitySet, new User());
+
+                        return directoryDataService;
+                    };
+
+                var context = createRequestForEntityWithDynamicCollectionOfUntypedValues(rootUri, entitySet, provider);
+
+                // This test is asserting behavior about a bug that has been fixed in order to demonstrate the difference between the fixed behavior and the bugged
+                // behavior. The bugged behavior fails a <see cref="System.Diagnostics.Debug.Assert(bool)"/>, so we don't run the test with the behavior flag disabled in
+                // the Debug configuration
+#if !DEBUG
+                // when disabled, we expect an exception due to a bug
+                context.EnableUntypedCollectionResponses = false;
+                Assert.Throws<DataServiceRequestException>(() => context.SaveChanges());
+#endif
+
+                context = createRequestForEntityWithDynamicCollectionOfUntypedValues(rootUri, entitySet, provider);
+
+                // when enabled, the exception should go away and we should receive an actual repsonse
+                context.EnableUntypedCollectionResponses = true;
+                var response = context.SaveChanges();
+                Assert.True(response.First().StatusCode >= 200 && response.First().StatusCode < 300);
             }
         }
 
