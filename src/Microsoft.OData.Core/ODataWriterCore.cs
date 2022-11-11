@@ -2826,19 +2826,11 @@ namespace Microsoft.OData
         private ODataPath AppendEntitySetKeySegment(ODataPath odataPath, bool throwIfFail)
         {
             ODataPath path = odataPath;
-            
-            if (EdmExtensionMethods.HasKey(this.CurrentScope.NavigationSource, this.CurrentScope.ResourceType))
+
+            KeyValuePair<string, object>[] keys = GetKeyProperties(throwIfFail);
+            if (keys == null || keys.Length == 0)
             {
                 IEdmEntityType currentEntityType = this.CurrentScope.ResourceType as IEdmEntityType;
-                ODataResourceBase resource = this.CurrentScope.Item as ODataResourceBase;
-                Debug.Assert(resource != null,
-                    "If the current state is Resource the current item must be an ODataResource as well (and not null either).");
-
-                ODataResourceSerializationInfo serializationInfo = this.GetResourceSerializationInfo(resource);
-
-                KeyValuePair<string, object>[] keys = ODataResourceMetadataContext.GetKeyProperties(resource,
-                        serializationInfo, currentEntityType, throwIfFail);
-
                 path = path.AddKeySegment(keys, currentEntityType, this.CurrentScope.NavigationSource);
             }
 
@@ -2847,10 +2839,23 @@ namespace Microsoft.OData
 
         private bool TryBuildKeySegment(out KeySegment keySegment)
         {
-            keySegment = null;
+            KeyValuePair<string, object>[] keys = GetKeyProperties(false /*throwIfFail*/);
+            if (keys == null || keys.Length == 0)
+            {
+                keySegment = null;
+                return false;
+            }
+
+            IEdmEntityType currentEntityType = this.CurrentScope.ResourceType as IEdmEntityType;
+            keySegment = new KeySegment(keys, currentEntityType, this.CurrentScope.NavigationSource);
+            return true;
+        }
+
+        private KeyValuePair<string, object>[] GetKeyProperties(bool throwIfFail)
+        {
             if (!EdmExtensionMethods.HasKey(this.CurrentScope.NavigationSource, this.CurrentScope.ResourceType))
             {
-                return false;
+                return null;
             }
 
             IEdmEntityType currentEntityType = this.CurrentScope.ResourceType as IEdmEntityType;
@@ -2860,15 +2865,7 @@ namespace Microsoft.OData
 
             ODataResourceSerializationInfo serializationInfo = this.GetResourceSerializationInfo(resource);
 
-            KeyValuePair<string, object>[] keys = ODataResourceMetadataContext.GetKeyProperties(resource, serializationInfo, currentEntityType, false /*throwIfFail*/);
-            if (keys == null || keys.Length == 0)
-            {
-                return false;
-            }
-
-            keySegment = new KeySegment(keys, currentEntityType, this.CurrentScope.NavigationSource);
-
-            return true;
+            return ODataResourceMetadataContext.GetKeyProperties(resource, serializationInfo, currentEntityType, throwIfFail);
         }
 
         /// <summary>
