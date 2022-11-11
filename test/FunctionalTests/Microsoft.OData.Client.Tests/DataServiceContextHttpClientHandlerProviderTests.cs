@@ -39,8 +39,8 @@ namespace Microsoft.OData.Client.Tests
         private const string PersonNameValue = "John Doe";
 
         /// <summary>
-        /// Asserts that a dynamic property which represents a collection of untyped values throwns an exception when the
-        /// <see cref="DataServiceContext.EnableUntypedCollectionResponses"/> behavior flag is not enabled, and that the exception is not present when the flag is
+        /// Asserts that a dynamic property which represents a collection of untyped values throws an exception when the
+        /// <see cref="ODataMessageReaderSettings.EnableUntypedCollections"/> behavior flag is not enabled, and that the exception is not present when the flag is
         /// enabled
         /// </summary>
         [Fact]
@@ -103,14 +103,14 @@ namespace Microsoft.OData.Client.Tests
                 // the Debug configuration
 #if !DEBUG
                 // when disabled, we expect an exception due to a bug
-                context.EnableUntypedCollectionResponses = false;
+                context.Configurations.ResponsePipeline.OnMessageReaderSettingsCreated(args => args.Settings.EnableUntypedCollections = false);
                 Assert.Throws<DataServiceRequestException>(() => context.SaveChanges());
 #endif
 
                 context = createRequestForEntityWithDynamicCollectionOfUntypedValues(rootUri, entitySet, provider);
 
                 // when enabled, the exception should go away and we should receive an actual repsonse
-                context.EnableUntypedCollectionResponses = true;
+                context.Configurations.ResponsePipeline.OnMessageReaderSettingsCreated(args => args.Settings.EnableUntypedCollections = true);
                 var response = context.SaveChanges();
                 Assert.True(response.First().StatusCode >= 200 && response.First().StatusCode < 300);
             }
