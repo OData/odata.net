@@ -353,7 +353,7 @@ namespace Microsoft.OData.Json
 
             while (jsonReader.NodeType != JsonNodeType.EndArray)
             {
-                yield return jsonReader.ReadAsUntypedOrNullValueImpl();
+                yield return jsonReader.ReadAsUntypedOrNullValueImplementation();
             }
 
             jsonReader.ReadEndArray();
@@ -361,7 +361,7 @@ namespace Microsoft.OData.Json
 
         internal static ODataValue ReadAsUntypedOrNullValue(this IJsonReader jsonReader)
         {
-            return jsonReader.ReadAsUntypedOrNullValueImpl();
+            return jsonReader.ReadAsUntypedOrNullValueImplementation();
         }
 
         /// <summary>
@@ -370,7 +370,7 @@ namespace Microsoft.OData.Json
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
         /// <returns>The <see cref="ODataUntypedValue"/> that represents the value read from <paramref name="jsonReader"/></returns>
         /// <exception cref="ODataException">Thrown if the JSON that <paramref name="jsonReader"/> is reading is not well-formed</exception>
-        private static ODataUntypedValue ReadAsUntypedOrNullValueImpl(this IJsonReader jsonReader)
+        private static ODataUntypedValue ReadAsUntypedOrNullValueImplementation(this IJsonReader jsonReader)
         {
             StringBuilder builder = new StringBuilder();
             jsonReader.SkipValue(builder);
