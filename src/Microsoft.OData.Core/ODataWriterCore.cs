@@ -2760,16 +2760,27 @@ namespace Microsoft.OData
                                         throw new ODataException(Strings.ODataWriterCore_PathInODataUriMustBeSetWhenWritingContainedElement);
                                     }
 
-                                    odataPath = AppendEntitySetKeySegment(odataPath, true);
-
-                                    if (odataPath != null && typeCastFromExpand != null)
+                                    // If there's only non-key properties selected in the request URI, then We don't have the key values to calcuate the key segment.
+                                    // So far, let's simply not to generate the link if we are missing this key information. Although even that is non-ideal.
+                                    // We should find a better solution for that. One way is to expand ODataResource to include the 'Key' properties if that's not presented in $select.
+                                    KeySegment keySegment;
+                                    if (TryBuildKeySegment(out keySegment))
                                     {
-                                        odataPath = odataPath.AddSegment(typeCastFromExpand);
-                                    }
+                                        odataPath.AddKeySegment(keySegment);
 
-                                    Debug.Assert(navigationSource is IEdmContainedEntitySet, "If the NavigationSourceKind is ContainedEntitySet, the navigationSource must be IEdmContainedEntitySet.");
-                                    IEdmContainedEntitySet containedEntitySet = (IEdmContainedEntitySet)navigationSource;
-                                    odataPath = odataPath.AddNavigationPropertySegment(containedEntitySet.NavigationProperty, containedEntitySet);
+                                        if (typeCastFromExpand != null)
+                                        {
+                                            odataPath = odataPath.AddSegment(typeCastFromExpand);
+                                        }
+
+                                        Debug.Assert(navigationSource is IEdmContainedEntitySet, "If the NavigationSourceKind is ContainedEntitySet, the navigationSource must be IEdmContainedEntitySet.");
+                                        IEdmContainedEntitySet containedEntitySet = (IEdmContainedEntitySet)navigationSource;
+                                        odataPath = odataPath.AddNavigationPropertySegment(containedEntitySet.NavigationProperty, containedEntitySet);
+                                    }
+                                    else
+                                    {
+                                        odataPath = null;
+                                    }
                                     break;
                                 case EdmNavigationSourceKind.EntitySet:
                                     odataPath = new ODataPath(new EntitySetSegment(navigationSource as IEdmEntitySet));
@@ -2832,6 +2843,32 @@ namespace Microsoft.OData
             }
 
             return path;
+        }
+
+        private bool TryBuildKeySegment(out KeySegment keySegment)
+        {
+            keySegment = null;
+            if (!EdmExtensionMethods.HasKey(this.CurrentScope.NavigationSource, this.CurrentScope.ResourceType))
+            {
+                return false;
+            }
+
+            IEdmEntityType currentEntityType = this.CurrentScope.ResourceType as IEdmEntityType;
+            ODataResourceBase resource = this.CurrentScope.Item as ODataResourceBase;
+            Debug.Assert(resource != null,
+                "If the current state is Resource the current item must be an ODataResource as well (and not null either).");
+
+            ODataResourceSerializationInfo serializationInfo = this.GetResourceSerializationInfo(resource);
+
+            KeyValuePair<string, object>[] keys = ODataResourceMetadataContext.GetKeyProperties(resource, serializationInfo, currentEntityType, false /*throwIfFail*/);
+            if (keys == null || keys.Length == 0)
+            {
+                return false;
+            }
+
+            keySegment = new KeySegment(keys, currentEntityType, this.CurrentScope.NavigationSource);
+
+            return true;
         }
 
         /// <summary>
