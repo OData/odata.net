@@ -27,7 +27,7 @@ namespace Microsoft.OData.Client.Tests.Tracking
             @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
   <edmx:DataServices>
     <Schema Namespace=""Microsoft.OData.Client.Tests.Tracking"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-      <EntityType Name=""User"">
+      <EntityType Name=""OtherUser"">
         <Key>
           <PropertyRef Name=""Id"" />
         </Key>
@@ -65,7 +65,7 @@ namespace Microsoft.OData.Client.Tests.Tracking
     </Schema>
     <Schema Namespace=""Default"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
       <EntityContainer Name=""Container"">
-        <EntitySet Name=""Users"" EntityType=""Microsoft.OData.Client.Tests.Tracking.User"" />
+        <EntitySet Name=""Users"" EntityType=""Microsoft.OData.Client.Tests.Tracking.OtherUser"" />
         <EntitySet Name=""Documents"" EntityType=""Microsoft.OData.Client.Tests.Tracking.Document"" />
         <EntitySet Name=""Customers"" EntityType=""Microsoft.OData.Client.Tests.Tracking.Customer"" />
         <EntitySet Name=""Customers2"" EntityType=""Microsoft.OData.Client.Tests.Tracking.Customer2"" />
@@ -224,7 +224,7 @@ namespace Microsoft.OData.Client.Tests.Tracking
             SetupContextWithRequestPipelineForSaving(
                 new DataServiceContext[] { NonTrackingContext, DefaultTrackingContext }, false);
 
-            var user = new User
+            var user = new OtherUser
             {
                 Name = "Some name"
             };
@@ -253,7 +253,7 @@ namespace Microsoft.OData.Client.Tests.Tracking
             SetupContextWithRequestPipelineForSaving(
                 new DataServiceContext[] { NonTrackingContext, DefaultTrackingContext }, false);
 
-            var user = new User
+            var user = new OtherUser
             {
                 Name = "Some name"
             };
@@ -343,12 +343,12 @@ namespace Microsoft.OData.Client.Tests.Tracking
             {
                 this.Format.LoadServiceModel = () => CsdlReader.Parse(XmlReader.Create(new StringReader(Edmx)));
                 this.Format.UseJson();
-                this.Users = base.CreateQuery<User>("Users");
+                this.Users = base.CreateQuery<OtherUser>("Users");
                 this.Documents = base.CreateQuery<Document>("Documents");
                 this.Customers = base.CreateQuery<Customer>("Customers");
                 this.Customers2 = base.CreateQuery<Customer2>("Customers2");
             }
-            public DataServiceQuery<User> Users { get; private set; }
+            public DataServiceQuery<OtherUser> Users { get; private set; }
             public DataServiceQuery<Document> Documents { get; private set; }
             public DataServiceQuery<Customer> Customers { get; private set; }
             public DataServiceQuery<Customer2> Customers2 { get; private set; }
@@ -366,7 +366,7 @@ namespace Microsoft.OData.Client.Tests.Tracking
     }
 
     [Key("Id")]
-    internal class User : BaseEntityType
+    internal class OtherUser : BaseEntityType
     {
         public int Id { get; set; }
         public string Name { get; set; }

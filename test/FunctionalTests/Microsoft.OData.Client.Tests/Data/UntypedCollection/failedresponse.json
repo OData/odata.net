@@ -1,0 +1,6 @@
+{
+  "@odata.context": "https://directory.msol-test.com/v2/e5e3c5t9l8.msol-test.com/$metadata#directoryObjects/$entity",
+  "@odata.type": "#Microsoft.DirectoryServices.User",
+  "id": "080a1a0e-71bf-4582-b141-fd61bdd35a40",
+  "alternativeSecurityIds": []
+}

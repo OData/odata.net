@@ -45,6 +45,9 @@ namespace Microsoft.OData.Json
         /// Reads the next node from the <paramref name="jsonReader"/> and verifies that it is an StartArray node.
         /// </summary>
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
+        /// <exception cref="ODataException">
+        /// Thrown if the <see cref="IJsonReader.NodeType"/> of <paramref name="jsonReader"/> is not <see cref="JsonNodeType.StartArray"/>
+        /// </exception>
         internal static void ReadStartArray(this IJsonReader jsonReader)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
@@ -56,6 +59,9 @@ namespace Microsoft.OData.Json
         /// Reads the next node from the <paramref name="jsonReader"/> and verifies that it is an EndArray node.
         /// </summary>
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
+        /// <exception cref="ODataException">
+        /// Thrown if the <see cref="IJsonReader.NodeType"/> of <paramref name="jsonReader"/> is not <see cref="JsonNodeType.EndArray"/>
+        /// </exception>
         internal static void ReadEndArray(this IJsonReader jsonReader)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
@@ -237,76 +243,134 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
         /// <param name="jsonRawValueStringBuilder">The StringBuilder to receive JSON raw string.</param>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="jsonRawValueStringBuilder"/> is <see langword="null"/></exception>
+        /// <exception cref="ODataException">Thrown if the JSON that <paramref name="jsonReader"/> is reading is not well-formed</exception>
         internal static void SkipValue(this IJsonReader jsonReader, StringBuilder jsonRawValueStringBuilder)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
             using (StringWriter stringWriter = new StringWriter(jsonRawValueStringBuilder, CultureInfo.InvariantCulture))
             {
-                JsonWriter jsonWriter = new JsonWriter(stringWriter, isIeee754Compatible: false);
-                int depth = 0;
-                do
+                using (JsonWriter jsonWriter = new JsonWriter(stringWriter, isIeee754Compatible: false))
                 {
-                    switch (jsonReader.NodeType)
+                    int depth = 0;
+                    do
                     {
-                        case JsonNodeType.PrimitiveValue:
-                            if (jsonReader.Value == null)
-                            {
-                                jsonWriter.WriteValue((string)null);
-                            }
-                            else
-                            {
-                                jsonWriter.WritePrimitiveValue(jsonReader.Value);
-                            }
+                        switch (jsonReader.NodeType)
+                        {
+                            case JsonNodeType.PrimitiveValue:
+                                if (jsonReader.Value == null)
+                                {
+                                    jsonWriter.WriteValue((string)null);
+                                }
+                                else
+                                {
+                                    jsonWriter.WritePrimitiveValue(jsonReader.Value);
+                                }
 
-                            break;
+                                break;
 
-                        case JsonNodeType.StartArray:
-                            jsonWriter.StartArrayScope();
-                            depth++;
-                            break;
+                            case JsonNodeType.StartArray:
+                                jsonWriter.StartArrayScope();
+                                depth++;
+                                break;
 
-                        case JsonNodeType.StartObject:
-                            jsonWriter.StartObjectScope();
-                            depth++;
-                            break;
+                            case JsonNodeType.StartObject:
+                                jsonWriter.StartObjectScope();
+                                depth++;
+                                break;
 
-                        case JsonNodeType.EndArray:
-                            jsonWriter.EndArrayScope();
-                            Debug.Assert(depth > 0, "Seen too many scope ends.");
-                            depth--;
-                            break;
+                            case JsonNodeType.EndArray:
+                                jsonWriter.EndArrayScope();
+                                Debug.Assert(depth > 0, "Seen too many scope ends.");
+                                depth--;
+                                break;
 
-                        case JsonNodeType.EndObject:
-                            jsonWriter.EndObjectScope();
-                            Debug.Assert(depth > 0, "Seen too many scope ends.");
-                            depth--;
-                            break;
+                            case JsonNodeType.EndObject:
+                                jsonWriter.EndObjectScope();
+                                Debug.Assert(depth > 0, "Seen too many scope ends.");
+                                depth--;
+                                break;
 
-                        case JsonNodeType.Property:
-                            jsonWriter.WriteName(jsonReader.GetPropertyName());
-                            break;
+                            case JsonNodeType.Property:
+                                jsonWriter.WriteName(jsonReader.GetPropertyName());
+                                break;
 
-                        default:
-                            Debug.Assert(
-                                jsonReader.NodeType != JsonNodeType.EndOfInput,
-                                "We should not have reached end of input, since the scopes should be well formed. Otherwise JsonReader should have failed by now.");
-                            break;
+                            default:
+                                Debug.Assert(
+                                    jsonReader.NodeType != JsonNodeType.EndOfInput,
+                                    "We should not have reached end of input, since the scopes should be well formed. Otherwise JsonReader should have failed by now.");
+                                break;
+                        }
                     }
-                }
-                while (jsonReader.Read() && depth > 0);
+                    while (jsonReader.Read() && depth > 0);
 
-                if (depth > 0)
-                {
-                    // Not all open scopes were closed:
-                    // "Invalid JSON. Unexpected end of input was found in JSON content. Not all object and array scopes were closed."
-                    throw JsonReaderExtensions.CreateException(Strings.JsonReader_EndOfInputWithOpenScope);
-                }
+                    if (depth > 0)
+                    {
+                        // Not all open scopes were closed:
+                        // "Invalid JSON. Unexpected end of input was found in JSON content. Not all object and array scopes were closed."
+                        throw JsonReaderExtensions.CreateException(Strings.JsonReader_EndOfInputWithOpenScope);
+                    }
 
-                jsonWriter.Flush();
+                    jsonWriter.Flush();
+                }
             }
         }
 
+        /// <summary>
+        /// Reads the elements in a JSON array and parses them as <see cref="ODataUntypedValue"/>s
+        /// </summary>
+        /// <param name="jsonReader">The <see cref="IJsonReader"/> that the collection of untyped values should be read from</param>
+        /// <returns>The untyped values in the JSON array in <paramref name="jsonReader"/></returns>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="jsonReader"/> is <see langword="null"/></exception>
+        /// <exception cref="ODataException">
+        /// Thrown if the <see cref="IJsonReader.NodeType"/> of <paramref name="jsonReader"/> is not <see cref="JsonNodeType.StartArray"/> or the JSON that
+        /// <paramref name="jsonReader"/> is reading is not well-formed
+        /// </exception>
+        internal static IEnumerable<ODataUntypedValue> ReadUntypedCollectionValues(this IJsonReader jsonReader)
+        {
+            if (jsonReader == null)
+            {
+                throw new ArgumentNullException(nameof(jsonReader));
+            }
+
+            return jsonReader.ReadUntypedCollectionValuesIterator();
+        }
+
+        /// <summary>
+        /// Reads the elements in a JSON array and parses them as <see cref="ODataUntypedValue"/>s
+        /// </summary>
+        /// <param name="jsonReader">
+        /// The <see cref="IJsonReader"/> that the collection of untyped values should be read from; assumed to not be <see langword="null"/>
+        /// </param>
+        /// <returns>The untyped values in the JSON array in <paramref name="jsonReader"/></returns>
+        /// <exception cref="ODataException">
+        /// Thrown if the <see cref="IJsonReader.NodeType"/> of <paramref name="jsonReader"/> is not <see cref="JsonNodeType.StartArray"/> or the JSON that
+        /// <paramref name="jsonReader"/> is reading is not well-formed
+        /// </exception>
+        private static IEnumerable<ODataUntypedValue> ReadUntypedCollectionValuesIterator(this IJsonReader jsonReader)
+        {
+            jsonReader.ReadStartArray();
+
+            while (jsonReader.NodeType != JsonNodeType.EndArray)
+            {
+                yield return jsonReader.ReadAsUntypedOrNullValueImplementation();
+            }
+
+            jsonReader.ReadEndArray();
+        }
+
         internal static ODataValue ReadAsUntypedOrNullValue(this IJsonReader jsonReader)
+        {
+            return jsonReader.ReadAsUntypedOrNullValueImplementation();
+        }
+
+        /// <summary>
+        /// Reads the entirety of the next JSON value (primitive, object or array) in <paramref name="jsonReader"/> as an <see cref="ODataUntypedValue"/>
+        /// </summary>
+        /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
+        /// <returns>The <see cref="ODataUntypedValue"/> that represents the value read from <paramref name="jsonReader"/></returns>
+        /// <exception cref="ODataException">Thrown if the JSON that <paramref name="jsonReader"/> is reading is not well-formed</exception>
+        private static ODataUntypedValue ReadAsUntypedOrNullValueImplementation(this IJsonReader jsonReader)
         {
             StringBuilder builder = new StringBuilder();
             jsonReader.SkipValue(builder);
@@ -866,6 +930,9 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
         /// <param name="expectedNodeType">The expected <see cref="JsonNodeType"/> of the read node.</param>
+        /// <exception cref="ODataException">
+        /// Thrown if the <see cref="IJsonReader.NodeType"/> of <paramref name="jsonReader"/> is not <paramref name="expectedNodeType"/>
+        /// </exception>
         private static void ReadNext(this IJsonReader jsonReader, JsonNodeType expectedNodeType)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
@@ -880,6 +947,9 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="jsonReader">The <see cref="JsonReader"/> to use.</param>
         /// <param name="expectedNodeType">The expected node type.</param>
+        /// <exception cref="ODataException">
+        /// Thrown if the <see cref="IJsonReader.NodeType"/> of <paramref name="jsonReader"/> is not <paramref name="expectedNodeType"/>
+        /// </exception>
         private static void ValidateNodeType(this IJsonReader jsonReader, JsonNodeType expectedNodeType)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");

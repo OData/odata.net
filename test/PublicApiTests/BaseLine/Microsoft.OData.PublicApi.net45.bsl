@@ -5520,6 +5520,7 @@ public sealed class Microsoft.OData.ODataMessageReaderSettings {
     bool EnableMessageStreamDisposal  { public get; public set; }
     bool EnablePrimitiveTypeConversion  { public get; public set; }
     bool EnablePropertyNameCaseInsensitive  { public get; public set; }
+    bool EnableUntypedCollections  { public get; public set; }
     Microsoft.OData.ODataLibraryCompatibility LibraryCompatibility  { public get; public set; }
     Microsoft.OData.ODataVersion MaxProtocolVersion  { public get; public set; }
     Microsoft.OData.ODataMessageQuotas MessageQuotas  { public get; public set; }
