@@ -12,6 +12,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using System.Net;
     using Microsoft.OData;
     using Microsoft.OData.Client;
+    using Microsoft.OData.Client.Materialization;
     using Microsoft.OData.Client.TDDUnitTests;
     using Xunit;
 
@@ -58,13 +59,15 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                 new HeaderCollection(),
                 (int)statusCode,
                 () => new MemoryStream());
+            var materializerCache = new MaterializerCache();
             var materialize = DataServiceRequest.Materialize(
                 responseInfo,
                 queryComponents,
                 null,
                 "application/json",
                 responseMessage,
-                payloadKind);
+                payloadKind,
+                materializerCache);
             Assert.Null(materialize.Context);
             Assert.Null(materialize.Current);
             var enumerable = materialize.Cast<object>();

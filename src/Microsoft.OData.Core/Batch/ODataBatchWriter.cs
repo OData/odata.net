@@ -167,11 +167,10 @@ namespace Microsoft.OData
 
         /// <summary>Asynchronously starts a new batch; can be only called once and as first call.</summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public async Task WriteStartBatchAsync()
+        public Task WriteStartBatchAsync()
         {
             this.VerifyCanWriteStartBatch(false);
-            await this.WriteStartBatchImplementationAsync()
-                .ConfigureAwait(false);
+            return this.WriteStartBatchImplementationAsync();
         }
 
         /// <summary>Ends a batch; can only be called after WriteStartBatch has been called and if no other active changeset or operation exist.</summary>
@@ -340,12 +339,16 @@ namespace Microsoft.OData
         /// The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
         /// <param name="dependsOnIds">The prerequisite request ids of this request.</param>
         /// <returns>A task that when completed returns the newly created operation request message.</returns>
-        public async Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageAsync(string method, Uri uri, string contentId,
-            BatchPayloadUriOption payloadUriOption, IList<string> dependsOnIds)
+        public Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageAsync(
+            string method,
+            Uri uri,
+            string contentId,
+            BatchPayloadUriOption payloadUriOption,
+            IList<string> dependsOnIds)
         {
             this.VerifyCanCreateOperationRequestMessage(false, method, uri, contentId);
-            return await this.CreateOperationRequestMessageInternalAsync(
-                method, uri, contentId, payloadUriOption, dependsOnIds).ConfigureAwait(false);
+            return this.CreateOperationRequestMessageInternalAsync(
+                method, uri, contentId, payloadUriOption, dependsOnIds);
         }
 
         /// <summary>Creates a message for writing an operation of a batch response.</summary>
@@ -360,11 +363,10 @@ namespace Microsoft.OData
         /// <summary>Asynchronously creates an <see cref="Microsoft.OData.ODataBatchOperationResponseMessage" /> for writing an operation of a batch response.</summary>
         /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
         /// <returns>A task that when completed returns the newly created operation response message.</returns>
-        public async Task<ODataBatchOperationResponseMessage> CreateOperationResponseMessageAsync(string contentId)
+        public Task<ODataBatchOperationResponseMessage> CreateOperationResponseMessageAsync(string contentId)
         {
             this.VerifyCanCreateOperationResponseMessage(false);
-            return await this.CreateOperationResponseMessageImplementationAsync(contentId)
-                .ConfigureAwait(false);
+            return this.CreateOperationResponseMessageImplementationAsync(contentId);
         }
 
         /// <summary>Flushes the write buffer to the underlying stream.</summary>
@@ -590,7 +592,9 @@ namespace Microsoft.OData
         /// <returns>A task that represents the asynchronous write operation.</returns>
         protected virtual Task WriteStartBatchImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(this.WriteStartBatchImplementation);
+            return TaskUtils.GetTaskForSynchronousOperation(
+                (thisParam) => thisParam.WriteStartBatchImplementation(),
+                this);
         }
 
         /// <summary>
@@ -599,7 +603,9 @@ namespace Microsoft.OData
         /// <returns>A task that represents the asynchronous write operation.</returns>
         protected virtual Task WriteEndBatchImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(this.WriteEndBatchImplementation);
+            return TaskUtils.GetTaskForSynchronousOperation(
+                (thisParam) => thisParam.WriteEndBatchImplementation(),
+                this);
         }
 
         /// <summary>
@@ -610,7 +616,9 @@ namespace Microsoft.OData
         protected virtual Task WriteStartChangesetImplementationAsync(string groupOrChangesetId)
         {
             return TaskUtils.GetTaskForSynchronousOperation(
-                () => this.WriteStartChangesetImplementation(groupOrChangesetId));
+                (thisParam, groupOrChangesetIdParam) => thisParam.WriteStartChangesetImplementation(groupOrChangesetIdParam),
+                this,
+                groupOrChangesetId);
         }
 
         /// <summary>
@@ -619,7 +627,9 @@ namespace Microsoft.OData
         /// <returns>A task that represents the asynchronous write operation.</returns>
         protected virtual Task WriteEndChangesetImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(this.WriteEndChangesetImplementation);
+            return TaskUtils.GetTaskForSynchronousOperation(
+                (thisParam) => thisParam.WriteEndChangesetImplementation(),
+                this);
         }
 
         /// <summary>
@@ -718,6 +728,38 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Catch any exception thrown by the action passed in; in the exception case move the writer into
+        /// state Error and then rethrow the exception.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result returned by the operation.</typeparam>
+        /// <typeparam name="TArg">The action argument type.</typeparam>
+        /// <param name="operation">The action to execute.</param>
+        /// <param name="arg">The argument value provided to the action.</param>
+        /// <returns>The result if the operation succeeds; otherwise the writer state is set to 
+        /// <see cref="BatchWriterState.Error"/> and the exception rethrown.
+        /// </returns>
+        /// <remarks>
+        /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
+        /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
+        /// </remarks>
+        private TResult InterceptException<TResult, TArg>(Func<ODataBatchWriter, TArg, TResult> operation, TArg arg)
+        {
+            try
+            {
+                return operation(this, arg);
+            }
+            catch
+            {
+                if (!IsErrorState(this.state))
+                {
+                    this.SetState(BatchWriterState.Error);
+                }
+
+                throw;
+            }
+        }
+
+        /// <summary>
         /// Catch any exception thrown by the action passed in; in the exception case move the reader into
         /// state Error and then rethrow the exception.
         /// </summary>
@@ -787,9 +829,9 @@ namespace Microsoft.OData
                 this.payloadUriConverter.AddContentId(this.currentOperationContentId);
             }
 
-            // This action delegate is capturing state from the enclosing context, to re-assign the 'uri', hence allocations are incurred here.
-            this.InterceptException((thisParam) =>
-                uri = ODataBatchUtils.CreateOperationRequestUri(uri, thisParam.outputContext.MessageWriterSettings.BaseUri, thisParam.payloadUriConverter));
+            uri = this.InterceptException((thisParam, uriParam) =>
+                ODataBatchUtils.CreateOperationRequestUri(uriParam, thisParam.outputContext.MessageWriterSettings.BaseUri, thisParam.payloadUriConverter),
+                uri);
 
             this.CurrentOperationRequestMessage = this.CreateOperationRequestMessageImplementation(
                 method, uri, contentId, payloadUriOption, dependsOnIds);
@@ -846,9 +888,9 @@ namespace Microsoft.OData
                 this.payloadUriConverter.AddContentId(this.currentOperationContentId);
             }
 
-            // This action delegate is capturing state from the enclosing context, to re-assign the 'uri', hence allocations are incurred here.
-            this.InterceptException((thisParam) =>
-                uri = ODataBatchUtils.CreateOperationRequestUri(uri, thisParam.outputContext.MessageWriterSettings.BaseUri, thisParam.payloadUriConverter));
+            uri = this.InterceptException((thisParam, uriParam) =>
+                ODataBatchUtils.CreateOperationRequestUri(uriParam, thisParam.outputContext.MessageWriterSettings.BaseUri, thisParam.payloadUriConverter),
+                uri);
 
             this.CurrentOperationRequestMessage = await this.CreateOperationRequestMessageImplementationAsync(
                 method, uri, contentId, payloadUriOption, dependsOnIds).ConfigureAwait(false);

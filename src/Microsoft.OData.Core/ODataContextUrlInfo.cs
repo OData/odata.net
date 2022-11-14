@@ -88,6 +88,25 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Create ODataContextUrlInfo for OdataValue.
+        /// </summary>
+        /// <param name="value">The ODataValue to be used.</param>
+        /// <param name="version">OData Version.</param>
+        /// <param name="odataUri">The odata uri info for current query.</param>
+        /// <param name="model">The model used to handle unsigned int conversions.</param>
+        /// <returns>The generated ODataContextUrlInfo.</returns>
+        internal static ODataContextUrlInfo Create(ODataValue value, ODataVersion version, in ODataUriSlim odataUri, IEdmModel model = null)
+        {
+            return new ODataContextUrlInfo()
+            {
+                TypeName = GetTypeNameForValue(value, model),
+                ResourcePath = ComputeResourcePath(odataUri),
+                QueryClause = ComputeQueryClause(odataUri, version),
+                IsUndeclared = ComputeIfIsUndeclared(odataUri)
+            };
+        }
+
+        /// <summary>
         /// Create ODataContextUrlInfo from ODataCollectionStartSerializationInfo
         /// </summary>
         /// <param name="info">The ODataCollectionStartSerializationInfo to be used.</param>
@@ -121,6 +140,33 @@ namespace Microsoft.OData
         /// <param name="version">The OData Version of the response.</param>
         /// <returns>The generated ODataContextUrlInfo.</returns>
         internal static ODataContextUrlInfo Create(IEdmNavigationSource navigationSource, string expectedEntityTypeName, bool isSingle, ODataUri odataUri, ODataVersion version)
+        {
+            EdmNavigationSourceKind kind = navigationSource.NavigationSourceKind();
+            string navigationSourceEntityType = navigationSource.EntityType().FullName();
+            return new ODataContextUrlInfo()
+            {
+                IsUnknownEntitySet = kind == EdmNavigationSourceKind.UnknownEntitySet,
+                NavigationSource = navigationSource.Name,
+                TypeCast = navigationSourceEntityType == expectedEntityTypeName ? null : expectedEntityTypeName,
+                TypeName = navigationSourceEntityType,
+                IncludeFragmentItemSelector = isSingle && kind != EdmNavigationSourceKind.Singleton,
+                NavigationPath = ComputeNavigationPath(kind, odataUri, navigationSource.Name),
+                ResourcePath = ComputeResourcePath(odataUri),
+                QueryClause = ComputeQueryClause(odataUri, version),
+                IsUndeclared = ComputeIfIsUndeclared(odataUri)
+            };
+        }
+
+        /// <summary>
+        /// Create ODataContextUrlInfo from basic information
+        /// </summary>
+        /// <param name="navigationSource">Navigation source for current element.</param>\
+        /// <param name="expectedEntityTypeName">The expectedEntity for current element.</param>
+        /// <param name="isSingle">Whether target is single item.</param>
+        /// <param name="odataUri">The odata uri info for current query.</param>
+        /// <param name="version">The OData Version of the response.</param>
+        /// <returns>The generated ODataContextUrlInfo.</returns>
+        internal static ODataContextUrlInfo Create(IEdmNavigationSource navigationSource, string expectedEntityTypeName, bool isSingle, in ODataUriSlim odataUri, ODataVersion version)
         {
             EdmNavigationSourceKind kind = navigationSource.NavigationSourceKind();
             string navigationSourceEntityType = navigationSource.EntityType().FullName();
@@ -263,9 +309,44 @@ namespace Microsoft.OData
             return navigationPath ?? navigationSource;
         }
 
+        private static string ComputeNavigationPath(EdmNavigationSourceKind kind, in ODataUriSlim odataUri, string navigationSource)
+        {
+            if (kind == EdmNavigationSourceKind.UnknownEntitySet)
+            {
+                // If the navigation target is not specified, i.e., UnknownEntitySet,
+                // the navigation path should be null so that type name will be used
+                // to build the context Url.
+                return null;
+            }
+
+            string navigationPath = null;
+            if (kind == EdmNavigationSourceKind.ContainedEntitySet && odataUri.Path != null)
+            {
+                ODataPath odataPath = odataUri.Path.TrimEndingTypeSegment().TrimEndingKeySegment();
+                if (!(odataPath.LastSegment is NavigationPropertySegment) && !(odataPath.LastSegment is OperationSegment))
+                {
+                    throw new ODataException(Strings.ODataContextUriBuilder_ODataPathInvalidForContainedElement(odataPath.ToContextUrlPathString()));
+                }
+
+                navigationPath = odataPath.ToContextUrlPathString();
+            }
+
+            return navigationPath ?? navigationSource;
+        }
+
         private static string ComputeResourcePath(ODataUri odataUri)
         {
             if (odataUri != null && odataUri.Path != null && odataUri.Path.IsIndividualProperty())
+            {
+                return odataUri.Path.ToContextUrlPathString();
+            }
+
+            return string.Empty;
+        }
+
+        private static string ComputeResourcePath(in ODataUriSlim odataUri)
+        {
+            if (odataUri.Path != null && odataUri.Path.IsIndividualProperty())
             {
                 return odataUri.Path.ToContextUrlPathString();
             }
@@ -290,9 +371,33 @@ namespace Microsoft.OData
             return null;
         }
 
+        private static string ComputeQueryClause(in ODataUriSlim odataUri, ODataVersion version)
+        {
+            if (odataUri.SelectAndExpand != null)
+            {
+                return CreateSelectExpandContextUriSegment(odataUri.SelectAndExpand);
+            }
+            else if (odataUri.Apply != null)
+            {
+                return CreateApplyUriSegment(odataUri.Apply);
+            }
+
+            return null;
+        }
+
         private static bool? ComputeIfIsUndeclared(ODataUri odataUri)
         {
             if (odataUri != null && odataUri.Path != null)
+            {
+                return odataUri.Path.IsUndeclared();
+            }
+
+            return null;
+        }
+
+        private static bool? ComputeIfIsUndeclared(in ODataUriSlim odataUri)
+        {
+            if (odataUri.Path != null)
             {
                 return odataUri.Path.IsUndeclared();
             }

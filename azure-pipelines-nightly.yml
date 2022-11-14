@@ -37,6 +37,7 @@ jobs:
       ProductBinPath5: '$(Build.SourcesDirectory)\src\CodeGen\bin\$(BuildConfiguration)'
       mainDll5: 'Microsoft.OData.Service.Design.T4.dll'
       ProductBinPath: $(Build.SourcesDirectory)\bin\$(BuildPlatform)\$(BuildConfiguration)\Product
+      NugetArtifactsDir: 'Nuget-Debug'
   steps:
     - template: nightly.yml
 
@@ -61,6 +62,7 @@ jobs:
       ProductBinPath5: '$(Build.SourcesDirectory)\src\CodeGen\bin\$(BuildConfiguration)'
       mainDll5: 'Microsoft.OData.Service.Design.T4.dll'
       ProductBinPath: $(Build.SourcesDirectory)\bin\$(BuildPlatform)\$(BuildConfiguration)\Product
+      NugetArtifactsDir: 'Nuget-Release'
   steps:
     - template: nightly.yml
 

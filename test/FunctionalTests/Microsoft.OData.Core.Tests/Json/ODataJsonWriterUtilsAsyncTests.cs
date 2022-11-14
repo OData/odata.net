@@ -97,6 +97,30 @@ namespace Microsoft.OData.Tests.Json
             "}}", result);
         }
 
+        [Fact]
+        public async Task WriteErrorAsync_WritesTargetAndDetailsWithEscapedCharacters()
+        {
+            var error = new ODataError
+            {
+                Target = "any target",
+                Details = new[] { new ODataErrorDetail { ErrorCode = "500", Target = "any target", Message = "any msg with \"escaped characters\"" } }
+            };
+
+            await ODataJsonWriterUtils.WriteErrorAsync(
+                this.jsonWriter,
+                this.writeInstanceAnnotationsDelegate,
+                error,
+                includeDebugInformation: false,
+                maxInnerErrorDepth: 0);
+            var result = stringWriter.GetStringBuilder().ToString();
+            Assert.Equal("{\"error\":{" +
+                "\"code\":\"\"," +
+                "\"message\":\"\"," +
+                "\"target\":\"any target\"," +
+                "\"details\":[{\"code\":\"500\",\"target\":\"any target\",\"message\":\"any msg with \\\"escaped characters\\\"\"}]" +
+            "}}", result);
+        }
+
 
         [Fact]
         public async Task WriteErrorAsync_InnerErrorWithNestedNullValue()

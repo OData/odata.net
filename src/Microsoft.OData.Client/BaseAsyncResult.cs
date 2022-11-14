@@ -11,6 +11,7 @@ namespace Microsoft.OData.Client
     using System.IO;
     using System.Threading;
     using Microsoft.OData;
+    using Microsoft.OData.Client.Materialization;
 
     /// <summary>
     /// Implementation of IAsyncResult
@@ -87,6 +88,11 @@ namespace Microsoft.OData.Client
             this.userCallback = callback;
             this.userState = state;
         }
+
+        /// <summary>
+        /// Cache used to store temporary metadata used for materialization of OData items.
+        /// </summary>
+        protected MaterializerCache MaterializerCache { get; } = new MaterializerCache();
 
         /// <summary>
         /// This delegate exists to workaround limitations in the WP7 runtime.

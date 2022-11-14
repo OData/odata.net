@@ -12,6 +12,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using FluentAssertions;
     using Microsoft.OData;
     using Xunit;
+    using AstoriaUnitTests.Tests;
 
     /// <summary>
     /// Unit tests for the ODataEntityMaterializerUnitTests class.
@@ -30,27 +31,29 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [Fact]
         public void AfterEntryMaterializedShouldOccur()
         {
+            var materializerContext = new TestMaterializerContext();
+
             foreach (ODataFormat format in new ODataFormat[] { ODataFormat.Json })
             {
                 var entity = new SimpleEntity() { ID = 1 };
-                var odataEntry = CreateEntryWithMaterializerEntry(format, entity);
+                var odataEntry = CreateEntryWithMaterializerEntry(format, entity, materializerContext);
                 MaterializedEntityArgs found = null;
                 this.context.Configurations.ResponsePipeline.OnEntityMaterialized((MaterializedEntityArgs materializedEntryEventArgs) => found = materializedEntryEventArgs);
 
-                this.context.Configurations.ResponsePipeline.FireEndEntryEvents(MaterializerEntry.GetEntry(odataEntry));
+                this.context.Configurations.ResponsePipeline.FireEndEntryEvents(MaterializerEntry.GetEntry(odataEntry, materializerContext));
                 Assert.NotNull(found);
                 found.Entity.Should().Be(entity);
                 found.Entry.Should().Be(odataEntry);
             }
         }
 
-        private ODataResource CreateEntryWithMaterializerEntry(ODataFormat format, object resolvedObject)
+        private ODataResource CreateEntryWithMaterializerEntry(ODataFormat format, object resolvedObject, IODataMaterializerContext materializerContext)
         {
             var entry = new ODataResource();
             entry.Id = new Uri("http://www.odata.org/Northwind.Svc/Customer(1)");
             entry.Properties = new ODataProperty[] { new ODataProperty() { Name = "ID", Value = 1 } };
 
-            var materializerEntry = MaterializerEntry.CreateEntry(entry, format, true, this.clientModel);
+            var materializerEntry = MaterializerEntry.CreateEntry(entry, format, true, this.clientModel, materializerContext);
             materializerEntry.ResolvedObject = resolvedObject;
 
             return entry;

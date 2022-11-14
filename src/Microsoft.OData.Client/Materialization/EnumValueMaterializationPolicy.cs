@@ -18,15 +18,15 @@ namespace Microsoft.OData.Client.Materialization
     internal class EnumValueMaterializationPolicy
     {
         /// <summary> MaterializerContext used to resolve types for materialization. </summary>
-        private readonly IODataMaterializerContext context;
+        private readonly IODataMaterializerContext materializerContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EnumValueMaterializationPolicy" /> class.
         /// </summary>
-        /// <param name="context">The context.</param>
-        internal EnumValueMaterializationPolicy(IODataMaterializerContext context)
+        /// <param name="materializerContext">The materializer context.</param>
+        internal EnumValueMaterializationPolicy(IODataMaterializerContext materializerContext)
         {
-            this.context = context;
+            this.materializerContext = materializerContext;
         }
 
         /// <summary>
@@ -40,9 +40,9 @@ namespace Microsoft.OData.Client.Materialization
             object materializedValue = null;
             ODataEnumValue value = property.Value as ODataEnumValue;
             this.MaterializeODataEnumValue(valueType, value.TypeName, value.Value, () => "TODO: Is this reachable?", out materializedValue);
-            if (!property.HasMaterializedValue())
+            if (!property.HasMaterializedValue(this.materializerContext))
             {
-                property.SetMaterializedValue(materializedValue);
+                property.SetMaterializedValue(materializedValue, this.materializerContext);
             }
 
             return materializedValue;
@@ -102,7 +102,7 @@ namespace Microsoft.OData.Client.Materialization
         {
             Debug.Assert(type != null, "type != null");
             Type underlyingType = Nullable.GetUnderlyingType(type) ?? type;
-            ClientTypeAnnotation elementTypeAnnotation = this.context.ResolveTypeForMaterialization(underlyingType, wireTypeName);
+            ClientTypeAnnotation elementTypeAnnotation = this.materializerContext.ResolveTypeForMaterialization(underlyingType, wireTypeName);
             Debug.Assert(elementTypeAnnotation != null, "elementTypeAnnotation != null");
 
             // TODO: Find better way to parse Enum

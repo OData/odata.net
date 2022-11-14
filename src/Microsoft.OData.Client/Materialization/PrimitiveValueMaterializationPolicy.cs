@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client.Materialization
     internal class PrimitiveValueMaterializationPolicy
     {
         /// <summary> MaterializerContext used to resolve types for materialization. </summary>
-        private readonly IODataMaterializerContext context;
+        private readonly IODataMaterializerContext materializerContext;
 
         /// <summary>
         /// primitive property converter used to convert the property have the value has been materialized. </summary>
@@ -26,11 +26,11 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>
         /// Initializes a new instance of the <see cref="PrimitiveValueMaterializationPolicy" /> class.
         /// </summary>
-        /// <param name="context">The context.</param>
+        /// <param name="materializerContext">The context.</param>
         /// <param name="lazyPrimitivePropertyConverter">The lazy primitive property converter.</param>
-        internal PrimitiveValueMaterializationPolicy(IODataMaterializerContext context, SimpleLazy<PrimitivePropertyConverter> lazyPrimitivePropertyConverter)
+        internal PrimitiveValueMaterializationPolicy(IODataMaterializerContext materializerContext, SimpleLazy<PrimitivePropertyConverter> lazyPrimitivePropertyConverter)
         {
-            this.context = context;
+            this.materializerContext = materializerContext;
             this.lazyPrimitivePropertyConverter = lazyPrimitivePropertyConverter;
         }
 
@@ -92,7 +92,7 @@ namespace Microsoft.OData.Client.Materialization
             bool knownType = PrimitiveType.TryGetPrimitiveType(underlyingType, out ptype);
             if (!knownType)
             {
-                nestedElementType = this.context.ResolveTypeForMaterialization(type, wireTypeName);
+                nestedElementType = this.materializerContext.ResolveTypeForMaterialization(type, wireTypeName);
                 Debug.Assert(nestedElementType != null, "nestedElementType != null -- otherwise ReadTypeAttribute (or someone!) should throw");
                 knownType = PrimitiveType.TryGetPrimitiveType(nestedElementType.ElementType, out ptype);
             }
@@ -112,7 +112,7 @@ namespace Microsoft.OData.Client.Materialization
                 {
                     ODataUntypedValue untypedVal = value as ODataUntypedValue;
                     if ((untypedVal != null)
-                        && this.context.UndeclaredPropertyBehavior == UndeclaredPropertyBehavior.Support)
+                        && this.materializerContext.UndeclaredPropertyBehavior == UndeclaredPropertyBehavior.Support)
                     {
                         value = CommonUtil.ParseJsonToPrimitiveValue(untypedVal.RawValue);
                     }

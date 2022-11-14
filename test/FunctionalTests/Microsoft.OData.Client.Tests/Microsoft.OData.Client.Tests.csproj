@@ -13,6 +13,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>..\..\..\bin\AnyCPU\Debug\Test\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>..\..\..\bin\AnyCPU\Release\Test\</OutputPath>
@@ -36,6 +37,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Data\UntypedCollection\failedresponse.json" />
+    <None Remove="Data\UntypedCollection\version27.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
     <PackageReference Include="xunit.extensibility.core" Version="2.4.1" />
@@ -48,6 +54,11 @@
     <ProjectReference Include="..\..\..\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
     <ProjectReference Include="..\..\..\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />
 
+  </ItemGroup>
+  
+  <ItemGroup>
+    <EmbeddedResource Include="Data\UntypedCollection\failedresponse.json" />
+    <EmbeddedResource Include="Data\UntypedCollection\version27.xml" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(TargetFramework)' == 'net452'">

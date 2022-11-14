@@ -293,7 +293,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                 entityTracker,
                 option,
                 clientEdmModel,
-                new DataServiceContext());
+                new DataServiceContext(),
+                materializerContext);
 
             EntryValueMaterializationPolicy evmp = new EntryValueMaterializationPolicy(
                 materializerContext,

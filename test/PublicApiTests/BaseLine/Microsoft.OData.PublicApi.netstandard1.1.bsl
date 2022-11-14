@@ -4504,19 +4504,11 @@ public abstract class Microsoft.OData.ODataBatchWriter : IODataOutputInStreamErr
     public Microsoft.OData.ODataBatchOperationRequestMessage CreateOperationRequestMessage (string method, System.Uri uri, string contentId, Microsoft.OData.BatchPayloadUriOption payloadUriOption, System.Collections.Generic.IEnumerable`1[[System.String]] dependsOnIds)
     public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataBatchOperationRequestMessage]] CreateOperationRequestMessageAsync (string method, System.Uri uri, string contentId)
     public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataBatchOperationRequestMessage]] CreateOperationRequestMessageAsync (string method, System.Uri uri, string contentId, Microsoft.OData.BatchPayloadUriOption payloadUriOption)
-    [
-    AsyncStateMachineAttribute(),
-    ]
     public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataBatchOperationRequestMessage]] CreateOperationRequestMessageAsync (string method, System.Uri uri, string contentId, Microsoft.OData.BatchPayloadUriOption payloadUriOption, System.Collections.Generic.IList`1[[System.String]] dependsOnIds)
-
     protected abstract Microsoft.OData.ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation (string method, System.Uri uri, string contentId, Microsoft.OData.BatchPayloadUriOption payloadUriOption, System.Collections.Generic.IEnumerable`1[[System.String]] dependsOnIds)
     protected virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataBatchOperationRequestMessage]] CreateOperationRequestMessageImplementationAsync (string method, System.Uri uri, string contentId, Microsoft.OData.BatchPayloadUriOption payloadUriOption, System.Collections.Generic.IEnumerable`1[[System.String]] dependsOnIds)
     public Microsoft.OData.ODataBatchOperationResponseMessage CreateOperationResponseMessage (string contentId)
-    [
-    AsyncStateMachineAttribute(),
-    ]
     public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataBatchOperationResponseMessage]] CreateOperationResponseMessageAsync (string contentId)
-
     protected abstract Microsoft.OData.ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation (string contentId)
     protected virtual System.Threading.Tasks.Task`1[[Microsoft.OData.ODataBatchOperationResponseMessage]] CreateOperationResponseMessageImplementationAsync (string contentId)
     public void Flush ()
@@ -4550,11 +4542,7 @@ public abstract class Microsoft.OData.ODataBatchWriter : IODataOutputInStreamErr
     protected abstract void WriteEndChangesetImplementation ()
     protected virtual System.Threading.Tasks.Task WriteEndChangesetImplementationAsync ()
     public void WriteStartBatch ()
-    [
-    AsyncStateMachineAttribute(),
-    ]
     public System.Threading.Tasks.Task WriteStartBatchAsync ()
-
     protected abstract void WriteStartBatchImplementation ()
     protected virtual System.Threading.Tasks.Task WriteStartBatchImplementationAsync ()
     public void WriteStartChangeset ()
@@ -5180,15 +5168,8 @@ public sealed class Microsoft.OData.ODataAsynchronousResponseMessage : IContaine
 
 public sealed class Microsoft.OData.ODataAsynchronousWriter : IODataOutputInStreamErrorListener {
     public Microsoft.OData.ODataAsynchronousResponseMessage CreateResponseMessage ()
-    [
-    AsyncStateMachineAttribute(),
-    ]
     public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataAsynchronousResponseMessage]] CreateResponseMessageAsync ()
-
     public void Flush ()
-    [
-    AsyncStateMachineAttribute(),
-    ]
     public System.Threading.Tasks.Task FlushAsync ()
 }
 
@@ -5539,6 +5520,7 @@ public sealed class Microsoft.OData.ODataMessageReaderSettings {
     bool EnableMessageStreamDisposal  { public get; public set; }
     bool EnablePrimitiveTypeConversion  { public get; public set; }
     bool EnablePropertyNameCaseInsensitive  { public get; public set; }
+    bool EnableUntypedCollections  { public get; public set; }
     Microsoft.OData.ODataLibraryCompatibility LibraryCompatibility  { public get; public set; }
     Microsoft.OData.ODataVersion MaxProtocolVersion  { public get; public set; }
     Microsoft.OData.ODataMessageQuotas MessageQuotas  { public get; public set; }

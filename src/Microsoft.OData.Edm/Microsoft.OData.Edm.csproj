@@ -47,16 +47,6 @@
   <ItemGroup>
     <Compile Include="..\AssemblyInfo\AssemblyKeys.cs" Link="AssemblyKeys.cs" />
     <Compile Include="..\PlatformHelper.cs" Link="PlatformHelper.cs" />
-    <Compile Update="Microsoft.OData.Edm.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Microsoft.OData.Edm.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Parameterized.Microsoft.OData.Edm.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Parameterized.Microsoft.OData.Edm.tt</DependentUpon>
-    </Compile>
   </ItemGroup>
 
   <ItemGroup>

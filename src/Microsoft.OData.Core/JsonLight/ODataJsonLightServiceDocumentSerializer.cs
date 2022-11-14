@@ -143,47 +143,47 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(serviceDocument != null, "serviceDocument != null");
 
             return this.WriteTopLevelPayloadAsync(
-                async () =>
+                async (thisParam, serviceDocumentParam) =>
                 {
                     // "{"
-                    await this.AsynchronousJsonWriter.StartObjectScopeAsync()
+                    await thisParam.AsynchronousJsonWriter.StartObjectScopeAsync()
                         .ConfigureAwait(false);
 
                     // "@odata.context":...
-                    await this.WriteContextUriPropertyAsync(ODataPayloadKind.ServiceDocument)
+                    await thisParam.WriteContextUriPropertyAsync(ODataPayloadKind.ServiceDocument)
                         .ConfigureAwait(false);
 
                     // "value":
-                    await this.AsynchronousJsonWriter.WriteValuePropertyNameAsync()
+                    await thisParam.AsynchronousJsonWriter.WriteValuePropertyNameAsync()
                         .ConfigureAwait(false);
 
                     // "["
-                    await this.AsynchronousJsonWriter.StartArrayScopeAsync()
+                    await thisParam.AsynchronousJsonWriter.StartArrayScopeAsync()
                         .ConfigureAwait(false);
 
-                    if (serviceDocument.EntitySets != null)
+                    if (serviceDocumentParam.EntitySets != null)
                     {
-                        foreach (ODataEntitySetInfo collectionInfo in serviceDocument.EntitySets)
+                        foreach (ODataEntitySetInfo collectionInfo in serviceDocumentParam.EntitySets)
                         {
-                            await this.WriteServiceDocumentElementAsync(collectionInfo, JsonLightConstants.ServiceDocumentEntitySetKindName)
+                            await thisParam.WriteServiceDocumentElementAsync(collectionInfo, JsonLightConstants.ServiceDocumentEntitySetKindName)
                                 .ConfigureAwait(false);
                         }
                     }
 
-                    if (serviceDocument.Singletons != null)
+                    if (serviceDocumentParam.Singletons != null)
                     {
-                        foreach (ODataSingletonInfo singletonInfo in serviceDocument.Singletons)
+                        foreach (ODataSingletonInfo singletonInfo in serviceDocumentParam.Singletons)
                         {
-                            await this.WriteServiceDocumentElementAsync(singletonInfo, JsonLightConstants.ServiceDocumentSingletonKindName)
+                            await thisParam.WriteServiceDocumentElementAsync(singletonInfo, JsonLightConstants.ServiceDocumentSingletonKindName)
                                 .ConfigureAwait(false);
                         }
                     }
 
                     HashSet<string> functionImportsWritten = new HashSet<string>(StringComparer.Ordinal);
 
-                    if (serviceDocument.FunctionImports != null)
+                    if (serviceDocumentParam.FunctionImports != null)
                     {
-                        foreach (ODataFunctionImportInfo functionImportInfo in serviceDocument.FunctionImports)
+                        foreach (ODataFunctionImportInfo functionImportInfo in serviceDocumentParam.FunctionImports)
                         {
                             if (functionImportInfo == null)
                             {
@@ -193,20 +193,22 @@ namespace Microsoft.OData.JsonLight
                             if (!functionImportsWritten.Contains(functionImportInfo.Name))
                             {
                                 functionImportsWritten.Add(functionImportInfo.Name);
-                                await this.WriteServiceDocumentElementAsync(functionImportInfo, JsonLightConstants.ServiceDocumentFunctionImportKindName)
+                                await thisParam.WriteServiceDocumentElementAsync(functionImportInfo, JsonLightConstants.ServiceDocumentFunctionImportKindName)
                                     .ConfigureAwait(false);
                             }
                         }
                     }
 
                     // "]"
-                    await this.AsynchronousJsonWriter.EndArrayScopeAsync()
+                    await thisParam.AsynchronousJsonWriter.EndArrayScopeAsync()
                         .ConfigureAwait(false);
 
                     // "}"
-                    await this.AsynchronousJsonWriter.EndObjectScopeAsync()
+                    await thisParam.AsynchronousJsonWriter.EndObjectScopeAsync()
                         .ConfigureAwait(false);
-                });
+                },
+                this,
+                serviceDocument);
         }
 
         /// <summary>

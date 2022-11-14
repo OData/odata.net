@@ -13,6 +13,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
     using Microsoft.OData;
     using ClientStrings = Microsoft.OData.Client.Strings;
     using Xunit;
+    using AstoriaUnitTests.Tests;
 
     /// <summary>
     /// TODO: test the rest of the functionality in <see cref="MaterializerEntry"/>.
@@ -63,7 +64,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
                 modifyEntry(entry);
             }
 
-            return MaterializerEntry.CreateEntry(entry, format, true, this.clientModel);
+            var materializerContext = new TestMaterializerContext();
+            return MaterializerEntry.CreateEntry(entry, format, true, this.clientModel, materializerContext);
         }
     }
 }

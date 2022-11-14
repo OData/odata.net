@@ -63,12 +63,14 @@ namespace Microsoft.OData.Client.Materialization
         /// </summary>
         /// <param name="link">The link.</param>
         /// <param name="entry">The entry.</param>
+        /// <param name="materializerContext">The current materializer context.</param>
         /// <returns>The materializer link.</returns>
-        public static MaterializerNavigationLink CreateLink(ODataNestedResourceInfo link, MaterializerEntry entry)
+        public static MaterializerNavigationLink CreateLink(ODataNestedResourceInfo link, MaterializerEntry entry, IODataMaterializerContext materializerContext)
         {
-            Debug.Assert(link.GetAnnotation<MaterializerNavigationLink>() == null, "there should be no MaterializerNestedResourceInfo annotation on the entry link yet");
+            Debug.Assert(materializerContext.GetAnnotation<MaterializerNavigationLink>(link) == null,
+                "there should be no MaterializerNestedResourceInfo annotation on the entry link yet");
             MaterializerNavigationLink materializedNestedResourceInfo = new MaterializerNavigationLink(link, entry);
-            link.SetAnnotation<MaterializerNavigationLink>(materializedNestedResourceInfo);
+            materializerContext.SetAnnotation<MaterializerNavigationLink>(link, materializedNestedResourceInfo);
             return materializedNestedResourceInfo;
         }
 
@@ -77,12 +79,14 @@ namespace Microsoft.OData.Client.Materialization
         /// </summary>
         /// <param name="link">The link.</param>
         /// <param name="resourceSet">The resource set.</param>
+        /// <param name="materializerContext">The current materializer context.</param>
         /// <returns>The materializer link.</returns>
-        public static MaterializerNavigationLink CreateLink(ODataNestedResourceInfo link, ODataResourceSet resourceSet)
+        public static MaterializerNavigationLink CreateLink(ODataNestedResourceInfo link, ODataResourceSet resourceSet, IODataMaterializerContext materializerContext)
         {
-            Debug.Assert(link.GetAnnotation<MaterializerNavigationLink>() == null, "there should be no MaterializerNestedResourceInfo annotation on the feed link yet");
+            Debug.Assert(materializerContext.GetAnnotation<MaterializerNavigationLink>(link) == null,
+                "there should be no MaterializerNestedResourceInfo annotation on the feed link yet");
             MaterializerNavigationLink materializedNestedResourceInfo = new MaterializerNavigationLink(link, resourceSet);
-            link.SetAnnotation<MaterializerNavigationLink>(materializedNestedResourceInfo);
+            materializerContext.SetAnnotation<MaterializerNavigationLink>(link, materializedNestedResourceInfo);
             return materializedNestedResourceInfo;
         }
 
@@ -90,10 +94,11 @@ namespace Microsoft.OData.Client.Materialization
         /// Gets the materializer link.
         /// </summary>
         /// <param name="link">The link.</param>
+        /// <param name="materializerContext">The current materializer context.</param>
         /// <returns>The materializer link.</returns>
-        public static MaterializerNavigationLink GetLink(ODataNestedResourceInfo link)
+        public static MaterializerNavigationLink GetLink(ODataNestedResourceInfo link, IODataMaterializerContext materializerContext)
         {
-            return link.GetAnnotation<MaterializerNavigationLink>();
+            return materializerContext.GetAnnotation<MaterializerNavigationLink>(link);
         }
     }
 }

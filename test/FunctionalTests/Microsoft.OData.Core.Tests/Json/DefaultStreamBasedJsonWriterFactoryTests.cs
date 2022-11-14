@@ -122,6 +122,29 @@ namespace Microsoft.OData.Tests.Json
             string contents = reader.ReadToEnd();
             Assert.Equal(@"{""Foo"":""Bar"",""Fizz"":15.0,""Buzz"":""<\""\n""}", contents);
         }
+
+
+        [Fact]
+        public void CreatedJsonWriterShouldNotCloseOutputStream()
+        {
+            DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Default;
+            using TestStream stream = new TestStream();
+
+            IDisposable jsonWriter = factory.CreateJsonWriter(stream, false, Encoding.UTF8) as IDisposable;
+            jsonWriter.Dispose();
+
+            Assert.False(stream.Disposed);
+        }
+
+        private sealed class TestStream : MemoryStream
+        {
+            public bool Disposed { get; private set; }
+            protected override void Dispose(bool disposing)
+            {
+                base.Dispose(disposing);
+                Disposed = true;
+            }
+        }
     }
 }
 #endif

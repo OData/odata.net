@@ -11,6 +11,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
     using System.Linq;
     using System.Net;
     using System.Reflection;
+    using System.Threading.Tasks;
     using Microsoft.OData.Client;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference;
@@ -786,6 +787,24 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             Assert.Equal(-10, c1.ComputerDetail.ComputerDetailId);
 
             this.EnqueueTestComplete();
+        }
+
+        [Fact]
+        public async Task Linq_ProjectPropertiesFromEntityWithConditionalNullCheckOnExpandedEntity()
+        {
+            var context = this.CreateWrappedContext<DefaultContainer>().Context;
+            var query = context.Computer.Where(c => c.ComputerId == -10)
+                        .Select(c => new Computer
+                         {
+                             ComputerId = c.ComputerId,
+                             ComputerDetail = c.ComputerDetail == null ? null : c.ComputerDetail,
+                         }) as DataServiceQuery<Computer>;
+
+            var result = await query.ExecuteAsync();
+
+            var computer = result.First();
+            Assert.Equal(-10, computer.ComputerId);
+            Assert.Equal(-10, computer.ComputerDetail.ComputerDetailId);
         }
 
         /// <summary>
