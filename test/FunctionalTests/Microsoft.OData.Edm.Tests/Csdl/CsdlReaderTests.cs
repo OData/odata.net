@@ -265,15 +265,15 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             var X1NavPropBinding = setA.NavigationPropertyBindings.FirstOrDefault(b => b.Path.PathSegments.Last() == "NS.EntityX1");
             Assert.NotNull(X1NavPropBinding);
             var setX1 = model.FindDeclaredNavigationSource("SetX1");
-            Assert.Equal(setX1, X1NavPropBinding.Target);
-            Assert.Equal(setX1, setA.FindNavigationTarget(navProp, new EdmPathExpression("Nav/NS.EntityX1")));
+            Assert.Same(setX1, X1NavPropBinding.Target);
+            Assert.Same(setX1, setA.FindNavigationTarget(navProp, new EdmPathExpression("Nav/NS.EntityX1")));
 
-            // NavPropBinding for for EntityX2 should be SetX2
+            // NavPropBinding for EntityX2 should be SetX2
             var X2NavPropBinding = setA.NavigationPropertyBindings.FirstOrDefault(b => b.Path.PathSegments.Last() == "NS.EntityX2");
             Assert.NotNull(X2NavPropBinding);
             var setX2 = model.FindDeclaredNavigationSource("SetX2");
-            Assert.Equal(setX2, X2NavPropBinding.Target);
-            Assert.Equal(setX2, setA.FindNavigationTarget(navProp, new EdmPathExpression("Nav/NS.EntityX2")));
+            Assert.Same(setX2, X2NavPropBinding.Target);
+            Assert.Same(setX2, setA.FindNavigationTarget(navProp, new EdmPathExpression("Nav/NS.EntityX2")));
 
             // Navigation Property without path should return UnknownEntitySet
             Assert.True(setA.FindNavigationTarget(navProp) is EdmUnknownEntitySet);
