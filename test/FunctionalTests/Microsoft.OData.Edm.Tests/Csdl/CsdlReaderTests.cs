@@ -223,7 +223,14 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         [Theory]
         public void ValidateNavigationPropertyBindingPathEndingInTypeCast(string odataVersion)
         {
-            var csdl = string.Format(
+            var entitySetWithNavProperties =
+                            "<EntitySet Name=\"SetA\" EntityType=\"NS.EntityA\">" +
+                              "<NavigationPropertyBinding Path=\"Nav/NS.EntityX1\" Target=\"SetX1\" />" +
+                              "<NavigationPropertyBinding Path=\"Nav/NS.EntityX2\" Target=\"SetX2\" />" +
+                            "</EntitySet>";
+            var entitySetWithoutNavProperties =
+                            "<EntitySet Name=\"SetA\" EntityType=\"NS.EntityA\" />";
+            var csdl = 
                   "<edmx:Edmx Version=\"{0}\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
                       "<edmx:DataServices>" +
                         "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
@@ -236,20 +243,18 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                             "<Key><PropertyRef Name=\"ID\" /></Key>" +
                             "<Property Name=\"ID\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
                           "</EntityType>" +
-                          "<EntityType Name=\"EntityX1\" BaseType=\"NS.EntityX\"/>" +
-                          "<EntityType Name=\"EntityX2\" BaseType=\"NS.EntityX\"/>" +
+                          "<EntityType Name=\"EntityX1\" BaseType=\"NS.EntityX\" />" +
+                          "<EntityType Name=\"EntityX2\" BaseType=\"NS.EntityX\" />" +
                           "<EntityContainer Name=\"Container\">" +
-                            "<EntitySet Name=\"SetA\" EntityType=\"NS.EntityA\">" +
-                              "<NavigationPropertyBinding Path=\"Nav/NS.EntityX1\" Target=\"SetX1\" />" +
-                              "<NavigationPropertyBinding Path=\"Nav/NS.EntityX2\" Target=\"SetX2\" />" +
-                            "</EntitySet>" +
+                          "{1}" +
                             "<EntitySet Name=\"SetX1\" EntityType=\"NS.EntityX1\" />" +
                             "<EntitySet Name=\"SetX2\" EntityType=\"NS.EntityX2\" />" +
                           "</EntityContainer>" +
                         "</Schema>" +
                       "</edmx:DataServices>" +
-                    "</edmx:Edmx>", odataVersion);
-            var model = CsdlReader.Parse(XElement.Parse(csdl).CreateReader());
+                    "</edmx:Edmx>";
+
+            var model = CsdlReader.Parse(XElement.Parse(String.Format(csdl, odataVersion, entitySetWithNavProperties)).CreateReader());
             IEnumerable<EdmError> errors;
             Assert.True(model.Validate(out errors));
             Assert.Empty(errors);
@@ -279,7 +284,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.True(setA.FindNavigationTarget(navProp) is EdmUnknownEntitySet);
 
             // Verify writing model
-            VerifyXmlModel(model, csdl);
+            model.SetEdmVersion(Version.Parse(odataVersion));
+            VerifyXmlModel(model, odataVersion == "4.0" ? entitySetWithoutNavProperties : entitySetWithNavProperties);
 
         }
 
@@ -2163,7 +2169,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.True(CsdlWriter.TryWriteCsdl(model, xmlWriter, CsdlTarget.OData, out errors));
             Assert.Empty(errors);
             stream.Position = 0;
-            Assert.Contains(new StreamReader(stream).ReadToEnd(), csdl);
+            Assert.Contains(csdl, new StreamReader(stream).ReadToEnd());
         }
     }
 }
