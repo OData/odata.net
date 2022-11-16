@@ -1192,6 +1192,26 @@ namespace Microsoft.OData.Edm.Validation
                     }
                 });
 
+        /// <summary>
+        /// Validates that if a complex-typed property has a type that is the same as
+        /// declaring type of the complex type or a derived type, then the complex type is nullable.
+        /// </summary>
+        public static readonly ValidationRule<IEdmStructuralProperty> RecursiveComplexTypedPropertyMustBeOptional =
+            new ValidationRule<IEdmStructuralProperty>(
+                (context, property) =>
+                {
+                    IEdmTypeReference propType = property.Type;
+                    IEdmStructuredType declaredType = property.DeclaringType;
+
+                    if (propType.Definition == declaredType && !propType.IsNullable)
+                    {
+                        context.AddError(
+                            property.Location(),
+                            EdmErrorCode.RecursiveComplexTypedPropertyMustBeOptional,
+                            Strings.EdmModel_Validator_Semantic_RecursiveComplexTypedPropertyMustBeOptional(property.Name));
+                    }
+                });
+
         #endregion
 
         #region IEdmNavigationProperty
