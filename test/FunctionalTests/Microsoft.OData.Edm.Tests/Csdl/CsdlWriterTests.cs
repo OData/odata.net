@@ -2616,6 +2616,152 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 
         [Fact]
+        public void CanWriteNavigationPropertyBindingTargetWithTypeCast()
+        {
+            EdmModel model = new EdmModel();
+
+            var purchaseOrderEntityType = new EdmEntityType("NS", "PurchaseOrder");
+            var key = purchaseOrderEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.String, /*isNullable*/ false);
+            purchaseOrderEntityType.AddKeys(key);
+
+            var productEntityType = new EdmEntityType("NS", "Product");
+            key = productEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.String, /*isNullable*/ false);
+            productEntityType.AddKeys(key);
+
+            var widgetEntityType = new EdmEntityType("NS", "Widget", productEntityType);
+
+            var dooHickeyEntityType = new EdmEntityType("NS", "DooHickey", productEntityType);
+
+            // Navigation Property to Product
+            var productNavigationProperty = purchaseOrderEntityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo()
+            {
+                ContainsTarget = false,
+                Name = "Product",
+                Target = productEntityType,
+                TargetMultiplicity = EdmMultiplicity.Many
+            });
+
+            model.AddElement(purchaseOrderEntityType);
+            model.AddElement(productEntityType);
+            model.AddElement(widgetEntityType);
+            model.AddElement(dooHickeyEntityType);
+
+            var entityContainer = new EdmEntityContainer("NS", "MyApi");
+            var purchaseOrdersEntitySet = entityContainer.AddEntitySet("PurchaseOrders", purchaseOrderEntityType);
+            var widgetEntitySet = entityContainer.AddEntitySet("Widgets", widgetEntityType);
+            var dooHickeyEntitySet = entityContainer.AddEntitySet("DooHickies", dooHickeyEntityType);
+            model.AddElement(entityContainer);
+            purchaseOrdersEntitySet.AddNavigationTarget(productNavigationProperty, widgetEntitySet, new EdmPathExpression("Product/NS.Widget"));
+            purchaseOrdersEntitySet.AddNavigationTarget(productNavigationProperty, dooHickeyEntitySet, new EdmPathExpression("Product/NS.DooHickey"));
+
+            IEnumerable<EdmError> errors;
+            Assert.True(model.Validate(out errors));
+            Assert.Empty(errors);
+
+var v40Json = 
+@"{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""NS.MyApi"",
+  ""NS"": {
+    ""PurchaseOrder"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {},
+      ""Product"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Collection"": true,
+        ""$Type"": ""NS.Product""
+      }
+    },
+    ""Product"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {}
+    },
+    ""Widget"": {
+      ""$Kind"": ""EntityType"",
+      ""$BaseType"": ""NS.Product""
+    },
+    ""DooHickey"": {
+      ""$Kind"": ""EntityType"",
+      ""$BaseType"": ""NS.Product""
+    },
+    ""MyApi"": {
+      ""$Kind"": ""EntityContainer"",
+      ""PurchaseOrders"": {
+        ""$Collection"": true,
+        ""$Type"": ""NS.PurchaseOrder"",
+        ""$NavigationPropertyBinding"": {
+          ""Product/NS.DooHickey"": ""DooHickies"",
+          ""Product/NS.Widget"": ""Widgets""
+        }
+      },
+      ""Widgets"": {
+        ""$Collection"": true,
+        ""$Type"": ""NS.Widget""
+      },
+      ""DooHickies"": {
+        ""$Collection"": true,
+        ""$Type"": ""NS.DooHickey""
+      }
+    }
+  }
+}";
+
+            var xmlResult =
+                "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+                    "<edmx:Edmx Version=\"{0}\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                    "<edmx:DataServices>" +
+                    "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                        "<EntityType Name=\"PurchaseOrder\">" +
+                            "<Key><PropertyRef Name=\"Id\" /></Key>" +
+                            "<Property Name=\"Id\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                            "<NavigationProperty Name=\"Product\" Type=\"Collection(NS.Product)\" />" +
+                        "</EntityType>" +
+                        "<EntityType Name=\"Product\">" +
+                            "<Key><PropertyRef Name=\"Id\" /></Key>" +
+                            "<Property Name=\"Id\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                        "</EntityType>" +
+                        "<EntityType Name=\"Widget\" BaseType=\"NS.Product\" />" +
+                        "<EntityType Name=\"DooHickey\" BaseType=\"NS.Product\" />" +
+                        "<EntityContainer Name=\"MyApi\">" +
+                        "{1}" +
+                            "<EntitySet Name=\"Widgets\" EntityType=\"NS.Widget\" />" +
+                            "<EntitySet Name=\"DooHickies\" EntityType=\"NS.DooHickey\" />" +
+                        "</EntityContainer>" +
+                    "</Schema>" +
+                    "</edmx:DataServices>" +
+                "</edmx:Edmx>";
+
+            var v40EntitySet =
+                            "<EntitySet Name=\"PurchaseOrders\" EntityType=\"NS.PurchaseOrder\" />";
+
+            var v401EntitySet =
+                            "<EntitySet Name=\"PurchaseOrders\" EntityType=\"NS.PurchaseOrder\">" +
+                                "<NavigationPropertyBinding Path=\"Product/NS.DooHickey\" Target=\"DooHickies\" />" +
+                                "<NavigationPropertyBinding Path=\"Product/NS.Widget\" Target=\"Widgets\" />" +
+                            "</EntitySet>";
+
+            // Act & Assert for XML 4.0
+            WriteAndVerifyXml(model, String.Format(xmlResult, "4.0", v40EntitySet));
+
+            // Act & Assert for JSON 4.0
+            WriteAndVerifyJson(model, v40Json);
+
+            model.SetEdmVersion(Version.Parse("4.01"));
+
+            // Act & Assert for XML 4.1
+            WriteAndVerifyXml(model, String.Format(xmlResult, "4.01", v401EntitySet));
+
+            // Act & Assert for JSON 4.1
+            WriteAndVerifyJson(model, v40Json.Replace("4.0", "4.01"));
+        }
+
+        [Fact]
         public void CanWriteEdmModelWithUntypedProperty()
         {
             EdmModel model = new EdmModel();

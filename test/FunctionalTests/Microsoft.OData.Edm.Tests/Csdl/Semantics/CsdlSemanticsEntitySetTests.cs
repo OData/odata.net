@@ -31,13 +31,13 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
         public CsdlSemanticsEntitySetTests()
         {
             var referentialConstraints = new List<CsdlReferentialConstraint>();
-            var csdlNavigation = new CsdlNavigationProperty("Navigation", null, null, null, false, null, referentialConstraints, null);
+            var csdlNavigation = new CsdlNavigationProperty("Navigation", "FQ.NS.EntityType", null, null, false, null, referentialConstraints, null);
             this.csdlEntityType = new CsdlEntityType("EntityType", null, false, false, false, null, Enumerable.Empty<CsdlProperty>(), new[] { csdlNavigation }, null);
             var goodBinding = new CsdlNavigationPropertyBinding("Navigation", "EntitySet", new CsdlLocation(1, 1));
             this.csdlEntitySet = new CsdlEntitySet("EntitySet", "FQ.NS.EntityType", new[] { goodBinding }, null);
             this.csdlContainer = new CsdlEntityContainer("Container", null, new[] { this.csdlEntitySet }, Enumerable.Empty<CsdlSingleton>(), Enumerable.Empty<CsdlOperationImport>(), null);
 
-            var derivedCsdlNavigation = new CsdlNavigationProperty("DerivedNavigation", null, null, null, false, null, referentialConstraints, null);
+            var derivedCsdlNavigation = new CsdlNavigationProperty("DerivedNavigation", "FQ.NS.EntityType", null, null, false, null, referentialConstraints, null);
             var derivedCsdlEntityType = new CsdlEntityType("DerivedEntityType", "FQ.NS.EntityType", false, false, false, null, Enumerable.Empty<CsdlProperty>(), new[] { derivedCsdlNavigation }, null);
 
             var unrelatedCsdlEntityType = new CsdlEntityType("UnrelatedEntityType", null, false, false, false, null, Enumerable.Empty<CsdlProperty>(), Enumerable.Empty<CsdlNavigationProperty>(), null);
