@@ -1192,6 +1192,7 @@ namespace Microsoft.OData.Edm.Validation
                     }
                 });
 
+        // Add this to rule set as a breaking change for a future release.
         /// <summary>
         /// Validates that if a complex-typed property has a type that is the same as
         /// declaring type of the complex type or a derived type, then the complex type is nullable.
