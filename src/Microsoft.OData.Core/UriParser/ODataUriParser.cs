@@ -119,6 +119,8 @@ namespace Microsoft.OData.UriParser
             this.queryOptions = QueryOptionUtils.ParseQueryOptions(UriUtils.CreateMockAbsoluteUri(this.uri));
         }
 
+        public string NewProp => "this shold break the build because the publicapi*.txt file has not been updated to reflect that this new public property exists";
+        
         /// <summary>
         /// The settings for this instance of <see cref="ODataUriParser"/>. Refer to the documentation for the individual properties of <see cref="ODataUriParserSettings"/> for more information.
         /// </summary>
