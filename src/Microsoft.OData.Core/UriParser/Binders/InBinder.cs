@@ -154,186 +154,122 @@ namespace Microsoft.OData.UriParser
             return operand;
         }
 
-        private static string NormalizeStringCollectionItems(string literalText)
+        internal static string NormalizeStringCollectionItems(string literalText)
         {
-            // a comma-separated list of primitive values, enclosed in parentheses, or a single expression that resolves to a collection
-            // However, for String collection, we should process:
-            // 1) comma could be part of the string value
-            // 2) single quote could not be part of string value
-            // 3) double quote could be part of string value, double quote also could be the starting and ending character.
+            // a comma-separated list of primitive values, enclosed in parentheses,
+            // or a single expression that resolves to a collection
+            StringBuilder sb = new StringBuilder();
+            char? openStringChar = null;
+            char previousChar = '\0';
+            int closeIndex = 0;
 
-            // remove the '[' and ']'
-            string normalizedText = literalText.Substring(1, literalText.Length - 2).Trim();
-            int length = normalizedText.Length;
-            StringBuilder sb = new StringBuilder(length + 2);
-            sb.Append('[');
-            for (int i = 0; i < length; i++)
+            for (int index = 0; index < literalText.Length; index++)
             {
-                char ch = normalizedText[i];
-                switch (ch)
+                char c = literalText[index];
+                if (openStringChar == null)
                 {
-                    case '"':
-                        i = ProcessDoubleQuotedStringItem(i, normalizedText, sb);
-                        break;
-
-                    case '\'':
-                        i = ProcessSingleQuotedStringItem(i, normalizedText, sb);
-                        break;
-
-                    case ' ':
-                        // ignore all whitespaces between items
-                        break;
-
-                    case ',':
-                        // for multiple comma(s) between items, for example ('abc',,,'xyz'),
-                        // We let it go and let the next layer to identify the problem by design.
-                        sb.Append(',');
-                        break;
-
-                    case 'n':
-                        // it maybe null
-                        int index = normalizedText.IndexOf(',', i + 1);
-                        string subStr;
-                        if (index < 0)
-                        {
-                            subStr = normalizedText.Substring(i).TrimEnd(' ');
-                            i = length - 1;
-                        }
-                        else
-                        {
-                            subStr = normalizedText.Substring(i, index - i).TrimEnd(' ');
-                            i = index - 1;
-                        }
-
-                        if (subStr == NullLiteral)
-                        {
-                            sb.Append(NullLiteral);
-                        }
-                        else
-                        {
-                            throw new ODataException(ODataErrorStrings.StringItemShouldBeQuoted(subStr));
-                        }
-
-                        break;
-
-                    default:
-                        // any other character between items is not valid.
-                        throw new ODataException(ODataErrorStrings.StringItemShouldBeQuoted(ch));
-                }
-            }
-
-            sb.Append(']');
-            return sb.ToString();
-        }
-
-        private static int ProcessDoubleQuotedStringItem(int start, string input, StringBuilder sb)
-        {
-            Debug.Assert(input[start] == '"');
-
-            int length = input.Length;
-            int k = start + 1;
-
-            // no matter it's single quote or not, just starting it as double quote (JSON).
-            sb.Append('"');
-
-            for (; k < length; k++)
-            {
-                char next = input[k];
-                if (next == '"')
-                {
-                    // If prev and next are both double quotes, then it's an empty string.
-                    if (input[k - 1] == '"')
+                    // We are outside a string
+                    switch (c)
                     {
-                        // We append \"\" so as to return "\"\"" instead of "".
-                        // This is to avoid passing an empty string to the ConstantNode.
-                        sb.Append("\\\"\\\"");
+                        case '"':
+                            // We open the string
+                            openStringChar = c;
+                            sb.Append('"');
+                            break;
+                        case '\'':
+                            if (previousChar == '\'')
+                            {
+                                // We re-open the string
+                                openStringChar = c;
+                                // We replace the characters append for closing by a simple quote
+                                sb.Length = closeIndex;
+                                sb.Append(c);
+                                previousChar = c;
+                                continue;
+                            }
+                            else
+                            {
+                                // We open the string
+                                openStringChar = c;
+                                sb.Append('"');
+                            }
+                            break;
+                        case ',':
+                        case '[':
+                        case ']':
+                            sb.Append(c);
+                            break;
+                        case '(':
+                            sb.Append('[');
+                            break;
+                        case ')':
+                            sb.Append(']');
+                            break;
+                        case 'n':
+                            if (index + NullLiteral.Length <= literalText.Length
+                                && literalText.Substring(index, NullLiteral.Length) == NullLiteral)
+                            {
+                                sb.Append(NullLiteral);
+                            }
+                            break;
                     }
-                    break;
-                }
-                else if (next == '\\')
-                {
-                    sb.Append('\\');
-                    if (k + 1 >= length)
-                    {
-                        // if end of string, stop it.
-                        break;
-                    }
-                    else
-                    {
-                        // otherwise, append "\x" into
-                        sb.Append(input[k + 1]);
-                        k++;
-                    }
+                    // We reset the previous char
+                    previousChar = '\0';
                 }
                 else
                 {
-                    sb.Append(next);
-                }
-            }
-
-            // no matter it's single quote or not, just ending it as double quote.
-            sb.Append('"');
-            return k;
-        }
-
-        private static int ProcessSingleQuotedStringItem(int start, string input, StringBuilder sb)
-        {
-            Debug.Assert(input[start] == '\'');
-
-            int length = input.Length;
-            int k = start + 1;
-
-            // no matter it's single quote or not, just starting it as double quote (JSON).
-            sb.Append('"');
-
-            for (; k < length; k++)
-            {
-                char next = input[k];
-                if (next == '\'')
-                {
-                    if (k + 1 >= length || input[k + 1] != '\'')
+                    // We are inside a string
+                    if (c == openStringChar)
                     {
-                        // If prev and next are both single quotes, then it's an empty string.
-                        if (input[k - 1] == '\'')
+                        // This is the character to close the string
+                        if (c == '"')
                         {
-                            if(k > 2 && input[k - 2] == '\'')
+                            // String was openned with double quote
+                            if (previousChar == '\\')
                             {
-                                // Ignore we have 3 single quotes e.g 'xyz'''
-                                // It means we need to escape the double quotes to return the result "xyz'"
+                                sb.Append('"');
+                                // Keep the previous char inside the string
+                                previousChar = c;
                                 continue;
                             }
+                        }
+                        // We leave the current string
+                        openStringChar = null;
+                        closeIndex = sb.Length;
+                        if (previousChar == '\0')
+                        {
                             // We append \"\" so as to return "\"\"" instead of "".
                             // This is to avoid passing an empty string to the ConstantNode.
                             sb.Append("\\\"\\\"");
                         }
-                        // match with single quote ('), stop it.
-                        break;
+                        sb.Append('"');
                     }
                     else
                     {
-                        // Unescape the double single quotes as one single quote, and continue
-                        sb.Append('\'');
-                        k++;
+                        // Add the character in string
+                        if (c == '"' && openStringChar == '\'')
+                        {
+                            sb.Append('\\');
+                        }
+                        sb.Append(c);
                     }
+                    // Keep the previous char inside the string
+                    previousChar = c;
                 }
-                else if (next == '"')
+            }
+            // Auto close the last string (for compatibility with previous method version)
+            if (openStringChar.HasValue)
+            {
+                if (sb[sb.Length - 1] == ']')
                 {
-                    sb.Append('\\');
-                    sb.Append('"');
-                }
-                else if (next == '\\')
-                {
-                    sb.Append("\\\\");
+                    sb.Insert(sb.Length - 1, '"');
                 }
                 else
                 {
-                    sb.Append(next);
+                    sb.Append("\"]");
                 }
             }
-
-            // no matter it's single quote or not, just ending it as double quote.
-            sb.Append('"');
-            return k;
+            return sb.ToString();
         }
 
         private static string NormalizeGuidCollectionItems(string bracketLiteralText)
