@@ -34,6 +34,8 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
             Assert.Equal("[\"\\\"\\\"\\\"\"]", InBinder.NormalizeStringCollectionItems("[\"\\\"\\\"\\\"\"]"));
             Assert.Equal("", InBinder.NormalizeStringCollectionItems(""));
             Assert.Equal("\"ABC\"", InBinder.NormalizeStringCollectionItems("\"ABC\""));
+            Assert.Equal("", InBinder.NormalizeStringCollectionItems(""));
+            Assert.Equal("null", InBinder.NormalizeStringCollectionItems(null));
         }
 
     }
