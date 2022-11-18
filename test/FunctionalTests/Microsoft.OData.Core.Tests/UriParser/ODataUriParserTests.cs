@@ -18,6 +18,20 @@ using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.UriParser
 {
+    internal static class Parser
+    {
+        public static bool TryParse(string csdl, out IEdmModel edmModel, out IEnumerable<Microsoft.OData.Edm.Validation.EdmError> errors)
+        {
+            using (var textReader = new System.IO.StringReader(csdl))
+            {
+                using (var xmlReader = System.Xml.XmlReader.Create(textReader))
+                {
+                    return CsdlReader.TryParse(xmlReader, out edmModel, out errors);
+                }
+            }
+        }
+    }
+
     /// <summary>
     /// Unit tests for ODataUriParser.
     /// </summary>
@@ -25,6 +39,596 @@ namespace Microsoft.OData.Tests.UriParser
     {
         private readonly Uri ServiceRoot = new Uri("http://host");
         private readonly Uri FullUri = new Uri("http://host/People");
+
+        /// <summary>
+        /// Passes
+        /// </summary>
+        [Fact]
+        public void GdebruinKnownGood()
+        {
+            var csdl = @"
+<?xml version=""1.0"" encoding=""utf-8""?>
+<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
+    <edmx:DataServices>
+        <Schema Namespace=""microsoft.graph"" Alias=""graph"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+            <EntityContainer Name=""multicloud"">
+                <EntitySet Name=""bases"" EntityType=""graph.base"" />
+            </EntityContainer>
+            <EntityType Name=""propType"">
+                <Property Name=""foo"" Type=""graph.customType"" />
+            </EntityType>
+            <EntityType Name=""derivedPropType"" BaseType=""graph.propType"">
+            </EntityType>
+            <EntityType Name=""base"">
+                <Property Name=""prop"" Type=""graph.propType"" />
+            </EntityType>
+            <EntityType Name=""derived"" BaseType=""graph.base"">
+            </EntityType>
+            <ComplexType Name=""customType"">
+            </ComplexType>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>
+".Trim();
+
+            Assert.True(Parser.TryParse(csdl, out var model, out var errors), errors == null ? string.Empty : string.Join(Environment.NewLine, errors.Select(error => error.ToString())));
+            var uriParser = new ODataUriParser(model, new Uri("/bases/graph.derived?$select=prop($select=foo)", UriKind.Relative));
+            var uri = uriParser.ParseUri();
+
+            var prop = uri.SelectAndExpand.SelectedItems.Single() as PathSelectItem;
+            var propSegment = prop.SelectedPath.Segments.Single() as PropertySegment;
+            Assert.Equal("prop", propSegment.Identifier);
+            Assert.Equal("prop", propSegment.Property.Name);
+            Assert.Equal("microsoft.graph.propType", propSegment.Property.Type.FullName());
+
+            var foo = prop.SelectAndExpand.SelectedItems.Single() as PathSelectItem;
+            var fooSegment = foo.SelectedPath.Segments.Single() as PropertySegment;
+            Assert.Equal("foo", fooSegment.Identifier);
+            Assert.Equal("foo", fooSegment.Property.Name);
+            Assert.Equal("microsoft.graph.customType", fooSegment.Property.Type.FullName());
+        }
+
+        /// <summary>
+        /// Fails, should pass in 4.01 according to <see href="http://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#_Toc38530355"/>:
+        /// > If a structural property with the same name is defined in any of this type’s base types, then the property’s type MUST be a type derived from the type
+        /// > specified for the property of the base type
+        /// </summary>
+        [Fact]
+        public void GdebruinTypeSpecialization()
+        {
+            var csdl = @"
+<?xml version=""1.0"" encoding=""utf-8""?>
+<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
+    <edmx:DataServices>
+        <Schema Namespace=""microsoft.graph"" Alias=""graph"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+            <EntityContainer Name=""multicloud"">
+                <EntitySet Name=""bases"" EntityType=""graph.base"" />
+            </EntityContainer>
+            <EntityType Name=""propType"">
+            </EntityType>
+            <EntityType Name=""derivedPropType"" BaseType=""graph.propType"">
+                <Property Name=""foo"" Type=""graph.customType"" />
+            </EntityType>
+            <EntityType Name=""base"">
+                <Property Name=""prop"" Type=""graph.propType"" />
+            </EntityType>
+            <EntityType Name=""derived"" BaseType=""graph.base"">
+                <Property Name=""prop"" Type=""graph.derivedpropType"" />
+            </EntityType>
+            <ComplexType Name=""customType"">
+            </ComplexType>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>
+".Trim();
+
+            Assert.True(Parser.TryParse(csdl, out var model, out var errors), errors == null ? string.Empty : string.Join(Environment.NewLine, errors.Select(error => error.ToString())));
+            var uriParser = new ODataUriParser(model, new Uri("/bases/graph.derived?$select=prop($select=foo)", UriKind.Relative));
+            var uri = uriParser.ParseUri();
+
+            var prop = uri.SelectAndExpand.SelectedItems.Single() as PathSelectItem;
+            var propSegment = prop.SelectedPath.Segments.Single() as PropertySegment;
+            Assert.Equal("prop", propSegment.Identifier);
+            Assert.Equal("prop", propSegment.Property.Name);
+            Assert.Equal("microsoft.graph.propType", propSegment.Property.Type.FullName());
+
+            var foo = prop.SelectAndExpand.SelectedItems.Single() as PathSelectItem;
+            var fooSegment = foo.SelectedPath.Segments.Single() as PropertySegment;
+            Assert.Equal("foo", fooSegment.Identifier);
+            Assert.Equal("foo", fooSegment.Property.Name);
+            Assert.Equal("microsoft.graph.customType", fooSegment.Property.Type.FullName());
+        }
+
+        /// <summary>
+        /// Fails, probably should pass without implementing type specialization
+        /// </summary>
+        [Fact]
+        public void GdebruinTypeSpecializationWithCastSegment()
+        {
+            var csdl = @"
+<?xml version=""1.0"" encoding=""utf-8""?>
+<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
+    <edmx:DataServices>
+        <Schema Namespace=""microsoft.graph"" Alias=""graph"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+            <EntityContainer Name=""multicloud"">
+                <EntitySet Name=""bases"" EntityType=""graph.base"" />
+            </EntityContainer>
+            <EntityType Name=""propType"">
+            </EntityType>
+            <EntityType Name=""derivedPropType"" BaseType=""graph.propType"">
+                <Property Name=""foo"" Type=""graph.customType"" />
+            </EntityType>
+            <EntityType Name=""base"">
+                <Property Name=""prop"" Type=""graph.propType"" />
+            </EntityType>
+            <EntityType Name=""derived"" BaseType=""graph.base"">
+                <Property Name=""prop"" Type=""graph.derivedpropType"" />
+            </EntityType>
+            <ComplexType Name=""customType"">
+            </ComplexType>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>
+".Trim();
+
+            Assert.True(Parser.TryParse(csdl, out var model, out var errors), errors == null ? string.Empty : string.Join(Environment.NewLine, errors.Select(error => error.ToString())));
+            var uriParser = new ODataUriParser(model, new Uri("/bases/graph.derived?$select=prop($select=graph.derivedPropType/foo)", UriKind.Relative));
+            var uri = uriParser.ParseUri();
+
+            var prop = uri.SelectAndExpand.SelectedItems.Single() as PathSelectItem;
+            var propSegment = prop.SelectedPath.Segments.Single() as PropertySegment;
+            Assert.Equal("prop", propSegment.Identifier);
+            Assert.Equal("prop", propSegment.Property.Name);
+            Assert.Equal("microsoft.graph.propType", propSegment.Property.Type.FullName());
+
+            var foo = prop.SelectAndExpand.SelectedItems.Single() as PathSelectItem;
+            var fooSegment = foo.SelectedPath.Segments.Single() as PropertySegment;
+            Assert.Equal("foo", fooSegment.Identifier);
+            Assert.Equal("foo", fooSegment.Property.Name);
+            Assert.Equal("microsoft.graph.customType", fooSegment.Property.Type.FullName());
+        }
+
+        /// <summary>
+        /// Fails, *maybe* it should pass beacuse the derived type constraint only has one element
+        /// </summary>
+        [Fact]
+        public void GdebruinDerivedTypeConstraint()
+        {
+            var csdl = @"
+<?xml version=""1.0"" encoding=""utf-8""?>
+<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
+    <edmx:DataServices>
+        <Schema Namespace=""microsoft.graph"" Alias=""graph"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+            <EntityContainer Name=""multicloud"">
+                <EntitySet Name=""bases"" EntityType=""graph.base"" />
+            </EntityContainer>
+            <EntityType Name=""propType"">
+            </EntityType>
+            <EntityType Name=""derivedPropType"" BaseType=""graph.propType"">
+                <Property Name=""foo"" Type=""graph.customType"" />
+            </EntityType>
+            <EntityType Name=""base"">
+                <Property Name=""prop"" Type=""graph.propType"" />
+            </EntityType>
+            <EntityType Name=""derived"" BaseType=""graph.base"">
+            </EntityType>
+            <ComplexType Name=""customType"">
+            </ComplexType>
+
+            <Annotations Target=""graph.derived/prop"">
+                <Annotation Term=""Org.OData.Validation.V1.DerivedTypeConstraint"">
+                    <Collection>
+                        <String>graph.derivedPropType</String>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>
+".Trim();
+
+            Assert.True(Parser.TryParse(csdl, out var model, out var errors), errors == null ? string.Empty : string.Join(Environment.NewLine, errors.Select(error => error.ToString())));
+            var uriParser = new ODataUriParser(model, new Uri("/bases/graph.derived?$select=prop($select=foo)", UriKind.Relative));
+            var uri = uriParser.ParseUri();
+
+            var prop = uri.SelectAndExpand.SelectedItems.Single() as PathSelectItem;
+            var propSegment = prop.SelectedPath.Segments.Single() as PropertySegment;
+            Assert.Equal("prop", propSegment.Identifier);
+            Assert.Equal("prop", propSegment.Property.Name);
+            Assert.Equal("microsoft.graph.propType", propSegment.Property.Type.FullName());
+
+            var foo = prop.SelectAndExpand.SelectedItems.Single() as PathSelectItem;
+            var fooSegment = foo.SelectedPath.Segments.Single() as PropertySegment;
+            Assert.Equal("foo", fooSegment.Identifier);
+            Assert.Equal("foo", fooSegment.Property.Name);
+            Assert.Equal("microsoft.graph.customType", fooSegment.Property.Type.FullName());
+        }
+
+        /// <summary>
+        /// Passes
+        /// </summary>
+        [Fact]
+        public void GdebruinDerivedTypeConstraintWithCastSegment()
+        {
+            var csdl = @"
+<?xml version=""1.0"" encoding=""utf-8""?>
+<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
+    <edmx:DataServices>
+        <Schema Namespace=""microsoft.graph"" Alias=""graph"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+            <EntityContainer Name=""multicloud"">
+                <EntitySet Name=""bases"" EntityType=""graph.base"" />
+            </EntityContainer>
+            <EntityType Name=""propType"">
+            </EntityType>
+            <EntityType Name=""derivedPropType"" BaseType=""graph.propType"">
+                <Property Name=""foo"" Type=""graph.customType"" />
+            </EntityType>
+            <EntityType Name=""base"">
+                <Property Name=""prop"" Type=""graph.propType"" />
+            </EntityType>
+            <EntityType Name=""derived"" BaseType=""graph.base"">
+            </EntityType>
+            <ComplexType Name=""customType"">
+            </ComplexType>
+
+            <Annotations Target=""graph.derived/prop"">
+                <Annotation Term=""Org.OData.Validation.V1.DerivedTypeConstraint"">
+                    <Collection>
+                        <String>graph.derivedPropType</String>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>
+".Trim();
+
+            Assert.True(Parser.TryParse(csdl, out var model, out var errors), errors == null ? string.Empty : string.Join(Environment.NewLine, errors.Select(error => error.ToString())));
+            var uriParser = new ODataUriParser(model, new Uri("/bases/graph.derived?$select=prop($select=graph.derivedPropType/foo)", UriKind.Relative));
+            var uri = uriParser.ParseUri();
+
+            var prop = uri.SelectAndExpand.SelectedItems.Single() as PathSelectItem;
+            var propSegment = prop.SelectedPath.Segments.Single() as PropertySegment;
+            Assert.Equal("prop", propSegment.Identifier);
+            Assert.Equal("prop", propSegment.Property.Name);
+            Assert.Equal("microsoft.graph.propType", propSegment.Property.Type.FullName());
+
+            var foo = prop.SelectAndExpand.SelectedItems.Single() as PathSelectItem;
+            Assert.Equal(2, foo.SelectedPath.Segments.Count);
+            var fooSegment = foo.SelectedPath.Segments.ElementAt(1) as PropertySegment;
+            Assert.Equal("foo", fooSegment.Identifier);
+            Assert.Equal("foo", fooSegment.Property.Name);
+            Assert.Equal("microsoft.graph.customType", fooSegment.Property.Type.FullName());
+        }
+
+        /// <summary>
+        /// Fails, should pass since there is only one derived type constraint
+        /// </summary>
+        [Fact]
+        public void GdebruinSingleDerivedTypeConstraint()
+        {
+            var csdl = @"
+<?xml version=""1.0"" encoding=""utf-8""?>
+<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
+    <edmx:DataServices>
+        <Schema Namespace=""microsoft.graph"" Alias=""graph"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+            <EntityContainer Name=""multicloud"">
+                <EntitySet Name=""bases"" EntityType=""graph.base"" />
+            </EntityContainer>
+            <EntityType Name=""propType"">
+            </EntityType>
+            <EntityType Name=""derivedPropType"" BaseType=""graph.propType"">
+                <Property Name=""foo"" Type=""graph.customType"" />
+            </EntityType>
+            <EntityType Name=""base"">
+                <Property Name=""prop"" Type=""graph.propType"" />
+            </EntityType>
+            <EntityType Name=""derived"" BaseType=""graph.base"">
+            </EntityType>
+            <ComplexType Name=""customType"">
+            </ComplexType>
+
+            <Annotations Target=""graph.derived/prop"">
+                <Annotation Term=""Org.OData.Validation.V1.DerivedTypeConstraint"">
+                    <String>graph.derivedPropType</String>
+                </Annotation>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>
+".Trim();
+
+            Assert.True(Parser.TryParse(csdl, out var model, out var errors), errors == null ? string.Empty : string.Join(Environment.NewLine, errors.Select(error => error.ToString())));
+            var uriParser = new ODataUriParser(model, new Uri("/bases/graph.derived?$select=prop($select=foo)", UriKind.Relative));
+            var uri = uriParser.ParseUri();
+
+            var prop = uri.SelectAndExpand.SelectedItems.Single() as PathSelectItem;
+            var propSegment = prop.SelectedPath.Segments.Single() as PropertySegment;
+            Assert.Equal("prop", propSegment.Identifier);
+            Assert.Equal("prop", propSegment.Property.Name);
+            Assert.Equal("microsoft.graph.propType", propSegment.Property.Type.FullName());
+
+            var foo = prop.SelectAndExpand.SelectedItems.Single() as PathSelectItem;
+            var fooSegment = foo.SelectedPath.Segments.Single() as PropertySegment;
+            Assert.Equal("foo", fooSegment.Identifier);
+            Assert.Equal("foo", fooSegment.Property.Name);
+            Assert.Equal("microsoft.graph.customType", fooSegment.Property.Type.FullName());
+        }
+
+        /// <summary>
+        /// Passes
+        /// </summary>
+        [Fact]
+        public void GdebruinSingleDerivedTypeConstraintWithCastSegment()
+        {
+            var csdl = @"
+<?xml version=""1.0"" encoding=""utf-8""?>
+<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
+    <edmx:DataServices>
+        <Schema Namespace=""microsoft.graph"" Alias=""graph"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+            <EntityContainer Name=""multicloud"">
+                <EntitySet Name=""bases"" EntityType=""graph.base"" />
+            </EntityContainer>
+            <EntityType Name=""propType"">
+            </EntityType>
+            <EntityType Name=""derivedPropType"" BaseType=""graph.propType"">
+                <Property Name=""foo"" Type=""graph.customType"" />
+            </EntityType>
+            <EntityType Name=""base"">
+                <Property Name=""prop"" Type=""graph.propType"" />
+            </EntityType>
+            <EntityType Name=""derived"" BaseType=""graph.base"">
+            </EntityType>
+            <ComplexType Name=""customType"">
+            </ComplexType>
+
+            <Annotations Target=""graph.derived/prop"">
+                <Annotation Term=""Org.OData.Validation.V1.DerivedTypeConstraint"">
+                    <String>graph.derivedPropType</String>
+                </Annotation>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>
+".Trim();
+
+            Assert.True(Parser.TryParse(csdl, out var model, out var errors), errors == null ? string.Empty : string.Join(Environment.NewLine, errors.Select(error => error.ToString())));
+            var uriParser = new ODataUriParser(model, new Uri("/bases/graph.derived?$select=prop($select=graph.derivedPropType/foo)", UriKind.Relative));
+            var uri = uriParser.ParseUri();
+
+            var prop = uri.SelectAndExpand.SelectedItems.Single() as PathSelectItem;
+            var propSegment = prop.SelectedPath.Segments.Single() as PropertySegment;
+            Assert.Equal("prop", propSegment.Identifier);
+            Assert.Equal("prop", propSegment.Property.Name);
+            Assert.Equal("microsoft.graph.propType", propSegment.Property.Type.FullName());
+
+            var foo = prop.SelectAndExpand.SelectedItems.Single() as PathSelectItem;
+            Assert.Equal(2, foo.SelectedPath.Segments.Count);
+            var fooSegment = foo.SelectedPath.Segments.ElementAt(1) as PropertySegment;
+            Assert.Equal("foo", fooSegment.Identifier);
+            Assert.Equal("foo", fooSegment.Property.Name);
+            Assert.Equal("microsoft.graph.customType", fooSegment.Property.Type.FullName());
+        }
+
+        /// <summary>
+        /// Fails, should pass with type specialization or derived type constraint logic
+        /// </summary>
+        [Fact]
+        public void GdebruinTypeSpecializationWithDerivedTypeConstraint()
+        {
+            var csdl = @"
+<?xml version=""1.0"" encoding=""utf-8""?>
+<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
+    <edmx:DataServices>
+        <Schema Namespace=""microsoft.graph"" Alias=""graph"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+            <EntityContainer Name=""multicloud"">
+                <EntitySet Name=""bases"" EntityType=""graph.base"" />
+            </EntityContainer>
+            <EntityType Name=""propType"">
+            </EntityType>
+            <EntityType Name=""derivedPropType"" BaseType=""graph.propType"">
+                <Property Name=""foo"" Type=""graph.customType"" />
+            </EntityType>
+            <EntityType Name=""base"">
+                <Property Name=""prop"" Type=""graph.propType"" />
+            </EntityType>
+            <EntityType Name=""derived"" BaseType=""graph.base"">
+                <Property Name=""prop"" Type=""graph.derivedpropType"">
+                    <Annotation Term=""Org.OData.Validation.V1.DerivedTypeConstraint"">
+                        <Collection>
+                            <String>graph.derivedPropType</String>
+                        </Collection>
+                    </Annotation>
+                </Property>
+            </EntityType>
+            <ComplexType Name=""customType"">
+            </ComplexType>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>
+".Trim();
+
+            Assert.True(Parser.TryParse(csdl, out var model, out var errors), errors == null ? string.Empty : string.Join(Environment.NewLine, errors.Select(error => error.ToString())));
+            var uriParser = new ODataUriParser(model, new Uri("/bases/graph.derived?$select=prop($select=foo)", UriKind.Relative));
+            var uri = uriParser.ParseUri();
+
+            var prop = uri.SelectAndExpand.SelectedItems.Single() as PathSelectItem;
+            var propSegment = prop.SelectedPath.Segments.Single() as PropertySegment;
+            Assert.Equal("prop", propSegment.Identifier);
+            Assert.Equal("prop", propSegment.Property.Name);
+            Assert.Equal("microsoft.graph.propType", propSegment.Property.Type.FullName());
+
+            var foo = prop.SelectAndExpand.SelectedItems.Single() as PathSelectItem;
+            var fooSegment = foo.SelectedPath.Segments.Single() as PropertySegment;
+            Assert.Equal("foo", fooSegment.Identifier);
+            Assert.Equal("foo", fooSegment.Property.Name);
+            Assert.Equal("microsoft.graph.customType", fooSegment.Property.Type.FullName());
+        }
+
+        /// <summary>
+        /// Fails, should pass with type specialization or derived type constraint logic
+        /// </summary>
+        [Fact]
+        public void GdebruinTypeSpecializationWithSingleDerivedTypeConstraint()
+        {
+            var csdl = @"
+<?xml version=""1.0"" encoding=""utf-8""?>
+<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
+    <edmx:DataServices>
+        <Schema Namespace=""microsoft.graph"" Alias=""graph"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+            <EntityContainer Name=""multicloud"">
+                <EntitySet Name=""bases"" EntityType=""graph.base"" />
+            </EntityContainer>
+            <EntityType Name=""propType"">
+            </EntityType>
+            <EntityType Name=""derivedPropType"" BaseType=""graph.propType"">
+                <Property Name=""foo"" Type=""graph.customType"" />
+            </EntityType>
+            <EntityType Name=""base"">
+                <Property Name=""prop"" Type=""graph.propType"" />
+            </EntityType>
+            <EntityType Name=""derived"" BaseType=""graph.base"">
+                <Property Name=""prop"" Type=""graph.derivedpropType"">
+                    <Annotation Term=""Org.OData.Validation.V1.DerivedTypeConstraint"">
+                        <String>graph.derivedPropType</String>
+                    </Annotation>
+                </Property>
+            </EntityType>
+            <ComplexType Name=""customType"">
+            </ComplexType>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>
+".Trim();
+
+            Assert.True(Parser.TryParse(csdl, out var model, out var errors), errors == null ? string.Empty : string.Join(Environment.NewLine, errors.Select(error => error.ToString())));
+            var uriParser = new ODataUriParser(model, new Uri("/bases/graph.derived?$select=prop($select=foo)", UriKind.Relative));
+            var uri = uriParser.ParseUri();
+
+            var prop = uri.SelectAndExpand.SelectedItems.Single() as PathSelectItem;
+            var propSegment = prop.SelectedPath.Segments.Single() as PropertySegment;
+            Assert.Equal("prop", propSegment.Identifier);
+            Assert.Equal("prop", propSegment.Property.Name);
+            Assert.Equal("microsoft.graph.propType", propSegment.Property.Type.FullName());
+
+            var foo = prop.SelectAndExpand.SelectedItems.Single() as PathSelectItem;
+            var fooSegment = foo.SelectedPath.Segments.Single() as PropertySegment;
+            Assert.Equal("foo", fooSegment.Identifier);
+            Assert.Equal("foo", fooSegment.Property.Name);
+            Assert.Equal("microsoft.graph.customType", fooSegment.Property.Type.FullName());
+        }
+
+        /// <summary>
+        /// Fails, should pass with type specialization or derived type constraint logic
+        /// </summary>
+        [Fact]
+        public void GdebruinTypeSpecializationWithExternalDerivedTypeConstraint()
+        {
+            var csdl = @"
+<?xml version=""1.0"" encoding=""utf-8""?>
+<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
+    <edmx:DataServices>
+        <Schema Namespace=""microsoft.graph"" Alias=""graph"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+            <EntityContainer Name=""multicloud"">
+                <EntitySet Name=""bases"" EntityType=""graph.base"" />
+            </EntityContainer>
+            <EntityType Name=""propType"">
+            </EntityType>
+            <EntityType Name=""derivedPropType"" BaseType=""graph.propType"">
+                <Property Name=""foo"" Type=""graph.customType"" />
+            </EntityType>
+            <EntityType Name=""base"">
+                <Property Name=""prop"" Type=""graph.propType"" />
+            </EntityType>
+            <EntityType Name=""derived"" BaseType=""graph.base"">
+                <Property Name=""prop"" Type=""graph.derivedpropType"" />
+            </EntityType>
+            <ComplexType Name=""customType"">
+            </ComplexType>
+
+            <Annotations Target=""graph.derived/prop"">
+                <Annotation Term=""Org.OData.Validation.V1.DerivedTypeConstraint"">
+                    <Collection>
+                        <String>graph.derivedPropType</String>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>
+".Trim();
+
+            Assert.True(Parser.TryParse(csdl, out var model, out var errors), errors == null ? string.Empty : string.Join(Environment.NewLine, errors.Select(error => error.ToString())));
+            var uriParser = new ODataUriParser(model, new Uri("/bases/graph.derived?$select=prop($select=foo)", UriKind.Relative));
+            var uri = uriParser.ParseUri();
+
+            var prop = uri.SelectAndExpand.SelectedItems.Single() as PathSelectItem;
+            var propSegment = prop.SelectedPath.Segments.Single() as PropertySegment;
+            Assert.Equal("prop", propSegment.Identifier);
+            Assert.Equal("prop", propSegment.Property.Name);
+            Assert.Equal("microsoft.graph.propType", propSegment.Property.Type.FullName());
+
+            var foo = prop.SelectAndExpand.SelectedItems.Single() as PathSelectItem;
+            var fooSegment = foo.SelectedPath.Segments.Single() as PropertySegment;
+            Assert.Equal("foo", fooSegment.Identifier);
+            Assert.Equal("foo", fooSegment.Property.Name);
+            Assert.Equal("microsoft.graph.customType", fooSegment.Property.Type.FullName());
+        }
+
+        /// <summary>
+        /// Fails, should pass with type specialization or derived type constraint logic
+        /// </summary>
+        [Fact]
+        public void GdebruinTypeSpecializationWithSingleExternalDerivedTypeConstraint()
+        {
+            var csdl = @"
+<?xml version=""1.0"" encoding=""utf-8""?>
+<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
+    <edmx:DataServices>
+        <Schema Namespace=""microsoft.graph"" Alias=""graph"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+            <EntityContainer Name=""multicloud"">
+                <EntitySet Name=""bases"" EntityType=""graph.base"" />
+            </EntityContainer>
+            <EntityType Name=""propType"">
+            </EntityType>
+            <EntityType Name=""derivedPropType"" BaseType=""graph.propType"">
+                <Property Name=""foo"" Type=""graph.customType"" />
+            </EntityType>
+            <EntityType Name=""base"">
+                <Property Name=""prop"" Type=""graph.propType"" />
+            </EntityType>
+            <EntityType Name=""derived"" BaseType=""graph.base"">
+                <Property Name=""prop"" Type=""graph.derivedpropType"" />
+            </EntityType>
+            <ComplexType Name=""customType"">
+            </ComplexType>
+
+            <Annotations Target=""graph.derived/prop"">
+                <Annotation Term=""Org.OData.Validation.V1.DerivedTypeConstraint"">
+                    <String>graph.derivedPropType</String>
+                </Annotation>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>
+".Trim();
+
+            Assert.True(Parser.TryParse(csdl, out var model, out var errors), errors == null ? string.Empty : string.Join(Environment.NewLine, errors.Select(error => error.ToString())));
+            var uriParser = new ODataUriParser(model, new Uri("/bases/graph.derived?$select=prop($select=foo)", UriKind.Relative));
+            var uri = uriParser.ParseUri();
+
+            var prop = uri.SelectAndExpand.SelectedItems.Single() as PathSelectItem;
+            var propSegment = prop.SelectedPath.Segments.Single() as PropertySegment;
+            Assert.Equal("prop", propSegment.Identifier);
+            Assert.Equal("prop", propSegment.Property.Name);
+            Assert.Equal("microsoft.graph.propType", propSegment.Property.Type.FullName());
+
+            var foo = prop.SelectAndExpand.SelectedItems.Single() as PathSelectItem;
+            var fooSegment = foo.SelectedPath.Segments.Single() as PropertySegment;
+            Assert.Equal("foo", fooSegment.Identifier);
+            Assert.Equal("foo", fooSegment.Property.Name);
+            Assert.Equal("microsoft.graph.customType", fooSegment.Property.Type.FullName());
+        }
 
         [Theory]
         [InlineData(true)]
