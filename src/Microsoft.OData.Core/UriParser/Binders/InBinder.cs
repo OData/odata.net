@@ -158,7 +158,8 @@ namespace Microsoft.OData.UriParser
         {
             // a comma-separated list of primitive values, enclosed in parentheses,
             // or a single expression that resolves to a collection
-            StringBuilder sb = new StringBuilder();
+            if (literalText == null) return NullLiteral;
+            StringBuilder sb = new StringBuilder(literalText.Length);
             char? openStringChar = null;
             char previousChar = '\0';
             int closeIndex = 0;
