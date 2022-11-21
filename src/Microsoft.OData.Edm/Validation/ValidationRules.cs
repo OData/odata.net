@@ -1194,8 +1194,8 @@ namespace Microsoft.OData.Edm.Validation
 
         // Add this to rule set as a breaking change for a future release.
         /// <summary>
-        /// Validates that if a complex-typed property has a type that is the same as
-        /// declaring type of the complex type or a derived type, then the complex type is nullable.
+        /// Validates that if a complex-typed property has a type or base type that is the same as
+        /// the complex type, then the complex type is nullable.
         /// </summary>
         public static readonly ValidationRule<IEdmStructuralProperty> RecursiveComplexTypedPropertyMustBeOptional =
             new ValidationRule<IEdmStructuralProperty>(
@@ -1203,8 +1203,9 @@ namespace Microsoft.OData.Edm.Validation
                 {
                     IEdmTypeReference propType = property.Type;
                     IEdmStructuredType declaredType = property.DeclaringType;
+                    IEdmStructuredType baseType = ((IEdmStructuredType)propType.Definition).BaseType;
 
-                    if (propType.Definition == declaredType && !propType.IsNullable)
+                    if (!propType.IsNullable && (propType.Definition == declaredType || declaredType == baseType))
                     {
                         context.AddError(
                             property.Location(),
