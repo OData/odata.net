@@ -82,6 +82,12 @@ namespace Microsoft.OData.Client.Materialization
                     case ODataReaderState.ResourceSetEnd:
                         this.responsePipeline.ExecuteOnFeedEndActions((ODataResourceSet)this.reader.Item);
                         break;
+                    case ODataReaderState.DeltaResourceSetStart:
+                        this.responsePipeline.ExecuteOnDeltaFeedStartActions((ODataDeltaResourceSet)this.reader.Item);
+                        break;
+                    case ODataReaderState.DeltaResourceSetEnd:
+                        this.responsePipeline.ExecuteOnDeltaFeedEndActions((ODataDeltaResourceSet)this.reader.Item);
+                        break;
                     case ODataReaderState.NestedResourceInfoStart:
                         this.responsePipeline.ExecuteOnNavigationStartActions((ODataNestedResourceInfo)this.reader.Item);
                         break;
@@ -108,6 +114,10 @@ namespace Microsoft.OData.Client.Materialization
             if (messageType == ODataPayloadKind.Resource)
             {
                 return new ODataReaderWrapper(messageReader.CreateODataResourceReader(entityType), responsePipeline);
+            }
+            else if (messageType == ODataPayloadKind.Delta)
+            {
+                return new ODataReaderWrapper(messageReader.CreateODataDeltaResourceSetReader(entityType), responsePipeline);
             }
 
             return new ODataReaderWrapper(messageReader.CreateODataResourceSetReader(entityType), responsePipeline);

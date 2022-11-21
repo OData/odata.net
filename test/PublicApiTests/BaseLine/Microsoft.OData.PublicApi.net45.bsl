@@ -8127,6 +8127,8 @@ public class Microsoft.OData.Client.DataServiceClientRequestPipelineConfiguratio
 }
 
 public class Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration {
+    public Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration OnDeltaFeedEnded (System.Action`1[[Microsoft.OData.Client.ReadingDeltaFeedArgs]] action)
+    public Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration OnDeltaFeedStarted (System.Action`1[[Microsoft.OData.Client.ReadingDeltaFeedArgs]] action)
     public Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration OnEntityMaterialized (System.Action`1[[Microsoft.OData.Client.MaterializedEntityArgs]] action)
     public Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration OnEntryEnded (System.Action`1[[Microsoft.OData.Client.ReadingEntryArgs]] action)
     public Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration OnEntryStarted (System.Action`1[[Microsoft.OData.Client.ReadingEntryArgs]] action)
@@ -8222,7 +8224,7 @@ public class Microsoft.OData.Client.DataServiceContext {
     public virtual System.IAsyncResult BeginLoadProperty (object entity, string propertyName, System.Uri nextLinkUri, System.AsyncCallback callback, object state)
     public virtual System.IAsyncResult BeginSaveChanges (System.AsyncCallback callback, object state)
     public virtual System.IAsyncResult BeginSaveChanges (Microsoft.OData.Client.SaveChangesOptions options, System.AsyncCallback callback, object state)
-    internal virtual void BulkUpdate (T[] objects)
+    public virtual Microsoft.OData.Client.DataServiceResponse BulkUpdate (T[] objects)
     public virtual void CancelRequest (System.IAsyncResult asyncResult)
     public virtual void ChangeState (object entity, Microsoft.OData.Client.EntityStates state)
     public virtual DataServiceQuery`1 CreateFunctionQuery ()
@@ -8862,6 +8864,12 @@ public sealed class Microsoft.OData.Client.QueryOperationResponse`1 : Microsoft.
 
     public DataServiceQueryContinuation`1 GetContinuation ()
     public virtual IEnumerator`1 GetEnumerator ()
+}
+
+public sealed class Microsoft.OData.Client.ReadingDeltaFeedArgs {
+    public ReadingDeltaFeedArgs (Microsoft.OData.ODataDeltaResourceSet deltaFeed)
+
+    Microsoft.OData.ODataDeltaResourceSet DeltaFeed  { public get; }
 }
 
 public sealed class Microsoft.OData.Client.ReadingEntryArgs {

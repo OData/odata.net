@@ -59,6 +59,14 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>
+        /// OData delta resource set being materialized; possibly null.
+        /// </summary>
+        internal override ODataDeltaResourceSet CurrentDeltaFeed
+        {
+            get { return null; }
+        }
+
+        /// <summary>
         /// Entry being materialized; possibly null.
         /// </summary>
         internal override ODataResource CurrentEntry

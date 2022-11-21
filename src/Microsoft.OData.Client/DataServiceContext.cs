@@ -2790,15 +2790,17 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <typeparam name="T">The type of top-level objects to be deep updated.</typeparam>
         /// <param name="objects">The top-level objects of the type to be deep updated.</param>
-        internal virtual void BulkUpdate<T>(params T[] objects)
+        public virtual DataServiceResponse BulkUpdate<T>(params T[] objects)
         {
-            if (objects.Length == 0)
+            if (objects == null || objects.Length == 0)
             {
-                throw Error.Argument(Strings.Util_EmptyArray, "top-level objects");
+                throw Error.Argument(Strings.Util_EmptyArray, nameof(objects));
             }
 
             BulkUpdateSaveResult result = new BulkUpdateSaveResult(this, Util.SaveChangesMethodName, SaveChangesOptions.BulkUpdate, callback: null, state: null);
             result.BulkUpdateRequest(objects);
+
+            return result.EndRequest();
         }
 
         #endregion
