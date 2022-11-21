@@ -7923,6 +7923,7 @@ FlagsAttribute(),
 public enum Microsoft.OData.Client.SaveChangesOptions : int {
     BatchWithIndependentOperations = 16
     BatchWithSingleChangeset = 1
+    BulkUpdate = 128
     ContinueOnError = 2
     None = 0
     PostOnlySetProperties = 8
@@ -8229,6 +8230,7 @@ public class Microsoft.OData.Client.DataServiceContext {
     public virtual DataServiceQuery`1 CreateQuery (string entitySetName)
     public virtual DataServiceQuery`1 CreateQuery (string resourcePath, bool isComposable)
     public virtual DataServiceQuery`1 CreateSingletonQuery (string singletonName)
+    public void DeepUpdate (T[] objects)
     protected System.Type DefaultResolveType (string typeName, string fullNamespace, string languageDependentNamespace)
     public virtual void DeleteLink (object source, string sourceProperty, object target)
     public virtual void DeleteObject (object entity)
@@ -8539,6 +8541,7 @@ public class Microsoft.OData.Client.ReceivingResponseEventArgs : System.EventArg
 public class Microsoft.OData.Client.SendingRequest2EventArgs : System.EventArgs {
     Microsoft.OData.Client.Descriptor Descriptor  { public get; }
     bool IsBatchPart  { public get; }
+    bool IsBulkUpdate  { public get; }
     Microsoft.OData.IODataRequestMessage RequestMessage  { public get; }
 }
 

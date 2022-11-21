@@ -2785,6 +2785,22 @@ namespace Microsoft.OData.Client
             return identity != null;
         }
 
+        /// <summary>
+        /// Processes bulk update requests
+        /// </summary>
+        /// <typeparam name="T">The type of top-level objects to be deep updated.</typeparam>
+        /// <param name="objects">The top-level objects of the type to be deep updated.</param>
+        internal virtual void DeepUpdate<T>(params T[] objects)
+        {
+            if (objects.Length == 0)
+            {
+                throw Error.Argument(Strings.Util_EmptyArray, "top-level objects");
+            }
+
+            BulkUpdateSaveResult result = new BulkUpdateSaveResult(this, Util.SaveChangesMethodName, SaveChangesOptions.BulkUpdate, callback: null, state: null);
+            result.BulkUpdateRequest(objects);
+        }
+
         #endregion
 
         #region FromAsync
@@ -3527,7 +3543,7 @@ namespace Microsoft.OData.Client
         /// <param name="options">options as specified by the user.</param>
         private void ValidateSaveChangesOptions(SaveChangesOptions options)
         {
-            const SaveChangesOptions All = SaveChangesOptions.ContinueOnError | SaveChangesOptions.BatchWithSingleChangeset | SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.ReplaceOnUpdate | SaveChangesOptions.PostOnlySetProperties | SaveChangesOptions.UseRelativeUri | SaveChangesOptions.UseJsonBatch;
+            const SaveChangesOptions All = SaveChangesOptions.ContinueOnError | SaveChangesOptions.BatchWithSingleChangeset | SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.ReplaceOnUpdate | SaveChangesOptions.PostOnlySetProperties | SaveChangesOptions.UseRelativeUri | SaveChangesOptions.UseJsonBatch | SaveChangesOptions.BulkUpdate;
 
             // Make sure no higher order bits are set.
             if ((options | All) != All)
@@ -3569,6 +3585,12 @@ namespace Microsoft.OData.Client
             if (Util.IsFlagSet(options, SaveChangesOptions.UseJsonBatch) && !Util.IsBatch(options))
             {
                 throw Error.InvalidOperation(Strings.Context_MustBeUsedWith("SaveChangesOptions.UseJsonBatch", "DataServiceCollection"));
+            }
+
+            // BulkUpdate cannot be used in Batch Requests
+            if (Util.IsFlagSet(options, SaveChangesOptions.BulkUpdate | SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.BatchWithSingleChangeset | SaveChangesOptions.UseJsonBatch))
+            {
+                throw Error.ArgumentOutOfRange(nameof(options));
             }
         }
 

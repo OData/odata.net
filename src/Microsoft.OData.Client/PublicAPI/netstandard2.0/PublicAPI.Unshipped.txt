@@ -1,0 +1,3 @@
+Microsoft.OData.Client.DataServiceContext.DeepUpdate<T>(params T[] objects) -> void
+Microsoft.OData.Client.SaveChangesOptions.BulkUpdate = 128 -> Microsoft.OData.Client.SaveChangesOptions
+Microsoft.OData.Client.SendingRequest2EventArgs.IsBulkUpdate.get -> bool
