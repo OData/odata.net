@@ -834,7 +834,7 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "=The type of the property '{0}' is invalid. If a complex typed property is of the same type (or base type) as its declaring type, then the property represents a recursive containment and the given property must be optional."
+        /// A string like "The nullability of the property '{0}' is invalid. If a complex typed property is of the same type (or base type) as its declaring type, then the property represents a recursive containment and the given property must be optional."
         /// </summary>
         internal static string EdmModel_Validator_Semantic_RecursiveComplexTypedPropertyMustBeOptional(object p0)
         {
