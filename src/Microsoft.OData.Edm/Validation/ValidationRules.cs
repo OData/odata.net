@@ -1202,10 +1202,10 @@ namespace Microsoft.OData.Edm.Validation
                 (context, property) =>
                 {
                     IEdmTypeReference propType = property.Type;
-                    IEdmStructuredType declaredType = property.DeclaringType;
+                    IEdmStructuredType declaringType = property.DeclaringType;
                     IEdmStructuredType baseType = ((IEdmStructuredType)propType.Definition).BaseType;
 
-                    if (!propType.IsNullable && (propType.Definition == declaredType || declaredType == baseType))
+                    if (!propType.IsNullable && (propType.Definition == declaringType || declaringType == baseType))
                     {
                         context.AddError(
                             property.Location(),
