@@ -73,7 +73,18 @@ namespace JsonWriterBenchmarks
             await writer.WritePayloadAsync(data, fileStream);
             await writer.WritePayloadAsync(data, fileStream);
             await writer.WritePayloadAsync(data, fileStream);
+        }
 
+        [Benchmark]
+        [BenchmarkCategory("RawValues")]
+        public async Task WriteWithRawValues()
+        {
+            // multiple writes to increase benchmark duration
+            await writer.WritePayloadAsync(data, fileStream, includeRawValues: true);
+            await writer.WritePayloadAsync(data, fileStream, includeRawValues: true);
+            await writer.WritePayloadAsync(data, fileStream, includeRawValues: true);
+            await writer.WritePayloadAsync(data, fileStream, includeRawValues: true);
+            await writer.WritePayloadAsync(data, fileStream, includeRawValues: true);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace ExperimentsLib
     public class JsonSerializerPayloadWriter : IPayloadWriter<IEnumerable<Customer>>
     {
         /// <inheritdoc/>
-        public async Task WritePayloadAsync(IEnumerable<Customer> payload, Stream stream)
+        public async Task WritePayloadAsync(IEnumerable<Customer> payload, Stream stream, bool includeRawValues)
         {
             var serviceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/");
 
@@ -29,6 +29,7 @@ namespace ExperimentsLib
                 Value = payload
             };
 
+            // we ignore the includeRawValues argument for simplicity
             await JsonSerializer.SerializeAsync(stream, response);
         }
 

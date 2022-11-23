@@ -429,37 +429,6 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
-        /// Asynchronously manually writes an item separator ','
-        /// to the output if necessary, bypassing the Utf8JsonWriter.
-        /// Should be used before property names in an object or values
-        /// in an array.
-        /// This method should not be called by <see cref="WriteRawValue(string)"/>.
-        /// </summary>
-        /// <returns>Task representing the asynchronous operation.</returns>
-        private async ValueTask WriteSeparatorIfNecessaryAsync()
-        {
-            if (this.shouldWriteSeparator)
-            {
-                await this.WriteItemSeparatorAsync().ConfigureAwait(false);
-            }
-
-            // reset state since now we're back in sync with Utf8JsonWriter.
-            this.shouldWriteSeparator = false;
-            this.isWritingFirstElementInArray = false;
-            this.isWritingConsecutiveRawValuesAtStartOfArray = false;
-        }
-
-        /// <summary>
-        /// Asynchronously manually writes an item separator ',' to the output, bypassing the Utf8JsonWriter.
-        /// </summary>
-        /// <returns>Task respresenting the asynchronous operation.</returns>
-        private async ValueTask WriteItemSeparatorAsync()
-        {
-            await this.FlushAsync().ConfigureAwait(false);
-            await this.writeStream.WriteAsync(itemSeparator).ConfigureAwait(false);
-        }
-
-        /// <summary>
         /// Mark that the writer has transitioned to write an object.
         /// </summary>
         private void EnterObjectScope()
@@ -555,8 +524,6 @@ namespace Microsoft.OData.Json
                 {
                     this.outputStream.Dispose();
                 }
-
-                //this.bufferWriter.Dispose();
             }
 
             this.disposed = true;
@@ -572,25 +539,28 @@ namespace Microsoft.OData.Json
 
         public async Task StartPaddingFunctionScopeAsync()
         {
-            await this.FlushAsync().ConfigureAwait(false);
-            await this.writeStream.WriteAsync(parentheses[..1]).ConfigureAwait(false);
+            this.CommitWriterContentsToBuffer();
+            this.bufferWriter.Write(parentheses[..1].Span);
+            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WritePaddingFunctionNameAsync(string functionName)
         {
-            await this.FlushAsync().ConfigureAwait(false);
-            await this.writeStream.WriteAsync(Encoding.UTF8.GetBytes(functionName)).ConfigureAwait(false);
+            this.CommitWriterContentsToBuffer();
+            this.bufferWriter.Write(Encoding.UTF8.GetBytes(functionName));
+            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task EndPaddingFunctionScopeAsync()
         {
-            await this.FlushAsync().ConfigureAwait(false);
-            await this.writeStream.WriteAsync(parentheses[1..2]).ConfigureAwait(false);
+            this.CommitWriterContentsToBuffer();
+            this.bufferWriter.Write(parentheses[1..2].Span);
+            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task StartObjectScopeAsync()
         {
-            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
+            this.WriteSeparatorIfNecessary();
             this.EnterObjectScope();
             this.writer.WriteStartObject();
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
@@ -605,7 +575,7 @@ namespace Microsoft.OData.Json
 
         public async Task StartArrayScopeAsync()
         {
-            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
+            this.WriteSeparatorIfNecessary();
             this.EnterArrayScope();
             this.writer.WriteStartArray();
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
@@ -620,42 +590,42 @@ namespace Microsoft.OData.Json
 
         public async Task WriteNameAsync(string name)
         {
-            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
+            this.WriteSeparatorIfNecessary();
             this.writer.WritePropertyName(name);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(bool value)
         {
-            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
+            this.WriteSeparatorIfNecessary();
             this.writer.WriteBooleanValue(value);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(int value)
         {
-            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
+            this.WriteSeparatorIfNecessary();
             this.writer.WriteNumberValue(value);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(float value)
         {
-            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
+            this.WriteSeparatorIfNecessary();
             this.writer.WriteNumberValue(value);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(short value)
         {
-            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
+            this.WriteSeparatorIfNecessary();
             this.writer.WriteNumberValue(value);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(long value)
         {
-            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
+            this.WriteSeparatorIfNecessary();
             if (this.isIeee754Compatible)
             {
                 this.writer.WriteStringValue(value.ToString(CultureInfo.InvariantCulture));
@@ -670,21 +640,21 @@ namespace Microsoft.OData.Json
 
         public async Task WriteValueAsync(double value)
         {
-            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
+            this.WriteSeparatorIfNecessary();
             this.writer.WriteNumberValue(value);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(Guid value)
         {
-            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
+            this.WriteSeparatorIfNecessary();
             this.writer.WriteStringValue(value);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(decimal value)
         {
-            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
+            this.WriteSeparatorIfNecessary();
             if (this.isIeee754Compatible)
             {
                 this.writer.WriteStringValue(value.ToString(CultureInfo.InvariantCulture));
@@ -699,14 +669,14 @@ namespace Microsoft.OData.Json
 
         public async Task WriteValueAsync(DateTimeOffset value)
         {
-            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
+            this.WriteSeparatorIfNecessary();
             this.writer.WriteStringValue(value);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(TimeSpan value)
         {
-            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
+            this.WriteSeparatorIfNecessary();
             string stringValue = EdmValueWriter.DurationAsXml(value);
             this.writer.WriteStringValue(stringValue);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
@@ -714,35 +684,35 @@ namespace Microsoft.OData.Json
 
         public async Task WriteValueAsync(Date value)
         {
-            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
+            this.WriteSeparatorIfNecessary();
             this.writer.WriteStringValue(value.ToString());
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(TimeOfDay value)
         {
-            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
+            this.WriteSeparatorIfNecessary();
             this.writer.WriteStringValue(value.ToString());
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(byte value)
         {
-            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
+            this.WriteSeparatorIfNecessary();
             this.writer.WriteNumberValue(value);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(sbyte value)
         {
-            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
+            this.WriteSeparatorIfNecessary();
             this.writer.WriteNumberValue(value);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(string value)
         {
-            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
+            this.WriteSeparatorIfNecessary();
             if (value == null)
             {
                 this.writer.WriteNullValue();
@@ -757,7 +727,7 @@ namespace Microsoft.OData.Json
 
         public async Task WriteValueAsync(byte[] value)
         {
-            await this.WriteSeparatorIfNecessaryAsync().ConfigureAwait(false);
+            this.WriteSeparatorIfNecessary();
             if (value == null)
             {
                 this.writer.WriteNullValue();
@@ -777,18 +747,25 @@ namespace Microsoft.OData.Json
                 return;
             }
 
-            // ensure we don't write to the stream directly while there are still pending data in the Utf8JsonWriter buffer
-            await this.FlushAsync().ConfigureAwait(false);
+            // We transcode and write the raw value directly to the buffer writer
+            // because Utf8JsonWriter.WriteRawValue is not available in .NET Core 3.1 and .NET Standard 2.0
+            // Writing the value manually means we also have to manually keep track of whether the separator
+            // should be written because Utf8JsonWriter is not aware of this write.
+            // Consider using Utf8JsonWriter.WriteRawValue() in .NET 6+
+            // see: https://github.com/OData/odata.net/issues/2420
+
+            // ensure we don't write to the buffer directly while there are still pending data in the Utf8JsonWriter buffer
+            this.CommitWriterContentsToBuffer();
             if (IsInArray() && !isWritingFirstElementInArray)
             {
                 // Place a separator before the raw value if
                 // this is an array, unless this is the first item in the array.
-                await this.writeStream.WriteAsync(itemSeparator).ConfigureAwait(false);
+                this.bufferWriter.Write(itemSeparator.Slice(0, 1).Span);
             }
 
             // Consider using Utf8JsonWriter.WriteRawValue() in .NET 6+
             // see: https://github.com/OData/odata.net/issues/2420
-            await this.writeStream.WriteAsync(Encoding.UTF8.GetBytes(rawValue)).ConfigureAwait(false);
+            this.bufferWriter.Write(Encoding.UTF8.GetBytes(rawValue));
 
             // since we bypass the Utf8JsonWriter, we need to signal to other
             // Write methods that a separator should be written first
@@ -803,14 +780,15 @@ namespace Microsoft.OData.Json
             }
 
             this.isWritingFirstElementInArray = false;
+            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task FlushAsync()
         {
-            if (this.writer.BytesPending > 0)
-            {
-                await this.writer.FlushAsync().ConfigureAwait(false);
-            }
+            this.CommitWriterContentsToBuffer();
+            await this.writeStream.WriteAsync(this.bufferWriter.WrittenMemory).ConfigureAwait(false);
+            this.bufferWriter.Clear();
+            await this.writeStream.FlushAsync().ConfigureAwait(false);
         }
 
         public async ValueTask DisposeAsync()

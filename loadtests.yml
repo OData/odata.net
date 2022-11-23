@@ -24,8 +24,9 @@ scenarios:
         connections: 128
         duration: 30
         count: 50
+        includeRawValues: false
         writer: 'ODataMessageWriter'
-        path: /customers/{{writer}}?count={{count}}
+        path: /customers/{{writer}}?count={{count}}&includeRawValues={{includeRawValues}}
 
 profiles:
   local:
