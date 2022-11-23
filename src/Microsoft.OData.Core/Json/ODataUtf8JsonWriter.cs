@@ -14,6 +14,7 @@ using System.Text.Json;
 using System.Text.Encodings.Web;
 using Microsoft.OData.Edm;
 using System.Threading.Tasks;
+using System.Buffers;
 
 namespace Microsoft.OData.Json
 {
@@ -31,6 +32,7 @@ namespace Microsoft.OData.Json
         private readonly Stream outputStream;
         private readonly Stream writeStream;
         private readonly Utf8JsonWriter writer;
+        private readonly ArrayBufferWriter<byte> bufferWriter;
         private readonly int bufferSize;
         private readonly bool isIeee754Compatible;
         private readonly bool leaveStreamOpen;
@@ -93,6 +95,7 @@ namespace Microsoft.OData.Json
             this.outputStream = outputStream;
             this.isIeee754Compatible = isIeee754Compatible;
             this.bufferSize = bufferSize;
+            this.bufferWriter = new ArrayBufferWriter<byte>(bufferSize);
             // flush when we're close to the buffer capacity to avoid allocating bigger buffers
             this.bufferFlushThreshold = 0.9f * this.bufferSize;
             this.leaveStreamOpen = leaveStreamOpen;
@@ -112,7 +115,7 @@ namespace Microsoft.OData.Json
             }
 
             this.writer = new Utf8JsonWriter(
-                this.writeStream,
+                this.bufferWriter,
                 new JsonWriterOptions {
                     // we don't need to perform validation here since the higher-level
                     // writers already perform validation
@@ -123,10 +126,10 @@ namespace Microsoft.OData.Json
 
         public void Flush()
         {
-            if (this.writer.BytesPending > 0)
-            {
-                this.writer.Flush();
-            }
+            this.CommitWriterContentsToBuffer();
+            this.writeStream.Write(this.bufferWriter.WrittenSpan);
+            this.bufferWriter.Clear();
+            this.writeStream.Flush();
         }
 
         private void FlushIfBufferThresholdReached()
@@ -137,22 +140,37 @@ namespace Microsoft.OData.Json
             }
         }
 
+        /// <summary>
+        /// Commits the contents of the <see cref="Utf8JsonWriter"/> to the
+        /// bufferWriter. This should be called before writing directly
+        /// to the bufferWriter.
+        /// </summary>
+        private void CommitWriterContentsToBuffer()
+        {
+            this.writer.Flush();
+        }
+
         public void StartPaddingFunctionScope()
         {
-            this.Flush();
-            this.writeStream.WriteByte((byte)'(');
+            this.CommitWriterContentsToBuffer();
+            ReadOnlySpan<byte> buf = stackalloc byte[] { (byte)'(' };
+            this.bufferWriter.Write(buf);
+            this.FlushIfBufferThresholdReached();
         }
 
         public void WritePaddingFunctionName(string functionName)
         {
-            this.Flush();
-            this.writeStream.Write(Encoding.UTF8.GetBytes(functionName));
+            this.CommitWriterContentsToBuffer();
+            this.bufferWriter.Write(Encoding.UTF8.GetBytes(functionName));
+            this.FlushIfBufferThresholdReached();
         }
 
         public void EndPaddingFunctionScope()
         {
-            this.Flush();
-            this.writeStream.WriteByte((byte)')');
+            this.CommitWriterContentsToBuffer();
+            ReadOnlySpan<byte> buf = stackalloc byte[] { (byte)')' };
+            this.bufferWriter.Write(buf);
+            this.FlushIfBufferThresholdReached();
         }
 
         public void StartObjectScope()
@@ -339,18 +357,18 @@ namespace Microsoft.OData.Json
                 return;
             }
 
-            // ensure we don't write to the stream directly while there are still pending data in the Utf8JsonWriter buffer
-            this.Flush(); 
+            // ensure we don't write to the buffer directly while there are still pending data in the Utf8JsonWriter buffer
+            this.CommitWriterContentsToBuffer();
             if (IsInArray() && !isWritingFirstElementInArray)
             {
                 // Place a separator before the raw value if
                 // this is an array, unless this is the first item in the array.
-                this.writeStream.WriteByte(itemSeparator.Span[0]);
+                this.bufferWriter.Write(itemSeparator.Slice(0, 1).Span);
             }
 
             // Consider using Utf8JsonWriter.WriteRawValue() in .NET 6+
             // see: https://github.com/OData/odata.net/issues/2420
-            this.writeStream.Write(Encoding.UTF8.GetBytes(rawValue));
+            this.bufferWriter.Write(Encoding.UTF8.GetBytes(rawValue));
 
             // since we bypass the Utf8JsonWriter, we need to signal to other
             // Write methods that a separator should be written first
@@ -365,6 +383,7 @@ namespace Microsoft.OData.Json
             }
             
             this.isWritingFirstElementInArray = false;
+            this.FlushIfBufferThresholdReached();
         }
 
         /// <summary>
@@ -392,8 +411,8 @@ namespace Microsoft.OData.Json
         /// </summary>
         private void WriteItemSeparator()
         {
-            this.Flush();
-            this.writeStream.WriteByte(itemSeparator.Span[0]);
+            this.CommitWriterContentsToBuffer();
+            this.bufferWriter.Write(itemSeparator.Span.Slice(0, 1));
         }
 
         /// <summary>
