@@ -357,6 +357,13 @@ namespace Microsoft.OData.Json
                 return;
             }
 
+            // We transcode and write the raw value directly to the buffer writer
+            // because Utf8JsonWriter.WriteRawValue is not available in .NET Core 3.1 and .NET Standard 2.0
+            // Writing the value manually means we also have to manually keep track of whether the separator
+            // should be written because Utf8JsonWriter is not aware of this write.
+            // Consider using Utf8JsonWriter.WriteRawValue() in .NET 6+
+            // see: https://github.com/OData/odata.net/issues/2420
+
             // ensure we don't write to the buffer directly while there are still pending data in the Utf8JsonWriter buffer
             this.CommitWriterContentsToBuffer();
             if (IsInArray() && !isWritingFirstElementInArray)
@@ -366,9 +373,10 @@ namespace Microsoft.OData.Json
                 this.bufferWriter.Write(itemSeparator.Slice(0, 1).Span);
             }
 
-            // Consider using Utf8JsonWriter.WriteRawValue() in .NET 6+
-            // see: https://github.com/OData/odata.net/issues/2420
-            this.bufferWriter.Write(Encoding.UTF8.GetBytes(rawValue));
+            // In the wrost case, a single UTF-16 character could be expanded to 3 UTF-8 bytes
+            Span<byte> buf = this.bufferWriter.GetSpan(rawValue.Length * 3);
+            Encoding.UTF8.GetEncoder().Convert(rawValue.AsSpan(), buf, flush: false, out int charsUsed, out int bytesUsed, out bool completed);
+            bufferWriter.Advance(bytesUsed);
 
             // since we bypass the Utf8JsonWriter, we need to signal to other
             // Write methods that a separator should be written first
@@ -412,7 +420,10 @@ namespace Microsoft.OData.Json
         private void WriteItemSeparator()
         {
             this.CommitWriterContentsToBuffer();
-            this.bufferWriter.Write(itemSeparator.Span.Slice(0, 1));
+            //this.bufferWriter.Write(itemSeparator.Span.Slice(0, 1));
+            Span<byte> buf = this.bufferWriter.GetSpan(1);
+            buf[0] = (byte)',';
+            this.bufferWriter.Advance(1);
         }
 
         /// <summary>
