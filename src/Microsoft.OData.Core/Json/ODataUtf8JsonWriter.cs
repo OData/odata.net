@@ -32,7 +32,7 @@ namespace Microsoft.OData.Json
         private readonly Stream outputStream;
         private readonly Stream writeStream;
         private readonly Utf8JsonWriter writer;
-        private readonly PooledByteBufferWriter bufferWriter;
+        private readonly ArrayBufferWriter<byte> bufferWriter;
         private readonly int bufferSize;
         private readonly bool isIeee754Compatible;
         private readonly bool leaveStreamOpen;
@@ -95,7 +95,7 @@ namespace Microsoft.OData.Json
             this.outputStream = outputStream;
             this.isIeee754Compatible = isIeee754Compatible;
             this.bufferSize = bufferSize;
-            this.bufferWriter = new PooledByteBufferWriter(bufferSize);
+            this.bufferWriter = new ArrayBufferWriter<byte>(bufferSize);
             // flush when we're close to the buffer capacity to avoid allocating bigger buffers
             this.bufferFlushThreshold = 0.9f * this.bufferSize;
             this.leaveStreamOpen = leaveStreamOpen;
@@ -134,7 +134,7 @@ namespace Microsoft.OData.Json
 
         private void FlushIfBufferThresholdReached()
         {
-            if (this.writer.BytesPending >= this.bufferFlushThreshold)
+            if (this.writer.BytesPending >= this.bufferFlushThreshold || this.bufferWriter.WrittenCount >= this.bufferFlushThreshold)
             {
                 this.Flush();
             }
@@ -373,10 +373,12 @@ namespace Microsoft.OData.Json
                 this.bufferWriter.Write(itemSeparator.Slice(0, 1).Span);
             }
 
-            // In the wrost case, a single UTF-16 character could be expanded to 3 UTF-8 bytes
-            Span<byte> buf = this.bufferWriter.GetSpan(rawValue.Length * 3);
-            Encoding.UTF8.GetEncoder().Convert(rawValue.AsSpan(), buf, flush: false, out int charsUsed, out int bytesUsed, out bool completed);
-            bufferWriter.Advance(bytesUsed);
+
+            this.bufferWriter.Write(Encoding.UTF8.GetBytes(rawValue));
+            // In the worst case, a single UTF-16 character could be expanded to 3 UTF-8 bytes
+            //Span<byte> buf = this.bufferWriter.GetSpan(rawValue.Length * 3);
+            //Encoding.UTF8.GetEncoder().Convert(rawValue.AsSpan(), buf, flush: false, out int charsUsed, out int bytesUsed, out bool completed);
+            //bufferWriter.Advance(bytesUsed);
 
             // since we bypass the Utf8JsonWriter, we need to signal to other
             // Write methods that a separator should be written first
@@ -554,7 +556,7 @@ namespace Microsoft.OData.Json
                     this.outputStream.Dispose();
                 }
 
-                this.bufferWriter.Dispose();
+                //this.bufferWriter.Dispose();
             }
 
             this.disposed = true;
