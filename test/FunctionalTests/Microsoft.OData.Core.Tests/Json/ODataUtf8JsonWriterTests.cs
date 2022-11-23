@@ -431,6 +431,67 @@ namespace Microsoft.OData.Tests.Json
 
         #endregion Custom JavaScriptEncoder
 
+        [Fact]
+        public void FlushesWhenBufferThresholdIsReached()
+        {
+            using var stream = new MemoryStream();
+            // set buffer size to 10, in current implementation, buffer threshold will be 9
+            using var jsonWriter = new ODataUtf8JsonWriter(stream, true, Encoding.UTF8, bufferSize: 10, leaveStreamOpen: true);
+            jsonWriter.StartArrayScope();
+            jsonWriter.WriteValue("well"); // 7 total bytes written: ["well"
+            Assert.Equal(0, stream.Position); // should not have flushed since threshold not reached
+
+            jsonWriter.WriteValue(1); // 9 total bytes written: ["well",1
+            Assert.Equal(9, stream.Length); // buffer was flushed to stream and cleared due to hitting threshold
+
+            jsonWriter.WriteValue("well");
+            Assert.Equal(9, stream.Length); // not yet flushed
+
+            jsonWriter.WriteValue("well");
+            Assert.Equal(23, stream.Length); // data flushed. Stream contents: ["well",1,"well","well"
+
+            jsonWriter.WriteValue("Hello, World"); // write data larger than buffer size
+            Assert.Equal(38, stream.Length); // stream contents: ["well",1,"well","well","Hello, World"
+
+            jsonWriter.EndArrayScope();
+            jsonWriter.Flush();
+
+            stream.Position = 0;
+            using var reader = new StreamReader(stream);
+            var contents = reader.ReadToEnd();
+            Assert.Equal(@"[""well"",1,""well"",""well"",""Hello, World""]", contents);
+        }
+
+        [Fact]
+        public void FlushesWhenBufferThresholdIsReached_WithRawValues()
+        {
+            using var stream = new MemoryStream();
+            // set buffer size to 10, in current implementation, buffer threshold will be 9
+            using var jsonWriter = new ODataUtf8JsonWriter(stream, true, Encoding.UTF8, bufferSize: 10, leaveStreamOpen: true);
+            jsonWriter.StartArrayScope();
+            jsonWriter.WriteRawValue(@"""well"""); // 7 total bytes written: ["well"
+            Assert.Equal(0, stream.Position); // should not have flushed since threshold not reached
+
+            jsonWriter.WriteValue(1); // 9 total bytes written: ["well",1
+            Assert.Equal(9, stream.Length); // buffer was flushed to stream and cleared due to hitting threshold
+
+            jsonWriter.WriteValue("well");
+            Assert.Equal(9, stream.Length); // not yet flushed
+
+            jsonWriter.WriteRawValue(@"""well""");
+            Assert.Equal(23, stream.Length); // data flushed. Stream contents: ["well",1,"well","well"
+
+            jsonWriter.WriteRawValue(@"""Hello, World"""); // write data larger than buffer size
+            Assert.Equal(38, stream.Length); // stream contents: ["well",1,"well","well","Hello, World"
+
+            jsonWriter.EndArrayScope();
+            jsonWriter.Flush();
+
+            stream.Position = 0;
+            using var reader = new StreamReader(stream);
+            var contents = reader.ReadToEnd();
+            Assert.Equal(@"[""well"",1,""well"",""well"",""Hello, World""]", contents);
+        }
 
         private string ReadStream()
         {

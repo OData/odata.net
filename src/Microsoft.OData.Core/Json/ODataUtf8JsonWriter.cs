@@ -134,7 +134,7 @@ namespace Microsoft.OData.Json
 
         private void FlushIfBufferThresholdReached()
         {
-            if (this.writer.BytesPending >= this.bufferFlushThreshold || this.bufferWriter.WrittenCount >= this.bufferFlushThreshold)
+            if ((this.writer.BytesPending + this.bufferWriter.WrittenCount) >= this.bufferFlushThreshold)
             {
                 this.Flush();
             }
@@ -178,12 +178,14 @@ namespace Microsoft.OData.Json
             this.WriteSeparatorIfNecessary();
             this.EnterObjectScope();
             this.writer.WriteStartObject();
+            this.FlushIfBufferThresholdReached();
         }
 
         public void EndObjectScope()
         {
             this.writer.WriteEndObject();
             this.ExitScope();
+            this.FlushIfBufferThresholdReached();
         }
 
         public void StartArrayScope()
@@ -191,12 +193,14 @@ namespace Microsoft.OData.Json
             this.WriteSeparatorIfNecessary();
             this.EnterArrayScope();
             this.writer.WriteStartArray();
+            this.FlushIfBufferThresholdReached();
         }
 
         public void EndArrayScope()
         {
             this.writer.WriteEndArray();
             this.ExitScope();
+            this.FlushIfBufferThresholdReached();
         }
 
         public void WriteName(string name)
@@ -818,7 +822,7 @@ namespace Microsoft.OData.Json
 
         private async ValueTask FlushIfBufferThresholdReachedAsync()
         {
-            if (this.writer.BytesPending >= this.bufferFlushThreshold)
+            if ((this.writer.BytesPending + this.bufferWriter.WrittenCount) >= this.bufferFlushThreshold)
             {
                 await this.FlushAsync().ConfigureAwait(false);
             }
