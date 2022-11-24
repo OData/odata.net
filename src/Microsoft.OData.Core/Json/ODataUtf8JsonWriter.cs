@@ -377,12 +377,7 @@ namespace Microsoft.OData.Json
                 this.bufferWriter.Write(itemSeparator.Slice(0, 1).Span);
             }
 
-
             this.bufferWriter.Write(Encoding.UTF8.GetBytes(rawValue));
-            // In the worst case, a single UTF-16 character could be expanded to 3 UTF-8 bytes
-            //Span<byte> buf = this.bufferWriter.GetSpan(rawValue.Length * 3);
-            //Encoding.UTF8.GetEncoder().Convert(rawValue.AsSpan(), buf, flush: false, out int charsUsed, out int bytesUsed, out bool completed);
-            //bufferWriter.Advance(bytesUsed);
 
             // since we bypass the Utf8JsonWriter, we need to signal to other
             // Write methods that a separator should be written first
@@ -767,8 +762,6 @@ namespace Microsoft.OData.Json
                 this.bufferWriter.Write(itemSeparator.Slice(0, 1).Span);
             }
 
-            // Consider using Utf8JsonWriter.WriteRawValue() in .NET 6+
-            // see: https://github.com/OData/odata.net/issues/2420
             this.bufferWriter.Write(Encoding.UTF8.GetBytes(rawValue));
 
             // since we bypass the Utf8JsonWriter, we need to signal to other
