@@ -439,7 +439,7 @@ namespace Microsoft.OData.Tests.Json
             using var jsonWriter = new ODataUtf8JsonWriter(stream, true, Encoding.UTF8, bufferSize: 10, leaveStreamOpen: true);
             jsonWriter.StartArrayScope();
             jsonWriter.WriteValue("well"); // 7 total bytes written: ["well"
-            Assert.Equal(0, stream.Position); // should not have flushed since threshold not reached
+            Assert.Equal(0, stream.Length); // should not have flushed since threshold not reached
 
             jsonWriter.WriteValue(1); // 9 total bytes written: ["well",1
             Assert.Equal(9, stream.Length); // buffer was flushed to stream and cleared due to hitting threshold
@@ -456,10 +456,7 @@ namespace Microsoft.OData.Tests.Json
             jsonWriter.EndArrayScope();
             jsonWriter.Flush();
 
-            stream.Position = 0;
-            using var reader = new StreamReader(stream);
-            var contents = reader.ReadToEnd();
-            Assert.Equal(@"[""well"",1,""well"",""well"",""Hello, World""]", contents);
+            Assert.Equal(@"[""well"",1,""well"",""well"",""Hello, World""]", this.ReadStream(jsonWriter, stream, Encoding.UTF8));
         }
 
         [Fact]
@@ -470,7 +467,7 @@ namespace Microsoft.OData.Tests.Json
             using var jsonWriter = new ODataUtf8JsonWriter(stream, true, Encoding.UTF8, bufferSize: 10, leaveStreamOpen: true);
             jsonWriter.StartArrayScope();
             jsonWriter.WriteRawValue(@"""well"""); // 7 total bytes written: ["well"
-            Assert.Equal(0, stream.Position); // should not have flushed since threshold not reached
+            Assert.Equal(0, stream.Length); // should not have flushed since threshold not reached
 
             jsonWriter.WriteValue(1); // 9 total bytes written: ["well",1
             Assert.Equal(9, stream.Length); // buffer was flushed to stream and cleared due to hitting threshold
@@ -487,23 +484,71 @@ namespace Microsoft.OData.Tests.Json
             jsonWriter.EndArrayScope();
             jsonWriter.Flush();
 
-            stream.Position = 0;
-            using var reader = new StreamReader(stream);
-            var contents = reader.ReadToEnd();
-            Assert.Equal(@"[""well"",1,""well"",""well"",""Hello, World""]", contents);
+            Assert.Equal(@"[""well"",1,""well"",""well"",""Hello, World""]", this.ReadStream(jsonWriter, stream, Encoding.UTF8));
         }
 
+        [Fact]
+        public void FlushingWriterBeforeBufferIsFullShouldBeOkay()
+        {
+            using var stream = new MemoryStream();
+            using var jsonWriter = new ODataUtf8JsonWriter(stream, true, Encoding.UTF8, bufferSize: 10, leaveStreamOpen: true);
+            jsonWriter.StartArrayScope();
+
+            jsonWriter.WriteValue("foo");
+            Assert.Equal(0, stream.Length); // not yet flushed
+
+            jsonWriter.Flush();
+            Assert.Equal(6, stream.Length); // buffer contents: ["foo"
+
+            jsonWriter.WriteValue("fooba");
+            Assert.Equal(6, stream.Length); // buffer was reset, so we're still below automatic flush threshold
+
+            jsonWriter.EndArrayScope();
+
+            Assert.Equal(@"[""foo"",""fooba""]", this.ReadStream(jsonWriter, stream, Encoding.UTF8));
+        }
+
+        [Fact]
+        public void FlushingEmptyWriterShouldBeOkay()
+        {
+            using var stream = new MemoryStream();
+            using var jsonWriter = new ODataUtf8JsonWriter(stream, true, Encoding.UTF8, leaveStreamOpen: true);
+            jsonWriter.Flush();
+            Assert.Equal(0, stream.Length);
+        }
+
+        /// <summary>
+        /// Reads the test class's default stream with UTF8 encoding.
+        /// </summary>
+        /// <returns>The text content in the stream.</returns>
         private string ReadStream()
         {
             return this.ReadStream(Encoding.UTF8);
         }
 
+        /// <summary>
+        /// Reads the test class's default stream with the specified <paramref name="encoding"/>.
+        /// </summary>
+        /// <param name="encoding">Encoding of the data in the stream.</param>
+        /// <returns>The text content in the stream.</returns>
         private string ReadStream(Encoding encoding)
         {
-            this.writer.Flush();
-            this.stream.Seek(0, SeekOrigin.Begin);
+            return this.ReadStream(this.writer, this.stream, encoding);
+        }
+
+        /// <summary>
+        /// Reads the contents of the specified <paramref name="stream"/>.
+        /// </summary>
+        /// <param name="writer">The writer that was used to write to the stream.</param>
+        /// <param name="stream">The stream to read from.</param>
+        /// <param name="encoding">The encoding of the data in the stream.</param>
+        /// <returns>The text content in the stream.</returns>
+        private string ReadStream(IJsonWriter writer, Stream stream, Encoding encoding)
+        {
+            writer.Flush();
+            stream.Seek(0, SeekOrigin.Begin);
             // leave open since the this.stream is disposed separately
-            using StreamReader reader = new StreamReader(this.stream, encoding, leaveOpen: true);
+            using StreamReader reader = new StreamReader(stream, encoding, leaveOpen: true);
             return reader.ReadToEnd();
         }
 
