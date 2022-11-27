@@ -844,6 +844,59 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 nestedDerivedProp);
         }
 
+        [Fact]
+        public void ComplexTypedPropertyWithSameInheritedBaseTypeAsDeclaringTypeShouldError()
+        {
+            EdmComplexType a = new EdmComplexType("ns", "a");
+            EdmComplexType b = new EdmComplexType("ns", "b", a);
+            EdmComplexType d = new EdmComplexType("ns", "d", b);
+            IEdmTypeReference dRef = d.GetTypeReference(false);
+            IEdmStructuralProperty aProp = a.AddStructuralProperty("aProp", dRef);
+
+            ValidateError(
+                ValidationRules.RecursiveComplexTypedPropertyMustBeOptional,
+                aProp,
+                EdmErrorCode.RecursiveComplexTypedPropertyMustBeOptional,
+                Strings.EdmModel_Validator_Semantic_RecursiveComplexTypedPropertyMustBeOptional("aProp"));
+        }
+
+        [Fact]
+        public void ComplexTypedPropertyWithSameSecondInheritedBaseTypeAsDeclaringTypeShouldError()
+        {
+            EdmComplexType a = new EdmComplexType("ns", "a");
+            EdmComplexType b = new EdmComplexType("ns", "b", a);
+            EdmComplexType d = new EdmComplexType("ns", "d", b);
+            EdmComplexType e = new EdmComplexType("ns", "e", d);
+            IEdmTypeReference eRef = e.GetTypeReference(false);
+            IEdmStructuralProperty aProp = a.AddStructuralProperty("aProp", eRef);
+
+            ValidateError(
+                ValidationRules.RecursiveComplexTypedPropertyMustBeOptional,
+                aProp,
+                EdmErrorCode.RecursiveComplexTypedPropertyMustBeOptional,
+                Strings.EdmModel_Validator_Semantic_RecursiveComplexTypedPropertyMustBeOptional("aProp"));
+        }
+
+        [Fact]
+        public void ComplexTypedPropertyWithMutualBaseTypeShouldNotError()
+        {
+            EdmComplexType a = new EdmComplexType("ns", "a");
+            EdmComplexType b = new EdmComplexType("ns", "b", a);
+            EdmComplexType c = new EdmComplexType("ns", "c", a);
+            IEdmTypeReference bRef = b.GetTypeReference(false);
+            IEdmStructuralProperty cProp = c.AddStructuralProperty("cProp", bRef);
+
+            var model = new EdmModel();
+            model.AddElement(a);
+            model.AddElement(b);
+            model.AddElement(c);
+
+            ValidateNoError(
+                ValidationRules.RecursiveComplexTypedPropertyMustBeOptional,
+                model,
+                cProp);
+        }
+
         #endregion
 
         [Fact]

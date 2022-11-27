@@ -1201,16 +1201,25 @@ namespace Microsoft.OData.Edm.Validation
             new ValidationRule<IEdmStructuralProperty>(
                 (context, property) =>
                 {
-                    IEdmTypeReference propType = property.Type;
+                    IEdmTypeReference currentPropTypeRef = property.Type;
+                    IEdmType currentPropType = currentPropTypeRef.Definition;
                     IEdmStructuredType declaringType = property.DeclaringType;
-                    IEdmStructuredType baseType = ((IEdmStructuredType)propType.Definition).BaseType;
 
-                    if (!propType.IsNullable && (propType.Definition == declaringType || declaringType == baseType))
+                    if (!currentPropTypeRef.IsNullable)
                     {
-                        context.AddError(
-                            property.Location(),
-                            EdmErrorCode.RecursiveComplexTypedPropertyMustBeOptional,
-                            Strings.EdmModel_Validator_Semantic_RecursiveComplexTypedPropertyMustBeOptional(property.Name));
+                        while (currentPropType != null && currentPropType != declaringType)
+                        {
+                            IEdmStructuredType baseType = ((IEdmStructuredType)currentPropType).BaseType;
+                            currentPropType = baseType;
+                        }
+
+                        if (currentPropType == declaringType)
+                        {
+                            context.AddError(
+                                property.Location(),
+                                EdmErrorCode.RecursiveComplexTypedPropertyMustBeOptional,
+                                Strings.EdmModel_Validator_Semantic_RecursiveComplexTypedPropertyMustBeOptional(property.Name));
+                        }
                     }
                 });
 
