@@ -3279,7 +3279,12 @@ namespace Microsoft.OData.Client
 
                 if (!this.resolveTypesCache.TryGetValue(typeName, out matchedType))
                 {
-                    if (ClientTypeUtil.TryResolveType(typeName, fullNamespace, languageDependentNamespace, out matchedType))
+                    if (ClientTypeUtil.TryResolveType(
+                        this.GetType().GetAssembly(),
+                        typeName,
+                        fullNamespace,
+                        languageDependentNamespace,
+                        out matchedType))
                     {
                         this.resolveTypesCache.TryAdd(typeName, matchedType);
 
