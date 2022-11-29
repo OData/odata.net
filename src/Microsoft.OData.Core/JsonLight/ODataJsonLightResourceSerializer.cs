@@ -95,7 +95,7 @@ namespace Microsoft.OData.JsonLight
 
             // Write the "@odata.id": "Entity Id"
             Uri id;
-            if (resource.MetadataBuilder.TryGetIdForSerialization(out id))
+            if (resourceState?.ResourceType?.TypeKind != EdmTypeKind.Complex && resource.MetadataBuilder.TryGetIdForSerialization(out id))
             {
                 this.ODataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataId);
                 if (id != null && !resource.HasNonComputedId)
@@ -397,7 +397,7 @@ namespace Microsoft.OData.JsonLight
 
             // Write the "@odata.id": "Entity Id"
             Uri id;
-            if (resource.MetadataBuilder.TryGetIdForSerialization(out id))
+            if (resourceState?.ResourceType?.TypeKind != EdmTypeKind.Complex && resource.MetadataBuilder.TryGetIdForSerialization(out id))
             {
                 await this.AsynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataId)
                     .ConfigureAwait(false);
