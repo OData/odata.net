@@ -47,7 +47,7 @@ namespace Microsoft.OData.Json
         /// to ensure we don't write extra separators or skip a separator where it's needed, both of
         /// which would result in invalid JSON.
         /// 
-        /// In particular, we have to ensure write a separator in the following scenarios:
+        /// In particular, we have to ensure we write a separator in the following scenarios:
         /// - inside a JSON object, before writing a property name that's preceded by a raw value
         /// - inside an array, before writing an item that's preceded by one or more consecutive raw values at the start of the array.
         /// We only need to do this for the first non-raw value after a sequence of raw values. That's because the Utf8JsonWriter
