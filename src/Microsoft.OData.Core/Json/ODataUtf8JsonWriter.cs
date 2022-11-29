@@ -69,7 +69,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         private BitStack bitStack;
         /// <summary>
-        /// Whether we're about the first element in array. This helps
+        /// Whether we're about to write the first element in array. This helps
         /// decide whether we should manually write a separator.
         /// </summary>
         private bool isWritingFirstElementInArray = false;
@@ -421,7 +421,6 @@ namespace Microsoft.OData.Json
         private void WriteItemSeparator()
         {
             this.CommitWriterContentsToBuffer();
-            //this.bufferWriter.Write(itemSeparator.Span.Slice(0, 1));
             Span<byte> buf = this.bufferWriter.GetSpan(1);
             buf[0] = (byte)',';
             this.bufferWriter.Advance(1);
@@ -460,7 +459,7 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Checks whether the writer is currently in an array scope.
         /// </summary>
-        /// <returns>Whether the writer is currently in an array scope.</returns>
+        /// <returns>true if the writer is currently in an array scope; otherwise false.</returns>
         private bool IsInArray()
         {
             if (!TryPeekScope(out bool isInObject))
@@ -475,8 +474,7 @@ namespace Microsoft.OData.Json
         /// Tries to get the current scope.
         /// </summary>
         /// <param name="isInObject">
-        /// True if the writer is currently in an object scope, false if the writer is in an array scope.</param>
-        /// <returns>True if the current scope was successfully determined, false if it was not able to determined the scope
+        /// <returns>True if the current scope was successfully determined, false if it was not possible to determine the scope
         /// (i.e. we're neither in an array or object).
         /// </returns>
         private bool TryPeekScope(out bool isInObject)
