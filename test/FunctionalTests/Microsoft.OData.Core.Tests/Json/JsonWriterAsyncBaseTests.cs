@@ -221,7 +221,6 @@ namespace Microsoft.OData.Tests.Json
             }
         }
 
-
         /// <summary>
         /// Normalizes the differences between JSON text encoded
         /// by Utf8JsonWriter and OData's JsonWriter, to make

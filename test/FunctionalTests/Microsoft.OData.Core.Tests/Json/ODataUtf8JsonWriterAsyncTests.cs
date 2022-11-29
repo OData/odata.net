@@ -455,8 +455,8 @@ namespace Microsoft.OData.Tests.Json
             await jsonWriter.WriteValueAsync("Hello, World"); // write data larger than buffer size
             Assert.Equal(38, stream.Length); // stream contents: ["well",1,"well","well","Hello, World"
 
-            jsonWriter.EndArrayScope();
-            jsonWriter.Flush();
+            await jsonWriter.EndArrayScopeAsync();
+            await jsonWriter.FlushAsync();
 
             Assert.Equal(@"[""well"",1,""well"",""well"",""Hello, World""]", await this.ReadStreamAsync(jsonWriter, stream, Encoding.UTF8));
         }
@@ -483,8 +483,8 @@ namespace Microsoft.OData.Tests.Json
             await jsonWriter.WriteRawValueAsync(@"""Hello, World"""); // write data larger than buffer size
             Assert.Equal(38, stream.Length); // stream contents: ["well",1,"well","well","Hello, World"
 
-            jsonWriter.EndArrayScope();
-            jsonWriter.Flush();
+            await jsonWriter.EndArrayScopeAsync();
+            await jsonWriter.FlushAsync();
 
             Assert.Equal(@"[""well"",1,""well"",""well"",""Hello, World""]", await this.ReadStreamAsync(jsonWriter, stream, Encoding.UTF8));
         }
@@ -494,7 +494,7 @@ namespace Microsoft.OData.Tests.Json
         {
             using var stream = new MemoryStream();
             using var jsonWriter = new ODataUtf8JsonWriter(stream, true, Encoding.UTF8, bufferSize: 10, leaveStreamOpen: true);
-            jsonWriter.StartArrayScope();
+            await jsonWriter.StartArrayScopeAsync();
 
             await jsonWriter.WriteValueAsync("foo");
             Assert.Equal(0, stream.Length); // not yet flushed
