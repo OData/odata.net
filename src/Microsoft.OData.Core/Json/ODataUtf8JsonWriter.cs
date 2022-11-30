@@ -356,6 +356,17 @@ namespace Microsoft.OData.Json
 
         public void WriteRawValue(string rawValue)
         {
+            this.WriteRawValueCore(rawValue);
+            this.FlushIfBufferThresholdReached();
+        }
+
+        /// <summary>
+        /// Implementation of WriteRawValue logic, used by both <see cref="WriteRawValue(string)"/>
+        /// and <see cref="WriteRawValueAsync(string)"/>.
+        /// </summary>
+        /// <param name="rawValue">The value to write.</param>
+        private void WriteRawValueCore(string rawValue)
+        {
             if (rawValue == null)
             {
                 return;
@@ -390,9 +401,8 @@ namespace Microsoft.OData.Json
             {
                 this.isWritingConsecutiveRawValuesAtStartOfArray = true;
             }
-            
+
             this.isWritingFirstElementInArray = false;
-            this.FlushIfBufferThresholdReached();
         }
 
         /// <summary>
@@ -739,42 +749,7 @@ namespace Microsoft.OData.Json
 
         public async Task WriteRawValueAsync(string rawValue)
         {
-            if (rawValue == null)
-            {
-                return;
-            }
-
-            // We transcode and write the raw value directly to the buffer writer
-            // because Utf8JsonWriter.WriteRawValue is not available in .NET Core 3.1 and .NET Standard 2.0
-            // Writing the value manually means we also have to manually keep track of whether the separator
-            // should be written because Utf8JsonWriter is not aware of this write.
-            // Consider using Utf8JsonWriter.WriteRawValue() in .NET 6+
-            // see: https://github.com/OData/odata.net/issues/2420
-
-            // ensure we don't write to the buffer directly while there are still pending data in the Utf8JsonWriter buffer
-            this.CommitWriterContentsToBuffer();
-            if (IsInArray() && !isWritingFirstElementInArray)
-            {
-                // Place a separator before the raw value if
-                // this is an array, unless this is the first item in the array.
-                this.bufferWriter.Write(itemSeparator.Slice(0, 1).Span);
-            }
-
-            this.bufferWriter.Write(Encoding.UTF8.GetBytes(rawValue));
-
-            // since we bypass the Utf8JsonWriter, we need to signal to other
-            // Write methods that a separator should be written first
-            if ((this.isWritingFirstElementInArray || this.isWritingConsecutiveRawValuesAtStartOfArray) || !this.IsInArray())
-            {
-                this.shouldWriteSeparator = true;
-            }
-
-            if (this.isWritingFirstElementInArray || this.isWritingConsecutiveRawValuesAtStartOfArray)
-            {
-                this.isWritingConsecutiveRawValuesAtStartOfArray = true;
-            }
-
-            this.isWritingFirstElementInArray = false;
+            this.WriteRawValueCore(rawValue);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
