@@ -12,6 +12,7 @@ namespace Microsoft.OData.Evaluation
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Vocabularies.V1;
     using Microsoft.OData.JsonLight;
     #endregion
@@ -383,10 +384,7 @@ namespace Microsoft.OData.Evaluation
             if (this.unprocessedNavigationLinks == null)
             {
                 Debug.Assert(this.ResourceMetadataContext != null, "this.resourceMetadataContext != null");
-                this.unprocessedNavigationLinks = this.ResourceMetadataContext.SelectedNavigationProperties
-                    .Where(p => !this.ProcessedNestedResourceInfos.Contains(p.Name))
-                    .Select(ODataJsonLightReaderNestedResourceInfo.CreateProjectedNestedResourceInfo)
-                    .GetEnumerator();
+                this.unprocessedNavigationLinks = GetUnprocessedNavigationLinks().GetEnumerator();
             }
 
             if (this.unprocessedNavigationLinks.MoveNext())
@@ -395,6 +393,17 @@ namespace Microsoft.OData.Evaluation
             }
 
             return null;
+        }
+
+        private IEnumerable<ODataJsonLightReaderNestedResourceInfo> GetUnprocessedNavigationLinks()
+        {
+            foreach (IEdmNavigationProperty property in this.ResourceMetadataContext.SelectedNavigationProperties)
+            {
+                if (!this.ProcessedNestedResourceInfos.Contains(property.Name))
+                {
+                    yield return ODataJsonLightReaderNestedResourceInfo.CreateProjectedNestedResourceInfo(property);
+                }
+            }
         }
 
         /// <summary>
