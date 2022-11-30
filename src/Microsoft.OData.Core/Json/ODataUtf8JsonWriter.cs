@@ -12,9 +12,10 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Text.Encodings.Web;
-using Microsoft.OData.Edm;
 using System.Threading.Tasks;
 using System.Buffers;
+using System.Runtime.CompilerServices;
+using Microsoft.OData.Edm;
 
 namespace Microsoft.OData.Json
 {
@@ -132,6 +133,7 @@ namespace Microsoft.OData.Json
             this.writeStream.Flush();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void FlushIfBufferThresholdReached()
         {
             if ((this.writer.BytesPending + this.bufferWriter.WrittenCount) >= this.bufferFlushThreshold)
@@ -145,6 +147,7 @@ namespace Microsoft.OData.Json
         /// bufferWriter. This should be called before writing directly
         /// to the bufferWriter.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void CommitWriterContentsToBuffer()
         {
             this.writer.Flush();
