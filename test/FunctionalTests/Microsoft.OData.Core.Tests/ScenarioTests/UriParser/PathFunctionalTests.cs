@@ -73,6 +73,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void MultipleUnnamedKeysThrowsException()
+        {
+            Action parsePath = () => PathFunctionalTestsUtil.RunParsePath("People(7,8,9)");
+            parsePath.Throws<ODataException>(ODataErrorStrings.RequestUriProcessor_KeysMustBeNamed);
+        }
+
+        [Fact]
         public void SimpleActionImport()
         {
             var path = PathFunctionalTestsUtil.RunParsePath("ResetAllData");
