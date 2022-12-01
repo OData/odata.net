@@ -2828,7 +2828,7 @@ namespace Microsoft.OData
             ODataPath path = odataPath;
 
             KeyValuePair<string, object>[] keys = GetKeyProperties(throwIfFail);
-            if (keys == null || keys.Length == 0)
+            if (keys != null && keys.Length > 0)
             {
                 IEdmEntityType currentEntityType = this.CurrentScope.ResourceType as IEdmEntityType;
                 path = path.AddKeySegment(keys, currentEntityType, this.CurrentScope.NavigationSource);
