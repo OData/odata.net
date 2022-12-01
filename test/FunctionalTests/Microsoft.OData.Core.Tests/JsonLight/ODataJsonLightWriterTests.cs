@@ -1394,6 +1394,87 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 result);
         }
 
+        [Fact]
+        public async Task WriteTransientComplexResourceAsync_ODataIdAnnotationIsNotWritten()
+        {
+            var orderResource = new ODataResource
+            {
+                TypeName = "NS.Order",
+                Properties = new List<ODataProperty>(),
+                IsTransient = true,
+                SerializationInfo = CreateOrderResourceSerializationInfo()
+            };
+
+            var addressNestedResourceInfo = CreateAddressNestedResourceInfo();
+            var addressResource = new ODataResource
+            {
+                TypeName = "NS.Address",
+                Properties = new List<ODataProperty>
+                {
+                    new ODataProperty { Name = "City", Value = "Redmond" }
+                },
+                IsTransient = true,
+                SerializationInfo = CreateAddressResourceSerializationInfo()
+            };
+
+            var result = await SetupJsonLightWriterAndRunTestAsync(
+                async (jsonLightWriter) =>
+                {
+                    await jsonLightWriter.WriteStartAsync(orderResource);
+                    await jsonLightWriter.WriteStartAsync(addressNestedResourceInfo);
+                    await jsonLightWriter.WriteStartAsync(addressResource);
+                    await jsonLightWriter.WriteEndAsync();
+                    await jsonLightWriter.WriteEndAsync();
+                    await jsonLightWriter.WriteEndAsync();
+                },
+                customerEntitySet,
+                customerEntityType);
+
+            Assert.Equal(
+                "{\"@odata.context\":\"http://tempuri.org/$metadata#Orders/$entity\",\"@odata.id\":null,\"ShippingAddress\":{\"City\":\"Redmond\"}}",
+                result);
+        }
+
+        [Fact]
+        public void WriteTransientComplexResource_ODataIdAnnotationIsNotWritten()
+        {
+            var orderResource = new ODataResource
+            {
+                TypeName = "NS.Order",
+                Properties = new List<ODataProperty>(),
+                IsTransient = true,
+                SerializationInfo = CreateOrderResourceSerializationInfo()
+            };
+
+            var addressNestedResourceInfo = CreateAddressNestedResourceInfo();
+            var addressResource = new ODataResource
+            {
+                TypeName = "NS.Address",
+                Properties = new List<ODataProperty>
+                {
+                    new ODataProperty { Name = "City", Value = "Redmond" }
+                },
+                IsTransient = true,
+                SerializationInfo = CreateAddressResourceSerializationInfo()
+            };
+
+            var result = SetupJsonLightWriterAndRunTest(
+                (jsonLightWriter) =>
+                {
+                    jsonLightWriter.WriteStart(orderResource);
+                    jsonLightWriter.WriteStart(addressNestedResourceInfo);
+                    jsonLightWriter.WriteStart(addressResource);
+                    jsonLightWriter.WriteEnd();
+                    jsonLightWriter.WriteEnd();
+                    jsonLightWriter.WriteEnd();
+                },
+                customerEntitySet,
+                customerEntityType);
+
+            Assert.Equal(
+                "{\"@odata.context\":\"http://tempuri.org/$metadata#Orders/$entity\",\"@odata.id\":null,\"ShippingAddress\":{\"City\":\"Redmond\"}}",
+                result);
+        }
 
         #region Exception Cases
 
@@ -1885,7 +1966,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             IODataReaderWriterListener writerListener = null,
             Action<IContainerBuilder> configAction = null)
         {
-            var jsonLightOutputContext = CreateJsonLightOutputContext(writingRequest, configAction);
+            var jsonLightOutputContext = CreateJsonLightOutputContext(writingRequest, true, configAction);
 
             var jsonLightWriter = new ODataJsonLightWriter(
                 jsonLightOutputContext,
@@ -1902,7 +1983,43 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             return await new StreamReader(this.stream).ReadToEndAsync();
         }
 
-        private ODataJsonLightOutputContext CreateJsonLightOutputContext(bool writingRequest = false, Action<IContainerBuilder> configAction = null)
+        /// <summary>
+        /// Sets up an ODataJsonLightWriter,
+        /// then runs the given test code,
+        /// then flushes and reads the stream back as a string for customized verification.
+        /// </summary>
+        private string SetupJsonLightWriterAndRunTest(
+            Action<ODataJsonLightWriter> action,
+            IEdmNavigationSource navigationSource,
+            IEdmStructuredType resourceType,
+            bool writingResourceSet = false,
+            bool writingDelta = false,
+            bool writingParameter = false,
+            bool writingRequest = false,
+            IODataReaderWriterListener writerListener = null,
+            Action<IContainerBuilder> configAction = null)
+        {
+            var jsonLightOutputContext = CreateJsonLightOutputContext(writingRequest, false, configAction);
+
+            var jsonLightWriter = new ODataJsonLightWriter(
+                jsonLightOutputContext,
+                navigationSource,
+                resourceType,
+                writingResourceSet,
+                writingParameter,
+                writingDelta,
+                writerListener);
+
+            action(jsonLightWriter);
+
+            this.stream.Position = 0;
+            return new StreamReader(this.stream).ReadToEnd();
+        }
+
+        private ODataJsonLightOutputContext CreateJsonLightOutputContext(
+            bool writingRequest = false,
+            bool isAsync = true,
+            Action<IContainerBuilder> configAction = null)
         {
             IServiceProvider container = null;
 
@@ -1924,7 +2041,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 Encoding = Encoding.Default,
 #endif
                 IsResponse = !writingRequest,
-                IsAsync = true,
+                IsAsync = isAsync,
                 Model = this.model,
                 Container = container
             };
