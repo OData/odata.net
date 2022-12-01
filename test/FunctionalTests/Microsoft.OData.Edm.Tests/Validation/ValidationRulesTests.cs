@@ -801,12 +801,12 @@ namespace Microsoft.OData.Edm.Tests.Validation
         public void ComplexTypedPropertyWithSameTypeAsDeclaringTypeShouldError()
         {
             EdmComplexType complexType = new EdmComplexType("ns", "myType");
-            IEdmTypeReference complexTypeReference = complexType.GetTypeReference(false);
-            IEdmStructuralProperty nestedProperty = complexType.AddStructuralProperty("nested", complexTypeReference);
+            IEdmTypeReference complexTypeRef = complexType.GetTypeReference(false);
+            IEdmStructuralProperty nestedProp = complexType.AddStructuralProperty("nested", complexTypeRef);
 
             ValidateError(
                 ValidationRules.RecursiveComplexTypedPropertyMustBeOptional,
-                nestedProperty,
+                nestedProp,
                 EdmErrorCode.RecursiveComplexTypedPropertyMustBeOptional,
                 Strings.EdmModel_Validator_Semantic_RecursiveComplexTypedPropertyMustBeOptional("nested"));
         }
@@ -816,12 +816,12 @@ namespace Microsoft.OData.Edm.Tests.Validation
         {
             EdmComplexType baseType = new EdmComplexType("ns", "myType");
             EdmComplexType derivedType = new EdmComplexType("ns", "derivedType", baseType);
-            IEdmTypeReference derivedTypeReference = derivedType.GetTypeReference(false);
-            IEdmStructuralProperty nestedBaseProperty = baseType.AddStructuralProperty("nested", derivedTypeReference);
+            IEdmTypeReference derivedTypeRef = derivedType.GetTypeReference(false);
+            IEdmStructuralProperty nestedBaseProp = baseType.AddStructuralProperty("nested", derivedTypeRef);
 
             ValidateError(
                 ValidationRules.RecursiveComplexTypedPropertyMustBeOptional,
-                nestedBaseProperty,
+                nestedBaseProp,
                 EdmErrorCode.RecursiveComplexTypedPropertyMustBeOptional,
                 Strings.EdmModel_Validator_Semantic_RecursiveComplexTypedPropertyMustBeOptional("nested"));
         }
@@ -847,54 +847,54 @@ namespace Microsoft.OData.Edm.Tests.Validation
         [Fact]
         public void ComplexTypedPropertyWithSameInheritedBaseTypeAsDeclaringTypeShouldError()
         {
-            EdmComplexType a = new EdmComplexType("ns", "a");
-            EdmComplexType b = new EdmComplexType("ns", "b", a);
-            EdmComplexType d = new EdmComplexType("ns", "d", b);
-            IEdmTypeReference dRef = d.GetTypeReference(false);
-            IEdmStructuralProperty aProp = a.AddStructuralProperty("aProp", dRef);
+            EdmComplexType baseType = new EdmComplexType("ns", "myType");
+            EdmComplexType derivedType1 = new EdmComplexType("ns", "derivedType1", baseType);
+            EdmComplexType derivedType2 = new EdmComplexType("ns", "derivedType2", derivedType1);
+            IEdmTypeReference derivedType2Ref = derivedType2.GetTypeReference(false);
+            IEdmStructuralProperty nestedBaseProp = baseType.AddStructuralProperty("nested", derivedType2Ref);
 
             ValidateError(
                 ValidationRules.RecursiveComplexTypedPropertyMustBeOptional,
-                aProp,
+                nestedBaseProp,
                 EdmErrorCode.RecursiveComplexTypedPropertyMustBeOptional,
-                Strings.EdmModel_Validator_Semantic_RecursiveComplexTypedPropertyMustBeOptional("aProp"));
+                Strings.EdmModel_Validator_Semantic_RecursiveComplexTypedPropertyMustBeOptional("nested"));
         }
 
         [Fact]
         public void ComplexTypedPropertyWithSameSecondInheritedBaseTypeAsDeclaringTypeShouldError()
         {
-            EdmComplexType a = new EdmComplexType("ns", "a");
-            EdmComplexType b = new EdmComplexType("ns", "b", a);
-            EdmComplexType d = new EdmComplexType("ns", "d", b);
-            EdmComplexType e = new EdmComplexType("ns", "e", d);
-            IEdmTypeReference eRef = e.GetTypeReference(false);
-            IEdmStructuralProperty aProp = a.AddStructuralProperty("aProp", eRef);
+            EdmComplexType baseType = new EdmComplexType("ns", "myType");
+            EdmComplexType derivedType1 = new EdmComplexType("ns", "derivedType1", baseType);
+            EdmComplexType derivedType2 = new EdmComplexType("ns", "derivedType2", derivedType1);
+            EdmComplexType derivedType3 = new EdmComplexType("ns", "derivedType3", derivedType2);
+            IEdmTypeReference derivedType3Ref = derivedType3.GetTypeReference(false);
+            IEdmStructuralProperty nestedBaseProp = baseType.AddStructuralProperty("nested", derivedType3Ref);
 
             ValidateError(
                 ValidationRules.RecursiveComplexTypedPropertyMustBeOptional,
-                aProp,
+                nestedBaseProp,
                 EdmErrorCode.RecursiveComplexTypedPropertyMustBeOptional,
-                Strings.EdmModel_Validator_Semantic_RecursiveComplexTypedPropertyMustBeOptional("aProp"));
+                Strings.EdmModel_Validator_Semantic_RecursiveComplexTypedPropertyMustBeOptional("nested"));
         }
 
         [Fact]
         public void ComplexTypedPropertyWithMutualBaseTypeShouldNotError()
         {
-            EdmComplexType a = new EdmComplexType("ns", "a");
-            EdmComplexType b = new EdmComplexType("ns", "b", a);
-            EdmComplexType c = new EdmComplexType("ns", "c", a);
-            IEdmTypeReference bRef = b.GetTypeReference(false);
-            IEdmStructuralProperty cProp = c.AddStructuralProperty("cProp", bRef);
+            EdmComplexType baseType = new EdmComplexType("ns", "myType");
+            EdmComplexType derivedType = new EdmComplexType("ns", "derivedType", baseType);
+            EdmComplexType otherDerivedType = new EdmComplexType("ns", "otherDerivedType", baseType);
+            IEdmTypeReference derivedTypeRef = derivedType.GetTypeReference(false);
+            IEdmStructuralProperty nestedOtherDerivedProp = otherDerivedType.AddStructuralProperty("nested", derivedTypeRef);
 
             var model = new EdmModel();
-            model.AddElement(a);
-            model.AddElement(b);
-            model.AddElement(c);
+            model.AddElement(baseType);
+            model.AddElement(derivedType);
+            model.AddElement(otherDerivedType);
 
             ValidateNoError(
                 ValidationRules.RecursiveComplexTypedPropertyMustBeOptional,
                 model,
-                cProp);
+                nestedOtherDerivedProp);
         }
 
         #endregion
