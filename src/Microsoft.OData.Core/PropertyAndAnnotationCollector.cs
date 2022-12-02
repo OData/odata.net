@@ -44,7 +44,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Caches OData scope annotations.
         /// </summary>
-        private IDictionary<string, object> odataScopeAnnotations = new Dictionary<string, object>();
+        private Dictionary<string, object> odataScopeAnnotations = new Dictionary<string, object>();
 
         /// <summary>
         /// Caches custom scope annotations.
@@ -54,7 +54,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Caches property data.
         /// </summary>
-        private IDictionary<string, PropertyData> propertyData = new Dictionary<string, PropertyData>();
+        private Dictionary<string, PropertyData> propertyData = new Dictionary<string, PropertyData>();
 
         /// <summary>
         /// Creates a PropertyAndAnnotationCollector instance.
@@ -281,7 +281,7 @@ namespace Microsoft.OData
         /// <remarks>
         /// Scope annotations are those that do not apply to specific properties, and start directly with "@".
         /// </remarks>
-        internal IDictionary<string, object> GetODataScopeAnnotation()
+        internal Dictionary<string, object> GetODataScopeAnnotation()
         {
             return odataScopeAnnotations;
         }

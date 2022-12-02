@@ -2422,7 +2422,7 @@ namespace Microsoft.OData.JsonLight
                 navigationSource = this.CurrentNavigationSource == null
                     ? null
                     : this.CurrentNavigationSource.FindNavigationTarget(navigationProperty,
-                        BindingPathHelper.MatchBindingPath, odataPath.Segments, out bindingPath);
+                        (path, segments) => BindingPathHelper.MatchBindingPath(path, segments), odataPath.Segments, out bindingPath);
             }
 
             if (navigationProperty != null)

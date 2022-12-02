@@ -36,7 +36,7 @@ namespace Microsoft.OData
         private readonly IODataReaderWriterListener listener;
 
         /// <summary>Stack of writer scopes to keep track of the current context of the writer.</summary>
-        private readonly ScopeStack scopeStack = new ScopeStack();
+        private readonly ScopeStack<Scope> scopeStack = new ScopeStack<Scope>();
 
         /// <summary>The number of entries which have been started but not yet ended.</summary>
         private int currentResourceDepth;
@@ -844,7 +844,7 @@ namespace Microsoft.OData
         /// </returns>
         protected ResourceScope GetParentResourceScope()
         {
-            ScopeStack scopeStack = new ScopeStack();
+            ScopeStack<Scope> scopeStack = new ScopeStack<Scope>();
             Scope parentResourceScope = null;
 
             if (this.scopeStack.Count > 0)
@@ -3677,102 +3677,7 @@ namespace Microsoft.OData
             }
         }
 
-        /// <summary>
-        /// Lightweight wrapper for the stack of scopes which exposes a few helper properties for getting parent scopes.
-        /// </summary>
-        internal sealed class ScopeStack
-        {
-            /// <summary>
-            /// Use a list to store the scopes instead of a true stack so that parent/grandparent lookups will be fast.
-            /// </summary>
-            private readonly List<Scope> scopes = new List<Scope>();
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="ScopeStack"/> class.
-            /// </summary>
-            internal ScopeStack()
-            {
-            }
-
-            /// <summary>
-            /// Gets the count of items in the stack.
-            /// </summary>
-            internal int Count
-            {
-                get
-                {
-                    return this.scopes.Count;
-                }
-            }
-
-            /// <summary>
-            /// Gets the scope below the current scope on top of the stack.
-            /// </summary>
-            internal Scope Parent
-            {
-                get
-                {
-                    Debug.Assert(this.scopes.Count > 1, "this.scopes.Count > 1");
-                    return this.scopes[this.scopes.Count - 2];
-                }
-            }
-
-            /// <summary>
-            /// Gets the scope below the parent of the current scope on top of the stack.
-            /// </summary>
-            internal Scope ParentOfParent
-            {
-                get
-                {
-                    Debug.Assert(this.scopes.Count > 2, "this.scopes.Count > 2");
-                    return this.scopes[this.scopes.Count - 3];
-                }
-            }
-
-            /// <summary>
-            /// Gets the scope below the current scope on top of the stack or null if there is only one item on the stack or the stack is empty.
-            /// </summary>
-            internal Scope ParentOrNull
-            {
-                get
-                {
-                    return this.Count == 0 ? null : this.Parent;
-                }
-            }
-
-            /// <summary>
-            /// Pushes the specified scope onto the stack.
-            /// </summary>
-            /// <param name="scope">The scope.</param>
-            internal void Push(Scope scope)
-            {
-                Debug.Assert(scope != null, "scope != null");
-                this.scopes.Add(scope);
-            }
-
-            /// <summary>
-            /// Pops the current scope off the stack.
-            /// </summary>
-            /// <returns>The popped scope.</returns>
-            internal Scope Pop()
-            {
-                Debug.Assert(this.scopes.Count > 0, "this.scopes.Count > 0");
-                int last = this.scopes.Count - 1;
-                Scope current = this.scopes[last];
-                this.scopes.RemoveAt(last);
-                return current;
-            }
-
-            /// <summary>
-            /// Peeks at the current scope on the top of the stack.
-            /// </summary>
-            /// <returns>The current scope at the top of the stack.</returns>
-            internal Scope Peek()
-            {
-                Debug.Assert(this.scopes.Count > 0, "this.scopes.Count > 0");
-                return this.scopes[this.scopes.Count - 1];
-            }
-        }
+        
 
         /// <summary>
         /// A writer scope; keeping track of the current writer state and an item associated with this state.

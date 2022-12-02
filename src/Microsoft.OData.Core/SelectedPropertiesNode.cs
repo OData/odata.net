@@ -399,17 +399,30 @@ namespace Microsoft.OData
 
             if (this.selectionType == SelectionType.EntireSubtree || this.hasWildcard)
             {
-                return entityType.StructuralProperties().Where(sp => sp.Type.IsStream()).ToDictionary(sp => sp.Name, StringComparer.Ordinal);
+                Dictionary<string, IEdmStructuralProperty> properties = new Dictionary<string, IEdmStructuralProperty>(StringComparer.Ordinal);
+                foreach (IEdmStructuralProperty structuralProperty in entityType.StructuralProperties())
+                {
+                    if (structuralProperty.Type.IsStream())
+                    {
+                        properties.Add(structuralProperty.Name, structuralProperty);
+                    }
+                }
+
+                return properties;
             }
 
-            IDictionary<string, IEdmStructuralProperty> selectedStreamProperties = 
-                this.selectedProperties == null ?
-                    new Dictionary<string, IEdmStructuralProperty>() :
-                    this.selectedProperties
-                        .Select(entityType.FindProperty)
-                        .OfType<IEdmStructuralProperty>()
-                        .Where(p => p.Type.IsStream())
-                        .ToDictionary(p => p.Name, StringComparer.Ordinal);
+            IDictionary<string, IEdmStructuralProperty> selectedStreamProperties = new Dictionary<string, IEdmStructuralProperty>(StringComparer.Ordinal);
+            if (this.selectedProperties != null)
+            {
+                foreach (string propertyName in this.selectedProperties)
+                {
+                    IEdmProperty property = entityType.FindProperty(propertyName);
+                    if (property is IEdmStructuralProperty structuralProperty && structuralProperty.Type.IsStream())
+                    {
+                        selectedStreamProperties.Add(structuralProperty.Name, structuralProperty);
+                    }
+                }
+            }
 
             // gather up the selected stream from any child nodes that have type segments matching the current type and add them to the dictionary.
             foreach (SelectedPropertiesNode typeSegmentChild in this.GetMatchingTypeSegments(entityType))
