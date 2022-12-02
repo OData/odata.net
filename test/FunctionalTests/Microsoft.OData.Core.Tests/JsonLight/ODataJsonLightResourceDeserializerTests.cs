@@ -230,14 +230,14 @@ namespace Microsoft.OData.Tests.JsonLight
 
                     var odataScopeAnnotations = resourceState.PropertyAndAnnotationCollector.GetODataScopeAnnotation();
 
-                    var odataId = (Uri)Assert.Contains("odata.id", odataScopeAnnotations);
-                    var odataEditLink = (Uri)Assert.Contains("odata.editLink", odataScopeAnnotations);
-                    var odataReadLink = (Uri)Assert.Contains("odata.readLink", odataScopeAnnotations);
-                    var odataEtag = Assert.Contains("odata.etag", odataScopeAnnotations);
-                    var odataMediaEditLink = (Uri)Assert.Contains("odata.mediaEditLink", odataScopeAnnotations);
-                    var odataMediaReadLink = (Uri)Assert.Contains("odata.mediaReadLink", odataScopeAnnotations);
-                    var odataMediaContentType = Assert.Contains("odata.mediaContentType", odataScopeAnnotations);
-                    var odataMediaEtag = Assert.Contains("odata.mediaEtag", odataScopeAnnotations);
+                    var odataId = (Uri)Assert.Contains("odata.id", odataScopeAnnotations as IDictionary<string, object>);
+                    var odataEditLink = (Uri)Assert.Contains("odata.editLink", odataScopeAnnotations as IDictionary<string, object>);
+                    var odataReadLink = (Uri)Assert.Contains("odata.readLink", odataScopeAnnotations as IDictionary<string, object>);
+                    var odataEtag = Assert.Contains("odata.etag", odataScopeAnnotations as IDictionary<string, object>);
+                    var odataMediaEditLink = (Uri)Assert.Contains("odata.mediaEditLink", odataScopeAnnotations as IDictionary<string, object>);
+                    var odataMediaReadLink = (Uri)Assert.Contains("odata.mediaReadLink", odataScopeAnnotations as IDictionary<string, object>);
+                    var odataMediaContentType = Assert.Contains("odata.mediaContentType", odataScopeAnnotations as IDictionary<string, object>);
+                    var odataMediaEtag = Assert.Contains("odata.mediaEtag", odataScopeAnnotations as IDictionary<string, object>);
                     Assert.Equal("http://tempuri.org/Categories(1)", odataId.AbsoluteUri);
                     Assert.Equal("http://tempuri.org/Categories(1)", odataEditLink.AbsoluteUri);
                     Assert.Equal("http://tempuri.org/Categories(1)", odataReadLink.AbsoluteUri);
@@ -1085,9 +1085,9 @@ namespace Microsoft.OData.Tests.JsonLight
                 {
                     var odataScopeAnnotations = propertyAndAnnotationCollector.GetODataScopeAnnotation();
 
-                    var odataType = Assert.Contains("odata.type", odataScopeAnnotations);
-                    var odataNextLink = Assert.Contains("odata.nextLink", odataScopeAnnotations);
-                    var odataCount = Assert.Contains("odata.count", odataScopeAnnotations);
+                    var odataType = Assert.Contains("odata.type", odataScopeAnnotations as IDictionary<string, object>);
+                    var odataNextLink = Assert.Contains("odata.nextLink", odataScopeAnnotations as IDictionary<string, object>);
+                    var odataCount = Assert.Contains("odata.count", odataScopeAnnotations as IDictionary<string, object>);
 
                     Assert.Equal("#Collection(NS.Category)", odataType);
                     Assert.Equal("http://tempuri.org/Categories/nextLink", odataNextLink);
@@ -1144,8 +1144,8 @@ namespace Microsoft.OData.Tests.JsonLight
                     // Reading does not stop at resource set (i.e., value) property
                     var odataScopeAnnotations = propertyAndAnnotationCollector.GetODataScopeAnnotation();
 
-                    var odataNextLink = Assert.Contains("odata.nextLink", odataScopeAnnotations);
-                    var odataCount = Assert.Contains("odata.count", odataScopeAnnotations);
+                    var odataNextLink = Assert.Contains("odata.nextLink", odataScopeAnnotations as IDictionary<string, object>);
+                    var odataCount = Assert.Contains("odata.count", odataScopeAnnotations as IDictionary<string, object>);
 
                     Assert.Equal("http://tempuri.org/Categories/nextLink", odataNextLink);
                     Assert.Equal(2, odataCount);
@@ -1173,9 +1173,9 @@ namespace Microsoft.OData.Tests.JsonLight
                 {
                     var odataScopeAnnotations = propertyAndAnnotationCollector.GetODataScopeAnnotation();
 
-                    var odataType = Assert.Contains("odata.type", odataScopeAnnotations);
-                    var odataDeltaLink = Assert.Contains("odata.deltaLink", odataScopeAnnotations);
-                    var odataCount = Assert.Contains("odata.count", odataScopeAnnotations);
+                    var odataType = Assert.Contains("odata.type", odataScopeAnnotations as IDictionary<string, object>);
+                    var odataDeltaLink = Assert.Contains("odata.deltaLink", odataScopeAnnotations as IDictionary<string, object>);
+                    var odataCount = Assert.Contains("odata.count", odataScopeAnnotations as IDictionary<string, object>);
 
                     Assert.Equal("#Collection(NS.Category)", odataType);
                     Assert.Equal("http://tempuri.org/Categories/deltaLink", odataDeltaLink);

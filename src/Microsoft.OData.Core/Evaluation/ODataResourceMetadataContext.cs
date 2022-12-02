@@ -605,8 +605,20 @@ namespace Microsoft.OData.Evaluation
                     if (this.selectedBindableOperations == null)
                     {
                         bool mustBeContainerQualified = this.metadataContext.OperationsBoundToStructuredTypeMustBeContainerQualified(this.actualResourceType);
-                        this.selectedBindableOperations = this.metadataContext.GetBindableOperationsForType(this.actualResourceType)
-                            .Where(operation => this.selectedProperties.IsOperationSelected(this.actualResourceType, operation, mustBeContainerQualified));
+
+                        List<IEdmOperation> bindableOperations = null;
+                        foreach (IEdmOperation operation in this.metadataContext.GetBindableOperationsForType(this.actualResourceType))
+                        {
+
+                            if (this.selectedProperties.IsOperationSelected(this.actualResourceType, operation, mustBeContainerQualified))
+                            {
+                                bindableOperations = bindableOperations == null ? new List<IEdmOperation>() : bindableOperations;
+                                bindableOperations.Add(operation);
+                            }
+                        }
+
+                        this.selectedBindableOperations = bindableOperations ?? Enumerable.Empty<IEdmOperation>();
+
                         if (this.metadataSelector != null)
                         {
                             this.selectedBindableOperations =

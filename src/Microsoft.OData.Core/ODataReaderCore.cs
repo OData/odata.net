@@ -35,7 +35,7 @@ namespace Microsoft.OData
         private readonly bool readingDelta;
 
         /// <summary>Stack of reader scopes to keep track of the current context of the reader.</summary>
-        private readonly Stack<Scope> scopes = new Stack<Scope>();
+        private readonly ScopeStack<Scope> scopes = new ScopeStack<Scope>();
 
         /// <summary>If not null, the reader will notify the implementer of the interface of relevant state changes in the reader.</summary>
         private readonly IODataReaderWriterListener listener;
@@ -252,7 +252,7 @@ namespace Microsoft.OData
         /// Returns the full scope stack. 
         /// Callers should not modify the stack directly, but should use EnterScope(), PopScope(), and ReplaceScope() to safely add/remove/change scopes.
         /// </summary>
-        protected Stack<Scope> Scopes
+        protected ScopeStack<Scope> Scopes
         {
             get { return this.scopes; }
         }
@@ -264,9 +264,7 @@ namespace Microsoft.OData
         {
             get
             {
-                Debug.Assert(this.scopes != null && this.scopes.Count > 1, "We must have at least two scopes in the stack.");
-                Debug.Assert(this.CurrentScope.ParentScope == this.scopes.Skip(1).First(), "Current scopes parent is not the same as the parent in the stack.");
-
+                Debug.Assert(this.scopes.Count > 1);
                 return this.CurrentScope.ParentScope;
             }
         }
@@ -387,7 +385,7 @@ namespace Microsoft.OData
         public override sealed bool Read()
         {
             this.VerifyCanRead(true);
-            return this.InterceptException(this.ReadSynchronously);
+            return this.InterceptException(thisParam => thisParam.ReadSynchronously());
         }
 
         /// <summary>
@@ -419,7 +417,7 @@ namespace Microsoft.OData
             }
 
             scope.StreamingState = StreamingState.Streaming;
-            return new ODataNotificationStream(this.InterceptException(this.CreateReadStreamImplementation), this);
+            return new ODataNotificationStream(this.InterceptException(thisParam => thisParam.CreateReadStreamImplementation()), this);
         }
 
         /// <summary>
@@ -438,7 +436,7 @@ namespace Microsoft.OData
                 }
 
                 scope.StreamingState = StreamingState.Streaming;
-                return new ODataNotificationReader(this.InterceptException(this.CreateTextReaderImplementation), this);
+                return new ODataNotificationReader(this.InterceptException(thisParam => thisParam.CreateTextReaderImplementation()), this);
             }
             else
             {
@@ -934,11 +932,11 @@ namespace Microsoft.OData
         /// <typeparam name="T">The type returned from the <paramref name="action"/> to execute.</typeparam>
         /// <param name="action">The action to execute.</param>
         /// <returns>The result of executing the <paramref name="action"/>.</returns>
-        private T InterceptException<T>(Func<T> action)
+        private T InterceptException<T>(Func<ODataReaderCore, T> action)
         {
             try
             {
-                return action();
+                return action(this);
             }
             catch (Exception e)
             {
